@@ -1,0 +1,167 @@
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using Marvin.Collections;
+using Marvin.TestTools.UnitTest;
+using Marvin.Tools;
+using NUnit.Framework;
+
+namespace Marvin.PlatformTools.Tests.Collections
+{
+    [TestFixture]
+    public class DelayQueueTests
+    {
+        private class DummyMessage
+        {
+
+        }
+
+        private const int Delay = 42;
+
+        private DelayQueue<DummyMessage> _queue;
+        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private readonly List<long> _times = new List<long>();
+
+        [SetUp]
+        public void CreateQueue()
+        {
+            _queue = new DelayQueue<DummyMessage>(new ParallelOperations());
+            _queue.Dequeued += OnDequeued;
+            _queue.Start(Delay);
+            _stopwatch.Start();
+        }
+
+        private void OnDequeued(object sender, DummyMessage dummyMessage)
+        {
+            _stopwatch.Stop();
+            _times.Add(_stopwatch.ElapsedMilliseconds);
+            _stopwatch.Start();
+        }
+
+        [TearDown]
+        public void ResetWatch()
+        {
+            _queue.Stop();
+            _stopwatch.Reset();
+            _times.Clear();
+        }
+
+        [TestCase(-1, Description = "Enqueue directly after creation")]
+        [TestCase(10, Description = "Enqueue with too short wait period")]
+        [TestCase(60, Description = "Enqueue with sufficient wait period")]
+        public void EnqueueAfterCreation(int delay)
+        {
+            // Arrange
+            if (delay > 0)
+                Thread.Sleep(delay);
+
+            // Act
+            _queue.Enqueue(new DummyMessage());
+            Thread.Sleep(100);
+
+            // Assert
+            if (delay < Delay)
+            {
+                Assert.GreaterOrEqual(_times[0], Delay - 2);
+                Assert.Less(_times[0], 2 * Delay);
+            }
+            else
+            {
+                Assert.GreaterOrEqual(_times[0], delay - 2);
+                Assert.Less(_times[0], delay + Delay);
+            }
+        }
+
+        [TestCase(true, Description = "Send two messages directly after each other after the inital wait time has passed")]
+        [TestCase(false, Description = "Send two messages directly after each other before the inital wait time has passed")]
+        public void DoubleMessage(bool queueReady)
+        {
+            // Arrange
+            const int initalDelay = 100;
+            if (queueReady)
+                Thread.Sleep(initalDelay);
+
+            // Act
+            _queue.Enqueue(new DummyMessage());
+            _queue.Enqueue(new DummyMessage());
+
+            // Assert
+            Thread.Sleep((queueReady ? initalDelay : Delay) + 2 * Delay);
+            // Validate first message
+            if (queueReady)
+            {
+                Assert.LessOrEqual(_times[0], Delay + initalDelay);
+            }
+            else
+            {
+                Assert.GreaterOrEqual(_times[0], Delay - 2);
+            }
+            // Validate second message
+            var timeDiff = _times[1] - _times[0];
+            Assert.GreaterOrEqual(timeDiff, Delay - 2);
+            Assert.LessOrEqual(timeDiff, 2 * Delay);
+        }
+
+        [TestCase(-1, 10, Description = "Direct burst of 3 objects in 10ms interval")]
+        [TestCase(50, 5, Description = "Burst of 3 objects after 50ms in 5ms interval")]
+        [TestCase(10, 50, Description = "Burst of 3 objects after 10ms in 50ms interval")]
+        public void EnqueueBurst(int initialDelay, int messageDelay)
+        {
+            // Arrange
+            if (initialDelay > 0)
+                Thread.Sleep(initialDelay);
+
+            // Act
+            const int loops = 4;
+            for (var i = 1; i <= loops; i++)
+            {
+                _queue.Enqueue(new DummyMessage());
+                Thread.Sleep(messageDelay);
+            }
+            Thread.Sleep(initialDelay + (loops + 1) * Delay);
+
+            // Assert
+            Assert.AreEqual(loops, _times.Count);
+            for (int i = 0; i < _times.Count; i++)
+            {
+                var diff = i == 0 ? _times[i] : _times[i] - _times[i - 1];
+                Assert.GreaterOrEqual(diff, Delay - 2);
+            }
+        }
+
+        [Test(Description = "Stop queue without ever using it and make sure it does not send anything")]
+        public void UnusedQueue()
+        {
+            // Act
+            _queue.Stop();
+            _queue.Enqueue(new DummyMessage());
+            Thread.Sleep(2 * Delay);
+
+            // Assert
+            Assert.AreEqual(0, _times.Count);
+        }
+
+        [Test]
+        public void InterruptQueue()
+        {
+            // Arrange
+            var localThreading = new ParallelOperations();
+
+            // Act
+            for (var delay = 10; delay < 100; delay += 10)
+            {
+                localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), delay, -1);
+            }
+            Thread.Sleep(55);
+            _queue.Stop();
+
+            var preClear = _times.Count;
+            _times.Clear();
+            Thread.Sleep(100);
+
+            // Assert
+            Assert.GreaterOrEqual(preClear, 0);
+            Assert.AreEqual(0, _times.Count);
+        }
+    }
+}

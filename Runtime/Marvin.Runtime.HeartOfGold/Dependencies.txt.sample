@@ -1,0 +1,5 @@
+﻿# Dependencies file
+# --------------------------
+# This file is used by the windows service installer to determine all runtime dependencies
+# of this RuntimeCore application.
+postgresql-x64-9.4

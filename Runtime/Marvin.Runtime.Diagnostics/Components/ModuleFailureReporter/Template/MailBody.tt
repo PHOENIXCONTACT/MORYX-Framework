@@ -1,0 +1,48 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ output extension=".txt" #>
+<p>Guten Tag <#= TargetName #>,</p>
+
+<p>der PluginService <b><#= PluginName #></b> wurde am <#= DateTime.Now.ToShortDateString() #> um <#= DateTime.Now.ToShortTimeString() #> 
+auf Grund des folgenden Fehlers gestoppt:<br> 
+<#= Exception.Message #>
+<#
+	if(Exception.InnerException != null)
+    {
+#>
+</p>
+<p>Dieser trat als Folge der aufgelisteten Exceptions auf:<br>
+<#
+		int number = 1;
+		var ex = Exception.InnerException;
+		while(ex != null)
+		{
+#>
+<#= number #>. <#= ex.Message #><br>
+<#
+			ex = ex.InnerException;
+			number++;
+		}
+    }
+
+	if(Dependends.Count > 0)
+    {
+#>
+</p>
+<p>Infolgedessen wurden alle davon abhängigen PluginServices ebenfalls gestoppt:<br>
+<# 
+		foreach(var dependend in Dependends)
+        {
+#>
+<#= dependend #><br>
+<#
+        }
+    }
+#>
+</p>
+<p>Bitte beheben Sie das Problem umgehend oder informieren Sie den nächsten fähigen Kollegen!</p>
+<p>
+Mit freundlichen Grüßen<br><br>
+MaRu FaiR<br>
+Marvin Runtime Failure Reporter
+</p>

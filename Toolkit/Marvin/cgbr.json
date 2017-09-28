@@ -1,0 +1,18 @@
+﻿{
+  "Enabled": true,
+  "Mappings": [
+    {
+      "Extension": ".cs",
+      "Parser": "Regex"
+    }
+  ],
+  "LocalGenerators": [
+    {
+      "Name": "Cloneable",
+      "IsEnabled": true
+    }
+  ],
+  "GlobalGenerators": [
+
+  ]
+}

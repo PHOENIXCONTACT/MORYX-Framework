@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EntitiesStoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="HugePocos">
+      <EntityTypeMapping TypeName="Marvin.TestTools.Test.Model.HugePoco">
+        <MappingFragment StoreEntitySet="HugePocos">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Float1" ColumnName="Float1" />
+          <ScalarProperty Name="Name1" ColumnName="Name1" />
+          <ScalarProperty Name="Number1" ColumnName="Number1" />
+          <ScalarProperty Name="Float2" ColumnName="Float2" />
+          <ScalarProperty Name="Name2" ColumnName="Name2" />
+          <ScalarProperty Name="Number2" ColumnName="Number2" />
+          <ScalarProperty Name="Float3" ColumnName="Float3" />
+          <ScalarProperty Name="Name3" ColumnName="Name3" />
+          <ScalarProperty Name="Number3" ColumnName="Number3" />
+          <ScalarProperty Name="Float4" ColumnName="Float4" />
+          <ScalarProperty Name="Name4" ColumnName="Name4" />
+          <ScalarProperty Name="Number4" ColumnName="Number4" />
+          <ScalarProperty Name="Float5" ColumnName="Float5" />
+          <ScalarProperty Name="Name5" ColumnName="Name5" />
+          <ScalarProperty Name="Number5" ColumnName="Number5" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RecursiveReferences">
+      <EntityTypeMapping TypeName="Marvin.TestTools.Test.Model.RecursiveReference">
+        <MappingFragment StoreEntitySet="RecursiveReferences">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Count" ColumnName="Count" />
+          <ScalarProperty Name="RecursiveReferenceId" ColumnName="RecursiveReferenceId" />
+          <ScalarProperty Name="TopParentId" ColumnName="TopParentId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TopParents">
+      <EntityTypeMapping TypeName="Marvin.TestTools.Test.Model.TopParent">
+        <MappingFragment StoreEntitySet="TopParents">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="NewColumn" ColumnName="NewColumn" />
+          <ScalarProperty Name="SuperNewColumn" ColumnName="SuperNewColumn" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="JsonTesters">
+      <EntityTypeMapping TypeName="Marvin.TestTools.Test.Model.JsonTester">
+        <MappingFragment StoreEntitySet="JsonTesters">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+          <ScalarProperty Name="JsonData" ColumnName="JsonData" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BaseClasses">
+      <EntityTypeMapping TypeName="IsTypeOf(Marvin.TestTools.Test.Model.BaseClass)">
+        <MappingFragment StoreEntitySet="BaseClasses">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Marvin.TestTools.Test.Model.Inherited">
+        <MappingFragment StoreEntitySet="Inheriteds">
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReferenceBases">
+      <EntityTypeMapping TypeName="Marvin.TestTools.Test.Model.A">
+        <MappingFragment StoreEntitySet="ReferenceBases">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ReferenceId" ColumnName="ReferenceId" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <Condition ColumnName="Type" Value="1" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Marvin.TestTools.Test.Model.B">
+        <MappingFragment StoreEntitySet="ReferenceBases">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ReferenceId" ColumnName="ReferenceId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <Condition ColumnName="Type" Value="2" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

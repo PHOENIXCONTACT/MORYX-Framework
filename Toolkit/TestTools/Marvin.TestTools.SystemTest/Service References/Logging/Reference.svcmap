@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="3d8c261d-8927-445d-82b6-3e4f4cb8e05c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost/metadata/logmaintenance" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="LogMaintenance.xsd" MetadataType="Schema" ID="29166a03-6ee2-4565-bcbc-41420b780122" SourceId="1" SourceUrl="http://localhost/Metadata/LogMaintenance?xsd=xsd0" />
+    <MetadataFile FileName="LogMaintenance1.xsd" MetadataType="Schema" ID="6bd868db-e633-49b6-9936-6e6067f38d1b" SourceId="1" SourceUrl="http://localhost/Metadata/LogMaintenance?xsd=xsd1" />
+    <MetadataFile FileName="LogMaintenance2.xsd" MetadataType="Schema" ID="5ffdd384-e368-44c6-a713-2e7ed1e8239d" SourceId="1" SourceUrl="http://localhost/Metadata/LogMaintenance?xsd=xsd2" />
+    <MetadataFile FileName="LogMaintenance3.xsd" MetadataType="Schema" ID="c5e3319e-2e0a-4b91-b6a2-2630054fa821" SourceId="1" SourceUrl="http://localhost/Metadata/LogMaintenance?xsd=xsd3" />
+    <MetadataFile FileName="LogMaintenance.wsdl" MetadataType="Wsdl" ID="0bd00d44-6482-48dc-9e62-d25d4d27440d" SourceId="1" SourceUrl="http://localhost/metadata/logmaintenance" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

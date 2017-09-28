@@ -1,0 +1,353 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Marvin.Runtime.UserManagement.Model.Store" Alias="Self" Provider="Devart.Data.PostgreSql" ProviderManifestToken="PostgreSQL" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:devart="http://devart.com/schemas/edml/StorageSchemaExtensions/1.0" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="UserManagementContainerStoreContainer">
+    <EntitySet Name="Libraries" EntityType="Marvin.Runtime.UserManagement.Model.Store.Library" store:Type="Tables" Schema="public" Table="Library" />
+    <EntitySet Name="UserGroups" EntityType="Marvin.Runtime.UserManagement.Model.Store.UserGroup" store:Type="Tables" Schema="public" Table="UserGroup" />
+    <EntitySet Name="Applications" EntityType="Marvin.Runtime.UserManagement.Model.Store.Application" store:Type="Tables" Schema="public" Table="Application" />
+    <EntitySet Name="LibraryAccesses" EntityType="Marvin.Runtime.UserManagement.Model.Store.LibraryAccess" store:Type="Tables" Schema="public" Table="LibraryAccess" />
+    <EntitySet Name="ApplicationAccesses" EntityType="Marvin.Runtime.UserManagement.Model.Store.ApplicationAccess" store:Type="Tables" Schema="public" Table="ApplicationAccess" />
+    <EntitySet Name="OperationGroups" EntityType="Marvin.Runtime.UserManagement.Model.Store.OperationGroup" store:Type="Tables" Schema="public" Table="OperationGroup" />
+    <EntitySet Name="Operations" EntityType="Marvin.Runtime.UserManagement.Model.Store.Operation" store:Type="Tables" Schema="public" Table="Operation" />
+    <EntitySet Name="OperationGroupLinks" EntityType="Marvin.Runtime.UserManagement.Model.Store.OperationGroupLink" store:Type="Tables" Schema="public" Table="OperationGroupLink" />
+    <EntitySet Name="Library_Libraries" EntityType="Marvin.Runtime.UserManagement.Model.Store.Library_Library" store:Type="Tables" Schema="public" Table="Library_Library" />
+    <EntitySet Name="Application_Libraries" EntityType="Marvin.Runtime.UserManagement.Model.Store.Application_Library" store:Type="Tables" Schema="public" Table="Application_Library" />
+    <EntitySet Name="OperationGroup_Libraryaccesses" EntityType="Marvin.Runtime.UserManagement.Model.Store.OperationGroup_LibraryAccess" store:Type="Tables" Schema="public" Table="OperationGroup_LibraryAccess" />
+    <EntitySet Name="OperationGroup_OperationGroups" EntityType="Marvin.Runtime.UserManagement.Model.Store.OperationGroup_OperationGroup" store:Type="Tables" Schema="public" Table="OperationGroup_OperationGroup" />
+    <AssociationSet Name="FK_Library_Library_Library" Association="Marvin.Runtime.UserManagement.Model.Store.FK_Library_Library_Library">
+      <End Role="Library" EntitySet="Libraries" />
+      <End Role="Library_Library" EntitySet="Library_Libraries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Library_Library_Library1" Association="Marvin.Runtime.UserManagement.Model.Store.FK_Library_Library_Library1">
+      <End Role="Library" EntitySet="Libraries" />
+      <End Role="Library_Library" EntitySet="Library_Libraries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Application_Library" Association="Marvin.Runtime.UserManagement.Model.Store.FK_Application_Library">
+      <End Role="Library" EntitySet="Libraries" />
+      <End Role="Application" EntitySet="Applications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Application_Library_Application" Association="Marvin.Runtime.UserManagement.Model.Store.FK_Application_Library_Application">
+      <End Role="Application" EntitySet="Applications" />
+      <End Role="Application_Library" EntitySet="Application_Libraries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Application_Library_Library" Association="Marvin.Runtime.UserManagement.Model.Store.FK_Application_Library_Library">
+      <End Role="Library" EntitySet="Libraries" />
+      <End Role="Application_Library" EntitySet="Application_Libraries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LibraryAccess_Library" Association="Marvin.Runtime.UserManagement.Model.Store.FK_LibraryAccess_Library">
+      <End Role="Library" EntitySet="Libraries" />
+      <End Role="LibraryAccess" EntitySet="LibraryAccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LibraryAccess_UserGroup" Association="Marvin.Runtime.UserManagement.Model.Store.FK_LibraryAccess_UserGroup">
+      <End Role="UserGroup" EntitySet="UserGroups" />
+      <End Role="LibraryAccess" EntitySet="LibraryAccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApplicationAccess_Application" Association="Marvin.Runtime.UserManagement.Model.Store.FK_ApplicationAccess_Application">
+      <End Role="Application" EntitySet="Applications" />
+      <End Role="ApplicationAccess" EntitySet="ApplicationAccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApplicationAccess_UserGroup" Association="Marvin.Runtime.UserManagement.Model.Store.FK_ApplicationAccess_UserGroup">
+      <End Role="UserGroup" EntitySet="UserGroups" />
+      <End Role="ApplicationAccess" EntitySet="ApplicationAccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OperationGroup_LibraryAccess_OperationGroup" Association="Marvin.Runtime.UserManagement.Model.Store.FK_OperationGroup_LibraryAccess_OperationGroup">
+      <End Role="OperationGroup" EntitySet="OperationGroups" />
+      <End Role="OperationGroup_LibraryAccess" EntitySet="OperationGroup_Libraryaccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OperationGroup_LibraryAccess_LibraryAccess" Association="Marvin.Runtime.UserManagement.Model.Store.FK_OperationGroup_LibraryAccess_LibraryAccess">
+      <End Role="LibraryAccess" EntitySet="LibraryAccesses" />
+      <End Role="OperationGroup_LibraryAccess" EntitySet="OperationGroup_Libraryaccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OperationGroup_OperationGroup_OperationGroup" Association="Marvin.Runtime.UserManagement.Model.Store.FK_OperationGroup_OperationGroup_OperationGroup">
+      <End Role="OperationGroup" EntitySet="OperationGroups" />
+      <End Role="OperationGroup_OperationGroup" EntitySet="OperationGroup_OperationGroups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OperationGroup_OperationGroup_OperationGroup1" Association="Marvin.Runtime.UserManagement.Model.Store.FK_OperationGroup_OperationGroup_OperationGroup1">
+      <End Role="OperationGroup" EntitySet="OperationGroups" />
+      <End Role="OperationGroup_OperationGroup" EntitySet="OperationGroup_OperationGroups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OperationGroupLink_OperationGroup" Association="Marvin.Runtime.UserManagement.Model.Store.FK_OperationGroupLink_OperationGroup">
+      <End Role="OperationGroup" EntitySet="OperationGroups" />
+      <End Role="OperationGroupLink" EntitySet="OperationGroupLinks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OperationGroupLink_Operation" Association="Marvin.Runtime.UserManagement.Model.Store.FK_OperationGroupLink_Operation">
+      <End Role="Operation" EntitySet="Operations" />
+      <End Role="OperationGroupLink" EntitySet="OperationGroupLinks" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Library">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="LibraryName" Type="varchar" Nullable="false" MaxLength="128" />
+    <Property Name="FullPath" Type="varchar" MaxLength="256" />
+    <Property Name="SortIndex" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserGroup">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="GroupName" Type="varchar" Nullable="false" MaxLength="256" />
+  </EntityType>
+  <EntityType Name="Application">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ApplicationName" Type="varchar" Nullable="false" MaxLength="128" />
+    <Property Name="ShellId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LibraryAccess">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="LibraryId" Type="bigint" />
+    <Property Name="UserGroupId" Type="bigint" />
+  </EntityType>
+  <EntityType Name="ApplicationAccess">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="AccessType" Type="int" Nullable="false" />
+    <Property Name="ApplicationId" Type="bigint" />
+    <Property Name="UserGroupId" Type="bigint" />
+  </EntityType>
+  <EntityType Name="OperationGroup">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="GroupName" Type="varchar" Nullable="false" MaxLength="128" />
+  </EntityType>
+  <EntityType Name="Operation">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="128" />
+  </EntityType>
+  <EntityType Name="OperationGroupLink">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="AccessType" Type="int" Nullable="false" />
+    <Property Name="OperationGroupId" Type="bigint" />
+    <Property Name="OperationId" Type="bigint" />
+  </EntityType>
+  <EntityType Name="Library_Library">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Id1" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="Id1" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Application_Library">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Id1" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="Id1" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OperationGroup_LibraryAccess">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Id1" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="Id1" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OperationGroup_OperationGroup">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Id1" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="Id1" Type="bigint" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Library_Library_Library">
+    <End Role="Library" Type="Marvin.Runtime.UserManagement.Model.Store.Library" Multiplicity="1" />
+    <End Role="Library_Library" Type="Marvin.Runtime.UserManagement.Model.Store.Library_Library" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Library">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Library_Library">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Library_Library_Library1">
+    <End Role="Library" Type="Marvin.Runtime.UserManagement.Model.Store.Library" Multiplicity="1" />
+    <End Role="Library_Library" Type="Marvin.Runtime.UserManagement.Model.Store.Library_Library" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Library">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Library_Library">
+        <PropertyRef Name="Id1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Application_Library">
+    <End Role="Library" Type="Marvin.Runtime.UserManagement.Model.Store.Library" Multiplicity="1" />
+    <End Role="Application" Type="Marvin.Runtime.UserManagement.Model.Store.Application" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Library">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Application">
+        <PropertyRef Name="ShellId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Application_Library_Application">
+    <End Role="Application" Type="Marvin.Runtime.UserManagement.Model.Store.Application" Multiplicity="1" />
+    <End Role="Application_Library" Type="Marvin.Runtime.UserManagement.Model.Store.Application_Library" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Application">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Application_Library">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Application_Library_Library">
+    <End Role="Library" Type="Marvin.Runtime.UserManagement.Model.Store.Library" Multiplicity="1" />
+    <End Role="Application_Library" Type="Marvin.Runtime.UserManagement.Model.Store.Application_Library" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Library">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Application_Library">
+        <PropertyRef Name="Id1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LibraryAccess_Library">
+    <End Role="Library" Type="Marvin.Runtime.UserManagement.Model.Store.Library" Multiplicity="0..1" />
+    <End Role="LibraryAccess" Type="Marvin.Runtime.UserManagement.Model.Store.LibraryAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Library">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LibraryAccess">
+        <PropertyRef Name="LibraryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LibraryAccess_UserGroup">
+    <End Role="UserGroup" Type="Marvin.Runtime.UserManagement.Model.Store.UserGroup" Multiplicity="0..1" />
+    <End Role="LibraryAccess" Type="Marvin.Runtime.UserManagement.Model.Store.LibraryAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LibraryAccess">
+        <PropertyRef Name="UserGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApplicationAccess_Application">
+    <End Role="Application" Type="Marvin.Runtime.UserManagement.Model.Store.Application" Multiplicity="0..1" />
+    <End Role="ApplicationAccess" Type="Marvin.Runtime.UserManagement.Model.Store.ApplicationAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Application">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApplicationAccess">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApplicationAccess_UserGroup">
+    <End Role="UserGroup" Type="Marvin.Runtime.UserManagement.Model.Store.UserGroup" Multiplicity="0..1" />
+    <End Role="ApplicationAccess" Type="Marvin.Runtime.UserManagement.Model.Store.ApplicationAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApplicationAccess">
+        <PropertyRef Name="UserGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OperationGroup_LibraryAccess_OperationGroup">
+    <End Role="OperationGroup" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroup" Multiplicity="1" />
+    <End Role="OperationGroup_LibraryAccess" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroup_LibraryAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OperationGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OperationGroup_LibraryAccess">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OperationGroup_LibraryAccess_LibraryAccess">
+    <End Role="LibraryAccess" Type="Marvin.Runtime.UserManagement.Model.Store.LibraryAccess" Multiplicity="1" />
+    <End Role="OperationGroup_LibraryAccess" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroup_LibraryAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LibraryAccess">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OperationGroup_LibraryAccess">
+        <PropertyRef Name="Id1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OperationGroup_OperationGroup_OperationGroup">
+    <End Role="OperationGroup" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroup" Multiplicity="1" />
+    <End Role="OperationGroup_OperationGroup" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroup_OperationGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OperationGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OperationGroup_OperationGroup">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OperationGroup_OperationGroup_OperationGroup1">
+    <End Role="OperationGroup" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroup" Multiplicity="1" />
+    <End Role="OperationGroup_OperationGroup" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroup_OperationGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OperationGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OperationGroup_OperationGroup">
+        <PropertyRef Name="Id1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OperationGroupLink_OperationGroup">
+    <End Role="OperationGroup" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroup" Multiplicity="0..1" />
+    <End Role="OperationGroupLink" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroupLink" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OperationGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OperationGroupLink">
+        <PropertyRef Name="OperationGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OperationGroupLink_Operation">
+    <End Role="Operation" Type="Marvin.Runtime.UserManagement.Model.Store.Operation" Multiplicity="0..1" />
+    <End Role="OperationGroupLink" Type="Marvin.Runtime.UserManagement.Model.Store.OperationGroupLink" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Operation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OperationGroupLink">
+        <PropertyRef Name="OperationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

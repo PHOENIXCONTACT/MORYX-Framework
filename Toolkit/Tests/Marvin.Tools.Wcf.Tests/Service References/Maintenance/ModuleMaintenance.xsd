@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Serialization" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd6" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ArrayOfEntry">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Entry" nillable="true" type="tns:Entry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfEntry" nillable="true" type="tns:ArrayOfEntry" />
+  <xs:complexType name="Entry">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Key" nillable="true" type="tns:EntryKey" />
+      <xs:element minOccurs="0" name="SubEntries" nillable="true" type="tns:ArrayOfEntry" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="tns:EntryValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Entry" nillable="true" type="tns:Entry" />
+  <xs:complexType name="EntryKey">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Identifier" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EntryKey" nillable="true" type="tns:EntryKey" />
+  <xs:complexType name="EntryValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Current" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Default" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Possible" nillable="true" type="q1:ArrayOfstring" />
+      <xs:element minOccurs="0" name="Type" type="tns:EntryValueType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EntryValue" nillable="true" type="tns:EntryValue" />
+  <xs:simpleType name="EntryValueType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Int16" />
+      <xs:enumeration value="UInt16" />
+      <xs:enumeration value="Int32" />
+      <xs:enumeration value="UInt32" />
+      <xs:enumeration value="Int64" />
+      <xs:enumeration value="UInt64" />
+      <xs:enumeration value="Single" />
+      <xs:enumeration value="Double" />
+      <xs:enumeration value="Boolean" />
+      <xs:enumeration value="String" />
+      <xs:enumeration value="Enum" />
+      <xs:enumeration value="Class" />
+      <xs:enumeration value="Collection" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EntryValueType" nillable="true" type="tns:EntryValueType" />
+</xs:schema>

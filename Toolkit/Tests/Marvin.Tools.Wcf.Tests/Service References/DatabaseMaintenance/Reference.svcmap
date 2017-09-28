@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="a07ff0e5-ab92-486b-990a-9ce70e2fbf4f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost/metadata/DatabaseMaintenance" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="DatabaseMaintenance.xsd" MetadataType="Schema" ID="7b906e2b-ba77-4bff-9389-4a64ed30ddfa" SourceId="1" SourceUrl="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd2" />
+    <MetadataFile FileName="DatabaseMaintenance1.xsd" MetadataType="Schema" ID="aca0b2ce-deb5-4a33-8e45-d9c83270cd1d" SourceId="1" SourceUrl="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd3" />
+    <MetadataFile FileName="DatabaseMaintenance2.xsd" MetadataType="Schema" ID="3edb3716-db5f-480d-ab39-86956555be06" SourceId="1" SourceUrl="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd0" />
+    <MetadataFile FileName="DatabaseMaintenance3.xsd" MetadataType="Schema" ID="32046ce0-ed12-421e-a9de-ab8e852d9828" SourceId="1" SourceUrl="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd1" />
+    <MetadataFile FileName="DatabaseMaintenance.wsdl" MetadataType="Wsdl" ID="1df1cfff-284d-4528-8e43-3339f9313f02" SourceId="1" SourceUrl="http://localhost/metadata/DatabaseMaintenance" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

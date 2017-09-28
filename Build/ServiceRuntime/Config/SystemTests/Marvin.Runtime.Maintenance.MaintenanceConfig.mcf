@@ -1,0 +1,76 @@
+{
+  "ConfigInitialized": false,
+  "PluginsDirectory": ".\\Core\\MaintenancePlugins",
+  "Plugins": [
+    {
+      "$type": "Marvin.Runtime.Maintenance.Plugins.WebServer.WebServerConfig, Marvin.Runtime.Maintenance",
+      "ProvidedEndpoint": {
+        "Endpoint": "MaintenanceWeb",
+        "BindingType": "WebHttp",
+        "RequiresAuthentification": false,
+        "MetadataEnabled": true,
+        "HelpEnabled": false
+      },
+      "IsActive": true
+    },
+    {
+      "$type": "Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.ModuleMaintenanceConfig, Marvin.Runtime.Maintenance",
+      "ProvidedEndpoint": {
+        "Endpoint": "ModuleMaintenance",
+        "BindingType": "BasicHttp",
+        "RequiresAuthentification": false,
+        "MetadataEnabled": true,
+        "HelpEnabled": false
+      },
+      "IsActive": true
+    },
+    {
+      "$type": "Marvin.Runtime.Maintenance.Plugins.LogMaintenance.LoggingMaintenanceConfig, Marvin.Runtime.Maintenance",
+      "AppenderTimeOut": 30000,
+      "ProvidedEndpoint": {
+        "Endpoint": "LogMaintenance",
+        "BindingType": "BasicHttp",
+        "RequiresAuthentification": false,
+        "MetadataEnabled": true,
+        "HelpEnabled": false
+      },
+      "IsActive": true
+    },
+    {
+      "$type": "Marvin.Runtime.Maintenance.Plugins.DataStore.DataStoreMaintenanceConfig, Marvin.Runtime.Maintenance",
+      "DataStoreRoot": ".\\Backups\\",
+      "ProvidedEndpoint": {
+        "Endpoint": "MaintenanceFileSystem",
+        "BindingType": "BasicHttp",
+        "RequiresAuthentification": false,
+        "MetadataEnabled": true,
+        "HelpEnabled": false
+      },
+      "IsActive": true
+    },
+    {
+      "$type": "Marvin.Runtime.Maintenance.Plugins.CommonMaintenance.CommonMaintenanceConfig, Marvin.Runtime.Maintenance",
+      "ProvidedEndpoint": {
+        "Endpoint": "CommonMaintenance",
+        "BindingType": "BasicHttp",
+        "RequiresAuthentification": false,
+        "MetadataEnabled": true,
+        "HelpEnabled": false
+      },
+      "IsActive": true
+    },
+    {
+      "$type": "Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.DatabaseMaintenanceConfig, Marvin.Runtime.Maintenance",
+      "SetupDataDir": ".\\Backups\\",
+      "ProvidedEndpoint": {
+        "Endpoint": "DatabaseMaintenance",
+        "BindingType": "BasicHttp",
+        "RequiresAuthentification": false,
+        "MetadataEnabled": true,
+        "HelpEnabled": false
+      },
+      "IsActive": true
+    }
+  ],
+  "ConfigState": "Generated"
+}

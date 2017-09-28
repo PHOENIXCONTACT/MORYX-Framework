@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Marvin.TestTools.Test.Model.Store" Alias="Self" Provider="Devart.Data.PostgreSql" ProviderManifestToken="PostgreSQL" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:devart="http://devart.com/schemas/edml/StorageSchemaExtensions/1.0" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="EntitiesStoreContainer">
+    <EntitySet Name="HugePocos" EntityType="Marvin.TestTools.Test.Model.Store.HugePoco" store:Type="Tables" Table="HugePoco" />
+    <EntitySet Name="RecursiveReferences" EntityType="Marvin.TestTools.Test.Model.Store.RecursiveReference" store:Type="Tables" Table="RecursiveReference" />
+    <EntitySet Name="TopParents" EntityType="Marvin.TestTools.Test.Model.Store.TopParent" store:Type="Tables" Table="TopParent" />
+    <EntitySet Name="JsonTesters" EntityType="Marvin.TestTools.Test.Model.Store.JsonTester" store:Type="Tables" Table="JsonTester" />
+    <EntitySet Name="ReferenceBases" EntityType="Marvin.TestTools.Test.Model.Store.ReferenceBase" store:Type="Tables" Table="ReferenceBase" />
+    <EntitySet Name="BaseClasses" EntityType="Marvin.TestTools.Test.Model.Store.BaseClass" store:Type="Tables" Table="BaseClass" />
+    <EntitySet Name="Inheriteds" EntityType="Marvin.TestTools.Test.Model.Store.Inherited" store:Type="Tables" Table="Inherited" />
+    <AssociationSet Name="FK_RecursiveReference_RecursiveReference" Association="Marvin.TestTools.Test.Model.Store.FK_RecursiveReference_RecursiveReference">
+      <End Role="RecursiveReference" EntitySet="RecursiveReferences" />
+      <End Role="RecursiveReference1" EntitySet="RecursiveReferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RecursiveReference_TopParent" Association="Marvin.TestTools.Test.Model.Store.FK_RecursiveReference_TopParent">
+      <End Role="TopParent" EntitySet="TopParents" />
+      <End Role="RecursiveReference" EntitySet="RecursiveReferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_B_A" Association="Marvin.TestTools.Test.Model.Store.FK_B_A">
+      <End Role="ReferenceBase" EntitySet="ReferenceBases" />
+      <End Role="ReferenceBase1" EntitySet="ReferenceBases" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="HugePoco">
+    <Documentation>
+      <Summary>A huge poco</Summary>
+      <LongDescription>The huge poco contains a lot of pocos for test</LongDescription>
+    </Documentation>
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Float1" Type="double precision" Nullable="false" />
+    <Property Name="Name1" Type="char" MaxLength="31" />
+    <Property Name="Number1" Type="int" Nullable="false" />
+    <Property Name="Float2" Type="double precision" Nullable="false" />
+    <Property Name="Name2" Type="char" MaxLength="31" />
+    <Property Name="Number2" Type="int" Nullable="false" />
+    <Property Name="Float3" Type="double precision" Nullable="false" />
+    <Property Name="Name3" Type="char" MaxLength="31" />
+    <Property Name="Number3" Type="int" Nullable="false" />
+    <Property Name="Float4" Type="double precision" Nullable="false" />
+    <Property Name="Name4" Type="char" MaxLength="31" />
+    <Property Name="Number4" Type="int" Nullable="false" />
+    <Property Name="Float5" Type="double precision" Nullable="false" />
+    <Property Name="Name5" Type="char" MaxLength="31" />
+    <Property Name="Number5" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RecursiveReference">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Count" Type="int" Nullable="false" />
+    <Property Name="RecursiveReferenceId" Type="bigint" Nullable="false" />
+    <Property Name="TopParentId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TopParent">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+    <Property Name="Number" Type="int" Nullable="false" />
+    <Property Name="NewColumn" Type="int" />
+    <Property Name="SuperNewColumn" Type="double precision" />
+  </EntityType>
+  <EntityType Name="JsonTester">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+    <Property Name="JsonData" Type="varchar" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ReferenceBase">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ReferenceId" Type="bigint" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Number" Type="int" />
+    <Property Name="Name" Type="varchar" />
+  </EntityType>
+  <EntityType Name="BaseClass">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+  </EntityType>
+  <EntityType Name="Inherited">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Deleted" Type="timestamp" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_RecursiveReference_RecursiveReference">
+    <End Role="RecursiveReference" Type="Marvin.TestTools.Test.Model.Store.RecursiveReference" Multiplicity="1" />
+    <End Role="RecursiveReference1" Type="Marvin.TestTools.Test.Model.Store.RecursiveReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RecursiveReference">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RecursiveReference1">
+        <PropertyRef Name="RecursiveReferenceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RecursiveReference_TopParent">
+    <End Role="TopParent" Type="Marvin.TestTools.Test.Model.Store.TopParent" Multiplicity="1" />
+    <End Role="RecursiveReference" Type="Marvin.TestTools.Test.Model.Store.RecursiveReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TopParent">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RecursiveReference">
+        <PropertyRef Name="TopParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_B_A">
+    <End Role="ReferenceBase" Type="Marvin.TestTools.Test.Model.Store.ReferenceBase" Multiplicity="0..1" />
+    <End Role="ReferenceBase1" Type="Marvin.TestTools.Test.Model.Store.ReferenceBase" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ReferenceBase">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ReferenceBase1">
+        <PropertyRef Name="ReferenceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
