@@ -1,0 +1,2 @@
+INCLUDE:+[Marvin.PlatformTools]*
+EXCLUDE:-[Marvin]* -[*]*.DummyLog -[*Test*]* -[*]*Exception -[*]*Attribute

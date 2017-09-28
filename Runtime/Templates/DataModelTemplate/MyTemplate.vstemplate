@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>MaRVIN DataModel</Name>
+    <Description>&lt;Template to create a new Marvin DataModel&gt;</Description>
+    <Icon>DataModelTemplate.ico</Icon>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <SortOrder>1000</SortOrder>
+    <TemplateID>638ecf20-dcf7-4022-942a-0240cce5aafa</TemplateID>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Marvin.Bundle.Model</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$safeprojectname$.csproj" File="Marvin.Templates.Model.csproj" ReplaceParameters="true">
+      <Folder Name="API" TargetFolderName="API" />
+      <Folder Name="DbContext" TargetFolderName="DbContext" />
+      <Folder Name="Entities" TargetFolderName="Entities" />
+      <Folder Name="Updates" TargetFolderName="Updates">
+        <ProjectItem ReplaceParameters="true" TargetFileName="FirstUpdate.sql">FirstUpdate.sql</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="FirstUpdate.cs">FirstUpdate.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Model" TargetFolderName="Model">
+        <ProjectItem ReplaceParameters="true" TargetFileName="$modelname$.ssdl">RenameMe.ssdl</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$modelname$.csdl">RenameMe.csdl</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$modelname$.msl">RenameMe.msl</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$modelname$.edml">RenameMe.edml</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$modelname$.edps">RenameMe.edps</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="$modelname$.Diagram1.view">RenameMe.Diagram1.view</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="README.txt">README.txt</ProjectItem>
+      </Folder>
+      <Folder Name="Inheritance" TargetFolderName="Inheritance"/>
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Repos" TargetFolderName="Repos" />
+      <Folder Name="Scripts" TargetFolderName="Scripts" />
+    </Project>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>Marvin.Templates.ModelWizard, Version=1.0.0.0, Culture=Neutral, PublicKeyToken=42ea694522ae1cd8</Assembly>
+    <FullClassName>Marvin.Templates.ModelWizard.DataModelWizard</FullClassName>
+  </WizardExtension>
+</VSTemplate>

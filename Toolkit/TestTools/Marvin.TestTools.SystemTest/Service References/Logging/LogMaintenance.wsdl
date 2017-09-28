@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="LogMaintenance" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" />
+      <xsd:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Logging" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ILogMaintenance_GetAllPluginLogger_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllPluginLogger" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_GetAllPluginLogger_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllPluginLoggerResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_AddRemoteAppender_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddRemoteAppender" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_AddRemoteAppender_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddRemoteAppenderResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_GetMessages_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMessages" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_GetMessages_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMessagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_RemoveRemoteAppender_InputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveRemoteAppender" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_RemoveRemoteAppender_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveRemoteAppenderResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_SetLogLevel_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetLogLevel" />
+  </wsdl:message>
+  <wsdl:message name="ILogMaintenance_SetLogLevel_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetLogLevelResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ILogMaintenance">
+    <wsdl:operation name="GetAllPluginLogger">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILogMaintenance/GetAllPluginLogger" message="tns:ILogMaintenance_GetAllPluginLogger_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILogMaintenance/GetAllPluginLoggerResponse" message="tns:ILogMaintenance_GetAllPluginLogger_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddRemoteAppender">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILogMaintenance/AddRemoteAppender" message="tns:ILogMaintenance_AddRemoteAppender_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILogMaintenance/AddRemoteAppenderResponse" message="tns:ILogMaintenance_AddRemoteAppender_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMessages">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILogMaintenance/GetMessages" message="tns:ILogMaintenance_GetMessages_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILogMaintenance/GetMessagesResponse" message="tns:ILogMaintenance_GetMessages_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveRemoteAppender">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILogMaintenance/RemoveRemoteAppender" message="tns:ILogMaintenance_RemoveRemoteAppender_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILogMaintenance/RemoveRemoteAppenderResponse" message="tns:ILogMaintenance_RemoveRemoteAppender_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetLogLevel">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILogMaintenance/SetLogLevel" message="tns:ILogMaintenance_SetLogLevel_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILogMaintenance/SetLogLevelResponse" message="tns:ILogMaintenance_SetLogLevel_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ILogMaintenance" type="tns:ILogMaintenance">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetAllPluginLogger">
+      <soap:operation soapAction="http://tempuri.org/ILogMaintenance/GetAllPluginLogger" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddRemoteAppender">
+      <soap:operation soapAction="http://tempuri.org/ILogMaintenance/AddRemoteAppender" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMessages">
+      <soap:operation soapAction="http://tempuri.org/ILogMaintenance/GetMessages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveRemoteAppender">
+      <soap:operation soapAction="http://tempuri.org/ILogMaintenance/RemoveRemoteAppender" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetLogLevel">
+      <soap:operation soapAction="http://tempuri.org/ILogMaintenance/SetLogLevel" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LogMaintenance">
+    <wsdl:port name="BasicHttpBinding_ILogMaintenance" binding="tns:BasicHttpBinding_ILogMaintenance">
+      <soap:address location="http://localhost/LogMaintenance" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

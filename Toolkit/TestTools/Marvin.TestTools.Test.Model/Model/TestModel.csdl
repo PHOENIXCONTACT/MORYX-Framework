@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Marvin.TestTools.Test.Model" Alias="Self" d1p1:ViewGeneration="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:devart="http://devart.com/schemas/edml/ConceptualSchemaExtensions/1.0" xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" annotation:UseStrongSpatialTypes="false" xmlns:d1p1="http://devart.com/schemas/edml/ConceptualSchemaExtensions/1.0" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true" ed:Guid="f9480777-52b0-4431-bcb7-e1f0b9f0e7e1">
+    <EntitySet Name="HugePocos" EntityType="Marvin.TestTools.Test.Model.HugePoco" />
+    <EntitySet Name="RecursiveReferences" EntityType="Marvin.TestTools.Test.Model.RecursiveReference" />
+    <EntitySet Name="TopParents" EntityType="Marvin.TestTools.Test.Model.TopParent" />
+    <EntitySet Name="JsonTesters" EntityType="Marvin.TestTools.Test.Model.JsonTester" />
+    <EntitySet Name="BaseClasses" EntityType="Marvin.TestTools.Test.Model.BaseClass" />
+    <EntitySet Name="ReferenceBases" EntityType="Marvin.TestTools.Test.Model.ReferenceBase" />
+    <AssociationSet Name="RecursiveReference_RecursiveReferenceSet" Association="Marvin.TestTools.Test.Model.RecursiveReference_RecursiveReference">
+      <End Role="Parent" EntitySet="RecursiveReferences" />
+      <End Role="Children" EntitySet="RecursiveReferences" />
+    </AssociationSet>
+    <AssociationSet Name="TopParent_RecursiveReferenceSet" Association="Marvin.TestTools.Test.Model.TopParent_RecursiveReference">
+      <End Role="TopParent" EntitySet="TopParents" />
+      <End Role="RecursiveReferences" EntitySet="RecursiveReferences" />
+    </AssociationSet>
+    <AssociationSet Name="A_BSet" Association="Marvin.TestTools.Test.Model.A_B">
+      <End Role="A" EntitySet="ReferenceBases" />
+      <End Role="Bs" EntitySet="ReferenceBases" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="HugePoco" ed:Guid="dbedce2f-d31e-4654-b577-b634d2232f81">
+    <Documentation>
+      <Summary>A huge poco</Summary>
+      <LongDescription>The huge poco contains a lot of pocos for test</LongDescription>
+    </Documentation>
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="426b94b0-9051-47a1-bd8c-78d01eb5b54f" />
+    <Property Name="Float1" Type="Double" Nullable="false" ed:ValidateRequired="true" ed:Guid="67b141e0-3527-4fa5-9878-b74deeefe351" ed:ConditionalGet="True" />
+    <Property Name="Name1" Type="String" MaxLength="31" FixedLength="true" ed:ValidateMaxLength="31" ed:ValidateRequired="false" ed:Guid="574ae381-4181-45d8-8019-b0c529ed7729" />
+    <Property Name="Number1" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="21de443b-3983-4259-b758-db38c05a0d61" />
+    <Property Name="Float2" Type="Double" Nullable="false" ed:ValidateRequired="true" ed:Guid="2150f163-1826-4696-9e3b-b905448cd35d" ed:CombinedGetGroups="Group2" />
+    <Property Name="Name2" Type="String" MaxLength="31" FixedLength="true" ed:ValidateMaxLength="31" ed:ValidateRequired="false" ed:Guid="327e9beb-39e2-4b43-bff4-08aa8dbeb1ab" ed:CombinedGetGroups="Group2" />
+    <Property Name="Number2" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="460200bb-d5c2-4e3f-a540-860c2a91e519" ed:CombinedGetGroups="Group2" />
+    <Property Name="Float3" Type="Double" Nullable="false" ed:ValidateRequired="true" ed:Guid="bc155aaa-b931-4ca6-a27e-00f759bae9f6" ed:CombinedGetAllGroups="AllGroup3" />
+    <Property Name="Name3" Type="String" MaxLength="31" FixedLength="true" ed:ValidateMaxLength="31" ed:ValidateRequired="false" ed:Guid="ecb5d204-7e3c-4fc0-b5ec-cb2891aca10b" ed:CombinedGetAllGroups="AllGroup3" />
+    <Property Name="Number3" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="ef6492b3-03da-451f-b79b-b1e08b745abd" ed:CombinedGetAllGroups="AllGroup3" />
+    <Property Name="Float4" Type="Double" Nullable="false" ed:ValidateRequired="true" ed:Guid="70184c1d-ae97-4edc-a7e3-38947ccc740c" />
+    <Property Name="Name4" Type="String" MaxLength="31" FixedLength="true" ed:ValidateMaxLength="31" ed:ValidateRequired="false" ed:Guid="379a21b2-bad9-471c-8da4-8dd492c3fb78" />
+    <Property Name="Number4" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="574bd6be-2bf1-4012-a6c5-1e1c16a8f4eb" />
+    <Property Name="Float5" Type="Double" Nullable="false" ed:ValidateRequired="true" ed:Guid="49998f1b-685a-4082-9972-598c46815be1" />
+    <Property Name="Name5" Type="String" MaxLength="31" FixedLength="true" ed:ValidateMaxLength="31" ed:ValidateRequired="false" ed:Guid="ba222f41-7cad-447f-b13a-38c313a63d26" />
+    <Property Name="Number5" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="db8da4e3-361b-475b-9774-2c9d10eb43c3" />
+  </EntityType>
+  <EntityType Name="RecursiveReference" ed:Guid="bdbfa8f3-eb68-4f50-98da-6e7c6c64229e">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="c7dad788-a2b6-4f9c-837e-f9fb010f36ab" />
+    <Property Name="Count" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="1d0c8591-68b7-4340-86d9-342a989f095c" ed:ConditionalGetAll="True" />
+    <Property Name="RecursiveReferenceId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="788d0ef9-77fe-4ad7-bc5b-3b25569b6467" />
+    <Property Name="TopParentId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="acb5d380-8ebd-44fe-8a6b-29c56a68d665" />
+    <NavigationProperty Name="Children" Relationship="Marvin.TestTools.Test.Model.RecursiveReference_RecursiveReference" FromRole="Parent" ToRole="Children" ed:Guid="d1f62f03-9d01-4d33-b477-d04584276db9" />
+    <NavigationProperty Name="Parent" Relationship="Marvin.TestTools.Test.Model.RecursiveReference_RecursiveReference" FromRole="Children" ToRole="Parent" ed:Guid="d7f7ab84-07a3-4d21-82ce-4d077761995b" />
+    <NavigationProperty Name="TopParent" Relationship="Marvin.TestTools.Test.Model.TopParent_RecursiveReference" FromRole="RecursiveReferences" ToRole="TopParent" ed:Guid="6cfcb810-98a5-49ae-bfb8-0ff18c2e0358" />
+  </EntityType>
+  <EntityType Name="TopParent" ed:Guid="2fd53a07-b459-4498-8911-040f2d966dd0">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="a4fe3d5f-df07-4c4f-8715-0168c2edc4d4" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="8276dc25-244d-4efd-9718-788a4e2e6352" ed:CombinedGetGroups="CreatedAndUpdated" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="8cb96589-5f63-40b5-900a-b8f67f5718fd" ed:ConditionalGetAll="True" ed:CombinedGetGroups="CreatedAndUpdated" ed:CombinedGetAllGroups="UpdatedAndNumber" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="b36aadd4-d4f7-4cf8-9c74-b8a2175a2590" />
+    <Property Name="Number" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="a6ea0a8e-576c-4588-8ec4-84f1c363039d" ed:ConditionalGet="True" ed:CombinedGetAllGroups="UpdatedAndNumber" ed:IsUnique="True" />
+    <Property Name="NewColumn" Type="Int32" ed:ValidateRequired="false" ed:Guid="5044f469-61c9-4a55-8d51-8aed15ee38ec" />
+    <Property Name="SuperNewColumn" Type="Double" ed:ValidateRequired="false" ed:Guid="e8de73d5-41b8-4a22-8dd1-69f11afc4ce0" />
+    <NavigationProperty Name="RecursiveReferences" Relationship="Marvin.TestTools.Test.Model.TopParent_RecursiveReference" FromRole="TopParent" ToRole="RecursiveReferences" ed:Guid="ce0baf37-c861-46b8-87b7-691d224b9748" />
+  </EntityType>
+  <EntityType Name="JsonTester" ed:Guid="35978c27-5342-4aee-9628-b1a4c3dbc518">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="a19389cc-d50b-4401-83bf-0170e163ceb5" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="0c0986cd-e2b2-4394-bed0-5b66b4854355" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="0885b40c-1a82-4e09-b4be-d86e510716f4" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="cc027bfa-fc36-42d8-b9a2-6b423b0762a9" />
+    <Property Name="JsonData" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="caf57f75-a04d-4a61-bd86-1d371e752fbb" />
+  </EntityType>
+  <EntityType Name="BaseClass" devart:InheritanceModifier="Abstract" Abstract="true" ed:Guid="71abd80f-41c9-42ef-9bc3-bcd85ae45d3e">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="f4035f6a-865c-40cc-a0fb-20507c0972ec" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="2de43e91-6497-4863-a71f-b406ba5f97d1" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="cbe8c3e8-6b3c-4a25-ae22-bfce6a51c641" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="27c1d4d7-af58-4a50-88bd-cee220dd1de8" />
+  </EntityType>
+  <EntityType Name="Inherited" BaseType="Marvin.TestTools.Test.Model.BaseClass" devart:InheritanceType="TablePerConcreteType" ed:InheritanceGuid="483d9376-d9c9-40ef-b753-9ec04bbdb3d0" ed:Guid="0e1dcb5d-43a2-4549-a08f-2f2798dc7c5c">
+    <Property Name="Number" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="5c9bd224-7452-4369-828d-06f995770ea4" ed:IsUnique="True" />
+  </EntityType>
+  <EntityType Name="ReferenceBase" devart:InheritanceModifier="Abstract" Abstract="true" ed:Guid="0cc1a774-9c0d-4788-9320-c48b1411c5b7">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="571b958d-c5ce-41d4-a7fd-c4f9e86e1fb6" />
+    <Property Name="ReferenceId" Type="Int64" ed:ValidateRequired="false" ed:Guid="510a0837-19a8-4e8b-9deb-d0ebb24c4be3" />
+  </EntityType>
+  <EntityType Name="A" BaseType="Marvin.TestTools.Test.Model.ReferenceBase" devart:InheritanceType="TablePerHierarchy" ed:InheritanceGuid="00c419fc-b90f-4d08-ad4b-2aeb71718ac0" ed:Guid="8bb2b679-19f2-465f-8ead-049b94375297">
+    <Property Name="Number" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="da3594dc-b820-410d-9966-2eb46333978d" />
+    <NavigationProperty Name="Bs" Relationship="Marvin.TestTools.Test.Model.A_B" FromRole="A" ToRole="Bs" ed:Guid="252cb4a4-b825-45eb-a0ef-c5f1098d2630" />
+  </EntityType>
+  <EntityType Name="B" BaseType="Marvin.TestTools.Test.Model.ReferenceBase" devart:InheritanceType="TablePerHierarchy" ed:InheritanceGuid="55815a2c-dfe6-4a0a-8134-b9a8f76ada5f" ed:Guid="48081b79-5def-407f-8755-baf6f81c8c8d">
+    <Property Name="Name" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="132baed9-7fe6-49b7-8096-1f8806d0ecdb" />
+    <NavigationProperty Name="A" Relationship="Marvin.TestTools.Test.Model.A_B" FromRole="Bs" ToRole="A" ed:Guid="f8e50700-afde-47d0-8839-131862459477" />
+  </EntityType>
+  <Association Name="RecursiveReference_RecursiveReference" ed:Guid="7b01890a-a5d3-4128-8ab7-db710a433703">
+    <End Role="Parent" Type="Marvin.TestTools.Test.Model.RecursiveReference" Multiplicity="1" />
+    <End Role="Children" Type="Marvin.TestTools.Test.Model.RecursiveReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Parent">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Children">
+        <PropertyRef Name="RecursiveReferenceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="TopParent_RecursiveReference" ed:Guid="8f9c6a0a-a11d-44a2-9615-50816ef0b2c9">
+    <End Role="TopParent" Type="Marvin.TestTools.Test.Model.TopParent" Multiplicity="1" />
+    <End Role="RecursiveReferences" Type="Marvin.TestTools.Test.Model.RecursiveReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TopParent">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RecursiveReferences">
+        <PropertyRef Name="TopParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="A_B" ed:Guid="3bd8da8d-028c-4eb5-ac11-f233fa6b045b">
+    <End Role="A" Type="Marvin.TestTools.Test.Model.A" Multiplicity="0..1" />
+    <End Role="Bs" Type="Marvin.TestTools.Test.Model.B" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="A">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Bs">
+        <PropertyRef Name="ReferenceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

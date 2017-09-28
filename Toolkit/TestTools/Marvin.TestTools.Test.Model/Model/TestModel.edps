@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityDeveloper Version="6.0.20.0">
+  <ModelSettings xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" ConnectionStringInAppConfig="False" TargetFramework="Net45" DetectTPTInheritance="False" EntityFrameworkVersion="Version6" IncludeForeignKeysInModel="true" DetectFunctionBasedColumnDefault="false">
+    <Connection ConnectionString="" Provider="Devart.Data.PostgreSql" />
+    <Generation>
+      <GeneratedFiles>
+        <File Name="..\Scripts\CreateIndexes.cs" />
+        <File Name="IHugePocoRepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="IHugePocoRepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="IRecursiveReferenceRepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="IRecursiveReferenceRepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="ITopParentRepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="ITopParentRepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="IJsonTesterRepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="IJsonTesterRepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="IBaseClassRepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="IBaseClassRepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="IInheritedRepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="IInheritedRepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="IReferenceBaseRepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="IReferenceBaseRepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="IARepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="IARepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="IBRepository.cs" DestinationFolder="..\API" OverwriteMode="None" />
+        <File Name="IBRepository.Generated.cs" DestinationFolder="..\API" />
+        <File Name="..\Repos\EntityFrameworkRepository.cs" />
+        <File Name="..\Repos\ModelConstants.cs" />
+        <File Name="..\Repos\DbConfig.cs" />
+        <File Name="..\Repos\ModelConfigurator.cs" />
+        <File Name="..\Repos\EntityFrameworkUnitOfWork.cs" />
+        <File Name="..\Repos\EntityFrameworkMergedUnitOfWork.cs" />
+        <File Name="..\Repos\EntityFrameworkUnitOfWorkFactory.cs" />
+        <File Name="..\Repos\InMemoryUnitOfWorkFactory.cs" />
+        <File Name="HugePocoRepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="HugePocoRepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="RecursiveReferenceRepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="RecursiveReferenceRepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="TopParentRepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="TopParentRepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="JsonTesterRepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="JsonTesterRepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="BaseClassRepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="BaseClassRepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="InheritedRepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="InheritedRepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="ReferenceBaseRepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="ReferenceBaseRepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="ARepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="ARepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="BRepository.cs" DestinationFolder="..\Repos" OverwriteMode="None" />
+        <File Name="BRepository.Generated.cs" DestinationFolder="..\Repos" />
+        <File Name="..\Scripts\CreateTriggers.cs" />
+        <File Name="..\Scripts\UniqueConstraints.cs" />
+        <File Name="TestModel.Entities.cs" />
+        <File Name="TestModel.HugePoco.cs" />
+        <File Name="TestModel.RecursiveReference.cs" />
+        <File Name="TestModel.TopParent.cs" />
+        <File Name="TestModel.JsonTester.cs" />
+        <File Name="TestModel.BaseClass.cs" />
+        <File Name="TestModel.Inherited.cs" />
+        <File Name="TestModel.ReferenceBase.cs" />
+        <File Name="TestModel.A.cs" />
+        <File Name="TestModel.B.cs" />
+      </GeneratedFiles>
+    </Generation>
+    <DatabaseFirstNamingRules>
+      <EntitySet PluralizationName="Pluralize" />
+      <Class UseSchemaAsPrefix="False" PluralizeCollectionNavigationPropertyName="True" RemoveUnderscores="True" RemoveInvalidCharacters="True" CodeCase="FirstLetterUppercase" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Singularize" />
+      <Property RemoveUnderscores="True" RemoveInvalidCharacters="True" CodeCase="FirstLetterUppercase" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Unchanged" />
+    </DatabaseFirstNamingRules>
+    <ModelFirst StorageSynchronizationEnabled="True" TargetProviderName="Devart.Data.PostgreSql">
+      <TargetServer Server="PostgreSQL" ServerVersion="9.2" />
+      <ModelFirstNamingRules>
+        <Table RemoveUnderscores="False" RemoveInvalidCharacters="True" CodeCase="Unchanged" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Unchanged" />
+        <Column RemoveUnderscores="False" RemoveInvalidCharacters="True" CodeCase="Unchanged" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Unchanged" />
+      </ModelFirstNamingRules>
+    </ModelFirst>
+    <Diagrams>
+      <Diagram Name="Mixed" DefaultDiagram="True" />
+      <Diagram Name="InheritanceAndReferences" />
+    </Diagrams>
+    <Templates>
+      <Template Name="CreateIndexGenerator" Enabled="True" File="..\..\..\Build\Templates\Model\CreateIndexGenerator.tmpl">
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+      </Template>
+      <Template Name="Marvin.Repo" Enabled="True" File="..\..\..\Build\Templates\Model\Marvin.Repo.tmpl">
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+        <ed:Property Name="GeneratePartial" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="ModelNameAsFilesPrefix" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="BundleRestrictedAccess" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="Inherited" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="InheritedModel" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Base</string>
+        </ed:Property>
+        <ed:Property Name="InheritedNamespace" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Marvin.Base.Model</string>
+        </ed:Property>
+        <ed:Property Name="Version" Type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <int>3</int>
+        </ed:Property>
+      </Template>
+      <Template Name="MarvinDbContext" Enabled="True" File="..\..\..\Build\Templates\Model\MarvinDbContext.tmpl">
+        <ed:Property Name="ValidationFramework" Type="EntityDeveloper.TemplateEngine.ValidationFramework, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <ValidationFramework>None</ValidationFramework>
+        </ed:Property>
+        <ed:Property Name="ValidationErrorMessages" Type="EntityDeveloper.TemplateEngine.ValidationErrorMessages, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <ValidationErrorMessages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </ed:Property>
+        <ed:Property Name="FilePerClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="ModelNameAsFilesPrefix" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="HeaderTimestampVersionControlTag" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string d6p1:nil="true" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance" />
+        </ed:Property>
+        <ed:Property Name="EntitiesOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder />
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="ContextOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder />
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="GeneratePartialClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="LocalizableDescription" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementCloneable" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementINotifyPropertyChanging" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementINotifyPropertyChanged" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="WcfDataContractAttributes" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="WcfDataMemberOnNavigationProperties" Type="EntityDeveloper.WcfDataMemberGenerationBehavior, EntityDeveloper.Orm.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <WcfDataMemberGenerationBehavior>All</WcfDataMemberGenerationBehavior>
+        </ed:Property>
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+        <ed:Property Name="FluentMapping" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="MappingGenerationStrategy" Type="EntityDeveloper.EntityFramework.CodeFirstMappingGenerationStrategy, EntityDeveloper.Orm.EntityFramework, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <CodeFirstMappingGenerationStrategy>UseOnModelCreatingMethod</CodeFirstMappingGenerationStrategy>
+        </ed:Property>
+        <ed:Property Name="DatabaseIndependent" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="DisabledConventions" Type="EntityDeveloper.EntityFramework.CodeFirstConfigurationConvention, EntityDeveloper.Orm.EntityFramework, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <CodeFirstConfigurationConvention />
+        </ed:Property>
+        <ed:Property Name="ConfigurationsOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder />
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="AutoDetectChangesEnabled" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="ProxyCreationEnabled" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="ValidateOnSaveEnabled" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+      </Template>
+      <Template Name="MarvinInheritance" Enabled="False" File="..\..\..\Build\Templates\Model\MarvinInheritance.tmpl">
+        <ed:Property Name="InheritedNamespace" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string d6p1:nil="true" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance" />
+        </ed:Property>
+        <ed:Property Name="ServiceRuntimePath" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>..\\..\\..\\Build\\ServiceRuntime</string>
+        </ed:Property>
+      </Template>
+      <Template Name="DateTriggers" Enabled="True" File="..\..\..\Build\Templates\Model\DateTriggers.tmpl">
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+      </Template>
+      <Template Name="UniqueConstraint" Enabled="True" File="..\..\..\Templates\ModelTemplates\Templates\UniqueConstraint.tmpl">
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+      </Template>
+    </Templates>
+    <AttributeAssemblies />
+    <UpdateToDatabaseExcludes>
+      <Exclude Name="Id" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Float1" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Name1" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Number1" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Float2" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Name2" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Number2" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Float3" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Name3" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Number3" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Float4" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Name4" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Number4" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Float5" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Name5" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="Number5" Table="public.HugePoco" Type="Column" />
+      <Exclude Name="" Table="public.HugePoco" Type="Constraint" />
+      <Exclude Name="Id" Table="public.JsonTester" Type="Column" />
+      <Exclude Name="Created" Table="public.JsonTester" Type="Column" />
+      <Exclude Name="Updated" Table="public.JsonTester" Type="Column" />
+      <Exclude Name="Deleted" Table="public.JsonTester" Type="Column" />
+      <Exclude Name="JsonData" Table="public.JsonTester" Type="Column" />
+      <Exclude Name="" Table="public.JsonTester" Type="Constraint" />
+      <Exclude Name="Id" Table="public.ReferenceBase" Type="Column" />
+      <Exclude Name="ReferenceId" Table="public.ReferenceBase" Type="Column" />
+      <Exclude Name="Type" Table="public.ReferenceBase" Type="Column" />
+      <Exclude Name="Number" Table="public.ReferenceBase" Type="Column" />
+      <Exclude Name="Name" Table="public.ReferenceBase" Type="Column" />
+      <Exclude Name="" Table="public.ReferenceBase" Type="Constraint" />
+      <Exclude Name="FK_B_A" Table="public.ReferenceBase" Type="Constraint" />
+      <Exclude Name="JsonData" Table="public.JsonTester" Type="Column" />
+      <Exclude Name="Name" Table="public.ReferenceBase" Type="Column" />
+    </UpdateToDatabaseExcludes>
+    <NewClassProperties>﻿&lt;ArrayOfCopiedObjectInfo xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/EntityDeveloper"&gt;&lt;CopiedObjectInfo&gt;&lt;DependencyObjects xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" /&gt;&lt;ModelObject z:Id="i1" xmlns:d3p1="http://schemas.datacontract.org/2004/07/EntityDeveloper.EntityFramework" i:type="d3p1:EntityProperty" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/"&gt;&lt;b&gt;Id&lt;/b&gt;&lt;c /&gt;&lt;d&gt;true&lt;/d&gt;&lt;attributes xmlns:d4p1="http://schemas.datacontract.org/2004/07/Devart.ObjectModel" i:type="d4p1:ObservableCollectionOfAttributeValue7R2LQkUY" /&gt;&lt;a /&gt;&lt;b /&gt;&lt;c i:nil="true" /&gt;&lt;d i:nil="true" /&gt;&lt;documentation z:Id="i2"&gt;&lt;a /&gt;&lt;b /&gt;&lt;/documentation&gt;&lt;e /&gt;&lt;f&gt;None&lt;/f&gt;&lt;g&gt;-1&lt;/g&gt;&lt;h&gt;false&lt;/h&gt;&lt;i&gt;false&lt;/i&gt;&lt;inheritanceModifier&gt;None&lt;/inheritanceModifier&gt;&lt;j&gt;-1&lt;/j&gt;&lt;k&gt;-1&lt;/k&gt;&lt;l i:nil="true" /&gt;&lt;m i:nil="true" /&gt;&lt;n i:nil="true" /&gt;&lt;nullable&gt;false&lt;/nullable&gt;&lt;primaryKey&gt;true&lt;/primaryKey&gt;&lt;type i:type="d3p1:EntityDataType"&gt;Int64&lt;/type&gt;&lt;validateRequired&gt;true&lt;/validateRequired&gt;&lt;d3p1:a&gt;Public&lt;/d3p1:a&gt;&lt;d3p1:b&gt;Public&lt;/d3p1:b&gt;&lt;d3p1:c&gt;None&lt;/d3p1:c&gt;&lt;d3p1:d&gt;false&lt;/d3p1:d&gt;&lt;d3p1:e&gt;Identity&lt;/d3p1:e&gt;&lt;/ModelObject&gt;&lt;ShapeViewInfo i:nil="true" /&gt;&lt;/CopiedObjectInfo&gt;&lt;CopiedObjectInfo&gt;&lt;DependencyObjects xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" /&gt;&lt;ModelObject z:Id="i3" xmlns:d3p1="http://schemas.datacontract.org/2004/07/EntityDeveloper.EntityFramework" i:type="d3p1:EntityProperty" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/"&gt;&lt;b&gt;Created&lt;/b&gt;&lt;c /&gt;&lt;d&gt;true&lt;/d&gt;&lt;attributes xmlns:d4p1="http://schemas.datacontract.org/2004/07/Devart.ObjectModel" i:type="d4p1:ObservableCollectionOfAttributeValue7R2LQkUY" /&gt;&lt;a /&gt;&lt;b /&gt;&lt;c i:nil="true" /&gt;&lt;d i:nil="true" /&gt;&lt;documentation z:Id="i4"&gt;&lt;a /&gt;&lt;b /&gt;&lt;/documentation&gt;&lt;e /&gt;&lt;f&gt;None&lt;/f&gt;&lt;g&gt;-1&lt;/g&gt;&lt;h&gt;false&lt;/h&gt;&lt;i&gt;false&lt;/i&gt;&lt;inheritanceModifier&gt;None&lt;/inheritanceModifier&gt;&lt;j&gt;-1&lt;/j&gt;&lt;k&gt;-1&lt;/k&gt;&lt;l i:nil="true" /&gt;&lt;m i:nil="true" /&gt;&lt;n i:nil="true" /&gt;&lt;nullable&gt;false&lt;/nullable&gt;&lt;primaryKey&gt;false&lt;/primaryKey&gt;&lt;type i:type="d3p1:EntityDataType"&gt;DateTime&lt;/type&gt;&lt;validateRequired&gt;true&lt;/validateRequired&gt;&lt;d3p1:a&gt;Public&lt;/d3p1:a&gt;&lt;d3p1:b&gt;Public&lt;/d3p1:b&gt;&lt;d3p1:c&gt;None&lt;/d3p1:c&gt;&lt;d3p1:d&gt;false&lt;/d3p1:d&gt;&lt;d3p1:e&gt;Computed&lt;/d3p1:e&gt;&lt;/ModelObject&gt;&lt;ShapeViewInfo i:nil="true" /&gt;&lt;/CopiedObjectInfo&gt;&lt;CopiedObjectInfo&gt;&lt;DependencyObjects xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" /&gt;&lt;ModelObject z:Id="i5" xmlns:d3p1="http://schemas.datacontract.org/2004/07/EntityDeveloper.EntityFramework" i:type="d3p1:EntityProperty" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/"&gt;&lt;b&gt;Updated&lt;/b&gt;&lt;c /&gt;&lt;d&gt;true&lt;/d&gt;&lt;attributes xmlns:d4p1="http://schemas.datacontract.org/2004/07/Devart.ObjectModel" i:type="d4p1:ObservableCollectionOfAttributeValue7R2LQkUY" /&gt;&lt;a /&gt;&lt;b /&gt;&lt;c i:nil="true" /&gt;&lt;d i:nil="true" /&gt;&lt;documentation z:Id="i6"&gt;&lt;a /&gt;&lt;b /&gt;&lt;/documentation&gt;&lt;e /&gt;&lt;f&gt;None&lt;/f&gt;&lt;g&gt;-1&lt;/g&gt;&lt;h&gt;false&lt;/h&gt;&lt;i&gt;false&lt;/i&gt;&lt;inheritanceModifier&gt;None&lt;/inheritanceModifier&gt;&lt;j&gt;-1&lt;/j&gt;&lt;k&gt;-1&lt;/k&gt;&lt;l i:nil="true" /&gt;&lt;m i:nil="true" /&gt;&lt;n i:nil="true" /&gt;&lt;nullable&gt;false&lt;/nullable&gt;&lt;primaryKey&gt;false&lt;/primaryKey&gt;&lt;type i:type="d3p1:EntityDataType"&gt;DateTime&lt;/type&gt;&lt;validateRequired&gt;true&lt;/validateRequired&gt;&lt;d3p1:a&gt;Public&lt;/d3p1:a&gt;&lt;d3p1:b&gt;Public&lt;/d3p1:b&gt;&lt;d3p1:c&gt;Fixed&lt;/d3p1:c&gt;&lt;d3p1:d&gt;false&lt;/d3p1:d&gt;&lt;d3p1:e&gt;Computed&lt;/d3p1:e&gt;&lt;/ModelObject&gt;&lt;ShapeViewInfo i:nil="true" /&gt;&lt;/CopiedObjectInfo&gt;&lt;CopiedObjectInfo&gt;&lt;DependencyObjects xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" /&gt;&lt;ModelObject z:Id="i7" xmlns:d3p1="http://schemas.datacontract.org/2004/07/EntityDeveloper.EntityFramework" i:type="d3p1:EntityProperty" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/"&gt;&lt;b&gt;Deleted&lt;/b&gt;&lt;c /&gt;&lt;d&gt;true&lt;/d&gt;&lt;attributes xmlns:d4p1="http://schemas.datacontract.org/2004/07/Devart.ObjectModel" i:type="d4p1:ObservableCollectionOfAttributeValue7R2LQkUY" /&gt;&lt;a /&gt;&lt;b /&gt;&lt;c i:nil="true" /&gt;&lt;d i:nil="true" /&gt;&lt;documentation z:Id="i8"&gt;&lt;a /&gt;&lt;b /&gt;&lt;/documentation&gt;&lt;e /&gt;&lt;f&gt;None&lt;/f&gt;&lt;g&gt;-1&lt;/g&gt;&lt;h&gt;false&lt;/h&gt;&lt;i&gt;false&lt;/i&gt;&lt;inheritanceModifier&gt;None&lt;/inheritanceModifier&gt;&lt;j&gt;-1&lt;/j&gt;&lt;k&gt;-1&lt;/k&gt;&lt;l i:nil="true" /&gt;&lt;m i:nil="true" /&gt;&lt;n i:nil="true" /&gt;&lt;nullable&gt;true&lt;/nullable&gt;&lt;primaryKey&gt;false&lt;/primaryKey&gt;&lt;type i:type="d3p1:EntityDataType"&gt;DateTime&lt;/type&gt;&lt;validateRequired&gt;false&lt;/validateRequired&gt;&lt;d3p1:a&gt;Public&lt;/d3p1:a&gt;&lt;d3p1:b&gt;Public&lt;/d3p1:b&gt;&lt;d3p1:c&gt;None&lt;/d3p1:c&gt;&lt;d3p1:d&gt;false&lt;/d3p1:d&gt;&lt;d3p1:e&gt;None&lt;/d3p1:e&gt;&lt;/ModelObject&gt;&lt;ShapeViewInfo i:nil="true" /&gt;&lt;/CopiedObjectInfo&gt;&lt;/ArrayOfCopiedObjectInfo&gt;</NewClassProperties>
+  </ModelSettings>
+</EntityDeveloper>

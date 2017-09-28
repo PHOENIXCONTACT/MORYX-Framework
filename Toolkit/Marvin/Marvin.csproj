@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{437A03F2-1A35-41E1-A065-00DEBDDA6E79}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin</RootNamespace>
+    <AssemblyName>Marvin</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\Toolkit\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WITH_DEVART</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\Toolkit\Marvin.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Build\Toolkit\</OutputPath>
+    <DefineConstants>TRACE;WITH_DEVART</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\Toolkit\Marvin.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="BaseTypes\MarvinException.cs" />
+    <Compile Include="Collections\IDelayQueue.cs" />
+    <Compile Include="Collections\MergedCollection.cs" />
+    <Compile Include="Collections\WeakCollection.cs" />
+    <Compile Include="Communication\Attributes\PayloadPositionAttribute.cs" />
+    <Compile Include="Communication\Connection\BinaryConnectionConfig.cs" />
+    <Compile Include="Communication\Connection\BinaryConnectionState.cs" />
+    <Compile Include="Communication\Connection\IBinaryConnection.cs" />
+    <Compile Include="Communication\Connection\IBinaryConnectionFactory.cs" />
+    <Compile Include="Communication\Interpreter\DelimitedMessageContext.cs" />
+    <Compile Include="Communication\Interpreter\DelimitedMessageInterpreter.cs" />
+    <Compile Include="Communication\Interpreter\HeaderMessageContext.cs" />
+    <Compile Include="Communication\Interpreter\HeaderMessageInterpreter.cs" />
+    <Compile Include="Communication\Interpreter\ReadContext.cs" />
+    <Compile Include="Communication\Transmission\BinaryMessage.cs" />
+    <Compile Include="Communication\Transmission\IBinaryHeader.cs" />
+    <Compile Include="Communication\Transmission\IBinaryMessageHook.cs" />
+    <Compile Include="Communication\Transmission\IBinaryPayload.cs" />
+    <Compile Include="Communication\Transmission\IBinaryRoot.cs" />
+    <Compile Include="Communication\Transmission\IBinaryTransmission.cs" />
+    <Compile Include="Communication\Transmission\IByteSerializable.cs" />
+    <Compile Include="Communication\Transmission\IByteSerializer.cs" />
+    <Compile Include="Communication\Transmission\IMessageInterpreter.cs" />
+    <Compile Include="Communication\Transmission\IReadContext.cs" />
+    <Compile Include="Communication\Validation\IMessageValidator.cs" />
+    <Compile Include="Configuration\ConfigConstants.cs" />
+    <Compile Include="Configuration\IConfig.cs" />
+    <Compile Include="Configuration\IConfigManager.cs" />
+    <Compile Include="Configuration\IProxyConfig.cs" />
+    <Compile Include="Configuration\IUpdatableConfig.cs" />
+    <Compile Include="Configuration\PasswordAttribute.cs" />
+    <Compile Include="Container\Attributes\ComponentAttribute.cs" />
+    <Compile Include="Container\Attributes\ComponentLoaderIgnoreAttribute.cs" />
+    <Compile Include="Container\Attributes\GlobalComponentAttribute.cs" />
+    <Compile Include="Container\Attributes\KernelComponentAttribute.cs" />
+    <Compile Include="Container\Attributes\PluginAttribute.cs" />
+    <Compile Include="Container\Attributes\PluginFactoryAttribute.cs" />
+    <Compile Include="Container\Attributes\RegistrationAttribute.cs" />
+    <Compile Include="Container\Attributes\FactoryRegistrationAttribute.cs" />
+    <Compile Include="Container\Attributes\NamedAttribute.cs" />
+    <Compile Include="Container\ComponentSelectors\IConfigBasedComponentSelector.cs" />
+    <Compile Include="Container\ComponentSelectors\INameBasedComponentSelector.cs" />
+    <Compile Include="Container\Attributes\DependencyRegistrationAttribute.cs" />
+    <Compile Include="Container\IComponentRegistrator.cs" />
+    <Compile Include="Container\IContainer.cs" />
+    <Compile Include="Container\IContainerInstaller.cs" />
+    <Compile Include="Container\INamedChildContainer.cs" />
+    <Compile Include="Container\UseChildAttribute.cs" />
+    <Compile Include="IQuickCast.cs" />
+    <Compile Include="Logging\IClientLoggerManagement.cs" />
+    <Compile Include="Logging\ILoggerManagement.cs" />
+    <Compile Include="Logging\ILoggingComponent.cs" />
+    <Compile Include="Logging\ILoggingHost.cs" />
+    <Compile Include="Logging\ILogMessage.cs" />
+    <Compile Include="Logging\IModuleLogger.cs" />
+    <Compile Include="Logging\IServerLoggerManagement.cs" />
+    <Compile Include="Model\Attributes\ModelConfiguratorAttribute.cs" />
+    <Compile Include="Model\Attributes\ModelFactoryAttribute.cs" />
+    <Compile Include="Model\Configuration\IDatabaseScript.cs" />
+    <Compile Include="Model\Configuration\IDatabaseConfig.cs" />
+    <Compile Include="Model\Configuration\IDatabaseUpdate.cs" />
+    <Compile Include="Model\Configuration\IModelConfigurator.cs" />
+    <Compile Include="Model\Configuration\IModelSetup.cs" />
+    <Compile Include="Model\Attributes\ModelSetupAttribute.cs" />
+    <Compile Include="Model\Configuration\UpdateSummary.cs" />
+    <Compile Include="Model\DataModification.cs" />
+    <Compile Include="Model\Extensions\QueryableExtensions.cs" />
+    <Compile Include="Model\EntityIdListener.cs" />
+    <Compile Include="Model\IEntity.cs" />
+    <Compile Include="Model\IMergedEntity.cs" />
+    <Compile Include="Model\IMergeParent.cs" />
+    <Compile Include="IPersistentObject.cs" />
+    <Compile Include="Model\IRepository.cs" />
+    <Compile Include="Model\Attributes\ModelAttribute.cs" />
+    <Compile Include="Model\UnitOfWork\IModelResolver.cs" />
+    <Compile Include="Model\UnitOfWork\IParentFactory.cs" />
+    <Compile Include="Model\UnitOfWork\IUnitOfWork.cs" />
+    <Compile Include="Model\UnitOfWork\IUnitOfWorkFactory.cs" />
+    <Compile Include="Modules\BundleAttribute.cs" />
+    <Compile Include="Modules\IModuleErrorReporting.cs" />
+    <Compile Include="Modules\IModuleNotification.cs" />
+    <Compile Include="Modules\ModulePlugins\ExpectedConfigAttribute.cs" />
+    <Compile Include="Modules\Server\IDependentAwareModule.cs" />
+    <Compile Include="Modules\Server\IServerModule.cs" />
+    <Compile Include="Modules\ModulePlugins\IPluginConfig.cs" />
+    <Compile Include="Modules\ModulePlugins\IConfiguredModulePlugin.cs" />
+    <Compile Include="Modules\IInitializable.cs" />
+    <Compile Include="Modules\ModulePlugins\IInitializableModulePlugin.cs" />
+    <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\ModulePlugins\IModulePlugin.cs" />
+    <Compile Include="Modules\Server\IServerModuleConsole.cs" />
+    <Compile Include="Modules\Server\IServerModuleState.cs" />
+    <Compile Include="Modules\Server\ServerModuleConsoleAttribute.cs" />
+    <Compile Include="Modules\Server\ServerModuleState.cs" />
+    <Compile Include="Bindings\IBindingResolver.cs" />
+    <Compile Include="Bindings\IBindingResolverChain.cs" />
+    <Compile Include="Bindings\IBindingResolverFactory.cs" />
+    <Compile Include="Bindings\ITextBindingResolver.cs" />
+    <Compile Include="Platform.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\Entry.cs" />
+    <Compile Include="Serialization\Entry.Generated.cs" />
+    <Compile Include="Serialization\EntryKey.cs" />
+    <Compile Include="Serialization\EntryKey.Generated.cs" />
+    <Compile Include="Serialization\EntryValidation.cs" />
+    <Compile Include="Serialization\EntryValidation.Generated.cs" />
+    <Compile Include="Serialization\EntryValue.cs" />
+    <Compile Include="Serialization\EntryValue.Generated.cs" />
+    <Compile Include="Serialization\EntryValueType.cs" />
+    <Compile Include="Serialization\IEntryCollection.cs" />
+    <Compile Include="StateMachines\IStateContext.cs" />
+    <Compile Include="StateMachines\StateDefinitionAttribute.cs" />
+    <Compile Include="Testing\OpenCoverIgnoreAttribute.cs" />
+    <Compile Include="Threading\IParallelObservation.cs" />
+    <Compile Include="Threading\IParallelObserver.cs" />
+    <Compile Include="Threading\IParallelOperations.cs" />
+    <Compile Include="Users\OperationAccess.cs" />
+    <Compile Include="StateMachines\IState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cgbr.json" />
+    <None Include="Marvin.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\CGbR.0.5.2\build\cgbr.targets" Condition="Exists('..\packages\CGbR.0.5.2\build\cgbr.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\CGbR.0.5.2\build\cgbr.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CGbR.0.5.2\build\cgbr.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\CGbR.0.5.2\build\cgbr.targets" Condition="Exists('..\..\packages\CGbR.0.5.2\build\cgbr.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

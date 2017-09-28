@@ -1,0 +1,115 @@
+﻿using System;
+using System.ComponentModel;
+
+namespace Marvin.Model
+{
+    /// <summary>
+    /// Listener of the <see cref="INotifyPropertyChanged.PropertyChanged"/> event for
+    /// <see cref="IEntity.Id"/>.
+    /// </summary>
+    public abstract class EntityIdListener
+    {
+        /// <summary>
+        /// Listen to id change and invoke callback.
+        /// </summary>
+        public static void Listen(IEntity entity, Action<long> idCallback)
+        {
+            Listen(entity, new CallbackListener(idCallback));
+        }
+
+        /// <summary>
+        /// Listen to id change and set on <see cref="IPersistentObject.Id"/>.
+        /// </summary>
+        public static void Listen(IEntity entity, IPersistentObject target)
+        {
+            Listen(entity, new PersistenListener(target));
+        }
+
+        /// <summary>
+        /// Listen to id change and assign to a merged entity.
+        /// </summary>
+        public static void Listen(IEntity entity, IEntity target)
+        {
+            Listen(entity, new DoubleEntityListener(target));
+        }
+
+        /// <summary>
+        /// Listen to entity change using a custom listener implementation.
+        /// </summary>
+        public static void Listen(IEntity entity, EntityIdListener listener)
+        {
+            // If id is already set, take a shortcut and assign directly
+            if (entity.Id > 0)
+            {
+                listener.AssignId(entity.Id);
+            }
+            else
+            {
+                entity.PropertyChanged += listener.IdChanged;
+            }
+        }
+
+        private void IdChanged(object sender, PropertyChangedEventArgs eventArgs)
+        {
+            var entity = (IEntity)sender;
+            if (eventArgs.PropertyName != "Id" || entity.Id == 0)
+                return;
+
+
+            entity.PropertyChanged -= IdChanged;
+            AssignId(entity.Id);
+        }
+
+        /// <summary>Assign id using derived strategy.</summary>
+        protected abstract void AssignId(long id);
+
+        #region Listener Strategies
+
+        private class CallbackListener : EntityIdListener
+        {
+            private readonly Action<long> _idCallback;
+
+            public CallbackListener(Action<long> idCallback)
+            {
+                _idCallback = idCallback;
+            }
+
+            protected override void AssignId(long id)
+            {
+                _idCallback(id);
+            }
+        }
+
+        private class PersistenListener : EntityIdListener
+        {
+            private readonly IPersistentObject _target;
+
+            public PersistenListener(IPersistentObject target)
+            {
+                _target = target;
+            }
+
+            protected override void AssignId(long id)
+            {
+                _target.Id = id;
+            }
+        }
+
+        private class DoubleEntityListener : EntityIdListener
+        {
+            private readonly IEntity _target;
+
+            public DoubleEntityListener(IEntity target)
+            {
+                _target = target;
+            }
+
+            protected override void AssignId(long id)
+            {
+                _target.Id = id;
+            }
+        }
+
+        #endregion
+    }
+}
