@@ -34,11 +34,26 @@ namespace Marvin.Serialization
         string[] PossibleValues(ParameterInfo parameter);
 
         /// <summary>
+        /// Possible values for the elements of a collection property
+        /// </summary>
+        /// <param name="property">Property to check</param>
+        /// <returns>Possible values or null</returns>
+        string[] PossibleElementValues(PropertyInfo property);
+
+        /// <summary>
+        /// Possible values for the elements of a collection parameter
+        /// </summary>
+        /// <param name="parameter">Parameter to check</param>
+        /// <returns>Possible values or null</returns>
+        string[] PossibleElementValues(ParameterInfo parameter);
+
+        /// <summary>
         /// Entry validation object
         /// </summary>
         /// <param name="property">Property to read validation for</param>
         /// <returns>Validation object</returns>
         EntryValidation CreateValidation(PropertyInfo property);
+
 
         /// <summary>
         /// Filter the properties that shall be included when creating the object

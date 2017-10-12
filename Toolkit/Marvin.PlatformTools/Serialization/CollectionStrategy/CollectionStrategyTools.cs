@@ -47,7 +47,7 @@ namespace Marvin.Serialization
                 Value = new EntryValue
                 {
                     Type = EntryConvert.TransformType(itemType),
-                    Current = EntryConvert.ValueOrStringType(itemType) ? item.ToString() : itemType.Name,
+                    Current = EntryConvert.ValueOrStringType(itemType) ? item.ToString() : itemType.Name
                 }
             };
 

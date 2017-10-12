@@ -57,6 +57,21 @@ namespace Marvin.Runtime.Base.Serialization
             return values?.Distinct().ToArray();
         }
 
+
+        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        public override string[] PossibleElementValues(PropertyInfo property)
+        {
+            var valuesAttribute = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            if (valuesAttribute == null)
+            {
+                return base.PossibleElementValues(property);
+            }
+
+            // Use attribute
+            var values = valuesAttribute.ResolvePossibleValues(_container);
+            return values?.Distinct().ToArray();
+        }
+
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override object CreateInstance(MappedProperty mappedRoot, Entry encoded)
         {

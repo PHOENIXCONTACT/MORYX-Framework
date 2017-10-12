@@ -153,9 +153,13 @@ namespace Marvin.Serialization
             if (parent.Value.Type != EntryValueType.Collection && parent.Value.Type != EntryValueType.Class)
                 yield break;
 
+            var possibleElementValues = IsCollection(property.PropertyType) 
+                ? customSerialization.PossibleElementValues(property) : null;
             foreach (var prototype in customSerialization.Prototypes(property))
             {
-                yield return Prototype(prototype, customSerialization);
+                var prototypeEntry = Prototype(prototype, customSerialization);
+                prototypeEntry.Value.Possible = possibleElementValues;
+                yield return prototypeEntry;
             }
         }
 
@@ -184,9 +188,11 @@ namespace Marvin.Serialization
             var prototypeType = type.Prototype.GetType();
             if (ValueOrStringType(prototypeType))
             {
+                var value = type.Prototype.ToString();
                 encoded.Value = new EntryValue
                 {
-                    Current = type.Prototype.ToString(),
+                    Current = value,
+                    Default = value,
                     Type = TransformType(type.Prototype.GetType())
                 };
             }
@@ -301,9 +307,14 @@ namespace Marvin.Serialization
                         if (enumurable == null)
                             break;
 
+                        var possibleElementValues = customSerialization.PossibleElementValues(property);
                         var strategy = CreateStrategy(value, value, property.PropertyType, customSerialization);
                         var subentries = strategy.Serialize();
-                        converted.SubEntries.AddRange(subentries);
+                        foreach (var entry in subentries)
+                        {
+                            entry.Value.Possible = possibleElementValues;
+                            converted.SubEntries.Add(entry);
+                        }
                         break;
 
                     case EntryValueType.Class:

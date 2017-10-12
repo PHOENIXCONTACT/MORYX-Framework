@@ -7,5 +7,8 @@ namespace Marvin.PlatformTools.Tests
         public int[] Array { get; set; }
 
         public string[] Keys { get; set; }
+
+        public DummyEnum[] Enums { get; set; }
+
     }
 }
