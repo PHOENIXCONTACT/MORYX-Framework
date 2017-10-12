@@ -17,16 +17,7 @@ namespace Marvin.Serialization
         /// <see cref="ICustomSerialization"/>
         public virtual IEnumerable<PropertyInfo> ReadFilter(Type sourceType)
         {
-            return sourceType.GetProperties().Where(SupportedTypes);
-        }
-
-        /// <summary>
-        /// Filter of property types we currently support. Add new types if found and remove
-        /// old ones when fixed.
-        /// </summary>
-        private static bool SupportedTypes(PropertyInfo property)
-        {
-            return true;
+            return sourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
         }
 
         /// <see cref="ICustomSerialization"/>
@@ -67,6 +58,20 @@ namespace Marvin.Serialization
         public virtual string[] PossibleValues(ParameterInfo parameter)
         {
             return PossibleValues(parameter.ParameterType);
+        }
+
+        /// <see cref="ICustomSerialization"/>
+        public virtual string[] PossibleElementValues(PropertyInfo property)
+        {
+            var elementType = EntryConvert.ElementType(property.PropertyType);
+            return PossibleValues(elementType);
+        }
+
+        /// <see cref="ICustomSerialization"/>
+        public virtual string[] PossibleElementValues(ParameterInfo parameter)
+        {
+            var elementType = EntryConvert.ElementType(parameter.ParameterType);
+            return PossibleValues(elementType);
         }
 
         /// <summary>
@@ -197,7 +202,7 @@ namespace Marvin.Serialization
             {
                 var currentArray = (Array)currentValue;
                 var size = collectionEntry.SubEntries.Count;
-                return currentArray != null && currentArray.Length == size 
+                return currentArray != null && currentArray.Length == size
                     ? currentArray : Array.CreateInstance(collectionType.GetElementType(), size);
             }
 
@@ -216,12 +221,12 @@ namespace Marvin.Serialization
             {
                 // Use lists when interfaces where used
                 if (collectionType.IsInterface)
-                    collectionType = typeof (List<>).MakeGenericType(collectionType.GenericTypeArguments);
+                    collectionType = typeof(List<>).MakeGenericType(collectionType.GenericTypeArguments);
                 // Reuse current object if available
                 return currentValue ?? Activator.CreateInstance(collectionType);
             }
 
-            
+
             // Other collections are not supported
             return null;
         }

@@ -26,7 +26,7 @@ namespace Marvin.PlatformTools.Tests
             Compare(root, clone);
         }
 
-        [Test(Description = "Checks if generator is 100x faster")]
+        //[Test(Description = "Checks if generator is 100x faster")]
         public void CloneBenchmark()
         {
             // Arrange
@@ -35,7 +35,7 @@ namespace Marvin.PlatformTools.Tests
             // JIT run
             var clone = root.Clone(true);
             Assert.IsTrue(Compare(root, clone), "Initial check failed!");
-            var serializer = new DataContractSerializer(typeof (Entry));
+            var serializer = new DataContractSerializer(typeof(Entry));
             var stopWatch = new Stopwatch();
 
             // Run serializer
@@ -44,7 +44,7 @@ namespace Marvin.PlatformTools.Tests
             {
                 serializer.WriteObject(memStream, root);
                 memStream.Seek(0, SeekOrigin.Begin);
-                clone = (Entry) serializer.ReadObject(memStream);
+                clone = (Entry)serializer.ReadObject(memStream);
             }
             stopWatch.Stop();
             Assert.IsTrue(Compare(root, clone), "Serializer failed!");

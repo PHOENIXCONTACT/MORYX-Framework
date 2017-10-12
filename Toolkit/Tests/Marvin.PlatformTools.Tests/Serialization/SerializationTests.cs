@@ -170,13 +170,15 @@ namespace Marvin.PlatformTools.Tests
             var dummy = new ArrayDummy
             {
                 Array = new[] { 2, 5, 7 },
-                Keys = new string[] { "test1_2", "test_02", "1245" }
+                Keys = new string[] { "test1_2", "test_02", "1245" },
+                Enums = new DummyEnum[] { DummyEnum.Unset, DummyEnum.ValueB, DummyEnum.ValueA }
             };
 
             // Act
             var encoded = EntryConvert.EncodeObject(dummy).ToArray();
             var entry1 = encoded[0];
             var entry2 = encoded[1];
+            var entry3 = encoded[2];
 
             entry1.SubEntries[1].Value.Current = "42";
             var instance1 = encoded[0].Prototypes[0].Instantiate();
@@ -188,7 +190,11 @@ namespace Marvin.PlatformTools.Tests
             instance2.Value.Current = "new_Value";
             entry2.SubEntries.Add(instance2);
 
-            
+            entry3.SubEntries[0].Value.Current = "ValueA";
+            var instance3 = entry3.Prototypes[0].Instantiate();
+            instance3.Value.Current = "ValueB";
+            entry3.SubEntries.Add(instance3);
+
             EntryConvert.UpdateInstance(dummy, encoded);
 
             // Assert
@@ -200,10 +206,14 @@ namespace Marvin.PlatformTools.Tests
             Assert.AreEqual("test_02", dummy.Keys[1]);
             Assert.AreEqual("hallo", dummy.Keys[2]);
             Assert.AreEqual("new_Value", dummy.Keys[3]);
+            Assert.AreEqual(DummyEnum.ValueA, dummy.Enums[0]);
+            Assert.AreEqual(DummyEnum.ValueB, dummy.Enums[1]);
+            Assert.AreEqual(DummyEnum.ValueA, dummy.Enums[2]);
+            Assert.AreEqual(DummyEnum.ValueB, dummy.Enums[3]);
         }
 
-        
-        
+
+
         [Test]
         public void CreateInstanceWithPrimitiveList()
         {
@@ -237,12 +247,13 @@ namespace Marvin.PlatformTools.Tests
             var dummy = new ListDummy()
             {
                 Number = 0,
-                DoubleList = new List<double>() {1.7, 2.5, 3}
-
+                DoubleList = new List<double>() {1.7, 2.5, 3},
+                EnumList = new List<DummyEnum>() { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB}
             };
 
             var encoded = EntryConvert.EncodeObject(dummy).ToArray();
             var ent = encoded[1];
+            var ent2 = encoded[2];
 
             //Act
             encoded[0].Value.Current = "5";
@@ -250,7 +261,12 @@ namespace Marvin.PlatformTools.Tests
             var newInstance = ent.Prototypes[0].Instantiate();
             newInstance.Value.Current = "133,7";
             ent.SubEntries.Add(newInstance);
-            
+
+            ent2.SubEntries[1].Value.Current = "ValueB";
+            newInstance = ent2.Prototypes[0].Instantiate();
+            newInstance.Value.Current = "ValueA";
+            ent2.SubEntries.Add(newInstance);
+
             EntryConvert.UpdateInstance(dummy, encoded);
 
             //Assert
@@ -260,6 +276,12 @@ namespace Marvin.PlatformTools.Tests
             Assert.AreEqual(12.34, dummy.DoubleList[1]);
             Assert.AreEqual(3.0, dummy.DoubleList[2]);
             Assert.AreEqual(133.7, dummy.DoubleList[3]);
+
+            Assert.AreEqual(4, dummy.EnumList.Count);
+            Assert.AreEqual(DummyEnum.ValueA, dummy.EnumList[0]);
+            Assert.AreEqual(DummyEnum.ValueB, dummy.EnumList[1]);
+            Assert.AreEqual(DummyEnum.ValueB, dummy.EnumList[2]);
+            Assert.AreEqual(DummyEnum.ValueA, dummy.EnumList[3]);
         }
 
 
@@ -284,12 +306,12 @@ namespace Marvin.PlatformTools.Tests
 
             // Act
             var encoded = EntryConvert.EncodeObject(dummy).ToArray();
-            var encodedSub = encoded[3].SubEntries[0].SubEntries;
+            var encodedSub = encoded[4].SubEntries[0].SubEntries;
 
             // Assert
             DummyAssert(encoded, encodedSub);
-            var expected = new[] { "10", "Thomas" };
-            for (int i = 0; i < 2; i++)
+            var expected = new[] { "10", "Thomas", "10" };
+            for (int i = 0; i < 3; i++)
             {
                 Assert.AreEqual(expected[i], encoded[i].Value.Current, "Property value missmatch");
             }
@@ -490,8 +512,8 @@ namespace Marvin.PlatformTools.Tests
             // Act
             encoded[0].Value.Current = "10";
             encoded[1].Value.Current = "Thomas";
-            encoded[2].SubEntries[1].Value.Current = encoded[2].SubEntries[1].Value.Possible[2];
-            for (int i = 3; i < 6; i++)
+            encoded[3].SubEntries[1].Value.Current = encoded[3].SubEntries[1].Value.Possible[2];
+            for (int i = 4; i < 7; i++)
             {
                 var colEntry = encoded[i];
                 for (int j = 0; j < i; j++)
@@ -512,7 +534,7 @@ namespace Marvin.PlatformTools.Tests
             var colAssert = new[] { CollectionType.Array, CollectionType.List, CollectionType.Enumerable, };
             for (int i = 0; i < colAssert.Length; i++)
             {
-                var length = 3 + i;
+                var length = 4 + i;
                 var collection = ExtractCollection(colAssert[i], obj);
                 Assert.AreEqual(length, collection.Count);
 
@@ -603,19 +625,27 @@ namespace Marvin.PlatformTools.Tests
             // Assert
             var expected = new[]
             {
-                new {Name = "Number", Type = EntryValueType.Int32},
-                new {Name = "Name", Type = EntryValueType.String},
-                new {Name = "SingleClass", Type = EntryValueType.Class},
-                new {Name = "SubArray", Type = EntryValueType.Collection},
-                new {Name = "SubList", Type = EntryValueType.Collection},
-                new {Name = "SubEnumerable", Type = EntryValueType.Collection},
-                new {Name = "SubDictionary", Type = EntryValueType.Collection},
+                new {Name = "Number", Type = EntryValueType.Int32, ReadOnly = false},
+                new {Name = "Name", Type = EntryValueType.String, ReadOnly = false},
+                new {Name = "ReadOnly", Type = EntryValueType.Int32, ReadOnly = true},
+                new {Name = "SingleClass", Type = EntryValueType.Class, ReadOnly = false},
+                new {Name = "SubArray", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "SubList", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "SubEnumerable", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "SubDictionary", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "EnumArray", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "EnumList", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "EnumEnumerable", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "BoolArray", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "BoolList", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "BoolEnumerable", Type = EntryValueType.Collection, ReadOnly = false},
             };
             Assert.AreEqual(expected.Length, encoded.Count, "Number of entries does not match");
             for (int i = 0; i < encoded.Count; i++)
             {
                 Assert.AreEqual(expected[i].Name, encoded[i].Key.Identifier, "Property name missmatch");
                 Assert.AreEqual(expected[i].Type, encoded[i].Value.Type, "Type missmatch");
+                Assert.AreEqual(expected[i].ReadOnly, encoded[i].Value.IsReadOnly, "ReadOnly missmatch");
             }
             Assert.AreEqual("Foo", encodedSub[0].Key.Identifier, "Name missmatch");
             Assert.AreEqual(EntryValueType.Single, encodedSub[0].Value.Type, "Float not detected");

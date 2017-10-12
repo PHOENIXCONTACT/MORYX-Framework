@@ -45,11 +45,11 @@ Of course a module can import more than one facade. Just add more properties of 
 
 ## Importing many facades
 Like with every DI-container the Runtime facade linker is able to inject a collection of instances if more than one component exports the interface. While most frameworks will leave you the choice of collection type. Currently collection injection only works with arrays. So far the dependency manager does not take collection injection into account when it comes to start dependencies. Therefor be careful when accessing the facades as the might raise InvalidHealthStateExceptions.
-Usgage in code: 
+Usage in code: 
 
 ````cs
 [RequiredModuleApi]
-public IFacade[] AllInstances { get; st; }
+public IFacade[] AllInstances { get; set; }
 ````
 
 # Facade Design Guideline
@@ -58,14 +58,14 @@ public IFacade[] AllInstances { get; st; }
 Occasionally the relationship between two modules requires bidirectional communication. The standard .NET way to to this is by using method calls from the dependent
 to its dependencies and events/callbacks from dependency to dependent. The starting behaviour of the Runtime however created problems in the kind of missed events
 when the dependency raised events before the listener has reached the necessary state. After many long discussions including circular dependencies, three way handshake
-and sacrificing kittens to the race-condition-god, we came up with a fairly simple solution. Events are supposed to propogate changes and should be used as such.
+and sacrificing kittens to the race-condition-god, we came up with a fairly simple solution. Events are supposed to propagate changes and should be used as such.
 
-Every event invocation represents an incremental change that occured within an object. An entry added to the collection or a modified property. Without the initial/
+Every event invocation represents an incremental change that occurred within an object. An entry added to the collection or a modified property. Without the initial/
 previous state of the object its current state can not be determined. Therefore every API that offers events must also provide methods to retrieve the current state
 of the component. For `NotifyPropertyChanged` and `NotifyCollectionChanged` the initial state is the object itself.
 
-Transfering this to MaRVIN facades means that for every event there must be way to retrieve the current state of the module. This decouples the lifecylces and allows
-the dependent to be started and stopped at any time without having to worry what he might miss in the process. For example the APIfor the JobManagement could simply
+Transferring this to MaRVIN facades means that for every event there must be way to retrieve the current state of the module. This decouples the life cycles and allows
+the dependent to be started and stopped at any time without having to worry what he might miss in the process. For example the API for the JobManagement could simply
 be:
 
 ````cs
