@@ -6,11 +6,11 @@ if ($PSVersionTable.PSVersion.Major -lt 4) {
 
 # Tool Versions
 $MsBuildVersion = "14.0"; # valid versions are [2.0, 3.5, 4.0, 12.0, 14.0]
-$NunitVersion = "3.6.0";
+$NunitVersion = "3.7.0";
 $OpenCoverVersion = "4.6.519";
 $DoxyGenVersion = "1.8.9.2";
 $OpenCoverToCoberturaVersion = "0.2.6.0";
-$ReportGeneratorVersion = "2.5.10";
+$ReportGeneratorVersion = "3.0.2";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
