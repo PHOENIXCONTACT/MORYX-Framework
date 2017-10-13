@@ -27,7 +27,7 @@ namespace Marvin.Container.Tests
         public void DefaultInjection()
         {
             // Arrange
-            var container = CreateContainer(null);
+            var container = CreateContainer(new Dictionary<Type, string>());
 
             // Act
             var root = container.Resolve<IRootClass>();
@@ -117,9 +117,9 @@ namespace Marvin.Container.Tests
             Assert.AreEqual(pluginName, root.ConfiguredComponent.GetName(), "Strategy was not overridden!");
         }
 
-        private static IContainer CreateContainer(IDictionary<Type, string> config)
+        private static IContainer CreateContainer(IDictionary<Type, string> strategies)
         {
-            var container = new ServerLocalContainer(config);
+            var container = new ServerLocalContainer(strategies);
 
             container.LoadComponents<IRootClass>();
             container.LoadComponents<IConfiguredComponent>();

@@ -255,5 +255,6 @@ namespace Marvin.Logging
         public bool IsWarnEnabled { get; private set; }
         public IVariablesContext GlobalVariablesContext { get; }
         public IVariablesContext ThreadVariablesContext { get; }
+        public INestedVariablesContext NestedThreadVariablesContext { get; }
     }
 }

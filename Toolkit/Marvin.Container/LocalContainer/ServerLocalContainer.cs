@@ -14,7 +14,7 @@ namespace Marvin.Container
         /// <summary>
         /// Default constructor without strategies
         /// </summary>
-        public ServerLocalContainer() : this(null)
+        public ServerLocalContainer() : this(new Dictionary<Type, string>())
         {
         }
 

@@ -157,7 +157,7 @@ namespace Marvin.Container
             if (_knownTypes == null)
             {
                 _knownTypes = ReflectionTool.GetAssemblies()
-                    .Where(a => !a.HasAttribute<ComponentLoaderIgnoreAttribute>())
+                    .Where(a => a.GetCustomAttribute<ComponentLoaderIgnoreAttribute>() == null)
                     .SelectMany(a => a.GetTypes())
                     .Where(t => t.GetCustomAttribute<RegistrationAttribute>(true) != null).ToArray();
             }
