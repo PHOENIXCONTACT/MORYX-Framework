@@ -85,9 +85,6 @@
     <Compile Include="ModuleManagement\HealthStateException.cs" />
     <Compile Include="ServerModules\IFacadeContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\ITaskSchedule.cs" />
-    <Compile Include="Tasks\ITask.cs" />
-    <Compile Include="Tasks\ITaskManager.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

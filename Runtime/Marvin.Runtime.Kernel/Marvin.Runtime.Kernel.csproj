@@ -88,11 +88,6 @@
     <Compile Include="ModuleManagement\ModuleManager.cs" />
     <Compile Include="ModuleManagement\ModuleManagerConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TaskManagement\TaskManager.cs" />
-    <Compile Include="TaskManagement\TaskManagerConfig.cs" />
-    <Compile Include="TaskManagement\TaskScheduleEntry.cs" />
-    <Compile Include="TaskManagement\TaskScheduler.cs" />
-    <Compile Include="TaskManagement\TaskWorker.cs" />
     <Compile Include="Wcf\BindingFactories.cs" />
     <Compile Include="Wcf\ClientFactory.cs" />
     <Compile Include="Wcf\ClientFactoryConfig.cs" />
