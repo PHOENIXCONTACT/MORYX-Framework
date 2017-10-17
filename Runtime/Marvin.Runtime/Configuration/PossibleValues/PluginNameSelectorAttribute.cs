@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Marvin.Container;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Configuration
 {
-    [OpenCoverIgnore]
     public class PluginNameSelectorAttribute : PossibleConfigValuesAttribute
     {
         private readonly Type _componentType;

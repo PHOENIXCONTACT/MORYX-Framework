@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Marvin.Testing;
 
 namespace Marvin.Serialization
 {
@@ -41,7 +40,6 @@ namespace Marvin.Serialization
     /// <summary>
     /// Decorate property to determine key in config structure
     /// </summary>
-    [OpenCoverIgnore]
     public class ConfigKeyAttribute : Attribute
     {
         /// <summary>

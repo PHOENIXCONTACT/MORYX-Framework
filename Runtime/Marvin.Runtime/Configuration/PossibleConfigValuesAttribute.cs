@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Marvin.Container;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Configuration
 {

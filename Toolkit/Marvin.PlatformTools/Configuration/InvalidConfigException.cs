@@ -1,12 +1,10 @@
 ﻿using System.Runtime.Serialization;
-using Marvin.Testing;
 
 namespace Marvin.Configuration
 {
     /// <summary>
     /// Exception 
     /// </summary>
-    [OpenCoverIgnore]
     public class InvalidConfigException : MarvinException
     {
         /// <summary>

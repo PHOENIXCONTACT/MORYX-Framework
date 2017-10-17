@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Communication
 {
     /// <summary>
     /// Attribute used to decorate fields of binary payload objects
     /// </summary>
-    [OpenCoverIgnore]
     public class PayloadPositionAttribute : Attribute
     {
         /// <summary>

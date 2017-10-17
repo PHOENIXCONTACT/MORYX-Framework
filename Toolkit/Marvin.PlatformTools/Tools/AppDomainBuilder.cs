@@ -2,14 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Marvin.Testing;
 
 namespace Marvin.Tools
 {
     /// <summary>
     /// Static platfrom library to compose the app domain
     /// </summary>
-    [OpenCoverIgnore]
     public static class AppDomainBuilder
     {
         /// <summary>

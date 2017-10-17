@@ -150,7 +150,6 @@
     <Compile Include="Serialization\IEntryCollection.cs" />
     <Compile Include="StateMachines\IStateContext.cs" />
     <Compile Include="StateMachines\StateDefinitionAttribute.cs" />
-    <Compile Include="Testing\OpenCoverIgnoreAttribute.cs" />
     <Compile Include="Threading\IParallelObservation.cs" />
     <Compile Include="Threading\IParallelObserver.cs" />
     <Compile Include="Threading\IParallelOperations.cs" />

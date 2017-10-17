@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Linq;
 using Marvin.Modules;
-using Marvin.Testing;
 
 namespace Marvin.Container
 {
     /// <summary>
     /// Register a kernel component
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class KernelComponentAttribute : GlobalComponentAttribute
     {
@@ -24,7 +22,6 @@ namespace Marvin.Container
     /// <summary>
     /// Register a kernel component
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class InitializableKernelComponentAttribute : KernelComponentAttribute
     {

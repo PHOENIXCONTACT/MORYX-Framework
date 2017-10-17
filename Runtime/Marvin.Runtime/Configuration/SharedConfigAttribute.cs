@@ -1,13 +1,10 @@
 ﻿using System;
 using Marvin.Configuration;
-using Marvin.Testing;
-
 namespace Marvin.Runtime.Configuration
 {
     /// <summary>
     /// Attribute used to reference another <see cref="IConfig"/>. Do not decorate the property with data member as it will write a copy of the config to your xml.
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Property)]
     public class SharedConfigAttribute : Attribute
     {

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Marvin.Container;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Configuration
 {
-    [OpenCoverIgnore]
     public class RelativeDirectoriesAttribute : PossibleConfigValuesAttribute
     {
         private readonly string _parentPath;

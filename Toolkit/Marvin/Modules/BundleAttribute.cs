@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Modules
 {
     /// <summary>
     /// Attribute to flag an assembly as part of a bundle
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Assembly)]
     public class BundleAttribute : Attribute
     {

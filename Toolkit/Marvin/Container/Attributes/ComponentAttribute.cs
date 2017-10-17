@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Container
 {
     /// <summary>
     /// Registration attribute to decorate components of a module.
     /// </summary>
-    [OpenCoverIgnore]
     public class ComponentAttribute : RegistrationAttribute
     {
         /// <summary>

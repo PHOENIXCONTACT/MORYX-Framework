@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Timers;
 using Marvin.Logging;
-using Marvin.Testing;
 
 namespace Marvin.Tools.Wcf
 {
@@ -99,7 +97,6 @@ namespace Marvin.Tools.Wcf
         /// Called when [subscribed].
         /// Called MANY TIMES after calling ReSubscribe()
         /// </summary>
-        [OpenCoverIgnore]
         protected virtual void OnSubscribed()
         {
             // override in derived classes to perform 
@@ -165,7 +162,6 @@ namespace Marvin.Tools.Wcf
         /// Subscribes the specified client identifier to the server.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
-        [OpenCoverIgnore]
         public void Subscribe(string clientId)
         {
             // use ReSubsribe()!
@@ -177,7 +173,6 @@ namespace Marvin.Tools.Wcf
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
         /// <returns>A Task which represents the asynchronous operation.</returns>
-        [OpenCoverIgnore]
         public Task SubscribeAsync(string clientId)
         {
             // use ReSubsribe()!

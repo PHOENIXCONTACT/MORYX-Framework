@@ -1,10 +1,8 @@
 ﻿using System;
 using Common.Logging;
-using Marvin.Testing;
 
 namespace Marvin.Logging
 {
-    [OpenCoverIgnore]
     internal class DummyLog : ILog
     {
         public void Trace(object message)

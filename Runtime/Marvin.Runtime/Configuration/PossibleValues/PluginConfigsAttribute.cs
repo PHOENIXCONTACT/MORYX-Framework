@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Marvin.Container;
 using Marvin.Modules.ModulePlugins;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Configuration
 {

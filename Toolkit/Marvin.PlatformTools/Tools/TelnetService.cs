@@ -5,14 +5,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Marvin.Logging;
-using Marvin.Testing;
 
 namespace Marvin.Tools
 {
     /// <summary>
     /// A simple Telnet service implementation
     /// </summary>
-    [OpenCoverIgnore]
     public class TelnetService
     {
         private class ReadLineEventArgs : EventArgs

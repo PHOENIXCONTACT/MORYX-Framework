@@ -1,5 +1,4 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Tools.Wcf
 {
@@ -7,7 +6,6 @@ namespace Marvin.Tools.Wcf
     /// Attribute used to declare a services version for clients to check compliance
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface)]
-    [OpenCoverIgnore]
     public class ServiceVersionAttribute : Attribute
     {
         private string _serverVersion = "1.0.0.0";
