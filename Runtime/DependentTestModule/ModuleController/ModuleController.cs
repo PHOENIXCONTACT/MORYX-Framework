@@ -3,7 +3,6 @@ using Marvin.Runtime.Base;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.ModuleManagement;
 using Marvin.Runtime.ServerModules;
-using Marvin.Runtime.Tasks;
 using Marvin.TestModule;
 
 namespace Marvin.DependentTestModule
@@ -24,8 +23,6 @@ namespace Marvin.DependentTestModule
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public ITestModule TestModule { get; set; }
 
-        public ITaskManager TaskManager { get; set; }
-
         #region State transition
         // ReSharper disable RedundantOverridenMember
         /// <summary>
@@ -33,7 +30,6 @@ namespace Marvin.DependentTestModule
         /// </summary>
         protected override void OnInitialize()
         {
-            Container.SetInstance(TaskManager);
 
             Container.LoadComponents<ISimpleHelloWorldWcfConnector>();
         }
