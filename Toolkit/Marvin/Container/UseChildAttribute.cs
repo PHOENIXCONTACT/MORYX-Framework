@@ -1,5 +1,4 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Container
 {
@@ -7,7 +6,6 @@ namespace Marvin.Container
     /// Attribute used to decorate dependencies which are part of larger container and shall be resolved by name 
     /// from this container.
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class UseChildAttribute : Attribute
     {

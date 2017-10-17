@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Container
 {
     /// <summary>
     /// Registration attribute for local container plugins
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Class)]
     public class PluginAttribute : ComponentAttribute
     {

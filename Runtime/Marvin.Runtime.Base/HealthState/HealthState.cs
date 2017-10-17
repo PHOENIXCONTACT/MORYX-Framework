@@ -1,5 +1,4 @@
 ﻿using Marvin.Modules.Server;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Base.HealthState
 {
@@ -41,7 +40,6 @@ namespace Marvin.Runtime.Base.HealthState
         /// <summary>
         /// Initialize phase of the module.
         /// </summary>
-        [OpenCoverIgnore]
         public virtual void Initialize()
         {
         }
@@ -49,7 +47,6 @@ namespace Marvin.Runtime.Base.HealthState
         /// <summary>
         /// Try to start a module.
         /// </summary>
-        [OpenCoverIgnore]
         public virtual void Start()
         {
         }
@@ -57,7 +54,6 @@ namespace Marvin.Runtime.Base.HealthState
         /// <summary>
         /// Stops a module.
         /// </summary>
-        [OpenCoverIgnore]
         public virtual void Stop()
         {
         }

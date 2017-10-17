@@ -1,6 +1,5 @@
 ﻿using System;
 using Marvin.Container;
-using Marvin.Testing;
 
 namespace Marvin.Modules.Server
 {
@@ -8,7 +7,6 @@ namespace Marvin.Modules.Server
     /// Attribute for implementations of <see cref="IServerModuleConsole"/>
     /// to register in container structure
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class ServerModuleConsoleAttribute : PluginAttribute
     {

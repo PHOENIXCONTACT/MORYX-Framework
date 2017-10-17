@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Marvin.Container;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Configuration
 {
@@ -17,7 +16,6 @@ namespace Marvin.Runtime.Configuration
         Multiplication
     }
 
-    [OpenCoverIgnore]
     public class IntegerStepsAttribute : PossibleConfigValuesAttribute
     {
         private readonly int _min;

@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Configuration
 {
     /// <summary>
     /// Attribute to enrich a config file with possible values for a property.
     /// </summary>
-    [OpenCoverIgnore]
     public class PossibleValuesAttribute : PossibleConfigValuesAttribute
     {
         private string[] _values;

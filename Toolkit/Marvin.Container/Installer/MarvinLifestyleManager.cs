@@ -1,6 +1,5 @@
 ﻿using Castle.MicroKernel;
 using Castle.MicroKernel.Lifestyle;
-using Marvin.Testing;
 
 namespace Marvin.Container
 {
@@ -12,7 +11,6 @@ namespace Marvin.Container
         /// <summary>
         /// Empty track implementation that does not track instances
         /// </summary>
-        [OpenCoverIgnore]
         protected override void Track(Burden burden, IReleasePolicy releasePolicy)
         {
         }

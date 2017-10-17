@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Modules.ModulePlugins
 {
     /// <summary>
     /// Attribute to decorate a <see cref="IModulePlugin"/> to receive a certain config type
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Class)]
     public class ExpectedConfigAttribute : Attribute
     {

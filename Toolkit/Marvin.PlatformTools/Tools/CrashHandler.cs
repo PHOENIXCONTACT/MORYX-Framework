@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Marvin.Testing;
 
 namespace Marvin.Tools
 {
     /// <summary>
     /// Static helper to attach to the unhandled exception event
     /// </summary>
-    [OpenCoverIgnore]
     public static class CrashHandler
     {
         /// <summary>

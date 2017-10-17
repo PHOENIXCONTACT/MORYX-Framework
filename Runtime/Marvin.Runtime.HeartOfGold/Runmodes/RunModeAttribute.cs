@@ -1,12 +1,10 @@
 ﻿using Marvin.Container;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.HeartOfGold
 {
     /// <summary>
     /// Registration attribute for IRuntimeEnvironment
     /// </summary>
-    [OpenCoverIgnore]
     public class RunmodeAttribute : GlobalComponentAttribute
     {
         /// <summary>

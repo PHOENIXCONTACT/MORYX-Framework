@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Configuration
 {
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Property)]
     public class CpuCountAttribute : DefaultValueAttribute
     {

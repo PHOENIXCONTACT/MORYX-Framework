@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Marvin.Modules;
-using Marvin.Testing;
 using Marvin.Threading;
 
 namespace Marvin.Tools
@@ -10,7 +9,6 @@ namespace Marvin.Tools
     /// <summary>
     /// Describes an impossible exception.
     /// </summary>
-    [OpenCoverIgnore]
     public class ImpossibleException : Exception
     {
         /// <summary>

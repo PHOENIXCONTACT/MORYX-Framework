@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Container
 {
     /// <summary>
     /// Installation attribute for castle windsor
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Class)]
     public class RegistrationAttribute : Attribute
     {

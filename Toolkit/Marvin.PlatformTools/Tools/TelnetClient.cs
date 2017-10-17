@@ -3,14 +3,12 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using Marvin.Logging;
-using Marvin.Testing;
 
 namespace Marvin.Tools
 {
     /// <summary>
     /// A simple TELNET client implementation
     /// </summary>
-    [OpenCoverIgnore]
     public class TelnetClient
     {
         private IPAddress _address;

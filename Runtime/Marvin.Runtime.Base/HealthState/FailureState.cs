@@ -1,6 +1,5 @@
 ﻿using System;
 using Marvin.Modules.Server;
-using Marvin.Testing;
 
 namespace Marvin.Runtime.Base.HealthState
 {
@@ -37,7 +36,6 @@ namespace Marvin.Runtime.Base.HealthState
         /// Does nothing when an error occured. The module is already in an error state so it will not change its state.
         /// </summary>
         /// <param name="criticalError">Flag for critical or not critical error.</param>
-        [OpenCoverIgnore]
         public override void ErrorOccured(bool criticalError)
         {
         }

@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Container
 {
     /// <summary>
     /// Installation attribute for factories
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Interface)]
     public class FactoryRegistrationAttribute : Attribute
     {

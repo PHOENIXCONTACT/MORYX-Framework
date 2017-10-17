@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.Container
 {
     /// <summary>
     /// Attribute for properties in Castle using named components
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
     public class NamedAttribute : Attribute
     {
