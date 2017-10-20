@@ -32,8 +32,8 @@ namespace Marvin.PlatformTools.Tests.Configuration
         [Test]
         public void TestGetCopy()
         {
-            TestConfig config1 = _configManager.GetConfiguration<TestConfig>();
-            TestConfig config2 = _configManager.GetConfiguration<TestConfig>(true);
+            var config1 = _configManager.GetConfiguration<TestConfig>();
+            var config2 = _configManager.GetConfiguration<TestConfig>(true);
 
             config1.DummyNumber++;
 
@@ -43,8 +43,8 @@ namespace Marvin.PlatformTools.Tests.Configuration
         [Test]
         public void TestGetCached()
         {
-            TestConfig config1 = _configManager.GetConfiguration<TestConfig>();
-            TestConfig config2 = _configManager.GetConfiguration<TestConfig>(false);
+            var config1 = _configManager.GetConfiguration<TestConfig>();
+            var config2 = _configManager.GetConfiguration<TestConfig>(false);
 
             config1.DummyNumber++;
 
@@ -54,11 +54,11 @@ namespace Marvin.PlatformTools.Tests.Configuration
         [Test]
         public void TestClearCache()
         {
-            TestConfig config1 = _configManager.GetConfiguration<TestConfig>();
+            var config1 = _configManager.GetConfiguration<TestConfig>();
 
             _configManager.ClearCache();
 
-            TestConfig config2 = _configManager.GetConfiguration<TestConfig>(false);
+            var config2 = _configManager.GetConfiguration<TestConfig>(false);
 
             config1.DummyNumber++;
 
@@ -68,12 +68,12 @@ namespace Marvin.PlatformTools.Tests.Configuration
         [Test]
         public void TestCacheOnSave()
         {
-            TestConfig config1 = _configManager.GetConfiguration<TestConfig>();
+            var config1 = _configManager.GetConfiguration<TestConfig>();
 
             _configManager.ClearCache();
             _configManager.SaveConfiguration(config1);
 
-            TestConfig config2 = _configManager.GetConfiguration<TestConfig>(false);
+            var config2 = _configManager.GetConfiguration<TestConfig>(false);
 
             config1.DummyNumber++;
 
@@ -83,12 +83,12 @@ namespace Marvin.PlatformTools.Tests.Configuration
         [Test]
         public void TestSave()
         {
-            TestConfig config1 = _configManager.GetConfiguration<TestConfig>();
+            var config1 = _configManager.GetConfiguration<TestConfig>();
 
             config1.DummyNumber++;
             _configManager.SaveConfiguration(config1);
 
-            TestConfig config2 = _configManager.GetConfiguration<TestConfig>(true);
+            var config2 = _configManager.GetConfiguration<TestConfig>(true);
 
             Assert.AreEqual(config1.DummyNumber, config2.DummyNumber);
         }
@@ -96,12 +96,12 @@ namespace Marvin.PlatformTools.Tests.Configuration
         [Test]
         public void TestSaveAll()
         {
-            TestConfig config1 = _configManager.GetConfiguration<TestConfig>();
+            var config1 = _configManager.GetConfiguration<TestConfig>();
 
             config1.DummyNumber++;
             _configManager.SaveAll();
 
-            TestConfig config2 = _configManager.GetConfiguration<TestConfig>(true);
+            var config2 = _configManager.GetConfiguration<TestConfig>(true);
             Assert.AreEqual(config1.DummyNumber, config2.DummyNumber);
         }
     }

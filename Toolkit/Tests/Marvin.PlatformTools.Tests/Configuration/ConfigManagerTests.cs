@@ -95,8 +95,8 @@ namespace Marvin.PlatformTools.Tests.Configuration
         [Test]
         public void TestGetCopy()
         {
-            TestConfig config1 = _configManager.GetConfiguration<TestConfig>();
-            TestConfig config2 = _configManager.GetConfiguration<TestConfig>(true);
+            var config1 = _configManager.GetConfiguration<TestConfig>();
+            var config2 = _configManager.GetConfiguration<TestConfig>(true);
 
             config1.DummyNumber++;
 
@@ -106,13 +106,33 @@ namespace Marvin.PlatformTools.Tests.Configuration
         [Test]
         public void TestGetCached()
         {
-            TestConfig config1 = _configManager.GetConfiguration<TestConfig>();
-            TestConfig config2 = _configManager.GetConfiguration<TestConfig>(false);
+            var config1 = _configManager.GetConfiguration<TestConfig>();
+            var config2 = _configManager.GetConfiguration<TestConfig>(false);
 
             config1.DummyNumber++;
 
             // The ConfigManager does not cahce at all. Therefore it should return always a copy.
             Assert.AreNotEqual(config1.DummyNumber, config2.DummyNumber);
+        }
+
+        [Test(Description = "Saves and loads a configuration by a custom name.")]
+        public void ByName()
+        {
+            //Arrange
+            const string configName = "CustomName";
+            const string someString = "HelloWorld";
+
+            //Act
+            var config = _configManager.GetConfiguration<TestConfig>(configName);
+            config.DummyString = someString;
+            _configManager.SaveConfiguration(config, configName);
+
+            //Assert
+            var configPath = Path.Combine(_fullConfigDir, configName + ConfigConstants.FileExtension);
+            Assert.IsTrue(File.Exists(configPath), "Config file was not created");
+
+            var reloaded = _configManager.GetConfiguration<TestConfig>(configName);
+            Assert.AreEqual(someString, reloaded.DummyString, "Config file was not loaded correctly");
         }
 
         [TearDown]

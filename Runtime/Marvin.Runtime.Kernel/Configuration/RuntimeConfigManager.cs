@@ -1,4 +1,6 @@
-﻿using Marvin.Configuration;
+﻿using System;
+using System.Linq;
+using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Runtime.Configuration;
 
@@ -11,8 +13,6 @@ namespace Marvin.Runtime.Kernel.Configuration
     public class RuntimeConfigManager : CachedConfigManager, IRuntimeConfigManager
     {
         private readonly IConfigLiveUpdate _liveUpdater = new ConfigLiveUpdater();
-
-        private readonly NodeProcessor[] _processors;
         private readonly SharedConfigProvider _sharedProvider;
 
         /// <summary>
@@ -21,13 +21,17 @@ namespace Marvin.Runtime.Kernel.Configuration
         public RuntimeConfigManager()
         {
             _sharedProvider = new SharedConfigProvider(this);
-            _processors = new NodeProcessor[] { _sharedProvider.CheckForSharedConfig, DefaultValueProvider.CheckPropertyForDefault };
+            NodeProcessors = new NodeProcessor[]
+            {
+                _sharedProvider.CheckForSharedConfig,
+                DefaultValueProvider.CheckPropertyForDefault
+            };
         }
 
         /// <summary>
         /// Override NodeProcessors to include shared config provider
         /// </summary>
-        protected override NodeProcessor[] NodeProcessors { get { return _processors; } }
+        protected override NodeProcessor[] NodeProcessors { get; }
 
         /// <summary>
         /// Fill all available emtpy properties of the config.
@@ -38,14 +42,22 @@ namespace Marvin.Runtime.Kernel.Configuration
             ValueProvider.FillProperties(obj, NodeProcessors);
         }
 
-        /// <summary>
-        /// Save the given configuration of type T.
-        /// </summary>
-        /// <typeparam name="T">Type of the configuration.</typeparam>
-        /// <param name="configuration">The configuration of type T.</param>
-        public override void SaveConfiguration<T>(T configuration)
+        /// <inheritdoc />
+        public IConfig GetConfiguration(Type confType, bool getCopy)
         {
-            SaveConfiguration(configuration, false);
+            return base.GetConfiguration(confType, getCopy, confType.FullName);
+        }
+
+        /// <inheritdoc cref="CachedConfigManager.SaveConfiguration{T}(T,string)" />
+        public override void SaveConfiguration<T>(T configuration, string name)
+        {
+            SaveConfiguration(configuration, false, name);
+        }
+
+        /// <inheritdoc />
+        public void SaveConfiguration(IConfig configuration, bool liveUpdate)
+        {
+            SaveConfiguration(configuration, liveUpdate, configuration.GetType().FullName);
         }
 
         /// <summary>
@@ -53,16 +65,29 @@ namespace Marvin.Runtime.Kernel.Configuration
         /// </summary>
         /// <param name="configuration">The configuration which should be saved.</param>
         /// <param name="liveUpdate">Should a live update of the configuration be perfomed?</param>
-        public void SaveConfiguration(IConfig configuration, bool liveUpdate)
+        /// <param name="name">Name of the configuration</param>
+        public void SaveConfiguration(IConfig configuration, bool liveUpdate, string name)
         {
-            var type = configuration.GetType();
-            if (liveUpdate && ConfigCache.ContainsKey(type) && typeof(IUpdatableConfig).IsAssignableFrom(type))
-                _liveUpdater.UpdateLive(type, ConfigCache[type], configuration);
-            else
-                ConfigCache[type] = configuration;
+            var configType = configuration.GetType();
+
+            lock (ConfigCache)
+            {
+                if (liveUpdate && ConfigCache.ContainsKey(name) && typeof(IUpdatableConfig).IsAssignableFrom(configType))
+                {
+                    _liveUpdater.UpdateLive(configType, ConfigCache[name].Instance, configuration);
+                }
+                else
+                {
+                    ConfigCache[name] = new CacheEntry
+                    {
+                        Type = configType,
+                        Instance = configuration,
+                    };
+                }
+            }
 
             SaveSharedConfigs(configuration, liveUpdate);
-            WriteToFile(type, configuration);
+            WriteToFile(configuration, name);
         }
 
         /// <summary>
@@ -72,7 +97,7 @@ namespace Marvin.Runtime.Kernel.Configuration
         {
             foreach (var sharedConfig in _sharedProvider.IncludedSharedConfigs(partialConfig))
             {
-                SaveConfiguration(sharedConfig, liveUpdate);
+                SaveConfiguration(sharedConfig, liveUpdate, sharedConfig.GetType().FullName);
             }
         }
     }

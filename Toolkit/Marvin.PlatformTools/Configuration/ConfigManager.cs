@@ -17,48 +17,64 @@ namespace Marvin.Configuration
         /// <summary>
         /// Array of processors used to scan the config for missing nodes
         /// </summary>
-        protected virtual NodeProcessor[] NodeProcessors { get; } = { DefaultValueProvider.CheckPropertyForDefault };
+        protected virtual NodeProcessor[] NodeProcessors { get; } =
+        {
+            DefaultValueProvider.CheckPropertyForDefault
+        };
 
-        /// <summary>
-        /// Get the config of type T.
-        /// </summary>
-        /// <typeparam name="T">Type T of the configuration which is wanted.</typeparam>
-        /// <returns>The config of type T.</returns>
+        /// <inheritdoc />
         public T GetConfiguration<T>() where T : class, IConfig, new()
         {
-            return GetConfiguration<T>(false);
+            return GetConfiguration<T>(typeof(T).FullName);
         }
 
-        /// <summary>
-        /// Get the config of type T.
-        /// </summary>
-        /// <typeparam name="T">Type T of the configuration which is wanted.</typeparam>
-        /// <param name="getCopy">Flag to get a configuration copy.</param>
-        /// <returns>The config of type T.</returns>
+        /// <inheritdoc />
+        public T GetConfiguration<T>(string name) where T : class, IConfig, new()
+        {
+            return GetConfiguration<T>(false, name);
+        }
+
+        /// <inheritdoc />
         public T GetConfiguration<T>(bool getCopy) where T : class, IConfig, new()
         {
-            return GetConfiguration(typeof(T), getCopy) as T;
+            return GetConfiguration<T>(getCopy, typeof(T).FullName);
+        }
+
+        /// <inheritdoc />
+        public T GetConfiguration<T>(bool getCopy, string name) where T : class, IConfig, new()
+        {
+            return GetConfiguration(typeof(T), getCopy, name) as T;
         }
 
         /// <summary>
         /// Generic get configuration method
         /// </summary>
-        /// <param name="configType">The type of the configuration.</param>
-        /// <param name="getCopy">Flag to get a configuration copy.</param>
-        /// <returns>The config of type T.</returns>
-        public virtual IConfig GetConfiguration(Type configType, bool getCopy)
+        protected virtual IConfig GetConfiguration(Type configType, bool getCopy, string name)
         {
-            return TryGetFromDirectory(configType);
+            return TryGetFromDirectory(configType, name);
+        }
+
+        /// <inheritdoc />
+        public void SaveConfiguration<T>(T configuration) where T : class, IConfig
+        {
+            SaveConfiguration(configuration, typeof(T).FullName);
+        }
+
+        /// <inheritdoc />
+        public virtual void SaveConfiguration<T>(T configuration, string name) where T : class, IConfig
+        {
+            WriteToFile(configuration, name);
         }
 
         /// <summary>
         /// Try to read config from directory or create default replacement
         /// </summary>
-        protected virtual IConfig TryGetFromDirectory(Type confType)
+        protected virtual IConfig TryGetFromDirectory(Type confType, string name)
         {
             // Get or create config object
             IConfig config;
-            var configPath = GetConfigPath(confType);
+            var configPath = GetConfigPath(name);
+
             if (File.Exists(configPath))
             {
                 try
@@ -97,27 +113,17 @@ namespace Marvin.Configuration
         }
 
         /// <summary>
-        /// Saves a configuration of type T.
-        /// </summary>
-        /// <typeparam name="T">The type of the configuration.</typeparam>
-        /// <param name="configuration">The configuration of type T.</param>
-        public virtual void SaveConfiguration<T>(T configuration) where T : class, IConfig
-        {
-            WriteToFile(typeof(T), configuration);
-        }
-
-        /// <summary>
         /// Write config object to mcf file
         /// </summary>
-        protected void WriteToFile(Type confType, object config)
+        protected void WriteToFile(object config, string name)
         {
             var text = Json.Serialize(config, JsonSettings.Readable);
-            File.WriteAllText(GetConfigPath(confType), text);
+            File.WriteAllText(GetConfigPath(name), text);
         }
 
-        private string GetConfigPath(Type type)
+        private string GetConfigPath(string name)
         {
-            var configName = $"{type.FullName}{ConfigConstants.FileExtension}";
+            var configName = $"{name}{ConfigConstants.FileExtension}";
             return Path.Combine(ConfigDirectory, configName);
         }
     }
