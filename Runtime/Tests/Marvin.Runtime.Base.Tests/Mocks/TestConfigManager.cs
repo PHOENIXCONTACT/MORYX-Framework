@@ -6,6 +6,7 @@ namespace Marvin.Runtime.Base.Tests.Mocks
 {
     internal class TestConfigManager : IRuntimeConfigManager
     {
+		//TODO: replace with Moq
         /// <summary>
         /// Config directory to use for storing the serialized configurations.
         /// </summary>
@@ -21,6 +22,11 @@ namespace Marvin.Runtime.Base.Tests.Mocks
         public T GetConfiguration<T>() where T : class, IConfig, new()
         {
             return (T)GetConfiguration(typeof(T), true);
+        }
+
+        public T GetConfiguration<T>(string name) where T : class, IConfig, new()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -41,6 +47,11 @@ namespace Marvin.Runtime.Base.Tests.Mocks
         public T GetConfiguration<T>(bool getCopy) where T : class, IConfig, new()
         {
             return GetConfiguration<T>();
+        }
+
+        public T GetConfiguration<T>(bool getCopy, string name) where T : class, IConfig, new()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -64,6 +75,11 @@ namespace Marvin.Runtime.Base.Tests.Mocks
         /// <typeparam name="T">Type to save</typeparam><param name="configuration">Object to save</param>
         public void SaveConfiguration<T>(T configuration) where T : class, IConfig
         {
+        }
+
+        public void SaveConfiguration<T>(T configuration, string name) where T : class, IConfig
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

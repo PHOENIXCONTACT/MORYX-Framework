@@ -10,6 +10,7 @@ namespace Marvin.TestTools.SystemTest.Mocks
     /// </summary>
     public class ConfigManagerMock : IConfigManager
     {
+		//TODO: replace with Moq
         /// <summary>
         /// Create new config manager mock
         /// </summary>
@@ -36,6 +37,11 @@ namespace Marvin.TestTools.SystemTest.Mocks
             return GetConfiguration<T>(true);
         }
 
+        public T GetConfiguration<T>(string name) where T : class, IConfig, new()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Gets the configuration.
         /// </summary>
@@ -47,6 +53,11 @@ namespace Marvin.TestTools.SystemTest.Mocks
             return (T)GetConfiguration(typeof(T), getCopy);
         }
 
+        public T GetConfiguration<T>(bool getCopy, string name) where T : class, IConfig, new()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Saves the configuration.
         /// </summary>
@@ -54,6 +65,11 @@ namespace Marvin.TestTools.SystemTest.Mocks
         /// <param name="configuration">The configuration.</param>
         public void SaveConfiguration<T>(T configuration) where T : class, IConfig
         {
+        }
+
+        public void SaveConfiguration<T>(T configuration, string name) where T : class, IConfig
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

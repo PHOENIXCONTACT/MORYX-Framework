@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Marvin.Configuration
@@ -10,43 +11,69 @@ namespace Marvin.Configuration
     public class CachedConfigManager : ConfigManager
     {
         /// <summary>
-        /// Cache of allready created config objects
+        /// Cached config instance and type
         /// </summary>
-        protected IDictionary<Type, IConfig> ConfigCache { get; } = new Dictionary<Type, IConfig>();
-
-        /// <summary>
-        /// Gets a configuration of the wanted type.
-        /// </summary>
-        /// <param name="confType">The type of the configuration.</param>
-        /// <param name="getCopy">Copy or not copy, that is here the question.</param>
-        /// <returns>The wanted configuration.</returns>
-        public override IConfig GetConfiguration(Type confType, bool getCopy)
+        [DebuggerDisplay("Type = {" + nameof(Type) + "}")]
+        protected class CacheEntry
         {
-            if (getCopy)
-                return TryGetFromDirectory(confType);
+            /// <summary>
+            /// Type of the configuration
+            /// </summary>
+            public Type Type { get; set; }
 
-            lock (ConfigCache)
-            {
-                var config = ConfigCache.ContainsKey(confType) ? ConfigCache[confType] : null;
-                if (config != null)
-                    return config;
-
-                config = TryGetFromDirectory(confType);
-                ConfigCache[confType] = config;
-
-                return config;
-            }
+            /// <summary>
+            /// Instance of the configuration
+            /// </summary>
+            public IConfig Instance { get; set; }
         }
 
         /// <summary>
-        /// Save the configuration of type T from the parameter list.
+        /// Cache of allready created config objects
         /// </summary>
-        /// <typeparam name="T">The type of the configuration.</typeparam>
-        /// <param name="configuration">The configuration of tyxpe T which should be saved.</param>
-        public override void SaveConfiguration<T>(T configuration)
+        protected IDictionary<string, CacheEntry> ConfigCache { get; } = new Dictionary<string, CacheEntry>();
+
+        /// <inheritdoc />
+        protected override IConfig GetConfiguration(Type configType, bool getCopy, string name)
         {
-            ConfigCache[typeof (T)] = configuration;
-            base.SaveConfiguration(configuration);
+            if (getCopy)
+                return TryGetFromDirectory(configType, name);
+
+            lock (ConfigCache)
+            {
+                if (ConfigCache.ContainsKey(name))
+                    return ConfigCache[name].Instance;
+
+                ConfigCache[name] = new CacheEntry
+                {
+                    Type = configType,
+                    Instance = TryGetFromDirectory(configType, name),
+                };
+
+                return ConfigCache[name].Instance;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void SaveConfiguration<T>(T configuration, string name)
+        {
+            lock (ConfigCache)
+            {
+                var configType = typeof(T);
+                if (ConfigCache.ContainsKey(name))
+                {
+                    ConfigCache[name].Instance = configuration;
+                }
+                else
+                {
+                    ConfigCache[name] = new CacheEntry
+                    {
+                        Type = configType,
+                        Instance = configuration,
+                    };
+                }
+            }
+
+            base.SaveConfiguration(configuration, name);
         }
 
         /// <summary>
@@ -64,10 +91,8 @@ namespace Marvin.Configuration
         {
             try
             {
-                foreach (var config in ConfigCache.Values.ToArray())
-                {
-                    WriteToFile(config.GetType(), config);
-                }
+                foreach (var cacheEntry in ConfigCache.ToArray())
+                    WriteToFile(cacheEntry.Value.Instance, cacheEntry.Key);
             }
             // During shutdown we just want to avoid a crash message
             // ReSharper disable once EmptyGeneralCatchClause
