@@ -30,7 +30,7 @@ namespace Marvin.Tools
                 catch(Exception ex)
                 {
                     var loadEx = new FileLoadException("Failed to load assembly file " + assemblyFile, ex);
-                    CrashHandler.HandleCrash(null, new UnhandledExceptionEventArgs(loadEx, false));
+                    Console.WriteLine(ExceptionPrinter.Print(loadEx));
                 }
             }
         }
