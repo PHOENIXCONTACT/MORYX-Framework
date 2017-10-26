@@ -20,7 +20,7 @@ namespace Marvin.Runtime.HeartOfGold
     }
 
     [Registration(LifeCycle.Singleton, typeof(ICommandHandler))]
-    internal class LogCommand : ICommandHandler
+    internal class LoggerCommand : ICommandHandler
     {
         public IServerLoggerManagement LoggerManagement { get; set; }
         private readonly Dictionary<string, ConsoleListener> _listeners = new Dictionary<string, ConsoleListener>(); 
@@ -40,8 +40,11 @@ namespace Marvin.Runtime.HeartOfGold
         /// </summary>
         public void Handle(string[] fullCommand)
         {
-            if(fullCommand.Length < 2)
-                Console.WriteLine("Insufficient number of arguments");
+            if (fullCommand.Length < 2)
+            {
+                Console.WriteLine("Insufficient number of arguments. Type `help` for more information.");
+                return;
+            }
 
             switch (fullCommand[1])
             {
