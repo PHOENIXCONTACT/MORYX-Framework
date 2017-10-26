@@ -155,7 +155,7 @@
     <Compile Include="Commands\GarbageCommand.cs" />
     <Compile Include="Commands\ICommandHandler.cs" />
     <Compile Include="Commands\InstallCommand.cs" />
-    <Compile Include="Commands\LogCommand.cs" />
+    <Compile Include="Commands\LoggerCommand.cs" />
     <Compile Include="Commands\PrintCommand.cs" />
     <Compile Include="Commands\ProductCommand.cs" />
     <Compile Include="Commands\ReincConfCommand.cs" />
