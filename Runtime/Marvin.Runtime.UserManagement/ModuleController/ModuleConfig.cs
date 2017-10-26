@@ -68,7 +68,7 @@ namespace Marvin.Runtime.UserManagement
         /// </summary>
         [DataMember]
         [Description("Strategy to select the storage type of client based configs")]
-        [PluginConfigs(typeof(IClientConfigStore))]
+        [PluginConfigs(typeof(IClientConfigStore), false)]
         public ClientConfigStoreConfigBase ConfigStorage { get; set; } 
     }
 }

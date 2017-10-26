@@ -23,7 +23,7 @@ namespace Marvin.Runtime.HeartOfGold
         /// <summary>
         /// Logger management instance. Injected by the castle container
         /// </summary>
-        public ILoggerManagement Logger { get; set; }
+        public IServerLoggerManagement Logger { get; set; }
 
         private IContainer _localContainer;
         /// <summary>

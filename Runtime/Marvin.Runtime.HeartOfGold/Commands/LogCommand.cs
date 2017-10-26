@@ -16,8 +16,6 @@ namespace Marvin.Runtime.HeartOfGold
             Console.SetCursorPosition(0, currentLineCursor);
 
             Console.WriteLine("{0} - {1} - {2}: {3}", message.Timestamp, message.Logger.Name, message.Level, message.Message);
-
-            Console.Write("Service emulator > ");
         }
     }
 
