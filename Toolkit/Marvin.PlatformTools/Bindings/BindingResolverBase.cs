@@ -12,20 +12,41 @@
         /// <inheritdoc />
         public IBindingResolverChain NextResolver { get; set; }
 
-
         /// <inheritdoc />
-        public abstract object Resolve(object source);
-
-        /// <summary>
-        /// Proceed with the chain
-        /// </summary>
-        /// <param name="result">Result of this resolvers execution</param>
-        protected object Proceed(object result)
+        object IBindingResolver.Resolve(object source)
         {
+            var result = Resolve(source);
+
             if (NextResolver == null || result == null)
                 return result;
 
             return NextResolver.Resolve(result);
         }
+
+        /// <summary>
+        /// Resolve the value of this element in the chain
+        /// </summary>
+        /// <param name="source"></param>
+        protected abstract object Resolve(object source);
+
+        /// <inheritdoc />
+        bool IBindingResolver.Update(object source, object value)
+        {
+            // We can not proceed without a source object
+            if (source == null)
+                return false;
+
+            // We have reached the end of the chain
+            if (NextResolver == null)
+                return Update(source, value);
+
+            source = Resolve(source);
+            return NextResolver.Update(source, value);
+        }
+
+        /// <summary>
+        /// Set the value on the souce object
+        /// </summary>
+        protected abstract bool Update(object source, object value);
     }
 }

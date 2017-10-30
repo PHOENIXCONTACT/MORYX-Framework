@@ -6,9 +6,15 @@
     public class NullResolver : BindingResolverBase
     {
         /// <inheritdoc />
-        public sealed override object Resolve(object source)
+        protected sealed override object Resolve(object source)
         {
-            return Proceed(source);
+            return source;
+        }
+
+        /// <inheritdoc />
+        protected sealed override bool Update(object source, object value)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

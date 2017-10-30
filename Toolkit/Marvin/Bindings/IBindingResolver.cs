@@ -9,5 +9,11 @@
         /// Resolve property from source object
         /// </summary>
         object Resolve(object source);
+
+        /// <summary>
+        /// Update the value on the source object
+        /// using the binding string.
+        /// </summary>
+        bool Update(object source, object value);
     }
 }

@@ -9,7 +9,6 @@ namespace Marvin.Bindings
     public class IndexResolver : BindingResolverBase
     {
         private readonly string _index;
-        private int _numericIndex;
 
         /// <summary>
         /// Create a new <see cref="IndexResolver"/> with a reflection resolver
@@ -23,34 +22,45 @@ namespace Marvin.Bindings
         /// <summary>
         /// Once the source was evaluated once this delegate speeds up resolution
         /// </summary>
-        private Func<object, object> _cachedResolver;
+        private IIndexStrategy _cachedResolver;
         /// <inheritdoc />
-        public sealed override object Resolve(object source)
+        protected sealed override object Resolve(object source)
         {
             if (_cachedResolver == null)
             {
                 _cachedResolver = CreateResolver(source);
             }
 
-            var result = _cachedResolver(source);
-            return Proceed(result);
+            return _cachedResolver.Resolve(source);
         }
 
-        private Func<object, object> CreateResolver(object source)
+        /// <inheritdoc />
+        protected sealed override bool Update(object source, object value)
         {
-            Func<object, object> resolver = null;
+            if (_cachedResolver == null)
+            {
+                _cachedResolver = CreateResolver(source);
+            }
 
-            if (int.TryParse(_index, out _numericIndex))
+            return _cachedResolver.Update(source, value);
+        }
+
+        private IIndexStrategy CreateResolver(object source)
+        {
+            IIndexStrategy resolver = null;
+
+            var numericIndex = 0;
+            if (int.TryParse(_index, out numericIndex))
             {
                 var dict = source as IDictionary;
                 var list = source as IList;
                 if (dict != null)
                 {
-                    resolver = FromNumericDictionary;
+                    resolver = new NumericDictStrategy(numericIndex);
                 }
                 else if (list != null)
                 {
-                    resolver = FromList;
+                    resolver = new ListStrategy(numericIndex);
                 }
             }
 
@@ -59,33 +69,104 @@ namespace Marvin.Bindings
             {
                 if (source is IDictionary)
                 {
-                    resolver = FromTextDictionary;
+                    resolver = new TextDictStrategy(_index);
                 }
                 else
                 {
-                    resolver = obj => null;
+                    resolver = new NullStrategy();
                 }
             }
 
             return resolver;
         }
 
-        private object FromNumericDictionary(object source)
+        private interface IIndexStrategy
         {
-            var dict = (IDictionary) source;
-            return dict.Contains(_numericIndex) ? dict[_numericIndex] : null;
+            object Resolve(object source);
+
+            bool Update(object source, object value);
         }
 
-        private object FromTextDictionary(object source)
+        private class NullStrategy : IIndexStrategy
         {
-            var dict = (IDictionary)source;
-            return dict.Contains(_index) ? dict[_index] : null;
+            public object Resolve(object source)
+            {
+                return null;
+            }
+
+            public bool Update(object source, object value)
+            {
+                return false;
+            }
         }
 
-        private object FromList(object source)
+        private class NumericDictStrategy : IIndexStrategy
         {
-            var list = (IList)source;
-            return list.Count > _numericIndex ? list[_numericIndex] : null;
+            private readonly int _index;
+
+            public NumericDictStrategy(int index)
+            {
+                _index = index;
+            }
+
+            public object Resolve(object source)
+            {
+                var dict = (IDictionary)source;
+                return dict.Contains(_index) ? dict[_index] : null;
+            }
+
+            public bool Update(object source, object value)
+            {
+                var dict = (IDictionary)source;
+                dict[_index] = value;
+                return true;
+            }
+        }
+
+        private class TextDictStrategy : IIndexStrategy
+        {
+            private readonly string _index;
+
+            public TextDictStrategy(string index)
+            {
+                _index = index;
+            }
+
+            public object Resolve(object source)
+            {
+                var dict = (IDictionary)source;
+                return dict.Contains(_index) ? dict[_index] : null;
+            }
+
+            public bool Update(object source, object value)
+            {
+                var dict = (IDictionary)source;
+                dict[_index] = value;
+                return true;
+            }
+        }
+
+        private class ListStrategy : IIndexStrategy
+        {
+            private readonly int _index;
+
+            public ListStrategy(int index)
+            {
+                _index = index;
+            }
+
+            public object Resolve(object source)
+            {
+                var list = (IList)source;
+                return list.Count > _index ? list[_index] : null;
+            }
+
+            public bool Update(object source, object value)
+            {
+                var list = (IList)source;
+                list[_index] = value;
+                return true;
+            }
         }
     }
 }
