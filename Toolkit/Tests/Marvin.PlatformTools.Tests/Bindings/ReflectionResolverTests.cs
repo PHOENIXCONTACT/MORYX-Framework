@@ -13,10 +13,10 @@ namespace Marvin.PlatformTools.Tests.Bindings
         {
             const string str = "HelloWorld";
 
-            // Assert
+            // Arrange
             var obj = createDerived ? new SomeHiddenPropertyClass() : new SomeClass();
             obj.SimpleString = str;
-            var reflectionResolver = new ReflectionResolver(nameof(SomeClass.SimpleString));
+            IBindingResolver reflectionResolver = new ReflectionResolver(nameof(SomeClass.SimpleString));
 
             // Act
             var result = reflectionResolver.Resolve(obj);
@@ -26,12 +26,29 @@ namespace Marvin.PlatformTools.Tests.Bindings
             Assert.AreEqual(str, (string)result);
         }
 
+        [Test]
+        public void SimpleAssign()
+        {
+            const string str = "HelloWorld";
+
+            // Arrange
+            var obj = new SomeHiddenPropertyClass();
+            IBindingResolver reflectionResolver = new ReflectionResolver(nameof(SomeClass.SimpleString));
+
+            // Act
+            var result = reflectionResolver.Update(obj, str);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(str, obj.SimpleString);
+        }
+
         [Test(Description = "Checks if the reflection resolver returns null by resolving an unknown property")]
         public void NullByUnknownProperty()
         {
             // Arrange
             var obj = new SomeClass();
-            var reflectionResolver = new ReflectionResolver("SomeUnknownProperty");
+            IBindingResolver reflectionResolver = new ReflectionResolver("SomeUnknownProperty");
 
             // Act
             var result = reflectionResolver.Resolve(obj);
@@ -45,7 +62,7 @@ namespace Marvin.PlatformTools.Tests.Bindings
         public void HiddenPropertyByNewKeyword()
         {
             // Arrange
-            var reflectionResolver = new ReflectionResolver(nameof(SomeClass.SomeObject));
+            IBindingResolver reflectionResolver = new ReflectionResolver(nameof(SomeClass.SomeObject));
             var obj = new SomeHiddenPropertyClass
             {
                 SomeObject = new SomeImplementation()
@@ -63,30 +80,6 @@ namespace Marvin.PlatformTools.Tests.Bindings
             Assert.NotNull(result);
         }
 
-        private interface ISomeInterface
-        {
-
-        }
-
-        private class SomeImplementation : ISomeInterface
-        {
-
-        }
-
-        private class SomeClass
-        {
-            public string SimpleString { get; set; }
-
-            public ISomeInterface SomeObject { get; set; }
-        }
-
-        private class SomeHiddenPropertyClass : SomeClass
-        {
-            public new SomeImplementation SomeObject
-            {
-                get { return (SomeImplementation) base.SomeObject; }
-                set { base.SomeObject = value; }
-            }
-        }
+        
     }
 }

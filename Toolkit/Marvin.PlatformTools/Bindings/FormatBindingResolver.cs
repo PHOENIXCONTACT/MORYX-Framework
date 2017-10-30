@@ -20,10 +20,16 @@ namespace Marvin.Bindings
         }
 
         /// <inheritdoc />
-        public override object Resolve(object source)
+        protected override object Resolve(object source)
         {
             var formattable = source as IFormattable;
             return formattable?.ToString(_format, CultureInfo.CurrentCulture) ?? source.ToString();
+        }
+
+        /// <inheritdoc />
+        protected sealed override bool Update(object source, object value)
+        {
+            throw new NotImplementedException();
         }
     }
 }

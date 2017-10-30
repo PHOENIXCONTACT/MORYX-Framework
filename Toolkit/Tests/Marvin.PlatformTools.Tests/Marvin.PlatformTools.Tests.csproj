@@ -57,7 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bindings\Dummies\Branch.cs" />
+    <Compile Include="Bindings\DelegateResolverTest.cs" />
+    <Compile Include="Bindings\Dummies\ISomeInterface.cs" />
+    <Compile Include="Bindings\Dummies\Foo.cs" />
     <Compile Include="Bindings\ReflectionResolverTests.cs" />
+    <Compile Include="Bindings\Dummies\SomeClass.cs" />
+    <Compile Include="Bindings\Dummies\SomeHiddenPropertyClass.cs" />
+    <Compile Include="Bindings\Dummies\SomeImplementation.cs" />
+    <Compile Include="Bindings\UpdateValueTest.cs" />
     <Compile Include="Collections\DelayQueueTests.cs" />
     <Compile Include="Collections\SortableCollectionTests.cs" />
     <Compile Include="Collections\SortObj.cs" />

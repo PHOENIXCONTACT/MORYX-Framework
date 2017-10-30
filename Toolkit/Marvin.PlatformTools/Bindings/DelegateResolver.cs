@@ -8,20 +8,38 @@ namespace Marvin.Bindings
     public class DelegateResolver : BindingResolverBase
     {
         private readonly Func<object, object> _resolveExpression;
+        private readonly Action<object, object> _assignmentExpression;
 
         /// <summary>
-        /// Create new <see cref="DelegateResolver"/> with delegate
+        /// Create new <see cref="DelegateResolver"/> with a resolver expression only
         /// </summary>
-        public DelegateResolver(Func<object, object> resolveExpression)
+        public DelegateResolver(Func<object, object> resolveExpression) : this(resolveExpression, null)
+        {
+        }
+
+        /// <summary>
+        /// Create new <see cref="DelegateResolver"/> with delegate for resolution and assignment
+        /// </summary>
+        public DelegateResolver(Func<object, object> resolveExpression, Action<object, object> assignmentExpression)
         {
             _resolveExpression = resolveExpression;
+            _assignmentExpression = assignmentExpression;
         }
 
         /// <inheritdoc />
-        public sealed override object Resolve(object source)
+        protected sealed override object Resolve(object source)
         {
-            source = _resolveExpression(source);
-            return Proceed(source);
+            return _resolveExpression(source);
+        }
+
+        /// <inheritdoc />
+        protected sealed override bool Update(object source, object value)
+        {
+            if (_assignmentExpression == null)
+                return false;
+
+            _assignmentExpression(source, value);
+            return true;
         }
     }
 }

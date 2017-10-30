@@ -1,7 +1,9 @@
 # Bindings {#bindings}
-The types of the `Marvin.Bindings`-namespace located in _Marvin.PlatformTools_ offer the functionality to dynamically resolve properties of objects. An [IBindingResolver](@ref Marvin.Bindings.IBindingResolver) is created by an instance of [IBindingResolverFactory](@ref Marvin.Bindings.IBindingResolverFactory) from a string like `"Branch.Name"`. The resolver will then return the value of `Name` for each `object source` passed into the `Resolve(source)`-method.
+The types of the `Marvin.Bindings`-namespace located in _Marvin.PlatformTools_ offer the functionality to dynamically resolve or update properties of objects. An [IBindingResolver](@ref Marvin.Bindings.IBindingResolver) is created by an instance of [IBindingResolverFactory](@ref Marvin.Bindings.IBindingResolverFactory) from a string like `"Branch.Name"`. The resolver will then return the value of `Name` for each `object source` passed into the `Resolve(source)`-method.
 
-Example of binding resolution:
+It is also possible to set the value of the property by calling `Update(object, object)` on the resolver created by the factory.
+
+Example of binding resolution and property update:
 
 ````cs
 public class Root
@@ -29,17 +31,20 @@ root = new Root()
     Branch = new Branch { Name = "Bob" }
 };
 name = resolver.Resolve(root); // Value of name = "Bob"
+
+// Setting the value
+resolver.Update(root, "Marie"); // Value of "root.Branch" = "Marie"
 ````
 
 ## IBindingResolver Chain
-Implementations of [IBindingResolver](@ref Marvin.Bindings.IBindingResolver) are build as a recursive double-linked list using their extended [IBindingResolverChain](@ref Marvin.Bindings.IBindingResolver) interface. Each link of the chain resolves a fragment of the string using the source object and passes the result to the next link calling the `Proceed()`-method inherited from [BindingResolverBase](@ref Marvin.Bindings.BindingResolverBase).
+Implementations of [IBindingResolver](@ref Marvin.Bindings.IBindingResolver) are build as a recursive double-linked list using their extended [IBindingResolverChain](@ref Marvin.Bindings.IBindingResolver) interface. Each link of the chain resolves a fragment of the string using the source object and passes the result to the next link. When updating a value the resolver chain is executed up to the last link and instead of calling `Resolve` on the last link, `Update` is invoked.
 
 The chain of resolvers is built by the [IBindingResolverFactory](@ref Marvin.Bindings.IBindingResolverFactory) by parsing the string and creating links token by token. A token is text fragement between two dots or an index like __name__ in `Parameters[name]`. Unlike XAML-binding not all tokens directly represent a property. An implementation of [IBindingResolverFactory](@ref Marvin.Bindings.IBindingResolverFactory) might define special keys or short-cuts.
 
 The platform provides a base class [BindingResolverBase](@ref Marvin.Bindings.BindingResolverBase) and four standard implementations of [IBindingResolver](@ref Marvin.Bindings.IBindingResolver).
 
 ### BindingResolverBase
-This base class implements the [IBindingResolverChain](@ref Marvin.Bindings.IBindingResolver) interface and should be used instead of implementing the interface manually. It provides a protected `Proceed`-method that continues invocation on the recursive chain. If the object is `null` or this was the last link in the chain it returns the current value.
+This base class implements the [IBindingResolverChain](@ref Marvin.Bindings.IBindingResolver) interface and should be used instead of implementing the interface manually. It provides an explicit `Resolve`-method that continues invocation on the recursive chain. If the object is `null` or this was the last link in the chain it returns the current value.
 
 A simple example for a custom resolver could resolve the type of an object.
 
@@ -47,10 +52,15 @@ A simple example for a custom resolver could resolve the type of an object.
 // Resolver that fetches the type of the current object
 public class TypeResolver : BindingResolverBase
 {
-    public override object Resolve(object source)
+    protected sealed override object Resolve(object source)
     {
-        var type = source.GetType();
-        return Proceed(type);
+        return source.GetType();
+    }
+
+    protected sealed override bool Update(object source, object value)
+    {
+        // We can not set the type of an object
+        throw new NotImplementedException();
     }
 }
 ````
@@ -67,7 +77,7 @@ result = resolver.Resolve("Name"); // Value of result = "Name"
 ````
 
 ### ReflectionResolver
-By using reflection [this resolver](@ref Marvin.Bindings.ReflectionResolver) tries to load the value of the property from the source object. The name of the property is usually parsed as the text between dots in the binding string. The example at the top creates two reflection resolvers - one for `"Branch"` and one for `"Name"`. Because this resolver uses reflection it is significantly slower than the others and should not be used to resolve values which could be accessed another way.
+By using reflection [this resolver](@ref Marvin.Bindings.ReflectionResolver) tries to load the value of the property from the source object. The name of the property is usually parsed as the text between dots in the binding string. The example at the top creates two reflection resolvers - one for `"Branch"` and one for `"Name"`. Because this resolver uses reflection it is significantly slower than the others and should not be used to resolve values which could be accessed another way. The resolver also supports updating the value as long as the property `CanWrite`.
 
 Example in code:
 
@@ -76,8 +86,21 @@ var resolver = new ReflectionResolver("Length");
 var result = resolver.Resolve("Name"); // Value of result = 4
 ````
 
+Example for updating a value:
+
+````cs
+class Foo 
+{ 
+    public string Name {get; set;}
+}
+
+var foo = new Foo();
+resolver = new ReflectionResolver("Name");
+resolver.Update(foo, "Bob");
+````
+
 ### DelegateResolver
-The [delegate resolver](@ref Marvin.Bindings.DelegateResolver) can be used to implement simple custom resolution rules without creating a new implementation of [IBindingResolver](@ref Marvin.Bindings.IBindingResolver). It is created from a delegate `Func<object, object>` and will call it for each call to `Resolve()`. The result of the callback is passed to the `Proceed`-method.
+The [delegate resolver](@ref Marvin.Bindings.DelegateResolver) can be used to implement simple custom resolution rules without creating a new implementation of [IBindingResolver](@ref Marvin.Bindings.IBindingResolver). It is created from a delegate `Func<object, object>` and will call it for each call to `Resolve()`. The result of the callback is returned.
 
 Using the DelegateResolver to provide the `GetType()` behavior:
 
@@ -85,6 +108,14 @@ Using the DelegateResolver to provide the `GetType()` behavior:
 var resolver = new DelegateResolver(src => src.GetType());
 var result = resolver.Resolve(10); // Value of result = "System.Int32"
 result = resolver.Resolve("Name"); // Value of result = "System.String"
+````
+
+The DelegateResolver also supports the `Update`-method. To use this feature the second constructor needs to be used. Using the class `Foo` from our previous example:
+
+````cs
+var foo = new Foo();
+var resolver = new DelegateResolver(src => ((Foo)src)?.Name, (src, value) => ((Foo)src).Name = (string)value);
+resolver.Update(foo, "Bob");
 ````
 
 ### FormatBindingResolver
@@ -98,7 +129,7 @@ var result = resolver.Resolve(3); // Value of result = "003"
 ````
 
 ### IndexResolver
-The [index resolver](@ref Marvin.Bindings.IndexResolver) can extract values from collections and dictionaries. Given an index like `"Thomas"` or `10` it tries to interpret those values either as indexes in `IList` or as the key in a dictionary. Because the index resolver expects a collection as `source` object it usually needs to be preceded by another resolver that resolves the collection itself. This is done be the `BindingResolverFactory` that uses a Regex to combine a `ReflectionResolver` with an `IndexResolver` when it finds a string like `Collection[index]`.
+The [index resolver](@ref Marvin.Bindings.IndexResolver) can extract values from collections and dictionaries. Given an index like `"Thomas"` or `10` it tries to interpret those values either as indexes in `IList` or as the key in a dictionary. Because the index resolver expects a collection as `source` object it usually needs to be preceded by another resolver that resolves the collection itself. This is done be the `BindingResolverFactory` that uses a Regex to combine a `ReflectionResolver` with an `IndexResolver` when it finds a string like `Collection[index]`. It also supports the `Update`-method to set values.
 
 Using it stand-alone looks like this:
 
@@ -106,6 +137,7 @@ Using it stand-alone looks like this:
 var resolver = new IndexResolver("1");
 var list = new List<int>{ 10, 42, 100 };
 var result = resolver.Resolve(list); // Value of result = 42
+resolver.Update(list, 1337); // List = {10, 42, 1337}
 
 resolver = new IndexResolver("Key");
 var dict = new Dictionary
@@ -113,6 +145,7 @@ var dict = new Dictionary
     ["Key"] = "Value"
 };
 result = resolver.Resolve(dict); // Value of result = "Value"
+resolver.Update(dict, "OtherValue");
 ````
 
 ## IBindingResolverFactory
