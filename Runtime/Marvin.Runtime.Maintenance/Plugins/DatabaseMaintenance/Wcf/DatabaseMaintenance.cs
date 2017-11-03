@@ -286,6 +286,9 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             var tagetModel = configurator.TargetModel;
             var backupDir = @".\Backups\";
 
+            if (!Directory.Exists(backupDir))
+                return new BackupModel[0];
+
             var allBackups = Directory.GetFiles(backupDir, "*.sql").ToList();
 
             foreach (var backup in allBackups)
