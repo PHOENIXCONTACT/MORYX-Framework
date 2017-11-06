@@ -87,9 +87,7 @@ namespace Marvin.Serialization
         /// </summary>
         public Entry Instantiate()
         {
-            var instance = Clone(true);
-            instance.Key.Identifier = EntryKey.PrototypeIdentifier;
-            return instance;
+            return Clone(true);
         }
 
         /// <see cref="ICloneable"/>
