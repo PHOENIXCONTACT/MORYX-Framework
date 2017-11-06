@@ -31,6 +31,7 @@ $NugetPackageTargetApiKey = "Admin:Admin";
 . "$DotBuild\Output.ps1";
 . "$DotBuild\Version.ps1";
 . "$DotBuild\AssemblyVersion.ps1";
+. "$DotBuild\SymbolStore.ps1";
 
 # Define Tools
 $global:MSBuildCli = join-path -path (Get-ItemProperty "HKLM:\software\Microsoft\MSBuild\ToolsVersions\$MsBuildVersion")."MSBuildToolsPath" -childpath "msbuild.exe"

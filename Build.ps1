@@ -7,6 +7,7 @@
     [switch]$GenerateDocs,
     [switch]$Pack,
     [switch]$Publish,
+    [switch]$PublishSymbols,
     [string]$Version = "3.0.0.0",
     [string]$Configuration = "Debug",
     [int]$PortIncrement = 0
@@ -69,6 +70,21 @@ if ($Pack) {
 
 if ($Publish) {
     Invoke-Publish
+}
+
+if ($PublishSymbols) {
+    # This is temporary until the real symbol storage and nuget packages are active
+    $storage = "$RootPath\Artefacts\Symbols";
+    if (-not (Test-Path -Path $storage)) {
+        try {
+            New-Item $storage -ItemType Directory
+        }
+        catch {
+            Write-Host "Storage $storage cannot be created.";
+            exit 1;
+        }
+    }
+    Publish-PDBs -Project "MarvinPlatform3" -Storage $storage;
 }
 
 Write-Host "Success!"

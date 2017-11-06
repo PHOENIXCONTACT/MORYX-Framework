@@ -10,10 +10,6 @@ Currently the `preperation` branch is used to get rid of binaries.
 
 ## ToDos for Platform 3
 
-### Build
-
-- Activate symbol store
-
 ### General
 
 - Move config attributes to platform (possible values, cpu count, integer steps, ...)
