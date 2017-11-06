@@ -219,6 +219,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="HeartOfGold.nuspec" />
+    <None Include="log4net.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -242,8 +243,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>xcopy /y "$(ProjectDir)log4net.config" "$(SolutionDir)Build\ServiceRuntime\Config"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
