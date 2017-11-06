@@ -1,4 +1,5 @@
 ﻿param (
+    [switch]$SetAssemblyVersion,
     [switch]$Build,
     [switch]$SmokeTests,
     [switch]$CICoverTests,
@@ -17,17 +18,19 @@
 # Definition of local variables 
 $openCoverFilter = "$RootPath\OpenCoverFilter.txt";
 
-# Modify all assembly infos except of templates, .build, .buildtools
-Write-Step "Modifing AssemblyInfos to Version '$Version'"
-$assemblyInfos = Get-ChildItem -Path $Path -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
-    ($_.FullName -notmatch "\\Templates\\" -and $_.FullName -notmatch "\\.build\\" -and $_.FullName -notmatch "\\.buildtools\\")
-}
-Set-AssemblyVersions -Files $assemblyInfos -Version $Version
+if ($SetAssemblyVersion) {
+    # Modify all assembly infos except of templates, .build, .buildtools
+    Write-Step "Modifing AssemblyInfos to Version '$Version'"
+    $assemblyInfos = Get-ChildItem -Path $Path -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
+        ($_.FullName -notmatch "\\Templates\\" -and $_.FullName -notmatch "\\.build\\" -and $_.FullName -notmatch "\\.buildtools\\")
+    }
+    Set-AssemblyVersions -Files $assemblyInfos -Version $Version
 
-# Modify version of templates
-Set-VsixManifestVersion -VsixManifest "$RootPath\Runtime\Templates\DataModelWizard\source.extension.vsixmanifest" -Version $Version
-Set-VsTemplateVersion -VsTemplate "$PSScriptRoot\Runtime\Templates\DataModelTemplate\MyTemplate.vstemplate" -Version $Version
-Set-AssemblyVersion -InputFile "$RootPath\Runtime\Templates\DataModelWizard\Properties\AssemblyInfo.cs" -Version $Version
+    # Modify version of templates
+    Set-VsixManifestVersion -VsixManifest "$RootPath\Runtime\Templates\DataModelWizard\source.extension.vsixmanifest" -Version $Version
+    Set-VsTemplateVersion -VsTemplate "$PSScriptRoot\Runtime\Templates\DataModelTemplate\MyTemplate.vstemplate" -Version $Version
+    Set-AssemblyVersion -InputFile "$RootPath\Runtime\Templates\DataModelWizard\Properties\AssemblyInfo.cs" -Version $Version
+}
 
 if ($Build) {
     Invoke-Build ".\Toolkit.sln" $Configuration
