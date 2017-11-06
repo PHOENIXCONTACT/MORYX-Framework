@@ -25,7 +25,7 @@ namespace Marvin.Serialization
         /// Identifier used for entry objects that function as prototypes
         /// </summary>
         public const // TODO: Additional line: Wait for CGbR fix of constant https://github.com/Toxantron/CGbR/issues/24
-            string PrototypeIdentifier = "PROTOTYPE";
+            string CreatedIdentifier = "CREATED";
 
         /// <see cref="ICloneable"/>
         public object Clone()

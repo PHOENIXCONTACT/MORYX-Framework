@@ -181,7 +181,7 @@ namespace Marvin.Serialization
                 Key = new EntryKey
                 {
                     Name = type.Key,
-                    Identifier = EntryKey.PrototypeIdentifier
+                    Identifier = EntryKey.CreatedIdentifier
                 }
             };
 
@@ -516,7 +516,7 @@ namespace Marvin.Serialization
             }
 
             // Add new entries to the collection
-            foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Key.Identifier == EntryKey.PrototypeIdentifier))
+            foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Key.Identifier == EntryKey.CreatedIdentifier))
             {
                 object item;
                 // All value types
