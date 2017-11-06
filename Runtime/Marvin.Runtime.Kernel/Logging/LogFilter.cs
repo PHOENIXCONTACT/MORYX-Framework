@@ -21,16 +21,19 @@ namespace Marvin.Runtime.Kernel.Logging
         /// </summary>
         NameAndLevel = 3
     }
+
     internal class LogFilter
     {
         /// <summary>
         /// Type of filter
         /// </summary>
         public FilterType FilterType { get; set; }
+
         /// <summary>
         /// Name of logger to listen to
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// Minimum level to listen to
         /// </summary>
