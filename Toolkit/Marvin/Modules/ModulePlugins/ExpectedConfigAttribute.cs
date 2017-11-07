@@ -3,18 +3,18 @@
 namespace Marvin.Modules.ModulePlugins
 {
     /// <summary>
-    /// Attribute to decorate a <see cref="IModulePlugin"/> to receive a certain config type
+    /// Attribute to decorate a <see cref="IPlugin"/> to receive a certain config type
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class ExpectedConfigAttribute : Attribute
     {
         /// <summary>
-        /// Config type expected by this <see cref="IModulePlugin"/>
+        /// Config type expected by this <see cref="IPlugin"/>
         /// </summary>
         public Type ExcpectedConfigType { get; private set; }
 
         /// <summary>
-        /// State that this <see cref="IModulePlugin"/> requires config instances of the given type
+        /// State that this <see cref="IPlugin"/> requires config instances of the given type
         /// </summary>
         public ExpectedConfigAttribute(Type configType)
         {

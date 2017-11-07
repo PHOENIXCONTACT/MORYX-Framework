@@ -2,7 +2,7 @@
 
 namespace Marvin.TestModule
 {
-    public interface ITestSubPlugin : IConfiguredModulePlugin<TestSubPluginConfig>
+    public interface ITestSubPlugin : IConfiguredPlugin<TestSubPluginConfig>
     {
          
     }

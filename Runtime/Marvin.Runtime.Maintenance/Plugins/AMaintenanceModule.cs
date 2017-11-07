@@ -17,32 +17,28 @@ namespace Marvin.Runtime.Maintenance.Plugins
         /// </summary>
         protected TConf Config { get; set; }
 
-        /// <summary>
-        ///  Injected properties
-        /// </summary>
         public IConfiguredHostFactory HostFactory { get; set; }
 
-        /// <summary>
-        /// Initialize the plugin with the give configuration.
-        /// </summary>
-        /// <param name="config">A <see cref="MaintenancePluginConfig"/>.</param>
+        /// <inheritdoc />
         public virtual void Initialize(MaintenancePluginConfig config)
         {
             Config = (TConf)config;
         }
 
-        /// <summary>
-        /// Start the plugin.
-        /// </summary>
+        /// <inheritdoc />
         public virtual void Start()
         {
             _host = HostFactory.CreateHost<TWcf>(Config.ProvidedEndpoint);
             _host.Start();
         }
 
-        /// <summary>
-        /// Disposes the plugin.
-        /// </summary>
+        /// <inheritdoc />
+        public virtual void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+        }
+
+        /// <inheritdoc />
         public virtual void Dispose()
         {
             if (_host == null)

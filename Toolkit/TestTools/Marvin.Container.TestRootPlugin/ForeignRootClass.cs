@@ -8,6 +8,8 @@ namespace Marvin.Container.TestRootPlugin
     {
         public const string PluginName = "ForeignRootClass";
 
+        public IConfiguredComponent ConfiguredComponent { get; set; }
+
         public string GetName()
         {
             return PluginName;
@@ -17,16 +19,12 @@ namespace Marvin.Container.TestRootPlugin
         {
         }
 
-        public void Dispose()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public void Start()
         {
-            throw new System.NotImplementedException();
         }
 
-        public IConfiguredComponent ConfiguredComponent { get; set; }
+        public void Stop()
+        {
+        }
     }
 }

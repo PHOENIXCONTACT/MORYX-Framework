@@ -11,23 +11,17 @@ namespace Marvin.Runtime.UserManagement.UserGroupProvider
     {
         private UserGroupProviderConfigBase _config;
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
+        public void Initialize(UserGroupProviderConfigBase config)
+        {
+            _config = config;
+        }
+
         public void Start()
         {
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
+        public void Stop()
         {
-        }
-
-        public void Initialize(UserGroupProviderConfigBase config)
-        {
-            _config = config;
         }
 
         /// <summary>

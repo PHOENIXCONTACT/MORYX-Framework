@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.ServiceModel;
@@ -10,7 +11,7 @@ using Marvin.Runtime.UserManagement.UserGroupProvider;
 namespace Marvin.Runtime.UserManagement.UserAuthentication
 {
     [Plugin(LifeCycle.Singleton, typeof(IUserAuthentication))]
-    internal class UserAuthentication : IUserAuthentication, ILoggingComponent
+    internal class UserAuthentication : IUserAuthentication, ILoggingComponent, IDisposable
     {
         #region dependency injection
 
@@ -29,11 +30,9 @@ namespace Marvin.Runtime.UserManagement.UserAuthentication
 
         #endregion
 
-        #region IModulePlugin
+        #region IPlugin
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
+        /// <inheritdoc />
         public void Start()
         {
             foreach (var applicationAccess in Config.AuthenticatorConfigs)
@@ -47,9 +46,13 @@ namespace Marvin.Runtime.UserManagement.UserAuthentication
             }
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
+        /// <inheritdoc />
+        public void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
             _authenticators.Clear();

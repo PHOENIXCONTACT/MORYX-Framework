@@ -20,5 +20,9 @@ namespace Marvin.TestModule
         public void Start()
         {
         }
+
+        public void Stop()
+        {
+        }
     }
 }

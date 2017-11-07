@@ -1,4 +1,5 @@
-﻿using Marvin.Container.TestTools;
+﻿using System;
+using Marvin.Container.TestTools;
 
 namespace Marvin.Container.TestRootPlugin
 {
@@ -20,17 +21,13 @@ namespace Marvin.Container.TestRootPlugin
         {
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        public void Start()
         {
         }
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
-        public void Start()
+        /// <inheritdoc />
+        public void Stop()
         {
         }
     }

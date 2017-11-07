@@ -2,7 +2,7 @@
 
 namespace Marvin.Container.TestTools
 {
-    public interface IConfiguredComponent : IConfiguredModulePlugin<ComponentConfig>
+    public interface IConfiguredComponent : IConfiguredPlugin<ComponentConfig>
     {
         string GetName();
     }

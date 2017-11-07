@@ -254,13 +254,13 @@ If you have some plugins without any configuration then you can just use the [IN
 Lets implement the plugins:
 ````cs
 [Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginA))]
-public class MyPluginA : IMyPlugin, IModulePlugin
+public class MyPluginA : IMyPlugin, IPlugin
 {
 
 }
 
 [Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginB))]
-public class MyPluginB : IMyPlugin, IModulePlugin
+public class MyPluginB : IMyPlugin, IPlugin
 {
 
 }

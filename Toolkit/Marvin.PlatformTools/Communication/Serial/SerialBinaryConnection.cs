@@ -69,6 +69,12 @@ namespace Marvin.Communication.Serial
             CurrentState = BinaryConnectionState.Connected;
         }
 
+        /// <inheritdoc />
+        public void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+        }
+
         /// 
         public void Dispose()
         {

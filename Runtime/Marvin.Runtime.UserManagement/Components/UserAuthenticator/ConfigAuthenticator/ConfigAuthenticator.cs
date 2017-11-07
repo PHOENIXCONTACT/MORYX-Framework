@@ -20,26 +20,19 @@ namespace Marvin.Runtime.UserManagement.UserAuthenticator
 
         private ConfigAuthorizationConfig _config;
 
-        /// <summary>
-        /// Initialize the config authenticator with the given config.
-        /// </summary>
-        /// <param name="config">an UserAuthenticatorConfig.</param>
+        /// <inheritdoc />
         public void Initialize(UserAuthenticatorConfigBase config)
         {
             _config = (ConfigAuthorizationConfig) config;
         }
 
-        /// <summary>
-        /// Dispose the ConfigAuthenticator.
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        public void Start()
         {
         }
 
-        /// <summary>
-        /// Start the ConfigAuthenticator. 
-        /// </summary>
-        public void Start()
+        /// <inheritdoc />
+        public void Stop()
         {
         }
 
@@ -63,7 +56,7 @@ namespace Marvin.Runtime.UserManagement.UserAuthenticator
         public Dictionary<string, OperationAccess> GetOperationAccesses(ModuleConfiguration module, string[] userGroups)
         {
             var accesConfig = GetMatchingConfig(userGroups);
-            return accesConfig == null ? null : accesConfig.OperationAccesses.ToDictionary(access => access.Operation, access => access.AccessRight);
+            return accesConfig?.OperationAccesses.ToDictionary(access => access.Operation, access => access.AccessRight);
         }
 
         private AccessConfiguration GetMatchingConfig(IEnumerable<string> userGroups)

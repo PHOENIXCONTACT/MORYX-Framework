@@ -14,15 +14,13 @@ using Newtonsoft.Json.Converters;
 namespace Marvin.TestModule
 {
     [Plugin(LifeCycle.Singleton)]
-    public class JsonTest : IModulePlugin
+    public class JsonTest : IPlugin
     {
         public IUnitOfWorkFactory TestFactory { get; set; }
 
         private const int LoopCount = 100;
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
+        /// <inheritdoc />
         public void Start()
         {
             Console.WriteLine();
@@ -84,6 +82,11 @@ namespace Marvin.TestModule
 
             }
             Console.WriteLine();
+        }
+
+        /// <inheritdoc />
+        public void Stop()
+        {
         }
 
         private ModuleConfig CreateConfig()
@@ -185,13 +188,6 @@ namespace Marvin.TestModule
                         where e.Id == id
                         select e.JsonData).FirstOrDefault();
             return JsonConvert.DeserializeObject<IConfig>(json, settings);
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
         }
     }
 }

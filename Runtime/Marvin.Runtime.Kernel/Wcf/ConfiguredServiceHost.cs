@@ -111,9 +111,29 @@ namespace Marvin.Runtime.Kernel.Wcf
         }
 
         #region IConfiguredServiceHost
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
+
+        /// <inheritdoc />
+        public void Start()
+        {
+            _logger?.LogEntry(LogLevel.Info, "Starting wcf service {0} with version {1}", _endpointAddress,
+                (_endpointVersion ?? new ServiceVersionAttribute()).ServerVersion);
+
+            _service.Open();
+
+            if (_endpointVersion != null)
+            {
+                _collector.AddEndpoint(_hostConfig.Endpoint, _endpointVersion);
+                _collector.AddService(_type, _hostConfig.BindingType, _endpointAddress, _endpointVersion, _hostConfig.RequiresAuthentification);
+            }
+        }
+
+        /// <inheritdoc />
+        public void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
             _collector.RemoveEndpoint(_hostConfig.Endpoint);
@@ -128,23 +148,6 @@ namespace Marvin.Runtime.Kernel.Wcf
             }
         }
 
-        /// <summary>
-        /// Signal host to start the service
-        /// </summary>
-        public void Start()
-        {
-            _logger?.LogEntry(LogLevel.Info, "Starting wcf service {0} with version {1}", _endpointAddress,
-                (_endpointVersion ?? new ServiceVersionAttribute()).ServerVersion);
-
-            _service.Open();
-
-            if (_endpointVersion != null)
-            {
-                _collector.AddEndpoint(_hostConfig.Endpoint, _endpointVersion);
-                _collector.AddService(_type, _hostConfig.BindingType, _endpointAddress, _endpointVersion, _hostConfig.RequiresAuthentification);
-            }
-        }
         #endregion
-
     }
 }

@@ -26,10 +26,7 @@ namespace Marvin.Runtime.UserManagement.ClientConfigStore
 
         #region IConfiguredModulePlugin
 
-        /// <summary>
-        /// Initializes the component with the specified configuration.
-        /// </summary>
-        /// <param name="config">The configuration.</param>
+        /// <inheritdoc />
         public void Initialize(ClientConfigStoreConfigBase config)
         {
             _config = (FileSystemClientConfigStoreConfig) config;
@@ -38,18 +35,20 @@ namespace Marvin.Runtime.UserManagement.ClientConfigStore
             CheckConfigDirectory();
         }
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
+        /// <inheritdoc />
         public void Start()
         {
             //reload clinet configs to the memory
             LoadClientConfigs();
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
+        /// <inheritdoc />
+        public void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
             SaveClientConfigs();

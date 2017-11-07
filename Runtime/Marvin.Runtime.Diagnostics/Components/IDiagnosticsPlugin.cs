@@ -1,11 +1,12 @@
-﻿using Marvin.Modules.ModulePlugins;
+﻿using System;
+using Marvin.Modules.ModulePlugins;
 
 namespace Marvin.Runtime.Diagnostics
 {
     /// <summary>
     /// Interface for a diagnostic plugin.
     /// </summary>
-    public interface IDiagnosticsPlugin : IConfiguredModulePlugin<DiagnosticsPluginConfigBase>
+    public interface IDiagnosticsPlugin : IConfiguredPlugin<DiagnosticsPluginConfigBase>, IDisposable
     {
         /// <summary>
         /// Name of the plugin.

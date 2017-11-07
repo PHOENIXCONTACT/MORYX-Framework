@@ -123,11 +123,11 @@
     <Compile Include="Modules\Server\IDependentAwareModule.cs" />
     <Compile Include="Modules\Server\IServerModule.cs" />
     <Compile Include="Modules\ModulePlugins\IPluginConfig.cs" />
-    <Compile Include="Modules\ModulePlugins\IConfiguredModulePlugin.cs" />
+    <Compile Include="Modules\ModulePlugins\IConfiguredPlugin.cs" />
     <Compile Include="Modules\IInitializable.cs" />
-    <Compile Include="Modules\ModulePlugins\IInitializableModulePlugin.cs" />
+    <Compile Include="Modules\ModulePlugins\IInitializablePlugin.cs" />
     <Compile Include="Modules\IModule.cs" />
-    <Compile Include="Modules\ModulePlugins\IModulePlugin.cs" />
+    <Compile Include="Modules\ModulePlugins\IPlugin.cs" />
     <Compile Include="Modules\Server\IServerModuleConsole.cs" />
     <Compile Include="Modules\Server\IServerModuleState.cs" />
     <Compile Include="Modules\Server\ServerModuleConsoleAttribute.cs" />

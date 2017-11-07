@@ -24,6 +24,11 @@ namespace Marvin.TestModule
         {
         }
 
+        public void Stop()
+        {
+            
+        }
+        
         public string Hello(string name)
         {
             return string.IsNullOrEmpty(name) ? "Hello world!" : string.Format("Hello {0}!", name);

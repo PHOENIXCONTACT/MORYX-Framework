@@ -82,6 +82,12 @@ namespace Marvin.Communication.Sockets
                 _state.Connect();
         }
 
+        /// <inheritdoc />
+        public void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+        }
+
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>

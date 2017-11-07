@@ -6,7 +6,7 @@ namespace Marvin.Communication
     /// <summary>
     /// Visionary interface for the binary connection
     /// </summary>
-    public interface IBinaryConnection : IConfiguredModulePlugin<BinaryConnectionConfig>, IBinaryTransmission
+    public interface IBinaryConnection : IConfiguredPlugin<BinaryConnectionConfig>, IBinaryTransmission, IDisposable
     {
         /// <summary>
         /// Gets the current ConnectionState.

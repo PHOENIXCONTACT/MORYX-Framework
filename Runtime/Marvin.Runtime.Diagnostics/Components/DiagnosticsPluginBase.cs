@@ -62,9 +62,7 @@ namespace Marvin.Runtime.Diagnostics
         /// </summary>
         protected abstract bool AllwaysListenToConfigChanged { get; }
 
-        /// <summary>
-        /// Starts the module.
-        /// </summary>
+        /// <inheritdoc />
         public void Start()
         {
             OnStart();
@@ -79,9 +77,13 @@ namespace Marvin.Runtime.Diagnostics
             
         }
 
-        /// <summary>
-        /// Disposes all.
-        /// </summary>
+        /// <inheritdoc />
+        public void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
             if(!_running)

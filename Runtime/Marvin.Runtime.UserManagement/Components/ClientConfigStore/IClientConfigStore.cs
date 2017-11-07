@@ -1,11 +1,12 @@
-﻿using Marvin.Modules.ModulePlugins;
+﻿using System;
+using Marvin.Modules.ModulePlugins;
 
 namespace Marvin.Runtime.UserManagement.ClientConfigStore
 {
     /// <summary>
     /// Interface for the user config store. 
     /// </summary>
-    public interface IClientConfigStore : IConfiguredModulePlugin<ClientConfigStoreConfigBase>
+    public interface IClientConfigStore : IConfiguredPlugin<ClientConfigStoreConfigBase>, IDisposable
     {
         /// <summary>
         /// Get a config model from a specific library.

@@ -25,6 +25,9 @@ The `IContainer.SetInstances(obj, obj, obj, ...)` is not available anymore. The 
 Container.SetInstance(ComponentA).SetInstance(ComponentB).SetInstance(ComponentC);
 ````
 
+# IModulePlugin
+The `IModulePlugin` was renamed to `IPlugin` and doesnt inherit from `IDisposable` anymore. In older versions of the Platform it was always a problem of automatic disposable of components. The  `IDisposable` is an optional extension of a component now and `IPlugin` have an additional method `Stop()`. It is neccessary to distinguish between `Stop()` and `Dispose` now. 
+
 # Upgraded Libraries
 To not become old and gray, all third party libraries were upgraded:
 

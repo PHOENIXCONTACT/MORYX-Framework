@@ -14,11 +14,11 @@ namespace Marvin.TestModule
         {
         }
 
-        public void Dispose()
+        public void Start()
         {
         }
 
-        public void Start()
+        public void Stop()
         {
         }
     }

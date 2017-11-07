@@ -6,7 +6,7 @@ namespace Marvin.Tools.Wcf
     /// <summary>
     /// Interface for http service connectors
     /// </summary>
-    public interface IHttpServiceConnector : IModulePlugin
+    public interface IHttpServiceConnector : IPlugin
     {
         /// <summary>
         /// Informs that the availabilty of the wcf client has changed

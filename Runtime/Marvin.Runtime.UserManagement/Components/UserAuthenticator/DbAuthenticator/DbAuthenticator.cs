@@ -24,29 +24,23 @@ namespace Marvin.Runtime.UserManagement.UserAuthenticator
         private DbAuthenticatorConfig _config;
         private IUnitOfWorkFactory _factory;
 
-        /// <summary>
-        /// Initialize the config DbAuthorization with the given config.
-        /// </summary>
-        /// <param name="config">An UserAuthenticatorConfig.</param>
+        /// <inheritdoc />
         public void Initialize(UserAuthenticatorConfigBase config)
         {
             _config = (DbAuthenticatorConfig)config;
             _factory = ModelResolver.GetByNamespace(UserManagementConstants.Namespace);
         }
 
-        /// <summary>
-        /// Start the DbAuthorization. 
-        /// </summary>
+        /// <inheritdoc />
         public void Start()
         {
         }
 
-        /// <summary>
-        /// Dispose the DbAuthorization.
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        public void Stop()
         {
         }
+
         /// <summary>
         /// Fetch the appllication configuration for the user groups.
         /// </summary>

@@ -1,4 +1,5 @@
-﻿using Marvin.Container;
+﻿using System;
+using Marvin.Container;
 using Marvin.Modules.ModulePlugins;
 using Marvin.Threading;
 
@@ -9,7 +10,7 @@ namespace Marvin.Tools.Wcf
     /// </summary>
     /// <typeparam name="TConfig">The plugin configuration class</typeparam>
     /// <typeparam name="TSvcMgr">The service manager interface</typeparam>
-    public abstract class BasicWcfConnectorPlugin<TConfig, TSvcMgr> : IWcfConnector<TConfig>
+    public abstract class BasicWcfConnectorPlugin<TConfig, TSvcMgr> : IWcfConnector<TConfig>, IDisposable
         where TConfig : IWcfServiceConfig
         where TSvcMgr : class
     {
@@ -39,16 +40,19 @@ namespace Marvin.Tools.Wcf
 
         #endregion
 
-        /// <seealso cref="IConfiguredModulePlugin{T}.Initialize"/>
+        /// <seealso cref="IConfiguredPlugin{T}.Initialize"/>
         public virtual void Initialize(TConfig config)
         {
             Config = config;
         }
 
-        /// <seealso cref="IModulePlugin.Start"/>
+        /// <inheritdoc />
         public abstract void Start();
 
-        /// <see cref="System.IDisposable.Dispose"/>
+        /// <inheritdoc />
+        public abstract void Stop();
+
+        /// <inheritdoc />
         public virtual void Dispose()
         {
             if (Service != null)
