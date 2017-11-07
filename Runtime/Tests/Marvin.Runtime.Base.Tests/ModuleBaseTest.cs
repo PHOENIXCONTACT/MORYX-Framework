@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Marvin.Modules.Server;
 using Marvin.Runtime.Base.Tests.Mocks;
 using Marvin.Runtime.Base.Tests.Modules;
 using Marvin.Runtime.Container;

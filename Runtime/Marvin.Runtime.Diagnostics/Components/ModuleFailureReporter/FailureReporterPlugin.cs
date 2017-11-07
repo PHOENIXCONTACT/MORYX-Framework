@@ -5,7 +5,6 @@ using System.Net;
 using Marvin.Container;
 using Marvin.Model;
 using Marvin.Modules;
-using Marvin.Modules.ModulePlugins;
 using Marvin.Modules.Server;
 using Marvin.Runtime.ModuleManagement;
 using Marvin.Threading;

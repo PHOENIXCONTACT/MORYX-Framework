@@ -1,4 +1,6 @@
-﻿namespace Marvin.Modules.Server
+﻿using Marvin.Modules;
+
+namespace Marvin.Runtime
 {
     /// <summary>
     /// Interface for all server modules running within the HeartOfGold application Server.

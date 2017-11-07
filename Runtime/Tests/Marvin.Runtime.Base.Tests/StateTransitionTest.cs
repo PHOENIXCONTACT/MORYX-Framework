@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading;
-using Marvin.Modules.Server;
 using Marvin.Runtime.Base.Tests.Mocks;
 using Marvin.Runtime.Base.Tests.Modules;
 using NUnit.Framework;

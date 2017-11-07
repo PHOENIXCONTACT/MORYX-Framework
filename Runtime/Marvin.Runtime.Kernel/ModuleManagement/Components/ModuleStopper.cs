@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Marvin.Logging;
-using Marvin.Modules.Server;
 
 namespace Marvin.Runtime.Kernel.ModuleManagement
 {

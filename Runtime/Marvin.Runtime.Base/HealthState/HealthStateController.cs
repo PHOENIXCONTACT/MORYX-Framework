@@ -2,7 +2,6 @@
 using System.Threading;
 using Marvin.Logging;
 using Marvin.Modules;
-using Marvin.Modules.Server;
 
 namespace Marvin.Runtime.Base.HealthState
 {

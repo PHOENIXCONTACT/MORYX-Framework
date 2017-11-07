@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Marvin.Modules.Server
+namespace Marvin.Runtime
 {
     /// <summary>
     /// Different health states a server module can have. They are orginized as flags for extensibility

@@ -5,7 +5,6 @@ using System.Timers;
 using Marvin.Configuration;
 using Marvin.Model;
 using Marvin.Modules;
-using Marvin.Modules.Server;
 using Marvin.Tools;
 using Marvin.Runtime.ModuleManagement;
 using Marvin.Runtime.ServerModules;

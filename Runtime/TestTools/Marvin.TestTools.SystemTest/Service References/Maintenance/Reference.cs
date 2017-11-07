@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using Marvin.Runtime;
+
 namespace Marvin.TestTools.SystemTest.Maintenance {
     using System.Runtime.Serialization;
     using System;
@@ -33,7 +35,7 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
         private Marvin.TestTools.SystemTest.Maintenance.FailureBehaviour FailureBehaviourField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Modules.Server.ServerModuleState HealthStateField;
+        private ServerModuleState HealthStateField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string NameField;
@@ -94,7 +96,7 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.Modules.Server.ServerModuleState HealthState {
+        public ServerModuleState HealthState {
             get {
                 return this.HealthStateField;
             }

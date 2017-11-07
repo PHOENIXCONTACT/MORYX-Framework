@@ -128,10 +128,6 @@
     <Compile Include="Modules\ModulePlugins\IInitializablePlugin.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\ModulePlugins\IPlugin.cs" />
-    <Compile Include="Modules\Server\IServerModuleConsole.cs" />
-    <Compile Include="Modules\Server\IServerModuleState.cs" />
-    <Compile Include="Modules\Server\ServerModuleConsoleAttribute.cs" />
-    <Compile Include="Modules\Server\ServerModuleState.cs" />
     <Compile Include="Bindings\IBindingResolver.cs" />
     <Compile Include="Bindings\IBindingResolverChain.cs" />
     <Compile Include="Bindings\IBindingResolverFactory.cs" />

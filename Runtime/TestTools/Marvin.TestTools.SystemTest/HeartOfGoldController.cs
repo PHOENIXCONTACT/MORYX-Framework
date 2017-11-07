@@ -12,7 +12,7 @@ using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading;
 using Marvin.Model;
-using Marvin.Modules.Server;
+using Marvin.Runtime;
 using Marvin.Serialization;
 using Marvin.TestTools.SystemTest.DatabaseMaintenance;
 using Marvin.TestTools.SystemTest.Logging;
