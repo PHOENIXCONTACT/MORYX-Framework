@@ -1,4 +1,5 @@
-﻿using Marvin.Container.TestTools;
+﻿using System;
+using Marvin.Container.TestTools;
 
 namespace Marvin.Container.Tests
 {
@@ -19,14 +20,13 @@ namespace Marvin.Container.Tests
         {
         }
 
-        public void Dispose()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public void Start()
         {
-            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void Stop()
+        {
         }
     }
 
@@ -40,25 +40,18 @@ namespace Marvin.Container.Tests
             return PluginName;
         }
 
-        /// <summary>
-        /// Initialize this component with its config
-        /// </summary>
-        /// <param name="config">Config of this module plugin</param>
+        /// <inheritdoc />
         public void Initialize(ComponentConfig config)
         {
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        public void Start()
         {
         }
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
-        public void Start()
+        /// <inheritdoc />
+        public void Stop()
         {
         }
     }
@@ -73,25 +66,18 @@ namespace Marvin.Container.Tests
             return PluginName;
         }
 
-        /// <summary>
-        /// Initialize this component with its config
-        /// </summary>
-        /// <param name="config">Config of this module plugin</param>
+        /// <inheritdoc />
         public void Initialize(ComponentConfig config)
         {
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        public void Start()
         {
         }
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
-        public void Start()
+        /// <inheritdoc />
+        public void Stop()
         {
         }
     }

@@ -7,7 +7,7 @@ namespace Marvin.Runtime.UserManagement.UserAuthentication
     /// <summary>
     /// Central component handling user authentication
     /// </summary>
-    internal interface IUserAuthentication : IModulePlugin
+    internal interface IUserAuthentication : IPlugin
     {
         /// <summary>
         /// Gets the user infos.

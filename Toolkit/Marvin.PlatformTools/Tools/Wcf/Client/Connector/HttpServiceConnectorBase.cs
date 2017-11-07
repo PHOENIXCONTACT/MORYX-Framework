@@ -8,7 +8,7 @@ namespace Marvin.Tools.Wcf
     /// </summary>
     /// <typeparam name="TWcfClient">The type of the WCF client.</typeparam>
     /// <typeparam name="TWcfInterface">The type of the WCF interface.</typeparam>
-    public abstract class HttpServiceConnectorBase<TWcfClient, TWcfInterface> : IHttpServiceConnector
+    public abstract class HttpServiceConnectorBase<TWcfClient, TWcfInterface> : IHttpServiceConnector, IDisposable
         where TWcfInterface : class
         where TWcfClient : ClientBase<TWcfInterface>, TWcfInterface
     {
@@ -58,6 +58,12 @@ namespace Marvin.Tools.Wcf
 
             //Instanciate client and get client info
             ClientId = ClientFactory.Create<TWcfClient, TWcfInterface>(ClientVersion, MinServerVersion, ClientCallback);
+        }
+
+        /// <inheritdoc />
+        public virtual void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
         }
 
         ///

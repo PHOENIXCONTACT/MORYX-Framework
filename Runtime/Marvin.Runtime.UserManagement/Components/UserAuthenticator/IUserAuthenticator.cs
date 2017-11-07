@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Marvin.Modules.ModulePlugins;
 
 namespace Marvin.Runtime.UserManagement.UserAuthenticator
@@ -6,7 +7,7 @@ namespace Marvin.Runtime.UserManagement.UserAuthenticator
     /// <summary>
     /// Interface for the user authenticator.
     /// </summary>
-    public interface IUserAuthenticator : IConfiguredModulePlugin<UserAuthenticatorConfigBase>
+    public interface IUserAuthenticator : IConfiguredPlugin<UserAuthenticatorConfigBase>
     {
         /// <summary>
         /// Get the plugin config for this user

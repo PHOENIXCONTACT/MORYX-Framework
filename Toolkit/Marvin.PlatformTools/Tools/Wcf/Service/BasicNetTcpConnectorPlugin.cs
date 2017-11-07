@@ -13,7 +13,7 @@ namespace Marvin.Tools.Wcf
         where TSvcMgr : class, IWcfServiceManager
         where TService : class, ISessionService
     {
-        /// <seealso cref="IModulePlugin.Start"/>
+        /// <inheritdoc />
         public override void Start()
         {
             // Link service manager delegate
@@ -22,6 +22,12 @@ namespace Marvin.Tools.Wcf
             // Start wcf host with the binding specific service
             Service = HostFactory.CreateHost<TService>(Config.ConnectorHost);
             Service.Start();
+        }
+
+        /// <inheritdoc />
+        public override void Stop()
+        {
+            
         }
 
     }

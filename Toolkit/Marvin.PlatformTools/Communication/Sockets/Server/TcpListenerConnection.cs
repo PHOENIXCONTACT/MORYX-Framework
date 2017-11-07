@@ -12,7 +12,7 @@ namespace Marvin.Communication.Sockets
     /// </summary>
     [ExpectedConfig(typeof(TcpListenerConfig))]
     [Plugin(LifeCycle.Transient, typeof(IBinaryConnection), Name = nameof(TcpListenerConnection))]
-    public class TcpListenerConnection : IBinaryConnection, IStateContext, ILoggingComponent
+    public class TcpListenerConnection : IBinaryConnection, IStateContext, ILoggingComponent, IDisposable
     {
         #region Dependencies
 
@@ -89,6 +89,12 @@ namespace Marvin.Communication.Sockets
         {
             lock (this)
                 _state.Open();
+        }
+
+        /// <inheritdoc />
+        public void Stop()
+        {
+            //TODO: Distinguish between IDisposable.Dispose() and Stop()
         }
 
         /// <summary>

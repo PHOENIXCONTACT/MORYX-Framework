@@ -22,5 +22,10 @@ namespace Marvin.DependentTestModule
             Service = HostFactory.CreateHost<ISimpleHelloWorldWcfService>(Config.ConnectorHost);
             Service.Start();
         }
+
+        public override void Stop()
+        {
+            
+        }
     }
 }

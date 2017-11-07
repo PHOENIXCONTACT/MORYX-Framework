@@ -4,7 +4,7 @@
     /// This generic interface is intended for all plugins that require a configuration for their initialization to work properly. 
     /// This configuration is passed to the plugin via the Initialize(TConf config) method. 
     /// </summary>
-    public interface IConfiguredModulePlugin<in T> : IModulePlugin
+    public interface IConfiguredPlugin<in T> : IPlugin
         where T : IPluginConfig
     {
         /// <summary>

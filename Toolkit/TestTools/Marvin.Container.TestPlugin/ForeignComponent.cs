@@ -12,25 +12,18 @@ namespace Marvin.Container.TestPlugin
             return PluginName;
         }
 
-        /// <summary>
-        /// Initialize this component with its config
-        /// </summary>
-        /// <param name="config">Config of this module plugin</param>
+        /// <inheritdoc />
         public void Initialize(ComponentConfig config)
         {
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        public void Start()
         {
         }
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
-        public void Start()
+        /// <inheritdoc />
+        public void Stop()
         {
         }
     }
