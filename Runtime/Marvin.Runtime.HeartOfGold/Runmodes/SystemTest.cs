@@ -4,7 +4,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Marvin.Configuration;
-using Marvin.Modules.Server;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.HeartOfGold

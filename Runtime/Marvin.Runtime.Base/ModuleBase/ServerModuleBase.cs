@@ -5,7 +5,6 @@ using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
-using Marvin.Modules.Server;
 using Marvin.Runtime.Base.HealthState;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.ModuleManagement;

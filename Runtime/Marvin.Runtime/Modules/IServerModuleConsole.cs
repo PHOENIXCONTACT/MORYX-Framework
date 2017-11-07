@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Marvin.Modules.Server
+namespace Marvin.Runtime
 {
     /// <summary>
     /// Console interface to provide developer interaction with a module

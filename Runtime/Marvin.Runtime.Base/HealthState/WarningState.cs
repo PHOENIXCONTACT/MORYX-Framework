@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using Marvin.Modules.Server;
 
 namespace Marvin.Runtime.Base.HealthState
 {

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Marvin.Container;
 using Marvin.Modules;
-using Marvin.Modules.Server;
 using Marvin.Tools;
 using Marvin.Runtime.ModuleManagement;
 

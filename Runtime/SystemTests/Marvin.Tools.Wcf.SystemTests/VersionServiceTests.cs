@@ -3,7 +3,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using Marvin.DependentTestModule;
-using Marvin.Modules.Server;
+using Marvin.Runtime;
 using Marvin.Runtime.SystemTests;
 using Marvin.TestModule;
 using Marvin.TestTools.SystemTest;

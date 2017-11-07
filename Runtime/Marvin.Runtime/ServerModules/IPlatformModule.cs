@@ -1,5 +1,4 @@
-﻿using Marvin.Modules.Server;
-using Marvin.Runtime.ModuleManagement;
+﻿using Marvin.Runtime.ModuleManagement;
 
 namespace Marvin.Runtime.ServerModules
 {

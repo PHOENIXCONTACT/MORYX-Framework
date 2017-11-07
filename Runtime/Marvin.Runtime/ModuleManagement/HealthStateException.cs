@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using Marvin.Modules.Server;
 
 namespace Marvin.Runtime.ModuleManagement
 {

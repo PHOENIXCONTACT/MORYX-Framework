@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
 using Marvin.Container;
-using Marvin.Modules.Server;
 using Marvin.Runtime.UserManagement.UserAuthentication;
 using Marvin.Runtime.UserManagement.UserAuthenticator;
 

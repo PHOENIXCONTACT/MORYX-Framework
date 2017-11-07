@@ -1,5 +1,5 @@
 ﻿using System;
-using Marvin.Modules.Server;
+using Marvin.Runtime;
 
 namespace Marvin.TestModule
 {

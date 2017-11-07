@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Marvin.Container;
-using Marvin.Modules.Server;
 using Marvin.Runtime.Maintenance.Contracts;
 
 namespace Marvin.Runtime.Maintenance

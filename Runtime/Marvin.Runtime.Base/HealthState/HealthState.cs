@@ -1,6 +1,4 @@
-﻿using Marvin.Modules.Server;
-
-namespace Marvin.Runtime.Base.HealthState
+﻿namespace Marvin.Runtime.Base.HealthState
 {
     /// <summary>
     /// This makes use of the state pattern described by the GoF

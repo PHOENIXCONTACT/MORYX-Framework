@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Model;
-using Marvin.Modules.Server;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Maintenance.Filesystem;
 using Marvin.Runtime.ModuleManagement;

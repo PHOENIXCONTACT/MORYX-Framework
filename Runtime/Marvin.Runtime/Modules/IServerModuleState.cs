@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Marvin.Modules.Server
+namespace Marvin.Runtime
 {
     /// <summary>
     /// Interface to access the modules state, state history and register to change events

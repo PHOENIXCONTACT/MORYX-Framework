@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Marvin.Container;
-using Marvin.Modules.Server;
 using Marvin.Runtime.ModuleManagement;
 
 namespace Marvin.Runtime.HeartOfGold

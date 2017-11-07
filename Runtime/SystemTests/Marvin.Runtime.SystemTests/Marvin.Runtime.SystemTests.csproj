@@ -60,9 +60,6 @@
     <Reference Include="Marvin.PlatformTools">
       <HintPath>..\..\..\Build\Toolkit\Marvin.PlatformTools.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.TestTools.SystemTest">
-      <HintPath>..\..\..\Build\Toolkit\Marvin.TestTools.SystemTest.dll</HintPath>
-    </Reference>
     <Reference Include="Marvin.TestTools.Test.Model">
       <HintPath>..\..\..\Build\Toolkit\Marvin.TestTools.Test.Model.dll</HintPath>
     </Reference>
@@ -99,6 +96,10 @@
     <ProjectReference Include="..\..\TestModule\Marvin.TestModule.csproj">
       <Project>{24ed97ad-6d04-4dc0-afcb-c911ef0aa738}</Project>
       <Name>Marvin.TestModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TestTools\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
+      <Project>{d6dc00c6-9358-4839-84c0-44df018a74dc}</Project>
+      <Name>Marvin.TestTools.SystemTest</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

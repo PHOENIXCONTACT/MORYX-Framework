@@ -1,6 +1,4 @@
-﻿using Marvin.Modules.Server;
-
-namespace Marvin.Runtime.Kernel.ModuleManagement
+﻿namespace Marvin.Runtime.Kernel.ModuleManagement
 {
     /// <summary>
     /// Component handling the start of modules

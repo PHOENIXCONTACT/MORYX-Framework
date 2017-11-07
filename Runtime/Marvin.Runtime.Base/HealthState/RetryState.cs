@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using Marvin.Modules.Server;
 using Marvin.Runtime.ModuleManagement;
 
 namespace Marvin.Runtime.Base.HealthState
