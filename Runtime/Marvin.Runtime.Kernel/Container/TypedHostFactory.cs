@@ -4,7 +4,7 @@ using Castle.Facilities.WcfIntegration;
 using Castle.MicroKernel;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Container
+namespace Marvin.Runtime.Kernel.Container
 {
     internal class TypedHostFactory : DefaultServiceHostFactory, ITypedHostFactory
     {

@@ -2,6 +2,7 @@
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
+using Marvin.Runtime.Kernel.Container;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Kernel.Wcf
@@ -25,7 +26,7 @@ namespace Marvin.Runtime.Kernel.Wcf
         /// </summary>
         public void Initialize()
         {
-            _container = new ServerLocalContainer().ExecuteInstaller(new AutoInstaller(GetType().Assembly));
+            _container = new WcfContainer().ExecuteInstaller(new AutoInstaller(GetType().Assembly));
             StartVersionsServices(ConfigManager);
         }
 
