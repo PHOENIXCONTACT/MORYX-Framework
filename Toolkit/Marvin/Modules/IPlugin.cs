@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Marvin.Modules.ModulePlugins
+﻿namespace Marvin.Modules
 {
     /// <summary>
     /// Base interface for all components collaborating within an <see cref="IModule"/> composition. 

@@ -1,4 +1,4 @@
-﻿namespace Marvin.Modules.ModulePlugins
+﻿namespace Marvin.Modules
 {
     /// <summary>
     /// This generic interface is intended for all plugins that require a configuration for their initialization to work properly. 

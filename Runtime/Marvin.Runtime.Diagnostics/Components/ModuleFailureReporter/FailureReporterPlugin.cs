@@ -5,7 +5,6 @@ using System.Net;
 using Marvin.Container;
 using Marvin.Model;
 using Marvin.Modules;
-using Marvin.Modules.Server;
 using Marvin.Runtime.ModuleManagement;
 using Marvin.Threading;
 
@@ -26,33 +25,19 @@ namespace Marvin.Runtime.Diagnostics.ModuleFailureReporter
         /// <summary>
         /// The name of the plugin.
         /// </summary>
-        public override string Name
-        {
-            get { return PluginName; }
-        }
+        public override string Name => PluginName;
+
         /// <summary>
         /// Behavior to listen allways to config changes or not.
         /// </summary>
-        protected override bool AllwaysListenToConfigChanged
-        {
-            get { return false; }
-        }
+        protected override bool AllwaysListenToConfigChanged => false;
 
-        /// <summary>
-        ///  Injected dependency.
-        /// </summary>
         public IMailClient MailClient { get; set; }
-        /// <summary>
-        ///  Injected dependency.
-        /// </summary>
+
         public IModuleManager ModuleManager { get; set; }
-        /// <summary>
-        ///  Injected dependency.
-        /// </summary>
+
         public IModuleErrorReporting ErrorReporting { get; set; }
-        /// <summary>
-        ///  Injected dependency.
-        /// </summary>
+
         public IParallelOperations ParallelOperations { get; set; }
 
         /// <summary>

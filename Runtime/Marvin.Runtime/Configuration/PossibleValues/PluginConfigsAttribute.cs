@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Runtime.Configuration
 {
@@ -59,7 +59,7 @@ namespace Marvin.Runtime.Configuration
             if (pluginContainer == null)
                 return possibleValues;
 
-            //TODO: find better way to remove ExpectedConfigAttribute ?!
+            // Find better way to remove ExpectedConfigAttribute -> Tries: 3
             var implementations = pluginContainer.GetRegisteredImplementations(StrategyService);
             possibleValues.AddRange(implementations.Select(implementation => implementation.GetCustomAttribute<ExpectedConfigAttribute>())
                                                    .Where(attribute => attribute != null).Select(attribute => attribute.ExcpectedConfigType));

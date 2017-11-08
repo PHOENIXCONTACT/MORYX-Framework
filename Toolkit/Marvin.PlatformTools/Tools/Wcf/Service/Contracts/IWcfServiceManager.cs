@@ -1,4 +1,4 @@
-﻿using Marvin.Modules.ModulePlugins;
+﻿using Marvin.Modules;
 
 namespace Marvin.Tools.Wcf
 {

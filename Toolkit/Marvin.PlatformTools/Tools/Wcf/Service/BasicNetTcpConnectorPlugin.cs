@@ -1,6 +1,4 @@
-﻿using Marvin.Modules.ModulePlugins;
-
-namespace Marvin.Tools.Wcf
+﻿namespace Marvin.Tools.Wcf
 {
     /// <summary>
     /// Base implementation of a NetTcp based WCF service plugin

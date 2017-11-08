@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Runtime.Configuration;
 
 namespace Marvin.TestModule

@@ -1,6 +1,6 @@
 ﻿using Devart.Data.PostgreSql;
 using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Runtime.Diagnostics.DbMonitor
 {

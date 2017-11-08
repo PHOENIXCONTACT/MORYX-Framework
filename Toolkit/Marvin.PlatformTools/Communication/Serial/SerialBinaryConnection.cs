@@ -2,7 +2,7 @@
 using System.IO.Ports;
 using Marvin.Container;
 using Marvin.Logging;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Communication.Serial
 {

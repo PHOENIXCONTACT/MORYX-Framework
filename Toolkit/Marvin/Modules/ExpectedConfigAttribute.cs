@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Marvin.Modules.ModulePlugins
+namespace Marvin.Modules
 {
     /// <summary>
     /// Attribute to decorate a <see cref="IPlugin"/> to receive a certain config type

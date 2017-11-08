@@ -6,7 +6,7 @@ using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Model;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.TestTools.Test.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

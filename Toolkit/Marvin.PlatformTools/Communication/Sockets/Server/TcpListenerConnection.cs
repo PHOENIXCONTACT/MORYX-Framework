@@ -2,7 +2,7 @@
 using System.Threading;
 using Marvin.Container;
 using Marvin.Logging;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.StateMachines;
 
 namespace Marvin.Communication.Sockets
