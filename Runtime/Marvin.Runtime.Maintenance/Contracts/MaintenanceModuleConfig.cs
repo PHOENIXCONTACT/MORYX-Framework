@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using Marvin.Configuration;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Maintenance.Contracts

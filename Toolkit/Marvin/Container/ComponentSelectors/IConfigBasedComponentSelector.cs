@@ -1,5 +1,3 @@
-using Marvin.Modules.ModulePlugins;
-
 namespace Marvin.Container
 {
     /// <summary>

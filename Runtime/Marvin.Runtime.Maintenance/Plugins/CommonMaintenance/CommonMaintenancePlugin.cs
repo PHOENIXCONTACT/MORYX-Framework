@@ -1,5 +1,5 @@
 ﻿using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Runtime.Maintenance.Contracts;
 using Marvin.Runtime.Maintenance.Plugins.CommonMaintenance.Wcf;
 

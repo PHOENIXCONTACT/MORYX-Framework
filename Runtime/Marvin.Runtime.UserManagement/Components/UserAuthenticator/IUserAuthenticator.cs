@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Runtime.UserManagement.UserAuthenticator
 {

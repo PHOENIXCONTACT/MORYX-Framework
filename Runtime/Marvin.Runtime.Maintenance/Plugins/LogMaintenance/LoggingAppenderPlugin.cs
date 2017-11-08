@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Marvin.Container;
 using Marvin.Logging;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Runtime.Maintenance.Contracts;
 using Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf;
 using Marvin.Threading;

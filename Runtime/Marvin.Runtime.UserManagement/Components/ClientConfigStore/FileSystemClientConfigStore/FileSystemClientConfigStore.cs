@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Marvin.Configuration;
 using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Runtime.UserManagement.ClientConfigStore
 {

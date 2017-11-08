@@ -1,5 +1,5 @@
 ﻿using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Runtime.Diagnostics.ClientLog.Wcf;
 using Marvin.Tools.Wcf;
 

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Marvin.Container;
 using Marvin.Logging;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Threading;
 
 namespace Marvin.Runtime.Diagnostics.SystemMonitor

@@ -1,6 +1,6 @@
 ﻿using System;
 using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Threading;
 
 namespace Marvin.Tools.Wcf

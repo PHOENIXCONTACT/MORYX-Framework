@@ -1,4 +1,4 @@
-﻿namespace Marvin.Modules.ModulePlugins
+﻿namespace Marvin.Modules
 {
     /// <summary>
     /// Based on <see cref="IInitializable"/> and <see cref="IPlugin"/> it offers a simple three-stage lifecycle. 

@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.TestModule

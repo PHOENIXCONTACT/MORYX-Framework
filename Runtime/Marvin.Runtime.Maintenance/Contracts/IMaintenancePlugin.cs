@@ -1,5 +1,5 @@
 ﻿using System;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Runtime.Maintenance.Contracts
 {

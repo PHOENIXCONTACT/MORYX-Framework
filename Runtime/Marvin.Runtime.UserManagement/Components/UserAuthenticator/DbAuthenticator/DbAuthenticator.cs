@@ -2,7 +2,7 @@
 using System.Linq;
 using Marvin.Container;
 using Marvin.Model;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Runtime.UserManagement.Model;
 
 namespace Marvin.Runtime.UserManagement.UserAuthenticator

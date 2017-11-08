@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using Marvin.Configuration;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Runtime.Diagnostics
 {
