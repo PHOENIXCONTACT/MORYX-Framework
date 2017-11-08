@@ -13,22 +13,27 @@ namespace Marvin.Logging
         /// Information simply used to trace the flow of operations inside a module
         /// </summary>
         Trace,
+
         /// <summary>
         /// Information used for debugging purposes
         /// </summary>
         Debug,
+
         /// <summary>
         /// Information about occured events that are nether a warning nor an error
         /// </summary>
         Info,
+
         /// <summary>
         /// Events that may destabilize the component
         /// </summary>
         Warning,
+
         /// <summary>
         /// Critical events that may obstruct any further execution
         /// </summary>
         Error,
+
         /// <summary>
         /// Critical event that does prevent any further component usage
         /// </summary>
@@ -44,14 +49,17 @@ namespace Marvin.Logging
         /// Name of this logger instance
         /// </summary>
         string Name { get; }
+
         /// <summary>
         /// Add a new entry to the log
         /// </summary>
         void LogEntry(LogLevel level, string message, params object[] formatParameters);
+
         /// <summary>
         /// Log a caught exception
         /// </summary>
         void LogException(LogLevel level, Exception ex, string message, params object[] formatParameters);
+
         /// <summary>
         /// Active logging level
         /// </summary>

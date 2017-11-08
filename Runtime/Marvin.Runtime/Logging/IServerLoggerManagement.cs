@@ -1,6 +1,7 @@
 ﻿using System;
+using Marvin.Logging;
 
-namespace Marvin.Logging
+namespace Marvin.Runtime
 {
     /// <summary>
     /// Server specific logger management

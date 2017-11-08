@@ -71,6 +71,7 @@
     <Compile Include="Configuration\SharedConfigAttribute.cs" />
     <Compile Include="Container\IContainerHost.cs" />
     <Compile Include="Container\ServerModuleAttribute.cs" />
+    <Compile Include="Logging\IServerLoggerManagement.cs" />
     <Compile Include="Modules\IServerModule.cs" />
     <Compile Include="Modules\IServerModuleConsole.cs" />
     <Compile Include="Modules\IServerModuleState.cs" />
