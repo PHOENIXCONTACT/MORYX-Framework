@@ -40,8 +40,6 @@
     </Compile>
     <Compile Include="BaseTypes\MarvinException.cs" />
     <Compile Include="Collections\IDelayQueue.cs" />
-    <Compile Include="Collections\MergedCollection.cs" />
-    <Compile Include="Collections\WeakCollection.cs" />
     <Compile Include="Communication\Attributes\PayloadPositionAttribute.cs" />
     <Compile Include="Communication\Connection\BinaryConnectionConfig.cs" />
     <Compile Include="Communication\Connection\BinaryConnectionState.cs" />
@@ -87,13 +85,11 @@
     <Compile Include="Container\INamedChildContainer.cs" />
     <Compile Include="Container\UseChildAttribute.cs" />
     <Compile Include="IQuickCast.cs" />
-    <Compile Include="Logging\IClientLoggerManagement.cs" />
     <Compile Include="Logging\ILoggerManagement.cs" />
     <Compile Include="Logging\ILoggingComponent.cs" />
     <Compile Include="Logging\ILoggingHost.cs" />
     <Compile Include="Logging\ILogMessage.cs" />
     <Compile Include="Logging\IModuleLogger.cs" />
-    <Compile Include="Logging\IServerLoggerManagement.cs" />
     <Compile Include="Model\Attributes\ModelConfiguratorAttribute.cs" />
     <Compile Include="Model\Attributes\ModelFactoryAttribute.cs" />
     <Compile Include="Model\Configuration\IDatabaseScript.cs" />
