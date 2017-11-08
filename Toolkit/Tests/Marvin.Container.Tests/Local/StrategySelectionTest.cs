@@ -119,7 +119,7 @@ namespace Marvin.Container.Tests
 
         private static IContainer CreateContainer(IDictionary<Type, string> strategies)
         {
-            var container = new ServerLocalContainer(strategies);
+            var container = new LocalContainer(strategies);
 
             container.LoadComponents<IRootClass>();
             container.LoadComponents<IConfiguredComponent>();

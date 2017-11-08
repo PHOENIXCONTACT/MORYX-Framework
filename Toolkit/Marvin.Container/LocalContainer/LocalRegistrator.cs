@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 
 namespace Marvin.Container
 {

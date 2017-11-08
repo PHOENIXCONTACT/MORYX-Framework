@@ -5,12 +5,12 @@ namespace Marvin.Container.Tests
     [TestFixture]
     public class LocalContainerTest
     {
-        private ServerLocalContainer _container;
+        private LocalContainer _container;
 
         [SetUp]
         public void Init()
         {
-            _container = new ServerLocalContainer();
+            _container = new LocalContainer();
             _container.ExecuteInstaller(new AutoInstaller(GetType().Assembly));
         }
 
