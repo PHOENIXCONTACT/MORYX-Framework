@@ -1,4 +1,5 @@
 ﻿using System;
+using Marvin.Communication.Serial;
 using Marvin.Logging;
 
 namespace Marvin.Communication
@@ -16,6 +17,9 @@ namespace Marvin.Communication
             IBinaryConnection instance;
             switch (config.PluginName)
             {
+                case nameof(SerialBinaryConnection):
+                    instance = new SerialBinaryConnection(validator) { Logger = logger.GetChild(string.Empty, typeof(SerialBinaryConnection)) };
+                    break;
                 default:
                     throw new ArgumentException("Unknown plugin name in config!", "config");
             }

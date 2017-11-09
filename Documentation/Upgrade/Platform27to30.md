@@ -4,6 +4,10 @@ Platform 2.7 to 3.0 Upgrade Guide {#platform27to30}
 When you read this, you are at the point when you are interested to upgrade your Platform 2.7 to 3.0.
 Let me say first, that it will be a complex task for the next hours. 
 
+# .NET Framework 4.6.1
+To stay with the future, we decided to move to .NET Framework 4.6.1. The version is compatible with .NET Standard 2.0 to later move to .NET Core.
+All projects have to be adjusted to the new framework version.
+
 # Flat Folder Structure and Copy-Local
 You know the days where you have to change the `CopyLocal` to `false` on every single reference you add to an assembly? Im glad to tell you that you can forget this creepy thing! In Platform 3 you do not have to do it anymore. The complete folder structure of the ServiceRuntime is pressed flat. You cannot find such folders like `Modules`, `ModulePlugins`, `Models` or `Bundles` anymore. Every assembly will be build in the root ServiceRuntime/ClientRuntime directory.
 
@@ -43,7 +47,7 @@ The JSON Library was updated to the newest version. With Platform 3 generally yo
 The known static class `JsonSettings` is not existing anymore. The new [Json](@ref Marvin.Serialization.Json) class will provide several options. For more details, please read [Json Serialization](@ref platform-jsonUsage)
 
 ## NUnit
-For our unit tests the Nunit framework was updated from 2.4.x to 3.5.0.
+For our unit tests the Nunit framework was updated from 2.4.x to 3.8.0.
 
 Some help:
 - TestCaseAttribute
