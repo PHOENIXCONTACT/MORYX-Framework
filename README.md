@@ -13,7 +13,6 @@ Currently the `preperation` branch is used to get rid of binaries.
 ### General
 
 - Move config attributes to platform (possible values, cpu count, integer steps, ...)
-- Remove `NoTracking` for container component lifecycle (?)
 
 ### Runtime
 
