@@ -111,7 +111,7 @@ namespace Marvin.Runtime.Base
             ConfigParser.ParseStrategies(Config, Strategies);
 
             // Initizalize container with server module dll and this dll
-            Container = new LocalContainer(Strategies)
+            Container = new WcfLocalContainer(Strategies)
                 .ExecuteInstaller(new AutoInstaller(GetType().Assembly))
                 .SetInstance<IModuleErrorReporting>(_stateController)
                 .Register<IParallelOperations, ParallelOperations>()
