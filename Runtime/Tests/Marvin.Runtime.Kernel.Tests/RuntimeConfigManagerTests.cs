@@ -161,7 +161,7 @@ namespace Marvin.Runtime.Kernel.Tests
             Assert.False(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, "String: The system default value equals the test setup default value.");
 
             // load the default values for unset properties
-            _manager.FillEmptyProperties(emptyConfig);
+            _manager.FillEmpty(emptyConfig);
 
             // check if all properties got their default values.
             Assert.True(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Boolean field has been initialized!");
@@ -204,7 +204,7 @@ namespace Marvin.Runtime.Kernel.Tests
             Assert.False(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, "String: The system default value equals the test setup default value.");
 
             // fillup empty properties
-            _manager.FillEmptyProperties(emptyConfig);
+            _manager.FillEmpty(emptyConfig);
            
             // check that no property value has been overwritten.
             Assert.False(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, "Enum field has been overwritten!");

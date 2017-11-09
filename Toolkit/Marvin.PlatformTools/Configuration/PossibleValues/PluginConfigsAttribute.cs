@@ -5,7 +5,7 @@ using System.Reflection;
 using Marvin.Container;
 using Marvin.Modules;
 
-namespace Marvin.Runtime.Configuration
+namespace Marvin.Configuration
 {
     public class PluginConfigsAttribute : PossibleConfigValuesAttribute
     {

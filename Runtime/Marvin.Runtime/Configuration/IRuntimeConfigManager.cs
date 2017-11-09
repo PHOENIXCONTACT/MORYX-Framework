@@ -6,7 +6,7 @@ namespace Marvin.Runtime.Configuration
     /// <summary>
     /// Extended config manager for the runtime
     /// </summary>
-    public interface IRuntimeConfigManager : IConfigManager
+    public interface IRuntimeConfigManager : IConfigManager, IEmptyPropertyProvider
     {
         /// <summary>
         /// Config directory to use for storing the serialized configurations.
@@ -42,11 +42,5 @@ namespace Marvin.Runtime.Configuration
         /// Save all open configurations
         /// </summary>
         void SaveAll();
-
-        /// <summary>
-        /// Fills all config properties with default values
-        /// </summary>
-        /// <param name="obj"></param>
-        void FillEmptyProperties(object obj);
     }
 }

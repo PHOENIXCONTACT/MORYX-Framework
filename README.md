@@ -10,10 +10,6 @@ Currently the `preperation` branch is used to get rid of binaries.
 
 ## ToDos for Platform 3
 
-### General
-
-- Move config attributes to platform (possible values, cpu count, integer steps, ...)
-
 ### Runtime
 
 - Discuss about the shipped executable, maybe an approach like asp.net is

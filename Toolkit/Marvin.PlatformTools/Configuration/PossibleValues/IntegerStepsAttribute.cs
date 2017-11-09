@@ -2,20 +2,27 @@
 using System.Collections.Generic;
 using Marvin.Container;
 
-namespace Marvin.Runtime.Configuration
+namespace Marvin.Configuration
 {
+    /// <summary>
+    /// Mode of the integer steps
+    /// </summary>
     public enum StepMode
     {
         /// <summary>
         /// Increase value by adding step value
         /// </summary>
         Addition,
+
         /// <summary>
         /// Increase value by multiplying with step value
         /// </summary>
         Multiplication
     }
 
+    /// <summary>
+    /// <see cref="PossibleConfigValuesAttribute"/> which provides integer steps
+    /// </summary>
     public class IntegerStepsAttribute : PossibleConfigValuesAttribute
     {
         private readonly int _min;
@@ -23,6 +30,9 @@ namespace Marvin.Runtime.Configuration
         private readonly int _step;
         private readonly StepMode _mode;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="IntegerStepsAttribute"/>
+        /// </summary>
         public IntegerStepsAttribute(int min, int max, int step, StepMode mode)
         {
             _min = min;
@@ -31,10 +41,7 @@ namespace Marvin.Runtime.Configuration
             _mode = mode;
         }
 
-        /// <summary>
-        /// All possible values for this member represented as strings. The given container might be null
-        /// and can be used to resolve possible values
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
         {
             var modeCalculation = (Func<int, int>)(possibleValue =>  _mode == StepMode.Addition 
@@ -46,17 +53,10 @@ namespace Marvin.Runtime.Configuration
             }
         }
 
-        /// <summary>
-        /// Flag if this member implements its own string to value conversion
-        /// </summary>
-        public override bool OverridesConversion
-        {
-            get { return false; }
-        }
+        /// <inheritdoc />
+        public override bool OverridesConversion => false;
 
-        public override bool UpdateFromPredecessor
-        {
-            get { return false; }
-        }
+        /// <inheritdoc />
+        public override bool UpdateFromPredecessor => false;
     }
 }

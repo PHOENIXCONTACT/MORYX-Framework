@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Runtime.Configuration;
+using Marvin.Configuration;
 
 namespace Marvin.Runtime.Diagnostics.SystemMonitor
 {

@@ -2,11 +2,8 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Marvin.Configuration;
-using Marvin.Runtime.Base.Serialization;
-using Marvin.Runtime.Configuration;
-using NUnit.Framework;
 
-namespace Marvin.Runtime.Base.Tests.Transformer
+namespace Marvin.PlatformTools.Tests.Configuration
 {
     /// <summary>
     /// Testconfig enum
@@ -30,12 +27,12 @@ namespace Marvin.Runtime.Base.Tests.Transformer
     /// <summary>
     /// Test config
     /// </summary>
-    internal class TestConfig 
+    internal class TransformerTestConfig 
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestConfig"/> class.
+        /// Initializes a new instance of the <see cref="TransformerTestConfig"/> class.
         /// </summary>
-        public TestConfig()
+        public TransformerTestConfig()
         {
             SubConfig = new SubConfig();
             SubConfigList = new List<SubConfig>();
@@ -45,31 +42,37 @@ namespace Marvin.Runtime.Base.Tests.Transformer
         /// The boolean field default
         /// </summary>
         public const bool BooleanFieldDefault = true;
+
         /// <summary>
         /// The string field default
         /// </summary>
         public const string StringFieldDefault = "42";
+
         /// <summary>
         /// The int field default
         /// </summary>
         public const int IntFieldDefault = 43;
+
         /// <summary>
         /// The double field default
         /// </summary>
         public const double DoubleFieldDefault = 44.1;
+
         /// <summary>
         /// The long field default
         /// </summary>
         public const long LongFieldDefault = 45;
+
         /// <summary>
         /// The enum field default
         /// </summary>
         public const TestConfig1Enum EnumFieldDefault = TestConfig1Enum.EnumValue3;
+
         /// <summary>
         /// String field display name
         /// </summary>
         public const string StringFieldDisplayName = "My string Field";
-
+        
         // no attributes: for some testcases
         /// <summary>
         /// Gets or sets a boolean value.
@@ -81,7 +84,7 @@ namespace Marvin.Runtime.Base.Tests.Transformer
         /// </summary>
         [DefaultValue(StringFieldDefault)]
         [PossibleValues("String1", "String2", "String3")]     
-        [System.ComponentModel.Description("StringField Test description")]
+        [Description("StringField Test description")]
         [DisplayName(StringFieldDisplayName)]
         [Required, MinLength(3), MaxLength(10), Password]
         public string StringField { get; set; }
@@ -89,14 +92,14 @@ namespace Marvin.Runtime.Base.Tests.Transformer
         /// <summary>
         /// Gets the read only property.
         /// </summary>
-        public string ReadOnlyProperty { get { return "Test"; } }
+        public string ReadOnlyProperty => "Test";
 
         /// <summary>
         /// Gets or sets a int value.
         /// </summary>
         [DefaultValue(IntFieldDefault)]
         [IntegerSteps(40, 45, 3, StepMode.Addition)]
-        [System.ComponentModel.Description("IntField Test description")]
+        [Description("IntField Test description")]
         public int IntField { get; set; }
 
         /// <summary>
@@ -104,7 +107,7 @@ namespace Marvin.Runtime.Base.Tests.Transformer
         /// </summary>
         [DefaultValue(DoubleFieldDefault)]
         [PossibleValues(0.0, 0.1, 0.2)]
-        [System.ComponentModel.Description("DoubleField Test description")]
+        [Description("DoubleField Test description")]
         public double DoubleField { get; set; }
 
         /// <summary>
@@ -112,26 +115,26 @@ namespace Marvin.Runtime.Base.Tests.Transformer
         /// </summary>
         [DefaultValue(LongFieldDefault)]
         [IntegerSteps(1, 10, 3, StepMode.Multiplication)]
-        [System.ComponentModel.Description("LongField Test description")]
+        [Description("LongField Test description")]
         public long LongField { get; set; }
 
         /// <summary>
         /// Gets or sets a enum value.
         /// </summary>
         [DefaultValue(EnumFieldDefault)]
-        [System.ComponentModel.Description("EnumField Test description")]
+        [Description("EnumField Test description")]
         public TestConfig1Enum EnumField { get; set; }
 
         /// <summary>
         /// Gets or sets a list of subconfigs.
         /// </summary>
-        [System.ComponentModel.Description("SubConfigList Test description")]
+        [Description("SubConfigList Test description")]
         public List<SubConfig> SubConfigList { get; set; }
 
         /// <summary>
         /// Gets or sets a subconfig.
         /// </summary>
-        [System.ComponentModel.Description("SubConfig Test description")]
+        [Description("SubConfig Test description")]
         public SubConfig SubConfig { get; set; }
     }
 
@@ -143,7 +146,7 @@ namespace Marvin.Runtime.Base.Tests.Transformer
         /// <summary>
         /// Gets or sets the int field.
         /// </summary>
-        [System.ComponentModel.Description("IntField Test description")]
+        [Description("IntField Test description")]
         public int IntField { get; set; }
     }
 }

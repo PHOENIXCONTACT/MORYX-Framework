@@ -7,7 +7,6 @@ using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
-using Marvin.Runtime.Base.Serialization;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.ModuleManagement;
