@@ -112,6 +112,15 @@
     <Compile Include="Bindings\IndexResolver.cs" />
     <Compile Include="Bindings\NullResolver.cs" />
     <Compile Include="Bindings\ReflectionResolver.cs" />
+    <Compile Include="Configuration\ConfigSerialization.cs" />
+    <Compile Include="Configuration\Defaults\CpuCountAttribute.cs" />
+    <Compile Include="Configuration\Defaults\CurrentHostNameAttribute.cs" />
+    <Compile Include="Configuration\PossibleValues\PossibleConfigValuesAttribute.cs" />
+    <Compile Include="Configuration\PossibleValues\IntegerStepsAttribute.cs" />
+    <Compile Include="Configuration\PossibleValues\PluginConfigsAttribute.cs" />
+    <Compile Include="Configuration\PossibleValues\PluginNameSelectorAttribute.cs" />
+    <Compile Include="Configuration\PossibleValues\PossibleValuesAttribute.cs" />
+    <Compile Include="Configuration\PossibleValues\RelativeDirectoriesAttribute.cs" />
     <Compile Include="Serialization\CollectionStrategy\ArrayStrategy.cs" />
     <Compile Include="Serialization\CollectionStrategy\CollectionStrategyTools.cs" />
     <Compile Include="Serialization\CollectionStrategy\DictionaryStrategy.cs" />

@@ -4,23 +4,31 @@ using System.IO;
 using System.Linq;
 using Marvin.Container;
 
-namespace Marvin.Runtime.Configuration
+namespace Marvin.Configuration
 {
+    /// <summary>
+    /// <see cref="PossibleConfigValuesAttribute"/> to provide a path relative to the BaseDirectory
+    /// </summary>
     public class RelativeDirectoriesAttribute : PossibleConfigValuesAttribute
     {
         private readonly string _parentPath;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RelativeDirectoriesAttribute"/>
+        /// </summary>
         public RelativeDirectoriesAttribute()
         {
         }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RelativeDirectoriesAttribute"/>
+        /// </summary>
         public RelativeDirectoriesAttribute(string parentPath)
         {
             _parentPath = parentPath;
         }
 
-        /// <summary>
-        /// All possible values for this member represented as strings. The given container might be null
-        /// and can be used to resolve possible values
-        /// </summary>
+        /// <inheritdoc />
         public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
         {
             var currentDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -41,6 +49,12 @@ namespace Marvin.Runtime.Configuration
             return dirs;
         }
 
+        /// <inheritdoc />
+        public override bool OverridesConversion => false;
+
+        /// <inheritdoc />
+        public override bool UpdateFromPredecessor => false;
+
         private IEnumerable<string> GetSubDirectories(string path)
         {
             var dirs = new List<string>();
@@ -52,17 +66,5 @@ namespace Marvin.Runtime.Configuration
             return dirs;
         }
 
-        /// <summary>
-        /// Flag if this member implements its own string to value conversion
-        /// </summary>
-        public override bool OverridesConversion
-        {
-            get { return false; }
-        }
-
-        public override bool UpdateFromPredecessor
-        {
-            get { return false; }
-        }
     }
 }

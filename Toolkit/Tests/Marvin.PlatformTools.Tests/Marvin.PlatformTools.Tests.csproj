@@ -48,6 +48,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -73,6 +74,8 @@
     <Compile Include="Configuration\ConfigManagerTests.cs" />
     <Compile Include="Configuration\FaultyConfig.cs" />
     <Compile Include="Configuration\TestConfig.cs" />
+    <Compile Include="Configuration\Transformer\ModelTransformerTest.cs" />
+    <Compile Include="Configuration\Transformer\TransformerTestConfig.cs" />
     <Compile Include="Extensions\AppDomainExtensionTests.cs" />
     <Compile Include="Extensions\AppDomain\AbstractBaseClass.cs" />
     <Compile Include="Extensions\AppDomain\BaseClass.cs" />

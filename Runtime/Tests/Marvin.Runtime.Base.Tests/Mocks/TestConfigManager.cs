@@ -116,7 +116,7 @@ namespace Marvin.Runtime.Base.Tests.Mocks
         /// Fills all config properties with default values
         /// </summary>
         /// <param name="obj"></param>
-        public void FillEmptyProperties(object obj)
+        public void FillEmpty(object obj)
         {
             
         }

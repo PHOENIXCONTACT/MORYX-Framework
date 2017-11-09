@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Runtime.Configuration;
@@ -37,7 +36,7 @@ namespace Marvin.Runtime.Kernel.Configuration
         /// Fill all available emtpy properties of the config.
         /// </summary>
         /// <param name="obj">The config for which the fill process should be done.</param>
-        public void FillEmptyProperties(object obj)
+        public void FillEmpty(object obj)
         {
             ValueProvider.FillProperties(obj, NodeProcessors);
         }

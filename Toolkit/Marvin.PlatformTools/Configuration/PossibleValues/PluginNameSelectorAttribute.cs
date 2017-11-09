@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Marvin.Container;
+
+namespace Marvin.Configuration
+{
+    /// <summary>
+    /// <see cref="PossibleConfigValuesAttribute"/> to provide possible plugin names
+    /// </summary>
+    public class PluginNameSelectorAttribute : PossibleConfigValuesAttribute
+    {
+        private readonly Type _componentType;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="PossibleConfigValuesAttribute"/>
+        /// </summary>
+        public PluginNameSelectorAttribute(Type componentType)
+        {
+            _componentType = componentType;
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        {
+            return (pluginContainer == null
+                    ? AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes())
+                        .Where(type => _componentType.IsAssignableFrom(type) && _componentType != type)
+                    : pluginContainer.GetRegisteredImplementations(_componentType))
+                .Select(GetComponentName);
+        }
+        private static string GetComponentName(Type component)
+        {
+            var att = component.GetCustomAttribute<RegistrationAttribute>();
+            return string.IsNullOrEmpty(att?.Name) ? component.FullName : att.Name;
+        }
+
+        /// <inheritdoc />
+        public override bool OverridesConversion => false;
+
+        /// <inheritdoc />
+        public override bool UpdateFromPredecessor => false;
+    }
+}

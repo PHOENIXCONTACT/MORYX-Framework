@@ -75,8 +75,6 @@
     <Compile Include="Mocks\TestConfigManager.cs" />
     <Compile Include="Strategy.cs" />
     <Compile Include="Modules\TestModule.cs" />
-    <Compile Include="Transformer\ModelTransformerTest.cs" />
-    <Compile Include="Transformer\TestConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">

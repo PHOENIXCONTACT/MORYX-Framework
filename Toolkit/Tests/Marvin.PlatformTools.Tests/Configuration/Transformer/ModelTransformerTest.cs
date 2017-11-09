@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.Linq;
-using Marvin.Runtime.Base.Serialization;
-using Marvin.Runtime.Configuration;
+using Marvin.Configuration;
 using Marvin.Serialization;
 using NUnit.Framework;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
-namespace Marvin.Runtime.Base.Tests.Transformer
+namespace Marvin.PlatformTools.Tests.Configuration
 {
     /// <summary>
     /// Test for the config to model and model to config transformer
@@ -21,7 +20,7 @@ namespace Marvin.Runtime.Base.Tests.Transformer
         [Test(Description = "Checks the conversation result from config to gerneric object.")]
         public void ConvertTest()
         {
-            TestConfig config = new TestConfig();
+            TransformerTestConfig config = new TransformerTestConfig();
 
             // tranform a config object
             ConfigSerialization serialization = new ConfigSerialization(null, null);//new TransformationProviderMock(config));
@@ -167,7 +166,7 @@ namespace Marvin.Runtime.Base.Tests.Transformer
         [Test(Description = "Checks if the config object is updated.")]
         public void SetConfigTest()
         {
-            TestConfig config = new TestConfig();
+            TransformerTestConfig config = new TransformerTestConfig();
 
             //var provider = new TransformationProviderMock(config);
             // tranform a config object

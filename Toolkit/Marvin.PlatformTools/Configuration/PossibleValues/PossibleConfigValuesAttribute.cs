@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Marvin.Container;
 
-namespace Marvin.Runtime.Configuration
+namespace Marvin.Configuration
 {
     /// <summary>
     /// Base attribute for all attributes that support multiple values
@@ -20,6 +20,7 @@ namespace Marvin.Runtime.Configuration
         /// Flag if this member implements its own string to value conversion
         /// </summary>
         public abstract bool OverridesConversion { get; }
+
         /// <summary>
         /// Flag if new values shall be updated from the old value
         /// </summary>

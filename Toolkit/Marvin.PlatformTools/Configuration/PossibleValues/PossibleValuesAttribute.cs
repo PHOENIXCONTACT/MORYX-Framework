@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Marvin.Container;
 
-namespace Marvin.Runtime.Configuration
+namespace Marvin.Configuration
 {
     /// <summary>
     /// Attribute to enrich a config file with possible values for a property.
@@ -78,31 +79,16 @@ namespace Marvin.Runtime.Configuration
             _values = stringValues.ToArray();
         }
 
-        /// <summary>
-        /// All possible values for this member represented as strings. The given container might be null
-        /// and can be used to resolve possible values
-        /// </summary>
-        /// <param name="pluginContainer"></param>
-        /// <returns></returns>
-        public override IEnumerable<string> ResolvePossibleValues(Marvin.Container.IContainer pluginContainer)
+        /// <inheritdoc />
+        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
         {
             return _values;
         }
 
-        /// <summary>
-        /// Flag if this member implements its own string to value conversion
-        /// </summary>
-        public override bool OverridesConversion
-        {
-            get { return false; }
-        }
+        /// <inheritdoc />
+        public override bool OverridesConversion => false;
 
-        /// <summary>
-        /// Flag if new values shall be updated from the old value
-        /// </summary>
-        public override bool UpdateFromPredecessor
-        {
-            get { return true; }
-        }
+        /// <inheritdoc />
+        public override bool UpdateFromPredecessor => true;
     }
 }

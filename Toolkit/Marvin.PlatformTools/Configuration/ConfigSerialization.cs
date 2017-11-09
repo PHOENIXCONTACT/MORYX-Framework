@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using Marvin.Container;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Container;
 using Marvin.Serialization;
 
-namespace Marvin.Runtime.Base.Serialization
+namespace Marvin.Configuration
 {
     /// <summary>
     /// Base class for config to model transformer
@@ -16,15 +11,15 @@ namespace Marvin.Runtime.Base.Serialization
     public class ConfigSerialization : DefaultSerialization
     {
         private readonly IContainer _container;
-        private readonly IRuntimeConfigManager _configManager;
+        private readonly IEmptyPropertyProvider _emptyPropertyProvider;
 
         /// <summary>
         /// Initialize base class
         /// </summary>
-        public ConfigSerialization(IContainer container, IRuntimeConfigManager configManager)
+        public ConfigSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider)
         {
             _container = container;
-            _configManager = configManager;
+            _emptyPropertyProvider = emptyPropertyProvider;
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
@@ -79,7 +74,9 @@ namespace Marvin.Runtime.Base.Serialization
             var instance = possibleValuesAtt != null
                 ? possibleValuesAtt.ConvertToConfigValue(_container, encoded.Value.Current)
                 : base.CreateInstance(mappedRoot, encoded);
-            _configManager.FillEmptyProperties(instance);
+
+            _emptyPropertyProvider.FillEmpty(instance);
+
             return instance;
         }
 
@@ -98,7 +95,10 @@ namespace Marvin.Runtime.Base.Serialization
 
             var instance = att.ConvertToConfigValue(_container, mapped.Entry.Value.Current);
             if (mapped.Entry.Value.Type == EntryValueType.Class)
-                _configManager.FillEmptyProperties(instance);
+            {
+                _emptyPropertyProvider.FillEmpty(instance);
+            }
+
             return instance;
         }
     }
