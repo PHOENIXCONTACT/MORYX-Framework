@@ -5,8 +5,8 @@ namespace Marvin.Runtime.Base
 {
     internal class ConfiguredHostFactory : IConfiguredHostFactory
     {
-        /// Injected properties
         public IModuleLogger Logger { get; set; }
+
         public ITypedHostFactory Factory { get; set; }
 
         private readonly IWcfHostFactory _hostFactory;

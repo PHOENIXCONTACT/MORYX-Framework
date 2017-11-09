@@ -81,6 +81,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Marvin.Runtime.Container\Marvin.Runtime.Container.csproj">
+      <Project>{b56bfe0a-708c-4d71-9927-1c97317d6d64}</Project>
+      <Name>Marvin.Runtime.Container</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime\Marvin.Runtime.csproj">
       <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>
       <Name>Marvin.Runtime</Name>
