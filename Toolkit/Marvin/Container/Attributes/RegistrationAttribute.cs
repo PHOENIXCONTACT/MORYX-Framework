@@ -11,12 +11,12 @@ namespace Marvin.Container
         /// <summary>
         /// Life cycle of this component
         /// </summary>
-        public LifeCycle LifeStyle { get; private set; }
+        public LifeCycle LifeStyle { get; }
 
         /// <summary>
         /// Implemented service
         /// </summary>
-        public Type[] Services { get; private set; }
+        public Type[] Services { get; }
 
         /// <summary>
         /// Optional name of component
@@ -44,13 +44,10 @@ namespace Marvin.Container
         /// Create only one instance during container life time
         /// </summary>
         Singleton,
+
         /// <summary>
         /// Create a new instance for every request
         /// </summary>
-        Transient,
-        /// <summary>
-        /// Create a non tracked instance for every request
-        /// </summary>
-        NoTracking
+        Transient
     }
 }

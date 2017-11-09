@@ -105,9 +105,6 @@ namespace Marvin.Container
                 case LifeCycle.Singleton:
                     registration.LifestyleSingleton();
                     break;
-                case LifeCycle.NoTracking:
-                    registration.LifestyleCustom<MarvinLifestyleManager>();
-                    break;
             }
 
             // Optionally override property injection

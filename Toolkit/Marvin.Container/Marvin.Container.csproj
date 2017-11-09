@@ -57,7 +57,6 @@
     <Compile Include="GlobalContainer\GlobalRegistrator.cs" />
     <Compile Include="Installer\ComponentRegistrator.cs" />
     <Compile Include="Installer\DependencyAutoInstaller.cs" />
-    <Compile Include="Installer\MarvinLifestyleManager.cs" />
     <Compile Include="CastleContainer.cs" />
     <Compile Include="ChildContainerSubResolver.cs" />
     <Compile Include="Installer\AutoInstaller.cs" />
