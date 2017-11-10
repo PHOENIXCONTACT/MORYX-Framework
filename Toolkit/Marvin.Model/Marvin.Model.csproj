@@ -17,20 +17,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Build\Toolkit\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\Build\Toolkit\Marvin.Model.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Marvin.Model.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Build\Toolkit\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\Build\Toolkit\Marvin.Model.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Marvin.Model.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Devart.Data.PostgreSql, Version=7.6.667.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL">

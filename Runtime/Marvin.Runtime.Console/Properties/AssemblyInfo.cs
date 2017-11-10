@@ -1,17 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-// Allgemeine Informationen über eine Assembly werden über die folgenden 
-// Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
-// die mit einer Assembly verknüpft sind.
-[assembly: AssemblyTitle("Marvin.Runtime.HeartOfGold")]
-[assembly: AssemblyDescription("Executable runtime environment.")]
-[assembly: AssemblyCulture("")]
+// General Information about an assembly is controlled through the following
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("Marvin.Runtime.Runner")]
+[assembly: AssemblyDescription("")]
 
-// Durch Festlegen von ComVisible auf "false" werden die Typen in dieser Assembly unsichtbar 
-// für COM-Komponenten. Wenn Sie auf einen Typ in dieser Assembly von 
-// COM zugreifen müssen, legen Sie das ComVisible-Attribut für diesen Typ auf "true" fest.
+// Setting ComVisible to false makes the types in this assembly not visible
+// to COM components.  If you need to access a type in this assembly from
+// COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
-// Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
-[assembly: Guid("b2fc35e9-4b74-4861-8e9e-ad99e8e26961")]
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("8441a356-c5a8-41b4-b7ee-d0411664d8aa")]

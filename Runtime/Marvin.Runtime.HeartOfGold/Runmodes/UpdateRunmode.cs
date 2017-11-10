@@ -1,6 +1,5 @@
 ﻿using System;
 using Marvin.Model;
-using Marvin.Runtime.HeartOfGold.Runmodes;
 using Marvin.Runtime.ModuleManagement;
 
 namespace Marvin.Runtime.HeartOfGold
@@ -38,7 +37,7 @@ namespace Marvin.Runtime.HeartOfGold
         /// Run environment
         /// </summary>
         /// <returns>0: All fine - 1: Warning - 2: Error</returns>
-        public RunModeErrorCode Run()
+        public RuntimeErrorCode Run()
         {
             Console.WriteLine("Updating databases...");
             foreach (var configurator in Configurators)
@@ -65,7 +64,7 @@ namespace Marvin.Runtime.HeartOfGold
                 }
             }
             Console.WriteLine("Update complete");
-            return RunModeErrorCode.NoError;
+            return RuntimeErrorCode.NoError;
         }
     }
 }

@@ -58,6 +58,15 @@ This Runmode is used to execute the Runtime fully headless as windows service. I
 Like any other Windows Service it can also declare dependencies. Because every application build on the Runtime has different dependencies they were not hard coded into this Runmode. When the install command is run it will read the Dependencies.txt file and interpret each line without '#' as a dependency name. Those names are passed to the operating system as dependencies. Refer to WinServiceDependencies for a tutorial.
 Arguments: The service Runmode does not read or define any arguments.
 
+Sample Dependencies.txt:
+
+````txt
+# Dependencies file
+# --------------------------
+# This file is used by the windows service installer to determine all runtime dependencies
+# of this RuntimeCore application.
+postgresql-x64-9.4
+````
 
 ## Smoketest
 As the name suggests this Runmode is used to perform a simple smoke test of the system. This means all modules are started, restarted and stopped once. The smoke test also checks the number of executed modules to make sure no module library was skipped due to a TypeLoadException or similar. It will also monitor the time it takes modules to transition from one state to another. If this time exceeds a given interval the smoke test fails as well.

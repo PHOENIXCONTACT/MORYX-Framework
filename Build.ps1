@@ -34,8 +34,7 @@ if ($SetAssemblyVersion) {
 }
 
 if ($Build) {
-    Invoke-Build ".\Toolkit.sln" $Configuration
-    Invoke-Build ".\RuntimeCore.sln" $Configuration
+    Invoke-Build ".\MarvinPlatform.sln" $Configuration
 }
 
 if ($SmokeTests) {

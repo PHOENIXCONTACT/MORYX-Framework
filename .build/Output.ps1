@@ -9,7 +9,7 @@ function Write-Step([string]$step) {
 }
 
 function Write-Variable ([string]$variableName, [string]$variableValue) {
-    Write-Host ($variableName + " = " + $variableValue) -ForegroundColor DarkYellow;
+    Write-Host ($variableName + " = " + $variableValue)
 }
 
 function Invoke-ExitCodeCheck([string]$exitCode) {

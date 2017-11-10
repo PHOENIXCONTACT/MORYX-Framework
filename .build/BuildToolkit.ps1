@@ -34,7 +34,7 @@ $NugetPackageTargetApiKey = "Admin:Admin";
 . "$DotBuild\SymbolStore.ps1";
 
 # Define Tools
-$global:MSBuildCli = join-path -path (Get-ItemProperty "HKLM:\software\Microsoft\MSBuild\ToolsVersions\$MsBuildVersion")."MSBuildToolsPath" -childpath "msbuild.exe"
+$global:MSBuildCli = "C:\Program Files (x86)\Microsoft Visual Studio\Preview\Enterprise\MSBuild\15.0\Bin\msbuild.exe"; #join-path -path (Get-ItemProperty "HKLM:\software\Microsoft\MSBuild\ToolsVersions\$MsBuildVersion")."MSBuildToolsPath" -childpath "msbuild.exe"
 $global:NugetCli = "$BuildTools\nuget\nuget.exe"
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
@@ -59,29 +59,21 @@ function Write-Variables {
     Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
 }
 
-function Install-Nuget {
-    Write-Step "Installing nuget"
+function Invoke-AssignNuget {
+    Write-Step "Assigning nuget.exe"
+    $nugetCommand = (Get-Command "nuget.exe" -ErrorAction SilentlyContinue);
 
-    $nugetFolderPath = Split-Path -Path $global:NugetCli -Parent
-
-	if (-not (Test-Path $nugetFolderPath)) {
-		New-Item $nugetFolderPath -Type Directory | Out-Null
-	}
-	
-    # Check if nuget already exists
-    if (Test-Path $global:NugetCli) {
-        Write-Host "Nuget already exists. Do not need to install.";
-        return;
-    }
-
-	# If not download it!
-    Write-Host "Nuget does not exist. Downloading from $NugetCliSource" -foreground Green;
-    
-    try { 
-        Invoke-WebRequest -Uri $NugetCliSource -OutFile $global:NugetCli
-    } catch {
+    if ($nugetCommand -eq $null)  { 
+        Write-Host "Unable to find nuget.exe in your PATH. Download from https://www.nuget.org/downloads";
         Invoke-ExitCodeCheck 1;
     }
+
+    if ($nugetCommand.Version.Major -lt 4) {
+        Write-Host "The minimum nuget.exe version should be 4.0.0.0. Currently installed: $($nugetCommand.Version)";
+        Invoke-ExitCodeCheck 1;
+    }
+
+    $global:NugetCli = $nugetCommand.Path;
 }
 
 function Install-Tool([string]$packageName, [string]$version, [string]$targetExecutable) {
@@ -276,5 +268,5 @@ function Invoke-Publish {
     }
 }
 
-Install-Nuget
+Invoke-AssignNuget
 Write-Variables
