@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Devart.Data.PostgreSql, Version=7.6.667.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Devart.Data.PostgreSql.7.6.667\lib\net45\Devart.Data.PostgreSql.dll</HintPath>
+    </Reference>
     <Reference Include="Effort, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Effort.EF6.1.3.0\lib\net45\Effort.dll</HintPath>
       <Private>True</Private>
@@ -58,9 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="OpenCoverFilter.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Marvin.Model\Marvin.Model.csproj">

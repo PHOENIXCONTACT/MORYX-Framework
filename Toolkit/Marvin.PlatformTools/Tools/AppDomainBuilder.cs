@@ -16,7 +16,7 @@ namespace Marvin.Tools
         public static void LoadAssemblies()
         {
             var parentDir = AppDomain.CurrentDomain.BaseDirectory;
-            var assemblies = Directory.GetFiles(parentDir, "*.dll");
+            var assemblies = Directory.GetFiles(parentDir, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (var assemblyFile in assemblies)
             {
                 if(AppDomain.CurrentDomain.GetAssemblies().Any(loadedAssembly => NamesMatch(loadedAssembly, assemblyFile)))

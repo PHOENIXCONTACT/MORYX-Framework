@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Marvin.Runtime.HeartOfGold.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Marvin.Runtime.HeartOfGold.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -69,7 +71,7 @@
     <Compile Include="Runmodes\DeveloperConsole.cs" />
     <Compile Include="Runmodes\IRunmode.cs" />
     <Compile Include="Runmodes\RunModeAttribute.cs" />
-    <Compile Include="Runmodes\RunModeErrorCode.cs" />
+    <Compile Include="Runmodes\RuntimeErrorCode.cs" />
     <Compile Include="Runmodes\ServiceRunMode.cs" />
     <Compile Include="Runmodes\SmokeTest.cs" />
     <Compile Include="Runmodes\SystemTest.cs" />
@@ -83,9 +85,6 @@
     <Compile Include="Service\Service.cs">
       <SubType>Component</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="log4net.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Toolkit\Marvin.Container\Marvin.Container.csproj">
@@ -118,9 +117,13 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Marvin.Runtime.HeartOfGold.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy /y "$(ProjectDir)log4net.config" "$(SolutionDir)Build\ServiceRuntime\Config\"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

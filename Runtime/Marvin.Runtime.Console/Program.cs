@@ -17,9 +17,8 @@ namespace Marvin.Runtime.Console
         /// </summary>
         public static int Main(string[] args)
         {
-            _loader = new HeartOfGoldLoader();
-            var result = _loader.Run(RuntimeArguments.BuildArgumentDict(args));
-
+            _loader = new HeartOfGoldLoader(args);
+            var result = _loader.Run();
             return (int)result;
         }
     }

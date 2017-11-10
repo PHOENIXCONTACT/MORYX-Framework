@@ -2,7 +2,6 @@
 using System.Linq;
 using Marvin.Container;
 using Marvin.Runtime.Configuration;
-using Marvin.Runtime.HeartOfGold.Runmodes;
 using Marvin.Runtime.ModuleManagement;
 
 namespace Marvin.Runtime.HeartOfGold
@@ -16,16 +15,19 @@ namespace Marvin.Runtime.HeartOfGold
         /// Module manager instance. Injected by the castle container
         /// </summary>
         public IModuleManager ModuleManager { get; set; }
+
         /// <summary>
         /// Config manger instance. Injected by the castle container
         /// </summary>
         public IRuntimeConfigManager ConfigLoader { get; set; }
+
         /// <summary>
         /// Logger management instance. Injected by the castle container
         /// </summary>
         public IServerLoggerManagement Logger { get; set; }
 
         private IContainer _localContainer;
+
         /// <summary>
         /// The command handler instance.
         /// </summary>
@@ -59,7 +61,7 @@ namespace Marvin.Runtime.HeartOfGold
         /// Sequence of states which should be done in the right order.
         /// </summary>
         /// <returns>0 when all methods run through without error.</returns>
-        public RunModeErrorCode Run()
+        public RuntimeErrorCode Run()
         {
             InitializeLocalContainer();
 
@@ -69,7 +71,7 @@ namespace Marvin.Runtime.HeartOfGold
 
             ShutDown();
 
-            return RunModeErrorCode.NoError;
+            return RuntimeErrorCode.NoError;
         }
 
         /// <summary>
@@ -108,7 +110,7 @@ namespace Marvin.Runtime.HeartOfGold
             }
             catch (Exception ex)
             {
-                PrintText(string.Format("Command invocation failed: {0}", ex.Message));
+                PrintText($"Command invocation failed: {ex.Message}");
             }
         }
 

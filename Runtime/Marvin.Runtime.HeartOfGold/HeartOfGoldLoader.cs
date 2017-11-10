@@ -6,14 +6,18 @@ using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
-using Marvin.Runtime.HeartOfGold.Runmodes;
 using Marvin.Runtime.Requirements;
 using Marvin.Tools;
 
 namespace Marvin.Runtime.HeartOfGold
 {
+    /// <summary>
+    /// Base kernel loader for the runtime
+    /// </summary>
     public class HeartOfGoldLoader
     {
+        private readonly string[] _args;
+
         /// <summary>
         /// MEF container
         /// </summary>
@@ -23,15 +27,26 @@ namespace Marvin.Runtime.HeartOfGold
         /// </summary>
         private RuntimeArguments _arguments;
 
-        public RunModeErrorCode Run(RuntimeArguments arguments)
+        /// <summary>
+        /// Creates an instance of the <see cref="HeartOfGoldLoader"/>
+        /// </summary>
+        public HeartOfGoldLoader(string[] args)
         {
-            _arguments = arguments;
+            _args = args;
+        }
+
+        /// <summary>
+        /// Starts the runtime
+        /// </summary>
+        public RuntimeErrorCode Run()
+        {
+            _arguments = RuntimeArguments.BuildArgumentDict(_args);
 
             // Look for help command
             if (_arguments.HasArgument("h", "help"))
             {
                 HelpPrinter.Print();
-                return RunModeErrorCode.NoError;
+                return RuntimeErrorCode.NoError;
             }
 
             // Set working directory to location of this exe
@@ -51,7 +66,7 @@ namespace Marvin.Runtime.HeartOfGold
 
             // Load and run environment
             var env = LoadEnvironment(_arguments);
-            var result = env == null ? RunModeErrorCode.Error : RunEnvironment(env);
+            var result = env == null ? RuntimeErrorCode.Error : RunEnvironment(env);
 
             // Clean up and exit
             try
@@ -156,7 +171,7 @@ namespace Marvin.Runtime.HeartOfGold
         /// Method to wrap all execution exceptions
         /// </summary>
         /// <param name="environment">Environment to execute</param>
-        private RunModeErrorCode RunEnvironment(IRunmode environment)
+        private RuntimeErrorCode RunEnvironment(IRunmode environment)
         {
             try
             {
@@ -165,7 +180,7 @@ namespace Marvin.Runtime.HeartOfGold
             catch (Exception ex)
             {
                 CrashHandler.HandleCrash(null, new UnhandledExceptionEventArgs(ex, true));
-                return RunModeErrorCode.Error;
+                return RuntimeErrorCode.Error;
             }
         }
     }

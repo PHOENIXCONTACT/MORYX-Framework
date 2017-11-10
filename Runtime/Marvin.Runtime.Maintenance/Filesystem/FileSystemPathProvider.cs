@@ -17,8 +17,8 @@ namespace Marvin.Runtime.Maintenance.Filesystem
         {
             var processFileInfo = new FileInfo(Process.GetCurrentProcess().MainModule.FileName);
 
-            SilverlightAppWebRoot = string.Format("{0}\\..\\EddieLight\\SilverlightApp\\", processFileInfo.DirectoryName);
-            AppWebRoot = string.Format("{0}\\..\\EddieLight\\Maintenance\\", processFileInfo.DirectoryName);
+            SilverlightAppWebRoot = $"{processFileInfo.DirectoryName}\\EddieLight\\SilverlightApp\\";
+            AppWebRoot = $"{processFileInfo.DirectoryName}\\EddieLight\\Maintenance\\";
             DataStoreRoot = Path.Combine(processFileInfo.DirectoryName, string.IsNullOrEmpty(DataStoreRoot) ? "Backups" : DataStoreRoot);
         }
 
@@ -26,10 +26,12 @@ namespace Marvin.Runtime.Maintenance.Filesystem
         /// Root path for the silverlight web app.
         /// </summary>
         public string SilverlightAppWebRoot { get; set; }
+
         /// <summary>
         /// Root path for the web app.
         /// </summary>
         public string AppWebRoot { get; set; }
+
         /// <summary>
         /// Root path for the data store.
         /// </summary>
