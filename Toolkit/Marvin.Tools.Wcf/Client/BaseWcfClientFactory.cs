@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using Marvin.Configuration;
 using Marvin.Logging;
+using Marvin.Threading;
 
 namespace Marvin.Tools.Wcf
 {
@@ -18,13 +19,18 @@ namespace Marvin.Tools.Wcf
         /// <summary>Injected property</summary>
         public IModuleLogger Logger { get; set; }
 
+        /// <summary>
+        /// Parallel operations to monitor current wcf clients
+        /// </summary>
+        public IParallelOperations ParallelOperations { get; set; }
+
         #endregion
 
         #region Fields and Properties
 
         // Monitoring
         private long _lastClientId;
-        private WorkerThread _monitoringThread;
+        private int _monitoringThread;
         private readonly List<MonitoredClient> _monitoredClients = new List<MonitoredClient>();
         private readonly ICollection<WcfClientInfo> _clientInfos = new List<WcfClientInfo>();
 
@@ -37,16 +43,10 @@ namespace Marvin.Tools.Wcf
         internal IVersionServiceManager VersionService { get; set; }
 
         ///
-        public IEnumerable<WcfClientInfo> ClientInfos
-        {
-            get { return _clientInfos; }
-        }
+        public IEnumerable<WcfClientInfo> ClientInfos => _clientInfos;
 
         ///
-        public string ClientId
-        {
-            get { return _factoryConfig.ClientId; }
-        }
+        public string ClientId => _factoryConfig.ClientId;
 
         #endregion
 
@@ -84,17 +84,15 @@ namespace Marvin.Tools.Wcf
                 VersionService.Initialize(_proxyConfig, _factoryConfig.Host, _factoryConfig.Port);
             }
 
-            if (_monitoringThread == null)
+            if (_monitoringThread == 0)
             {
-                _monitoringThread = new WorkerThread("WcfClientFactory.MonitoringThread", delegate
+                _monitoringThread = ParallelOperations.ScheduleExecution(delegate
                 {
                     // Main operation which will iterate through the current monitored clients
                     ConnectOfflineClients();
                     CloseDestroyedClients();
 
-                }, 1000, Logger);
-
-                _monitoringThread.Start();
+                }, 1000, 1000);
             }
         }
 
@@ -105,11 +103,7 @@ namespace Marvin.Tools.Wcf
         {
             Logger.LogEntry(LogLevel.Info, "Disposing WcfClientFactory!");
 
-            if (_monitoringThread != null)
-            {
-                _monitoringThread.Dispose();
-                _monitoringThread.Join(2000);
-            }
+            ParallelOperations.StopExecution(_monitoringThread);
 
             var connectedClients = GetMonitoredClients(c => c.State == InternalConnectionState.Success);
 

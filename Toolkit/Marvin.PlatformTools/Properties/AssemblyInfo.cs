@@ -18,4 +18,3 @@ using System.Runtime.InteropServices;
 [assembly: Guid("fee32db2-3220-4e03-b892-42accacd0653")]
 
 [assembly: InternalsVisibleTo("Marvin.PlatformTools.Tests")]
-[assembly: InternalsVisibleTo("Marvin.Tools.Wcf.Tests")]

@@ -8,17 +8,12 @@ namespace Marvin.Runtime.Console
     public static class Program
     {
         /// <summary>
-        /// MEF container
-        /// </summary>
-        private static HeartOfGoldLoader _loader;
-
-        /// <summary>
-        /// Der Haupteinstiegspunkt für die Anwendung.
+        /// This is the main starting point of this application
         /// </summary>
         public static int Main(string[] args)
         {
-            _loader = new HeartOfGoldLoader(args);
-            var result = _loader.Run();
+            var loader = new HeartOfGoldLoader(args);
+            var result = loader.Run();
             return (int)result;
         }
     }

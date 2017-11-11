@@ -106,7 +106,6 @@
     <Compile Include="StateMachines\TestMachine\MyStateBase.cs" />
     <Compile Include="Tools\ParallelOperationTests.cs" />
     <Compile Include="Tools\NonStackingTimerCallbackTests.cs" />
-    <Compile Include="Tools\WorkerThreadTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Marvin\Marvin.csproj">
