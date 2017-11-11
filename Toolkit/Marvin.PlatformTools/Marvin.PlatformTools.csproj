@@ -51,9 +51,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
@@ -140,7 +137,6 @@
     <Compile Include="Tools\Extensions\ObservableCollectionExtension.cs" />
     <Compile Include="Tools\Extensions\StringExtensions.cs" />
     <Compile Include="Tools\Extensions\UnitOfWorkExtensions.cs" />
-    <Compile Include="Tools\Extensions\WindowsIdentityExtensions.cs" />
     <Compile Include="Logging\LoggerManagement.cs" />
     <Compile Include="Logging\Logger\DummyLog.cs" />
     <Compile Include="Logging\Logger\IdleLogger.cs" />
@@ -171,64 +167,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EntryConvertGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Tools\TelnetClient.cs" />
-    <Compile Include="Tools\TelnetService.cs" />
     <Compile Include="Tools\CallerId.cs" />
     <Compile Include="Tools\ParallelOperations.cs" />
     <Compile Include="Tools\NonStackingTimerCallback.cs" />
-    <Compile Include="Tools\Wcf\Client\BaseWcfClientFactory.cs" />
-    <Compile Include="Tools\Wcf\Client\BindingFactory.cs" />
-    <Compile Include="Tools\Wcf\Client\ClientConfig.cs" />
-    <Compile Include="Tools\Wcf\Client\Connector\HttpServiceConnectorBase.cs" />
-    <Compile Include="Tools\Wcf\Client\Connector\IHttpServiceConnector.cs" />
-    <Compile Include="Tools\Wcf\Client\Connector\ITcpServiceReference.cs" />
-    <Compile Include="Tools\Wcf\Client\Connector\TcpServiceConnectorBase.cs" />
-    <Compile Include="Tools\Wcf\Client\Contracts\BindingType.cs" />
-    <Compile Include="Tools\Wcf\Client\Contracts\ConnectionState.cs" />
-    <Compile Include="Tools\Wcf\Client\Contracts\DisconnectReason.cs" />
-    <Compile Include="Tools\Wcf\Client\Contracts\IClientConfig.cs" />
-    <Compile Include="Tools\Wcf\Client\Contracts\IThreadContext.cs" />
-    <Compile Include="Tools\Wcf\Client\Contracts\IWcfClientFactory.cs" />
-    <Compile Include="Tools\Wcf\Client\Contracts\IWcfClientFactoryConfig.cs" />
-    <Compile Include="Tools\Wcf\Client\Contracts\WcfClientInfo.cs" />
-    <Compile Include="Tools\Wcf\Client\MonitoredClient.cs" />
-    <Compile Include="Tools\Wcf\Client\SimpleThreadContext.cs" />
-    <Compile Include="Tools\Wcf\Client\SimpleWcfClientFactory.cs" />
-    <Compile Include="Tools\Wcf\Client\VersionService\IVersionServiceManager.cs" />
-    <Compile Include="Tools\Wcf\Client\VersionService\ServiceConfiguration.cs" />
-    <Compile Include="Tools\Wcf\Client\VersionService\VersionServiceManager.cs" />
-    <Compile Include="Tools\Wcf\Client\WcfClientFactoryConfig.cs" />
-    <Compile Include="Tools\Wcf\Service\BasicNetTcpConnectorPlugin.cs" />
-    <Compile Include="Tools\Wcf\Service\BasicWcfConnectorConfig.cs" />
-    <Compile Include="Tools\Wcf\Service\BasicWcfConnectorPlugin.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\IConfiguredHostFactory.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\IConfiguredServiceHost.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\IServiceManager.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\ISessionService.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\ITypedHostFactory.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\IVersionService.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\IWcfConnector.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\IWcfHostFactory.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\IWcfServiceConfig.cs" />
-    <Compile Include="Tools\Wcf\Service\Contracts\IWcfServiceManager.cs" />
-    <Compile Include="Tools\Wcf\Service\ExtendedHostConfig.cs" />
-    <Compile Include="Tools\Wcf\Service\FileSystem\FileModel.cs" />
-    <Compile Include="Tools\Wcf\Service\FileSystem\RemoteFile.cs" />
-    <Compile Include="Tools\Wcf\Service\FileSystem\FileSystemService.cs" />
-    <Compile Include="Tools\Wcf\Service\FileSystem\PolicyRetriever.cs" />
-    <Compile Include="Tools\Wcf\Service\FileSystem\IFileSystemService.cs" />
-    <Compile Include="Tools\Wcf\Service\FileSystem\IPolicyRetriever.cs" />
-    <Compile Include="Tools\Wcf\Service\FileSystem\SimpleStreamingServiceBase.cs" />
-    <Compile Include="Tools\Wcf\Service\HostConfig.cs" />
-    <Compile Include="Tools\Wcf\Service\ServiceBindingType.cs" />
-    <Compile Include="Tools\Wcf\Service\ServiceConfig.cs" />
-    <Compile Include="Tools\Wcf\Service\ServiceEndpoint.cs" />
-    <Compile Include="Tools\Wcf\Service\ServiceManager.cs" />
-    <Compile Include="Tools\Wcf\Service\ServiceVersionAttribute.cs" />
-    <Compile Include="Tools\Wcf\Service\SessionService.cs" />
-    <Compile Include="Tools\Wcf\Service\WcfConfig.cs" />
-    <Compile Include="Tools\Wcf\WcfAccelerator.cs" />
-    <Compile Include="Tools\WorkerThread.cs" />
     <None Include="app.config" />
     <None Include="Communication\Sockets\README.md" />
     <None Include="Marvin.PlatformTools.nuspec">
@@ -237,7 +178,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Tools\Vector.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Marvin\Marvin.csproj">

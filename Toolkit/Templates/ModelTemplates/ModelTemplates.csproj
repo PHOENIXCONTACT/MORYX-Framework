@@ -17,20 +17,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\ModelTemplates.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\ModelTemplates.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\ModelTemplates.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\ModelTemplates.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
@@ -49,12 +49,24 @@
     <EmbeddedResource Include="Model\ModelTemplates.csdl" />
     <EmbeddedResource Include="Model\ModelTemplates.msl" />
     <EmbeddedResource Include="Model\ModelTemplates.ssdl" />
-    <None Include="Templates\CreateIndexGenerator.tmpl" />
-    <None Include="Templates\DateTriggers.tmpl" />
-    <None Include="Templates\Marvin.Repo.tmpl" />
-    <None Include="Templates\MarvinDbContext.tmpl" />
-    <None Include="Templates\MarvinInheritance.tmpl" />
-    <None Include="Templates\UniqueConstraint.tmpl" />
+    <None Include="CreateIndexGenerator.tmpl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="DateTriggers.tmpl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Marvin.Repo.tmpl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MarvinDbContext.tmpl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MarvinInheritance.tmpl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="UniqueConstraint.tmpl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -62,9 +74,8 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>if not exist "$(SolutionDir)Build\Templates\Model" mkdir "$(SolutionDir)Build\Templates\Model"
-del /Q "$(SolutionDir)Toolkit\Build\Templates\Model\*.*"
-for %25%25i in ("$(ProjectDir)Templates\*.*") do copy /Y "%25%25i" "$(SolutionDir)Build\Templates\Model\"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
