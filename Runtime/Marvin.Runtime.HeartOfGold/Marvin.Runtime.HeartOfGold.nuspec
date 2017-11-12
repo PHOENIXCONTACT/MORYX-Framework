@@ -7,6 +7,7 @@
     <authors>MaRVIN Team</authors>
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
     <description>$description$</description>
   </metadata>
 </package>
