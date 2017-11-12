@@ -1,11 +1,18 @@
-. "$PSScriptRoot\Version.ps1"
+function CheckVersionParameter([string]$version) {
+    $versionPattern = "[0-9]+(\.([0-9]+|\*)){1,3}";
+    if ($version -notmatch $versionPattern) {
+        Write-Host "Version does not match the pattern $versionPattern";
+        return $False;
+    }
+    return $True;
+}
 
 function Set-AssemblyVersion {
     <#
         .Synopsis
             Sets the version on the given AssemblyInfo.cs.
         .Example
-            Set-AssemblyVersion -InputFile "C:\MarvinPlatform\GlobalAssemblyInfo.cs" -Version "2.0.0.0"
+            Set-AssemblyVersion -InputFile "C:\MarvinPlatform\GlobalAssemblyInfo.cs" -Version "2.0.0.0" -InformationalVersion "2.0.0-beta1-23423"
             This call wil set the version 2.0.0.0 on the given AssemblyInfo.
     #>
     [CmdletBinding()]
@@ -15,38 +22,48 @@ function Set-AssemblyVersion {
         [string]$InputFile,
 
         [Parameter(Mandatory=$true, Position=1)]
-        [string]$Version
+        [string]$Version,
+
+        [Parameter(Mandatory=$true, Position=2)]
+        [string]$InformationalVersion, 
+
+        [Parameter(Mandatory=$false, Position=3)]
+        [string]$Configuration = "Debug"
     )
 
     if (-not $(CheckVersionParameter $Version)) {
         exit 1;
     }
 
-    $file = Get-Childitem -Path $inputFile
+    $file = Get-Childitem -Path $inputFile;
 
     if (-Not $file) {
-        Write-Host "AssemblyInfo: $inputFile was not found!"
+        Write-Host "AssemblyInfo: $inputFile was not found!";
         exit 1;
     }
 
-    Write-Host "Applying assembly info of $($file.FullName) -> $Version -> $Configuration"
+    Write-Host "Applying assembly info of $($file.FullName) -> $Version ";
    
-    $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
+    $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+)){3}"\)';
     $assemblyVersion = 'AssemblyVersion("' + $Version + '")';
 
-    $fileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
-    $fileVersion = 'AssemblyFileVersion("' + $Version + '")';
+    $assemblyFileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+)){3}"\)';
+    $assemblyFileVersion = 'AssemblyFileVersion("' + $Version + '")';
 
-    $assemblyInformationalVersionPattern = 'AssemblyInformationalVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
-    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $Version + '")';
+    $assemblyInformationalVersionPattern = 'AssemblyInformationalVersion\("[0-9]+(\.([0-9]+)){3}"\)';
+    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $InformationalVersion + '")';
+
+    $assemblyConfigurationPattern = 'AssemblyConfiguration\("\w+"\)';
+    $assemblyConfiguration = 'AssemblyConfiguration("' + $Configuration + '")';
     
     $content = (Get-Content $file.FullName) | ForEach-Object  { 
         ForEach-Object {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
+        ForEach-Object {$_ -replace $assemblyFileVersionPattern, $assemblyFileVersion } |
         ForEach-Object {$_ -replace $assemblyInformationalVersionPattern, $assemblyInformationalVersion } |
-        ForEach-Object {$_ -replace $fileVersionPattern, $fileVersion }
+        ForEach-Object {$_ -replace $assemblyConfigurationPattern, $assemblyConfiguration } 
     }
 
-    [System.IO.File]::WriteAllLines($file.FullName, $content, [System.Text.Encoding]::UTF8);
+    Out-File -InputObject $content -FilePath $file.FullName -Encoding utf8;
 }
 
 function Set-AssemblyVersions
@@ -65,14 +82,20 @@ function Set-AssemblyVersions
         [string[]]$Files,
 
         [Parameter(Mandatory=$true, Position=1)]
-        [string]$Version
+        [string]$Version,
+
+        [Parameter(Mandatory=$true, Position=2)]
+        [string]$InformationalVersion, 
+        
+        [Parameter(Mandatory=$false, Position=3)]
+        [string]$Configuration = "Debug"
     )
 
     if ($Files)
     {
-        Write-Host "Will apply Version '$Version' and Configuration '$Configuration' to $($Files.count) AssemblyInfos."
+        Write-Host "Will apply Version '$Version' to $($Files.count) AssemblyInfos.";
         foreach ($file in $files) {
-            Set-AssemblyVersion -InputFile $file -Version $Version
+            Set-AssemblyVersion -InputFile $file -Version $Version -InformationalVersion $InformationalVersion -Configuration $Configuration;
         }
     }
 }

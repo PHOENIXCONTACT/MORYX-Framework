@@ -11,6 +11,15 @@
             "script": "${workspaceRoot}\\Build.ps1",
             "args": ["-Build"],
             "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "AssemblyVersion",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-SetAssemblyVersion -Version \"3.0.0.15432\" -InformationalVersion \"3.0.0-beta1-15432\""],
+            "cwd": "${workspaceRoot}"
         }
     ]
 }
+

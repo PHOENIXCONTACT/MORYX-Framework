@@ -1,61 +1,87 @@
 ﻿param (
     [switch]$SetAssemblyVersion,
+    [int]$BuildNumber = 0,
+    [string]$Preview = "",
+    [ValidateSet('Debug','Release')]
+    [string]$Configuration = "Debug",
+
     [switch]$Build,
+    [switch]$OptimizeCode,
+
     [switch]$SmokeTests,
-    [switch]$CICoverTests,
-    [switch]$DailyCoverTests,
+    [switch]$CITests,
+    [switch]$DailyTests,
+    [int]$PortIncrement = 0,
+
     [switch]$GenerateDocs,
+
     [switch]$Pack,
     [switch]$Publish,
-    [switch]$PublishSymbols,
-    [string]$Version = "3.0.0.0",
-    [string]$Configuration = "Debug",
-    [int]$PortIncrement = 0
+
+    [switch]$PublishSymbols
 )
+
+
+# Set Version
+$Version = "3.0.0" + "." + $BuildNumber;
 
 # Load Toolkit
 . ".build\BuildToolkit.ps1"
+
+# Check execution of BuilToolkit
+if ($lastexitcode -ne 0) { 
+    exit $lastexitcode
+} 
 
 # Definition of local variables 
 $openCoverFilter = "$RootPath\OpenCoverFilter.txt";
 
 if ($SetAssemblyVersion) {
-    # Modify all assembly infos except of templates, .build, .buildtools
-    Write-Step "Modifing AssemblyInfos to Version '$Version'"
-    $assemblyInfos = Get-ChildItem -Path $Path -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
-        ($_.FullName -notmatch "\\Templates\\" -and $_.FullName -notmatch "\\.build\\" -and $_.FullName -notmatch "\\.buildtools\\")
+    $assemblyVersion = Get-MajorMinorPatchVersion $Version;
+    $informationalVersion = Get-InformationalVersion $Version $Preview;
+
+    # Modify all assembly infos except some pathes
+    Write-Step "Modifing AssemblyInfos to Version '$Version' and InformationalVersion '$informationalVersion'"
+    $assemblyInfos = Get-ChildItem -Path $RootPath -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
+        ($_.FullName -notmatch "\\Templates\\" `
+        -and $_.FullName -notmatch "\\.build\\" `
+        -and $_.FullName -notmatch "\\.buildtools\\" `
+        -and $_.FullName -notmatch "\\Tests\\" `
+        -and $_.FullName -notmatch "\\IntegrationTests\\" `
+        -and $_.FullName -notmatch "\\SystemTests\\")
     }
-    Set-AssemblyVersions -Files $assemblyInfos -Version $Version
+    
+    Set-AssemblyVersions $assemblyInfos $assemblyVersion $informationalVersion $Configuration
 
     # Modify version of templates
     Set-VsixManifestVersion -VsixManifest "$RootPath\Runtime\Templates\DataModelWizard\source.extension.vsixmanifest" -Version $Version
     Set-VsTemplateVersion -VsTemplate "$PSScriptRoot\Runtime\Templates\DataModelTemplate\MyTemplate.vstemplate" -Version $Version
-    Set-AssemblyVersion -InputFile "$RootPath\Runtime\Templates\DataModelWizard\Properties\AssemblyInfo.cs" -Version $Version
+    Set-AssemblyVersion "$RootPath\Runtime\Templates\DataModelWizard\Properties\AssemblyInfo.cs" $Version $informationalVersion $Configuration
 }
 
 if ($Build) {
-    Invoke-Build ".\MarvinPlatform.sln" $Configuration
+    Invoke-Build ".\MarvinPlatform.sln" $Configuration $OptimizeCode
 }
 
 if ($SmokeTests) {
-    $runtimePath = "$RootPath\Build\ServiceRuntime\HeartOfGold.exe";
+    $runtimePath = "$RootPath\Runtime\Marvin.Runtime.Console\bin\$Configuration\HeartOfGold.exe";
     Invoke-SmokeTest $runtimePath (&{If($Configuration -eq "Debug") {6} Else {4}}) 6000 $PortIncrement
 }
 
-if ($CICoverTests -or $DailyCoverTests) {
-    Invoke-CoverTests "$RootPath\Toolkit\Tests" $openCoverFilter
-    Invoke-CoverTests "$RootPath\Toolkit\IntegrationTests" $openCoverFilter
+if ($CITests -or $DailyTests) {
+    Invoke-CoverTests "$RootPath\Toolkit\Tests" $openCoverFilter $Configuration
+    Invoke-CoverTests "$RootPath\Toolkit\IntegrationTests" -FilterFile $openCoverFilter -Configuration $Configuration
 
-    Invoke-CoverTests "$RootPath\Runtime\Tests" $openCoverFilter
-    Invoke-CoverTests "$RootPath\Runtime\IntegrationTests" $openCoverFilter
+    Invoke-CoverTests "$RootPath\Runtime\Tests" $openCoverFilter $Configuration
+    Invoke-CoverTests "$RootPath\Runtime\IntegrationTests" $openCoverFilter $Configuration
 }
 
-if ($DailyCoverTests) {
-    Invoke-CoverTests "$RootPath\Toolkit\SystemTests" $openCoverFilter
-    Invoke-CoverTests "$RootPath\Runtime\SystemTests" $openCoverFilter
+if ($DailyTests) {
+    Invoke-Nunit "$RootPath\Toolkit\SystemTests" $Configuration
+    Invoke-Nunit "$RootPath\Runtime\SystemTests" $Configuration
 }
 
-if ($CICoverTests -or $DailyCoverTests) {
+if ($CITests -or $DailyTests) {
     Invoke-CoverReport "$RootPath\" "MarvinPlatform"
 }
 
@@ -64,7 +90,8 @@ if ($GenerateDocs) {
 }
 
 if ($Pack) {
-    Invoke-PackAll $RootPath $NupkgTarget
+    $NugetPackageVersion = Get-NugetPackageVersion -Version $Version -Preview $Preview;
+    Invoke-PackAll $RootPath $NupkgTarget $NugetPackageVersion $Configuration
 }
 
 if ($Publish) {
@@ -74,7 +101,7 @@ if ($Publish) {
 if ($PublishSymbols) {
     # This is temporary until the real symbol storage and nuget packages are active
     $storage = "$RootPath\Artefacts\Symbols";
-    if (-not (Test-Path -Path $storage)) {
+    if (-not (Test-Path $storage)) {
         try {
             New-Item $storage -ItemType Directory
         }
