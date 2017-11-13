@@ -17,7 +17,4 @@ The [PlatformToolkit](@ref platformToolkitMain) is a stack of components and cod
 ## MaRVIN RuntimeCore
 The Runtime is an application framework for the **server** part of a client-server application. 
 
-# Framework applications
-The platform itself is not executable. Therefor we created a range of framework applications transforming the platform concepts into executables. Compatibility with each application depend Framework executables:
-
 - [RuntimeCore](@ref runtimeMain)

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Marvin.BuildTools</id>
+    <version>1.0.0</version>
+    <title>Marvin.BuildTools</title>
+    <authors>MaRVIN Team</authors>
+    <owners>MaRVIN Team</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
+    <description>Build tools used to build MaRVIN Runtime projects</description>
+  </metadata>
+</package>

@@ -17,7 +17,15 @@
             "request": "launch",
             "name": "AssemblyVersion",
             "script": "${workspaceRoot}\\Build.ps1",
-            "args": ["-SetAssemblyVersion -Version \"3.0.0.15432\" -InformationalVersion \"3.0.0-beta1-15432\""],
+            "args": ["-SetAssemblyVersion -BuildNumber 15432"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Nuget Pack",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-BuildNumber 15432 -Pack"],
             "cwd": "${workspaceRoot}"
         }
     ]

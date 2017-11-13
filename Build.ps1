@@ -9,10 +9,11 @@
     [switch]$OptimizeCode,
 
     [switch]$SmokeTests,
-    [switch]$CITests,
-    [switch]$DailyTests,
     [int]$PortIncrement = 0,
-
+    [switch]$UnitTests,
+    [switch]$SystemTests,
+    [switch]$IntegrationTests,
+    
     [switch]$GenerateDocs,
 
     [switch]$Pack,
@@ -68,20 +69,22 @@ if ($SmokeTests) {
     Invoke-SmokeTest $runtimePath (&{If($Configuration -eq "Debug") {6} Else {4}}) 6000 $PortIncrement
 }
 
-if ($CITests -or $DailyTests) {
+if ($UnitTests) {
     Invoke-CoverTests "$RootPath\Toolkit\Tests" $openCoverFilter $Configuration
-    Invoke-CoverTests "$RootPath\Toolkit\IntegrationTests" -FilterFile $openCoverFilter -Configuration $Configuration
-
     Invoke-CoverTests "$RootPath\Runtime\Tests" $openCoverFilter $Configuration
+}
+
+if ($IntegrationTests) {
+    Invoke-CoverTests "$RootPath\Toolkit\IntegrationTests" -FilterFile $openCoverFilter -Configuration $Configuration    
     Invoke-CoverTests "$RootPath\Runtime\IntegrationTests" $openCoverFilter $Configuration
 }
 
-if ($DailyTests) {
+if ($SystemTests) {
     Invoke-Nunit "$RootPath\Toolkit\SystemTests" $Configuration
     Invoke-Nunit "$RootPath\Runtime\SystemTests" $Configuration
 }
 
-if ($CITests -or $DailyTests) {
+if ($UnitTests -or $IntegrationTests) {
     Invoke-CoverReport "$RootPath\" "MarvinPlatform"
 }
 
