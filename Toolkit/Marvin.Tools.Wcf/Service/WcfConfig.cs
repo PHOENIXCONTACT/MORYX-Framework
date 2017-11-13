@@ -39,6 +39,38 @@ namespace Marvin.Tools.Wcf
         public ConfigState ConfigState { get; set; }
 
         /// <summary>
+        /// Gets or sets the interval of time provided for a connection to open before the
+        /// transport raises an exception.
+        /// </summary>
+        [DataMember]
+        [DefaultValue(30)]
+        public int OpenTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the interval of time provided for a connection to close before the
+        /// transport raises an exception.
+        /// </summary>
+        [DataMember]
+        [DefaultValue(30)]
+        public int CloseTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the interval of time provided for a write operation to complete
+        /// before the transport raises an exception.
+        /// </summary>
+        [DataMember]
+        [DefaultValue(30)]
+        public int SendTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the interval of time that a connection can remain inactive, during
+        /// which no application messages are received, before it is dropped.
+        /// </summary>
+        [DataMember]
+        [DefaultValue(30)]
+        public int ReceiveTimeout { get; set; }
+
+        /// <summary>
         /// Exception message if load failed. This must not be decorated with a data member attribute.
         /// </summary>
         public string LoadError { get; set; }

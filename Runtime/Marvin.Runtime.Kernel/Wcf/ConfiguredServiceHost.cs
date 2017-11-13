@@ -58,13 +58,6 @@ namespace Marvin.Runtime.Kernel.Wcf
                     break;
             }
 
-            // Create endpoint address from config
-            var port = config.BindingType == ServiceBindingType.NetTcp ? _wcfConfig.NetTcpPort : _wcfConfig.HttpPort;
-            var extendedConfig = config as ExtendedHostConfig;
-            if (extendedConfig != null)
-                port = extendedConfig.OverrideFrameworkConfig ? extendedConfig.PortOverride : port;
-            _endpointAddress = $"{protocol}://{_wcfConfig.Host}:{port}/{config.Endpoint}";
-
             // Create service host
             _service = _factory.CreateServiceHost<T>();
             _type = typeof (T);
@@ -85,9 +78,32 @@ namespace Marvin.Runtime.Kernel.Wcf
                     break;
             }
 
+            // Set timeouts
+            binding.OpenTimeout = TimeSpan.FromSeconds(_wcfConfig.OpenTimeout);
+            binding.CloseTimeout = TimeSpan.FromSeconds(_wcfConfig.CloseTimeout);
+            binding.SendTimeout = TimeSpan.FromSeconds(_wcfConfig.SendTimeout);
+            binding.ReceiveTimeout = TimeSpan.FromSeconds(_wcfConfig.ReceiveTimeout);
+
+            // Create endpoint address from config
+            var port = config.BindingType == ServiceBindingType.NetTcp ? _wcfConfig.NetTcpPort : _wcfConfig.HttpPort;
+            var extendedConfig = config as ExtendedHostConfig;
+            if (extendedConfig != null && extendedConfig.OverrideFrameworkConfig)
+            {
+                // Override binding timeouts if necessary
+                port = extendedConfig.Port;
+                binding.OpenTimeout = TimeSpan.FromSeconds(extendedConfig.OpenTimeout);
+                binding.CloseTimeout = TimeSpan.FromSeconds(extendedConfig.CloseTimeout);
+                binding.SendTimeout = TimeSpan.FromSeconds(extendedConfig.SendTimeout);
+                binding.ReceiveTimeout = TimeSpan.FromSeconds(extendedConfig.ReceiveTimeout);
+            }
+
+            _endpointAddress = $"{protocol}://{_wcfConfig.Host}:{port}/{config.Endpoint}";
+
             var endpoint = _service.AddServiceEndpoint(typeof(T), binding, _endpointAddress);
             if (config.BindingType == ServiceBindingType.WebHttp)
+            {
                 endpoint.Behaviors.Add(new WebHttpBehavior());
+            }
 
             if (config.MetadataEnabled)
             {
