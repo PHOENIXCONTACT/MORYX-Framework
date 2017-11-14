@@ -77,10 +77,6 @@
       <Project>{3BC04A3B-24D6-4E33-989D-33366C47DC48}</Project>
       <Name>Marvin.Container</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
-      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
-      <Name>Marvin.PlatformTools</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\TestTools\Marvin.Container.TestPlugin\Marvin.Container.TestPlugin.csproj">
       <Project>{DD4163B4-1696-4554-961E-DE2A3EB21ECE}</Project>
       <Name>Marvin.Container.TestPlugin</Name>

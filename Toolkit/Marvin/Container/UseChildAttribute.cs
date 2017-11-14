@@ -12,12 +12,12 @@ namespace Marvin.Container
         /// <summary>
         /// Name of the child to resolve
         /// </summary>
-        public string ChildName { get; private set; }
+        public string ChildName { get; }
 
         /// <summary>
         /// Optional name of the model, if more than one is available
         /// </summary>
-        public string ParentName { get; private set; }
+        public string ParentName { get; }
 
         /// <summary>
         /// Request a child instance with the same name custom tailored for this component

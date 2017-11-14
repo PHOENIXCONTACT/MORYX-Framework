@@ -1,5 +1,4 @@
-﻿
-namespace Marvin.Communication
+﻿namespace Marvin.Communication
 {
     /// <summary>
     /// Possible states of a binary connection  
@@ -10,10 +9,12 @@ namespace Marvin.Communication
         /// No connection available
         /// </summary>
         Disconnected,
+
         /// <summary>
         /// Component is trying to establish a connection
         /// </summary>
         AttemptingConnection,
+
         /// <summary>
         /// Component is connected. Communication is possible
         /// </summary>

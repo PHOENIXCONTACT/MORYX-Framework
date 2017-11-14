@@ -51,7 +51,6 @@
       <HintPath>..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -103,10 +102,6 @@
     <ProjectReference Include="..\..\Toolkit\Marvin.Container\Marvin.Container.csproj">
       <Project>{3bc04a3b-24d6-4e33-989d-33366c47dc48}</Project>
       <Name>Marvin.Container</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Toolkit\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
-      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
-      <Name>Marvin.PlatformTools</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Toolkit\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>

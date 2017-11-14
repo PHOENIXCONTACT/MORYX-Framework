@@ -59,10 +59,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Toolkit\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
-      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
-      <Name>Marvin.PlatformTools</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
       <Project>{12dbb67a-e0a8-413a-8c1b-a4cae57a9afb}</Project>
       <Name>Marvin.Runtime.Base</Name>

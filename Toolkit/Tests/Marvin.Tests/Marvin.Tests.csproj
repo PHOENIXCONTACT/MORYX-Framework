@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{05891405-D460-4EC2-9906-B9FF2FF27006}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Tests</RootNamespace>
+    <AssemblyName>Marvin.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bindings\Dummies\Branch.cs" />
+    <Compile Include="Bindings\DelegateResolverTest.cs" />
+    <Compile Include="Bindings\Dummies\ISomeInterface.cs" />
+    <Compile Include="Bindings\Dummies\Foo.cs" />
+    <Compile Include="Bindings\ReflectionResolverTests.cs" />
+    <Compile Include="Bindings\Dummies\SomeClass.cs" />
+    <Compile Include="Bindings\Dummies\SomeHiddenPropertyClass.cs" />
+    <Compile Include="Bindings\Dummies\SomeImplementation.cs" />
+    <Compile Include="Bindings\UpdateValueTest.cs" />
+    <Compile Include="Collections\DelayQueueTests.cs" />
+    <Compile Include="Collections\SortableCollectionTests.cs" />
+    <Compile Include="Collections\SortObj.cs" />
+    <Compile Include="Configuration\CachedConfigManagerTests.cs" />
+    <Compile Include="Configuration\ConfigManagerTests.cs" />
+    <Compile Include="Configuration\FaultyConfig.cs" />
+    <Compile Include="Configuration\TestConfig.cs" />
+    <Compile Include="Configuration\Transformer\ModelTransformerTest.cs" />
+    <Compile Include="Configuration\Transformer\TransformerTestConfig.cs" />
+    <Compile Include="Extensions\AppDomainExtensionTests.cs" />
+    <Compile Include="Extensions\AppDomain\AbstractBaseClass.cs" />
+    <Compile Include="Extensions\AppDomain\BaseClass.cs" />
+    <Compile Include="Extensions\AppDomain\ChildClass1.cs" />
+    <Compile Include="Extensions\AppDomain\ChildClass2.cs" />
+    <Compile Include="Extensions\AppDomain\GranChildClass1.cs" />
+    <Compile Include="Extensions\AppDomain\GranChildClass2.cs" />
+    <Compile Include="Extensions\AppDomain\IBaseInterface.cs" />
+    <Compile Include="Extensions\AppDomain\ITestInterface.cs" />
+    <Compile Include="Extensions\DateTimeExtensionTests.cs" />
+    <Compile Include="Extensions\EnumerableExtensionTests.cs" />
+    <Compile Include="Logging\LoggerManagementTests.cs" />
+    <Compile Include="Logging\LoggingTests.cs" />
+    <Compile Include="Logging\ModuleMock.cs" />
+    <Compile Include="Logging\TestLoggerManagement.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\ArrayDummy.cs" />
+    <Compile Include="Serialization\CloneTests.cs" />
+    <Compile Include="Serialization\DictionaryClass.cs" />
+    <Compile Include="Serialization\DummyClass.cs" />
+    <Compile Include="Serialization\ListDummy.cs" />
+    <Compile Include="Serialization\SerializationTests.cs" />
+    <Compile Include="StateMachines\StateMachineTests.cs" />
+    <Compile Include="StateMachines\TestMachine\AState.cs" />
+    <Compile Include="StateMachines\TestMachine\BState.cs" />
+    <Compile Include="StateMachines\TestMachine\CState.cs" />
+    <Compile Include="StateMachines\TestMachine\MyContext.cs" />
+    <Compile Include="StateMachines\TestMachine\MyStateBase.cs" />
+    <Compile Include="Tools\ParallelOperationTests.cs" />
+    <Compile Include="Tools\NonStackingTimerCallbackTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
+      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
+      <Name>Marvin</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TestTools\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
+      <Project>{505DF475-5FF5-47CC-9E3B-BBE16C359F0E}</Project>
+      <Name>Marvin.TestTools.UnitTest</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="OpenCoverFilter.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

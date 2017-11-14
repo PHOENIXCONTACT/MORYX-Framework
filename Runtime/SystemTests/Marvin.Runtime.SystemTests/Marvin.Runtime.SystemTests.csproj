@@ -76,10 +76,6 @@
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
       <Name>Marvin.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Toolkit\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
-      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
-      <Name>Marvin.PlatformTools</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Toolkit\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
       <Name>Marvin.Tools.Wcf</Name>

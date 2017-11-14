@@ -1,5 +1,6 @@
 ﻿{
   "Enabled": true,
+  "Extensions": [], 
   "Mappings": [
     {
       "Extension": ".cs",
