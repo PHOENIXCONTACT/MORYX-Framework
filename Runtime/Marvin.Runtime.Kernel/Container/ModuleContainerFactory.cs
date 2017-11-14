@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Marvin.Container;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Kernel
 {

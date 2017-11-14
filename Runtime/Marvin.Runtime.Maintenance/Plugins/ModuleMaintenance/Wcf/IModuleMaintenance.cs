@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
-using Marvin.Runtime.ServerModules;
+using Marvin.Runtime.Modules;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 

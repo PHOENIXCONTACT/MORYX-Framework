@@ -2,6 +2,7 @@
 using Marvin.Runtime.Base.Tests.Mocks;
 using Marvin.Runtime.Base.Tests.Modules;
 using Marvin.Runtime.Container;
+using Marvin.Runtime.Modules;
 using NUnit.Framework;
 
 namespace Marvin.Runtime.Base.Tests

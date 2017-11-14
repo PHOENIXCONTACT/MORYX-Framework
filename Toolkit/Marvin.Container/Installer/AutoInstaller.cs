@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.SubSystems.Configuration;
-using Castle.Windsor;
 
 namespace Marvin.Container
 {

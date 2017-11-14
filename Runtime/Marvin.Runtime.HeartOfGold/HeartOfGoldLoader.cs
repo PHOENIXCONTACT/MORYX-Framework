@@ -6,6 +6,8 @@ using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
+using Marvin.Runtime.Kernel;
+using Marvin.Runtime.Modules;
 using Marvin.Tools;
 
 namespace Marvin.Runtime.HeartOfGold

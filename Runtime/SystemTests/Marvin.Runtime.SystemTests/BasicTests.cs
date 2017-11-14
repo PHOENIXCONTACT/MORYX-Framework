@@ -3,6 +3,7 @@ using System.Threading;
 using Marvin.TestTools.SystemTest;
 using NUnit.Framework;
 using System;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.SystemTests
 {

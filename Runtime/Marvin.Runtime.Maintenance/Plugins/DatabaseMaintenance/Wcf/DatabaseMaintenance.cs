@@ -10,7 +10,7 @@ using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Maintenance.Filesystem;
-using Marvin.Runtime.ModuleManagement;
+using Marvin.Runtime.Modules;
 using Marvin.Threading;
 
 namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf

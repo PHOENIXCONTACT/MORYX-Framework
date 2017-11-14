@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Marvin.Runtime
+namespace Marvin.Runtime.Modules
 {
     /// <summary>
     /// Interface to access the modules state, state history and register to change events

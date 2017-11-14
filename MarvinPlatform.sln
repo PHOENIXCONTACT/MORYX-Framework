@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime", "Runtime\Marvin.Runtime\Marvin.Runtime.csproj", "{92777E64-9978-40AE-8B90-93ECBBBEFE67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Base", "Runtime\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj", "{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Kernel", "Runtime\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj", "{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Base.Tests", "Runtime\Tests\Marvin.Runtime.Base.Tests\Marvin.Runtime.Base.Tests.csproj", "{7448728C-9965-4874-A2E9-7BAB37E42963}"
@@ -81,6 +79,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ManualTests", "ManualTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Workflows.Benchmark", "Toolkit\ManualTests\Marvin.Workflows.Benchmark\Marvin.Workflows.Benchmark.csproj", "{B9FBC616-5D9A-4C82-8DFB-AEFF07A239C8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DE7526FF-6D25-4643-9AA3-C24253901C8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,23 +111,6 @@ Global
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release|x64.ActiveCfg = Release|Any CPU
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release|x64.Build.0 = Release|Any CPU
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release|x86.ActiveCfg = Release|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Debug|x64.Build.0 = Debug|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Debug|x86.Build.0 = Debug|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release(x86)|Any CPU.ActiveCfg = Release(x86)|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release(x86)|Any CPU.Build.0 = Release(x86)|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release(x86)|x64.ActiveCfg = Release(x86)|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release(x86)|x64.Build.0 = Release(x86)|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release(x86)|x86.ActiveCfg = Release(x86)|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release(x86)|x86.Build.0 = Release(x86)|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release|x64.ActiveCfg = Release|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release|x64.Build.0 = Release|Any CPU
-		{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}.Release|x86.ActiveCfg = Release|Any CPU
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Debug|x64.ActiveCfg = Debug|Any CPU

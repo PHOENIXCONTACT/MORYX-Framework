@@ -35,12 +35,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
@@ -59,10 +53,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
-      <Project>{12dbb67a-e0a8-413a-8c1b-a4cae57a9afb}</Project>
-      <Name>Marvin.Runtime.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Diagnostics.DbMonitor\Marvin.Runtime.Diagnostics.DbMonitor.csproj">
       <Project>{afbaeb70-6df9-4aef-a2f4-3c5413738ca2}</Project>
       <Name>Marvin.Runtime.Diagnostics.DbMonitor</Name>

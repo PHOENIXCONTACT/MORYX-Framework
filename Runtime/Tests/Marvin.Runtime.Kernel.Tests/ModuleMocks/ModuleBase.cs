@@ -1,4 +1,5 @@
 ﻿using Marvin.Modules;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Kernel.Tests.ModuleMocks
 {

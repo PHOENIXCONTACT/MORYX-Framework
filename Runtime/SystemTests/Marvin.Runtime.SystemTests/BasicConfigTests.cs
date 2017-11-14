@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Marvin.Configuration;
 using Marvin.Runtime.Kernel;
+using Marvin.Runtime.Modules;
 using Marvin.Serialization;
 using Marvin.TestModule;
 using Marvin.TestTools.SystemTest;

@@ -42,40 +42,36 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Commands\Additionals\DifficultyStats.cs" />
-    <Compile Include="Commands\Additionals\Shots.cs" />
-    <Compile Include="Commands\Additionals\SoundSequences.cs" />
-    <Compile Include="Commands\Additionals\StageCommand.cs" />
-    <Compile Include="Commands\Additionals\UiElement.cs" />
-    <Compile Include="Commands\CommandHelper.cs" />
-    <Compile Include="Commands\ConsoleCommand.cs" />
-    <Compile Include="Commands\DefaultHandler.cs" />
-    <Compile Include="Commands\GarbageCommand.cs" />
-    <Compile Include="Commands\ICommandHandler.cs" />
-    <Compile Include="Commands\InstallCommand.cs" />
-    <Compile Include="Commands\LoggerCommand.cs" />
-    <Compile Include="Commands\PrintCommand.cs" />
-    <Compile Include="Commands\ProductCommand.cs" />
-    <Compile Include="Commands\ReincConfCommand.cs" />
-    <Compile Include="Commands\RuntimeArguments.cs" />
-    <Compile Include="Commands\SetupCommand.cs" />
-    <Compile Include="Commands\SnakeCommand.cs" />
-    <Compile Include="Commands\SoundCommand.cs" />
-    <Compile Include="Commands\SpaceCommand.cs" />
-    <Compile Include="Commands\StartCommand.cs" />
-    <Compile Include="Commands\StopCommand.cs" />
+    <Compile Include="Command\Commands\Additionals\DifficultyStats.cs" />
+    <Compile Include="Command\Commands\Additionals\Shots.cs" />
+    <Compile Include="Command\Commands\Additionals\SoundSequences.cs" />
+    <Compile Include="Command\Commands\Additionals\StageCommand.cs" />
+    <Compile Include="Command\Commands\Additionals\UiElement.cs" />
+    <Compile Include="Command\Commands\CommandHelper.cs" />
+    <Compile Include="Command\Commands\ConsoleCommand.cs" />
+    <Compile Include="Command\Commands\DefaultHandler.cs" />
+    <Compile Include="Command\Commands\GarbageCommand.cs" />
+    <Compile Include="Command\Commands\ICommandHandler.cs" />
+    <Compile Include="Command\Commands\InstallCommand.cs" />
+    <Compile Include="Command\Commands\LoggerCommand.cs" />
+    <Compile Include="Command\Commands\PrintCommand.cs" />
+    <Compile Include="Command\Commands\ProductCommand.cs" />
+    <Compile Include="Command\Commands\ReincConfCommand.cs" />
+    <Compile Include="Command\Commands\SetupCommand.cs" />
+    <Compile Include="Command\Commands\SnakeCommand.cs" />
+    <Compile Include="Command\Commands\SoundCommand.cs" />
+    <Compile Include="Command\Commands\SpaceCommand.cs" />
+    <Compile Include="Command\Commands\StartCommand.cs" />
+    <Compile Include="Command\Commands\StopCommand.cs" />
     <Compile Include="HeartOfGoldLoader.cs" />
     <Compile Include="HelpPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runmodes\CommandRunmode.cs" />
-    <Compile Include="Runmodes\DeveloperConsole.cs" />
-    <Compile Include="Runmodes\IRunmode.cs" />
-    <Compile Include="Runmodes\RunModeAttribute.cs" />
-    <Compile Include="Runmodes\RuntimeErrorCode.cs" />
-    <Compile Include="Runmodes\ServiceRunMode.cs" />
-    <Compile Include="Runmodes\SmokeTest.cs" />
-    <Compile Include="Runmodes\SystemTest.cs" />
-    <Compile Include="Runmodes\UpdateRunmode.cs" />
+    <Compile Include="Command\CommandRunmode.cs" />
+    <Compile Include="Command\DeveloperConsole.cs" />
+    <Compile Include="Service\ServiceRunMode.cs" />
+    <Compile Include="SmokeTest\SmokeTest.cs" />
+    <Compile Include="Command\SystemTest.cs" />
+    <Compile Include="Update\UpdateRunmode.cs" />
     <Compile Include="Service\ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -98,10 +94,6 @@
     <ProjectReference Include="..\..\Toolkit\Marvin\Marvin.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
-      <Project>{12dbb67a-e0a8-413a-8c1b-a4cae57a9afb}</Project>
-      <Name>Marvin.Runtime.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj">
       <Project>{8ff77f62-43c3-40fe-9dfe-01a53fe8a68e}</Project>

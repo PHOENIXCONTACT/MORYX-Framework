@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using Marvin.Model;
 using Marvin.Runtime;
+using Marvin.Runtime.Modules;
 using Marvin.Serialization;
 using Marvin.TestTools.SystemTest.DatabaseMaintenance;
 using Marvin.TestTools.SystemTest.Logging;

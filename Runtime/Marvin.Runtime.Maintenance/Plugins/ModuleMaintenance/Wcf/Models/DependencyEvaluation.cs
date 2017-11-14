@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using Marvin.Runtime.ModuleManagement;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
 {

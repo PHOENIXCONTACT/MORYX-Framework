@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 using Marvin.Runtime;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.TestTools.SystemTest.Maintenance {
     using System.Runtime.Serialization;

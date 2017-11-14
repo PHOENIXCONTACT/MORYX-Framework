@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Marvin.Container;
 using Marvin.Runtime.Maintenance.Contracts;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Maintenance
 {

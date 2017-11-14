@@ -9,8 +9,7 @@ using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
-using Marvin.Runtime.ModuleManagement;
-using Marvin.Runtime.ServerModules;
+using Marvin.Runtime.Modules;
 using Marvin.Serialization;
 using Marvin.Threading;
 

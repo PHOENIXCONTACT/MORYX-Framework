@@ -7,8 +7,7 @@ using Marvin.Runtime.Base;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Maintenance.Contracts;
-using Marvin.Runtime.ModuleManagement;
-using Marvin.Runtime.ServerModules;
+using Marvin.Runtime.Modules;
 using Marvin.Tools.Wcf;
 using Marvin.Tools.Wcf.FileSystem;
 
