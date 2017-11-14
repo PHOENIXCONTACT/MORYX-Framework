@@ -70,10 +70,6 @@
       <Project>{3bc04a3b-24d6-4e33-989d-33366c47dc48}</Project>
       <Name>Marvin.Container</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
-      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
-      <Name>Marvin.PlatformTools</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\TestTools\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
       <Project>{505df475-5ff5-47cc-9e3b-bbe16c359f0e}</Project>
       <Name>Marvin.TestTools.UnitTest</Name>

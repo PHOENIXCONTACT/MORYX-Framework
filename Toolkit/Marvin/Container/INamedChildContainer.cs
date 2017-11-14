@@ -2,17 +2,6 @@
 
 namespace Marvin.Container
 {
-    ///// <summary>
-    ///// Interface for all components that allow access to direct children
-    ///// </summary>
-    //public interface INamedChildContainer
-    //{
-    //    /// <summary>
-    //    /// Get the child with this name
-    //    /// </summary>
-    //    object GetChild(Type childType, string name);
-    //}
-
     /// <summary>
     /// Interface for all components that allow access to direct children
     /// </summary>

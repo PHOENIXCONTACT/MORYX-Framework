@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Marvin.Communication
+﻿namespace Marvin.Communication
 {
     /// <summary>
     /// Interaface for binary messages

@@ -10,9 +10,6 @@ namespace Marvin.Communication
     public class BinaryConnectionConfig : IPluginConfig
     {
         ///
-        public virtual string PluginName
-        {
-            get { return "CommunicatorConfig"; }
-        }
+        public virtual string PluginName => "CommunicatorConfig";
     }
 }
