@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using Marvin.Configuration;
+using Marvin.Runtime.Kernel.Tests.Dummys;
 using NUnit.Framework;
 
 namespace Marvin.Runtime.Kernel.Tests

@@ -60,6 +60,9 @@
     <Compile Include="Dummys\RuntimeConfigManagerTestConfig1.cs" />
     <Compile Include="Dummys\RuntimeConfigManagerTestConfig2.cs" />
     <Compile Include="Mocks\LoggerManagementMock.cs" />
+    <Compile Include="Mocks\TestConfigManager.cs" />
+    <Compile Include="Mocks\TestLogger.cs" />
+    <Compile Include="Mocks\TestLoggerMgmt.cs" />
     <Compile Include="ModuleManagerTests.cs" />
     <Compile Include="ModuleMocks\IFacadeA.cs" />
     <Compile Include="ModuleMocks\IFacadeB.cs" />
@@ -90,6 +93,10 @@
     <ProjectReference Include="..\..\TestTools\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
       <Project>{d6dc00c6-9358-4839-84c0-44df018a74dc}</Project>
       <Name>Marvin.TestTools.SystemTest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.Tests\Marvin.Runtime.Tests.csproj">
+      <Project>{7448728c-9965-4874-a2e9-7bab37e42963}</Project>
+      <Name>Marvin.Runtime.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

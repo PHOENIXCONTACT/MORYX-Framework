@@ -29,7 +29,6 @@
     <MetadataFile FileName="ModuleMaintenance.wsdl" MetadataType="Wsdl" ID="98b3a73a-b550-4111-8547-2778463c589c" SourceId="1" SourceUrl="http://localhost/metadata/modulemaintenance" />
     <MetadataFile FileName="ModuleMaintenance2.xsd" MetadataType="Schema" ID="da157425-29db-4ff9-b4e7-c23d281f3602" SourceId="1" SourceUrl="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" />
     <MetadataFile FileName="ModuleMaintenance3.xsd" MetadataType="Schema" ID="77594573-3c84-47ce-9f3a-57dc0bb8a46a" SourceId="1" SourceUrl="http://localhost/Metadata/ModuleMaintenance?xsd=xsd2" />
-    <MetadataFile FileName="ModuleMaintenance4.xsd" MetadataType="Schema" ID="09ec3f57-dd3d-4f57-b7c0-58551d9c8ef7" SourceId="1" SourceUrl="http://localhost/Metadata/ModuleMaintenance?xsd=xsd6" />
     <MetadataFile FileName="ModuleMaintenance5.xsd" MetadataType="Schema" ID="4c5e3102-1474-4d39-bef1-97ff60b7db1f" SourceId="1" SourceUrl="http://localhost/Metadata/ModuleMaintenance?xsd=xsd0" />
     <MetadataFile FileName="ModuleMaintenance6.xsd" MetadataType="Schema" ID="cee49e3e-ab83-4317-9d66-43e525c8d6f0" SourceId="1" SourceUrl="http://localhost/Metadata/ModuleMaintenance?xsd=xsd1" />
   </Metadata>

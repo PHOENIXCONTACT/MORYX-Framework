@@ -24,7 +24,7 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Tools.Wcf.Tests.Logging.LogLevel ActiveLevelField;
+        private Marvin.Logging.LogLevel ActiveLevelField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel> ChildLoggerField;
@@ -46,7 +46,7 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.Tools.Wcf.Tests.Logging.LogLevel ActiveLevel {
+        public Marvin.Logging.LogLevel ActiveLevel {
             get {
                 return this.ActiveLevelField;
             }
@@ -105,29 +105,6 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
                 propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="LogLevel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Logging")]
-    public enum LogLevel : int {
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Trace = 0,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Debug = 1,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Info = 2,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Warning = 3,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Error = 4,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Fatal = 5,
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -222,7 +199,7 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
         private string ClassNameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Tools.Wcf.Tests.Logging.LogLevel LogLevelField;
+        private Marvin.Logging.LogLevel LogLevelField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel LoggerField;
@@ -257,7 +234,7 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.Tools.Wcf.Tests.Logging.LogLevel LogLevel {
+        public Marvin.Logging.LogLevel LogLevel {
             get {
                 return this.LogLevelField;
             }
@@ -329,10 +306,10 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
         System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel>> GetAllPluginLoggerAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/AddRemoteAppender", ReplyAction="http://tempuri.org/ILogMaintenance/AddRemoteAppenderResponse")]
-        int AddRemoteAppender(string name, Marvin.Tools.Wcf.Tests.Logging.LogLevel minLevel);
+        int AddRemoteAppender(string name, Marvin.Logging.LogLevel minLevel);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/AddRemoteAppender", ReplyAction="http://tempuri.org/ILogMaintenance/AddRemoteAppenderResponse")]
-        System.Threading.Tasks.Task<int> AddRemoteAppenderAsync(string name, Marvin.Tools.Wcf.Tests.Logging.LogLevel minLevel);
+        System.Threading.Tasks.Task<int> AddRemoteAppenderAsync(string name, Marvin.Logging.LogLevel minLevel);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetMessages", ReplyAction="http://tempuri.org/ILogMaintenance/GetMessagesResponse")]
         Marvin.Tools.Wcf.Tests.Logging.LogMessages GetMessages(int appenderId);
@@ -347,10 +324,10 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
         System.Threading.Tasks.Task RemoveRemoteAppenderAsync(int appenderId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/SetLogLevel", ReplyAction="http://tempuri.org/ILogMaintenance/SetLogLevelResponse")]
-        void SetLogLevel(Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel logger, Marvin.Tools.Wcf.Tests.Logging.LogLevel level);
+        void SetLogLevel(Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel logger, Marvin.Logging.LogLevel level);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/SetLogLevel", ReplyAction="http://tempuri.org/ILogMaintenance/SetLogLevelResponse")]
-        System.Threading.Tasks.Task SetLogLevelAsync(Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel logger, Marvin.Tools.Wcf.Tests.Logging.LogLevel level);
+        System.Threading.Tasks.Task SetLogLevelAsync(Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel logger, Marvin.Logging.LogLevel level);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -388,11 +365,11 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
             return base.Channel.GetAllPluginLoggerAsync();
         }
         
-        public int AddRemoteAppender(string name, Marvin.Tools.Wcf.Tests.Logging.LogLevel minLevel) {
+        public int AddRemoteAppender(string name, Marvin.Logging.LogLevel minLevel) {
             return base.Channel.AddRemoteAppender(name, minLevel);
         }
         
-        public System.Threading.Tasks.Task<int> AddRemoteAppenderAsync(string name, Marvin.Tools.Wcf.Tests.Logging.LogLevel minLevel) {
+        public System.Threading.Tasks.Task<int> AddRemoteAppenderAsync(string name, Marvin.Logging.LogLevel minLevel) {
             return base.Channel.AddRemoteAppenderAsync(name, minLevel);
         }
         
@@ -412,11 +389,11 @@ namespace Marvin.Tools.Wcf.Tests.Logging {
             return base.Channel.RemoveRemoteAppenderAsync(appenderId);
         }
         
-        public void SetLogLevel(Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel logger, Marvin.Tools.Wcf.Tests.Logging.LogLevel level) {
+        public void SetLogLevel(Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel logger, Marvin.Logging.LogLevel level) {
             base.Channel.SetLogLevel(logger, level);
         }
         
-        public System.Threading.Tasks.Task SetLogLevelAsync(Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel logger, Marvin.Tools.Wcf.Tests.Logging.LogLevel level) {
+        public System.Threading.Tasks.Task SetLogLevelAsync(Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel logger, Marvin.Logging.LogLevel level) {
             return base.Channel.SetLogLevelAsync(logger, level);
         }
     }

@@ -1,4 +1,4 @@
-﻿using Marvin.Runtime.HeartOfGold;
+﻿using Marvin.Runtime.Kernel;
 
 namespace Marvin.Runtime.Console
 {
@@ -12,7 +12,7 @@ namespace Marvin.Runtime.Console
         /// </summary>
         public static int Main(string[] args)
         {
-            var loader = new HeartOfGoldLoader(args);
+            var loader = new HeartOfGold(args);
             var result = loader.Run();
             return (int)result;
         }

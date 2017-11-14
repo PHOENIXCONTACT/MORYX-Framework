@@ -1,6 +1,6 @@
 ﻿using Marvin.Configuration;
 
-namespace Marvin.Runtime.Kernel.Tests
+namespace Marvin.Runtime.Kernel.Tests.Dummys
 {
     /// <summary>
     /// Test subconfig
