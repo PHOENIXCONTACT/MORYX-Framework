@@ -8,10 +8,15 @@ using Marvin.Tools;
 
 namespace Marvin.Logging
 {
+    internal interface ILogTargetFactory
+    {
+        ILogTarget Create(string name);
+    }
+
     /// <summary>
     /// Framework component managing the life cycle of all loggers and provide diagnostic access to them
     /// </summary>
-    public abstract class LoggerManagement : ILoggerManagement, IDisposable
+    public abstract class LoggerManagement : ILoggerManagement, ILogTargetFactory, IDisposable
     {
         private readonly Thread _loggingThread;
         private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
@@ -29,7 +34,22 @@ namespace Marvin.Logging
             _loggingThread.Start();
         }
 
+        #region LogTargetFactory
+
+        ILogTarget ILogTargetFactory.Create(string name)
+        {
+            return CreateLogTarget(name);
+        }
+
+        /// <summary>
+        /// Creates a log target for the internal loggers
+        /// </summary>
+        protected abstract ILogTarget CreateLogTarget(string name);
+
+        #endregion
+
         #region Logger access
+
         private Logger GetOrCreateLogger(string name, Type targetType)
         {
             lock (_loggers)
@@ -40,7 +60,7 @@ namespace Marvin.Logging
                 else
                 {
                     var loggerConf = GetLoggerConfig(name);
-                    logger = new Logger(loggerConf, targetType, _logQueue);
+                    logger = new Logger(loggerConf, targetType, this, _logQueue);
                     _loggers[name] = logger;
                 }
                 return logger;
@@ -101,14 +121,19 @@ namespace Marvin.Logging
         /// </summary>
         public void DeactivateLogging(ILoggingHost module)
         {
-            if (module.Logger is Logger)
-                ((Logger)module.Logger).ClearChildren();
-            module.Logger = new IdleLogger(module.Name);
+            var logger = (module.Logger as Logger);
+            logger?.ClearChildren();
+
+            
+            module.Logger = new IdleLogger(module.Name, CreateLogTarget(module.Name));
         }
+
         #endregion
 
         #region Stream listener
+
         private readonly BlockingCollection<LogMessage> _logQueue = new BlockingCollection<LogMessage>();
+
         private void ProcessQueue()
         {
             var token = _tokenSource.Token;
@@ -127,7 +152,7 @@ namespace Marvin.Logging
                 logMessage.Format();
                 try
                 {
-                    WriteToLogFile(logMessage);
+                    ForwartToLogTarget(logMessage);
                     ForwardToListeners(logMessage);
                 }
                 catch (Exception ex)
@@ -138,48 +163,17 @@ namespace Marvin.Logging
             }
         }
 
-        private static void WriteToLogFile(LogMessage logMessage)
+        private static void ForwartToLogTarget(LogMessage logMessage)
         {
             // Forward message to internal log and all appender
-            var internalLog = logMessage.TargetLog;
-            switch (logMessage.Level)
+            var logTarget = logMessage.LogTarget;
+            if (logMessage.IsException)
             {
-                case LogLevel.Trace:
-                    if (logMessage.IsException)
-                        internalLog.Trace(logMessage.LoggerMessage, logMessage.Exception);
-                    else
-                        internalLog.Trace(logMessage.LoggerMessage);
-                    break;
-                case LogLevel.Debug:
-                    if (logMessage.IsException)
-                        internalLog.Debug(logMessage.LoggerMessage, logMessage.Exception);
-                    else
-                        internalLog.Debug(logMessage.LoggerMessage);
-                    break;
-                case LogLevel.Info:
-                    if (logMessage.IsException)
-                        internalLog.Info(logMessage.LoggerMessage, logMessage.Exception);
-                    else
-                        internalLog.Info(logMessage.LoggerMessage);
-                    break;
-                case LogLevel.Warning:
-                    if (logMessage.IsException)
-                        internalLog.Warn(logMessage.LoggerMessage, logMessage.Exception);
-                    else
-                        internalLog.Warn(logMessage.LoggerMessage);
-                    break;
-                case LogLevel.Error:
-                    if (logMessage.IsException)
-                        internalLog.Error(logMessage.LoggerMessage, logMessage.Exception);
-                    else
-                        internalLog.Error(logMessage.LoggerMessage);
-                    break;
-                case LogLevel.Fatal:
-                    if (logMessage.IsException)
-                        internalLog.Fatal(logMessage.LoggerMessage, logMessage.Exception);
-                    else
-                        internalLog.Fatal(logMessage.LoggerMessage);
-                    break;
+                logTarget.Log(logMessage.Level, logMessage.LoggerMessage, logMessage.Exception);
+            }
+            else
+            {
+                logTarget.Log(logMessage.Level, logMessage.LoggerMessage);
             }
         }
 
@@ -188,10 +182,13 @@ namespace Marvin.Logging
         /// </summary>
         /// <param name="logMessage">The log message which should be forworded.</param>
         protected abstract void ForwardToListeners(ILogMessage logMessage);
+
         #endregion
 
         #region IEnumerable
+
         private readonly IDictionary<string, Logger> _loggers = new Dictionary<string, Logger>();
+
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
@@ -217,6 +214,7 @@ namespace Marvin.Logging
         {
             return GetEnumerator();
         }
+
         #endregion
 
         /// <summary>

@@ -35,14 +35,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -113,6 +105,8 @@
     <Compile Include="Configuration\PossibleValues\PluginNameSelectorAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\PossibleValuesAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\RelativeDirectoriesAttribute.cs" />
+    <Compile Include="Logging\IdleLogger.cs" />
+    <Compile Include="Logging\ILogTarget.cs" />
     <Compile Include="Serialization\CollectionStrategy\ArrayStrategy.cs" />
     <Compile Include="Serialization\CollectionStrategy\CollectionStrategyTools.cs" />
     <Compile Include="Serialization\CollectionStrategy\DictionaryStrategy.cs" />
@@ -138,10 +132,7 @@
     <Compile Include="Tools\Extensions\StringExtensions.cs" />
     <Compile Include="Tools\Extensions\UnitOfWorkExtensions.cs" />
     <Compile Include="Logging\LoggerManagement.cs" />
-    <Compile Include="Logging\Logger\DummyLog.cs" />
-    <Compile Include="Logging\Logger\IdleLogger.cs" />
-    <Compile Include="Logging\Logger\LogFactory.cs" />
-    <Compile Include="Logging\Logger\Logger.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\ModuleLoggerConfig.cs" />
     <Compile Include="Logging\LogMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,16 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Marvin.Logging;
 
 namespace Marvin.PlatformTools.Tests.Logging
 {
+    public class LogTargetMock : ILogTarget
+    {
+        public void Log(LogLevel loglevel, string message)
+        {
+            
+        }
+
+        public void Log(LogLevel loglevel, string message, Exception exception)
+        {
+            
+        }
+    }
+
     public class TestLoggerManagement : LoggerManagement
     {
         private readonly List<ILogMessage> _messages = new List<ILogMessage>();
 
         private readonly ManualResetEventSlim _messageReceivedEvent = new ManualResetEventSlim(false);
 
-        public ManualResetEventSlim MessageReceivedEvent { get { return _messageReceivedEvent; } }
+        public ManualResetEventSlim MessageReceivedEvent => _messageReceivedEvent;
 
         public IEnumerable<ILogMessage> Messages
         {
@@ -22,7 +36,12 @@ namespace Marvin.PlatformTools.Tests.Logging
                 }
             }
         }
- 
+
+        protected override ILogTarget CreateLogTarget(string name)
+        {
+            return new LogTargetMock();
+        }
+
         protected override ModuleLoggerConfig GetLoggerConfig(string name)
         {
             return new ModuleLoggerConfig

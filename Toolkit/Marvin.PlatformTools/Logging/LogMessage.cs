@@ -1,5 +1,5 @@
 ﻿using System;
-using Common.Logging;
+using Marvin.Tools;
 
 namespace Marvin.Logging
 {
@@ -7,6 +7,37 @@ namespace Marvin.Logging
     {
         private readonly string _message;
         private readonly object[] _parameters;
+
+        #region Internal helper properties
+
+        public ILogTarget LogTarget { get; set; }
+
+        public string LoggerMessage { get; private set; }
+
+        public bool IsException { get; }
+
+        public Exception Exception { get; }
+
+        #endregion
+
+        #region ILogMessage
+
+        /// <inheritdoc />
+        public IModuleLogger Logger { get; }
+
+        /// <inheritdoc />
+        public string ClassName { get; }
+
+        /// <inheritdoc />
+        public LogLevel Level { get; }
+
+        /// <inheritdoc />
+        public string Message { get; private set; }
+
+        /// <inheritdoc />
+        public DateTime Timestamp { get; }
+
+        #endregion
 
         public LogMessage(IModuleLogger logger, string className, LogLevel level, Exception exception, string message, object[] formatParameters)
             : this(logger, className, level, message, formatParameters)
@@ -47,47 +78,10 @@ namespace Marvin.Logging
             LoggerMessage = ClassName + ": " + Message;
 
             // Concat exception to message
-            if(IsException)
+            if (IsException)
             {
-                Message += string.Format("\nException: {0}{1}\nStackTrace: {2}",
-                    Exception.Message, Exception.InnerException != null ? "\nInner exception: " + Exception.InnerException.Message : "", Exception.StackTrace);
+                Message += $"\nException: {ExceptionPrinter.Print(Exception)}";
             }
         }
-
-        #region Internal helper properties
-        public ILog TargetLog { get; set; }
-        public string LoggerMessage { get; private set; }
-
-        public bool IsException { get; private set; }
-        public Exception Exception { get; private set; }
-        #endregion
-
-        #region ILogMessage
-        /// <summary>
-        /// Name of the logger that created the message
-        /// </summary>
-        public IModuleLogger Logger { get; private set; }
-
-        /// <summary>
-        /// Logging class
-        /// </summary>
-        public string ClassName { get; private set; }
-
-        /// <summary>
-        /// Level of the message
-        /// </summary>
-        public LogLevel Level { get; private set; }
-
-        /// <summary>
-        /// The logged message
-        /// </summary>
-        public string Message { get; private set; }
-
-        /// <summary>
-        /// The moment this message was passed to the logger
-        /// </summary>
-        public DateTime Timestamp { get; private set; }
-        #endregion
-
     }
 }

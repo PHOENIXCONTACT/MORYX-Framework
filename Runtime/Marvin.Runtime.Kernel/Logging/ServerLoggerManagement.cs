@@ -23,6 +23,14 @@ namespace Marvin.Runtime.Kernel.Logging
         private LoggingConfig _config;
 
         /// <summary>
+        /// Creates the log target where log messages will be sent to
+        /// </summary>
+        protected override ILogTarget CreateLogTarget(string name)
+        {
+            return new LogTarget(name);
+        }
+
+        /// <summary>
         /// Get the configuration of a logger. If no configuration exist will it create a default config for the requested logger.
         /// </summary>
         /// <param name="name">The name of the logger for which the configuration should be fetched.</param>
