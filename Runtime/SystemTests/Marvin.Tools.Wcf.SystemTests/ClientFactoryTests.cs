@@ -4,7 +4,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using Marvin.DependentTestModule;
-using Marvin.Runtime;
+using Marvin.Runtime.Modules;
 using Marvin.Runtime.SystemTests;
 using Marvin.Tools.Wcf.SystemTests.HelloWorld;
 using Marvin.Tools.Wcf.SystemTests.SimpleHelloWorld;

@@ -70,11 +70,6 @@
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
-      <Project>{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}</Project>
-      <Name>Marvin.Runtime.Base</Name>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime\Marvin.Runtime.csproj">
       <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
       <Name>Marvin.Runtime</Name>

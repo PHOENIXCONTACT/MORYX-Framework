@@ -1,9 +1,10 @@
 ﻿using System.Threading;
 using Marvin.Container;
 using Marvin.Model;
+using Marvin.Runtime;
 using Marvin.Runtime.Base;
 using Marvin.Runtime.Container;
-using Marvin.Runtime.ServerModules;
+using Marvin.Runtime.Modules;
 using Marvin.TestTools.Test.Model;
 
 namespace Marvin.TestModule

@@ -86,10 +86,6 @@
       <Project>{505df475-5ff5-47cc-9e3b-bbe16c359f0e}</Project>
       <Name>Marvin.TestTools.UnitTest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
-      <Project>{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}</Project>
-      <Name>Marvin.Runtime.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Marvin.Runtime\Marvin.Runtime.csproj">
       <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
       <Name>Marvin.Runtime</Name>

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Marvin.Runtime
+namespace Marvin.Runtime.Modules
 {
     /// <summary>
     /// Console interface to provide developer interaction with a module

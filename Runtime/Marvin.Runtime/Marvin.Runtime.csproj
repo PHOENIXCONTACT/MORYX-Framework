@@ -61,31 +61,53 @@
     <Compile Include="Container\IContainerHost.cs" />
     <Compile Include="Container\ServerModuleAttribute.cs" />
     <Compile Include="Logging\IServerLoggerManagement.cs" />
+    <Compile Include="Modules\ConfigParser.cs" />
+    <Compile Include="Wcf\ConfiguredHostFactory.cs" />
+    <Compile Include="Modules\HealthState\FailureState.cs" />
+    <Compile Include="Modules\HealthState\HealthState.cs" />
+    <Compile Include="Modules\HealthState\HealthStateController.cs" />
+    <Compile Include="Modules\HealthState\ReadyState.cs" />
+    <Compile Include="Modules\HealthState\RetryState.cs" />
+    <Compile Include="Modules\HealthState\RunningState.cs" />
+    <Compile Include="Modules\HealthState\StoppedState.cs" />
+    <Compile Include="Modules\HealthState\WarningState.cs" />
+    <Compile Include="Modules\IFacadeControl.cs" />
     <Compile Include="Modules\IServerModule.cs" />
     <Compile Include="Modules\IServerModuleConsole.cs" />
     <Compile Include="Modules\IServerModuleState.cs" />
+    <Compile Include="Modules\IStateBasedTransitions.cs" />
+    <Compile Include="Modules\ServerModuleBase.cs" />
     <Compile Include="Modules\ServerModuleConsoleAttribute.cs" />
+    <Compile Include="Modules\ServerModuleFacadeControllerBase.cs" />
     <Compile Include="Modules\ServerModuleState.cs" />
+    <Compile Include="Modules\ServerNotificationCollection.cs" />
+    <Compile Include="Notifications\FailureNotification.cs" />
+    <Compile Include="Notifications\WarningNotification.cs" />
     <Compile Include="ProductConfig.cs" />
     <Compile Include="RuntimePlatform.cs" />
-    <Compile Include="ModuleManagement\MissingDependencyException.cs" />
-    <Compile Include="ModuleManagement\IDependencyTreeValidation.cs" />
-    <Compile Include="ModuleManagement\IModuleDependencyTree.cs" />
-    <Compile Include="ModuleManagement\IModuleManager.cs" />
-    <Compile Include="ModuleManagement\RequiredModuleApiAttribute.cs" />
-    <Compile Include="ServerModules\FailureBehaviour.cs" />
-    <Compile Include="ServerModules\IPlatformModule.cs" />
-    <Compile Include="ServerModules\ModuleStartBehaviour.cs" />
-    <Compile Include="ModuleManagement\HealthStateException.cs" />
-    <Compile Include="ServerModules\IFacadeContainer.cs" />
+    <Compile Include="Modules\Management\MissingDependencyException.cs" />
+    <Compile Include="Modules\Management\IDependencyTreeValidation.cs" />
+    <Compile Include="Modules\Management\IModuleDependencyTree.cs" />
+    <Compile Include="Modules\Management\IModuleManager.cs" />
+    <Compile Include="Modules\Management\RequiredModuleApiAttribute.cs" />
+    <Compile Include="Modules\FailureBehaviour.cs" />
+    <Compile Include="Modules\IPlatformModule.cs" />
+    <Compile Include="Modules\ModuleStartBehaviour.cs" />
+    <Compile Include="Modules\Management\HealthStateException.cs" />
+    <Compile Include="Modules\IFacadeContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Toolkit\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
+      <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
+      <Name>Marvin.Tools.Wcf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Toolkit\Marvin\Marvin.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

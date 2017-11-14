@@ -79,10 +79,6 @@
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
-      <Project>{12dbb67a-e0a8-413a-8c1b-a4cae57a9afb}</Project>
-      <Name>Marvin.Runtime.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj">
       <Project>{8ff77f62-43c3-40fe-9dfe-01a53fe8a68e}</Project>
       <Name>Marvin.Runtime.Kernel</Name>

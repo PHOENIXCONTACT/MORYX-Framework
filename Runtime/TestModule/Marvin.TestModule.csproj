@@ -95,10 +95,6 @@
       <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
       <Name>Marvin.TestTools.Test.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
-      <Project>{12dbb67a-e0a8-413a-8c1b-a4cae57a9afb}</Project>
-      <Name>Marvin.Runtime.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime\Marvin.Runtime.csproj">
       <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>
       <Name>Marvin.Runtime</Name>

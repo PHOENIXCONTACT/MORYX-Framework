@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Marvin.Modules;
-using Marvin.Runtime.ServerModules;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
 {

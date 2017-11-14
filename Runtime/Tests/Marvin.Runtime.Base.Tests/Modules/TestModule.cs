@@ -1,5 +1,5 @@
 ﻿using System;
-using Marvin.Runtime.ModuleManagement;
+using Marvin.Runtime.Modules;
 using Marvin.Threading;
 
 namespace Marvin.Runtime.Base.Tests.Modules

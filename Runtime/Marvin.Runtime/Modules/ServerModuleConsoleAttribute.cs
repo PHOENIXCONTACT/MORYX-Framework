@@ -1,7 +1,7 @@
 ﻿using System;
 using Marvin.Container;
 
-namespace Marvin.Runtime
+namespace Marvin.Runtime.Modules
 {
     /// <summary>
     /// Attribute for implementations of <see cref="IServerModuleConsole"/>
