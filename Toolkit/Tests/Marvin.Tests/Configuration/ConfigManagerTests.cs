@@ -81,12 +81,14 @@ namespace Marvin.Tests.Configuration
         [Test]
         public void ConfigSelfRepair()
         {
+            const string configName = "Marvin.Tests.Configuration.TestConfig";
+
             // Write faulty config to file
-            var fileName = Path.Combine(_fullConfigDir, "Marvin.PlatformTools.Tests.Configuration.TestConfig.mcf");
+            var fileName = Path.Combine(_fullConfigDir, configName + ConfigConstants.FileExtension);
             File.WriteAllText(fileName, FaultyConfig.Content());
 
             // Load config an check if present values where preserved
-            var config = _configManager.GetConfiguration<TestConfig>();
+            var config = _configManager.GetConfiguration<TestConfig>(configName);
             Assert.AreEqual(ModifiedValues.Text, config.DummyString, "Modified value not recovered!");
             Assert.AreEqual(ModifiedValues.Decimal, config.Child.DummyDouble, "Decimal value not preserved!");
             Assert.AreEqual(DefaultValues.Number, config.DummyNumber, "Default value not restored");

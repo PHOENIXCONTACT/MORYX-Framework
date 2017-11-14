@@ -123,7 +123,11 @@ namespace Marvin.Serialization
             return validation;
         }
 
-
+        /// <see cref="ICustomSerialization"/>
+        public virtual IEnumerable<MethodInfo> MethodFilter(Type sourceType)
+        {
+            return sourceType.GetMethods().Where(m => !m.IsSpecialName);
+        }
 
         /// <see cref="ICustomSerialization"/>
         public virtual IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
