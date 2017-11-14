@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Common.Logging;
 
 namespace Marvin.Logging
 {
@@ -10,12 +9,13 @@ namespace Marvin.Logging
     /// </summary>
     internal class IdleLogger : IModuleLogger
     {
-        private ILog _internalLog;
+        private readonly ILogTarget _logTarget;
 
-        public IdleLogger(string name)
+        public IdleLogger(string name, ILogTarget logTarget)
         {
             Name = name;
-            _internalLog = LogFactory.Create(name);
+
+            _logTarget = logTarget;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Marvin.Logging
         /// <summary>
         /// Name of this logger instance
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Add a new entry to the log
@@ -74,15 +74,15 @@ namespace Marvin.Logging
         private void LogMessage(LogMessage logMessage)
         {
             if (logMessage.IsException)
-                _internalLog.Error(logMessage.LoggerMessage, logMessage.Exception);
+                _logTarget.Log(LogLevel.Error, logMessage.LoggerMessage, logMessage.Exception); 
             else
-                _internalLog.Error(logMessage.LoggerMessage);
+                _logTarget.Log(LogLevel.Error, logMessage.LoggerMessage);
         }
 
         /// <summary>
         /// Active logging level
         /// </summary>
-        public LogLevel ActiveLevel { get { return LogLevel.Fatal; } }
+        public LogLevel ActiveLevel => LogLevel.Fatal;
 
         /// <summary>
         /// Create a new child logger or return an exisiting one with this name

@@ -1,10 +1,96 @@
 ﻿using System;
 using Common.Logging;
+using Marvin.Logging;
+using LogLevel = Marvin.Logging.LogLevel;
 
-namespace Marvin.Logging
+namespace Marvin.Runtime.Kernel.Logging
 {
+    internal class LogTarget : ILogTarget
+    {
+        private readonly ILog _internalTarget;
+
+        public LogTarget(string name)
+        {
+            try
+            {
+                _internalTarget =  LogManager.GetLogger(name);
+            }
+            catch
+            {
+                _internalTarget = new DummyLog();
+            }
+        }
+
+        public void Log(LogLevel loglevel, string message)
+        {
+            Log(loglevel, message, null);
+        }
+
+        public void Log(LogLevel loglevel, string message, Exception exception)
+        {
+            var isException = exception != null;
+            switch (loglevel)
+            {
+                case LogLevel.Trace:
+                    if (isException)
+                        _internalTarget.Trace(message, exception);
+                    else
+                        _internalTarget.Trace(message);
+                    break;
+                case LogLevel.Debug:
+                    if (isException)
+                        _internalTarget.Debug(message, exception);
+                    else
+                        _internalTarget.Debug(message);
+                    break;
+                case LogLevel.Info:
+                    if (isException)
+                        _internalTarget.Info(message, exception);
+                    else
+                        _internalTarget.Info(message);
+                    break;
+                case LogLevel.Warning:
+                    if (isException)
+                        _internalTarget.Warn(message, exception);
+                    else
+                        _internalTarget.Warn(message);
+                    break;
+                case LogLevel.Error:
+                    if (isException)
+                        _internalTarget.Error(message, exception);
+                    else
+                        _internalTarget.Error(message);
+                    break;
+                case LogLevel.Fatal:
+                    if (isException)
+                        _internalTarget.Fatal(message, exception);
+                    else
+                        _internalTarget.Fatal(message);
+                    break;
+            }
+        }
+    }
+
     internal class DummyLog : ILog
     {
+        public bool IsTraceEnabled { get; private set; }
+
+        public bool IsDebugEnabled { get; private set; }
+
+        public bool IsErrorEnabled { get; private set; }
+
+        public bool IsFatalEnabled { get; private set; }
+
+        public bool IsInfoEnabled { get; private set; }
+
+        public bool IsWarnEnabled { get; private set; }
+
+        public IVariablesContext GlobalVariablesContext { get; }
+
+        public IVariablesContext ThreadVariablesContext { get; }
+
+        public INestedVariablesContext NestedThreadVariablesContext { get; }
+
         public void Trace(object message)
         {
         }
@@ -244,15 +330,5 @@ namespace Marvin.Logging
         public void Fatal(IFormatProvider formatProvider, Action<FormatMessageHandler> formatMessageCallback, Exception exception)
         {
         }
-
-        public bool IsTraceEnabled { get; private set; }
-        public bool IsDebugEnabled { get; private set; }
-        public bool IsErrorEnabled { get; private set; }
-        public bool IsFatalEnabled { get; private set; }
-        public bool IsInfoEnabled { get; private set; }
-        public bool IsWarnEnabled { get; private set; }
-        public IVariablesContext GlobalVariablesContext { get; }
-        public IVariablesContext ThreadVariablesContext { get; }
-        public INestedVariablesContext NestedThreadVariablesContext { get; }
     }
 }

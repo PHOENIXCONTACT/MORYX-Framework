@@ -8,14 +8,17 @@ namespace Marvin.Runtime.Kernel.Logging
         /// No filtering options
         /// </summary>
         None = 0,
+
         /// <summary>
         /// Filter by name
         /// </summary>
         NameBased = 1,
+
         /// <summary>
         /// Filter by level
         /// </summary>
         LevelBased = 2,
+
         /// <summary>
         /// Filter by name and level
         /// </summary>

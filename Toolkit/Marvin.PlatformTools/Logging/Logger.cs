@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Logging;
 using Marvin.Tools;
 
 namespace Marvin.Logging
@@ -12,7 +11,9 @@ namespace Marvin.Logging
     {
         // Logging fields
         private readonly ModuleLoggerConfig _config;
-        private readonly ILog _internalLog;
+
+        private readonly ILogTargetFactory _logTargetFactory;
+        private readonly ILogTarget _targetLog;
 
         // Hosting fields
         private readonly string _hostName; // permanent cache for faster access
@@ -27,9 +28,10 @@ namespace Marvin.Logging
         /// </summary>
         /// <param name="config">Top level logger config</param>
         /// <param name="targetType">Type this logger is assigned to</param>
+        /// <param name="factory">Factory to create additional logger</param>
         /// <param name="logQueue">Global stream listener</param>
-        internal Logger(ModuleLoggerConfig config, Type targetType, BlockingCollection<LogMessage> logQueue)
-            : this(config, targetType, null, logQueue)
+        internal Logger(ModuleLoggerConfig config, Type targetType, ILogTargetFactory factory, BlockingCollection<LogMessage> logQueue)
+            : this(config, targetType, factory, null, logQueue)
         {
         }
 
@@ -38,13 +40,15 @@ namespace Marvin.Logging
         /// </summary>
         /// <param name="config">Top level logger config</param>
         /// <param name="logQueue">Global stream listener</param>
+        /// <param name="factory">Factory to create additional logger</param>
         /// <param name="targetType">Type this logger is assigned to</param>
-        /// <param name="internalLog">Existing log instance for loggers of same name</param>
-        private Logger(ModuleLoggerConfig config, Type targetType, ILog internalLog, BlockingCollection<LogMessage> logQueue)
+        /// <param name="logTarget">Existing log instance for loggers of same name</param>
+        private Logger(ModuleLoggerConfig config, Type targetType, ILogTargetFactory factory, ILogTarget logTarget, BlockingCollection<LogMessage> logQueue)
         {
             _config = config;
+            _logTargetFactory = factory;
             _hostName = targetType.Name;
-            _internalLog = internalLog ?? LogFactory.Create(_config.LoggerName);
+            _targetLog = logTarget ?? factory.Create(_config.LoggerName);
             LogQueue = logQueue;
 
             // Put this instance to the clone cache for later reuse.
@@ -75,7 +79,7 @@ namespace Marvin.Logging
 
             var logMessage = new LogMessage(this, _hostName, level, message, formatParameters)
             {
-                TargetLog = _internalLog
+                LogTarget = _targetLog
             };
             LogQueue.Add(logMessage);
         }
@@ -90,7 +94,7 @@ namespace Marvin.Logging
 
             var logMessage = new LogMessage(this, _hostName, level, ex, message, formatParameters)
             {
-                TargetLog = _internalLog
+                LogTarget = _targetLog
             };
             LogQueue.Add(logMessage);
         }
@@ -98,7 +102,7 @@ namespace Marvin.Logging
         /// <summary>
         /// Internal log queue executed by logger management
         /// </summary>
-        public BlockingCollection<LogMessage> LogQueue { get; private set; }
+        public BlockingCollection<LogMessage> LogQueue { get; }
 
         /// <summary>
         /// Create a new 
@@ -125,30 +129,33 @@ namespace Marvin.Logging
                 if (_children.ContainsKey(name))
                     return _children[name].Clone(targetType);
 
-                var childName = string.Format("{0}.{1}", Name, name);
+                var childName = $"{Name}.{name}";
                 var config = _config.ChildConfigs.FirstOrDefault(item => item.LoggerName == childName);
                 if (config == null)
                 {
                     config = new ModuleLoggerConfig { LoggerName = childName };
                     _config.ChildConfigs.Add(config);
                 }
-                var child = new Logger(config, targetType,LogQueue) { Parent = this };
-                _children[name] = child;
+
+                _children[name] = new Logger(config, targetType, _logTargetFactory, LogQueue) { Parent = this };
+
                 return _children[name];
             }
         }
 
         private readonly Dictionary<string, Logger> _cloneCache = new Dictionary<string, Logger>();
+
         private Logger Clone(Type targetType)
         {
             var cloneName = targetType.Name;
             if (_cloneCache.ContainsKey(cloneName))
                 return _cloneCache[cloneName];
 
-            var logger = new Logger(_config, targetType, _internalLog, LogQueue) { Parent = Parent };
+            var logger = new Logger(_config, targetType, _logTargetFactory, _targetLog, LogQueue) { Parent = Parent };
             _cloneCache[cloneName] = logger;
             return logger;
         }
+
         IModuleLogger IModuleLogger.Clone(Type targetType)
         {
             return Clone(targetType);
@@ -163,6 +170,7 @@ namespace Marvin.Logging
         }
 
         #region IEnumerable
+
         private readonly IDictionary<string, Logger> _children = new Dictionary<string, Logger>();
 
         /// <summary>
@@ -190,6 +198,7 @@ namespace Marvin.Logging
         {
             return GetEnumerator();
         }
+
         #endregion
 
         public override string ToString()
