@@ -5,7 +5,7 @@ using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
 
-namespace Marvin.Runtime.Kernel.Logging
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Management for the server logging. Provides mechanics to add and remove listeners for the logging. 

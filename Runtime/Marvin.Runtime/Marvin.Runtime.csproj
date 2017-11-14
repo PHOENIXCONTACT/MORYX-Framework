@@ -67,7 +67,6 @@
     <Compile Include="Modules\ServerModuleConsoleAttribute.cs" />
     <Compile Include="Modules\ServerModuleState.cs" />
     <Compile Include="ProductConfig.cs" />
-    <Compile Include="Requirements\IRequirementsCheck.cs" />
     <Compile Include="RuntimePlatform.cs" />
     <Compile Include="ModuleManagement\MissingDependencyException.cs" />
     <Compile Include="ModuleManagement\IDependencyTreeValidation.cs" />

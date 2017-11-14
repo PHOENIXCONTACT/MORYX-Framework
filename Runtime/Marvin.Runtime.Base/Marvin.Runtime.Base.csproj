@@ -72,10 +72,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Toolkit\Marvin.Container\Marvin.Container.csproj">
-      <Project>{3bc04a3b-24d6-4e33-989d-33366c47dc48}</Project>
-      <Name>Marvin.Container</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Toolkit\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
       <Name>Marvin.Tools.Wcf</Name>
@@ -83,10 +79,6 @@
     <ProjectReference Include="..\..\Toolkit\Marvin\Marvin.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.Container\Marvin.Runtime.Container.csproj">
-      <Project>{b56bfe0a-708c-4d71-9927-1c97317d6d64}</Project>
-      <Name>Marvin.Runtime.Container</Name>
     </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime\Marvin.Runtime.csproj">
       <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>

@@ -143,6 +143,7 @@
     <Compile Include="Container\IComponentRegistrator.cs" />
     <Compile Include="Container\IContainer.cs" />
     <Compile Include="Container\IContainerInstaller.cs" />
+    <Compile Include="Container\IModuleContainerFactory.cs" />
     <Compile Include="Container\INamedChildContainer.cs" />
     <Compile Include="Container\UseChildAttribute.cs" />
     <Compile Include="Configuration\IEmptyPropertyProvider.cs" />

@@ -6,7 +6,7 @@ using System.ServiceModel.Description;
 using Marvin.Logging;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel.Wcf
+namespace Marvin.Runtime.Kernel
 {
     internal class ConfiguredServiceHost : IConfiguredServiceHost
     {

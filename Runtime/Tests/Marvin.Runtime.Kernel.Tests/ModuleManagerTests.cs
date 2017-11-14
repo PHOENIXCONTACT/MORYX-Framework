@@ -1,5 +1,4 @@
-﻿using Marvin.Runtime.Kernel.ModuleManagement;
-using Marvin.Runtime.Kernel.Tests.Mocks;
+﻿using Marvin.Runtime.Kernel.Tests.Mocks;
 using Marvin.Runtime.Kernel.Tests.ModuleMocks;
 using Marvin.TestTools.SystemTest.Mocks;
 using NUnit.Framework;

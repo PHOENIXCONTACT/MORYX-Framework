@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Marvin.Configuration;
 
-namespace Marvin.Runtime.Kernel.Wcf
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Configuration for the Proxy.

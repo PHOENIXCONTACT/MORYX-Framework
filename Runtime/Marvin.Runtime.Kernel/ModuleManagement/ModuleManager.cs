@@ -8,7 +8,7 @@ using Marvin.Modules;
 using Marvin.Runtime.ModuleManagement;
 using Marvin.Runtime.ServerModules;
 
-namespace Marvin.Runtime.Kernel.ModuleManagement
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Manages all the modules on the server side. 

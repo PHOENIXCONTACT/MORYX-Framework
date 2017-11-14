@@ -2,7 +2,7 @@
 using System.Linq;
 using Marvin.Logging;
 
-namespace Marvin.Runtime.Kernel.ModuleManagement
+namespace Marvin.Runtime.Kernel
 {
     internal class ModuleStopper : ModuleManagerComponent, IModuleStopper
     {

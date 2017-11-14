@@ -2,10 +2,9 @@
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
-using Marvin.Runtime.Container;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel.Wcf
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Factory to create service hosts and provides hosts for the version service.

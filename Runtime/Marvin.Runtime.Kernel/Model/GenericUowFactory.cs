@@ -1,7 +1,7 @@
 ﻿using Marvin.Container;
 using Marvin.Model;
 
-namespace Marvin.Runtime.Kernel.Model
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Generic factory to provide access to all data models

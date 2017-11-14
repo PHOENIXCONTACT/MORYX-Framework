@@ -1,7 +1,7 @@
 ﻿using Marvin.Modules;
 using Marvin.Runtime.ServerModules;
 
-namespace Marvin.Runtime.Kernel.ModuleManagement
+namespace Marvin.Runtime.Kernel
 {
     internal class FailureStrategy : IModuleFailureStrategy
     {

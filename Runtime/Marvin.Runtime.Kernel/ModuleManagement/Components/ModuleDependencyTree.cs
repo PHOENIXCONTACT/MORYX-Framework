@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Marvin.Runtime.ModuleManagement;
 
-namespace Marvin.Runtime.Kernel.ModuleManagement
+namespace Marvin.Runtime.Kernel
 {
     internal class PluginDependencyTree : IModuleDependencyTree
     {

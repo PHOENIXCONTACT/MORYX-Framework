@@ -4,7 +4,7 @@ using System.Linq;
 using Marvin.Container;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel.Wcf
+namespace Marvin.Runtime.Kernel
 {
     [Plugin(LifeCycle.Singleton)]
     internal class EndpointCollector

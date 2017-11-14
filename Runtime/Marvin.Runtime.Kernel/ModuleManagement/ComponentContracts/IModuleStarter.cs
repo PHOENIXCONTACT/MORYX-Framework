@@ -1,4 +1,4 @@
-﻿namespace Marvin.Runtime.Kernel.ModuleManagement
+﻿namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Component handling the start of modules

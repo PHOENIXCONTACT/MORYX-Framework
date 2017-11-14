@@ -4,7 +4,7 @@ using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel.Wcf
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Factory for the clients.

@@ -1,7 +1,7 @@
 ﻿using System;
 using Marvin.Configuration;
 
-namespace Marvin.Runtime.Kernel.Configuration
+namespace Marvin.Runtime.Kernel
 {
     internal interface IConfigLiveUpdate
     {
