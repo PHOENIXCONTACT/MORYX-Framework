@@ -2,7 +2,7 @@
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 
-namespace Marvin.Runtime.Kernel.Wcf
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Static factory to do the Wcf bindings.

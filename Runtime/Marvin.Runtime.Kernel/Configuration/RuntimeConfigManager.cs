@@ -3,7 +3,7 @@ using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Runtime.Configuration;
 
-namespace Marvin.Runtime.Kernel.Configuration
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Manages the configs of the runtime and its modules.

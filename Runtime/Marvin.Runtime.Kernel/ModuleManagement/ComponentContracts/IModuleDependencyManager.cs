@@ -1,6 +1,6 @@
 ﻿using Marvin.Runtime.ModuleManagement;
 
-namespace Marvin.Runtime.Kernel.ModuleManagement
+namespace Marvin.Runtime.Kernel
 {
     internal interface IModuleDependencyManager : IModuleManagerComponent
     {

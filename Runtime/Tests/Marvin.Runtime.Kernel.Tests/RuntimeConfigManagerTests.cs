@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading;
 using Marvin.Configuration;
-using Marvin.Runtime.Kernel.Configuration;
 using NUnit.Framework;
 
 namespace Marvin.Runtime.Kernel.Tests

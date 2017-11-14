@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using Marvin.Configuration;
 using Marvin.Logging;
 
-namespace Marvin.Runtime.Kernel.Logging
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// config for logging.

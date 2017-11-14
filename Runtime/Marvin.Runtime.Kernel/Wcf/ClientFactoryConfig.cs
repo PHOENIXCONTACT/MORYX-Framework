@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using Marvin.Configuration;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel.Wcf
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Configuration for the wcf client factory.

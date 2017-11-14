@@ -36,25 +36,19 @@ namespace Marvin.Runtime.Base
         /// </summary>
         public abstract string Name { get; }
 
-        IServerModuleConsole IServerModule.Console
-        {
-            get { return Container == null ? null : Container.Resolve<IServerModuleConsole>(); }
-        }
+        IServerModuleConsole IServerModule.Console => Container?.Resolve<IServerModuleConsole>();
 
         /// <summary>
         /// Notifications raised within module and during state changes.
         /// </summary>
-        public INotificationCollection Notifications
-        {
-            get { return _stateController.Notifications; }
-        }
+        public INotificationCollection Notifications => _stateController.Notifications;
 
         #region Server Module states
 
         /// <summary>
         /// Access to the modules internal state
         /// </summary>
-        IServerModuleState IServerModule.State { get { return _stateController; } }
+        IServerModuleState IServerModule.State => _stateController;
 
         /// <summary>
         /// Does a validaton of the health state with all states which have the running flag. <see cref="ServerModuleState"/> for the states.
@@ -78,6 +72,7 @@ namespace Marvin.Runtime.Base
         #endregion
 
         #region Logging
+
         /// <summary>
         /// <see cref="ILoggerManagement"/> 
         /// </summary>
@@ -95,6 +90,13 @@ namespace Marvin.Runtime.Base
         #endregion
 
         #region Server Module methods
+
+        /// <summary>
+        /// <see cref="IModuleContainerFactory"/>
+        /// </summary>
+        public IModuleContainerFactory ContainerFactory { get; set; }
+
+
         void IInitializable.Initialize()
         {
             _stateController.Initialize();
@@ -111,8 +113,7 @@ namespace Marvin.Runtime.Base
             ConfigParser.ParseStrategies(Config, Strategies);
 
             // Initizalize container with server module dll and this dll
-            Container = new WcfLocalContainer(Strategies)
-                .ExecuteInstaller(new AutoInstaller(GetType().Assembly))
+            Container = ContainerFactory.Create(Strategies, GetType().Assembly)
                 .SetInstance<IModuleErrorReporting>(_stateController)
                 .Register<IParallelOperations, ParallelOperations>()
                 // Register instances for this cycle
@@ -216,6 +217,7 @@ namespace Marvin.Runtime.Base
         #endregion
 
         #region Configuration
+
         /// <summary>
         /// Config manager kernel component used to access this module config
         /// </summary>
@@ -225,6 +227,7 @@ namespace Marvin.Runtime.Base
         /// Config instance for the current lifecycle
         /// </summary>
         protected TConf Config { get; private set; }
+
         #endregion
 
         /// <summary>
@@ -233,7 +236,7 @@ namespace Marvin.Runtime.Base
         /// <returns>Name and current health state of the module.d</returns>
         public override string ToString()
         {
-            return string.Format("{0} - {1}", Name, _stateController.Current);
+            return $"{Name} - {_stateController.Current}";
         }
     }
 }

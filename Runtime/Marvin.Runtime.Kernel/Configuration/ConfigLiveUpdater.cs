@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Marvin.Configuration;
 
-namespace Marvin.Runtime.Kernel.Configuration
+namespace Marvin.Runtime.Kernel
 {
     internal class ConfigLiveUpdater : IConfigLiveUpdate
     {

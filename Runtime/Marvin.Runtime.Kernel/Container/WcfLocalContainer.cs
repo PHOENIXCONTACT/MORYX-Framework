@@ -5,7 +5,7 @@ using Marvin.Container;
 using Marvin.Tools.Wcf;
 using Component = Castle.MicroKernel.Registration.Component;
 
-namespace Marvin.Runtime.Container
+namespace Marvin.Runtime.Kernel
 {
     /// <summary>
     /// Container for hosting wcf services

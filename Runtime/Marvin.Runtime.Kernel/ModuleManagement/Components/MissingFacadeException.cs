@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Marvin.Runtime.Kernel.ModuleManagement
+namespace Marvin.Runtime.Kernel
 {
     internal class MissingFacadeException : MarvinException
     {

@@ -6,7 +6,6 @@ using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
-using Marvin.Runtime.Requirements;
 using Marvin.Tools;
 
 namespace Marvin.Runtime.HeartOfGold
@@ -105,9 +104,6 @@ namespace Marvin.Runtime.HeartOfGold
             // Load models
             container.LoadComponents<IUnitOfWorkFactory>();
             container.LoadComponents<IModelConfigurator>();
-
-            // Load requirements check plugins
-            container.LoadComponents<IRequirementsCheck>();
 
             // Load user modules
             container.LoadComponents<IServerModule>();

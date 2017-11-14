@@ -3,7 +3,7 @@ using Common.Logging;
 using Marvin.Logging;
 using LogLevel = Marvin.Logging.LogLevel;
 
-namespace Marvin.Runtime.Kernel.Logging
+namespace Marvin.Runtime.Kernel
 {
     internal class LogTarget : ILogTarget
     {

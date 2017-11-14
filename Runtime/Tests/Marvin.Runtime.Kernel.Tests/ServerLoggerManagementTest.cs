@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Marvin.Logging;
-using Marvin.Runtime.Kernel.Configuration;
-using Marvin.Runtime.Kernel.Logging;
-using Marvin.Runtime.Kernel.ModuleManagement;
 using NUnit.Framework;
 
 namespace Marvin.Runtime.Kernel.Tests
