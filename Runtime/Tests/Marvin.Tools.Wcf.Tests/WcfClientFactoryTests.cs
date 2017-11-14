@@ -71,7 +71,8 @@ namespace Marvin.Tools.Wcf.Tests
             _wcfClientFactory = new TestWcfClientFactory
             {
                 Logger = new DummyLogger(),
-                VersionService = _versionServiceManager
+                VersionService = _versionServiceManager,
+                ParallelOperations = new ParallelOperations()
             };
 
             _wcfClientFactory.Initialize(new WcfClientFactoryConfig

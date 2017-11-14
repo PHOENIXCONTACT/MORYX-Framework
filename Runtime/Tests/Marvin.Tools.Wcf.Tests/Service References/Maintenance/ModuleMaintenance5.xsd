@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" />
-  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" />
-  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
+  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" />
   <xs:element name="GetAll">
     <xs:complexType>
       <xs:sequence />
@@ -106,7 +105,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" minOccurs="0" name="startBehaviour" type="q6:ModuleStartBehaviour" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="startBehaviour" type="q6:ModuleStartBehaviour" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -119,45 +118,13 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" minOccurs="0" name="failureBehaviour" type="q7:FailureBehaviour" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="failureBehaviour" type="q7:FailureBehaviour" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SetFailureBehaviourResponse">
     <xs:complexType>
       <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="RequestEntry">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="parentCollection" nillable="true" type="q8:Entry" />
-        <xs:element minOccurs="0" name="entryType" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="RequestEntryResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="RequestEntryResult" nillable="true" type="q9:Entry" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ReplaceEntry">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="currentEntry" nillable="true" type="q10:Entry" />
-        <xs:element minOccurs="0" name="replacementType" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ReplaceEntryResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="ReplaceEntryResult" nillable="true" type="q11:Entry" />
-      </xs:sequence>
     </xs:complexType>
   </xs:element>
 </xs:schema>

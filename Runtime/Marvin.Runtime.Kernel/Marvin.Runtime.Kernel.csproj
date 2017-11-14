@@ -64,11 +64,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
@@ -80,6 +82,7 @@
     <Compile Include="Configuration\SharedConfigProvider.cs" />
     <Compile Include="Container\TypedHostFactory.cs" />
     <Compile Include="Container\WcfLocalContainer.cs" />
+    <Compile Include="HeartOfGold.cs" />
     <Compile Include="KernelBundleAttribute.cs" />
     <Compile Include="Logging\LogTarget.cs" />
     <Compile Include="Logging\LogFilter.cs" />
@@ -104,10 +107,47 @@
     <Compile Include="Modules\ModuleManager.cs" />
     <Compile Include="Modules\ModuleManagerConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunMode\Command\CommandRunmode.cs" />
+    <Compile Include="RunMode\Command\Commands\Additionals\DifficultyStats.cs" />
+    <Compile Include="RunMode\Command\Commands\Additionals\Shots.cs" />
+    <Compile Include="RunMode\Command\Commands\Additionals\SoundSequences.cs" />
+    <Compile Include="RunMode\Command\Commands\Additionals\StageCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\Additionals\UiElement.cs" />
+    <Compile Include="RunMode\Command\Commands\CommandHelper.cs" />
+    <Compile Include="RunMode\Command\Commands\ConsoleCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\DefaultHandler.cs" />
+    <Compile Include="RunMode\Command\Commands\GarbageCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\ICommandHandler.cs" />
+    <Compile Include="RunMode\Command\Commands\InstallCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\LoggerCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\PrintCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\ProductCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\ReincConfCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\SetupCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\SnakeCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\SoundCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\SpaceCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\StartCommand.cs" />
+    <Compile Include="RunMode\Command\Commands\StopCommand.cs" />
+    <Compile Include="RunMode\Command\DeveloperConsole.cs" />
+    <Compile Include="RunMode\Command\HelpPrinter.cs" />
+    <Compile Include="RunMode\Command\SystemTest.cs" />
     <Compile Include="RunMode\IRunmode.cs" />
     <Compile Include="RunMode\RunModeAttribute.cs" />
     <Compile Include="RunMode\RuntimeArguments.cs" />
     <Compile Include="RunMode\RuntimeErrorCode.cs" />
+    <Compile Include="RunMode\Service\ProjectInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RunMode\Service\ProjectInstaller.Designer.cs">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RunMode\Service\Service.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RunMode\Service\ServiceRunMode.cs" />
+    <Compile Include="RunMode\SmokeTest\SmokeTest.cs" />
+    <Compile Include="RunMode\Update\UpdateRunmode.cs" />
     <Compile Include="Wcf\BindingFactories.cs" />
     <Compile Include="Wcf\ClientFactory.cs" />
     <Compile Include="Wcf\ClientFactoryConfig.cs" />
@@ -140,6 +180,12 @@
   <ItemGroup>
     <None Include="Marvin.Runtime.Kernel.nuspec" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="RunMode\Service\ProjectInstaller.resx">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

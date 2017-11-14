@@ -235,7 +235,7 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.FlagsAttribute()]
-    [System.Runtime.Serialization.DataContractAttribute(Name="FailureBehaviour", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="FailureBehaviour", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules")]
     public enum FailureBehaviour : int {
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
@@ -253,7 +253,7 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.FlagsAttribute()]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ServerModuleState", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Modules.Server")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ServerModuleState", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules")]
     public enum ServerModuleState : int {
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
@@ -270,9 +270,6 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
         Running = 8,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Wired = 24,
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
         Stopping = 10,
@@ -366,7 +363,7 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ModuleStartBehaviour", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ModuleStartBehaviour", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules")]
     public enum ModuleStartBehaviour : int {
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
@@ -578,7 +575,7 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Collections.Generic.List<Marvin.Tools.Wcf.Tests.Maintenance.Entry> EntriesField;
+        private System.Collections.Generic.List<Marvin.Serialization.Entry> EntriesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ModuleField;
@@ -594,7 +591,7 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.List<Marvin.Tools.Wcf.Tests.Maintenance.Entry> Entries {
+        public System.Collections.Generic.List<Marvin.Serialization.Entry> Entries {
             get {
                 return this.EntriesField;
             }
@@ -627,297 +624,6 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
                 propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Entry", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization")]
-    [System.SerializableAttribute()]
-    public partial class Entry : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DescriptionField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Tools.Wcf.Tests.Maintenance.EntryKey KeyField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Collections.Generic.List<Marvin.Tools.Wcf.Tests.Maintenance.Entry> SubEntriesField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Tools.Wcf.Tests.Maintenance.EntryValue ValueField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Description {
-            get {
-                return this.DescriptionField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DescriptionField, value) != true)) {
-                    this.DescriptionField = value;
-                    this.RaisePropertyChanged("Description");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.Tools.Wcf.Tests.Maintenance.EntryKey Key {
-            get {
-                return this.KeyField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.KeyField, value) != true)) {
-                    this.KeyField = value;
-                    this.RaisePropertyChanged("Key");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.List<Marvin.Tools.Wcf.Tests.Maintenance.Entry> SubEntries {
-            get {
-                return this.SubEntriesField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.SubEntriesField, value) != true)) {
-                    this.SubEntriesField = value;
-                    this.RaisePropertyChanged("SubEntries");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.Tools.Wcf.Tests.Maintenance.EntryValue Value {
-            get {
-                return this.ValueField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ValueField, value) != true)) {
-                    this.ValueField = value;
-                    this.RaisePropertyChanged("Value");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="EntryKey", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization")]
-    [System.SerializableAttribute()]
-    public partial class EntryKey : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string IdentifierField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NameField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Identifier {
-            get {
-                return this.IdentifierField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.IdentifierField, value) != true)) {
-                    this.IdentifierField = value;
-                    this.RaisePropertyChanged("Identifier");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Name {
-            get {
-                return this.NameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NameField, value) != true)) {
-                    this.NameField = value;
-                    this.RaisePropertyChanged("Name");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="EntryValue", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization")]
-    [System.SerializableAttribute()]
-    public partial class EntryValue : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CurrentField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DefaultField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Collections.Generic.List<string> PossibleField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Tools.Wcf.Tests.Maintenance.EntryValueType TypeField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Current {
-            get {
-                return this.CurrentField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CurrentField, value) != true)) {
-                    this.CurrentField = value;
-                    this.RaisePropertyChanged("Current");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Default {
-            get {
-                return this.DefaultField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DefaultField, value) != true)) {
-                    this.DefaultField = value;
-                    this.RaisePropertyChanged("Default");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.List<string> Possible {
-            get {
-                return this.PossibleField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.PossibleField, value) != true)) {
-                    this.PossibleField = value;
-                    this.RaisePropertyChanged("Possible");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.Tools.Wcf.Tests.Maintenance.EntryValueType Type {
-            get {
-                return this.TypeField;
-            }
-            set {
-                if ((this.TypeField.Equals(value) != true)) {
-                    this.TypeField = value;
-                    this.RaisePropertyChanged("Type");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="EntryValueType", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization")]
-    public enum EntryValueType : int {
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Int16 = 0,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        UInt16 = 1,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Int32 = 2,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        UInt32 = 3,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Int64 = 4,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        UInt64 = 5,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Single = 6,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Double = 7,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Boolean = 8,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        String = 9,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Enum = 10,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Class = 11,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Collection = 12,
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
@@ -998,18 +704,6 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/SetFailureBehaviour", ReplyAction="http://tempuri.org/IModuleMaintenance/SetFailureBehaviourResponse")]
         System.Threading.Tasks.Task SetFailureBehaviourAsync(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.FailureBehaviour failureBehaviour);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/RequestEntry", ReplyAction="http://tempuri.org/IModuleMaintenance/RequestEntryResponse")]
-        Marvin.Tools.Wcf.Tests.Maintenance.Entry RequestEntry(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.Entry parentCollection, string entryType);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/RequestEntry", ReplyAction="http://tempuri.org/IModuleMaintenance/RequestEntryResponse")]
-        System.Threading.Tasks.Task<Marvin.Tools.Wcf.Tests.Maintenance.Entry> RequestEntryAsync(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.Entry parentCollection, string entryType);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/ReplaceEntry", ReplyAction="http://tempuri.org/IModuleMaintenance/ReplaceEntryResponse")]
-        Marvin.Tools.Wcf.Tests.Maintenance.Entry ReplaceEntry(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.Entry currentEntry, string replacementType);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/ReplaceEntry", ReplyAction="http://tempuri.org/IModuleMaintenance/ReplaceEntryResponse")]
-        System.Threading.Tasks.Task<Marvin.Tools.Wcf.Tests.Maintenance.Entry> ReplaceEntryAsync(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.Entry currentEntry, string replacementType);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1117,22 +811,6 @@ namespace Marvin.Tools.Wcf.Tests.Maintenance {
         
         public System.Threading.Tasks.Task SetFailureBehaviourAsync(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.FailureBehaviour failureBehaviour) {
             return base.Channel.SetFailureBehaviourAsync(moduleName, failureBehaviour);
-        }
-        
-        public Marvin.Tools.Wcf.Tests.Maintenance.Entry RequestEntry(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.Entry parentCollection, string entryType) {
-            return base.Channel.RequestEntry(moduleName, parentCollection, entryType);
-        }
-        
-        public System.Threading.Tasks.Task<Marvin.Tools.Wcf.Tests.Maintenance.Entry> RequestEntryAsync(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.Entry parentCollection, string entryType) {
-            return base.Channel.RequestEntryAsync(moduleName, parentCollection, entryType);
-        }
-        
-        public Marvin.Tools.Wcf.Tests.Maintenance.Entry ReplaceEntry(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.Entry currentEntry, string replacementType) {
-            return base.Channel.ReplaceEntry(moduleName, currentEntry, replacementType);
-        }
-        
-        public System.Threading.Tasks.Task<Marvin.Tools.Wcf.Tests.Maintenance.Entry> ReplaceEntryAsync(string moduleName, Marvin.Tools.Wcf.Tests.Maintenance.Entry currentEntry, string replacementType) {
-            return base.Channel.ReplaceEntryAsync(moduleName, currentEntry, replacementType);
         }
     }
 }

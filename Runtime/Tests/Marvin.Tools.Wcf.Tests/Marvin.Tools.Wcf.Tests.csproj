@@ -39,6 +39,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LogMaintenanceClientMock.cs" />
@@ -150,9 +151,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\Maintenance\ModuleMaintenance3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Maintenance\ModuleMaintenance4.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\Maintenance\ModuleMaintenance5.xsd">
