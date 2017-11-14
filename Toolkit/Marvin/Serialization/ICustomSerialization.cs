@@ -54,6 +54,10 @@ namespace Marvin.Serialization
         /// <returns>Validation object</returns>
         EntryValidation CreateValidation(PropertyInfo property);
 
+        /// <summary>
+        /// Filter methods of a type that shall be serialized
+        /// </summary>
+        IEnumerable<MethodInfo> MethodFilter(Type sourceType);
 
         /// <summary>
         /// Filter the properties that shall be included when creating the object

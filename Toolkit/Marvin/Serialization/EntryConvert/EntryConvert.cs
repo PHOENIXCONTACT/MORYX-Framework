@@ -342,6 +342,106 @@ namespace Marvin.Serialization
             }
         }
 
+        /// <summary>
+        /// Encode a <see cref="MethodInfo"/> to the transmittable <see cref="MethodEntry"/>
+        /// using <see cref="DefaultSerialization"/>
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static MethodEntry EncodeMethod(MethodInfo method)
+        {
+            return EncodeMethod(method, Serialization);
+        }
+
+        /// <summary>
+        /// Encode a <see cref="MethodInfo"/> to the transmittable <see cref="MethodEntry"/>
+        /// </summary>
+        public static MethodEntry EncodeMethod(MethodInfo method, ICustomSerialization serialization)
+        {
+            return new MethodEntry
+            {
+                Name = method.Name,
+                DisplayName = method.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? method.Name,
+                Description = method.GetCustomAttribute<DescriptionAttribute>()?.Description,
+                Parameters = method.GetParameters().Select(ConvertParameter).ToArray()
+            };
+        }
+
+        /// <summary>
+        /// Convert a method parameter to our standard <see cref="Entry"/> format
+        /// </summary>
+        private static Entry ConvertParameter(ParameterInfo parameter)
+        {
+            var parameterType = parameter.ParameterType;
+            var defaultValue = parameter.HasDefaultValue ? parameter.DefaultValue.ToString() : null;
+
+            var parameterModel = new Entry
+            {
+                Key = new EntryKey
+                {
+                    Name = parameter.Name,
+                    Identifier = parameter.Name
+                },
+                Description = parameter.GetCustomAttribute<DescriptionAttribute>()?.Description,
+                Value = new EntryValue
+                {
+                    Type = TransformType(parameter.ParameterType),
+                    Current = defaultValue,
+                    Default = defaultValue,
+                    Possible = Serialization.PossibleValues(parameter)
+                }
+            };
+
+            switch (parameterModel.Value.Type)
+            {
+                case EntryValueType.Class:
+                    parameterModel.Value.Current = parameterType.Name;
+                    parameterModel.SubEntries = EncodeClass(parameterType).ToList();
+                    break;
+                case EntryValueType.Collection:
+                    var elemType = ElementType(parameterType);
+                    parameterModel.Value.Current = elemType.Name;
+                    var protoType = Prototype(new EntryPrototype(elemType.Name, Activator.CreateInstance(elemType)));
+                    parameterModel.Prototypes.Add(protoType);
+                    break;
+            }
+
+            return parameterModel;
+        }
+
+        /// <summary>
+        /// Encode all methods of an object using <see cref="DefaultSerialization"/>
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeMethods(object source)
+        {
+            return EncodeMethods(source.GetType(), Serialization);
+        }
+
+        /// <summary>
+        /// Encode all methods of an object using a custom serialization
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeMethods(object source, ICustomSerialization serialization)
+        {
+            return EncodeMethods(source.GetType(), serialization);
+        }
+
+        /// <summary>
+        /// Encode all methods of class using <see cref="DefaultSerialization"/>
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeMethods(Type objType)
+        {
+            return EncodeMethods(objType, Serialization);
+        }
+
+        /// <summary>
+        /// Encode all methods of a type using a custom serialization
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeMethods(Type objType, ICustomSerialization serialization)
+        {
+            var methods = serialization.MethodFilter(objType);
+            return methods.Select(m => EncodeMethod(m, serialization));
+        }
+
         #endregion
 
         #region Decode
@@ -582,6 +682,61 @@ namespace Marvin.Serialization
             }
 
             return strategy;
+        }
+
+        /// <summary>
+        /// Invoke a method on the target object using <see cref="DefaultSerialization"/>
+        /// </summary>
+        public static Entry InvokeMethod(object target, MethodEntry methodEntry)
+        {
+            return InvokeMethod(target, methodEntry, Serialization);
+        }
+
+        /// <summary>
+        /// Invoke a method on the target object using custom serialization
+        /// </summary>
+        public static Entry InvokeMethod(object target, MethodEntry methodEntry, ICustomSerialization serialization)
+        {
+            var parameterEntries = methodEntry.Parameters;
+            var method = target.GetType().GetMethods().First(m => m.Name == methodEntry.Name
+                                                               && m.GetParameters().All(p => parameterEntries.Any(pe => pe.Key.Identifier == p.Name)));
+            var parameters = method.GetParameters();
+
+            var arguments = new object[parameters.Length];
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var parameter = parameters[i];
+                var parameterModel = methodEntry.Parameters[i];
+                switch (parameterModel.Value.Type)
+                {
+                    case EntryValueType.Class:
+                        arguments[i] = CreateInstance(parameter.ParameterType, parameterModel);
+                        break;
+                    default:
+                        arguments[i] = ToObject(parameter.ParameterType, parameterModel.Value.Current);
+                        break;
+                }
+            }
+
+            var result = method.Invoke(target, arguments);
+            if (result == null)
+                return null;
+
+            var resultModel = new Entry
+            {
+                Key = new EntryKey { Name = "ReturnValue" },
+                Value = new EntryValue
+                {
+                    Current = result.ToString(),
+                    Type = TransformType(result.GetType())
+                }
+            };
+            if (resultModel.Value.Type == EntryValueType.Class)
+            {
+                resultModel.SubEntries = EncodeObject(result).ToList();
+            }
+
+            return resultModel;
         }
 
         #endregion

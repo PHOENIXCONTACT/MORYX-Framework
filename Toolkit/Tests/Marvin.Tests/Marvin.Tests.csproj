@@ -106,6 +106,22 @@
     <Compile Include="StateMachines\TestMachine\MyStateBase.cs" />
     <Compile Include="Tools\ParallelOperationTests.cs" />
     <Compile Include="Tools\NonStackingTimerCallbackTests.cs" />
+    <Compile Include="Workflows\CompilerTests.cs" />
+    <Compile Include="Workflows\Dummies\DefaultValueStep.cs" />
+    <Compile Include="Workflows\Dummies\DummyStep.cs" />
+    <Compile Include="Workflows\Dummies\DummyStepCompiler.cs" />
+    <Compile Include="Workflows\Dummies\DummyToken.cs" />
+    <Compile Include="Workflows\Dummies\EmptyParametersStep.cs" />
+    <Compile Include="Workflows\Dummies\InvalidStep.cs" />
+    <Compile Include="Workflows\Dummies\ParameterStep.cs" />
+    <Compile Include="Workflows\Dummies\PausableStep.cs" />
+    <Compile Include="Workflows\Dummies\WorkplanDummy.cs" />
+    <Compile Include="Workflows\EditingTests.cs" />
+    <Compile Include="Workflows\EngineTests.cs" />
+    <Compile Include="Workflows\PlacesTests.cs" />
+    <Compile Include="Workflows\SerializationTest.cs" />
+    <Compile Include="Workflows\StepTests.cs" />
+    <Compile Include="Workflows\TransitionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Marvin\Marvin.csproj">
@@ -125,6 +141,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Workflows\packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
