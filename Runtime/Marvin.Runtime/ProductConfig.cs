@@ -11,6 +11,14 @@ namespace Marvin.Runtime
     public class ProductConfig : IConfig
     {
         /// <summary>
+        /// Creates a new instance of the <see cref="ProductConfig"/>
+        /// </summary>
+        public ProductConfig()
+        {
+            Version = RuntimePlatform.RuntimeVersion;
+        }
+
+        /// <summary>
         /// <see cref="ConfigState"/>
         /// </summary>
         public ConfigState ConfigState { get; set; }
@@ -31,7 +39,6 @@ namespace Marvin.Runtime
         /// Version of this product
         /// </summary>
         [DataMember]
-        [DefaultValue(RuntimePlatform.RuntimeVersion)]
         public string Version { get; set; }
     }
 }

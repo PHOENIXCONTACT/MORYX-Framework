@@ -7,13 +7,22 @@ namespace Marvin.Runtime
     /// </summary>
     public class RuntimePlatform : Platform
     {
+        private string _productName;
+        private Version _productVersion;
+
         /// <summary>
         /// Current version of the MarvonRuntime
         /// </summary>
-        public const string RuntimeVersion = "3.0.0.0";
+        public static string RuntimeVersion;
 
-        private string _productName;
-        private Version _productVersion;
+        /// <summary>
+        /// Static constructor to read the current RuntimeVersion out of the Assembly
+        /// </summary>
+        static RuntimePlatform()
+        {
+            var version = typeof(RuntimePlatform).Assembly.GetName().Version;
+            RuntimeVersion = $"{version.Major}.{version.Minor}.{version.Revision}";
+        }
 
         /// <summary>
         /// Set the platform instance to <see cref="RuntimePlatform"/> and provide product information
