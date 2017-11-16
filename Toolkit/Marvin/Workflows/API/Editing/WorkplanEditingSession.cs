@@ -44,12 +44,12 @@ namespace Marvin.Workflows
         /// All steps within the workplan
         /// </summary>
         [DataMember]
-        public IList<WorkplanStep> Steps { get; set; }
+        public IList<WorkplanStepModel> Steps { get; set; }
 
         /// <summary>
         /// Connectors linking the inputs and outputs of steps
         /// </summary>
         [DataMember]
-        public IList<ConnectorDto> Connectors { get; set; }
+        public IList<ConnectorModel> Connectors { get; set; }
     }
 }

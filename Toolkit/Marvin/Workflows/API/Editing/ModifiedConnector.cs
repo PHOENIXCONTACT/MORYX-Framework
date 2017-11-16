@@ -19,7 +19,7 @@ namespace Marvin.Workflows
         /// Connector that was modified
         /// </summary>
         [DataMember]
-        public ConnectorDto Data { get; set; }
+        public ConnectorModel Data { get; set; }
 
         /// <summary>
         /// Source of the connection

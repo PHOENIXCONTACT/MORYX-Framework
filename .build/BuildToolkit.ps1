@@ -27,12 +27,17 @@ $NugetPackageTargetApiKey = "Admin:Admin";
 
 # Define Tools
 $global:NugetCli = "";
+$global:GitCli = "";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\ReportGenerator.exe";
 $global:DoxyGenCli = "$BuildTools\Doxygen.$DoxyGenVersion\tools\doxygen.exe";
 $global:OpenCoverToCoberturaCli = "$BuildTools\OpenCoverToCoberturaConverter.$OpenCoverToCoberturaVersion\tools\OpenCoverToCoberturaConverter.exe";
 $global:VswhereCli = "$BuildTools\vswhere.$VswhereVersion\tools\vswhere.exe";
+
+# Git
+$global:GitCommitHash = "";
+$global:GitBranch = "";
 
 # Functions
 function Invoke-Initialize {
@@ -44,6 +49,29 @@ function Invoke-Initialize {
         exit 1;
     }
 
+    # Assign git.exe
+    $gitCommand = (Get-Command "git.exe" -ErrorAction SilentlyContinue);
+    if ($gitCommand -eq $null)  { 
+        Write-Host "Unable to find git.exe in your PATH. Download from https://git-scm.com";
+        Invoke-ExitCodeCheck 1;
+    }
+    
+    $global:GitCli = $gitCommand.Path;
+
+    # Load Hash
+    $global:GitCommitHash = (& $global:GitCli rev-parse --short HEAD);
+    Invoke-ExitCodeCheck $LastExitCode;
+
+    # Current branch
+    $global:GitBranch = (& $global:GitCli rev-parse --abbrev-ref HEAD);
+    Invoke-ExitCodeCheck $LastExitCode;
+
+    # Clean up
+    Write-Host "Cleaning up repository ...";
+    & $global:GitCli clean -f -d -x
+    Invoke-ExitCodeCheck $LastExitCode;
+
+    # Assign nuget.exe
     $nugetCommand = (Get-Command "nuget.exe" -ErrorAction SilentlyContinue);
     if ($nugetCommand -eq $null)  { 
         Write-Host "Unable to find nuget.exe in your PATH. Download from https://www.nuget.org/downloads";
@@ -76,18 +104,6 @@ function Invoke-Initialize {
         Invoke-ExitCodeCheck 1;
     }
     
-    # Assign git.exe
-    $gitCommand = (Get-Command "git.exe" -ErrorAction SilentlyContinue);
-    if ($gitCommand -eq $null)  { 
-        Write-Host "Unable to find git.exe in your PATH. Download from https://git-scm.com";
-        Invoke-ExitCodeCheck 1;
-    }
-    
-    $global:GitCli = $gitCommand.Path;
-    
-    $GitCommitHash = (& $global:GitCli rev-parse --short HEAD);
-    $GitBranch = (& $global:GitCli rev-parse --abbrev-ref HEAD);
-
     # Printing Variables
     Write-Step "Printing global variables"
     Write-Variable "RootPath" $RootPath;
@@ -105,8 +121,8 @@ function Invoke-Initialize {
     Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
     Write-Variable "VswhereCli" $global:VswhereCli;
     Write-Variable "GitCli" $global:GitCli;
-    Write-Variable "GitCommitHash" $GitCommitHash;
-    Write-Variable "GitBranch" $GitBranch;
+    Write-Variable "GitCommitHash" $global:GitCommitHash;
+    Write-Variable "GitBranch" $global:GitBranch;
 }
 
 function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExecutable, [string]$OutputDirectory = $BuildTools) {
@@ -310,7 +326,8 @@ function Get-InformationalVersion($Version, $Preview) {
     $buildNumber = $versionSplit[3];
 
     # SemVer 2.0.0 will be used: "3.0.0+3ff33243" or "3.0.0-beta15432+3ff33243"
-    $informationalVersion = $majorMinorPatch + (&{If([string]::IsNullOrEmpty($Preview)) {"+$GitCommitHash"} Else {"-" + $Preview + "$buildNumber+$GitCommitHash"}});
+    $versionExt = (&{If([string]::IsNullOrEmpty($Preview)) {"+$global:GitCommitHash"} Else {"-" + $Preview + "$buildNumber+$global:GitCommitHash"}});
+    $informationalVersion = $majorMinorPatch + $versionExt;
     return $informationalVersion;
 }
 
