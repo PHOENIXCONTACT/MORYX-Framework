@@ -22,17 +22,14 @@
     [switch]$PublishSymbols
 )
 
+# Load Toolkit
+. ".build\BuildToolkit.ps1"
 
 # Set Version
 $Version = "3.0.0" + "." + $BuildNumber;
 
-# Load Toolkit
-. ".build\BuildToolkit.ps1"
-
-# Check execution of BuilToolkit
-if ($lastexitcode -ne 0) { 
-    exit $lastexitcode
-} 
+# Initialize Toolkit
+Invoke-Initialize;
 
 # Definition of local variables 
 $openCoverFilter = "$RootPath\OpenCoverFilter.txt";
@@ -61,6 +58,7 @@ if ($SetAssemblyVersion) {
 }
 
 if ($Build) {
+    Install-EddieLight "3.0.0" "Runtime\Marvin.Runtime.Console\bin\$Configuration\EddieLight\";
     Invoke-Build ".\MarvinPlatform.sln" $Configuration $OptimizeCode
 }
 

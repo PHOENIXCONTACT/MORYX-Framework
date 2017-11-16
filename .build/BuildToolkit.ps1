@@ -1,9 +1,3 @@
-# First check the powershell version
-if ($PSVersionTable.PSVersion.Major -lt 5) {
-    Write-Host ("The needed major powershell version for this script is 5. Your version: " + ($PSVersionTable.PSVersion.ToString()))
-    exit 1;
-}
-
 # Tool Versions
 $MsBuildVersion = "14.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
 $NunitVersion = "3.7.0";
@@ -32,6 +26,7 @@ $NugetPackageTargetApiKey = "Admin:Admin";
 . "$DotBuild\SymbolStore.ps1";
 
 # Define Tools
+$global:NugetCli = "";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\ReportGenerator.exe";
@@ -39,92 +34,105 @@ $global:DoxyGenCli = "$BuildTools\Doxygen.$DoxyGenVersion\tools\doxygen.exe";
 $global:OpenCoverToCoberturaCli = "$BuildTools\OpenCoverToCoberturaConverter.$OpenCoverToCoberturaVersion\tools\OpenCoverToCoberturaConverter.exe";
 $global:VswhereCli = "$BuildTools\vswhere.$VswhereVersion\tools\vswhere.exe";
 
-# Assign nuget.exe
-function Install-Tool([string]$packageName, [string]$version, [string]$targetExecutable) {
-    if (-not (Test-Path $targetExecutable)) {
-        & $global:NugetCli install $packageName -version $version -outputdirectory $BuildTools -configfile $NugetConfig
+# Functions
+function Invoke-Initialize {
+    Write-Step "Initializing BuildToolkit"
+
+    # First check the powershell version
+    if ($PSVersionTable.PSVersion.Major -lt 5) {
+        Write-Host ("The needed major powershell version for this script is 5. Your version: " + ($PSVersionTable.PSVersion.ToString()))
+        exit 1;
+    }
+
+    $nugetCommand = (Get-Command "nuget.exe" -ErrorAction SilentlyContinue);
+    if ($nugetCommand -eq $null)  { 
+        Write-Host "Unable to find nuget.exe in your PATH. Download from https://www.nuget.org/downloads";
+        Invoke-ExitCodeCheck 1;
+    }
+    
+    if ($nugetCommand.Version.Major -lt 4) {
+        Write-Host "The minimum nuget.exe version should be 4.0.0.0. Currently installed: $($nugetCommand.Version)";
+        Invoke-ExitCodeCheck 1;
+    }
+    
+    $global:NugetCli = $nugetCommand.Path;
+    
+    # Assign msbuild.exe
+    if ($MsBuildVersion -eq "latest" -or $MsBuildVersion -eq "15.0") {
+        if (-not (Test-Path $global:VswhereCli)) {
+            Install-Tool "vswhere" $VswhereVersion $VswhereCli;
+        }
+        $installPath = [string] (& $global:VswhereCli -latest -prerelease -products * -requires "Microsoft.Component.MSBuild" -property "installationPath");
+        if ($installPath) {
+            $global:MSBuildCli = Join-Path $installPath 'MSBuild\15.0\Bin\MSBuild.exe';
+        }
+    }
+    else {
+        $global:MSBuildCli = join-path -path (Get-ItemProperty "HKLM:\software\Microsoft\MSBuild\ToolsVersions\$MsBuildVersion")."MSBuildToolsPath" -childpath "msbuild.exe"
+    }
+    
+    if ($global:MSBuildCli -eq $null -or -not (Test-Path $global:MSBuildCli)) {
+        Write-Host "Unable to find msbuild.exe.";
+        Invoke-ExitCodeCheck 1;
+    }
+    
+    # Assign git.exe
+    $gitCommand = (Get-Command "git.exe" -ErrorAction SilentlyContinue);
+    if ($gitCommand -eq $null)  { 
+        Write-Host "Unable to find git.exe in your PATH. Download from https://git-scm.com";
+        Invoke-ExitCodeCheck 1;
+    }
+    
+    $global:GitCli = $gitCommand.Path;
+    
+    $GitCommitHash = (& $global:GitCli rev-parse --short HEAD);
+    $GitBranch = (& $global:GitCli rev-parse --abbrev-ref HEAD);
+
+    # Printing Variables
+    Write-Step "Printing global variables"
+    Write-Variable "RootPath" $RootPath;
+    Write-Variable "Version" $Version;
+    Write-Variable "DocumentationDir" $DocumentationDir;
+    Write-Variable "NunitReportsDir" $NunitReportsDir;
+
+    Write-Step "Printing global scope"
+    Write-Variable "MSBuildCli" $global:MSBuildCli;
+    Write-Variable "NugetCli" $global:NugetCli;
+    Write-Variable "OpenCoverCli" $global:OpenCoverCli;
+    Write-Variable "NUnitCli" $global:NUnitCli;
+    Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
+    Write-Variable "DoxyGenCli" $global:DoxyGenCli;
+    Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
+    Write-Variable "VswhereCli" $global:VswhereCli;
+    Write-Variable "GitCli" $global:GitCli;
+    Write-Variable "GitCommitHash" $GitCommitHash;
+    Write-Variable "GitBranch" $GitBranch;
+}
+
+function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExecutable, [string]$OutputDirectory = $BuildTools) {
+    if (-not (Test-Path $TargetExecutable)) {
+        & $global:NugetCli install $PackageName -version $Version -outputdirectory $OutputDirectory -configfile $NugetConfig
         Invoke-ExitCodeCheck $LastExitCode;
     }
     else {
-        Write-Host "$packageName ($version) already exists. Do not need to install."
+        Write-Host "$PackageName ($Version) already exists. Do not need to install."
     }
 }
+function Invoke-Build([string]$SolutionFile, [string]$Configuration, [bool]$Optimize = $True, [string]$Options = "") {
+    Write-Step "Building $SolutionFile"
 
-$nugetCommand = (Get-Command "nuget.exe" -ErrorAction SilentlyContinue);
-if ($nugetCommand -eq $null)  { 
-    Write-Host "Unable to find nuget.exe in your PATH. Download from https://www.nuget.org/downloads";
-    Invoke-ExitCodeCheck 1;
-}
-
-if ($nugetCommand.Version.Major -lt 4) {
-    Write-Host "The minimum nuget.exe version should be 4.0.0.0. Currently installed: $($nugetCommand.Version)";
-    Invoke-ExitCodeCheck 1;
-}
-
-$global:NugetCli = $nugetCommand.Path;
-
-# Assign msbuild.exe
-if ($MsBuildVersion -eq "latest" -or $MsBuildVersion -eq "15.0") {
-    if (-not (Test-Path $global:VswhereCli)) {
-        Install-Tool "vswhere" $VswhereVersion $VswhereCli;
-    }
-    $installPath = [string] (& $global:VswhereCli -latest -prerelease -products * -requires "Microsoft.Component.MSBuild" -property "installationPath");
-    if ($installPath) {
-        $global:MSBuildCli = Join-Path $installPath 'MSBuild\15.0\Bin\MSBuild.exe';
-    }
-}
-else {
-    $global:MSBuildCli = join-path -path (Get-ItemProperty "HKLM:\software\Microsoft\MSBuild\ToolsVersions\$MsBuildVersion")."MSBuildToolsPath" -childpath "msbuild.exe"
-}
-
-if ($global:MSBuildCli -eq $null -or -not (Test-Path $global:MSBuildCli)) {
-    Write-Host "Unable to find msbuild.exe.";
-    Invoke-ExitCodeCheck 1;
-}
-
-# Assign git.exe
-$gitCommand = (Get-Command "git.exe" -ErrorAction SilentlyContinue);
-if ($gitCommand -eq $null)  { 
-    Write-Host "Unable to find git.exe in your PATH. Download from https://git-scm.com";
-    Invoke-ExitCodeCheck 1;
-}
-
-$global:GitCli = $gitCommand.Path;
-
-$GitCommitHash = (& $global:GitCli rev-parse --short HEAD);
-$GitBranch = (& $global:GitCli rev-parse --abbrev-ref HEAD);
-
-# Printing Variables
-Write-Step "Printing global variables"
-Write-Variable "RootPath" $RootPath;
-Write-Variable "Version" $Version;
-Write-Variable "DocumentationDir" $DocumentationDir;
-Write-Variable "NunitReportsDir" $NunitReportsDir;
-
-Write-Step "Printing global scope"
-Write-Variable "MSBuildCli" $global:MSBuildCli;
-Write-Variable "NugetCli" $global:NugetCli;
-Write-Variable "OpenCoverCli" $global:OpenCoverCli;
-Write-Variable "NUnitCli" $global:NUnitCli;
-Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
-Write-Variable "DoxyGenCli" $global:DoxyGenCli;
-Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
-Write-Variable "VswhereCli" $global:VswhereCli;
-Write-Variable "GitCli" $global:GitCli;
-Write-Variable "GitCommitHash" $GitCommitHash;
-Write-Variable "GitBranch" $GitBranch;
-
-# Functions
-function Invoke-Build([string]$solutionFile, [string]$configuration, [bool]$optimize = $True) {
-    Write-Step "Building $solutionFile"
-
-    Write-Host "Restoring Nuget packages of $solutionFile"
-    & $global:NugetCli restore $solutionFile -Verbosity detailed -configfile $NugetConfig
+    Write-Host "Restoring Nuget packages of $SolutionFile"
+    & $global:NugetCli restore $SolutionFile -Verbosity detailed -configfile $NugetConfig
     Invoke-ExitCodeCheck $LastExitCode;
 
-    $params = "Configuration=$configuration,Optimize=" + (&{If($optimize) {"true"} Else {"false"}}) + ",DebugSymbols=true";
+    $additonalOptions = "";
+    if (-not [string]::IsNullOrEmpty($Options)) {
+        $additonalOptions = ",$Options";
+    }
 
-    & $global:MSBuildCli $solutionFile /p:$params /detailedsummary
+    $params = "Configuration=$Configuration,Optimize=" + (&{If($Optimize) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
+
+    & $global:MSBuildCli $SolutionFile /p:$params /detailedsummary
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
@@ -314,4 +322,17 @@ function Get-NugetPackageVersion($Version, $Preview) {
     # SemVer 1.0.0 will be used: "3.0.0" or "3.0.0-beta15432"
     $packageVersion = $majorMinorPatch + (&{If([string]::IsNullOrEmpty($Preview)) {""} Else {"-" + $Preview + "$buildNumber"}})
     return $packageVersion;
+}
+
+function Install-EddieLight([string]$Version, [string]$TargetPath) {
+    $eddieLightPackage = "Marvin.Runtime.EddieLight";
+    $eddieLightSource = [System.IO.Path]::Combine($BuildTools, "$eddieLightPackage.$Version\EddieLight\");
+    $heartOfSilver = [System.IO.Path]::Combine($TargetPath, "SilverlightApp\HeartOfSilver.xap");
+    $eddieLightPackage = "Marvin.Runtime.EddieLight";
+
+    Install-Tool $eddieLightPackage $Version $heartOfSilver;
+
+    # Copy to target path
+    Write-Host "Copy EddieLight from $eddieLightSource to $TargetPath ..."
+    Copy-Item -Path $eddieLightSource -Recurse -Destination $TargetPath -Container
 }
