@@ -7,7 +7,7 @@ namespace Marvin.Workflows
     /// DTO representation of a <see cref="IWorkplanStep"/>
     /// </summary>
     [DataContract(IsReference = true)]
-    public sealed class WorkplanStep
+    public sealed class WorkplanStepModel
     {
         /// <summary>
         /// Id of the represented step
@@ -43,13 +43,13 @@ namespace Marvin.Workflows
         /// Inputs of this step
         /// </summary>
         [DataMember]
-        public ConnectorDto[] Inputs { get; set; }
+        public ConnectorModel[] Inputs { get; set; }
 
         /// <summary>
         /// Outputs of this step
         /// </summary>
         [DataMember]
-        public ConnectorDto[] Outputs { get; set; }
+        public ConnectorModel[] Outputs { get; set; }
 
         /// <summary>
         /// Descriptions for the outputs

@@ -384,7 +384,7 @@ namespace Marvin.Tests.Workflows
             var editing = Workflow.CreateWorkplan(_dummySource);
 
             // Act
-            var summary = editing.AddConnector(new ConnectorDto { Name = "Entry", Classification = NodeClassification.Entry });
+            var summary = editing.AddConnector(new ConnectorModel { Name = "Entry", Classification = NodeClassification.Entry });
             var workplan = editing.Finish();
 
             // Assert

@@ -26,12 +26,12 @@ namespace Marvin.Workflows
         /// <summary>
         /// Add special connector to the workplan
         /// </summary>
-        SessionModification AddConnector(ConnectorDto connector);
+        SessionModification AddConnector(ConnectorModel connector);
 
         /// <summary>
         /// Update the properties of a step
         /// </summary>
-        SessionModification UpdateStep(WorkplanStep stepModel);
+        SessionModification UpdateStep(WorkplanStepModel stepModel);
 
         /// <summary>
         /// Remove step from workplan

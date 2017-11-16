@@ -6,8 +6,8 @@ namespace Marvin.Workflows
     /// <summary>
     /// Dto for client editing communication
     /// </summary>
-    [DataContract(Name = "Connector", IsReference = true)]
-    public sealed class ConnectorDto
+    [DataContract(IsReference = true)]
+    public sealed class ConnectorModel
     {
         /// 
         [DataMember]
@@ -37,9 +37,9 @@ namespace Marvin.Workflows
             };
         }
 
-        internal static ConnectorDto FromConnector(IConnector source)
+        internal static ConnectorModel FromConnector(IConnector source)
         {
-            return new ConnectorDto
+            return new ConnectorModel
             {
                 Id = source.Id,
                 Name = source.Name,

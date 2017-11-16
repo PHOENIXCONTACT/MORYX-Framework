@@ -50,12 +50,12 @@ namespace Marvin.Workflows
                 Name = _editedWorkplan.Name,
                 State = _editedWorkplan.State,
                 Version = _editedWorkplan.Version,
-                Steps = new List<WorkplanStep>(_editedWorkplan.Steps.Count()),
+                Steps = new List<WorkplanStepModel>(_editedWorkplan.Steps.Count()),
                 AvailableSteps = _stepTypes.Select((value, index) => value.ExportRecipe(index)).ToArray()
             };
 
             // Connectors can just be copied
-            var connectors = _editedWorkplan.Connectors.Select(ConnectorDto.FromConnector).ToList();
+            var connectors = _editedWorkplan.Connectors.Select(ConnectorModel.FromConnector).ToList();
             session.Connectors = connectors;
 
             // Now convert the steps
@@ -89,32 +89,32 @@ namespace Marvin.Workflows
         }
 
         /// <seealso cref="IWorkplanEditing"/>
-        public SessionModification AddConnector(ConnectorDto connectorDto)
+        public SessionModification AddConnector(ConnectorModel connectorModel)
         {
-            var temporaryId = connectorDto.TemporaryId;
-            var connector = connectorDto.ToConnector();
+            var temporaryId = connectorModel.TemporaryId;
+            var connector = connectorModel.ToConnector();
             _editedWorkplan.Add(connector);
-            connectorDto = ConnectorDto.FromConnector(connector);
-            connectorDto.TemporaryId = temporaryId;
+            connectorModel = ConnectorModel.FromConnector(connector);
+            connectorModel.TemporaryId = temporaryId;
             return SessionModification.Summary(UserOperation.AddConnector)
-                .Added(connectorDto, new ConnectionPoint(), new ConnectionPoint());
+                .Added(connectorModel, new ConnectionPoint(), new ConnectionPoint());
         }
 
         /// <summary>
         /// Serialize any instance of <see cref="IWorkplanStep"/> to the DTO
         /// </summary>
-        private static WorkplanStep SerializeStep(IWorkplanStep step)
+        private static WorkplanStepModel SerializeStep(IWorkplanStep step)
         {
             // Create a serialized version of the step
             var stepType = step.GetType();
-            var serialized = new WorkplanStep
+            var serialized = new WorkplanStepModel
             {
                 Id = step.Id,
                 Name = step.Name,
                 Type = stepType.Name,
                 Classification = StepTypeConverter.ToClassification(stepType),
-                Inputs = new ConnectorDto[step.Inputs.Length],
-                Outputs = new ConnectorDto[step.Outputs.Length],
+                Inputs = new ConnectorModel[step.Inputs.Length],
+                Outputs = new ConnectorModel[step.Outputs.Length],
                 OutputDescriptions = step.OutputDescriptions.Select(CopyDescription).ToArray(),
                 Properties = StepCreationContainer.GetProperties(stepType, step).ToArray()
             };
@@ -129,9 +129,9 @@ namespace Marvin.Workflows
         }
 
         /// <summary>
-        /// Link converted <see cref="WorkplanStep"/> to <see cref="ConnectorDto"/> while preserving object reference integrity
+        /// Link converted <see cref="WorkplanStepModel"/> to <see cref="ConnectorModel"/> while preserving object reference integrity
         /// </summary>
-        private static void LinkStep(IWorkplanStep step, WorkplanStep converted, IDictionary<long, ConnectorDto> connectorMap)
+        private static void LinkStep(IWorkplanStep step, WorkplanStepModel converted, IDictionary<long, ConnectorModel> connectorMap)
         {
             for (int i = 0; i < step.Inputs.Length; i++)
             {
@@ -153,11 +153,11 @@ namespace Marvin.Workflows
         }
 
         /// <summary>
-        /// Get <see cref="ConnectorDto"/> from map or create new one
+        /// Get <see cref="ConnectorModel"/> from map or create new one
         /// </summary>
-        private static ConnectorDto GetOrCreateConnector(IConnector connector, IDictionary<long, ConnectorDto> connectorMap)
+        private static ConnectorModel GetOrCreateConnector(IConnector connector, IDictionary<long, ConnectorModel> connectorMap)
         {
-            return connectorMap.ContainsKey(connector.Id) ? connectorMap[connector.Id] : connectorMap[connector.Id] = ConnectorDto.FromConnector(connector);
+            return connectorMap.ContainsKey(connector.Id) ? connectorMap[connector.Id] : connectorMap[connector.Id] = ConnectorModel.FromConnector(connector);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Marvin.Workflows
         }
 
         /// <seealso cref="IWorkplanEditing"/>
-        public SessionModification UpdateStep(WorkplanStep stepModel)
+        public SessionModification UpdateStep(WorkplanStepModel stepModel)
         {
             // Find the associated server side object
             var step = _editedWorkplan.Steps.First(s => s.Id == stepModel.Id);
@@ -190,12 +190,12 @@ namespace Marvin.Workflows
             var step = _editedWorkplan.Steps.First(s => s.Id == stepId);
             _editedWorkplan.Remove(step);
             // Create summary
-            var summary = SessionModification.Summary(UserOperation.RemoveStep).Deleted(new WorkplanStep { Id = stepId });
+            var summary = SessionModification.Summary(UserOperation.RemoveStep).Deleted(new WorkplanStepModel { Id = stepId });
 
             // Add all connectors to the summary that were removed during clean up and remove them from the sessio
             foreach (var connector in ConnectorCleanup(step))
             {
-                summary.Deleted(ConnectorDto.FromConnector(connector));
+                summary.Deleted(ConnectorModel.FromConnector(connector));
             }
 
             // Publish changes
@@ -255,7 +255,7 @@ namespace Marvin.Workflows
             // Remove from plan
             _editedWorkplan.Remove(connector);
 
-            return SessionModification.Summary(UserOperation.RemoveConnector).Deleted(new ConnectorDto { Id = connectorId });
+            return SessionModification.Summary(UserOperation.RemoveConnector).Deleted(new ConnectorModel { Id = connectorId });
         }
 
         /// <seealso cref="IWorkplanEditing"/>
@@ -294,7 +294,7 @@ namespace Marvin.Workflows
             else
                 step.Outputs[stepConnection.Index] = connector;
 
-            return SessionModification.Summary(UserOperation.Connect).Updated(ConnectorDto.FromConnector(connector), nodeConnection, stepConnection);
+            return SessionModification.Summary(UserOperation.Connect).Updated(ConnectorModel.FromConnector(connector), nodeConnection, stepConnection);
         }
 
         /// <summary>
@@ -325,9 +325,9 @@ namespace Marvin.Workflows
 
             var summary = SessionModification.Summary(UserOperation.Connect);
             if (connectorCreated)
-                summary.Added(ConnectorDto.FromConnector(connector), source, target);
+                summary.Added(ConnectorModel.FromConnector(connector), source, target);
             else
-                summary.Updated(ConnectorDto.FromConnector(connector), source, target);
+                summary.Updated(ConnectorModel.FromConnector(connector), source, target);
 
             return summary;
         }
@@ -348,14 +348,14 @@ namespace Marvin.Workflows
                 step.Inputs[target.Index] = null;
 
                 var converted = SerializeStep(step);
-                LinkStep(step, converted, new Dictionary<long, ConnectorDto>());
+                LinkStep(step, converted, new Dictionary<long, ConnectorModel>());
                 summary.Updated(converted);
 
                 // If connector was used a variable in the workplan we can delete it, if this was the last reference
                 if (connector.Classification == NodeClassification.Intermediate)
                 {
                     _editedWorkplan.Remove(connector);
-                    summary.Deleted(ConnectorDto.FromConnector(connector));
+                    summary.Deleted(ConnectorModel.FromConnector(connector));
                 }
                 return summary;
             }
@@ -370,14 +370,14 @@ namespace Marvin.Workflows
                 step.Outputs[source.Index] = null;
 
                 var converted = SerializeStep(step);
-                LinkStep(step, converted, new Dictionary<long, ConnectorDto>());
+                LinkStep(step, converted, new Dictionary<long, ConnectorModel>());
                 summary.Updated(converted);
 
                 // If connector was used a variable in the workplan we can delete it, if this was the last reference
                 if (connector.Classification == NodeClassification.Intermediate)
                 {
                     _editedWorkplan.Remove(connector);
-                    summary.Deleted(ConnectorDto.FromConnector(connector));
+                    summary.Deleted(ConnectorModel.FromConnector(connector));
                 }
                 return summary;
             }
@@ -421,12 +421,12 @@ namespace Marvin.Workflows
             if (otherSteps)
             {
                 // If others use this connector we are done here
-                summary.Updated(ConnectorDto.FromConnector(steps.Connector), source, target);
+                summary.Updated(ConnectorModel.FromConnector(steps.Connector), source, target);
             }
             else
             {
                 // Remove reference to the connector and the connector itself
-                summary.Deleted(ConnectorDto.FromConnector(steps.Connector));
+                summary.Deleted(ConnectorModel.FromConnector(steps.Connector));
             }
 
             return summary;

@@ -19,6 +19,6 @@ namespace Marvin.Workflows
         /// Step that was modified
         /// </summary>
         [DataMember]
-        public WorkplanStep Data { get; set; }
+        public WorkplanStepModel Data { get; set; }
     }
 }
