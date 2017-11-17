@@ -1,4 +1,5 @@
 ﻿param (
+    [switch]$Cleanup,
     [switch]$SetAssemblyVersion,
     [int]$BuildNumber = 0,
     [string]$Preview = "",
@@ -29,7 +30,7 @@
 $Version = "3.0.0" + "." + $BuildNumber;
 
 # Initialize Toolkit
-Invoke-Initialize;
+Invoke-Initialize -Cleanup $Cleanup;
 
 # Definition of local variables 
 $openCoverFilter = "$RootPath\OpenCoverFilter.txt";

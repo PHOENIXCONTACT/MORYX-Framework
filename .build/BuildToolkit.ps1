@@ -40,7 +40,7 @@ $global:GitCommitHash = "";
 $global:GitBranch = "";
 
 # Functions
-function Invoke-Initialize {
+function Invoke-Initialize([bool]$Cleanup = $false) {
     Write-Step "Initializing BuildToolkit"
 
     # First check the powershell version
@@ -64,11 +64,6 @@ function Invoke-Initialize {
 
     # Current branch
     $global:GitBranch = (& $global:GitCli rev-parse --abbrev-ref HEAD);
-    Invoke-ExitCodeCheck $LastExitCode;
-
-    # Clean up
-    Write-Host "Cleaning up repository ...";
-    & $global:GitCli clean -f -d -x
     Invoke-ExitCodeCheck $LastExitCode;
 
     # Assign nuget.exe
@@ -123,6 +118,18 @@ function Invoke-Initialize {
     Write-Variable "GitCli" $global:GitCli;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
     Write-Variable "GitBranch" $global:GitBranch;
+
+    # Cleanp
+    if ($Cleanup) {
+        Write-Step "Cleanup"
+        
+        Write-Host "Cleaning up repository ..." -ForegroundColor Red;
+        & $global:GitCli clean -f -d -x
+        Invoke-ExitCodeCheck $LastExitCode;
+
+        & $global:GitCli checkout .
+        Invoke-ExitCodeCheck $LastExitCode;
+    }
 }
 
 function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExecutable, [string]$OutputDirectory = $BuildTools) {
