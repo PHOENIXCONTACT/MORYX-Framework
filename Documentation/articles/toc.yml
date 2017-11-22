@@ -1,0 +1,17 @@
+- name: Introduction
+  href: index.md
+
+- name: Changelog
+  href: Changelog.md
+
+- name: Design Patterns
+  href: DesignPatterns.md
+
+- name: Platform
+  href: Platform/toc.yml
+
+- name: Runtime
+  href: Runtime/toc.yml
+
+- name: Upgrade
+  href: Platform27to30.md

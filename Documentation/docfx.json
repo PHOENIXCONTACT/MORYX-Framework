@@ -1,0 +1,94 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "Runtime/**/*.csproj",
+            "Toolkit/**/*.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**",
+            "**/Tests/**"
+          ],
+          "src": "../"
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "articles/**.md",
+          "articles/**/toc.yml",
+          "toc.yml",
+          "*.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      },
+      {
+        "files": [
+          "tutorials/**.md",
+          "tutorials/**/toc.yml"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "**/images/**",
+          "resources/Phoenix_Contact_Logo.svg"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/**.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "dest": "_site",
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "template"
+    ],
+    "postProcessors": ["ExtractSearchIndex"],
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "cleanupCacheHistory": false,
+    "globalMetadata": {
+      "_appTitle": "MarvinPlatform",
+      "_appFooter": "MaRVIN Team - Corporate Technology & Value Chain",
+      "_appLogoPath": "resources/Phoenix_Contact_Logo.svg",
+      "_enableNewTab": true,
+      "_enableSearch": true,
+      "_gitContribute": {
+        "repo": "http://bitbucket-dev.europe.phoenixcontact.com/projects/MS/repos/marvinplatform",
+        "branch": "master"
+      }
+    }
+  }
+}

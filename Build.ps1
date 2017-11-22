@@ -83,7 +83,7 @@ if ($UnitTests -or $IntegrationTests) {
 }
 
 if ($GenerateDocs) {
-    Invoke-DoxyGen
+    Invoke-DocFx
 }
 
 if ($Pack) {

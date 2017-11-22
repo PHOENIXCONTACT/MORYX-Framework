@@ -1,0 +1,67 @@
+- name: Overview and Introduction
+  href: 1000_OverviewAndIntroduction.md
+  items:
+    - name: Runtime in a nutshell
+      href: 1100_RuntimeInANutshell.md
+    - name: Runtime Architecture
+      href: 1200_RuntimeArchitecture.md
+    - name: Containers in the Runtime
+      href: 1300_Containers.md      
+    - name: Patterns, conventions and Model-driven Software Development (MDSD)
+      href: 1400_PatternsAndConventionsAndMDSD.md      
+# Sub folder Creating an application
+- name: Creating an application
+  href: 2000_CreatingAnApplication.md
+  items:
+    - name: Setting up an application directory
+      href: 2100_GettingStarted.md
+    # Sub folder Work with ServerModules
+    - name: Work with ServerModules
+      href: 2200_WorkWithServerModules.md
+      items:
+        - name: Create a ServerModule
+          href: 2205_CreateAPlugin.md
+        - name: Adjusting a ServerModule
+          href: 2210_AdjustingServerModule.md
+        - name: Fixing the startup exceptions
+          href: 2215_FixStartupExceptions.md
+        - name: Strategy and the associated components
+          href: 2220_StrategyAndComponents.md
+        - name: Implementation of the components
+          href: 2225_ImplementationOfComponents.md
+        - name: Using the components
+          href: 2230_UsingTheComponents.md
+        - name: Logging the result
+          href: 2235_LoggingTheResult.md
+        - name: Configurable Components
+          href: 2240_ConfigurableComponents.md
+        - name: Fixing the execution
+          href: 2245_FixingExecution.md
+        - name: Create a facade
+          href: 2250_CreateAFacade.md
+        - name: Adjustments for the test
+          href: 2255_Adjustments.md
+        - name: Call and test of the strategies
+          href: 2260_CallAndTest.md
+    # Sub folder Work with data models
+    - name: Work with data models
+      href: 2300_WorkWithDataModels.md
+      items:
+        - name: Create and clean up a project
+          href: 2305_CreateAndCleaningProject.md
+        - name: Create a data model
+          href: 2310_CreateDataModel.md
+        - name: Include your generated files
+          href: 2315_IncludeGeneratedFiles.md
+        - name: Run application and create database
+          href: 2320_RunAppAndCreateDatabase.md
+        - name: Extend the WebService to use the data model
+          href: 2330_ExtendTheWebService.md
+        - name: Test the web service combined with the data model
+          href: 2335_DataModelTest.md
+        - name: Create and cleanup the new data model
+          href: 2340_CreateAndCleanNewDataModelProject.md
+        - name: Desgin the new data model and adjust the old one
+          href: 2345_CreateNewDataModel.md
+        - name: Extend and test the web service again
+          href: 2350_ExtendTheWebServiceAgain.md

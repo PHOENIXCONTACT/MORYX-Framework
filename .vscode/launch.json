@@ -51,6 +51,14 @@
             "script": "${workspaceRoot}\\Jenkins.ps1",
             "args": [],
             "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Documentation",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-GenerateDocs"],
+            "cwd": "${workspaceRoot}"
         }
     ]
 }

@@ -2,7 +2,7 @@
 $MsBuildVersion = "14.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
 $NunitVersion = "3.7.0";
 $OpenCoverVersion = "4.6.519";
-$DoxyGenVersion = "1.8.9.2";
+$DocFxVersion = "2.27.0";
 $OpenCoverToCoberturaVersion = "0.2.6.0";
 $ReportGeneratorVersion = "3.0.2";
 $VswhereVersion = "2.2.11";
@@ -31,9 +31,9 @@ $global:GitCli = "";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\ReportGenerator.exe";
-$global:DoxyGenCli = "$BuildTools\Doxygen.$DoxyGenVersion\tools\doxygen.exe";
 $global:OpenCoverToCoberturaCli = "$BuildTools\OpenCoverToCoberturaConverter.$OpenCoverToCoberturaVersion\tools\OpenCoverToCoberturaConverter.exe";
 $global:VswhereCli = "$BuildTools\vswhere.$VswhereVersion\tools\vswhere.exe";
+$global:DocFxCli = "$BuildTools\docfx.console.$DocFxVersion\tools\docfx.exe";
 
 # Git
 $global:GitCommitHash = "";
@@ -112,7 +112,7 @@ function Invoke-Initialize([bool]$Cleanup = $false) {
     Write-Variable "OpenCoverCli" $global:OpenCoverCli;
     Write-Variable "NUnitCli" $global:NUnitCli;
     Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
-    Write-Variable "DoxyGenCli" $global:DoxyGenCli;
+    Write-Variable "DocFxCli" $global:DocFxCli;
     Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
     Write-Variable "VswhereCli" $global:VswhereCli;
     Write-Variable "GitCli" $global:GitCli;
@@ -302,14 +302,20 @@ function Invoke-CoverReport {
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-DoxyGen {
-    Write-Step "Generating documentation using doxygen"
+function Invoke-DocFx {
+    Param
+    (
+        [Parameter(Mandatory=$false, Position=0)]
+        [string]$Metadata = [System.IO.Path]::Combine($DocumentationDir, "docfx.json")
+    )
 
-    if (-not (Test-Path $global:DoxyGenCli)) {
-        Install-Tool "Doxygen" $DoxyGenVersion $global:DoxyGenCli;
+    Write-Step "Generating documentation using DocFx"
+
+    if (-not (Test-Path $global:DocFxCli)) {
+        Install-Tool "docfx.console" $DocFxVersion $global:DocFxCli;
     }
 
-    & $global:DoxyGenCli "$DotBuild\DefaultDoxyFile"
+    & $global:DocFxCli $Metadata;
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
