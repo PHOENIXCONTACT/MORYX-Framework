@@ -77,15 +77,15 @@
       <Project>{3BC04A3B-24D6-4E33-989D-33366C47DC48}</Project>
       <Name>Marvin.Container</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TestTools\Marvin.Container.TestPlugin\Marvin.Container.TestPlugin.csproj">
+    <ProjectReference Include="..\Marvin.Container.TestPlugin\Marvin.Container.TestPlugin.csproj">
       <Project>{DD4163B4-1696-4554-961E-DE2A3EB21ECE}</Project>
       <Name>Marvin.Container.TestPlugin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TestTools\Marvin.Container.TestRootPlugin\Marvin.Container.TestRootPlugin.csproj">
+    <ProjectReference Include="..\Marvin.Container.TestRootPlugin\Marvin.Container.TestRootPlugin.csproj">
       <Project>{7615C9F0-91F1-4E05-A424-6D083B8958C5}</Project>
       <Name>Marvin.Container.TestRootPlugin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TestTools\Marvin.Container.TestTools\Marvin.Container.TestTools.csproj">
+    <ProjectReference Include="..\Marvin.Container.TestTools\Marvin.Container.TestTools.csproj">
       <Project>{b72aa993-72e5-4d14-bf5e-c2e0e8cf5186}</Project>
       <Name>Marvin.Container.TestTools</Name>
     </ProjectReference>

@@ -84,7 +84,7 @@
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Toolkit\TestTools\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj">
+    <ProjectReference Include="..\..\..\Toolkit\Tests\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj">
       <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
       <Name>Marvin.TestTools.Test.Model</Name>
     </ProjectReference>
@@ -101,7 +101,7 @@
       <Project>{24ed97ad-6d04-4dc0-afcb-c911ef0aa738}</Project>
       <Name>Marvin.TestModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TestTools\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
+    <ProjectReference Include="..\..\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
       <Project>{d6dc00c6-9358-4839-84c0-44df018a74dc}</Project>
       <Name>Marvin.TestTools.SystemTest</Name>
     </ProjectReference>

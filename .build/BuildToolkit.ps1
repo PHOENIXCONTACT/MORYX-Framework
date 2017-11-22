@@ -159,24 +159,29 @@ function Invoke-Build([string]$SolutionFile, [string]$Configuration, [bool]$Opti
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-Nunit([string]$SearchPath, [string]$Name, [string]$Configuration) {
+function Invoke-Nunit() {
+    Param
+    (
+        [Parameter(Mandatory=$false, Position=0)]
+        [string]$SearchPath = $RootPath,
+
+        [Parameter(Mandatory=$false, Position=1)]
+        [string]$SearchFilter = "*.csproj",
+
+        [Parameter(Mandatory=$false, Position=3)]
+        [string]$Configuration = "Debug"
+    )
+
     Write-Step "Running $Name Tests: $SearchPath"
 
     if (-not (Test-Path $global:NUnitCli)) {
         Install-Tool "NUnit.Console" $NunitVersion $global:NunitCli;
     }
 
-    $resultFileName = "$Name.TestResult.xml";
-    if (Test-Path $resultFileName) {
-        Remove-Item $resultFileName
-    }
+    $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
 
-    $testProjects = Get-ChildItem $SearchPath -Recurse -Include '*.csproj'
-
-    & $global:NUnitCli $testProjects /config:"$Configuration" #/framework:"net-4.5" 
+    & $global:NUnitCli $testProjects /config:"$Configuration"
     Invoke-ExitCodeCheck $LastExitCode;
-
-    Rename-Item -Path "TestResult.xml" -NewName "$resultFileName"
 }
 
 function Invoke-SmokeTest([string]$runtimePath, [int]$modulesCount, [int]$interruptTime, [int]$portIncrement) {
@@ -186,7 +191,22 @@ function Invoke-SmokeTest([string]$runtimePath, [int]$modulesCount, [int]$interr
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-CoverTests([string]$SearchPath, [string]$FilterFile, $Configuration) {
+function Invoke-CoverTests {
+    Param
+    (
+        [Parameter(Mandatory=$false, Position=0)]
+        [string]$SearchPath = $RootPath,
+
+        [Parameter(Mandatory=$false, Position=1)]
+        [string]$SearchFilter = "*.csproj",
+
+        [Parameter(Mandatory=$false, Position=2)]
+        [string]$FilterFile = "$RootPath\OpenCoverFilter.txt", 
+
+        [Parameter(Mandatory=$false, Position=3)]
+        [string]$Configuration = "Debug"
+    )
+    
     Write-Step "Starting cover tests from $SearchPath with filter $FilterFile."
     
     if (-not (Test-Path $SearchPath)) {
@@ -206,7 +226,7 @@ function Invoke-CoverTests([string]$SearchPath, [string]$FilterFile, $Configurat
         Install-Tool "OpenCoverToCoberturaConverter" $OpenCoverToCoberturaVersion $global:OpenCoverToCoberturaCli;
     }
 
-    $testProjects = Get-ChildItem $SearchPath -Recurse -Include '*.csproj'
+    $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
     ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
 
@@ -245,10 +265,10 @@ function Invoke-CoverTests([string]$SearchPath, [string]$FilterFile, $Configurat
 
         Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
 
-        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$Configuration /result:$resultsXml /framework:net-4.5 $testProject"
+        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$Configuration /result:$resultsXml $testProject"
         $openCoverAgs += "-log:Debug", "-register:user", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
-
+        
         & $global:OpenCoverCli $openCoverAgs
         Invoke-ExitCodeCheck $LastExitCode;
 
@@ -257,8 +277,17 @@ function Invoke-CoverTests([string]$SearchPath, [string]$FilterFile, $Configurat
     }
 }
 
-function Invoke-CoverReport([string]$SearchPath, [string]$Name) {
-    Write-Step "Creating cover report for $Name. Searching for OpenCover.xml files in $SearchPath."
+function Invoke-CoverReport {
+    Param
+    (
+        [Parameter(Mandatory=$false, Position=0)]
+        [string]$SearchPath = $RootPath,
+
+        [Parameter(Mandatory=$false, Position=1)]
+        [string]$Name
+    )
+
+    Write-Step "Creating cover report. Searching for OpenCover.xml files in $SearchPath."
 
     if (-not (Test-Path $global:ReportGeneratorCli)) {
         Install-Tool "ReportGenerator" $ReportGeneratorVersion $global:ReportGeneratorCli;
@@ -267,7 +296,9 @@ function Invoke-CoverReport([string]$SearchPath, [string]$Name) {
     $reports = (Get-ChildItem $SearchPath -Recurse -Include '*.OpenCover.xml');
     $asArgument = [string]::Join(";",$reports);
 
-    & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$DocumentationDir\$Name.OpenCover\"
+    $reportsName = (&{If($Name) {"$Name.OpenCover"} Else {"OpenCover"}})
+    
+    & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$DocumentationDir\$reportsName\"
     Invoke-ExitCodeCheck $LastExitCode;
 }
 

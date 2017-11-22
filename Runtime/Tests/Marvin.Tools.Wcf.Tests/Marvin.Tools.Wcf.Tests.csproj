@@ -174,7 +174,7 @@
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Toolkit\TestTools\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
+    <ProjectReference Include="..\..\..\Toolkit\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
       <Project>{505df475-5ff5-47cc-9e3b-bbe16c359f0e}</Project>
       <Name>Marvin.TestTools.UnitTest</Name>
     </ProjectReference>

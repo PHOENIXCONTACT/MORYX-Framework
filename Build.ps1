@@ -2,7 +2,6 @@
     [switch]$Cleanup,
     [switch]$SetAssemblyVersion,
     [int]$BuildNumber = 0,
-    [string]$Preview = "",
     [ValidateSet('Debug','Release')]
     [string]$Configuration = "Debug",
 
@@ -27,13 +26,12 @@
 . ".build\BuildToolkit.ps1"
 
 # Set Version
-$Version = "3.0.0" + "." + $BuildNumber;
+$versionInfo = (Get-Content "VERSION").Split("-");
+$Version = $versionInfo[0] + "." + $BuildNumber;
+$Preview = (&{If($versionInfo.Length -gt 1) {$versionInfo[1]} Else {""}})
 
 # Initialize Toolkit
 Invoke-Initialize -Cleanup $Cleanup;
-
-# Definition of local variables 
-$openCoverFilter = "$RootPath\OpenCoverFilter.txt";
 
 if ($SetAssemblyVersion) {
     $assemblyVersion = Get-MajorMinorPatchVersion $Version;
@@ -69,22 +67,19 @@ if ($SmokeTests) {
 }
 
 if ($UnitTests) {
-    Invoke-CoverTests "$RootPath\Toolkit\Tests" $openCoverFilter $Configuration
-    Invoke-CoverTests "$RootPath\Runtime\Tests" $openCoverFilter $Configuration
+    Invoke-CoverTests -SearchFilter "*.Tests.csproj" -Configuration $Configuration
 }
 
 if ($IntegrationTests) {
-    Invoke-CoverTests "$RootPath\Toolkit\IntegrationTests" -FilterFile $openCoverFilter -Configuration $Configuration    
-    Invoke-CoverTests "$RootPath\Runtime\IntegrationTests" $openCoverFilter $Configuration
+    Invoke-CoverTests -SearchFilter "*.IntegrationTests.csproj" -Configuration $Configuration
 }
 
 if ($SystemTests) {
-    Invoke-Nunit "$RootPath\Toolkit\SystemTests" $Configuration
-    Invoke-Nunit "$RootPath\Runtime\SystemTests" $Configuration
+    Invoke-Nunit -SearchFilter "*.SystemTests.csproj" -Configuration $Configuration
 }
 
 if ($UnitTests -or $IntegrationTests) {
-    Invoke-CoverReport "$RootPath\" "MarvinPlatform"
+    Invoke-CoverReport
 }
 
 if ($GenerateDocs) {
