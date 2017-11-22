@@ -90,7 +90,7 @@
       <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
       <Name>Marvin.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TestTools\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
+    <ProjectReference Include="..\..\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
       <Project>{d6dc00c6-9358-4839-84c0-44df018a74dc}</Project>
       <Name>Marvin.TestTools.SystemTest</Name>
     </ProjectReference>

@@ -129,7 +129,7 @@
       <Name>Marvin</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\TestTools\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
+    <ProjectReference Include="..\..\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
       <Project>{505DF475-5FF5-47CC-9E3B-BBE16C359F0E}</Project>
       <Name>Marvin.TestTools.UnitTest</Name>
     </ProjectReference>
