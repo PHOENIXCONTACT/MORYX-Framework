@@ -363,14 +363,14 @@ namespace Marvin.Serialization
                 Name = method.Name,
                 DisplayName = method.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? method.Name,
                 Description = method.GetCustomAttribute<DescriptionAttribute>()?.Description,
-                Parameters = method.GetParameters().Select(ConvertParameter).ToArray()
+                Parameters = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToArray()
             };
         }
 
         /// <summary>
         /// Convert a method parameter to our standard <see cref="Entry"/> format
         /// </summary>
-        private static Entry ConvertParameter(ParameterInfo parameter)
+        private static Entry ConvertParameter(ParameterInfo parameter, ICustomSerialization serialization)
         {
             var parameterType = parameter.ParameterType;
             var defaultValue = parameter.HasDefaultValue ? parameter.DefaultValue.ToString() : null;
@@ -388,7 +388,7 @@ namespace Marvin.Serialization
                     Type = TransformType(parameter.ParameterType),
                     Current = defaultValue,
                     Default = defaultValue,
-                    Possible = Serialization.PossibleValues(parameter)
+                    Possible = serialization.PossibleValues(parameter)
                 }
             };
 
