@@ -89,7 +89,8 @@ namespace Marvin.Communication.Sockets
                 return;
 
             // Start tcplistener and accept clients
-            _tcpListener = new TcpListener(new IPEndPoint(IPAddress.Any, Port));
+            if (_tcpListener == null)
+                _tcpListener = new TcpListener(new IPEndPoint(IPAddress.Any, Port));
             _tcpListener.Start();
             _tcpListener.BeginAcceptTcpClient(ClientConnected, null);
             _listening = true;
