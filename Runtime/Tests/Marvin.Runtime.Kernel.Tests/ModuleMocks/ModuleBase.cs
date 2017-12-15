@@ -1,16 +1,17 @@
-﻿using Marvin.Modules;
+﻿using System;
+using Marvin.Modules;
 using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Kernel.Tests.ModuleMocks
 {
     internal class ModuleBase : IServerModule
     {
-        #region Properties
+        public ServerModuleState State { get; set; }
 
         /// <summary>
         /// Unique name for this module within the platform it is designed for
         /// </summary>
-        public string Name { get { return GetType().Name; } }
+        public string Name => GetType().Name;
 
         /// <summary>
         /// Notifications published by this module
@@ -21,14 +22,6 @@ namespace Marvin.Runtime.Kernel.Tests.ModuleMocks
         /// Console to interact with the module
         /// </summary>
         public IServerModuleConsole Console { get; private set; }
-
-        /// <summary>
-        /// Access to the modules internal state
-        /// </summary>
-        public IServerModuleState State { get; private set; }
-
-        #endregion
-
 
         /// <summary>
         /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start 
@@ -50,6 +43,8 @@ namespace Marvin.Runtime.Kernel.Tests.ModuleMocks
         /// </summary>
         public void Stop()
         {
-        } 
+        }
+
+        public event EventHandler<ModuleStateChangedEventArgs> StateChanged;
     }
 }

@@ -42,8 +42,6 @@ namespace Marvin.Runtime.Tests.Modules
             RetryCount++;
             switch (CurrentMode)
             {
-                case TestMode.RetryException:
-                    throw new MissingDependencyException("Missing dependency!", 3, 100);
                 case TestMode.MarvinException:
                     throw new TestException();
                 case TestMode.SystemException:

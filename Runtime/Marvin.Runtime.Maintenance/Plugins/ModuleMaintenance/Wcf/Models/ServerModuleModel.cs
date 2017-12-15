@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Marvin.Modules;
+using Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf.Models;
 using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
@@ -30,7 +31,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
         /// Health state of the module. See <see cref="ServerModuleState"/> for the states.
         /// </summary>
         [DataMember]
-        public ServerModuleState HealthState { get; set; }
+        public ModuleServerModuleState HealthState { get; set; }
 
         /// <summary>
         /// The start behavior. The module will do this on the start. See <see cref="ModuleStartBehaviour"/> for the behaviors.
@@ -104,6 +105,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
             //todo: when is a notification important?
             //Important = notification.ImportantNotification;
             Exception = new SerializableException(notification.Exception);
+            NotificationType = EnumConverter.Convert(notification.Type);
         }
 
         /// <summary>
@@ -123,5 +125,11 @@ namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
         /// </summary>
         [DataMember]
         public SerializableException Exception { get; set; }
+
+        /// <summary>
+        /// Kind of notification
+        /// </summary>
+        [DataMember]
+        public ModuleNotificationType NotificationType { get; set; }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Wcf;
+using Marvin.StateMachines;
 using Marvin.Threading;
 using Marvin.Tools;
 using Marvin.Tools.Wcf;
@@ -17,19 +19,9 @@ namespace Marvin.Runtime.Modules
     /// Base class for a server module. Provides all necessary methods to be a server module.  
     /// </summary>
     /// <typeparam name="TConf">Configuration type for the server module.</typeparam>
-    public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IStateBasedTransitions, ILoggingHost
+    public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IStateBasedTransitions, ILoggingHost, ILoggingComponent
         where TConf : class, IConfig, new()
     {
-        private readonly HealthStateController _stateController;
-
-        /// <summary>
-        /// Constructor for this class which initialize all necessary instances.
-        /// </summary>
-        protected ServerModuleBase()
-        {
-            _stateController = new HealthStateController(this);
-        }
-
         /// <summary>
         /// Unique name for a module within the platform it is designed for
         /// </summary>
@@ -40,14 +32,17 @@ namespace Marvin.Runtime.Modules
         /// <summary>
         /// Notifications raised within module and during state changes.
         /// </summary>
-        public INotificationCollection Notifications => _stateController.Notifications;
-
-        #region Server Module states
+        public INotificationCollection Notifications { get; } = new ServerNotificationCollection();
 
         /// <summary>
-        /// Access to the modules internal state
+        /// Creates a new instance of <see cref="ServerModuleBase{TConf}"/> and initializes the state machine
         /// </summary>
-        IServerModuleState IServerModule.State => _stateController;
+        protected ServerModuleBase()
+        {
+            StateMachine.Initialize((IStateBasedTransitions)this).With<ServerModuleStateBase>();
+        }
+
+        #region Server Module states
 
         /// <summary>
         /// Does a validaton of the health state with all states which have the running flag. <see cref="ServerModuleState"/> for the states.
@@ -58,6 +53,7 @@ namespace Marvin.Runtime.Modules
                 .Where(state => state.HasFlag(ServerModuleState.Running)).ToArray();
             ValidateHealthState(requiredStates);
         }
+
         /// <summary>
         /// Validates the health state to find out, if the module is in one of the required states. 
         /// </summary>
@@ -65,8 +61,10 @@ namespace Marvin.Runtime.Modules
         /// <exception cref="HealthStateException">When module is not in one of the required states.</exception>
         protected void ValidateHealthState(ServerModuleState[] requiredStates)
         {
-            if (!requiredStates.Any(state => state == _stateController.Current))
-                throw new HealthStateException(_stateController.Current, requiredStates);
+            if (requiredStates.All(state => state != State))
+            {
+                throw new HealthStateException(State, requiredStates);
+            }
         }
         #endregion
 
@@ -80,11 +78,7 @@ namespace Marvin.Runtime.Modules
         /// <summary>
         /// Logger of the current state.
         /// </summary>
-        public IModuleLogger Logger
-        {
-            get { return _stateController.Logger; }
-            set { _stateController.Logger = value; }
-        }
+        public IModuleLogger Logger { get; set; }
 
         #endregion
 
@@ -95,25 +89,24 @@ namespace Marvin.Runtime.Modules
         /// </summary>
         public IModuleContainerFactory ContainerFactory { get; set; }
 
-
         void IInitializable.Initialize()
         {
-            _stateController.Initialize();
+            _state.Initialize();
         }
+
         void IStateBasedTransitions.Initialize()
         {
             // Activate logging
             LoggerManagement.ActivateLogging(this);
-            _stateController.Logger = Logger;
             Logger.LogEntry(LogLevel.Info, "{0} is initializing...", Name);
-
+            
             // Get config and parse for container settings
             Config = ConfigManager.GetConfiguration<TConf>();
             ConfigParser.ParseStrategies(Config, Strategies);
 
             // Initizalize container with server module dll and this dll
             Container = ContainerFactory.Create(Strategies, GetType().Assembly)
-                .SetInstance<IModuleErrorReporting>(_stateController)
+                .SetInstance<IModuleErrorReporting>(this)
                 .Register<IParallelOperations, ParallelOperations>()
                 // Register instances for this cycle
                 .SetInstance(Config).SetInstance(Logger);
@@ -130,12 +123,16 @@ namespace Marvin.Runtime.Modules
             }
 
             Logger.LogEntry(LogLevel.Info, "{0} initialized!", Name);
+
+            // After initializing the module, all notifications are unnecessary
+            Notifications.Clear();
         }
 
         void IServerModule.Start()
         {
-            _stateController.Start();
+            _state.Start();
         }
+
         void IStateBasedTransitions.Start()
         {
             Logger.LogEntry(LogLevel.Info, "{0} is starting...", Name);
@@ -147,28 +144,35 @@ namespace Marvin.Runtime.Modules
 
         void IServerModule.Stop()
         {
-            _stateController.Stop();
+            _state.Stop();
         }
+
         void IStateBasedTransitions.Stop()
         {
             Logger.LogEntry(LogLevel.Info, "{0} is stopping...", Name);
 
-            OnStop();
-
-            // Destroy local container
-            if (Container != null)
+            try
             {
-                Container.Destroy();
-                Container = null;
+                OnStop();
             }
-            // Deregister from logging
-            Logger.LogEntry(LogLevel.Info, "{0} stopped!", Name);
-            LoggerManagement.DeactivateLogging(this);
-            _stateController.Logger = Logger;
+            finally
+            {
+                // Destroy local container
+                if (Container != null)
+                {
+                    Container.Destroy();
+                    Container = null;
+                }
+                // Deregister from logging
+                Logger.LogEntry(LogLevel.Info, "{0} stopped!", Name);
+                LoggerManagement.DeactivateLogging(this);
+            }
         }
+
         #endregion
 
         #region Container
+
         /// <summary>
         /// Internal container can only be set from inside this assembly
         /// </summary>
@@ -196,9 +200,11 @@ namespace Marvin.Runtime.Modules
                 Logger = Logger
             });
         }
+
         #endregion
 
         #region Child module transitions
+
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again.
         /// </summary>
@@ -213,6 +219,7 @@ namespace Marvin.Runtime.Modules
         /// Code executed when service is stopped
         /// </summary>
         protected abstract void OnStop();
+
         #endregion
 
         #region Configuration
@@ -229,13 +236,114 @@ namespace Marvin.Runtime.Modules
 
         #endregion
 
+        #region IServerModuleState
+
+        private ServerModuleStateBase _state;
+
+        void IStateContext.SetState(IState state)
+        {
+            _state = (ServerModuleStateBase)state;
+            State = _state.Classification;
+        }
+
+        private ServerModuleState _current = ServerModuleState.Stopped;
+
+        /// <summary>
+        /// The current state.
+        /// </summary>
+        public ServerModuleState State
+        {
+            get { return _current; }
+            private set
+            {
+                var oldState = _current;
+                _current = value;
+                StateChange(oldState, value);
+            }
+        }
+
+        /// <summary>
+        /// Event is called when ModuleState changed
+        /// </summary>
+        public event EventHandler<ModuleStateChangedEventArgs> StateChanged;
+        private void StateChange(ServerModuleState oldState, ServerModuleState newState)
+        {
+            if (StateChanged == null || oldState == newState)
+            {
+                return;
+            }
+
+            // Since event handling may take a while make sure we don't stop module execution
+            foreach (var caller in StateChanged.GetInvocationList())
+            {
+                ThreadPool.QueueUserWorkItem(delegate (object callObj)
+                {
+                    try
+                    {
+                        var callDelegate = (Delegate)callObj;
+                        callDelegate.DynamicInvoke(this, new ModuleStateChangedEventArgs { OldState = oldState, NewState = newState });
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger?.LogException(LogLevel.Warning, ex, "Failed to notify listener of state change");
+                    }
+                }, caller);
+            }
+        }
+
+        #endregion
+
+        #region ErrorReporting
+
+        /// <summary>
+        /// Report internal failure to parent module
+        /// </summary>
+        /// <param name="sender">The sender of the failure report.</param>
+        /// <param name="exception">The exception which should be reported.</param>
+        void IModuleErrorReporting.ReportFailure(object sender, Exception exception)
+        {
+            var notification = new FailureNotification(exception, $"Component {sender.GetType().Name} reported an exception");
+            LogNotification(sender, notification);
+
+            _state.ErrorOccured();
+        }
+
+        /// <summary>
+        /// Report an error to be treated as a warning
+        /// </summary>
+        /// <param name="sender">The sender of the warning report.</param>
+        /// <param name="exception">The exception which should be reported as warning.</param>
+        void IModuleErrorReporting.ReportWarning(object sender, Exception exception)
+        {
+            var notification = new WarningNotification(n => Notifications.Remove(n), exception, $"Component {sender.GetType().Name} reported an exception");
+            LogNotification(sender, notification);
+        }
+
+        /// <inheritdoc />
+        void IStateBasedTransitions.LogNotification(object sender, IModuleNotification notification)
+        {
+            LogNotification(sender, notification);
+        }
+
+        private void LogNotification(object sender, IModuleNotification notification)
+        {
+            Notifications.Add(notification);
+
+            var loggingComponent = sender as ILoggingComponent;
+            var logger = loggingComponent != null ? loggingComponent.Logger : Logger;
+            logger.LogException(notification.Type == NotificationType.Warning ? LogLevel.Warning : LogLevel.Error,
+                notification.Exception, notification.Message);
+        }
+
+        #endregion
+
         /// <summary>
         /// Override to provide specific information about the server module.
         /// </summary>
         /// <returns>Name and current health state of the module.d</returns>
         public override string ToString()
         {
-            return $"{Name} - {_stateController.Current}";
+            return $"{Name} - {State}";
         }
     }
 }

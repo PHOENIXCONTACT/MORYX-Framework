@@ -157,7 +157,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
         private WaitCallback[] ManualStartCallbacks()
         {
             var modules = ModuleManager.AllModules.Where(item => ModuleManager.BehaviourAccess<ModuleStartBehaviour>(item).Behaviour != ModuleStartBehaviour.Auto
-                                                                && item.State.Current != ServerModuleState.Running);
+                                                                && item.State != ServerModuleState.Running);
             var waitCallbacks = modules.Select(plugin => new WaitCallback(state => ModuleManager.StartModule(plugin)));
             return waitCallbacks.ToArray();
         }
@@ -205,7 +205,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
                 Console.WriteLine("Final system state:");
                 foreach (var service in ModuleManager.AllModules)
                 {
-                    Console.WriteLine("Module {0} is in state {1}", service.Name, service.State.Current);
+                    Console.WriteLine("Module {0} is in state {1}", service.Name, service.State);
                 }
             }
             else
@@ -271,7 +271,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
                     case TestStep.StartAll:
                         // Check if all auto start modules are on their feet
                         var autoPlugin = ModuleManager.AllModules.Where(item => ModuleManager.BehaviourAccess<ModuleStartBehaviour>(item).Behaviour == ModuleStartBehaviour.Auto).ToArray();
-                        var running = autoPlugin.Count(item => item.State.Current == ServerModuleState.Running);
+                        var running = autoPlugin.Count(item => item.State == ServerModuleState.Running);
                         var allAuto = autoPlugin.Length;
 
                         if (running == allAuto)
@@ -281,14 +281,14 @@ namespace Marvin.Runtime.Kernel.SmokeTest
                     case TestStep.StartManuals:
                     case TestStep.ReincarnateSingle:
                         // Check if target service is back running
-                        running = ModuleManager.AllModules.Count(item => item.State.Current == ServerModuleState.Running);
+                        running = ModuleManager.AllModules.Count(item => item.State == ServerModuleState.Running);
                         if (running == _modulesCount)
                             stepDone = true;
                         Console.WriteLine("{0} of {1} modules are running", running.ToString("D").PadLeft(_digits), _modulesCount);
                         break;
                     case TestStep.StopAll:
                         // Check if all auto start modules are stopped
-                        var stopped = ModuleManager.AllModules.Count(item => item.State.Current == ServerModuleState.Stopped);
+                        var stopped = ModuleManager.AllModules.Count(item => item.State == ServerModuleState.Stopped);
                         if (stopped == _modulesCount)
                             stepDone = true;
                         Console.WriteLine("{0} of {1} modules stopped", stopped.ToString("D").PadLeft(_digits), _modulesCount);

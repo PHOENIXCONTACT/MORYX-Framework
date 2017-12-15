@@ -1,4 +1,5 @@
-﻿using Marvin.Modules;
+﻿using System;
+using Marvin.Modules;
 
 namespace Marvin.Runtime.Modules
 {
@@ -14,6 +15,16 @@ namespace Marvin.Runtime.Modules
     public interface IServerModule : IModule
     {
         /// <summary>
+        /// Console to interact with the module
+        /// </summary>
+        IServerModuleConsole Console { get; }
+
+        /// <summary>
+        /// Current state of the server module
+        /// </summary>
+        ServerModuleState State { get; }
+
+        /// <summary>
         /// Start all components and modules to begin execution
         /// </summary>
         void Start();
@@ -24,13 +35,24 @@ namespace Marvin.Runtime.Modules
         void Stop();
 
         /// <summary>
-        /// Console to interact with the module
+        /// Event raised when the current state changes
         /// </summary>
-        IServerModuleConsole Console { get; }
+        event EventHandler<ModuleStateChangedEventArgs> StateChanged;
+    }
+
+    /// <summary>
+    /// Event args for the StateChanged event
+    /// </summary>
+    public class ModuleStateChangedEventArgs
+    {
+        /// <summary>
+        /// Old state of the module
+        /// </summary>
+        public ServerModuleState OldState { get; set; }
 
         /// <summary>
-        /// Access to the modules internal state
+        /// New state of the module
         /// </summary>
-        IServerModuleState State { get; }
+        public ServerModuleState NewState { get; set; }
     }
 }

@@ -591,12 +591,12 @@ namespace Marvin.Tools.Wcf.SystemTests
             string hello = _netTcpService.Hello(null);
             Assert.AreEqual("Hello world!", hello, "Unexpected result with null argument");
 
-            bool result = _hogController.WaitForService("TestModule", ServerModuleState.Warning, 5);
-            Assert.IsTrue(result, "Service 'TestModule' did not reach state 'Warning' ");
+            //bool result = _hogController.WaitForService("TestModule", ServerModuleState.Warning, 5);
+            //Assert.IsTrue(result, "Service 'TestModule' did not reach state 'Warning' ");
 
-            _hogController.StopService("TestModule");
-            result = _hogController.WaitForService("TestModule", ServerModuleState.Stopped, 5);
-            Assert.IsTrue(result, "Service '{0}' did not reach state 'Stopped'", "TestModule");
+            //_hogController.StopService("TestModule");
+            //result = _hogController.WaitForService("TestModule", ServerModuleState.Stopped, 5);
+            //Assert.IsTrue(result, "Service '{0}' did not reach state 'Stopped'", "TestModule");
         }
 
         [Test]

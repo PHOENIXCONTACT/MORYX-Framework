@@ -7,7 +7,6 @@ namespace Marvin.Runtime.Tests
     public enum TestMode
     {
         BestCase,
-        RetryException,
         MarvinException,
         SystemException
     }

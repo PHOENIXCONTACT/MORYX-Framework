@@ -9,6 +9,7 @@ namespace Marvin.Runtime.Kernel
     {
         private readonly IModuleDependencyManager _dependencyManager;
         private readonly IModuleLogger _logger;
+
         public ModuleStopper(IModuleDependencyManager dependencyManager, IModuleLogger logger)
         {
             _dependencyManager = dependencyManager;
@@ -24,21 +25,14 @@ namespace Marvin.Runtime.Kernel
             // First we have to find all running modules that depend on this service
             var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependends.Select(item => item.RepresentedModule);
             // Now we will stop all of them recursivly
-            foreach (var dependingService in dependingServices.Where(dependend => dependend.State.Current.HasFlag(ServerModuleState.Running)
-                                                                               || dependend.State.Current == ServerModuleState.Starting))
+            foreach (var dependingService in dependingServices.Where(dependend => dependend.State.HasFlag(ServerModuleState.Running)
+                                                                               || dependend.State == ServerModuleState.Starting))
             {
                 // We will enque the service to make sure it is restarted later on
                 AddWaitingService(module, dependingService);
                 Stop(dependingService);
             }
 
-            ExecuteModuleStop(module);
-        }
-
-
-        private void ExecuteModuleStop(object moduleObj)
-        {
-            var module = (IServerModule)moduleObj;
             // Since stop is synchron we don't need an event
             try
             {

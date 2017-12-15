@@ -9,6 +9,7 @@ using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
+using Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf.Models;
 using Marvin.Runtime.Modules;
 using Marvin.Serialization;
 using Marvin.Threading;
@@ -44,7 +45,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
                 {
                     Name = pluginService.Name,
                     Assembly = ConvertAssembly(pluginService),
-                    HealthState = pluginService.State.Current,
+                    HealthState = EnumConverter.Convert(pluginService.State),
                     StartBehaviour = ModuleManager.BehaviourAccess<ModuleStartBehaviour>(pluginService).Behaviour,
                     FailureBehaviour = ModuleManager.BehaviourAccess<FailureBehaviour>(pluginService).Behaviour,
                     Notifications = pluginService.Notifications.Select(n => new NotificationModel(n)).ToArray()
@@ -56,7 +57,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
                     model.Dependencies.Add(new ServerModuleModel
                     {
                         Name = dependency.Name,
-                        HealthState = dependency.State.Current,
+                        HealthState = EnumConverter.Convert(dependency.State)
                     });
                 }
                 models.Add(model);

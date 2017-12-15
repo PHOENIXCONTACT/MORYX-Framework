@@ -135,9 +135,6 @@ namespace Marvin.Runtime.Kernel
                 case ServerModuleState.Running:
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
-                case ServerModuleState.Warning:
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    break;
                 case ServerModuleState.Failure:
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;

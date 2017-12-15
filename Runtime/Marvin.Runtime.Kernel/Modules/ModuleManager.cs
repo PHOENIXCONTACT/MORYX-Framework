@@ -89,7 +89,7 @@ namespace Marvin.Runtime.Kernel
 
             foreach (var plugin in AllModules)
             {
-                plugin.State.Changed += ModuleStateChanged;
+                plugin.StateChanged += ModuleStateChanged;
             }
             _eventsRegistered = true;
         }
@@ -212,9 +212,7 @@ namespace Marvin.Runtime.Kernel
 
         private void ModuleStateChanged(object sender, ModuleStateChangedEventArgs eventArgs)
         {
-            if (ModuleChangedState != null)
-                ModuleChangedState(sender, eventArgs);
-
+            ModuleChangedState?.Invoke(sender, eventArgs);
             ReincarnateOnFailure((IServerModule)sender, eventArgs.NewState);
         }
 

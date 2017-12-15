@@ -76,6 +76,9 @@
     <Compile Include="Filesystem\FileSystemPathProvider.cs" />
     <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\Config.cs" />
     <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\DependencyEvaluation.cs" />
+    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\EnumConverter.cs" />
+    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\ModuleNotificationType.cs" />
+    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\ModuleServerModuleState.cs" />
     <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\SerializableException.cs" />
     <Compile Include="Contracts\IMaintenancePlugin.cs" />
     <Compile Include="Contracts\IMaintenancePluginFactory.cs" />

@@ -1,43 +1,43 @@
-﻿namespace Marvin.Runtime.Modules
+﻿namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf.Models
 {
     /// <summary>
-    /// Different health states a server module can have
+    /// Server module state
     /// </summary>
-    public enum ServerModuleState
+    public enum ModuleServerModuleState
     {
         /// <summary>
         /// Initial value
         /// </summary>
-        Stopped = 0x0,
+        Stopped,
 
         /// <summary>
         /// Module is initializing
         /// </summary>
-        Initializing = 0x2,
+        Initializing,
 
         /// <summary>
         /// Service is ready to be started
         /// </summary>
-        Ready = 0x1,
+        Ready,
 
         /// <summary>
         /// Service is starting
         /// </summary>
-        Starting = 0x3,
+        Starting,
 
         /// <summary>
         /// Service is running
         /// </summary>
-        Running = 0x8,
+        Running,
 
         /// <summary>
         /// Service is stopping
         /// </summary>
-        Stopping = 0xA,
+        Stopping,
 
         /// <summary>
         /// Service failed
         /// </summary>
-        Failure = 0x4
+        Failure,
     }
 }
