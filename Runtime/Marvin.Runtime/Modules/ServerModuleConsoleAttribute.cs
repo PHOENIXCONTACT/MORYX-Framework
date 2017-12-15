@@ -7,7 +7,7 @@ namespace Marvin.Runtime.Modules
     /// Attribute for implementations of <see cref="IServerModuleConsole"/>
     /// to register in container structure
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class ServerModuleConsoleAttribute : PluginAttribute
     {
         /// <summary>

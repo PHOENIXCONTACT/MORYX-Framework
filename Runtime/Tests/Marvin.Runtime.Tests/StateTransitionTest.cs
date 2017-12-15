@@ -28,14 +28,14 @@ namespace Marvin.Runtime.Tests
         public void StoppedToReady()
         {
             var casted = (IServerModule) _moduleUnderTest;
-            Assert.AreEqual(ServerModuleState.Stopped, casted.State.Current, "Module not in stopped state!");
+            Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module not in stopped state!");
 
             // Call initialize
             casted.Initialize();
 
             // Validate result
             Assert.AreEqual(InvokedMethod.Initialize, _moduleUnderTest.LastInvoke, "Initialize was not called!");
-            Assert.AreEqual(ServerModuleState.Ready, casted.State.Current, "Module did not enter ready state!");
+            Assert.AreEqual(ServerModuleState.Ready, casted.State, "Module did not enter ready state!");
         }
 
         [Test]
@@ -43,14 +43,14 @@ namespace Marvin.Runtime.Tests
         {
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
-            Assert.AreEqual(ServerModuleState.Ready, casted.State.Current, "Module not in ready state!");
+            Assert.AreEqual(ServerModuleState.Ready, casted.State, "Module not in ready state!");
 
             // Call initialize
             casted.Start();
 
             // Validate result
             Assert.AreEqual(InvokedMethod.Start, _moduleUnderTest.LastInvoke, "Start was not called!");
-            Assert.AreEqual(ServerModuleState.Running, casted.State.Current, "Module did not enter running state!");
+            Assert.AreEqual(ServerModuleState.Running, casted.State, "Module did not enter running state!");
         }
 
         [Test]
@@ -59,14 +59,14 @@ namespace Marvin.Runtime.Tests
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
             casted.Start();
-            Assert.AreEqual(ServerModuleState.Running, casted.State.Current, "Module not in running state!");
+            Assert.AreEqual(ServerModuleState.Running, casted.State, "Module not in running state!");
 
             // Call initialize
             casted.Stop();
 
             // Validate result
             Assert.AreEqual(InvokedMethod.Stop, _moduleUnderTest.LastInvoke, "Stop was not called!");
-            Assert.AreEqual(ServerModuleState.Stopped, casted.State.Current, "Module did not enter stopped state!");
+            Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module did not enter stopped state!");
         }
 
         [Test]
@@ -74,13 +74,13 @@ namespace Marvin.Runtime.Tests
         {
             _moduleUnderTest.CurrentMode = TestMode.MarvinException;
             var casted = (IServerModule)_moduleUnderTest;
-            Assert.AreEqual(ServerModuleState.Stopped, casted.State.Current, "Module not in stopped state!");
+            Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module not in stopped state!");
 
             // Call initialize
             casted.Initialize();
 
             // Validate result
-            Assert.AreEqual(ServerModuleState.Failure, casted.State.Current, "Module did not detect error!");
+            Assert.AreEqual(ServerModuleState.Failure, casted.State, "Module did not detect error!");
         }
 
         [Test]
@@ -89,13 +89,13 @@ namespace Marvin.Runtime.Tests
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
             _moduleUnderTest.CurrentMode = TestMode.MarvinException;
-            Assert.AreEqual(ServerModuleState.Ready, casted.State.Current, "Module not in ready state!");
+            Assert.AreEqual(ServerModuleState.Ready, casted.State, "Module not in ready state!");
 
             // Call initialize
             casted.Start();
 
             // Validate result
-            Assert.AreEqual(ServerModuleState.Failure, casted.State.Current, "Module did not detect error!");
+            Assert.AreEqual(ServerModuleState.Failure, casted.State, "Module did not detect error!");
         }
 
         [Test]
@@ -105,43 +105,13 @@ namespace Marvin.Runtime.Tests
             casted.Initialize();
             casted.Start();
             _moduleUnderTest.CurrentMode = TestMode.MarvinException;
-            Assert.AreEqual(ServerModuleState.Running, casted.State.Current, "Module not in running state!");
+            Assert.AreEqual(ServerModuleState.Running, casted.State, "Module not in running state!");
 
             // Call initialize
             casted.Stop();
 
             // Validate result
-            Assert.AreEqual(ServerModuleState.Failure, casted.State.Current, "Module did not detect error!");
-        }
-
-        [Test]
-        public void RunningToWarning()
-        {
-            var casted = (IServerModule)_moduleUnderTest;
-            casted.Initialize();
-            casted.Start();
-            Assert.AreEqual(ServerModuleState.Running, casted.State.Current, "Module not in running state!");
-
-            _moduleUnderTest.RaiseException(false);
-            Thread.Sleep(100);
-            Assert.AreEqual(ServerModuleState.Warning, casted.State.Current, "Module did not enter warning state!");
-        }
-
-        [Test]
-        public void WarningToRunning()
-        {
-            var casted = (IServerModule)_moduleUnderTest;
-            casted.Initialize();
-            casted.Start();
-            _moduleUnderTest.RaiseException(false);
-            Thread.Sleep(200);
-            Assert.AreEqual(ServerModuleState.Warning, casted.State.Current, "Module not in warning state!");
-
-            foreach (var notification in casted.Notifications.ToArray())
-            {
-                notification.Confirm();
-            }
-            Assert.AreEqual(ServerModuleState.Running, casted.State.Current, "Module did not return to running!");
+            Assert.AreEqual(ServerModuleState.Failure, casted.State, "Module did not detect error!");
         }
 
         [Test]
@@ -150,11 +120,11 @@ namespace Marvin.Runtime.Tests
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
             casted.Start();
-            Assert.AreEqual(ServerModuleState.Running, casted.State.Current, "Module not in running state!");
+            Assert.AreEqual(ServerModuleState.Running, casted.State, "Module not in running state!");
 
             _moduleUnderTest.RaiseException(true);
             Thread.Sleep(200);
-            Assert.AreEqual(ServerModuleState.Failure, casted.State.Current, "Module did not enter failure state!");
+            Assert.AreEqual(ServerModuleState.Failure, casted.State, "Module did not enter failure state!");
         }
 
         [Test]

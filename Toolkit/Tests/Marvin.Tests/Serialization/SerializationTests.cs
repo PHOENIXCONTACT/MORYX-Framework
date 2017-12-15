@@ -257,9 +257,9 @@ namespace Marvin.Tests
 
             //Act
             encoded[0].Value.Current = "5";
-            ent.SubEntries[1].Value.Current = "12,34";
+            ent.SubEntries[1].Value.Current = 12.34d.ToString();
             var newInstance = ent.Prototypes[0].Instantiate();
-            newInstance.Value.Current = "133,7";
+            newInstance.Value.Current = 133.7d.ToString();
             ent.SubEntries.Add(newInstance);
 
             ent2.SubEntries[1].Value.Current = "ValueB";

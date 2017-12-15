@@ -1,7 +1,7 @@
 ﻿using System;
 using Marvin.Modules;
 
-namespace Marvin.Runtime.Base
+namespace Marvin.Runtime.Modules
 {
     internal class FailureNotification : IModuleNotification
     {

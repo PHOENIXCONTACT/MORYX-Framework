@@ -79,7 +79,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
 
         private List<IServerModule> AffectedModules(string targetModel = null)
         {
-            var affectedModules = (from module in ModuleManager.AllModules.Where(module => module.State.Current == ServerModuleState.Running)
+            var affectedModules = (from module in ModuleManager.AllModules.Where(module => module.State == ServerModuleState.Running)
                                    let props = module.GetType().GetProperties()
                                    let facAtts = props.Where(prop => prop.PropertyType == typeof(IUnitOfWorkFactory))
                                                       .Select(fac => fac.GetCustomAttribute<NamedAttribute>()).ToArray()

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Marvin.Logging;
 using Marvin.Model;
-using Marvin.Runtime.Base;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Maintenance.Contracts;

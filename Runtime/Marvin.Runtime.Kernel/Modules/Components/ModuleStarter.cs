@@ -25,7 +25,7 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public void Initialize(IServerModule module)
         {
-            // TODO: Make better
+            // TODO: Make better, why?
             module.Initialize();
         }
 
@@ -34,7 +34,7 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public void Start(IServerModule plugin)
         {
-            StartPlugin(plugin);   
+            StartModule(plugin);   
         }
 
         /// <summary>
@@ -53,25 +53,25 @@ namespace Marvin.Runtime.Kernel
             {
                 ConvertBranch(root);
             }
-            foreach (var plugin in depTree.RootModules.Where(ShouldBeStarted).Select(branch => branch.RepresentedModule))
+            foreach (var module in depTree.RootModules.Where(ShouldBeStarted).Select(branch => branch.RepresentedModule))
             {
-                StartPlugin(plugin);
+                StartModule(module);
             }
         }
 
-        private void StartPlugin(IServerModule plugin)
+        private void StartModule(IServerModule module)
         {
             // Now we check for any not running dependencies and start them
-            var awaitingDependecies = _dependencyManager.GetDependencyBranch(plugin).Dependencies
-                                     .Where(item => !item.RepresentedModule.State.Current.HasFlag(ServerModuleState.Running))
+            var awaitingDependecies = _dependencyManager.GetDependencyBranch(module).Dependencies
+                                     .Where(item => !item.RepresentedModule.State.HasFlag(ServerModuleState.Running))
                                      .Select(item => item.RepresentedModule).ToArray();
             if (awaitingDependecies.Any())
             {
-                EnqueServiceAndStartDependencies(awaitingDependecies, plugin);
+                EnqueServiceAndStartDependencies(awaitingDependecies, module);
             }
             else
             {
-                ThreadPool.QueueUserWorkItem(ExecuteModuleStart, plugin);
+                ThreadPool.QueueUserWorkItem(ExecuteModuleStart, module);
             }  
         }
 
@@ -89,7 +89,7 @@ namespace Marvin.Runtime.Kernel
                 _logger.LogException(LogLevel.Error, ex, "Failed to start plugin {0}", module.Name);
             }
             // Forward result
-            ModuleChangedState(module, module.State.Current);
+            ModuleChangedState(module, module.State);
         }
 
         private void ModuleChangedState(IServerModule module, ServerModuleState newState)
@@ -108,7 +108,7 @@ namespace Marvin.Runtime.Kernel
                 foreach (var waitingModule in WaitingModules[module].ToArray())
                 {
                     WaitingModules[module].Remove(waitingModule);
-                    StartPlugin(waitingModule);
+                    StartModule(waitingModule);
                 }
                 // We remove this service for now after we started every dependend
                 WaitingModules.Remove(module);

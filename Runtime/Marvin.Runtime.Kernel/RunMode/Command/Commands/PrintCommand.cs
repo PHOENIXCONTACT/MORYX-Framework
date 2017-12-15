@@ -51,7 +51,7 @@ namespace Marvin.Runtime.Kernel
             var versionAttribute = module.GetType().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
 
             Console.Write("Service: " + module.Name.PadRight(30));
-            CommandHelper.PrintState(module.State.Current, false, 17);
+            CommandHelper.PrintState(module.State, false, 17);
             Console.WriteLine("Version: " + (versionAttribute == null ? "N/A" : versionAttribute.Version));
 
             if (printOptions == null)
@@ -74,7 +74,7 @@ namespace Marvin.Runtime.Kernel
                         foreach (var startDependency in ModuleManager.StartDependencies(module))
                         {
                             Console.WriteLine(" Service: " + startDependency.Name.PadRight(29) + "State: " +
-                                              startDependency.State.Current);
+                                              startDependency.State);
                         }
                         break;
                     default:
