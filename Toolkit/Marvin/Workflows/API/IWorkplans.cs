@@ -1,4 +1,6 @@
-﻿namespace Marvin.Workflows
+﻿using System.Collections.Generic;
+
+namespace Marvin.Workflows
 {
     /// <summary>
     /// Additional facade interface for components that store and provide workplans
@@ -18,6 +20,11 @@
         /// <param name="workplanId">Workplan id</param>
         /// <returns>Instance of workplan</returns>
         Workplan LoadWorkplan(long workplanId);
+
+        /// <summary>
+        /// Load all workplans managed by the module
+        /// </summary>
+        IReadOnlyList<Workplan> LoadAllWorkplans();
 
         /// <summary>
         /// Deletes workplan if in new state
