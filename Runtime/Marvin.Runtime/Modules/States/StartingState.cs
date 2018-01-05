@@ -4,7 +4,7 @@ namespace Marvin.Runtime.Modules
 {
     internal class StartingState : ServerModuleStateBase
     {
-        public StartingState(IStateBasedTransitions context, StateMap stateMap) 
+        public StartingState(IServerModuleStateContext context, StateMap stateMap) 
             : base(context, stateMap, ServerModuleState.Starting)
         {
         }
@@ -27,6 +27,11 @@ namespace Marvin.Runtime.Modules
         public override void Initialize()
         {
             // Nothing to do here
+        }
+
+        public override void Start()
+        {
+            // We are already starting
         }
 
         public override void Stop()

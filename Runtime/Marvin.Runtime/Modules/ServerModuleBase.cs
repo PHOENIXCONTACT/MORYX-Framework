@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Marvin.Configuration;
 using Marvin.Container;
@@ -19,7 +18,7 @@ namespace Marvin.Runtime.Modules
     /// Base class for a server module. Provides all necessary methods to be a server module.  
     /// </summary>
     /// <typeparam name="TConf">Configuration type for the server module.</typeparam>
-    public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IStateBasedTransitions, ILoggingHost, ILoggingComponent
+    public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IServerModuleStateContext, ILoggingHost, ILoggingComponent
         where TConf : class, IConfig, new()
     {
         /// <summary>
@@ -39,33 +38,23 @@ namespace Marvin.Runtime.Modules
         /// </summary>
         protected ServerModuleBase()
         {
-            StateMachine.Initialize((IStateBasedTransitions)this).With<ServerModuleStateBase>();
+            StateMachine.Initialize((IServerModuleStateContext)this).With<ServerModuleStateBase>();
         }
 
-        #region Server Module states
-
-        /// <summary>
-        /// Does a validaton of the health state with all states which have the running flag. <see cref="ServerModuleState"/> for the states.
-        /// </summary>
-        protected void ValidateHealthState()
-        {
-            var requiredStates = Enum.GetValues(typeof(ServerModuleState)).Cast<ServerModuleState>()
-                .Where(state => state.HasFlag(ServerModuleState.Running)).ToArray();
-            ValidateHealthState(requiredStates);
-        }
+        #region ValidateHealthState
 
         /// <summary>
-        /// Validates the health state to find out, if the module is in one of the required states. 
+        /// Does a validaton of the health state. Only states indicating <see cref="ServerModuleState.Running"/> will not 
+        /// throw an <see cref="HealthStateException"/>
         /// </summary>
-        /// <param name="requiredStates">Array of the states where the module can be in.</param>
-        /// <exception cref="HealthStateException">When module is not in one of the required states.</exception>
-        protected void ValidateHealthState(ServerModuleState[] requiredStates)
+        protected void ValidateHealthState() => _state.ValidateHealthState();
+
+        /// <inheritdoc />
+        void IServerModuleStateContext.InvalidHealthState(ServerModuleState state)
         {
-            if (requiredStates.All(state => state != State))
-            {
-                throw new HealthStateException(State, requiredStates);
-            }
+            throw new HealthStateException(state);
         }
+
         #endregion
 
         #region Logging
@@ -94,7 +83,7 @@ namespace Marvin.Runtime.Modules
             _state.Initialize();
         }
 
-        void IStateBasedTransitions.Initialize()
+        void IServerModuleStateContext.Initialize()
         {
             // Activate logging
             LoggerManagement.ActivateLogging(this);
@@ -133,7 +122,7 @@ namespace Marvin.Runtime.Modules
             _state.Start();
         }
 
-        void IStateBasedTransitions.Start()
+        void IServerModuleStateContext.Start()
         {
             Logger.LogEntry(LogLevel.Info, "{0} is starting...", Name);
 
@@ -147,7 +136,7 @@ namespace Marvin.Runtime.Modules
             _state.Stop();
         }
 
-        void IStateBasedTransitions.Stop()
+        void IServerModuleStateContext.Stop()
         {
             Logger.LogEntry(LogLevel.Info, "{0} is stopping...", Name);
 
@@ -242,25 +231,19 @@ namespace Marvin.Runtime.Modules
 
         void IStateContext.SetState(IState state)
         {
-            _state = (ServerModuleStateBase)state;
-            State = _state.Classification;
-        }
+            var oldState = ServerModuleState.Stopped;
+            if (_state != null)
+                oldState = _state.Classification;
 
-        private ServerModuleState _current = ServerModuleState.Stopped;
+            _state = (ServerModuleStateBase)state;
+
+            StateChange(oldState, State);
+        }
 
         /// <summary>
         /// The current state.
         /// </summary>
-        public ServerModuleState State
-        {
-            get { return _current; }
-            private set
-            {
-                var oldState = _current;
-                _current = value;
-                StateChange(oldState, value);
-            }
-        }
+        public ServerModuleState State => _state.Classification;
 
         /// <summary>
         /// Event is called when ModuleState changed
@@ -315,12 +298,13 @@ namespace Marvin.Runtime.Modules
         /// <param name="exception">The exception which should be reported as warning.</param>
         void IModuleErrorReporting.ReportWarning(object sender, Exception exception)
         {
-            var notification = new WarningNotification(n => Notifications.Remove(n), exception, $"Component {sender.GetType().Name} reported an exception");
+            var notification = new WarningNotification(n => Notifications.Remove(n), exception,
+                $"Component {sender.GetType().Name} reported an exception");
             LogNotification(sender, notification);
         }
 
         /// <inheritdoc />
-        void IStateBasedTransitions.LogNotification(object sender, IModuleNotification notification)
+        void IServerModuleStateContext.LogNotification(object sender, IModuleNotification notification)
         {
             LogNotification(sender, notification);
         }

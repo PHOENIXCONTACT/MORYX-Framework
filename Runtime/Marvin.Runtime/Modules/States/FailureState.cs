@@ -4,7 +4,7 @@ namespace Marvin.Runtime.Modules
 {
     internal class FailureState : ServerModuleStateBase
     {
-        public FailureState(IStateBasedTransitions context, StateMap stateMap) 
+        public FailureState(IServerModuleStateContext context, StateMap stateMap) 
             : base(context, stateMap, ServerModuleState.Failure)
         {
         }

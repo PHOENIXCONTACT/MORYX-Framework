@@ -74,7 +74,7 @@
     <Compile Include="Modules\IFacadeControl.cs" />
     <Compile Include="Modules\IServerModule.cs" />
     <Compile Include="Modules\IServerModuleConsole.cs" />
-    <Compile Include="Modules\States\IStateBasedTransitions.cs" />
+    <Compile Include="Modules\States\IServerModuleStateContext.cs" />
     <Compile Include="Modules\ServerModuleBase.cs" />
     <Compile Include="Modules\ServerModuleConsoleAttribute.cs" />
     <Compile Include="Modules\ServerModuleFacadeControllerBase.cs" />

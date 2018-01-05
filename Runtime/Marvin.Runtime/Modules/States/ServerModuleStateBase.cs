@@ -2,11 +2,11 @@
 
 namespace Marvin.Runtime.Modules
 {
-    internal abstract class ServerModuleStateBase : StateBase<IStateBasedTransitions>
+    internal abstract class ServerModuleStateBase : StateBase<IServerModuleStateContext>
     {
         public ServerModuleState Classification { get; }
 
-        protected ServerModuleStateBase(IStateBasedTransitions context, StateMap stateMap, ServerModuleState classification) : base(context, stateMap)
+        protected ServerModuleStateBase(IServerModuleStateContext context, StateMap stateMap, ServerModuleState classification) : base(context, stateMap)
         {
             Classification = classification;
         }
@@ -29,6 +29,11 @@ namespace Marvin.Runtime.Modules
         public virtual void ErrorOccured()
         {
             InvalidState();
+        }
+
+        public virtual void ValidateHealthState()
+        {
+            Context.InvalidHealthState(Classification);
         }
 
         [StateDefinition(typeof(StoppedState), IsInitial = true)]

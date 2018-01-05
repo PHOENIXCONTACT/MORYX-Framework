@@ -2,7 +2,7 @@
 {
     internal class ReadyState : ServerModuleStateBase
     {
-        public ReadyState(IStateBasedTransitions context, StateMap stateMap) 
+        public ReadyState(IServerModuleStateContext context, StateMap stateMap) 
             : base(context, stateMap, ServerModuleState.Ready)
         {
         }

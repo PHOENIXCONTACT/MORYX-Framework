@@ -4,7 +4,7 @@ namespace Marvin.Runtime.Modules
 {
     internal class StoppingState : ServerModuleStateBase
     {
-        public StoppingState(IStateBasedTransitions context, StateMap stateMap) 
+        public StoppingState(IServerModuleStateContext context, StateMap stateMap) 
             : base(context, stateMap, ServerModuleState.Stopping)
         {
         }
@@ -27,6 +27,16 @@ namespace Marvin.Runtime.Modules
         public override void Initialize()
         {
             // Nothing to do here
+        }
+
+        public override void Start()
+        {
+            // Not possible here
+        }
+
+        public override void Stop()
+        {
+            // We are already stopping
         }
 
         public override void ErrorOccured()

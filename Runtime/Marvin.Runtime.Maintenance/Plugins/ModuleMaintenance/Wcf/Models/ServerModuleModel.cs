@@ -19,6 +19,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf
         public ServerModuleModel()
         {
             Dependencies = new List<ServerModuleModel>();
+            Notifications = new NotificationModel[0];
         }
 
         /// <summary>
