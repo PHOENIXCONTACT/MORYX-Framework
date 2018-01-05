@@ -6,7 +6,7 @@ namespace Marvin.Runtime.Modules
     /// <summary>
     /// Interface for server module base to access state based transitions
     /// </summary>
-    internal interface IStateBasedTransitions : IStateContext, IModuleErrorReporting
+    internal interface IServerModuleStateContext : IStateContext, IModuleErrorReporting
     {
         /// <summary>
         /// Initialize the module
@@ -27,5 +27,10 @@ namespace Marvin.Runtime.Modules
         /// Adds a notification to the module
         /// </summary>>
         void LogNotification(object sender, IModuleNotification notification);
+
+        /// <summary>
+        /// Called if the health state is invalid for the current state
+        /// </summary>
+        void InvalidHealthState(ServerModuleState state);
     }
 }

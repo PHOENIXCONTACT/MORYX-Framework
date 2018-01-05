@@ -22,7 +22,6 @@ namespace Marvin.Runtime.Modules
         public HealthStateException(SerializationInfo si, StreamingContext context)
             : base(si, context)
         {
-            RequiredStates = (ServerModuleState[])si.GetValue("RequiredStates", typeof(ServerModuleState[]));
             Current = (ServerModuleState)si.GetValue("Current", typeof(ServerModuleState));
         }
 
@@ -31,33 +30,20 @@ namespace Marvin.Runtime.Modules
         /// invalid operation
         /// </summary>
         /// <param name="current">Current state of the module</param>
-        /// <param name="requiredStates">Required state of the module</param>
-        public HealthStateException(ServerModuleState current, params ServerModuleState[] requiredStates)
+        public HealthStateException(ServerModuleState current)
         {
-            RequiredStates = requiredStates;
             Current = current;
         }
 
         /// <summary>
-        /// State required for desired operation
-        /// </summary>
-        public ServerModuleState[] RequiredStates { get; private set; }
-        /// <summary>
         /// Current state of the module
         /// </summary>
-        public ServerModuleState Current { get; private set; }
+        public ServerModuleState Current { get; }
 
         /// <summary>
         /// Gets a message that describes the current exception.
         /// </summary>
-        public override string Message
-        {
-            get
-            {
-                return string.Format("Current HealthState {0} of service does not allow requested operation. Required states are: {1})",
-                                     Current, string.Join(", ", RequiredStates));
-            }
-        }
+        public override string Message => $"Current HealthState {Current} of service does not allow requested operation.";
 
         /// <summary>
         /// When overridden in a derived class, sets the System.Runtime.Serialization.SerializationInfo
@@ -71,8 +57,6 @@ namespace Marvin.Runtime.Modules
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-
-            info.AddValue("RequiredStates", RequiredStates);
             info.AddValue("Current", Current);
         }
     }

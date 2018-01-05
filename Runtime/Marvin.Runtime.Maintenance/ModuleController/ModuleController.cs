@@ -90,7 +90,7 @@ namespace Marvin.Runtime.Maintenance
                 catch (Exception ex)
                 {
                     Logger.LogException(LogLevel.Error, ex, "Failed to start plugin {0}", pluginConfig.PluginName);
-                    throw new Exception("Failed to start module " + pluginConfig.PluginName, ex);
+                    throw new Exception("Failed to start plugin " + pluginConfig.PluginName, ex);
                 }
             }
         }

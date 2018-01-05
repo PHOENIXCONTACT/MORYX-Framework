@@ -67,8 +67,6 @@ namespace Marvin.Runtime.Kernel
                         break;
                 }
             }
-
-            ModuleManager.StopModules();
         }
 
         /// <summary>
