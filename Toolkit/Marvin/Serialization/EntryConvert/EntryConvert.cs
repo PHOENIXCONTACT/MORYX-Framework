@@ -153,8 +153,8 @@ namespace Marvin.Serialization
             if (parent.Value.Type != EntryValueType.Collection && parent.Value.Type != EntryValueType.Class)
                 yield break;
 
-            var possibleElementValues = IsCollection(property.PropertyType) 
-                ? customSerialization.PossibleElementValues(property) : null;
+            var possibleElementValues = customSerialization.PossibleValues(property);
+
             foreach (var prototype in customSerialization.Prototypes(property))
             {
                 var prototypeEntry = Prototype(prototype, customSerialization);
@@ -194,7 +194,7 @@ namespace Marvin.Serialization
                     Current = value,
                     Default = value,
                     Type = TransformType(type.Prototype.GetType())
-                };
+            };
             }
             else
             {
