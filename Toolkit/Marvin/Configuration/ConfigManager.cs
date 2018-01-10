@@ -126,5 +126,15 @@ namespace Marvin.Configuration
             var configName = $"{name}{ConfigConstants.FileExtension}";
             return Path.Combine(ConfigDirectory, configName);
         }
+
+        /// <summary>
+        /// Checks whether the config exists
+        /// </summary>
+        /// <param name="name">Name of the configuration</param>
+        /// <returns></returns>
+        protected bool ConfigExists(string name)
+        {
+            return File.Exists(GetConfigPath(name));
+        }
     }
 }

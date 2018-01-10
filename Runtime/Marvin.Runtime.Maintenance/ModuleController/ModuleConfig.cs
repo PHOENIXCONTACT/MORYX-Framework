@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
 using Marvin.Configuration;
-using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Maintenance.Contracts;
 using Marvin.Runtime.Maintenance.Plugins.CommonMaintenance;
 using Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance;
@@ -19,6 +17,9 @@ namespace Marvin.Runtime.Maintenance
     [DataContract]
     public class ModuleConfig : ConfigBase
     {
+        /// <inheritdoc />
+        protected override bool PersistDefaultConfig => false;
+
         /// <summary>
         /// List of configured maintenance modules.
         /// </summary>

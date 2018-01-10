@@ -119,6 +119,7 @@
     <Compile Include="Configuration\IConfig.cs" />
     <Compile Include="Configuration\IConfigManager.cs" />
     <Compile Include="Configuration\InvalidConfigException.cs" />
+    <Compile Include="Configuration\IPersistentConfig.cs" />
     <Compile Include="Configuration\IProxyConfig.cs" />
     <Compile Include="Configuration\IUpdatableConfig.cs" />
     <Compile Include="Configuration\PasswordAttribute.cs" />

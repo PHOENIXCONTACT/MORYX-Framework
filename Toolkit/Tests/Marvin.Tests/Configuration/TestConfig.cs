@@ -50,4 +50,9 @@ namespace Marvin.Tests.Configuration
         [DefaultValue(DefaultValues.Decimal)]
         public double DummyDouble { get; set; }
     }
+
+    public class NonPersistedTestConfig : TestConfig
+    {
+        protected override bool PersistDefaultConfig => false;
+    }
 }
