@@ -6,8 +6,14 @@ namespace Marvin.Configuration
     /// Base implementation of IConfig to reduce redundant code
     /// </summary>
     [DataContract]
-    public class ConfigBase : UpdatableEntry, IConfig
+    public class ConfigBase : UpdatableEntry, IConfig, IPersistentConfig
     {
+        /// <inheritdoc />
+        bool IPersistentConfig.PersistDefaultConfig => PersistDefaultConfig;
+
+        /// <see cref="IPersistentConfig"/>
+        protected virtual bool PersistDefaultConfig => true;
+
         /// <summary>
         /// Current state of the config object
         /// </summary>

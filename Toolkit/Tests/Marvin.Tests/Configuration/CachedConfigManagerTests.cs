@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Marvin.Configuration;
 using NUnit.Framework;
 
@@ -94,11 +95,34 @@ namespace Marvin.Tests.Configuration
         }
 
         [Test]
-        public void TestSaveAll()
+        public void TestSaveAll_NonDefaultPersistedConfigWasNotPersisted()
+        {
+            var config1 = _configManager.GetConfiguration<NonPersistedTestConfig>();
+
+            _configManager.SaveAll();
+
+            Assert.IsFalse(Directory.GetFiles(_fullConfigDir).Any());
+        }
+
+        [Test]
+        public void TestSaveAll_NonDefaultPersistingConfigWasPersistedManually()
+        {
+            var config1 = _configManager.GetConfiguration<NonPersistedTestConfig>();
+            _configManager.SaveConfiguration(config1);
+
+            config1.DummyNumber += 2;
+            _configManager.SaveAll();
+
+            var config2 = _configManager.GetConfiguration<NonPersistedTestConfig>(true);
+            Assert.AreEqual(config1.DummyNumber, config2.DummyNumber);
+        }
+
+        [Test]
+        public void TestSaveAll_DefaultPersistingConfigWasPersisted()
         {
             var config1 = _configManager.GetConfiguration<TestConfig>();
 
-            config1.DummyNumber++;
+            config1.DummyNumber += 1;
             _configManager.SaveAll();
 
             var config2 = _configManager.GetConfiguration<TestConfig>(true);

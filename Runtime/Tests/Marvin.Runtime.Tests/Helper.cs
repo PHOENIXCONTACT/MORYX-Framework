@@ -24,7 +24,7 @@ namespace Marvin.Runtime.Tests
     {
         /// <summary>
         /// Current state of the config object. This should be decorated with the data member in order to save
-        ///             the valid state after finalized configuration.
+        /// the valid state after finalized configuration.
         /// </summary>
         [DataMember]
         public ConfigState ConfigState { get; set; }

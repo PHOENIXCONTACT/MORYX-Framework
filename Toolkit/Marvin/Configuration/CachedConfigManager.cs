@@ -85,14 +85,23 @@ namespace Marvin.Configuration
         }
 
         /// <summary>
-        /// Save all cached config objects to disk
+        /// Save all cached config objects to disk. Config objects will only be saved to disk
+        /// if the corresponding file already exists on disk.
         /// </summary>
         public void SaveAll()
         {
             try
             {
                 foreach (var cacheEntry in ConfigCache.ToArray())
-                    WriteToFile(cacheEntry.Value.Instance, cacheEntry.Key);
+                {
+                    var config = cacheEntry.Value.Instance as IPersistentConfig;
+                    var persistConfig = config?.PersistDefaultConfig ?? true;
+
+                    if (persistConfig || ConfigExists(cacheEntry.Key))
+                    {
+                        WriteToFile(cacheEntry.Value.Instance, cacheEntry.Key);
+                    }
+                }
             }
             // During shutdown we just want to avoid a crash message
             // ReSharper disable once EmptyGeneralCatchClause
