@@ -27,10 +27,6 @@ Invoke-Initialize -Version (Get-Content "VERSION");
 
 if ($SetAssemblyVersion) {
     Set-AssemblyVersions @("\\Templates\\");
-
-    Set-VsixManifestVersion -VsixManifest "$RootPath\Runtime\Templates\DataModelWizard\source.extension.vsixmanifest"
-    Set-VsTemplateVersion -VsTemplate "$PSScriptRoot\Runtime\Templates\DataModelTemplate\MyTemplate.vstemplate"
-    Set-AssemblyVersion "$RootPath\Runtime\Templates\DataModelWizard\Properties\AssemblyInfo.cs"
 }
 
 if ($Build) {

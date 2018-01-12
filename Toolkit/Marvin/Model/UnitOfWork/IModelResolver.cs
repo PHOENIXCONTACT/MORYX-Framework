@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Marvin.Model
+﻿namespace Marvin.Model
 {
     /// <summary>
     /// Factory capable of creating any 
@@ -12,8 +6,8 @@ namespace Marvin.Model
     public interface IModelResolver
     {
         /// <summary>
-        /// Create an open context using the model namespace
+        /// Create an open context using the model name
         /// </summary>
-        IUnitOfWorkFactory GetByNamespace(string modelNamespace);
+        IUnitOfWorkFactory GetByName(string modelName);
     }
 }

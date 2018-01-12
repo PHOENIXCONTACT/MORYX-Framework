@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Marvin.Configuration;
+﻿using Marvin.Configuration;
 
 namespace Marvin.Model
 {
@@ -11,7 +10,7 @@ namespace Marvin.Model
         /// <summary>
         /// Databse server
         /// </summary>
-        string Server { get; set; }
+        string Host { get; set; }
 
         /// <summary>
         /// Port to access the server
@@ -24,17 +23,12 @@ namespace Marvin.Model
         string Database { get; set; }
 
         /// <summary>
-        /// Schema to store the model
-        /// </summary>
-        string Schema { get; set; }
-
-        /// <summary>
         /// Databse user
         /// </summary>
-        string User { get; set; }
+        string Username { get; set; }
 
         /// <summary>
-        /// Password for <see cref="User"/>
+        /// Password for <see cref="Username"/>
         /// </summary>
         string Password { get; set; }
     }

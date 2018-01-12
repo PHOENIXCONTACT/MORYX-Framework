@@ -12,7 +12,7 @@ namespace Marvin.TestTools.SystemTest
     /// </summary>
     public class ModulConfigurator
     {
-        private HeartOfGoldController _hogController;
+        private readonly HeartOfGoldController _hogController;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModulConfigurator"/> class.

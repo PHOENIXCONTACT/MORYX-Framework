@@ -17,7 +17,7 @@ namespace Marvin.Runtime.Kernel
         /// <summary>
         /// Create an open context using the model namespace
         /// </summary>
-        public IUnitOfWorkFactory GetByNamespace(string modelNamespace)
+        public IUnitOfWorkFactory GetByName(string modelNamespace)
         {
             return GlobalContainer.Resolve<IUnitOfWorkFactory>(modelNamespace);
         }

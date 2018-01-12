@@ -236,17 +236,6 @@ namespace Marvin.TestTools.SystemTest
                 throw new InvalidOperationException("HeartOfGold is already running.");
             }
 
-            string runModeDllSrcPath = Path.Combine(RuntimeDir, "..", "RuntimeModes", "Marvin.Runtime.Runmodes.dll");
-            string runModeDllDstPath = Path.Combine(RuntimeDir, "Marvin.Runtime.Runmodes.dll");
-
-            FileInfo srcFile = new FileInfo(runModeDllSrcPath);
-            FileInfo dstFile = new FileInfo(runModeDllDstPath);
-
-            if (!dstFile.Exists || dstFile.Length != srcFile.Length)    // Assume the file did not change if size is the same.
-            {
-                File.Copy(runModeDllSrcPath, runModeDllDstPath, true);
-            }
-
             string runtimeCommand = Path.Combine(RuntimeDir, exeName);
 
             Process = new Process
@@ -883,12 +872,11 @@ namespace Marvin.TestTools.SystemTest
         /// <summary>
         /// Creates an UnitOfWorkFactory.
         /// </summary>
-        public static FactoryCreationContext<TFactory> CreateUnitOfWorkFactory<TFactory, TConfig>(DatabaseConfigModel databaseConfigModel)
+        public static FactoryCreationContext<TFactory> CreateUnitOfWorkFactory<TFactory>(DatabaseConfigModel databaseConfigModel)
             where TFactory : class, IUnitOfWorkFactory, new()
-            where TConfig : IDatabaseConfig, new()
         {
             var creationContext = new FactoryCreationContext<TFactory>();
-            creationContext.SetConfig<TConfig>(databaseConfigModel);
+            creationContext.SetConfig(databaseConfigModel);
             return creationContext;
         }
 

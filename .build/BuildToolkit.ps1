@@ -161,6 +161,13 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     }
 }
 
+function Invoke-Cleanup {
+    # Clean up
+    Write-Step "Cleaning up repository ...";
+    & $global:GitCli clean -f -d -x
+    Invoke-ExitCodeCheck $LastExitCode;
+}
+
 function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExecutable, [string]$OutputDirectory = $BuildTools) {
     if (-not (Test-Path $TargetExecutable)) {
         & $global:NugetCli install $PackageName -version $Version -outputdirectory $OutputDirectory -configfile $NugetConfig

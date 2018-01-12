@@ -36,8 +36,8 @@ namespace Marvin.Runtime.SystemTests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            HogHelper.CopyTestModule("Marvin.TestModule.dll");
-            HogHelper.DeleteTestModule("Marvin.DependentTestModule.dll");
+            HogHelper.CopyAssembly("Marvin.TestModule.dll");
+            HogHelper.RemoveAssembly("Marvin.DependentTestModule.dll");
 
             _configManager = new RuntimeConfigManager
             {
@@ -94,7 +94,7 @@ namespace Marvin.Runtime.SystemTests
                 Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
             }
 
-            HogHelper.DeleteTestModule("Marvin.TestModule.dll");
+            HogHelper.RemoveAssembly("Marvin.TestModule.dll");
         }
 
         [TearDown]

@@ -1,21 +1,28 @@
 - name: Dependency Injection
   href: DependencyInjection.md
+
 - name: Configuration
   href: Configuration.md
+
 - name: Logging
   href: Logging.md
+
 - name: Wcf Connections
   href: Wcf.md
-  # Sub folder Collections
+
+- name: Data Model
+  href: DataModel/toc.yml
+
 - name: Collections
   items:
     - name: Delay Queue
       href: DelayQueue.md
 - name: Bindings
   href: Bindings.md
+
 - name: Binary Connection
   href: BinaryConnection.md
-  # Sub folder Serialization
+
 - name: Serialization
   href: Serialization.md
   items:

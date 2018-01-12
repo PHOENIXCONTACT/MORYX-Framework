@@ -1,2 +1,0 @@
-INCLUDE:+[Marvin.Tools.Wcf*]*
-EXCLUDE:-[Marvin]* -[*]*.DummyLog -[*Test*]* -[*]*Exception -[*]*Attribute

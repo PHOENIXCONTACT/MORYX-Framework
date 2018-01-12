@@ -106,7 +106,6 @@ namespace Marvin.Runtime.Kernel
 
             // Load models
             container.LoadComponents<IUnitOfWorkFactory>();
-            container.LoadComponents<IModelConfigurator>();
 
             // Load user modules
             container.LoadComponents<IServerModule>();

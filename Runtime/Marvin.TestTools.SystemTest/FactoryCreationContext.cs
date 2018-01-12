@@ -27,18 +27,17 @@ namespace Marvin.TestTools.SystemTest
             _container.Register(Component.For<IConfigManager, ConfigManagerMock>().ImplementedBy<ConfigManagerMock>());
         }
 
-        private void RegisterConfig<TConfig>(DatabaseConfigModel config)
-            where TConfig : IDatabaseConfig, new()
+        private void RegisterConfig(DatabaseConfigModel config)
         {
-            var dbconfig = new TConfig
+            var dbconfig = new DatabaseConfig
             {
-                Server = config.Server,
+                Host = config.Server,
                 ConfigState = ConfigState.Valid,
                 Database = config.Database,
-                User = config.User,
+                Username = config.User,
                 Password = config.Password,
             };
-            _container.Resolve<ConfigManagerMock>().AvailableConfigs.Add(dbconfig);
+            _container.Resolve<ConfigManagerMock>().SaveConfiguration(dbconfig);;
         }
 
         /// <summary>
@@ -46,11 +45,10 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         /// <typeparam name="TConfig">Concrete IDatabaseConfig type</typeparam>
         /// <param name="databaseConfigModel">Config model containing the connections settings</param>
-        public void SetConfig<TConfig>(DatabaseConfigModel databaseConfigModel)
-            where TConfig : IDatabaseConfig, new()
+        public void SetConfig(DatabaseConfigModel databaseConfigModel)
         {
             // Create a database config and register at config manager
-            RegisterConfig<TConfig>(databaseConfigModel);
+            RegisterConfig(databaseConfigModel);
 
             // Register factory for later
             _container.Register(Component.For<TFactory>());
@@ -69,16 +67,14 @@ namespace Marvin.TestTools.SystemTest
         /// Merge this factory with a given child
         /// </summary>
         /// <typeparam name="TChildFactory"></typeparam>
-        /// <typeparam name="TChildConfig"></typeparam>
         /// <param name="config"></param>
         /// <param name="mergeOperation"></param>
         /// <returns></returns>
-        public FactoryCreationContext<TFactory> Merge<TChildFactory, TChildConfig>(DatabaseConfigModel config, Action<TFactory, TChildFactory> mergeOperation)
+        public FactoryCreationContext<TFactory> Merge<TChildFactory>(DatabaseConfigModel config, Action<TFactory, TChildFactory> mergeOperation)
             where TChildFactory : class, IUnitOfWorkFactory, new()
-            where TChildConfig : IDatabaseConfig, new()
         {
             // Register child config
-            RegisterConfig<TChildConfig>(config);
+            RegisterConfig(config);
 
             // Register child factory
             _container.Register(Component.For<TChildFactory>());

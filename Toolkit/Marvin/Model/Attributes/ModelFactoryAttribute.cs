@@ -6,17 +6,16 @@ namespace Marvin.Model
     /// <summary>
     /// Registration attribute for data model factories
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public sealed class ModelFactoryAttribute : ModelAttribute
     {
         /// <summary>
         /// Register this factory using the models namespace
         /// </summary>
-        /// <param name="modelNamespace">Namespace of the model</param>
-        public ModelFactoryAttribute(string modelNamespace)
-            : base(typeof(IUnitOfWorkFactory), typeof(IInitializable))
+        public ModelFactoryAttribute(string targetModel)
+            : base(targetModel, typeof(IUnitOfWorkFactory), typeof(IInitializable))
         {
-            Name = modelNamespace;
+            Name = targetModel;
         }
     }
 }

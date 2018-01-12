@@ -40,6 +40,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Attributes\ForceAssemblyReferenceAttribute.cs" />
     <Compile Include="BaseTypes\MarvinException.cs" />
     <Compile Include="Bindings\BindingResolverBase.cs" />
     <Compile Include="Bindings\BindingResolverExtension.cs" />
@@ -157,26 +158,27 @@
     <Compile Include="Container\UseChildAttribute.cs" />
     <Compile Include="Configuration\IEmptyPropertyProvider.cs" />
     <Compile Include="IQuickCast.cs" />
-    <Compile Include="Logging\Logger\IdleLogger.cs" />
+    <Compile Include="Logging\LoggerManagement.cs" />
+    <Compile Include="Logging\IdleLogger.cs" />
     <Compile Include="Logging\ILoggerManagement.cs" />
     <Compile Include="Logging\ILoggingComponent.cs" />
     <Compile Include="Logging\ILoggingHost.cs" />
     <Compile Include="Logging\ILogMessage.cs" />
     <Compile Include="Logging\ILogTarget.cs" />
     <Compile Include="Logging\IModuleLogger.cs" />
-    <Compile Include="Logging\Logger\Logger.cs" />
-    <Compile Include="Logging\LoggerManagement.cs" />
-    <Compile Include="Logging\Logger\LogMessage.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LogMessage.cs" />
     <Compile Include="Logging\ModuleLoggerConfig.cs" />
-    <Compile Include="Model\Attributes\ModelConfiguratorAttribute.cs" />
     <Compile Include="Model\Attributes\ModelFactoryAttribute.cs" />
-    <Compile Include="Model\Configuration\IDatabaseScript.cs" />
+    <Compile Include="Model\Configuration\DatabaseUpdate.cs" />
+    <Compile Include="Model\Configuration\IModelScript.cs" />
     <Compile Include="Model\Configuration\IDatabaseConfig.cs" />
     <Compile Include="Model\Configuration\IDatabaseUpdate.cs" />
     <Compile Include="Model\Configuration\IModelConfigurator.cs" />
     <Compile Include="Model\Configuration\IModelSetup.cs" />
     <Compile Include="Model\Attributes\ModelSetupAttribute.cs" />
-    <Compile Include="Model\Configuration\UpdateSummary.cs" />
+    <Compile Include="Model\Configuration\DatabaseUpdateInformation.cs" />
+    <Compile Include="Model\Configuration\DatabaseUpdateSummary.cs" />
     <Compile Include="Model\DataModification.cs" />
     <Compile Include="Model\Extensions\QueryableExtensions.cs" />
     <Compile Include="Model\EntityIdListener.cs" />
@@ -186,8 +188,9 @@
     <Compile Include="IPersistentObject.cs" />
     <Compile Include="Model\IRepository.cs" />
     <Compile Include="Model\Attributes\ModelAttribute.cs" />
+    <Compile Include="Model\UnitOfWork\IContextMode.cs" />
+    <Compile Include="Model\Configuration\IModelConfiguratorFactory.cs" />
     <Compile Include="Model\UnitOfWork\IModelResolver.cs" />
-    <Compile Include="Model\UnitOfWork\IParentFactory.cs" />
     <Compile Include="Model\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Model\UnitOfWork\IUnitOfWorkFactory.cs" />
     <Compile Include="Modules\BundleAttribute.cs" />

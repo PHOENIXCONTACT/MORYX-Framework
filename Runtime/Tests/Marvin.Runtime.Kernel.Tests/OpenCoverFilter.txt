@@ -1,2 +1,0 @@
-﻿INCLUDE:+[Marvin.Runtime.*]*
-EXCLUDE:-[Marvin]* -[*]*.DummyLog -[*Test*]* -[*]*Exception -[*]*Attribute

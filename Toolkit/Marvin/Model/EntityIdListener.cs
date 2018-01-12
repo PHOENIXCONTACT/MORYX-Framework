@@ -45,18 +45,14 @@ namespace Marvin.Model
             }
             else
             {
-                entity.PropertyChanged += listener.IdChanged;
+                entity.IdChanged += listener.IdChanged;
             }
         }
 
-        private void IdChanged(object sender, PropertyChangedEventArgs eventArgs)
+        private void IdChanged(object sender, EventArgs eventArgs)
         {
             var entity = (IEntity)sender;
-            if (eventArgs.PropertyName != "Id" || entity.Id == 0)
-                return;
-
-
-            entity.PropertyChanged -= IdChanged;
+            entity.IdChanged -= IdChanged;
             AssignId(entity.Id);
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Marvin.Model
+﻿using System.Runtime.Serialization;
+
+namespace Marvin.Model
 {
     /// <summary>
     /// Interface for updating databases from a specified version to 

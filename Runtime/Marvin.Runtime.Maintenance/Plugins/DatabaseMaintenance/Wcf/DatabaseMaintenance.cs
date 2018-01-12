@@ -23,8 +23,10 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
         public IRuntimeConfigManager ConfigManager { get; set; }
         public IModuleManager ModuleManager { get; set; }
         public IParallelOperations ParallelOperations { get; set; }
-        public IEnumerable<IModelConfigurator> ModelConfigurators { get; set; }
+        public IEnumerable<IUnitOfWorkFactory> ModelFactories { get; set; }
         public FileSystemPathProvider PathProvider { get; set; }
+
+        private IEnumerable<IModelConfigurator> ModelConfigurators => ModelFactories.Cast<IModelConfiguratorFactory>().Select(c => c.GetConfigurator());
 
         /// <summary>
         /// Logger of this component
@@ -49,9 +51,8 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             BulkOperation(mc =>
             {
                 // Save and reload config
-                var conf = UpdateConfigFromModel(mc.Config, config);
-                ConfigManager.SaveConfiguration(conf);
-                mc.ResponsibleFactory.ReloadConfiguration();
+                UpdateConfigFromModel(mc.Config, config);
+                mc.UpdateConfig();
             }, "Save config");
 
             // Restart modules
@@ -69,9 +70,8 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             affectedModules.ForEach(ModuleManager.StopModule);
 
             // Save config and reload all DataModels
-            var conf = UpdateConfigFromModel(match.Config, model);
-            ConfigManager.SaveConfiguration(conf);
-            match.ResponsibleFactory.ReloadConfiguration();
+            UpdateConfigFromModel(match.Config, model);
+            match.UpdateConfig();
 
             // Start services again
             affectedModules.ForEach(ModuleManager.StartModule);
@@ -118,14 +118,13 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             var config = UpdateConfigFromModel(targetConfigurator.Config, model);
             try
             {
-                targetConfigurator.CreateDatabase(config);
-                return string.Empty;
+                return targetConfigurator.CreateDatabase(config) ? string.Empty : "Cannot create database. May be database already exists, no database was defined or no migrations were found.";
             }
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Warning, ex, "Database creation failed!");
-                return string.Format("Database creation failed with exception: {0}\n Inner exception: {1}",
-                                    ex.Message, ex.InnerException == null ? "none" : ex.InnerException.Message);
+                return $"Database creation failed with exception: {ex.Message}\n " +
+                       $"Inner exception: {ex.InnerException?.Message ?? "none"}";
             }
         }
 
@@ -150,8 +149,8 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Warning, ex, "Database deletion failed!");
-                return string.Format("Deleting data base failed with exception: {0}\n Inner exception: {1}",
-                                    ex.Message, ex.InnerException == null ? "none" : ex.InnerException.Message);
+                return $"Deleting data base failed with exception: {ex.Message}\n " +
+                       $"Inner exception: {ex.InnerException?.Message ?? "none"}";
             }
         }
 
@@ -162,9 +161,11 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
                 return new DumpResult("No configurator found");
 
             var config = UpdateConfigFromModel(targetConfigurator.Config, model);
-            var dumpName = string.Format("{0}_{1}_{2}.sql", targetModel, model.Database, DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss"));
-            ParallelOperations.ExecuteParallel(context => context.Configurator.DumpDatabase(config, string.Format(@".\Backups\{0}", context.DumpName)), 
+            var dumpName = $"{targetModel}_{model.Database}_{DateTime.Now:dd-MM-yyyy-hh-mm-ss}.sql";
+
+            ParallelOperations.ExecuteParallel(context => context.Configurator.DumpDatabase(config, $@".\Backups\{context.DumpName}"), 
                                                new { Configurator = targetConfigurator, DumpName = dumpName});
+
             return new DumpResult(string.Empty) { DumpName = dumpName };
         }
 
@@ -175,9 +176,29 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
                 return "No configurator found";
 
             var config = UpdateConfigFromModel(targetConfigurator.Config, configModel);
-            ParallelOperations.ExecuteParallel(context => context.Configurator.RestoreDatabase(config, string.Format(@".\Backups\{0}", context.FileName)),
+            ParallelOperations.ExecuteParallel(context => context.Configurator.RestoreDatabase(config, $@".\Backups\{context.FileName}"),
                                                new { Configurator = targetConfigurator, backupModel.FileName });
             return string.Empty;
+        }
+
+        public DatabaseUpdateSummary UpdateDatabaseModel(string targetModel, DatabaseConfigModel configModel, string updateName)
+        {
+            var targetConfigurator = GetTargetConfigurator(targetModel);
+            if (targetConfigurator == null)
+                return new DatabaseUpdateSummary { WasUpdated = false };
+
+            var config = UpdateConfigFromModel(targetConfigurator.Config, configModel);
+            return targetConfigurator.UpdateDatabase(config, updateName);
+        }
+
+        public bool RollbackDatabase(string targetModel, DatabaseConfigModel configModel)
+        {
+            var targetConfigurator = GetTargetConfigurator(targetModel);
+            if (targetConfigurator == null)
+                return false;
+
+            var config = UpdateConfigFromModel(targetConfigurator.Config, configModel);
+            return targetConfigurator.RollbackDatabase(config);
         }
 
         public string ExecuteSetup(string targetModel, DatabaseConfigModel model, SetupModel setup)
@@ -203,8 +224,8 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Warning, ex, "Database setup execution failed!");
-                return string.Format("Setup execution failed with exception: {0}\n Inner exception: {1}",
-                                    ex.Message, ex.InnerException == null ? "none" : ex.InnerException.Message);
+                return $"Setup execution failed with exception: {ex.Message}\n " +
+                       $"Inner exception: {ex.InnerException?.Message ?? "none"}";
             }
         }
 
@@ -244,16 +265,18 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
                 TargetModel = configurator.TargetModel,
                 Config = new DatabaseConfigModel
                 {
-                    Server = dbConfig.Server,
+                    Server = dbConfig.Host,
                     Port = dbConfig.Port,
                     Database = dbConfig.Database,
-                    Schema = dbConfig.Schema,
-                    User = dbConfig.User,
+                    //TODO: Schema = dbConfig.Schema,
+                    User = dbConfig.Username,
                     Password = dbConfig.Password
                 },
                 Setups = GetAllSetups(configurator),
                 Backups = GetAllBackups(configurator),
-                Scripts = GetAllScripts(configurator)
+                Scripts = GetAllScripts(configurator),
+                AvailableUpdates = GetAvailableUpdates(dbConfig, configurator),
+                InstalledUpdates = GetInstalledUpdates(dbConfig, configurator)
             };
             return model;
         }
@@ -283,7 +306,13 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             var backupModels = new List<BackupModel>();
 
             var tagetModel = configurator.TargetModel;
-            var backupDir = @".\Backups\";
+            const string backupDir = @".\Backups\";
+
+            if (!Directory.Exists(backupDir))
+            {
+                Directory.CreateDirectory(backupDir);
+                return new BackupModel[0];
+            }
 
             if (!Directory.Exists(backupDir))
                 return new BackupModel[0];
@@ -319,13 +348,33 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             }).ToArray();
         }
 
+        private DbUpdateModel[] GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
+        {
+            var availableUpdates = configurator.AvailableUpdates(dbConfig).ToList();
+
+            return availableUpdates.Select(u => new DbUpdateModel
+            {
+                Name = u.Name
+            }).ToArray();
+        }
+
+        private DbUpdateModel[] GetInstalledUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
+        {
+            var installedUpdates = configurator.InstalledUpdates(dbConfig).ToList();
+
+            return installedUpdates.Select(u => new DbUpdateModel
+            {
+                Name = u.Name
+            }).ToArray();
+        }
+
         private IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel model)
         {
-            dbConfig.Server = model.Server;
+            dbConfig.Host = model.Server;
             dbConfig.Port = model.Port;
             dbConfig.Database = model.Database;
-            dbConfig.Schema = model.Schema;
-            dbConfig.User = model.User;
+            //TODO: dbConfig.Schema = model.Schema;
+            dbConfig.Username = model.User;
             dbConfig.Password = model.Password;
             return dbConfig;
         }
@@ -342,7 +391,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
                 catch (Exception ex)
                 {
                     Logger.LogException(LogLevel.Warning, ex, "{0} of {1} failed!", operationName, configurator.TargetModel);
-                    result += string.Format("{0} of {1} failed!\n", operationName, configurator.TargetModel);
+                    result += $"{operationName} of {configurator.TargetModel} failed!\n";
                 }
             }
             return result;
