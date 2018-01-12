@@ -39,7 +39,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LogMaintenanceClientMock.cs" />
@@ -65,7 +64,6 @@
     <Compile Include="WcfClientFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="OpenCoverFilter.txt" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Marvin.Serialization.Entry1.datasource" />
     <None Include="Service References\Logging\Marvin.Tools.Wcf.Tests.Logging.LogMessages.datasource">

@@ -54,7 +54,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Mocks\ConfigManagerMock.cs" />
+    <Compile Include="ConfigManagerMock.cs" />
     <Compile Include="ModulConfigurator.cs" />
     <Compile Include="FactoryCreationContext.cs" />
     <Compile Include="HeartOfGoldController.cs" />
@@ -200,6 +200,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Toolkit\Marvin.Model\Marvin.Model.csproj">
+      <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
+      <Name>Marvin.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Toolkit\Marvin\Marvin.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>

@@ -53,6 +53,7 @@
     <Compile Include="Plugins\DatabaseMaintenance\DatabaseConfig.cs" />
     <Compile Include="Plugins\DatabaseMaintenance\DatabasePlugin.cs" />
     <Compile Include="Plugins\DatabaseMaintenance\Wcf\Datamodel.cs" />
+    <Compile Include="Plugins\DatabaseMaintenance\Wcf\DbUpdateModel.cs" />
     <Compile Include="Plugins\DatabaseMaintenance\Wcf\ScriptModel.cs" />
     <Compile Include="Plugins\DatabaseMaintenance\Wcf\SetupModel.cs" />
     <Compile Include="Plugins\DatabaseMaintenance\Wcf\DatabaseMaintenance.cs" />

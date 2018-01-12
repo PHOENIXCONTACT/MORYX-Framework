@@ -35,23 +35,6 @@
       <HintPath>..\..\..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Common.Logging.Log4Net208, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Common.Logging.Log4Net208.3.4.1\lib\net40\Common.Logging.Log4Net208.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq, Version=4.7.142.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Moq.4.7.142\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -61,7 +44,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
@@ -95,17 +77,6 @@
       <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
       <Name>Marvin.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
-      <Project>{d6dc00c6-9358-4839-84c0-44df018a74dc}</Project>
-      <Name>Marvin.TestTools.SystemTest</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.Tests\Marvin.Runtime.Tests.csproj">
-      <Project>{7448728c-9965-4874-a2e9-7bab37e42963}</Project>
-      <Name>Marvin.Runtime.Tests</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="OpenCoverFilter.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

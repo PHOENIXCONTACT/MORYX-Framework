@@ -83,6 +83,10 @@
     <Compile Include="Facades\TestModuleFacade.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Toolkit\Marvin.Model\Marvin.Model.csproj">
+      <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
+      <Name>Marvin.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Toolkit\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
       <Name>Marvin.Tools.Wcf</Name>

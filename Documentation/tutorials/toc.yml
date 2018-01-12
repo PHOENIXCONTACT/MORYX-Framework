@@ -2,16 +2,12 @@
   items: 
   - name: Quickstart
     href: Quickstart.md
+
   - name: ServerModule
-    href: ServerModule.md
-  - name: Facades
-    href: Facades.md
+    href: ServerModule/toc.yml
+
   - name: Windows Service
     href: WindowsService.md
 
 - name: Data Models
-  items: 
-  - name: Model Update 
-    href: ModelUpdateGuide.md
-  - name: Model Setups
-    href: ModelSetupGuide.md
+  href: DataModel/toc.yml

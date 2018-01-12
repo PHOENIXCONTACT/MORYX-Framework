@@ -44,7 +44,7 @@ namespace Marvin.Runtime.Kernel.Update
             {
                 try
                 {
-                    var summary = configurator.UpdateDatabase();
+                    var summary = configurator.UpdateDatabase(configurator.Config);
                     if (!summary.WasUpdated)
                     {
                         Console.WriteLine("No updates for {0}", configurator.TargetModel);

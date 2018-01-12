@@ -1,17 +1,21 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace Marvin.Model
 {
     /// <summary>
     /// Interface for all entities
     /// </summary>
-    public interface IEntity : INotifyPropertyChanged
+    public interface IEntity
     {
         /// <summary>
         /// Database key of this entity
         /// </summary>
         long Id { get; set; }
+
+        /// <summary>
+        /// Event if the id was changed
+        /// </summary>
+        event EventHandler IdChanged;
     }
 
     /// <summary>
@@ -22,16 +26,16 @@ namespace Marvin.Model
         /// <summary>
         /// Time this entity was created
         /// </summary>
-        DateTime Created { get; }
+        DateTime Created { get; set; }
 
         /// <summary>
         /// Thime this entity was last updatedt
         /// </summary>
-        DateTime Updated { get; }
+        DateTime Updated { get; set; }
 
         /// <summary>
         /// Time this entity was deleted
         /// </summary>
-        DateTime? Deleted { get; }
+        DateTime? Deleted { get; set; }
     }
 }

@@ -148,7 +148,7 @@ namespace Marvin.TestModule
             var ids = new List<long>();
 
             // Write time
-            using (var uow = TestFactory.Create(ContextMode.Tracking))
+            using (var uow = TestFactory.Create(ContextMode.ChangeTracking))
             {
                 stopWatch.Start();
                 for (var i = 0; i < LoopCount; i++)
@@ -177,14 +177,14 @@ namespace Marvin.TestModule
         private long WriteLoop(IUnitOfWork uow, ModuleConfig config, JsonSerializerSettings settings)
         {
             var json = JsonConvert.SerializeObject(config, typeof(IConfig), settings);
-            var entity = uow.GetRepository<IJsonTesterRepository>().Create(json);
+            var entity = uow.GetRepository<IJsonEntityRepository>().Create(json);
             uow.Save();
             return entity.Id;
         }
 
         private IConfig ReadLoop(IUnitOfWork uow, long id, JsonSerializerSettings settings)
         {
-            var json = (from e in uow.GetRepository<IJsonTesterRepository>().Linq
+            var json = (from e in uow.GetRepository<IJsonEntityRepository>().Linq
                         where e.Id == id
                         select e.JsonData).FirstOrDefault();
             return JsonConvert.DeserializeObject<IConfig>(json, settings);

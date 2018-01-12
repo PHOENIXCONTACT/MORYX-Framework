@@ -1,4 +1,5 @@
 ﻿using System.ServiceModel;
+using Marvin.Model;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
@@ -81,6 +82,18 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
         /// <returns></returns>
         [OperationContract]
         string RestoreDatabase(string targetModel, DatabaseConfigModel config, BackupModel backupModel);
+
+        /// <summary>
+        /// Updates database model to the specified update.
+        /// </summary>
+        [OperationContract]
+        DatabaseUpdateSummary UpdateDatabaseModel(string targetModel, DatabaseConfigModel config, string updateName);
+
+        /// <summary>
+        /// Rollback of all migrations made
+        /// </summary>
+        [OperationContract]
+        bool RollbackDatabase(string targetModel, DatabaseConfigModel config);
 
         /// <summary>
         /// Execute setup for this config

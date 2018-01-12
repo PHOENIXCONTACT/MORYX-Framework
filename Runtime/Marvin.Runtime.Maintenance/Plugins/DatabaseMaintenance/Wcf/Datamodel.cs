@@ -37,5 +37,17 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
         /// </summary>
         [DataMember]
         public ScriptModel[] Scripts { get; set; }
+
+        /// <summary>
+        /// Available migrations for this context
+        /// </summary>
+        [DataMember]
+        public DbUpdateModel[] AvailableUpdates { get; set; }
+
+        /// <summary>
+        /// Installed migrations for this context
+        /// </summary>
+        [DataMember]
+        public DbUpdateModel[] InstalledUpdates { get; set; }
     }
 }

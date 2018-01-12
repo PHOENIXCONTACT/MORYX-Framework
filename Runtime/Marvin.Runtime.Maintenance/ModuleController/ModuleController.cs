@@ -33,7 +33,7 @@ namespace Marvin.Runtime.Maintenance
         /// <summary>
         /// Model configurators. Injected by castle.
         /// </summary>
-        public IModelConfigurator[] ModelConfigurators { get; set; }
+        public IUnitOfWorkFactory[] UnitOfWorkFactories { get; set; }
 
         /// <summary>
         /// runtime config manager. Injected by castle.
@@ -65,9 +65,9 @@ namespace Marvin.Runtime.Maintenance
                 .SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
                 .SetInstance((IServerLoggerManagement)LoggerManagement);
 
-            // Register all configurators
-            foreach (var configurator in ModelConfigurators)
-                Container.SetInstance(configurator);
+            // Register all unit of work factories
+            foreach (var factory in UnitOfWorkFactories)
+                Container.SetInstance(factory);
 
             Container.LoadComponents<IMaintenancePlugin>();
         }

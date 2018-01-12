@@ -31,27 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Common.Logging.Log4Net208, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Common.Logging.Log4Net208.3.4.1\lib\net40\Common.Logging.Log4Net208.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Devart.Data.PostgreSql, Version=7.6.667.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Devart.Data.PostgreSql.7.6.667\lib\net45\Devart.Data.PostgreSql.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -59,23 +38,16 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicTests.cs" />
     <Compile Include="BasicConfigTests.cs" />
-    <Compile Include="DatabaseTests.cs" />
     <Compile Include="HogHelper.cs" />
     <Compile Include="LoggingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LifeCycleTests.cs" />
-    <Compile Include="TypeConfigTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Toolkit\Marvin.Model\Marvin.Model.csproj">
-      <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
-      <Name>Marvin.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Toolkit\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
       <Name>Marvin.Tools.Wcf</Name>
@@ -83,10 +55,6 @@
     <ProjectReference Include="..\..\..\Toolkit\Marvin\Marvin.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Toolkit\Tests\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj">
-      <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
-      <Name>Marvin.TestTools.Test.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj">
       <Project>{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}</Project>

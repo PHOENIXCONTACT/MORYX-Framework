@@ -23,7 +23,7 @@ namespace Marvin.Tests.Extensions
             new object[] {new DateTime(2013, 12, 31), 1},
         };
 
-        [Test, TestCaseSource("WeekNumberCases")]
+        [Test, TestCaseSource(nameof(WeekNumberCases))]
         public void WeekNumberTest(DateTime dateTime, int result)
         {
             var week = dateTime.WeekNumber();
@@ -42,7 +42,7 @@ namespace Marvin.Tests.Extensions
             new object[] {new DateTime(2008, 4, 4), 12, new DateTime(2008, 6, 27)},
         };
 
-        [Test, TestCaseSource("AddWeekCases")]
+        [Test, TestCaseSource(nameof(AddWeekCases))]
         public void AddWeekTest(DateTime dateTime, int weeksToAdd, DateTime resultDateTime)
         {
             var result = dateTime.AddWeeks(weeksToAdd);
@@ -60,7 +60,7 @@ namespace Marvin.Tests.Extensions
             new object[] {new DateTime(2015, 12, 24), new DateTime(2015, 12, 21), new DateTime(2015, 12, 27, 23, 59, 59, 999)},
         };
 
-        [Test, TestCaseSource("StartEndOfWeekCases")]
+        [Test, TestCaseSource(nameof(StartEndOfWeekCases))]
         public void StartOfWeekTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
         {
             var startOfWeek = dateTime.StartOfWeek();
@@ -68,7 +68,7 @@ namespace Marvin.Tests.Extensions
             AssertEqualDateTime(startOfWeek, resultStart);
         }
 
-        [Test, TestCaseSource("StartEndOfWeekCases")]
+        [Test, TestCaseSource(nameof(StartEndOfWeekCases))]
         public void EndOfWeekTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
         {
             var endOfWeek = dateTime.EndOfWeek();
@@ -86,14 +86,14 @@ namespace Marvin.Tests.Extensions
             new object[] {2015, 51, new DateTime(2015, 12, 14), new DateTime(2015, 12, 20, 23, 59, 59, 999)},
         };
 
-        [Test, TestCaseSource("StartEndOfWeekWithCalendarWeekCases")]
+        [Test, TestCaseSource(nameof(StartEndOfWeekWithCalendarWeekCases))]
         public void StartOfWeekTest(int year, int calendarweek, DateTime startResult, DateTime endResult)
         {
             var datetime = DateTimeExtensions.StartOfWeek(year, calendarweek);
             AssertEqualDateTime(datetime, startResult);
         }
 
-        [Test, TestCaseSource("StartEndOfWeekWithCalendarWeekCases")]
+        [Test, TestCaseSource(nameof(StartEndOfWeekWithCalendarWeekCases))]
         public void EndOfWeekTest(int year, int calendarweek, DateTime startResult, DateTime endResult)
         {
             var datetime = DateTimeExtensions.EndOfWeek(year, calendarweek);
@@ -110,14 +110,14 @@ namespace Marvin.Tests.Extensions
             new object[] {new DateTime(2015, 6, 12), new DateTime(2015, 6, 1), new DateTime(2015, 6, 30, 23, 59, 59, 999)},
         };
 
-        [Test, TestCaseSource("StartEndOfMonthCases")]
+        [Test, TestCaseSource(nameof(StartEndOfMonthCases))]
         public void StartOfMonthTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
         {
             var startOfMonth = dateTime.StartOfMonth();
             AssertEqualDateTime(startOfMonth, resultStart);
         }
 
-        [Test, TestCaseSource("StartEndOfMonthCases")]
+        [Test, TestCaseSource(nameof(StartEndOfMonthCases))]
         public void EndOfMonthTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
         {
             var endOfMonth = dateTime.EndOfMonth();

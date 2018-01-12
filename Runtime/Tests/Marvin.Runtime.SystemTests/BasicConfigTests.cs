@@ -40,7 +40,7 @@ namespace Marvin.Runtime.SystemTests
         [SetUp]
         public void Setup()
         {
-            HogHelper.CopyTestModule("Marvin.TestModule.dll");
+            HogHelper.CopyAssembly("Marvin.TestModule.dll");
 
             _configManager = new RuntimeConfigManager
             {

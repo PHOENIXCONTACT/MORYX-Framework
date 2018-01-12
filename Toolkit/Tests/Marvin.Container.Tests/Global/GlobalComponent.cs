@@ -7,7 +7,7 @@ namespace Marvin.Container.Tests
     {
     }
 
-    [Model]
+    [Model("Some Namespace")]
     internal class ModelComponent
     {
         
