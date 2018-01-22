@@ -1,7 +1,10 @@
-﻿using Marvin.Runtime.Kernel.Tests.Mocks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Marvin.Configuration;
+using Marvin.Logging;
 using Marvin.Runtime.Kernel.Tests.ModuleMocks;
 using Marvin.Runtime.Modules;
-using Marvin.TestTools.SystemTest.Mocks;
+using Moq;
 using NUnit.Framework;
 
 namespace Marvin.Runtime.Kernel.Tests
@@ -9,35 +12,28 @@ namespace Marvin.Runtime.Kernel.Tests
     [TestFixture]
     public class ModuleManagerTests
     {
-        private ModuleManager _moduleManager;
-
         [SetUp]
         public void Setup()
         {
-            _moduleManager = new ModuleManager
-            {
-                ConfigManager = new ConfigManagerMock(),
-                LoggerManagement = new LoggerManagementMock(),
-            };
+            _mockConfigManager = new Mock<IConfigManager>();
+            var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = new List<ManagedModuleConfig>()};
+            _mockConfigManager.Setup(mock => mock.GetConfiguration<ModuleManagerConfig>()).Returns(moduleManagerConfig);
+
+            _mockLoggerManagement = new Mock<ILoggerManagement>();
+            var mockLogger = new Mock<IModuleLogger>();
+            _mockLoggerManagement.Setup(mock => mock.ActivateLogging(It.IsAny<ILoggingHost>()))
+                .Callback((ILoggingHost par) => par.Logger = mockLogger.Object);
         }
 
-        [Test]
-        public void FacadeInjection()
+
+        private ModuleManager CreateObjectUnderTest(IEnumerable<IServerModule> modules)
         {
-            // Arrange
-            var dependency = new ModuleA();
-            var depend = new ModuleADependend();
-            _moduleManager.ServerModules = new IServerModule[]
+            return new ModuleManager
             {
-                dependency,
-                depend
+                ServerModules = modules.ToArray(),
+                ConfigManager = _mockConfigManager.Object,
+                LoggerManagement = _mockLoggerManagement.Object
             };
-
-            // Act
-            _moduleManager.Initialize();
-
-            // Assert
-            Assert.NotNull(depend.Dependency, "Facade not injected correctly");
         }
 
         [Test]
@@ -45,16 +41,17 @@ namespace Marvin.Runtime.Kernel.Tests
         {
             // Arrange
             var dependend = new ModuleC();
-            _moduleManager.ServerModules = new IServerModule[]
+            var moduleManager = CreateObjectUnderTest(new IServerModule[]
             {
                 new ModuleB1(),
                 new ModuleB2(),
                 new ModuleB3(),
                 dependend
-            };
+            });
+
 
             // Act
-            _moduleManager.Initialize();
+            moduleManager.Initialize();
 
             // Assert
             Assert.NotNull(dependend.Facades, "No facade injected");
@@ -62,40 +59,119 @@ namespace Marvin.Runtime.Kernel.Tests
         }
 
         [Test]
+        public void FacadeCollectionNoEntry()
+        {
+            // Arrange
+            var dependend = new ModuleC();
+            var moduleManager = CreateObjectUnderTest(new IServerModule[]
+            {
+                dependend
+            });
+  
+            // Act
+            moduleManager.Initialize();
+
+            // Assert
+            Assert.NotNull(dependend.Facades, "No facade injected");
+            Assert.AreEqual(0, dependend.Facades.Length, "Faulty number of facades");
+        }
+
+        [Test]
         public void FacadeCollectionSingleEntry()
         {
             // Arrange
             var dependend = new ModuleC();
-            _moduleManager.ServerModules = new IServerModule[]
+            var moduleManager = CreateObjectUnderTest(new IServerModule[]
             {
                 new ModuleB1(),
                 dependend
-            };
+            });
 
             // Act
-            _moduleManager.Initialize();
+            moduleManager.Initialize();
 
             // Assert
             Assert.NotNull(dependend.Facades, "No facade injected");
             Assert.AreEqual(1, dependend.Facades.Length, "Faulty number of facades");
         }
 
+
         [Test]
-        public void FacadeCollectionNoEntry()
+        public void FacadeInjection()
         {
             // Arrange
-            var dependend = new ModuleC();
-            _moduleManager.ServerModules = new IServerModule[]
+            var dependency = new ModuleA();
+            var depend = new ModuleADependend();
+            var moduleManager = CreateObjectUnderTest(new IServerModule[]
             {
-                dependend
-            };
+                dependency,
+                depend
+            });
 
             // Act
-            _moduleManager.Initialize();
+            moduleManager.Initialize();
 
             // Assert
-            Assert.NotNull(dependend.Facades, "No facade injected");
-            Assert.AreEqual(0, dependend.Facades.Length, "Faulty number of facades");
+            Assert.NotNull(depend.Dependency, "Facade not injected correctly");
         }
+
+        [Test]
+        public void ShouldInitializeTheModule()
+        {
+            var mockModule = new Mock<IServerModule>();
+
+            var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
+            moduleManager.Initialize();
+
+            moduleManager.InitializeModule(mockModule.Object);
+
+            mockModule.Verify(mock => mock.Initialize());
+        }
+
+        [Test]
+        public void ShouldStartAllModules()
+        {
+            // Argange
+            var mockModule1 = new Mock<IServerModule>();
+            var mockModule2 = new Mock<IServerModule>();
+
+            var moduleManager = CreateObjectUnderTest(new[]
+            {
+                mockModule1.Object,
+                mockModule2.Object
+            });
+            moduleManager.Initialize();
+
+            // Act
+            moduleManager.StartModules();
+
+            // Assert
+
+            mockModule1.Verify(mock => mock.Initialize(), Times.Once);
+            mockModule1.Verify(mock => mock.Start());
+
+            mockModule2.Verify(mock => mock.Initialize(), Times.Once);
+            mockModule2.Verify(mock => mock.Start());
+        }
+
+        [Test]
+        public void ShouldStartOneModule()
+        {
+            // Argange
+            var mockModule = new Mock<IServerModule>();
+
+            var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
+            moduleManager.Initialize();
+
+            // Act
+            moduleManager.StartModule(mockModule.Object);
+
+            // Assert
+            mockModule.Verify(mock => mock.Initialize(), Times.Once);
+            mockModule.Verify(mock => mock.Start());
+        }
+
+        private Mock<IConfigManager> _mockConfigManager;
+        private Mock<ILoggerManagement> _mockLoggerManagement;
     }
 }

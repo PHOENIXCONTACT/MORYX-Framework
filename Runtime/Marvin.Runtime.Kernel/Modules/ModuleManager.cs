@@ -118,7 +118,7 @@ namespace Marvin.Runtime.Kernel
         /// <param name="module"></param>
         public void InitializeModule(IServerModule module)
         {
-            _moduleStarter.Initialize(module);
+            module.Initialize();
         }
 
         /// <summary>
@@ -147,9 +147,6 @@ namespace Marvin.Runtime.Kernel
         {
             // Stop execution
             _moduleStopper.Stop(module);
-
-            // Prepare for new start
-            _moduleStarter.Initialize(module);
 
             // Start all desired
             _moduleStarter.Start(module);

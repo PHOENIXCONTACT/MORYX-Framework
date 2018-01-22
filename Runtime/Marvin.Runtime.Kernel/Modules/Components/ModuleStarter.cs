@@ -20,26 +20,14 @@ namespace Marvin.Runtime.Kernel
             _config = config;
         }
 
-        /// <summary>
-        /// Initialize this module to try to achieve ready state
-        /// </summary>
-        public void Initialize(IServerModule module)
-        {
-            // TODO: Make better, why?
-            module.Initialize();
-        }
-
-        /// <summary>
-        /// Start a module and start dependencies if necessary
-        /// </summary>
+        /// <inheritdoc />
         public void Start(IServerModule plugin)
         {
+            plugin.Initialize();
             StartModule(plugin);   
         }
 
-        /// <summary>
-        /// Start all modules
-        /// </summary>
+        /// <inheritdoc />
         public void StartAll()
         {
             foreach (var module in AllModules())
@@ -81,7 +69,6 @@ namespace Marvin.Runtime.Kernel
             // Should be caught by ServerModuleBase but better be safe than sorry 
             try
             {
-                module.Initialize();
                 module.Start();
             }
             catch(Exception ex)
