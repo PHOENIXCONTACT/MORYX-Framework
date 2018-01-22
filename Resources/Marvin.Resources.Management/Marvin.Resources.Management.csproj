@@ -97,7 +97,6 @@
     <Compile Include="Resources\ResourceTypeNode.cs" />
     <Compile Include="Resources\ReferenceCollection.cs" />
     <Compile Include="Version\ModuleVersion.cs" />
-    <None Include="Version\ModuleVersion.template" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -119,7 +118,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir)..\..\." "$(ProjectDir)\Version\ModuleVersion.template" "$(ProjectDir)\Version\ModuleVersion.cs"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
