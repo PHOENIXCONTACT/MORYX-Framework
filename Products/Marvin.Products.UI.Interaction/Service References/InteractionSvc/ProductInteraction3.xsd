@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="ProductState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Created" />
+      <xs:enumeration value="Released" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ProductState" nillable="true" type="tns:ProductState" />
+  <xs:simpleType name="RecipeState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="New" />
+      <xs:enumeration value="Released" />
+      <xs:enumeration value="Revoked" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="RecipeState" nillable="true" type="tns:RecipeState" />
+</xs:schema>

@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4CA4F6B5-4C26-4B99-8FB9-937971883083}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Resources.Management</RootNamespace>
+    <AssemblyName>Marvin.Resources.Management</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\Modules\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ServiceRuntime\Modules\Marvin.Resources.Management.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\Modules\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ServiceRuntime\Modules\Marvin.Resources.Management.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Marvin.Container">
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Container.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Facades\ResourceManagementFacade.cs" />
+    <Compile Include="Interaction\Default\ResourceSerialization.cs" />
+    <Compile Include="Interaction\IRootResource.cs" />
+    <Compile Include="Interaction\Models\ResourceReferenceModel.cs" />
+    <Compile Include="Interaction\RootResource.cs" />
+    <Compile Include="Interaction\Default\IResourceInteraction.cs" />
+    <Compile Include="Interaction\Default\ResourceInteraction.cs" />
+    <Compile Include="Interaction\InteractionResource.cs" />
+    <Compile Include="Interaction\Models\ResourceModel.cs" />
+    <Compile Include="Interaction\Models\ResourceTypeModel.cs" />
+    <Compile Include="ModuleController\ModuleController.cs" />
+    <Compile Include="ModuleController\ModuleConsole.cs" />
+    <Compile Include="ModuleController\ModuleConfig.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Marvin">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.PlatformTools">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.PlatformTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime.Base">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.Base.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\IReferenceCollection.cs" />
+    <Compile Include="Resources\IResourceFactory.cs" />
+    <Compile Include="Resources\IResourceManager.cs" />
+    <Compile Include="Resources\IResourceTypeController.cs" />
+    <Compile Include="Resources\ResourceProxyBuilder.cs" />
+    <Compile Include="Resources\ResourceTypeController.cs" />
+    <Compile Include="Resources\ResourceCreationTemplate.cs" />
+    <Compile Include="Resources\ResourceManager.cs" />
+    <Compile Include="Resources\ResourceProxy.cs" />
+    <Compile Include="Resources\ResourceTypeNode.cs" />
+    <Compile Include="Resources\ReferenceCollection.cs" />
+    <Compile Include="Version\ModuleVersion.cs" />
+    <None Include="Version\ModuleVersion.template" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+      <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
+      <Name>Marvin.AbstractionLayer</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Resources.Model\Marvin.Resources.Model.csproj">
+      <Project>{e803d4a1-80da-40b7-b70c-42c4ed289f59}</Project>
+      <Name>Marvin.Resources.Model</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Notifications\Marvin.Notifications\Marvin.Notifications.csproj">
+      <Project>{4FB1BCA9-BD6D-478A-93C5-5CD4DE2A2337}</Project>
+      <Name>Marvin.Notifications</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>SubWCRev.exe "$(ProjectDir)..\..\." "$(ProjectDir)\Version\ModuleVersion.template" "$(ProjectDir)\Version\ModuleVersion.cs"</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{650756A0-E077-4632-8DA8-27214B5ACDA4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Products.Management</RootNamespace>
+    <AssemblyName>Marvin.Products.Management</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\Modules\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ServiceRuntime\Modules\Marvin.Products.Management.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\Modules\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ServiceRuntime\Modules\Marvin.Products.Management.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Implementation\ILinkStrategy.cs" />
+    <Compile Include="Implementation\Import\FileImportParameters.cs" />
+    <Compile Include="Implementation\Import\PrototypeImportParameters.cs" />
+    <Compile Include="Implementation\IProductTypeStrategy.cs" />
+    <Compile Include="Implementation\DefaultLinkStrategy.cs" />
+    <Compile Include="Implementation\PartialSerialization.cs" />
+    <Compile Include="Components\IWorkplanManagement.cs" />
+    <Compile Include="Implementation\PartSourceStrategy.cs" />
+    <Compile Include="Implementation\ProductStrategyBase.cs" />
+    <Compile Include="Implementation\RecipeStorage.cs" />
+    <Compile Include="Components\IProductImporterFactory.cs" />
+    <Compile Include="Components\IProductManager.cs" />
+    <Compile Include="Implementation\Import\ProductImporterBase.cs" />
+    <Compile Include="Implementation\ProductStorageBase.cs" />
+    <Compile Include="Components\IRecipeManagement.cs" />
+    <Compile Include="Implementation\RecipeManagement.cs" />
+    <Compile Include="Implementation\DefaultProductStrategy.cs" />
+    <Compile Include="Plugins\Importers\TriggersUpdateAttribute.cs" />
+    <Compile Include="Implementation\WorkplanManagement.cs" />
+    <Compile Include="Implementation\ProductManager.cs" />
+    <Compile Include="Implementation\ProductStructureEntry.cs" />
+    <Compile Include="Implementation\WorkplanReferenceType.cs" />
+    <Compile Include="Modification\IProductConverterFactory.cs" />
+    <Compile Include="Modification\Model\ImportParameter.cs" />
+    <Compile Include="Modification\Model\PartConnector.cs" />
+    <Compile Include="Modification\Model\PartModel.cs" />
+    <Compile Include="Modification\Model\ProductCustomization.cs" />
+    <Compile Include="Modification\Model\ProductModel.cs" />
+    <Compile Include="Modification\Model\ProductImporter.cs" />
+    <Compile Include="Modification\Model\ProductRevisionEntry.cs" />
+    <Compile Include="Modification\Model\RecipeModel.cs" />
+    <Compile Include="Modification\Model\StorageValue.cs" />
+    <Compile Include="Modification\Model\WorkplanModel.cs" />
+    <Compile Include="Modification\ProductConverter.cs" />
+    <Compile Include="Modification\Wcf\NullCustomization.cs" />
+    <Compile Include="Modification\Wcf\ProductInteraction.cs" />
+    <Compile Include="ModuleController\ModuleConfig.cs" />
+    <Compile Include="ModuleController\ModuleController.cs" />
+    <Compile Include="ModuleController\ModuleConsole.cs" />
+    <Compile Include="Plugins\ICustomization.cs" />
+    <Compile Include="Plugins\Importers\IImportParameters.cs" />
+    <Compile Include="Plugins\Importers\IProductImporter.cs" />
+    <Compile Include="Plugins\Importers\ProductImporterConfig.cs" />
+    <Compile Include="Plugins\IProductStorage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Facades\ProductManagementFacade.cs" />
+    <Compile Include="Modification\Wcf\IProductInteraction.cs" />
+    <Compile Include="Modification\IProductConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Marvin">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.PlatformTools">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.PlatformTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime.Base">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.Base.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Version\ModuleVersion.cs" />
+    <None Include="Version\ModuleVersion.template" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+      <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
+      <Name>Marvin.AbstractionLayer</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Products.Model\Marvin.Products.Model.csproj">
+      <Project>{99a470c6-1224-4475-937e-e7ca0266205c}</Project>
+      <Name>Marvin.Products.Model</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>SubWCRev.exe "$(ProjectDir)..\..\." "$(ProjectDir)\Version\ModuleVersion.template" "$(ProjectDir)\Version\ModuleVersion.cs"</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

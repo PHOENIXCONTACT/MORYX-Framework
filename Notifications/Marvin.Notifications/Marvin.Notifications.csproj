@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4FB1BCA9-BD6D-478A-93C5-5CD4DE2A2337}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Notifications</RootNamespace>
+    <AssemblyName>Marvin.Notifications</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\Bundles\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\Bundles\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ServiceRuntime\Bundles\Marvin.Notifications.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Marvin">
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.PlatformTools">
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.PlatformTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime">
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime.Base">
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.Base.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adapter\NotificationAdapter.cs" />
+    <Compile Include="NotificationExtensions.cs" />
+    <Compile Include="Notification\INotification.cs" />
+    <Compile Include="Facade\INotificationSource.cs" />
+    <Compile Include="Adapter\INotificationSender.cs" />
+    <Compile Include="Adapter\INotificationAdapter.cs" />
+    <Compile Include="Adapter\INotificationSenderAdapter.cs" />
+    <Compile Include="Notification\Notification.cs" />
+    <Compile Include="Facade\NotificationSourceFacade.cs" />
+    <Compile Include="Notification\Severity.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

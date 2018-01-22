@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{99A470C6-1224-4475-937E-E7CA0266205C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Products.Model</RootNamespace>
+    <AssemblyName>Marvin.Products.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\Models</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ServiceRuntime\Models\Marvin.Products.Model.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\Models</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ServiceRuntime\Models\Marvin.Products.Model.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Castle.Windsor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Devart.Data, Version=5.0.1056.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Devart.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Devart.Data.PostgreSql, Version=7.3.246.0, Culture=neutral, PublicKeyToken=09af7300eec23701, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Devart.Data.PostgreSql.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Effort">
+      <HintPath>..\..\.build\Test.Libs\Effort.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\EntityFramework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin">
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Model">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Marvin.Model.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\IArticleEntityRepository.cs" />
+    <Compile Include="API\IConnectorEntityRepository.cs" />
+    <Compile Include="API\IConnectorReferenceRepository.cs" />
+    <Compile Include="API\IOutputDescriptionEntityRepository.cs" />
+    <Compile Include="API\IPartLinkRepository.cs" />
+    <Compile Include="API\IProductDocumentRepository.cs" />
+    <Compile Include="API\IProductEntityRepository.cs" />
+    <Compile Include="API\IProductPropertiesRepository.cs" />
+    <Compile Include="API\IProductRecipeEntityRepository.cs" />
+    <Compile Include="API\IRevisionHistoryRepository.cs" />
+    <Compile Include="API\IStepEntityRepository.cs" />
+    <Compile Include="API\IWorkplanEntityRepository.cs" />
+    <Compile Include="API\IWorkplanReferenceRepository.cs" />
+    <Compile Include="DbContext\Products.Entities.cs" />
+    <Compile Include="Entities\ArticleEntity.cs" />
+    <Compile Include="Entities\ConnectorEntity.cs" />
+    <Compile Include="Entities\ConnectorReference.cs" />
+    <Compile Include="Entities\ConnectorRole.cs" />
+    <Compile Include="Entities\OutputDescriptionEntity.cs" />
+    <Compile Include="Entities\PartLink.cs" />
+    <Compile Include="Entities\ProductDocument.cs" />
+    <Compile Include="Entities\ProductEntity.Extension.cs" />
+    <Compile Include="Entities\ProductEntity.cs" />
+    <Compile Include="Entities\ProductProperties.cs" />
+    <Compile Include="Entities\ProductRecipeEntity.cs" />
+    <Compile Include="Entities\RevisionHistory.cs" />
+    <Compile Include="Entities\StepEntity.cs" />
+    <Compile Include="Entities\WorkplanEntity.cs" />
+    <Compile Include="Entities\WorkplanReference.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repos\ArticleEntityRepository.cs" />
+    <Compile Include="Repos\ConnectorEntityRepository.cs" />
+    <Compile Include="Repos\ConnectorReferenceRepository.cs" />
+    <Compile Include="Repos\DbConfig.cs" />
+    <Compile Include="Repos\EntityFrameworkMergedUnitOfWork.cs" />
+    <Compile Include="Repos\EntityFrameworkUnitOfWork.cs" />
+    <Compile Include="Repos\EntityFrameworkUnitOfWorkFactory.cs" />
+    <Compile Include="Repos\InMemoryUnitOfWorkFactory.cs" />
+    <Compile Include="Repos\ModelConfigurator.cs" />
+    <Compile Include="Repos\ModelConstants.cs" />
+    <Compile Include="Repos\OutputDescriptionEntityRepository.cs" />
+    <Compile Include="Repos\PartLinkRepository.cs" />
+    <Compile Include="Repos\ProductDocumentRepository.cs" />
+    <Compile Include="Repos\ProductEntityRepository.cs" />
+    <Compile Include="Repos\ProductPropertiesRepository.cs" />
+    <Compile Include="Repos\ProductRecipeEntityRepository.cs" />
+    <Compile Include="Repos\RevisionHistoryRepository.cs" />
+    <Compile Include="Repos\StepEntityRepository.cs" />
+    <Compile Include="Repos\WorkplanEntityRepository.cs" />
+    <Compile Include="Repos\WorkplanReferenceRepository.cs" />
+    <Compile Include="Scripts\CreateIndexes.cs" />
+    <Compile Include="Scripts\CreateTriggers.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Inheritance\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\README.txt" />
+    <EmbeddedResource Include="Model\Products.csdl" />
+    <EmbeddedResource Include="Model\Products.msl" />
+    <EmbeddedResource Include="Model\Products.ssdl" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

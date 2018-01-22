@@ -1,0 +1,27 @@
+namespace Marvin.AbstractionLayer.Drivers.Marking
+{
+    /// <summary>
+    /// Class representing a marking file for laser printing devices
+    /// </summary>
+    public class MarkingFile
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MarkingFile"/> class.
+        /// </summary>
+        public MarkingFile(string fileName, byte[] fileBytes)
+        {
+            FileName = fileName;
+            FileBytes = fileBytes;
+        }
+
+        /// <summary>
+        /// Gets the name of the file.
+        /// </summary>
+        public string FileName { get; private set; }
+
+        /// <summary>
+        /// File to mark with the laser
+        /// </summary>
+        public byte[] FileBytes { get; private set; }
+    }
+}

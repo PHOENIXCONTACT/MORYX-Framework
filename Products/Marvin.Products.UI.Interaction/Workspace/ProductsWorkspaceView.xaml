@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="Marvin.Products.UI.Interaction.ProductsWorkspaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:interaction="clr-namespace:Marvin.Products.UI.Interaction"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:c4i="clr-namespace:C4I;assembly=Controls4Industry"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance interaction:ProductsWorkspaceViewModel}"
+             d:DesignHeight="616" d:DesignWidth="1077">
+    <UserControl.Resources>
+        <c4i:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+        <c4i:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </UserControl.Resources>
+    <DockPanel Margin="5,5,5,5" Background="White" LastChildFill="True">
+        <TextBlock Eddie.TextFormat="Header1" DockPanel.Dock="Top">
+            Products
+        </TextBlock>
+
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="300" Width="Auto" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <DockPanel>
+                    <EddieButton DockPanel.Dock="Bottom" Content="Import" Icon="Copy" Command="{Binding ImportDialogCmd}"
+                                 HorizontalAlignment="Left" Margin="0,5,0,0"/>
+                    <EddieTextBox DockPanel.Dock="Top" Margin="0,0,5,5" Watermark="Search" Icon="Magnifier" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                    <EddieTreeView DockPanel.Dock="Top" ItemsSource="{Binding DisplayStructure}" VerticalAlignment="Stretch"
+                                   cal:Message.Attach="[Event SelectedItemChanged] = [Action OnMasterItemChanged($source, $eventArgs)]"
+                                   IsEnabled="{Binding IsDetailsInBusyMode, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,5,0">
+                        <EddieTreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type EddieTreeViewItem}">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                        </EddieTreeView.ItemContainerStyle>
+                        <EddieTreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type interaction:StructureEntryViewModel}" ItemsSource="{Binding Branches}">
+                                <TextBlock Text="{Binding Name}" Eddie.TextFormat="Bold"/>
+                            </HierarchicalDataTemplate>
+                        </EddieTreeView.Resources>
+                    </EddieTreeView>
+                </DockPanel>
+                <EddieBusyIndicator Width="60" Height="60" Visibility="{Binding IsMasterBusy, Converter={StaticResource VisibilityConverter}}" />
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                        <EddieButton Icon="Plus" Margin="5,0,0,0" EddieStyle="Gray" Content="New Revision"
+                                     Command="{Binding CreateRevisionCmd}"/>
+                        
+                        <EddieButton Icon="Binocular" Margin="5,0,0,0" EddieStyle="Gray" Content="Revisions"
+                                     Command="{Binding ShowRevisionsCmd}"/>
+                        
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <EddieButton Icon="Cross" Margin="0,0,5,0" EddieStyle="Gray" Content="Cancel"
+                                     Command="{Binding CurrentDetails.CancelEditCmd}"/>
+                            <EddieButton Icon="Pencil" Margin="0,0,5,0" EddieStyle="Gray" Content="Edit"
+                                     Command="{Binding CurrentDetails.EditModeCmd}"/>
+                            <EddieButton Icon="CheckMark" EddieStyle="Gray" Content="Save"
+                                     Command="{Binding CurrentDetails.SaveCmd}"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <ContentControl DockPanel.Dock="Top" Margin="5,0"
+                                    cal:View.Model="{Binding ActiveItem}" />
+                </DockPanel>
+
+
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"
+                      Visibility="{Binding IsDetailsInBusyMode, Converter={StaticResource VisibilityConverter}}">
+                    <EddieBusyIndicator Width="60" Height="60" Visibility="{Binding IsDetailsInBusyMode, Converter={StaticResource VisibilityConverter}}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</UserControl>
+

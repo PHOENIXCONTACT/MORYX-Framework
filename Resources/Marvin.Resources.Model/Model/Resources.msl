@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EntitiesStoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="ResourceEntities">
+      <EntityTypeMapping TypeName="Marvin.Resources.Model.ResourceEntity">
+        <MappingFragment StoreEntitySet="ResourceEntities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="LocalIdentifier" ColumnName="LocalIdentifier" />
+          <ScalarProperty Name="GlobalIdentifier" ColumnName="GlobalIdentifier" />
+          <ScalarProperty Name="ExtensionData" ColumnName="ExtensionData" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ResourceRelations">
+      <EntityTypeMapping TypeName="Marvin.Resources.Model.ResourceRelation">
+        <MappingFragment StoreEntitySet="ResourceRelations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RelationType" ColumnName="RelationType" />
+          <ScalarProperty Name="RelationName" ColumnName="RelationName" />
+          <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+          <ScalarProperty Name="TargetId" ColumnName="TargetId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

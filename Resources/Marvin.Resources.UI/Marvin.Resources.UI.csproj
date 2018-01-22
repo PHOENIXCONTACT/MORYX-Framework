@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AFE31117-C539-48F9-8EA5-4044AAA22C69}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Resources.UI</RootNamespace>
+    <AssemblyName>Marvin.Resources.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\ClientRuntime\Bundles\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ClientRuntime\Bundles\Marvin.Resources.UI.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Build\ClientRuntime\Bundles\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\ClientRuntime\Bundles\Marvin.Resources.UI.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\..\Build\ClientRuntime\Libraries\Caliburn.Micro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin">
+      <HintPath>..\..\Build\ClientRuntime\Marvin.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.ClientFramework">
+      <HintPath>..\..\Build\ClientRuntime\Core\Marvin.ClientFramework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.ClientFramework.Base">
+      <HintPath>..\..\Build\ClientRuntime\Core\Marvin.ClientFramework.Base.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Controls">
+      <HintPath>..\..\Build\ClientRuntime\Libraries\Marvin.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.PlatformTools">
+      <HintPath>..\..\Build\ClientRuntime\Marvin.PlatformTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Details\IResourceDetails.cs" />
+    <Compile Include="ResourceMethods\IConstructorViewModel.cs" />
+    <Compile Include="ResourceMethods\IMethodInvocationViewModel.cs" />
+    <Compile Include="ResourceMethods\IResourceMethodViewModel.cs" />
+    <Compile Include="Types\IResourceTypeViewModel.cs" />
+    <Compile Include="Types\ITypeSelectorViewModel.cs" />
+    <Compile Include="IResourceDialogFactory.cs" />
+    <Compile Include="IResourceInteractionController.cs" />
+    <Compile Include="ResourceInteractionControllerBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Details\ResourceDetailsRegistrationAttribute.cs" />
+    <Compile Include="ResourceInteractionRegistrationAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AbstractionLayer.UI\Marvin.AbstractionLayer.UI.csproj">
+      <Project>{b9920541-7e0e-4cde-b195-b18589a2bbb1}</Project>
+      <Name>Marvin.AbstractionLayer.UI</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

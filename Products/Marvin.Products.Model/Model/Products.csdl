@@ -1,0 +1,523 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Marvin.Products.Model" Alias="Self" d1p1:ViewGeneration="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:devart="http://devart.com/schemas/edml/ConceptualSchemaExtensions/1.0" xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" annotation:UseStrongSpatialTypes="false" xmlns:d1p1="http://devart.com/schemas/edml/ConceptualSchemaExtensions/1.0" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true" ed:Guid="f9480777-52b0-4431-bcb7-e1f0b9f0e7e1">
+    <EntitySet Name="ProductEntities" EntityType="Marvin.Products.Model.ProductEntity" />
+    <EntitySet Name="PartLinks" EntityType="Marvin.Products.Model.PartLink" />
+    <EntitySet Name="RevisionHistories" EntityType="Marvin.Products.Model.RevisionHistory" />
+    <EntitySet Name="ProductRecipeEntities" EntityType="Marvin.Products.Model.ProductRecipeEntity" />
+    <EntitySet Name="ProductProperties" EntityType="Marvin.Products.Model.ProductProperties" />
+    <EntitySet Name="ArticleEntities" EntityType="Marvin.Products.Model.ArticleEntity" />
+    <EntitySet Name="WorkplanEntities" EntityType="Marvin.Products.Model.WorkplanEntity" />
+    <EntitySet Name="ProductDocuments" EntityType="Marvin.Products.Model.ProductDocument" />
+    <EntitySet Name="WorkplanReferences" EntityType="Marvin.Products.Model.WorkplanReference" />
+    <EntitySet Name="StepEntities" EntityType="Marvin.Products.Model.StepEntity" />
+    <EntitySet Name="ConnectorEntities" EntityType="Marvin.Products.Model.ConnectorEntity" />
+    <EntitySet Name="ConnectorReferences" EntityType="Marvin.Products.Model.ConnectorReference" />
+    <EntitySet Name="OutputDescriptionEntities" EntityType="Marvin.Products.Model.OutputDescriptionEntity" />
+    <AssociationSet Name="ProductEntity_PartLinkSet" Association="Marvin.Products.Model.ProductEntity_PartLink">
+      <End Role="Parent" EntitySet="ProductEntities" />
+      <End Role="Parts" EntitySet="PartLinks" />
+    </AssociationSet>
+    <AssociationSet Name="ProductEntity_PartLink1Set" Association="Marvin.Products.Model.ProductEntity_PartLink1">
+      <End Role="Child" EntitySet="ProductEntities" />
+      <End Role="Parents" EntitySet="PartLinks" />
+    </AssociationSet>
+    <AssociationSet Name="ProductEntity_RevisionHistorySet" Association="Marvin.Products.Model.ProductEntity_RevisionHistory">
+      <End Role="ProductRevision" EntitySet="ProductEntities" />
+      <End Role="RevisionHistories" EntitySet="RevisionHistories" />
+    </AssociationSet>
+    <AssociationSet Name="ProductEntity_ProductRecipeSet" Association="Marvin.Products.Model.ProductEntity_ProductRecipe">
+      <End Role="Product" EntitySet="ProductEntities" />
+      <End Role="Recipes" EntitySet="ProductRecipeEntities" />
+    </AssociationSet>
+    <AssociationSet Name="ProductEntity_ProductVersionSet" Association="Marvin.Products.Model.ProductEntity_ProductVersion">
+      <End Role="Product" EntitySet="ProductEntities" />
+      <End Role="OldVersions" EntitySet="ProductProperties" />
+    </AssociationSet>
+    <AssociationSet Name="ProductEntity_ArticleSet" Association="Marvin.Products.Model.ProductEntity_Article">
+      <End Role="Product" EntitySet="ProductEntities" />
+      <End Role="Instances" EntitySet="ArticleEntities" />
+    </AssociationSet>
+    <AssociationSet Name="WorkplanEntity_ProductRecipeSet" Association="Marvin.Products.Model.WorkplanEntity_ProductRecipe">
+      <End Role="Workplan" EntitySet="WorkplanEntities" />
+      <End Role="Recipes" EntitySet="ProductRecipeEntities" />
+    </AssociationSet>
+    <AssociationSet Name="ProductProperties_ProductEntitySet" Association="Marvin.Products.Model.ProductProperties_ProductEntity">
+      <End Role="CurrentVersion" EntitySet="ProductProperties" />
+      <End Role="Products" EntitySet="ProductEntities" />
+    </AssociationSet>
+    <AssociationSet Name="ProductEntity_ProductDocumentSet" Association="Marvin.Products.Model.ProductEntity_ProductDocument">
+      <End Role="Product" EntitySet="ProductEntities" />
+      <End Role="Documents" EntitySet="ProductDocuments" />
+    </AssociationSet>
+    <AssociationSet Name="ArticleEntity_ArticleEntitySet" Association="Marvin.Products.Model.ArticleEntity_ArticleEntity">
+      <End Role="Parent" EntitySet="ArticleEntities" />
+      <End Role="Parts" EntitySet="ArticleEntities" />
+    </AssociationSet>
+    <AssociationSet Name="PartLink_ArticleEntitySet" Association="Marvin.Products.Model.PartLink_ArticleEntity">
+      <End Role="PartLink" EntitySet="PartLinks" />
+      <End Role="Articles" EntitySet="ArticleEntities" />
+    </AssociationSet>
+    <AssociationSet Name="WorkplanEntity_WorkplanReferenceSet" Association="Marvin.Products.Model.WorkplanEntity_WorkplanReference">
+      <End Role="Target" EntitySet="WorkplanEntities" />
+      <End Role="SourceReferences" EntitySet="WorkplanReferences" />
+    </AssociationSet>
+    <AssociationSet Name="WorkplanEntity_WorkplanReference1Set" Association="Marvin.Products.Model.WorkplanEntity_WorkplanReference1">
+      <End Role="Source" EntitySet="WorkplanEntities" />
+      <End Role="TargetReferences" EntitySet="WorkplanReferences" />
+    </AssociationSet>
+    <AssociationSet Name="WorkplanEntity_ConnectorEntitySet" Association="Marvin.Products.Model.WorkplanEntity_ConnectorEntity">
+      <End Role="Workplan" EntitySet="WorkplanEntities" />
+      <End Role="Connectors" EntitySet="ConnectorEntities" />
+    </AssociationSet>
+    <AssociationSet Name="WorkplanEntity_StepEntitySet" Association="Marvin.Products.Model.WorkplanEntity_StepEntity">
+      <End Role="Workplan" EntitySet="WorkplanEntities" />
+      <End Role="Steps" EntitySet="StepEntities" />
+    </AssociationSet>
+    <AssociationSet Name="StepEntity_SubWorkplanSet" Association="Marvin.Products.Model.StepEntity_SubWorkplan">
+      <End Role="SubWorkplan" EntitySet="WorkplanEntities" />
+      <End Role="Parents" EntitySet="StepEntities" />
+    </AssociationSet>
+    <AssociationSet Name="ConnectorEntity_ConnectorReferenceSet" Association="Marvin.Products.Model.ConnectorEntity_ConnectorReference">
+      <End Role="Connector" EntitySet="ConnectorEntities" />
+      <End Role="Usages" EntitySet="ConnectorReferences" />
+    </AssociationSet>
+    <AssociationSet Name="StepEntity_ConnectorReferenceSet" Association="Marvin.Products.Model.StepEntity_ConnectorReference">
+      <End Role="Step" EntitySet="StepEntities" />
+      <End Role="Connectors" EntitySet="ConnectorReferences" />
+    </AssociationSet>
+    <AssociationSet Name="StepEntity_OutputDescriptionEntitySet" Association="Marvin.Products.Model.StepEntity_OutputDescriptionEntity">
+      <End Role="Step" EntitySet="StepEntities" />
+      <End Role="OutputDescriptions" EntitySet="OutputDescriptionEntities" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="ProductEntity" ed:Guid="c72987f5-5c73-4cea-bfbd-70727e30a97f">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="f151fdbb-2347-40b3-968c-5f77048e36ce" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="164c085f-6d6f-4331-93fe-62fc43cc82ae" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="35c6829f-affc-469d-9ae4-2e161654b1f3" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="fc70532a-70d0-4812-92a4-c84e463fdd3e" />
+    <Property Name="MaterialNumber" Type="String" Nullable="false" MaxLength="127" ed:ValidateMaxLength="127" ed:ValidateRequired="true" ed:Guid="bb2305bd-2425-47a0-8301-1ce70ecf5c9e" ed:ConditionalGet="True" ed:CombinedGetGroups="ByIdentity" />
+    <Property Name="Revision" Type="Int16" Nullable="false" ed:ValidateRequired="true" ed:Guid="0a6b525f-7e0d-43b2-a19d-a43c3575fb0a" ed:CombinedGetGroups="ByIdentity" />
+    <Property Name="TypeName" Type="String" Nullable="false" MaxLength="127" ed:ValidateMaxLength="127" ed:ValidateRequired="true" ed:Guid="3b711bf0-cc2a-49a6-8a85-7fa1fc5f3daf" />
+    <Property Name="CurrentVersionId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="eb7dd02f-b2bd-4427-b899-a43ebaf0b33f" />
+    <NavigationProperty Name="Parts" Relationship="Marvin.Products.Model.ProductEntity_PartLink" FromRole="Parent" ToRole="Parts" ed:Guid="2ef9ec76-d16c-4663-873f-21b72b0e36f0" />
+    <NavigationProperty Name="Parents" Relationship="Marvin.Products.Model.ProductEntity_PartLink1" FromRole="Child" ToRole="Parents" ed:Guid="3633f664-26bb-4227-bcd4-2546e0f45514" />
+    <NavigationProperty Name="Recipes" Relationship="Marvin.Products.Model.ProductEntity_ProductRecipe" FromRole="Product" ToRole="Recipes" ed:Guid="477500d3-1404-4b72-b6e7-0ec63ad566fe" />
+    <NavigationProperty Name="OldVersions" Relationship="Marvin.Products.Model.ProductEntity_ProductVersion" FromRole="Product" ToRole="OldVersions" ed:Guid="d550810d-7cdc-4d4f-8481-13ae3de504f2" />
+    <NavigationProperty Name="CurrentVersion" Relationship="Marvin.Products.Model.ProductProperties_ProductEntity" FromRole="Products" ToRole="CurrentVersion" d3p1:SetterAccess="Internal" devart:SetterAccess="ProtectedInternal" ed:Guid="4b200a98-f202-4b58-9691-a4ceae9b2854" xmlns:d6p1="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:d3p1="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+    <NavigationProperty Name="Documents" Relationship="Marvin.Products.Model.ProductEntity_ProductDocument" FromRole="Product" ToRole="Documents" ed:Guid="2b43a608-b66e-41a2-ae61-d8a5c2a6fe1a" />
+  </EntityType>
+  <EntityType Name="PartLink" ed:Guid="0fb3d977-d7b4-4dab-b3a9-3b97cb14e086">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="610366a8-9bfb-41a4-9e4f-dfe7479fc328" />
+    <Property Name="ParentId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="a2455681-ab8d-4045-a92b-697567ce96e7" />
+    <Property Name="ChildId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="d1757d4b-0d0b-4f1b-b035-f7f739e92dc1" />
+    <Property Name="PropertyName" Type="String" Nullable="false" MaxLength="127" ed:ValidateMaxLength="127" ed:ValidateRequired="true" ed:Guid="bf2b2840-90c4-47fc-9e6a-cd80e2278208" />
+    <NavigationProperty Name="Parent" Relationship="Marvin.Products.Model.ProductEntity_PartLink" FromRole="Parts" ToRole="Parent" ed:Guid="8b5e97f6-22a3-4882-86f4-a218df58091b" />
+    <NavigationProperty Name="Child" Relationship="Marvin.Products.Model.ProductEntity_PartLink1" FromRole="Parents" ToRole="Child" ed:Guid="da00e859-3b12-413a-bd9b-79bef1badfa6" />
+  </EntityType>
+  <EntityType Name="RevisionHistory" ed:Guid="e030c565-e3fa-4481-b88e-f2add36eb790">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="56cc5e96-64eb-46f6-bc22-be1743e97af8" />
+    <Property Name="Comment" Type="String" Nullable="false" MaxLength="4095" ed:ValidateMaxLength="4095" ed:ValidateRequired="true" ed:Guid="cc66406a-b76e-4572-a2dc-e0dc4e0e2484" />
+    <Property Name="ProductRevisionId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="97ecfd77-cff9-48f2-a59b-c51c534735ec" />
+    <NavigationProperty Name="ProductRevision" Relationship="Marvin.Products.Model.ProductEntity_RevisionHistory" FromRole="RevisionHistories" ToRole="ProductRevision" ed:Guid="18597f03-38ef-47ab-a274-2d2695b563a9" />
+  </EntityType>
+  <EntityType Name="ProductRecipeEntity" ed:Guid="b092e5f6-ba92-4f56-ad09-b75359cc1f4d">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="f66eb412-184f-4111-a48e-c0525288f97a" />
+    <Property Name="Name" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="a6123196-6caa-407b-8648-d483c5b9b82d" />
+    <Property Name="Revision" Type="Int32" Nullable="false" DefaultValue="0" ed:ValidateRequired="true" ed:Guid="e31969c8-b7c4-4075-9b8c-23af70eae8bf" />
+    <Property Name="Classification" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="1cdfb82c-99fd-4a11-855f-9be96090335e" />
+    <Property Name="State" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="32a16bfb-8d32-43dc-9b79-4e3df9c945c8" />
+    <Property Name="WorkplanId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="198e0d44-2f59-4991-b406-4caa88654f6e" />
+    <Property Name="ProductId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="dec8a59c-c819-4491-8802-df87c96560bb" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="c07f4275-4947-4065-a231-0ec57d697a9a" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="2f07f69a-940a-44dc-b8f6-56ce9e1634f4" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="4826173b-6c49-4557-950b-85b3045ce56b" />
+    <NavigationProperty Name="Product" Relationship="Marvin.Products.Model.ProductEntity_ProductRecipe" FromRole="Recipes" ToRole="Product" ed:Guid="820a3d9c-f84b-4024-bad6-7db1e5f8493f" />
+    <NavigationProperty Name="Workplan" Relationship="Marvin.Products.Model.WorkplanEntity_ProductRecipe" FromRole="Recipes" ToRole="Workplan" ed:Guid="5431a88f-9e32-497a-bdad-bae327f7c05b" />
+  </EntityType>
+  <EntityType Name="ProductProperties" ed:Guid="edc1d142-69a0-40e3-be1f-29b39e7a194f">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="ba02e492-421f-4585-8264-67da2c43ebd0" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="8b2600e7-a88d-4412-990a-4a9ee5a207b2" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="83b22bcf-6907-465f-8ecf-3a973e77e753" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="9e564b12-aee9-489c-b9e9-34e8250e742d" />
+    <Property Name="State" Type="Int32" Nullable="false" DefaultValue="0" ed:ValidateRequired="true" ed:Guid="4caa2b38-6cfd-4cf8-abf3-e3b614bebd0b" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="255" ed:ValidateMaxLength="255" ed:ValidateRequired="true" ed:Guid="b98f3499-b47f-4893-bb70-4e8c41db6353" />
+    <Property Name="ProductId" Type="Int64" ed:ValidateRequired="false" ed:Guid="a7806a34-5c9c-479f-bc7f-80de86c31beb" />
+  </EntityType>
+  <EntityType Name="ArticleEntity" ed:Guid="a8e791d9-7fa2-4574-922a-7ac116d22e25">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="8abd8c19-f3b7-426d-bd8c-c631548777c4" />
+    <Property Name="State" Type="Int64" Nullable="false" DefaultValue="0" ed:ValidateRequired="true" ed:Guid="ef308974-d34a-40cf-8a7e-00d3b51548de" ed:ConditionalGetAll="True" />
+    <Property Name="ProductionDate" Type="DateTime" Nullable="false" ed:ValidateRequired="true" ed:Guid="334ee054-6c6b-4a09-90cf-3996b49da7e1" />
+    <Property Name="Identifier" Type="String" ed:ValidateRequired="false" ed:Guid="19c3fc9f-b3ed-46b2-969f-055be780346a" />
+    <Property Name="NumberType" Type="Int32" Nullable="false" DefaultValue="0" ed:ValidateRequired="true" ed:Guid="9340cdd6-8d63-43ad-a4f2-fcefc8b4bf7d" />
+    <Property Name="ProductId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="9f0d57a0-da26-4392-81c8-7f09c5470b30" />
+    <Property Name="ParentId" Type="Int64" ed:ValidateRequired="true" ed:Guid="50d6aef0-03f2-4b91-80b9-51313d8b5f23" />
+    <Property Name="ExtensionData" Type="String" ed:ValidateRequired="false" ed:Guid="e6849ea8-5611-4a5b-9e8b-5c8782293296" />
+    <Property Name="PartLinkId" Type="Int64" ed:ValidateRequired="false" ed:Guid="7b266f9f-36b6-4fd7-aeca-6a76b5ec1dc7" />
+    <NavigationProperty Name="Product" Relationship="Marvin.Products.Model.ProductEntity_Article" FromRole="Instances" ToRole="Product" ed:Guid="0c85ee14-14eb-4a5d-82c5-2c6d77c7e538" />
+    <NavigationProperty Name="Parts" Relationship="Marvin.Products.Model.ArticleEntity_ArticleEntity" FromRole="Parent" ToRole="Parts" ed:Guid="c6d8b281-e4d1-4de0-9745-d6b593c8e53e" />
+    <NavigationProperty Name="Parent" Relationship="Marvin.Products.Model.ArticleEntity_ArticleEntity" FromRole="Parts" ToRole="Parent" ed:Guid="f3147fdb-8f27-4c2e-af8b-7d3674babea4" />
+    <NavigationProperty Name="PartLink" Relationship="Marvin.Products.Model.PartLink_ArticleEntity" FromRole="Articles" ToRole="PartLink" ed:Guid="e621dbdd-3f78-4b43-9467-99231ca26e00" />
+  </EntityType>
+  <EntityType Name="WorkplanEntity" ed:Guid="db37be1e-3cfb-4b0c-8c7a-f8f740df6dd6">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="e96d5c18-a8ee-4df0-818d-3ffc38cea404" />
+    <Property Name="Name" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="e491170e-0706-4580-b406-1d8970567960" />
+    <Property Name="Version" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="4c63b23d-66df-48de-80ca-2c5fba5153ba" />
+    <Property Name="State" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="1bdeec5f-9215-4587-90c0-37c14a3d406d" />
+    <Property Name="MaxElementId" Type="Int32" Nullable="false" DefaultValue="0" ed:ValidateRequired="true" ed:Guid="ae5a6627-16e9-42c5-8b12-29ea7753dfab" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="d01e2a0a-ce57-4707-bfb1-c8437e04b3d0" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="05e562f8-c021-4c9f-9cf5-37beb8aca5ac" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="01e8c822-60d5-4070-a1b6-99d1f5cddd06" />
+    <NavigationProperty Name="Recipes" Relationship="Marvin.Products.Model.WorkplanEntity_ProductRecipe" FromRole="Workplan" ToRole="Recipes" ed:Guid="6e33d84a-3d6d-43db-8549-e2e0107e3608" />
+    <NavigationProperty Name="SourceReferences" Relationship="Marvin.Products.Model.WorkplanEntity_WorkplanReference" FromRole="Target" ToRole="SourceReferences" ed:Guid="0a3e7e79-c49c-49a8-9fb1-357f1eace32d" />
+    <NavigationProperty Name="TargetReferences" Relationship="Marvin.Products.Model.WorkplanEntity_WorkplanReference1" FromRole="Source" ToRole="TargetReferences" ed:Guid="69da9441-8f6d-4fc2-ad44-a9c2bdb232c4" />
+    <NavigationProperty Name="Connectors" Relationship="Marvin.Products.Model.WorkplanEntity_ConnectorEntity" FromRole="Workplan" ToRole="Connectors" ed:Guid="d1168a8a-13db-4991-aae3-d7c0bf7ea407" />
+    <NavigationProperty Name="Steps" Relationship="Marvin.Products.Model.WorkplanEntity_StepEntity" FromRole="Workplan" ToRole="Steps" ed:Guid="c2eda5e3-bf78-4c2f-af8a-cdf942e87fb0" />
+    <NavigationProperty Name="Parents" Relationship="Marvin.Products.Model.StepEntity_SubWorkplan" FromRole="SubWorkplan" ToRole="Parents" ed:Guid="647f5a67-aa4c-47b0-846b-a0befc54d8a3" />
+  </EntityType>
+  <EntityType Name="ProductDocument" ed:Guid="ea3a2a1f-cbc0-430c-ab12-ed59118eefd8">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="43d59cbe-8256-4fec-980f-e7ebe1efb1b6" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="af19b87e-8b76-4ae5-b65d-3c4972482f1b" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="c39272d6-440a-4c85-a024-c19f62fe57a1" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="4dba2ebb-972d-4b4f-a297-c8bc571c3da1" />
+    <Property Name="FileName" Type="String" Nullable="false" MaxLength="255" ed:ValidateMaxLength="255" ed:ValidateRequired="true" ed:Guid="0b45cc8b-7585-416a-9f77-59355e99271e" />
+    <Property Name="FilesystemPath" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="3c136a90-1794-4ffd-9f88-7ec0eced7831" />
+    <Property Name="File" Type="Binary" ed:ValidateRequired="false" ed:Guid="467cd70b-dedd-4927-aaaa-1c084d37e4cc" />
+    <Property Name="Version" Type="Int32" Nullable="false" DefaultValue="1" ed:ValidateRequired="true" ed:Guid="4e013fb4-b1e6-43c5-a435-da2c0b024cb6" />
+    <Property Name="Hash" Type="String" ed:ValidateRequired="false" ed:Guid="b61aa4ba-1ebd-4f82-ac11-e67b900f9517" />
+    <Property Name="ProductId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="fbf92ed1-402b-46b9-94ff-3fbe9a2b0367" />
+    <NavigationProperty Name="Product" Relationship="Marvin.Products.Model.ProductEntity_ProductDocument" FromRole="Documents" ToRole="Product" ed:Guid="b43f43f6-1ebe-48ea-b4f4-39faad5723e6" />
+  </EntityType>
+  <EntityType Name="WorkplanReference" ed:Guid="b683a077-fe74-43bc-82a4-1fb2bde090fe">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="1b7d1ab6-971c-4fb5-8a95-5771ab7ebdee" />
+    <Property Name="ReferenceType" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="2c3c04cd-d113-4c4e-a3f8-2fb599ddf0ab" />
+    <Property Name="SourceId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="af0d06cc-a330-46f8-baae-103b05623a7c" />
+    <Property Name="TargetId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="d3e8b00f-4edc-4c55-aae9-adb9589039a7" />
+    <NavigationProperty Name="Target" Relationship="Marvin.Products.Model.WorkplanEntity_WorkplanReference" FromRole="SourceReferences" ToRole="Target" ed:Guid="d2e5408d-f6c0-41e3-96f5-f5d40b1c72d6" />
+    <NavigationProperty Name="Source" Relationship="Marvin.Products.Model.WorkplanEntity_WorkplanReference1" FromRole="TargetReferences" ToRole="Source" ed:Guid="582d044b-abb8-4f40-a920-a12c21bedf11" />
+  </EntityType>
+  <EntityType Name="StepEntity" ed:Guid="1922c048-0cc1-4937-8f3e-5a7ef668f567">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="148f4116-dad3-4faf-b9e8-f70344e1459e" />
+    <Property Name="StepId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="d9b5bf06-c194-457e-8208-6498f463c22d" />
+    <Property Name="Name" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="94a683bd-9b51-4a1f-9d8d-ff6d44a62f08" />
+    <Property Name="Assembly" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="f19096b4-7e04-43ab-aba5-08b03b9d62d7" />
+    <Property Name="NameSpace" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="52e5c292-6bd1-4adc-b30e-b7c3264117b3" />
+    <Property Name="Classname" Type="String" Nullable="false" ed:ValidateRequired="true" ed:Guid="ea8283c8-e962-47fd-91f4-40cc0f6e6344" />
+    <Property Name="Parameters" Type="String" ed:ValidateRequired="false" ed:Guid="f4956de5-3a37-43ef-bcf5-3abd51f4a811" />
+    <Property Name="WorkplanId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="00c50afa-10ed-4f0d-9704-0c7f8c8d3dec" />
+    <Property Name="SubWorkplanId" Type="Int64" ed:ValidateRequired="true" ed:Guid="ca0e461a-29bf-4572-9014-dcde0f88f659" />
+    <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="04496c67-c736-439b-b752-c57a83ba6b55" />
+    <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="5dbac2cf-daff-435f-910e-171361617d8f" />
+    <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="fa0e1aab-090a-4bf2-9f3f-7f94ab340627" />
+    <NavigationProperty Name="Workplan" Relationship="Marvin.Products.Model.WorkplanEntity_StepEntity" FromRole="Steps" ToRole="Workplan" ed:Guid="d5db5007-a4da-47fd-9be4-ec66c0b3eb38" />
+    <NavigationProperty Name="SubWorkplan" Relationship="Marvin.Products.Model.StepEntity_SubWorkplan" FromRole="Parents" ToRole="SubWorkplan" ed:Guid="693a0595-a2e2-431f-83c1-ba8a5a0cada4" />
+    <NavigationProperty Name="Connectors" Relationship="Marvin.Products.Model.StepEntity_ConnectorReference" FromRole="Step" ToRole="Connectors" ed:Guid="5ff0c478-a98f-4574-8d84-099a1c4b5f88" />
+    <NavigationProperty Name="OutputDescriptions" Relationship="Marvin.Products.Model.StepEntity_OutputDescriptionEntity" FromRole="Step" ToRole="OutputDescriptions" ed:Guid="5f30170f-5c55-4ea1-86a4-d63aabe1f48d" />
+  </EntityType>
+  <EntityType Name="ConnectorEntity" ed:Guid="9c69de4e-d23a-4b35-b1e9-ab67cb0d4b3c">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="1d77c5b4-9919-4417-b43b-0117ac23a272" />
+    <Property Name="ConnectorId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="a5e87e73-cc4e-40c5-b4cc-4488ce7d27a6" />
+    <Property Name="Name" Type="String" ed:ValidateRequired="false" ed:Guid="2233a96c-7bad-49f0-b76b-d67049c1a24c" />
+    <Property Name="Classification" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="90755742-9e43-4d32-bd42-219f59ba3283" />
+    <Property Name="WorkplanId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="0bc81013-c1ee-471f-ba6d-ac0ddd7f5197" />
+    <NavigationProperty Name="Workplan" Relationship="Marvin.Products.Model.WorkplanEntity_ConnectorEntity" FromRole="Connectors" ToRole="Workplan" ed:Guid="b6d7a081-a314-457a-919a-ca28c4a41304" />
+    <NavigationProperty Name="Usages" Relationship="Marvin.Products.Model.ConnectorEntity_ConnectorReference" FromRole="Connector" ToRole="Usages" ed:Guid="139b383c-d9cd-40e2-93e8-735288de242d" />
+  </EntityType>
+  <EntityType Name="ConnectorReference" ed:Guid="e8387bf6-fd02-4f99-839e-e9c17500f9b6">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="00a774a0-8bc9-413c-90d7-e60a08f3f792" />
+    <Property Name="Index" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="049bffd6-d6f6-49a9-8339-a5807da8e15b" />
+    <Property Name="Role" Type="Marvin.Products.Model.ConnectorRole" Nullable="false" ed:ValidateRequired="true" ed:Guid="b4c293bc-c4a9-457d-bbc4-0300d592fdba" />
+    <Property Name="ConnectorId" Type="Int64" ed:ValidateRequired="false" ed:Guid="bf7cb471-6c23-4970-9a53-0ec3b4d7bd0b" />
+    <Property Name="StepId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="3a92ee6f-65c1-4bc9-bc19-56497654f504" />
+    <NavigationProperty Name="Connector" Relationship="Marvin.Products.Model.ConnectorEntity_ConnectorReference" FromRole="Usages" ToRole="Connector" ed:Guid="8366f2e5-ad25-4849-ac7f-f886d5a313d3" />
+    <NavigationProperty Name="Step" Relationship="Marvin.Products.Model.StepEntity_ConnectorReference" FromRole="Connectors" ToRole="Step" ed:Guid="a96c3b82-5c54-464d-90b8-6efe672b2705" />
+  </EntityType>
+  <EntityType Name="OutputDescriptionEntity" ed:Guid="289e2496-5e21-40e6-813e-b2866c592b74">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="11acf13c-e0ae-47b8-9ee7-80326c2a74fc" />
+    <Property Name="Index" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="6f03e6f8-ea27-4807-9645-dd3b053a64bc" />
+    <Property Name="Success" Type="Boolean" Nullable="false" ed:ValidateRequired="true" ed:Guid="e89f3d8f-bf3b-41cc-ac7a-d44e84e1bdbb" />
+    <Property Name="Name" Type="String" ed:ValidateRequired="false" ed:Guid="a2e5d42b-306a-4fef-a0b1-a8b4c35c053e" />
+    <Property Name="MappingValue" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="d3fd431c-f4cd-4a8a-904e-952c6c74b1e8" />
+    <Property Name="StepEntityId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="ec9310ae-0591-4438-8bed-347f0775e71f" />
+    <NavigationProperty Name="Step" Relationship="Marvin.Products.Model.StepEntity_OutputDescriptionEntity" FromRole="OutputDescriptions" ToRole="Step" ed:Guid="38330122-5725-4f4a-9519-e13b56f5c130" />
+  </EntityType>
+  <EnumType Name="ConnectorRole" ed:Guid="fd185979-f898-430b-8eff-24c2e8dce89c">
+    <Member Name="Input" ed:Guid="4361a4fe-bb3b-4fae-9a6e-70a7e88d8ad0" />
+    <Member Name="Output" ed:Guid="f178736f-cfc0-4e45-94d6-dcfe1bb03fe9" />
+  </EnumType>
+  <Association Name="ProductEntity_PartLink" ed:Guid="da4cfc87-ab3e-40a8-baf2-6d51cc1c3615">
+    <End Role="Parent" Type="Marvin.Products.Model.ProductEntity" Multiplicity="1" />
+    <End Role="Parts" Type="Marvin.Products.Model.PartLink" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Parent">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Parts">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductEntity_PartLink1" ed:Guid="4efb9816-e303-428a-9d44-2e5b14002e2b">
+    <End Role="Child" Type="Marvin.Products.Model.ProductEntity" Multiplicity="1" />
+    <End Role="Parents" Type="Marvin.Products.Model.PartLink" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Child">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Parents">
+        <PropertyRef Name="ChildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductEntity_RevisionHistory" ed:Guid="8edbf9b4-9dcb-42b9-8627-f37613f275f0">
+    <End Role="ProductRevision" Type="Marvin.Products.Model.ProductEntity" Multiplicity="1" />
+    <End Role="RevisionHistories" Type="Marvin.Products.Model.RevisionHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductRevision">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RevisionHistories">
+        <PropertyRef Name="ProductRevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductEntity_ProductRecipe" ed:Guid="e117eba5-56fb-4874-9833-0fd0ac1e0253">
+    <End Role="Product" Type="Marvin.Products.Model.ProductEntity" Multiplicity="1" />
+    <End Role="Recipes" Type="Marvin.Products.Model.ProductRecipeEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recipes">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductEntity_ProductVersion" ed:Guid="78183349-b50d-4980-a10b-0c74b7be0b71">
+    <End Role="Product" Type="Marvin.Products.Model.ProductEntity" Multiplicity="0..1" />
+    <End Role="OldVersions" Type="Marvin.Products.Model.ProductProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OldVersions">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductEntity_Article" ed:Guid="bf505efd-d06c-4865-a09a-72a57e244deb">
+    <End Role="Product" Type="Marvin.Products.Model.ProductEntity" Multiplicity="1" />
+    <End Role="Instances" Type="Marvin.Products.Model.ArticleEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Instances">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="WorkplanEntity_ProductRecipe" ed:Guid="48674323-6a5d-489d-aa0d-866d270b8f27">
+    <End Role="Workplan" Type="Marvin.Products.Model.WorkplanEntity" Multiplicity="1" />
+    <End Role="Recipes" Type="Marvin.Products.Model.ProductRecipeEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Workplan">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recipes">
+        <PropertyRef Name="WorkplanId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductProperties_ProductEntity" ed:Guid="e8ebaeca-3328-4f4d-a002-60763055fdd4">
+    <End Role="CurrentVersion" Type="Marvin.Products.Model.ProductProperties" Multiplicity="1" />
+    <End Role="Products" Type="Marvin.Products.Model.ProductEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CurrentVersion">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Products">
+        <PropertyRef Name="CurrentVersionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductEntity_ProductDocument" ed:Guid="ec3c97dd-0927-4175-802f-7e930f1f6bef">
+    <End Role="Product" Type="Marvin.Products.Model.ProductEntity" Multiplicity="1" />
+    <End Role="Documents" Type="Marvin.Products.Model.ProductDocument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Documents">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ArticleEntity_ArticleEntity" ed:Guid="5b05073e-587c-4673-badd-1c780924f7b1">
+    <End Role="Parent" Type="Marvin.Products.Model.ArticleEntity" Multiplicity="0..1" />
+    <End Role="Parts" Type="Marvin.Products.Model.ArticleEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Parent">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Parts">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PartLink_ArticleEntity" ed:Guid="3ac3d0fd-b8ee-48fa-81d1-aa2c896a7453">
+    <End Role="PartLink" Type="Marvin.Products.Model.PartLink" Multiplicity="0..1" />
+    <End Role="Articles" Type="Marvin.Products.Model.ArticleEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PartLink">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Articles">
+        <PropertyRef Name="PartLinkId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="WorkplanEntity_WorkplanReference" ed:Guid="82215dbb-f3c3-4b36-b4a9-e68199aa1f30">
+    <End Role="Target" Type="Marvin.Products.Model.WorkplanEntity" Multiplicity="1" />
+    <End Role="SourceReferences" Type="Marvin.Products.Model.WorkplanReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Target">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SourceReferences">
+        <PropertyRef Name="TargetId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="WorkplanEntity_WorkplanReference1" ed:Guid="aff10740-14e9-4d73-b014-e7136cc37bae">
+    <End Role="Source" Type="Marvin.Products.Model.WorkplanEntity" Multiplicity="1" />
+    <End Role="TargetReferences" Type="Marvin.Products.Model.WorkplanReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Source">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TargetReferences">
+        <PropertyRef Name="SourceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="WorkplanEntity_ConnectorEntity" ed:Guid="f910523d-dec4-4ce9-91c8-3ad2fe37d722">
+    <End Role="Workplan" Type="Marvin.Products.Model.WorkplanEntity" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Connectors" Type="Marvin.Products.Model.ConnectorEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Workplan">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Connectors">
+        <PropertyRef Name="WorkplanId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="WorkplanEntity_StepEntity" ed:Guid="a50dc4ab-5002-4511-82cb-34f4f5e57b49">
+    <End Role="Workplan" Type="Marvin.Products.Model.WorkplanEntity" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Steps" Type="Marvin.Products.Model.StepEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Workplan">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Steps">
+        <PropertyRef Name="WorkplanId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="StepEntity_SubWorkplan" ed:Guid="bf5563d0-3e03-4814-84fc-71e715f52a92">
+    <End Role="SubWorkplan" Type="Marvin.Products.Model.WorkplanEntity" Multiplicity="0..1" />
+    <End Role="Parents" Type="Marvin.Products.Model.StepEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SubWorkplan">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Parents">
+        <PropertyRef Name="SubWorkplanId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ConnectorEntity_ConnectorReference" ed:Guid="d3d26ae9-c7ca-404d-b7ac-93fa520052ba">
+    <End Role="Connector" Type="Marvin.Products.Model.ConnectorEntity" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Usages" Type="Marvin.Products.Model.ConnectorReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Connector">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Usages">
+        <PropertyRef Name="ConnectorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="StepEntity_ConnectorReference" ed:Guid="cd97bf12-8f01-419a-9e43-cbacd8eb1cea">
+    <End Role="Step" Type="Marvin.Products.Model.StepEntity" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Connectors" Type="Marvin.Products.Model.ConnectorReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Step">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Connectors">
+        <PropertyRef Name="StepId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="StepEntity_OutputDescriptionEntity" ed:Guid="3c5b5d85-7d85-40d4-9a89-82605256f20f">
+    <End Role="Step" Type="Marvin.Products.Model.StepEntity" Multiplicity="1" />
+    <End Role="OutputDescriptions" Type="Marvin.Products.Model.OutputDescriptionEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Step">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OutputDescriptions">
+        <PropertyRef Name="StepEntityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

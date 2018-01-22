@@ -1,0 +1,8 @@
+﻿namespace Marvin.Resources.Management
+{
+    internal static class ModuleVersion
+    {
+        public const string Version = "2.0.0.$WCREV$";
+		public const string RevisionDate = "$WCDATE$";
+    }
+}

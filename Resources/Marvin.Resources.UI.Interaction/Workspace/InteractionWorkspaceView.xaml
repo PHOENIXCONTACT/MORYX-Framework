@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Marvin.Resources.UI.Interaction.InteractionWorkspaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:interaction="clr-namespace:Marvin.Resources.UI.Interaction"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:c4i="clr-namespace:C4I;assembly=Controls4Industry"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance interaction:InteractionWorkspaceViewModel }" 
+             d:DesignHeight="416" d:DesignWidth="956">  
+    <UserControl.Resources>
+        <c4i:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+        <c4i:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </UserControl.Resources>
+    <UserControl.InputBindings>
+        <KeyBinding Command="{Binding AddResourceCmd}" Modifiers="Control" Key="N"/>
+    </UserControl.InputBindings>
+    <DockPanel Margin="5,5,5,5" Background="White" LastChildFill="True">
+        <TextBlock Eddie.TextFormat="Header1" DockPanel.Dock="Top">
+            Resources
+        </TextBlock>
+
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="300" Width="Auto" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,10,0,0">
+                        <EddieButton Command="{Binding AddResourceCmd}" Icon="Plus" EddieStyle="Gray" Margin="0,0,5,0">Add</EddieButton>
+                        <EddieButton Command="{Binding RemoveResourceCmd}" Icon="Minus" EddieStyle="Gray" Margin="0,0,5,0">Remove</EddieButton>
+                    </StackPanel>
+                    
+                    <EddieTreeView DockPanel.Dock="Top" ItemsSource="{Binding ResourceTree}" VerticalAlignment="Stretch" 
+                                   cal:Message.Attach="[Event SelectedItemChanged] = [Action OnMasterItemChanged($source, $eventArgs)]" 
+                                   IsEnabled="{Binding IsDetailsInEditMode, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,5,0">
+                        <EddieTreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type EddieTreeViewItem}">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                        </EddieTreeView.ItemContainerStyle>
+                        <EddieTreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type interaction:ResourceTreeItemViewModel}" ItemsSource="{Binding Children}">
+                                <TextBlock Text="{Binding Name}" Eddie.TextFormat="Bold" />
+                            </HierarchicalDataTemplate>
+                        </EddieTreeView.Resources>
+                    </EddieTreeView>
+                </DockPanel>
+                <EddieBusyIndicator Width="60" Height="60" Visibility="{Binding IsMasterBusy, Converter={StaticResource VisibilityConverter}}" />
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <DockPanel >
+                    <DockPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" HorizontalAlignment="Right">
+                        <EddieButton Icon="Cross" Margin="0,0,5,0" EddieStyle="Gray"
+                                     Command="{Binding CurrentDetails.CancelEditCmd}">Cancel</EddieButton>
+                        <EddieButton Icon="Pencil" Margin="0,0,5,0" EddieStyle="Gray"
+                                     Command="{Binding CurrentDetails.EditModeCmd}">Edit</EddieButton>
+                        <EddieButton Icon="CheckMark" EddieStyle="Gray"
+                                     Command="{Binding CurrentDetails.SaveCmd}">Save</EddieButton>
+                    </DockPanel>
+
+                    <ContentControl DockPanel.Dock="Top" 
+                                    cal:View.Model="{Binding ActiveItem}" />
+                </DockPanel>
+                
+                
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"
+                      Visibility="{Binding IsDetailsInBusyMode, Converter={StaticResource VisibilityConverter}}">
+                    <EddieBusyIndicator Width="60" Height="60" Visibility="{Binding IsDetailsInBusyMode, Converter={StaticResource VisibilityConverter}}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</UserControl>

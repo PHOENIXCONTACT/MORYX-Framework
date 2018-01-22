@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="7dee6f3b-8366-49c0-8798-54aa42ce2fd2" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>true</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost/Metadata/ProductInteraction" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ProductInteraction.xsd" MetadataType="Schema" ID="486412c4-4b72-45de-8cd2-5778befc8a09" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd0" />
+    <MetadataFile FileName="ProductInteraction1.xsd" MetadataType="Schema" ID="3a9c04a1-77b8-40bc-bbde-f564cfbf61c3" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd1" />
+    <MetadataFile FileName="ProductInteraction.wsdl" MetadataType="Wsdl" ID="0e3f1061-3299-4d53-acde-0f4ca09a67aa" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction" />
+    <MetadataFile FileName="ProductInteraction2.xsd" MetadataType="Schema" ID="3c6e9387-ee7c-4fa5-a50b-569d9f5b7609" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd8" />
+    <MetadataFile FileName="ProductInteraction3.xsd" MetadataType="Schema" ID="c886474c-cbf1-43fb-a64b-2a10f0fd289a" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd6" />
+    <MetadataFile FileName="ProductInteraction4.xsd" MetadataType="Schema" ID="4def036e-40c6-4c43-9ff6-2eccea28480c" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd7" />
+    <MetadataFile FileName="ProductInteraction5.xsd" MetadataType="Schema" ID="f46332fb-4a92-4129-bad0-7b317ce146cf" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd4" />
+    <MetadataFile FileName="ProductInteraction6.xsd" MetadataType="Schema" ID="dcdf2f77-64ad-4e82-a606-86ca9a2908e0" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd5" />
+    <MetadataFile FileName="ProductInteraction7.xsd" MetadataType="Schema" ID="9695bdc0-87ae-4fca-8cc7-26ff3481f0fa" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd2" />
+    <MetadataFile FileName="ProductInteraction8.xsd" MetadataType="Schema" ID="09e8b5fa-e0df-4f09-80f2-d7ee59c91419" SourceId="1" SourceUrl="http://localhost/Metadata/ProductInteraction?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/Metadata/ResourceInteraction?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
+  <xs:import schemaLocation="http://localhost/Metadata/ResourceInteraction?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost/Metadata/ResourceInteraction?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer.Resources" />
+  <xs:complexType name="ArrayOfResourceTypeModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ResourceTypeModel" nillable="true" type="tns:ResourceTypeModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfResourceTypeModel" nillable="true" type="tns:ArrayOfResourceTypeModel" />
+  <xs:complexType name="ResourceTypeModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BaseType" nillable="true" type="tns:ResourceTypeModel" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Constructors" nillable="true" type="q1:ArrayOfMethodEntry" />
+      <xs:element minOccurs="0" name="Creatable" type="xs:boolean" />
+      <xs:element minOccurs="0" name="DerivedTypes" nillable="true" type="tns:ArrayOfResourceTypeModel" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DisplayName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="ResourceTypeModel" nillable="true" type="tns:ResourceTypeModel" />
+  <xs:complexType name="ArrayOfResourceModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ResourceModel" nillable="true" type="tns:ResourceModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfResourceModel" nillable="true" type="tns:ArrayOfResourceModel" />
+  <xs:complexType name="ResourceModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="GlobalIdentifier" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Id" type="xs:long" />
+      <xs:element minOccurs="0" name="LocalIdentifier" nillable="true" type="xs:string" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Methods" nillable="true" type="q2:ArrayOfMethodEntry" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParentId" type="xs:long" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Properties" nillable="true" type="q3:ArrayOfEntry" />
+      <xs:element minOccurs="0" name="References" nillable="true" type="tns:ArrayOfResourceReferenceModel" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="ResourceModel" nillable="true" type="tns:ResourceModel" />
+  <xs:complexType name="ArrayOfResourceReferenceModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ResourceReferenceModel" nillable="true" type="tns:ResourceReferenceModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfResourceReferenceModel" nillable="true" type="tns:ArrayOfResourceReferenceModel" />
+  <xs:complexType name="ResourceReferenceModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IsCollection" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PossibleTargets" nillable="true" type="tns:ArrayOfResourceModel" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer.Resources" minOccurs="0" name="RelationType" type="q4:ResourceRelationType" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer.Resources" minOccurs="0" name="Role" type="q5:ResourceReferenceRole" />
+      <xs:element minOccurs="0" name="SupportedTypes" nillable="true" type="tns:ArrayOfResourceTypeModel" />
+      <xs:element minOccurs="0" name="Targets" nillable="true" type="tns:ArrayOfResourceModel" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="ResourceReferenceModel" nillable="true" type="tns:ResourceReferenceModel" />
+</xs:schema>

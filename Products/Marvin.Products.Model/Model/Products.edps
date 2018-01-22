@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityDeveloper Version="6.0.20.0">
+  <ModelSettings xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" ConnectionStringInAppConfig="False" DetectTPTInheritance="False" EntityFrameworkVersion="Version6" IncludeForeignKeysInModel="true" DetectFunctionBasedColumnDefault="false">
+    <Connection ConnectionString="User Id=postgres;Host=localhost;Database=TTC;Initial Schema=public" Provider="Devart.Data.PostgreSql" />
+    <Generation>
+      <GeneratedFiles>
+        <File Name="..\Scripts\CreateIndexes.cs" />
+        <File Name="IProductEntityRepository.cs" DestinationFolder="..\API" />
+        <File Name="IPartLinkRepository.cs" DestinationFolder="..\API" />
+        <File Name="IRevisionHistoryRepository.cs" DestinationFolder="..\API" />
+        <File Name="IProductRecipeEntityRepository.cs" DestinationFolder="..\API" />
+        <File Name="IProductPropertiesRepository.cs" DestinationFolder="..\API" />
+        <File Name="IArticleEntityRepository.cs" DestinationFolder="..\API" />
+        <File Name="IWorkplanEntityRepository.cs" DestinationFolder="..\API" />
+        <File Name="IProductDocumentRepository.cs" DestinationFolder="..\API" />
+        <File Name="IWorkplanReferenceRepository.cs" DestinationFolder="..\API" />
+        <File Name="IStepEntityRepository.cs" DestinationFolder="..\API" />
+        <File Name="IConnectorEntityRepository.cs" DestinationFolder="..\API" />
+        <File Name="IConnectorReferenceRepository.cs" DestinationFolder="..\API" />
+        <File Name="IOutputDescriptionEntityRepository.cs" DestinationFolder="..\API" />
+        <File Name="..\Repos\ModelConstants.cs" />
+        <File Name="..\Repos\DbConfig.cs" />
+        <File Name="..\Repos\ModelConfigurator.cs" />
+        <File Name="..\Repos\EntityFrameworkUnitOfWork.cs" />
+        <File Name="..\Repos\EntityFrameworkMergedUnitOfWork.cs" />
+        <File Name="..\Repos\EntityFrameworkUnitOfWorkFactory.cs" />
+        <File Name="..\Repos\InMemoryUnitOfWorkFactory.cs" />
+        <File Name="ProductEntityRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="PartLinkRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="RevisionHistoryRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="ProductRecipeEntityRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="ProductPropertiesRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="ArticleEntityRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="WorkplanEntityRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="ProductDocumentRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="WorkplanReferenceRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="StepEntityRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="ConnectorEntityRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="ConnectorReferenceRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="OutputDescriptionEntityRepository.cs" DestinationFolder="..\Repos" />
+        <File Name="Products.Entities.cs" DestinationFolder="..\DbContext" />
+        <File Name="ProductEntity.cs" DestinationFolder="..\Entities" />
+        <File Name="PartLink.cs" DestinationFolder="..\Entities" />
+        <File Name="RevisionHistory.cs" DestinationFolder="..\Entities" />
+        <File Name="ProductRecipeEntity.cs" DestinationFolder="..\Entities" />
+        <File Name="ProductProperties.cs" DestinationFolder="..\Entities" />
+        <File Name="ArticleEntity.cs" DestinationFolder="..\Entities" />
+        <File Name="WorkplanEntity.cs" DestinationFolder="..\Entities" />
+        <File Name="ProductDocument.cs" DestinationFolder="..\Entities" />
+        <File Name="WorkplanReference.cs" DestinationFolder="..\Entities" />
+        <File Name="StepEntity.cs" DestinationFolder="..\Entities" />
+        <File Name="ConnectorEntity.cs" DestinationFolder="..\Entities" />
+        <File Name="ConnectorReference.cs" DestinationFolder="..\Entities" />
+        <File Name="OutputDescriptionEntity.cs" DestinationFolder="..\Entities" />
+        <File Name="ConnectorRole.cs" DestinationFolder="..\Entities" />
+        <File Name="..\Scripts\CreateTriggers.cs" />
+      </GeneratedFiles>
+    </Generation>
+    <DatabaseFirstNamingRules>
+      <EntitySet PluralizationName="Pluralize" />
+      <Class UseSchemaAsPrefix="False" PluralizeCollectionNavigationPropertyName="True" RemoveUnderscores="True" RemoveInvalidCharacters="True" CodeCase="FirstLetterUppercase" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Singularize" />
+      <Property RemoveUnderscores="True" RemoveInvalidCharacters="True" CodeCase="FirstLetterUppercase" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Unchanged" />
+    </DatabaseFirstNamingRules>
+    <ModelFirst StorageSynchronizationEnabled="True" TargetSchema="public" TargetProviderName="Devart.Data.PostgreSql">
+      <TargetServer Server="PostgreSQL" ServerVersion="9.5" />
+      <ModelFirstNamingRules>
+        <Table RemoveUnderscores="False" RemoveInvalidCharacters="True" CodeCase="Unchanged" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Unchanged" />
+        <Column RemoveUnderscores="False" RemoveInvalidCharacters="True" CodeCase="Unchanged" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Unchanged" />
+      </ModelFirstNamingRules>
+    </ModelFirst>
+    <Diagrams>
+      <Diagram Name="Diagram1" DefaultDiagram="True" />
+    </Diagrams>
+    <Templates>
+      <Template Name="CreateIndexGenerator" Enabled="True" File="..\..\..\Libraries\Templates\Model\CreateIndexGenerator.tmpl">
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+      </Template>
+      <Template Name="Marvin.Repo" Enabled="True" File="..\..\..\Libraries\Templates\Model\Marvin.Repo.tmpl">
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+        <ed:Property Name="GeneratePartial" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ModelNameAsFilesPrefix" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="BundleRestrictedAccess" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="Inherited" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="InheritedModel" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Base</string>
+        </ed:Property>
+        <ed:Property Name="InheritedNamespace" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Marvin.Base.Model</string>
+        </ed:Property>
+        <ed:Property Name="Version" Type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <int>3</int>
+        </ed:Property>
+      </Template>
+      <Template Name="MarvinDbContext" Enabled="True" File="..\..\..\Libraries\Templates\Model\MarvinDbContext.tmpl">
+        <ed:Property Name="ValidationFramework" Type="EntityDeveloper.TemplateEngine.ValidationFramework, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <ValidationFramework>None</ValidationFramework>
+        </ed:Property>
+        <ed:Property Name="ValidationErrorMessages" Type="EntityDeveloper.TemplateEngine.ValidationErrorMessages, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <ValidationErrorMessages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </ed:Property>
+        <ed:Property Name="FilePerClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="ModelNameAsFilesPrefix" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="HeaderTimestampVersionControlTag" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string d6p1:nil="true" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance" />
+        </ed:Property>
+        <ed:Property Name="EntitiesOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder />
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="ContextOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder />
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="GeneratePartialClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="LocalizableDescription" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+        <ed:Property Name="ImplementCloneable" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementEquals" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementINotifyPropertyChanging" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementINotifyPropertyChanged" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="PropertyChangePartialMethods" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="WcfDataContractAttributes" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="WcfDataMemberOnNavigationProperties" Type="EntityDeveloper.WcfDataMemberGenerationBehavior, EntityDeveloper.Orm.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <WcfDataMemberGenerationBehavior>All</WcfDataMemberGenerationBehavior>
+        </ed:Property>
+        <ed:Property Name="EnableWinFormsDataBinding" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="UseObservableCollection" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="FluentMapping" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="MappingGenerationStrategy" Type="EntityDeveloper.EntityFramework.CodeFirstMappingGenerationStrategy, EntityDeveloper.Orm.EntityFramework, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <CodeFirstMappingGenerationStrategy>UseOnModelCreatingMethod</CodeFirstMappingGenerationStrategy>
+        </ed:Property>
+        <ed:Property Name="DatabaseIndependent" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="DisabledConventions" Type="EntityDeveloper.EntityFramework.CodeFirstConfigurationConvention, EntityDeveloper.Orm.EntityFramework, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <CodeFirstConfigurationConvention />
+        </ed:Property>
+        <ed:Property Name="ConfigurationsOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=6.0.20.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder />
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="AutoDetectChangesEnabled" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="ProxyCreationEnabled" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="ValidateOnSaveEnabled" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+      </Template>
+      <Template Name="MarvinInheritance" Enabled="False" File="..\..\..\Libraries\Templates\Model\MarvinInheritance.tmpl">
+        <ed:Property Name="InheritedNamespace" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Marvin.Base.Model</string>
+        </ed:Property>
+        <ed:Property Name="ServiceRuntimePath" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>..\\..\\..\\Build\\ServiceRuntime</string>
+        </ed:Property>
+      </Template>
+      <Template Name="DateTriggers" Enabled="True" File="..\..\..\Libraries\Templates\Model\DateTriggers.tmpl">
+        <ed:Property Name="Provider" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string>Devart.Data.PostgreSql</string>
+        </ed:Property>
+      </Template>
+    </Templates>
+    <AttributeAssemblies />
+    <UpdateToDatabaseExcludes>
+      <Exclude Name="Id" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="State" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="ProductionDate" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="Identifier" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="NumberType" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="ProductId" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="ParentId" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="ExtensionData" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="PartLinkId" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="" Table="public.ArticleEntity" Type="Constraint" />
+      <Exclude Name="FK_ArticleEntity_ProductEntity" Table="public.ArticleEntity" Type="Constraint" />
+      <Exclude Name="FK_ArticleEntity_ArticleEntity" Table="public.ArticleEntity" Type="Constraint" />
+      <Exclude Name="FK_ArticleEntity_PartLink" Table="public.ArticleEntity" Type="Constraint" />
+      <Exclude Name="Id" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="Created" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="Updated" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="Deleted" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="FileName" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="FilesystemPath" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="File" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="Version" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="Hash" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="ProductId" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="" Table="public.ProductDocument" Type="Constraint" />
+      <Exclude Name="FK_ProductDocument_ProductEntity" Table="public.ProductDocument" Type="Constraint" />
+      <Exclude Name="Id" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="Name" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="Revision" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="State" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="WorkplanId" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="ProductId" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="Created" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="Updated" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="Deleted" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="" Table="public.ProductRecipeEntity" Type="Constraint" />
+      <Exclude Name="FK_ProductRecipeEntity_ProductEntity" Table="public.ProductRecipeEntity" Type="Constraint" />
+      <Exclude Name="FK_ProductRecipeEntity_WorkplanEntity" Table="public.ProductRecipeEntity" Type="Constraint" />
+      <Exclude Name="Id" Table="public.RevisionHistory" Type="Column" />
+      <Exclude Name="Comment" Table="public.RevisionHistory" Type="Column" />
+      <Exclude Name="ProductRevisionId" Table="public.RevisionHistory" Type="Column" />
+      <Exclude Name="" Table="public.RevisionHistory" Type="Constraint" />
+      <Exclude Name="FK_RevisionHistory_ProductEntity" Table="public.RevisionHistory" Type="Constraint" />
+      <Exclude Name="Id" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="Name" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="Version" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="State" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="MaxElementId" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="WorkplanJson" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="Created" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="Updated" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="Deleted" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="" Table="public.WorkplanEntity" Type="Constraint" />
+      <Exclude Name="Identifier" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="ExtensionData" Table="public.ArticleEntity" Type="Column" />
+      <Exclude Name="FilesystemPath" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="Hash" Table="public.ProductDocument" Type="Column" />
+      <Exclude Name="Name" Table="public.ProductRecipeEntity" Type="Column" />
+      <Exclude Name="Comment" Table="public.RevisionHistory" Type="Column" />
+      <Exclude Name="Name" Table="public.WorkplanEntity" Type="Column" />
+      <Exclude Name="WorkplanJson" Table="public.WorkplanEntity" Type="Column" />
+    </UpdateToDatabaseExcludes>
+    <NewClassProperties>﻿&lt;ArrayOfCopiedObjectInfo xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/EntityDeveloper"&gt;&lt;CopiedObjectInfo&gt;&lt;DependencyObjects xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" /&gt;&lt;ModelObject z:Id="i1" xmlns:d3p1="http://schemas.datacontract.org/2004/07/EntityDeveloper.EntityFramework" i:type="d3p1:EntityProperty" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/"&gt;&lt;b&gt;Id&lt;/b&gt;&lt;c /&gt;&lt;d&gt;true&lt;/d&gt;&lt;attributes xmlns:d4p1="http://schemas.datacontract.org/2004/07/Devart.ObjectModel" i:type="d4p1:ObservableCollectionOfAttributeValue7R2LQkUY" /&gt;&lt;a /&gt;&lt;b /&gt;&lt;c i:nil="true" /&gt;&lt;d i:nil="true" /&gt;&lt;documentation z:Id="i2"&gt;&lt;a /&gt;&lt;b /&gt;&lt;/documentation&gt;&lt;e /&gt;&lt;f&gt;None&lt;/f&gt;&lt;g&gt;-1&lt;/g&gt;&lt;h&gt;false&lt;/h&gt;&lt;i&gt;false&lt;/i&gt;&lt;inheritanceModifier&gt;None&lt;/inheritanceModifier&gt;&lt;j&gt;-1&lt;/j&gt;&lt;k&gt;-1&lt;/k&gt;&lt;l i:nil="true" /&gt;&lt;m i:nil="true" /&gt;&lt;n i:nil="true" /&gt;&lt;nullable&gt;false&lt;/nullable&gt;&lt;primaryKey&gt;true&lt;/primaryKey&gt;&lt;type i:type="d3p1:EntityDataType"&gt;Int64&lt;/type&gt;&lt;validateRequired&gt;true&lt;/validateRequired&gt;&lt;d3p1:a&gt;Public&lt;/d3p1:a&gt;&lt;d3p1:b&gt;Public&lt;/d3p1:b&gt;&lt;d3p1:c&gt;None&lt;/d3p1:c&gt;&lt;d3p1:d&gt;false&lt;/d3p1:d&gt;&lt;d3p1:e&gt;Identity&lt;/d3p1:e&gt;&lt;/ModelObject&gt;&lt;ShapeViewInfo i:nil="true" /&gt;&lt;/CopiedObjectInfo&gt;&lt;CopiedObjectInfo&gt;&lt;DependencyObjects xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" /&gt;&lt;ModelObject z:Id="i3" xmlns:d3p1="http://schemas.datacontract.org/2004/07/EntityDeveloper.EntityFramework" i:type="d3p1:EntityProperty" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/"&gt;&lt;b&gt;Created&lt;/b&gt;&lt;c /&gt;&lt;d&gt;true&lt;/d&gt;&lt;attributes xmlns:d4p1="http://schemas.datacontract.org/2004/07/Devart.ObjectModel" i:type="d4p1:ObservableCollectionOfAttributeValue7R2LQkUY" /&gt;&lt;a /&gt;&lt;b /&gt;&lt;c i:nil="true" /&gt;&lt;d i:nil="true" /&gt;&lt;documentation z:Id="i4"&gt;&lt;a /&gt;&lt;b /&gt;&lt;/documentation&gt;&lt;e /&gt;&lt;f&gt;None&lt;/f&gt;&lt;g&gt;-1&lt;/g&gt;&lt;h&gt;false&lt;/h&gt;&lt;i&gt;false&lt;/i&gt;&lt;inheritanceModifier&gt;None&lt;/inheritanceModifier&gt;&lt;j&gt;-1&lt;/j&gt;&lt;k&gt;-1&lt;/k&gt;&lt;l i:nil="true" /&gt;&lt;m i:nil="true" /&gt;&lt;n i:nil="true" /&gt;&lt;nullable&gt;false&lt;/nullable&gt;&lt;primaryKey&gt;false&lt;/primaryKey&gt;&lt;type i:type="d3p1:EntityDataType"&gt;DateTime&lt;/type&gt;&lt;validateRequired&gt;true&lt;/validateRequired&gt;&lt;d3p1:a&gt;Public&lt;/d3p1:a&gt;&lt;d3p1:b&gt;Public&lt;/d3p1:b&gt;&lt;d3p1:c&gt;None&lt;/d3p1:c&gt;&lt;d3p1:d&gt;false&lt;/d3p1:d&gt;&lt;d3p1:e&gt;Computed&lt;/d3p1:e&gt;&lt;/ModelObject&gt;&lt;ShapeViewInfo i:nil="true" /&gt;&lt;/CopiedObjectInfo&gt;&lt;CopiedObjectInfo&gt;&lt;DependencyObjects xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" /&gt;&lt;ModelObject z:Id="i5" xmlns:d3p1="http://schemas.datacontract.org/2004/07/EntityDeveloper.EntityFramework" i:type="d3p1:EntityProperty" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/"&gt;&lt;b&gt;Updated&lt;/b&gt;&lt;c /&gt;&lt;d&gt;true&lt;/d&gt;&lt;attributes xmlns:d4p1="http://schemas.datacontract.org/2004/07/Devart.ObjectModel" i:type="d4p1:ObservableCollectionOfAttributeValue7R2LQkUY" /&gt;&lt;a /&gt;&lt;b /&gt;&lt;c i:nil="true" /&gt;&lt;d i:nil="true" /&gt;&lt;documentation z:Id="i6"&gt;&lt;a /&gt;&lt;b /&gt;&lt;/documentation&gt;&lt;e /&gt;&lt;f&gt;None&lt;/f&gt;&lt;g&gt;-1&lt;/g&gt;&lt;h&gt;false&lt;/h&gt;&lt;i&gt;false&lt;/i&gt;&lt;inheritanceModifier&gt;None&lt;/inheritanceModifier&gt;&lt;j&gt;-1&lt;/j&gt;&lt;k&gt;-1&lt;/k&gt;&lt;l i:nil="true" /&gt;&lt;m i:nil="true" /&gt;&lt;n i:nil="true" /&gt;&lt;nullable&gt;false&lt;/nullable&gt;&lt;primaryKey&gt;false&lt;/primaryKey&gt;&lt;type i:type="d3p1:EntityDataType"&gt;DateTime&lt;/type&gt;&lt;validateRequired&gt;true&lt;/validateRequired&gt;&lt;d3p1:a&gt;Public&lt;/d3p1:a&gt;&lt;d3p1:b&gt;Public&lt;/d3p1:b&gt;&lt;d3p1:c&gt;Fixed&lt;/d3p1:c&gt;&lt;d3p1:d&gt;false&lt;/d3p1:d&gt;&lt;d3p1:e&gt;Computed&lt;/d3p1:e&gt;&lt;/ModelObject&gt;&lt;ShapeViewInfo i:nil="true" /&gt;&lt;/CopiedObjectInfo&gt;&lt;CopiedObjectInfo&gt;&lt;DependencyObjects xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" /&gt;&lt;ModelObject z:Id="i7" xmlns:d3p1="http://schemas.datacontract.org/2004/07/EntityDeveloper.EntityFramework" i:type="d3p1:EntityProperty" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/"&gt;&lt;b&gt;Deleted&lt;/b&gt;&lt;c /&gt;&lt;d&gt;true&lt;/d&gt;&lt;attributes xmlns:d4p1="http://schemas.datacontract.org/2004/07/Devart.ObjectModel" i:type="d4p1:ObservableCollectionOfAttributeValue7R2LQkUY" /&gt;&lt;a /&gt;&lt;b /&gt;&lt;c i:nil="true" /&gt;&lt;d i:nil="true" /&gt;&lt;documentation z:Id="i8"&gt;&lt;a /&gt;&lt;b /&gt;&lt;/documentation&gt;&lt;e /&gt;&lt;f&gt;None&lt;/f&gt;&lt;g&gt;-1&lt;/g&gt;&lt;h&gt;false&lt;/h&gt;&lt;i&gt;false&lt;/i&gt;&lt;inheritanceModifier&gt;None&lt;/inheritanceModifier&gt;&lt;j&gt;-1&lt;/j&gt;&lt;k&gt;-1&lt;/k&gt;&lt;l i:nil="true" /&gt;&lt;m i:nil="true" /&gt;&lt;n i:nil="true" /&gt;&lt;nullable&gt;true&lt;/nullable&gt;&lt;primaryKey&gt;false&lt;/primaryKey&gt;&lt;type i:type="d3p1:EntityDataType"&gt;DateTime&lt;/type&gt;&lt;validateRequired&gt;false&lt;/validateRequired&gt;&lt;d3p1:a&gt;Public&lt;/d3p1:a&gt;&lt;d3p1:b&gt;Public&lt;/d3p1:b&gt;&lt;d3p1:c&gt;None&lt;/d3p1:c&gt;&lt;d3p1:d&gt;false&lt;/d3p1:d&gt;&lt;d3p1:e&gt;None&lt;/d3p1:e&gt;&lt;/ModelObject&gt;&lt;ShapeViewInfo i:nil="true" /&gt;&lt;/CopiedObjectInfo&gt;&lt;/ArrayOfCopiedObjectInfo&gt;</NewClassProperties>
+  </ModelSettings>
+</EntityDeveloper>

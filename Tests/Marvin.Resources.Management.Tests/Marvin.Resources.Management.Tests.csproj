@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{65D88A79-9239-4BF6-AAD3-29E432A9DEDB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Resources.Management.Tests</RootNamespace>
+    <AssemblyName>Marvin.Resources.Management.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin">
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.Container">
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.PlatformTools">
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.PlatformTools.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.Runtime">
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.Runtime.Base">
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\.build\Test.Libs\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\.build\Test.Libs\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IMyResource.cs" />
+    <Compile Include="INonPublicResource.cs" />
+    <Compile Include="IReferenceResource.cs" />
+    <Compile Include="MyResource.cs" />
+    <Compile Include="ReferenceResource.cs" />
+    <Compile Include="TypeControllerTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+      <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
+      <Name>Marvin.AbstractionLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Notifications\Marvin.Notifications\Marvin.Notifications.csproj">
+      <Project>{4fb1bca9-bd6d-478a-93c5-5cd4de2a2337}</Project>
+      <Name>Marvin.Notifications</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Resources\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
+      <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
+      <Name>Marvin.Resources.Management</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

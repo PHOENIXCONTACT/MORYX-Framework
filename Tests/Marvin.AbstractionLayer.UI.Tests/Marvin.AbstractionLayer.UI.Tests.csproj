@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{47B9DE3F-18D2-4C36-AD35-7EF06A799ED0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.AbstractionLayer.UI.Tests</RootNamespace>
+    <AssemblyName>Marvin.AbstractionLayer.UI.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\..\Build\ClientRuntime\Libraries\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform">
+      <HintPath>..\..\Build\ClientRuntime\Libraries\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\Build\ClientRuntime\Libraries\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin">
+      <HintPath>..\..\Build\ClientRuntime\Marvin.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.ClientFramework">
+      <HintPath>..\..\Build\ClientRuntime\Core\Marvin.ClientFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.ClientFramework.Base">
+      <HintPath>..\..\Build\ClientRuntime\Core\Marvin.ClientFramework.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.Container">
+      <HintPath>..\..\Build\ClientRuntime\Libraries\Marvin.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.PlatformTools">
+      <HintPath>..\..\Build\ClientRuntime\Marvin.PlatformTools.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.TestTools.UnitTest">
+      <HintPath>..\..\Libraries\PlatformToolkit-TestTools\Marvin.TestTools.UnitTest.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\.build\Test.Libs\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Mocks\DialogManagerMock.cs" />
+    <Compile Include="Mocks\MasterDetailsWorkspaceMock.cs" />
+    <Compile Include="Mocks\EmptyDetailsMock.cs" />
+    <Compile Include="MasterDetailsWorkspaceTests.cs" />
+    <Compile Include="Mocks\DetailsComponentMock.cs" />
+    <Compile Include="Mocks\DetailsComponentRegistrationAttribute.cs" />
+    <Compile Include="DetailsComponentSelectorTests.cs" />
+    <Compile Include="Mocks\DetailsComponentSelector.cs" />
+    <Compile Include="Mocks\IDetailsComponent.cs" />
+    <Compile Include="Mocks\IDetailsComponentFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AbstractionLayer.UI\Marvin.AbstractionLayer.UI.csproj">
+      <Project>{b9920541-7e0e-4cde-b195-b18589a2bbb1}</Project>
+      <Name>Marvin.AbstractionLayer.UI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="OpenCoverFilter.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

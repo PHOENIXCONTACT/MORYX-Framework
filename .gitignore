@@ -1,5 +1,6 @@
 Build
 .buildtools
+Libraries
 *.Cobertura.xml
 *.OpenCover.xml
 *.TestResult.xml

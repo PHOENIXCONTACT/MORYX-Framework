@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{23F6025E-1348-4ABF-A908-C5D360F9D486}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Resources.Samples</RootNamespace>
+    <AssemblyName>Marvin.Resources.Samples</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\ServiceRuntime\ModulePlugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Marvin">
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.PlatformTools">
+      <HintPath>..\..\Build\ServiceRuntime\Marvin.PlatformTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime">
+      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssembleResource.cs" />
+    <Compile Include="BufferResource.cs" />
+    <Compile Include="Cell.cs" />
+    <Compile Include="GateResource.cs" />
+    <Compile Include="IVisualInstructor.cs" />
+    <Compile Include="Machine.cs" />
+    <Compile Include="MountingCell.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoutingResource.cs" />
+    <Compile Include="SolderingCell.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+      <Project>{841F50C1-DEC0-48D8-92D1-F860450940D8}</Project>
+      <Name>Marvin.AbstractionLayer</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Drivers\Marvin.Protocols.PhoenixPlc\Marvin.Protocols.PhoenixPlc.csproj">
+      <Project>{21db2c2b-3cdf-4ef0-8530-5c062feeb529}</Project>
+      <Name>Marvin.Protocols.PhoenixPlc</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
+      <Project>{4CA4F6B5-4C26-4B99-8FB9-937971883083}</Project>
+      <Name>Marvin.Resources.Management</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

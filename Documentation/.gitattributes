@@ -1,0 +1,2 @@
+*.eap filter=lfs diff=lfs merge=lfs -text
+*.EAP filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,486 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Marvin.Products.Model.Store" Alias="Self" Provider="Devart.Data.PostgreSql" ProviderManifestToken="PostgreSQL, 9.5.5" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:devart="http://devart.com/schemas/edml/StorageSchemaExtensions/1.0" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="EntitiesStoreContainer">
+    <EntitySet Name="ProductEntities" EntityType="Marvin.Products.Model.Store.ProductEntity" store:Type="Tables" Schema="public" Table="ProductEntity" />
+    <EntitySet Name="PartLinks" EntityType="Marvin.Products.Model.Store.PartLink" store:Type="Tables" Schema="public" Table="PartLink" />
+    <EntitySet Name="RevisionHistories" EntityType="Marvin.Products.Model.Store.RevisionHistory" store:Type="Tables" Schema="public" Table="RevisionHistory" />
+    <EntitySet Name="ProductRecipeEntities" EntityType="Marvin.Products.Model.Store.ProductRecipeEntity" store:Type="Tables" Schema="public" Table="ProductRecipeEntity" />
+    <EntitySet Name="ProductProperties" EntityType="Marvin.Products.Model.Store.ProductProperties" store:Type="Tables" Schema="public" Table="ProductProperties" />
+    <EntitySet Name="ArticleEntities" EntityType="Marvin.Products.Model.Store.ArticleEntity" store:Type="Tables" Schema="public" Table="ArticleEntity" />
+    <EntitySet Name="WorkplanEntities" EntityType="Marvin.Products.Model.Store.WorkplanEntity" store:Type="Tables" Schema="public" Table="WorkplanEntity" />
+    <EntitySet Name="ProductDocuments" EntityType="Marvin.Products.Model.Store.ProductDocument" store:Type="Tables" Schema="public" Table="ProductDocument" />
+    <EntitySet Name="WorkplanReferences" EntityType="Marvin.Products.Model.Store.WorkplanReference" store:Type="Tables" Schema="public" Table="WorkplanReference" />
+    <EntitySet Name="StepEntities" EntityType="Marvin.Products.Model.Store.StepEntity" store:Type="Tables" Schema="public" Table="StepEntity" />
+    <EntitySet Name="ConnectorEntities" EntityType="Marvin.Products.Model.Store.ConnectorEntity" store:Type="Tables" Schema="public" Table="ConnectorEntity" />
+    <EntitySet Name="ConnectorReferences" EntityType="Marvin.Products.Model.Store.ConnectorReference" store:Type="Tables" Schema="public" Table="ConnectorReference" />
+    <EntitySet Name="OutputDescriptionEntities" EntityType="Marvin.Products.Model.Store.OutputDescriptionEntity" store:Type="Tables" Schema="public" Table="OutputDescriptionEntity" />
+    <AssociationSet Name="FK_PartLink_ProductEntity" Association="Marvin.Products.Model.Store.FK_PartLink_ProductEntity">
+      <End Role="ProductEntity" EntitySet="ProductEntities" />
+      <End Role="PartLink" EntitySet="PartLinks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PartLink_ProductEntity1" Association="Marvin.Products.Model.Store.FK_PartLink_ProductEntity1">
+      <End Role="ProductEntity" EntitySet="ProductEntities" />
+      <End Role="PartLink" EntitySet="PartLinks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RevisionHistory_ProductEntity" Association="Marvin.Products.Model.Store.FK_RevisionHistory_ProductEntity">
+      <End Role="ProductEntity" EntitySet="ProductEntities" />
+      <End Role="RevisionHistory" EntitySet="RevisionHistories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductRecipeEntity_ProductEntity" Association="Marvin.Products.Model.Store.FK_ProductRecipeEntity_ProductEntity">
+      <End Role="ProductEntity" EntitySet="ProductEntities" />
+      <End Role="ProductRecipeEntity" EntitySet="ProductRecipeEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductProperties_ProductEntity" Association="Marvin.Products.Model.Store.FK_ProductProperties_ProductEntity">
+      <End Role="ProductEntity" EntitySet="ProductEntities" />
+      <End Role="ProductProperties" EntitySet="ProductProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ArticleEntity_ProductEntity" Association="Marvin.Products.Model.Store.FK_ArticleEntity_ProductEntity">
+      <End Role="ProductEntity" EntitySet="ProductEntities" />
+      <End Role="ArticleEntity" EntitySet="ArticleEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductRecipeEntity_WorkplanEntity" Association="Marvin.Products.Model.Store.FK_ProductRecipeEntity_WorkplanEntity">
+      <End Role="WorkplanEntity" EntitySet="WorkplanEntities" />
+      <End Role="ProductRecipeEntity" EntitySet="ProductRecipeEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductEntity_ProductProperties" Association="Marvin.Products.Model.Store.FK_ProductEntity_ProductProperties">
+      <End Role="ProductProperties" EntitySet="ProductProperties" />
+      <End Role="ProductEntity" EntitySet="ProductEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductDocument_ProductEntity" Association="Marvin.Products.Model.Store.FK_ProductDocument_ProductEntity">
+      <End Role="ProductEntity" EntitySet="ProductEntities" />
+      <End Role="ProductDocument" EntitySet="ProductDocuments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ArticleEntity_ArticleEntity" Association="Marvin.Products.Model.Store.FK_ArticleEntity_ArticleEntity">
+      <End Role="ArticleEntity" EntitySet="ArticleEntities" />
+      <End Role="ArticleEntity1" EntitySet="ArticleEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ArticleEntity_PartLink" Association="Marvin.Products.Model.Store.FK_ArticleEntity_PartLink">
+      <End Role="PartLink" EntitySet="PartLinks" />
+      <End Role="ArticleEntity" EntitySet="ArticleEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WorkplanReference_WorkplanEntity" Association="Marvin.Products.Model.Store.FK_WorkplanReference_WorkplanEntity">
+      <End Role="WorkplanEntity" EntitySet="WorkplanEntities" />
+      <End Role="WorkplanReference" EntitySet="WorkplanReferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WorkplanReference_WorkplanEntity1" Association="Marvin.Products.Model.Store.FK_WorkplanReference_WorkplanEntity1">
+      <End Role="WorkplanEntity" EntitySet="WorkplanEntities" />
+      <End Role="WorkplanReference" EntitySet="WorkplanReferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ConnectorEntity_WorkplanEntity" Association="Marvin.Products.Model.Store.FK_ConnectorEntity_WorkplanEntity">
+      <End Role="WorkplanEntity" EntitySet="WorkplanEntities" />
+      <End Role="ConnectorEntity" EntitySet="ConnectorEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StepEntity_WorkplanEntity" Association="Marvin.Products.Model.Store.FK_StepEntity_WorkplanEntity">
+      <End Role="WorkplanEntity" EntitySet="WorkplanEntities" />
+      <End Role="StepEntity" EntitySet="StepEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StepEntity_WorkplanEntity1" Association="Marvin.Products.Model.Store.FK_StepEntity_WorkplanEntity1">
+      <End Role="WorkplanEntity" EntitySet="WorkplanEntities" />
+      <End Role="StepEntity" EntitySet="StepEntities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ConnectorReference_ConnectorEntity" Association="Marvin.Products.Model.Store.FK_ConnectorReference_ConnectorEntity">
+      <End Role="ConnectorEntity" EntitySet="ConnectorEntities" />
+      <End Role="ConnectorReference" EntitySet="ConnectorReferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ConnectorReference_StepEntity" Association="Marvin.Products.Model.Store.FK_ConnectorReference_StepEntity">
+      <End Role="StepEntity" EntitySet="StepEntities" />
+      <End Role="ConnectorReference" EntitySet="ConnectorReferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OutputDescriptionEntity_StepEntity" Association="Marvin.Products.Model.Store.FK_OutputDescriptionEntity_StepEntity">
+      <End Role="StepEntity" EntitySet="StepEntities" />
+      <End Role="OutputDescriptionEntity" EntitySet="OutputDescriptionEntities" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="ProductEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+    <Property Name="MaterialNumber" Type="varchar" Nullable="false" MaxLength="127" />
+    <Property Name="Revision" Type="smallint" Nullable="false" />
+    <Property Name="TypeName" Type="varchar" Nullable="false" MaxLength="127" />
+    <Property Name="CurrentVersionId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PartLink">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ParentId" Type="bigint" Nullable="false" />
+    <Property Name="ChildId" Type="bigint" Nullable="false" />
+    <Property Name="PropertyName" Type="varchar" Nullable="false" MaxLength="127" />
+  </EntityType>
+  <EntityType Name="RevisionHistory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Comment" Type="varchar" Nullable="false" MaxLength="4095" />
+    <Property Name="ProductRevisionId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ProductRecipeEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" />
+    <Property Name="Revision" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="Classification" Type="int" Nullable="false" />
+    <Property Name="State" Type="int" Nullable="false" />
+    <Property Name="WorkplanId" Type="bigint" Nullable="false" />
+    <Property Name="ProductId" Type="bigint" Nullable="false" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+  </EntityType>
+  <EntityType Name="ProductProperties">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+    <Property Name="State" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
+    <Property Name="ProductId" Type="bigint" />
+  </EntityType>
+  <EntityType Name="ArticleEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="State" Type="bigint" Nullable="false" DefaultValue="0" />
+    <Property Name="ProductionDate" Type="timestamp" Nullable="false" />
+    <Property Name="Identifier" Type="varchar" />
+    <Property Name="NumberType" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="ProductId" Type="bigint" Nullable="false" />
+    <Property Name="ParentId" Type="bigint" />
+    <Property Name="ExtensionData" Type="varchar" />
+    <Property Name="PartLinkId" Type="bigint" />
+  </EntityType>
+  <EntityType Name="WorkplanEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="varchar" Nullable="false" />
+    <Property Name="Version" Type="int" Nullable="false" />
+    <Property Name="State" Type="int" Nullable="false" />
+    <Property Name="MaxElementId" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+  </EntityType>
+  <EntityType Name="ProductDocument">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+    <Property Name="FileName" Type="varchar" Nullable="false" MaxLength="255" />
+    <Property Name="FilesystemPath" Type="varchar" Nullable="false" />
+    <Property Name="File" Type="bytea" />
+    <Property Name="Version" Type="int" Nullable="false" DefaultValue="1" />
+    <Property Name="Hash" Type="varchar" />
+    <Property Name="ProductId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WorkplanReference">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ReferenceType" Type="int" Nullable="false" />
+    <Property Name="SourceId" Type="bigint" Nullable="false" />
+    <Property Name="TargetId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StepEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="StepId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="varchar" Nullable="false" />
+    <Property Name="Assembly" Type="varchar" Nullable="false" />
+    <Property Name="NameSpace" Type="varchar" Nullable="false" />
+    <Property Name="Classname" Type="varchar" Nullable="false" />
+    <Property Name="Parameters" Type="varchar" />
+    <Property Name="WorkplanId" Type="bigint" Nullable="false" />
+    <Property Name="SubWorkplanId" Type="bigint" />
+    <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="Deleted" Type="timestamp" />
+  </EntityType>
+  <EntityType Name="ConnectorEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ConnectorId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="varchar" />
+    <Property Name="Classification" Type="int" Nullable="false" />
+    <Property Name="WorkplanId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ConnectorReference">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Role" Type="int" Nullable="false" />
+    <Property Name="ConnectorId" Type="bigint" />
+    <Property Name="StepId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OutputDescriptionEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Index" Type="int" Nullable="false" />
+    <Property Name="Success" Type="boolean" Nullable="false" />
+    <Property Name="Name" Type="varchar" />
+    <Property Name="MappingValue" Type="bigint" Nullable="false" />
+    <Property Name="StepEntityId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_PartLink_ProductEntity">
+    <End Role="ProductEntity" Type="Marvin.Products.Model.Store.ProductEntity" Multiplicity="1" />
+    <End Role="PartLink" Type="Marvin.Products.Model.Store.PartLink" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PartLink">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PartLink_ProductEntity1">
+    <End Role="ProductEntity" Type="Marvin.Products.Model.Store.ProductEntity" Multiplicity="1" />
+    <End Role="PartLink" Type="Marvin.Products.Model.Store.PartLink" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PartLink">
+        <PropertyRef Name="ChildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RevisionHistory_ProductEntity">
+    <End Role="ProductEntity" Type="Marvin.Products.Model.Store.ProductEntity" Multiplicity="1" />
+    <End Role="RevisionHistory" Type="Marvin.Products.Model.Store.RevisionHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RevisionHistory">
+        <PropertyRef Name="ProductRevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductRecipeEntity_ProductEntity">
+    <End Role="ProductEntity" Type="Marvin.Products.Model.Store.ProductEntity" Multiplicity="1" />
+    <End Role="ProductRecipeEntity" Type="Marvin.Products.Model.Store.ProductRecipeEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductRecipeEntity">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductProperties_ProductEntity">
+    <End Role="ProductEntity" Type="Marvin.Products.Model.Store.ProductEntity" Multiplicity="0..1" />
+    <End Role="ProductProperties" Type="Marvin.Products.Model.Store.ProductProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductProperties">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ArticleEntity_ProductEntity">
+    <End Role="ProductEntity" Type="Marvin.Products.Model.Store.ProductEntity" Multiplicity="1" />
+    <End Role="ArticleEntity" Type="Marvin.Products.Model.Store.ArticleEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ArticleEntity">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductRecipeEntity_WorkplanEntity">
+    <End Role="WorkplanEntity" Type="Marvin.Products.Model.Store.WorkplanEntity" Multiplicity="1" />
+    <End Role="ProductRecipeEntity" Type="Marvin.Products.Model.Store.ProductRecipeEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="WorkplanEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductRecipeEntity">
+        <PropertyRef Name="WorkplanId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductEntity_ProductProperties">
+    <End Role="ProductProperties" Type="Marvin.Products.Model.Store.ProductProperties" Multiplicity="1" />
+    <End Role="ProductEntity" Type="Marvin.Products.Model.Store.ProductEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductProperties">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductEntity">
+        <PropertyRef Name="CurrentVersionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductDocument_ProductEntity">
+    <End Role="ProductEntity" Type="Marvin.Products.Model.Store.ProductEntity" Multiplicity="1" />
+    <End Role="ProductDocument" Type="Marvin.Products.Model.Store.ProductDocument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductDocument">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ArticleEntity_ArticleEntity">
+    <End Role="ArticleEntity" Type="Marvin.Products.Model.Store.ArticleEntity" Multiplicity="0..1" />
+    <End Role="ArticleEntity1" Type="Marvin.Products.Model.Store.ArticleEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ArticleEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ArticleEntity1">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ArticleEntity_PartLink">
+    <End Role="PartLink" Type="Marvin.Products.Model.Store.PartLink" Multiplicity="0..1" />
+    <End Role="ArticleEntity" Type="Marvin.Products.Model.Store.ArticleEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PartLink">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ArticleEntity">
+        <PropertyRef Name="PartLinkId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WorkplanReference_WorkplanEntity">
+    <End Role="WorkplanEntity" Type="Marvin.Products.Model.Store.WorkplanEntity" Multiplicity="1" />
+    <End Role="WorkplanReference" Type="Marvin.Products.Model.Store.WorkplanReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="WorkplanEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="WorkplanReference">
+        <PropertyRef Name="TargetId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WorkplanReference_WorkplanEntity1">
+    <End Role="WorkplanEntity" Type="Marvin.Products.Model.Store.WorkplanEntity" Multiplicity="1" />
+    <End Role="WorkplanReference" Type="Marvin.Products.Model.Store.WorkplanReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="WorkplanEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="WorkplanReference">
+        <PropertyRef Name="SourceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ConnectorEntity_WorkplanEntity">
+    <End Role="WorkplanEntity" Type="Marvin.Products.Model.Store.WorkplanEntity" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ConnectorEntity" Type="Marvin.Products.Model.Store.ConnectorEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="WorkplanEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ConnectorEntity">
+        <PropertyRef Name="WorkplanId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StepEntity_WorkplanEntity">
+    <End Role="WorkplanEntity" Type="Marvin.Products.Model.Store.WorkplanEntity" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="StepEntity" Type="Marvin.Products.Model.Store.StepEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="WorkplanEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StepEntity">
+        <PropertyRef Name="WorkplanId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StepEntity_WorkplanEntity1">
+    <End Role="WorkplanEntity" Type="Marvin.Products.Model.Store.WorkplanEntity" Multiplicity="0..1" />
+    <End Role="StepEntity" Type="Marvin.Products.Model.Store.StepEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="WorkplanEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StepEntity">
+        <PropertyRef Name="SubWorkplanId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ConnectorReference_ConnectorEntity">
+    <End Role="ConnectorEntity" Type="Marvin.Products.Model.Store.ConnectorEntity" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ConnectorReference" Type="Marvin.Products.Model.Store.ConnectorReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ConnectorEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ConnectorReference">
+        <PropertyRef Name="ConnectorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ConnectorReference_StepEntity">
+    <End Role="StepEntity" Type="Marvin.Products.Model.Store.StepEntity" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ConnectorReference" Type="Marvin.Products.Model.Store.ConnectorReference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StepEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ConnectorReference">
+        <PropertyRef Name="StepId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OutputDescriptionEntity_StepEntity">
+    <End Role="StepEntity" Type="Marvin.Products.Model.Store.StepEntity" Multiplicity="1" />
+    <End Role="OutputDescriptionEntity" Type="Marvin.Products.Model.Store.OutputDescriptionEntity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StepEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OutputDescriptionEntity">
+        <PropertyRef Name="StepEntityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

@@ -1,0 +1,2 @@
+INCLUDE:
+EXCLUDE:-[Marvin]* -[Marvin.PlatformTools]* -[Marvin.Container]* -[Marvin.Runtime]* -[Marvin.TestTools*]* -[Marvin.Runtime.Base]* -[Marvin.ClientFramework]* -[Marvin.ClientFramework.Base]* -[*]*ModuleController -[*]*Config -[*]*Console -[Marvin.Protocols*]*

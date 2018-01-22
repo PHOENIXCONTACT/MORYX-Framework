@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="Marvin.Products.UI.Interaction.ImportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:interaction="clr-namespace:Marvin.Products.UI.Interaction"
+             xmlns:controls="clr-namespace:Marvin.Controls;assembly=Marvin.Controls"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance interaction:ImportViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <DialogPanel Background="White" BusyVisibility="{Binding OkCmd.Execution.BusyVisibility}">
+        <DialogPanel.Header>
+            <TextBlock Margin="0,5,0,5">
+             Importing product using importers.
+            </TextBlock>
+        </DialogPanel.Header>
+        <DialogPanel.Buttons>
+            <EddieButton  DockPanel.Dock="Bottom" Content="Cancel" Icon="Cross" EddieStyle="Gray"
+                         HorizontalAlignment="Right"
+                         Margin="5" Command="{Binding CancelCmd}" />
+            <EddieButton IsDefault="True" Margin="5" Icon="Ok"
+                     Command="{Binding OkCmd}" IsEnabled="{Binding OkCmd.Execution.TaskCompleted}"
+                     Content="Import product" />
+        </DialogPanel.Buttons>
+        <DockPanel LastChildFill="True">
+            <EddieComboBox DockPanel.Dock="Top" ItemsSource="{Binding Importers}"
+                                           SelectedItem="{Binding SelectedImporter}" Margin="5,5,5,10" Width="250">
+                <EddieComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </EddieComboBox.ItemTemplate>
+            </EddieComboBox>
+
+            <controls:ConfigEditor BreadcrumbVisibility="Hidden" DockPanel.Dock="Top" IsEditMode="True"
+                                   RootEntry="{Binding SelectedImporter.Parameters}"/>
+
+            <TextBlock DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                       FontWeight="Bold" Foreground="Red" Margin="2,20,0,20" 
+                       Text="{Binding ErrorText}" />
+
+        </DockPanel>
+    </DialogPanel>
+</UserControl>
