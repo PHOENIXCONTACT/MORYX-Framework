@@ -8,17 +8,12 @@ namespace Marvin.Runtime.Kernel
     internal interface IModuleStarter : IModuleManagerComponent
     {
         /// <summary>
-        /// Initialize this module to try to achieve ready state
-        /// </summary>
-        void Initialize(IServerModule module);
-
-        /// <summary>
-        /// Start a plugin and start dependencies if necessary
+        /// Starts a module and all dependencies if necessary
         /// </summary>
         void Start(IServerModule module);
 
         /// <summary>
-        /// Start all services
+        /// Starts all modules
         /// </summary>
         void StartAll();
     }
