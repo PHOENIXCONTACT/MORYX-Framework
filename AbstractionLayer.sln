@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Drivers.PhoenixPlc.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.IntegrationTests", "IntegrationTests\Marvin.Products.IntegrationTests\Marvin.Products.IntegrationTests.csproj", "{88D15860-19C3-4E02-A7F1-2E1EACE87963}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Notifications.Tests", "Tests\Marvin.Notifications.Tests\Marvin.Notifications.Tests.csproj", "{93650069-26E9-4E0D-A336-9D02F1039346}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,10 @@ Global
 		{88D15860-19C3-4E02-A7F1-2E1EACE87963}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88D15860-19C3-4E02-A7F1-2E1EACE87963}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88D15860-19C3-4E02-A7F1-2E1EACE87963}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93650069-26E9-4E0D-A336-9D02F1039346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93650069-26E9-4E0D-A336-9D02F1039346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93650069-26E9-4E0D-A336-9D02F1039346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93650069-26E9-4E0D-A336-9D02F1039346}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,5 +147,6 @@ Global
 		{E7BCFD1C-D140-467E-BDFB-C7013DC59171} = {D6D69517-7889-4E08-ABEA-D3E069D08A6B}
 		{E45C5EA3-9E25-471B-AA7C-8CC821990528} = {D6D69517-7889-4E08-ABEA-D3E069D08A6B}
 		{88D15860-19C3-4E02-A7F1-2E1EACE87963} = {A33D3A48-37FE-46A3-A0BE-E8D7586B862C}
+		{93650069-26E9-4E0D-A336-9D02F1039346} = {D6D69517-7889-4E08-ABEA-D3E069D08A6B}
 	EndGlobalSection
 EndGlobal
