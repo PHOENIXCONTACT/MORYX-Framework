@@ -53,7 +53,7 @@ namespace Marvin.Runtime.Kernel
             _listener.Start();
 
             // Register to service manager event            
-            ModuleManager.ModuleChangedState += OnModuleStateChanged;
+            ModuleManager.ModuleStateChanged += OnModuleStateChanged;
             base.Boot();
         }
 
@@ -131,7 +131,7 @@ namespace Marvin.Runtime.Kernel
         {
             base.ShutDown();
 
-            ModuleManager.ModuleChangedState -= OnModuleStateChanged;
+            ModuleManager.ModuleStateChanged -= OnModuleStateChanged;
 
             _shutdownTimer.Dispose();
 

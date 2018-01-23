@@ -55,10 +55,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DependentTestModule\Marvin.DependentTestModule.csproj">
-      <Project>{d8344b1f-9db3-4e85-9195-6fffecbf6427}</Project>
-      <Name>Marvin.DependentTestModule</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Diagnostics.DbMonitor\Marvin.Runtime.Diagnostics.DbMonitor.csproj">
       <Project>{afbaeb70-6df9-4aef-a2f4-3c5413738ca2}</Project>
       <Name>Marvin.Runtime.Diagnostics.DbMonitor</Name>
@@ -78,10 +74,6 @@
     <ProjectReference Include="..\Marvin.Runtime.UserManagement\Marvin.Runtime.UserManagement.csproj">
       <Project>{fb5ba113-5ebe-453b-b144-7d487953df56}</Project>
       <Name>Marvin.Runtime.UserManagement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TestModule\Marvin.TestModule.csproj">
-      <Project>{24ed97ad-6d04-4dc0-afcb-c911ef0aa738}</Project>
-      <Name>Marvin.TestModule</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

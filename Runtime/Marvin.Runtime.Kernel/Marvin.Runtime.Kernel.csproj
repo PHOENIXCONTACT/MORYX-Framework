@@ -97,9 +97,11 @@
     <Compile Include="Modules\ComponentContracts\IModuleStopper.cs" />
     <Compile Include="Modules\Components\DependencyEvaluation.cs" />
     <Compile Include="Modules\Components\FailureStrategy.cs" />
+    <Compile Include="Modules\ComponentContracts\IModuleInitializer.cs" />
     <Compile Include="Modules\Components\MissingFacadeException.cs" />
     <Compile Include="Modules\Components\ModuleDependencyManager.cs" />
     <Compile Include="Modules\Components\ModuleDependencyTree.cs" />
+    <Compile Include="Modules\Components\ModuleInitializer.cs" />
     <Compile Include="Modules\Components\ModuleStarter.cs" />
     <Compile Include="Modules\Components\ModuleStopper.cs" />
     <Compile Include="Modules\Components\ModuleManagerComponent.cs" />

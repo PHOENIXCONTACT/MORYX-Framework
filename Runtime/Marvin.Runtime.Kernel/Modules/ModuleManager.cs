@@ -15,38 +15,48 @@ namespace Marvin.Runtime.Kernel
     [InitializableKernelComponent(typeof(IModuleManager))]
     public class ModuleManager : IModuleManager, IInitializable, ILoggingHost
     {
-        #region Injected Properties
-        private IServerModule[] _serverModules = new IServerModule[0];
+        #region Dependencies
+
+        /// <summary>
+        /// Logger instance
+        /// </summary>
+        public IModuleLogger Logger { get; set; }
+
         /// <summary>
         /// Get/set the list of server modules. Injected by castle.
         /// </summary>
-        public IServerModule[] ServerModules
-        {
-            get { return _serverModules; }
-            set { _serverModules = value; }
-        }
+        public IServerModule[] ServerModules { get; set; }
 
         /// <summary>
         /// Logger management instance. Injected by castle.
         /// </summary>
         public ILoggerManagement LoggerManagement { get; set; }
+
         /// <summary>
         /// Configuration manager instance. Injected by castel.
         /// </summary>
         public IConfigManager ConfigManager { get; set; }
+
         #endregion
 
-        #region Fields
-        private bool _eventsRegistered;
+        #region Fields and Properties
+
+        /// <inheritdoc />
+        public string Name => "Kernel";
 
         private IModuleDependencyManager _dependencyManager;
+        private IModuleInitializer _moduleInitializer;
         private IModuleStarter _moduleStarter;
         private IModuleStopper _moduleStopper;
         private IModuleFailureStrategy _failureStrategy;
         private ModuleManagerConfig _config;
+
+        private readonly IDictionary<IServerModule, int> _retryCount = new Dictionary<IServerModule, int>();
+
         #endregion
 
         #region IModuleManager
+
         /// <summary>
         /// Initialize the module manager.
         /// </summary>
@@ -54,21 +64,24 @@ namespace Marvin.Runtime.Kernel
         {
             // Create cross component objects
             var waitingServices = new Dictionary<IServerModule, ICollection<IServerModule>>();
-            var allServices = new Func<IEnumerable<IServerModule>>(() => AllModules);
+            var allModules = new Func<IEnumerable<IServerModule>>(() => AllModules);
 
             // Create components
             LoggerManagement.ActivateLogging(this);
             _config = ConfigManager.GetConfiguration<ModuleManagerConfig>();
             _dependencyManager = new ModuleDependencyManager(Logger.GetChild(string.Empty, typeof(ModuleDependencyManager)));
+
+            _moduleInitializer = new ModuleInitializer(Logger.GetChild(string.Empty, typeof(ModuleInitializer)));
             _moduleStarter = new ModuleStarter(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStarter)), _config);
             _moduleStopper = new ModuleStopper(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStopper)));
+
             _failureStrategy = new FailureStrategy(_config);
 
             // Link components
             var components = new IModuleManagerComponent[] { _dependencyManager, _moduleStarter, _moduleStopper };
             foreach (var component in components)
             {
-                component.AllModules = allServices;
+                component.AllModules = allModules;
                 component.WaitingModules = waitingServices;
             }
 
@@ -76,22 +89,16 @@ namespace Marvin.Runtime.Kernel
             _dependencyManager.BuildDependencyTree();
 
             // Link framework modules
-            foreach (var platformModule in _serverModules.OfType<IPlatformModule>())
+            foreach (var platformModule in ServerModules.OfType<IPlatformModule>())
             {
                 platformModule.SetModuleManager(this);
             }
-        }
 
-        private void RegisterEvents()
-        {
-            if (_eventsRegistered)
-                return;
-
-            foreach (var plugin in AllModules)
+            // Observe state changed events of modules
+            foreach (var module in AllModules)
             {
-                plugin.StateChanged += ModuleStateChanged;
+                module.StateChanged += OnModuleStateChanged;
             }
-            _eventsRegistered = true;
         }
 
         /// <summary>
@@ -99,10 +106,8 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public void StartModules()
         {
-            RegisterEvents();
             _moduleStarter.StartAll();
         }
-
 
         /// <summary>
         /// Stop all modules in cascading order
@@ -118,7 +123,7 @@ namespace Marvin.Runtime.Kernel
         /// <param name="module"></param>
         public void InitializeModule(IServerModule module)
         {
-            module.Initialize();
+            _moduleInitializer.Initialize(module);
         }
 
         /// <summary>
@@ -153,29 +158,14 @@ namespace Marvin.Runtime.Kernel
         }
 
         /// <summary>
-        /// Confirm error or warning for module
-        /// </summary>
-        /// <param name="module"></param>
-        public void ConfirmAllNotifications(IServerModule module)
-        {
-            foreach (var notification in module.Notifications)
-            {
-                notification.Confirm();
-            }
-        }
-
-        /// <summary>
         /// All modules
         /// </summary>
-        public IEnumerable<IServerModule> AllModules
-        {
-            get { return _serverModules; }
-        }
+        public IEnumerable<IServerModule> AllModules => ServerModules;
 
         /// <summary>
         /// Inform the listeners about module state changes. 
         /// </summary>
-        public event EventHandler<ModuleStateChangedEventArgs> ModuleChangedState;
+        public event EventHandler<ModuleStateChangedEventArgs> ModuleStateChanged;
 
         /// <summary>
         /// Get the start dependencies of the given module.
@@ -191,10 +181,7 @@ namespace Marvin.Runtime.Kernel
         /// Get the full dependency tree
         /// </summary>
         /// <returns></returns>
-        public IDependencyEvaluation DependencyEvaluation
-        {
-            get { return _dependencyManager.GetDependencyEvalutaion(); }
-        }
+        public IDependencyEvaluation DependencyEvaluation => _dependencyManager.GetDependencyEvalutaion();
 
         /// <summary>
         /// Get or set a services behaviour using 
@@ -207,13 +194,12 @@ namespace Marvin.Runtime.Kernel
 
         #endregion
 
-        private void ModuleStateChanged(object sender, ModuleStateChangedEventArgs eventArgs)
+        private void OnModuleStateChanged(object sender, ModuleStateChangedEventArgs eventArgs)
         {
-            ModuleChangedState?.Invoke(sender, eventArgs);
+            ModuleStateChanged?.Invoke(sender, eventArgs);
             ReincarnateOnFailure((IServerModule)sender, eventArgs.NewState);
         }
 
-        private readonly IDictionary<IServerModule, int> _retryCount = new Dictionary<IServerModule, int>();
         private void ReincarnateOnFailure(IServerModule sender, ServerModuleState newState)
         {
             switch (newState)
@@ -245,15 +231,5 @@ namespace Marvin.Runtime.Kernel
                     break;
             }
         }
-
-        /// <summary>
-        /// Name of this host. Used for logger name structure
-        /// </summary>
-        public string Name { get { return "Kernel"; } }
-
-        /// <summary>
-        /// Logger instance
-        /// </summary>
-        public IModuleLogger Logger { get; set; }
     }
 }

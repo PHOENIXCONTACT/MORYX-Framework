@@ -50,7 +50,7 @@ namespace Marvin.Runtime.Modules
         /// <summary>
         /// Event raised when one of the modules changed its state
         /// </summary>
-        event EventHandler<ModuleStateChangedEventArgs> ModuleChangedState;
+        event EventHandler<ModuleStateChangedEventArgs> ModuleStateChanged;
         
         /// <summary>
         /// All other modules this module depends on

@@ -94,7 +94,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
             }
 
             // Register to changed events
-            ModuleManager.ModuleChangedState += OnModuleChangedState;
+            ModuleManager.ModuleStateChanged += OnModuleStateChanged;
 
             // Determine number of all modules once to avoid constant call to ModuleManager
             // For optical purposes we get the number of digits it takes to display the number of all modules
@@ -239,7 +239,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
             }
         }
 
-        private void OnModuleChangedState(object sender, ModuleStateChangedEventArgs stateChanged)
+        private void OnModuleStateChanged(object sender, ModuleStateChangedEventArgs stateChanged)
         {
             // Reset NoChangeStep
             _noChangeTimer.Stop();
