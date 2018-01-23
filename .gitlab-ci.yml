@@ -9,7 +9,11 @@ Build:
   tags:
     - vs2015
   script:
-    - .\build.ps1 -Build
+    - .\build.ps1 -SetAssemblyVersion -BuildNumber $([int]::Parse($env:CI_JOB_ID) + 363) -Build -Pack
+  artifacts:
+    expire_in: 1 hrs
+    paths:
+      - 'Artifacts\Packages'
 
 SmokeTests: 
   stage: test
@@ -18,31 +22,41 @@ SmokeTests:
     - vs2015
     - postgres
 
-Tests: 
+CoverTests: 
   stage: test
-  script: .\build.ps1 -Build -UnitTests -IntegrationTests
+  script: .\build.ps1 -Build -UnitTests #-IntegrationTests
   tags:
     - vs2015
+  artifacts:
+    expire_in: 1 hrs
+    paths:
+      - 'Artifacts\OpenCover' 
 
-SystemTests: 
-  stage: test
-  script: .\build.ps1 -Build -SystemTests
-  tags:
-    - vs2015
-
-Documentation:
+GenerateDocs:
   tags:
     - vs2015
   stage: documentation
-  script: .\build.ps1 -Build -GenerateDocs
-  only: 
-    - master@marvinplatform/MarvinPlatform
+  script: 
+    - .\build.ps1 -GenerateDocs
+    - 'xcopy /s /i Documentation\_site\* Artifacts\Documentation'
+  artifacts:
+    expire_in: 1 hrs
+    paths:
+      - 'Artifacts\Documentation'
 
-Publish: 
+PublishDocs: 
+  stage: publish
+  script: 'echo "Creating package of all precedence stages!"'
+  artifacts:
+    expire_in: 1 hrs
+    paths:
+      - 'Artifacts\'
+
+PublishPackages: 
   tags:
     - vs2015
     - nuget
   stage: publish
-  script: .\build.ps1 -SetAssemblyVersion -Build -BuildNumber $($env:CI_JOB_ID + 363) -Pack -Publish
-  only: 
-    - master@marvinplatform/MarvinPlatform
+  script: 'echo "Currently do nothing!"' # .\build.ps1 -Publish
+#  only: 
+#    - master@marvinplatform/MarvinPlatform

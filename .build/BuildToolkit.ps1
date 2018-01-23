@@ -11,12 +11,19 @@ $VswhereVersion = "2.2.11";
 $RootPath = $MyInvocation.PSScriptRoot;
 $BuildTools = "$RootPath\.buildtools";
 $DotBuild = "$RootPath\.build";
+
+# Artifacts
+$ArtifactsDir = "$RootPath\Artifacts";
+
+# Documentation
 $DocumentationDir = "$RootPath\Documentation";
-$NunitReportsDir = "$RootPath\NUnitReportsDir";
-$NupkgTarget = "$RootPath\Artefacts";
+
+# Nunit
+$NunitReportsDir = "$ArtifactsDir\NUnitReportsDir";
 
 # Nuget
 $NugetConfig = "$dotBuild\NuGet.Config";
+$NugetPackageArtifacts = "$ArtifactsDir\Packages";
 $NugetPackageTarget = "http://127.0.0.1:5588/nuget/MaRVIN-CI/";
 $NugetPackageTargetApiKey = "Admin:Admin";
 
@@ -281,10 +288,7 @@ function Invoke-CoverReport {
     Param
     (
         [Parameter(Mandatory=$false, Position=0)]
-        [string]$SearchPath = $RootPath,
-
-        [Parameter(Mandatory=$false, Position=1)]
-        [string]$Name
+        [string]$SearchPath = $RootPath
     )
 
     Write-Step "Creating cover report. Searching for OpenCover.xml files in $SearchPath."
@@ -296,9 +300,7 @@ function Invoke-CoverReport {
     $reports = (Get-ChildItem $SearchPath -Recurse -Include '*.OpenCover.xml');
     $asArgument = [string]::Join(";",$reports);
 
-    $reportsName = (&{If($Name) {"$Name.OpenCover"} Else {"OpenCover"}})
-    
-    & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$DocumentationDir\$reportsName\"
+    & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$ArtifactsDir\OpenCover\"
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
@@ -319,20 +321,20 @@ function Invoke-DocFx {
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-Pack($FilePath, $OutDir, $Version, $Configuration) {
-    $packargs = @("-outputdirectory", "$OutDir", "-includereferencedprojects", "-Version", $Version, "-Prop", "Configuration=$Configuration");
+function Invoke-Pack($FilePath, $Version, $Configuration) {
+    if(!(Test-Path $NugetPackageArtifacts)) {
+        Write-Host "Creating missing directory '$NugetPackageArtifacts'"
+        New-Item $NugetPackageArtifacts -Type Directory | Out-Null
+    }
+
+    $packargs = @("-outputdirectory", "$NugetPackageArtifacts", "-includereferencedprojects", "-Version", $Version, "-Prop", "Configuration=$Configuration");
 
     # Call nuget with default arguments plus optional
     & $global:NugetCli pack "$FilePath" @packargs
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-PackAll($Directory, $OutDir, $Version, $Configuration) {
-    if(!(Test-Path $OutDir)) {
-        Write-Host "Creating missing directory '$OutDir'"
-        New-Item $OutDir -Type Directory | Out-Null
-    }
-
+function Invoke-PackAll($Directory, $Version, $Configuration) {
     Write-Host "Looking for .nuspec files..."
     # Look for nuspec in this directory
     foreach ($nuspecFile in Get-ChildItem $Directory -Recurse -Filter *.nuspec) {
@@ -342,16 +344,16 @@ function Invoke-PackAll($Directory, $OutDir, $Version, $Configuration) {
         # Check if there is a matching proj for the nuspec
         $projectPath = [IO.Path]::ChangeExtension($nuspecPath, "csproj")
         if(Test-Path $projectPath) {
-            Invoke-Pack $projectPath $OutDir $Version $Configuration
+            Invoke-Pack $projectPath $Version $Configuration
         } else {
-            Invoke-Pack $nuspecPath $OutDir $Version $Configuration
+            Invoke-Pack $nuspecPath $Version $Configuration
         }
     }
 }
 
 function Invoke-Publish {
-    Write-Host "Pushing packages from $NupkgTarget to $NugetPackageTarget"
-    $packages = Get-ChildItem $NupkgTarget -Recurse -Include '*.nupkg'
+    Write-Host "Pushing packages from $ArtifactsDir to $NugetPackageTarget"
+    $packages = Get-ChildItem $ArtifactsDir -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
         & $global:NugetCli push $package $NugetPackageTargetApiKey -Source $NugetPackageTarget

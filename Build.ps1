@@ -88,7 +88,7 @@ if ($GenerateDocs) {
 
 if ($Pack) {
     $NugetPackageVersion = Get-NugetPackageVersion -Version $Version -Preview $Preview;
-    Invoke-PackAll $RootPath $NupkgTarget $NugetPackageVersion $Configuration
+    Invoke-PackAll $RootPath $NugetPackageVersion $Configuration
 }
 
 if ($Publish) {
