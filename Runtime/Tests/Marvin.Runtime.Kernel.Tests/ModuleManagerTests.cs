@@ -12,6 +12,9 @@ namespace Marvin.Runtime.Kernel.Tests
     [TestFixture]
     public class ModuleManagerTests
     {
+        private Mock<IConfigManager> _mockConfigManager;
+        private Mock<ILoggerManagement> _mockLoggerManagement;
+
         [SetUp]
         public void Setup()
         {
@@ -26,11 +29,11 @@ namespace Marvin.Runtime.Kernel.Tests
         }
 
 
-        private ModuleManager CreateObjectUnderTest(IEnumerable<IServerModule> modules)
+        private ModuleManager CreateObjectUnderTest(IServerModule[] modules)
         {
             return new ModuleManager
             {
-                ServerModules = modules.ToArray(),
+                ServerModules = modules,
                 ConfigManager = _mockConfigManager.Object,
                 LoggerManagement = _mockLoggerManagement.Object
             };
@@ -67,7 +70,7 @@ namespace Marvin.Runtime.Kernel.Tests
             {
                 dependend
             });
-  
+
             // Act
             moduleManager.Initialize();
 
@@ -118,13 +121,16 @@ namespace Marvin.Runtime.Kernel.Tests
         [Test]
         public void ShouldInitializeTheModule()
         {
+            // Arrange
             var mockModule = new Mock<IServerModule>();
 
             var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
             moduleManager.Initialize();
 
+            // Act
             moduleManager.InitializeModule(mockModule.Object);
 
+            // Assert
             mockModule.Verify(mock => mock.Initialize());
         }
 
@@ -146,7 +152,6 @@ namespace Marvin.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-
             mockModule1.Verify(mock => mock.Initialize(), Times.Once);
             mockModule1.Verify(mock => mock.Start());
 
@@ -171,7 +176,42 @@ namespace Marvin.Runtime.Kernel.Tests
             mockModule.Verify(mock => mock.Start());
         }
 
-        private Mock<IConfigManager> _mockConfigManager;
-        private Mock<ILoggerManagement> _mockLoggerManagement;
+        [Test]
+        public void ShouldStopModulesAndDeregisterFromEvents()
+        {
+            // Argange
+            var mockModule1 = new Mock<IServerModule>();
+            var mockModule2 = new Mock<IServerModule>();
+
+            var moduleManager = CreateObjectUnderTest(new[] {mockModule1.Object, mockModule2.Object});
+            moduleManager.Initialize();
+            moduleManager.StartModules();
+
+            // Act
+            moduleManager.StopModules();
+
+            // Assert
+            mockModule1.Verify(mock => mock.Stop());
+            mockModule2.Verify(mock => mock.Stop());
+        }
+
+        [Test]
+        public void ShouldObserveModuleStatesAfterInitialize()
+        {
+            // Argange
+            var mockModule = new Mock<IServerModule>();
+            var eventFired = false;
+
+            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
+            moduleManager.ModuleStateChanged += (sender, args) => eventFired = true;
+            moduleManager.Initialize();
+
+            // Act
+            moduleManager.Initialize();
+            mockModule.Raise(mock => mock.StateChanged += null, null, new ModuleStateChangedEventArgs());
+
+            // Assert
+            Assert.IsTrue(eventFired, "ModuleManager doesn't observe state changed events of modules.");
+        }
     }
 }

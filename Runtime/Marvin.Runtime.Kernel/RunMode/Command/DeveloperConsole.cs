@@ -33,7 +33,7 @@ namespace Marvin.Runtime.Kernel
             }
 
             // Register to service manager event            
-            ModuleManager.ModuleChangedState += OnModuleStateChanged;
+            ModuleManager.ModuleStateChanged += OnModuleStateChanged;
 
             // Welcome message and start
             DrawTitle();
@@ -76,7 +76,7 @@ namespace Marvin.Runtime.Kernel
         {
             base.ShutDown();
 
-            ModuleManager.ModuleChangedState -= OnModuleStateChanged;
+            ModuleManager.ModuleStateChanged -= OnModuleStateChanged;
 
             ConfigLoader.SaveAll();
         }

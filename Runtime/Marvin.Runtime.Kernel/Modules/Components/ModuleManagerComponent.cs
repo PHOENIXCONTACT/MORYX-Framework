@@ -6,6 +6,16 @@ namespace Marvin.Runtime.Kernel
 {
     internal abstract class ModuleManagerComponent : IModuleManagerComponent
     {
+        /// <summary>
+        /// Global dictionary of modules awaiting the start of other modules
+        /// </summary>
+        public IDictionary<IServerModule, ICollection<IServerModule>> WaitingModules { get; set; }
+
+        /// <summary>
+        /// Delegate to get a copy of the module list
+        /// </summary>
+        public Func<IEnumerable<IServerModule>> AllModules { get; set; }
+
         protected void AddWaitingService(IServerModule dependency, IServerModule dependend)
         {
             lock (WaitingModules)
@@ -21,15 +31,5 @@ namespace Marvin.Runtime.Kernel
                 }
             }
         }
-
-        /// <summary>
-        /// Global dictionary of modules awaiting the start of other modules
-        /// </summary>
-        public IDictionary<IServerModule, ICollection<IServerModule>> WaitingModules { get; set; }
-
-        /// <summary>
-        /// Delegate to get a copy of the module list
-        /// </summary>
-        public Func<IEnumerable<IServerModule>> AllModules { get; set; }
     }
 }
