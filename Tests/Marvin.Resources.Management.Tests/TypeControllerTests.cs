@@ -106,7 +106,7 @@ namespace Marvin.Resources.Management.Tests
             var proxy = (IMyResource) _typeController.GetProxy(instance);
 
             // Act: Register listener and change foo
-            object eventSender = null;
+            object eventSender = null, eventSender2 = null;
             int eventValue = 0;
             var finallyEven = false;
             Assert.DoesNotThrow(() => instance.Foo = 10);
@@ -117,11 +117,14 @@ namespace Marvin.Resources.Management.Tests
             };
             proxy.FooChanged += eventHandler;
             proxy.FooEven += (sender, b) => finallyEven = b;
+            proxy.SomeEvent += (sender, args) => eventSender2 = sender;
             instance.Foo = 100;
+            instance.RaiseEvent();
             proxy.FooChanged -= eventHandler;
 
             // Assert: Check if eventSender is not null and equals the proxy
             Assert.NotNull(eventSender);
+            Assert.NotNull(eventSender2);
             Assert.AreNotEqual(0, eventValue);
             Assert.AreEqual(proxy, eventSender);
             Assert.AreEqual(100, eventValue);
