@@ -14,6 +14,10 @@ namespace Marvin.Resources.Management.Tests
         event EventHandler<int> FooChanged;
 
         event EventHandler<bool> FooEven;
+
+        void RaiseEvent();
+
+        event EventHandler SomeEvent;
     }
 
     public interface IDuplicateFoo : IPublicResource

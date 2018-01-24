@@ -291,8 +291,9 @@ namespace Marvin.Resources.Management
             typeBuilder.DefineMethodOverride(removeMethod, eventInfo.RemoveMethod);
 
             // Step 5: Define caller method to raise the event
+            var handlerType = eventInfo.EventHandlerType;
+            var argument = handlerType == typeof(EventHandler) ? typeof(EventArgs) : handlerType.GetGenericArguments()[0];
             var methodAttributes = MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
-            var argument = eventInfo.EventHandlerType.GetGenericArguments()[0];
             var raiseMethod = typeBuilder.DefineMethod($"On{eventInfo.Name}", methodAttributes, typeof(void), new[] { typeof(object), argument });
             generator = raiseMethod.GetILGenerator();
             var returnLabel = generator.DefineLabel(); // Branch label if the field is null

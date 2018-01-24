@@ -31,6 +31,12 @@ namespace Marvin.Resources.Management.Tests
         public event EventHandler<int> FooChanged;
 
         public event EventHandler<bool> FooEven;
+
+        public event EventHandler SomeEvent;
+        public void RaiseEvent()
+        {
+            SomeEvent?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public class DerivedResource : MyResource
