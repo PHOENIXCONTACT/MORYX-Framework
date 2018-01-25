@@ -235,7 +235,9 @@ namespace Marvin.Resources.Management
             }
             else
             {
-                elementType = propertyType.GetGenericArguments()[0];
+                elementType = propertyType.IsArray 
+                    ? propertyType.GetElementType()
+                    : propertyType.GetGenericArguments()[0];
                 methodName = nameof(ResourceProxy<PublicResource>.ConvertMany);
             }
             var methodInfo = baseType.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);

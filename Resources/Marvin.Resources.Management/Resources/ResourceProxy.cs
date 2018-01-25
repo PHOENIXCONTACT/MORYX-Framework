@@ -103,10 +103,10 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Convert a collection of referenced resources to proxies
         /// </summary>
-        protected internal IEnumerable<TResource> ConvertMany<TResource>(IEnumerable<IResource> instances) 
+        protected internal TResource[] ConvertMany<TResource>(IEnumerable<IResource> instances) 
             where TResource : IResource
         {
-            return instances.Select(Convert<TResource>);
+            return instances.Select(Convert<TResource>).ToArray();
         }
 
         public override string ToString()

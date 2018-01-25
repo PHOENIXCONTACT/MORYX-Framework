@@ -172,10 +172,13 @@ namespace Marvin.Resources.Management.Tests
             var reference = proxy.Reference;
             var methodRef = proxy.GetReference();
             var references = proxy.MoreReferences.ToArray();
+            var references2 = proxy.GetReferences();
             var nonPubProxy = proxy.NonPublic;
 
             IMyResource eventArgs = null;
             proxy.ReferenceChanged += (sender, resource) => eventArgs = resource;
+            IMyResource[] eventArgs2 = null;
+            proxy.SomeChanged += (sender, resources) => eventArgs2 = resources;
 
             // Act: Set resource property through proxy
             proxy.Reference = references[0];
@@ -184,12 +187,17 @@ namespace Marvin.Resources.Management.Tests
             // Make sure all references where replaced with proxies
             Assert.AreNotEqual(ref1, reference);
             Assert.AreNotEqual(ref2, references[0]);
+            Assert.AreNotEqual(ref2, references2[0]);
             Assert.AreNotEqual(nonPub, nonPubProxy);
             Assert.AreEqual(20, reference.Foo);
             Assert.AreEqual(reference, methodRef);
             Assert.AreEqual(30, references[0].Foo);
+            Assert.AreEqual(30, references2[0].Foo);
             Assert.NotNull(eventArgs);
             Assert.AreEqual(30, eventArgs.Foo);
+            Assert.NotNull(eventArgs2);
+            Assert.AreEqual(1, eventArgs2.Length);
+            Assert.AreEqual(30, eventArgs2[0].Foo);
             Assert.AreEqual("NonPublic", nonPubProxy.Name);
             // Assert modifications of the setters
             Assert.AreEqual(instance.Reference, ref2);

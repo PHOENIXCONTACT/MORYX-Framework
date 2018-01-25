@@ -17,6 +17,7 @@ namespace Marvin.Resources.Management.Tests
             {
                 _reference = value;
                 ReferenceChanged?.Invoke(this, value);
+                SomeChanged?.Invoke(this, new[] { value });
             }
         }
 
@@ -28,13 +29,20 @@ namespace Marvin.Resources.Management.Tests
             return Reference;
         }
 
+        public IReadOnlyList<IMyResource> GetReferences()
+        {
+            return MoreReferences.ToArray();
+        }
+
         public void SetReference(IMyResource reference)
         {
-            MoreReferences = MoreReferences.Concat(new [] { reference }).ToArray();
+            MoreReferences = MoreReferences.Concat(new[] { reference }).ToArray();
         }
 
         public INonPublicResource NonPublic { get; set; }
 
         public event EventHandler<IMyResource> ReferenceChanged;
+
+        public event EventHandler<IMyResource[]> SomeChanged;
     }
 }
