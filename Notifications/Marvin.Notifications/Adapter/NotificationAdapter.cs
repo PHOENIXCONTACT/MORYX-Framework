@@ -43,6 +43,13 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         void INotificationAdapter.Publish(INotificationSender sender, INotification notification)
         {
+            lock (_senders)
+            {
+                if (!_senders.ContainsKey(sender.Identifier))
+                    throw new InvalidOperationException("Notification cannot be published. " +
+                                                        "The sender was not registered on the adapter");
+            }
+            
             var managed = (IManagedNotification)notification;
             managed.Identifier = Guid.NewGuid().ToString();
             managed.Created = DateTime.Now;
@@ -76,7 +83,12 @@ namespace Marvin.Notifications
 
             if (published == null)
             {
-                published = _pendingPubs.Single(n => n.Notification.Identifier == notification.Identifier);
+                published = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
+
+                if (published == null)
+                    throw new InvalidOperationException("Notification was not managed by the adapter. " +
+                                                        "The sender was not registered on the adapter");
+
                 _pendingPubs.Remove(published);
             }
 
