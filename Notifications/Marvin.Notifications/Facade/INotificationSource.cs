@@ -42,5 +42,15 @@ namespace Marvin.Notifications
         /// Event to publish a acknoledged notification to inform the NotificationPublisher about it
         /// </summary>
         event EventHandler<INotification> Acknowledged;
+
+        /// <summary>
+        /// Event will be raised if the facade was activated
+        /// </summary>
+        event EventHandler Activated;
+
+        /// <summary>
+        /// Event will be raised if the facade was deactivated
+        /// </summary>
+        event EventHandler Deactivated;
     }
 }
