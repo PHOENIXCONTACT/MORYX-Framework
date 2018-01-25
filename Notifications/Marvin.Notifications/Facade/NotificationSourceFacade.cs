@@ -29,6 +29,9 @@ namespace Marvin.Notifications
         {
             NotificationAdapter.Published += OnNotificationPublished;
             NotificationAdapter.Acknowledged += OnNotificationAcknowledged;
+
+            // TODO: Raise this Event when the facade was activated not while activate. Wait for Platform 3.0.
+            Activated?.Invoke(this, EventArgs.Empty);
         }
         
         /// <inheritdoc />
@@ -36,6 +39,9 @@ namespace Marvin.Notifications
         {
             NotificationAdapter.Published -= OnNotificationPublished;
             NotificationAdapter.Acknowledged -= OnNotificationAcknowledged;
+
+            // TODO: Raise this Event when the facade was deactivated not while deactivate. Wait for Platform 3.0.
+            Deactivated?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
@@ -85,5 +91,11 @@ namespace Marvin.Notifications
 
         /// <inheritdoc />
         public event EventHandler<INotification> Acknowledged;
+
+        /// <inheritdoc />
+        public event EventHandler Activated;
+
+        /// <inheritdoc />
+        public event EventHandler Deactivated;
     }
 }
