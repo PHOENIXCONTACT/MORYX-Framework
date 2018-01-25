@@ -267,7 +267,7 @@ namespace Marvin.Resources.Management
         ///
         public void Dispose()
         {
-            if (_disposed)
+            if (_disposed || _resources == null)
                 return;
 
             foreach (var resource in _resources.Values)
