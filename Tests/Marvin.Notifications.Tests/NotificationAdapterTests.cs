@@ -92,6 +92,23 @@ namespace Marvin.Notifications.Tests
             Assert.AreNotEqual(_acknowledgedEventNotification.Acknowledged, default(DateTime), "Acknowledged date should have been set");
         }
 
+        [Test(Description = "Check that acknowledging a notification by the adapter for a known notification.")]
+        public void AcknowledgeAKnownNotificationWhichIsAlreadyPublishedToThePublisher()
+        {
+            // Arrange
+            var notification = new Notification();
+            ((INotificationAdapter)_notificationAdapter).Publish(_notificationSenderMock.Object, notification);
+            ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notification);
+
+            // Act
+            ((INotificationAdapter)_notificationAdapter).Acknowledge(notification);
+
+            // Assert
+            Assert.NotNull(_acknowledgedEventNotification, "Acknowledged-event was not triggered.");
+            Assert.AreEqual(notification, _acknowledgedEventNotification, "Acknowledged-event was triggered with wrong notification.");
+            Assert.AreNotEqual(_acknowledgedEventNotification.Acknowledged, default(DateTime), "Acknowledged date should have been set");
+        }
+
         /// <summary>
         /// Check that acknowledging a notification by the adapter for a unknown notification throws an exception.
         /// </summary>
@@ -143,6 +160,27 @@ namespace Marvin.Notifications.Tests
             {
                 ((INotificationSenderAdapter)_notificationAdapter).Acknowledge(notification);
             }, "Acknowledge was called for an unknown notification");
+        }
+
+        [Test(Description = "Pending published notifications should be published again during a sync because of a restart of the Publisher")]
+        public void PublishPendingNotificationsDuringTheSync()
+        {
+            // Arrange
+            ((INotificationAdapter)_notificationAdapter).Register(_notificationSenderMock.Object);
+            ((INotificationAdapter)_notificationAdapter).Publish(_notificationSenderMock.Object, new Notification());
+            ((INotificationAdapter)_notificationAdapter).Publish(_notificationSenderMock.Object, new Notification());
+            ((INotificationAdapter)_notificationAdapter).Publish(_notificationSenderMock.Object, new Notification());
+            ((INotificationAdapter)_notificationAdapter).Publish(_notificationSenderMock.Object, new Notification());
+            int counter = 0;
+
+            // Act
+            _notificationAdapter.Published += delegate { counter += 1; };
+
+            ((INotificationSenderAdapter)_notificationAdapter).Sync(new INotification[] {});
+
+            // Assert
+            Assert.AreEqual(4, counter, "There should be four publish events. One for each pending notification");
+
         }
     }
 }
