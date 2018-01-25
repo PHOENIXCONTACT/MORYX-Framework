@@ -6,10 +6,11 @@ namespace Marvin.Notifications
 {
     public class NotificationSourceFacade : INotificationSource, IFacadeControl
     {
-        /// <summary>
-        /// Name of this facade
-        /// </summary>
+        /// <inheritdoc />
         public string Name { get; }
+
+        /// <inheritdoc />
+        public bool IsActivated { get; private set; }
 
         public NotificationSourceFacade(string name)
         {
@@ -31,6 +32,7 @@ namespace Marvin.Notifications
             NotificationAdapter.Acknowledged += OnNotificationAcknowledged;
 
             // TODO: Raise this Event when the facade was activated not while activate. Wait for Platform 3.0.
+            IsActivated = true;
             Activated?.Invoke(this, EventArgs.Empty);
         }
         
@@ -41,6 +43,7 @@ namespace Marvin.Notifications
             NotificationAdapter.Acknowledged -= OnNotificationAcknowledged;
 
             // TODO: Raise this Event when the facade was deactivated not while deactivate. Wait for Platform 3.0.
+            IsActivated = false;
             Deactivated?.Invoke(this, EventArgs.Empty);
         }
 

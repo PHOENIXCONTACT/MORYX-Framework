@@ -14,6 +14,11 @@ namespace Marvin.Notifications
         string Name { get; }
 
         /// <summary>
+        /// Publishes the current state of the facade
+        /// </summary>
+        bool IsActivated { get; }
+
+        /// <summary>
         /// Restore notification on source
         /// </summary>
         void Sync(IReadOnlyList<INotification> notifications);
