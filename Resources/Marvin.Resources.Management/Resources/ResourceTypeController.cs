@@ -47,6 +47,7 @@ namespace Marvin.Resources.Management
         /// All types derived from <see cref="Resource"/>
         /// </summary>
         private readonly List<ResourceTypeNode> _rootTypes = new List<ResourceTypeNode>();
+
         /// <summary>
         /// Cache to directly access a resource type
         /// </summary>
@@ -54,12 +55,11 @@ namespace Marvin.Resources.Management
 
         /// <inheritdoc />
         public IEnumerable<ResourceTypeNode> RootTypes => _rootTypes.AsReadOnly();
+
         /// <inheritdoc />
         IEnumerable<IResourceTypeNode> IResourceTypeTree.RootTypes => _rootTypes.AsReadOnly();
 
-        /// <summary>
-        /// Start the type controller and build the type tree
-        /// </summary>
+        /// <inheritdoc />
         public void Start()
         {
             // Define module on first start
@@ -68,10 +68,8 @@ namespace Marvin.Resources.Management
             BuildTypeTree();
         }
 
-        /// <summary>
-        /// Dispose proxy builder and detach all proxies from their targets
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        public void Stop()
         {
             foreach (var proxy in _proxyCache.Values)
             {

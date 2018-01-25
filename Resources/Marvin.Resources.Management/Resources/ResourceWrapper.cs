@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Marvin.AbstractionLayer.Resources;
+﻿using Marvin.AbstractionLayer.Resources;
 using Marvin.StateMachines;
 
 namespace Marvin.Resources.Management
@@ -14,7 +9,7 @@ namespace Marvin.Resources.Management
         
         internal ResourceStateBase State { get; private set; }
 
-        public void SetState(IState state)
+        void IStateContext.SetState(IState state)
         {
             State = (ResourceStateBase)state;
         }
@@ -22,7 +17,7 @@ namespace Marvin.Resources.Management
         internal ResourceWrapper(Resource target)
         {
             Target = target;
-            StateMachine.Initialize<ResourceStateBase>(this);
+            StateMachine.Initialize(this).With<ResourceStateBase>();
         }
 
         internal void Initialize()
@@ -49,8 +44,7 @@ namespace Marvin.Resources.Management
         {
             State.ErrorOccured();
         }
-
-
+        
         internal void Stop()
         {
             State.Stop();

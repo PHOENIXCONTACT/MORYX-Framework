@@ -63,7 +63,7 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         protected override TransitionBase Instantiate(IWorkplanContext context)
         {
-            if (context.IsDisabled(Id))
+            if (context.IsDisabled(this))
                 return new NullTransition();
 
             // Create transition

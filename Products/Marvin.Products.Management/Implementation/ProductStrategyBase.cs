@@ -55,7 +55,7 @@ namespace Marvin.Products.Management
             // Create new version
             var version = repo.Create();
 
-            var properties = version as ProductProperties ?? ((IMergedEntity<ProductProperties>)version).Parent;
+            var properties = version as ProductProperties;
             properties.Name = product.Name ?? string.Empty;
             properties.State = (int)product.State;
             entity.SetCurrentVersion(properties);

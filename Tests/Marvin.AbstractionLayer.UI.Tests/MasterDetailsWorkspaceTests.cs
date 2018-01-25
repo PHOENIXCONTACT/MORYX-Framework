@@ -16,7 +16,7 @@ namespace Marvin.AbstractionLayer.UI.Tests
         [SetUp]
         public void SetUp()
         {
-            _container = new ClientLocalContainer(null);
+            _container = new LocalContainer();
             _container.Register<IModuleLogger, DummyLogger>();
 
             _container.Register<DetailsComponentSelector, DetailsComponentSelector>();

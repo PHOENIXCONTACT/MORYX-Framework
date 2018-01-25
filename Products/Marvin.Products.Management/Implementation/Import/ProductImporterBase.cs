@@ -46,6 +46,13 @@ namespace Marvin.Products.Management
         }
 
         /// <summary>
+        /// Stop internal execution of active and/or periodic functionality.
+        /// </summary>
+        public virtual void Stop()
+        {
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public virtual void Dispose()

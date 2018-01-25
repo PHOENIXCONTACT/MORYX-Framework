@@ -23,7 +23,7 @@
 
         <TabControl Grid.Row="2">
             <TabItem Header="Settings">
-                <controls:ConfigEditor 
+                <controls:EntryEditor 
                                    IsEditMode="{Binding IsEditMode}"
                                    RootEntry="{Binding ConfigViewModel}"/>
             </TabItem>

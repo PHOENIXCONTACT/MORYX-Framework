@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:complexType name="ArrayOfstring">
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Products.Management" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Products.Management" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" />
+  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ArrayOfProductStructureEntry">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProductStructureEntry" nillable="true" type="tns:ProductStructureEntry" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfstring" nillable="true" type="tns:ArrayOfstring" />
+  <xs:element name="ArrayOfProductStructureEntry" nillable="true" type="tns:ArrayOfProductStructureEntry" />
+  <xs:complexType name="ProductStructureEntry">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BranchType" type="tns:BranchType" />
+      <xs:element minOccurs="0" name="Branches" nillable="true" type="tns:ArrayOfProductStructureEntry" />
+      <xs:element minOccurs="0" name="Id" type="xs:long" />
+      <xs:element minOccurs="0" name="MaterialNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Revision" type="xs:short" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" minOccurs="0" name="State" type="q1:ProductState" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="ProductStructureEntry" nillable="true" type="tns:ProductStructureEntry" />
+  <xs:simpleType name="BranchType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Group" />
+      <xs:enumeration value="Product" />
+      <xs:enumeration value="PartCollector" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="BranchType" nillable="true" type="tns:BranchType" />
 </xs:schema>

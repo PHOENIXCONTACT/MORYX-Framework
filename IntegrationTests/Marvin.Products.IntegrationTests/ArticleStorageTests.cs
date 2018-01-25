@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using Marvin.AbstractionLayer;
-using Marvin.Model;
+using Marvin.Products.IntegrationTests.UnitOfWorkFactories;
 using Marvin.Products.Model;
 using Marvin.Products.Samples;
+using Marvin.Products.Samples.Model;
 using NUnit.Framework;
+using OperatingSystem = Marvin.Products.Samples.Model.OperatingSystem;
 
 namespace Marvin.Products.IntegrationTests
 {
@@ -17,13 +18,9 @@ namespace Marvin.Products.IntegrationTests
         private WatchProductStorage _storage;
         private readonly IDictionary<string, long[]> _ids = new Dictionary<string, long[]>();
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void CreateDb()
         {
-            // initialize EntityFramework with in-memory database
-            Effort.Provider.EffortProviderConfiguration.RegisterProvider();
-            DbConfiguration.SetConfiguration(new EntityFrameworkConfiguration());
-
             // prepare inmemory resource db
             _factory = new InMemoryUnitOfWorkFactory("ArticleStorageTest");
             _factory.Initialize();
@@ -31,15 +28,16 @@ namespace Marvin.Products.IntegrationTests
             using (var uow = _factory.Create())
             {
                 var prodRepo = uow.GetRepository<IProductEntityRepository>();
-                var propertiesRepo = uow.GetRepository<IProductPropertiesRepository>();
+                var propertiesRepo = uow.GetRepository<ISmartWatchProductPropertiesEntityRepository>();
                 var linkRepo = uow.GetRepository<IPartLinkRepository>();
 
                 // Create products
                 var watchProduct = prodRepo.Create("1234", 1, nameof(WatchProduct));
                 var watchProperties = propertiesRepo.Create("Cool Watch");
+                watchProperties.OperatingSystem = OperatingSystem.Windows2012Server;
                 watchProduct.SetCurrentVersion(watchProperties);
 
-                var watchfaceProduct = prodRepo.Create("5678", 2, nameof(WatchfaceProduct));
+                var watchfaceProduct = prodRepo.Create("5678", 2, nameof(WatchFaceProduct));
                 var watchfaceProperties = propertiesRepo.Create("Cool watchface");
                 watchfaceProduct.SetCurrentVersion(watchfaceProperties);
 
@@ -131,7 +129,7 @@ namespace Marvin.Products.IntegrationTests
 
             // Assert
             Assert.NotNull(article, "Failed to load from db!");
-            Assert.IsInstanceOf<WatchfaceArticle>(article.Watchface, "Failed to fetch single part");
+            Assert.IsInstanceOf<WatchFaceArticle>(article.WatchFace, "Failed to fetch single part");
             Assert.AreEqual(3, ((IArticleParts)article).Parts.Count, "Invalid number of parts fetched!");
         }
 

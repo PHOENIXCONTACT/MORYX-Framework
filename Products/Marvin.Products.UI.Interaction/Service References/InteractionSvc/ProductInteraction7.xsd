@@ -1,177 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Products.Management.Modification" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Products.Management.Modification" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Serialization" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
-  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/Marvin.Products" />
-  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" />
-  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/Marvin.Workflows" />
-  <xs:complexType name="ProductCustomization">
+  <xs:complexType name="Entry">
     <xs:sequence>
-      <xs:element minOccurs="0" name="HasRecipes" type="xs:boolean" />
-      <xs:element minOccurs="0" name="Importers" nillable="true" type="tns:ArrayOfProductImporter" />
-      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ProductTypes" nillable="true" type="q1:ArrayOfstring" />
-      <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="RecipeTypes" nillable="true" type="q2:ArrayOfstring" />
-      <xs:element minOccurs="0" name="ReleasedProductsEditable" type="xs:boolean" />
-      <xs:element minOccurs="0" name="StorageValues" nillable="true" type="tns:ArrayOfStorageValue" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Key" nillable="true" type="tns:EntryKey" />
+      <xs:element minOccurs="0" name="Prototypes" nillable="true" type="tns:ArrayOfEntry" />
+      <xs:element minOccurs="0" name="SubEntries" nillable="true" type="tns:ArrayOfEntry" />
+      <xs:element minOccurs="0" name="Validation" nillable="true" type="tns:EntryValidation" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="tns:EntryValue" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ProductCustomization" nillable="true" type="tns:ProductCustomization" />
-  <xs:complexType name="ArrayOfProductImporter">
+  <xs:element name="Entry" nillable="true" type="tns:Entry" />
+  <xs:complexType name="EntryKey">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProductImporter" nillable="true" type="tns:ProductImporter" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfProductImporter" nillable="true" type="tns:ArrayOfProductImporter" />
-  <xs:complexType name="ProductImporter">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Parameters" nillable="true" type="tns:ArrayOfImportParameter" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ProductImporter" nillable="true" type="tns:ProductImporter" />
-  <xs:complexType name="ArrayOfImportParameter">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ImportParameter" nillable="true" type="tns:ImportParameter" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfImportParameter" nillable="true" type="tns:ArrayOfImportParameter" />
-  <xs:complexType name="ImportParameter">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Serialization" base="q3:Entry">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="TriggersUpdate" type="xs:boolean" />
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:element name="ImportParameter" nillable="true" type="tns:ImportParameter" />
-  <xs:complexType name="ArrayOfStorageValue">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="StorageValue" nillable="true" type="tns:StorageValue" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfStorageValue" nillable="true" type="tns:ArrayOfStorageValue" />
-  <xs:complexType name="StorageValue">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Key" nillable="true" type="xs:string" />
-      <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Values" nillable="true" type="q4:ArrayOfstring" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="StorageValue" nillable="true" type="tns:StorageValue" />
-  <xs:complexType name="ArrayOfProductModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProductModel" nillable="true" type="tns:ProductModel" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfProductModel" nillable="true" type="tns:ArrayOfProductModel" />
-  <xs:complexType name="ProductModel">
-    <xs:sequence>
-      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Products" minOccurs="0" name="Files" nillable="true" type="q5:ArrayOfProductFile" />
-      <xs:element minOccurs="0" name="Id" type="xs:long" />
       <xs:element minOccurs="0" name="Identifier" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Parts" nillable="true" type="tns:ArrayOfPartConnector" />
-      <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Properties" nillable="true" type="q6:ArrayOfEntry" />
-      <xs:element minOccurs="0" name="Recipes" nillable="true" type="tns:ArrayOfRecipeModel" />
-      <xs:element minOccurs="0" name="Revision" type="xs:short" />
-      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" minOccurs="0" name="State" type="q7:ProductState" />
-      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
     </xs:sequence>
-    <xs:attribute ref="ser:Id" />
-    <xs:attribute ref="ser:Ref" />
   </xs:complexType>
-  <xs:element name="ProductModel" nillable="true" type="tns:ProductModel" />
-  <xs:complexType name="ArrayOfPartConnector">
+  <xs:element name="EntryKey" nillable="true" type="tns:EntryKey" />
+  <xs:complexType name="ArrayOfEntry">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="PartConnector" nillable="true" type="tns:PartConnector" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Entry" nillable="true" type="tns:Entry" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfPartConnector" nillable="true" type="tns:ArrayOfPartConnector" />
-  <xs:complexType name="PartConnector">
+  <xs:element name="ArrayOfEntry" nillable="true" type="tns:ArrayOfEntry" />
+  <xs:complexType name="EntryValidation">
     <xs:sequence>
-      <xs:element minOccurs="0" name="DisplayName" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="IsCollection" type="xs:boolean" />
-      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Part" nillable="true" type="tns:PartModel" />
-      <xs:element minOccurs="0" name="Parts" nillable="true" type="tns:ArrayOfPartModel" />
-      <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="PropertyTemplates" nillable="true" type="q8:ArrayOfEntry" />
-      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsPassword" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IsRequired" type="xs:boolean" />
+      <xs:element minOccurs="0" name="MaxLenght" type="xs:int" />
+      <xs:element minOccurs="0" name="MinLenght" type="xs:int" />
+      <xs:element minOccurs="0" name="Regex" nillable="true" type="xs:string" />
     </xs:sequence>
-    <xs:attribute ref="ser:Id" />
-    <xs:attribute ref="ser:Ref" />
   </xs:complexType>
-  <xs:element name="PartConnector" nillable="true" type="tns:PartConnector" />
-  <xs:complexType name="PartModel">
+  <xs:element name="EntryValidation" nillable="true" type="tns:EntryValidation" />
+  <xs:complexType name="EntryValue">
     <xs:sequence>
-      <xs:element minOccurs="0" name="Product" nillable="true" type="tns:ProductModel" />
-      <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Properties" nillable="true" type="q9:ArrayOfEntry" />
-    </xs:sequence>
-    <xs:attribute ref="ser:Id" />
-    <xs:attribute ref="ser:Ref" />
-  </xs:complexType>
-  <xs:element name="PartModel" nillable="true" type="tns:PartModel" />
-  <xs:complexType name="ArrayOfPartModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="PartModel" nillable="true" type="tns:PartModel" />
+      <xs:element minOccurs="0" name="Current" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Default" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsReadOnly" type="xs:boolean" />
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Possible" nillable="true" type="q1:ArrayOfstring" />
+      <xs:element minOccurs="0" name="Type" type="tns:EntryValueType" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfPartModel" nillable="true" type="tns:ArrayOfPartModel" />
-  <xs:complexType name="ArrayOfRecipeModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="RecipeModel" nillable="true" type="tns:RecipeModel" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfRecipeModel" nillable="true" type="tns:ArrayOfRecipeModel" />
-  <xs:complexType name="RecipeModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Id" type="xs:long" />
-      <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Ingredients" nillable="true" type="q10:ArrayOfEntry" />
-      <xs:element minOccurs="0" name="IsDefault" type="xs:boolean" />
-      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Revision" type="xs:int" />
-      <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" minOccurs="0" name="State" type="q11:RecipeState" />
-      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="WorkplanId" type="xs:long" />
-    </xs:sequence>
-    <xs:attribute ref="ser:Id" />
-    <xs:attribute ref="ser:Ref" />
-  </xs:complexType>
-  <xs:element name="RecipeModel" nillable="true" type="tns:RecipeModel" />
-  <xs:complexType name="ArrayOfProductRevisionEntry">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProductRevisionEntry" nillable="true" type="tns:ProductRevisionEntry" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfProductRevisionEntry" nillable="true" type="tns:ArrayOfProductRevisionEntry" />
-  <xs:complexType name="ProductRevisionEntry">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="CreateDate" type="xs:dateTime" />
-      <xs:element minOccurs="0" name="ProductId" type="xs:long" />
-      <xs:element minOccurs="0" name="ReleaseDate" nillable="true" type="xs:dateTime" />
-      <xs:element minOccurs="0" name="Revision" type="xs:short" />
-      <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" minOccurs="0" name="State" type="q12:ProductState" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ProductRevisionEntry" nillable="true" type="tns:ProductRevisionEntry" />
-  <xs:complexType name="WorkplanModel">
-    <xs:sequence>
-      <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Marvin.Workflows" minOccurs="0" name="Connectors" nillable="true" type="q13:ArrayOfConnectorModel" />
-      <xs:element minOccurs="0" name="Id" type="xs:long" />
-      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Marvin.Workflows" minOccurs="0" name="State" type="q14:WorkplanState" />
-      <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/Marvin.Workflows" minOccurs="0" name="Steps" nillable="true" type="q15:ArrayOfWorkplanStepModel" />
-      <xs:element minOccurs="0" name="Version" type="xs:int" />
-    </xs:sequence>
-    <xs:attribute ref="ser:Id" />
-    <xs:attribute ref="ser:Ref" />
-  </xs:complexType>
-  <xs:element name="WorkplanModel" nillable="true" type="tns:WorkplanModel" />
-  <xs:complexType name="ArrayOfWorkplanModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="WorkplanModel" nillable="true" type="tns:WorkplanModel" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfWorkplanModel" nillable="true" type="tns:ArrayOfWorkplanModel" />
+  <xs:element name="EntryValue" nillable="true" type="tns:EntryValue" />
+  <xs:simpleType name="EntryValueType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Byte" />
+      <xs:enumeration value="Boolean" />
+      <xs:enumeration value="Int16" />
+      <xs:enumeration value="UInt16" />
+      <xs:enumeration value="Int32" />
+      <xs:enumeration value="UInt32" />
+      <xs:enumeration value="Int64" />
+      <xs:enumeration value="UInt64" />
+      <xs:enumeration value="Single" />
+      <xs:enumeration value="Double" />
+      <xs:enumeration value="String" />
+      <xs:enumeration value="Enum" />
+      <xs:enumeration value="Class" />
+      <xs:enumeration value="Collection" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EntryValueType" nillable="true" type="tns:EntryValueType" />
 </xs:schema>

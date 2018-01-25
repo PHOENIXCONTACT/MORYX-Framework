@@ -17,7 +17,7 @@
             <StackPanel Margin="5,5" HorizontalAlignment="Left" Width="400">
                 <StackPanel.Resources>
                     <Style TargetType="LabeledControlHost" BasedOn="{StaticResource {x:Type LabeledControlHost}}">
-                        <Setter Property="LabelWidth" Value="70" />
+                        <Setter Property="LabelMinWidth" Value="70" />
                         <Setter Property="Margin" Value="0,10,0,0" />
                         <Setter Property="Eddie.TextFormat" Value="Bold" />
                     </Style>
@@ -48,7 +48,7 @@
         </Border>
 
 
-        <controls:ConfigEditor Grid.Row="1" Margin="5, 10, 5, 5" Padding="5"
+        <controls:EntryEditor Grid.Row="1" Margin="5, 10, 5, 5" Padding="5"
                                VerticalAlignment="Top" HorizontalAlignment="Stretch"
                                BreadcrumbVisibility="Visible" IsEditMode="{Binding IsEditMode}"
                                RootEntry="{Binding Properties}"/>

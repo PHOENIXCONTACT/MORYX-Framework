@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Notifications
 {
     /// <summary>
     /// Facade interface for providing notifications
     /// </summary>
-    public interface INotificationSource
+    public interface INotificationSource : ILifeCycleBoundFacade
     {
         /// <summary>
         /// Name of the Source which will publish notifications
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Publishes the current state of the facade
-        /// </summary>
-        bool IsActivated { get; }
 
         /// <summary>
         /// Restore notification on source
@@ -47,15 +43,5 @@ namespace Marvin.Notifications
         /// Event to publish a acknoledged notification to inform the NotificationPublisher about it
         /// </summary>
         event EventHandler<INotification> Acknowledged;
-
-        /// <summary>
-        /// Event will be raised if the facade was activated
-        /// </summary>
-        event EventHandler Activated;
-
-        /// <summary>
-        /// Event will be raised if the facade was deactivated
-        /// </summary>
-        event EventHandler Deactivated;
     }
 }

@@ -10,13 +10,6 @@ namespace Marvin.AbstractionLayer
     public interface IProductManagement : IRecipeProvider, IWorkplans
     {
         /// <summary>
-        /// Get all workplans managed by the product management
-        /// TODO: Move to <see cref="IWorkplans"/>
-        /// </summary>
-        /// <returns></returns>
-        IReadOnlyList<IWorkplan> GetAllWorkplans();
-
-            /// <summary>
         /// Get all products
         /// </summary>
         IEnumerable<IProduct> GetAllProducts();

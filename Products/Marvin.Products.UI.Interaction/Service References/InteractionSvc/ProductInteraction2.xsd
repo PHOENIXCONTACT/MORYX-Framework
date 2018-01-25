@@ -1,157 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Workflows" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Workflows" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="http://localhost/Metadata/ProductInteraction?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
-  <xs:complexType name="ArrayOfConnectorModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ConnectorModel" nillable="true" type="tns:ConnectorModel" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfConnectorModel" nillable="true" type="tns:ArrayOfConnectorModel" />
-  <xs:complexType name="ConnectorModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Classification" type="tns:NodeClassification" />
-      <xs:element minOccurs="0" name="Id" type="xs:long" />
-      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="TemporaryId" nillable="true" type="xs:string" />
-    </xs:sequence>
-    <xs:attribute ref="ser:Id" />
-    <xs:attribute ref="ser:Ref" />
-  </xs:complexType>
-  <xs:element name="ConnectorModel" nillable="true" type="tns:ConnectorModel" />
-  <xs:simpleType name="NodeClassification">
-    <xs:list>
-      <xs:simpleType>
-        <xs:restriction base="xs:string">
-          <xs:enumeration value="Intermediate">
-            <xs:annotation>
-              <xs:appinfo>
-                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0</EnumerationValue>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:enumeration>
-          <xs:enumeration value="Entry">
-            <xs:annotation>
-              <xs:appinfo>
-                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:enumeration>
-          <xs:enumeration value="Exit">
-            <xs:annotation>
-              <xs:appinfo>
-                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:enumeration>
-          <xs:enumeration value="WorkplanBorder">
-            <xs:annotation>
-              <xs:appinfo>
-                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4</EnumerationValue>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:enumeration>
-          <xs:enumeration value="Failure">
-            <xs:annotation>
-              <xs:appinfo>
-                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">8</EnumerationValue>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:enumeration>
-          <xs:enumeration value="Start">
-            <xs:annotation>
-              <xs:appinfo>
-                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">5</EnumerationValue>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:enumeration>
-          <xs:enumeration value="End">
-            <xs:annotation>
-              <xs:appinfo>
-                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">6</EnumerationValue>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:enumeration>
-          <xs:enumeration value="Failed">
-            <xs:annotation>
-              <xs:appinfo>
-                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">10</EnumerationValue>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:enumeration>
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:list>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="ProductState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Created" />
+      <xs:enumeration value="Released" />
+    </xs:restriction>
   </xs:simpleType>
-  <xs:element name="NodeClassification" nillable="true" type="tns:NodeClassification" />
-  <xs:simpleType name="WorkplanState">
+  <xs:element name="ProductState" nillable="true" type="tns:ProductState" />
+  <xs:complexType name="ArrayOfProductFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProductFile" nillable="true" type="tns:ProductFile" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProductFile" nillable="true" type="tns:ArrayOfProductFile" />
+  <xs:complexType name="ProductFile">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="File" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Type" type="tns:FileType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProductFile" nillable="true" type="tns:ProductFile" />
+  <xs:simpleType name="FileType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Image" />
+      <xs:enumeration value="Text" />
+      <xs:enumeration value="Binary" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="FileType" nillable="true" type="tns:FileType" />
+  <xs:simpleType name="RecipeState">
     <xs:restriction base="xs:string">
       <xs:enumeration value="New" />
       <xs:enumeration value="Released" />
       <xs:enumeration value="Revoked" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:element name="WorkplanState" nillable="true" type="tns:WorkplanState" />
-  <xs:complexType name="ArrayOfWorkplanStepModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="WorkplanStepModel" nillable="true" type="tns:WorkplanStepModel" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfWorkplanStepModel" nillable="true" type="tns:ArrayOfWorkplanStepModel" />
-  <xs:complexType name="WorkplanStepModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Classification" type="tns:StepClassification" />
-      <xs:element minOccurs="0" name="Id" type="xs:long" />
-      <xs:element minOccurs="0" name="Inputs" nillable="true" type="tns:ArrayOfConnectorModel" />
-      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="OutputDescriptions" nillable="true" type="tns:ArrayOfOutputDescription" />
-      <xs:element minOccurs="0" name="Outputs" nillable="true" type="tns:ArrayOfConnectorModel" />
-      <xs:element minOccurs="0" name="Properties" nillable="true" type="tns:ArrayOfWorkplanStepInitializer" />
-      <xs:element minOccurs="0" name="SubworkplanId" type="xs:long" />
-      <xs:element minOccurs="0" name="TemporaryId" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
-    </xs:sequence>
-    <xs:attribute ref="ser:Id" />
-    <xs:attribute ref="ser:Ref" />
-  </xs:complexType>
-  <xs:element name="WorkplanStepModel" nillable="true" type="tns:WorkplanStepModel" />
-  <xs:simpleType name="StepClassification">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Execution" />
-      <xs:enumeration value="ControlFlow" />
-      <xs:enumeration value="Subworkplan" />
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:element name="StepClassification" nillable="true" type="tns:StepClassification" />
-  <xs:complexType name="ArrayOfOutputDescription">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="OutputDescription" nillable="true" type="tns:OutputDescription" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfOutputDescription" nillable="true" type="tns:ArrayOfOutputDescription" />
-  <xs:complexType name="OutputDescription">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="MappingValue" type="xs:long" />
-      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Success" type="xs:boolean" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="OutputDescription" nillable="true" type="tns:OutputDescription" />
-  <xs:complexType name="ArrayOfWorkplanStepInitializer">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="WorkplanStepInitializer" nillable="true" type="tns:WorkplanStepInitializer" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfWorkplanStepInitializer" nillable="true" type="tns:ArrayOfWorkplanStepInitializer" />
-  <xs:complexType name="WorkplanStepInitializer">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Serialization" base="q1:Entry">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="FromConstructor" type="xs:boolean" />
-          <xs:element minOccurs="0" name="SubWorkplan" type="xs:boolean" />
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:element name="WorkplanStepInitializer" nillable="true" type="tns:WorkplanStepInitializer" />
+  <xs:element name="RecipeState" nillable="true" type="tns:RecipeState" />
 </xs:schema>

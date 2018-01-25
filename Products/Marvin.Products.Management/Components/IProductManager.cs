@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Marvin.AbstractionLayer;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Products.Management.Importers;
 using Marvin.Products.Management.Modification;
 
@@ -10,7 +10,7 @@ namespace Marvin.Products.Management
     /// <summary>
     /// Management component
     /// </summary>
-    internal interface IProductManager : IModulePlugin
+    internal interface IProductManager : IPlugin
     {
         /// <summary>
         /// Returns all available product importers

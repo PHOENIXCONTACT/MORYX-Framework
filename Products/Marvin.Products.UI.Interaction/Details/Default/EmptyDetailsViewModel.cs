@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using System.Windows.Media;
 using Marvin.AbstractionLayer.UI;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework.Commands;
 
 namespace Marvin.Products.UI.Interaction
 {
@@ -15,6 +16,8 @@ namespace Marvin.Products.UI.Interaction
         public DelegateCommand CreateRevisionCmd { get; }
 
         public long ProductId { get; } = 0;
+
+        public Geometry Icon => Geometry.Parse(ModuleController.IconPath);
 
         public EmptyDetailsViewModel()
         {

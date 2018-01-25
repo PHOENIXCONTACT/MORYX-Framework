@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
     /// This property uses a range of possible values from the database
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ProductStorageValuesAttribute : Attribute
     {

@@ -1,12 +1,12 @@
 ﻿using Marvin.AbstractionLayer;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Products.Management.Importers
 {
     /// <summary>
     /// Interface for plugins that can import products from file
     /// </summary>
-    public interface IProductImporter : IConfiguredModulePlugin<ProductImporterConfig>
+    public interface IProductImporter : IConfiguredPlugin<ProductImporterConfig>
     {
         /// <summary>
         /// Name of the importer

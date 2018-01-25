@@ -15,7 +15,7 @@ namespace Marvin.AbstractionLayer.Tests
                 Identity = new ProductIdentity("1277125", 01)
             };
 
-            watch.Watchface.Product = new WatchfaceProduct
+            watch.Watchface.Product = new WatchFaceProduct
             {
                 Identity = new ProductIdentity("512380125", 01)
             };
@@ -38,7 +38,7 @@ namespace Marvin.AbstractionLayer.Tests
 
             // Assert
             Assert.AreEqual(watch, watchInstance.Product, "Wrong watch product");
-            Assert.AreEqual(watch.Watchface.Product, watchInstance.Watchface.Product, "Wrong watchface product");
+            Assert.AreEqual(watch.Watchface.Product, watchInstance.WatchFace.Product, "Wrong watchface product");
             Assert.AreEqual(NeedleRole.Hours, watch.Needles.ElementAt(0).Role, "Role not set on instance");
         }
     }

@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Products.Management.Importers
 {

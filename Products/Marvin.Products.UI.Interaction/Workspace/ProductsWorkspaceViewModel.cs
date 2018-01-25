@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using C4I;
 using Marvin.AbstractionLayer.UI;
+using Marvin.ClientFramework;
 using Marvin.Container;
-using Marvin.Modules.Client;
 
 namespace Marvin.Products.UI.Interaction
 {

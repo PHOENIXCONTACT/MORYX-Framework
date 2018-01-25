@@ -12,7 +12,7 @@
         <StackPanel Orientation="Vertical">
             <StackPanel.Resources>
                 <Style TargetType="LabeledControlHost" BasedOn="{StaticResource {x:Type LabeledControlHost}}">
-                    <Setter Property="LabelWidth" Value="125" />
+                    <Setter Property="LabelMinWidth" Value="125" />
                     <Setter Property="Eddie.TextFormat" Value="Bold" />
                 </Style>
             </StackPanel.Resources>

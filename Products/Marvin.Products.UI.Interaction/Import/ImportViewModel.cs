@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using C4I;
 using Caliburn.Micro;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework.Commands;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Products.UI.Interaction.InteractionSvc;

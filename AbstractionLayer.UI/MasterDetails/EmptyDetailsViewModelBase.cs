@@ -1,5 +1,5 @@
 ﻿using System.Windows.Media;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework.Commands;
 
 namespace Marvin.AbstractionLayer.UI
 {

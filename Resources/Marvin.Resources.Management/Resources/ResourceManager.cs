@@ -10,8 +10,8 @@ using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Resources.Model;
+using Marvin.Serialization;
 using Marvin.Tools;
-using Newtonsoft.Json;
 
 namespace Marvin.Resources.Management
 {
@@ -349,10 +349,13 @@ namespace Marvin.Resources.Management
                 EntityIdListener.Listen(entity, new SaveResourceTrigger(this, resource));
             }
 
+            // Save base properties
             entity.Name = resource.Name;
             entity.LocalIdentifier = resource.LocalIdentifier;
             entity.GlobalIdentifier = resource.GlobalIdentifier;
-            entity.ExtensionData = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
+            // Save extended properties if there are any
+            var json = Json.Serialize(resource);
+            entity.ExtensionData = json.Length > 2 ? json : null; // Do not save empty JSON "{}"
 
             // Save references
             var relations = ResourceRelationTemplate.FromEntity(uow, entity);

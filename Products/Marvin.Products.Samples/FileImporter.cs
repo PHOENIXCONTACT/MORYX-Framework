@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Marvin.AbstractionLayer;
 using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Products.Management;
 using Marvin.Products.Management.Importers;
 

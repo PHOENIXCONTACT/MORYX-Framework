@@ -678,7 +678,7 @@ namespace Marvin.Products.UI.Interaction.InteractionSvc {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ProductFile", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Products")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ProductFile", Namespace="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer")]
     [System.SerializableAttribute()]
     internal partial class ProductFile : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -1052,7 +1052,7 @@ namespace Marvin.Products.UI.Interaction.InteractionSvc {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="FileType", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Products")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="FileType", Namespace="http://schemas.datacontract.org/2004/07/Marvin.AbstractionLayer")]
     internal enum FileType : int {
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
@@ -1287,9 +1287,6 @@ namespace Marvin.Products.UI.Interaction.InteractionSvc {
         private Marvin.Workflows.WorkplanState StateField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Workflows.WorkplanStepModel[] StepsField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int VersionField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -1350,19 +1347,6 @@ namespace Marvin.Products.UI.Interaction.InteractionSvc {
                 if ((this.StateField.Equals(value) != true)) {
                     this.StateField = value;
                     this.RaisePropertyChanged("State");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Workflows.WorkplanStepModel[] Steps {
-            get {
-                return this.StepsField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.StepsField, value) != true)) {
-                    this.StepsField = value;
-                    this.RaisePropertyChanged("Steps");
                 }
             }
         }

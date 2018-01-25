@@ -50,7 +50,7 @@
                     <Style TargetType="LabeledControlHost">
                         <Setter Property="Eddie.TextFormat" Value="Bold" />
                         <Setter Property="Margin" Value="0,0,0,10" />
-                        <Setter Property="LabelWidth" Value="65" />
+                        <Setter Property="LabelMinWidth" Value="65" />
                     </Style>
                 </StackPanel.Resources>
 
@@ -74,7 +74,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="Constructor" IsChecked="{Binding IsSelected}" Content="{Binding DisplayName}"/>
-                            <controls:ConfigEditor BreadcrumbVisibility="Collapsed" IsEditMode="True" 
+                            <controls:EntryEditor BreadcrumbVisibility="Collapsed" IsEditMode="True" 
                                    DockPanel.Dock="Bottom"
                                    RootEntry="{Binding Parameters}"/>
                         </StackPanel>

@@ -2,8 +2,8 @@ using Marvin.AbstractionLayer;
 
 namespace Marvin.Products.Samples
 {
-    public class WatchfaceArticle : Article<WatchfaceProduct>
+    public class WatchFaceArticle : Article<WatchFaceProduct>
     {
-        public override string Type => nameof(WatchfaceArticle);
+        public override string Type => nameof(WatchFaceArticle);
     }
 }

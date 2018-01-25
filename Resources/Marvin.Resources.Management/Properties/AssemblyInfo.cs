@@ -12,11 +12,6 @@ using Marvin.Resources.Management;
 
 [assembly: AssemblyTitle("Marvin.Resources.Management")]
 [assembly: AssemblyDescription("Marvin Runtime Module: ResourceManager")]
-[assembly: AssemblyConfiguration("MarvinPlatform-CI #854")]
-[assembly: AssemblyCompany("PHOENIX CONTACT GmbH & Co. KG")]
-[assembly: AssemblyProduct("Marvin.Resources.Management")]
-[assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT GmbH & Co. KG 2016")]
-[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -25,7 +20,7 @@ using Marvin.Resources.Management;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f31704fe-753b-45e8-a7fd-adc4bdbaac24")]
+[assembly: Guid("f14d282b-a0e8-46d7-92b0-a173be7ce3da")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -37,8 +32,6 @@ using Marvin.Resources.Management;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(ModuleVersion.Version)]
-[assembly: AssemblyFileVersion(ModuleVersion.Version)]
 
 // Marvin attributes
 [assembly: ResourcesBundle]

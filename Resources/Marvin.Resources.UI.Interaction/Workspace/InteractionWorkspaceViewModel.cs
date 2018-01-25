@@ -2,13 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using C4I;
 using Marvin.AbstractionLayer.UI;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework;
+using Marvin.ClientFramework.Commands;
 using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Modules.Client;
-using Marvin.Resources.UI.Interaction.ResourceInteraction;
 using Marvin.Serialization;
 using Marvin.Tools;
 using MessageBoxImage = Marvin.ClientFramework.Dialog.MessageBoxImage;

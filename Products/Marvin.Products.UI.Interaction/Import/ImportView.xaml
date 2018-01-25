@@ -31,7 +31,7 @@
                 </EddieComboBox.ItemTemplate>
             </EddieComboBox>
 
-            <controls:ConfigEditor BreadcrumbVisibility="Hidden" DockPanel.Dock="Top" IsEditMode="True"
+            <controls:EntryEditor BreadcrumbVisibility="Hidden" DockPanel.Dock="Top" IsEditMode="True"
                                    RootEntry="{Binding SelectedImporter.Parameters}"/>
 
             <TextBlock DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center" 

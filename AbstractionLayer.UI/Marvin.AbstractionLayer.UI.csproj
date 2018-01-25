@@ -9,70 +9,88 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Marvin.AbstractionLayer.UI</RootNamespace>
     <AssemblyName>Marvin.AbstractionLayer.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Build\ClientRuntime\Libraries\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Build\ClientRuntime\Libraries\Marvin.AbstractionLayer.UI.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Marvin.AbstractionLayer.UI.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Build\ClientRuntime\Libraries\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Build\ClientRuntime\Libraries\Marvin.AbstractionLayer.UI.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Marvin.AbstractionLayer.UI.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>..\Build\ClientRuntime\Libraries\Caliburn.Micro.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Caliburn.Micro, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.3.2.0\lib\net45\Caliburn.Micro.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Castle.Windsor">
-      <HintPath>..\Build\ClientRuntime\Libraries\Castle.Windsor.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Controls4Industry, Version=0.0.1355.19519, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Build\ClientRuntime\Libraries\Controls4Industry.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin">
-      <HintPath>..\Build\ClientRuntime\Marvin.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.ClientFramework">
-      <HintPath>..\Build\ClientRuntime\Core\Marvin.ClientFramework.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.4.1.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.ClientFramework.Base">
-      <HintPath>..\Build\ClientRuntime\Core\Marvin.ClientFramework.Base.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Controls4Industry, Version=3.0.0.469, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Controls4Industry.3.0.0-dev000469\lib\net461\Controls4Industry.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Container">
-      <HintPath>..\Build\ClientRuntime\Libraries\Marvin.Container.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Marvin, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Marvin.3.0.0-dev000851\lib\net461\Marvin.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.PlatformTools">
-      <HintPath>..\Build\ClientRuntime\Marvin.PlatformTools.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Marvin.ClientFramework, Version=3.0.0.469, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Marvin.ClientFramework.3.0.0-dev000469\lib\net461\Marvin.ClientFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Marvin.Tools.Wcf.3.0.0-dev000851\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="MasterDetails\DetailsComponentSelector.cs" />
     <Compile Include="MasterDetails\DetailsConstants.cs" />
     <Compile Include="MasterDetails\DetailsRegistrationAttribute.cs" />
@@ -86,6 +104,10 @@
     <Compile Include="ITreeItemViewModel.cs" />
     <Compile Include="MasterDetails\MasterDetailsWorkspace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Marvin.AbstractionLayer.UI.nuspec" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

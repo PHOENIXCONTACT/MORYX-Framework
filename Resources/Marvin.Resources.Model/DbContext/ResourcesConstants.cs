@@ -1,0 +1,24 @@
+﻿namespace Marvin.Resources.Model
+{
+    /// <summary>
+    /// String constants defined by the Resources database model.
+    /// </summary>
+    public class ResourcesConstants
+    {
+        /// <summary>
+        /// Namespace of the generated code within this model. This can be used for the
+        /// ImportAttribute and UseChildAttribute.
+        /// </summary>
+        public const string Namespace = "Marvin.Resources.Model";
+
+        /// <summary>
+        /// Schema name for the ResourcesContext
+        /// </summary>
+        public const string SchemaName = "resources";
+
+        /// <summary>
+        /// Current version of the model for metadata
+        /// </summary>
+        public const int Version = 2; 
+    }
+}

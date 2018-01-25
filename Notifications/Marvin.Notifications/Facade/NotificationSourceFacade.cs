@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using Marvin.Runtime.Base;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Notifications
 {
-    public class NotificationSourceFacade : INotificationSource, IFacadeControl
+    /// <summary>
+    /// Default implementation of the <see cref="INotificationSource"/> facade
+    /// </summary>
+    public class NotificationSourceFacade : FacadeBase, INotificationSource
     {
         /// <inheritdoc />
         public string Name { get; }
 
-        /// <inheritdoc />
-        public bool IsActivated { get; private set; }
-
+        /// <summary>
+        /// Creates a new named notification source facade
+        /// </summary>
         public NotificationSourceFacade(string name)
         {
             Name = name;
         }
-
-        /// <inheritdoc />
-        public Action ValidateHealthState { get; set; }
 
         /// <summary>
         /// The Adapter to interact with the notification senders
@@ -26,31 +26,21 @@ namespace Marvin.Notifications
         public INotificationSenderAdapter NotificationAdapter { get; set; }
 
         /// <inheritdoc />
-        public void Activate()
+        public override void Activate()
         {
+            base.Activate();
+
             NotificationAdapter.Published += OnNotificationPublished;
             NotificationAdapter.Acknowledged += OnNotificationAcknowledged;
-
         }
-
-        public void RaiseActivated()
-        {
-            // TODO: Raise this Event when the facade was activated not while activate. Wait for Platform 3.0.
-            IsActivated = true;
-            Activated?.Invoke(this, EventArgs.Empty);
-        }
-
-
 
         /// <inheritdoc />
-        public void Deactivate()
+        public override void Deactivate()
         {
             NotificationAdapter.Published -= OnNotificationPublished;
             NotificationAdapter.Acknowledged -= OnNotificationAcknowledged;
 
-            // TODO: Raise this Event when the facade was deactivated not while deactivate. Wait for Platform 3.0.
-            IsActivated = false;
-            Deactivated?.Invoke(this, EventArgs.Empty);
+            base.Deactivate();
         }
 
         /// <inheritdoc />
@@ -100,11 +90,5 @@ namespace Marvin.Notifications
 
         /// <inheritdoc />
         public event EventHandler<INotification> Acknowledged;
-
-        /// <inheritdoc />
-        public event EventHandler Activated;
-
-        /// <inheritdoc />
-        public event EventHandler Deactivated;
     }
 }

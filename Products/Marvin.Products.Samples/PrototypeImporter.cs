@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Marvin.AbstractionLayer;
 using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Products.Management;
 using Marvin.Products.Management.Importers;
 
@@ -36,8 +36,8 @@ namespace Marvin.Products.Samples
                         Needles = new List<NeedlePartLink>()
                     };
                     break;
-                case nameof(WatchfaceProduct):
-                    product = new WatchfaceProduct
+                case nameof(WatchFaceProduct):
+                    product = new WatchFaceProduct
                     {
                         Numbers = new[] { 3, 6, 9, 12 }
                     };
@@ -59,7 +59,7 @@ namespace Marvin.Products.Samples
     public class WatchImportParameters : PrototypeParameters
     {
         [Required, TriggersUpdate]
-        [PossibleProductValues(nameof(WatchProduct), nameof(WatchfaceProduct), nameof(NeedleProduct))]
+        [PossibleProductValues(nameof(WatchProduct), nameof(WatchFaceProduct), nameof(NeedleProduct))]
         public string ProductType { get; set; }
     }
 }
