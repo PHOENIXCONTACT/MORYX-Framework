@@ -14,8 +14,12 @@ namespace Marvin.Resources.Management.Tests
 
         IMyResource GetReference();
 
+        IReadOnlyList<IMyResource> GetReferences();
+
         void SetReference(IMyResource reference);
 
         event EventHandler<IMyResource> ReferenceChanged;
+
+        event EventHandler<IMyResource[]> SomeChanged;
     }
 }
