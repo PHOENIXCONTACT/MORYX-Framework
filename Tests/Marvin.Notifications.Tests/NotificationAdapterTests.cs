@@ -254,5 +254,19 @@ namespace Marvin.Notifications.Tests
             // Assert
             Assert.AreEqual(1, _notificationAdapter.GetPublished(_notificationSenderMock.Object).Count, "There should be one published notification" );
         }
+
+        [Test(Description = "Check that acknowledging a notification by the SenderAdapter-interface for an unknown notification throws an exception.")]
+        public void ThrowExceptionIfTheSenderPublishesANotificationButIsNotRegistered()
+        {
+            // Arrange
+            var notification = new Notification();
+            _notificationAdapter.Unregister(_notificationSenderMock.Object);
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(delegate
+            {
+                _notificationAdapter.Publish(_notificationSenderMock.Object, notification);
+            });
+        }
     }
 }
