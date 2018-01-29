@@ -31,12 +31,14 @@ namespace Marvin.Resources.Samples
                 .ReceivedHandler;
         }
 
-        private void PlcReadyToWork(ReadyToWorkMessage readyToWork)
+        private void PlcReadyToWork(object sender, ReadyToWorkMessage readyToWork)
         {
+            // Handler that also uses the sender
         }
 
         private void ProcessResultReceived(ProcessResultMessage obj)
         {
+            // Handler that ignores the sender
         }
 
         [EditorVisible]
