@@ -60,7 +60,6 @@
     <Compile Include="Activities\DefaultActivityResult.cs" />
     <Compile Include="Activities\IParameters.cs" />
     <Compile Include="Activities\IActivityTracing.cs" />
-    <Compile Include="Activities\Tracing\SerialNumberTracing.cs" />
     <Compile Include="Capabilities\NullCapabilities.cs" />
     <Compile Include="Drivers\DigitalIO\IDigitalInputs.cs" />
     <Compile Include="Drivers\DigitalIO\IDigitalOutputs.cs" />
