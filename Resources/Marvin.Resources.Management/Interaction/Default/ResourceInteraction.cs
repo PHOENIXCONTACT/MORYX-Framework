@@ -231,7 +231,8 @@ namespace Marvin.Resources.Management
             var referenceProperties = (from prop in properties
                                        let propType = prop.PropertyType
                                        // Find all properties referencing a resource a collection of resources
-                                       where prop.CanWrite && (typeof(IResource).IsAssignableFrom(propType) || propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(IReferences<>))
+                                       where prop.CanWrite && Attribute.IsDefined(prop, typeof(ResourceReferenceAttribute))
+                                         && (typeof(IResource).IsAssignableFrom(propType) || propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(IReferences<>))
                                        // Exclude read only properties, because they are simple type overrides of other references
                                        // TODO: Filter parent and children somewhere else
                                        where prop.Name != nameof(Resource.Parent) && prop.Name != nameof(Resource.Children)
@@ -265,9 +266,9 @@ namespace Marvin.Resources.Management
             // Create reference model from property information and optional attribute
             var referenceModel = new ResourceReferenceModel
             {
-                Name = attribute?.Name ?? property.Name,
-                Role = attribute?.Role ?? ResourceReferenceRole.Target,
-                RelationType = attribute?.RelationType ?? ResourceRelationType.Custom,
+                Name = attribute.Name ?? property.Name,
+                Role = attribute.Role,
+                RelationType = attribute.RelationType,
                 Targets = new List<ResourceModel>()
             };
 
