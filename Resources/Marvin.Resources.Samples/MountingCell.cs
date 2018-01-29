@@ -33,10 +33,12 @@ namespace Marvin.Resources.Samples
 
         private void PlcReadyToWork(object sender, ReadyToWorkMessage readyToWork)
         {
+            // Handler that also uses the sender
         }
 
-        private void ProcessResultReceived(object sender, ProcessResultMessage obj)
+        private void ProcessResultReceived(ProcessResultMessage obj)
         {
+            // Handler that ignores the sender
         }
 
         [EditorVisible]

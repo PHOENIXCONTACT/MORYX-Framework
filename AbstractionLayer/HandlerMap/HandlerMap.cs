@@ -42,7 +42,20 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Distribution message handler
         /// </summary>
-        public void Handle(object sender, T message)
+        public void Handle(T message)
+        {
+            ExecuteOnHandler(null, message);
+        }
+
+        /// <summary>
+        /// Handle that matches the <see cref="EventHandler{TEventArgs}"/> signature
+        /// </summary>
+        public void ReceivedHandler(object sender, T message)
+        {
+            ExecuteOnHandler(sender, message);
+        }
+
+        private void ExecuteOnHandler(object sender, T message)
         {
             var handler = _handlers.FirstOrDefault(h => h.CanHandle(message));
             if (handler != null)
@@ -60,11 +73,16 @@ namespace Marvin.AbstractionLayer
         }
 
         /// <summary>
-        /// Handle that matches the <see cref="EventHandler{TEventArgs}"/> signature
+        /// Register a new handler
         /// </summary>
-        public void ReceivedHandler(object sender, T message)
+        /// <param name="handler"></param>
+        /// <typeparam name="TArgument">Type of the method argument inferred from delegate</typeparam>
+        /// <returns></returns>
+        public HandlerMap<T> Register<TArgument>(Action<TArgument> handler)
+            where TArgument : T
         {
-            Handle(sender, message);
+            AddHandler(new CastHandler<TArgument>(handler));
+            return this;
         }
 
         /// <summary>
@@ -76,7 +94,16 @@ namespace Marvin.AbstractionLayer
         public HandlerMap<T> Register<TArgument>(Action<object, TArgument> handler)
             where TArgument : T
         {
-            AddHandler(new CastHandler<TArgument>(handler));
+            AddHandler(new CastEventHandler<TArgument>(handler));
+            return this;
+        }
+
+        /// <summary>
+        /// Default handler if no key matches
+        /// </summary>
+        public HandlerMap<T> Default(Action<T> handler)
+        {
+            DefaultHandler = new SimpleHandler(handler);
             return this;
         }
 
@@ -85,7 +112,7 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         public HandlerMap<T> Default(Action<object, T> handler)
         {
-            DefaultHandler = new SimpleHandler(handler);
+            DefaultHandler = new SimpleEventHandler(handler);
             return this;
         }
 
@@ -112,6 +139,38 @@ namespace Marvin.AbstractionLayer
         protected struct CastHandler<TArgument> : IHandler
             where TArgument : T
         {
+            private readonly Action<TArgument> _handler;
+
+            /// <summary>
+            /// Create new <see cref="CastHandler{T}"/> for 
+            /// a typed callback.
+            /// </summary>
+            /// <param name="handler"></param>
+            public CastHandler(Action<TArgument> handler)
+            {
+                _handler = handler;
+            }
+
+            /// <inheritdoc />
+            public bool CanHandle(T message)
+            {
+                return message is TArgument;
+            }
+
+            /// <inheritdoc />
+            public void Handle(object sender, T message)
+            {
+                _handler((TArgument)message);
+            }
+        }
+
+        /// <summary>
+        /// Handler implementation for event handlers that checks type 
+        /// compliance and casts objects for the callback
+        /// </summary>
+        protected struct CastEventHandler<TArgument> : IHandler
+            where TArgument : T
+        {
             private readonly Action<object, TArgument> _handler;
 
             /// <summary>
@@ -119,7 +178,7 @@ namespace Marvin.AbstractionLayer
             /// a typed callback.
             /// </summary>
             /// <param name="handler"></param>
-            public CastHandler(Action<object, TArgument> handler)
+            public CastEventHandler(Action<object, TArgument> handler)
             {
                 _handler = handler;
             }
@@ -142,12 +201,40 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         protected struct SimpleHandler : IHandler
         {
+            private readonly Action<T> _handler;
+
+            /// <summary>
+            /// Create default handler with delegate
+            /// </summary>
+            public SimpleHandler(Action<T> handler)
+            {
+                _handler = handler;
+            }
+
+            /// <inheritdoc />
+            public bool CanHandle(T message)
+            {
+                return true;
+            }
+
+            /// <inheritdoc />
+            public void Handle(object sender, T message)
+            {
+                _handler(message);
+            }
+        }
+
+        /// <summary>
+        /// Default handler implementation
+        /// </summary>
+        protected struct SimpleEventHandler : IHandler
+        {
             private readonly Action<object, T> _handler;
 
             /// <summary>
             /// Create default handler with delegate
             /// </summary>
-            public SimpleHandler(Action<object, T> handler)
+            public SimpleEventHandler(Action<object, T> handler)
             {
                 _handler = handler;
             }
