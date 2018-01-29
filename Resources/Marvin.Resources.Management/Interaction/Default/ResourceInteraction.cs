@@ -234,8 +234,8 @@ namespace Marvin.Resources.Management
                                        where prop.CanWrite && Attribute.IsDefined(prop, typeof(ResourceReferenceAttribute))
                                          && (typeof(IResource).IsAssignableFrom(propType) || propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(IReferences<>))
                                        // Exclude read only properties, because they are simple type overrides of other references
-                                       // TODO: Filter parent and children somewhere else
-                                       where prop.Name != nameof(Resource.Parent) && prop.Name != nameof(Resource.Children)
+                                       // Filter parent to break recursion
+                                       where prop.Name != nameof(Resource.Parent)
                                        select prop).ToList();
             return referenceProperties;
         }
