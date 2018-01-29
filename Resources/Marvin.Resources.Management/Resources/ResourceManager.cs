@@ -267,7 +267,7 @@ namespace Marvin.Resources.Management
         ///
         public void Dispose()
         {
-            if (_disposed)
+            if (_disposed || _resources == null)
                 return;
 
             foreach (var resource in _resources.Values)
@@ -382,7 +382,7 @@ namespace Marvin.Resources.Management
             if (relEntity == null && referencedResource != null)
             {
                 // Create a new relation
-                relEntity = CreateRelationForProperty(relationRepo, referenceProperty, att);
+                relEntity = CreateRelationForProperty(relationRepo, att);
             }
             else if (relEntity != null && referencedResource == null)
             {
@@ -428,7 +428,7 @@ namespace Marvin.Resources.Management
             foreach (var createdReference in created)
             {
                 var referencedEntity = createdReference.Id > 0 ? uow.GetEntity<ResourceEntity>(createdReference) : Save(uow, createdReference);
-                var relEntity = CreateRelationForProperty(relationRepo, referenceProperty, referenceAtt);
+                var relEntity = CreateRelationForProperty(relationRepo, referenceAtt);
                 UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
             }
         }
@@ -436,13 +436,11 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Create a <see cref="ResourceRelation"/> entity for a property match
         /// </summary>
-        private static ResourceRelation CreateRelationForProperty(IResourceRelationRepository relationRepo, PropertyInfo referenceProperty, ResourceReferenceAttribute att)
+        private static ResourceRelation CreateRelationForProperty(IResourceRelationRepository relationRepo, ResourceReferenceAttribute att)
         {
-            var relationType = att?.RelationType ?? ResourceRelationType.Custom;
+            var relationType = att.RelationType;
             var relEntity = relationRepo.Create((int)relationType);
-            if (relationType == ResourceRelationType.Custom)
-                relEntity.RelationName = referenceProperty.Name;
-            else if (!string.IsNullOrEmpty(att?.Name))
+            if (!string.IsNullOrEmpty(att.Name))
                 relEntity.RelationName = att.Name;
             return relEntity;
         }
@@ -453,7 +451,7 @@ namespace Marvin.Resources.Management
         /// </summary>
         private static void UpdateRelationEntity(ResourceEntity resource, ResourceEntity referencedResource, ResourceRelation relEntity, ResourceReferenceAttribute att)
         {
-            if (att?.Role == ResourceReferenceRole.Source)
+            if (att.Role == ResourceReferenceRole.Source)
             {
                 relEntity.Source = referencedResource;
                 relEntity.Target = resource;
@@ -469,9 +467,10 @@ namespace Marvin.Resources.Management
         {
             return (from property in resourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     let propertyType = property.PropertyType
+                    where Attribute.IsDefined(property, typeof(ResourceReferenceAttribute)) 
+                       || includeOverrides && Attribute.IsDefined(property, typeof(ReferenceOverrideAttribute))
                     where property.CanWrite && (typeof(IResource).IsAssignableFrom(propertyType)
                        || propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IReferences<>))
-                    where includeOverrides || !Attribute.IsDefined(property, typeof(ReferenceOverrideAttribute))
                     select property);
         }
 
@@ -482,11 +481,9 @@ namespace Marvin.Resources.Management
         {
             var attribute = property.GetCustomAttribute<ResourceReferenceAttribute>();
             var matches = (from relation in relations
-                           where (attribute?.Role ?? ResourceReferenceRole.Target) == relation.Role
-                           where attribute?.RelationType == relation.RelationType // Typed relation without name or matching name
+                           where attribute.Role == relation.Role
+                           where attribute.RelationType == relation.RelationType // Typed relation without name or matching name
                                 && (string.IsNullOrEmpty(attribute.Name) || attribute.Name == relation.Name)
-                              || attribute?.RelationType == ResourceRelationType.Custom && attribute.Name == relation.Name // Custom relation with name
-                              || property.Name == relation.Name  // Undecorated, named reference
                            select relation);
             return matches;
         }

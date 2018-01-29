@@ -97,7 +97,9 @@ namespace Marvin.Resources.UI.Interaction
             NotifyOfPropertyChange(() => EditableObject);
 
             Methods = resource.Methods.Select(method => new ResourceMethodViewModel(method, this)).ToArray();
-            References = resource.References.Select(ReferenceViewModel.Create).ToArray();
+            References = resource.References
+                .Where(r => r.RelationType != ResourceRelationType.ParentChild) // Filter parent child relationship
+                .Select(ReferenceViewModel.Create).ToArray();
 
             await OnConfigLoaded();
 
