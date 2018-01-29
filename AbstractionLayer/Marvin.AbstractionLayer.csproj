@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Activities\Activity.cs" />
     <Compile Include="Activities\ActivityResultsAttribute.cs" />
+    <Compile Include="Activities\IActivityProgress.cs" />
     <Compile Include="Activities\NullActivityParameters.cs" />
     <Compile Include="Activities\ParametersBase.cs" />
     <Compile Include="Activities\ProcessRequirement.cs" />
