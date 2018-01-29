@@ -8,6 +8,6 @@
         /// <summary>
         /// Distribution message handler
         /// </summary>
-        void Handle(T message);
+        void Handle(object sender, T message);
     }
 }

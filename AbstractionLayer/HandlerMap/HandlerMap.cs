@@ -42,16 +42,16 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Distribution message handler
         /// </summary>
-        public void Handle(T message)
+        public void Handle(object sender, T message)
         {
             var handler = _handlers.FirstOrDefault(h => h.CanHandle(message));
             if (handler != null)
             {
-                handler.Handle(message);
+                handler.Handle(sender, message);
             }
             else if (DefaultHandler != null)
             {
-                DefaultHandler.Handle(message);
+                DefaultHandler.Handle(sender, message);
             }
             else
             {
@@ -64,7 +64,7 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         public void ReceivedHandler(object sender, T message)
         {
-            Handle(message);
+            Handle(sender, message);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Marvin.AbstractionLayer
         /// <param name="handler"></param>
         /// <typeparam name="TArgument">Type of the method argument inferred from delegate</typeparam>
         /// <returns></returns>
-        public HandlerMap<T> Register<TArgument>(Action<TArgument> handler)
+        public HandlerMap<T> Register<TArgument>(Action<object, TArgument> handler)
             where TArgument : T
         {
             AddHandler(new CastHandler<TArgument>(handler));
@@ -83,7 +83,7 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Default handler if no key matches
         /// </summary>
-        public HandlerMap<T> Default(Action<T> handler)
+        public HandlerMap<T> Default(Action<object, T> handler)
         {
             DefaultHandler = new SimpleHandler(handler);
             return this;
@@ -102,7 +102,7 @@ namespace Marvin.AbstractionLayer
             /// <summary>
             /// Handle it for gods sake
             /// </summary>
-            void Handle(T message);
+            void Handle(object sender, T message);
         }
 
         /// <summary>
@@ -112,14 +112,14 @@ namespace Marvin.AbstractionLayer
         protected struct CastHandler<TArgument> : IHandler
             where TArgument : T
         {
-            private readonly Action<TArgument> _handler;
+            private readonly Action<object, TArgument> _handler;
 
             /// <summary>
             /// Create new <see cref="CastHandler{T}"/> for 
             /// a typed callback.
             /// </summary>
             /// <param name="handler"></param>
-            public CastHandler(Action<TArgument> handler)
+            public CastHandler(Action<object, TArgument> handler)
             {
                 _handler = handler;
             }
@@ -131,9 +131,9 @@ namespace Marvin.AbstractionLayer
             }
 
             /// <inheritdoc />
-            public void Handle(T message)
+            public void Handle(object sender, T message)
             {
-                _handler((TArgument)message);
+                _handler(sender, (TArgument)message);
             }
         }
 
@@ -142,12 +142,12 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         protected struct SimpleHandler : IHandler
         {
-            private readonly Action<T> _handler;
+            private readonly Action<object, T> _handler;
 
             /// <summary>
             /// Create default handler with delegate
             /// </summary>
-            public SimpleHandler(Action<T> handler)
+            public SimpleHandler(Action<object, T> handler)
             {
                 _handler = handler;
             }
@@ -159,9 +159,9 @@ namespace Marvin.AbstractionLayer
             }
 
             /// <inheritdoc />
-            public void Handle(T message)
+            public void Handle(object sender, T message)
             {
-                _handler(message);
+                _handler(sender, message);
             }
         }
     }

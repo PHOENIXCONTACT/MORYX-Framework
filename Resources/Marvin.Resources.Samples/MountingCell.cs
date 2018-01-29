@@ -31,11 +31,11 @@ namespace Marvin.Resources.Samples
                 .ReceivedHandler;
         }
 
-        private void PlcReadyToWork(ReadyToWorkMessage readyToWork)
+        private void PlcReadyToWork(object sender, ReadyToWorkMessage readyToWork)
         {
         }
 
-        private void ProcessResultReceived(ProcessResultMessage obj)
+        private void ProcessResultReceived(object sender, ProcessResultMessage obj)
         {
         }
 
