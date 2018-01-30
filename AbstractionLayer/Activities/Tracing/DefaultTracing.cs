@@ -6,15 +6,14 @@ namespace Marvin.AbstractionLayer
     /// Class to enforce the null object pattern
     /// </summary>
     [DataContract]
-    public class DefaultTracing : Tracing
+    public class DefaultTracing : Tracing, IActivityProgress
     {
         ///
         public override string Type => nameof(DefaultTracing);
-
-        ///
-        protected override T Fill<T>(T instance)
-        {
-            return instance;
-        }
+        
+        /// <summary>
+        /// Relative progress directly equals numeric progress
+        /// </summary>
+        public virtual double Relative => Progress;
     }
 }

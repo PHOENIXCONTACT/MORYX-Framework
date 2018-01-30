@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Activities\Activity.cs" />
     <Compile Include="Activities\ActivityResultsAttribute.cs" />
+    <Compile Include="Activities\IActivityProgress.cs" />
     <Compile Include="Activities\NullActivityParameters.cs" />
     <Compile Include="Activities\ParametersBase.cs" />
     <Compile Include="Activities\ProcessRequirement.cs" />
@@ -60,7 +61,6 @@
     <Compile Include="Activities\DefaultActivityResult.cs" />
     <Compile Include="Activities\IParameters.cs" />
     <Compile Include="Activities\IActivityTracing.cs" />
-    <Compile Include="Activities\Tracing\SerialNumberTracing.cs" />
     <Compile Include="Capabilities\NullCapabilities.cs" />
     <Compile Include="Drivers\DigitalIO\IDigitalInputs.cs" />
     <Compile Include="Drivers\DigitalIO\IDigitalOutputs.cs" />

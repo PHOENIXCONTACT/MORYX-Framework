@@ -21,6 +21,9 @@ namespace Marvin.AbstractionLayer
         ///
         public string Text { get; set; }
 
+        /// 
+        public int Progress { get; set; }
+
         ///
         // ReSharper disable once InconsistentNaming <-- too cool to rename :P
         public Sparta Transform<Sparta>() where Sparta 
@@ -29,18 +32,32 @@ namespace Marvin.AbstractionLayer
             if (this is Sparta)
                 return this as Sparta;
 
-            return Fill(new Sparta
+            // Create new instance with default properties
+            var instance = new Sparta
             {
                 Started = Started,
                 Completed = Completed,
                 Text = Text
-            });
+            };
+
+            // Fill with additional properties
+            Fill(instance);
+
+            // Return transformed instance
+            return instance;
         }
 
         /// <summary>
         /// Fill the transformed instance
         /// </summary>
-        protected abstract T Fill<T>(T instance)
-            where T : IActivityTracing;
+        protected virtual void Fill<T>(T instance)
+            where T : IActivityTracing
+        {
+            var tracing = instance as Tracing;
+            if (tracing != null)
+            {
+                tracing.Progress = Progress;
+            }
+        }
     }
 }

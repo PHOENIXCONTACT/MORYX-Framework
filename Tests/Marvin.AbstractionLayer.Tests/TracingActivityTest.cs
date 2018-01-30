@@ -16,11 +16,12 @@ namespace Marvin.AbstractionLayer.Tests
         private T CreateTracing<T>() where T : Tracing, new()
         {
             Tracing trace = new T();
-            var tracing = trace as WpcTracing;
+            var tracing = trace as FooTracing;
             if (tracing != null)
             {
-                tracing.WpcIdentifier = "42";
-                tracing.WpcPosition = 42;
+                tracing.FooName = "42";
+                tracing.FooNumber = 42;
+                tracing.Progress = FooProgress.Loaded;
             }
             trace.Started = _startDateTime;
             trace.Completed = _endDateTime;
@@ -35,17 +36,15 @@ namespace Marvin.AbstractionLayer.Tests
             activity.Tracing.Started = _startDateTime;
             activity.Tracing.Completed = _endDateTime;
 
-            var wpcTracing = activity.TransformTracing<WpcTracing>();
+            var wpcTracing = activity.TransformTracing<FooTracing>();
 
             Assert.AreEqual(_startDateTime, wpcTracing.Started);
             Assert.AreEqual(_endDateTime, wpcTracing.Completed);
-            Assert.AreEqual(null, wpcTracing.WpcIdentifier);
-            Assert.AreEqual(0, wpcTracing.WpcPosition);
+            Assert.AreEqual(null, wpcTracing.FooName);
+            Assert.AreEqual(0, wpcTracing.FooNumber);
+            Assert.AreEqual(FooProgress.Initial, wpcTracing.Progress);
         }
 
-        //activity.TransformTracing<WpcTracing>()
-        //        .Trace(t => t.WpcIdentifier = CurrentWpc.ExternalId.ToString(CultureInfo.InvariantCulture))
-        //        .Trace(t => t.WpcPosition = CurrentWpc.GetPosition(startActivity.Id));
         [Test]
         public void TestActivityCreatedTracingTransformSameType()
         {
@@ -65,14 +64,16 @@ namespace Marvin.AbstractionLayer.Tests
             activity.Tracing.Started = _startDateTime;
             activity.Tracing.Completed = _endDateTime;
 
-            var wpcTracing = activity.TransformTracing<WpcTracing>()
-                .Trace(t => t.WpcIdentifier = "42")
-                .Trace(t => t.WpcPosition = 42);
+            var wpcTracing = activity.TransformTracing<FooTracing>()
+                .Trace(t => t.FooName = "42")
+                .Trace(t => t.FooNumber = 42)
+                .Trace(t => t.Progress = FooProgress.Done);
 
             Assert.AreEqual(_startDateTime, wpcTracing.Started);
             Assert.AreEqual(_endDateTime, wpcTracing.Completed);
-            Assert.AreEqual("42", wpcTracing.WpcIdentifier);
-            Assert.AreEqual(42, wpcTracing.WpcPosition);
+            Assert.AreEqual("42", wpcTracing.FooName);
+            Assert.AreEqual(42, wpcTracing.FooNumber);
+            Assert.AreEqual((int)FooProgress.Done, ((Tracing)activity.Tracing).Progress);
         }
 
         [Test]
@@ -89,27 +90,29 @@ namespace Marvin.AbstractionLayer.Tests
         [Test]
         public void TestTransformWpcToNullAndBack()
         {
-            var tracing = CreateTracing<WpcTracing>();
+            var tracing = CreateTracing<FooTracing>();
             var defaultTracing = tracing.Transform<DefaultTracing>();
-            var newWpcTracing = defaultTracing.Transform<WpcTracing>();
+            var newWpcTracing = defaultTracing.Transform<FooTracing>();
 
             Assert.AreEqual(tracing.Started, newWpcTracing.Started);
             Assert.AreEqual(tracing.Completed, newWpcTracing.Completed);
-            Assert.AreEqual(null, newWpcTracing.WpcIdentifier);
-            Assert.AreEqual(0, newWpcTracing.WpcPosition);
+            Assert.AreEqual(null, newWpcTracing.FooName);
+            Assert.AreEqual(0, newWpcTracing.FooNumber);
         }
 
         [Test]
         public void TestWpcTracingTransform()
         {
-            var trace = CreateTracing<WpcTracing>();
+            var trace = CreateTracing<FooTracing>();
 
-            var wpcTracing = trace.Transform<WpcTracing>();
+            var wpcTracing = trace.Transform<FooTracing>()
+                .Trace(t => t.Processing());
 
             Assert.AreEqual(trace.Started, wpcTracing.Started);
             Assert.AreEqual(trace.Completed, wpcTracing.Completed);
-            Assert.AreEqual(trace.WpcIdentifier, wpcTracing.WpcIdentifier);
-            Assert.AreEqual(trace.WpcPosition, wpcTracing.WpcPosition);
+            Assert.AreEqual(trace.FooName, wpcTracing.FooName);
+            Assert.AreEqual(trace.FooNumber, wpcTracing.FooNumber);
+            Assert.AreEqual(FooProgress.Running, wpcTracing.Progress);
         }
 
         private static Activity CreateActivity()
@@ -118,24 +121,45 @@ namespace Marvin.AbstractionLayer.Tests
             return activityMock.Object;
         }
 
-        private class WpcTracing : Tracing
+        private enum FooProgress
         {
-            public override string Type => nameof(WpcTracing);
+            Initial = 0,
+            Loaded = 10,
+            Running = 50,
+            Done = 100
+        }
 
-            public string WpcIdentifier { get; set; }
+        private class FooTracing : Tracing, IActivityProgress
+        {
+            public override string Type => nameof(FooTracing);
 
-            public int WpcPosition { get; set; }
-            
+            public string FooName { get; set; }
 
-            protected override T Fill<T>(T instance)
+            public int FooNumber { get; set; }
+
+            public double Relative => base.Progress;
+
+            public new FooProgress Progress
             {
-                var wpc = instance as WpcTracing;
+                get { return (FooProgress) base.Progress; }
+                set { base.Progress = (int) value; }
+            }
+
+            public void Processing()
+            {
+                Progress = FooProgress.Running;
+            }
+
+            protected override void Fill<T>(T instance)
+            {
+                base.Fill(instance);
+
+                var wpc = instance as FooTracing;
                 if (wpc != null)
                 {
-                    wpc.WpcIdentifier = WpcIdentifier;
-                    wpc.WpcPosition = WpcPosition;
+                    wpc.FooName = FooName;
+                    wpc.FooNumber = FooNumber;
                 }
-                return instance;
             }
         }
     }
