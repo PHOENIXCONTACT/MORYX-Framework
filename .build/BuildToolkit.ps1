@@ -352,8 +352,8 @@ function Invoke-PackAll($Directory, $Version, $Configuration) {
 }
 
 function Invoke-Publish {
-    Write-Host "Pushing packages from $ArtifactsDir to $NugetPackageTarget"
-    $packages = Get-ChildItem $ArtifactsDir -Recurse -Include '*.nupkg'
+    Write-Host "Pushing packages from $NugetPackageArtifacts to $NugetPackageTarget"
+    $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
         & $global:NugetCli push $package $NugetPackageTargetApiKey -Source $NugetPackageTarget

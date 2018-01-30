@@ -57,6 +57,7 @@ PublishPackages:
     - vs2015
     - nuget
   stage: publish
-  script: 'echo "Currently do nothing!"' # .\build.ps1 -Publish
-#  only: 
-#    - master@marvinplatform/MarvinPlatform
+  script: 
+    - .\build.ps1 -Publish
+  only: 
+    - master@marvinplatform/MarvinPlatform
