@@ -1,14 +1,14 @@
-Build Script Toolkit
-=======================
+# Build Script Toolkit
 
 The script tookit was created to reduce build server configuration to a minimum and add the speciallities to the project. The build toolkit is a powershell script which contains several functions to automate the build process.
 
-Another main feature is to reduce the commited executable to 0. Every executable has a high load on the VCS system and should never be commited or pushed. 
+Another main feature is to reduce the commited executable to 0. Every executable has a high load on the VCS system and should never be commited or pushed.
 
-# Main Concept
-Do never commit or push libraries or tools! All tools should be downloaded or loaded while the build process. All tools or libraries are existent as Nuget-Packages. 
+## Concept
 
-Currently used tools: 
+Do never commit or push libraries or tools! All tools should be downloaded or loaded while the build process. All tools or libraries are existent as Nuget-Packages.
+
+Currently used tools:
 
 | Tool | Description |
 |------|-------------|
@@ -16,13 +16,24 @@ Currently used tools:
 | Nuget | NuGet is an open-source package manager designed for the Microsoft development platform  |
 | Nunit | NUnit is an open source unit testing framework for Microsoft .NET |
 | OpenCover | OpenCover is a code coverage tool for .NET 2 and above |
-| Doxygen | Doxygen is a tool for generating documentation from C# sources |
+| DocFx | DocFx is a tool for generating documentation from C# sources |
 | OpenCoverToCoberturaConverter | Converts OpenCover reports to Cobertura reports |
 | ReportGenerator | Converts the OpenCover results to a human readable HTML page. |
 
 For downloading Nuget-Packages, we need Nuget itself. So the first Step is to download Nuget from a reliable source. With nuget all build dependencies can be resolved.
 
-# Available Functions
+## Environment Variables
+
+````sh
+$env:MARVIN_BUILDNUMBER
+$env:MARVIN_BRANCH
+$env:MARVIN_BUILD_CONFIG
+$env:MARVIN_OPTIMIZE_CODE
+$env:MARVIN_VERSION
+$env:MARVIN_ASSEMBLY_VERSION
+````
+
+## Available Functions
 
 | Function | Description |
 |----------|-------------|
@@ -35,11 +46,11 @@ For downloading Nuget-Packages, we need Nuget itself. So the first Step is to do
 | Invoke-Nunit | Will run Nunit tests with the Nunit console |
 | Invoke-SmokeTest | Will start the runtime core smoke test  |
 | Invoke-CoverTests | Starts the open cover tests with nunit |
-| Invoke-DoxyGen | Generates whole documentation |
+| Invoke-DocFx | Generates whole documentation |
 | Invoke-PackAll | Searches for .nuspec files and creates the packages |
 | Invoke-Publish | Will publish packed Nuget packages to the configured source |
 
-# Usage
+## Usage
 You have to create an own Powershell-Script in the root folder of your projekt. 
 Add the following parameter definition to the head of the script:
 
@@ -49,14 +60,10 @@ param (
     [switch]$UnitTests,
     [switch]$IntegrationTests,
     [switch]$SystemTests,
-    [switch]$SmokeTests,
-    [switch]$CoverTests,
+    [switch]$SmokeTests
     [switch]$GenerateDocs,
     [switch]$Pack,
-    [switch]$Publish,
-    [string]$Version = "0.0.0.0",
-    [string]$Configuration = "Debug",
-    [int]$PortIncrement = 0
+    [switch]$Publish
 )
 ````
 
@@ -64,19 +71,4 @@ Now include the toolkit in you script:
 
 ````ps1
 . ".build\BuildToolkit.ps1"
-````
-
-Now you should be able to build your project. Sample: 
-
-````ps1
-Install-BuildTools
-Write-Variables
-Update-AssemblyInfo "$RootPath\GlobalAssemblyInfo.cs"
-
-if ($Build) {
-    Invoke-Build ".\Tools.sln"
-    Invoke-Build ".\Toolkit.sln"
-    Invoke-Build ".\RuntimeCore.sln"
-    Invoke-Build ".\ClientFramework.sln"
-}
 ````

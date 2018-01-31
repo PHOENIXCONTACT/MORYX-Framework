@@ -4,12 +4,18 @@ stages:
   - documentation
   - publish
 
+variables:
+  MARVIN_BUILDNUMBER: "$CI_PIPELINE_ID"
+  MARVIN_BRANCH: "$CI_COMMIT_REF_NAME"
+  MARVIN_BUILD_CONFIG: "Release"
+  MARVIN_OPTIMIZE_CODE: "false"
+
 Build: 
   stage: build
   tags:
     - vs2015
   script:
-    - .\build.ps1 -SetAssemblyVersion -BuildNumber $([int]::Parse($env:CI_JOB_ID) + 363) -Build -Pack
+    - .\build.ps1 -SetAssemblyVersion -Build -Pack
   artifacts:
     expire_in: 1 hrs
     paths:
@@ -30,7 +36,7 @@ CoverTests:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts\OpenCover' 
+      - 'Artifacts\Tests' 
 
 GenerateDocs:
   tags:

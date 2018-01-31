@@ -18,18 +18,18 @@ $ArtifactsDir = "$RootPath\Artifacts";
 # Documentation
 $DocumentationDir = "$RootPath\Documentation";
 
-# Nunit
-$NunitReportsDir = "$ArtifactsDir\NUnitReportsDir";
+# Tests
+$NunitReportsDir = "$ArtifactsDir\Tests";
+$OpenCoverReportsDir = "$ArtifactsDir\Tests"
+$CoberturaReportsDir = "$ArtifactsDir\Tests"
 
 # Nuget
 $NugetConfig = "$dotBuild\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
-$NugetPackageTarget = "http://127.0.0.1:5588/nuget/MaRVIN-CI/";
-$NugetPackageTargetApiKey = "Admin:Admin";
+$NugetPackageTarget = "http://nts-eu-jenk02.europe.phoenixcontact.com:5588/nuget/MaRVIN-CI/";
 
 # Load partial scripts
 . "$DotBuild\Output.ps1";
-. "$DotBuild\AssemblyVersion.ps1";
 . "$DotBuild\SymbolStore.ps1";
 
 # Define Tools
@@ -44,10 +44,9 @@ $global:DocFxCli = "$BuildTools\docfx.console.$DocFxVersion\tools\docfx.exe";
 
 # Git
 $global:GitCommitHash = "";
-$global:GitBranch = "";
 
 # Functions
-function Invoke-Initialize([bool]$Cleanup = $false) {
+function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) {
     Write-Step "Initializing BuildToolkit"
 
     # First check the powershell version
@@ -67,10 +66,6 @@ function Invoke-Initialize([bool]$Cleanup = $false) {
 
     # Load Hash
     $global:GitCommitHash = (& $global:GitCli rev-parse --short HEAD);
-    Invoke-ExitCodeCheck $LastExitCode;
-
-    # Current branch
-    $global:GitBranch = (& $global:GitCli rev-parse --abbrev-ref HEAD);
     Invoke-ExitCodeCheck $LastExitCode;
 
     # Assign nuget.exe
@@ -105,7 +100,26 @@ function Invoke-Initialize([bool]$Cleanup = $false) {
         Write-Host "Unable to find msbuild.exe.";
         Invoke-ExitCodeCheck 1;
     }
-    
+
+    # Environment Variable Defaults
+    if (-not $env:MARVIN_BUILDNUMBER) {
+        $env:MARVIN_BUILDNUMBER = 0;
+    }
+
+    if (-not $env:MARVIN_BUILD_CONFIG) {
+        $env:MARVIN_BUILD_CONFIG = "Debug";
+    }
+
+    if (-not $env:MARVIN_OPTIMIZE_CODE) {
+        $env:MARVIN_OPTIMIZE_CODE = $True;
+    }
+
+    if (-not $env:MARVIN_BRANCH) {
+        $env:MARVIN_BRANCH = "unknown";
+    }
+
+    Set-Version $Version;
+
     # Printing Variables
     Write-Step "Printing global variables"
     Write-Variable "RootPath" $RootPath;
@@ -124,8 +138,10 @@ function Invoke-Initialize([bool]$Cleanup = $false) {
     Write-Variable "VswhereCli" $global:VswhereCli;
     Write-Variable "GitCli" $global:GitCli;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
-    Write-Variable "GitBranch" $global:GitBranch;
-
+    Write-Variable "MARVIN_BRANCH" $env:MARVIN_BRANCH;
+    Write-Variable "MARVIN_VERSION" $env:MARVIN_VERSION;
+    Write-Variable "MARVIN_ASSEMBLY_VERSION" $env:MARVIN_ASSEMBLY_VERSION
+    
     # Cleanp
     if ($Cleanup) {
         Write-Step "Cleanup"
@@ -148,7 +164,7 @@ function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExe
         Write-Host "$PackageName ($Version) already exists. Do not need to install."
     }
 }
-function Invoke-Build([string]$SolutionFile, [string]$Configuration, [bool]$Optimize = $True, [string]$Options = "") {
+function Invoke-Build([string]$SolutionFile, [string]$Options = "") {
     Write-Step "Building $SolutionFile"
 
     Write-Host "Restoring Nuget packages of $SolutionFile"
@@ -160,60 +176,38 @@ function Invoke-Build([string]$SolutionFile, [string]$Configuration, [bool]$Opti
         $additonalOptions = ",$Options";
     }
 
-    $params = "Configuration=$Configuration,Optimize=" + (&{If($Optimize) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
+    $params = "Configuration=$env:MARVIN_BUILD_CONFIG,Optimize=" + (&{If($env:MARVIN_OPTIMIZE_CODE) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
 
     & $global:MSBuildCli $SolutionFile /p:$params /detailedsummary
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-Nunit() {
-    Param
-    (
-        [Parameter(Mandatory=$false, Position=0)]
-        [string]$SearchPath = $RootPath,
-
-        [Parameter(Mandatory=$false, Position=1)]
-        [string]$SearchFilter = "*.csproj",
-
-        [Parameter(Mandatory=$false, Position=3)]
-        [string]$Configuration = "Debug"
-    )
-
+function Invoke-Nunit([string]$SearchPath = $RootPath, [string]$SearchFilter = "*.csproj") {
     Write-Step "Running $Name Tests: $SearchPath"
 
     if (-not (Test-Path $global:NUnitCli)) {
         Install-Tool "NUnit.Console" $NunitVersion $global:NunitCli;
     }
 
+    if (-not (Test-Path $NunitReportsDir)) {
+        New-Item $NunitReportsDir -Type Directory | Out-Null
+    }
+
     $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
 
-    & $global:NUnitCli $testProjects /config:"$Configuration"
+    & $global:NUnitCli $testProjects /config:"$env:MARVIN_BUILD_CONFIG"
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-SmokeTest([string]$runtimePath, [int]$modulesCount, [int]$interruptTime, [int]$portIncrement) {
-    Write-Step "Invoking Runtime SmokeTest Modules: $modulesCount, Interrupt Time: $interruptTime, Port Increment: $portIncrement."
+function Invoke-SmokeTest([string]$RuntimePath, [int]$ModulesCount, [int]$InterruptTime) {
+    $randomIncrement = Get-Random -Minimum 2000 -Maximum 2100
+    Write-Step "Invoking Runtime SmokeTest Modules: $ModulesCount, Interrupt Time: $InterruptTime, Port Increment: $randomIncrement."  
 
-    & $runtimePath "-r=SmokeTest -e=$modulesCount -i=$interruptTime -pi=$portIncrement"
+    & $RuntimePath "-r=SmokeTest -e=$ModulesCount -i=$InterruptTime -pi=$randomIncrement"
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-CoverTests {
-    Param
-    (
-        [Parameter(Mandatory=$false, Position=0)]
-        [string]$SearchPath = $RootPath,
-
-        [Parameter(Mandatory=$false, Position=1)]
-        [string]$SearchFilter = "*.csproj",
-
-        [Parameter(Mandatory=$false, Position=2)]
-        [string]$FilterFile = "$RootPath\OpenCoverFilter.txt", 
-
-        [Parameter(Mandatory=$false, Position=3)]
-        [string]$Configuration = "Debug"
-    )
-    
+function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", $FilterFile = "$RootPath\OpenCoverFilter.txt") {   
     Write-Step "Starting cover tests from $SearchPath with filter $FilterFile."
     
     if (-not (Test-Path $SearchPath)) {
@@ -233,22 +227,33 @@ function Invoke-CoverTests {
         Install-Tool "OpenCoverToCoberturaConverter" $OpenCoverToCoberturaVersion $global:OpenCoverToCoberturaCli;
     }
 
+    if (-not (Test-Path $OpenCoverReportsDir)) {
+        New-Item $OpenCoverReportsDir -Type Directory | Out-Null
+    }
+
+    if (-not (Test-Path $CoberturaReportsDir)) {
+        New-Item $CoberturaReportsDir -Type Directory | Out-Null
+    }
+
+    if (-not (Test-Path $NunitReportsDir)) {
+        New-Item $NunitReportsDir -Type Directory | Out-Null
+    }
+
     $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
     ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
 
         Write-Host "OpenCover Test: ${projectName}:";
 
-        $projectDir = $testProject.DirectoryName;
-        $resultsXml = ($projectDir + "\$projectName.TestResult.xml");
-        $openCoverXml = ($projectDir + "\$projectName.OpenCover.xml");
-        $coberturaXml = ($projectDir + "\$projectName.Cobertura.xml");
+        #$projectDir = $testProject.DirectoryName;
+        $nunitXml = ($NunitReportsDir + "\$projectName.TestResult.xml");
+        $openCoverXml = ($OpenCoverReportsDir + "\$projectName.OpenCover.xml");
+        $coberturaXml = ($CoberturaReportsDir + "\$projectName.Cobertura.xml");
 
         $includeFilter = "+[Marvin*]*";
         $excludeFilter = "-[*nunit*]* -[*Tests]* -[*Model*]*";
 
         if (Test-Path $FilterFile) {
-            # TODO: Load filter file 
             $ignoreContent = Get-Content $FilterFile;
 
             foreach ($line in $ignoreContent) {
@@ -272,7 +277,7 @@ function Invoke-CoverTests {
 
         Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
 
-        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$Configuration /result:$resultsXml $testProject"
+        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MARVIN_BUILD_CONFIG /result:$nunitXml $testProject"
         $openCoverAgs += "-log:Debug", "-register:user", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
         
@@ -284,13 +289,7 @@ function Invoke-CoverTests {
     }
 }
 
-function Invoke-CoverReport {
-    Param
-    (
-        [Parameter(Mandatory=$false, Position=0)]
-        [string]$SearchPath = $RootPath
-    )
-
+function Invoke-CoverReport($SearchPath = $OpenCoverReportsDir) {
     Write-Step "Creating cover report. Searching for OpenCover.xml files in $SearchPath."
 
     if (-not (Test-Path $global:ReportGeneratorCli)) {
@@ -300,17 +299,11 @@ function Invoke-CoverReport {
     $reports = (Get-ChildItem $SearchPath -Recurse -Include '*.OpenCover.xml');
     $asArgument = [string]::Join(";",$reports);
 
-    & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$ArtifactsDir\OpenCover\"
+    & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$OpenCoverReportsDir/html"
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-DocFx {
-    Param
-    (
-        [Parameter(Mandatory=$false, Position=0)]
-        [string]$Metadata = [System.IO.Path]::Combine($DocumentationDir, "docfx.json")
-    )
-
+function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "docfx.json")) {
     Write-Step "Generating documentation using DocFx"
 
     if (-not (Test-Path $global:DocFxCli)) {
@@ -321,32 +314,32 @@ function Invoke-DocFx {
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-Pack($FilePath, $Version, $Configuration) {
+function Invoke-Pack($FilePath) {
     if(!(Test-Path $NugetPackageArtifacts)) {
         Write-Host "Creating missing directory '$NugetPackageArtifacts'"
         New-Item $NugetPackageArtifacts -Type Directory | Out-Null
     }
 
-    $packargs = @("-outputdirectory", "$NugetPackageArtifacts", "-includereferencedprojects", "-Version", $Version, "-Prop", "Configuration=$Configuration");
+    $packargs = @("-outputdirectory", "$NugetPackageArtifacts", "-includereferencedprojects", "-Version", $env:MARVIN_VERSION, "-Prop", "Configuration=$env:MARVIN_BUILD_CONFIG");
 
     # Call nuget with default arguments plus optional
     & $global:NugetCli pack "$FilePath" @packargs
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-PackAll($Directory, $Version, $Configuration) {
+function Invoke-PackAll {
     Write-Host "Looking for .nuspec files..."
     # Look for nuspec in this directory
-    foreach ($nuspecFile in Get-ChildItem $Directory -Recurse -Filter *.nuspec) {
+    foreach ($nuspecFile in Get-ChildItem $RootPath -Recurse -Filter *.nuspec) {
         $nuspecPath = $nuspecFile.FullName
         Write-Host "Packing $nuspecPath" -ForegroundColor Green
         
         # Check if there is a matching proj for the nuspec
         $projectPath = [IO.Path]::ChangeExtension($nuspecPath, "csproj")
         if(Test-Path $projectPath) {
-            Invoke-Pack $projectPath $Version $Configuration
+            Invoke-Pack $projectPath
         } else {
-            Invoke-Pack $nuspecPath $Version $Configuration
+            Invoke-Pack $nuspecPath
         }
     }
 }
@@ -356,35 +349,134 @@ function Invoke-Publish {
     $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
-        & $global:NugetCli push $package $NugetPackageTargetApiKey -Source $NugetPackageTarget
+        & $global:NugetCli push $package $env:MARVIN_NUGET_APIKEY -Source $NugetPackageTarget
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }
 
-function Get-MajorMinorPatchVersion($Version) {
-    $versionSplit = $Version.Split(".");
-    return "$($versionSplit[0]).$($versionSplit[1]).$($versionSplit[2])";
+function Set-Version ([string]$MajorMinorPatch) {
+    Write-Host "Setting environment version to $MajorMinorPatch";
+
+    $version = $MajorMinorPatch;
+    $tagRegex = '^v?(\d+\.\d+\.\d+)(-([a-zA-Z]+)\.?(\d*))?$'; # v1.0.0-beta1
+
+    $isVersionTag = $env:MARVIN_BRANCH -match $tagRegex
+    if ($isVersionTag) {
+        Write-Debug "Building commit tagged with a compatable version number"
+        
+        $version = $matches[1]
+        $postTag = $matches[3]
+        $count = $matches[4]
+
+        Write-Debug "version number: ${version} post tag: ${postTag} count: ${count}"
+        
+        if ("$postTag" -ne "") {
+            $version = "${version}-${postTag}"
+        }
+        if("$count" -ne ""){
+            $padded = $count.Trim().Trim('0').PadLeft(6,"0");
+            $version = "${version}${padded}"
+        }
+    } else {
+        Write-Debug "Untagged"
+
+        # Build number replacement is padded to 6 places
+        $buildNumber = "$env:MARVIN_BUILDNUMBER".Trim().Trim('0').PadLeft(6,"0");
+
+        # This is a general branch commit
+        $branch = $env:MARVIN_BRANCH
+        $branch = $branch.Replace("/","-").ToLower()
+
+        if ($branch.ToLower() -eq "master") {
+            $branch = "dev"
+        }
+        
+        $version = "${version}-${branch}${buildNumber}";
+    }
+
+    $env:MARVIN_VERSION = $version;
+    $env:MARVIN_ASSEMBLY_VERSION = $MajorMinorPatch + "." + $env:MARVIN_BUILDNUMBER;
 }
 
-function Get-InformationalVersion($Version, $Preview) {
-    $versionSplit = $Version.Split(".");
-    $majorMinorPatch = "$($versionSplit[0]).$($versionSplit[1]).$($versionSplit[2])";
-    $buildNumber = $versionSplit[3];
+function Set-AssemblyVersion([string]$InputFile) {
+    $file = Get-Childitem -Path $inputFile;
 
-    # SemVer 2.0.0 will be used: "3.0.0+3ff33243" or "3.0.0-beta15432+3ff33243"
-    $versionExt = (&{If([string]::IsNullOrEmpty($Preview)) {"+$global:GitCommitHash"} Else {"-" + $Preview + "$buildNumber+$global:GitCommitHash"}});
-    $informationalVersion = $majorMinorPatch + $versionExt;
-    return $informationalVersion;
+    if (-Not $file) {
+        Write-Host "AssemblyInfo: $inputFile was not found!";
+        exit 1;
+    }
+
+    Write-Host "Applying assembly info of $($file.FullName) -> $env:MARVIN_ASSEMBLY_VERSION ";
+   
+    $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+)){3}"\)';
+    $assemblyVersion = 'AssemblyVersion("' + $env:MARVIN_ASSEMBLY_VERSION + '")';
+
+    $assemblyFileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+)){3}"\)';
+    $assemblyFileVersion = 'AssemblyFileVersion("' + $env:MARVIN_ASSEMBLY_VERSION + '")';
+
+    $assemblyInformationalVersionPattern = 'AssemblyInformationalVersion\("[0-9]+(\.([0-9]+)){3}"\)';
+    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $env:MARVIN_VERSION + '")';
+
+    $assemblyConfigurationPattern = 'AssemblyConfiguration\("\w+"\)';
+    $assemblyConfiguration = 'AssemblyConfiguration("' + $env:MARVIN_BUILD_CONFIG + '")';
+    
+    $content = (Get-Content $file.FullName) | ForEach-Object  { 
+        ForEach-Object {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
+        ForEach-Object {$_ -replace $assemblyFileVersionPattern, $assemblyFileVersion } |
+        ForEach-Object {$_ -replace $assemblyInformationalVersionPattern, $assemblyInformationalVersion } |
+        ForEach-Object {$_ -replace $assemblyConfigurationPattern, $assemblyConfiguration } 
+    }
+
+    Out-File -InputObject $content -FilePath $file.FullName -Encoding utf8;
 }
 
-function Get-NugetPackageVersion($Version, $Preview) {
-    $versionSplit = $Version.Split(".");
-    $majorMinorPatch = "$($versionSplit[0]).$($versionSplit[1]).$($versionSplit[2])";
-    $buildNumber = $versionSplit[3];
+function Set-AssemblyVersions([string[]]$Ignored, [string]$SearchPath = $RootPath) {
+    $Ignored = $Ignored + "\\.build\\" + "\\.buildtools\\" + "\\Tests\\" + "\\IntegrationTests\\" + "\\SystemTests\\";
 
-    # SemVer 1.0.0 will be used: "3.0.0" or "3.0.0-beta15432"
-    $packageVersion = $majorMinorPatch + (&{If([string]::IsNullOrEmpty($Preview)) {""} Else {"-" + $Preview + "$buildNumber"}})
-    return $packageVersion;
+    $assemblyInfos = Get-ChildItem -Path $RootPath -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
+        $fullName = $_.FullName;
+        return -not ($Ignored.Where({ $fullName -match $_ }).Count -gt 0);
+    }
+
+    if ($assemblyInfos)
+    {
+        Write-Host "Will apply version to $($assemblyInfos.Count) AssemblyInfos.";
+        foreach ($file in $assemblyInfos) {
+            Set-AssemblyVersion -InputFile $file;
+        }
+    }
+}
+
+function Set-VsixManifestVersion([string]$VsixManifest) {
+    $file = Get-Childitem -Path $VsixManifest
+    if (-Not $file) {
+        Write-Host "VSIX Manifest: $VsixManifest was not found!"
+        exit 1;
+    }
+    
+    [xml]$manifestContent = Get-Content $file
+    $manifestContent.PackageManifest.Metadata.Identity.Version = $env:MARVIN_ASSEMBLY_VERSION
+    $manifestContent.Save($VsixManifest) 
+
+    Write-Host "Version $env:MARVIN_ASSEMBLY_VERSION applied to $VsixManifest!"
+}
+
+function Set-VsTemplateVersion([string]$VsTemplate) {
+    $file = Get-Childitem -Path $VsTemplate
+    if (-Not $file) {
+        Write-Host "VsTemplate: $VsTemplate was not found!"
+        exit 1;
+    }
+
+    [xml]$templateContent = Get-Content $VsTemplate
+
+    $versionRegex = "(\d+)\.(\d+)\.(\d+)\.(\d+)"
+
+    $wizardAssemblyStrongName = $templateContent.VSTemplate.WizardExtension.Assembly -replace $versionRegex, $env:MARVIN_ASSEMBLY_VERSION 
+    $templateContent.VSTemplate.WizardExtension.Assembly = $wizardAssemblyStrongName
+    $templateContent.Save($vsTemplate)
+
+    Write-Host "Version $env:MARVIN_ASSEMBLY_VERSION applied to $VsTemplate!"
 }
 
 function Install-EddieLight([string]$Version, [string]$TargetPath) {

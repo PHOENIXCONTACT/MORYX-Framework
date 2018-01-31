@@ -1,18 +1,11 @@
 ﻿param (
-    [switch]$Cleanup,
     [switch]$SetAssemblyVersion,
-    [int]$BuildNumber = 0,
-    [ValidateSet('Debug','Release')]
-    [string]$Configuration = "Debug",
-
     [switch]$Build,
-    [switch]$OptimizeCode,
 
     [switch]$SmokeTests,
-    [int]$PortIncrement = 0,
     [switch]$UnitTests,
-    [switch]$SystemTests,
     [switch]$IntegrationTests,
+    [switch]$SystemTests,
     
     [switch]$GenerateDocs,
 
@@ -22,60 +15,43 @@
     [switch]$PublishSymbols
 )
 
+# Extend version number
+$env:MARVIN_BUILDNUMBER = [int]::Parse($env:MARVIN_BUILDNUMBER) + 364;
+
 # Load Toolkit
 . ".build\BuildToolkit.ps1"
 
-# Set Version
-$versionInfo = (Get-Content "VERSION").Split("-");
-$Version = $versionInfo[0] + "." + $BuildNumber;
-$Preview = (&{If($versionInfo.Length -gt 1) {$versionInfo[1]} Else {""}})
-
 # Initialize Toolkit
-Invoke-Initialize -Cleanup $Cleanup;
+Invoke-Initialize -Version (Get-Content "VERSION");
 
 if ($SetAssemblyVersion) {
-    $assemblyVersion = Get-MajorMinorPatchVersion $Version;
-    $informationalVersion = Get-InformationalVersion $Version $Preview;
+    Set-AssemblyVersions @("\\Templates\\");
 
-    # Modify all assembly infos except some pathes
-    Write-Step "Modifing AssemblyInfos to Version '$Version' and InformationalVersion '$informationalVersion'"
-    $assemblyInfos = Get-ChildItem -Path $RootPath -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
-        ($_.FullName -notmatch "\\Templates\\" `
-        -and $_.FullName -notmatch "\\.build\\" `
-        -and $_.FullName -notmatch "\\.buildtools\\" `
-        -and $_.FullName -notmatch "\\Tests\\" `
-        -and $_.FullName -notmatch "\\IntegrationTests\\" `
-        -and $_.FullName -notmatch "\\SystemTests\\")
-    }
-    
-    Set-AssemblyVersions $assemblyInfos $assemblyVersion $informationalVersion $Configuration
-
-    # Modify version of templates
-    Set-VsixManifestVersion -VsixManifest "$RootPath\Runtime\Templates\DataModelWizard\source.extension.vsixmanifest" -Version $Version
-    Set-VsTemplateVersion -VsTemplate "$PSScriptRoot\Runtime\Templates\DataModelTemplate\MyTemplate.vstemplate" -Version $Version
-    Set-AssemblyVersion "$RootPath\Runtime\Templates\DataModelWizard\Properties\AssemblyInfo.cs" $Version $informationalVersion $Configuration
+    Set-VsixManifestVersion -VsixManifest "$RootPath\Runtime\Templates\DataModelWizard\source.extension.vsixmanifest"
+    Set-VsTemplateVersion -VsTemplate "$PSScriptRoot\Runtime\Templates\DataModelTemplate\MyTemplate.vstemplate"
+    Set-AssemblyVersion "$RootPath\Runtime\Templates\DataModelWizard\Properties\AssemblyInfo.cs"
 }
 
 if ($Build) {
-    Invoke-Build ".\MarvinPlatform.sln" $Configuration $OptimizeCode
-    Install-EddieLight "3.0.4" "Runtime\Marvin.Runtime.Console\bin\$Configuration\EddieLight\";
+    Invoke-Build ".\MarvinPlatform.sln"
+    Install-EddieLight "3.0.4" "Runtime\Marvin.Runtime.Console\bin\$env:MARVIN_BUILD_CONFIG\EddieLight\";
 }
 
 if ($SmokeTests) {
-    $runtimePath = "$RootPath\Runtime\Marvin.Runtime.Console\bin\$Configuration\HeartOfGold.exe";
-    Invoke-SmokeTest $runtimePath (&{If($Configuration -eq "Debug") {6} Else {4}}) 6000 $PortIncrement
+    $runtimePath = "$RootPath\Runtime\Marvin.Runtime.Console\bin\$env:MARVIN_BUILD_CONFIG\HeartOfGold.exe";
+    Invoke-SmokeTest $runtimePath 4 6000
 }
 
 if ($UnitTests) {
-    Invoke-CoverTests -SearchFilter "*.Tests.csproj" -Configuration $Configuration
+    Invoke-CoverTests -SearchFilter "*.Tests.csproj"
 }
 
 if ($IntegrationTests) {
-    Invoke-CoverTests -SearchFilter "*.IntegrationTests.csproj" -Configuration $Configuration
+    Invoke-CoverTests -SearchFilter "*.IntegrationTests.csproj"
 }
 
 if ($SystemTests) {
-    Invoke-Nunit -SearchFilter "*.SystemTests.csproj" -Configuration $Configuration
+    Invoke-Nunit -SearchFilter "*.SystemTests.csproj"
 }
 
 if ($UnitTests -or $IntegrationTests) {
@@ -87,8 +63,7 @@ if ($GenerateDocs) {
 }
 
 if ($Pack) {
-    $NugetPackageVersion = Get-NugetPackageVersion -Version $Version -Preview $Preview;
-    Invoke-PackAll $RootPath $NugetPackageVersion $Configuration
+    Invoke-PackAll
 }
 
 if ($Publish) {
