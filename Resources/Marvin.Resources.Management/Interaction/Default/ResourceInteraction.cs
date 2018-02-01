@@ -266,7 +266,7 @@ namespace Marvin.Resources.Management
             // Create reference model from property information and optional attribute
             var referenceModel = new ResourceReferenceModel
             {
-                Name = attribute.Name ?? property.Name,
+                Name = property.Name,
                 Role = attribute.Role,
                 RelationType = attribute.RelationType,
                 Targets = new List<ResourceModel>()

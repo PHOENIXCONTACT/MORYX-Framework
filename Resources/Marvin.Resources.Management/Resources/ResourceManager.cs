@@ -390,9 +390,10 @@ namespace Marvin.Resources.Management
                 relationRepo.Remove(relEntity);
                 return;
             }
-            else
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse <<- To identify the remaining case
+            else if (relEntity == null && referencedResource == null)
             {
-                // Relation did not exist before and still does not OR was only modified
+                // Relation did not exist before and still does not
                 return;
             }
 
@@ -467,7 +468,7 @@ namespace Marvin.Resources.Management
         {
             return (from property in resourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     let propertyType = property.PropertyType
-                    where Attribute.IsDefined(property, typeof(ResourceReferenceAttribute)) 
+                    where Attribute.IsDefined(property, typeof(ResourceReferenceAttribute))
                        || includeOverrides && Attribute.IsDefined(property, typeof(ReferenceOverrideAttribute))
                     where property.CanWrite && (typeof(IResource).IsAssignableFrom(propertyType)
                        || propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IReferences<>))
