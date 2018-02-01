@@ -1,11 +1,11 @@
 # Tool Versions
 $MsBuildVersion = "14.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
-$NunitVersion = "3.7.0";
+$NunitVersion = "3.8.0";
 $OpenCoverVersion = "4.6.519";
 $DocFxVersion = "2.27.0";
 $OpenCoverToCoberturaVersion = "0.2.6.0";
-$ReportGeneratorVersion = "3.0.2";
-$VswhereVersion = "2.2.11";
+$ReportGeneratorVersion = "3.1.2";
+$VswhereVersion = "2.3.2";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
