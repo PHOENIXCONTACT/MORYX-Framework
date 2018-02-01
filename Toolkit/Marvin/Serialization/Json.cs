@@ -167,6 +167,29 @@ namespace Marvin.Serialization
             return JsonConvert.DeserializeObject(jsonStr, type, SettingsMap[JsonSettings.Minimal]);
         }
 
+        /// <summary>
+        /// Populates the properties of the <paramref name="target"/> with values from the <paramref name="jsonStr"/>.
+        /// Uses <see cref="JsonSettings.Minimal"/> settings.
+        /// </summary>
+        /// <param name="target">Target object to populate</param>
+        /// <param name="jsonStr">Json string as data source</param>
+        public static void Populate(object target, string jsonStr)
+        {
+            JsonConvert.PopulateObject(jsonStr, target, SettingsMap[JsonSettings.Minimal]);
+        }
+
+        /// <summary>
+        /// Populates the properties of the <paramref name="target"/> with values from the <paramref name="jsonStr"/>.
+        /// Uses the given settings.
+        /// </summary>
+        /// <param name="target">Target object to populate</param>
+        /// <param name="jsonStr">Json string as data source</param>
+        /// <param name="settings">Settings to pass to the serializer</param>
+        public static void Populate(object target, string jsonStr, JsonSettings settings)
+        {
+            JsonConvert.PopulateObject(jsonStr, target, SettingsMap[settings]);
+        }
+
         #endregion
 
     }
