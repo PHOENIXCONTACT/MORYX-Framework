@@ -11,7 +11,25 @@ namespace Marvin.Resources.Samples
         [DataMember]
         public AssembleConfig Config { get; set; }
 
-        public override object Descriptor => Config;
+        [ResourceReference(ResourceRelationType.Extension)]
+        public AssemleSetup Setup { get; set; }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            if (Setup == null)
+            {
+                Setup = Creator.Instantiate<AssemleSetup>();
+                RaiseResourceChanged();
+            }
+        }
+
+        [EditorVisible]
+        public void ChangeSetup(string orderNumber)
+        {
+            Setup.ChangeOrderNumber(orderNumber);
+        }
 
         [EditorVisible]
         public class AssembleConfig
@@ -19,6 +37,19 @@ namespace Marvin.Resources.Samples
             public string Name { get; set; }
 
             public int Number { get; set; }
+        }
+        
+    }
+
+    public class AssemleSetup : Resource
+    {
+        [DataMember]
+        public string OrderNumber { get; set; }
+
+        public void ChangeOrderNumber(string orderNumber)
+        {
+            OrderNumber = orderNumber;
+            RaiseResourceChanged();
         }
     }
 }

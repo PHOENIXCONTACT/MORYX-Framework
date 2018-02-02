@@ -269,44 +269,32 @@ namespace Marvin.Resources.Management
                 Name = property.Name,
                 Role = attribute.Role,
                 RelationType = attribute.RelationType,
-                Targets = new List<ResourceModel>()
+                Targets = new List<ResourceModel>(),
+                IsCollection = typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType)
             };
 
-            // Convert referenced resource objects and possible instance types
+            // Get type constraints
+            Type targetType = property.PropertyType;
+            if (referenceModel.IsCollection)
+                targetType = EntryConvert.ElementType(targetType);
+            var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
+            referenceModel.SupportedTypes = SupportedTypes(typeConstraints);
+
+            // Exclude other properties if this is the last layer
             var value = property.GetValue(current);
-            if (typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType))
+            if (value == null || depth <= 0)
+                return referenceModel;
+
+            // Convert referenced resource objects and possible instance types 
+            var referenceTargets = referenceModel.IsCollection ? (IEnumerable<IResource>)value : new[] { (IResource)value };
+            foreach (Resource resource in referenceTargets)
             {
-                referenceModel.IsCollection = true;
-
-                var targetType = EntryConvert.ElementType(property.PropertyType);
-                var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
-                referenceModel.SupportedTypes = SupportedTypes(typeConstraints);
-                referenceModel.PossibleTargets = MatchingInstances(typeConstraints);
-
-                // Exclude other properties if this is the last layer
-                if (value == null || depth <= 0)
-                    return referenceModel;
-
-                foreach (Resource resource in (IEnumerable<IResource>)value)
-                {
-                    var target = GetDetails(resource, depth - 1);
-                    referenceModel.Targets.Add(target);
-                }
-            }
-            else
-            {
-                var typeConstraints = MergeTypeConstraints(property, property.PropertyType, overrides);
-
-                referenceModel.SupportedTypes = SupportedTypes(typeConstraints);
-                referenceModel.PossibleTargets = MatchingInstances(typeConstraints);
-
-                // Convert singe reference only if this is not the last layer 
-                if (value == null || depth <= 0)
-                    return referenceModel;
-
-                var target = GetDetails((Resource) value, depth - 1);
+                var target = GetDetails(resource, depth - 1);
                 referenceModel.Targets.Add(target);
             }
+            // Possible targets must always include the current target, even if its not part of the tree
+            referenceModel.PossibleTargets = MatchingInstances(typeConstraints)
+                .Union(referenceModel.Targets).ToArray();
 
             return referenceModel;
         }
@@ -350,7 +338,7 @@ namespace Marvin.Resources.Management
                 var property = type.GetProperty(reference.Name);
                 if (reference.IsCollection)
                 {
-                    
+
                 }
                 else
                 {
@@ -403,7 +391,7 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Find all resources of the tree that are possible instances for a reference of that type
         /// </summary>
-        private ResourceModel[] MatchingInstances(ICollection<Type> typeConstraints)
+        private IEnumerable<ResourceModel> MatchingInstances(ICollection<Type> typeConstraints)
         {
             var matches = new List<Resource>();
             IncludeMatchingInstance((Resource)Root, typeConstraints, matches);
@@ -413,7 +401,7 @@ namespace Marvin.Resources.Management
                 Name = r.Name,
                 LocalIdentifier = r.LocalIdentifier,
                 GlobalIdentifier = r.GlobalIdentifier
-            }).ToArray();
+            });
         }
 
         /// <summary>
