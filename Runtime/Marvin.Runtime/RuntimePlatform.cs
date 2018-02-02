@@ -21,7 +21,7 @@ namespace Marvin.Runtime
         static RuntimePlatform()
         {
             var version = typeof(RuntimePlatform).Assembly.GetName().Version;
-            RuntimeVersion = $"{version.Major}.{version.Minor}.{version.Revision}";
+            RuntimeVersion = $"{version.Major}.{version.Minor}.{version.Build}";
         }
 
         /// <summary>
