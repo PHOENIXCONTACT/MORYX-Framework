@@ -124,6 +124,7 @@ namespace Marvin.StateMachines
                                                     $"'{nameof(StateDefinitionAttribute.IsInitial)} = true'.");
 
             context.SetState(initialState);
+            initialState.OnEnter();
         }
 
         /// <summary>
