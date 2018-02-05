@@ -58,7 +58,7 @@ namespace Marvin.Resources.Management
             var methods = interfaces.SelectMany(inter => inter.GetMethods(bindingFlags)).Where(m => !m.IsSpecialName);
             foreach (var method in methods)
             {
-                DefineMethod(typeBuilder, baseType, targetProperty.GetMethod, resourceType, method);
+                DefineMethod(typeBuilder, baseType, targetProperty.GetMethod, method);
             }
 
             // Define events
@@ -172,13 +172,12 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Define a method on the proxy that forwards the call the target 
         /// </summary>
-        private static void DefineMethod(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, Type targetType, MethodInfo method)
+        private static void DefineMethod(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, MethodInfo method)
         {
             var parameters = method.GetParameters();
             var argumentTypes = parameters.Select(p => p.ParameterType).ToArray();
-            var methodOnTarget = targetType.GetMethod(method.Name, argumentTypes);
 
-            var methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
+            const MethodAttributes methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
             var methodBuilder = typeBuilder.DefineMethod(method.Name, methodAttributes, method.ReturnType, argumentTypes);
 
             var isResourceReference = IsResourceReference(method.ReturnType);
@@ -198,7 +197,7 @@ namespace Marvin.Resources.Management
                     ExtractTargetFromStack(generator, parameter.ParameterType);
             }
             // Call method on target
-            generator.Emit(OpCodes.Callvirt, methodOnTarget);
+            generator.Emit(OpCodes.Callvirt, method);
             if (isResourceReference) // Convert return value to proxy
             {
                 var convertMethod = Convert(baseType, method.ReturnType);
