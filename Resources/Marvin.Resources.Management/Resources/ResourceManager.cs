@@ -81,7 +81,8 @@ namespace Marvin.Resources.Management
                 }
                 catch (Exception e)
                 {
-                    _publicResources.Remove(resource as IPublicResource);
+                    lock (_publicResources)
+                        _publicResources.Remove(resource as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -243,7 +244,8 @@ namespace Marvin.Resources.Management
                 }
                 catch (Exception e)
                 {
-                    _publicResources.Remove(resource as IPublicResource);
+                    lock (_publicResources)
+                        _publicResources.Remove(resource as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
