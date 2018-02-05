@@ -43,6 +43,6 @@ using Marvin.Resources.Management;
 // Marvin attributes
 [assembly: ResourcesBundle]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: InternalsVisibleTo(ResourceTypeController.AssemblyName)]
+[assembly: InternalsVisibleTo(ResourceProxyBuilder.AssemblyName)]
 [assembly: InternalsVisibleTo("Marvin.Resources.IntegrationTests")]
 [assembly: InternalsVisibleTo("Marvin.Resources.Management.Tests")]

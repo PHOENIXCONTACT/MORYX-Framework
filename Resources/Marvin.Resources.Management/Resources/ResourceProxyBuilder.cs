@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Marvin.AbstractionLayer.Resources;
+using Marvin.Container;
 
 namespace Marvin.Resources.Management
 {
@@ -11,8 +12,19 @@ namespace Marvin.Resources.Management
     /// Class that can construct a new <see cref="ResourceProxy{TTarget}"/> for a given
     /// resource type
     /// </summary>
-    internal static class ResourceProxyBuilder
+    [Component(LifeCycle.Singleton)]
+    internal class ResourceProxyBuilder
     {
+        /// <summary>
+        /// Name of the assembly that contains the dynamic resource proxies
+        /// </summary>
+        public const string AssemblyName = "DynamicResourceProxies";
+
+        /// <summary>
+        /// Name of the dynamic module
+        /// </summary>
+        public const string ModuleName = "Proxies";
+
         /// <summary>
         /// Static module builder reference
         /// </summary>
@@ -25,13 +37,41 @@ namespace Marvin.Resources.Management
         | MethodAttributes.Virtual | MethodAttributes.Final | MethodAttributes.HideBySig | MethodAttributes.NewSlot;
 
         /// <summary>
+        /// Prepare builder on first execution, skip otherwise
+        /// </summary>
+        public void PrepareBuilder()
+        {
+            if (ModuleBuilder != null)
+                return;
+
+            // Check if we already created the assembly and the module builder
+            var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(AssemblyName), AssemblyBuilderAccess.Run);
+            ModuleBuilder = assembly.DefineDynamicModule(ModuleName);
+        }
+
+        /// <summary>
+        /// Get the previously build type from the dynamic module
+        /// </summary>
+        public Type GetType(string proxyName)
+        {
+            return ModuleBuilder.GetType(proxyName);
+        }
+
+        /// <summary>
         /// Build a proxy for this resouce type
         /// </summary>
-        public static Type Build(Type resourceType, Type[] interfaces)
+        public Type Build(Type resourceType, Type[] interfaces)
         {
+            var proxyName = $"{resourceType.Name}Proxy";
+
+            // Check if this proxy is already defined in the assembly
+            var proxyType = GetType(proxyName);
+            if (proxyType != null)
+                return proxyType;
+
             // Create a type based on ResourceProxy and implement all interfaces
             var baseType = typeof(ResourceProxy<>).MakeGenericType(resourceType);
-            var typeBuilder = ModuleBuilder.DefineType($"{resourceType.Name}Proxy", TypeAttributes.Public, baseType);
+            var typeBuilder = ModuleBuilder.DefineType(proxyName, TypeAttributes.Public, baseType);
 
             // Define a constructor
             DefineConstructor(typeBuilder, baseType, resourceType);
@@ -58,7 +98,7 @@ namespace Marvin.Resources.Management
             var methods = interfaces.SelectMany(inter => inter.GetMethods(bindingFlags)).Where(m => !m.IsSpecialName);
             foreach (var method in methods)
             {
-                DefineMethod(typeBuilder, baseType, targetProperty.GetMethod, resourceType, method);
+                DefineMethod(typeBuilder, baseType, targetProperty.GetMethod, method);
             }
 
             // Define events
@@ -172,13 +212,12 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Define a method on the proxy that forwards the call the target 
         /// </summary>
-        private static void DefineMethod(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, Type targetType, MethodInfo method)
+        private static void DefineMethod(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, MethodInfo method)
         {
             var parameters = method.GetParameters();
             var argumentTypes = parameters.Select(p => p.ParameterType).ToArray();
-            var methodOnTarget = targetType.GetMethod(method.Name, argumentTypes);
 
-            var methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
+            const MethodAttributes methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
             var methodBuilder = typeBuilder.DefineMethod(method.Name, methodAttributes, method.ReturnType, argumentTypes);
 
             var isResourceReference = IsResourceReference(method.ReturnType);
@@ -187,18 +226,18 @@ namespace Marvin.Resources.Management
             var generator = methodBuilder.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0); // Load 'this'
             if (isResourceReference) // Duplicate 'this' on the stack because we need it for the Convert call
-                generator.Emit(OpCodes.Dup); 
+                generator.Emit(OpCodes.Dup);
             generator.Emit(OpCodes.Call, targetGetter); // Load 'Parent' field
             // Load all arguments
             foreach (var parameter in parameters)
             {
                 generator.Emit(OpCodes.Ldarg, parameter.Position + 1); // Parameters are zero based, but in IL argument 0 of every instance method is 'this'
                 // Extract resource if the parameter is a proxy
-                if (IsResourceReference(parameter.ParameterType)) 
+                if (IsResourceReference(parameter.ParameterType))
                     ExtractTargetFromStack(generator, parameter.ParameterType);
             }
             // Call method on target
-            generator.Emit(OpCodes.Callvirt, methodOnTarget);
+            generator.Emit(OpCodes.Callvirt, method);
             if (isResourceReference) // Convert return value to proxy
             {
                 var convertMethod = Convert(baseType, method.ReturnType);
@@ -235,7 +274,7 @@ namespace Marvin.Resources.Management
             }
             else
             {
-                elementType = propertyType.IsArray 
+                elementType = propertyType.IsArray
                     ? propertyType.GetElementType()
                     : propertyType.GetGenericArguments()[0];
                 methodName = nameof(ResourceProxy<PublicResource>.ConvertMany);

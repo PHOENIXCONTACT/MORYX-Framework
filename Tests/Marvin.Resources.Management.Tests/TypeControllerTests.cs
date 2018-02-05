@@ -22,7 +22,8 @@ namespace Marvin.Resources.Management.Tests
 
             _typeController = new ResourceTypeController
             {
-                Container = containerMock.Object
+                Container = containerMock.Object,
+                ProxyBuilder = new ResourceProxyBuilder()
             };
             _typeController.Start();
         }

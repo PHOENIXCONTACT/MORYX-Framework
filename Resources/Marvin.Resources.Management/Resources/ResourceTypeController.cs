@@ -26,18 +26,16 @@ namespace Marvin.Resources.Management
         public IResourceFactory ResourceFactory { get; set; }
 
         /// <summary>
-        /// Name of the assembly that contains the dynamic resource proxies
+        /// Component responsible for proxy creation
         /// </summary>
-        public const string AssemblyName = "DynamicResourceProxies";
+        public ResourceProxyBuilder ProxyBuilder { get; set; }
 
         /// <summary>
         /// Cache of resource type strings and their proxy types. Some type keys may reference the same
         /// proxy because they do not define any additional public API and can use the same proxy. This
         /// cache is only built on the first module start and kept after a restart to avoid redundant proxy building
         /// </summary>
-        private static readonly Dictionary<string, Type> ProxyTypeCache = new Dictionary<string, Type>();
-
-
+        private readonly Dictionary<string, string> _proxyTypeCache = new Dictionary<string, string>();
 
         /// <summary>
         /// Cache of all proxy instances that were created during the runtime of the ResourceManagement. They
@@ -65,11 +63,7 @@ namespace Marvin.Resources.Management
         public void Start()
         {
             // Define module on first start
-            if (ResourceProxyBuilder.ModuleBuilder == null)
-            {
-                var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(AssemblyName), AssemblyBuilderAccess.Run);
-                ResourceProxyBuilder.ModuleBuilder = assemblyBuilder.DefineDynamicModule("Proxies");
-            }
+            ProxyBuilder.PrepareBuilder();
 
             BuildTypeTree();
         }
@@ -275,7 +269,7 @@ namespace Marvin.Resources.Management
         {
             lock (_proxyCache)
             {
-                lock (ProxyTypeCache)
+                lock (_proxyTypeCache)
                 {
                     return GetOrCreateProxy(instance);
                 }
@@ -293,7 +287,7 @@ namespace Marvin.Resources.Management
 
             var resourceType = instance.GetType();
             // Did we build a proxy type before, but for a different instance?
-            if (ProxyTypeCache.ContainsKey(resourceType.Name))
+            if (_proxyTypeCache.ContainsKey(resourceType.Name))
                 return _proxyCache[instance.Id] = InstantiateProxy(resourceType.Name, instance);
 
             // Build the proxy type for this resource type
@@ -306,14 +300,14 @@ namespace Marvin.Resources.Management
         /// </summary>
         private IResourceProxy InstantiateProxy(string typeName, Resource instance)
         {
-            var proxyType = ProxyTypeCache[typeName];
+            var proxyType = ProxyBuilder.GetType(_proxyTypeCache[typeName]);
             var proxyInstance = (IResourceProxy)Activator.CreateInstance(proxyType, instance, this);
             proxyInstance.Attach();
             return proxyInstance;
         }
 
         /// <summary>
-        /// Make sure the <see cref="ProxyTypeCache"/> contains an entry for the given type
+        /// Make sure the <see cref="_proxyTypeCache"/> contains an entry for the given type
         /// </summary>
         private void ProvideProxyType(Type resourceType)
         {
@@ -330,21 +324,21 @@ namespace Marvin.Resources.Management
 
             // Step 2: Check if we already created a proxy for this type. If we already
             // did use this one for the requested type as well.
-            if (ProxyTypeCache.ContainsKey(linker.Name))
+            if (_proxyTypeCache.ContainsKey(linker.Name))
             {
-                ProxyTypeCache[targetType.Name] = ProxyTypeCache[linker.Name];
+                _proxyTypeCache[targetType.Name] = _proxyTypeCache[linker.Name];
                 return;
             }
 
             // Step 3: Build a proxy type for the least specific base type
-            var proxyType = ResourceProxyBuilder.Build(linker.ResourceType, interfaces);
+            var proxyType = ProxyBuilder.Build(linker.ResourceType, interfaces);
 
             // Step 4: Assign the new proxy type to all derived types from the
             // match to the originally requested one
-            ProxyTypeCache[linker.Name] = proxyType;
+            _proxyTypeCache[linker.Name] = proxyType.Name;
             while (targetType != null && targetType != linker)
             {
-                ProxyTypeCache[targetType.Name] = proxyType;
+                _proxyTypeCache[targetType.Name] = proxyType.Name;
                 targetType = targetType.BaseType;
             }
         }

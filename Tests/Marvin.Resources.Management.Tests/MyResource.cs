@@ -23,7 +23,7 @@ namespace Marvin.Resources.Management.Tests
             return Foo *= factor;
         }
 
-        public int MultiplyFoo(int factor, ushort offset)
+        int IMyResource.MultiplyFoo(int factor, ushort offset)
         {
             return Foo = Foo * factor + offset;
         }
