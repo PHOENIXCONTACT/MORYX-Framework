@@ -12,7 +12,7 @@ namespace Marvin.Resources.Samples
         public AssembleConfig Config { get; set; }
 
         [ResourceReference(ResourceRelationType.Extension)]
-        public AssemleSetup Setup { get; set; }
+        public AssembleFoo Setup { get; set; }
 
         public override void Initialize()
         {
@@ -20,15 +20,15 @@ namespace Marvin.Resources.Samples
 
             if (Setup == null)
             {
-                Setup = Creator.Instantiate<AssemleSetup>();
+                Setup = Creator.Instantiate<AssembleFoo>();
                 RaiseResourceChanged();
             }
         }
 
         [EditorVisible]
-        public void ChangeSetup(string orderNumber)
+        public void ChangeNumber(string fooNumber)
         {
-            Setup.ChangeOrderNumber(orderNumber);
+            Setup.ChangeNumber(fooNumber);
         }
 
         [EditorVisible]
@@ -41,14 +41,14 @@ namespace Marvin.Resources.Samples
         
     }
 
-    public class AssemleSetup : Resource
+    public class AssembleFoo : Resource
     {
         [DataMember]
-        public string OrderNumber { get; set; }
+        public string FooNumber { get; set; }
 
-        public void ChangeOrderNumber(string orderNumber)
+        public void ChangeNumber(string fooNumber)
         {
-            OrderNumber = orderNumber;
+            FooNumber = fooNumber;
             RaiseResourceChanged();
         }
     }
