@@ -55,12 +55,12 @@ namespace Marvin.StateMachines
             return new TypedContextWrapper<TContext>(context, null);
         }
 
-        ///  <summary>
-        ///  Prepare fluent API to create a state machine. Call <see cref="TypedContextWrapper{TContext}.With{TState}()"/>
-        ///  to finalize the operation.
-        ///  </summary>
-        ///  <param name="context">Context of the state machine</param>
-        /// <param name="key">Key of the state that is reloaded</param>
+        /// <summary>
+        /// Prepare fluent API to create a state machine. Call <see cref="TypedContextWrapper{TContext}.With{TState}()"/>
+        /// to finalize the operation.
+        /// </summary>
+        /// <param name="context">Context of the state machine</param>
+        /// <param name="state">Key of the state that is reloaded</param>
         /// <typeparam name="TContext">Type of the context class</typeparam>
         ///  <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
         ///  <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
@@ -104,11 +104,72 @@ namespace Marvin.StateMachines
         /// }
         /// </code>
         /// </example>
-        public static TypedContextWrapper<TContext> Reload<TContext>(TContext context, int key)
+        public static TypedContextWrapper<TContext> Reload<TContext>(TContext context, int state)
             where TContext : IStateContext
 
         {
-            return new TypedContextWrapper<TContext>(context, key);
+            return new TypedContextWrapper<TContext>(context, state);
+        }
+
+        /// <summary>
+        /// Will return the complete state machine as a string
+        /// </summary>
+        /// <example>
+        /// Current: [AState (10)] - All: [AState (10)], [BState (20)], [CState (30)]
+        /// </example>
+        public static string Dump(StateBase currentState)
+        {
+            var stateMap = currentState.GetMap();
+            var states = stateMap.Select(dict => $"[{dict.Value.ToString()}]");
+
+            var allStates = string.Join(", ", states);
+            return $"Current: [{currentState}] - All: {allStates}";
+        }
+
+        /// <summary>
+        /// Forces a given state state on the given StateMachine.
+        /// </summary>
+        /// <param name="current">The current StateMachine</param>
+        /// <param name="forceState">The target state to be forced</param>
+        /// <example> 
+        /// This sample shows how to force a state
+        /// <code>
+        /// public class SomeComponent : IStateContext
+        /// {
+        ///     public void Sample()
+        ///     {
+        ///         StateMachine.Force(context.State, MyStateBase.StateA);
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static void Force(StateBase current, int forceState)
+        {
+            Force(current, forceState, false, false);
+        }
+
+        /// <summary>
+        /// Forces a given state state on the given StateMachine.
+        /// </summary>
+        /// <param name="current">The current StateMachine</param>
+        /// <param name="forceState">The target state to be forced</param>
+        /// <param name="exitCurrent">If <c>true</c> <see cref="IState.OnExit"/> will be called before force.</param>
+        /// <param name="enterForced">If <c>true</c> <see cref="IState.OnEnter"/> will be called on forced state.</param>
+        /// <example> 
+        /// This sample shows how to force a state
+        /// <code>
+        /// public class SomeComponent : IStateContext
+        /// {
+        ///     public void Sample()
+        ///     {
+        ///         StateMachine.Force(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static void Force(StateBase current, int forceState, bool exitCurrent, bool enterForced)
+        {
+            current.Force(forceState, exitCurrent, enterForced);
         }
 
         /// <summary>
@@ -143,18 +204,6 @@ namespace Marvin.StateMachines
             {
                 StateBase.Create<TStateBase>(_context, _key);
             }
-        }
-
-        /// <summary>
-        /// Will return the complete state machine as a string
-        /// </summary>
-        public static string Dump(StateBase currentState)
-        {
-            var stateMap = currentState.GetMap();
-            var states = stateMap.Select(dict => $"[{dict.Value.ToString()}]");
-
-            var allStates = string.Join(", ", states);
-            return $"Current: [{currentState}] - All: {allStates}";
         }
     }
 }

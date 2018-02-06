@@ -128,6 +128,29 @@ namespace Marvin.StateMachines
         }
 
         /// <summary>
+        /// Forces a specific state with option to exit the current and enter the forced state
+        /// </summary>
+        internal void Force(int state, bool exitCurrent, bool enterForced)
+        {
+            if (!Map.ContainsKey(state))
+            {
+                throw new InvalidOperationException("State cannot be forced. " +
+                                                    $"The state {state} does not exist in StateMachine.");
+            }
+
+            // If requested, exit current state
+            if (exitCurrent)
+                OnExit();
+            
+            var next = Map[state];
+            Context.SetState(next);
+
+            // If requested, enter forced state
+            if (enterForced)
+                next.OnEnter();
+        }
+
+        /// <summary>
         /// Will return the protected map.
         /// Will internally called by the <see cref="StateMachine"/> wrapper class
         /// </summary>
@@ -142,6 +165,11 @@ namespace Marvin.StateMachines
         /// <param name="state">Number of the next state</param>
         protected virtual void NextState(int state)
         {
+            if (!Map.ContainsKey(state))
+            {
+                throw new InvalidOperationException($"The state {state} does not exist in StateMachine.");
+            }
+
             // Exit the old state
             OnExit();
 

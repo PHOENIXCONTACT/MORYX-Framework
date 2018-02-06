@@ -6,6 +6,11 @@
         {
         }
 
+        public override void OnExit()
+        {
+            Context.BExited = true;
+        }
+
         public override void BtoC()
         {
             NextState(StateC);
