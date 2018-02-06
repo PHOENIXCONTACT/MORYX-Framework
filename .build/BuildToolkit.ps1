@@ -314,13 +314,20 @@ function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-Pack($FilePath) {
+function Invoke-Pack($FilePath, [bool]$IsTool = $False) {
     if(!(Test-Path $NugetPackageArtifacts)) {
         Write-Host "Creating missing directory '$NugetPackageArtifacts'"
         New-Item $NugetPackageArtifacts -Type Directory | Out-Null
     }
 
-    $packargs = @("-outputdirectory", "$NugetPackageArtifacts", "-includereferencedprojects", "-Version", $env:MARVIN_VERSION, "-Prop", "Configuration=$env:MARVIN_BUILD_CONFIG");
+    $packargs = "-outputdirectory", "$NugetPackageArtifacts";
+    $packargs += "-includereferencedprojects";
+    $packargs += "-Version", "$env:MARVIN_VERSION";
+    $packargs += "-Prop", "Configuration=$env:MARVIN_BUILD_CONFIG";
+
+    if ($IsTool) {
+        $packargs += "-Tool";
+    }
 
     # Call nuget with default arguments plus optional
     & $global:NugetCli pack "$FilePath" @packargs
@@ -430,7 +437,7 @@ function Set-AssemblyVersion([string]$InputFile) {
     Out-File -InputObject $content -FilePath $file.FullName -Encoding utf8;
 }
 
-function Set-AssemblyVersions([string[]]$Ignored, [string]$SearchPath = $RootPath) {
+function Set-AssemblyVersions([string[]]$Ignored = $(), [string]$SearchPath = $RootPath) {
     $Ignored = $Ignored + "\\.build\\" + "\\.buildtools\\" + "\\Tests\\" + "\\IntegrationTests\\" + "\\SystemTests\\";
 
     $assemblyInfos = Get-ChildItem -Path $RootPath -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
