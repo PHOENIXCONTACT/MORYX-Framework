@@ -7,7 +7,7 @@ namespace Marvin.Configuration
     /// <summary>
     /// Base attribute for all attributes that support multiple values
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public abstract class PossibleConfigValuesAttribute : Attribute
     {
         /// <summary>

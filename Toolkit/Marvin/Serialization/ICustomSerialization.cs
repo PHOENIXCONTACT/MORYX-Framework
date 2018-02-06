@@ -72,7 +72,13 @@ namespace Marvin.Serialization
         /// <summary>
         /// Value of the property extracted from the entry
         /// </summary>
-        object PropertyValue(MappedProperty mapped, object currentValue);
+        object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue);
+
+        /// <summary>
+        /// Convert the value of a method parameter from the entry representing it.
+        /// </summary>
+        object ParameterValue(ParameterInfo parameter, Entry mappedEntry);
+
 
         /// <summary>
         /// Create instance of a collection item

@@ -81,20 +81,20 @@ namespace Marvin.Configuration
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override object PropertyValue(MappedProperty mapped, object currentValue)
+        public override object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue)
         {
-            var value = mapped.Entry.Value;
+            var value = mappedEntry.Value;
 
-            var att = mapped.Property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var att = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
             if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
-                return base.PropertyValue(mapped, currentValue);
+                return base.PropertyValue(property, mappedEntry, currentValue);
 
             // If old and current type are identical, keep the object
             if (value.Type == EntryValueType.Class && currentValue != null && currentValue.GetType().Name == value.Current)
                 return currentValue;
 
-            var instance = att.ConvertToConfigValue(_container, mapped.Entry.Value.Current);
-            if (mapped.Entry.Value.Type == EntryValueType.Class)
+            var instance = att.ConvertToConfigValue(_container, mappedEntry.Value.Current);
+            if (mappedEntry.Value.Type == EntryValueType.Class)
             {
                 _emptyPropertyProvider.FillEmpty(instance);
             }
