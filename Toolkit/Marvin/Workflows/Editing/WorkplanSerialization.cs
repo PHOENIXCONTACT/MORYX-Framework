@@ -60,19 +60,19 @@ namespace Marvin.Workflows
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override object PropertyValue(MappedProperty mapped, object currentValue)
+        public override object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue)
         {
             // Override mechanism to load workplan references
-            if (IsWorkplanReference(mapped.Property))
+            if (IsWorkplanReference(property))
             {
                 if (_source == null)
                     return currentValue;
 
-                var newId = long.Parse(mapped.Entry.Value.Current);
-                var currentWorkplan = (IWorkplan) currentValue;
+                var newId = long.Parse(mappedEntry.Value.Current);
+                var currentWorkplan = (IWorkplan)currentValue;
                 return currentWorkplan.Id == newId ? currentWorkplan : _source.Load(newId);
             }
-            return base.PropertyValue(mapped, currentValue);
+            return base.PropertyValue(property, mappedEntry, currentValue);
         }
 
         /// <summary>

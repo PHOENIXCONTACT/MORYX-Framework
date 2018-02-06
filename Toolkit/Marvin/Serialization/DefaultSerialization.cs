@@ -163,19 +163,36 @@ namespace Marvin.Serialization
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual object PropertyValue(MappedProperty mapped, object currentValue)
+        public virtual object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue)
         {
-            var propertyType = mapped.Property.PropertyType;
+            var propertyType = property.PropertyType;
             // Other operations depend on the element type
-            switch (mapped.Entry.Value.Type)
+            switch (mappedEntry.Value.Type)
             {
                 case EntryValueType.Class:
                     return currentValue ?? Activator.CreateInstance(propertyType);
                 case EntryValueType.Collection:
-                    return CollectionBuilder(propertyType, currentValue, mapped.Entry);
+                    return CollectionBuilder(propertyType, currentValue, mappedEntry);
                 default:
-                    var value = mapped.Entry.Value.Current;
+                    var value = mappedEntry.Value.Current;
                     return value == null ? null : EntryConvert.ToObject(propertyType, value);
+            }
+        }
+
+        /// <see cref="ICustomSerialization"/>
+        public virtual object ParameterValue(ParameterInfo parameter, Entry mappedEntry)
+        {
+            var parameterType = parameter.ParameterType;
+            // Other operations depend on the element type
+            switch (mappedEntry.Value.Type)
+            {
+                case EntryValueType.Class:
+                    return Activator.CreateInstance(parameterType);
+                case EntryValueType.Collection:
+                    return CollectionBuilder(parameterType, null, mappedEntry);
+                default:
+                    var value = mappedEntry.Value.Current;
+                    return value == null ? null : EntryConvert.ToObject(parameterType, value);
             }
         }
 

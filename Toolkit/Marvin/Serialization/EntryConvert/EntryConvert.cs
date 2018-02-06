@@ -46,17 +46,6 @@ namespace Marvin.Serialization
             return collectionType.IsArray ? collectionType.GetElementType() : collectionType.GenericTypeArguments[0];
         }
 
-        /// <summary>
-        /// Name of entry for list
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        [Obsolete("In the future we will not provide access to the method")]
-        public static string GetEntryName(object item)
-        {
-            return CollectionStrategyTools.GetEntryName(item);
-        }
-
         #region Encode
 
         /// <summary>
@@ -543,7 +532,7 @@ namespace Marvin.Serialization
                 var currentValue = mapped.Property.GetValue(instance);
                 var value = mapped.Entry == null
                     ? customSerialization.DefaultValue(mapped.Property, currentValue)
-                    : customSerialization.PropertyValue(mapped, currentValue);
+                    : customSerialization.PropertyValue(mapped.Property, mapped.Entry, currentValue);
                 
                 // Value types and strings do not need recursion
                 if (ValueOrStringType(propertyType))
@@ -703,19 +692,9 @@ namespace Marvin.Serialization
             var parameters = method.GetParameters();
 
             var arguments = new object[parameters.Length];
-            for (int i = 0; i < parameters.Length; i++)
+            for (var i = 0; i < parameters.Length; i++)
             {
-                var parameter = parameters[i];
-                var parameterModel = methodEntry.Parameters[i];
-                switch (parameterModel.Value.Type)
-                {
-                    case EntryValueType.Class:
-                        arguments[i] = CreateInstance(parameter.ParameterType, parameterModel);
-                        break;
-                    default:
-                        arguments[i] = ToObject(parameter.ParameterType, parameterModel.Value.Current);
-                        break;
-                }
+                arguments[i] = serialization.ParameterValue(parameters[i], methodEntry.Parameters[i]);
             }
 
             var result = method.Invoke(target, arguments);
