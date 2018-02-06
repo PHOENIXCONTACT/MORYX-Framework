@@ -112,6 +112,7 @@
     <Compile Include="Products\Attributes\PossibleProductValuesAttribute.cs" />
     <Compile Include="Products\Attributes\ProductStorageValuesAttribute.cs" />
     <Compile Include="Products\FileType.cs" />
+    <Compile Include="Products\IImportParameters.cs" />
     <Compile Include="Products\IProductManagement.cs" />
     <Compile Include="Products\ProductFile.cs" />
     <Compile Include="Products\ProductNotFoundException.cs" />

@@ -1,4 +1,4 @@
-﻿namespace Marvin.Products
+﻿namespace Marvin.AbstractionLayer
 {
     /// <summary>
     /// Interface for typed parameter objects
