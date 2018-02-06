@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Marvin.Container;
 using Marvin.Serialization;
@@ -39,10 +40,14 @@ namespace Marvin.Configuration
                 return base.Prototypes(property);
             }
 
-            var possibleValues = possibleValuesAtt.ResolvePossibleValues(Container);
-            return (from value in possibleValues
-                    let prototype = possibleValuesAtt.ConvertToConfigValue(Container, value)
-                    select new EntryPrototype(value, prototype)).ToArray();
+            var list = new List<EntryPrototype>();
+            foreach (var value in possibleValuesAtt.ResolvePossibleValues(Container))
+            {
+                var prototype = possibleValuesAtt.ConvertToConfigValue(Container, value);
+                EmptyPropertyProvider.FillEmpty(prototype);
+                list.Add(new EntryPrototype(value, prototype));
+            }
+            return list.ToArray();
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
