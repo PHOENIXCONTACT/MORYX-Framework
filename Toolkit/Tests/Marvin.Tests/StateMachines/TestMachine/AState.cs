@@ -6,6 +6,11 @@
         {
         }
 
+        public override void OnEnter()
+        {
+            Context.AEntered = true;
+        }
+
         public override void Initial()
         {
             

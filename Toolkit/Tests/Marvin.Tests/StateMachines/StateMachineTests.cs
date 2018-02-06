@@ -7,11 +7,7 @@ namespace Marvin.Tests
     [TestFixture]
     public class StateMachineTests
     {
-        /// <summary>
-        /// This test should only test the initial state.
-        /// The method will throw an exception if the wrong state is selected
-        /// </summary>
-        [Test]
+        [Test(Description = "Test the initial state. Throws an exception if the wrong state was selected.")]
         public void Inital()
         {
             //Arrange
@@ -25,10 +21,7 @@ namespace Marvin.Tests
             });
         }
 
-        /// <summary>
-        /// Test transition from A to B state. This state is only possible in <see cref="AState"/>
-        /// </summary>
-        [Test]
+        [Test(Description = "Test transition from A to B state. This state is only possible in AState")]
         public void AtoBState()
         {
             // Arrange
@@ -43,10 +36,7 @@ namespace Marvin.Tests
             Assert.IsFalse(context.CtoATriggered);
         }
 
-        /// <summary>
-        /// Test transition from B to C state. This state is only possible in <see cref="BState"/>
-        /// </summary>
-        [Test]
+        [Test(Description = "Test transition from B to C state. This state is only possible in BState")]
         public void BtoCState()
         {
             // Arrange
@@ -62,10 +52,7 @@ namespace Marvin.Tests
             Assert.IsFalse(context.CtoATriggered);
         }
 
-        /// <summary>
-        /// Test transition from C to A state. This state is only possible in <see cref="CState"/>
-        /// </summary>
-        [Test]
+        [Test(Description = "Test transition from C to A state. This state is only possible in CState")]
         public void CtoAState()
         {
             // Arrange
@@ -82,10 +69,7 @@ namespace Marvin.Tests
             Assert.IsTrue(context.CtoATriggered);
         }
 
-        /// <summary>
-        /// Test will check the string representation of <see cref="StateMachine.Dump"/>
-        /// </summary>
-        [Test]
+        [Test(Description = "Test will check the string representation of StateMachine.Dump")]
         public void Dump()
         {
             // Arrange
@@ -135,6 +119,50 @@ namespace Marvin.Tests
                 // Act
                 StateMachine.Reload(context, int.MaxValue).With<MyStateBase>();
             });
+        }
+
+        [Test(Description = "Brings the StateMachine to B and force to A without exit the current or enter the forced state.")]
+        public void ForceState()
+        {
+            // Arrange
+            var context = CreateContext();
+            context.State.AtoB();
+
+            // Act
+            StateMachine.Force(context.State, MyStateBase.StateA);
+
+            // Assert
+            Assert.DoesNotThrow(() => context.State.AtoB());
+        }
+
+        [Test(Description = "Brings the StateMachine to B and force to A with exiting the current state.")]
+        public void ForceStateWithExitCurrent()
+        {
+            // Arrange
+            var context = CreateContext();
+            context.State.AtoB();
+            context.BExited = false;
+
+            // Act
+            StateMachine.Force(context.State, MyStateBase.StateA, true, false);
+
+            // Assert
+            Assert.IsTrue(context.BExited);
+        }
+
+        [Test(Description = "Brings the StateMachine to B and force to A with entering the forced state.")]
+        public void ForceStateWithEnterForced()
+        {
+            // Arrange
+            var context = CreateContext();
+            context.State.AtoB();
+            context.AEntered = false;
+
+            // Act
+            StateMachine.Force(context.State, MyStateBase.StateA, false, true);
+
+            // Assert
+            Assert.IsTrue(context.AEntered);
         }
 
         private static MyContext CreateContext()

@@ -345,6 +345,9 @@
     <Compile Include="Workflows\WorkplanSteps\WorkplanStepBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Documentation\articles\DesignPatterns.md">
+      <Link>StateMachines\DesignPatterns.md</Link>
+    </None>
     <None Include="cgbr.json" />
     <None Include="Communication\Sockets\README.md" />
     <None Include="Marvin.nuspec">

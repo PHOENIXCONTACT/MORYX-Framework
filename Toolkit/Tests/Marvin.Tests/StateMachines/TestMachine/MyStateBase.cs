@@ -30,12 +30,12 @@ namespace Marvin.Tests
         }
 
         [StateDefinition(typeof(AState), IsInitial = true)]
-        protected const int StateA = 10;
+        public const int StateA = 10;
 
         [StateDefinition(typeof(BState))]
-        protected const int StateB = 20;
+        public const int StateB = 20;
 
         [StateDefinition(typeof(CState))]
-        protected const int StateC = 30;
+        public const int StateC = 30;
     }
 }

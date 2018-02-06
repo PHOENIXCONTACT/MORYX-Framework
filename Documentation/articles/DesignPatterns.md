@@ -190,6 +190,28 @@ private void ReloadMachine()
 } 
 ````
 
+**Force a machine to a specific state**
+
+Sometimes it is required to force a specific state machine state for debugging purposes. 
+It is possible to force the state machine with the static helper class [StateMachine](xref:Marvin.StateMachines.StateMachine):
+
+````cs
+private void ForceMachine()
+{
+    StateMachine.Force(context.State, MyStateBase.StateA);
+}
+````
+
+The default overload of `Force` does not call `OnExit` of the given state nor calling the `OnEnter` of the forced state. 
+A specialized overload for this can be used: 
+
+````cs
+private void ForceMachine()
+{
+    StateMachine.Force(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
+}
+````
+
 Please open the class documentation to see all functions of the [StateMachine](xref:Marvin.StateMachines.StateMachine) class.
 
 **Some rules:**

@@ -6,6 +6,10 @@ namespace Marvin.Tests
     {
         public MyStateBase State { get; private set; }
 
+        public bool AEntered { get; set; }
+
+        public bool BExited { get; set; }
+
         public bool AtoBTriggered { get; set; }
 
         public bool BtoCTriggered { get; set; }

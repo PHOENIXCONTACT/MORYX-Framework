@@ -18,13 +18,13 @@ namespace Marvin.StateMachines
         }
 
         /// <summary>
+        /// Type of the state
+        /// </summary>
+        public Type Type { get; }
+
+        /// <summary>
         /// Defines weather the state is the initial state of the machine or not.
         /// </summary>
         public bool IsInitial { get; set; }
-
-        /// <summary>
-        /// Type of the state
-        /// </summary>
-        public Type Type { get; set; }
     }
 }
