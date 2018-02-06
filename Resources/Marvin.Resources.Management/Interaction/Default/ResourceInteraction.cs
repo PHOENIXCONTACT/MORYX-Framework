@@ -97,7 +97,7 @@ namespace Marvin.Resources.Management
         public Entry InvokeMethod(long id, MethodEntry methodModel)
         {
             var resource = Manager.Get(id);
-            return EntryConvert.InvokeMethod(resource, methodModel);
+            return EntryConvert.InvokeMethod(resource, methodModel, Serialization);
         }
 
         /// <summary>
