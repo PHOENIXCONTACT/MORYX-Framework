@@ -10,16 +10,23 @@ namespace Marvin.Configuration
     /// </summary>
     public class ConfigSerialization : DefaultSerialization
     {
-        private readonly IContainer _container;
-        private readonly IEmptyPropertyProvider _emptyPropertyProvider;
+        /// <summary>
+        /// Container used to include current information from current composition into the configuration
+        /// </summary>
+        protected IContainer Container { get; }
+
+        /// <summary>
+        /// Empty property provider to pre-fill newley created objects
+        /// </summary>
+        protected IEmptyPropertyProvider EmptyPropertyProvider { get; }
 
         /// <summary>
         /// Initialize base class
         /// </summary>
         public ConfigSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider)
         {
-            _container = container;
-            _emptyPropertyProvider = emptyPropertyProvider;
+            Container = container;
+            EmptyPropertyProvider = emptyPropertyProvider;
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
@@ -32,9 +39,9 @@ namespace Marvin.Configuration
                 return base.Prototypes(property);
             }
 
-            var possibleValues = possibleValuesAtt.ResolvePossibleValues(_container);
+            var possibleValues = possibleValuesAtt.ResolvePossibleValues(Container);
             return (from value in possibleValues
-                    let prototype = possibleValuesAtt.ConvertToConfigValue(_container, value)
+                    let prototype = possibleValuesAtt.ConvertToConfigValue(Container, value)
                     select new EntryPrototype(value, prototype)).ToArray();
         }
 
@@ -48,7 +55,7 @@ namespace Marvin.Configuration
             }
 
             // Use attribute
-            var values = valuesAttribute.ResolvePossibleValues(_container);
+            var values = valuesAttribute.ResolvePossibleValues(Container);
             return values?.Distinct().ToArray();
         }
 
@@ -63,7 +70,7 @@ namespace Marvin.Configuration
             }
 
             // Use attribute
-            var values = valuesAttribute.ResolvePossibleValues(_container);
+            var values = valuesAttribute.ResolvePossibleValues(Container);
             return values?.Distinct().ToArray();
         }
 
@@ -72,10 +79,10 @@ namespace Marvin.Configuration
         {
             var possibleValuesAtt = mappedRoot.Property.GetCustomAttribute<PossibleConfigValuesAttribute>();
             var instance = possibleValuesAtt != null
-                ? possibleValuesAtt.ConvertToConfigValue(_container, encoded.Value.Current)
+                ? possibleValuesAtt.ConvertToConfigValue(Container, encoded.Value.Current)
                 : base.CreateInstance(mappedRoot, encoded);
 
-            _emptyPropertyProvider.FillEmpty(instance);
+            EmptyPropertyProvider.FillEmpty(instance);
 
             return instance;
         }
@@ -93,10 +100,10 @@ namespace Marvin.Configuration
             if (value.Type == EntryValueType.Class && currentValue != null && currentValue.GetType().Name == value.Current)
                 return currentValue;
 
-            var instance = att.ConvertToConfigValue(_container, mappedEntry.Value.Current);
+            var instance = att.ConvertToConfigValue(Container, mappedEntry.Value.Current);
             if (mappedEntry.Value.Type == EntryValueType.Class)
             {
-                _emptyPropertyProvider.FillEmpty(instance);
+                EmptyPropertyProvider.FillEmpty(instance);
             }
 
             return instance;
