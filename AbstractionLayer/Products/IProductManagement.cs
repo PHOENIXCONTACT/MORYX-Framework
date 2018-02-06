@@ -42,6 +42,16 @@ namespace Marvin.AbstractionLayer
         long SaveProduct(IProduct modifiedInstance);
 
         /// <summary>
+        /// All importers and their parameters currently configured in the machine
+        /// </summary>
+        IDictionary<string, IImportParameters> Importers { get; }
+
+        /// <summary>
+        /// Import products for the given parameters with the named importer
+        /// </summary>
+        IProduct[] ImportProducts(string importerName, IImportParameters parameters);
+
+            /// <summary>
         /// Retrieves the current recipe for this product
         /// </summary>
         IReadOnlyList<IProductRecipe> GetRecipes(IProduct product, RecipeClassification classification);

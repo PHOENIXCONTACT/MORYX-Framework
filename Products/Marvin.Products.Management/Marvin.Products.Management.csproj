@@ -84,7 +84,6 @@
     <Compile Include="ModuleController\ModuleController.cs" />
     <Compile Include="ModuleController\ModuleConsole.cs" />
     <Compile Include="Plugins\ICustomization.cs" />
-    <Compile Include="Plugins\Importers\IImportParameters.cs" />
     <Compile Include="Plugins\Importers\IProductImporter.cs" />
     <Compile Include="Plugins\Importers\ProductImporterConfig.cs" />
     <Compile Include="Plugins\IProductStorage.cs" />

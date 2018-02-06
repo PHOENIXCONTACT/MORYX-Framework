@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using Marvin.AbstractionLayer;
 using Marvin.Container;
 using Marvin.Products.Management.Importers;
 using Marvin.Serialization;

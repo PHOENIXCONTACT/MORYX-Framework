@@ -66,6 +66,22 @@ namespace Marvin.Products.Management
             return ProductManager.Save(modifiedInstance);
         }
 
+
+        public IDictionary<string, IImportParameters> Importers
+        {
+            get
+            {
+                ValidateHealthState();
+                return ProductManager.Importers.ToDictionary(i => i.Name, i => i.Parameters);
+            }
+        }
+
+        public IProduct[] ImportProducts(string importerName, IImportParameters parameters)
+        {
+            ValidateHealthState();
+            return ProductManager.ImportProducts(importerName, parameters);
+        }
+
         public IRecipe LoadRecipe(long id)
         {
             ValidateHealthState();
