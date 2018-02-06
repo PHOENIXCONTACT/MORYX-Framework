@@ -109,21 +109,34 @@ namespace Marvin.Resources.Management
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override object PropertyValue(MappedProperty mapped, object currentValue)
+        public override object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue)
         {
-            var value = mapped.Entry.Value;
-
-            var att = mapped.Property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var value = mappedEntry.Value;
+            var att = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
             if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
-                return base.PropertyValue(mapped, currentValue);
+                return base.PropertyValue(property, mappedEntry, currentValue);
 
             // If old and current type are identical, keep the object
             if (value.Type == EntryValueType.Class && currentValue != null && currentValue.GetType().Name == value.Current)
                 return currentValue;
 
-            var instance = att.ConvertToConfigValue(Container, mapped.Entry.Value.Current);
-            if (mapped.Entry.Value.Type == EntryValueType.Class)
+            var instance = att.ConvertToConfigValue(Container, mappedEntry.Value.Current);
+            if (mappedEntry.Value.Type == EntryValueType.Class)
                 ConfigManager.FillEmptyProperties(instance);
+            return instance;
+        }
+
+        public override object ParameterValue(ParameterInfo parameter, Entry mappedEntry)
+        {
+            var value = mappedEntry.Value;
+            var att = parameter.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
+                return base.ParameterValue(parameter, mappedEntry);
+
+            var instance = att.ConvertToConfigValue(Container, mappedEntry.Value.Current);
+            if (mappedEntry.Value.Type == EntryValueType.Class)
+                ConfigManager.FillEmptyProperties(instance);
+
             return instance;
         }
 
