@@ -52,11 +52,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryConnectionFactoryMock.cs" />
+    <Compile Include="CommunicationSocketsTestsBase.cs" />
+    <Compile Include="ConnectionBuffer.cs" />
+    <Compile Include="DelimiterProtocol\DelimiterCommunicationSocketTests.cs" />
     <Compile Include="DelimiterProtocol\EndDelimiterOnlyInterpreter.cs" />
     <Compile Include="DelimiterProtocol\MetronicInterpreter.cs" />
     <Compile Include="DelimiterProtocol\TestDelimiterInterpreter.cs" />
     <Compile Include="DelimiterProtocol\DelimiterInterpreterTests.cs" />
     <Compile Include="CommunicationSocketsTests.cs" />
+    <Compile Include="DelimiterProtocol\TestDelimiterValidator.cs" />
+    <Compile Include="HeaderProtocol\HeaderedCommunicationSocketTests.cs" />
+    <Compile Include="HeaderProtocol\SystemTestValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HeaderProtocol\SystemTestHeader.cs" />
     <Compile Include="HeaderProtocol\SystemTestHeaderInterpreter.cs" />
