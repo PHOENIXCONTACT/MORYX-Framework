@@ -85,7 +85,8 @@ namespace Marvin.Communication.Sockets
         /// <inheritdoc />
         public void Stop()
         {
-            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+            lock (this)
+                _state.Disconnect();
         }
 
         /// <summary>
@@ -93,8 +94,7 @@ namespace Marvin.Communication.Sockets
         /// </summary>
         public void Dispose()
         {
-            lock (this)
-                _state.Disconnect();
+            Stop();
         }
 
         /// <inheritdoc />
