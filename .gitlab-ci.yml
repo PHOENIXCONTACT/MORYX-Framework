@@ -30,7 +30,7 @@ SmokeTests:
 
 CoverTests: 
   stage: test
-  script: .\build.ps1 -Build -UnitTests #-IntegrationTests
+  script: .\build.ps1 -Build -UnitTests -IntegrationTests
   tags:
     - vs2015
   artifacts:

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 
@@ -19,25 +17,28 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
         {
             _interpreter = new TestDelimiterInterpreter();
             _context = (DelimitedMessageContext)_interpreter.CreateContext();
+
+            // Extended properties 
+            _context.StartFound = false;
         }
 
-        [Test]
-        public void CreateContext()
+        [Test(Description = "Checks whether the base properties are set correctly after context creation")]
+        public void CheckIfBaseDelimiterParametersAreCorrect()
         {
+            // Arrange & Act
             var context = _context;
 
             // Base properties
+            // Assert
             Assert.AreEqual(0, context.CurrentIndex);
             Assert.AreEqual(EndDelimiterOnlyInterpreter.TestReadSize, context.ReadSize);
             Assert.AreEqual(EndDelimiterOnlyInterpreter.TestBufferSize, context.ReadBuffer.Length);
-
-            // Extended properties 
-            context.StartFound = false;
         }
 
+        [Test(Description = "Check if a partial received message was read correctly")]
         [TestCase(true, Description = "Use start and end delimiter")]
         [TestCase(false, Description = "Use only end delimiter")]
-        public void PartialMessage(bool useStartDelimiter)
+        public void ParsePartialDelimiterMessage(bool useStartDelimiter)
         {
             if (!useStartDelimiter)
                 _interpreter = new EndDelimiterOnlyInterpreter();
@@ -59,15 +60,16 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             Assert.AreEqual(readMessage.Length, _context.CurrentIndex);
         }
 
+        [Test(Description = "Check if full received message was parsed correctly")]
         [TestCase(0, Description = "No leading chunk, only the full message.")]
         [TestCase(4, Description = "4 bytes of leading chunk")]
-        public void FullMessage(int leadingChunk)
+        public void ParseFullDelimiterMessage(int leadingChunk)
         {
             var text = Encoding.Unicode.GetBytes("Wie passend, du kämpfst wie eine Kuh!");
 
             // Arrange
             var message = new List<byte>();
-            for (int i = 1; i <= leadingChunk; i++)
+            for (var i = 1; i <= leadingChunk; i++)
             {
                 message.Add((byte)i);
             }
@@ -76,12 +78,10 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             message.AddRange(EndDelimiterOnlyInterpreter.TestEndDelimiter);
             var readMessage = message.ToArray();
 
-
             // Act
             BinaryMessage published = null;
             Array.Copy(readMessage, 0, _context.ReadBuffer, 0, readMessage.Length);
             _interpreter.ProcessReadBytes(_context, readMessage.Length, m => published = m);
-
 
             // Assert
             Assert.IsFalse(_context.StartFound);
@@ -92,8 +92,8 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             Assert.AreEqual(readMessage.Skip(leadingChunk).Sum(e => (short)e), published.Payload.Sum(e => (short)e));
         }
 
-        [Test]
-        public void MessageOverlap()
+        [Test(Description = "Check wether a overlaaping received message was parsed correctly")]
+        public void ParseOverlappingDelimiterMessage()
         {
             var text = Encoding.Unicode.GetBytes("Wie passend, du kämpfst wie eine Kuh!");
             var partialText = Encoding.Unicode.GetBytes("Wie passend");
@@ -108,7 +108,6 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             message.AddRange(partialText);
             var readMessage = message.ToArray();
 
-
             // Act
             BinaryMessage published = null;
             BinaryMessage notPublished = null;
@@ -121,7 +120,6 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             Array.Copy(readMessage, cut, _context.ReadBuffer, _context.CurrentIndex, remain);
             _interpreter.ProcessReadBytes(_context, remain, m => notPublished = m);
 
-
             // Assert
             Assert.IsTrue(_context.StartFound);
             Assert.AreEqual(readMessage.Length - fullmessage.Length, _context.CurrentIndex);
@@ -133,12 +131,13 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             Assert.IsNull(notPublished);
         }
 
+        [Test(Description = "Read message chunk wise")]
         [TestCase(1, Description = "Reading byte wise")]
         [TestCase(3, Description = "Chunks smaller than start or end")]
         [TestCase(41, Description = "Chunks of half a message")]
         [TestCase(82, Description = "Chunk matches first message")]
         [TestCase(EndDelimiterOnlyInterpreter.TestReadSize, Description = "Chunks of full read size")]
-        public void MessageChunks(int chunkSize)
+        public void ReadDelimiterMessageInChunks(int chunkSize)
         {
             var fullMessages = new byte[3][];
 
@@ -162,20 +161,18 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             stream.AddRange(TestDelimiterInterpreter.TestStartDelimiter);
             var readMessage = stream.ToArray();
 
-
             // Act
-            List<BinaryMessage> published = new List<BinaryMessage>();
+            var published = new List<BinaryMessage>();
             var index = 0;
             while (index < readMessage.Length)
             {
                 var diff = readMessage.Length - index;
-                var copyRange = (diff > chunkSize) ? chunkSize : diff;
+                var copyRange = diff > chunkSize ? chunkSize : diff;
                 Array.Copy(readMessage, index, _context.ReadBuffer, _context.CurrentIndex, copyRange);
                 _interpreter.ProcessReadBytes(_context, copyRange, published.Add);
 
                 index += chunkSize;
             }
-
 
             // Assert
             Assert.IsTrue(_context.StartFound);
@@ -189,8 +186,8 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             }
         }
 
-        [Test]
-        public void MetronicTest()
+        [Test(Description = "Parse Metronic message")]
+        public void ParseMetronicMessageAndUseMetronicInterpreter()
         {
             // Arrange
             _interpreter = MetronicInterpreter.Instance;
