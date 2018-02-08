@@ -28,9 +28,19 @@ SmokeTests:
     - vs2015
     - postgres
 
-CoverTests: 
+UnitTests: 
   stage: test
-  script: .\build.ps1 -Build -UnitTests -IntegrationTests
+  script: .\build.ps1 -UnitTests 
+  tags:
+    - vs2015
+  artifacts:
+    expire_in: 1 hrs
+    paths:
+      - 'Artifacts\Tests' 
+  
+IntegrationTests: 
+  stage: test
+  script: .\build.ps1 -IntegrationTests
   tags:
     - vs2015
   artifacts:

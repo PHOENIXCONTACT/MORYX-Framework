@@ -164,13 +164,17 @@ function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExe
         Write-Host "$PackageName ($Version) already exists. Do not need to install."
     }
 }
-function Invoke-Build([string]$SolutionFile, [string]$Options = "") {
-    Write-Step "Building $SolutionFile"
+function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
+    Write-Step "Building $ProjectFile"
 
-    Write-Host "Restoring Nuget packages of $SolutionFile"
-    & $global:NugetCli restore $SolutionFile -Verbosity detailed -configfile $NugetConfig
-    Invoke-ExitCodeCheck $LastExitCode;
+    # TODO: maybe we find a better way: currently all packages of all solutions are restored.
+    ForEach ($solution in (Get-ChildItem $RootPath -Filter "*.sln")) {
+        Write-Host "Restoring Nuget packages of $solution";
 
+        & $global:NugetCli restore $solution -Verbosity detailed -configfile $NugetConfig;
+        Invoke-ExitCodeCheck $LastExitCode;
+    }
+    
     $additonalOptions = "";
     if (-not [string]::IsNullOrEmpty($Options)) {
         $additonalOptions = ",$Options";
@@ -178,7 +182,7 @@ function Invoke-Build([string]$SolutionFile, [string]$Options = "") {
 
     $params = "Configuration=$env:MARVIN_BUILD_CONFIG,Optimize=" + (&{If($env:MARVIN_OPTIMIZE_CODE) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
 
-    & $global:MSBuildCli $SolutionFile /p:$params /detailedsummary
+    & $global:MSBuildCli $ProjectFile /p:$params /detailedsummary
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
@@ -242,13 +246,18 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
     ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
+        $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MARVIN_BUILD_CONFIG, "$projectName.dll");
 
         Write-Host "OpenCover Test: ${projectName}:";
 
-        #$projectDir = $testProject.DirectoryName;
         $nunitXml = ($NunitReportsDir + "\$projectName.TestResult.xml");
         $openCoverXml = ($OpenCoverReportsDir + "\$projectName.OpenCover.xml");
         $coberturaXml = ($CoberturaReportsDir + "\$projectName.Cobertura.xml");
+
+        # If assembly does not exists, the project will be build
+        if (-not (Test-Path $testAssembly)) {
+            Invoke-Build $testProject 
+        }
 
         $includeFilter = "+[Marvin*]*";
         $excludeFilter = "-[*nunit*]* -[*Tests]* -[*Model*]*";
@@ -277,7 +286,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
 
         Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
 
-        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MARVIN_BUILD_CONFIG /result:$nunitXml $testProject"
+        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MARVIN_BUILD_CONFIG /result:$nunitXml $testAssembly"
         $openCoverAgs += "-log:Debug", "-register:user", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
         

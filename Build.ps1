@@ -54,11 +54,11 @@ if ($SystemTests) {
     Invoke-Nunit -SearchFilter "*.SystemTests.csproj"
 }
 
-if ($UnitTests -or $IntegrationTests) {
-    Invoke-CoverReport
-}
-
 if ($GenerateDocs) {
+    if ($UnitTests -or $IntegrationTests) {
+        Invoke-CoverReport
+    }
+
     Invoke-DocFx
 }
 
