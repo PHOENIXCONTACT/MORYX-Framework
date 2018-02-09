@@ -279,6 +279,7 @@ namespace Marvin.Resources.Management
                 targetType = EntryConvert.ElementType(targetType);
             var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
             referenceModel.SupportedTypes = SupportedTypes(typeConstraints);
+            referenceModel.PossibleTargets = MatchingInstances(typeConstraints).ToArray();
 
             // Exclude other properties if this is the last layer
             var value = property.GetValue(current);
@@ -293,8 +294,7 @@ namespace Marvin.Resources.Management
                 referenceModel.Targets.Add(target);
             }
             // Possible targets must always include the current target, even if its not part of the tree
-            referenceModel.PossibleTargets = MatchingInstances(typeConstraints)
-                .Union(referenceModel.Targets).ToArray();
+            referenceModel.PossibleTargets = referenceModel.PossibleTargets.Union(referenceModel.Targets).ToArray();
 
             return referenceModel;
         }
