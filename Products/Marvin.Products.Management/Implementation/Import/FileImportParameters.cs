@@ -8,7 +8,7 @@ namespace Marvin.Products.Management
     /// <summary>
     /// Base parameters for a file import
     /// </summary>
-    public class FileImportParameters : IImportParameters
+    public class FileImportParameters : IFileImportParameters
     {
         /// <summary>
         /// File extension of the file
