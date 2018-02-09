@@ -7,7 +7,7 @@ namespace Marvin.Products.Management
     /// <summary>
     /// Base class for importing a prototype
     /// </summary>
-    public class PrototypeParameters : IImportParameters
+    public class PrototypeParameters : IPrototypeParameters
     {
         /// <summary>
         /// Identifier of the new product
