@@ -7,9 +7,9 @@ using Marvin.Tools;
 namespace Marvin.Configuration
 {
     /// <summary>
-    /// <see cref="PossibleConfigValuesAttribute"/> to provide possible types by an array or base type
+    /// <see cref="PossibleValuesAttribute"/> to provide possible types by an array or base type
     /// </summary>
-    public class PossibleTypesAttribute : PossibleConfigValuesAttribute
+    public class PossibleTypesAttribute : PossibleValuesAttribute
     {
         private readonly Type[] _types;
 

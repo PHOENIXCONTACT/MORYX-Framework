@@ -8,9 +8,9 @@ using Marvin.StateMachines;
 namespace Marvin.Configuration
 {
     /// <summary>
-    /// <see cref="PossibleConfigValuesAttribute"/> to provide possible StateMachine keys
+    /// <see cref="PossibleValuesAttribute"/> to provide possible StateMachine keys
     /// </summary>
-    public class StateMachineKeysAttribute : PossibleConfigValuesAttribute
+    public class StateMachineKeysAttribute : PossibleValuesAttribute
     {
         private readonly Type _stateBase;
 

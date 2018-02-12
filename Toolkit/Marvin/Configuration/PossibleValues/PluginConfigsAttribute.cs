@@ -7,7 +7,7 @@ using Marvin.Modules;
 
 namespace Marvin.Configuration
 {
-    public class PluginConfigsAttribute : PossibleConfigValuesAttribute
+    public class PluginConfigsAttribute : PossibleValuesAttribute
     {
         protected Type StrategyService { get; }
 

@@ -21,9 +21,9 @@ namespace Marvin.Configuration
     }
 
     /// <summary>
-    /// <see cref="PossibleConfigValuesAttribute"/> which provides integer steps
+    /// <see cref="PossibleValuesAttribute"/> which provides integer steps
     /// </summary>
-    public class IntegerStepsAttribute : PossibleConfigValuesAttribute
+    public class IntegerStepsAttribute : PossibleValuesAttribute
     {
         private readonly int _min;
         private readonly int _max;
