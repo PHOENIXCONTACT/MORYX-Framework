@@ -117,7 +117,7 @@ namespace Marvin.Tests.Configuration
                     }
                     else
                     {
-                        attribute = attr.FirstOrDefault(o => o is PossibleConfigValuesAttribute);
+                        attribute = attr.FirstOrDefault(o => o is PossibleValuesAttribute);
                         if (attribute == null)
                         {
                             foundPropertyWithoutValueAttribute = true;
@@ -126,7 +126,7 @@ namespace Marvin.Tests.Configuration
                         }
                         else
                         {
-                            var possibleValuesAttribute = (PossibleConfigValuesAttribute) attribute;
+                            var possibleValuesAttribute = (PossibleValuesAttribute) attribute;
                             foundPropertyWithValuesAttribute = true;
                             foreach (var value in possibleValuesAttribute.ResolvePossibleValues(null))
                             {

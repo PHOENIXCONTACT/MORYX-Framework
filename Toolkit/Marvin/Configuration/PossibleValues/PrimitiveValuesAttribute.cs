@@ -7,7 +7,7 @@ namespace Marvin.Configuration
     /// <summary>
     /// Attribute to enrich a config file with possible values for a property.
     /// </summary>
-    public class PrimitiveValuesAttribute : PossibleConfigValuesAttribute
+    public class PrimitiveValuesAttribute : PossibleValuesAttribute
     {
         private string[] _values;
 

@@ -7,9 +7,9 @@ using Marvin.Container;
 namespace Marvin.Configuration
 {
     /// <summary>
-    /// <see cref="PossibleConfigValuesAttribute"/> to provide a path relative to the BaseDirectory
+    /// <see cref="PossibleValuesAttribute"/> to provide a path relative to the BaseDirectory
     /// </summary>
-    public class RelativeDirectoriesAttribute : PossibleConfigValuesAttribute
+    public class RelativeDirectoriesAttribute : PossibleValuesAttribute
     {
         private readonly string _parentPath;
 

@@ -7,14 +7,14 @@ using Marvin.Container;
 namespace Marvin.Configuration
 {
     /// <summary>
-    /// <see cref="PossibleConfigValuesAttribute"/> to provide possible plugin names
+    /// <see cref="PossibleValuesAttribute"/> to provide possible plugin names
     /// </summary>
-    public class PluginNameSelectorAttribute : PossibleConfigValuesAttribute
+    public class PluginNameSelectorAttribute : PossibleValuesAttribute
     {
         private readonly Type _componentType;
 
         /// <summary>
-        /// Creates a new instance of <see cref="PossibleConfigValuesAttribute"/>
+        /// Creates a new instance of <see cref="PossibleValuesAttribute"/>
         /// </summary>
         public PluginNameSelectorAttribute(Type componentType)
         {

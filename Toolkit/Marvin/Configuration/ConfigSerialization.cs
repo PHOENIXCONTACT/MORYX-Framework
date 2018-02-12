@@ -34,7 +34,7 @@ namespace Marvin.Configuration
         public override EntryPrototype[] Prototypes(PropertyInfo property)
         {
             // Create prototypes from possible values
-            var possibleValuesAtt = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var possibleValuesAtt = property.GetCustomAttribute<PossibleValuesAttribute>();
             if (possibleValuesAtt == null)
             {
                 return base.Prototypes(property);
@@ -53,7 +53,7 @@ namespace Marvin.Configuration
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override string[] PossibleValues(PropertyInfo property)
         {
-            var valuesAttribute = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var valuesAttribute = property.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
             {
                 return base.PossibleValues(property);
@@ -68,7 +68,7 @@ namespace Marvin.Configuration
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override string[] PossibleElementValues(PropertyInfo property)
         {
-            var valuesAttribute = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var valuesAttribute = property.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
             {
                 return base.PossibleElementValues(property);
@@ -82,7 +82,7 @@ namespace Marvin.Configuration
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override object CreateInstance(MappedProperty mappedRoot, Entry encoded)
         {
-            var possibleValuesAtt = mappedRoot.Property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var possibleValuesAtt = mappedRoot.Property.GetCustomAttribute<PossibleValuesAttribute>();
             var instance = possibleValuesAtt != null
                 ? possibleValuesAtt.ConvertToConfigValue(Container, encoded.Value.Current)
                 : base.CreateInstance(mappedRoot, encoded);
@@ -97,7 +97,7 @@ namespace Marvin.Configuration
         {
             var value = mappedEntry.Value;
 
-            var att = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var att = property.GetCustomAttribute<PossibleValuesAttribute>();
             if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
                 return base.PropertyValue(property, mappedEntry, currentValue);
 
