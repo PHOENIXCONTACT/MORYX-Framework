@@ -11,6 +11,12 @@ namespace Marvin.Resources.Samples
     {
         [ReferenceOverride(nameof(Children))]
         public IReferences<IStation> Stations { get; set; }
+
+        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        public SolderingStation Soldering { get; set; }
+
+        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        public HeatingStation Heating { get; set; }
     }
 
     public interface IStation : IResource
