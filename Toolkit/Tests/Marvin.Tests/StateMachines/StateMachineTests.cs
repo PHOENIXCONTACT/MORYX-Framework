@@ -167,22 +167,6 @@ namespace Marvin.Tests
             Assert.IsTrue(context.AEntered);
         }
 
-        [Test(Description = "Uses the StateMachineKeysAttribute to read possible state keys from the given state machine type.")]
-        public void StateMachineKeysAttribute()
-        {
-            // Arrange
-            var attr = new StateMachineKeysAttribute(typeof(MyStateBase));
-
-            // Act
-            var possibleValues = attr.ResolvePossibleValues(null).ToArray();
-            
-            // Assert
-            Assert.AreEqual(3, possibleValues.Length);
-            Assert.AreEqual(nameof(MyStateBase.StateA), possibleValues[0]);
-            Assert.AreEqual(nameof(MyStateBase.StateB), possibleValues[1]);
-            Assert.AreEqual(nameof(MyStateBase.StateC), possibleValues[2]);
-        }
-
         private static MyContext CreateContext()
         {
             var context = new MyContext();

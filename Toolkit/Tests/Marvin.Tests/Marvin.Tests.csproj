@@ -73,6 +73,7 @@
     <Compile Include="Configuration\CachedConfigManagerTests.cs" />
     <Compile Include="Configuration\ConfigManagerTests.cs" />
     <Compile Include="Configuration\FaultyConfig.cs" />
+    <Compile Include="Configuration\PossibleValues\PossibleValuesAttributeTests.cs" />
     <Compile Include="Configuration\TestConfig.cs" />
     <Compile Include="Configuration\Transformer\ModelTransformerTest.cs" />
     <Compile Include="Configuration\Transformer\TransformerTestConfig.cs" />
