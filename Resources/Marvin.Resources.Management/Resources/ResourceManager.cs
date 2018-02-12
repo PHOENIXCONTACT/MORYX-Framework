@@ -198,22 +198,36 @@ namespace Marvin.Resources.Management
             foreach (var property in ReferenceProperties(resourceType))
             {
                 var referenceOverride = property.GetCustomAttribute<ReferenceOverrideAttribute>();
-
-                // Link a single resource
-                if (typeof(IResource).IsAssignableFrom(property.PropertyType) && referenceOverride == null)
+                var isEnumerable = typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType);
+                if (!isEnumerable && referenceOverride == null)
                 {
-                    var relation = MatchingRelations(relations, property).SingleOrDefault();
-                    if (relation != null)
-                        property.SetValue(resource, _resources[relation.ReferenceId]);
+                    // Link a single reference
+                    var matches = MatchingRelations(relations, property);
+                    if (matches.Count == 0)
+                        continue;
+
+                    // Try to find a possible match for the property
+                    var propertyType = property.PropertyType;
+                    var referenceMatch = (from match in matches
+                                          let reference = _resources[match.ReferenceId]
+                                          where propertyType.IsInstanceOfType(reference)
+                                          select reference).SingleOrDefault();
+                    if (referenceMatch != null)
+                        property.SetValue(resource, referenceMatch);
+                    else
+                    {
+                        var ids = matches.Select(m => m.ReferenceId);
+                        throw new InvalidCastException($"Type mismatch: Can not assign any resource from [{string.Join(",", ids)}] to {property.Name} on Id:{resource.Id}!");
+                    }
                 }
                 // Link a list of resources
-                else if (typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType) && referenceOverride == null)
+                else if (isEnumerable && referenceOverride == null)
                 {
                     // Read attribute and get the ReferenceCollection
                     var att = property.GetCustomAttribute<ResourceReferenceAttribute>();
                     var value = (IReferenceCollection)property.GetValue(resource);
 
-                    var matches = MatchingRelations(relations, property).ToList();
+                    var matches = MatchingRelations(relations, property);
                     var resources = _resources.Where(pair => matches.Any(m => m.ReferenceId == pair.Key)).Select(pair => (IResource)pair.Value);
                     foreach (var referencedResource in resources)
                     {
@@ -223,7 +237,7 @@ namespace Marvin.Resources.Management
                         value.CollectionChanged += new SaveResourceTrigger(this, resource, property).OnCollectionChanged;
                 }
                 // Register on changes for ReferenceOverrides with AutoSave
-                else if (typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType) && referenceOverride != null && referenceOverride.AutoSave)
+                else if (isEnumerable && referenceOverride != null && referenceOverride.AutoSave)
                 {
                     var target = resourceType.GetProperty(referenceOverride.Source);
                     var value = (IReferenceCollection)property.GetValue(resource);
@@ -373,14 +387,23 @@ namespace Marvin.Resources.Management
         /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
         /// public Resource FriendResource { get; set; }
         /// </example>
-        private void UpdateSingleReference(IUnitOfWork uow, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IEnumerable<ResourceRelationTemplate> matches)
+        private void UpdateSingleReference(IUnitOfWork uow, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationTemplate> matches)
         {
             var relationRepo = uow.GetRepository<IResourceRelationRepository>();
 
-            var referencedResource = referenceProperty.GetValue(resource) as Resource;
+            var value = referenceProperty.GetValue(resource);
+            var referencedResource = value as Resource;
+            // Validate if object assigned to the property is a resource
+            if (value != null && referencedResource == null)
+                throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}:{resource.GetType().Name} must be a Resource");
+
             var att = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
 
-            var relEntity = matches.FirstOrDefault()?.Entity;
+            // Try to find a match that previously referenced another compatible resource
+            var propertyType = referenceProperty.PropertyType;
+            var relEntity = (from match in matches
+                             where propertyType.IsInstanceOfType(_resources[match.ReferenceId])
+                             select match.Entity).SingleOrDefault();
             if (relEntity == null && referencedResource != null)
             {
                 // Create a new relation
@@ -412,9 +435,8 @@ namespace Marvin.Resources.Management
         /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
         /// public IReferences&lt;Resource&gt; FriendResources { get; set; }
         /// </example>
-        private void UpdateCollectionReference(IUnitOfWork uow, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IEnumerable<ResourceRelationTemplate> matches)
+        private void UpdateCollectionReference(IUnitOfWork uow, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationTemplate> relationTemplates)
         {
-            var relationTemplates = matches.ToList();
             var relationRepo = uow.GetRepository<IResourceRelationRepository>();
             var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
 
@@ -469,18 +491,15 @@ namespace Marvin.Resources.Management
         private static IEnumerable<PropertyInfo> ReferenceProperties(Type resourceType, bool includeOverrides = true)
         {
             return (from property in resourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    let propertyType = property.PropertyType
-                    where Attribute.IsDefined(property, typeof(ResourceReferenceAttribute))
+                    where property.CanWrite && Attribute.IsDefined(property, typeof(ResourceReferenceAttribute))
                        || includeOverrides && Attribute.IsDefined(property, typeof(ReferenceOverrideAttribute))
-                    where property.CanWrite && (typeof(IResource).IsAssignableFrom(propertyType)
-                       || propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IReferences<>))
                     select property);
         }
 
         /// <summary>
         /// Find the relation that matches the property
         /// </summary>
-        private static IEnumerable<ResourceRelationTemplate> MatchingRelations(IEnumerable<ResourceRelationTemplate> relations, PropertyInfo property)
+        private static IReadOnlyList<ResourceRelationTemplate> MatchingRelations(IEnumerable<ResourceRelationTemplate> relations, PropertyInfo property)
         {
             var attribute = property.GetCustomAttribute<ResourceReferenceAttribute>();
             var matches = (from relation in relations
@@ -488,7 +507,7 @@ namespace Marvin.Resources.Management
                            where attribute.RelationType == relation.RelationType // Typed relation without name or matching name
                                 && (string.IsNullOrEmpty(attribute.Name) || attribute.Name == relation.Name)
                            select relation);
-            return matches;
+            return matches.ToArray();
         }
 
         ///
