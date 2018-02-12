@@ -232,7 +232,6 @@ namespace Marvin.Resources.Management
                                        let propType = prop.PropertyType
                                        // Find all properties referencing a resource a collection of resources
                                        where prop.CanWrite && Attribute.IsDefined(prop, typeof(ResourceReferenceAttribute))
-                                         && (typeof(IResource).IsAssignableFrom(propType) || propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(IReferences<>))
                                        // Exclude read only properties, because they are simple type overrides of other references
                                        // Filter parent to break recursion
                                        where prop.Name != nameof(Resource.Parent)
