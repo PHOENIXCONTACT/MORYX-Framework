@@ -7,60 +7,60 @@ namespace Marvin.Configuration
     /// <summary>
     /// Attribute to enrich a config file with possible values for a property.
     /// </summary>
-    public class PossibleValuesAttribute : PossibleConfigValuesAttribute
+    public class PrimitiveValuesAttribute : PossibleConfigValuesAttribute
     {
         private string[] _values;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PossibleValuesAttribute"/> class.
+        /// Initializes a new instance of the <see cref="PrimitiveValuesAttribute"/> class.
         /// </summary>
         /// <param name="values">The values.</param>
-        public PossibleValuesAttribute(params string[] values)
+        public PrimitiveValuesAttribute(params string[] values)
         {
             _values = values;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PossibleValuesAttribute"/> class.
+        /// Initializes a new instance of the <see cref="PrimitiveValuesAttribute"/> class.
         /// </summary>
         /// <param name="values">The values.</param>
-        public PossibleValuesAttribute(params byte[] values)
+        public PrimitiveValuesAttribute(params byte[] values)
         {
             GenerateStringValues(values);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PossibleValuesAttribute"/> class.
+        /// Initializes a new instance of the <see cref="PrimitiveValuesAttribute"/> class.
         /// </summary>
         /// <param name="values">The values.</param>
-        public PossibleValuesAttribute(params int[] values)
+        public PrimitiveValuesAttribute(params int[] values)
         {
             GenerateStringValues(values);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PossibleValuesAttribute"/> class.
+        /// Initializes a new instance of the <see cref="PrimitiveValuesAttribute"/> class.
         /// </summary>
         /// <param name="values">The values.</param>
-        public PossibleValuesAttribute(params long[] values)
+        public PrimitiveValuesAttribute(params long[] values)
         {
             GenerateStringValues(values);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PossibleValuesAttribute"/> class.
+        /// Initializes a new instance of the <see cref="PrimitiveValuesAttribute"/> class.
         /// </summary>
         /// <param name="values">The values.</param>
-        public PossibleValuesAttribute(params double[] values)
+        public PrimitiveValuesAttribute(params double[] values)
         {
             GenerateStringValues(values);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PossibleValuesAttribute"/> class.
+        /// Initializes a new instance of the <see cref="PrimitiveValuesAttribute"/> class.
         /// </summary>
         /// <param name="values">The values.</param>
-        public PossibleValuesAttribute(params bool[] values)
+        public PrimitiveValuesAttribute(params bool[] values)
         {
             GenerateStringValues(values);
         }

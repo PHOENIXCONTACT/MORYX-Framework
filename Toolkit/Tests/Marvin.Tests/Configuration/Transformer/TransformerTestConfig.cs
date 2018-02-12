@@ -83,7 +83,7 @@ namespace Marvin.Tests.Configuration
         /// Gets or sets a string value.
         /// </summary>
         [DefaultValue(StringFieldDefault)]
-        [PossibleValues("String1", "String2", "String3")]     
+        [PrimitiveValues("String1", "String2", "String3")]     
         [Description("StringField Test description")]
         [DisplayName(StringFieldDisplayName)]
         [Required, MinLength(3), MaxLength(10), Password]
@@ -106,7 +106,7 @@ namespace Marvin.Tests.Configuration
         /// Gets or sets a double value.
         /// </summary>
         [DefaultValue(DoubleFieldDefault)]
-        [PossibleValues(0.0, 0.1, 0.2)]
+        [PrimitiveValues(0.0, 0.1, 0.2)]
         [Description("DoubleField Test description")]
         public double DoubleField { get; set; }
 

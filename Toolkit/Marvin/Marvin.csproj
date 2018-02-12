@@ -128,7 +128,7 @@
     <Compile Include="Configuration\PossibleValues\PluginNameSelectorAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\PossibleConfigValuesAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\PossibleTypesAttribute.cs" />
-    <Compile Include="Configuration\PossibleValues\PossibleValuesAttribute.cs" />
+    <Compile Include="Configuration\PossibleValues\PrimitiveValuesAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\RelativeDirectoriesAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\StateMachineKeysAttribute.cs" />
     <Compile Include="Configuration\UpdatableEntry.cs" />
