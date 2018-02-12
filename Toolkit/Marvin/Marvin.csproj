@@ -129,6 +129,7 @@
     <Compile Include="Configuration\PossibleValues\PossibleConfigValuesAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\PossibleValuesAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\RelativeDirectoriesAttribute.cs" />
+    <Compile Include="Configuration\PossibleValues\StateMachineKeysAttribute.cs" />
     <Compile Include="Configuration\UpdatableEntry.cs" />
     <Compile Include="Container\Attributes\ComponentAttribute.cs" />
     <Compile Include="Container\Attributes\ComponentLoaderIgnoreAttribute.cs" />

@@ -78,12 +78,9 @@ namespace Marvin.StateMachines
             // Load all fields
             // 1. Get all fields which are static constant with the attribute
             // 2. let attribute and create an anonymous array
-            var definedStates = (from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public) 
-                                 where field.IsLiteral && !field.IsInitOnly && 
-                                       field.FieldType.IsAssignableFrom(typeof(int)) && 
-                                       field.GetCustomAttribute<StateDefinitionAttribute>() != null
-                                 let att = field.GetCustomAttribute<StateDefinitionAttribute>()
-                                 select new { Key = (int)field.GetValue(null), att.IsInitial, att.Type }).ToArray();
+            var definedStates = (from stateField in GetStateFields(stateBaseType)
+                                 let att = stateField.GetCustomAttribute<StateDefinitionAttribute>()
+                                 select new { Key = (int)stateField.GetValue(null), att.IsInitial, att.Type }).ToArray();
 
             if (definedStates.Length == 0)
                 throw new InvalidOperationException("There was no state constant defined in the given base type." +
@@ -125,6 +122,19 @@ namespace Marvin.StateMachines
 
             context.SetState(initialState);
             initialState.OnEnter();
+        }
+
+        /// <summary>
+        /// Returns all fields of the given Type of <see cref="StateBase"/> which are attributed with the <see cref="StateDefinitionAttribute"/>
+        /// </summary>
+        internal static IEnumerable<FieldInfo> GetStateFields(Type stateBaseType)
+        {
+            var stateFields = from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                where field.IsLiteral && !field.IsInitOnly &&
+                      field.FieldType.IsAssignableFrom(typeof(int)) &&
+                      field.GetCustomAttribute<StateDefinitionAttribute>() != null
+                select field;
+            return stateFields;
         }
 
         /// <summary>
