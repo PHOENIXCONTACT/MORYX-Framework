@@ -23,10 +23,10 @@ Build:
 
 SmokeTests: 
   stage: test
-  script: .\build.ps1 -Build -SmokeTests  
   tags:
     - vs2015
     - postgres
+  script: .\build.ps1 -Build -SmokeTests  
 
 UnitTests: 
   stage: test
@@ -53,8 +53,7 @@ GenerateDocs:
     - vs2015
   stage: documentation
   script: 
-    - .\build.ps1 -GenerateDocs
-    - 'xcopy /s /i Documentation\_site\* Artifacts\Documentation'
+    - .\build.ps1 -CoverReport -GenerateDocs 
   artifacts:
     expire_in: 1 hrs
     paths:
@@ -71,7 +70,6 @@ PublishDocs:
 PublishPackages: 
   tags:
     - vs2015
-    - nuget
   stage: publish
   script: 
     - .\build.ps1 -Publish

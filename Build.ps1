@@ -7,6 +7,7 @@
     [switch]$IntegrationTests,
     [switch]$SystemTests,
     
+    [switch]$CoverReport,
     [switch]$GenerateDocs,
 
     [switch]$Pack,
@@ -54,11 +55,11 @@ if ($SystemTests) {
     Invoke-Nunit -SearchFilter "*.SystemTests.csproj"
 }
 
-if ($GenerateDocs) {
-    if ($UnitTests -or $IntegrationTests) {
-        Invoke-CoverReport
-    }
+if ($CoverReport) {
+    Invoke-CoverReport
+}
 
+if ($GenerateDocs) {
     Invoke-DocFx
 }
 

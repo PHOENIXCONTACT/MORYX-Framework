@@ -18,3 +18,19 @@ function Invoke-ExitCodeCheck([string]$exitCode) {
         exit $exitCode;
     }
 }
+
+function Write-Host-Info([string]$message) {
+    Write-Host $message
+}
+
+function Write-Host-Success([string]$message) {
+    Write-Host $message -ForegroundColor Green
+}
+
+function Write-Host-Warning([string]$message) {
+    Write-Host $message -ForegroundColor Yellow
+}
+
+function Write-Host-Error([string]$message) {
+    Write-Host $message -ForegroundColor Red
+}

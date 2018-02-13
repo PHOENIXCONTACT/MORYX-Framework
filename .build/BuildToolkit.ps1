@@ -17,6 +17,7 @@ $ArtifactsDir = "$RootPath\Artifacts";
 
 # Documentation
 $DocumentationDir = "$RootPath\Documentation";
+$DocumentationArtifcacts = "$ArtifactsDir\Documentation";
 
 # Tests
 $NunitReportsDir = "$ArtifactsDir\Tests";
@@ -70,9 +71,10 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Invoke-ExitCodeCheck $LastExitCode;
 
     # Initialize Folders
-    if (-not (Test-Path $BuildTools)) {
-        New-Item $BuildTools -Type Directory | Out-Null
-    }
+    CreateFolderIfNotExists $BuildTools;
+    CreateFolderIfNotExists $ArtifactsDir;
+    CreateFolderIfNotExists $DocumentationArtifcacts;
+    CreateFolderIfNotExists $NugetPackageArtifacts;
 
     # Assign nuget.exe
     if (-not (Test-Path $global:NugetCli)) {
@@ -197,9 +199,7 @@ function Invoke-Nunit([string]$SearchPath = $RootPath, [string]$SearchFilter = "
         Install-Tool "NUnit.Console" $NunitVersion $global:NunitCli;
     }
 
-    if (-not (Test-Path $NunitReportsDir)) {
-        New-Item $NunitReportsDir -Type Directory | Out-Null
-    }
+    CreateFolderIfNotExists $NunitReportsDir;
 
     $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
 
@@ -235,17 +235,9 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
         Install-Tool "OpenCoverToCoberturaConverter" $OpenCoverToCoberturaVersion $global:OpenCoverToCoberturaCli;
     }
 
-    if (-not (Test-Path $OpenCoverReportsDir)) {
-        New-Item $OpenCoverReportsDir -Type Directory | Out-Null
-    }
-
-    if (-not (Test-Path $CoberturaReportsDir)) {
-        New-Item $CoberturaReportsDir -Type Directory | Out-Null
-    }
-
-    if (-not (Test-Path $NunitReportsDir)) {
-        New-Item $NunitReportsDir -Type Directory | Out-Null
-    }
+    CreateFolderIfNotExists $OpenCoverReportsDir;
+    CreateFolderIfNotExists $CoberturaReportsDir;
+    CreateFolderIfNotExists $NunitReportsDir;
 
     $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
     ForEach($testProject in $testProjects ) { 
@@ -302,37 +294,48 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     }
 }
 
-function Invoke-CoverReport($SearchPath = $OpenCoverReportsDir) {
-    Write-Step "Creating cover report. Searching for OpenCover.xml files in $SearchPath."
+function Invoke-CoverReport {
+    Write-Step "Creating cover report. Searching for OpenCover.xml files in $OpenCoverReportsDir."
+
+    if (-not (Test-Path $OpenCoverReportsDir)) {
+        Write-Host-Error "$OpenCoverReportsDir was not found!";
+        Invoke-ExitCodeCheck 1;
+    }
 
     if (-not (Test-Path $global:ReportGeneratorCli)) {
         Install-Tool "ReportGenerator" $ReportGeneratorVersion $global:ReportGeneratorCli;
     }
     
-    $reports = (Get-ChildItem $SearchPath -Recurse -Include '*.OpenCover.xml');
+    $reports = (Get-ChildItem $OpenCoverReportsDir -Recurse -Include '*.OpenCover.xml');
     $asArgument = [string]::Join(";",$reports);
 
-    & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$OpenCoverReportsDir/html"
+    & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$DocumentationArtifcacts/OpenCover"
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
 function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "docfx.json")) {
     Write-Step "Generating documentation using DocFx"
 
+    if (-not (Test-Path $Metadata)) {
+        Write-Host-Error "Metadata was not found at: $Metadata!"
+        Invoke-ExitCodeCheck 1;
+    }
+
     if (-not (Test-Path $global:DocFxCli)) {
         Install-Tool "docfx.console" $DocFxVersion $global:DocFxCli;
     }
+    
+    $docFxObj = (Get-Content $Metadata) | ConvertFrom-Json;
+    $metadataFolder = [System.IO.Path]::GetDirectoryName($Metadata);
+    $docFxDest = [System.IO.Path]::Combine($metadataFolder, $docFxObj.build.dest);
 
     & $global:DocFxCli $Metadata;
     Invoke-ExitCodeCheck $LastExitCode;
+
+    CopyAndReplaceFolder $docFxDest "$DocumentationArtifcacts\DocFx";
 }
 
 function Invoke-Pack($FilePath, [bool]$IsTool = $False) {
-    if(!(Test-Path $NugetPackageArtifacts)) {
-        Write-Host "Creating missing directory '$NugetPackageArtifacts'"
-        New-Item $NugetPackageArtifacts -Type Directory | Out-Null
-    }
-
     $packargs = "-outputdirectory", "$NugetPackageArtifacts";
     $packargs += "-includereferencedprojects";
     $packargs += "-Version", "$env:MARVIN_VERSION";
@@ -509,13 +512,25 @@ function Install-EddieLight([string]$Version, [string]$TargetPath) {
 
     Install-Tool $eddieLightPackage $Version $heartOfSilver;
 
+    CopyAndReplaceFolder $eddieLightSource $TargetPath;
+}
+
+function CreateFolderIfNotExists([string]$Folder) {
+    if (-not (Test-Path $Folder)) {
+        Write-Host "Creating missing directory '$Folder'"
+        New-Item $Folder -Type Directory | Out-Null
+    }
+}
+
+function CopyAndReplaceFolder($SourceDir, $TargetDir) {
+    Write-Host-Info "Copy $TargetDir to $SourceDir!"
     # Remove old folder if exists
-    if (Test-Path $TargetPath) {
+    if (Test-Path $TargetDir) {
         Write-Host "Target path already exists, removing ..." -ForegroundColor Yellow
-        Remove-Item -Recurse -Force $TargetPath
+        Remove-Item -Recurse -Force $TargetDir
     }
 
     # Copy to target path
-    Write-Host "Copy EddieLight from $eddieLightSource to $TargetPath ..." -ForegroundColor Green
-    Copy-Item -Path $eddieLightSource -Recurse -Destination $TargetPath -Container
+    Write-Host "Copy from $SourceDir to $TargetDir ..." -ForegroundColor Green
+    Copy-Item -Path $SourceDir -Recurse -Destination $TargetDir -Container
 }
