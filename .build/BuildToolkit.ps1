@@ -26,6 +26,7 @@ $CoberturaReportsDir = "$ArtifactsDir\Tests"
 # Nuget
 $NugetConfig = "$dotBuild\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
+$NugetCliSource = "http://nts-eu-jenk02.europe.phoenixcontact.com/Symbols/nuget.exe";
 $NugetPackageTarget = "http://nts-eu-jenk02.europe.phoenixcontact.com:5588/nuget/MaRVIN-CI/";
 
 # Load partial scripts
@@ -33,8 +34,8 @@ $NugetPackageTarget = "http://nts-eu-jenk02.europe.phoenixcontact.com:5588/nuget
 . "$DotBuild\SymbolStore.ps1";
 
 # Define Tools
-$global:NugetCli = "";
 $global:GitCli = "";
+$global:NugetCli = "$BuildTools\nuget.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\ReportGenerator.exe";
@@ -68,20 +69,23 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     $global:GitCommitHash = (& $global:GitCli rev-parse --short HEAD);
     Invoke-ExitCodeCheck $LastExitCode;
 
+    # Initialize Folders
+    if (-not (Test-Path $BuildTools)) {
+        New-Item $BuildTools -Type Directory | Out-Null
+    }
+
     # Assign nuget.exe
-    $nugetCommand = (Get-Command "nuget.exe" -ErrorAction SilentlyContinue);
-    if ($nugetCommand -eq $null)  { 
-        Write-Host "Unable to find nuget.exe in your PATH. Download from https://www.nuget.org/downloads";
-        Invoke-ExitCodeCheck 1;
+    if (-not (Test-Path $global:NugetCli)) {
+        Write-Host "Downloading NuGet.exe ..."
+        try {
+            Invoke-WebRequest $NugetCliSource -OutFile $global:NugetCli
+        }
+        catch {
+            Write-Host "Error while downloading nuget.exe: " + $_.Exception.Message
+            Invoke-ExitCodeCheck 1;
+        }
     }
-    
-    if ($nugetCommand.Version.Major -lt 4) {
-        Write-Host "The minimum nuget.exe version should be 4.0.0.0. Currently installed: $($nugetCommand.Version)";
-        Invoke-ExitCodeCheck 1;
-    }
-    
-    $global:NugetCli = $nugetCommand.Path;
-    
+
     # Assign msbuild.exe
     if ($MsBuildVersion -eq "latest" -or $MsBuildVersion -eq "15.0") {
         if (-not (Test-Path $global:VswhereCli)) {
@@ -496,14 +500,22 @@ function Set-VsTemplateVersion([string]$VsTemplate) {
 }
 
 function Install-EddieLight([string]$Version, [string]$TargetPath) {
+    Write-Step "Installing EddieLight"
+
     $eddieLightPackage = "Marvin.Runtime.EddieLight";
     $eddieLightSource = [System.IO.Path]::Combine($BuildTools, "$eddieLightPackage.$Version\EddieLight\");
-    $heartOfSilver = [System.IO.Path]::Combine($TargetPath, "SilverlightApp\HeartOfSilver.xap");
+    $heartOfSilver = [System.IO.Path]::Combine($eddieLightSource, "SilverlightApp\HeartOfSilver.xap");
     $eddieLightPackage = "Marvin.Runtime.EddieLight";
 
     Install-Tool $eddieLightPackage $Version $heartOfSilver;
 
+    # Remove old folder if exists
+    if (Test-Path $TargetPath) {
+        Write-Host "Target path already exists, removing ..." -ForegroundColor Yellow
+        Remove-Item -Recurse -Force $TargetPath
+    }
+
     # Copy to target path
-    Write-Host "Copy EddieLight from $eddieLightSource to $TargetPath ..."
+    Write-Host "Copy EddieLight from $eddieLightSource to $TargetPath ..." -ForegroundColor Green
     Copy-Item -Path $eddieLightSource -Recurse -Destination $TargetPath -Container
 }

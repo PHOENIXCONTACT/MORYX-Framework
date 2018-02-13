@@ -17,7 +17,7 @@
             "request": "launch",
             "name": "AssemblyVersion",
             "script": "${workspaceRoot}\\Build.ps1",
-            "args": ["-SetAssemblyVersion -BuildNumber 15432"],
+            "args": ["-SetAssemblyVersion"],
             "cwd": "${workspaceRoot}"
         },
         {
@@ -41,17 +41,9 @@
             "request": "launch",
             "name": "Nuget Pack",
             "script": "${workspaceRoot}\\Build.ps1",
-            "args": ["-BuildNumber 15432 -Pack"],
+            "args": ["-Pack"],
             "cwd": "${workspaceRoot}"
-        },
-        {
-            "type": "PowerShell",
-            "request": "launch",
-            "name": "Jenkins",
-            "script": "${workspaceRoot}\\Jenkins.ps1",
-            "args": [],
-            "cwd": "${workspaceRoot}"
-        },
+        }
         {
             "type": "PowerShell",
             "request": "launch",
