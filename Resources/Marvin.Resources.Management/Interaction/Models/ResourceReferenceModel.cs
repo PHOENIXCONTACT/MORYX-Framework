@@ -17,6 +17,12 @@ namespace Marvin.Resources.Management
         public string Name { get; set; }
 
         /// <summary>
+        /// Description of this reference
+        /// </summary>
+        [DataMember]
+        public string Description { get; set; }
+
+        /// <summary>
         /// Types that can be assigned to this reference
         /// </summary>
         [DataMember]
@@ -26,7 +32,7 @@ namespace Marvin.Resources.Management
         /// Resources that could be assigned to this reference
         /// </summary>
         [DataMember]
-        public ResourceModel[] PossibleTargets { get; set; }
+        public List<ResourceModel> PossibleTargets { get; set; }
 
         /// <summary>
         /// Role of the referenced resource in the relationship

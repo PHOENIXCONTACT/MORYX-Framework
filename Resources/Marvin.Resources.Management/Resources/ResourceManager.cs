@@ -354,15 +354,15 @@ namespace Marvin.Resources.Management
             foreach (var referenceProperty in ReferenceProperties(resource.GetType(), false))
             {
                 var matches = MatchingRelations(relations, referenceProperty);
-
-                // Save a single reference
-                if (typeof(IResource).IsAssignableFrom(referenceProperty.PropertyType))
+                if (typeof(IEnumerable<IResource>).IsAssignableFrom(referenceProperty.PropertyType))
                 {
-                    UpdateSingleReference(uow, entity, resource, referenceProperty, matches);
+                    // Save a collection reference
+                    UpdateCollectionReference(uow, entity, resource, referenceProperty, matches);
                 }
                 else
                 {
-                    UpdateCollectionReference(uow, entity, resource, referenceProperty, matches);
+                    // Save a single reference
+                    UpdateSingleReference(uow, entity, resource, referenceProperty, matches);
                 }
             }
 
