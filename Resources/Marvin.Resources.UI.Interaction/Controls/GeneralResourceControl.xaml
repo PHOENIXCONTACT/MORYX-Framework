@@ -19,9 +19,7 @@
                     <Setter Property="Margin" Value="0,0,0,10" />
                 </Style>
             </StackPanel.Resources>
-            <TextBlock Eddie.TextFormat="Header2" Margin="0,5,0,5">
-                General
-            </TextBlock>
+            <TextBlock Eddie.TextFormat="Header2" Margin="0,5,0,5" Text="{Binding Resource.Type, ElementName=UserControl}"/>
 
             <LabeledControlHost LabelA="Name:">
                 <EddieTextBox Text="{Binding Resource.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ElementName=UserControl}"

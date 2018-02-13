@@ -53,6 +53,7 @@
   <xs:element name="ArrayOfResourceReferenceModel" nillable="true" type="tns:ArrayOfResourceReferenceModel" />
   <xs:complexType name="ResourceReferenceModel">
     <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IsCollection" type="xs:boolean" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PossibleTargets" nillable="true" type="tns:ArrayOfResourceModel" />

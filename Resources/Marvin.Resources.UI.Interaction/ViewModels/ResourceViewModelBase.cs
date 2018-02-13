@@ -35,7 +35,7 @@ namespace Marvin.Resources.UI.Interaction
         /// Name of the resource
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "The name can not be empty!")]
-        [MinLength(5, ErrorMessage = "The name must be longer than 5 characters!")]
+        [MinLength(3, ErrorMessage = "The name must be longer than 3 characters!")]
         [MaxLength(80, ErrorMessage = "The name must be shorter than 80 characters!")]
         public string Name
         {

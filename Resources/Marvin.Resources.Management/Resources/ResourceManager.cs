@@ -228,7 +228,8 @@ namespace Marvin.Resources.Management
                     var value = (IReferenceCollection)property.GetValue(resource);
 
                     var matches = MatchingRelations(relations, property);
-                    var resources = _resources.Where(pair => matches.Any(m => m.ReferenceId == pair.Key)).Select(pair => (IResource)pair.Value);
+                    var resources = matches.Select(m => _resources[m.ReferenceId])
+                        .OrderBy(r => r.LocalIdentifier).ThenBy(r => r.Name);
                     foreach (var referencedResource in resources)
                     {
                         value.UnderlyingCollection.Add(referencedResource);
