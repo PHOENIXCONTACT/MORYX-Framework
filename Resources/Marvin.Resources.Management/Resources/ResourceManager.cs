@@ -283,20 +283,10 @@ namespace Marvin.Resources.Management
         ///
         public void Dispose()
         {
-            if (_disposed || _resources == null)
-                return;
-
             foreach (var resource in _resources.Values)
             {
                 UnregisterEvents(resource, resource as IPublicResource);
             }
-
-            _disposed = true;
-        }
-
-        ~ResourceManager()
-        {
-            Dispose();
         }
 
         #endregion

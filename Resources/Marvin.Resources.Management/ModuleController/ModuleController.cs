@@ -86,7 +86,7 @@ namespace Marvin.Resources.Management
             DeactivateFacade(_notificationSourceFacade);
             
             var resourceManager = Container.Resolve<IResourceManager>();
-            resourceManager.Dispose();
+            resourceManager.Stop();
         }
 
         #endregion
