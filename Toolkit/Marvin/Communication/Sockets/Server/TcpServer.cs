@@ -60,7 +60,7 @@ namespace Marvin.Communication.Sockets
             var interpreter = validator.Interpreter;
             if (!PortMap.Register(port, interpreter))
             {
-                throw new InvalidOperationException($"Attempted to register protocol header {interpreter} on port {port}, but port was allready taken");
+                throw new InvalidOperationException($"Attempted to register protocol header {interpreter} on port {port}, but port was already taken");
             }
 
             // Get port listeners

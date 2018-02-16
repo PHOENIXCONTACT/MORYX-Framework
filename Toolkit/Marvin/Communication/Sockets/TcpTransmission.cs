@@ -143,6 +143,10 @@ namespace Marvin.Communication.Sockets
         private void ReadComplete(IAsyncResult ar)
         {
             int read;
+
+            if (_disconnected)
+                return;
+
             try
             {
                 read = _stream.EndRead(ar);
