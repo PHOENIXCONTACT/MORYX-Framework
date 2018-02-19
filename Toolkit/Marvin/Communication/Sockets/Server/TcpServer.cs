@@ -24,7 +24,7 @@ namespace Marvin.Communication.Sockets
         {
             lock (Map)
             {
-                if (Map.ContainsKey(port) && Map[port] != protocol)
+                if (Map.ContainsKey(port) && !Map[port].Equals(protocol))
                     return false;
 
                 Map[port] = protocol;

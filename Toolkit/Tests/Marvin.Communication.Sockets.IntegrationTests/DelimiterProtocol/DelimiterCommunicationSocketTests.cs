@@ -32,7 +32,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
         }
 
         [Test(Description = "Sends a delimetered message and check the received data")]
-        public void SendDelimiteredMessage()
+        public void SendDelimitedMessage()
         {
             var payloadMultiplier = 10;
 
