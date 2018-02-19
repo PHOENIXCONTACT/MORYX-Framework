@@ -20,7 +20,7 @@ namespace Marvin.Communication
     /// <summary>
     /// Validator instance that checks of parsed headers match this listeners requirements
     /// </summary>
-    public interface IMessageInterpreter
+    public interface IMessageInterpreter : IEquatable<IMessageInterpreter>
     {
         /// <summary>
         /// Create transmission for first communication
