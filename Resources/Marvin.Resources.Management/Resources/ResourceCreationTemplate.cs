@@ -117,7 +117,6 @@ namespace Marvin.Resources.Management
                                  ExtensionData = res.ExtensionData,
                                  Relations = (from target in res.Targets
                                               where target.Target.Deleted == null
-                                              orderby target.Target.LocalIdentifier
                                               // Attention: This is Copy&Paste because of LinQ limitations
                                               select new ResourceRelationTemplate
                                               {
@@ -128,7 +127,6 @@ namespace Marvin.Resources.Management
                                               }).Concat(
                                                from source in res.Sources
                                                where source.Source.Deleted == null
-                                               orderby source.Source.LocalIdentifier
                                                // Attention: This is Copy&Paste because of LinQ limitations
                                                select new ResourceRelationTemplate
                                                {
@@ -192,7 +190,6 @@ namespace Marvin.Resources.Management
             var relationRepo = uow.GetRepository<IResourceRelationRepository>();
             var relations = (from target in relationRepo.Linq
                              where target.Target.Deleted == null && target.SourceId == entity.Id
-                             orderby target.Target.LocalIdentifier
                              // Attention: This is Copy&Paste because of LinQ limitations
                              select new ResourceRelationTemplate
                              {
@@ -204,7 +201,6 @@ namespace Marvin.Resources.Management
                              }).Concat(
                              from source in relationRepo.Linq
                              where source.Source.Deleted == null && source.TargetId == entity.Id
-                             orderby source.Source.LocalIdentifier
                              // Attention: This is Copy&Paste because of LinQ limitations
                              select new ResourceRelationTemplate
                              {

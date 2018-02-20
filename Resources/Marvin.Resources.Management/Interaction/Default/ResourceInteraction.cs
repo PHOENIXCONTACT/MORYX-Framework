@@ -266,6 +266,8 @@ namespace Marvin.Resources.Management
             var referenceModel = new ResourceReferenceModel
             {
                 Name = property.Name,
+                Description = property.GetCustomAttribute<DescriptionAttribute>()?.Description,
+
                 Role = attribute.Role,
                 RelationType = attribute.RelationType,
                 Targets = new List<ResourceModel>(),
@@ -278,7 +280,7 @@ namespace Marvin.Resources.Management
                 targetType = EntryConvert.ElementType(targetType);
             var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
             referenceModel.SupportedTypes = SupportedTypes(typeConstraints);
-            referenceModel.PossibleTargets = MatchingInstances(typeConstraints).ToArray();
+            referenceModel.PossibleTargets = MatchingInstances(typeConstraints).ToList();
 
             // Exclude other properties if this is the last layer
             var value = property.GetValue(current);
@@ -291,9 +293,10 @@ namespace Marvin.Resources.Management
             {
                 var target = GetDetails(resource, depth - 1);
                 referenceModel.Targets.Add(target);
+                // Possible targets must always include the current target, even if its not part of the tree
+                if (referenceModel.PossibleTargets.All(pt => pt.Id != target.Id))
+                    referenceModel.PossibleTargets.Add(target);
             }
-            // Possible targets must always include the current target, even if its not part of the tree
-            referenceModel.PossibleTargets = referenceModel.PossibleTargets.Union(referenceModel.Targets).ToArray();
 
             return referenceModel;
         }
@@ -398,6 +401,7 @@ namespace Marvin.Resources.Management
             {
                 Id = r.Id,
                 Name = r.Name,
+                Type = r.GetType().Name,
                 LocalIdentifier = r.LocalIdentifier,
                 GlobalIdentifier = r.GlobalIdentifier
             });

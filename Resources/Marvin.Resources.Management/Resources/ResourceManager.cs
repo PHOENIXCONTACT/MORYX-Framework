@@ -228,7 +228,8 @@ namespace Marvin.Resources.Management
                     var value = (IReferenceCollection)property.GetValue(resource);
 
                     var matches = MatchingRelations(relations, property);
-                    var resources = _resources.Where(pair => matches.Any(m => m.ReferenceId == pair.Key)).Select(pair => (IResource)pair.Value);
+                    var resources = matches.Select(m => _resources[m.ReferenceId])
+                        .OrderBy(r => r.LocalIdentifier).ThenBy(r => r.Name);
                     foreach (var referencedResource in resources)
                     {
                         value.UnderlyingCollection.Add(referencedResource);
@@ -354,15 +355,15 @@ namespace Marvin.Resources.Management
             foreach (var referenceProperty in ReferenceProperties(resource.GetType(), false))
             {
                 var matches = MatchingRelations(relations, referenceProperty);
-
-                // Save a single reference
-                if (typeof(IResource).IsAssignableFrom(referenceProperty.PropertyType))
+                if (typeof(IEnumerable<IResource>).IsAssignableFrom(referenceProperty.PropertyType))
                 {
-                    UpdateSingleReference(uow, entity, resource, referenceProperty, matches);
+                    // Save a collection reference
+                    UpdateCollectionReference(uow, entity, resource, referenceProperty, matches);
                 }
                 else
                 {
-                    UpdateCollectionReference(uow, entity, resource, referenceProperty, matches);
+                    // Save a single reference
+                    UpdateSingleReference(uow, entity, resource, referenceProperty, matches);
                 }
             }
 

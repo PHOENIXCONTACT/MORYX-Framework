@@ -3,7 +3,7 @@ using Marvin.Resources.UI.Interaction.ResourceInteraction;
 namespace Marvin.Resources.UI.Interaction
 {
     /// <summary>
-    /// Resource view model for the <see cref="Resource"/>
+    /// Resource view model for the <see cref="ResourceModel"/>
     /// </summary>
     public class ResourceViewModel : ResourceViewModelBase
     {
