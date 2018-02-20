@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Marvin.Configuration;
 using Marvin.Logging;
 using Marvin.Runtime.Kernel.Tests.ModuleMocks;
@@ -152,6 +153,8 @@ namespace Marvin.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
+            Thread.Sleep(3000); // Give the thread pool some time
+
             mockModule1.Verify(mock => mock.Initialize(), Times.Once);
             mockModule1.Verify(mock => mock.Start());
 

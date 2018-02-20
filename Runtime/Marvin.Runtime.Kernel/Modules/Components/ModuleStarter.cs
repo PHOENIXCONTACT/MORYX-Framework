@@ -21,10 +21,10 @@ namespace Marvin.Runtime.Kernel
         }
 
         /// <inheritdoc />
-        public void Start(IServerModule plugin)
+        public void Start(IServerModule module)
         {
-            plugin.Initialize();
-            StartModule(plugin);   
+            module.Initialize();
+            StartModule(module);   
         }
 
         /// <inheritdoc />
@@ -73,7 +73,7 @@ namespace Marvin.Runtime.Kernel
             }
             catch(Exception ex)
             {
-                _logger.LogException(LogLevel.Error, ex, "Failed to start plugin {0}", module.Name);
+                _logger.LogException(LogLevel.Error, ex, "Failed to start module {0}", module.Name);
             }
             // Forward result
             ModuleChangedState(module, module.State);
