@@ -284,10 +284,29 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
 
         $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MARVIN_BUILD_CONFIG /result:$nunitXml $testAssembly"
         $openCoverAgs += "-log:Debug", "-register:user", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
+        $openCoverAgs += "-returntargetcode" # We need the nunit return code
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
         
         & $global:OpenCoverCli $openCoverAgs
-        Invoke-ExitCodeCheck $LastExitCode;
+        
+        $exitCode = [int]::Parse($LastExitCode);
+        if ($exitCode -ne 0) {
+            $errorText = "";
+            switch ($exitCode) {
+                -1 { $errorText = "INVALID_ARG"; }
+                -2 { $errorText = "INVALID_ASSEMBLY"; }
+                -4 { $errorText = "INVALID_TEST_FIXTURE"; }
+                -5 { $errorText = "UNLOAD_ERROR"; }
+                Default { $errorText = "UNEXPECTED_ERROR"; }
+            }
+
+            if ($exitCode -gt 0) {
+                $errorText = "FAILED_TESTS ($exitCode)";
+            }
+
+            Write-Host "Nunit exited with $errorText for $projectName";
+            Invoke-ExitCodeCheck $exitCode;
+        }
 
         & $global:OpenCoverToCoberturaCli -input:$openCoverXml -output:$coberturaXml -sources:$rootPath
         Invoke-ExitCodeCheck $LastExitCode;
