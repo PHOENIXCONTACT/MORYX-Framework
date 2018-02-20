@@ -10,10 +10,16 @@ variables:
   MARVIN_BUILD_CONFIG: "Release"
   MARVIN_OPTIMIZE_CODE: "false"
 
+cache:
+  paths:
+    - .buildtools
+    - packages
+
 Build: 
   stage: build
   tags:
     - vs2015
+    - powershell
   script:
     - .\build.ps1 -SetAssemblyVersion -Build -Pack
   artifacts:
@@ -26,13 +32,15 @@ SmokeTests:
   tags:
     - vs2015
     - postgres
+    - powershell
   script: .\build.ps1 -Build -SmokeTests  
 
 UnitTests: 
   stage: test
-  script: .\build.ps1 -UnitTests 
   tags:
     - vs2015
+    - powershell
+  script: .\build.ps1 -UnitTests 
   artifacts:
     expire_in: 1 hrs
     paths:
@@ -40,18 +48,20 @@ UnitTests:
   
 IntegrationTests: 
   stage: test
-  script: .\build.ps1 -IntegrationTests
   tags:
     - vs2015
+    - powershell
+  script: .\build.ps1 -IntegrationTests
   artifacts:
     expire_in: 1 hrs
     paths:
       - 'Artifacts\Tests' 
 
 GenerateDocs:
+  stage: documentation
   tags:
     - vs2015
-  stage: documentation
+    - powershell
   script: 
     - .\build.ps1 -CoverReport -GenerateDocs 
   artifacts:
@@ -68,9 +78,10 @@ PublishDocs:
       - 'Artifacts\'
 
 PublishPackages: 
+  stage: publish
   tags:
     - vs2015
-  stage: publish
+    - powershell
   script: 
     - .\build.ps1 -Publish
   only: 
