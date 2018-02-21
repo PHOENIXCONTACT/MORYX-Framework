@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
+using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Modules.ModulePlugins;
@@ -34,6 +35,11 @@ namespace Marvin.Resources.Management
         /// Error reporting in case a resource crashes
         /// </summary>
         public IModuleErrorReporting ErrorReporting { get; set; }
+
+        /// <summary>
+        /// Logger for tracing and errors
+        /// </summary>
+        public IModuleLogger Logger { get; set; }
 
         /// <summary>
         /// Config of this module
@@ -104,8 +110,10 @@ namespace Marvin.Resources.Management
             {
                 AddResource(resource, false);
             }
+
             // Link them to each other
             Parallel.ForEach(allResources, LinkReferences);
+
             // Register events after all links were set
             foreach (var resource in _resources.Values)
             {
@@ -215,10 +223,7 @@ namespace Marvin.Resources.Management
                     if (referenceMatch != null)
                         property.SetValue(resource, referenceMatch);
                     else
-                    {
-                        var ids = matches.Select(m => m.ReferenceId);
-                        throw new InvalidCastException($"Type mismatch: Can not assign any resource from [{string.Join(",", ids)}] to {property.Name} on Id:{resource.Id}!");
-                    }
+                        Logger.LogEntry(LogLevel.Warning, "Type mismatch: Can not assign any resource from [{0}] to {1} on {2}:{3}!", string.Join(",", matches.Select(m => m.ReferenceId)), property.Name, resource.Id, resource.Name);
                 }
                 // Link a list of resources
                 else if (isEnumerable && referenceOverride == null)
