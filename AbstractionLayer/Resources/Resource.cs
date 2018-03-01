@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Marvin.Logging;
 using Marvin.Modules.ModulePlugins;
 using Marvin.Serialization;
+using Marvin.StateMachines;
 
 namespace Marvin.AbstractionLayer.Resources
 {
@@ -54,7 +55,8 @@ namespace Marvin.AbstractionLayer.Resources
         public virtual void Initialize()
         {
             Logger = Logger?.GetChild(Name, GetType());
-        } 
+        }
+
         ///
         public virtual void Start()
         {
@@ -121,5 +123,6 @@ namespace Marvin.AbstractionLayer.Resources
         {
             return $"{Id}:{Name} ({GetType().Name})";
         }
+ 
     }
 }

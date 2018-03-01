@@ -9,7 +9,6 @@ using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Modules;
-using Marvin.Modules.ModulePlugins;
 using Marvin.Resources.Model;
 using Marvin.Tools;
 using Newtonsoft.Json;
@@ -53,14 +52,12 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Direct access to all resources of the tree
         /// </summary>
-        private IDictionary<long, Resource> _resources;
+        private IDictionary<long, ResourceWrapper> _resources;
 
         /// <summary>
         /// Subset of public resources
         /// </summary>
         private List<IPublicResource> _publicResources;
-
-        private bool _disposed;
         #endregion
 
         #region LifeCycle
@@ -79,16 +76,17 @@ namespace Marvin.Resources.Management
             }
 
             // Boot resources
-            Parallel.ForEach(_resources.Values, resource =>
+            Parallel.ForEach(_resources.Values, resourceWrapper =>
             {
                 try
                 {
-                    resource.Initialize();
+                    resourceWrapper.Initialize();
                 }
                 catch (Exception e)
                 {
+                    resourceWrapper.ErrorOccured();
                     lock (_publicResources)
-                        _publicResources.Remove(resource as IPublicResource);
+                        _publicResources.Remove(resourceWrapper.Target as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -100,7 +98,7 @@ namespace Marvin.Resources.Management
         private void LoadResources(ICollection<ResourceCreationTemplate> allResources)
         {
             // Create dictionaries with initial capacity that should avoid the need of resizing
-            _resources = new Dictionary<long, Resource>(allResources.Count * 2);
+            _resources = new Dictionary<long, ResourceWrapper>(allResources.Count * 2);
             _publicResources = new List<IPublicResource>(allResources.Count);
 
             // Create resource objects on multiple threads
@@ -110,14 +108,14 @@ namespace Marvin.Resources.Management
             {
                 AddResource(resource, false);
             }
-
+            
             // Link them to each other
             Parallel.ForEach(allResources, LinkReferences);
 
             // Register events after all links were set
-            foreach (var resource in _resources.Values)
+            foreach (var resourceWrapper in _resources.Values)
             {
-                RegisterEvents(resource, resource as IPublicResource);
+                RegisterEvents(resourceWrapper.Target, resourceWrapper.Target as IPublicResource);
             }
         }
 
@@ -127,7 +125,7 @@ namespace Marvin.Resources.Management
         private void CreateRoot(IUnitOfWork uow)
         {
             // Create dictionaries with initial capacity that should avoid the need of resizing
-            _resources = new Dictionary<long, Resource>(64);
+            _resources = new Dictionary<long, ResourceWrapper>(64);
             _publicResources = new List<IPublicResource>(32);
 
             // Create a root resource
@@ -147,7 +145,7 @@ namespace Marvin.Resources.Management
             lock (_resources)
             {
                 // Add to collections
-                _resources[instance.Id] = instance;
+                _resources[instance.Id] = new ResourceWrapper(instance);
                 publicResource = instance as IPublicResource;
                 if (publicResource != null)
                     _publicResources.Add(publicResource);
@@ -217,7 +215,7 @@ namespace Marvin.Resources.Management
                     // Try to find a possible match for the property
                     var propertyType = property.PropertyType;
                     var referenceMatch = (from match in matches
-                                          let reference = _resources[match.ReferenceId]
+                                          let reference = _resources[match.ReferenceId].Target
                                           where propertyType.IsInstanceOfType(reference)
                                           select reference).ToArray();
                     if (referenceMatch.Length == 1)
@@ -233,7 +231,7 @@ namespace Marvin.Resources.Management
                     var value = (IReferenceCollection)property.GetValue(resource);
 
                     var matches = MatchingRelations(relations, property);
-                    var resources = matches.Select(m => _resources[m.ReferenceId])
+                    var resources = matches.Select(m => _resources[m.ReferenceId].Target)
                         .OrderBy(r => r.LocalIdentifier).ThenBy(r => r.Name);
                     foreach (var referencedResource in resources)
                     {
@@ -256,16 +254,17 @@ namespace Marvin.Resources.Management
         ///
         public void Start()
         {
-            Parallel.ForEach(_resources.Values, resource =>
+            Parallel.ForEach(_resources.Values, resourceWrapper =>
             {
                 try
                 {
-                    resource.Start();
+                    resourceWrapper.Start();
                 }
                 catch (Exception e)
                 {
+                    resourceWrapper.ErrorOccured();
                     lock (_publicResources)
-                        _publicResources.Remove(resource as IPublicResource);
+                        _publicResources.Remove(resourceWrapper.Target as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -273,11 +272,11 @@ namespace Marvin.Resources.Management
 
         public void Stop()
         {
-            Parallel.ForEach(_resources.Values, resource =>
+            Parallel.ForEach(_resources.Values, resourceWrapper =>
             {
                 try
                 {
-                    resource.Stop();
+                    resourceWrapper.Stop();
                 }
                 catch (Exception e)
                 {
@@ -289,15 +288,15 @@ namespace Marvin.Resources.Management
         ///
         public void Dispose()
         {
-            foreach (var resource in _resources.Values)
+            foreach (var resourceWrapper in _resources.Values)
             {
-                UnregisterEvents(resource, resource as IPublicResource);
+                UnregisterEvents(resourceWrapper.Target, resourceWrapper.Target as IPublicResource);
             }
         }
 
         #endregion
 
-        public Resource Get(long id) => _resources[id];
+        public Resource Get(long id) => _resources[id].Target;
 
         public Resource Create(string type)
         {
@@ -398,7 +397,7 @@ namespace Marvin.Resources.Management
             // Try to find a match that previously referenced another compatible resource
             var propertyType = referenceProperty.PropertyType;
             var relEntity = (from match in matches
-                             where propertyType.IsInstanceOfType(_resources[match.ReferenceId])
+                             where propertyType.IsInstanceOfType(_resources[match.ReferenceId].Target)
                              select match.Entity).SingleOrDefault();
             if (relEntity == null && referencedResource != null)
             {
@@ -576,7 +575,7 @@ namespace Marvin.Resources.Management
                     var referenceId = relationEntity.SourceId == instance.Id
                         ? relationEntity.TargetId
                         : relationEntity.SourceId;
-                    var reference = _resources[referenceId];
+                    var reference = _resources[referenceId].Target;
 
                     var property = GetProperty(reference, instance);
                     if (property != null)
