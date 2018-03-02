@@ -9,7 +9,7 @@ namespace Marvin.Workflows
     public struct NullContext : IWorkplanContext
     {
         /// <see cref="IWorkplanContext"/>
-        public bool IsDisabled(long stepId)
+        public bool IsDisabled(IWorkplanStep step)
         {
             return false;
         }

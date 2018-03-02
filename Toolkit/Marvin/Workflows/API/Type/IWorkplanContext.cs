@@ -11,6 +11,6 @@ namespace Marvin.Workflows
         /// <summary>
         /// Check if a step was disabled
         /// </summary>
-        bool IsDisabled(long stepId);
+        bool IsDisabled(IWorkplanStep step);
     }
 }

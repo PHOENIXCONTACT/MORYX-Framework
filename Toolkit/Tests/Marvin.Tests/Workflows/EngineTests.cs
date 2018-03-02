@@ -23,15 +23,15 @@ namespace Marvin.Tests.Workflows
             // Simple assert
             Assert.AreEqual(workplan.Connectors.Count(), workflow.Places.Count(), "Not all connectors transformed to places!");
             Assert.AreEqual(workplan.Steps.Count(), workflow.Transitions.Count(), "Not all steps transformed to transitions!");
-            Assert.IsTrue(workflow.Transitions.Cast<DummyTransition>().All(t => t.Context.IsDisabled(42)), "Context not passed to all transitions!");
+            Assert.IsTrue(workflow.Transitions.Cast<DummyTransition>().All(t => t.Context.IsDisabled(new DummyStep(1) {Id = 42})), "Context not passed to all transitions!");
             // TODO: More asserts regarding the structure
         }
 
         private struct FakeContext : IWorkplanContext
         {
-            public bool IsDisabled(long stepId)
+            public bool IsDisabled(IWorkplanStep step)
             {
-                return stepId == 42;
+                return step.Id == 42;
             }
         }
 
