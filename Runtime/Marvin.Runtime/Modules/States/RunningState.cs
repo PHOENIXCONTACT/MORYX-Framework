@@ -6,6 +6,11 @@
         {
         }
 
+        public override void OnEnter()
+        {
+            Context.Started();
+        }
+
         public override void Initialize()
         {
             // Nothing to do here

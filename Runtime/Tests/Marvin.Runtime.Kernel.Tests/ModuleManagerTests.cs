@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Marvin.Configuration;
 using Marvin.Logging;
+using Marvin.Runtime.Kernel.Tests.Dummys;
 using Marvin.Runtime.Kernel.Tests.ModuleMocks;
 using Marvin.Runtime.Modules;
 using Moq;
@@ -15,6 +15,7 @@ namespace Marvin.Runtime.Kernel.Tests
     {
         private Mock<IConfigManager> _mockConfigManager;
         private Mock<ILoggerManagement> _mockLoggerManagement;
+        private Mock<IModuleLogger> _mockLogger;
 
         [SetUp]
         public void Setup()
@@ -22,11 +23,12 @@ namespace Marvin.Runtime.Kernel.Tests
             _mockConfigManager = new Mock<IConfigManager>();
             var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = new List<ManagedModuleConfig>()};
             _mockConfigManager.Setup(mock => mock.GetConfiguration<ModuleManagerConfig>()).Returns(moduleManagerConfig);
+            _mockConfigManager.Setup(mock => mock.GetConfiguration<RuntimeConfigManagerTestConfig2>()).Returns(new RuntimeConfigManagerTestConfig2());
 
             _mockLoggerManagement = new Mock<ILoggerManagement>();
-            var mockLogger = new Mock<IModuleLogger>();
+            _mockLogger = new Mock<IModuleLogger>();
             _mockLoggerManagement.Setup(mock => mock.ActivateLogging(It.IsAny<ILoggingHost>()))
-                .Callback((ILoggingHost par) => par.Logger = mockLogger.Object);
+                .Callback((ILoggingHost par) => par.Logger = _mockLogger.Object);
         }
 
 
@@ -37,6 +39,17 @@ namespace Marvin.Runtime.Kernel.Tests
                 ServerModules = modules,
                 ConfigManager = _mockConfigManager.Object,
                 LoggerManagement = _mockLoggerManagement.Object
+            };
+        }
+
+        private LifeCycleBoundFacadeTestModule CreateLifeCycleBoundFacadeTestModuleUnderTest()
+        {
+            return new LifeCycleBoundFacadeTestModule
+            {
+                LoggerManagement = _mockLoggerManagement.Object,
+                Logger = _mockLogger.Object,
+                ConfigManager = _mockConfigManager.Object,
+                ContainerFactory = new ModuleContainerFactory()
             };
         }
 
@@ -215,6 +228,53 @@ namespace Marvin.Runtime.Kernel.Tests
 
             // Assert
             Assert.IsTrue(eventFired, "ModuleManager doesn't observe state changed events of modules.");
+        }
+
+        [Test]
+        public void CheckLifeCycleBoundActivatedCountIs1()
+        {
+            // Argange
+            var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
+            var moduleManager = CreateObjectUnderTest(new[] { module });
+
+            // Act
+            moduleManager.Initialize();
+            moduleManager.StartModules();
+
+            while (module.State != ServerModuleState.Running)
+            {
+                Thread.Sleep(100);
+            }
+
+            // Assert
+            Assert.AreEqual(1, module.ActivatedCount);
+        }
+
+        [Test]
+        public void CheckLifeCycleBoundDeactivatedCountIs1()
+        {
+            // Argange
+            var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
+            var moduleManager = CreateObjectUnderTest(new[] { module });
+
+            // Act
+            moduleManager.Initialize();
+            moduleManager.StartModules();
+            
+            while (module.State != ServerModuleState.Running)
+            {
+                Thread.Sleep(100);
+            }
+
+            moduleManager.StopModules();
+
+            while (module.State != ServerModuleState.Stopped)
+            {
+                Thread.Sleep(100);
+            }
+
+            // Assert
+            Assert.AreEqual(1, module.ActivatedCount);
         }
     }
 }

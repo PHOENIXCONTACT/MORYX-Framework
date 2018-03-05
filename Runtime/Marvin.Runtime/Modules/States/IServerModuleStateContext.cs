@@ -19,6 +19,11 @@ namespace Marvin.Runtime.Modules
         void Start();
 
         /// <summary>
+        /// Called when module was started
+        /// </summary>
+        void Started();
+
+        /// <summary>
         /// Stop the module
         /// </summary>
         void Stop();
@@ -27,10 +32,5 @@ namespace Marvin.Runtime.Modules
         /// Adds a notification to the module
         /// </summary>>
         void LogNotification(object sender, IModuleNotification notification);
-
-        /// <summary>
-        /// Called if the health state is invalid for the current state
-        /// </summary>
-        void InvalidHealthState(ServerModuleState state);
     }
 }

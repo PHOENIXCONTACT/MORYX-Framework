@@ -18,7 +18,7 @@ namespace Marvin.Runtime.Modules
         /// <summary>
         /// All facades that were activated
         /// </summary>
-        private readonly List<IFacadeControl> _activeFacades = new List<IFacadeControl>();
+        private readonly ICollection<IFacadeControl> _activeFacades = new List<IFacadeControl>();
 
         /// <summary>
         /// Activate our public API facade
@@ -47,6 +47,21 @@ namespace Marvin.Runtime.Modules
             FillProperties(facade, (a, b) => null);
 
             _activeFacades.Remove(facade);
+
+            var lifeCycleBoundFacade = facade as ILifeCycleBoundFacade;
+            lifeCycleBoundFacade?.Deactivated();
+        }
+
+
+        /// <inheritdoc />
+        protected internal sealed override void OnStarted()
+        {
+            base.OnStarted();
+
+            foreach (var facade in _activeFacades.OfType<ILifeCycleBoundFacade>())
+            {
+                facade.Activated();
+            }
         }
 
         private void FillProperties(object instance, Func<IContainer, PropertyInfo, object> fillingFunc)

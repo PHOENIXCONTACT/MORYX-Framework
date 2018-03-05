@@ -18,7 +18,7 @@ namespace Marvin.Runtime.Modules
         void Activate();
 
         /// <summary>
-        /// Module is stopping and facade deactivated
+        /// Module is stopping and facade deactivates
         /// </summary>
         void Deactivate();
     }
