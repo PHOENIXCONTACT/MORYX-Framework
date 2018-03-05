@@ -1,18 +1,8 @@
-﻿using System;
-using Marvin.Runtime.Modules;
+﻿using Marvin.Runtime.Modules;
 
 namespace Marvin.DependentTestModule
 {
-    public class DependentTestModuleFacade : IFacadeControl, IDependentTestModule
+    public class DependentTestModuleFacade : FacadeBase, IDependentTestModule
     {
-        public Action ValidateHealthState { get; set; }
-
-        public void Activate()
-        {
-        }
-
-        public void Deactivate()
-        {
-        }
     }
 }

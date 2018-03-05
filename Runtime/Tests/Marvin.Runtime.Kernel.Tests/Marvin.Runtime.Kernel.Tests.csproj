@@ -51,8 +51,10 @@
     <Compile Include="Dummys\RuntimeConfigManagerTestConfig1.cs" />
     <Compile Include="Dummys\RuntimeConfigManagerTestConfig2.cs" />
     <Compile Include="ModuleManagerTests.cs" />
+    <Compile Include="ModuleMocks\Facade\TestFacade.cs" />
     <Compile Include="ModuleMocks\IFacadeA.cs" />
     <Compile Include="ModuleMocks\IFacadeB.cs" />
+    <Compile Include="ModuleMocks\LifeCycleBoundFacadeTestModule.cs" />
     <Compile Include="ModuleMocks\ModuleA.cs" />
     <Compile Include="ModuleMocks\ModuleADependend.cs" />
     <Compile Include="ModuleMocks\ModuleB1.cs" />
@@ -74,7 +76,7 @@
       <Name>Marvin.Runtime.Kernel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Marvin.Runtime\Marvin.Runtime.csproj">
-      <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
+      <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>
       <Name>Marvin.Runtime</Name>
     </ProjectReference>
   </ItemGroup>

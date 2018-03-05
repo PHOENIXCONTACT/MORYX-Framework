@@ -33,7 +33,7 @@ namespace Marvin.Runtime.Modules
 
         public virtual void ValidateHealthState()
         {
-            Context.InvalidHealthState(Classification);
+            throw new HealthStateException(Classification);
         }
 
         [StateDefinition(typeof(StoppedState), IsInitial = true)]

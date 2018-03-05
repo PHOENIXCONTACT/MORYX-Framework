@@ -62,7 +62,7 @@
       <Name>Marvin.Runtime.Kernel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Marvin.Runtime\Marvin.Runtime.csproj">
-      <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
+      <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>
       <Name>Marvin.Runtime</Name>
     </ProjectReference>
   </ItemGroup>

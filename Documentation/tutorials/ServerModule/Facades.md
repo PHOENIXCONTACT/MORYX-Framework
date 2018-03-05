@@ -1,27 +1,28 @@
 ---
 uid: GettingStarted.Facades
 ---
-Facades
-========
+# Facades
 
-Facades are the Runtime ways of interaction between server modules. This tutorial shall cover the both ends of this concept - exporting a facade and importing a facade. This tutorial does require basic knowledge of server modules. The first steps do not represent good code style and should not be used as a reference for facade design. Please complete the tutorial to get the right understanding of how facades work and how they are supposed to be used. As a starting base we need two server modules. Make sure to clear the facade entries on the first tab. Name one module Facades.Dependency and the othter Facades.Dependent. Your solutions should now look like this: 
+Facades are the Runtime ways of interaction between server modules. This tutorial shall cover the both ends of this concept - exporting a facade and importing a facade. This tutorial does require basic knowledge of server modules. The first steps do not represent good code style and should not be used as a reference for facade design. Please complete the tutorial to get the right understanding of how facades work and how they are supposed to be used. As a starting base we need two server modules. Make sure to clear the facade entries on the first tab. Name one module Facades.Dependency and the othter Facades.Dependent. Your solutions should now look like this:
 
-![](images/FacadeGuideProjects.png)
+![Facade guide projects](images/FacadeGuideProjects.png)
 
 ## Exporting a facade
+
 In the first step we will create a facade and export it in our dependency module.
 Creating a facade:
+
 - Open the Facades.Dependency project and create a folder Facade
 - Add an interface "IFacade.cs" to the folder
 - Define a "Foo"-method in the interface that accepts two integers and returns an integer.
 - Add a class "Facade.cs" to the folder an make it implement "IFacade".
 - Implement "Foo" by returning the sum of a and b
 
-After we defined our facade we want to export it from the server module. All we must do is let our module controller implement the "IFacadeContainer<T>" interface. Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file: 
+After we defined our facade we want to export it from the server module. All we must do is let our module controller implement the [IFacadeContainer](xref:Marvin.Runtime.Modules.IFacadeContainer´1) interface. Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file:
 
-![](images/FacadeExport.png)
+![Facade export](images/FacadeExport.png)
 
-It is important, that the property always returns the same object in order for the Runtime to function correctly. 
+It is important, that the property always returns the same object in order for the Runtime to function correctly.
 
 The facade property should be implemented explicit for a simple reason. If our module should export more than one facade it would have two properties with the same name but different type. While this is not possible for implicit class members, explicit interface implementations do not cause any conflicts. In our case this does not matter but since it does no harm for single facades.
 
@@ -30,6 +31,7 @@ IFacade IFacadeContainer<IFacade>.Facade => _facade;
 ````
 
 ## Importing a facade
+
 Now that we have exported the facade we want to use it in another server module. To do this our dependent module must reference the dependency module. In real world applications the facade interface will be located in a separate bundle library to reduce coupling of dependency and implementation.
 
 Steps:
@@ -40,24 +42,26 @@ Steps:
   3.1 IsStartDependency = true will instruct the module manager to bind the dependent modules life cycle to the dependency ones
   3.2 IsOptional = true will allow this property to be null if no other module exports it. If this remains false the module manager will abort the boot process due to incomplete dependencies.
 
-Your dependent module should look like this: 
+Your dependent module should look like this:
 
-![](images/FacadeGuideDependent.png)
+![Dependant](images/FacadeGuideDependent.png)
 
 Of course a module can import more than one facade. Just add more properties of the facades you want to import and decorate them with RequiredModuleApiAttribute
 
 ## Importing many facades
+
 Like with every DI-container the Runtime facade linker is able to inject a collection of instances if more than one component exports the interface. While most frameworks will leave you the choice of collection type. Currently collection injection only works with arrays. So far the dependency manager does not take collection injection into account when it comes to start dependencies. Therefor be careful when accessing the facades as the might raise InvalidHealthStateExceptions.
-Usage in code: 
+Usage in code:
 
 ````cs
 [RequiredModuleApi]
 public IFacade[] AllInstances { get; set; }
 ````
 
-# Facade Design Guideline
+## Facade Design Guideline
 
 ## Bidirectional Communication
+
 Occasionally the relationship between two modules requires bidirectional communication. The standard .NET way to to this is by using method calls from the dependent
 to its dependencies and events/callbacks from dependency to dependent. The starting behaviour of the Runtime however created problems in the kind of missed events
 when the dependency raised events before the listener has reached the necessary state. After many long discussions including circular dependencies, three way handshake
@@ -93,5 +97,40 @@ public interface IJobManagement
     /// Event raised when was finished and is removed from the list
     /// </summary>
     public EventHandler<Job> JobFinished;
+}
+````
+
+## Lifecycle bound facades
+
+Sometimes you need to know when a facade gets `activated` or `deactivated`. It's quite possible to get notified if the activation state of a facade has been changed. Your facade should inherit from [FacadeBase](xref:Marvin.Runtime.Modules.ILifeCycleBoundFacade) or at least from [ILifeCycleBoundFacade](xref:Marvin.Runtime.Modules.FacadeBase):
+
+````cs
+public class CustomFacade : FacadeBase, ICustomFacade
+{
+
+}
+````
+
+Your last step will be to register to the facade event:
+
+````cs
+public class MyPlugin : IPlugin
+{
+    public ICustomFacade CustomFacade { get; set; }
+
+    public void Start()
+    {
+        ((ILifeCycleBoundFacade)CustomFacade).StateChanged += FacadeStateChanged;
+    }
+
+    public void Stop()
+    {
+        ((ILifeCycleBoundFacade)CustomFacade).StateChanged -= FacadeStateChanged;
+    }
+
+    private void FacadeStateChanged(object sender, bool newActivationState)
+    {
+        // Do something
+    }
 }
 ````

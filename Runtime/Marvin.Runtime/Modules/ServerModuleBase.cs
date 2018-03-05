@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Marvin.Configuration;
 using Marvin.Container;
@@ -18,6 +19,7 @@ namespace Marvin.Runtime.Modules
     /// Base class for a server module. Provides all necessary methods to be a server module.  
     /// </summary>
     /// <typeparam name="TConf">Configuration type for the server module.</typeparam>
+    [DebuggerDisplay("{" + nameof(Name) + "} - {" + nameof(State) + "}")]
     public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IServerModuleStateContext, ILoggingHost, ILoggingComponent
         where TConf : class, IConfig, new()
     {
@@ -26,11 +28,10 @@ namespace Marvin.Runtime.Modules
         /// </summary>
         public abstract string Name { get; }
 
+        /// <inheritdoc />
         IServerModuleConsole IServerModule.Console => Container?.Resolve<IServerModuleConsole>();
 
-        /// <summary>
-        /// Notifications raised within module and during state changes.
-        /// </summary>
+        /// <inheritdoc />
         public INotificationCollection Notifications { get; } = new ServerNotificationCollection();
 
         /// <summary>
@@ -49,12 +50,6 @@ namespace Marvin.Runtime.Modules
         /// </summary>
         protected void ValidateHealthState() => _state.ValidateHealthState();
 
-        /// <inheritdoc />
-        void IServerModuleStateContext.InvalidHealthState(ServerModuleState state)
-        {
-            throw new HealthStateException(state);
-        }
-
         #endregion
 
         #region Logging
@@ -65,7 +60,7 @@ namespace Marvin.Runtime.Modules
         public ILoggerManagement LoggerManagement { get; set; }
 
         /// <summary>
-        /// Logger of the current state.
+        /// Logger of this module.
         /// </summary>
         public IModuleLogger Logger { get; set; }
 
@@ -120,6 +115,18 @@ namespace Marvin.Runtime.Modules
         void IServerModule.Start()
         {
             _state.Start();
+        }
+
+        void IServerModuleStateContext.Started()
+        {
+            OnStarted();
+        }
+
+        /// <summary>
+        /// Called when module has been started
+        /// </summary>
+        protected internal virtual void OnStarted()
+        {
         }
 
         void IServerModuleStateContext.Start()
@@ -320,14 +327,5 @@ namespace Marvin.Runtime.Modules
         }
 
         #endregion
-
-        /// <summary>
-        /// Override to provide specific information about the server module.
-        /// </summary>
-        /// <returns>Name and current health state of the module.d</returns>
-        public override string ToString()
-        {
-            return $"{Name} - {State}";
-        }
     }
 }
