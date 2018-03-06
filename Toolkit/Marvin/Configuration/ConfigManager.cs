@@ -17,9 +17,9 @@ namespace Marvin.Configuration
         /// <summary>
         /// Array of processors used to scan the config for missing nodes
         /// </summary>
-        protected virtual NodeProcessor[] NodeProcessors { get; } =
+        protected virtual IValueProvider[] ValueProviders { get; } =
         {
-            DefaultValueProvider.CheckPropertyForDefault
+            new DefaultValueProvider()
         };
 
         /// <inheritdoc />
@@ -81,7 +81,8 @@ namespace Marvin.Configuration
                 {
                     var fileContent = File.ReadAllText(configPath);
                     config = (IConfig)Json.Deserialize(fileContent, confType, JsonSettings.ReadableReplace);
-                    ValueProvider.FillProperties(config, NodeProcessors);
+
+                    ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
                 }
                 catch (Exception e)
                 {
@@ -107,7 +108,7 @@ namespace Marvin.Configuration
             configBase?.Initialize();
 
             // Fill default values
-            ValueProvider.FillProperties(config, NodeProcessors);
+            ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
             
             return config;
         }

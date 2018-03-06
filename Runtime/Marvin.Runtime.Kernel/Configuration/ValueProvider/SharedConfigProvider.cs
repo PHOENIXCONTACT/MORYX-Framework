@@ -5,23 +5,24 @@ using Marvin.Runtime.Configuration;
 
 namespace Marvin.Runtime.Kernel
 {
-    internal class SharedConfigProvider
+    internal class SharedConfigProvider : IValueProvider
     {
         private readonly IRuntimeConfigManager _configManager;
+
         public SharedConfigProvider(IRuntimeConfigManager configManager)
         {
             _configManager = configManager;
         }
 
-        internal bool CheckForSharedConfig(object parent, PropertyInfo property)
+        public ValueProviderResult Handle(object parent, PropertyInfo property)
         {
             var sharedAtt = property.GetCustomAttribute<SharedConfigAttribute>();
             if (sharedAtt == null || !typeof(IConfig).IsAssignableFrom(property.PropertyType))
-                return false;
+                return ValueProviderResult.Skipped;
 
             var sharedConf = _configManager.GetConfiguration(property.PropertyType, sharedAtt.UseCopy);
             property.SetValue(parent, sharedConf);
-            return true;
+            return ValueProviderResult.Handled;
         }
 
         internal IEnumerable<IConfig> IncludedSharedConfigs(object parent)

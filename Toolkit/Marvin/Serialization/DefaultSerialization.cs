@@ -39,7 +39,7 @@ namespace Marvin.Serialization
             else
             {
                 prototype = Activator.CreateInstance(elementType);
-                ValueProvider.FillProperties(prototype, DefaultValueProvider.CheckPropertyForDefault);
+                ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
             }
 
             return new[]

@@ -115,7 +115,6 @@
     <Compile Include="Configuration\ConfigSerialization.cs" />
     <Compile Include="Configuration\Defaults\CpuCountAttribute.cs" />
     <Compile Include="Configuration\Defaults\CurrentHostNameAttribute.cs" />
-    <Compile Include="Configuration\DefaultValueProvider.cs" />
     <Compile Include="Configuration\IConfig.cs" />
     <Compile Include="Configuration\IConfigManager.cs" />
     <Compile Include="Configuration\InvalidConfigException.cs" />
@@ -132,6 +131,12 @@
     <Compile Include="Configuration\PossibleValues\RelativeDirectoriesAttribute.cs" />
     <Compile Include="Configuration\PossibleValues\StateMachineKeysAttribute.cs" />
     <Compile Include="Configuration\UpdatableEntry.cs" />
+    <Compile Include="Configuration\ValueProvider\Filters\DefaultCanWriteValueProviderFilter.cs" />
+    <Compile Include="Configuration\ValueProvider\IValueProvider.cs" />
+    <Compile Include="Configuration\ValueProvider\IValueProviderFilter.cs" />
+    <Compile Include="Configuration\ValueProvider\Providers\DefaultValueProvider.cs" />
+    <Compile Include="Configuration\ValueProvider\ValueProviderExecutor.cs" />
+    <Compile Include="Configuration\ValueProvider\ValueProviderExecutorSettings.cs" />
     <Compile Include="Container\Attributes\ComponentAttribute.cs" />
     <Compile Include="Container\Attributes\ComponentLoaderIgnoreAttribute.cs" />
     <Compile Include="Container\Attributes\GlobalComponentAttribute.cs" />
@@ -266,7 +271,6 @@
     <Compile Include="Tools\ReflectionTool.cs" />
     <Compile Include="Users\OperationAccess.cs" />
     <Compile Include="StateMachines\IState.cs" />
-    <Compile Include="ValueProvider.cs" />
     <Compile Include="Workflows\API\Editing\ConnectionPoint.cs" />
     <Compile Include="Workflows\API\Editing\ConnectorModel.cs" />
     <Compile Include="Workflows\API\Editing\IWorkplanEditing.cs" />
@@ -385,6 +389,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

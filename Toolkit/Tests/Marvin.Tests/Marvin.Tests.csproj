@@ -77,6 +77,12 @@
     <Compile Include="Configuration\TestConfig.cs" />
     <Compile Include="Configuration\Transformer\ModelTransformerTest.cs" />
     <Compile Include="Configuration\Transformer\TransformerTestConfig.cs" />
+    <Compile Include="Configuration\ValueProvider\NoStringValueProviderFilter.cs" />
+    <Compile Include="Configuration\ValueProvider\TestConfig1.cs" />
+    <Compile Include="Configuration\ValueProvider\TestConfig4.cs" />
+    <Compile Include="Configuration\ValueProvider\TestConfig3.cs" />
+    <Compile Include="Configuration\ValueProvider\TestConfig2.cs" />
+    <Compile Include="Configuration\ValueProvider\ValueProviderTests.cs" />
     <Compile Include="Extensions\AppDomainExtensionTests.cs" />
     <Compile Include="Extensions\AppDomain\AbstractBaseClass.cs" />
     <Compile Include="Extensions\AppDomain\BaseClass.cs" />

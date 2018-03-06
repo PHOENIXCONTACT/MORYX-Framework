@@ -20,17 +20,17 @@ namespace Marvin.Runtime.Kernel
         public RuntimeConfigManager()
         {
             _sharedProvider = new SharedConfigProvider(this);
-            NodeProcessors = new NodeProcessor[]
+            ValueProviders = new IValueProvider[]
             {
-                _sharedProvider.CheckForSharedConfig,
-                DefaultValueProvider.CheckPropertyForDefault
+                new SharedConfigProvider(this), 
+                new DefaultValueProvider(), 
             };
         }
 
         /// <summary>
-        /// Override NodeProcessors to include shared config provider
+        /// Override ValueProviders to include shared config provider
         /// </summary>
-        protected override NodeProcessor[] NodeProcessors { get; }
+        protected override IValueProvider[] ValueProviders { get; }
 
         /// <summary>
         /// Fill all available emtpy properties of the config.
@@ -38,7 +38,7 @@ namespace Marvin.Runtime.Kernel
         /// <param name="obj">The config for which the fill process should be done.</param>
         public void FillEmpty(object obj)
         {
-            ValueProvider.FillProperties(obj, NodeProcessors);
+            ValueProviderExecutor.Execute(obj, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
         }
 
         /// <inheritdoc />

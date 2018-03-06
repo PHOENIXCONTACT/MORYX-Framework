@@ -5,29 +5,29 @@ using System.Reflection;
 namespace Marvin.Configuration
 {
     /// <summary>
-    /// Provides default values for empty properties found in configuration classs
+    /// ValueProvider that sets property's value given from a <see cref="DefaultValueAttribute"/>
     /// </summary>
-    public class DefaultValueProvider
+    public sealed class DefaultValueProvider : IValueProvider
     {
-        /// <summary>
-        /// Check if this property can be filled with a default value
-        /// </summary>
-        public static bool CheckPropertyForDefault(object parentObject, PropertyInfo property)
+        /// <inheritdoc />
+        public ValueProviderResult Handle(object parent, PropertyInfo property)
         {
             var propType = property.PropertyType;
 
             // Provide default entries
-            var value = property.GetValue(parentObject);
-            if (object.Equals(value, DefaultValue(propType)))
+            var value = property.GetValue(parent);
+            if (Equals(value, DefaultValue(propType)))
             {
                 value = ProvideDefaultValue(property);
-                if (value == null || !property.CanWrite)
-                    return true;
+                if (value == null)
+                    return ValueProviderResult.Skipped;
 
-                property.SetValue(parentObject, value);
+                property.SetValue(parent, value);
+
+                return ValueProviderResult.Handled;
             }
 
-            return !propType.IsClass || propType == typeof(string);
+            return ValueProviderResult.Skipped;
         }
 
         private static object DefaultValue(Type propType)
@@ -43,10 +43,16 @@ namespace Marvin.Configuration
                 if (propertyType.IsArray)
                 {
                     var elementType = propertyType.GetElementType();
+
+                    if (elementType == null)
+                        return null;
+
                     return Array.CreateInstance(elementType, 0);
                 }
+
                 return Activator.CreateInstance(propertyType);
             }
+
             var attribute = property.GetCustomAttribute<DefaultValueAttribute>(false);
             if (attribute == null)
                 return null;
