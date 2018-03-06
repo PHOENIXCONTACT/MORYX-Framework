@@ -79,7 +79,7 @@
     <Compile Include="Configuration\ConfigLiveUpdater.cs" />
     <Compile Include="Configuration\RuntimeConfigManager.cs" />
     <Compile Include="Configuration\IConfigLiveUpdate.cs" />
-    <Compile Include="Configuration\SharedConfigProvider.cs" />
+    <Compile Include="Configuration\ValueProvider\SharedConfigProvider.cs" />
     <Compile Include="Container\TypedHostFactory.cs" />
     <Compile Include="Container\WcfLocalContainer.cs" />
     <Compile Include="HeartOfGold.cs" />
