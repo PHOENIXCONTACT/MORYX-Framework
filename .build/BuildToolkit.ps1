@@ -430,7 +430,7 @@ function Set-Version ([string]$MajorMinorPatch) {
         Write-Debug "Untagged"
 
         # Build number replacement is padded to 6 places
-        $buildNumber = "$env:MARVIN_BUILDNUMBER".Trim().Trim('0').PadLeft(6,"0");
+        $buildNumber = "$env:MARVIN_BUILDNUMBER".Trim().PadLeft(6,"0");
 
         # This is a general branch commit
         $branch = $env:MARVIN_BRANCH
