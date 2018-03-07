@@ -219,11 +219,11 @@ namespace Marvin.Resources.Management
                     var referenceMatch = (from match in matches
                                           let reference = _resources[match.ReferenceId]
                                           where propertyType.IsInstanceOfType(reference)
-                                          select reference).SingleOrDefault();
-                    if (referenceMatch != null)
+                                          select reference).ToArray();
+                    if (referenceMatch.Length == 1)
                         property.SetValue(resource, referenceMatch);
                     else
-                        Logger.LogEntry(LogLevel.Warning, "Type mismatch: Can not assign any resource from [{0}] to {1} on {2}:{3}!", string.Join(",", matches.Select(m => m.ReferenceId)), property.Name, resource.Id, resource.Name);
+                        Logger.LogEntry(LogLevel.Warning, "Type mismatch: Can not assign any resource from [{0}] to {1} on {2}:{3} or too many matches!", string.Join(",", matches.Select(m => m.ReferenceId)), property.Name, resource.Id, resource.Name);
                 }
                 // Link a list of resources
                 else if (isEnumerable && referenceOverride == null)
