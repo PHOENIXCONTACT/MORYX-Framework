@@ -75,10 +75,6 @@
     <Compile Include="Repository\UnitOfWorkFactoryBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin.Container\Marvin.Container.csproj">
-      <Project>{3bc04a3b-24d6-4e33-989d-33366c47dc48}</Project>
-      <Name>Marvin.Container</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin\Marvin.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
       <Name>Marvin</Name>

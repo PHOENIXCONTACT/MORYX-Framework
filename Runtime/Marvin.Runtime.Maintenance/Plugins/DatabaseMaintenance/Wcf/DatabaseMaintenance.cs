@@ -268,7 +268,6 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
                     Server = dbConfig.Host,
                     Port = dbConfig.Port,
                     Database = dbConfig.Database,
-                    //TODO: Schema = dbConfig.Schema,
                     User = dbConfig.Username,
                     Password = dbConfig.Password
                 },
@@ -313,9 +312,6 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
                 Directory.CreateDirectory(backupDir);
                 return new BackupModel[0];
             }
-
-            if (!Directory.Exists(backupDir))
-                return new BackupModel[0];
 
             var allBackups = Directory.GetFiles(backupDir, "*.sql").ToList();
 

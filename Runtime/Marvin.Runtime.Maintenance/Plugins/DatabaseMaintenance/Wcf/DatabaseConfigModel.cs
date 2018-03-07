@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using Marvin.Model;
 
 namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
 {
@@ -31,7 +30,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
         /// Schema in server
         /// </summary>
         [DataMember]
-        public string Schema { get; set; }
+        public string Schema { get; set; } //TODO: Remove with new MaintenanceWeb
 
         /// <summary>
         /// Databse user
@@ -40,7 +39,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
         public string User { get; set; }
 
         /// <summary>
-        /// Password for <see cref="IDatabaseConfig.User"/>
+        /// Password for the username
         /// </summary>
         [DataMember]
         public string Password { get; set; }

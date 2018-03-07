@@ -31,7 +31,7 @@ if ($SetAssemblyVersion) {
 
 if ($Build) {
     Invoke-Build ".\MarvinPlatform.sln"
-    Install-EddieLight "3.0.4" "Runtime\Marvin.Runtime.Console\bin\$env:MARVIN_BUILD_CONFIG\EddieLight\";
+    Install-EddieLight "3.0.5" "Runtime\Marvin.Runtime.Console\bin\$env:MARVIN_BUILD_CONFIG\EddieLight\";
 }
 
 if ($SmokeTests) {

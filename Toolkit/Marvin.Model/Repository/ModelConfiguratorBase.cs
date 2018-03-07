@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using Marvin.Container;
+using Marvin.Tools;
 
 namespace Marvin.Model
 {
@@ -12,9 +12,10 @@ namespace Marvin.Model
     /// </summary>
     public abstract class ModelConfiguratorBase : IModelConfigurator
     {
-        private readonly IContainer _container;
         private readonly IDbContextFactory _contextFactory;
-        
+        private IDictionary<Type, IModelSetup> _setupDict;
+        private IDictionary<Type, IModelScript> _scriptDict;
+
         /// <summary>
         /// Current <see cref="IUnitOfWorkFactory"/> for the configurator
         /// </summary>
@@ -36,16 +37,14 @@ namespace Marvin.Model
             if (_contextFactory == null)
                 throw new InvalidOperationException("Factory have to implement " + nameof(IDbContextFactory));
 
-            //TODO: find better way
             var factoryAttr = unitOfWorkFactory.GetType().GetCustomAttribute<ModelFactoryAttribute>();
             if (factoryAttr == null)
                 throw new InvalidOperationException("Factory has to be attibuted with the: " + nameof(ModelFactoryAttribute));
 
             TargetModel = factoryAttr.TargetModel;
 
-            _container = new CastleContainer();
-            _container.LoadComponents<IModelSetup>(FilterTypeByModelAttribute);
-            _container.LoadComponents<IModelScript>(FilterTypeByModelAttribute);
+            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(FilterTypeByModelAttribute).ToDictionary(t => t, t => (IModelSetup)null);
+            _scriptDict = ReflectionTool.GetPublicClasses<IModelScript>(FilterTypeByModelAttribute).ToDictionary(t => t, t => (IModelScript)null);
         }
 
         private bool FilterTypeByModelAttribute(Type type)
@@ -166,13 +165,32 @@ namespace Marvin.Model
         /// <inheritdoc />
         public IEnumerable<IModelSetup> GetAllSetups()
         {
-            return _container.ResolveAll<IModelSetup>();
+            return GetOrCreateFromDict(_setupDict);
         }
 
         /// <inheritdoc />
         public IEnumerable<IModelScript> GetAllScripts()
         {
-            return _container.ResolveAll<IModelScript>();
+            return GetOrCreateFromDict(_scriptDict);
+        }
+
+        /// <summary>
+        /// Creates the instance from the given IDictionary{Type, object}
+        /// </summary>
+        private static IEnumerable<T> GetOrCreateFromDict<T>(IDictionary<Type, T> dict)
+        {
+            foreach (var kvPair in dict)
+            {
+                if (kvPair.Value == null)
+                {
+                    dict[kvPair.Key] = (T)Activator.CreateInstance(kvPair.Key);
+                    yield return dict[kvPair.Key];
+                }
+                else
+                {
+                    yield return kvPair.Value;
+                }
+            }
         }
 
         /// <inheritdoc />
