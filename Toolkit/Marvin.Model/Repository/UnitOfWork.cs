@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.Linq;
 
 namespace Marvin.Model
 {
@@ -11,7 +12,7 @@ namespace Marvin.Model
     public sealed class UnitOfWork : IUnitOfWork, IGenericUnitOfWork
     {
         private MarvinDbContext _context;
-        private readonly IDictionary<Type, Type> _repositories;
+        private readonly IEnumerable<Type> _repositories;
 
         /// <inheritdoc />
         public ContextMode Mode
@@ -25,7 +26,7 @@ namespace Marvin.Model
         /// </summary>
         /// <param name="context">Responsible <see cref="DbContext"/></param>
         /// <param name="repoBuilders">Current availabe repositories</param>
-        public UnitOfWork(MarvinDbContext context, IDictionary<Type, Type> repoBuilders)
+        public UnitOfWork(MarvinDbContext context, IEnumerable<Type> repoBuilders)
         {
             _context = context;
             _repositories = repoBuilders;
@@ -45,7 +46,7 @@ namespace Marvin.Model
 
         private IRepository GetRepository(Type api)
         {
-            var repoType = _repositories[api];
+            var repoType = _repositories.Single(api.IsAssignableFrom);
 
             var instance = (Repository)Activator.CreateInstance(repoType);
             instance.Initialize(this, _context);
