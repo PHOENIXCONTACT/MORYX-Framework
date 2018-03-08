@@ -63,10 +63,10 @@ namespace Marvin.Model
         /// <inheritdoc />
         protected override void Generate(SqlOperation sqlOperation, IndentedTextWriter writer)
         {
-            var customSslStatementOperation = sqlOperation as CustomSqlStatementOperation;
-            if (customSslStatementOperation != null)
+            var customSqlStatementOperation = sqlOperation as CustomSqlStatementOperation;
+            if (customSqlStatementOperation != null)
             {
-                Generate(customSslStatementOperation, writer);
+                Generate(customSqlStatementOperation, writer);
                 return;
             }
 
