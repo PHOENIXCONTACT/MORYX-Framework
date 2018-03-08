@@ -3,7 +3,7 @@
 namespace Marvin.Model
 {
     /// <summary>
-    /// A custom migration operation to set execute ssl statements
+    /// A custom migration operation to set execute sql statements
     /// </summary>
     public abstract class CustomSqlStatementOperation : SqlOperation
     {
