@@ -12,7 +12,7 @@ namespace Marvin.Model
         where TContext : MarvinDbContext
     {
         private IModelConfigurator _configurator;
-        private readonly IDictionary<Type, Type> _repositories = new Dictionary<Type, Type>();
+        private readonly IList<Type> _repositories = new List<Type>();
         private readonly RepositoryProxyBuilder _proxyBuilder;
 
         /// <summary>
@@ -124,7 +124,12 @@ namespace Marvin.Model
         /// </summary>
         private void RegisterRepository(Type apiType)
         {
-            _repositories.Add(apiType, _proxyBuilder.Build(apiType));
+            if (_repositories.Contains(apiType))
+            {
+                throw new ArgumentException("Repository interface already registered");
+            }
+
+            _repositories.Add(_proxyBuilder.Build(apiType));
         }
 
         /// <summary>
@@ -134,7 +139,13 @@ namespace Marvin.Model
         private void RegisterRepository(Type apiType, Type implType, bool noProxy)
         {
             var impl = noProxy ? implType : _proxyBuilder.Build(apiType, implType);
-            _repositories.Add(apiType, impl);
+
+            if (_repositories.Contains(impl))
+            {
+                throw new ArgumentException("Repository interface already registered");
+            }
+
+            _repositories.Add(impl);
         }
 
         /// <summary>
