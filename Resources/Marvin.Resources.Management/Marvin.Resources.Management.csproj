@@ -89,6 +89,7 @@
     <Compile Include="Resources\IResourceFactory.cs" />
     <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Resources\IResourceTypeController.cs" />
+    <Compile Include="Resources\ResourceWrapper.cs" />
     <Compile Include="Resources\ResourceProxyBuilder.cs" />
     <Compile Include="Resources\ResourceTypeController.cs" />
     <Compile Include="Resources\ResourceCreationTemplate.cs" />
@@ -96,6 +97,12 @@
     <Compile Include="Resources\ResourceProxy.cs" />
     <Compile Include="Resources\ResourceTypeNode.cs" />
     <Compile Include="Resources\ReferenceCollection.cs" />
+    <Compile Include="States\CreatedState.cs" />
+    <Compile Include="States\StoppedState.cs" />
+    <Compile Include="States\ErrorState.cs" />
+    <Compile Include="States\InitializedState.cs" />
+    <Compile Include="States\ResourceStateBase.cs" />
+    <Compile Include="States\StartedState.cs" />
     <Compile Include="Version\ModuleVersion.cs" />
   </ItemGroup>
   <ItemGroup />
