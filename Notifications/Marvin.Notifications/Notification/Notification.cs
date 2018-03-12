@@ -27,6 +27,15 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
+        public string Acknowledger { get; private set; }
+
+        string IManagedNotification.Acknowledger
+        {
+            get { return Acknowledger; }
+            set { Acknowledger = value; }
+        }
+
+        /// <inheritdoc />
         public DateTime Created { get; private set; }
 
         DateTime IManagedNotification.Created

@@ -13,14 +13,16 @@ namespace Marvin.Notifications
         private readonly ICollection<NotificationMap> _pendingPubs = new List<NotificationMap>();
 
         private readonly IDictionary<string, INotificationSender> _senders = new Dictionary<string, INotificationSender>();
-
         #region Adapter <> Publisher
 
         /// <inheritdoc />
-        void INotificationAdapter.Register(INotificationSender sender)
+        INotificationContext INotificationAdapter.Register(INotificationSender sender)
         {
             lock (_senders)
+            {
                 _senders.Add(sender.Identifier, sender);
+                return new NotificationContext(sender, this);
+            }
         }
 
         /// <inheritdoc />
@@ -31,7 +33,7 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
-        IReadOnlyList<INotification> INotificationAdapter.GetPublished(INotificationSender sender)
+        internal IReadOnlyList<INotification> GetPublished(INotificationSender sender)
         {
             var notifications = _published.Where(m => m.Sender == sender)
                 .Select(map => map.Notification)
@@ -41,7 +43,7 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
-        void INotificationAdapter.Publish(INotificationSender sender, INotification notification)
+        internal void Publish(INotificationSender sender, INotification notification)
         {
             lock (_senders)
             {
@@ -70,10 +72,11 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
-        void INotificationAdapter.Acknowledge(INotification notification)
+        internal void Acknowledge(INotificationSender sender, INotification notification)
         {
             var managed = (IManagedNotification)notification;
             managed.Acknowledged = DateTime.Now;
+            managed.Acknowledger = sender.Identifier;
 
             var published = _published.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
             if (published != null)

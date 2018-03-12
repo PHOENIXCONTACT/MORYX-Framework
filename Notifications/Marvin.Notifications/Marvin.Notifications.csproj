@@ -55,7 +55,9 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapter\INotificationContext.cs" />
     <Compile Include="Adapter\NotificationAdapter.cs" />
+    <Compile Include="Adapter\NotificationContext.cs" />
     <Compile Include="NotificationExtensions.cs" />
     <Compile Include="Notification\INotification.cs" />
     <Compile Include="Facade\INotificationSource.cs" />
