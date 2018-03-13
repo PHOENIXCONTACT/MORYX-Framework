@@ -41,6 +41,12 @@ namespace Marvin.Notifications
         new DateTime? Acknowledged { get; set; }
 
         /// <summary>
+        /// Override with setter.
+        /// <inheritdoc cref="INotification.Acknowledger"/>
+        /// </summary>
+        new string Acknowledger { get; set; }
+
+        /// <summary>
         /// Sender of this notification. <see cref="INotificationSender"/>
         /// </summary>
         string Sender { get; set; }
@@ -86,5 +92,11 @@ namespace Marvin.Notifications
         /// If not null, the notification was already acknowledged
         /// </summary>
         DateTime? Acknowledged { get; }
+
+        /// <summary>
+        /// Who or what acknowledged the notification, if it was acknowledged.
+        /// <see cref="Acknowledged"/> shows if the notification has been acknowledged. 
+        /// </summary>
+        string Acknowledger { get; }
     }
 }

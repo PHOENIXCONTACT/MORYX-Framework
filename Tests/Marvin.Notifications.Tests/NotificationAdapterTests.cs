@@ -16,6 +16,7 @@ namespace Marvin.Notifications.Tests
         private IManagedNotification _publishedEventNotification;
         private IManagedNotification _acknowledgedEventNotification;
         private INotification _acknowledgeCallNotification;
+        private INotificationContext _notificationpublisher;
 
         /// <summary>
         /// Initialize the test-environment
@@ -45,7 +46,7 @@ namespace Marvin.Notifications.Tests
                 _acknowledgedEventNotification = (IManagedNotification)notification;
             };
 
-            _notificationAdapter.Register(_notificationSenderMock.Object);
+            _notificationpublisher = _notificationAdapter.Register(_notificationSenderMock.Object);
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace Marvin.Notifications.Tests
             var notification = new Notification();
 
             // Act
-            _notificationAdapter.Publish(_notificationSenderMock.Object, notification);
+            _notificationpublisher.Publish(notification);
 
             // Assert
             Assert.NotNull(_publishedEventNotification, "Published-event was not triggered.");
@@ -69,7 +70,7 @@ namespace Marvin.Notifications.Tests
 
             Assert.Throws<InvalidOperationException>(delegate
             {
-                _notificationAdapter.Publish(_notificationSenderMock.Object, notification);
+                _notificationpublisher.Publish(notification);
             }, "The same notification was published a second time.");
         }
 
@@ -81,10 +82,10 @@ namespace Marvin.Notifications.Tests
         {
             // Arrange
             var notification = new Notification();
-            _notificationAdapter.Publish(_notificationSenderMock.Object, notification);
+            _notificationpublisher.Publish(notification);
 
             // Act
-            _notificationAdapter.Acknowledge(notification);
+            _notificationpublisher.Acknowledge(notification);
 
             // Assert
             Assert.NotNull(_acknowledgedEventNotification, "Acknowledged-event was not triggered.");
@@ -97,11 +98,11 @@ namespace Marvin.Notifications.Tests
         {
             // Arrange
             var notification = new Notification();
-            ((INotificationAdapter)_notificationAdapter).Publish(_notificationSenderMock.Object, notification);
+            _notificationpublisher.Publish(notification);
             ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notification);
 
             // Act
-            ((INotificationAdapter)_notificationAdapter).Acknowledge(notification);
+            _notificationpublisher.Acknowledge(notification);
 
             // Assert
             Assert.NotNull(_acknowledgedEventNotification, "Acknowledged-event was not triggered.");
@@ -121,7 +122,7 @@ namespace Marvin.Notifications.Tests
             // Act && Assert
             Assert.Throws<InvalidOperationException>(delegate
             {
-                _notificationAdapter.Acknowledge(notification);
+                _notificationpublisher.Acknowledge(notification);
             }, "Acknowledge was called for an unknown notification");
         }
 
@@ -134,7 +135,7 @@ namespace Marvin.Notifications.Tests
             // Arrange
             var notification = new Notification();
 
-            _notificationAdapter.Publish(_notificationSenderMock.Object, notification);
+            _notificationpublisher.Publish(notification);
 
             ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notification);
 
@@ -166,10 +167,10 @@ namespace Marvin.Notifications.Tests
         public void PublishPendingNotificationsDuringTheSync()
         {
             // Arrange
-            _notificationAdapter.Publish(_notificationSenderMock.Object, new Notification());
-            _notificationAdapter.Publish(_notificationSenderMock.Object, new Notification());
-            _notificationAdapter.Publish(_notificationSenderMock.Object, new Notification());
-            _notificationAdapter.Publish(_notificationSenderMock.Object, new Notification());
+            _notificationpublisher.Publish(new Notification());
+            _notificationpublisher.Publish(new Notification());
+            _notificationpublisher.Publish(new Notification());
+            _notificationpublisher.Publish(new Notification());
             int counter = 0;
             ((INotificationSenderAdapter) _notificationAdapter).Published += delegate { counter += 1; };
 
@@ -189,10 +190,10 @@ namespace Marvin.Notifications.Tests
             var notifiaction1 = new Notification();
             var notifiaction2 = new Notification();
 
-            _notificationAdapter.Publish(_notificationSenderMock.Object, notifiaction1);
-            _notificationAdapter.Publish(_notificationSenderMock.Object, notifiaction2);
-            _notificationAdapter.Acknowledge(notifiaction1);
-            _notificationAdapter.Acknowledge(notifiaction2);
+            _notificationpublisher.Publish(notifiaction1);
+            _notificationpublisher.Publish(notifiaction2);
+            _notificationpublisher.Acknowledge(notifiaction1);
+            _notificationpublisher.Acknowledge(notifiaction2);
             int counter = 0;
             ((INotificationSenderAdapter) _notificationAdapter).Acknowledged += delegate { counter += 1; };
 
@@ -209,8 +210,8 @@ namespace Marvin.Notifications.Tests
             // Arrange
             var notifiaction1 = new Notification();
             var notification2 = new Notification();
-            _notificationAdapter.Publish(_notificationSenderMock.Object, notifiaction1);
-            _notificationAdapter.Publish(_notificationSenderMock.Object, notification2);
+            _notificationpublisher.Publish(notifiaction1);
+            _notificationpublisher.Publish(notification2);
             ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notifiaction1);
             ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notification2);
             int counter = 0;
@@ -252,7 +253,7 @@ namespace Marvin.Notifications.Tests
             ((INotificationSenderAdapter) _notificationAdapter).Sync(new INotification[] {notification});
 
             // Assert
-            Assert.AreEqual(1, _notificationAdapter.GetPublished(_notificationSenderMock.Object).Count, "There should be one published notification" );
+            Assert.AreEqual(1, _notificationpublisher.GetPublished().Count, "There should be one published notification" );
         }
 
         [Test(Description = "Check that acknowledging a notification by the SenderAdapter-interface for an unknown notification throws an exception.")]
@@ -265,7 +266,7 @@ namespace Marvin.Notifications.Tests
             // Act & Assert
             Assert.Throws<InvalidOperationException>(delegate
             {
-                _notificationAdapter.Publish(_notificationSenderMock.Object, notification);
+                _notificationpublisher.Publish(notification);
             });
         }
     }
