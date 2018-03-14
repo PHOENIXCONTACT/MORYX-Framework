@@ -2,6 +2,7 @@
 using Marvin.Communication;
 using Marvin.Container;
 using Marvin.Model;
+using Marvin.Modules.Server;
 using Marvin.Notifications;
 using Marvin.Resources.Model;
 using Marvin.Runtime.Base;
@@ -61,6 +62,9 @@ namespace Marvin.Resources.Management
         /// </summary>
         protected override void OnStart()
         {
+            // TODO: Add the event to activate the notification facade. Use this until Platform 3.0 has a better solution for this problem.
+            ((IServerModule)this).State.Changed += OnModuleStateChanged;
+
             // Start type controller for resource and proxy creation
             Container.Resolve<IResourceTypeController>().Start();
 
@@ -82,13 +86,23 @@ namespace Marvin.Resources.Management
         protected override void OnStop()
         {
             // Tear down facades
-            DeactivateFacade(_resourceManagementFacade);
             DeactivateFacade(_notificationSourceFacade);
+            DeactivateFacade(_resourceManagementFacade);
             
+
             var resourceManager = Container.Resolve<IResourceManager>();
             resourceManager.Stop();
+
+            // TODO: Remove the event to deactivate the notification facade. Use this until Platform 3.0 has a better solution for this problem.
+            ((IServerModule)this).State.Changed -= OnModuleStateChanged;
         }
 
+        /// TODO: This is a quick fix to only start the notification facade when the module itself is in the state of running and should be changed with Platform 3.0
+        private void OnModuleStateChanged(object sender, ModuleStateChangedEventArgs e)
+        {
+            if (e.NewState == ServerModuleState.Running && !_notificationSourceFacade.IsActivated)
+				_notificationSourceFacade.RaiseActivated();
+        }
         #endregion
 
         #region FacadeContainer
