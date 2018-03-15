@@ -2,7 +2,6 @@
 
 namespace Marvin.Model.Npgsql
 {
-
     /// <summary>
     /// Base migration configuration for Npgsql
     /// </summary>
@@ -15,11 +14,9 @@ namespace Marvin.Model.Npgsql
         public NpgsqlDbMigrationConfigurationBase()
         {
             AutomaticMigrationsEnabled = true;
-            MigrationsDirectory = @"Migrations\Generated";
+            CodeGenerator = new NpqsqlCSharpMigrationCodeGenerator<T>();
 
             SetHistoryContextFactory("Npgsql", (connection, defaultSchema) => new MarvinHistoryContext(connection, defaultSchema));
-
-            CodeGenerator = new NpqsqlCSharpMigrationCodeGenerator<T>();
             SetSqlGenerator("Npgsql", new NpgsqlMigrationSqlGenerator());
         }
     }

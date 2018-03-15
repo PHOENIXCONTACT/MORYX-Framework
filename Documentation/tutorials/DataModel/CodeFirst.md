@@ -276,7 +276,7 @@ Add-Migration -Name InitialCreate -ProjectName Marvin.TestTools.Test.Model `
     -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql
 ````
 
-That's it. The script should have added a new class to the `Migrations/Generated` folder of the project. It's name should look like `201801120742211_InitialCreate`. The leading numbers will be different.
+That's it. The script should have added a new class to the `Migrations` folder of the project. It's name should look like `201801120742211_InitialCreate`. The leading numbers will be different.
 
 #### Update-Database
 
