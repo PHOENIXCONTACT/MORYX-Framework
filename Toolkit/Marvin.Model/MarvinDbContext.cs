@@ -117,27 +117,31 @@ namespace Marvin.Model
 
         private void SetTimestamps()
         {
-            var changeTimestamp = DateTime.UtcNow;
-
-            var selectedEntityList = ChangeTracker.Entries().Where(x => x.Entity is ModificationTrackedEntityBase &&
-                                                                        (x.State == EntityState.Added || x.State == EntityState.Modified));
-
-            foreach (var dbEntityEntry in selectedEntityList)
-            {
-                switch (dbEntityEntry.State)
+            var modifiedTrackedEntries = from entry in ChangeTracker.Entries()
+                where entry.Entity is IModificationTrackedEntity &&
+                      (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+                select new
                 {
-                    case EntityState.Added:
-                        ((ModificationTrackedEntityBase)dbEntityEntry.Entity).Created = changeTimestamp;
-                        break;
-                    case EntityState.Modified:
-                        ((ModificationTrackedEntityBase)dbEntityEntry.Entity).Updated = changeTimestamp;
+                    Entry = entry,
+                    Entity = entry.Entity as IModificationTrackedEntity,
+                    entry.State,
+                };
 
-                        if (dbEntityEntry.CurrentValues[nameof(ModificationTrackedEntityBase.Deleted)] !=
-                            dbEntityEntry.OriginalValues[nameof(ModificationTrackedEntityBase.Deleted)])
-                        {
-                            ((ModificationTrackedEntityBase)dbEntityEntry.Entity).Deleted = changeTimestamp;
-                        }
-                        break;
+            var changeTimestamp = DateTime.UtcNow;
+            foreach (var modified in modifiedTrackedEntries)
+            {
+                modified.Entity.Updated = changeTimestamp;
+
+                // ReSharper disable once ConvertIfStatementToSwitchStatement
+                if (modified.State == EntityState.Added)
+                {
+                    modified.Entity.Created = changeTimestamp;
+                }
+                else if (modified.State == EntityState.Modified)
+                {
+                    if (modified.Entry.CurrentValues[nameof(IModificationTrackedEntity.Deleted)] !=
+                        modified.Entry.OriginalValues[nameof(IModificationTrackedEntity.Deleted)])
+                        modified.Entity.Deleted = changeTimestamp;
                 }
             }
         }
