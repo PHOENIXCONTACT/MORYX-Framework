@@ -183,9 +183,8 @@
     <Compile Include="Model\Extensions\QueryableExtensions.cs" />
     <Compile Include="Model\EntityIdListener.cs" />
     <Compile Include="Model\IEntity.cs" />
-    <Compile Include="Model\IMergedEntity.cs" />
-    <Compile Include="Model\IMergeParent.cs" />
     <Compile Include="IPersistentObject.cs" />
+    <Compile Include="Model\UnitOfWork\IParentFactory.cs" />
     <Compile Include="Model\IRepository.cs" />
     <Compile Include="Model\Attributes\ModelAttribute.cs" />
     <Compile Include="Model\UnitOfWork\IContextMode.cs" />

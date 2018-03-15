@@ -14,8 +14,6 @@ namespace Marvin.Model.Npgsql
         /// </summary>
         public NpgsqlDbMigrationConfigurationBase()
         {
-            //System.Diagnostics.Debugger.Launch();
-
             AutomaticMigrationsEnabled = true;
             MigrationsDirectory = @"Migrations\Generated";
 

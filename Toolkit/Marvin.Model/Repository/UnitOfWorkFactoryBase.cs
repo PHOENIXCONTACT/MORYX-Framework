@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Marvin.Container;
 using Marvin.Modules;
 
 namespace Marvin.Model
@@ -8,13 +10,32 @@ namespace Marvin.Model
     /// Base class for unit of work factories
     /// </summary>
     public abstract class UnitOfWorkFactoryBase<TContext> : IUnitOfWorkFactory, 
-        IContextUnitOfWorkFactory, IInitializable, IDbContextFactory, IModelConfiguratorFactory
+        IContextUnitOfWorkFactory, IInitializable, IDbContextFactory, IModelConfiguratorFactory,
+        IParentFactory, IContainerChild<IUnitOfWorkFactory>
         where TContext : MarvinDbContext
     {
+        #region Dependencies
+
+        /// <summary>
+        /// Injection of a container to load children factories
+        /// </summary>
+        public IContainer Container { get; set; }
+
+        #endregion
+
+        /// <inheritdoc />
+        IUnitOfWorkFactory IContainerChild<IUnitOfWorkFactory>.Parent
+        {
+            get { return _parent; }
+            set { /* This cannot be set from outside */ }
+        }
+
+        private IUnitOfWorkFactory _parent;
         private IModelConfigurator _configurator;
         private readonly IList<Type> _repositories = new List<Type>();
         private readonly RepositoryProxyBuilder _proxyBuilder;
-
+        private readonly Dictionary<string, IUnitOfWorkFactory> _children = new Dictionary<string, IUnitOfWorkFactory>();
+        
         /// <summary>
         /// Creates a new instance of the <see cref="UnitOfWorkFactoryBase{TContext}"/>
         /// </summary>
@@ -31,6 +52,9 @@ namespace Marvin.Model
 
             // Configure the factory
             Configure();
+
+            // Register model as child if parent is set
+            RegisterAsChild();
         }
 
         /// <summary>
@@ -43,6 +67,27 @@ namespace Marvin.Model
         /// Repositories should be added by <see cref="RegisterRepository{TApi}"/>
         /// </summary>
         protected abstract void Configure();
+
+        /// <summary>
+        /// If the parent model is set, 
+        /// </summary>
+        private void RegisterAsChild()
+        {
+            // Maybe a to do? I have no better idea 
+            // The parent model can be a protected virtual property but how to get the target model?
+            var modelFactoryAttr = GetType().GetCustomAttribute<ModelFactoryAttribute>();
+            if (string.IsNullOrEmpty(modelFactoryAttr?.ParentModel))
+                return;
+
+            var parentModel = Container?.Resolve<IUnitOfWorkFactory>(modelFactoryAttr.ParentModel);
+            // ReSharper disable once UseNullPropagation -> Please resharper it has to be readable
+            if (parentModel == null)
+                return;
+
+            // Register as child on the parent model
+            _parent = parentModel;
+            ((IParentFactory)parentModel).RegisterChild(this, modelFactoryAttr.TargetModel);
+        }
 
         /// <inheritdoc />
         public IUnitOfWork Create()
@@ -85,6 +130,21 @@ namespace Marvin.Model
         public MarvinDbContext CreateContext(IDatabaseConfig config, ContextMode contextMode)
         {
             return (MarvinDbContext)Activator.CreateInstance(typeof(TContext), _configurator.BuildConnectionString(config), contextMode);
+        }
+
+        /// <inheritdoc />
+        IUnitOfWorkFactory INamedChildContainer<IUnitOfWorkFactory>.GetChild(string name, Type target)
+        {
+            if (string.IsNullOrEmpty(name))
+                return this;
+
+            return _children.ContainsKey(name) ? _children[name] : null;
+        }
+
+        /// <inheritdoc />
+        void IParentFactory.RegisterChild(IUnitOfWorkFactory childFactory, string childModelName)
+        {
+            _children[childModelName] = childFactory;
         }
 
         /// <summary>

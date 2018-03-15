@@ -1,11 +1,12 @@
 using System;
+using Marvin.Container;
 
 namespace Marvin.Model
 {
     /// <summary>
     /// Factory to open db context wrapped in UnitOfWork
     /// </summary>
-    public interface IUnitOfWorkFactory
+    public interface IUnitOfWorkFactory : INamedChildContainer<IUnitOfWorkFactory>
     {
         /// <summary>
         /// Create new context in default mode ProxyLazyLoadingTracking
