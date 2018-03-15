@@ -230,7 +230,7 @@ Now, open the `Package Manager Console` (You may ask 'Really? Why the Package Ma
 
 ````ps
 Enable-Migrations -ContextTypeName SolarSystemContext -EnableAutomaticMigrations `
-    -MigrationsDirectory Migrations -ProjectName Marvin.TestTools.Test.Model `
+    -ProjectName Marvin.TestTools.Test.Model `
     -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql
 ````
 
