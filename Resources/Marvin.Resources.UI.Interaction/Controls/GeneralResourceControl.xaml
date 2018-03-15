@@ -14,7 +14,7 @@
         <StackPanel >
             <StackPanel.Resources>
                 <Style TargetType="LabeledControlHost">
-                    <Setter Property="LabelWidth" Value="130" />
+                    <Setter Property="LabelMinWidth" Value="130" />
                     <Setter Property="Eddie.TextFormat" Value="Bold" />
                     <Setter Property="Margin" Value="0,0,0,10" />
                 </Style>

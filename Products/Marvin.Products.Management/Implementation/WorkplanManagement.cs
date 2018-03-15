@@ -36,7 +36,7 @@ namespace Marvin.Products.Management
             }
         }
 
-        public IReadOnlyList<IWorkplan> GetAll()
+        public IReadOnlyList<Workplan> LoadAllWorkplans()
         {
             using (var uow = ModelFactory.Create())
             {

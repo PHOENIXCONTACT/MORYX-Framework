@@ -5,7 +5,7 @@ namespace Marvin.AbstractionLayer
     /// <summary>
     /// Context for workplans that execute a process
     /// </summary>
-    public struct ProcessContext : IWorkplanContext
+    public class ProcessContext : IWorkplanContext
     {
         /// <summary>
         /// Create process context for process
@@ -20,12 +20,10 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         public IProcess Process { get; }
 
-        /// <summary>
-        /// Check if a step was disabled
-        /// </summary>
-        public bool IsDisabled(long stepId)
+        /// <inheritdoc />
+        public virtual bool IsDisabled(IWorkplanStep step)
         {
-            return ((IWorkplanRecipe)Process.Recipe).DisabledSteps.Contains(stepId);
+            return ((IWorkplanRecipe)Process.Recipe).DisabledSteps.Contains(step.Id);
         }
 
         /// <summary>

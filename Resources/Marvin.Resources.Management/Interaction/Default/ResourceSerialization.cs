@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
+using Marvin.Configuration;
 using Marvin.Container;
-using Marvin.Runtime.Base.Serialization;
 using Marvin.Runtime.Configuration;
 using Marvin.Serialization;
 
@@ -30,7 +30,7 @@ namespace Marvin.Resources.Management
         public IRuntimeConfigManager ConfigManager { get; set; }
 
         /// <summary>
-        /// Only export properties flagged with <see cref="DataMember"/>
+        /// Only export properties flagged with <see cref="DataMemberAttribute"/>
         /// </summary>
         public override IEnumerable<PropertyInfo> ReadFilter(Type sourceType)
         {
@@ -52,7 +52,7 @@ namespace Marvin.Resources.Management
         public override EntryPrototype[] Prototypes(PropertyInfo property)
         {
             // Create prototypes from possible values
-            var possibleValuesAtt = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var possibleValuesAtt = property.GetCustomAttribute<PossibleValuesAttribute>();
             if (possibleValuesAtt == null)
             {
                 return base.Prototypes(property);
@@ -63,7 +63,7 @@ namespace Marvin.Resources.Management
             foreach (var value in possibleValues)
             {
                 var prototype = possibleValuesAtt.ConvertToConfigValue(Container, value);
-                ConfigManager.FillEmptyProperties(prototype);
+                ConfigManager.FillEmpty(prototype);
                 list.Add(new EntryPrototype(value, prototype));
             }
             return list.ToArray();
@@ -72,7 +72,7 @@ namespace Marvin.Resources.Management
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override string[] PossibleValues(PropertyInfo property)
         {
-            var valuesAttribute = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var valuesAttribute = property.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
             {
                 return base.PossibleValues(property);
@@ -86,7 +86,7 @@ namespace Marvin.Resources.Management
         /// <inheritdoc />
         public override string[] PossibleValues(ParameterInfo parameter)
         {
-            var valuesAttribute = parameter.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var valuesAttribute = parameter.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
             {
                 return base.PossibleValues(parameter);
@@ -100,11 +100,11 @@ namespace Marvin.Resources.Management
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override object CreateInstance(MappedProperty mappedRoot, Entry encoded)
         {
-            var possibleValuesAtt = mappedRoot.Property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var possibleValuesAtt = mappedRoot.Property.GetCustomAttribute<PossibleValuesAttribute>();
             var instance = possibleValuesAtt != null
                 ? possibleValuesAtt.ConvertToConfigValue(Container, encoded.Value.Current)
                 : base.CreateInstance(mappedRoot, encoded);
-            ConfigManager.FillEmptyProperties(instance);
+            ConfigManager.FillEmpty(instance);
             return instance;
         }
 
@@ -112,7 +112,7 @@ namespace Marvin.Resources.Management
         public override object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue)
         {
             var value = mappedEntry.Value;
-            var att = property.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var att = property.GetCustomAttribute<PossibleValuesAttribute>();
             if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
                 return base.PropertyValue(property, mappedEntry, currentValue);
 
@@ -122,20 +122,20 @@ namespace Marvin.Resources.Management
 
             var instance = att.ConvertToConfigValue(Container, mappedEntry.Value.Current);
             if (mappedEntry.Value.Type == EntryValueType.Class)
-                ConfigManager.FillEmptyProperties(instance);
+                ConfigManager.FillEmpty(instance);
             return instance;
         }
 
         public override object ParameterValue(ParameterInfo parameter, Entry mappedEntry)
         {
             var value = mappedEntry.Value;
-            var att = parameter.GetCustomAttribute<PossibleConfigValuesAttribute>();
+            var att = parameter.GetCustomAttribute<PossibleValuesAttribute>();
             if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
                 return base.ParameterValue(parameter, mappedEntry);
 
             var instance = att.ConvertToConfigValue(Container, mappedEntry.Value.Current);
             if (mappedEntry.Value.Type == EntryValueType.Class)
-                ConfigManager.FillEmptyProperties(instance);
+                ConfigManager.FillEmpty(instance);
 
             return instance;
         }

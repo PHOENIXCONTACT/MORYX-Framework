@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Marvin.Logging;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Serialization;
 using Marvin.StateMachines;
 
@@ -11,7 +11,7 @@ namespace Marvin.AbstractionLayer.Resources
     /// Base class for all resources to reduce boilerplate code
     /// </summary>
     [DataContract]
-    public abstract class Resource : ILoggingComponent, IResource, IModulePlugin, IPersistentObject
+    public abstract class Resource : ILoggingComponent, IResource, IPlugin, IPersistentObject
     {
         #region Dependencies
 

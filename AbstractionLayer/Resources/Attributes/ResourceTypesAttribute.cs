@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Marvin.Configuration;
 using Marvin.Container;
-using Marvin.Runtime.Configuration;
 
 namespace Marvin.AbstractionLayer.Resources
 {
@@ -9,8 +9,7 @@ namespace Marvin.AbstractionLayer.Resources
     /// Attribute to decorate properties or method parameters of type string and return
     /// all possible resource types.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
-    public class ResourceTypesAttribute : PossibleConfigValuesAttribute
+    public class ResourceTypesAttribute : PossibleValuesAttribute
     {
         /// <summary>
         /// String remains string

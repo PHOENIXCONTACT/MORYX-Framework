@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Runtime.Serialization;
-using Marvin.Testing;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -17,7 +16,6 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Empty default constructor to recreate task from database
         /// </summary>
-        [OpenCoverIgnore]
         protected SubWorkplanTask()
         {
         }
@@ -38,7 +36,7 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         protected override TransitionBase Instantiate(IWorkplanContext context)
         {
-            if (context.IsDisabled(Id))
+            if (context.IsDisabled(this))
                 return new NullTransition();
 
             // Create transition

@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using C4I;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework.Commands;
 using Marvin.ClientFramework.Dialog;
 using Marvin.Container;
 using Marvin.Products.UI.Interaction.InteractionSvc;

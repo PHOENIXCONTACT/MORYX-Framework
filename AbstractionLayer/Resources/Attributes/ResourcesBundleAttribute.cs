@@ -1,12 +1,10 @@
 ﻿using Marvin.Modules;
-using Marvin.Testing;
 
 namespace Marvin.AbstractionLayer.Resources
 {
     /// <summary>
     /// Constants class for the bundle name and version
     /// </summary>
-    [OpenCoverIgnore]
     public class ResourcesBundleAttribute : BundleAttribute
     {
         /// <summary>

@@ -2,13 +2,11 @@
 using Marvin.Communication;
 using Marvin.Container;
 using Marvin.Model;
-using Marvin.Modules.Server;
 using Marvin.Notifications;
 using Marvin.Resources.Model;
-using Marvin.Runtime.Base;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
-using Marvin.Runtime.ServerModules;
+using Marvin.Runtime.Modules;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Resources.Management
@@ -47,7 +45,7 @@ namespace Marvin.Resources.Management
         {
             // Register imports
             Container.RegisterNotifications();
-            Container.SetInstances(ResourceModel, WcfClientFactory, ConfManager);
+            Container.SetInstance(ResourceModel).SetInstance(WcfClientFactory).SetInstance(ConfManager);
 
             // Register for communication
             Container.Register<IBinaryConnectionFactory>();
@@ -62,9 +60,6 @@ namespace Marvin.Resources.Management
         /// </summary>
         protected override void OnStart()
         {
-            // TODO: Add the event to activate the notification facade. Use this until Platform 3.0 has a better solution for this problem.
-            ((IServerModule)this).State.Changed += OnModuleStateChanged;
-
             // Start type controller for resource and proxy creation
             Container.Resolve<IResourceTypeController>().Start();
 
@@ -89,20 +84,10 @@ namespace Marvin.Resources.Management
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_resourceManagementFacade);
             
-
             var resourceManager = Container.Resolve<IResourceManager>();
-            resourceManager.Stop();
-
-            // TODO: Remove the event to deactivate the notification facade. Use this until Platform 3.0 has a better solution for this problem.
-            ((IServerModule)this).State.Changed -= OnModuleStateChanged;
+            resourceManager.Stop();        
         }
 
-        /// TODO: This is a quick fix to only start the notification facade when the module itself is in the state of running and should be changed with Platform 3.0
-        private void OnModuleStateChanged(object sender, ModuleStateChangedEventArgs e)
-        {
-            if (e.NewState == ServerModuleState.Running && !_notificationSourceFacade.IsActivated)
-				_notificationSourceFacade.RaiseActivated();
-        }
         #endregion
 
         #region FacadeContainer

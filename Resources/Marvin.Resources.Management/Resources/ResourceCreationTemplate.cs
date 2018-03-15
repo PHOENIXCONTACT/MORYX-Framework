@@ -9,8 +9,8 @@ using Marvin.Configuration;
 using Marvin.Model;
 using Marvin.Resources.Model;
 using Marvin.Runtime.Configuration;
+using Marvin.Serialization;
 using Marvin.Tools;
-using Newtonsoft.Json;
 
 namespace Marvin.Resources.Management
 {
@@ -80,10 +80,12 @@ namespace Marvin.Resources.Management
 
             // Copy extended data from json
             if (ExtensionData != null)
-                JsonConvert.PopulateObject(ExtensionData, resource, JsonSettings.Minimal);
+                Json.Populate(resource, ExtensionData);
 
             // Read everything else from defaults
-            ValueProvider.FillProperties(resource, PropertyFilter, DefaultValueProvider.CheckPropertyForDefault);
+            ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
+                                                        .AddFilter(new DataMemberAttributeValueProviderFilter(false))
+                                                        .AddDefaultValueProvider());
 
             return Instance = resource;
         }

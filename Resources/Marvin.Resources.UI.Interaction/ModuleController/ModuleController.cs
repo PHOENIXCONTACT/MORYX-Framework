@@ -1,6 +1,6 @@
-﻿using Marvin.ClientFramework;
-using Marvin.ClientFramework.Base;
-using Marvin.Modules.Client;
+﻿using System.Windows.Media;
+using C4I;
+using Marvin.ClientFramework;
 
 namespace Marvin.Resources.UI.Interaction
 {
@@ -13,6 +13,9 @@ namespace Marvin.Resources.UI.Interaction
         internal const string ModuleName = "Resources";
 
         private IModuleWorkspace _defaultWorkspace;
+
+        /// <inheritdoc />
+        public override Geometry Icon => ShapeFactory.GetShapeGeometry(CommonShapeType.Cells);
 
         ///
         protected override void OnInitialize()

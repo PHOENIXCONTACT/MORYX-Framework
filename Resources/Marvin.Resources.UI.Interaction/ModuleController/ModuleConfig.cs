@@ -1,4 +1,4 @@
-﻿using Marvin.ClientFramework.Base;
+﻿using Marvin.ClientFramework;
 
 namespace Marvin.Resources.UI.Interaction
 {

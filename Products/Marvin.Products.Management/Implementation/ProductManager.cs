@@ -39,6 +39,10 @@ namespace Marvin.Products.Management
                           select ImportFactory.Create(importerConfig)).ToList();
         }
 
+        public void Stop()
+        {
+        }
+
         public void Dispose()
         {
         }

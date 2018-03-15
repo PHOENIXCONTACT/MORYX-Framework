@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Runtime.Base;
+using Marvin.Runtime.Modules;
 
 namespace Marvin.Resources.Management
 {

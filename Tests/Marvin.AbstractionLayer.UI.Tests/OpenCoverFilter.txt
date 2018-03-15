@@ -1,2 +1,0 @@
-INCLUDE:+[Marvin.AbstractionLayer.UI]*
-EXCLUDE:-[*Test*]* -[Marvin]* -[Marvin.Container]* -[Marvin.PlatformTools]* -[Marvin.ClientFramework*]* -[Marvin.Tools*]*

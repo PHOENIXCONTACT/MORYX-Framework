@@ -12,10 +12,10 @@ namespace Marvin.Products.Samples
 
         public DateTime DeliveryDate { get; set; }
 
-        public WatchfaceArticle Watchface
+        public WatchFaceArticle WatchFace
         {
-            get { return Single<WatchfaceArticle>().Part; }
-            set { Single<WatchfaceArticle>().Part = value; }
+            get { return Single<WatchFaceArticle>().Part; }
+            set { Single<WatchFaceArticle>().Part = value; }
         }
 
         public ICollection<NeedleArticle> Neddles

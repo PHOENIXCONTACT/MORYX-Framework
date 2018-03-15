@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 
 namespace Marvin.Resources.Management
 {
     /// <summary>
     /// Central component responsible for reading the type tree and building/managing proxies
     /// </summary>
-    internal interface IResourceTypeController : IModulePlugin
+    internal interface IResourceTypeController : IPlugin
     {
         /// <summary>
         /// Types derived from <see cref="Resource"/> and their derived types

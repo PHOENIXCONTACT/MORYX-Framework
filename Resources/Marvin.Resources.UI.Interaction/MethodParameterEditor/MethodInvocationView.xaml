@@ -20,11 +20,11 @@
         </DialogPanel.Buttons>
 
         <DockPanel>
-            <controls:ConfigEditor BreadcrumbVisibility="Collapsed" IsEditMode="True" 
+            <controls:EntryEditor BreadcrumbVisibility="Collapsed" IsEditMode="True" 
                                    DockPanel.Dock="Top"
                                    RootEntry="{Binding Parameters}"/>
-            
-            <controls:ConfigEditor BreadcrumbVisibility="Collapsed" IsEditMode="True" 
+
+            <controls:EntryEditor BreadcrumbVisibility="Collapsed" IsEditMode="True" 
                                    DockPanel.Dock="Bottom"
                                    RootEntry="{Binding InvocationResult}"/>
             <TextBlock DockPanel.Dock="Bottom">Result:</TextBlock>

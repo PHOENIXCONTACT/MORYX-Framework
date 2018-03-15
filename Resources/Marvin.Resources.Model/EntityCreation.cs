@@ -1,8 +1,8 @@
 ﻿using System;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Model;
+using Marvin.Serialization;
 using Marvin.Tools;
-using Newtonsoft.Json;
 
 namespace Marvin.Resources.Model
 {
@@ -38,7 +38,7 @@ namespace Marvin.Resources.Model
                 resourceEntity.Name = resourceEntity.Type;
             resourceEntity.LocalIdentifier = resource.LocalIdentifier;
             resourceEntity.GlobalIdentifier = resource.GlobalIdentifier;
-            resourceEntity.ExtensionData = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
+            resourceEntity.ExtensionData = Json.Serialize(resource, JsonSettings.Minimal);
 
             if (parent != null)
             {

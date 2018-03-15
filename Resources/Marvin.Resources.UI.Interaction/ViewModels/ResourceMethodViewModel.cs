@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Threading.Tasks;
 using Caliburn.Micro;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework.Commands;
 using Marvin.Controls;
-using Marvin.Resources.UI.Interaction.ResourceInteraction;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.UI.Interaction

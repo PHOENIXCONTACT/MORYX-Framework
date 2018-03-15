@@ -60,21 +60,22 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         private class PartLinkShortCut : BindingResolverBase
         {
-            public override object Resolve(object source)
+            protected override object Resolve(object source)
             {
                 var partLink = source as IProductPartLink;
                 if (partLink == null)
                 {
                     // Our object is not a part link, so we leave the chain
                     this.Remove();
-                    return Proceed(source);
+                    return source;
                 }
 
                 // Object is part link 
                 // 1. Try to read from object
-                var linkResult = Proceed(source);
+                var linkResult = NextResolver?.Resolve(partLink);
+
                 // 2. Try to read from product
-                var prodResult = Proceed(partLink.Product);
+                var prodResult = NextResolver?.Resolve(partLink.Product);
 
                 // 3. Make sure we do not have a naming conflict
                 if (linkResult != null && prodResult != null)
@@ -82,7 +83,12 @@ namespace Marvin.AbstractionLayer
                     throw new InvalidOperationException("Binding value inconclusive on part link and product!");
                 }
 
-                return linkResult ?? prodResult;
+                return linkResult != null ? (object)partLink : partLink.Product;
+            }
+
+            protected override bool Update(object source, object value)
+            {
+                throw new InvalidOperationException("PartLinks cannot be updated.");
             }
         }
 
@@ -92,9 +98,14 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         private class IdentifierResolver : BindingResolverBase
         {
-            public override object Resolve(object source)
+            protected override object Resolve(object source)
             {
                 return (source as IIdentifiableObject)?.Identity.Identifier;
+            }
+
+            protected override bool Update(object source, object value)
+            {
+                throw new InvalidOperationException("Identifier cannot be updated.");
             }
         }
 
@@ -103,25 +114,30 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         private class ProductResolver : BindingResolverBase
         {
-            public sealed override object Resolve(object source)
+            protected sealed override object Resolve(object source)
             {
                 var process = source as IProcess;
                 if (process != null)
                 {
                     var product = (process.Recipe as IProductRecipe)?.Product;
-                    return Proceed(product);
+                    return product;
                 }
 
                 var article = source as Article;
                 if (article != null)
                 {
-                    return Proceed(article.Product);
+                    return article.Product;
                 }
 
                 // If our shortcuts do not work, use ReflectionResolver instead
                 var replacement = new ReflectionResolver("Product");
                 this.Replace(replacement);
-                return replacement.Resolve(source);
+                return ((IBindingResolver)replacement).Resolve(source);
+            }
+
+            protected override bool Update(object source, object value)
+            {
+                throw new InvalidOperationException("Products cannot be updated!");
             }
         }
     }

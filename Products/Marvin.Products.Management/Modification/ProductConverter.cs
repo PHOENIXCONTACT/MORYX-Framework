@@ -108,7 +108,7 @@ namespace Marvin.Products.Management.Modification
 
         public WorkplanModel[] GetWorkplans()
         {
-            var workplans = WorkplanManagement.GetAll();
+            var workplans = WorkplanManagement.LoadAllWorkplans();
             return workplans.Select(ConvertWorkplan).ToArray();
         }
 

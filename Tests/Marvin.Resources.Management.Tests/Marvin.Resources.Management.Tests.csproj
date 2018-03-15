@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Marvin.Resources.Management.Tests</RootNamespace>
     <AssemblyName>Marvin.Resources.Management.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,41 +31,36 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\..\Build\ServiceRuntime\Libraries\Castle.Core.dll</HintPath>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Castle.Windsor">
-      <HintPath>..\..\Build\ServiceRuntime\Libraries\Castle.Windsor.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev000851\lib\net461\Marvin.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin">
-      <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
+    <Reference Include="Marvin.Runtime, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev000851\lib\net461\Marvin.Runtime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Container">
-      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Container.dll</HintPath>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev000851\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.PlatformTools">
-      <HintPath>..\..\Build\ServiceRuntime\Marvin.PlatformTools.dll</HintPath>
+    <Reference Include="Moq, Version=4.7.142.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moq.4.7.142\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Runtime">
-      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Runtime.Base">
-      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.Base.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq">
-      <HintPath>..\..\.build\Test.Libs\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\.build\Test.Libs\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMyResource.cs" />
@@ -80,14 +76,17 @@
       <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
       <Name>Marvin.AbstractionLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Notifications\Marvin.Notifications\Marvin.Notifications.csproj">
-      <Project>{4fb1bca9-bd6d-478a-93c5-5cd4de2a2337}</Project>
-      <Name>Marvin.Notifications</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Resources\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
       <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
       <Name>Marvin.Resources.Management</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

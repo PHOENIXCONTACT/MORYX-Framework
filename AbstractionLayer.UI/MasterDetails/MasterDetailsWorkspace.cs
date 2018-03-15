@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework;
 using Marvin.ClientFramework.Dialog;
 using Marvin.Logging;
 

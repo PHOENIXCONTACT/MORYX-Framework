@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Marvin.Resources.UI</RootNamespace>
     <AssemblyName>Marvin.Resources.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -17,51 +17,70 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Build\ClientRuntime\Bundles\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\Build\ClientRuntime\Bundles\Marvin.Resources.UI.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Marvin.Resources.UI.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Build\ClientRuntime\Bundles\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\Build\ClientRuntime\Bundles\Marvin.Resources.UI.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Marvin.Resources.UI.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\Build\ClientRuntime\Libraries\Caliburn.Micro.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Caliburn.Micro, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.Core.3.2.0\lib\net45\Caliburn.Micro.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin">
-      <HintPath>..\..\Build\ClientRuntime\Marvin.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.ClientFramework">
-      <HintPath>..\..\Build\ClientRuntime\Core\Marvin.ClientFramework.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.ClientFramework.Base">
-      <HintPath>..\..\Build\ClientRuntime\Core\Marvin.ClientFramework.Base.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Controls4Industry, Version=3.0.0.469, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Controls4Industry.3.0.0-dev000469\lib\net461\Controls4Industry.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Controls">
-      <HintPath>..\..\Build\ClientRuntime\Libraries\Marvin.Controls.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Marvin, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev000851\lib\net461\Marvin.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.PlatformTools">
-      <HintPath>..\..\Build\ClientRuntime\Marvin.PlatformTools.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Marvin.ClientFramework, Version=3.0.0.469, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.ClientFramework.3.0.0-dev000469\lib\net461\Marvin.ClientFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Controls, Version=3.0.0.469, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Controls.3.0.0-dev000469\lib\net461\Marvin.Controls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev000851\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.3.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Details\IResourceDetails.cs" />
     <Compile Include="ResourceMethods\IConstructorViewModel.cs" />
     <Compile Include="ResourceMethods\IMethodInvocationViewModel.cs" />
@@ -76,10 +95,13 @@
     <Compile Include="ResourceInteractionRegistrationAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Marvin.Resources.UI.nuspec" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\AbstractionLayer.UI\Marvin.AbstractionLayer.UI.csproj">
       <Project>{b9920541-7e0e-4cde-b195-b18589a2bbb1}</Project>
       <Name>Marvin.AbstractionLayer.UI</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

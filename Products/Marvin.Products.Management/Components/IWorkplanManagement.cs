@@ -12,10 +12,5 @@ namespace Marvin.Products.Management
         /// Creates the workplan.
         /// </summary>
         IWorkplan Create(string name);
-
-        /// <summary>
-        /// Gets the workplans.
-        /// </summary>
-        IReadOnlyList<IWorkplan> GetAll();
     }
 }

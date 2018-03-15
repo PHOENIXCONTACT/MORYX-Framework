@@ -1,12 +1,10 @@
 ﻿using System;
-using Marvin.Testing;
 
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
     /// Attribute for hard coded valid product values
     /// </summary>
-    [OpenCoverIgnore]
     [AttributeUsage(AttributeTargets.Property)]
     public class PossibleProductValuesAttribute : Attribute
     {

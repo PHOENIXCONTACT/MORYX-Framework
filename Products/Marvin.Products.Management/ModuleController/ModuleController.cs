@@ -4,9 +4,8 @@ using Marvin.Model;
 using Marvin.Products.Management.Importers;
 using Marvin.Products.Management.Modification;
 using Marvin.Products.Model;
-using Marvin.Runtime.Base;
 using Marvin.Runtime.Container;
-using Marvin.Runtime.ServerModules;
+using Marvin.Runtime.Modules;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Products.Management

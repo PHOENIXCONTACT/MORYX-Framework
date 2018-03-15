@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Marvin.AbstractionLayer.Capabilities;
+using Marvin.Configuration;
 using Marvin.Container;
-using Marvin.Runtime.Configuration;
 using Marvin.Tools;
 
 namespace Marvin.AbstractionLayer.Resources
 {
     /// <summary>
     /// Attribute to configure capabilities in resource configs
-    /// TODO: Move to AL as soon as PossibleConfigValues was moved to the platform
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class AvailableCapabilitiesAttribute : PossibleConfigValuesAttribute
+    public class AvailableCapabilitiesAttribute : PossibleValuesAttribute
     {
         private readonly Func<Type, bool> _capabilitiesFilter;
 

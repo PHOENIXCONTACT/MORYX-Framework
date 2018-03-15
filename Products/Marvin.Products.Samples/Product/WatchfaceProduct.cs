@@ -2,9 +2,9 @@ using Marvin.AbstractionLayer;
 
 namespace Marvin.Products.Samples
 {
-    public class WatchfaceProduct : Product
+    public class WatchFaceProduct : Product
     {
-        public override string Type => nameof(WatchfaceProduct);
+        public override string Type => nameof(WatchFaceProduct);
 
         public int[] Numbers { get; set; }
 
@@ -12,7 +12,7 @@ namespace Marvin.Products.Samples
 
         protected override Article Instantiate()
         {
-            return new WatchfaceArticle();
+            return new WatchFaceArticle();
         }
     }
 }

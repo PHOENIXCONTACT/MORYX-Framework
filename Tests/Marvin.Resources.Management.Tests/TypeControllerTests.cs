@@ -31,7 +31,7 @@ namespace Marvin.Resources.Management.Tests
         [TearDown]
         public void AfterTest()
         {
-            _typeController.Dispose();
+            _typeController.Stop();
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace Marvin.Resources.Management.Tests
 
             // Act: Dispose the type controller and use the proxy again
             called = false;
-            _typeController.Dispose();
+            _typeController.Stop();
             instance.Foo = 10;
             
             // Assert: Event was not raised and proxy can no longer be used

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Marvin.AbstractionLayer;
-using Marvin.Runtime.Base;
+using Marvin.Runtime.Modules;
 using Marvin.Workflows;
 
 namespace Marvin.Products.Management
@@ -122,10 +122,10 @@ namespace Marvin.Products.Management
             return wp;
         }
 
-        public IReadOnlyList<IWorkplan> GetAllWorkplans()
+        public IReadOnlyList<Workplan> LoadAllWorkplans()
         {
             ValidateHealthState();
-            return Workplans.GetAll();
+            return Workplans.LoadAllWorkplans();
         }
 
         public void DeleteWorkplan(long workplanId)

@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using C4I;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework.Commands;
+using Marvin.ClientFramework.Dialog;
 using Marvin.Container;
 
 namespace Marvin.Resources.UI.Interaction

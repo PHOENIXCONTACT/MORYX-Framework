@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Marvin.ClientFramework.Base;
+using Marvin.ClientFramework.Commands;
+using Marvin.ClientFramework.Dialog;
 using Marvin.Container;
 using Marvin.Controls;
 using Marvin.Serialization;

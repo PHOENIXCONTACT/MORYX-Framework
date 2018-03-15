@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Linq;
 using Marvin.Model;
+using Marvin.Products.IntegrationTests.UnitOfWorkFactories;
 using Marvin.Products.Management;
 using Marvin.Products.Model;
 using Marvin.Workflows;
@@ -13,14 +14,14 @@ namespace Marvin.Products.IntegrationTests
     {
         private InMemoryUnitOfWorkFactory _factory;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             Effort.Provider.EffortProviderConfiguration.RegisterProvider();
-            DbConfiguration.SetConfiguration(new EntityFrameworkConfiguration());
+            //DbConfiguration.SetConfiguration(new EntityFrameworkConfiguration());
 
             // prepare inmemory resource db
-            _factory = new InMemoryUnitOfWorkFactory();
+            _factory = new InMemoryUnitOfWorkFactory("RecipeStorageTests");
             _factory.Initialize();
         }
 

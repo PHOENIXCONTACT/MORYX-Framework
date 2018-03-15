@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Marvin.AbstractionLayer.UI;
 using Marvin.Container;
-using Marvin.Modules.ModulePlugins;
+using Marvin.Modules;
 using Marvin.Products.UI.Interaction.InteractionSvc;
 using Marvin.Tools.Wcf;
 
@@ -12,7 +11,7 @@ namespace Marvin.Products.UI.Interaction
     /// <summary>
     /// Model interface for product interaction
     /// </summary>
-    internal interface IProductsController : IInteractionController, IModulePlugin
+    internal interface IProductsController : IInteractionController, IPlugin, IDisposable
     {
         /// <summary>
         /// Represents the product structure tree
