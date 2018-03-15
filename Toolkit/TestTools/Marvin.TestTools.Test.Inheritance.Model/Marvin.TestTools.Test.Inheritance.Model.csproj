@@ -50,12 +50,12 @@
     <Compile Include="API\ISuperCarEntityRepository.cs" />
     <Compile Include="Entities\SuperCarEntity.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Migrations\Generated\201803150937529_InitialCreate.cs" />
-    <Compile Include="Migrations\Generated\201803150937529_InitialCreate.Designer.cs">
+    <Compile Include="Migrations\201803150937529_InitialCreate.cs" />
+    <Compile Include="Migrations\201803150937529_InitialCreate.Designer.cs">
       <DependentUpon>201803150937529_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Generated\201803150945101_InitialCreate2.cs" />
-    <Compile Include="Migrations\Generated\201803150945101_InitialCreate2.Designer.cs">
+    <Compile Include="Migrations\201803150945101_InitialCreate2.cs" />
+    <Compile Include="Migrations\201803150945101_InitialCreate2.Designer.cs">
       <DependentUpon>201803150945101_InitialCreate2.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,10 +84,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\Generated\201803150937529_InitialCreate.resx">
+    <EmbeddedResource Include="Migrations\201803150937529_InitialCreate.resx">
       <DependentUpon>201803150937529_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Generated\201803150945101_InitialCreate2.resx">
+    <EmbeddedResource Include="Migrations\201803150945101_InitialCreate2.resx">
       <DependentUpon>201803150945101_InitialCreate2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
