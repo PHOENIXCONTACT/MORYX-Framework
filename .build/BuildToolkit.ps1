@@ -366,6 +366,7 @@ function Invoke-Pack($FilePath, [bool]$IsTool = $False) {
     $packargs += "-includereferencedprojects";
     $packargs += "-Version", "$env:MARVIN_VERSION";
     $packargs += "-Prop", "Configuration=$env:MARVIN_BUILD_CONFIG";
+    $packargs += "-Verbosity", "detailed";
 
     if ($IsTool) {
         $packargs += "-Tool";
