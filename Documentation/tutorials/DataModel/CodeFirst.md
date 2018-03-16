@@ -20,6 +20,32 @@ You have to implement a few basics to get started working with the PostgreSQL da
 * Repositories (Helper functions to access a specific table). The Marvin framework implements a speciality to make your life easier. You just need to define the interface and the code will be generated at runtime.)
 * The UnitOfWork (Manage the context)
 
+#### A small view on constants
+
+Constants are good practice if you want to make you life easier. You have one single source of truth which you can refactor much easier.
+
+````cs
+namespace Marvin.TestTools.Test.Model
+{
+    /// <summary>
+    /// String constants defined by the Products database model.
+    /// </summary>
+    public class TestModelConstants
+    {
+        /// <summary>
+        /// Namespace of the generated code within this model. This can be used for the
+        /// ImportAttribute and UseChildAttribute.
+        /// </summary>
+        public const string Namespace = "Marvin.TestTools.Test.Model";
+
+        /// <summary>
+        /// Schema name for the database context
+        /// </summary>
+        public const string SchemaName = "public";
+    }
+}
+````
+
 #### The database context
 
 Create your own database context by deriving from [MarvinDbContext](xref:Marvin.Model.MarvinDbContext) and the three constructor overloads as shown below.
@@ -28,6 +54,7 @@ Create your own database context by deriving from [MarvinDbContext](xref:Marvin.
 namespace Marvin.TestTools.Test.Model
 {
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
+    [DefaultSchema(TestModelConstants.SchemaName)]
     public class SolarSystemContext : MarvinDbContext
     {
         public SolarSystemContext()
@@ -56,6 +83,8 @@ namespace Marvin.TestTools.Test.Model
     }
 }
 ````
+
+Please note that we follow the policy to place tables of a context into to a different namespace when possible. Please use the global `DefaultSchemaAttribute` on the context.
 
 #### Entities
 
@@ -359,14 +388,152 @@ The Entity Framework supports three inheritance strategies (an overview can be f
 | Table per Type (TPT) | This approach suggests a separate table for each domain class. |
 | Table per Concrete class (TPC) | This approach suggests one table for one concrete class, but not for the abstract class. So, if you inherit the abstract class in multiple concrete classes, then the properties of the abstract class will be part of each table of the concrete class. |
 
-If you want to inherit a data model you just need to
-
-* Inherit the context of your data model from the corresponding base `DbContext` (don't forget that the implementation of the function `OnModelCreating` from the base class is called). There add the derived entities as `DbSets`.
-* The `UnitOfWorkFactory` (it's not derived from the `UnitOfWorkFactory` of the base class)
-* Inherit the entities you need and extend them
-* Do the migration step described above (`Enable-Migrations`, `Add-Migration`)
-
 The default strategy the EF is using is the `Table per Hierarchy`.
+
+### Inheritance example
+
+In MaRVIN's world you may want to extend an existing entity. This chapter describes how you can inherit from an existing context and its entities. We will use `Table per Concrete class` to achieve inheritance. We assume that the inherited data context is part of a new project but the "old" project is referenced to it.
+
+Create a new `Model` project and add the following classes to the project:
+
+An yes, create also a new class for constant values:
+
+````cs
+namespace Marvin.TestTools.Test.Model.Inheritance
+{
+    /// <summary>
+    /// String constants defined by the Products database model.
+    /// </summary>
+    public class TestModelInheritanceConstants
+    {
+        /// <summary>
+        /// Namespace of the generated code within this model. This can be used for the
+        /// ImportAttribute and UseChildAttribute.
+        /// </summary>
+        public const string Namespace = "Marvin.TestTools.Test.Model.Inheritance";
+
+        /// <summary>
+        /// Schema name for the database context
+        /// </summary>
+        public const string SchemaName = "public";
+    }
+}
+````
+
+The inherited entity:
+
+````cs
+public class PlanetOfTheApes : Planet
+{
+    public virtual int ApeCount { get; set; }
+}
+````
+
+The inherited context:
+
+````cs
+namespace Marvin.TestTools.Test.Model.Inheritance
+{
+    [DbConfigurationType(typeof(NpgsqlConfiguration))]
+    public class SpecializedSolarSystemContext : SolarSystemContext
+    {
+        public SpecializedSolarSystemContext()
+        {
+            // Important: Migration functions needing a parameterless constructor
+        }
+
+        public SpecializedSolarSystemContext(string connectionString, ContextMode mode) : base(connectionString, mode)
+        {
+        }
+
+        public SpecializedSolarSystemContext(DbConnection connection, ContextMode mode) : base(connection, mode)
+        {
+        }
+
+        public virtual DbSet<PlanetOfTheApes> Planets { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PlanetOfTheApes>().ToTable(nameof(PlanetOfTheApes));
+        }
+    }
+}
+````
+
+A new migration configuration (Note: you always have to create a new migration configuration in every model project. This is a restriction by the EF.):
+
+````cs
+internal sealed class Configuration : NpgsqlDbMigrationConfigurationBase<SpecializedSolarSystemContext>
+{
+}
+````
+
+A new repository:
+
+````cs
+public interface IPlanetOfApesPlanetRepository : IRepository<PlanetOfTheApes>
+{
+}
+````
+
+And last but not least a `UnitOfWorkFactory`:
+
+But before we can add the specialized UnitOfWorkFactory you have to change the SolarSystemContextUnitOfWorkFactory:
+
+````cs
+public abstract class SolarSystemModelUnitOfWorkFactory<TContext> : NpgsqlUnitOfWorkFactoryBase<<TContext>>
+{
+    protected override void Configure()
+    {
+        RegisterRepository<IPlanetRepository>();
+        RegisterRepository<ISatelliteRepository>();
+        RegisterRepository<IAsteroidRepository>();
+    }
+}
+
+[ModelFactory(TestModelInheritanceConstants.Namespace.Namespace)]
+public class SolarSystemModelUnitOfWorkFactory : SolarSystemModelUnitOfWorkFactory<SolarSystemContext>
+{
+    protected override DbMigrationsConfiguration<ProductsContext> MigrationConfiguration => new Migrations.Configuration();
+}
+````
+
+And now the specialized one.
+
+````cs
+[ModelFactory(TestModelInheritanceConstants.Namespace, TestModelConstants.Namespace)]
+public class SpecializedSolarSystemContextUnitOfWorkFactory : SolarSystemContextUnitOfWorkFactory<SpecializedSolarSystemContext>
+{
+    protected override DbMigrationsConfiguration<ProductsContext> MigrationConfiguration => new Migrations.Configuration();
+
+    protected override void Configure()
+    {
+        RegisterRepository<IPlanetOfApesPlanetRepository>();
+    }
+}
+````
+
+That's all. Now you can use all migration stuff to create migrations.
+
+### A word about the `ModelFactory`
+
+You might wonder about the extended `ModelFactory` call. It's used to create a hierarchy inside the `UnitOfWorkFactory` and to get the right factory when a `IUnitofWorkFactory` gets injected.
+
+So if you want to get a derived factory injected you have to add the `UseChild` attribute to your class:
+
+````cs
+public class MyPlanetObserver
+{
+    ...
+
+    [UseChild(TestModelInheritanceConstants.Namespace)]
+    public IUnitOfWorkFactory PlanetOfTheApesFactory { get; set; }
+
+    ...
+}
+````
 
 ## Customizations to the migration process
 
