@@ -85,7 +85,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
             {
                 try
                 {
-                    modelConfigurator.CreateDatabase(modelConfigurator.Config);
+                    modelConfigurator.UpdateDatabase(modelConfigurator.Config);
                 }
                 catch
                 {
