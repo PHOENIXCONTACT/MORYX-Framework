@@ -69,11 +69,6 @@
       <Name>Marvin.AbstractionLayer</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Drivers\Marvin.Protocols.PhoenixPlc\Marvin.Protocols.PhoenixPlc.csproj">
-      <Project>{21db2c2b-3cdf-4ef0-8530-5c062feeb529}</Project>
-      <Name>Marvin.Protocols.PhoenixPlc</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
       <Project>{4CA4F6B5-4C26-4B99-8FB9-937971883083}</Project>
       <Name>Marvin.Resources.Management</Name>

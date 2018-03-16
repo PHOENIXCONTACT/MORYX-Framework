@@ -2,11 +2,7 @@
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Drivers.Plc;
-using Marvin.AbstractionLayer.Identity;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Model;
-using Marvin.Protocols.PhoenixPlc;
-using Marvin.Resources.Management;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples
@@ -26,19 +22,13 @@ namespace Marvin.Resources.Samples
             base.Initialize();
 
             Driver.Received += new HandlerMap<IQuickCast>($"{Id}-{Name}")
-                .Register<ReadyToWorkMessage>(PlcReadyToWork)
-                .Register<ProcessResultMessage>(ProcessResultReceived)
+                .Register<IQuickCast>(OnPlcMessage)
                 .ReceivedHandler;
         }
 
-        private void PlcReadyToWork(object sender, ReadyToWorkMessage readyToWork)
+        private static void OnPlcMessage(object sender, IQuickCast readyToWork)
         {
             // Handler that also uses the sender
-        }
-
-        private void ProcessResultReceived(ProcessResultMessage obj)
-        {
-            // Handler that ignores the sender
         }
 
         [EditorVisible]
