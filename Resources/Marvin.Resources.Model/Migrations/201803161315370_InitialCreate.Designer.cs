@@ -13,7 +13,7 @@ namespace Marvin.Resources.Model
         
         string IMigrationMetadata.Id
         {
-            get { return "201803120952457_InitialCreate"; }
+            get { return "201803161315370_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

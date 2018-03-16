@@ -42,8 +42,8 @@ namespace Marvin.Resources.Model
                         TargetId = c.Long(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("resources.ResourceEntity", t => t.SourceId, cascadeDelete: true)
                 .ForeignKey("resources.ResourceEntity", t => t.TargetId, cascadeDelete: true)
+                .ForeignKey("resources.ResourceEntity", t => t.SourceId, cascadeDelete: true)
                 .Index(t => t.SourceId)
                 .Index(t => t.TargetId);
             
@@ -51,8 +51,8 @@ namespace Marvin.Resources.Model
         
         public override void Down()
         {
-            DropForeignKey("resources.ResourceRelation", "TargetId", "resources.ResourceEntity");
             DropForeignKey("resources.ResourceRelation", "SourceId", "resources.ResourceEntity");
+            DropForeignKey("resources.ResourceRelation", "TargetId", "resources.ResourceEntity");
             DropIndex("resources.ResourceRelation", new[] { "TargetId" });
             DropIndex("resources.ResourceRelation", new[] { "SourceId" });
             DropIndex("resources.ResourceEntity", new[] { "GlobalIdentifier" });
