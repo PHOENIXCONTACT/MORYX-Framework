@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -50,6 +51,46 @@ namespace Marvin.Resources.Management
         #region Fields
 
         /// <summary>
+        /// Enum of the different startup phases of the resources
+        /// </summary>
+        private enum ResourceStartupPhase
+        {
+            /// <summary>
+            /// Loading the existing resources or creating a root resource
+            /// </summary>
+            LoadResources,
+            /// <summary>
+            /// Calling Initialize() foreach loaded resource
+            /// </summary>
+            Initializing,
+            /// <summary>
+            /// Every loaded resource is initialized
+            /// </summary>
+            Initialized,
+            /// <summary>
+            /// Calling Start() foreach loaded resource
+            /// </summary>
+            Starting,
+            /// <summary>
+            /// Every loaded resource is started.
+            /// </summary>
+            Started,
+            /// <summary>
+            /// Calling Stop() foreach resource
+            /// </summary>
+            Stopping,
+            /// <summary>
+            /// All resources are stopped
+            /// </summary>
+            Stopped
+        }
+
+        /// <summary>
+        /// Current phase of the Resource-Startup-Phase
+        /// </summary>
+        private ResourceStartupPhase _startup;
+
+        /// <summary>
         /// Direct access to all resources of the tree
         /// </summary>
         private IDictionary<long, ResourceWrapper> _resources;
@@ -62,9 +103,11 @@ namespace Marvin.Resources.Management
 
         #region LifeCycle
 
+
         /// 
         public void Initialize()
         {
+            _startup = ResourceStartupPhase.LoadResources;
             using (var uow = UowFactory.Create(ContextMode.AllOff))
             {
                 // Create all objects
@@ -75,6 +118,7 @@ namespace Marvin.Resources.Management
                     CreateRoot(uow);
             }
 
+            _startup = ResourceStartupPhase.Initializing;
             // Boot resources
             Parallel.ForEach(_resources.Values, resourceWrapper =>
             {
@@ -90,6 +134,7 @@ namespace Marvin.Resources.Management
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
+            _startup = ResourceStartupPhase.Initialized;
         }
 
         /// <summary>
@@ -97,8 +142,8 @@ namespace Marvin.Resources.Management
         /// </summary>
         private void LoadResources(ICollection<ResourceCreationTemplate> allResources)
         {
-            // Create dictionaries with initial capacity that should avoid the need of resizing
-            _resources = new Dictionary<long, ResourceWrapper>(allResources.Count * 2);
+            // Create the concurrent dictionary optimized for the current system architecture and expected collection size
+            _resources = new ConcurrentDictionary<long, ResourceWrapper>(Environment.ProcessorCount, allResources.Count * 2);
             _publicResources = new List<IPublicResource>(allResources.Count);
 
             // Create resource objects on multiple threads
@@ -108,7 +153,7 @@ namespace Marvin.Resources.Management
             {
                 AddResource(resource, false);
             }
-            
+
             // Link them to each other
             Parallel.ForEach(allResources, LinkReferences);
 
@@ -142,17 +187,42 @@ namespace Marvin.Resources.Management
         {
             IPublicResource publicResource;
 
-            lock (_resources)
+            var wrapped = new ResourceWrapper(instance);
+            // Add to collections
+            _resources[instance.Id] = wrapped;
+            publicResource = instance as IPublicResource;
+
+            if (publicResource != null)
             {
-                // Add to collections
-                _resources[instance.Id] = new ResourceWrapper(instance);
-                publicResource = instance as IPublicResource;
-                if (publicResource != null)
-                    _publicResources.Add(publicResource);
+                _publicResources.Add(publicResource);
 
                 // Register to events
                 if (registerEvents)
                     RegisterEvents(instance, publicResource);
+            }
+
+            switch (_startup)
+            {
+                case ResourceStartupPhase.LoadResources:
+                    // do nothing
+                    break;
+                case ResourceStartupPhase.Initializing:
+                case ResourceStartupPhase.Initialized:
+                    // Resources those are created during the initialize of a resource are automaticaly initialized also.
+                    wrapped.Initialize();
+                    break;
+                case ResourceStartupPhase.Starting:
+                case ResourceStartupPhase.Started:
+                    // Resources those are created during the start of a resource are automaticaly initialized and started also.
+                    wrapped.Initialize();
+                    wrapped.Start();
+                    break;
+                case ResourceStartupPhase.Stopping:
+                case ResourceStartupPhase.Stopped:
+                    // do nothing
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             RaiseResourceAdded(publicResource);
@@ -254,6 +324,7 @@ namespace Marvin.Resources.Management
         ///
         public void Start()
         {
+            _startup = ResourceStartupPhase.Starting;
             Parallel.ForEach(_resources.Values, resourceWrapper =>
             {
                 try
@@ -268,10 +339,12 @@ namespace Marvin.Resources.Management
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
+            _startup = ResourceStartupPhase.Started;
         }
 
         public void Stop()
         {
+            _startup = ResourceStartupPhase.Stopping;
             Parallel.ForEach(_resources.Values, resourceWrapper =>
             {
                 try
@@ -283,6 +356,7 @@ namespace Marvin.Resources.Management
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
+            _startup = ResourceStartupPhase.Stopped;
         }
 
         ///
@@ -689,6 +763,7 @@ namespace Marvin.Resources.Management
             var senderProxy = TypeController.GetProxy(senderResource);
             CapabilitiesChanged?.Invoke(senderProxy, capabilities);
         }
+
         #endregion
 
         /// <summary>
@@ -718,5 +793,6 @@ namespace Marvin.Resources.Management
                 _parent.AutoSaveCollection(_instance, _referenceProperty);
             }
         }
+
     }
 }
