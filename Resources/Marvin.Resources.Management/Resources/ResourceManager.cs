@@ -142,7 +142,8 @@ namespace Marvin.Resources.Management
         /// </summary>
         private void LoadResources(ICollection<ResourceCreationTemplate> allResources)
         {
-            _resources = new ConcurrentDictionary<long, ResourceWrapper>();
+            // Create the concurrent dictionary optimized for the current system architecture and expected collection size
+            _resources = new ConcurrentDictionary<long, ResourceWrapper>(Environment.ProcessorCount, allResources.Count * 2);
             _publicResources = new List<IPublicResource>(allResources.Count);
 
             // Create resource objects on multiple threads
