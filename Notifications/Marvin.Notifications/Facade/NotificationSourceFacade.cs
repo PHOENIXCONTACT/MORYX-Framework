@@ -28,15 +28,14 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public void Activate()
         {
-            NotificationAdapter.Published += OnNotificationPublished;
-            NotificationAdapter.Acknowledged += OnNotificationAcknowledged;
-
         }
 
         public void RaiseActivated()
         {
             // TODO: Raise this Event when the facade was activated not while activate. Wait for Platform 3.0.
             IsActivated = true;
+            NotificationAdapter.Published += OnNotificationPublished;
+            NotificationAdapter.Acknowledged += OnNotificationAcknowledged;
             Activated?.Invoke(this, EventArgs.Empty);
         }
 
