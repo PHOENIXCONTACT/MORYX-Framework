@@ -424,7 +424,7 @@ function Set-Version ([string]$MajorMinorPatch) {
             $version = "${version}-${postTag}"
         }
         if("$count" -ne ""){
-            $padded = $count.Trim().Trim('0').PadLeft(6,"0");
+            $padded = $count.Trim().PadLeft(6,"0");
             $version = "${version}${padded}"
         }
     } else {
@@ -437,7 +437,7 @@ function Set-Version ([string]$MajorMinorPatch) {
         $branch = $env:MARVIN_BRANCH
         $branch = $branch.Replace("/","-").ToLower()
 
-        if ($branch.ToLower() -eq "master") {
+        if ($branch -eq "develop") { # Rename to shorter name: dev
             $branch = "dev"
         }
         
