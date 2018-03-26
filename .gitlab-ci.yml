@@ -85,4 +85,4 @@ PublishPackages:
   script: 
     - .\build.ps1 -Publish
   only: 
-    - dev@marvinplatform/MarvinPlatform
+    - develop@marvinplatform/MarvinPlatform
