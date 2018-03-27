@@ -1,0 +1,36 @@
+﻿using System;
+using Marvin.Logging;
+
+namespace Marvin.Runtime.Maintenance.Plugins.Logging
+{
+    /// <summary>
+    /// Model which describes a log message.
+    /// </summary>
+    public class LogMessageModel
+    {
+        /// <summary>
+        /// Instance of a logger.
+        /// </summary>
+        public LoggerModel Logger { get; set; }
+
+        /// <summary>
+        /// Name of the class which created the logger message.
+        /// </summary>
+        public string ClassName { get; set; }
+
+        /// <summary>
+        /// The severity of this message.
+        /// </summary>
+        public LogLevel LogLevel { get; set; }
+
+        /// <summary>
+        /// The log message iteself.
+        /// </summary>
+        public string Message { get; set; }
+
+        /// <summary>
+        /// Time when the log message occured.
+        /// </summary>
+        public DateTime Timestamp { get; set; }
+    }
+}

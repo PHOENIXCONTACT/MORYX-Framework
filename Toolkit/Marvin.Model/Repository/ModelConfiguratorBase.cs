@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Migrations.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using Marvin.Configuration;
+using Marvin.Logging;
 using Marvin.Tools;
 
 namespace Marvin.Model
@@ -26,6 +28,11 @@ namespace Marvin.Model
         private string[] _migrations;
 
         /// <summary>
+        /// Logger for this model configurator
+        /// </summary>
+        protected IModuleLogger Logger { get; private set; }
+
+        /// <summary>
         /// Current <see cref="IUnitOfWorkFactory"/> for the configurator
         /// </summary>
         protected IUnitOfWorkFactory UnitOfWorkFactory { get; private set; }
@@ -42,12 +49,15 @@ namespace Marvin.Model
         public IDatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager)
+        public void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager, IModuleLogger logger)
         {
             UnitOfWorkFactory = unitOfWorkFactory;
 
             _contextFactory = unitOfWorkFactory as IDbContextFactory;
             _configManager = configManager;
+
+            // Add logger
+            Logger = logger;
 
             // Check cast
             if (_contextFactory == null)
@@ -94,22 +104,22 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public virtual bool TestConnection(IDatabaseConfig config)
+        public virtual TestConnectionResult TestConnection(IDatabaseConfig config)
         {
             if (string.IsNullOrWhiteSpace(config.Database))
-                return false;
+                return TestConnectionResult.ConnectionError;
 
             if (!TestDatabaseConnection(config))
-                return false;
+                return TestConnectionResult.ConnectionError;
 
             var context = _contextFactory.CreateContext(config, ContextMode.AllOff);
             try
             {
-                return context.Database.Exists();
+                return context.Database.Exists() ? TestConnectionResult.Success : TestConnectionResult.ConnectionOkDbDoesNotExist;
             }
             catch
             {
-                return false;
+                return TestConnectionResult.ConnectionOkDbDoesNotExist;
             }
             finally
             {
@@ -161,6 +171,11 @@ namespace Marvin.Model
         protected abstract DbConnection CreateConnection(IDatabaseConfig config);
 
         /// <summary>
+        /// Creates a <see cref="DbConnection"/>
+        /// </summary>
+        protected abstract DbConnection CreateConnection(IDatabaseConfig config, bool inlcudeModel);
+
+        /// <summary>
         /// Creates a <see cref="DbCommand"/>
         /// </summary>
         protected abstract DbCommand CreateCommand(string cmdText, DbConnection connection);
@@ -175,13 +190,13 @@ namespace Marvin.Model
         public abstract string BuildConnectionString(IDatabaseConfig config, bool includeModel);
 
         /// <inheritdoc />
-        public DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config)
+        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config)
         {
-            return UpdateDatabase(config, string.Empty);
+            return MigrateDatabase(config, string.Empty);
         }
 
         /// <inheritdoc />
-        public virtual DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string migrationId)
+        public virtual DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId)
         {
             var result = new DatabaseUpdateSummary();
 
@@ -210,7 +225,7 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AvailableUpdates(IDatabaseConfig config)
+        public IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config)
         {
             return _migrations.Select(migration => new DatabaseUpdateInformation
             {
@@ -219,7 +234,7 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> InstalledUpdates(IDatabaseConfig config)
+        public IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config)
         {
             return GetInstalledMigrations(config).Select(migration => new DatabaseUpdateInformation
             {
@@ -231,7 +246,7 @@ namespace Marvin.Model
         public abstract void DeleteDatabase(IDatabaseConfig config);
 
         /// <inheritdoc />
-        public abstract void DumpDatabase(IDatabaseConfig config, string filePath);
+        public abstract void DumpDatabase(IDatabaseConfig config, string targetPath);
 
         /// <inheritdoc />
         public abstract void RestoreDatabase(IDatabaseConfig config, string filePath);
@@ -249,6 +264,15 @@ namespace Marvin.Model
             using (var unitOfWork = ((IContextUnitOfWorkFactory)UnitOfWorkFactory).Create(context))
             {
                 setup.Execute(unitOfWork, setupData);
+            }
+        }
+
+        /// <inheritdoc />
+        public void Execute(IDatabaseConfig config, IModelScript script)
+        {
+            using (var context = _contextFactory.CreateContext(config, ContextMode.AllOn))
+            {
+                context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, script.GetSql());
             }
         }
 
@@ -287,11 +311,11 @@ namespace Marvin.Model
             if (!CheckDatabaseConfig(config))
                 return false;
                 
-            using (var conn = CreateConnection(config))
+            using (var conn = CreateConnection(config, false))
             {
                 try
                 {
-                    conn.Open(); //TODO SocketException will not be catched - https://github.com/npgsql/npgsql/issues/1707 
+                    conn.Open();
                     return true;
                 }
                 catch
@@ -367,7 +391,7 @@ namespace Marvin.Model
         public IDatabaseConfig Config => null;
 
         /// <inheritdoc />
-        public void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager)
+        public void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager, IModuleLogger logger)
         {
            
         }
@@ -391,7 +415,7 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public bool TestConnection(IDatabaseConfig config)
+        public TestConnectionResult TestConnection(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
@@ -403,13 +427,13 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config)
+        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string migrationId)
+        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
@@ -421,13 +445,13 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AvailableUpdates(IDatabaseConfig config)
+        public IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> InstalledUpdates(IDatabaseConfig config)
+        public IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
@@ -439,7 +463,7 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public void DumpDatabase(IDatabaseConfig config, string filePath)
+        public void DumpDatabase(IDatabaseConfig config, string targetPath)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
@@ -464,6 +488,12 @@ namespace Marvin.Model
 
         /// <inheritdoc />
         public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
+        {
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        }
+
+        /// <inheritdoc />
+        public void Execute(IDatabaseConfig config, IModelScript script)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }

@@ -1,8 +1,32 @@
 ﻿using System.Collections.Generic;
 using Marvin.Configuration;
+using Marvin.Logging;
 
 namespace Marvin.Model
 {
+    /// <summary>
+    /// Result enum for function TestConnection
+    /// </summary>
+    public enum TestConnectionResult
+    {
+        /// <summary>
+        /// Anything that belongs to a non existant or wrong configuration
+        /// </summary>
+        ConfigurationError,
+        /// <summary>
+        /// Connection could not be established
+        /// </summary>
+        ConnectionError,
+        /// <summary>
+        /// Connection could be established but database was not found
+        /// </summary>
+        ConnectionOkDbDoesNotExist,
+        /// <summary>
+        /// Connection could be established but database was found
+        /// </summary>
+        Success
+    }
+
     /// <summary>
     /// Interface for interaction with model
     /// </summary>
@@ -21,7 +45,7 @@ namespace Marvin.Model
         /// <summary>
         /// Initializes the model configurator
         /// </summary>
-        void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager);
+        void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager, IModuleLogger logger);
 
         /// <summary>
         /// Builds the connection string for the database. 
@@ -43,7 +67,7 @@ namespace Marvin.Model
         /// <summary>
         /// Test connection for config
         /// </summary>
-        bool TestConnection(IDatabaseConfig config);
+        TestConnectionResult TestConnection(IDatabaseConfig config);
 
         /// <summary>
         /// Create a new database for this model with given config
@@ -54,13 +78,13 @@ namespace Marvin.Model
         /// Update the current database to the newest version
         /// </summary>
         /// <returns>True when an update was executed, false when this is already the latest version</returns>
-        DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config);
+        DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config);
 
         /// <summary>
         /// Update the database to a the given migration version if available
         /// </summary>
         /// <returns>True when an update was executed, false when this is already the latest version</returns>
-        DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string migrationId);
+        DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId);
 
         /// <summary>
         /// Rolls back all migrations including the first migration
@@ -72,13 +96,13 @@ namespace Marvin.Model
         /// Retrieves all names of available updates
         /// </summary>
         /// <returns></returns>
-        IEnumerable<DatabaseUpdateInformation> AvailableUpdates(IDatabaseConfig config);
+        IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config);
 
         /// <summary>
         /// Retrieves all names of installed updates
         /// </summary>
         /// <returns></returns>
-        IEnumerable<DatabaseUpdateInformation> InstalledUpdates(IDatabaseConfig config);
+        IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config);
 
         /// <summary>
         /// Delete this database
@@ -92,9 +116,9 @@ namespace Marvin.Model
         /// This method works asynchronus
         /// </summary>
         /// <param name="config">Config describing the database target</param>
-        /// <param name="filePath">Path to store backup</param>
+        /// <param name="targetPath">Path to store backup</param>
         /// <returns>True if Backup is in progress</returns>
-        void DumpDatabase(IDatabaseConfig config, string filePath);
+        void DumpDatabase(IDatabaseConfig config, string targetPath);
 
         /// <summary>
         /// Restore this database with the given backup file
@@ -121,5 +145,12 @@ namespace Marvin.Model
         /// <param name="setup">Setup</param>
         /// <param name="setupData"></param>
         void Execute(IDatabaseConfig config, IModelSetup setup, string setupData);
+
+        /// <summary>
+        /// Execute script for this config
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="script"></param>
+        void Execute(IDatabaseConfig config, IModelScript script);
     }
 }

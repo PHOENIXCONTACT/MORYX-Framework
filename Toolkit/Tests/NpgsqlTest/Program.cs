@@ -44,7 +44,7 @@ namespace NpgsqlTest
 
             var modelConfigurator = ((IModelConfiguratorFactory) factory).GetConfigurator();
 
-            modelConfigurator.UpdateDatabase(dbConfig);
+            modelConfigurator.MigrateDatabase(dbConfig);
 
         }
     }

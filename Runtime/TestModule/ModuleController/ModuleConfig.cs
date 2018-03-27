@@ -29,6 +29,10 @@ namespace Marvin.TestModule
         public WcfConfig Config { get; set; }
 
         [DataMember]
+        [DefaultValue(0x2)]
+        public byte ByteValue { get; set; }
+
+        [DataMember]
         [DefaultValue(5)]
         public int IntegerValue { get; set; }
 
