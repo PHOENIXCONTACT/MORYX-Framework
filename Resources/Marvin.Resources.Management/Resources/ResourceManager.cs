@@ -185,21 +185,16 @@ namespace Marvin.Resources.Management
         /// </summary>
         private void AddResource(Resource instance, bool registerEvents)
         {
-            IPublicResource publicResource;
-
             var wrapped = new ResourceWrapper(instance);
             // Add to collections
             _resources[instance.Id] = wrapped;
-            publicResource = instance as IPublicResource;
-
+            var publicResource = instance as IPublicResource;
             if (publicResource != null)
-            {
                 _publicResources.Add(publicResource);
 
-                // Register to events
-                if (registerEvents)
-                    RegisterEvents(instance, publicResource);
-            }
+            // Register to events
+            if (registerEvents)
+                RegisterEvents(instance, publicResource);
 
             switch (_startup)
             {
@@ -225,7 +220,9 @@ namespace Marvin.Resources.Management
                     throw new ArgumentOutOfRangeException();
             }
 
-            RaiseResourceAdded(publicResource);
+            // Inform listeners about the new resource
+            if (publicResource != null)
+                RaiseResourceAdded(publicResource);
         }
 
         /// <summary>
