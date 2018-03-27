@@ -436,11 +436,7 @@ function Set-Version ([string]$MajorMinorPatch) {
         # This is a general branch commit
         $branch = $env:MARVIN_BRANCH
         $branch = $branch.Replace("/","-").ToLower()
-
-        if ($branch -eq "develop") { # Rename to shorter name: dev
-            $branch = "dev"
-        }
-        
+       
         $version = "${version}-${branch}${buildNumber}";
     }
 
