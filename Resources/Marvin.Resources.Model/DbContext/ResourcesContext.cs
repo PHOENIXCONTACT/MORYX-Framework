@@ -43,15 +43,14 @@ namespace Marvin.Resources.Model
         /// <inheritdoc cref="MarvinDbContext.OnModelCreating"/>
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ResourceRelation>()
-                .HasRequired(r => r.Source)
-                .WithMany(r => r.Sources)
-                .HasForeignKey(s => s.SourceId);
+            // ResourceEntity
+            modelBuilder.Entity<ResourceEntity>()
+                .HasMany(r => r.Sources)
+                .WithRequired(r => r.Target);
 
-            modelBuilder.Entity<ResourceRelation>()
-                .HasRequired(r => r.Target)
-                .WithMany(r => r.Targets)
-                .HasForeignKey(s => s.TargetId);
+            modelBuilder.Entity<ResourceEntity>()
+                .HasMany(r => r.Targets)
+                .WithRequired(r => r.Source);
 
             // Indexes
             modelBuilder.Entity<ResourceEntity>()

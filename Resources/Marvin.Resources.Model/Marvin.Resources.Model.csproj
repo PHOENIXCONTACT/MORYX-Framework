@@ -49,16 +49,16 @@
       <HintPath>..\..\packages\EntityFramework6.Npgsql.3.1.1\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev000851\lib\net461\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.889, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev000889\lib\net461\Marvin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Model.3.0.0-dev000851\lib\net461\Marvin.Model.dll</HintPath>
+    <Reference Include="Marvin.Model, Version=3.0.0.889, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Model.3.0.0-dev000889\lib\net461\Marvin.Model.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Model.Npgsql, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Model.Npgsql.3.0.0-dev000851\lib\net461\Marvin.Model.Npgsql.dll</HintPath>
+    <Reference Include="Marvin.Model.Npgsql, Version=3.0.0.889, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Model.Npgsql.3.0.0-dev000889\lib\net461\Marvin.Model.Npgsql.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -93,15 +93,14 @@
     <Compile Include="Entities\ResourceEntity.cs" />
     <Compile Include="Entities\ResourceRelation.cs" />
     <Compile Include="EntityCreation.cs" />
-    <Compile Include="Migrations\201803120952457_InitialCreate.cs" />
-    <Compile Include="Migrations\201803120952457_InitialCreate.Designer.cs">
-      <DependentUpon>201803120952457_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201803161315370_InitialCreate.cs" />
+    <Compile Include="Migrations\201803161315370_InitialCreate.Designer.cs">
+      <DependentUpon>201803161315370_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ResourcesMigrationsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DbContext\ResourcesConstants.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Marvin.Resources.Model.nuspec" />
@@ -115,9 +114,10 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201803120952457_InitialCreate.resx">
-      <DependentUpon>201803120952457_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201803161315370_InitialCreate.resx">
+      <DependentUpon>201803161315370_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
