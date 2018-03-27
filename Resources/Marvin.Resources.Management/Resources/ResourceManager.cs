@@ -584,7 +584,7 @@ namespace Marvin.Resources.Management
         {
             try
             {
-                resource.Start();
+                ((IPlugin)resource).Start();
                 return true;
             }
             catch (Exception e)
@@ -599,7 +599,7 @@ namespace Marvin.Resources.Management
         {
             try
             {
-                resource.Stop();
+                ((IPlugin)resource).Stop();
                 return true;
             }
             catch (Exception e)
@@ -633,7 +633,7 @@ namespace Marvin.Resources.Management
         public bool Destroy(IResource resource, bool permanent)
         {
             var instance = (Resource)resource;
-            instance.Stop();
+            ((IPlugin)resource).Stop();
 
             // Load entity and relations to disconnect resource and remove from database
             using (var uow = UowFactory.Create())

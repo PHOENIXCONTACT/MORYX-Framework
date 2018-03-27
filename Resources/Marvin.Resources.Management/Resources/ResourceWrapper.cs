@@ -1,4 +1,5 @@
 ﻿using Marvin.AbstractionLayer.Resources;
+using Marvin.Modules;
 using Marvin.StateMachines;
 
 namespace Marvin.Resources.Management
@@ -27,7 +28,7 @@ namespace Marvin.Resources.Management
 
         internal void HandleInitialize()
         {
-            Target.Initialize();
+            ((IInitializable)Target).Initialize();
         }
 
         internal void Start()
@@ -37,7 +38,7 @@ namespace Marvin.Resources.Management
 
         internal void HandleStart()
         {
-            Target.Start();
+            ((IPlugin)Target).Start();
         }
 
         internal void ErrorOccured()
@@ -52,7 +53,7 @@ namespace Marvin.Resources.Management
 
         internal void HandleStop()
         {
-            Target.Stop();
+            ((IPlugin)Target).Stop();
         }
     }
 }

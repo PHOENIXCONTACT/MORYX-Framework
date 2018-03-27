@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.Serialization;
-using Marvin.StateMachines;
 
 namespace Marvin.AbstractionLayer.Resources
 {
@@ -11,7 +10,7 @@ namespace Marvin.AbstractionLayer.Resources
     /// Base class for all resources to reduce boilerplate code
     /// </summary>
     [DataContract]
-    public abstract class Resource : ILoggingComponent, IResource, IPlugin, IPersistentObject
+    public abstract class Resource : ILoggingComponent, IResource, IPlugin, IDisposable, IPersistentObject, IInitializable
     {
         #region Dependencies
 
@@ -27,17 +26,23 @@ namespace Marvin.AbstractionLayer.Resources
 
         #endregion
 
-        /// 
+        /// <inheritdoc /> 
         public long Id { get; set; }
 
-        ///
+        /// <inheritdoc />
         public string Name { get; set; }
 
-        /// 
+        /// <inheritdoc />
         public string LocalIdentifier { get; set; }
 
-        ///
+        /// <inheritdoc />
         public string GlobalIdentifier { get; set; }
+
+        /// <summary>
+        /// Descriptor to provide access to this resource. Either the descriptor or 
+        /// its properties and methods need to flagged with <see cref="EditorVisibleAttribute"/> 
+        /// </summary>
+        public virtual object Descriptor => this;
 
         /// <summary>
         /// Parent resource of this resource
@@ -51,26 +56,48 @@ namespace Marvin.AbstractionLayer.Resources
         [ResourceReference(ResourceRelationType.ParentChild, ResourceReferenceRole.Target)]
         public IReferences<Resource> Children { get; set; }
 
-        ///
-        public virtual void Initialize()
+        /// <inheritdoc />
+        void IInitializable.Initialize()
         {
             Logger = Logger?.GetChild(Name, GetType());
-        }
-
-        ///
-        public virtual void Start()
-        {
+            OnInitialize();
         }
 
         /// <summary>
-        /// Method invoked to stop a resource instances execution
+        /// Resource specific implementation of <see cref="IInitializable.Initialize"/>
         /// </summary>
-        public virtual void Stop()
+        protected virtual void OnInitialize()
         {
         }
 
-        /// 
-        public void Dispose()
+        /// <inheritdoc />
+        void IPlugin.Start()
+        {
+            OnStart();
+        }
+
+        /// <summary>
+        /// Resource specific implementation of <see cref="IPlugin.Start"/>
+        /// </summary>
+        protected virtual void OnStart()
+        {
+        }
+
+        /// <inheritdoc />
+        void IPlugin.Stop()
+        {
+            OnStop();
+        }
+
+        /// <summary>
+        /// Resource specific implementation of <see cref="IPlugin.Stop"/>
+        /// </summary>
+        protected virtual void OnStop()
+        {
+        }
+
+        /// <inheritdoc />
+        void IDisposable.Dispose()
         {
             // Remove type controller reference, just to make sure
             Creator = null;
@@ -86,9 +113,7 @@ namespace Marvin.AbstractionLayer.Resources
         }
 
         /// <summary>
-        /// Resource specific implementation of Dispose instead of overriding <see cref="Dispose"/>.
-        /// This ensures, that developers do not accidently forget to call <code>base.Dispose()</code> and
-        /// create a memory leak
+        /// Resource specific implementation of <see cref="IDisposable.Dispose"/>
         /// </summary>
         protected virtual void OnDispose()
         {
@@ -103,17 +128,6 @@ namespace Marvin.AbstractionLayer.Resources
             // This is only null during boot, when the resource manager populates the object
             Changed?.Invoke(this, EventArgs.Empty);
         }
-        /// <summary>
-        /// Event raised when the resource was modified and the changes should be
-        /// written to the data storage
-        /// </summary>
-        public event EventHandler Changed;
-
-        /// <summary>
-        /// Descriptor to provide access to this resource. Either the descriptor or 
-        /// its properties and methods need to flagged with <see cref="EditorVisibleAttribute"/> 
-        /// </summary>
-        public virtual object Descriptor => this;
 
         /// <summary>
         /// Return Id, name and type of the resource
@@ -123,6 +137,11 @@ namespace Marvin.AbstractionLayer.Resources
         {
             return $"{Id}:{Name} ({GetType().Name})";
         }
- 
+
+        /// <summary>
+        /// Event raised when the resource was modified and the changes should be
+        /// written to the data storage
+        /// </summary>
+        public event EventHandler Changed;
     }
 }

@@ -17,9 +17,9 @@ namespace Marvin.Resources.Samples
         [ResourceReference(ResourceRelationType.Driver)]
         public IPlcDriver Driver { get; set; }
 
-        public override void Initialize()
+        protected override void OnInitialize()
         {
-            base.Initialize();
+            base.OnInitialize();
 
             Driver.Received += new HandlerMap<IQuickCast>($"{Id}-{Name}")
                 .Register<IQuickCast>(OnPlcMessage)
