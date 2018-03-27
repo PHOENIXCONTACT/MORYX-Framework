@@ -8,24 +8,14 @@ namespace Marvin.Tools.Wcf
     [AttributeUsage(AttributeTargets.Interface)]
     public class ServiceVersionAttribute : Attribute
     {
-        private string _serverVersion = "1.0.0.0";
         /// <summary>
         /// Version of the server
         /// </summary>
-        public string ServerVersion
-        {
-            get { return _serverVersion; }
-            set { _serverVersion = value; }
-        }
+        public string ServerVersion { get; set; } = "1.0.0.0";
 
-        private string _minClientVersion = "1.0.0.0";
         /// <summary>
         /// Min required version of the server
         /// </summary>
-        public string MinClientVersion
-        {
-            get { return _minClientVersion; }
-            set { _minClientVersion = value; }
-        }
+        public string MinClientVersion { get; set; } = "1.0.0.0";
     }
 }

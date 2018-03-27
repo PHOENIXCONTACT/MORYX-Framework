@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Marvin.Configuration;
 using Marvin.Container;
+using Marvin.Logging;
 using Marvin.Modules;
 
 namespace Marvin.Model
@@ -12,8 +13,7 @@ namespace Marvin.Model
     /// </summary>
     public abstract class UnitOfWorkFactoryBase<TContext, TConfigurator> : IUnitOfWorkFactory, 
         IContextUnitOfWorkFactory, IInitializable, IDbContextFactory, IModelConfiguratorFactory,
-        IParentFactory, IContainerChild<IUnitOfWorkFactory>
-        where TContext : MarvinDbContext
+        IParentFactory, IContainerChild<IUnitOfWorkFactory>, ILoggingHost where TContext : MarvinDbContext
         where TConfigurator : IModelConfigurator, new()
     {
         #region Dependencies
@@ -27,6 +27,11 @@ namespace Marvin.Model
         /// Config manager to load configuration of the model
         /// </summary>
         public IConfigManager ConfigManager { get; set; }
+
+        /// <summary>
+        /// LoggerManagement to create Logger
+        /// </summary>
+        public ILoggerManagement LoggerManagement { get; set; }
 
         #endregion
 
@@ -43,6 +48,13 @@ namespace Marvin.Model
         private readonly RepositoryProxyBuilder _proxyBuilder;
         private readonly Dictionary<string, IUnitOfWorkFactory> _children = new Dictionary<string, IUnitOfWorkFactory>();
 
+        string ILoggingHost.Name => "UnitOfWorkFactory";
+
+        /// <summary>
+        /// Root logger for the unitOfworkfactory
+        /// </summary>
+        public IModuleLogger Logger { get; set; }
+
         /// <summary>
         /// Creates a new instance of the <see cref="UnitOfWorkFactoryBase{TContext, TConfigurator}"/>
         /// </summary>
@@ -54,9 +66,12 @@ namespace Marvin.Model
         /// <inheritdoc />
         public void Initialize()
         {
+            // Activate logging
+            LoggerManagement.ActivateLogging(this);
+
             // Create configurator
             _configurator = new TConfigurator();
-            _configurator.Initialize(this, ConfigManager);
+            _configurator.Initialize(this, ConfigManager, Logger);
 
             // Configure the factory
             Configure();

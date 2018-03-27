@@ -1,0 +1,30 @@
+﻿using Marvin.Logging;
+
+namespace Marvin.Runtime.Maintenance.Plugins.Logging
+{
+    /// <summary>
+    /// Model which represens a plugin logger. 
+    /// </summary>
+    public class LoggerModel
+    {
+        /// <summary>
+        /// Name of this logger.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The level for which this logger is configured. See <see cref="LogLevel"/> for level information.
+        /// </summary>
+        public LogLevel ActiveLevel { get; set; }
+
+        /// <summary>
+        /// List of childs of this logger.
+        /// </summary>
+        public LoggerModel[] ChildLogger { get; set; }
+
+        /// <summary>
+        /// The parent of this logger. 
+        /// </summary>
+        public LoggerModel Parent { get; set; }
+    }
+}

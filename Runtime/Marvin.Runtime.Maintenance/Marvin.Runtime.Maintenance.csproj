@@ -35,63 +35,78 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Plugins\AMaintenanceModule.cs" />
-    <Compile Include="Plugins\CommonMaintenance\CommonMaintenanceConfig.cs" />
-    <Compile Include="Plugins\CommonMaintenance\CommonMaintenancePlugin.cs" />
-    <Compile Include="Plugins\CommonMaintenance\Wcf\CommonMaintenance.cs" />
-    <Compile Include="Plugins\CommonMaintenance\Wcf\ICommonMaintenance.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\DumpResult.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\Wcf\BackupModel.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\Wcf\DatabaseConfigModel.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\DatabaseConfig.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\DatabasePlugin.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\Wcf\Datamodel.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\Wcf\DbUpdateModel.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\Wcf\ScriptModel.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\Wcf\SetupModel.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\Wcf\DatabaseMaintenance.cs" />
-    <Compile Include="Plugins\DatabaseMaintenance\Wcf\IDatabaseMaintenance.cs" />
+    <Compile Include="Filesystem\FileSystemPathProvider.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\ApplicationInformationResponse.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\ApplicationLoadResponse.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\HostInformationResponse.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\SystemLoadResponse.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Response\TestConnectionResponse.cs" />
+    <Compile Include="Plugins\HttpHelper.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Response\AddAppenderResponse.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Request\AddAppenderRequest.cs" />
+    <Compile Include="Plugins\MaintenancePluginBase.cs" />
+    <Compile Include="Plugins\Common\CommonMaintenanceConfig.cs" />
+    <Compile Include="Plugins\Common\CommonMaintenancePlugin.cs" />
+    <Compile Include="Plugins\Common\Wcf\CommonMaintenance.cs" />
+    <Compile Include="Plugins\Common\Wcf\ICommonMaintenance.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\ServerTimeResponse.cs" />
+    <Compile Include="Plugins\InvocationResponse.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Request\ExecuteScriptRequest.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Request\ExecuteSetupRequest.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Request\RestoreDatabaseRequest.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\BackupModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\DatabaseConfigModel.cs" />
+    <Compile Include="Plugins\Databases\DatabaseConfig.cs" />
+    <Compile Include="Plugins\Databases\DatabasePlugin.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\DataModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\DbMigrationsModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\ScriptModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\SetupModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\DatabaseMaintenance.cs" />
+    <Compile Include="Plugins\Databases\Wcf\IDatabaseMaintenance.cs" />
     <Compile Include="Plugins\DataStore\DataStoreConfig.cs" />
     <Compile Include="Plugins\DataStore\DataStorePlugin.cs" />
-    <Compile Include="Plugins\LogMaintenance\ILoggingAppender.cs" />
-    <Compile Include="Plugins\LogMaintenance\LoggingAppenderPlugin.cs" />
-    <Compile Include="Plugins\LogMaintenance\LoggingMaintenanceConfig.cs" />
-    <Compile Include="Plugins\LogMaintenance\RemoteAppender.cs" />
-    <Compile Include="Plugins\LogMaintenance\Wcf\ILogMaintenance.cs" />
-    <Compile Include="Plugins\LogMaintenance\Wcf\LogMessageModel.cs" />
-    <Compile Include="Plugins\LogMaintenance\Wcf\PluginLoggerModel.cs" />
-    <Compile Include="Plugins\LogMaintenance\Wcf\LogMaintenance.cs" />
+    <Compile Include="Plugins\Logging\ILoggingAppender.cs" />
+    <Compile Include="Plugins\Logging\LoggingAppenderPlugin.cs" />
+    <Compile Include="Plugins\Logging\LoggingMaintenanceConfig.cs" />
+    <Compile Include="Plugins\Logging\RemoteAppender.cs" />
+    <Compile Include="Plugins\Logging\Wcf\ILogMaintenance.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Models\LogMessageModel.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Models\LoggerModel.cs" />
+    <Compile Include="Plugins\Logging\Wcf\LogMaintenance.cs" />
     <Compile Include="ModuleController\ModuleConsole.cs" />
     <Compile Include="ModuleController\ModuleController.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\ConfigUpdateMode.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Request\SetLogLevelRequest.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\AssemblyModel.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\Config.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\ConfigUpdateMode.cs" />
     <Compile Include="Filesystem\IMaintenanceFileSystemService.cs" />
     <Compile Include="ModuleController\ModuleConfig.cs" />
     <Compile Include="Filesystem\MaintenanceFileSystemService.cs" />
-    <Compile Include="Filesystem\FileSystemPathProvider.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\Config.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\DependencyEvaluation.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\EnumConverter.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\ModuleNotificationType.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\ModuleServerModuleState.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\SerializableException.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\DependencyEvaluation.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\ModuleNotificationType.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\ModuleServerModuleState.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\NotificationModel.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\SerializableException.cs" />
     <Compile Include="Contracts\IMaintenancePlugin.cs" />
     <Compile Include="Contracts\IMaintenancePluginFactory.cs" />
     <Compile Include="Contracts\MaintenanceModuleConfig.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\ModuleMaintenanceConfig.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\ModuleMaintenancePlugin.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\IModuleMaintenance.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\ModuleMaintenance.cs" />
-    <Compile Include="Plugins\WebServer\WebServerConfig.cs" />
-    <Compile Include="Plugins\WebServer\WebServerModule.cs" />
+    <Compile Include="Plugins\Modules\ModuleMaintenanceConfig.cs" />
+    <Compile Include="Plugins\Modules\ModuleMaintenancePlugin.cs" />
+    <Compile Include="Plugins\Modules\Wcf\IModuleMaintenance.cs" />
+    <Compile Include="Plugins\Modules\Wcf\ModuleMaintenance.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Request\SaveConfigRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Plugins\ModuleMaintenance\Wcf\Models\ServerModuleModel.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\ServerModuleModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Toolkit\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
@@ -111,6 +126,7 @@
   <ItemGroup>
     <None Include="Marvin.Runtime.Maintenance.nuspec" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

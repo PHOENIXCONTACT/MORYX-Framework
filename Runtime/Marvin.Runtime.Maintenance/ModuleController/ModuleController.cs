@@ -78,20 +78,33 @@ namespace Marvin.Runtime.Maintenance
         /// <exception cref="System.Exception">Failed to start module  + moduleConfig.PluginName</exception>
         protected override void OnStart()
         {
-            // Start plugins
             var pluginFac = Container.Resolve<IMaintenancePluginFactory>();
-            foreach (var pluginConfig in Config.Plugins.Where(module => module.IsActive).Distinct())
+            var plugins = Container.ResolveAll<IMaintenancePlugin>().ToList();
+
+            foreach (var pluginConfig in Config.Plugins.Distinct())
             {
                 var plugin = pluginFac.Create(pluginConfig);
                 try
                 {
-                    plugin.Start();
+                    if (pluginConfig.IsActive)
+                    {
+                        plugin.Start();
+                    }
+                    plugins.Remove(plugin);
                 }
                 catch (Exception ex)
                 {
                     Logger.LogException(LogLevel.Error, ex, "Failed to start plugin {0}", pluginConfig.PluginName);
                     throw new Exception("Failed to start plugin " + pluginConfig.PluginName, ex);
                 }
+            }
+
+            foreach (var maintenancePlugin in plugins)
+            {
+                var config = (MaintenancePluginConfig)Activator.CreateInstance(maintenancePlugin.ConfigType);
+                config.IsActive = false;
+
+                Config.Plugins.Add(config);
             }
         }
 
@@ -106,6 +119,5 @@ namespace Marvin.Runtime.Maintenance
             }
             _serviceHosts.Clear();
         }
-
     }
 }
