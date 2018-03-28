@@ -87,8 +87,10 @@
   <ItemGroup>
     <Compile Include="Resources\IReferenceCollection.cs" />
     <Compile Include="Resources\IResourceFactory.cs" />
+    <Compile Include="Resources\IResourceLinker.cs" />
     <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Resources\IResourceTypeController.cs" />
+    <Compile Include="Resources\ResourceLinker.cs" />
     <Compile Include="Resources\ResourceWrapper.cs" />
     <Compile Include="Resources\ResourceProxyBuilder.cs" />
     <Compile Include="Resources\ResourceTypeController.cs" />

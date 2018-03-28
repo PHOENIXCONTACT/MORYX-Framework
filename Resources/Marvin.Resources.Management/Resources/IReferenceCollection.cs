@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Marvin.AbstractionLayer.Resources;
 
 namespace Marvin.Resources.Management
@@ -17,6 +18,25 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Event raised when the collection was changed
         /// </summary>
-        event EventHandler CollectionChanged;
+        event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
+    }
+
+    internal class ReferenceCollectionChangedEventArgs : EventArgs
+    {
+        public ReferenceCollectionChangedEventArgs(Resource parent, PropertyInfo collectionProperty)
+        {
+            Parent = parent;
+            CollectionProperty = collectionProperty;
+        }
+
+        /// <summary>
+        /// Resource instance this collection belongs to
+        /// </summary>
+        public Resource Parent { get; }
+
+        /// <summary>
+        /// Property represented by this collection
+        /// </summary>
+        public PropertyInfo CollectionProperty { get; }
     }
 }

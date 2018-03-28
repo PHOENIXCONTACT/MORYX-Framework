@@ -27,6 +27,11 @@ namespace Marvin.Resources.Management
         public IResourceTypeController TypeController { get; set; }
 
         /// <summary>
+        /// Component responsible for linking of the object graph
+        /// </summary>
+        public IResourceLinker ResourceLinker { get; set; }
+
+        /// <summary>
         /// Access to the database
         /// </summary>
         public IUnitOfWorkFactory UowFactory { get; set; }
@@ -175,7 +180,7 @@ namespace Marvin.Resources.Management
 
             // Create a root resource
             var root = Create(Config.RootType);
-            Save(uow, root);
+            SaveResource(uow, root);
             uow.Save();
             AddResource(root, true);
         }
@@ -259,63 +264,10 @@ namespace Marvin.Resources.Management
         /// </summary>
         private void LinkReferences(ResourceCreationTemplate creationTemplate)
         {
-            LinkReferences(creationTemplate.Instance, creationTemplate.Relations);
-        }
+            ResourceLinker.LinkReferences(creationTemplate.Instance, creationTemplate.Relations, this);
 
-        /// <summary>
-        /// Link all references of a resource
-        /// </summary>
-        private void LinkReferences(Resource resource, ICollection<ResourceRelationTemplate> relations)
-        {
-            var resourceType = resource.GetType();
-            foreach (var property in ReferenceProperties(resourceType))
-            {
-                var referenceOverride = property.GetCustomAttribute<ReferenceOverrideAttribute>();
-                var isEnumerable = typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType);
-                if (!isEnumerable && referenceOverride == null)
-                {
-                    // Link a single reference
-                    var matches = MatchingRelations(relations, property);
-                    if (matches.Count == 0)
-                        continue;
-
-                    // Try to find a possible match for the property
-                    var propertyType = property.PropertyType;
-                    var referenceMatch = (from match in matches
-                                          let reference = _resources[match.ReferenceId].Target
-                                          where propertyType.IsInstanceOfType(reference)
-                                          select reference).ToArray();
-                    if (referenceMatch.Length == 1)
-                        property.SetValue(resource, referenceMatch[0]);
-                    else
-                        Logger.LogEntry(LogLevel.Warning, "Type mismatch: Can not assign any resource from [{0}] to {1} on {2}:{3} or too many matches!", string.Join(",", matches.Select(m => m.ReferenceId)), property.Name, resource.Id, resource.Name);
-                }
-                // Link a list of resources
-                else if (isEnumerable && referenceOverride == null)
-                {
-                    // Read attribute and get the ReferenceCollection
-                    var att = property.GetCustomAttribute<ResourceReferenceAttribute>();
-                    var value = (IReferenceCollection)property.GetValue(resource);
-
-                    var matches = MatchingRelations(relations, property);
-                    var resources = matches.Select(m => _resources[m.ReferenceId].Target)
-                        .OrderBy(r => r.LocalIdentifier).ThenBy(r => r.Name);
-                    foreach (var referencedResource in resources)
-                    {
-                        value.UnderlyingCollection.Add(referencedResource);
-                    }
-                    if (att != null && att.AutoSave)
-                        value.CollectionChanged += new SaveResourceTrigger(this, resource, property).OnCollectionChanged;
-                }
-                // Register on changes for ReferenceOverrides with AutoSave
-                else if (isEnumerable && referenceOverride != null && referenceOverride.AutoSave)
-                {
-                    var target = resourceType.GetProperty(referenceOverride.Source);
-                    var value = (IReferenceCollection)property.GetValue(resource);
-                    // Reference override publish change for the source property instead
-                    value.CollectionChanged += new SaveResourceTrigger(this, resource, target).OnCollectionChanged;
-                }
-            }
+            foreach(var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(creationTemplate.Instance))
+                autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
         }
 
         ///
@@ -376,9 +328,6 @@ namespace Marvin.Resources.Management
             template.Name = template.Type = type; // Initially set name to type
             var instance = template.Instantiate(TypeController, this);
 
-            // Provide ReferenceCollections for the new instance
-            LinkReferences(instance, new List<ResourceRelationTemplate>());
-
             return instance;
         }
 
@@ -386,7 +335,7 @@ namespace Marvin.Resources.Management
         {
             using (var uow = UowFactory.Create())
             {
-                Save(uow, resource);
+                SaveResource(uow, resource);
                 uow.Save();
             }
         }
@@ -394,29 +343,33 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// A collection with "AutoSave = true" was modified. Write current state to the database
         /// </summary>
-        private void AutoSaveCollection(Resource instance, PropertyInfo collectionProperty)
+        private void OnAutoSaveCollectionChanged(object sender, ReferenceCollectionChangedEventArgs args)
         {
+            var instance = args.Parent;
+            var property = args.CollectionProperty;
+
             using (var uow = UowFactory.Create())
             {
-                var entity = uow.GetEntity<ResourceEntity>(instance);
-                var relations = ResourceRelationTemplate.FromEntity(uow, entity);
-                var matches = MatchingRelations(relations, collectionProperty);
-                UpdateCollectionReference(uow, entity, instance, collectionProperty, matches);
+                ResourceLinker.SaveSingleCollection(uow, instance, property, this);
+
                 uow.Save();
             }
         }
 
         /// <summary>
         /// Save a resource to the database
+        /// TODO: Return to private access modifier
         /// </summary>
-        private ResourceEntity Save(IUnitOfWork uow, Resource resource)
+        internal ResourceEntity SaveResource(IUnitOfWork uow, Resource resource)
         {
             // Create entity and populate from object
             var entity = uow.GetEntity<ResourceEntity>(resource);
             if (entity.Id == 0)
             {
                 entity.Type = resource.GetType().Name;
-                LinkReferences(resource, new List<ResourceRelationTemplate>()); // Register on references for new instance
+                // Register on references for new instance
+                foreach (var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(resource))
+                    autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
                 EntityIdListener.Listen(entity, new SaveResourceTrigger(this, resource));
             }
 
@@ -426,154 +379,9 @@ namespace Marvin.Resources.Management
             entity.ExtensionData = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
 
             // Save references
-            var relations = ResourceRelationTemplate.FromEntity(uow, entity);
-            foreach (var referenceProperty in ReferenceProperties(resource.GetType(), false))
-            {
-                var matches = MatchingRelations(relations, referenceProperty);
-                if (typeof(IEnumerable<IResource>).IsAssignableFrom(referenceProperty.PropertyType))
-                {
-                    // Save a collection reference
-                    UpdateCollectionReference(uow, entity, resource, referenceProperty, matches);
-                }
-                else
-                {
-                    // Save a single reference
-                    UpdateSingleReference(uow, entity, resource, referenceProperty, matches);
-                }
-            }
+            ResourceLinker.SaveReferences(uow, resource, entity, this);
 
             return entity;
-        }
-
-        /// <summary>
-        /// Make sure our resource-relation graph in the database is synced to the resource object graph. This method
-        /// updates single references like in the example below
-        /// </summary>
-        /// <example>
-        /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
-        /// public Resource FriendResource { get; set; }
-        /// </example>
-        private void UpdateSingleReference(IUnitOfWork uow, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationTemplate> matches)
-        {
-            var relationRepo = uow.GetRepository<IResourceRelationRepository>();
-
-            var value = referenceProperty.GetValue(resource);
-            var referencedResource = value as Resource;
-            // Validate if object assigned to the property is a resource
-            if (value != null && referencedResource == null)
-                throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}:{resource.GetType().Name} must be a Resource");
-
-            var att = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
-
-            // Try to find a match that previously referenced another compatible resource
-            var propertyType = referenceProperty.PropertyType;
-            var relEntity = (from match in matches
-                             where propertyType.IsInstanceOfType(_resources[match.ReferenceId].Target)
-                             select match.Entity).SingleOrDefault();
-            if (relEntity == null && referencedResource != null)
-            {
-                // Create a new relation
-                relEntity = CreateRelationForProperty(relationRepo, att);
-            }
-            else if (relEntity != null && referencedResource == null)
-            {
-                // Delete a relation, that no longer exists
-                relationRepo.Remove(relEntity);
-                return;
-            }
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse <<- To identify the remaining case
-            else if (relEntity == null && referencedResource == null)
-            {
-                // Relation did not exist before and still does not
-                return;
-            }
-
-            // Set source and target of the relation depending on the reference roles
-            var referencedEntity = referencedResource.Id > 0 ? uow.GetEntity<ResourceEntity>(referencedResource) : Save(uow, referencedResource);
-            UpdateRelationEntity(entity, referencedEntity, relEntity, att);
-        }
-
-        /// <summary>
-        /// Make sure our resource-relation graph in the database is synced to the resource object graph. This method
-        /// updates a collection of references
-        /// </summary>
-        /// <example>
-        /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
-        /// public IReferences&lt;Resource&gt; FriendResources { get; set; }
-        /// </example>
-        private void UpdateCollectionReference(IUnitOfWork uow, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationTemplate> relationTemplates)
-        {
-            var relationRepo = uow.GetRepository<IResourceRelationRepository>();
-            var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
-
-            // Get the value stored in the reference property
-            var propertyValue = referenceProperty.GetValue(resource);
-            var referencedResources = ((IEnumerable<IResource>)propertyValue).Cast<Resource>().ToList();
-
-            // First delete references that no longer exist
-            var deleted = relationTemplates.Where(m => referencedResources.All(r => r.Id != m.ReferenceId)).Select(m => m.Entity);
-            relationRepo.RemoveRange(deleted);
-
-            // Now create new relations
-            var created = referencedResources.Where(r => relationTemplates.All(m => m.ReferenceId != r.Id));
-            foreach (var createdReference in created)
-            {
-                var referencedEntity = createdReference.Id > 0 ? uow.GetEntity<ResourceEntity>(createdReference) : Save(uow, createdReference);
-                var relEntity = CreateRelationForProperty(relationRepo, referenceAtt);
-                UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
-            }
-        }
-
-        /// <summary>
-        /// Create a <see cref="ResourceRelation"/> entity for a property match
-        /// </summary>
-        private static ResourceRelation CreateRelationForProperty(IResourceRelationRepository relationRepo, ResourceReferenceAttribute att)
-        {
-            var relationType = att.RelationType;
-            var relEntity = relationRepo.Create((int)relationType);
-            if (!string.IsNullOrEmpty(att.Name))
-                relEntity.RelationName = att.Name;
-            return relEntity;
-        }
-
-        /// <summary>
-        /// Set <see cref="ResourceRelation.SourceId"/> and <see cref="ResourceRelation.TargetId"/> depending on the <see cref="ResourceReferenceRole"/>
-        /// of the reference property
-        /// </summary>
-        private static void UpdateRelationEntity(ResourceEntity resource, ResourceEntity referencedResource, ResourceRelation relEntity, ResourceReferenceAttribute att)
-        {
-            if (att.Role == ResourceReferenceRole.Source)
-            {
-                relEntity.Source = referencedResource;
-                relEntity.Target = resource;
-            }
-            else
-            {
-                relEntity.Source = resource;
-                relEntity.Target = referencedResource;
-            }
-        }
-
-        private static IEnumerable<PropertyInfo> ReferenceProperties(Type resourceType, bool includeOverrides = true)
-        {
-            return (from property in resourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    where property.CanWrite && Attribute.IsDefined(property, typeof(ResourceReferenceAttribute))
-                       || includeOverrides && Attribute.IsDefined(property, typeof(ReferenceOverrideAttribute))
-                    select property);
-        }
-
-        /// <summary>
-        /// Find the relation that matches the property
-        /// </summary>
-        private static IReadOnlyList<ResourceRelationTemplate> MatchingRelations(IEnumerable<ResourceRelationTemplate> relations, PropertyInfo property)
-        {
-            var attribute = property.GetCustomAttribute<ResourceReferenceAttribute>();
-            var matches = (from relation in relations
-                           where attribute.Role == relation.Role
-                           where attribute.RelationType == relation.RelationType // Typed relation without name or matching name
-                                && (string.IsNullOrEmpty(attribute.Name) || attribute.Name == relation.Name)
-                           select relation);
-            return matches.ToArray();
         }
 
         ///
@@ -641,16 +449,15 @@ namespace Marvin.Resources.Management
                 // Fetch entity and relations
                 // Update properties on the references and get rid of relation entities
                 var entity = resourceRepository.GetByKey(instance.Id);
-                foreach (var relationEntity in entity.Sources.Concat(entity.Targets).ToArray())
+                var relationEntities = entity.Sources.Concat(entity.Targets).ToArray();
+                foreach (var relationEntity in relationEntities)
                 {
                     var referenceId = relationEntity.SourceId == instance.Id
                         ? relationEntity.TargetId
                         : relationEntity.SourceId;
                     var reference = _resources[referenceId].Target;
 
-                    var property = GetProperty(reference, instance);
-                    if (property != null)
-                        UpdateProperty(reference, instance, property);
+                    ResourceLinker.RemoveLinking(resource, reference);
 
                     if (permanent)
                         relationRepository.Remove(relationEntity);
@@ -669,29 +476,6 @@ namespace Marvin.Resources.Management
 
             // Remove from internal collections
             return _publicResources.Remove(resource as IPublicResource) | _resources.Remove(instance.Id);
-        }
-
-        private static PropertyInfo GetProperty(IResource referencedResource, IResource instance)
-        {
-            var type = referencedResource.GetType();
-            return (from property in ReferenceProperties(type)
-                        // Instead of comparing the resource type we simply look for the object reference
-                    let value = property.GetValue(referencedResource)
-                    where value == instance || ((value as IEnumerable<IResource>)?.Contains(instance) ?? false)
-                    select property).FirstOrDefault();
-        }
-
-        private static void UpdateProperty(Resource reference, Resource instance, PropertyInfo property)
-        {
-            if (typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType))
-            {
-                var referenceCollection = (IReferenceCollection)property.GetValue(reference);
-                referenceCollection.UnderlyingCollection.Remove(instance);
-            }
-            else
-            {
-                property.SetValue(reference, null);
-            }
         }
 
         #endregion
@@ -771,25 +555,17 @@ namespace Marvin.Resources.Management
         {
             private readonly ResourceManager _parent;
             private readonly Resource _instance;
-            private readonly PropertyInfo _referenceProperty;
 
-            public SaveResourceTrigger(ResourceManager parent, Resource instance, PropertyInfo referenceProperty = null)
+            public SaveResourceTrigger(ResourceManager parent, Resource instance)
             {
                 _parent = parent;
                 _instance = instance;
-                _referenceProperty = referenceProperty;
             }
 
             protected override void AssignId(long id)
             {
                 _parent.AddResource(_instance, true);
             }
-
-            internal void OnCollectionChanged(object sender, EventArgs e)
-            {
-                _parent.AutoSaveCollection(_instance, _referenceProperty);
-            }
         }
-
     }
 }
