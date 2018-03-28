@@ -11,6 +11,7 @@ using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Resources.Model;
+using Marvin.Serialization;
 using Marvin.Tools;
 using Newtonsoft.Json;
 
@@ -298,7 +299,9 @@ namespace Marvin.Resources.Management
                     var value = (IReferenceCollection)property.GetValue(resource);
 
                     var matches = MatchingRelations(relations, property);
+                    var elemType = property.PropertyType.GetGenericArguments()[0];
                     var resources = matches.Select(m => _resources[m.ReferenceId].Target)
+                        .Where(elemType.IsInstanceOfType)
                         .OrderBy(r => r.LocalIdentifier).ThenBy(r => r.Name);
                     foreach (var referencedResource in resources)
                     {
@@ -308,7 +311,7 @@ namespace Marvin.Resources.Management
                         value.CollectionChanged += new SaveResourceTrigger(this, resource, property).OnCollectionChanged;
                 }
                 // Register on changes for ReferenceOverrides with AutoSave
-                else if (isEnumerable && referenceOverride != null && referenceOverride.AutoSave)
+                else if (isEnumerable && referenceOverride.AutoSave)
                 {
                     var target = resourceType.GetProperty(referenceOverride.Source);
                     var value = (IReferenceCollection)property.GetValue(resource);

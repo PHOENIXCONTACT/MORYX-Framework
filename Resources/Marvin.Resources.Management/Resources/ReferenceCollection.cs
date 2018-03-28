@@ -86,7 +86,7 @@ namespace Marvin.Resources.Management
         /// </summary>
         public IEnumerator<TResource> GetEnumerator()
         {
-            return UnderlyingCollection.OfType<TResource>().GetEnumerator();
+            return UnderlyingCollection.Cast<TResource>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
