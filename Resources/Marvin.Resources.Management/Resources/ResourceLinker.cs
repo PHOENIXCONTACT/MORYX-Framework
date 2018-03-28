@@ -49,7 +49,7 @@ namespace Marvin.Resources.Management
 
                 // Create new reference collection that shares the UnderlyingCollection
                 var property = pair.Key;
-                var value = CreateCollection(instance, property, sourceCollection.UnderlyingCollection);
+                var value = CreateCollection(instance, target, sourceCollection.UnderlyingCollection);
                 property.SetValue(instance, value);
             }
         }
