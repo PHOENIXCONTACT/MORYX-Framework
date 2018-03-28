@@ -29,7 +29,7 @@ namespace Marvin.Resources.Management
                 if (attribute == null)
                 {
                     // Create collection and set on property
-                    var value = CreateCollection(instance, property, new List<IResource>());
+                    var value = CreateCollection(instance, property, property, new List<IResource>());
                     property.SetValue(instance, value);
                 }
                 else
@@ -49,7 +49,7 @@ namespace Marvin.Resources.Management
 
                 // Create new reference collection that shares the UnderlyingCollection
                 var property = pair.Key;
-                var value = CreateCollection(instance, target, sourceCollection.UnderlyingCollection);
+                var value = CreateCollection(instance, property, target, sourceCollection.UnderlyingCollection);
                 property.SetValue(instance, value);
             }
         }
@@ -57,12 +57,12 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Create a <see cref="ReferenceCollection{TResource}"/> instance
         /// </summary>
-        private static IReferenceCollection CreateCollection(Resource instance, PropertyInfo property, ICollection<IResource> underlyingCollection)
+        private static IReferenceCollection CreateCollection(Resource instance, PropertyInfo property, PropertyInfo targetProperty, ICollection<IResource> underlyingCollection)
         {
             var propertyType = property.PropertyType;
             var referenceType = propertyType.GetGenericArguments()[0]; // Type of resource from ICollection<ResourceType>
             var collectionType = typeof(ReferenceCollection<>).MakeGenericType(referenceType); // Make generic ReferenceCollection
-            var value = (IReferenceCollection)Activator.CreateInstance(collectionType, instance, property, underlyingCollection);
+            var value = (IReferenceCollection)Activator.CreateInstance(collectionType, instance, targetProperty, underlyingCollection);
             return value;
         }
 
