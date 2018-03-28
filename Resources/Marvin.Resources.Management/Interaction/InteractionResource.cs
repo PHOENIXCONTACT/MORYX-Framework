@@ -45,17 +45,17 @@ namespace Marvin.Resources.Management
         protected List<TService> Clients { get; } = new List<TService>();
 
         /// <inheritdoc />
-        public override void Initialize()
+        protected override void OnInitialize()
         {
-            base.Initialize();
+            base.OnInitialize();
 
             Host = HostFactory.CreateHost<TService>(HostConfig);
         }
 
         /// 
-        public override void Start()
+        protected override void OnStart()
         {
-            base.Start();
+            base.OnStart();
 
             Host.Start();
         }

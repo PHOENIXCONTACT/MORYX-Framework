@@ -145,14 +145,6 @@
       <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
       <Name>Marvin.AbstractionLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Drivers\Marvin.Drivers.PhoenixPlc\Marvin.Drivers.PhoenixPlc.csproj">
-      <Project>{aa29c037-740d-4de0-9149-3b7c42d4a017}</Project>
-      <Name>Marvin.Drivers.PhoenixPlc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Drivers\Marvin.Protocols.PhoenixPlc\Marvin.Protocols.PhoenixPlc.csproj">
-      <Project>{21db2c2b-3cdf-4ef0-8530-5c062feeb529}</Project>
-      <Name>Marvin.Protocols.PhoenixPlc</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Notifications\Marvin.Notifications\Marvin.Notifications.csproj">
       <Project>{4fb1bca9-bd6d-478a-93c5-5cd4de2a2337}</Project>
       <Name>Marvin.Notifications</Name>

@@ -12,7 +12,8 @@ namespace Marvin.AbstractionLayer.Resources
         /// Current capabilities of this resource
         /// </summary>
         private ICapabilities _capabilities = NullCapabilities.Instance;
-        /// 
+
+        /// <inheritdoc />
         public ICapabilities Capabilities
         {
             get

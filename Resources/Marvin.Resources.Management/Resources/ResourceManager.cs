@@ -98,7 +98,8 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Subset of public resources
         /// </summary>
-        private List<IPublicResource> _publicResources;
+        private ICollection<IPublicResource> _publicResources;
+
         #endregion
 
         #region LifeCycle
@@ -129,8 +130,7 @@ namespace Marvin.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    lock (_publicResources)
-                        _publicResources.Remove(resourceWrapper.Target as IPublicResource);
+                    _publicResources.Remove(resourceWrapper.Target as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -144,7 +144,7 @@ namespace Marvin.Resources.Management
         {
             // Create the concurrent dictionary optimized for the current system architecture and expected collection size
             _resources = new ConcurrentDictionary<long, ResourceWrapper>(Environment.ProcessorCount, allResources.Count * 2);
-            _publicResources = new List<IPublicResource>(allResources.Count);
+            _publicResources = new SynchronizedCollection<IPublicResource>();
 
             // Create resource objects on multiple threads
             var query = from template in allResources.AsParallel()
@@ -171,7 +171,7 @@ namespace Marvin.Resources.Management
         {
             // Create dictionaries with initial capacity that should avoid the need of resizing
             _resources = new Dictionary<long, ResourceWrapper>(64);
-            _publicResources = new List<IPublicResource>(32);
+            _publicResources = new SynchronizedCollection<IPublicResource>();
 
             // Create a root resource
             var root = Create(Config.RootType);
@@ -331,8 +331,7 @@ namespace Marvin.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    lock (_publicResources)
-                        _publicResources.Remove(resourceWrapper.Target as IPublicResource);
+                    _publicResources.Remove(resourceWrapper.Target as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -584,7 +583,7 @@ namespace Marvin.Resources.Management
         {
             try
             {
-                resource.Start();
+                ((IPlugin)resource).Start();
                 return true;
             }
             catch (Exception e)
@@ -599,7 +598,7 @@ namespace Marvin.Resources.Management
         {
             try
             {
-                resource.Stop();
+                ((IPlugin)resource).Stop();
                 return true;
             }
             catch (Exception e)
@@ -633,7 +632,7 @@ namespace Marvin.Resources.Management
         public bool Destroy(IResource resource, bool permanent)
         {
             var instance = (Resource)resource;
-            instance.Stop();
+            ((IPlugin)resource).Stop();
 
             // Load entity and relations to disconnect resource and remove from database
             using (var uow = UowFactory.Create())

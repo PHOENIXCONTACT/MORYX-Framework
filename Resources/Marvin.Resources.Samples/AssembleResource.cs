@@ -14,9 +14,9 @@ namespace Marvin.Resources.Samples
         [ResourceReference(ResourceRelationType.Extension)]
         public AssembleFoo Setup { get; set; }
 
-        public override void Initialize()
+        protected override void OnInitialize()
         {
-            base.Initialize();
+            base.OnInitialize();
 
             if (Setup == null)
             {

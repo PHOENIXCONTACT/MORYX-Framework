@@ -154,7 +154,7 @@ namespace Marvin.Resources.Management
             if (linker.IsRegistered)
                 ResourceFactory.Destroy(instance);
             else
-                instance.Dispose();
+                ((IDisposable)instance).Dispose();
 
             // If there is currently a proxy for this resource detach and destroy it
             var id = instance.Id;
