@@ -14,6 +14,6 @@
         /// <summary>
         /// Name of the schema for this model
         /// </summary>
-        public const string SchemaName = "usrmgmt";
+        public const string Schema = "usrmgmt";
     }
 }

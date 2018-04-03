@@ -9,6 +9,7 @@ namespace Marvin.Runtime.UserManagement.Model
     /// The DBContext of this database model.
     /// </summary>
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
+    [DefaultSchema(UserManagementConstants.Schema)]
     public class UserManagementContext : MarvinDbContext
     {
         public UserManagementContext()
@@ -49,7 +50,7 @@ namespace Marvin.Runtime.UserManagement.Model
                 .WithMany(c => c.Dependendends)
                 .Map(mm =>
                 {
-                    mm.ToTable("Library_Library", UserManagementConstants.SchemaName);
+                    mm.ToTable("Library_Library", UserManagementConstants.Schema);
                 });
 
             modelBuilder.Entity<Library>()
@@ -57,7 +58,7 @@ namespace Marvin.Runtime.UserManagement.Model
                 .WithMany(a => a.AvailablePlugins)
                 .Map(mm =>
                 {
-                    mm.ToTable("Library_Application", UserManagementConstants.SchemaName);
+                    mm.ToTable("Library_Application", UserManagementConstants.Schema);
                 });
 
             modelBuilder.Entity<Library>()
@@ -85,7 +86,7 @@ namespace Marvin.Runtime.UserManagement.Model
                 .WithMany(o => o.LibraryAccesses)
                 .Map(mm =>
                 {
-                    mm.ToTable("LibraryAccess_OperationGroup", UserManagementConstants.SchemaName);
+                    mm.ToTable("LibraryAccess_OperationGroup", UserManagementConstants.Schema);
                 });
 
             modelBuilder.Entity<OperationGroup>()
@@ -93,7 +94,7 @@ namespace Marvin.Runtime.UserManagement.Model
                 .WithMany(o => o.ParentGroups)
                 .Map(mm =>
                 {
-                    mm.ToTable("OpGr_OpGr", UserManagementConstants.SchemaName);
+                    mm.ToTable("OpGr_OpGr", UserManagementConstants.Schema);
                 });
 
             modelBuilder.Entity<OperationGroup>()
