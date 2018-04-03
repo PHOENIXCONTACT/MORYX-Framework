@@ -82,9 +82,6 @@ namespace Marvin.Model
         /// <param name="modelBuilder"></param>
         protected virtual void ConfigureProperties(DbModelBuilder modelBuilder)
         {
-            // Column with name "Id" will be the primary key
-            modelBuilder.Properties().Where(p => p.Name == "Id").Configure(p => p.IsKey());
-
             // Properties flagged with IsUnicode will be configured
             modelBuilder.Properties()
                 .Having(x => x.GetCustomAttributes(false).OfType<IsUnicodeAttribute>().FirstOrDefault())
@@ -97,25 +94,28 @@ namespace Marvin.Model
         /// <inheritdoc />
         public override int SaveChanges()
         {
-            SetTimestamps();
+            ApplyModificationTracking();
             return base.SaveChanges();
         }
 
         /// <inheritdoc />
         public override Task<int> SaveChangesAsync()
         {
-            SetTimestamps();
+            ApplyModificationTracking();
             return base.SaveChangesAsync();
         }
 
         /// <inheritdoc />
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            SetTimestamps();
+            ApplyModificationTracking();
             return base.SaveChangesAsync(cancellationToken);
         }
 
-        private void SetTimestamps()
+        /// <summary>
+        /// Applies the modification tracking and updates the Created, Updated and Deleted columns
+        /// </summary>
+        private void ApplyModificationTracking()
         {
             var modifiedTrackedEntries = from entry in ChangeTracker.Entries()
                 where entry.Entity is IModificationTrackedEntity &&
