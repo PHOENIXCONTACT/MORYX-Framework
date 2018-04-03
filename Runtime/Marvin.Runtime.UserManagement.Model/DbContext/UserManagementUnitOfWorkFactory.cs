@@ -8,7 +8,7 @@ namespace Marvin.Runtime.UserManagement.Model
     /// Factory to get a unit of work for the UserManagement model
     /// </summary>
     [ModelFactory(UserManagementConstants.Name)]
-    public class UserManagementUnitOfWorkFactory : NpgsqlUnitOfWorkFactoryBase<UserManagementContext>
+    public sealed class UserManagementUnitOfWorkFactory : NpgsqlUnitOfWorkFactoryBase<UserManagementContext>
     {
         protected override DbMigrationsConfiguration<UserManagementContext> MigrationConfiguration => new Migrations.Configuration();
 
