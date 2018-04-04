@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using Marvin.Configuration;
 using Npgsql;
 
 namespace Marvin.Model.Npgsql
@@ -12,39 +7,10 @@ namespace Marvin.Model.Npgsql
     /// <summary>
     /// Used to configure, create and update data models
     /// </summary>
-    public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase
+    public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqDatabaseConfig>
     {
-        /// <summary>
-        /// Config manager of this ModelConfigurator
-        /// </summary>
-        private readonly IConfigManager _configManager;
-
-        /// <summary>
-        /// Name of the config
-        /// </summary>
-        private readonly string _configName;
-
-        /// <summary>
-        /// Configuration for migrations
-        /// </summary>
-        private readonly DbMigrationsConfiguration _migrationsConfiguration;
-
         /// <inheritdoc />
-        public NpgsqlModelConfigurator(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager, DbMigrationsConfiguration migrationsConfiguration)
-            : base(unitOfWorkFactory)
-        {
-            _configManager = configManager;
-            _migrationsConfiguration = migrationsConfiguration;
-            _configName = TargetModel + ".DbConfig";
-            
-            Config = _configManager.GetConfiguration<NpgsqDatabaseConfig>(_configName);
-        }
-
-        /// <inheritdoc />
-        public override void UpdateConfig()
-        {
-            _configManager.SaveConfiguration(Config, _configName);
-        }
+        protected override string ProviderInvariantName => "Npgsql";
 
         /// <inheritdoc />
         protected override DbConnection CreateConnection(IDatabaseConfig config)
@@ -56,63 +22,6 @@ namespace Marvin.Model.Npgsql
         protected override DbCommand CreateCommand(string cmdText, DbConnection connection)
         {
             return new NpgsqlCommand(cmdText, (NpgsqlConnection)connection);
-        }
-
-        /// <inheritdoc />
-        public override bool TestConnection(IDatabaseConfig config)
-        {
-            return !string.IsNullOrWhiteSpace(config.Database) && base.TestConnection(config);
-        }
-
-        /// <inheritdoc />
-        public override DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string updateName)
-        {
-            var result = new DatabaseUpdateSummary();
-            var localUpdateName = updateName;
-
-            var availableUpdates = AvailableUpdates(config).ToList();
-            if (string.IsNullOrEmpty(localUpdateName))
-            {
-                localUpdateName = availableUpdates.LastOrDefault()?.Name;
-            }
-
-            var isAvailable = availableUpdates.Any(databaseUpdateInformation => databaseUpdateInformation.Name == localUpdateName);
-            if (isAvailable)
-            {
-                CreateDbMigrator(config).Update(localUpdateName);
-                result.ExecutedUpdates = InstalledUpdates(config).Select(databaseUpdateInformation => new DatabaseUpdate
-                {
-                    Description = databaseUpdateInformation.Name
-                }).ToArray();
-                result.WasUpdated = true;
-            }
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public override bool RollbackDatabase(IDatabaseConfig config)
-        {
-            CreateDbMigrator(config).Update("0");
-            return true;
-        }
-
-        /// <inheritdoc />
-        public override IEnumerable<DatabaseUpdateInformation> AvailableUpdates(IDatabaseConfig config)
-        {
-            return CreateDbMigrator(config).GetLocalMigrations().Select(name => new DatabaseUpdateInformation
-            {
-                Name = name
-            });
-        }
-
-        /// <inheritdoc />
-        public override IEnumerable<DatabaseUpdateInformation> InstalledUpdates(IDatabaseConfig config)
-        {
-            return CreateDbMigrator(config).GetDatabaseMigrations().Select(name => new DatabaseUpdateInformation
-            {
-                Name = name
-            });
         }
 
         /// <inheritdoc />
@@ -160,12 +69,6 @@ namespace Marvin.Model.Npgsql
                 builder.Database = config.Database;
 
             return builder.ToString();
-        }
-
-        private DbMigrator CreateDbMigrator(IDatabaseConfig config)
-        {
-            _migrationsConfiguration.TargetDatabase = new DbConnectionInfo(BuildConnectionString(config), "Npgsql");
-            return new DbMigrator(_migrationsConfiguration);
         }
     }
 }

@@ -2,16 +2,11 @@ namespace Marvin.Runtime.UserManagement.Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    using Marvin.Model.Npgsql;
-    using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Infrastructure;
     
     public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("usrmgmt"));
-            
             CreateTable(
                 "usrmgmt.ApplicationAccess",
                 c => new
@@ -214,8 +209,6 @@ namespace Marvin.Runtime.UserManagement.Model.Migrations
             DropTable("usrmgmt.Library");
             DropTable("usrmgmt.Application");
             DropTable("usrmgmt.ApplicationAccess");
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("usrmgmt"));
-            
         }
     }
 }

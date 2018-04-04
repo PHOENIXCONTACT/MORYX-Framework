@@ -57,6 +57,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Toolkit\Tests\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj">
+      <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
+      <Name>Marvin.TestTools.Test.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Diagnostics\Marvin.Runtime.Diagnostics.csproj">
       <Project>{601ea517-0337-430b-840c-424b84f8f922}</Project>
       <Name>Marvin.Runtime.Diagnostics</Name>

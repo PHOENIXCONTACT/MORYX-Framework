@@ -23,12 +23,6 @@ namespace Marvin.Model.InMemory
         }
 
         /// <inheritdoc />
-        protected sealed override IModelConfigurator CreateConfigurator()
-        {
-            return null; // Configurator is not supported
-        }
-
-        /// <inheritdoc />
         protected override MarvinDbContext CreateContext(Type contextType, ContextMode contextMode)
         {
             var connection = string.IsNullOrEmpty(_instanceId)

@@ -43,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Marvin.Runtime.UserManagement.DbAuthenticator.nuspec" />
   </ItemGroup>
   <ItemGroup>

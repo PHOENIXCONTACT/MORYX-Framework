@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Marvin.Configuration;
 
 namespace Marvin.Model
 {
@@ -16,6 +17,11 @@ namespace Marvin.Model
         /// Gets the configuration of the underlying model
         /// </summary>
         IDatabaseConfig Config { get; }
+
+        /// <summary>
+        /// Initializes the model configurator
+        /// </summary>
+        void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager);
 
         /// <summary>
         /// Builds the connection string for the database. 

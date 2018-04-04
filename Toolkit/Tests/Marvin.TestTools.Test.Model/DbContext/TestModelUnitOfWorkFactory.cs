@@ -1,5 +1,4 @@
-﻿using System.Data.Entity.Migrations;
-using Marvin.Model;
+﻿using Marvin.Model;
 using Marvin.Model.Npgsql;
 
 namespace Marvin.TestTools.Test.Model
@@ -8,7 +7,7 @@ namespace Marvin.TestTools.Test.Model
     /// Used for inherited models
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
-    public abstract class TestModelUnitOfWorkFactory<TContext> : NpgsqlUnitOfWorkFactoryBase<TContext>
+    public abstract class TestModelUnitOfWorkFactory<TContext> : UnitOfWorkFactoryBase<TContext, NpgsqlModelConfigurator>
         where TContext : TestModelContext
     {
 
@@ -20,8 +19,6 @@ namespace Marvin.TestTools.Test.Model
     [ModelFactory(TestModelConstants.Name)]
     public sealed class TestModelUnitOfWorkFactory : TestModelUnitOfWorkFactory<TestModelContext>
     {
-        protected override DbMigrationsConfiguration<TestModelContext> MigrationConfiguration => new Migrations.Configuration();
-
         protected override void Configure()
         {
             RegisterRepository<ICarEntityRepository>();
