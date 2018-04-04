@@ -69,7 +69,15 @@ namespace Marvin.Model
             // Set default schmema
             var defaultSchemaAttr = GetType().GetCustomAttribute<DefaultSchemaAttribute>();
             if (!string.IsNullOrEmpty(defaultSchemaAttr?.Schema))
-                modelBuilder.HasDefaultSchema(defaultSchemaAttr.Schema.ToLower());
+            {
+                var attrName = defaultSchemaAttr.Schema;
+                var schemaName = char.ToLowerInvariant(attrName[0]) + attrName.Substring(1);
+                modelBuilder.HasDefaultSchema(schemaName);
+            }
+            else
+            {
+                modelBuilder.HasDefaultSchema("public");
+            }
 
             // Custon Code-First Conventions: https://msdn.microsoft.com/en-us/library/jj819164(v=vs.113).aspx
             // Turn off pluralization

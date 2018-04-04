@@ -3,9 +3,9 @@ using System;
 namespace Marvin.Model
 {
     [AttributeUsage(AttributeTargets.Property)]
-    internal class IsUnicodeAttribute : Attribute
+    public class IsUnicodeAttribute : Attribute
     {
-        public bool Unicode { get; set; }
+        public bool Unicode { get; }
 
         public IsUnicodeAttribute(bool isUnicode)
         {

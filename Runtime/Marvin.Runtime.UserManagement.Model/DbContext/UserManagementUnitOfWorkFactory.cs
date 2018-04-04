@@ -1,5 +1,4 @@
-﻿using System.Data.Entity.Migrations;
-using Marvin.Model;
+﻿using Marvin.Model;
 using Marvin.Model.Npgsql;
 
 namespace Marvin.Runtime.UserManagement.Model
@@ -8,10 +7,8 @@ namespace Marvin.Runtime.UserManagement.Model
     /// Factory to get a unit of work for the UserManagement model
     /// </summary>
     [ModelFactory(UserManagementConstants.Name)]
-    public sealed class UserManagementUnitOfWorkFactory : NpgsqlUnitOfWorkFactoryBase<UserManagementContext>
+    public sealed class UserManagementUnitOfWorkFactory : UnitOfWorkFactoryBase<UserManagementContext, NpgsqlModelConfigurator>
     {
-        protected override DbMigrationsConfiguration<UserManagementContext> MigrationConfiguration => new Migrations.Configuration();
-
         protected override void Configure()
         {
             RegisterRepository<IApplicationAccessRepository>();

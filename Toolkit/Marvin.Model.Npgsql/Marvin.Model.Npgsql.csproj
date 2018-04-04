@@ -64,15 +64,9 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Migration\CodeGenerator\NpqsqlCSharpMigrationCodeGenerator.cs" />
-    <Compile Include="Migration\CodeGenerator\NpgsqlMigrationSqlGenerator.cs" />
-    <Compile Include="Migration\NpgsqlDbMigrationConfigurationBase.cs" />
-    <Compile Include="Migration\Operations\AddSchemaOperation.cs" />
-    <Compile Include="Migration\Operations\RemoveSchemaOperation.cs" />
     <Compile Include="NpgsqDatabaseConfig.cs" />
     <Compile Include="NpgsqlConfiguration.cs" />
     <Compile Include="NpgsqlModelConfigurator.cs" />
-    <Compile Include="NpgsqlUnitOfWorkFactoryBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +86,7 @@
       <Name>Marvin</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

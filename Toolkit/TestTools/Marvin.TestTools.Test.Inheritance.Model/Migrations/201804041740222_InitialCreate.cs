@@ -2,20 +2,11 @@ namespace Marvin.TestTools.Test.Inheritance.Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    using Marvin.Model.Npgsql;
-    using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Infrastructure;
     
     public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("myschema"));
-            
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("subschema"));
-            
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("anotherschema"));
-            
             CreateTable(
                 "myschema.CarEntity",
                 c => new
@@ -27,9 +18,8 @@ namespace Marvin.TestTools.Test.Inheritance.Model.Migrations
                         Created = c.DateTime(nullable: false),
                         Updated = c.DateTime(nullable: false),
                         Deleted = c.DateTime(),
-                        IsSuper = c.Boolean(),
                         Performance = c.Int(),
-                        Discriminator = c.String(nullable: false, maxLength: 128),
+                        Discriminator = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -103,24 +93,32 @@ namespace Marvin.TestTools.Test.Inheritance.Model.Migrations
                     })
                 .PrimaryKey(t => t.Id);
             
+            CreateTable(
+                "subschema.SuperCarEntity",
+                c => new
+                    {
+                        Id = c.Long(nullable: false),
+                        IsSuper = c.Boolean(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("myschema.CarEntity", t => t.Id)
+                .Index(t => t.Id);
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("subschema.SuperCarEntity", "Id", "myschema.CarEntity");
             DropForeignKey("subschema.WheelEntity", "CarId", "myschema.CarEntity");
+            DropIndex("subschema.SuperCarEntity", new[] { "Id" });
             DropIndex("subschema.WheelEntity", "IX_Car_Id");
+            DropTable("subschema.SuperCarEntity");
             DropTable("anotherschema.Another");
             DropTable("subschema.JsonEntity");
             DropTable("subschema.HugePocoEntity");
             DropTable("subschema.HouseEntity");
             DropTable("subschema.WheelEntity");
             DropTable("myschema.CarEntity");
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("anotherschema"));
-            
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("subschema"));
-            
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("myschema"));
-            
         }
     }
 }

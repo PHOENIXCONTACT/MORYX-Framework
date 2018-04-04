@@ -42,7 +42,7 @@ namespace Marvin.Tools
         {
             if (s == null)
             {
-                throw new ArgumentNullException("s");
+                throw new ArgumentNullException(nameof(s));
             }
 
             if (s.Length == 0)

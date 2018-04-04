@@ -2,20 +2,11 @@ namespace Marvin.TestTools.Test.Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    using Marvin.Model.Npgsql;
-    using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Infrastructure;
     
     public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("myschema"));
-            
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("subschema"));
-            
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("anotherschema"));
-            
             CreateTable(
                 "myschema.CarEntity",
                 c => new
@@ -114,12 +105,6 @@ namespace Marvin.TestTools.Test.Model.Migrations
             DropTable("subschema.HouseEntity");
             DropTable("subschema.WheelEntity");
             DropTable("myschema.CarEntity");
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("anotherschema"));
-            
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("subschema"));
-            
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("myschema"));
-            
         }
     }
 }

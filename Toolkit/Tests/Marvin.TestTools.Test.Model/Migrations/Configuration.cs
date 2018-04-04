@@ -1,9 +1,17 @@
-using Marvin.Model.Npgsql;
-
 namespace Marvin.TestTools.Test.Model.Migrations
 {
-    public sealed class Configuration : NpgsqlDbMigrationConfigurationBase<TestModelContext>
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Migrations;
+    using System.Linq;
+
+    internal sealed class Configuration : DbMigrationsConfiguration<Marvin.TestTools.Test.Model.TestModelContext>
     {
+        public Configuration()
+        {
+            AutomaticMigrationsEnabled = true;
+        }
+
         protected override void Seed(Marvin.TestTools.Test.Model.TestModelContext context)
         {
             //  This method will be called after migrating to the latest version.

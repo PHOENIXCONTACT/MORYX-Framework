@@ -1,6 +1,4 @@
-﻿using Marvin.Model;
-
-namespace Marvin.TestTools.Test.Model
+﻿namespace Marvin.TestTools.Test.Model
 {
     public class SportCarEntity : CarEntity
     {

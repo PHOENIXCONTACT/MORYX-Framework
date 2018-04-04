@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Modules;
 
 namespace Marvin.Model
 {
     /// <summary>
-    /// Base class for unit of work factories
+    /// Base class for unit of work factories with possibility to by configured
     /// </summary>
-    public abstract class UnitOfWorkFactoryBase<TContext> : IUnitOfWorkFactory, 
+    public abstract class UnitOfWorkFactoryBase<TContext, TConfigurator> : IUnitOfWorkFactory, 
         IContextUnitOfWorkFactory, IInitializable, IDbContextFactory, IModelConfiguratorFactory,
         IParentFactory, IContainerChild<IUnitOfWorkFactory>
         where TContext : MarvinDbContext
+        where TConfigurator : IModelConfigurator, new()
     {
         #region Dependencies
 
@@ -20,6 +22,11 @@ namespace Marvin.Model
         /// Injection of a container to load children factories
         /// </summary>
         public IContainer Container { get; set; }
+
+        /// <summary>
+        /// Config manager to load configuration of the model
+        /// </summary>
+        public IConfigManager ConfigManager { get; set; }
 
         #endregion
 
@@ -35,9 +42,9 @@ namespace Marvin.Model
         private readonly IList<Type> _repositories = new List<Type>();
         private readonly RepositoryProxyBuilder _proxyBuilder;
         private readonly Dictionary<string, IUnitOfWorkFactory> _children = new Dictionary<string, IUnitOfWorkFactory>();
-        
+
         /// <summary>
-        /// Creates a new instance of the <see cref="UnitOfWorkFactoryBase{TContext}"/>
+        /// Creates a new instance of the <see cref="UnitOfWorkFactoryBase{TContext, TConfigurator}"/>
         /// </summary>
         protected UnitOfWorkFactoryBase()
         {
@@ -48,7 +55,8 @@ namespace Marvin.Model
         public void Initialize()
         {
             // Create configurator
-            _configurator = CreateConfigurator();
+            _configurator = new TConfigurator();
+            _configurator.Initialize(this, ConfigManager);
 
             // Configure the factory
             Configure();
@@ -56,11 +64,6 @@ namespace Marvin.Model
             // Register model as child if parent is set
             RegisterAsChild();
         }
-
-        /// <summary>
-        /// Creates the configurator for this model
-        /// </summary>
-        protected abstract IModelConfigurator CreateConfigurator();
 
         /// <summary>
         /// Will be called after initializing this instance. 
@@ -216,5 +219,14 @@ namespace Marvin.Model
             var connectionString = _configurator.BuildConnectionString(_configurator.Config);
             return (MarvinDbContext)Activator.CreateInstance(contextType, connectionString, contextMode);
         }
+    }
+
+    /// <summary>
+    /// Base class for unit of work factories which cannot be configured
+    /// </summary>
+    public abstract class UnitOfWorkFactoryBase<TContext> : UnitOfWorkFactoryBase<TContext, NullModelConfigurator>
+        where TContext : MarvinDbContext
+    {
+
     }
 }

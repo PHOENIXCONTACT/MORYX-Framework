@@ -77,11 +77,11 @@
     <Compile Include="Entities\HouseEntity.cs" />
     <Compile Include="Entities\HugePocoEntity.cs" />
     <Compile Include="Entities\JsonEntity.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Migrations\201802200835262_InitialCreate.cs" />
-    <Compile Include="Migrations\201802200835262_InitialCreate.Designer.cs">
-      <DependentUpon>201802200835262_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201804041735182_InitialCreate.cs" />
+    <Compile Include="Migrations\201804041735182_InitialCreate.Designer.cs">
+      <DependentUpon>201804041735182_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Scripts\SomeCoolScript.cs" />
     <Compile Include="Scripts\SomeCoolSetup.cs" />
     <None Include="app.config" />
@@ -118,10 +118,9 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201802200835262_InitialCreate.resx">
-      <DependentUpon>201802200835262_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201804041735182_InitialCreate.resx">
+      <DependentUpon>201804041735182_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

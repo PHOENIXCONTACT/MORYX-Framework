@@ -47,16 +47,10 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Attributes\Annotation\CustomMigrationOperationAttribute.cs" />
-    <Compile Include="Attributes\Annotation\DefaultSchemaAttribute.cs" />
+    <Compile Include="Attributes\DefaultSchemaAttribute.cs" />
     <Compile Include="Attributes\IsUnicodeAttribute.cs" />
     <Compile Include="DatabaseConfig.cs" />
     <Compile Include="EntityBase.cs" />
-    <Compile Include="Attributes\JsonColumnAttribute.cs" />
-    <Compile Include="MarvinHistoryContext.cs" />
-    <Compile Include="Migration\CodeGenerator\MarvinCSharpMigrationCodeGenerator.cs" />
-    <Compile Include="Migration\MarvinDbMigrationsConfiguration.cs" />
-    <Compile Include="Migration\Operations\CustomSqlStatementOperation.cs" />
     <Compile Include="Proxy\IMethodProxyStrategy.cs" />
     <Compile Include="Proxy\ParameterPropertyMap.cs" />
     <Compile Include="Proxy\Strategies\RemoveMethodStrategy.cs" />
