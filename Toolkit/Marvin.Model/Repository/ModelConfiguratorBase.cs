@@ -13,8 +13,8 @@ namespace Marvin.Model
     public abstract class ModelConfiguratorBase : IModelConfigurator
     {
         private readonly IDbContextFactory _contextFactory;
-        private IDictionary<Type, IModelSetup> _setupDict;
-        private IDictionary<Type, IModelScript> _scriptDict;
+        private readonly IDictionary<Type, IModelSetup> _setupDict;
+        private readonly IDictionary<Type, IModelScript> _scriptDict;
 
         /// <summary>
         /// Current <see cref="IUnitOfWorkFactory"/> for the configurator
