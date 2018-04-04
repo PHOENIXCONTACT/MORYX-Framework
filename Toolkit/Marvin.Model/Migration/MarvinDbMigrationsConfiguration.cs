@@ -11,20 +11,18 @@ namespace Marvin.Model
     public class MarvinDbMigrationsConfiguration<T> : DbMigrationsConfiguration<T> where T : DbContext
     {
         /// <summary>
-        /// Constructor
+        /// Property to the Marvin based code generator
+        /// </summary>
+        protected MarvinCSharpMigrationCodeGenerator<T> MarvinCodeGenerator => CodeGenerator as MarvinCSharpMigrationCodeGenerator<T>;
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="MarvinDbMigrationsConfiguration{T}"/>
         /// </summary>
         public MarvinDbMigrationsConfiguration()
         {
             AutomaticMigrationsEnabled = true;
-            MigrationsDirectory = @"Migrations\Generated";
-
             CodeGenerator = new MarvinCSharpMigrationCodeGenerator<T>();
         }
-
-        /// <summary>
-        /// Property to the Marvin based code generator
-        /// </summary>
-        protected MarvinCSharpMigrationCodeGenerator<T> MarvinCodeGenerator => CodeGenerator as MarvinCSharpMigrationCodeGenerator<T>;
 
         /// <summary>
         /// Add an additional migration to the beginning of the migration
