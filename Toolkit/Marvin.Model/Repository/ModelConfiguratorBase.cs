@@ -120,12 +120,6 @@ namespace Marvin.Model
                 return false;
             }
 
-            // We cannot create a database without migrations
-            if (!GetAvailableMigrations().Any())
-            {
-                return false;
-            }
-
             using (var context = _contextFactory.CreateContext(config, ContextMode.AllOff))
             {
                 // Check if this database is present on the server
@@ -322,7 +316,10 @@ namespace Marvin.Model
             }
         }
 
-        private static bool CheckDatabaseConfig(IDatabaseConfig config)
+        /// <summary>
+        /// Validates the config gor Host, Database, Username and Port
+        /// </summary>
+        protected static bool CheckDatabaseConfig(IDatabaseConfig config)
         {
             return !(string.IsNullOrEmpty(config.Host) ||
                      string.IsNullOrEmpty(config.Database) ||
@@ -388,97 +385,97 @@ namespace Marvin.Model
         /// <inheritdoc />
         public string BuildConnectionString(IDatabaseConfig config)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public string BuildConnectionString(IDatabaseConfig config, bool includeModel)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public void UpdateConfig()
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public bool TestConnection(IDatabaseConfig config)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public bool CreateDatabase(IDatabaseConfig config)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string migrationId)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public bool RollbackDatabase(IDatabaseConfig config)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public IEnumerable<DatabaseUpdateInformation> AvailableUpdates(IDatabaseConfig config)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public IEnumerable<DatabaseUpdateInformation> InstalledUpdates(IDatabaseConfig config)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public void DeleteDatabase(IDatabaseConfig config)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public void DumpDatabase(IDatabaseConfig config, string filePath)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public void RestoreDatabase(IDatabaseConfig config, string filePath)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public IEnumerable<IModelSetup> GetAllSetups()
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public IEnumerable<IModelScript> GetAllScripts()
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
         public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
         {
-            throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
     }
 }

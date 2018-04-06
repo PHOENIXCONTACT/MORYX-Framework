@@ -12,11 +12,13 @@ namespace Marvin.Model.InMemory
         private readonly string _instanceId;
 
         /// <inheritdoc />
+        protected InMemoryUnitOfWorkFactoryBase() : this(string.Empty)
+        {
+        }
+
+        /// <inheritdoc />
         protected InMemoryUnitOfWorkFactoryBase(string instanceId)
         {
-            if (string.IsNullOrEmpty(instanceId))
-                throw new ArgumentException("InstanceId should be not null or empty", nameof(instanceId));
-
             EffortProviderConfiguration.RegisterProvider();
 
             _instanceId = instanceId;

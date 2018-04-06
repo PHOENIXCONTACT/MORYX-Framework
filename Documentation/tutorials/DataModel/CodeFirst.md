@@ -43,7 +43,7 @@ public class SolarSystemModelConstants
 }
 ````
 
-### The database DbContext
+## The database DbContext
 
 Create your own database context by deriving from [MarvinDbContext](xref:Marvin.Model.MarvinDbContext) and the three constructor overloads as shown below.
 
@@ -82,7 +82,7 @@ public class SolarSystemContext : MarvinDbContext
 
 Please note that we follow the policy to place tables of a context into to a different schema when possible. Please use the global `DefaultSchemaAttribute` on the context.
 
-### Entities
+## Entities
 
 Then you need to define your entities which will represented as tables in your database.
 
@@ -166,7 +166,7 @@ var uow = uowFactory.Create(ContextMode.Tracking);
 uow.Mode = ContextMode.Tracking;
 ````
 
-### Repositories
+## Repositories
 
 After that we need do define the repository interfaces.
 
@@ -232,7 +232,7 @@ When EF guys are talking about the *CodeFirst Migrations* approach they mean exa
 
 ### Initial creation of migration configuration
 
-Before we implement the UnitOfWork you have to configure your migration. This is an easy step to take because MaRVIN has prepared a few things for you. But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project. After then you need to open your `App.config` and add the following lines:
+Before we implement the UnitOfWork you can configure your migration. This is an easy step to take because MaRVIN has prepared a few things for you. But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project. After then you need to open your `App.config` and add the following lines:
 
 ````xml
   <configSections>
@@ -256,25 +256,6 @@ Enable-Migrations -ContextTypeName SolarSystemContext -EnableAutomaticMigrations
 ````
 
 and execute it. This will create a folder named Migrations into the project and a `Configurations.cs` file within. As mentioned before Marvin has already done some work for you.
-
-### The UnitOfWorkFactory
-
-Lastly we need to implement the corresponding `UnitOfWorkFactory`. The base implementation comes with a set of predefined functions to manipulate your data. So you only need to register your repositories and the migration configuration.
-
-````cs
-[ModelFactory(SolarSystemModelConstants.Namespace)]
-public class SolarSystemModelUnitOfWorkFactory : UnitOfWorkFactoryBase<SolarSystemContext, NpgsqlModelConfigurator>
-{
-    protected override void Configure()
-    {
-        RegisterRepository<IPlanetRepository>();
-        RegisterRepository<ISatelliteRepository>();
-        RegisterRepository<IAsteroidRepository>();
-    }
-}
-````
-
-Are we done now? No, but you have just implemented the basic data entities and the repository to access the data.
 
 ### Add-Migrations
 
@@ -303,6 +284,25 @@ The database should now have been updated. Have a look.
 ### Repeat when necessary
 
 When you have changed your entities or your context while development you only need to call the `Add-Migration` script once more. You have to consider two things: First ensure that your database is on the latest migration. Second change the `Name` parameter of the script to a speaking version name.
+
+## The UnitOfWorkFactory
+
+Lastly we need to implement the corresponding `UnitOfWorkFactory`. The base implementation comes with a set of predefined functions to manipulate your data. So you only need to register your repositories and the migration configuration.
+
+````cs
+[ModelFactory(SolarSystemModelConstants.Namespace)]
+public class SolarSystemModelUnitOfWorkFactory : UnitOfWorkFactoryBase<SolarSystemContext, NpgsqlModelConfigurator>
+{
+    protected override void Configure()
+    {
+        RegisterRepository<IPlanetRepository>();
+        RegisterRepository<ISatelliteRepository>();
+        RegisterRepository<IAsteroidRepository>();
+    }
+}
+````
+
+Are we done now? No, but you have just implemented the basic data entities and the repository to access the data.
 
 ## Accessing your data
 
@@ -352,24 +352,21 @@ Create a new `Model` project and add the following classes to the project:
 An yes, create also a new class for constant values:
 
 ````cs
-namespace Marvin.TestTools.Test.Model.Inheritance
+/// <summary>
+/// String constants defined by the Products database model.
+/// </summary>
+public class TestModelInheritanceConstants
 {
     /// <summary>
-    /// String constants defined by the Products database model.
+    /// Namespace of the generated code within this model. This can be used for the
+    /// ImportAttribute and UseChildAttribute.
     /// </summary>
-    public class TestModelInheritanceConstants
-    {
-        /// <summary>
-        /// Namespace of the generated code within this model. This can be used for the
-        /// ImportAttribute and UseChildAttribute.
-        /// </summary>
-        public const string Namespace = "Marvin.TestTools.Test.Model.Inheritance";
+    public const string Namespace = "Marvin.TestTools.Test.Model.Inheritance";
 
-        /// <summary>
-        /// Schema name for the database context
-        /// </summary>
-        public const string SchemaName = "public";
-    }
+    /// <summary>
+    /// Schema name for the database context
+    /// </summary>
+    public const string SchemaName = "public";
 }
 ````
 
@@ -418,7 +415,7 @@ namespace Marvin.TestTools.Test.Model.Inheritance
 A new migration configuration (Note: you always have to create a new migration configuration in every model project. This is a restriction by the EF.):
 
 ````cs
-internal sealed class Configuration : NpgsqlDbMigrationConfigurationBase<SpecializedSolarSystemContext>
+internal sealed class Configuration : DbMigrationConfiguration<SpecializedSolarSystemContext>
 {
 }
 ````
@@ -470,7 +467,7 @@ public class SpecializedSolarSystemContextUnitOfWorkFactory : SolarSystemContext
 
 That's all. Now you can use all migration stuff to create migrations.
 
-### A word about the `ModelFactory`
+## A word about the `ModelFactory`
 
 You might wonder about the extended `ModelFactory` call. It's used to create a hierarchy inside the `UnitOfWorkFactory` and to get the right factory when a `IUnitofWorkFactory` gets injected.
 

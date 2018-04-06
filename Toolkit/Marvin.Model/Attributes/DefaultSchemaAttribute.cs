@@ -9,6 +9,11 @@ namespace Marvin.Model
     public class DefaultSchemaAttribute : Attribute
     {
         /// <summary>
+        /// Default schema name
+        /// </summary>
+        public const string DefaultName = "public";
+
+        /// <summary>
         /// Name of the default schema
         /// </summary>
         public string Schema { get; }

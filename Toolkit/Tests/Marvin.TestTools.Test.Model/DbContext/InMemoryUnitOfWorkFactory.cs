@@ -4,6 +4,11 @@ namespace Marvin.TestTools.Test.Model
 {
     public class InMemoryUnitOfWorkFactory : InMemoryUnitOfWorkFactoryBase<TestModelContext>
     {
+        public InMemoryUnitOfWorkFactory()
+        {
+            
+        }
+
         public InMemoryUnitOfWorkFactory(string instanceId) : base(instanceId)
         {
         }
@@ -14,7 +19,7 @@ namespace Marvin.TestTools.Test.Model
             RegisterRepository<ISportCarRepository, SportCarRepository>();
             RegisterRepository<IWheelEntityRepository>();
             RegisterRepository<IJsonEntityRepository>();
-            RegisterRepository<IHouseEntityRepository, HouseEntityRepository>(true);
+            RegisterRepository<IHouseEntityRepository, HouseEntityRepository>(noProxy: true);
         }
     }
 }
