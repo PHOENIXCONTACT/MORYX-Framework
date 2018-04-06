@@ -3,7 +3,7 @@
 namespace Marvin.TestTools.Test.Model
 {
     [ModelSetup(TestModelConstants.Namespace)]
-    internal class SomeCoolSetup : IModelSetup
+    public class SomeCoolSetup : IModelSetup
     {
         public int SortOrder => 1;
 
