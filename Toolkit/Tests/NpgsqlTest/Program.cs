@@ -29,7 +29,7 @@ namespace NpgsqlTest
             var parentFactory = new TestModelUnitOfWorkFactory { ConfigManager = configManagerMock.Object };
 
             var containerMock = new Mock<IContainer>();
-            containerMock.Setup(c => c.Resolve<IUnitOfWorkFactory>(TestModelConstants.Name)).Returns(parentFactory);
+            containerMock.Setup(c => c.Resolve<IUnitOfWorkFactory>(TestModelConstants.Namespace)).Returns(parentFactory);
 
             parentFactory.Container = containerMock.Object;
             parentFactory.Initialize();

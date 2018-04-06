@@ -61,6 +61,10 @@
       <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
       <Name>Marvin.TestTools.Test.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Toolkit\TestTools\Marvin.TestTools.Test.Inheritance.Model\Marvin.TestTools.Test.Inheritance.Model.csproj">
+      <Project>{cbf4c42b-488d-44af-9c60-3cd2c2aa955e}</Project>
+      <Name>Marvin.TestTools.Test.Inheritance.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Diagnostics\Marvin.Runtime.Diagnostics.csproj">
       <Project>{601ea517-0337-430b-840c-424b84f8f922}</Project>
       <Name>Marvin.Runtime.Diagnostics</Name>

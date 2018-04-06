@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
+using System.Data.Entity.Migrations.History;
+using System.Data.Entity.Migrations.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using Marvin.Configuration;
@@ -21,7 +24,7 @@ namespace Marvin.Model
         private IDictionary<Type, IModelSetup> _setupDict;
         private IDictionary<Type, IModelScript> _scriptDict;
         private string _configName;
-        private DbMigrationsConfiguration _currentMigrationConfiguration;
+        private DbMigrationsConfiguration _migrationsConfiguration;
         private string[] _localMigrations;
 
         /// <summary>
@@ -88,6 +91,9 @@ namespace Marvin.Model
             if (string.IsNullOrWhiteSpace(config.Database))
                 return false;
 
+            if (!TestDatabaseConnection(config))
+                return false;
+
             var context = _contextFactory.CreateContext(config, ContextMode.AllOff);
             try
             {
@@ -106,18 +112,20 @@ namespace Marvin.Model
         /// <inheritdoc />
         public virtual bool CreateDatabase(IDatabaseConfig config)
         {
+            // Check is database is configured
+            if (!CheckDatabaseConfig(config))
+            {
+                return false;
+            }
+
+            // We cannot create a database without migrations
+            if (!GetAvailableMigrations().Any())
+            {
+                return false;
+            }
+
             using (var context = _contextFactory.CreateContext(config, ContextMode.AllOff))
             {
-                if (string.IsNullOrWhiteSpace(config.Database))
-                {
-                    return false;
-                }
-
-                if (!AvailableUpdates(config).Any())
-                {
-                    return false;
-                }
-
                 // Check if this database is present on the server
                 var dbExists = context.Database.Exists();
                 if (dbExists)
@@ -171,24 +179,23 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public virtual DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string updateName)
+        public virtual DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string migrationId)
         {
             var result = new DatabaseUpdateSummary();
-            var localUpdateName = updateName;
 
-            var availableUpdates = AvailableUpdates(config).ToList();
-            if (string.IsNullOrEmpty(localUpdateName))
+            var availableMigrations = GetAvailableMigrations().ToList();
+            if (string.IsNullOrEmpty(migrationId))
             {
-                localUpdateName = availableUpdates.LastOrDefault()?.Name;
+                migrationId = availableMigrations.LastOrDefault();
             }
 
-            var isAvailable = availableUpdates.Any(databaseUpdateInformation => databaseUpdateInformation.Name == localUpdateName);
+            var isAvailable = availableMigrations.Any(available => available == migrationId);
             if (isAvailable)
             {
-                CreateDbMigrator(config).Update(localUpdateName);
-                result.ExecutedUpdates = InstalledUpdates(config).Select(databaseUpdateInformation => new DatabaseUpdate
+                CreateDbMigrator(config).Update(migrationId);
+                result.ExecutedUpdates = GetInstalledMigrations(config).Select(migration => new DatabaseUpdate
                 {
-                    Description = databaseUpdateInformation.Name
+                    Description = migration
                 }).ToArray();
                 result.WasUpdated = true;
             }
@@ -206,24 +213,18 @@ namespace Marvin.Model
         /// <inheritdoc />
         public IEnumerable<DatabaseUpdateInformation> AvailableUpdates(IDatabaseConfig config)
         {
-            // Local migrations cannot be changed at runtime and are not dependent to the config
-            if (_localMigrations == null)
+            return GetAvailableMigrations().Select(migration => new DatabaseUpdateInformation
             {
-                _localMigrations = CreateDbMigrator(config).GetLocalMigrations().ToArray();
-            }
-
-            return _localMigrations.Select(name => new DatabaseUpdateInformation
-            {
-                Name = name
+                Name = migration
             });
         }
 
         /// <inheritdoc />
         public IEnumerable<DatabaseUpdateInformation> InstalledUpdates(IDatabaseConfig config)
         {
-            return CreateDbMigrator(config).GetDatabaseMigrations().Select(name => new DatabaseUpdateInformation
+            return GetInstalledMigrations(config).Select(migration => new DatabaseUpdateInformation
             {
-                Name = name
+                Name = migration
             });
         }
 
@@ -237,16 +238,10 @@ namespace Marvin.Model
         public abstract void RestoreDatabase(IDatabaseConfig config, string filePath);
         
         /// <inheritdoc />
-        public IEnumerable<IModelSetup> GetAllSetups()
-        {
-            return GetOrCreateFromDict(_setupDict);
-        }
+        public IEnumerable<IModelSetup> GetAllSetups() => GetOrCreateFromTypeDict(_setupDict);
 
         /// <inheritdoc />
-        public IEnumerable<IModelScript> GetAllScripts()
-        {
-            return GetOrCreateFromDict(_scriptDict);
-        }
+        public IEnumerable<IModelScript> GetAllScripts() => GetOrCreateFromTypeDict(_scriptDict);
 
         /// <inheritdoc />
         public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
@@ -261,18 +256,18 @@ namespace Marvin.Model
         /// <summary>
         /// Creates the instance from the given IDictionary{Type, object}
         /// </summary>
-        private static IEnumerable<T> GetOrCreateFromDict<T>(IDictionary<Type, T> dict)
+        private static IEnumerable<T> GetOrCreateFromTypeDict<T>(IDictionary<Type, T> dict)
         {
-            foreach (var kvPair in dict)
+            foreach (var type in dict.Keys.ToArray())
             {
-                if (kvPair.Value == null)
+                if (dict[type] == null)
                 {
-                    dict[kvPair.Key] = (T)Activator.CreateInstance(kvPair.Key);
-                    yield return dict[kvPair.Key];
+                    dict[type] = (T)Activator.CreateInstance(type);
+                    yield return dict[type];
                 }
                 else
                 {
-                    yield return kvPair.Value;
+                    yield return dict[type];
                 }
             }
         }
@@ -290,17 +285,84 @@ namespace Marvin.Model
         /// </summary>
         private DbMigrationsConfiguration GetOrCreateDbMigrationsConfiguration()
         {
-            if (_currentMigrationConfiguration != null)
-                return _currentMigrationConfiguration;
+            if (_migrationsConfiguration != null)
+                return _migrationsConfiguration;
 
-            var assemblyTypes = UnitOfWorkFactory.GetType().Assembly.GetTypes();
-            var configuration = assemblyTypes.FirstOrDefault(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
+            var configuration = UnitOfWorkFactory.GetType().Assembly.DefinedTypes
+                .FirstOrDefault(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
 
             if (configuration == null)
                 return null;
 
-            _currentMigrationConfiguration = (DbMigrationsConfiguration)Activator.CreateInstance(configuration);
-            return _currentMigrationConfiguration;
+            _migrationsConfiguration = (DbMigrationsConfiguration)Activator.CreateInstance(configuration);
+            return _migrationsConfiguration;
+        }
+
+        /// <summary>
+        /// Generally tests the connection to the database
+        /// </summary>
+        private bool TestDatabaseConnection(IDatabaseConfig config)
+        {
+            if (!CheckDatabaseConfig(config))
+                return false;
+                
+            using (var conn = CreateConnection(config))
+            {
+                try
+                {
+                    conn.Open(); //TODO SocketException will not be catched - https://github.com/npgsql/npgsql/issues/1707 
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        private static bool CheckDatabaseConfig(IDatabaseConfig config)
+        {
+            return !(string.IsNullOrEmpty(config.Host) ||
+                     string.IsNullOrEmpty(config.Database) ||
+                     string.IsNullOrEmpty(config.Username) ||
+                     config.Port <= 0);
+        }
+
+        /// <summary>
+        /// Loads all available migrations for the model
+        /// </summary>
+        private IEnumerable<string> GetAvailableMigrations()
+        {
+            // Local migrations cannot be changed at runtime and are not dependent to the config
+            if (_localMigrations != null)
+                return _localMigrations;
+
+            // Get configuration, if not available, no migrations are defined
+            var migrationsConfiguration = GetOrCreateDbMigrationsConfiguration();
+            if (migrationsConfiguration == null)
+            {
+                _localMigrations = new string[0];
+                return _localMigrations;
+            }
+
+            // There is no suitable method to get model migrations without connection string - lets load them manually
+            // https://stackoverflow.com/questions/23996785/get-local-migrations-from-assembly-using-ef-code-first-without-a-connection-stri
+            _localMigrations = (from type in migrationsConfiguration.MigrationsAssembly.DefinedTypes.Select(t => t.AsType())
+                    where type.IsSubclassOf(typeof(DbMigration))
+                    select (IMigrationMetadata)Activator.CreateInstance(type))
+                .Select(m => m.Id).ToArray();
+
+            return _localMigrations;
+        }
+
+        /// <summary>
+        /// Opens a database connection and checks the currently installed migrations
+        /// </summary>
+        private IEnumerable<string> GetInstalledMigrations(IDatabaseConfig config)
+        {
+            return TestDatabaseConnection(config)
+                ? CreateDbMigrator(config).GetDatabaseMigrations()
+                : Enumerable.Empty<string>();
         }
     }
 
@@ -358,7 +420,7 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string updateName)
+        public DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string migrationId)
         {
             throw new InvalidOperationException("Not supported by " + nameof(NullModelConfigurator));
         }

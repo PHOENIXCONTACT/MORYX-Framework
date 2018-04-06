@@ -11,11 +11,5 @@
 
         /// <inheritdoc />
         public int To { get; set; }
-
-        /// <inheritdoc />
-        public virtual void Update(IUpdateContext context)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

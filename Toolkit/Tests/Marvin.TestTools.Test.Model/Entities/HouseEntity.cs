@@ -12,6 +12,6 @@ namespace Marvin.TestTools.Test.Model
 
         public virtual bool IsBurnedDown { get; set; }
 
-        //public virtual bool HasCellar { get; set; }
+        public virtual bool ToRent { get; set; }
     }
 }

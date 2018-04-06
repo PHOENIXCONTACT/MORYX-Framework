@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Marvin.Model
+﻿namespace Marvin.Model
 {
     /// <summary>
     /// Interface for updating databases from a specified version to 
@@ -22,11 +20,6 @@ namespace Marvin.Model
         /// Version to which the database should be migrated
         /// </summary>
         int To { get; }
-
-        /// <summary>
-        /// Executes the update 
-        /// </summary>
-        void Update(IUpdateContext context);
     }
 
     /// <summary>

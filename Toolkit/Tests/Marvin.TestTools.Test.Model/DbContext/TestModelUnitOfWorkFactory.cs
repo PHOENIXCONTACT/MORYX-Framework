@@ -16,7 +16,7 @@ namespace Marvin.TestTools.Test.Model
     /// <summary>
     /// Factory to get a unit of work for the TestModel model
     /// </summary>
-    [ModelFactory(TestModelConstants.Name)]
+    [ModelFactory(TestModelConstants.Namespace)]
     public sealed class TestModelUnitOfWorkFactory : TestModelUnitOfWorkFactory<TestModelContext>
     {
         protected override void Configure()

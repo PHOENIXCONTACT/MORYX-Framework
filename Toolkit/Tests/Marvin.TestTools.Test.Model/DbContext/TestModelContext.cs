@@ -9,7 +9,7 @@ namespace Marvin.TestTools.Test.Model
     /// The DBContext of this database model.
     /// </summary>
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
-    [DefaultSchema("subschema")]
+    [DefaultSchema(TestModelConstants.Schema)]
     public class TestModelContext : MarvinDbContext
     {
         public TestModelContext()

@@ -17,7 +17,7 @@ namespace Marvin.TestModule
         /// </summary>
         public override string Name => ModuleName;
 
-        [Named(TestModelConstants.Name)]
+        [Named(TestModelConstants.Namespace)]
         public IUnitOfWorkFactory TestFactory { get; set; }
 
         #region State transition
