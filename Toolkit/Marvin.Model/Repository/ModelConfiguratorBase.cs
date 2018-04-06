@@ -23,7 +23,7 @@ namespace Marvin.Model
         private IDictionary<Type, IModelScript> _scriptDict;
         private string _configName;
         private DbMigrationsConfiguration _migrationsConfiguration;
-        private string[] _localMigrations;
+        private string[] _migrations;
 
         /// <summary>
         /// Current <see cref="IUnitOfWorkFactory"/> for the configurator
@@ -67,6 +67,12 @@ namespace Marvin.Model
             // If database is empty, fill with TargetModel name
             if (string.IsNullOrEmpty(Config.Database))
                 Config.Database = TargetModel;
+
+            // Create migrations configuration
+            _migrationsConfiguration = CreateDbMigrationsConfiguration();
+
+            // Load local migrations
+            _migrations = GetAvailableMigrations();
 
             // Load ModelSetups TODO: Load internals
             _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(FilterTypeByModelAttribute).ToDictionary(t => t, t => (IModelSetup)null);
@@ -179,13 +185,10 @@ namespace Marvin.Model
         {
             var result = new DatabaseUpdateSummary();
 
-            var availableMigrations = GetAvailableMigrations().ToList();
             if (string.IsNullOrEmpty(migrationId))
-            {
-                migrationId = availableMigrations.LastOrDefault();
-            }
+                migrationId = _migrations.LastOrDefault();
 
-            var isAvailable = availableMigrations.Any(available => available == migrationId);
+            var isAvailable = _migrations.Any(available => available == migrationId);
             if (isAvailable)
             {
                 CreateDbMigrator(config).Update(migrationId);
@@ -209,7 +212,7 @@ namespace Marvin.Model
         /// <inheritdoc />
         public IEnumerable<DatabaseUpdateInformation> AvailableUpdates(IDatabaseConfig config)
         {
-            return GetAvailableMigrations().Select(migration => new DatabaseUpdateInformation
+            return _migrations.Select(migration => new DatabaseUpdateInformation
             {
                 Name = migration
             });
@@ -270,29 +273,13 @@ namespace Marvin.Model
 
         private DbMigrator CreateDbMigrator(IDatabaseConfig config)
         {
-            var configuration = GetOrCreateDbMigrationsConfiguration();
+            var configuration = _migrationsConfiguration;
             configuration.TargetDatabase = new DbConnectionInfo(BuildConnectionString(config), ProviderInvariantName);
 
             return new DbMigrator(configuration);
         }
 
-        /// <summary>
-        /// Returns or creates and returns the DbMigrationsConfiguration of the Model
-        /// </summary>
-        private DbMigrationsConfiguration GetOrCreateDbMigrationsConfiguration()
-        {
-            if (_migrationsConfiguration != null)
-                return _migrationsConfiguration;
-
-            var configuration = UnitOfWorkFactory.GetType().Assembly.DefinedTypes
-                .FirstOrDefault(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
-
-            if (configuration == null)
-                return null;
-
-            _migrationsConfiguration = (DbMigrationsConfiguration)Activator.CreateInstance(configuration);
-            return _migrationsConfiguration;
-        }
+        
 
         /// <summary>
         /// Generally tests the connection to the database
@@ -328,30 +315,35 @@ namespace Marvin.Model
         }
 
         /// <summary>
+        /// Returns or creates and returns the DbMigrationsConfiguration of the Model
+        /// </summary>
+        private DbMigrationsConfiguration CreateDbMigrationsConfiguration()
+        {
+            var configuration = UnitOfWorkFactory.GetType().Assembly.DefinedTypes
+                .FirstOrDefault(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
+
+            if (configuration == null)
+                return null;
+
+            return (DbMigrationsConfiguration)Activator.CreateInstance(configuration);
+        }
+
+        /// <summary>
         /// Loads all available migrations for the model
         /// </summary>
-        private IEnumerable<string> GetAvailableMigrations()
+        private string[] GetAvailableMigrations()
         {
-            // Local migrations cannot be changed at runtime and are not dependent to the config
-            if (_localMigrations != null)
-                return _localMigrations;
-
             // Get configuration, if not available, no migrations are defined
-            var migrationsConfiguration = GetOrCreateDbMigrationsConfiguration();
-            if (migrationsConfiguration == null)
-            {
-                _localMigrations = new string[0];
-                return _localMigrations;
-            }
+            if (_migrationsConfiguration == null)
+                return new string[0];
 
             // There is no suitable method to get model migrations without connection string - lets load them manually
             // https://stackoverflow.com/questions/23996785/get-local-migrations-from-assembly-using-ef-code-first-without-a-connection-stri
-            _localMigrations = (from type in migrationsConfiguration.MigrationsAssembly.DefinedTypes.Select(t => t.AsType())
-                    where type.IsSubclassOf(typeof(DbMigration))
-                    select (IMigrationMetadata)Activator.CreateInstance(type))
-                .Select(m => m.Id).ToArray();
+            var migrations = (from type in _migrationsConfiguration.MigrationsAssembly.DefinedTypes.Select(t => t.AsType())
+                              where type.IsSubclassOf(typeof(DbMigration))
+                              select (IMigrationMetadata) Activator.CreateInstance(type)).Select(m => m.Id).ToArray();
 
-            return _localMigrations;
+            return migrations;
         }
 
         /// <summary>
