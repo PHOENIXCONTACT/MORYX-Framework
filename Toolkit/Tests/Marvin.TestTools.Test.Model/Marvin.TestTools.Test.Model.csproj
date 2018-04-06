@@ -77,9 +77,13 @@
     <Compile Include="Entities\HouseEntity.cs" />
     <Compile Include="Entities\HugePocoEntity.cs" />
     <Compile Include="Entities\JsonEntity.cs" />
-    <Compile Include="Migrations\201804041735182_InitialCreate.cs" />
-    <Compile Include="Migrations\201804041735182_InitialCreate.Designer.cs">
-      <DependentUpon>201804041735182_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201804061542349_InitialCreate.cs" />
+    <Compile Include="Migrations\201804061542349_InitialCreate.Designer.cs">
+      <DependentUpon>201804061542349_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804061554031_RentableHouse.cs" />
+    <Compile Include="Migrations\201804061554031_RentableHouse.Designer.cs">
+      <DependentUpon>201804061554031_RentableHouse.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Scripts\SomeCoolScript.cs" />
@@ -87,13 +91,14 @@
     <None Include="app.config" />
     <Compile Include="API\ICarEntityRepository.cs" />
     <Compile Include="API\IWheelEntityRepository.cs" />
-    <Compile Include="Entities\SportCarEntity.cs" />
+    <Compile Include="Entities\Cars\SportCarEntity.cs" />
     <Compile Include="DbContext\TestModelContext.cs" />
-    <Compile Include="Entities\CarEntity.cs" />
-    <Compile Include="Entities\WheelEntity.cs" />
+    <Compile Include="Entities\Cars\CarEntity.cs" />
+    <Compile Include="Entities\Cars\WheelEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="API\ISportCarRepository.cs" />
     <Compile Include="DbContext\TestModelUnitOfWorkFactory.cs" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -119,8 +124,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201804041735182_InitialCreate.resx">
-      <DependentUpon>201804041735182_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201804061542349_InitialCreate.resx">
+      <DependentUpon>201804061542349_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804061554031_RentableHouse.resx">
+      <DependentUpon>201804061554031_RentableHouse.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

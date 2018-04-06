@@ -2,7 +2,7 @@
 
 namespace Marvin.TestTools.Test.Model
 {
-    [ModelScript(TestModelConstants.Name)]
+    [ModelScript(TestModelConstants.Namespace)]
     public class SomeCoolScript : IModelScript
     {
         public string Name => "Some cool name";
@@ -11,7 +11,8 @@ namespace Marvin.TestTools.Test.Model
 
         public string GetSql()
         {
-            return "INSERT INTO \"HouseEntity\"(\"Name\") VALUES ('From CreationScript');";
+            return $"INSERT INTO {TestModelConstants.Schema.ToLower()}.\"{nameof(HouseEntity)}\"(\"{nameof(HouseEntity.Name)}\") " +
+                   "VALUES ('From CreationScript');";
         }
     }
 }

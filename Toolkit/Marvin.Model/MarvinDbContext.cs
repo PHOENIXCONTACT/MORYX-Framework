@@ -68,16 +68,9 @@ namespace Marvin.Model
         {
             // Set default schmema
             var defaultSchemaAttr = GetType().GetCustomAttribute<DefaultSchemaAttribute>();
-            if (!string.IsNullOrEmpty(defaultSchemaAttr?.Schema))
-            {
-                var attrName = defaultSchemaAttr.Schema;
-                var schemaName = char.ToLowerInvariant(attrName[0]) + attrName.Substring(1);
-                modelBuilder.HasDefaultSchema(schemaName);
-            }
-            else
-            {
-                modelBuilder.HasDefaultSchema("public");
-            }
+            modelBuilder.HasDefaultSchema(!string.IsNullOrEmpty(defaultSchemaAttr?.Schema)
+                ? defaultSchemaAttr.Schema.ToLower() // schema names have to be lower case!
+                : "public");
 
             // Custon Code-First Conventions: https://msdn.microsoft.com/en-us/library/jj819164(v=vs.113).aspx
             // Turn off pluralization

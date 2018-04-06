@@ -4,7 +4,7 @@ using Marvin.Model;
 
 namespace Marvin.TestTools.Test.Model
 {
-    [Table(nameof(CarEntity), Schema = "myschema")]
+    [Table(nameof(CarEntity), Schema = TestModelConstants.CarsSchema)]
     public class CarEntity : ModificationTrackedEntityBase
     {
         public virtual string Name { get; set; }

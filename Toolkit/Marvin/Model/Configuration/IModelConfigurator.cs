@@ -60,7 +60,7 @@ namespace Marvin.Model
         /// Update the database to a the given migration version if available
         /// </summary>
         /// <returns>True when an update was executed, false when this is already the latest version</returns>
-        DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string updateName);
+        DatabaseUpdateSummary UpdateDatabase(IDatabaseConfig config, string migrationId);
 
         /// <summary>
         /// Rolls back all migrations including the first migration

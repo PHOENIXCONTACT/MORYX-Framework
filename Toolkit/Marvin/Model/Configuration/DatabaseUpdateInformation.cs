@@ -9,5 +9,10 @@
         /// Name of the update
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Inidicates if the update is installed
+        /// </summary>
+        public bool IsApplied { get; set; }
     }
 }

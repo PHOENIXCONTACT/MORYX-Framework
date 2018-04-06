@@ -1,4 +1,5 @@
-﻿using Marvin.Model;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Marvin.Model;
 
 namespace Marvin.TestTools.Test.Model
 {
@@ -10,6 +11,7 @@ namespace Marvin.TestTools.Test.Model
         RearRight
     }
 
+    [Table(nameof(WheelEntity), Schema = TestModelConstants.CarsSchema)]
     public class WheelEntity : EntityBase
     {
         public virtual CarEntity Car { get; set; }

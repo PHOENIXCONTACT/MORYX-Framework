@@ -8,7 +8,7 @@ namespace Marvin.TestTools.Test.Model.Migrations
         public override void Up()
         {
             CreateTable(
-                "myschema.CarEntity",
+                "cars.CarEntity",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -18,13 +18,11 @@ namespace Marvin.TestTools.Test.Model.Migrations
                         Created = c.DateTime(nullable: false),
                         Updated = c.DateTime(nullable: false),
                         Deleted = c.DateTime(),
-                        Performance = c.Int(),
-                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "subschema.WheelEntity",
+                "cars.WheelEntity",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -32,11 +30,11 @@ namespace Marvin.TestTools.Test.Model.Migrations
                         CarId = c.Long(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("myschema.CarEntity", t => t.CarId)
+                .ForeignKey("cars.CarEntity", t => t.CarId)
                 .Index(t => t.CarId, name: "IX_Car_Id");
             
             CreateTable(
-                "subschema.HouseEntity",
+                "testmodel.HouseEntity",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -51,7 +49,7 @@ namespace Marvin.TestTools.Test.Model.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "subschema.HugePocoEntity",
+                "testmodel.HugePocoEntity",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -74,7 +72,7 @@ namespace Marvin.TestTools.Test.Model.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "subschema.JsonEntity",
+                "testmodel.JsonEntity",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -83,7 +81,7 @@ namespace Marvin.TestTools.Test.Model.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "anotherschema.Another",
+                "testmodel.AnotherEntity",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -93,18 +91,32 @@ namespace Marvin.TestTools.Test.Model.Migrations
                     })
                 .PrimaryKey(t => t.Id);
             
+            CreateTable(
+                "cars.SportCarEntity",
+                c => new
+                    {
+                        Id = c.Long(nullable: false),
+                        Performance = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("cars.CarEntity", t => t.Id)
+                .Index(t => t.Id);
+            
         }
         
         public override void Down()
         {
-            DropForeignKey("subschema.WheelEntity", "CarId", "myschema.CarEntity");
-            DropIndex("subschema.WheelEntity", "IX_Car_Id");
-            DropTable("anotherschema.Another");
-            DropTable("subschema.JsonEntity");
-            DropTable("subschema.HugePocoEntity");
-            DropTable("subschema.HouseEntity");
-            DropTable("subschema.WheelEntity");
-            DropTable("myschema.CarEntity");
+            DropForeignKey("cars.SportCarEntity", "Id", "cars.CarEntity");
+            DropForeignKey("cars.WheelEntity", "CarId", "cars.CarEntity");
+            DropIndex("cars.SportCarEntity", new[] { "Id" });
+            DropIndex("cars.WheelEntity", "IX_Car_Id");
+            DropTable("cars.SportCarEntity");
+            DropTable("testmodel.AnotherEntity");
+            DropTable("testmodel.JsonEntity");
+            DropTable("testmodel.HugePocoEntity");
+            DropTable("testmodel.HouseEntity");
+            DropTable("cars.WheelEntity");
+            DropTable("cars.CarEntity");
         }
     }
 }

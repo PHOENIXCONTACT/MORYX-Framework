@@ -2,6 +2,10 @@
 {
     public static class TestModelConstants
     {
-        public const string Name = "Marvin.TestTools.Test.Model";
+        public const string Namespace = "Marvin.TestTools.Test.Model";
+
+        public const string Schema = "testModel";
+
+        public const string CarsSchema = "cars";
     }
 }
