@@ -12,7 +12,6 @@ namespace Marvin.Model
     /// <summary>
     /// Marvin related implementation of <see cref="T:System.Data.Entity.DbContext" />
     /// </summary>
-    [DefaultSchema("public")]
     public abstract class MarvinDbContext : DbContext, IContextMode
     {
         /// <inheritdoc />
@@ -67,12 +66,12 @@ namespace Marvin.Model
         protected virtual void ConfigureConventions(DbModelBuilder modelBuilder)
         {
             // Set default schmema
-            var defaultSchemaAttr = GetType().GetCustomAttribute<DefaultSchemaAttribute>();
+            var defaultSchemaAttr = GetType().GetCustomAttributes<DefaultSchemaAttribute>().LastOrDefault();
             modelBuilder.HasDefaultSchema(!string.IsNullOrEmpty(defaultSchemaAttr?.Schema)
                 ? defaultSchemaAttr.Schema.ToLower() // schema names have to be lower case!
-                : "public");
+                : DefaultSchemaAttribute.DefaultName);
 
-            // Custon Code-First Conventions: https://msdn.microsoft.com/en-us/library/jj819164(v=vs.113).aspx
+            // Custom Code-First Conventions: https://msdn.microsoft.com/en-us/library/jj819164(v=vs.113).aspx
             // Turn off pluralization
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }

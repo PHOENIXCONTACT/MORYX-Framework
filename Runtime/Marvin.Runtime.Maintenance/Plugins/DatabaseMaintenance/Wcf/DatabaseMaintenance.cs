@@ -8,8 +8,6 @@ using System.Text.RegularExpressions;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Model;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Maintenance.Filesystem;
 using Marvin.Runtime.Modules;
 using Marvin.Threading;
 
@@ -19,12 +17,11 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     internal class DatabaseMaintenance : IDatabaseMaintenance
     {
-        // Castle dependency injection
-        public IRuntimeConfigManager ConfigManager { get; set; }
         public IModuleManager ModuleManager { get; set; }
+
         public IParallelOperations ParallelOperations { get; set; }
+
         public IEnumerable<IUnitOfWorkFactory> ModelFactories { get; set; }
-        public FileSystemPathProvider PathProvider { get; set; }
 
         private IEnumerable<IModelConfigurator> ModelConfigurators => ModelFactories.Cast<IModelConfiguratorFactory>().Select(c => c.GetConfigurator());
 
@@ -118,7 +115,9 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             var config = UpdateConfigFromModel(targetConfigurator.Config, model);
             try
             {
-                return targetConfigurator.CreateDatabase(config) ? string.Empty : "Cannot create database. May be database already exists, no database was defined or no migrations were found.";
+                return targetConfigurator.CreateDatabase(config)
+                    ? string.Empty
+                    : "Cannot create database. May be the database already exists or was misconfigured.";
             }
             catch (Exception ex)
             {
@@ -320,7 +319,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
                 var fileName = Path.GetFileName(backup);
                 var isForTagetModel = fileName.StartsWith(tagetModel);
                 var fileInfo = new FileInfo(backup);
-                var backupModel = new BackupModel()
+                var backupModel = new BackupModel
                 {
                     FileName = fileName,
                     Size = (int)fileInfo.Length / 1024,
@@ -369,7 +368,6 @@ namespace Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf
             dbConfig.Host = model.Server;
             dbConfig.Port = model.Port;
             dbConfig.Database = model.Database;
-            //TODO: dbConfig.Schema = model.Schema;
             dbConfig.Username = model.User;
             dbConfig.Password = model.Password;
             return dbConfig;
