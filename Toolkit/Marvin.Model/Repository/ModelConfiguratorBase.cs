@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
-using System.Data.Entity.Migrations.History;
 using System.Data.Entity.Migrations.Infrastructure;
 using System.Linq;
 using System.Reflection;
@@ -65,6 +63,10 @@ namespace Marvin.Model
             // Load Config
             _configName = TargetModel + ".DbConfig";
             Config = _configManager.GetConfiguration<TConfig>(_configName);
+
+            // If database is empty, fill with TargetModel name
+            if (string.IsNullOrEmpty(Config.Database))
+                Config.Database = TargetModel;
 
             // Load ModelSetups TODO: Load internals
             _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(FilterTypeByModelAttribute).ToDictionary(t => t, t => (IModelSetup)null);
