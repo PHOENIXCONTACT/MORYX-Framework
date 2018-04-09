@@ -11,6 +11,7 @@ namespace Marvin.Products.Model
     /// The DBContext of this database model.
     /// </summary>
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
+    [DefaultSchema(ProductsConstants.Schema)]
     public class ProductsContext : MarvinDbContext
     {
         /// <inheritdoc />
@@ -24,78 +25,41 @@ namespace Marvin.Products.Model
         }
 
         /// <inheritdoc />
-        public ProductsContext(DbConnection dbConnection, ContextMode mode) : base(dbConnection, mode)
+        public ProductsContext(DbConnection connection, ContextMode mode) : base(connection, mode)
         {
         }
 
-        /// <summary>
-        /// There are no comments for ProductEntity in the schema.
-        /// </summary>
         public virtual DbSet<ProductEntity> ProductEntities { get; set; }
     
-        /// <summary>
-        /// There are no comments for PartLink in the schema.
-        /// </summary>
         public virtual DbSet<PartLink> PartLinks { get; set; }
     
-        /// <summary>
-        /// There are no comments for RevisionHistory in the schema.
-        /// </summary>
         public virtual DbSet<RevisionHistory> RevisionHistories { get; set; }
     
-        /// <summary>
-        /// There are no comments for ProductRecipeEntity in the schema.
-        /// </summary>
         public virtual DbSet<ProductRecipeEntity> ProductRecipeEntities { get; set; }
     
-        /// <summary>
-        /// There are no comments for ProductProperties in the schema.
-        /// </summary>
         public virtual DbSet<ProductProperties> ProductProperties { get; set; }
     
-        /// <summary>
-        /// There are no comments for ArticleEntity in the schema.
-        /// </summary>
         public virtual DbSet<ArticleEntity> ArticleEntities { get; set; }
     
-        /// <summary>
-        /// There are no comments for WorkplanEntity in the schema.
-        /// </summary>
         public virtual DbSet<WorkplanEntity> WorkplanEntities { get; set; }
-    
-        /// <summary>
-        /// There are no comments for ProductDocument in the schema.
-        /// </summary>
+
         public virtual DbSet<ProductDocument> ProductDocuments { get; set; }
-    
-        /// <summary>
-        /// There are no comments for WorkplanReference in the schema.
-        /// </summary>
+
         public virtual DbSet<WorkplanReference> WorkplanReferences { get; set; }
     
-        /// <summary>
-        /// There are no comments for StepEntity in the schema.
-        /// </summary>
         public virtual DbSet<StepEntity> StepEntities { get; set; }
-    
-        /// <summary>
-        /// There are no comments for ConnectorEntity in the schema.
-        /// </summary>
+
         public virtual DbSet<ConnectorEntity> ConnectorEntities { get; set; }
-    
-        /// <summary>
-        /// There are no comments for ConnectorReference in the schema.
-        /// </summary>
+
         public virtual DbSet<ConnectorReference> ConnectorReferences { get; set; }
     
-        /// <summary>
-        /// There are no comments for OutputDescriptionEntity in the schema.
-        /// </summary>
         public virtual DbSet<OutputDescriptionEntity> OutputDescriptionEntities { get; set; }
 
         /// <inheritdoc />
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // Workplane reference
             modelBuilder.Entity<WorkplanReference>()
                 .HasRequired(w => w.Target)

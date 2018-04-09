@@ -6,14 +6,14 @@ namespace Marvin.Products.Model.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
+    [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
     public sealed partial class InitialCreate : IMigrationMetadata
     {
         private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201803120950508_InitialCreate"; }
+            get { return "201804091109101_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

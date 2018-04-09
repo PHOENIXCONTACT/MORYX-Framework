@@ -9,14 +9,8 @@ namespace Marvin.Products.Samples.Model
         Windows2012Server
     }
 
-    /// <summary>
-    /// Product entity
-    /// </summary>
     public class SmartWatchProductPropertiesEntity : ProductProperties
     {
-        /// <summary>
-        /// OperatingSystem
-        /// </summary>
         public virtual OperatingSystem OperatingSystem { get; set; }
     }
 }

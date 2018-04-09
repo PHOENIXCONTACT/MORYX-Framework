@@ -1,14 +1,12 @@
-﻿using System.Data.Entity.Migrations;
-using Marvin.Model;
+﻿using Marvin.Model;
 using Marvin.Model.Npgsql;
-using Marvin.Products.Model.Migrations;
 
 namespace Marvin.Products.Model
 {
     /// <summary>
     /// Factory to get a unit of work for the resources model
     /// </summary>
-    public abstract class ProductsUnitOfWorkFactory<TContext> : NpgsqlUnitOfWorkFactoryBase<TContext>
+    public abstract class ProductsUnitOfWorkFactory<TContext> : UnitOfWorkFactoryBase<TContext, NpgsqlModelConfigurator>
         where TContext : ProductsContext
     {
         /// <inheritdoc />
@@ -33,6 +31,5 @@ namespace Marvin.Products.Model
     [ModelFactory(ProductsConstants.Namespace)]
     public class ProductUnitOfWorkFactory : ProductsUnitOfWorkFactory<ProductsContext>
     {
-        protected override DbMigrationsConfiguration<ProductsContext> MigrationConfiguration => new ProductMigrationsConfiguration();
     }
 }

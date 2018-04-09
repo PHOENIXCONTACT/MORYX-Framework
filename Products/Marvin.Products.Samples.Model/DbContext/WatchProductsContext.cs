@@ -10,6 +10,7 @@ namespace Marvin.Products.Samples.Model
     /// The DBContext of this database model.
     /// </summary>
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
+    [DefaultSchema(ProductsConstants.Schema)]
     public class WatchProductsContext : ProductsContext
     {
         /// <inheritdoc />
@@ -23,7 +24,7 @@ namespace Marvin.Products.Samples.Model
         }
 
         /// <inheritdoc />
-        public WatchProductsContext(DbConnection dbConnection, ContextMode mode) : base(dbConnection, mode)
+        public WatchProductsContext(DbConnection connection, ContextMode mode) : base(connection, mode)
         {
         }
 
@@ -41,8 +42,11 @@ namespace Marvin.Products.Samples.Model
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<SmartWatchProductPropertiesEntity>().ToTable(nameof(SmartWatchProductPropertiesEntities), ProductsConstants.SchemaName);
-            modelBuilder.Entity<AnalogWatchProductPropertiesEntity>().ToTable(nameof(AnalogWatchProductPropertiesEntity), ProductsConstants.SchemaName);
+            modelBuilder.Entity<SmartWatchProductPropertiesEntity>()
+                .ToTable(nameof(SmartWatchProductPropertiesEntity), ProductsConstants.Schema);
+
+            modelBuilder.Entity<AnalogWatchProductPropertiesEntity>()
+                .ToTable(nameof(AnalogWatchProductPropertiesEntity), ProductsConstants.Schema);
         }
     }
 }

@@ -10,10 +10,5 @@
         /// ImportAttribute and UseChildAttribute.
         /// </summary>
         public const string Namespace = "Marvin.Products.Samples.Model";
-
-        /// <summary>
-        /// Schema name for the ProductsContext
-        /// </summary>
-        public const string SchemaName = "watchproducts";
     }
 }
