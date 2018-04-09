@@ -41,11 +41,7 @@ To not become old and gray, all third party libraries were upgraded:
 
 ### Common Logging
 
-The common logging framework was updated from 2.1 to 3.3.1. No relevant api changes known.
-
-### Caliburn.Micro
-
-Caliburn was upgraded from 2.0.1 to 3.0.1. No known problems.
+The common logging framework was updated from 2.1 to 3.4.1. No relevant api changes known.
 
 ### JSON.NET (Newtonsoft JSON)
 
@@ -55,7 +51,7 @@ The known static class `JsonSettings` is not existing anymore. The new [Json](xr
 
 ### NUnit
 
-For our unit tests the Nunit framework was updated from 2.4.x to 3.5.0.
+For our unit tests the Nunit framework was updated from 2.4.x to 3.10.1.
 
 Some help:
 

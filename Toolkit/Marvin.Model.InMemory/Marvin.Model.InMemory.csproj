@@ -34,11 +34,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Effort, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Effort.EF6.1.3.0\lib\net45\Effort.dll</HintPath>
+      <HintPath>..\..\packages\Effort.EF6.1.3.3\lib\net45\Effort.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
