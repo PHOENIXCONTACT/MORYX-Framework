@@ -7,16 +7,32 @@ using Marvin.Modules;
 
 namespace Marvin.Configuration
 {
+    /// <summary>
+    /// Similar to the <see cref="PluginNameSelectorAttribute"/> this attribute provides a list of component configurations. 
+    /// These configurations are expected by the implementations of a certain interface and allow each implementation to define its own configuration.
+    /// </summary>
     public class PluginConfigsAttribute : PossibleValuesAttribute
     {
-        protected Type StrategyService { get; }
-
         private readonly bool _exportBaseType;
 
+        /// <summary>
+        /// Type of the service which should be selectable
+        /// </summary>
+        protected Type StrategyService { get; }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="PluginConfigsAttribute"/>
+        /// </summary>
+        /// <param name="strategyService">Type of the service which should be selectable</param>
         public PluginConfigsAttribute(Type strategyService) : this(strategyService, true)
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="PluginConfigsAttribute"/>
+        /// </summary>
+        /// <param name="strategyService">Type of the service which should be selectable</param>
+        /// <param name="exportBaseType">If <c>true</c>, the base type will also be exported</param>
         public PluginConfigsAttribute(Type strategyService, bool exportBaseType)
         {
             _exportBaseType = exportBaseType;

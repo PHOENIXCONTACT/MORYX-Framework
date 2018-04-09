@@ -208,7 +208,7 @@ Often directories are used as config parameters and to reduce typos or invalid p
 public string Directory { get; set; }
 ````
 
-### PluginNamesAttribute
+### PluginNameSelectorAttribute
 To specify which implementation to use, the platform provides support for the factory pattern and named components. The name of the component is defined in its component attribute and the factory provides a method `Create(string name)`. To reduce complexity of deployment and configuration and avoid typos when specifing these names the ComponentNameSelectorAttribute creates a list of available implementations of a certain interface. Its usage is pretty straight forward and only requires the type of interface to look for.
 
 ````cs
@@ -218,7 +218,7 @@ public string ActiveStrategy { get; set; }
 ````
 
 ### PluginConfigsAttribute
-Similar to the `PluginNamesAttribute` this attribute provides a list of component configurations. These configurations are expected by the implementations of a certain interface and allow each implementation to define its own configuration. This does require the implementation to be decorated with the attribute `[ExpectedConfig(typeof(MyConfig))]`. This attribute can be used on single properties or collections. Therefor you can either select the type of a new entry or change the entries type. All configs will be presented as list of their respective types name and converted into in object if one is selected. When decorating a config member with this attribute the configs base type can be excluded if it is abstract. Always make sure to specify the interface type and not the base config type!
+Similar to the `PluginNameSelectorAttribute` this attribute provides a list of component configurations. These configurations are expected by the implementations of a certain interface and allow each implementation to define its own configuration. This does require the implementation to be decorated with the attribute `[ExpectedConfig(typeof(MyConfig))]`. This attribute can be used on single properties or collections. Therefor you can either select the type of a new entry or change the entries type. All configs will be presented as list of their respective types name and converted into in object if one is selected. When decorating a config member with this attribute the configs base type can be excluded if it is abstract. Always make sure to specify the interface type and not the base config type!
 
 ````cs 
 [DataMember]
