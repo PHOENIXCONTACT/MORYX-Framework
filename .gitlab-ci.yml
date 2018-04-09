@@ -12,7 +12,6 @@ variables:
 
 cache:
   paths:
-    - .buildtools
     - packages
 
 Build: 

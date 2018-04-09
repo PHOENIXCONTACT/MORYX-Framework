@@ -9,7 +9,7 @@ $VswhereVersion = "2.4.1";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
-$BuildTools = "$RootPath\.buildtools";
+$BuildTools = "$RootPath\packages";
 $DotBuild = "$RootPath\.build";
 
 # Artifacts
