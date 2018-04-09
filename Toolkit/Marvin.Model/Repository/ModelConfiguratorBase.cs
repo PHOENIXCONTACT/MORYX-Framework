@@ -65,7 +65,7 @@ namespace Marvin.Model
             Config = _configManager.GetConfiguration<TConfig>(_configName);
 
             // If database is empty, fill with TargetModel name
-            if (string.IsNullOrEmpty(Config.Database))
+            if (string.IsNullOrWhiteSpace(Config.Database))
                 Config.Database = TargetModel;
 
             // Create migrations configuration
@@ -278,9 +278,7 @@ namespace Marvin.Model
 
             return new DbMigrator(configuration);
         }
-
         
-
         /// <summary>
         /// Generally tests the connection to the database
         /// </summary>
@@ -308,9 +306,9 @@ namespace Marvin.Model
         /// </summary>
         protected static bool CheckDatabaseConfig(IDatabaseConfig config)
         {
-            return !(string.IsNullOrEmpty(config.Host) ||
-                     string.IsNullOrEmpty(config.Database) ||
-                     string.IsNullOrEmpty(config.Username) ||
+            return !(string.IsNullOrWhiteSpace(config.Host) ||
+                     string.IsNullOrWhiteSpace(config.Database) ||
+                     string.IsNullOrWhiteSpace(config.Username) ||
                      config.Port <= 0);
         }
 

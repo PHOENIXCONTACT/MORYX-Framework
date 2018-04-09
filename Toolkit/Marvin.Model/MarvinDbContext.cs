@@ -14,30 +14,47 @@ namespace Marvin.Model
     /// </summary>
     public abstract class MarvinDbContext : DbContext, IContextMode
     {
+        private static readonly MethodInfo DbInitializerMethod;
+
         /// <inheritdoc />
         public ContextMode CurrentMode { get; private set; }
 
         /// <summary>
-        /// Default constructor, only need for migration tools
+        /// Static constructor to load the database initializer method
         /// </summary>
-        protected MarvinDbContext()
+        static MarvinDbContext()
         {
-
+            DbInitializerMethod = (from method in typeof(Database).GetMethods()
+                where method.Name.Equals(nameof(Database.SetInitializer)) &&
+                      method.GetGenericArguments().Length == 1
+                select method).FirstOrDefault();
         }
 
         /// <summary>
-        /// Initializes a new Entities object using the connection string found in the 'Entities' section of the application configuration file.
+        /// Constructor for this DbContext. 
+        /// Used by EntityFramework migration tools.
+        /// </summary>
+        protected MarvinDbContext()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for this DbContext using the given connection string.
+        /// Used by the Runtime environment
         /// </summary>
         protected MarvinDbContext(string connectionString, ContextMode mode) : base(connectionString)
         {
+            SetNullDatabaseInitializer();
             Configure(mode);
         }
 
         /// <summary>
-        /// Initializes a new Entities object using an exisiting connection.
+        /// Constructor for this DbContext using an exisiting connection.
+        /// Used if connection is already defined (e.g. Effort InMemory)
         /// </summary>
         protected MarvinDbContext(DbConnection connection, ContextMode mode) : base(connection, true)
         {
+            SetNullDatabaseInitializer();
             Configure(mode);
         }
 
@@ -66,7 +83,8 @@ namespace Marvin.Model
         protected virtual void ConfigureConventions(DbModelBuilder modelBuilder)
         {
             // Set default schmema
-            var defaultSchemaAttr = GetType().GetCustomAttributes<DefaultSchemaAttribute>().LastOrDefault();
+            var attributes = GetType().GetCustomAttributes<DefaultSchemaAttribute>().ToArray();
+            var defaultSchemaAttr = attributes.LastOrDefault();
             modelBuilder.HasDefaultSchema(!string.IsNullOrEmpty(defaultSchemaAttr?.Schema)
                 ? defaultSchemaAttr.Schema.ToLower() // schema names have to be lower case!
                 : DefaultSchemaAttribute.DefaultName);
@@ -144,6 +162,22 @@ namespace Marvin.Model
                         modified.Entity.Deleted = changeTimestamp;
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the <see cref="NullDatabaseInitializer{TContext}"/> to not create the database automatically
+        /// </summary>
+        private void SetNullDatabaseInitializer()
+        {
+            // Because of the limited entity framdework API, we have to call the Database initializer by reflection
+            // Database.SetInitializer(new NullDatabaseInitializer<CustomContext>());
+            var contextType = GetType();
+            var initializerMethod = DbInitializerMethod.MakeGenericMethod(contextType);
+
+            var nullInitializerType = typeof(NullDatabaseInitializer<>).MakeGenericType(contextType);
+            var nullInitializer = Activator.CreateInstance(nullInitializerType);
+
+            initializerMethod.Invoke(null, new[] { nullInitializer });
         }
     }
 }
