@@ -25,7 +25,8 @@ namespace Marvin.TestTools.Test.Inheritance.Model
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<SuperCarEntity>().ToTable(nameof(SuperCarEntity));
+            modelBuilder.Entity<SuperCarEntity>()
+                .ToTable(nameof(SuperCarEntity));
         }
     }
 }

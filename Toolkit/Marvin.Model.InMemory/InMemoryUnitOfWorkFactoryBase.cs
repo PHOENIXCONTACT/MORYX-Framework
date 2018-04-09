@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using Effort.Provider;
 
 namespace Marvin.Model.InMemory
@@ -31,7 +32,13 @@ namespace Marvin.Model.InMemory
                 ? Effort.DbConnectionFactory.CreatePersistent(Guid.NewGuid().ToString())
                 : Effort.DbConnectionFactory.CreatePersistent(_instanceId);
 
-            return (MarvinDbContext)Activator.CreateInstance(contextType, connection, contextMode);
+            // Create instance of context
+            var context =  (MarvinDbContext)Activator.CreateInstance(contextType, connection, contextMode);
+
+            // Override initializer of MarvinDbContext: Create database if not exists
+            Database.SetInitializer(new CreateDatabaseIfNotExists<TContext>());
+
+            return context;
         }
     }
 }

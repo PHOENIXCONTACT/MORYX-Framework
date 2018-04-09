@@ -14,7 +14,6 @@ namespace Marvin.Runtime.UserManagement.Model
     {
         public UserManagementContext()
         {
-            
         }
 
         public UserManagementContext(string connectionString, ContextMode mode) : base(connectionString, mode)

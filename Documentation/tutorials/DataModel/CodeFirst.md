@@ -75,6 +75,8 @@ public class SolarSystemContext : MarvinDbContext
 
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         // Additional FluentAPI calls ...
     }
 }
@@ -396,17 +398,14 @@ namespace Marvin.TestTools.Test.Model.Inheritance
         {
         }
 
-        public SpecializedSolarSystemContext(DbConnection connection, ContextMode mode) : base(connection, mode)
-        {
-        }
-
         public virtual DbSet<PlanetOfTheApes> Planets { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<PlanetOfTheApes>().ToTable(nameof(PlanetOfTheApes));
+            modelBuilder.Entity<PlanetOfTheApes>()
+                .ToTable(nameof(PlanetOfTheApes));
         }
     }
 }
