@@ -1,17 +1,12 @@
-namespace Marvin.Resources.Model
+namespace Marvin.Resources.Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    using Marvin.Model.Npgsql;
-    using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Infrastructure;
     
     public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("resources"));
-            
             CreateTable(
                 "resources.ResourceEntity",
                 c => new
@@ -60,8 +55,6 @@ namespace Marvin.Resources.Model
             DropIndex("resources.ResourceEntity", new[] { "Name" });
             DropTable("resources.ResourceRelation");
             DropTable("resources.ResourceEntity");
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("resources"));
-            
         }
     }
 }

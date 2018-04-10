@@ -2,7 +2,6 @@
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Model;
 using Marvin.Serialization;
-using Marvin.Tools;
 
 namespace Marvin.Resources.Model
 {

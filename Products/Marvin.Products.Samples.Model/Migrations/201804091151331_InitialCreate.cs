@@ -2,16 +2,11 @@ namespace Marvin.Products.Samples.Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    using Marvin.Model.Npgsql;
-    using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Infrastructure;
     
     public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("products"));
-            
             CreateTable(
                 "products.ProductProperties",
                 c => new
@@ -247,7 +242,7 @@ namespace Marvin.Products.Samples.Model.Migrations
                 .Index(t => t.Id);
             
             CreateTable(
-                "products.SmartWatchProductPropertiesEntities",
+                "products.SmartWatchProductPropertiesEntity",
                 c => new
                     {
                         Id = c.Long(nullable: false),
@@ -261,7 +256,7 @@ namespace Marvin.Products.Samples.Model.Migrations
         
         public override void Down()
         {
-            DropForeignKey("products.SmartWatchProductPropertiesEntities", "Id", "products.ProductProperties");
+            DropForeignKey("products.SmartWatchProductPropertiesEntity", "Id", "products.ProductProperties");
             DropForeignKey("products.AnalogWatchProductPropertiesEntity", "Id", "products.ProductProperties");
             DropForeignKey("products.RevisionHistory", "ProductRevisionId", "products.ProductEntity");
             DropForeignKey("products.ArticleEntity", "ProductId", "products.ProductEntity");
@@ -282,7 +277,7 @@ namespace Marvin.Products.Samples.Model.Migrations
             DropForeignKey("products.ProductProperties", "ProductId", "products.ProductEntity");
             DropForeignKey("products.ProductDocument", "ProductId", "products.ProductEntity");
             DropForeignKey("products.ProductEntity", "CurrentVersionId", "products.ProductProperties");
-            DropIndex("products.SmartWatchProductPropertiesEntities", new[] { "Id" });
+            DropIndex("products.SmartWatchProductPropertiesEntity", new[] { "Id" });
             DropIndex("products.AnalogWatchProductPropertiesEntity", new[] { "Id" });
             DropIndex("products.RevisionHistory", new[] { "ProductRevisionId" });
             DropIndex("products.ArticleEntity", new[] { "PartLinkId" });
@@ -306,7 +301,7 @@ namespace Marvin.Products.Samples.Model.Migrations
             DropIndex("products.ProductEntity", "Material_Number");
             DropIndex("products.ProductEntity", "MaterialNumber_Revision_Index");
             DropIndex("products.ProductProperties", new[] { "ProductId" });
-            DropTable("products.SmartWatchProductPropertiesEntities");
+            DropTable("products.SmartWatchProductPropertiesEntity");
             DropTable("products.AnalogWatchProductPropertiesEntity");
             DropTable("products.RevisionHistory");
             DropTable("products.ArticleEntity");
@@ -321,8 +316,6 @@ namespace Marvin.Products.Samples.Model.Migrations
             DropTable("products.ProductDocument");
             DropTable("products.ProductEntity");
             DropTable("products.ProductProperties");
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("products"));
-            
         }
     }
 }

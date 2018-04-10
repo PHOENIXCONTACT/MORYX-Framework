@@ -14,6 +14,6 @@
         /// <summary>
         /// Schema name for the ProductsContext
         /// </summary>
-        public const string SchemaName = "products";
+        public const string Schema = "products";
     }
 }

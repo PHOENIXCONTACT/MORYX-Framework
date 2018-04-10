@@ -2,16 +2,11 @@ namespace Marvin.Products.Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    using Marvin.Model.Npgsql;
-    using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Infrastructure;
     
     public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
-            ((IDbMigration)this).AddOperation(new AddSchemaOperation("products"));
-            
             CreateTable(
                 "products.ArticleEntity",
                 c => new
@@ -293,8 +288,6 @@ namespace Marvin.Products.Model.Migrations
             DropTable("products.ProductEntity");
             DropTable("products.PartLink");
             DropTable("products.ArticleEntity");
-            ((IDbMigration)this).AddOperation(new RemoveSchemaOperation("products"));
-            
         }
     }
 }

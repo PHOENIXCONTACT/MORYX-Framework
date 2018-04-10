@@ -1,5 +1,4 @@
-﻿using System.Data.Entity.Migrations;
-using Marvin.Model;
+﻿using Marvin.Model;
 using Marvin.Model.Npgsql;
 
 namespace Marvin.Resources.Model
@@ -8,7 +7,7 @@ namespace Marvin.Resources.Model
     /// Factory to get a unit of work for the resources model
     /// </summary>
     [ModelFactory(ResourcesConstants.Namespace)]
-    public class ResourcesUnitOfWorkFactory : NpgsqlUnitOfWorkFactoryBase<ResourcesContext>
+    public class ResourcesUnitOfWorkFactory : UnitOfWorkFactoryBase<ResourcesContext, NpgsqlModelConfigurator>
     {
         /// <inheritdoc />
         protected override void Configure()
@@ -16,8 +15,5 @@ namespace Marvin.Resources.Model
             RegisterRepository<IResourceEntityRepository>();
             RegisterRepository<IResourceRelationRepository>();
         }
-
-        /// <inheritdoc />
-        protected override DbMigrationsConfiguration<ResourcesContext> MigrationConfiguration => new ResourcesMigrationsConfiguration();
     }
 }

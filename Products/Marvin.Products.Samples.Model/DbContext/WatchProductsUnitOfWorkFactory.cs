@@ -1,7 +1,5 @@
-﻿using System.Data.Entity.Migrations;
-using Marvin.Model;
+﻿using Marvin.Model;
 using Marvin.Products.Model;
-using Marvin.Products.Samples.Model.Migrations;
 
 namespace Marvin.Products.Samples.Model
 {
@@ -19,7 +17,5 @@ namespace Marvin.Products.Samples.Model
             RegisterRepository<ISmartWatchProductPropertiesEntityRepository>();
             RegisterRepository<IAnalogWatchProductPropertiesEntityRepository>();
         }
-
-        protected override DbMigrationsConfiguration<WatchProductsContext> MigrationConfiguration => new WatchProductMigrationsConfiguration();
     }
 }

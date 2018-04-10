@@ -14,11 +14,6 @@
         /// <summary>
         /// Schema name for the ResourcesContext
         /// </summary>
-        public const string SchemaName = "resources";
-
-        /// <summary>
-        /// Current version of the model for metadata
-        /// </summary>
-        public const int Version = 2; 
+        public const string Schema = "resources";
     }
 }
