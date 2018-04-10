@@ -18,11 +18,22 @@ namespace Marvin.Runtime.Kernel.SmokeTest
     [Runmode("SmokeTest")]
     public class SmokeTest : IRunmode
     {
+        // ReSharper disable LocalizableElement
+
+        /// <summary>
+        /// ModuleManager to interact wit modules
+        /// </summary>
         public IModuleManager ModuleManager { get; set; }
 
+        /// <summary>
+        /// ConfigManager to receive the <see cref="WcfConfig"/>
+        /// </summary>
         public IConfigManager ConfigManager { get; set; }
 
-        public IModelConfigurator[] Configurators { get; set; }
+        /// <summary>
+        /// All database model factories
+        /// </summary>
+        public IUnitOfWorkFactory[] ModelFactories { get; set; }
 
         #region Fields
 
@@ -80,12 +91,17 @@ namespace Marvin.Runtime.Kernel.SmokeTest
                 return RuntimeErrorCode.Error;
             }
 
+            // Load model configurators
+            var modelConfigurators = ModelFactories.Select(m => ((IModelConfiguratorFactory)m).GetConfigurator()).ToArray();
+
             // Create all databases
-            foreach (var modelConfigurator in Configurators)
+            foreach (var modelConfigurator in modelConfigurators)
             {
                 try
                 {
-                    modelConfigurator.UpdateDatabase(modelConfigurator.Config);
+                    // Add database config prefix
+                    modelConfigurator.Config.Database = $"smokeTest-{modelConfigurator.TargetModel}";
+                    modelConfigurator.CreateDatabase(modelConfigurator.Config);
                 }
                 catch
                 {
@@ -105,7 +121,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
             var result = RunTests();
 
             // Delete all databases
-            foreach (var modelConfigurator in Configurators)
+            foreach (var modelConfigurator in modelConfigurators)
             {
                 try
                 {
