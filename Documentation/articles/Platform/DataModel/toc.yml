@@ -9,3 +9,6 @@
 
 - name: Model Setups
   href: ModelSetups.md
+
+- name: Diagnostics
+  href: Diagnostics.md
