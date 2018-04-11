@@ -54,6 +54,7 @@
     <Compile Include="Proxy\IMethodProxyStrategy.cs" />
     <Compile Include="Proxy\ParameterPropertyMap.cs" />
     <Compile Include="Proxy\Strategies\RemoveMethodStrategy.cs" />
+    <Compile Include="Repository\IModelDiagnostics.cs" />
     <Compile Include="Repository\ModelConfiguratorBase.cs" />
     <Compile Include="ModificationTrackedEntityBase.cs" />
     <Compile Include="MarvinDbContext.cs" />

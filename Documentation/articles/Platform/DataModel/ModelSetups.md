@@ -12,4 +12,3 @@ The easiest setup is a hard coded one as it can be as simple as creating a singl
 
 **File based**
 Another way to import data into the database is from a file. File based setups share the same API as hard coded once but differ by exporting a regex to filter valid files. On the maintenance they are displayed 0 to n times depending on the number of found files. If one of this is selected the server side setups is invoked with the full path to the selected file. The setup may than parse the file and import its content into the relational data model.
-

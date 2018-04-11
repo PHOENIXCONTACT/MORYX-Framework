@@ -9,7 +9,7 @@ namespace Marvin.Model
     /// <summary>
     /// Unit of work 
     /// </summary>
-    public sealed class UnitOfWork : IUnitOfWork, IGenericUnitOfWork
+    public sealed class UnitOfWork : IUnitOfWork, IGenericUnitOfWork, IModelDiagnostics
     {
         private MarvinDbContext _context;
         private readonly IEnumerable<Type> _repositories;
@@ -42,6 +42,13 @@ namespace Marvin.Model
         IRepository IGenericUnitOfWork.GetRepository(Type api)
         {
             return GetRepository(api);
+        }
+
+        /// <inheritdoc />
+        Action<string> IModelDiagnostics.Log
+        {
+            get { return _context.Database.Log; }
+            set { _context.Database.Log = value; }
         }
 
         private IRepository GetRepository(Type api)
