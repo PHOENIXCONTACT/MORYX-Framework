@@ -116,7 +116,7 @@ namespace Marvin.Resources.Management
             using (var uow = UowFactory.Create(ContextMode.AllOff))
             {
                 // Create all objects
-                var allResources = ResourceCreationTemplate.FetchResourceTemplates(uow);
+                var allResources = ResourceEntityAccessor.FetchResourceTemplates(uow);
                 if (allResources.Count > 0)
                     LoadResources(allResources);
                 else
@@ -145,7 +145,7 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Load and link all resources from the databse
         /// </summary>
-        private void LoadResources(ICollection<ResourceCreationTemplate> allResources)
+        private void LoadResources(ICollection<ResourceEntityAccessor> allResources)
         {
             // Create the concurrent dictionary optimized for the current system architecture and expected collection size
             _resources = new ConcurrentDictionary<long, ResourceWrapper>(Environment.ProcessorCount, allResources.Count * 2);
@@ -180,7 +180,7 @@ namespace Marvin.Resources.Management
 
             // Create a root resource
             var root = Create(Config.RootType);
-            SaveResource(uow, root);
+            ResourceEntityAccessor.SaveToEntity(uow, root);
             uow.Save();
 
             // Add root to the list of resources
@@ -270,11 +270,11 @@ namespace Marvin.Resources.Management
         }
 
         /// <summary>
-        /// Build object graph from simplified <see cref="ResourceCreationTemplate"/> and flat resource list
+        /// Build object graph from simplified <see cref="ResourceEntityAccessor"/> and flat resource list
         /// </summary>
-        private void LinkReferences(ResourceCreationTemplate creationTemplate)
+        private void LinkReferences(ResourceEntityAccessor entityAccessor)
         {
-            ResourceLinker.LinkReferences(creationTemplate.Instance, creationTemplate.Relations, this);
+            ResourceLinker.LinkReferences(entityAccessor.Instance, entityAccessor.Relations, _resources);
         }
 
         ///
@@ -331,7 +331,7 @@ namespace Marvin.Resources.Management
         public Resource Create(string type)
         {
             // Create simplified template and instantiate
-            var template = new ResourceCreationTemplate();
+            var template = new ResourceEntityAccessor();
             template.Name = template.Type = type; // Initially set name to type
             var instance = template.Instantiate(TypeController, this);
 
@@ -342,8 +342,12 @@ namespace Marvin.Resources.Management
         {
             using (var uow = UowFactory.Create())
             {
-                var entity = SaveResource(uow, resource);
-                ResourceLinker.SaveReferences(uow, this, resource, entity);
+                var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
+                if (entity.Id == 0)
+                    EntityIdListener.Listen(entity, new SaveResourceTrigger(this, resource));
+
+                foreach (var newResource in ResourceLinker.SaveReferences(uow, resource, entity))
+                    EntityIdListener.Listen(newResource.Value, new SaveResourceTrigger(this, newResource.Key));
 
                 uow.Save();
             }
@@ -359,32 +363,11 @@ namespace Marvin.Resources.Management
 
             using (var uow = UowFactory.Create())
             {
-                ResourceLinker.SaveSingleCollection(uow, this, instance, property);
+                foreach (var newResource in ResourceLinker.SaveSingleCollection(uow, instance, property))
+                    EntityIdListener.Listen(newResource.Value, new SaveResourceTrigger(this, newResource.Key));
 
                 uow.Save();
             }
-        }
-
-        /// <summary>
-        /// Save a resource to the database
-        /// TODO: Return to private access modifier
-        /// </summary>
-        internal ResourceEntity SaveResource(IUnitOfWork uow, Resource resource)
-        {
-            // Create entity and populate from object
-            var entity = uow.GetEntity<ResourceEntity>(resource);
-            if (entity.Id == 0)
-            {
-                entity.Type = resource.GetType().Name;
-                EntityIdListener.Listen(entity, new SaveResourceTrigger(this, resource));
-            }
-
-            entity.Name = resource.Name;
-            entity.LocalIdentifier = resource.LocalIdentifier;
-            entity.GlobalIdentifier = resource.GlobalIdentifier;
-            entity.ExtensionData = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
-
-            return entity;
         }
 
         ///
@@ -452,18 +435,15 @@ namespace Marvin.Resources.Management
                 // Fetch entity and relations
                 // Update properties on the references and get rid of relation entities
                 var entity = resourceRepository.GetByKey(instance.Id);
-                var relationEntities = entity.Sources.Concat(entity.Targets).ToArray();
-                foreach (var relationEntity in relationEntities)
+                var relations = ResourceRelationAccessor.FromEntity(uow, entity);
+                foreach (var relation in relations)
                 {
-                    var referenceId = relationEntity.SourceId == instance.Id
-                        ? relationEntity.TargetId
-                        : relationEntity.SourceId;
-                    var reference = _resources[referenceId].Target;
+                    var reference = _resources[relation.ReferenceId].Target;
 
                     ResourceLinker.RemoveLinking(resource, reference);
 
                     if (permanent)
-                        relationRepository.Remove(relationEntity);
+                        relationRepository.Remove(relation.Entity);
                 }
 
                 resourceRepository.Remove(entity, permanent);
