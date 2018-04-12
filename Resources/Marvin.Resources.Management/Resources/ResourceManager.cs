@@ -238,8 +238,12 @@ namespace Marvin.Resources.Management
         private void RegisterEvents(Resource instance, IPublicResource asPublic)
         {
             instance.Changed += OnResourceChanged;
+
             if (asPublic != null)
                 asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
+
+            foreach (var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(instance))
+                autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
         }
 
         /// <summary>
@@ -248,8 +252,12 @@ namespace Marvin.Resources.Management
         private void UnregisterEvents(Resource instance, IPublicResource asPublic)
         {
             instance.Changed -= OnResourceChanged;
+
             if (asPublic != null)
                 asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
+
+            foreach (var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(instance))
+                autoSaveCollection.CollectionChanged -= OnAutoSaveCollectionChanged;
         }
 
         /// <summary>
@@ -267,9 +275,6 @@ namespace Marvin.Resources.Management
         private void LinkReferences(ResourceCreationTemplate creationTemplate)
         {
             ResourceLinker.LinkReferences(creationTemplate.Instance, creationTemplate.Relations, this);
-
-            foreach(var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(creationTemplate.Instance))
-                autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
         }
 
         ///
@@ -371,9 +376,6 @@ namespace Marvin.Resources.Management
             if (entity.Id == 0)
             {
                 entity.Type = resource.GetType().Name;
-                // Register on references for new instance
-                foreach (var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(resource))
-                    autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
                 EntityIdListener.Listen(entity, new SaveResourceTrigger(this, resource));
             }
 
@@ -476,7 +478,13 @@ namespace Marvin.Resources.Management
             TypeController.Destroy(instance);
 
             // Remove from internal collections
-            return _publicResources.Remove(resource as IPublicResource) | _resources.Remove(instance.Id);
+            if (_resources.Remove(instance.Id))
+            {
+                // It can only be a public resource if it was port of the resources
+                _publicResources.Remove(resource as IPublicResource);
+                return true;
+            }
+            return false;
         }
 
         #endregion
