@@ -36,13 +36,13 @@ namespace Marvin.Resources.Management
         /// in relations on the fly.
         /// TODO: Remove parent from API
         /// </summary>
-        void SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity, ResourceManager parent);
+        void SaveReferences(IUnitOfWork uow, ResourceManager parent, Resource instance, ResourceEntity entity);
 
         /// <summary>
         /// Save changes to a single collection
         /// TODO: Remove parent from API
         /// </summary>
-        void SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property, ResourceManager parent);
+        void SaveSingleCollection(IUnitOfWork uow, ResourceManager parent, Resource instance, PropertyInfo property);
 
         /// <summary>
         /// Remove all links to the deleted instance on the reference

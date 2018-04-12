@@ -11,9 +11,19 @@ namespace Marvin.Resources.Samples
         [Description("Type of wpc for Autocreate")]
         public string WpcType { get; set; }
 
+        [EditorVisible]
         public void AutoCreateWpc()
         {
-            var wpc = Creator.Instantiate<IWpc>(WpcType);
+            var wpc = (Resource)Creator.Instantiate<IWpc>(WpcType);
+            wpc.Parent = this;
+
+            var pos = Creator.Instantiate<WpcPosition>();
+            pos.Parent = wpc;
+            wpc.Children.Add(pos);
+
+            Children.Add(wpc);
+
+            RaiseResourceChanged();
         }
     }
 
@@ -24,5 +34,10 @@ namespace Marvin.Resources.Samples
 
     public class Wpc : Resource, IWpc
     {
+    }
+
+    public class WpcPosition : Resource
+    {
+
     }
 }

@@ -338,7 +338,7 @@ namespace Marvin.Resources.Management
             using (var uow = UowFactory.Create())
             {
                 var entity = SaveResource(uow, resource);
-                ResourceLinker.SaveReferences(uow, resource, entity, this);
+                ResourceLinker.SaveReferences(uow, this, resource, entity);
 
                 uow.Save();
             }
@@ -354,7 +354,7 @@ namespace Marvin.Resources.Management
 
             using (var uow = UowFactory.Create())
             {
-                ResourceLinker.SaveSingleCollection(uow, instance, property, this);
+                ResourceLinker.SaveSingleCollection(uow, this, instance, property);
 
                 uow.Save();
             }
