@@ -202,7 +202,7 @@ namespace Marvin.Resources.Management
             }
 
             // Set source and target of the relation depending on the reference roles
-            var referencedEntity = referencedResource.Id > 0 ? uow.GetEntity<ResourceEntity>(referencedResource) : parent.SaveResource(uow, referencedResource);
+            var referencedEntity = GetOrCreateEntity(uow, referencedResource, parent);
             UpdateRelationEntity(entity, referencedEntity, relEntity, att);
         }
 
@@ -231,10 +231,29 @@ namespace Marvin.Resources.Management
             var created = referencedResources.Where(r => relationTemplates.All(m => m.ReferenceId != r.Id));
             foreach (var createdReference in created)
             {
-                var referencedEntity = createdReference.Id > 0 ? uow.GetEntity<ResourceEntity>(createdReference) : parent.SaveResource(uow, createdReference);
+                var referencedEntity = GetOrCreateEntity(uow, createdReference, parent);
                 var relEntity = CreateRelationForProperty(relationRepo, referenceAtt);
                 UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
             }
+        }
+
+        /// <summary>
+        /// Get or create an entity for a resource instance
+        /// </summary>
+        private ResourceEntity GetOrCreateEntity(IUnitOfWork uow, Resource instance, ResourceManager parent)
+        {
+            ResourceEntity referencedEntity;
+            if (instance.Id > 0)
+            {
+                referencedEntity = uow.GetEntity<ResourceEntity>(instance);
+            }
+            else
+            {
+                referencedEntity = parent.SaveResource(uow, instance);
+                SaveReferences(uow, instance, referencedEntity, parent);
+            }
+
+            return referencedEntity;
         }
 
         /// <summary>

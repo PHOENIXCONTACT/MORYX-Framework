@@ -182,6 +182,8 @@ namespace Marvin.Resources.Management
             var root = Create(Config.RootType);
             SaveResource(uow, root);
             uow.Save();
+
+            // Add root to the list of resources
             AddResource(root, true);
         }
 
@@ -335,7 +337,9 @@ namespace Marvin.Resources.Management
         {
             using (var uow = UowFactory.Create())
             {
-                SaveResource(uow, resource);
+                var entity = SaveResource(uow, resource);
+                ResourceLinker.SaveReferences(uow, resource, entity, this);
+
                 uow.Save();
             }
         }
@@ -377,9 +381,6 @@ namespace Marvin.Resources.Management
             entity.LocalIdentifier = resource.LocalIdentifier;
             entity.GlobalIdentifier = resource.GlobalIdentifier;
             entity.ExtensionData = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
-
-            // Save references
-            ResourceLinker.SaveReferences(uow, resource, entity, this);
 
             return entity;
         }
