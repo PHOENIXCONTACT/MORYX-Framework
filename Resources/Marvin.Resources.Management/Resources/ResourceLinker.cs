@@ -27,16 +27,11 @@ namespace Marvin.Resources.Management
             {
                 var attribute = property.GetCustomAttribute<ReferenceOverrideAttribute>();
                 if (attribute == null)
-                {
                     // Create collection and set on property
-                    var value = CreateCollection(instance, property, property, new List<IResource>());
-                    property.SetValue(instance, value);
-                }
+                    CreateCollection(instance, property);
                 else
-                {
                     // Save overrides for later
                     overrides[property] = attribute;
-                }
             }
 
             // Now set the reference overrides
@@ -49,21 +44,34 @@ namespace Marvin.Resources.Management
 
                 // Create new reference collection that shares the UnderlyingCollection
                 var property = pair.Key;
-                var value = CreateCollection(instance, property, target, sourceCollection.UnderlyingCollection);
-                property.SetValue(instance, value);
+                CreateCollection(instance, property, sourceCollection.UnderlyingCollection, target);
             }
         }
 
         /// <summary>
         /// Create a <see cref="ReferenceCollection{TResource}"/> instance
         /// </summary>
-        private static IReferenceCollection CreateCollection(Resource instance, PropertyInfo property, PropertyInfo targetProperty, ICollection<IResource> underlyingCollection)
+        /// <param name="instance">The resource instance to create the collection for</param>
+        /// <param name="property">The collection property that should be filled by this collection</param>
+        /// <param name="underlyingCollection">The base collection wrapped in the reference collection. This can be null for non-override properties</param>
+        /// <param name="targetProperty">Target property of the collection. For non-overrides this equals <paramref name="property"/>.</param>
+        private static void CreateCollection(Resource instance, PropertyInfo property, ICollection<IResource> underlyingCollection = null, PropertyInfo targetProperty = null)
         {
+            // Set target property to property if it is not given
+            if (targetProperty == null)
+                targetProperty = property;
+
+            // Create underlying collection if it is not given
+            if (underlyingCollection == null)
+                underlyingCollection = new List<IResource>();
+
             var propertyType = property.PropertyType;
             var referenceType = propertyType.GetGenericArguments()[0]; // Type of resource from ICollection<ResourceType>
             var collectionType = typeof(ReferenceCollection<>).MakeGenericType(referenceType); // Make generic ReferenceCollection
-            var value = (IReferenceCollection)Activator.CreateInstance(collectionType, instance, targetProperty, underlyingCollection);
-            return value;
+
+            // Create collection and set on instance property
+            var value = Activator.CreateInstance(collectionType, instance, targetProperty, underlyingCollection);
+            property.SetValue(instance, value);
         }
 
         /// <inheritdoc />
@@ -109,9 +117,9 @@ namespace Marvin.Resources.Management
                     // Try to find a possible match for the property
                     var propertyType = property.PropertyType;
                     var referenceMatch = (from match in matches
-                        let reference = parent.Get(match.ReferenceId)
-                        where propertyType.IsInstanceOfType(reference)
-                        select reference).ToArray();
+                                          let reference = parent.Get(match.ReferenceId)
+                                          where propertyType.IsInstanceOfType(reference)
+                                          select reference).ToArray();
                     if (referenceMatch.Length == 1)
                         property.SetValue(resource, referenceMatch[0]);
                     else
