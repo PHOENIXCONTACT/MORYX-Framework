@@ -22,7 +22,12 @@ namespace Marvin.Resources.Management.Tests
         }
 
         [ResourceReference(ResourceRelationType.PossibleExchangablePart)]
-        public IEnumerable<IMyResource> MoreReferences { get; set; }
+        public IReferences<IMyResource> References { get; set; }
+
+        [ReferenceOverride(nameof(Children), AutoSave = true)]
+        internal IReferences<IMyResource> ChildReferences { get; set; }
+
+        IEnumerable<IMyResource> IReferenceResource.MoreReferences => References;
 
         public IMyResource GetReference()
         {
@@ -31,12 +36,12 @@ namespace Marvin.Resources.Management.Tests
 
         public IReadOnlyList<IMyResource> GetReferences()
         {
-            return MoreReferences.ToArray();
+            return References.ToArray();
         }
 
         public void SetReference(IMyResource reference)
         {
-            MoreReferences = MoreReferences.Concat(new[] { reference }).ToArray();
+            References.Add(reference);
         }
 
         public INonPublicResource NonPublic { get; set; }

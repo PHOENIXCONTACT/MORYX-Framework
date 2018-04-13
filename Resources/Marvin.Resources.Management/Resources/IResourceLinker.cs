@@ -26,23 +26,22 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Link all reference properties of an instance using the relation information
         /// and complete resource collection
-        /// TODO: Remove parent from API
         /// </summary>
         /// <returns>List of reference collections configured for autosave</returns>
-        void LinkReferences(Resource resource, ICollection<ResourceRelationTemplate> relations, ResourceManager parent);
+        void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations, IDictionary<long, ResourceWrapper> allResources);
 
         /// <summary>
         /// Save all references of a resource to the database. Use the creator callback to save new instances discovered
         /// in relations on the fly.
-        /// TODO: Remove parent from API
         /// </summary>
-        void SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity, ResourceManager parent);
+        /// <returns>Found new instances and their representing entity</returns>
+        IDictionary<Resource, ResourceEntity> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity);
 
         /// <summary>
         /// Save changes to a single collection
-        /// TODO: Remove parent from API
         /// </summary>
-        void SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property, ResourceManager parent);
+        /// <returns>Found new instances and their representing entity</returns>
+        IDictionary<Resource, ResourceEntity> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property);
 
         /// <summary>
         /// Remove all links to the deleted instance on the reference
@@ -50,6 +49,5 @@ namespace Marvin.Resources.Management
         /// <param name="deletedInstance">Resource that is being deleted</param>
         /// <param name="reference">Resource referencing the deleted instance</param>
         void RemoveLinking(IResource deletedInstance, IResource reference);
-
     }
 }

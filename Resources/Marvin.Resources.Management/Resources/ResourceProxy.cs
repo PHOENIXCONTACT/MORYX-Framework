@@ -70,16 +70,16 @@ namespace Marvin.Resources.Management
         }
 
         /// <inheritdoc />
-        public long Id => Target.Id;
+        long IResource.Id => Target.Id;
 
         /// <inheritdoc />
-        public string Name => Target.Name;
+        string IResource.Name => Target.Name;
 
         /// <inheritdoc />
-        public string LocalIdentifier => Target.LocalIdentifier;
+        string IResource.LocalIdentifier => Target.LocalIdentifier;
 
         /// <inheritdoc />
-        public string GlobalIdentifier => Target.GlobalIdentifier;
+        string IResource.GlobalIdentifier => Target.GlobalIdentifier;
 
         public virtual void Attach()
         {

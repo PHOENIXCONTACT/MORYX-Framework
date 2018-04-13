@@ -33,7 +33,7 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Method attributes for properties and events
         /// </summary>
-        private const MethodAttributes SpecialNameAttributes = MethodAttributes.Public | MethodAttributes.SpecialName
+        private const MethodAttributes SpecialNameAttributes = MethodAttributes.Private | MethodAttributes.SpecialName
         | MethodAttributes.Virtual | MethodAttributes.Final | MethodAttributes.HideBySig | MethodAttributes.NewSlot;
 
         /// <summary>
@@ -88,10 +88,10 @@ namespace Marvin.Resources.Management
 
             var bindingFlags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
             // Define the properties
-            var properties = interfaces.SelectMany(inter => inter.GetProperties(bindingFlags)).GroupBy(p => p.Name);
-            foreach (var propertyGroup in properties)
+            var properties = interfaces.SelectMany(inter => inter.GetProperties(bindingFlags));
+            foreach (var property in properties)
             {
-                DefineProperty(typeBuilder, baseType, targetProperty.GetMethod, resourceType, propertyGroup);
+                DefineProperty(typeBuilder, baseType, targetProperty.GetMethod, resourceType, property);
             }
 
             // Define methods
@@ -139,27 +139,26 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Define a property on the proxy
         /// </summary>
-        private static void DefineProperty(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, Type targetType, IGrouping<string, PropertyInfo> propertyGroup)
+        private static void DefineProperty(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, Type targetType, PropertyInfo property)
         {
-            var propertyOnTarget = targetType.GetProperty(propertyGroup.Key);
-            var propertyBuilder = typeBuilder.DefineProperty(propertyGroup.Key, propertyOnTarget.Attributes, propertyOnTarget.PropertyType, null);
+            var propertyName = ExplicitMemberName(property);
+            var propertyBuilder = typeBuilder.DefineProperty(ExplicitMemberName(property), property.Attributes, property.PropertyType, null);
 
             // Flag if this property references another public resource
-            var isResourceReference = IsResourceReference(propertyOnTarget.PropertyType);
-
-            if (propertyOnTarget.CanRead)
+            var isResourceReference = IsResourceReference(property.PropertyType);
+            if (property.CanRead)
             {
-                var getterBuilder = typeBuilder.DefineMethod($"get_{propertyGroup.Key}", SpecialNameAttributes, propertyOnTarget.PropertyType, Type.EmptyTypes);
+                var getterBuilder = typeBuilder.DefineMethod($"get_{propertyName}", SpecialNameAttributes, property.PropertyType, Type.EmptyTypes);
                 var generator = getterBuilder.GetILGenerator();
                 generator.Emit(OpCodes.Ldarg_0);
                 if (isResourceReference)
                     generator.Emit(OpCodes.Dup); // Duplicate 'this' to call convert later
                 generator.Emit(OpCodes.Call, targetGetter); // Get the 'Target' object using the property getter
-                generator.Emit(OpCodes.Callvirt, propertyOnTarget.GetMethod); // Call 'get' on the target
+                generator.Emit(OpCodes.Callvirt, property.GetMethod); // Call 'get' on the target
                 if (isResourceReference)
                 {
                     // Call convert with the object on the stack to convert it into a proxy
-                    var convertMethod = Convert(baseType, propertyOnTarget.PropertyType);
+                    var convertMethod = Convert(baseType, property.PropertyType);
                     generator.Emit(OpCodes.Call, convertMethod);
                 }
                 generator.Emit(OpCodes.Ret);
@@ -167,33 +166,27 @@ namespace Marvin.Resources.Management
                 // Link getter to property and interface
                 propertyBuilder.SetGetMethod(getterBuilder);
                 // Link this getter to all interfaces that define it
-                foreach (var property in propertyGroup.Where(p => p.CanRead))
-                {
-                    typeBuilder.DefineMethodOverride(getterBuilder, property.GetMethod);
-                }
+                typeBuilder.DefineMethodOverride(getterBuilder, property.GetMethod);
             }
 
-            if (propertyOnTarget.CanWrite)
+            if (property.CanWrite)
             {
-                var setterBuilder = typeBuilder.DefineMethod($"set_{propertyOnTarget.Name}", SpecialNameAttributes, null, new[] { propertyOnTarget.PropertyType });
+                var setterBuilder = typeBuilder.DefineMethod($"set_{propertyName}", SpecialNameAttributes, null, new[] { property.PropertyType });
                 var generator = setterBuilder.GetILGenerator();
                 generator.Emit(OpCodes.Ldarg_0); // Load 'this onto the stack
                 generator.Emit(OpCodes.Call, targetGetter); // Call the 'Target' getter and load Target on stack
 
                 generator.Emit(OpCodes.Ldarg_1); // Load 'value' onto the stack
                 if (isResourceReference) // Replace proxy with real resource again
-                    ExtractTargetFromStack(generator, propertyOnTarget.PropertyType);
+                    ExtractTargetFromStack(generator, property.PropertyType);
 
-                generator.Emit(OpCodes.Callvirt, propertyOnTarget.SetMethod); // Call 'set' on the target
+                generator.Emit(OpCodes.Callvirt, property.SetMethod); // Call 'set' on the target
                 generator.Emit(OpCodes.Ret);
 
                 // Link setter to property and interface
                 propertyBuilder.SetSetMethod(setterBuilder);
                 // Link this setter to all interfaces that can write
-                foreach (var property in propertyGroup.Where(p => p.CanWrite))
-                {
-                    typeBuilder.DefineMethodOverride(setterBuilder, property.SetMethod);
-                }
+                typeBuilder.DefineMethodOverride(setterBuilder, property.SetMethod);
             }
         }
 
@@ -217,8 +210,8 @@ namespace Marvin.Resources.Management
             var parameters = method.GetParameters();
             var argumentTypes = parameters.Select(p => p.ParameterType).ToArray();
 
-            const MethodAttributes methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
-            var methodBuilder = typeBuilder.DefineMethod(method.Name, methodAttributes, method.ReturnType, argumentTypes);
+            const MethodAttributes methodAttributes = MethodAttributes.Private | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
+            var methodBuilder = typeBuilder.DefineMethod(ExplicitMemberName(method), methodAttributes, method.ReturnType, argumentTypes);
 
             var isResourceReference = IsResourceReference(method.ReturnType);
 
@@ -249,6 +242,12 @@ namespace Marvin.Resources.Management
             // Define overide to the interface
             typeBuilder.DefineMethodOverride(methodBuilder, method);
         }
+
+        /// <summary>
+        /// Create a unique name for each explicit member implementation
+        /// </summary>
+        private static string ExplicitMemberName(MemberInfo member) => $"{member.DeclaringType.Name}_{member.Name}";
+        
 
         /// <summary>
         /// Determine if the return type indicates a resource reference
