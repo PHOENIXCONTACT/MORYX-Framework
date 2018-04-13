@@ -51,6 +51,9 @@
     <Reference Include="Marvin.Runtime.Base">
       <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.Base.dll</HintPath>
     </Reference>
+    <Reference Include="Marvin.TestTools.UnitTest">
+      <HintPath>..\..\Libraries\PlatformToolkit-TestTools\Marvin.TestTools.UnitTest.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\..\.build\Test.Libs\Moq.dll</HintPath>
     </Reference>
@@ -67,11 +70,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMyResource.cs" />
-    <Compile Include="INonPublicResource.cs" />
-    <Compile Include="IReferenceResource.cs" />
-    <Compile Include="MyResource.cs" />
-    <Compile Include="ReferenceResource.cs" />
+    <Compile Include="Mocks\IMyResource.cs" />
+    <Compile Include="Mocks\INonPublicResource.cs" />
+    <Compile Include="Mocks\IReferenceResource.cs" />
+    <Compile Include="Mocks\MyResource.cs" />
+    <Compile Include="Mocks\ReferenceResource.cs" />
+    <Compile Include="ResourceLinkerTests.cs" />
     <Compile Include="TypeControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
