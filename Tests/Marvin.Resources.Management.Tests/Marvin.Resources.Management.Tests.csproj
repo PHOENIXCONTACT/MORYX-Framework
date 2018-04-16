@@ -106,6 +106,10 @@
       <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
       <Name>Marvin.Resources.Management</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Resources\Marvin.Resources.Model\Marvin.Resources.Model.csproj">
+      <Project>{e803d4a1-80da-40b7-b70c-42c4ed289f59}</Project>
+      <Name>Marvin.Resources.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
