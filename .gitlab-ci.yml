@@ -24,7 +24,8 @@ Build:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts\Packages'
+      - 'Artifacts/Packages'
+      - 'Runtime/Marvin.Runtime.Console/bin/$MARVIN_BUILD_CONFIG'
 
 SmokeTests: 
   stage: test
@@ -32,7 +33,7 @@ SmokeTests:
     - vs2015
     - postgres
     - powershell
-  script: .\build.ps1 -Build -SmokeTests  
+  script: .\build.ps1 -SmokeTests  
 
 UnitTests: 
   stage: test
@@ -43,7 +44,7 @@ UnitTests:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts\Tests' 
+      - 'Artifacts/Tests' 
   
 IntegrationTests: 
   stage: test
@@ -54,7 +55,7 @@ IntegrationTests:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts\Tests' 
+      - 'Artifacts/Tests' 
 
 GenerateDocs:
   stage: documentation
@@ -66,7 +67,7 @@ GenerateDocs:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts\Documentation'
+      - 'Artifacts/Documentation'
 
 PublishDocs: 
   stage: publish
@@ -74,7 +75,7 @@ PublishDocs:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts\'
+      - 'Artifacts/'
 
 PublishPackages: 
   stage: publish
