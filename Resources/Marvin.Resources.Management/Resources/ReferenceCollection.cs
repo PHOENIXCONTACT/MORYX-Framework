@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using Marvin.AbstractionLayer.Resources;
 
 namespace Marvin.Resources.Management
@@ -13,11 +14,17 @@ namespace Marvin.Resources.Management
     internal class ReferenceCollection<TResource> : IReferences<TResource>, IReferenceCollection
         where TResource : class, IResource
     {
+        private readonly Resource _parent;
+
+        private readonly PropertyInfo _property;
+
         /// <summary>
         /// Create a new reference collection
         /// </summary>
-        public ReferenceCollection(ICollection<IResource> underlyingCollection)
+        public ReferenceCollection(Resource parent, PropertyInfo property, ICollection<IResource> underlyingCollection)
         {
+            _parent = parent;
+            _property = property;
             UnderlyingCollection = underlyingCollection;
         }
 
@@ -86,7 +93,7 @@ namespace Marvin.Resources.Management
         /// </summary>
         public IEnumerator<TResource> GetEnumerator()
         {
-            return UnderlyingCollection.OfType<TResource>().GetEnumerator();
+            return UnderlyingCollection.Cast<TResource>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -96,8 +103,9 @@ namespace Marvin.Resources.Management
 
         private void RaiseCollectionChanged()
         {
-            CollectionChanged?.Invoke(this, EventArgs.Empty);
+            var args = new ReferenceCollectionChangedEventArgs(_parent, _property);
+            CollectionChanged?.Invoke(this, args);
         }
-        public event EventHandler CollectionChanged;
+        public event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
     }
 }

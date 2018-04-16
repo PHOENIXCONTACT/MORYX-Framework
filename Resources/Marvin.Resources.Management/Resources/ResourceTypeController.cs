@@ -26,6 +26,12 @@ namespace Marvin.Resources.Management
         public IResourceFactory ResourceFactory { get; set; }
 
         /// <summary>
+        /// Dependency on the linker to provide all reference collections
+        /// on the newly created instances.
+        /// </summary>
+        public IResourceLinker ResourceLinker { get; set; }
+
+        /// <summary>
         /// Component responsible for proxy creation
         /// </summary>
         public ResourceProxyBuilder ProxyBuilder { get; set; }
@@ -142,7 +148,7 @@ namespace Marvin.Resources.Management
                 : (Resource)Activator.CreateInstance(linker.ResourceType); // Create manually
 
             // Set reference collections
-            SetReferenceCollections(instance);
+            ResourceLinker.SetReferenceCollections(instance);
 
             return instance;
         }
@@ -164,59 +170,6 @@ namespace Marvin.Resources.Management
                 _proxyCache.Remove(id);
             }
         }
-
-        /// <summary>
-        /// Set all reference collections on the new instance
-        /// </summary>
-        private static void SetReferenceCollections(Resource instance)
-        {
-            var resourceType = instance.GetType();
-            // Iterate all references and provide reference collections
-            var overrides = new Dictionary<PropertyInfo, ReferenceOverrideAttribute>();
-            foreach (var property in CollectionReferenceProperties(resourceType))
-            {
-                var attribute = property.GetCustomAttribute<ReferenceOverrideAttribute>();
-                if (attribute == null)
-                {
-                    // Create collection and set on property
-                    var value = CreateCollection(property, new List<IResource>());
-                    property.SetValue(instance, value);
-                }
-                else
-                {
-                    // Save overrides for later
-                    overrides[property] = attribute;
-                }
-            }
-
-            // Now set the reference overrides
-            foreach (var pair in overrides)
-            {
-                // Fetch already created reference collection
-                var targetName = pair.Value.Source;
-                var target = resourceType.GetProperty(targetName);
-                var sourceCollection = (IReferenceCollection)target.GetValue(instance);
-
-                // Create new reference collection that shares the UnderlyingCollection
-                var property = pair.Key;
-                var value = CreateCollection(property, sourceCollection.UnderlyingCollection);
-                property.SetValue(instance, value);
-            }
-        }
-
-        /// <summary>
-        /// Create a <see cref="ReferenceCollection{TResource}"/> instance
-        /// </summary>
-        private static IReferenceCollection CreateCollection(PropertyInfo property, ICollection<IResource> underlyingCollection)
-        {
-            var propertyType = property.PropertyType;
-            var referenceType = propertyType.GetGenericArguments()[0]; // Type of resource from ICollection<ResourceType>
-            var collectionType = typeof(ReferenceCollection<>).MakeGenericType(referenceType); // Make generic ReferenceCollection
-            var value = (IReferenceCollection)Activator.CreateInstance(collectionType, underlyingCollection);
-            return value;
-        }
-
-
 
         /// <inheritdoc />
         public IEnumerable<ResourceTypeNode> SupportedTypes(Type constraint)
@@ -352,17 +305,6 @@ namespace Marvin.Resources.Management
                           && typeof(IResource).IsAssignableFrom(resourceInterface)
                           && !resourceInterface.IsAssignableFrom(typeof(IResource))
                     select resourceInterface).ToArray();
-        }
-
-        /// <summary>
-        /// Find all reference properties on a resource type
-        /// </summary>
-        private static IEnumerable<PropertyInfo> CollectionReferenceProperties(Type resourceType)
-        {
-            return (from property in resourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    let propertyType = property.PropertyType
-                    where property.CanWrite && propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IReferences<>)
-                    select property);
         }
     }
 }

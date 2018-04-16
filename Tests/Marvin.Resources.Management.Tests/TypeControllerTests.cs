@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
@@ -164,8 +165,12 @@ namespace Marvin.Resources.Management.Tests
             {
                 Id = 8,
                 Reference = ref1,
-                NonPublic = nonPub,
-                MoreReferences = new IMyResource[]{ ref2 },
+                NonPublic = nonPub
+            };
+            instance.References = new ReferenceCollection<IMyResource>(instance, 
+                instance.GetType().GetProperty(nameof(ReferenceResource.References)), new List<IResource>())
+            {
+                ref2
             };
 
             // Act: Convert to proxy and access the reference
@@ -202,8 +207,8 @@ namespace Marvin.Resources.Management.Tests
             Assert.AreEqual("NonPublic", nonPubProxy.Name);
             // Assert modifications of the setters
             Assert.AreEqual(instance.Reference, ref2);
-            Assert.AreEqual(instance.MoreReferences.Count(), 2);
-            Assert.AreEqual(instance.MoreReferences.ElementAt(1), ref1);
+            Assert.AreEqual(instance.References.Count(), 2);
+            Assert.AreEqual(instance.References.ElementAt(1), ref1);
         }
 
     }

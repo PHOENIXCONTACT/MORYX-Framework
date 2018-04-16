@@ -91,11 +91,13 @@
   <ItemGroup>
     <Compile Include="Resources\IReferenceCollection.cs" />
     <Compile Include="Resources\IResourceFactory.cs" />
+    <Compile Include="Resources\IResourceLinker.cs" />
     <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Resources\IResourceTypeController.cs" />
+    <Compile Include="Resources\ResourceLinker.cs" />
     <Compile Include="Resources\ResourceProxyBuilder.cs" />
     <Compile Include="Resources\ResourceTypeController.cs" />
-    <Compile Include="Resources\ResourceCreationTemplate.cs" />
+    <Compile Include="Resources\ResourceEntityAccessor.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="Resources\ResourceProxy.cs" />
     <Compile Include="Resources\ResourceTypeNode.cs" />

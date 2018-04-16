@@ -38,12 +38,20 @@
       <HintPath>..\..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Windsor.4.1.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Marvin, Version=3.0.0.949, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Marvin.3.0.0-dev000949\lib\net461\Marvin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Marvin.Runtime, Version=3.0.0.949, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev000949\lib\net461\Marvin.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.949, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev000949\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.949, Culture=neutral, processorArchitecture=MSIL">
@@ -74,11 +82,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMyResource.cs" />
-    <Compile Include="INonPublicResource.cs" />
-    <Compile Include="IReferenceResource.cs" />
-    <Compile Include="MyResource.cs" />
-    <Compile Include="ReferenceResource.cs" />
+    <Compile Include="Mocks\IMyResource.cs" />
+    <Compile Include="Mocks\INonPublicResource.cs" />
+    <Compile Include="Mocks\IReferenceResource.cs" />
+    <Compile Include="Mocks\MyResource.cs" />
+    <Compile Include="Mocks\ReferenceResource.cs" />
+    <Compile Include="ResourceLinkerTests.cs" />
     <Compile Include="TypeControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
