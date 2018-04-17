@@ -65,7 +65,7 @@ namespace Marvin.Resources.Management
 
             // Create underlying collection if it is not given
             if (underlyingCollection == null)
-                underlyingCollection = new List<IResource>();
+                underlyingCollection = new SynchronizedCollection<IResource>();
 
             var propertyType = property.PropertyType;
             var referenceType = propertyType.GetGenericArguments()[0]; // Type of resource from ICollection<ResourceType>
