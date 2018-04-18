@@ -268,7 +268,7 @@ namespace Marvin.Resources.Management
 
             var interfaces = RelevantInterfaces(linker);
             // Move up the type tree until the parent offers less interfaces than the current linker
-            while (linker.BaseType != null && interfaces.Length == RelevantInterfaces(linker.BaseType).Length)
+            while (linker.BaseType != null && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
             {
                 linker = linker.BaseType;
             }
@@ -298,13 +298,26 @@ namespace Marvin.Resources.Management
         /// Get all interfaces of a linker that are relevant for the public proxy. This excludes all non-public
         /// interfaces or interfaces that are not derived from IPublicResource. 
         /// </summary>
-        private static Type[] RelevantInterfaces(ResourceTypeNode node)
+        private static IReadOnlyList<Type> RelevantInterfaces(ResourceTypeNode node)
         {
-            return (from resourceInterface in node.ResourceType.GetInterfaces()
-                    where resourceInterface.IsPublic
-                          && typeof(IResource).IsAssignableFrom(resourceInterface)
-                          && !resourceInterface.IsAssignableFrom(typeof(IResource))
-                    select resourceInterface).ToArray();
+            var interfaces = node.ResourceType.GetInterfaces();
+            var relevantInterfaces = new List<Type>(interfaces.Length); // At max all interfaces are relevant
+
+            // Add all resources derived from IResource, but not IResource itself
+            relevantInterfaces.AddRange(from resourceInterface in interfaces
+                                        where resourceInterface.IsPublic
+                                              && typeof(IResource).IsAssignableFrom(resourceInterface)
+                                              && !resourceInterface.IsAssignableFrom(typeof(IResource))
+                                        select resourceInterface);
+
+            // Add all interfaces that are NOT derived from IResource BUT part of any of the relevant interfaces
+            relevantInterfaces.AddRange(from generalInterface in interfaces
+                                        where !generalInterface.IsAssignableFrom(typeof(IResource)) // It should not be a base type if IResource
+                                           && !relevantInterfaces.Contains(generalInterface) // It should not be part of the relevant interfaces yet
+                                           && relevantInterfaces.Any(generalInterface.IsAssignableFrom) // It is a base type of a relevant interface
+                                        select generalInterface);
+
+            return relevantInterfaces;
         }
     }
 }

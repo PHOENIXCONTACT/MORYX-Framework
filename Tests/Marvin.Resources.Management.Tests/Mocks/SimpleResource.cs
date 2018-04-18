@@ -3,7 +3,29 @@ using Marvin.AbstractionLayer.Resources;
 
 namespace Marvin.Resources.Management.Tests
 {
-    public class MyResource : PublicResource, IMyResource, IDuplicateFoo
+    public interface IDuplicateFoo : IPublicResource
+    {
+        int Foo { get; }
+    }
+
+    public interface ISimpleResource : IPublicResource
+    {
+        int Foo { get; set; }
+
+        int MultiplyFoo(int factor);
+
+        int MultiplyFoo(int factor, ushort offset);
+
+        event EventHandler<int> FooChanged;
+
+        event EventHandler<bool> FooEven;
+
+        void RaiseEvent();
+
+        event EventHandler SomeEvent;
+    }
+
+    public class SimpleResource : PublicResource, ISimpleResource, IDuplicateFoo
     {
         private int _foo;
 
@@ -23,7 +45,7 @@ namespace Marvin.Resources.Management.Tests
             return Foo *= factor;
         }
 
-        int IMyResource.MultiplyFoo(int factor, ushort offset)
+        int ISimpleResource.MultiplyFoo(int factor, ushort offset)
         {
             return Foo = Foo * factor + offset;
         }
@@ -36,14 +58,6 @@ namespace Marvin.Resources.Management.Tests
         public void RaiseEvent()
         {
             SomeEvent?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-    public class DerivedResource : MyResource
-    {
-        public override int MultiplyFoo(int factor)
-        {
-            return Foo *= (factor + 1);
         }
     }
 }
