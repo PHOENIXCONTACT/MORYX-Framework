@@ -60,7 +60,7 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Build a proxy for this resouce type
         /// </summary>
-        public Type Build(Type resourceType, Type[] interfaces)
+        public Type Build(Type resourceType, IReadOnlyList<Type> interfaces)
         {
             var proxyName = $"{resourceType.Name}Proxy";
 

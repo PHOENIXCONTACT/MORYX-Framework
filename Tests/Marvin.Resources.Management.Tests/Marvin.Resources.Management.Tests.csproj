@@ -70,11 +70,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mocks\IMyResource.cs" />
-    <Compile Include="Mocks\INonPublicResource.cs" />
-    <Compile Include="Mocks\IReferenceResource.cs" />
-    <Compile Include="Mocks\MyResource.cs" />
+    <Compile Include="Mocks\DerivedResource.cs" />
+    <Compile Include="Mocks\NonPublicResource.cs" />
+    <Compile Include="Mocks\ResourceWithImplicitApi.cs" />
     <Compile Include="Mocks\ReferenceResource.cs" />
+    <Compile Include="Mocks\SimpleResource.cs" />
     <Compile Include="ResourceLinkerTests.cs" />
     <Compile Include="TypeControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

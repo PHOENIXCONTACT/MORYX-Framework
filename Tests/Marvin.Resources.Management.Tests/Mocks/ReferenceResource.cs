@@ -5,12 +5,31 @@ using Marvin.AbstractionLayer.Resources;
 
 namespace Marvin.Resources.Management.Tests
 {
+    public interface IReferenceResource : IPublicResource
+    {
+        ISimpleResource Reference { get; set; }
+
+        IEnumerable<ISimpleResource> MoreReferences { get; }
+
+        INonPublicResource NonPublic { get; }
+
+        ISimpleResource GetReference();
+
+        IReadOnlyList<ISimpleResource> GetReferences();
+
+        void SetReference(ISimpleResource reference);
+
+        event EventHandler<ISimpleResource> ReferenceChanged;
+
+        event EventHandler<ISimpleResource[]> SomeChanged;
+    }
+
     public class ReferenceResource : PublicResource, IReferenceResource
     {
-        private IMyResource _reference;
+        private ISimpleResource _reference;
 
         [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
-        public IMyResource Reference
+        public ISimpleResource Reference
         {
             get { return _reference; }
             set
@@ -22,32 +41,32 @@ namespace Marvin.Resources.Management.Tests
         }
 
         [ResourceReference(ResourceRelationType.PossibleExchangablePart)]
-        public IReferences<IMyResource> References { get; set; }
+        public IReferences<ISimpleResource> References { get; set; }
 
         [ReferenceOverride(nameof(Children), AutoSave = true)]
-        internal IReferences<IMyResource> ChildReferences { get; set; }
+        internal IReferences<ISimpleResource> ChildReferences { get; set; }
 
-        IEnumerable<IMyResource> IReferenceResource.MoreReferences => References;
+        IEnumerable<ISimpleResource> IReferenceResource.MoreReferences => References;
 
-        public IMyResource GetReference()
+        public ISimpleResource GetReference()
         {
             return Reference;
         }
 
-        public IReadOnlyList<IMyResource> GetReferences()
+        public IReadOnlyList<ISimpleResource> GetReferences()
         {
             return References.ToArray();
         }
 
-        public void SetReference(IMyResource reference)
+        public void SetReference(ISimpleResource reference)
         {
             References.Add(reference);
         }
 
         public INonPublicResource NonPublic { get; set; }
 
-        public event EventHandler<IMyResource> ReferenceChanged;
+        public event EventHandler<ISimpleResource> ReferenceChanged;
 
-        public event EventHandler<IMyResource[]> SomeChanged;
+        public event EventHandler<ISimpleResource[]> SomeChanged;
     }
 }
