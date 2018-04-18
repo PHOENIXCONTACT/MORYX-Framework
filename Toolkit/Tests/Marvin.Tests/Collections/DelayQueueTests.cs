@@ -15,7 +15,7 @@ namespace Marvin.Tests.Collections
 
         }
 
-        private const int Delay = 42;
+        private const int Delay = 300;
 
         private DelayQueue<DummyMessage> _queue;
         private readonly Stopwatch _stopwatch = new Stopwatch();
@@ -46,8 +46,8 @@ namespace Marvin.Tests.Collections
         }
 
         [TestCase(-1, Description = "Enqueue directly after creation")]
-        [TestCase(10, Description = "Enqueue with too short wait period")]
-        [TestCase(60, Description = "Enqueue with sufficient wait period")]
+        [TestCase(150, Description = "Enqueue with too short wait period")]
+        [TestCase(450, Description = "Enqueue with sufficient wait period")]
         public void EnqueueAfterCreation(int delay)
         {
             // Arrange
@@ -56,7 +56,7 @@ namespace Marvin.Tests.Collections
 
             // Act
             _queue.Enqueue(new DummyMessage());
-            Thread.Sleep(100);
+            Thread.Sleep(Delay + 100);
 
             // Assert
             if (delay < Delay)
@@ -76,7 +76,7 @@ namespace Marvin.Tests.Collections
         public void DoubleMessage(bool queueReady)
         {
             // Arrange
-            const int initalDelay = 100;
+            const int initalDelay = Delay + 100;
             if (queueReady)
                 Thread.Sleep(initalDelay);
 
@@ -121,7 +121,7 @@ namespace Marvin.Tests.Collections
 
             // Assert
             Assert.AreEqual(loops, _times.Count);
-            for (int i = 0; i < _times.Count; i++)
+            for (var i = 0; i < _times.Count; i++)
             {
                 var diff = i == 0 ? _times[i] : _times[i] - _times[i - 1];
                 Assert.GreaterOrEqual(diff, Delay - 2);
@@ -147,16 +147,15 @@ namespace Marvin.Tests.Collections
             var localThreading = new ParallelOperations();
 
             // Act
-            for (var delay = 10; delay < 100; delay += 10)
-            {
-                localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), delay, -1);
-            }
-            Thread.Sleep(55);
+            localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), 200, -1);
+            localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), 450, -1);
+
+            Thread.Sleep(Delay * 2);
             _queue.Stop();
 
             var preClear = _times.Count;
             _times.Clear();
-            Thread.Sleep(100);
+            Thread.Sleep(Delay * 2);
 
             // Assert
             Assert.GreaterOrEqual(preClear, 0);
