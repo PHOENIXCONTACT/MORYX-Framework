@@ -34,14 +34,14 @@ namespace Marvin.Resources.Management
         /// Save all references of a resource to the database. Use the creator callback to save new instances discovered
         /// in relations on the fly.
         /// </summary>
-        /// <returns>Found new instances and their representing entity</returns>
-        IDictionary<Resource, ResourceEntity> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity);
+        /// <returns>Found new instances</returns>
+        IEnumerable<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity);
 
         /// <summary>
         /// Save changes to a single collection
         /// </summary>
-        /// <returns>Found new instances and their representing entity</returns>
-        IDictionary<Resource, ResourceEntity> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property);
+        /// <returns>Found new instances</returns>
+        IEnumerable<Resource> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property);
 
         /// <summary>
         /// Remove all links to the deleted instance on the reference
