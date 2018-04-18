@@ -10,6 +10,7 @@ using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Resources.Model;
+using Marvin.Tools;
 
 namespace Marvin.Resources.Management
 {
@@ -338,14 +339,18 @@ namespace Marvin.Resources.Management
         {
             using (var uow = UowFactory.Create())
             {
+                var newResources = new HashSet<Resource>();
+
                 var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
                 if (entity.Id == 0)
-                    EntityIdListener.Listen(entity, new SaveResourceTrigger(this, resource));
+                    newResources.Add(resource);
 
-                foreach (var newResource in ResourceLinker.SaveReferences(uow, resource, entity))
-                    EntityIdListener.Listen(newResource.Value, new SaveResourceTrigger(this, newResource.Key));
+                newResources.AddRange(ResourceLinker.SaveReferences(uow, resource, entity));
 
                 uow.Save();
+
+                foreach (var instance in newResources)
+                    AddResource(instance, true);
             }
         }
 
@@ -359,10 +364,12 @@ namespace Marvin.Resources.Management
 
             using (var uow = UowFactory.Create())
             {
-                foreach (var newResource in ResourceLinker.SaveSingleCollection(uow, instance, property))
-                    EntityIdListener.Listen(newResource.Value, new SaveResourceTrigger(this, newResource.Key));
-
+                var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
+                
                 uow.Save();
+
+                foreach (var newResource in newResources)
+                    AddResource(newResource, true);
             }
         }
 
@@ -531,26 +538,5 @@ namespace Marvin.Resources.Management
         }
 
         #endregion
-
-        /// <summary>
-        /// Save resource trigger that forwards an event back to the
-        /// <see cref="ResourceManager"/> to save the instance
-        /// </summary>
-        private class SaveResourceTrigger : EntityIdListener
-        {
-            private readonly ResourceManager _parent;
-            private readonly Resource _instance;
-
-            public SaveResourceTrigger(ResourceManager parent, Resource instance)
-            {
-                _parent = parent;
-                _instance = instance;
-            }
-
-            protected override void AssignId(long id)
-            {
-                _parent.AddResource(_instance, true);
-            }
-        }
     }
 }

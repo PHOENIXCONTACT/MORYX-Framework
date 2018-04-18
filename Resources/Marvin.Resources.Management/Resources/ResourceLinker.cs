@@ -130,11 +130,11 @@ namespace Marvin.Resources.Management
         }
 
         /// <inheritdoc />
-        public IDictionary<Resource, ResourceEntity> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity)
+        public IEnumerable<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity)
         {
             var context = new ReferenceSaverContext(uow, instance, entity);
             SaveReferences(context, instance, entity);
-            return context.EntityCache.Where(pair => pair.Key.Id == 0).ToDictionary(p => p.Key, p => p.Value);
+            return context.EntityCache.Keys.Where(i => i.Id == 0);
         }
 
         private static void SaveReferences(ReferenceSaverContext context, Resource instance, ResourceEntity entity)
@@ -157,7 +157,7 @@ namespace Marvin.Resources.Management
         }
 
         /// <inheritdoc />
-        public IDictionary<Resource, ResourceEntity> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property)
+        public IEnumerable<Resource> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property)
         {
             var entity = uow.GetEntity<ResourceEntity>(instance);
             var relations = ResourceRelationAccessor.FromEntity(uow, entity);
@@ -165,7 +165,7 @@ namespace Marvin.Resources.Management
 
             var context = new ReferenceSaverContext(uow, instance, entity);
             UpdateCollectionReference(context, entity, instance, property, matches);
-            return context.EntityCache.Where(pair => pair.Key.Id == 0).ToDictionary(p => p.Key, p => p.Value);
+            return context.EntityCache.Keys.Where(i => i.Id == 0);
         }
 
         /// <summary>
