@@ -19,7 +19,14 @@ namespace Marvin.Resources.Management.Tests
             // Mock of the container
             var containerMock = new Mock<IContainer>();
             containerMock.Setup(c => c.GetRegisteredImplementations(It.IsAny<Type>()))
-                .Returns(() => new [] {typeof(MyResource), typeof(DerivedResource), typeof(ReferenceResource), typeof(NonPublicResource)});
+                .Returns(() => new[]
+                {
+                    typeof(SimpleResource),
+                    typeof(DerivedResource),
+                    typeof(ReferenceResource),
+                    typeof(NonPublicResource),
+                    typeof(ResourceWithImplicitApi)
+                });
 
             _typeController = new ResourceTypeController
             {
@@ -39,10 +46,10 @@ namespace Marvin.Resources.Management.Tests
         public void ReadAndWriteProperties()
         {
             // Arrange: Create instance
-            var resource = new MyResource {Id = 1, Foo = 1337};
+            var resource = new SimpleResource {Id = 1, Foo = 1337};
 
             // Act: Build Proxy
-            var proxy = (IMyResource)_typeController.GetProxy(resource);
+            var proxy = (ISimpleResource)_typeController.GetProxy(resource);
             var duplicate = (IDuplicateFoo)proxy;
 
             // Assert
@@ -58,12 +65,12 @@ namespace Marvin.Resources.Management.Tests
         public void UseBaseProxyForDerivedType()
         {
             // Arrange: Create instance
-            var baseInstance = new MyResource {Id = 2};
+            var baseInstance = new SimpleResource { Id = 2};
             var instance = new DerivedResource {Id = 3};
 
             // Act: Build Proxy
-            var baseProxy = (IMyResource) _typeController.GetProxy(baseInstance);
-            var proxy = (IMyResource) _typeController.GetProxy(instance);
+            var baseProxy = (ISimpleResource) _typeController.GetProxy(baseInstance);
+            var proxy = (ISimpleResource) _typeController.GetProxy(instance);
 
             // Assert: Make sure proxy is still the base type
             Assert.AreEqual(baseProxy.GetType(), proxy.GetType());
@@ -73,10 +80,10 @@ namespace Marvin.Resources.Management.Tests
         public void CallMethodOnProxy()
         {
             // Arrange: Create instance
-            var instance = new MyResource {Id= 4, Foo = 10};
+            var instance = new SimpleResource { Id= 4, Foo = 10};
 
             // Act: Build proxy and call method
-            var proxy = (IMyResource) _typeController.GetProxy(instance);
+            var proxy = (ISimpleResource) _typeController.GetProxy(instance);
             var result = proxy.MultiplyFoo(3);
             proxy.MultiplyFoo(2, 10);
 
@@ -92,7 +99,7 @@ namespace Marvin.Resources.Management.Tests
             var instance = new DerivedResource { Id = 5, Foo = 10 };
 
             // Act: Build proxy and call method
-            var proxy = (IMyResource)_typeController.GetProxy(instance);
+            var proxy = (ISimpleResource)_typeController.GetProxy(instance);
             var result = proxy.MultiplyFoo(3);
 
             // Assert: Check result and modified foo
@@ -100,12 +107,27 @@ namespace Marvin.Resources.Management.Tests
             Assert.AreEqual(40, proxy.Foo);
         }
 
+        [Test(Description = "Test if implemented proxy supports inherited interfaces")]
+        public void ProxySupportsInheritedInterfaces()
+        {
+            // Arrange: Create instance
+            var instance = new ResourceWithImplicitApi();
+
+            // Act: 
+            IResourceWithImplicitApi proxy = null;
+            Assert.DoesNotThrow(() => proxy = (IResourceWithImplicitApi) _typeController.GetProxy(instance));
+
+            // Assert:
+            Assert.IsInstanceOf<IExtension>(proxy);
+            Assert.AreEqual(20, proxy.Add(10));
+        }
+
         [Test]
         public void ForwardEventsFromProxy()
         {
             // Arrange: Create instance and proxy
-            var instance = new MyResource {Id = 6};
-            var proxy = (IMyResource) _typeController.GetProxy(instance);
+            var instance = new SimpleResource { Id = 6};
+            var proxy = (ISimpleResource) _typeController.GetProxy(instance);
 
             // Act: Register listener and change foo
             object eventSender = null, eventSender2 = null;
@@ -137,8 +159,8 @@ namespace Marvin.Resources.Management.Tests
         public void AfterDisposeTheProxyIsDetached()
         {
             // Arrange: Create a proxy and register to an event
-            var instance = new MyResource {Id = 7};
-            var proxy = (IMyResource)_typeController.GetProxy(instance);
+            var instance = new SimpleResource { Id = 7};
+            var proxy = (ISimpleResource)_typeController.GetProxy(instance);
             var called = false;
             proxy.FooChanged += (sender, i) => called = true;
             instance.Foo = 10;
@@ -159,7 +181,7 @@ namespace Marvin.Resources.Management.Tests
         {
             // Arrange: Create instance and reference
             var ref1 = new DerivedResource { Id = 9, Foo = 20 };
-            var ref2 = new MyResource {Id = 10, Foo = 30};
+            var ref2 = new SimpleResource { Id = 10, Foo = 30};
             var nonPub = new NonPublicResource {Name = "NonPublic"};
             var instance = new ReferenceResource
             {
@@ -167,7 +189,7 @@ namespace Marvin.Resources.Management.Tests
                 Reference = ref1,
                 NonPublic = nonPub
             };
-            instance.References = new ReferenceCollection<IMyResource>(instance, 
+            instance.References = new ReferenceCollection<ISimpleResource>(instance, 
                 instance.GetType().GetProperty(nameof(ReferenceResource.References)), new List<IResource>())
             {
                 ref2
@@ -181,9 +203,9 @@ namespace Marvin.Resources.Management.Tests
             var references2 = proxy.GetReferences();
             var nonPubProxy = proxy.NonPublic;
 
-            IMyResource eventArgs = null;
+            ISimpleResource eventArgs = null;
             proxy.ReferenceChanged += (sender, resource) => eventArgs = resource;
-            IMyResource[] eventArgs2 = null;
+            ISimpleResource[] eventArgs2 = null;
             proxy.SomeChanged += (sender, resources) => eventArgs2 = resources;
 
             // Act: Set resource property through proxy
