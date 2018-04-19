@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Marvin.Collections;
@@ -12,7 +13,6 @@ namespace Marvin.Tests.Collections
     {
         private class DummyMessage
         {
-
         }
 
         private const int Delay = 300;
@@ -25,15 +25,8 @@ namespace Marvin.Tests.Collections
         public void CreateQueue()
         {
             _queue = new DelayQueue<DummyMessage>(new ParallelOperations());
-            _queue.Dequeued += OnDequeued;
+            _queue.Dequeued += OnQueueDequeued;
             _queue.Start(Delay);
-            _stopwatch.Start();
-        }
-
-        private void OnDequeued(object sender, DummyMessage dummyMessage)
-        {
-            _stopwatch.Stop();
-            _times.Add(_stopwatch.ElapsedMilliseconds);
             _stopwatch.Start();
         }
 
@@ -45,12 +38,20 @@ namespace Marvin.Tests.Collections
             _times.Clear();
         }
 
+        private void OnQueueDequeued(object sender, DummyMessage dummyMessage)
+        {
+            _stopwatch.Stop();
+            _times.Add(_stopwatch.ElapsedMilliseconds);
+            _stopwatch.Start();
+        }
+
         [TestCase(-1, Description = "Enqueue directly after creation")]
-        [TestCase(150, Description = "Enqueue with too short wait period")]
-        [TestCase(450, Description = "Enqueue with sufficient wait period")]
-        public void EnqueueAfterCreation(int delay)
+        [TestCase(0.5, Description = "Enqueue with too short wait period")]
+        [TestCase(1.5, Description = "Enqueue with sufficient wait period")]
+        public void EnqueueAfterCreation(double delayFactor)
         {
             // Arrange
+            var delay = (int)(Delay * delayFactor);
             if (delay > 0)
                 Thread.Sleep(delay);
 
@@ -128,27 +129,26 @@ namespace Marvin.Tests.Collections
             }
         }
 
-        [Test(Description = "Stop queue without ever using it and make sure it does not send anything")]
-        public void UnusedQueue()
+        [Test(Description = "Stop queue without ever using it and make sure it throws an exeption and does not send anything")]
+        public void StoppedQueueThrowsException()
         {
-            // Act
+            // Arrange
             _queue.Stop();
-            _queue.Enqueue(new DummyMessage());
-            Thread.Sleep(2 * Delay);
 
-            // Assert
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _queue.Enqueue(new DummyMessage()));
             Assert.AreEqual(0, _times.Count);
         }
 
-        [Test]
+        [Test(Description = "")]
         public void InterruptQueue()
         {
             // Arrange
             var localThreading = new ParallelOperations();
 
             // Act
-            localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), 200, -1);
-            localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), 450, -1);
+            localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), (int)(Delay * 0.5), -1);
+            localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), (int)(Delay * 1.5), -1);
 
             Thread.Sleep(Delay * 2);
             _queue.Stop();

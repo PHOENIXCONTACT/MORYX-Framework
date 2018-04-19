@@ -1,7 +1,7 @@
 namespace Marvin.Collections
 {
     /// <summary>
-    /// Default state of the queue. Incoming messages are send if the delay requirement
+    /// Default state of the queue. Incoming items are dequeued if the delay requirement
     /// is met and the stop watch restarted.
     /// </summary>
     internal class QueueIdleState : QueueStateBase
@@ -16,19 +16,19 @@ namespace Marvin.Collections
             Context.Stopwatch.Reset();
         }
 
-        public override void Enqueue(object obj)
+        public override void Enqueue(object item)
         {
-            NextState(PendingMessageState);
+            NextState(PendingItemsState);
 
             var currentTime = Context.Stopwatch.ElapsedMilliseconds;
             if (currentTime >= Context.QueueDelay)
             {
-                Context.ExecuteDequeueParallel(obj);
+                Context.ExecuteDequeueParallel(item);
             }
             else
             {
                 var remainingDelay = Context.QueueDelay - currentTime;
-                Context.DequeueDelayed(obj, (int)remainingDelay);
+                Context.DequeueDelayed(item, (int)remainingDelay);
             }
         }
     }

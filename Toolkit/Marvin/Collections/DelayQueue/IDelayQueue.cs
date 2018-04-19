@@ -5,27 +5,27 @@ namespace Marvin.Collections
     /// <summary>
     /// Special queue for objects that need to be dequeued with a configured minimum delay.
     /// </summary>
-    public interface IDelayQueue<T> 
+    public interface IDelayQueue<T>
         where T : class
     {
         /// <summary>
-        /// Start the queue and start sendings objects with the given delay
+        /// Start the queue and start sendings items with the given delay
         /// </summary>
         void Start(int queueDelay);
 
         /// <summary>
-        /// Stop the queue and discard all pending objects
+        /// Stop the queue and discard all pending items
         /// </summary>
         void Stop();
 
         /// <summary>
-        /// Adds an object to the end of the Queue.
+        /// Adds an item to the end of the queue.
         /// </summary>
-        /// <param name="obj">The object to add to the queue.</param>
+        /// <param name="obj">The item to add to the queue.</param>
         void Enqueue(T obj);
 
         /// <summary>
-        /// Removes and returns the object at the beginning of the Queue.
+        /// Removes and returns the item at the beginning of the Queue.
         /// </summary>
         event EventHandler<T> Dequeued;
     }

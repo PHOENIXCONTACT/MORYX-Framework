@@ -10,12 +10,12 @@ namespace Marvin.Collections
 
         int QueueDelay { get; }
 
-        Queue PendingMessages { get; set; }
+        Queue PendingItems { get; set; }
 
-        void ExecuteDequeue(object obj);
+        void ExecuteDequeue(object item);
 
         void DequeueDelayed(object next, int queueDelay);
 
-        void ExecuteDequeueParallel(object obj);
+        void ExecuteDequeueParallel(object item);
     }
 }

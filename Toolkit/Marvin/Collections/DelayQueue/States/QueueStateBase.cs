@@ -16,20 +16,20 @@ namespace Marvin.Collections
         {
         }
 
-        public virtual void Enqueue(object obj)
+        public virtual void Enqueue(object item)
         {
         }
 
-        public virtual void DelayedDequeue(object obj)
+        public virtual void DelayedDequeue(object item)
         {
         }
 
-        public virtual void MessageSent(object obj)
+        public virtual void MessageSent(object item)
         {
         }
 
         [StateDefinition(typeof(QueuePendingState))]
-        public const int PendingMessageState = 10;
+        public const int PendingItemsState = 10;
 
         [StateDefinition(typeof(QueueIdleState))]
         public const int QueueIdleState = 20;
