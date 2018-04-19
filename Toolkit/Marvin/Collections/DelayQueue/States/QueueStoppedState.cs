@@ -1,3 +1,5 @@
+using System;
+
 namespace Marvin.Collections
 {
     internal class QueueStoppedState : QueueStateBase
@@ -11,6 +13,11 @@ namespace Marvin.Collections
             NextState(QueueIdleState);
 
             Context.Stopwatch.Start();
+        }
+
+        public override void Enqueue(object item)
+        {
+            throw new InvalidOperationException("The queue is not running.");
         }
     }
 }

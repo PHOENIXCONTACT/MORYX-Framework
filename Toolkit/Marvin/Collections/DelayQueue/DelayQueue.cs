@@ -7,13 +7,13 @@ using Marvin.Threading;
 namespace Marvin.Collections
 {
     /// <summary>
-    /// Special queue for messages that need to be transmitted with a configured minimum delay.
+    /// Special queue for items that need to be dequeued with a configured minimum delay.
     /// </summary>
     public class DelayQueue<T> : IDelayQueue<T>, IDelayQueueContext
         where T : class
     {
         /// <summary>
-        /// Parallel operations to delay message transmission
+        /// Parallel operations to delay item dequeuing
         /// </summary>
         private readonly IParallelOperations _parallelOperations;
 
@@ -23,9 +23,14 @@ namespace Marvin.Collections
         private QueueStateBase _state;
 
         /// <summary>
-        /// Stopwatch to precisly measure time since last message
+        /// Stopwatch to precisly measure time since last dequeue
         /// </summary>
         private readonly Stopwatch _stopwatch;
+
+        /// <summary>
+        /// Lock object for this instance of the queue
+        /// </summary>
+        private readonly object _stateLock = new object();
 
         /// <summary>
         /// Explicit implementation to use in state machine
@@ -33,7 +38,7 @@ namespace Marvin.Collections
         Stopwatch IDelayQueueContext.Stopwatch => _stopwatch;
 
         /// <summary>
-        /// Stopwatch to precisly measure time since last message
+        /// Stopwatch to precisly measure time since last dequeue
         /// </summary>
         private int _queueDelay;
 
@@ -43,9 +48,9 @@ namespace Marvin.Collections
         int IDelayQueueContext.QueueDelay => _queueDelay;
 
         /// <summary>
-        /// Used in state machine to manage pending messages of this queue
+        /// Used in state machine to manage pending items of this queue
         /// </summary>
-        Queue IDelayQueueContext.PendingMessages { get; set; }
+        Queue IDelayQueueContext.PendingItems { get; set; }
 
         /// <summary>
         /// Create a new instance of the <see cref="DelayQueue{TMessage}"/>
@@ -65,7 +70,7 @@ namespace Marvin.Collections
             _state = (QueueStateBase) state;
         }
 
-        /// 
+        /// <inheritdoc />
         public void Start(int queueDelay)
         {
             _queueDelay = queueDelay;
@@ -75,45 +80,45 @@ namespace Marvin.Collections
             _state.Start();
         }
 
-        ///
+        /// <inheritdoc />
         public void Stop()
         {
-            lock (this)
+            lock (_stateLock)
                 _state.Stop();
         }
 
-        ///
+        /// <inheritdoc />
         public void Enqueue(T obj)
         {
-            lock (this)
+            lock (_stateLock)
                 _state.Enqueue(obj);
         }
 
         /// <summary>
-        /// Method called from the state machine to dequeue the object
+        /// Method called from the state machine to dequeue the item
         /// </summary>
-        void IDelayQueueContext.ExecuteDequeue(object obj)
+        void IDelayQueueContext.ExecuteDequeue(object item)
         {
-            ExecuteDequeue((T) obj);
+            ExecuteDequeue((T) item);
         }
 
-        private void ExecuteDequeue(T obj)
+        private void ExecuteDequeue(T item)
         {
-            lock (this)
+            lock (_stateLock)
             {
                 var handler = Dequeued;
-                handler?.Invoke(this, obj);
+                handler?.Invoke(this, item);
 
-                _state.MessageSent(obj);
+                _state.MessageSent(item);
             }
         }
 
         /// <summary>
-        /// Method called from the state machine to dequeue the object in a new thread
+        /// Method called from the state machine to dequeue the item in a new thread
         /// </summary>
-        void IDelayQueueContext.ExecuteDequeueParallel(object obj)
+        void IDelayQueueContext.ExecuteDequeueParallel(object item)
         {
-            ExecuteDequeueParallel((T) obj);
+            ExecuteDequeueParallel((T) item);
         }
 
         private void ExecuteDequeueParallel(T obj)
@@ -122,7 +127,7 @@ namespace Marvin.Collections
         }
 
         /// <summary>
-        /// Method called from the state machine to delay the dequeue of the object
+        /// Method called from the state machine to delay the dequeuing of the item
         /// </summary>
         void IDelayQueueContext.DequeueDelayed(object next, int queueDelay)
         {
@@ -145,7 +150,7 @@ namespace Marvin.Collections
             _state.DelayedDequeue(obj);
         }
 
-        ///
+        /// <inheritdoc />
         public event EventHandler<T> Dequeued;
     }
 }
