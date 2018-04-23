@@ -61,6 +61,7 @@
     <Compile Include="Activities\IParameters.cs" />
     <Compile Include="Activities\IActivityTracing.cs" />
     <Compile Include="Capabilities\NullCapabilities.cs" />
+    <Compile Include="Drivers\Configuration\AvailableComPortsAttribute.cs" />
     <Compile Include="Drivers\DigitalIO\IDigitalInputs.cs" />
     <Compile Include="Drivers\DigitalIO\IDigitalOutputs.cs" />
     <Compile Include="Drivers\DigitalIO\IDioDriver.cs" />
