@@ -4,40 +4,32 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" x:Name="UserControl"
-             d:DesignHeight="300" d:DesignWidth="609">
-    <Grid Margin="5,0,5,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+             d:DesignHeight="100" d:DesignWidth="640">
+    <StackPanel  Margin="5,0,0,0">
+        <TextBlock Eddie.TextFormat="Header2" Text="{Binding Resource.Type, ElementName=UserControl}"/>
 
-        <StackPanel >
-            <StackPanel.Resources>
+        <UniformGrid Margin="0,10,0,10" Rows="1">
+            <UniformGrid.Resources>
                 <Style TargetType="LabeledControlHost">
-                    <Setter Property="LabelMinWidth" Value="130" />
                     <Setter Property="Eddie.TextFormat" Value="Bold" />
-                    <Setter Property="Margin" Value="0,0,0,10" />
+                    <Setter Property="Margin" Value="0,0,10,0" />
                 </Style>
-            </StackPanel.Resources>
-            <TextBlock Eddie.TextFormat="Header2" Margin="0,5,0,5" Text="{Binding Resource.Type, ElementName=UserControl}"/>
+            </UniformGrid.Resources>
 
             <LabeledControlHost LabelA="Name:">
                 <EddieTextBox Text="{Binding Resource.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ElementName=UserControl}"
-                                  IsEnabled="{Binding IsEditMode, ElementName=UserControl}" />
+                              IsEnabled="{Binding IsEditMode, ElementName=UserControl}"/>
             </LabeledControlHost>
 
             <LabeledControlHost LabelA="Global Identifier:">
                 <EddieTextBox Text="{Binding Resource.GlobalIdentifier, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ElementName=UserControl}" 
-                                  IsEnabled="{Binding IsEditMode, ElementName=UserControl}" />
+                              IsEnabled="{Binding IsEditMode, ElementName=UserControl}"/>
             </LabeledControlHost>
 
             <LabeledControlHost LabelA="Local Identifier:">
                 <EddieTextBox Text="{Binding Resource.LocalIdentifier, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ElementName=UserControl}" 
-                                  IsEnabled="{Binding IsEditMode, ElementName=UserControl}" />
+                              IsEnabled="{Binding IsEditMode, ElementName=UserControl}"/>
             </LabeledControlHost>
-        </StackPanel>
-
-    </Grid>
-
-    
+        </UniformGrid>
+    </StackPanel>
 </UserControl>
