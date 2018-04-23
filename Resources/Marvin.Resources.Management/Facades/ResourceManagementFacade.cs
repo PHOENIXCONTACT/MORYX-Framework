@@ -23,18 +23,18 @@ namespace Marvin.Resources.Management
         public void Activate()
         {
             Manager.ResourceAdded += OnResourceAdded;
-            Manager.CapabilitiesChanged += ManagerOnCapabilitiesChanged;
+            Manager.CapabilitiesChanged += OnCapabilitiesChanged;
         }
         
         /// <seealso cref="IFacadeControl"/> 
         public void Deactivate()
         {
             Manager.ResourceAdded -= OnResourceAdded;
-            Manager.CapabilitiesChanged -= ManagerOnCapabilitiesChanged;
+            Manager.CapabilitiesChanged -= OnCapabilitiesChanged;
         }
 
 
-        private void ManagerOnCapabilitiesChanged(object sender, ICapabilities args)
+        private void OnCapabilitiesChanged(object sender, ICapabilities args)
         {
             CapabilitiesChanged?.Invoke(((IPublicResource)sender).Proxify(TypeController), args);
         }

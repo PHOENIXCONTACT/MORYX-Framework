@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
@@ -11,7 +10,6 @@ using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Resources.Model;
 using Marvin.Tools;
-using Newtonsoft.Json;
 
 namespace Marvin.Resources.Management
 {
@@ -97,13 +95,13 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Subset of public resources
         /// </summary>
-        private List<IPublicResource> _publicResources;
+        private ICollection<IPublicResource> _publicResources;
+
         #endregion
 
         #region LifeCycle
 
-
-        /// 
+        /// <inheritdoc />
         public void Initialize()
         {
             _startup = ResourceStartupPhase.LoadResources;
@@ -128,8 +126,7 @@ namespace Marvin.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    lock (_publicResources)
-                        _publicResources.Remove(resourceWrapper.Target as IPublicResource);
+                    _publicResources.Remove(resourceWrapper.Target as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -143,24 +140,20 @@ namespace Marvin.Resources.Management
         {
             // Create the concurrent dictionary optimized for the current system architecture and expected collection size
             _resources = new ConcurrentDictionary<long, ResourceWrapper>(Environment.ProcessorCount, allResources.Count * 2);
-            _publicResources = new List<IPublicResource>(allResources.Count);
+            _publicResources = new SynchronizedCollection<IPublicResource>();
 
             // Create resource objects on multiple threads
             var query = from template in allResources.AsParallel()
                         select template.Instantiate(TypeController, this);
             foreach (var resource in query)
-            {
                 AddResource(resource, false);
-            }
 
             // Link them to each other
             Parallel.ForEach(allResources, LinkReferences);
 
             // Register events after all links were set
             foreach (var resourceWrapper in _resources.Values)
-            {
-                RegisterEvents(resourceWrapper.Target, resourceWrapper.Target as IPublicResource);
-            }
+                RegisterEvents(resourceWrapper.Target);
         }
 
         /// <summary>
@@ -170,7 +163,7 @@ namespace Marvin.Resources.Management
         {
             // Create dictionaries with initial capacity that should avoid the need of resizing
             _resources = new Dictionary<long, ResourceWrapper>(64);
-            _publicResources = new List<IPublicResource>(32);
+            _publicResources = new SynchronizedCollection<IPublicResource>();
 
             // Create a root resource
             var root = Create(Config.RootType);
@@ -195,7 +188,7 @@ namespace Marvin.Resources.Management
 
             // Register to events
             if (registerEvents)
-                RegisterEvents(instance, publicResource);
+                RegisterEvents(instance);
 
             switch (_startup)
             {
@@ -229,10 +222,11 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Register a resources events
         /// </summary>
-        private void RegisterEvents(Resource instance, IPublicResource asPublic)
+        private void RegisterEvents(Resource instance)
         {
             instance.Changed += OnResourceChanged;
 
+            var asPublic = instance as IPublicResource;
             if (asPublic != null)
                 asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
@@ -243,10 +237,11 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Register a resources events
         /// </summary>
-        private void UnregisterEvents(Resource instance, IPublicResource asPublic)
+        private void UnregisterEvents(Resource instance)
         {
             instance.Changed -= OnResourceChanged;
 
+            var asPublic = instance as IPublicResource;
             if (asPublic != null)
                 asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
@@ -284,8 +279,7 @@ namespace Marvin.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    lock (_publicResources)
-                        _publicResources.Remove(resourceWrapper.Target as IPublicResource);
+                    _publicResources.Remove(resourceWrapper.Target as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -314,7 +308,7 @@ namespace Marvin.Resources.Management
         {
             foreach (var resourceWrapper in _resources.Values)
             {
-                UnregisterEvents(resourceWrapper.Target, resourceWrapper.Target as IPublicResource);
+                UnregisterEvents(resourceWrapper.Target);
             }
         }
 
@@ -452,7 +446,7 @@ namespace Marvin.Resources.Management
             }
 
             // Unregister from all events to avoid memory leaks
-            UnregisterEvents(instance, instance as IPublicResource);
+            UnregisterEvents(instance);
 
             // Destroy the object
             TypeController.Destroy(instance);

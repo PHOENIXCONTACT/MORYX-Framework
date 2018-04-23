@@ -36,11 +36,20 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\Build\ServiceRuntime\Libraries\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Effort">
+      <HintPath>..\..\.build\Test.Libs\Effort.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Marvin">
       <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
     </Reference>
     <Reference Include="Marvin.Container">
       <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.Model">
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Marvin.Model.dll</HintPath>
     </Reference>
     <Reference Include="Marvin.PlatformTools">
       <HintPath>..\..\Build\ServiceRuntime\Marvin.PlatformTools.dll</HintPath>
@@ -56,6 +65,10 @@
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\..\.build\Test.Libs\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\ServiceRuntime\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\.build\Test.Libs\nunit.framework.dll</HintPath>
@@ -76,6 +89,7 @@
     <Compile Include="Mocks\ReferenceResource.cs" />
     <Compile Include="Mocks\SimpleResource.cs" />
     <Compile Include="ResourceLinkerTests.cs" />
+    <Compile Include="ResourceManagerTests.cs" />
     <Compile Include="TypeControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
