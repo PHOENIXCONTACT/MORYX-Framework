@@ -104,20 +104,10 @@
       <DependentUpon>EmptyDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Details\Default\EmptyDetailsViewModel.cs" />
-    <Compile Include="Details\IdentityProvider\BufferedTypeViewModel.cs" />
-    <Compile Include="Details\IdentityProvider\IdentityConfigViewModel.cs" />
-    <Compile Include="Details\IdentityProvider\IdentityProviderDetailsView.xaml.cs">
-      <DependentUpon>IdentityProviderDetailsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Details\IdentityProvider\IdentityProviderDetailsViewModel.cs" />
-    <Compile Include="Details\Machine\MachineDetailsView.xaml.cs">
-      <DependentUpon>MachineDetailsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Details\Default\DefaultDetailsView.xaml.cs">
       <DependentUpon>DefaultDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Details\Default\DefaultDetailsViewModel.cs" />
-    <Compile Include="Details\Machine\MachineDetailsViewModel.cs" />
     <Compile Include="Details\ResourceDetailsComponentSelector.cs" />
     <Compile Include="Details\ResourceDetailsViewModelBase.cs" />
     <Compile Include="Details\IResourceDetailsFactory.cs" />
@@ -174,14 +164,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Details\Default\EmptyDetailsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Details\IdentityProvider\IdentityProviderDetailsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Details\Machine\MachineDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
