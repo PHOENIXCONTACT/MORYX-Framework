@@ -47,6 +47,7 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Facades\ResourceExtension.cs" />
     <Compile Include="Facades\ResourceManagementFacade.cs" />
     <Compile Include="Interaction\Default\ResourceSerialization.cs" />
     <Compile Include="Interaction\IRootResource.cs" />
