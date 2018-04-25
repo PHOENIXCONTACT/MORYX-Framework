@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
@@ -196,7 +197,9 @@ namespace Marvin.Resources.Management
             var currentReferences = (from property in ReferenceProperties(resource.GetType(), false)
                                      let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
                                      where att.RelationType == referenceAtt.RelationType
-                                     select property.GetValue(resource)).OfType<Resource>().ToList();
+                                        && att.Name == referenceAtt.Name
+                                        && att.Role == referenceAtt.Role
+                                     select property.GetValue(resource)).Distinct().OfType<Resource>().ToList();
             // Try to find a match that is not used in any reference
             var relEntity = (from match in matches
                              where currentReferences.All(cr => cr.Id != match.ReferenceId)
@@ -349,7 +352,7 @@ namespace Marvin.Resources.Management
                            select relation);
             return matches.ToArray();
         }
-
+        
         /// <summary>
         /// Find all reference properties on a resource type
         /// </summary>
