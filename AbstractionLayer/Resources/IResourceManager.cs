@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Model;
 using Marvin.Modules.ModulePlugins;
 
-namespace Marvin.Resources.Management
+namespace Marvin.AbstractionLayer.Resources
 {
     /// <summary>
-    /// Internal manager within the resource module to handle all resource access
+    /// Major component managing the resource graph
     /// </summary>
     public interface IResourceManager : IInitializableModulePlugin, IResourceManagement, IResourceCreator
     {
@@ -25,6 +23,11 @@ namespace Marvin.Resources.Management
         /// Get the resource with this id
         /// </summary>
         Resource Get(long id);
+
+        /// <summary>
+        /// Returns all resources without a parent
+        /// </summary>
+        IReadOnlyList<Resource> GetRoots();
 
         /// <summary>
         /// Write changes on this object to the database

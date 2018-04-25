@@ -17,7 +17,7 @@ namespace Marvin.Resources.Management.Tests
         private ModuleConfig _moduleConfig;
         private Mock<IResourceTypeController> _typeControllerMock;
         private Mock<IResourceLinker> _linkerMock;
-        private Mock<Resource> _rootResourceMock;
+        private DefaultResourceMock _defaultResource;
 
         private ResourceManager _resourceManager;
 
@@ -35,7 +35,10 @@ namespace Marvin.Resources.Management.Tests
             modelFactory.Initialize();
             _modelFactory = modelFactory;
 
-            _moduleConfig = new ModuleConfig { RootType = nameof(RootResource) };
+            _moduleConfig = new ModuleConfig
+            {
+                DefaultResource = nameof(DefaultResourceMock)
+            };
             _typeControllerMock = new Mock<IResourceTypeController>();
 
             _linkerMock = new Mock<IResourceLinker>();
@@ -49,15 +52,9 @@ namespace Marvin.Resources.Management.Tests
                 TypeController = _typeControllerMock.Object
             };
 
-            _rootResourceMock = new Mock<Resource>();
-            var persistenObj = _rootResourceMock.As<IPersistentObject>();
-            persistenObj.SetupProperty(p => p.Id);
+            _defaultResource = new DefaultResourceMock();
 
-            _rootResourceMock.As<IRootResource>();
-            _rootResourceMock.As<IReferenceResource>();
-            _rootResourceMock.As<IPublicResource>();
-
-            _typeControllerMock.Setup(tc => tc.Create(_moduleConfig.RootType)).Returns(_rootResourceMock.Object);
+            _typeControllerMock.Setup(tc => tc.Create(_moduleConfig.DefaultResource)).Returns(_defaultResource);
             _typeControllerMock.Setup(tc => tc.Create(nameof(ResourceMock))).Returns(new ResourceMock());
         }
 
@@ -70,11 +67,11 @@ namespace Marvin.Resources.Management.Tests
             _resourceManager.Initialize();
 
             // Assert
-            _typeControllerMock.Verify(tc => tc.Create(_moduleConfig.RootType), Times.Once);
-            _linkerMock.Verify(l => l.GetAutoSaveCollections(_rootResourceMock.Object), Times.Once);
-            _rootResourceMock.Verify(r => r.Initialize(), Times.Once);
-            _rootResourceMock.Verify(r => r.Start(), Times.Never);
-            _rootResourceMock.Verify(r => r.Stop(), Times.Never);
+            _typeControllerMock.Verify(tc => tc.Create(_moduleConfig.DefaultResource), Times.Once);
+            _linkerMock.Verify(l => l.GetAutoSaveCollections(_defaultResource), Times.Once);
+            Assert.AreEqual(1, _defaultResource.InitializeCalls);
+            Assert.AreEqual(0, _defaultResource.StartCalls);
+            Assert.AreEqual(0, _defaultResource.StopCalls);
         }
 
         [Test(Description = "If resource manager starts with filled database, it will initialized with values of database.")]
@@ -85,7 +82,7 @@ namespace Marvin.Resources.Management.Tests
             using (var uow = _modelFactory.Create())
             {
                 var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
-                var entity = resourceRepo.Create(_moduleConfig.RootType, _moduleConfig.RootType);
+                var entity = resourceRepo.Create(_moduleConfig.DefaultResource, _moduleConfig.DefaultResource);
                 entity.GlobalIdentifier = globalIdentifier;
 
                 uow.Save();
@@ -95,8 +92,8 @@ namespace Marvin.Resources.Management.Tests
             _resourceManager.Initialize();
 
             // Assert
-            _rootResourceMock.Verify(r => r.Initialize(), Times.Once);
-            Assert.AreEqual(globalIdentifier, _rootResourceMock.Object.GlobalIdentifier);
+            Assert.AreEqual(1, _defaultResource.InitializeCalls);
+            Assert.AreEqual(globalIdentifier, _defaultResource.GlobalIdentifier);
         }
 
         [Test(Description = "Start call to ResourceManager starts the handled resources.")]
@@ -109,9 +106,9 @@ namespace Marvin.Resources.Management.Tests
             _resourceManager.Start();
 
             // Assert
-            _rootResourceMock.Verify(r => r.Initialize(), Times.Once);
-            _rootResourceMock.Verify(r => r.Start(), Times.Once);
-            _rootResourceMock.Verify(r => r.Stop(), Times.Never);
+            Assert.AreEqual(1, _defaultResource.InitializeCalls);
+            Assert.AreEqual(1, _defaultResource.StartCalls);
+            Assert.AreEqual(0, _defaultResource.StopCalls);
         }
 
         [Test(Description = "Stop call to ResourceManager stops the handled resources.")]
@@ -125,9 +122,9 @@ namespace Marvin.Resources.Management.Tests
             _resourceManager.Stop();
 
             // Assert
-            _rootResourceMock.Verify(r => r.Initialize(), Times.Once);
-            _rootResourceMock.Verify(r => r.Start(), Times.Once);
-            _rootResourceMock.Verify(r => r.Stop(), Times.Once);
+            Assert.AreEqual(1, _defaultResource.InitializeCalls);
+            Assert.AreEqual(1, _defaultResource.StartCalls);
+            Assert.AreEqual(1, _defaultResource.StopCalls);
         }
 
         [Test(Description = "ResourceManager is attached to all reference collections and and listens to changed events.")]
@@ -135,11 +132,11 @@ namespace Marvin.Resources.Management.Tests
         {
             // Arrange
             var collectionProperty = typeof(IReferenceResource).GetProperty(nameof(IReferenceResource.References));
-            _linkerMock.Setup(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _rootResourceMock.Object, collectionProperty))
+            _linkerMock.Setup(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _defaultResource, collectionProperty))
                 .Returns(() => new Resource[0]);
 
             var referenceCollectionMock = new Mock<IReferenceCollection>();
-            _linkerMock.Setup(l => l.GetAutoSaveCollections(_rootResourceMock.Object)).Returns(
+            _linkerMock.Setup(l => l.GetAutoSaveCollections(_defaultResource)).Returns(
                 new List<IReferenceCollection>
                 {
                     referenceCollectionMock.Object
@@ -149,35 +146,34 @@ namespace Marvin.Resources.Management.Tests
             _resourceManager.Start();
 
             // Act
-            var eventArgs = new ReferenceCollectionChangedEventArgs(_rootResourceMock.Object, collectionProperty);
+            var eventArgs = new ReferenceCollectionChangedEventArgs(_defaultResource, collectionProperty);
             referenceCollectionMock.Raise(rc => rc.CollectionChanged += null, referenceCollectionMock.Object, eventArgs);
 
             // Assert
-            _linkerMock.Verify(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _rootResourceMock.Object, collectionProperty), Times.Once);
+            _linkerMock.Verify(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _defaultResource, collectionProperty), Times.Once);
         }
 
         [Test(Description = "Saving resources should save to database")]
         public void SaveResource()
         {
             // Arrange
-            var rootResource = _rootResourceMock.Object;
             _resourceManager.Initialize();
             _resourceManager.Start();
             _linkerMock.ResetCalls();
 
             // Act
-            rootResource.LocalIdentifier = "Local";
-            _resourceManager.Save(rootResource);
+            _defaultResource.LocalIdentifier = "Local";
+            _resourceManager.Save(_defaultResource);
 
             // Assert
-            _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), rootResource, It.IsAny<ResourceEntity>()), Times.Once);
+            _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), _defaultResource, It.IsAny<ResourceEntity>()), Times.Once);
 
             using (var uow = _modelFactory.Create())
             {
                 var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
-                var entity = resourceRepo.GetByKey(((IPersistentObject)rootResource).Id);
+                var entity = resourceRepo.GetByKey(_defaultResource.Id);
 
-                Assert.AreEqual(rootResource.LocalIdentifier, entity.LocalIdentifier);
+                Assert.AreEqual(_defaultResource.LocalIdentifier, entity.LocalIdentifier);
             }
         }
 
@@ -269,7 +265,7 @@ namespace Marvin.Resources.Management.Tests
             IReferences<IResource> References { get; set; }
         }
 
-        private class ResourceMock : Resource, IPublicResource
+        private abstract class ResourceMockBase : Resource
         {
             public int InitializeCalls { get; private set; }
 
@@ -277,12 +273,13 @@ namespace Marvin.Resources.Management.Tests
 
             public int StopCalls { get; private set; }
 
-            public ICapabilities Capabilities { get; private set; }
+            
+            public IReferences<IResource> References { get; set; }
 
             public override void Initialize()
             {
                 base.Initialize();
-                Capabilities = new TestCapabilities();
+                
 
                 InitializeCalls++;
             }
@@ -303,9 +300,25 @@ namespace Marvin.Resources.Management.Tests
             {
                 RaiseResourceChanged();
             }
+        }
 
+        private class ResourceMock : ResourceMockBase, IPublicResource, IReferenceResource
+        {
+            public ICapabilities Capabilities { get; private set; }
+
+            public override void Initialize()
+            {
+                base.Initialize();
+                Capabilities = new TestCapabilities();
+            }
 
             public event EventHandler<ICapabilities> CapabilitiesChanged;
+            
+        }
+
+        private class DefaultResourceMock : ResourceMockBase, IDefaultResource
+        {
+            
         }
 
         private class TestCapabilities : ICapabilities

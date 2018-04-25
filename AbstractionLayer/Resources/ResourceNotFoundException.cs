@@ -30,7 +30,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// </summary>
         /// <param name="requiredCapabilities">The required capabilities.</param>
         public ResourceNotFoundException(ICapabilities requiredCapabilities)
-            : base(string.Format("No resource found providing capabilities or too many matches: {0}", requiredCapabilities))
+            : base($"No resource found providing capabilities or too many matches: {requiredCapabilities}")
         {
         }
 
@@ -39,7 +39,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// </summary>
         /// <param name="id">Id that was not found</param>
         public ResourceNotFoundException(long id)
-            : base(string.Format("No resource found with id: {0}", id))
+            : base($"No resource found with id: {id}")
         {
         }
     }

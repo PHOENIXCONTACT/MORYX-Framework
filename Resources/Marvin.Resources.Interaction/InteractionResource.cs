@@ -1,27 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Model;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Resources.Management
+namespace Marvin.Resources.Interaction
 {
     /// <summary>
     /// Resources that host a WCF service to interact with related resources
     /// </summary>
     public abstract class InteractionResource<TService> : Resource, IServiceManager
     {
-        #region Dependency Injection
-
         /// <summary>
-        /// Injected by caslte.
+        /// Factory to create the web service
         /// </summary>
         public IConfiguredHostFactory HostFactory { get; set; }
-
-        #endregion
-
-        #region Config
 
         /// <summary>
         /// Host config injected by resource manager
@@ -31,8 +24,6 @@ namespace Marvin.Resources.Management
 
         /// <inheritdoc />
         public override object Descriptor => HostConfig;
-
-        #endregion
 
         /// <summary>
         /// Current service host
@@ -49,10 +40,11 @@ namespace Marvin.Resources.Management
         {
             base.Initialize();
 
+
             Host = HostFactory.CreateHost<TService>(HostConfig);
         }
 
-        /// 
+        /// <inheritdoc />
         public override void Start()
         {
             base.Start();
@@ -60,7 +52,7 @@ namespace Marvin.Resources.Management
             Host.Start();
         }
 
-        /// 
+        /// <inheritdoc />
         protected override void OnDispose()
         {
             Host.Dispose();

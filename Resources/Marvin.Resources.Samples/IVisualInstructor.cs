@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
+using Marvin.Resources.Interaction;
 using Marvin.Resources.Management;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
@@ -78,7 +79,7 @@ namespace Marvin.Resources.Samples
 
     [DependencyRegistration(typeof(IInteractionService))]
     [ResourceRegistration(nameof(InstructionServiceHost), typeof(InstructionServiceHost))]
-    public class InstructionServiceHost : InteractionResource<IInteractionService>, IServiceManager
+    public class InstructionServiceHost : InteractionResource<IInteractionService>
     {
         [ReferenceOverride(nameof(Children), AutoSave = true)]
         public IReferences<IVisualInstructor> Instructors { get; set; }
@@ -106,16 +107,6 @@ namespace Marvin.Resources.Samples
                 BindingType = ServiceBindingType.NetTcp,
                 MetadataEnabled = true,
             };
-        }
-
-        public void Register(ISessionService service)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Unregister(ISessionService service)
-        {
-            throw new System.NotImplementedException();
         }
 
         public void DisplayFoo(string client, string message)

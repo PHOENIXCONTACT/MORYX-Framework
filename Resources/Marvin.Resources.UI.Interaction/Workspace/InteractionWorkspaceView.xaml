@@ -33,7 +33,8 @@
                         <EddieButton Command="{Binding RemoveResourceCmd}" Icon="Minus" EddieStyle="Gray" Margin="0,0,5,0">Remove</EddieButton>
                     </StackPanel>
                     
-                    <EddieTreeView DockPanel.Dock="Top" ItemsSource="{Binding ResourceTree}" VerticalAlignment="Stretch" 
+                    <EddieTreeView x:Name="ResourceTreeView" DockPanel.Dock="Top" ItemsSource="{Binding ResourceTree}" VerticalAlignment="Stretch" 
+                                   MouseDown="OnResourceTreeeMouseDown"
                                    cal:Message.Attach="[Event SelectedItemChanged] = [Action OnMasterItemChanged($source, $eventArgs)]" 
                                    IsEnabled="{Binding IsDetailsInEditMode, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,5,0">
                         <EddieTreeView.ItemContainerStyle>
