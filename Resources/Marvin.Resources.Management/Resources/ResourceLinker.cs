@@ -65,7 +65,7 @@ namespace Marvin.Resources.Management
 
             // Create underlying collection if it is not given
             if (underlyingCollection == null)
-                underlyingCollection = new List<IResource>();
+                underlyingCollection = new SynchronizedCollection<IResource>();
 
             var propertyType = property.PropertyType;
             var referenceType = propertyType.GetGenericArguments()[0]; // Type of resource from ICollection<ResourceType>
@@ -348,7 +348,7 @@ namespace Marvin.Resources.Management
             var matches = (from relation in relations
                            where attribute.Role == relation.Role
                            where attribute.RelationType == relation.RelationType // Typed relation without name or matching name
-                                 && (string.IsNullOrEmpty(attribute.Name) || attribute.Name == relation.Name)
+                                 && attribute.Name == relation.Name
                            select relation);
             return matches.ToArray();
         }

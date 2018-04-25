@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 using Marvin.Logging;
 using Marvin.Modules.ModulePlugins;
 using Marvin.Serialization;
-using Marvin.StateMachines;
 
 namespace Marvin.AbstractionLayer.Resources
 {

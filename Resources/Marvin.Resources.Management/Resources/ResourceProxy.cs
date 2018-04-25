@@ -12,7 +12,6 @@ namespace Marvin.Resources.Management
     /// </summary>
     internal interface IResourceProxy : IResource
     {
-
         /// <summary>
         /// Target object of the proxy
         /// </summary>
