@@ -11,8 +11,8 @@ namespace Marvin.Resources.UI
     public interface IMethodInvocationViewModel : IDialogScreen
     {
         /// <summary>
-        /// Return value of the method invocation
+        /// Result returned from the web-service
         /// </summary>
-        EntryViewModel InvocationResult { get; }
+        Entry ResultEntry { get; }
     }
 }
