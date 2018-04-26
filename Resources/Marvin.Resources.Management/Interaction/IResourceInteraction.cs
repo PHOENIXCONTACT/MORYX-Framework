@@ -1,4 +1,5 @@
 ﻿using System.ServiceModel;
+using Marvin.Resources.Interaction;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
@@ -9,7 +10,7 @@ namespace Marvin.Resources.Management
     /// </summary>
     [ServiceContract]
     [ServiceVersion(ServerVersion = "2.0.0", MinClientVersion = "2.0.0")]
-    public interface IResourceInteraction
+    internal interface IResourceInteraction
     {
         /// <summary>
         /// Full type tree of currently installed resources

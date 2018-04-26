@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/ResourceInteraction?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" />
+  <xs:import schemaLocation="http://localhost/Metadata/ResourceInteraction?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction" />
   <xs:import schemaLocation="http://localhost/Metadata/ResourceInteraction?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
   <xs:element name="GetTypeTree">
     <xs:complexType>
@@ -10,7 +10,7 @@
   <xs:element name="GetTypeTreeResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" minOccurs="0" name="GetTypeTreeResult" nillable="true" type="q1:ArrayOfResourceTypeModel" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction" minOccurs="0" name="GetTypeTreeResult" nillable="true" type="q1:ArrayOfResourceTypeModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -22,7 +22,7 @@
   <xs:element name="GetResourceTreeResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" minOccurs="0" name="GetResourceTreeResult" nillable="true" type="q2:ArrayOfResourceModel" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction" minOccurs="0" name="GetResourceTreeResult" nillable="true" type="q2:ArrayOfResourceModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -37,7 +37,7 @@
   <xs:element name="GetDetailsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" minOccurs="0" name="GetDetailsResult" nillable="true" type="q3:ResourceModel" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction" minOccurs="0" name="GetDetailsResult" nillable="true" type="q3:ResourceModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -68,21 +68,21 @@
   <xs:element name="CreateResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" minOccurs="0" name="CreateResult" nillable="true" type="q7:ResourceModel" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction" minOccurs="0" name="CreateResult" nillable="true" type="q7:ResourceModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="Save">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" minOccurs="0" name="resource" nillable="true" type="q8:ResourceModel" />
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction" minOccurs="0" name="resource" nillable="true" type="q8:ResourceModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SaveResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management" minOccurs="0" name="SaveResult" nillable="true" type="q9:ResourceModel" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction" minOccurs="0" name="SaveResult" nillable="true" type="q9:ResourceModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

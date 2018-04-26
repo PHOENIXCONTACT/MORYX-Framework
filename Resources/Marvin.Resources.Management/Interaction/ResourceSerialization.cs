@@ -144,12 +144,9 @@ namespace Marvin.Resources.Management
         {
             var methods = base.MethodFilter(sourceType);
 
-            if (Attribute.IsDefined(sourceType, typeof(EditorVisibleAttribute)))
-                // Filter methods defined by object
-                methods = methods.Where(method => method.DeclaringType != typeof(object));
-            else
-                // Filter methods carrying the editor visible attribute
-                methods = methods.Where(method => Attribute.IsDefined(method, typeof(EditorVisibleAttribute)));
+            methods = Attribute.IsDefined(sourceType, typeof(EditorVisibleAttribute)) 
+                ? methods.Where(method => method.DeclaringType != typeof(object)) // Filter methods defined by object
+                : methods.Where(method => Attribute.IsDefined(method, typeof(EditorVisibleAttribute))); // Filter methods carrying the editor visible attribute
 
             return methods;
         }

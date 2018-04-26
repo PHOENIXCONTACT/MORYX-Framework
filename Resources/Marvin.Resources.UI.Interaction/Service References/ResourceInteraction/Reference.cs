@@ -15,7 +15,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ResourceTypeModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management", IsReference=true)]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ResourceTypeModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction", IsReference=true)]
     [System.SerializableAttribute()]
     internal partial class ResourceTypeModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -156,7 +156,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ResourceModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management", IsReference=true)]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ResourceModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction", IsReference=true)]
     [System.SerializableAttribute()]
     internal partial class ResourceModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -329,7 +329,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ResourceReferenceModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Management", IsReference=true)]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ResourceReferenceModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Resources.Interaction", IsReference=true)]
     [System.SerializableAttribute()]
     internal partial class ResourceReferenceModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         

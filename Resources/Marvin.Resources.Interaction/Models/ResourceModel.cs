@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Marvin.Serialization;
 
-namespace Marvin.Resources.Management
+namespace Marvin.Resources.Interaction
 {
     /// <summary>
     /// Base model used by details view and tree

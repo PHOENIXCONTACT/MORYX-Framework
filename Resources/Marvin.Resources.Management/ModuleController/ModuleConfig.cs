@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.Serialization;
+using Marvin.AbstractionLayer.Resources;
 using Marvin.Configuration;
 using Marvin.Runtime.Configuration;
 
@@ -12,10 +13,19 @@ namespace Marvin.Resources.Management
     public class ModuleConfig : ConfigBase
     {
         /// <summary>
-        /// Resource type of the root resource
+        /// Creates a new instance of the module config
         /// </summary>
-        [DataMember, DefaultValue(nameof(RootResource))]
-        [PluginNameSelector(typeof(IRootResource)), ModuleStrategy(typeof(IRootResource))]
-        public string RootType { get; set; }
+        public ModuleConfig()
+        {
+            DefaultResource = nameof(ResourceInteractionHost);
+        }
+
+        /// <summary>
+        /// If database is empty, this resource will be created by default.
+        /// </summary>
+        [DataMember, DefaultValue(nameof(ResourceInteractionHost))]
+        [Description("If database is empty, this resource will be created by default.")]
+        [PluginNameSelector(typeof(IDefaultResource))]
+        public string DefaultResource { get; set; }
     }
 }

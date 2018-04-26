@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Management
+namespace Marvin.Resources.Interaction
 {
     /// <summary>
     /// DTO that represents the reference of one resource with another

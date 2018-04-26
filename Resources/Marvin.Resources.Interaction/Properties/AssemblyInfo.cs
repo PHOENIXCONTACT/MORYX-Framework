@@ -2,17 +2,16 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Resources.Management;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.Resources.Management")]
-[assembly: AssemblyDescription("Marvin Runtime Module: ResourceManager")]
-[assembly: AssemblyConfiguration("MarvinPlatform-CI #854")]
+[assembly: AssemblyTitle("Marvin.Resources.Interaction")]
+[assembly: AssemblyDescription("Provides the default implementation if the resource interaction")]
+[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PHOENIX CONTACT GmbH & Co. KG")]
-[assembly: AssemblyProduct("Marvin.Resources.Management")]
-[assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT GmbH & Co. KG 2016")]
+[assembly: AssemblyProduct("Marvin.Resources.Interaction")]
+[assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT GmbH & Co. KG 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -22,7 +21,7 @@ using Marvin.Resources.Management;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f31704fe-753b-45e8-a7fd-adc4bdbaac24")]
+[assembly: Guid("583cbd84-dd9f-4834-a89c-1625a05ee15d")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,12 +33,7 @@ using Marvin.Resources.Management;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(ModuleVersion.Version)]
-[assembly: AssemblyFileVersion(ModuleVersion.Version)]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
-// Marvin attributes
 [assembly: ResourcesBundle]
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: InternalsVisibleTo(ResourceProxyBuilder.AssemblyName)]
-[assembly: InternalsVisibleTo("Marvin.Resources.IntegrationTests")]
-[assembly: InternalsVisibleTo("Marvin.Resources.Management.Tests")]

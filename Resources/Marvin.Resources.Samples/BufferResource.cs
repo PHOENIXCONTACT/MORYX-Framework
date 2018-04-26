@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Resources.Management;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples

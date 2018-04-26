@@ -112,7 +112,7 @@ namespace Marvin.Resources.Management
                 if (allResources.Count > 0)
                     LoadResources(allResources);
                 else
-                    CreateRoot(uow);
+                    CreateDefault(uow, Config.DefaultResource);
             }
 
             _startup = ResourceStartupPhase.Initializing;
@@ -159,19 +159,19 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Create root resource if the database is empty
         /// </summary>
-        private void CreateRoot(IUnitOfWork uow)
+        private void CreateDefault(IUnitOfWork uow, string type)
         {
             // Create dictionaries with initial capacity that should avoid the need of resizing
             _resources = new Dictionary<long, ResourceWrapper>(64);
             _publicResources = new SynchronizedCollection<IPublicResource>();
 
             // Create a root resource
-            var root = Create(Config.RootType);
-            ResourceEntityAccessor.SaveToEntity(uow, root);
+            var defaultResource = Create(type);
+            ResourceEntityAccessor.SaveToEntity(uow, defaultResource);
             uow.Save();
 
             // Add root to the list of resources
-            AddResource(root, true);
+            AddResource(defaultResource, true);
         }
 
         /// <summary>
@@ -509,6 +509,11 @@ namespace Marvin.Resources.Management
         public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IPublicResource
         {
             return _publicResources.OfType<TResource>().Where(r => r.Capabilities != NullCapabilities.Instance).Where(predicate);
+        }
+
+        public IReadOnlyList<Resource> GetRoots()
+        {
+            return _resources.Values.Where(wapper => wapper.Target.Parent == null).Select(wrapper => wrapper.Target).ToArray();
         }
 
         private void RaiseResourceAdded(IPublicResource newResource)
