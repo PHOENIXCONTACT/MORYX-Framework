@@ -161,6 +161,10 @@
       <Project>{00916431-5038-44b8-8bda-4a1b13636f32}</Project>
       <Name>Marvin.Products.Samples</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Resources\Marvin.Resources.Interaction\Marvin.Resources.Interaction.csproj">
+      <Project>{583cbd84-dd9f-4834-a89c-1625a05ee15d}</Project>
+      <Name>Marvin.Resources.Interaction</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Resources\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
       <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
       <Name>Marvin.Resources.Management</Name>
