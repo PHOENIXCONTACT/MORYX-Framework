@@ -54,6 +54,9 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AccessHost\IResourceInteraction.cs" />
+    <Compile Include="AccessHost\ResourceInteraction.cs" />
+    <Compile Include="AccessHost\ResourceInteractionHost.cs" />
     <Compile Include="InteractionResource.cs" />
     <Compile Include="Models\ResourceModel.cs" />
     <Compile Include="Models\ResourceReferenceModel.cs" />

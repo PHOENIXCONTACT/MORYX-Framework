@@ -1,16 +1,15 @@
 ﻿using System.ServiceModel;
-using Marvin.Resources.Interaction;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Resources.Management
+namespace Marvin.Resources.Interaction
 {
     /// <summary>
     /// Interface to provide functions for interaction of resources. 
     /// </summary>
     [ServiceContract]
     [ServiceVersion(ServerVersion = "2.0.0", MinClientVersion = "2.0.0")]
-    internal interface IResourceInteraction
+    public interface IResourceInteraction
     {
         /// <summary>
         /// Full type tree of currently installed resources

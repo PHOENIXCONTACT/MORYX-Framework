@@ -1,16 +1,17 @@
 ﻿using System.ComponentModel;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Resources.Interaction;
+using Marvin.Container;
 using Marvin.Tools.Wcf;
 
-namespace Marvin.Resources.Management
+namespace Marvin.Resources.Interaction
 {
     /// <summary>
     /// Default interaction resource which hosts the default web service
     /// </summary>
     [Description("Resource to host the default web service")]
+    [DependencyRegistration(typeof(IResourceInteraction))]
     [ResourceRegistration(nameof(ResourceInteractionHost), typeof(IDefaultResource))]
-    internal sealed class ResourceInteractionHost : InteractionResource<IResourceInteraction>, IDefaultResource
+    public sealed class ResourceInteractionHost : InteractionResource<IResourceInteraction>, IDefaultResource
     {
         /// <summary>
         /// Constructor to set <see cref="HostConfig"/> defaults.

@@ -73,9 +73,6 @@
     </Compile>
     <Compile Include="Facades\ResourceExtension.cs" />
     <Compile Include="Facades\ResourceManagementFacade.cs" />
-    <Compile Include="Interaction\ResourceInteractionHost.cs" />
-    <Compile Include="Interaction\IResourceInteraction.cs" />
-    <Compile Include="Interaction\ResourceInteraction.cs" />
     <Compile Include="ModuleController\ModuleController.cs" />
     <Compile Include="ModuleController\ModuleConsole.cs" />
     <Compile Include="ModuleController\ModuleConfig.cs" />
@@ -86,7 +83,7 @@
     <Compile Include="Resources\IResourceLinker.cs" />
     <Compile Include="Resources\IResourceTypeController.cs" />
     <Compile Include="Resources\ResourceLinker.cs" />
-    <Compile Include="Interaction\ResourceSerialization.cs" />
+    <Compile Include="Resources\ResourceSerialization.cs" />
     <Compile Include="Resources\ResourceTypeNode.cs" />
     <Compile Include="Resources\ResourceWrapper.cs" />
     <Compile Include="Resources\ResourceProxyBuilder.cs" />
