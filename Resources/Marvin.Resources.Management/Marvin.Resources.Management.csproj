@@ -113,7 +113,6 @@
     <ProjectReference Include="..\Marvin.Resources.Interaction\Marvin.Resources.Interaction.csproj">
       <Project>{583cbd84-dd9f-4834-a89c-1625a05ee15d}</Project>
       <Name>Marvin.Resources.Interaction</Name>
-      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Marvin.Resources.Model\Marvin.Resources.Model.csproj">
       <Project>{e803d4a1-80da-40b7-b70c-42c4ed289f59}</Project>
