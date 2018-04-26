@@ -7,15 +7,14 @@ using System.ServiceModel;
 using System.Text.RegularExpressions;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
-using Marvin.Resources.Interaction;
 using Marvin.Serialization;
 
-namespace Marvin.Resources.Management
+namespace Marvin.Resources.Interaction
 {
     /// <seealso cref="IResourceInteraction"/>
     [Plugin(LifeCycle.Singleton, typeof(IResourceInteraction))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
-    internal class ResourceInteraction : IResourceInteraction
+    public class ResourceInteraction : IResourceInteraction
     {
         #region Dependency Injection
 
@@ -41,12 +40,13 @@ namespace Marvin.Resources.Management
         /// </summary>
         private readonly Dictionary<string, ResourceTypeModel> _typeCache = new Dictionary<string, ResourceTypeModel>();
 
-
+        /// <inheritdoc />
         public ResourceTypeModel[] GetTypeTree()
         {
             return TypeController.RootTypes.Select(ConvertType).ToArray();
         }
 
+        /// <inheritdoc />
         public ResourceModel[] GetResourceTree()
         {
             return Manager.GetRoots().Select(ConvertResource).ToArray();
@@ -78,7 +78,7 @@ namespace Marvin.Resources.Management
             };
         }
 
-        ///
+        /// <inheritdoc />
         public ResourceModel GetDetails(long id, int depth = 1)
         {
             //Additionally load workpieces 
@@ -87,18 +87,14 @@ namespace Marvin.Resources.Management
             return model;
         }
 
-        /// <summary>
-        /// Invoke a method on the resource with this id
-        /// </summary>
+        /// <inheritdoc />
         public Entry InvokeMethod(long id, MethodEntry methodModel)
         {
             var resource = Manager.Get(id);
             return EntryConvert.InvokeMethod(resource, methodModel, Serialization);
         }
 
-        /// <summary>
-        /// Construct a new resource instance using one of its constructors
-        /// </summary>
+        /// <inheritdoc />
         public ResourceModel Create(string resourceType, long parentResourceId, MethodEntry constructor = null)
         {
             var resource = Manager.Create(resourceType);
@@ -112,6 +108,7 @@ namespace Marvin.Resources.Management
             return model;
         }
 
+        /// <inheritdoc />
         public ResourceModel Save(ResourceModel model)
         {
             // Get or create resource
@@ -142,24 +139,28 @@ namespace Marvin.Resources.Management
             return model;
         }
 
+        /// <inheritdoc />
         public bool Start(long id)
         {
             var resource = Manager.Get(id);
             return Manager.Start(resource);
         }
 
+        /// <inheritdoc />
         public bool Reset(long id)
         {
             var resource = Manager.Get(id);
             return Manager.Start(resource) && Manager.Stop(resource);
         }
 
+        /// <inheritdoc />
         public bool Stop(long id)
         {
             var resource = Manager.Get(id);
             return Manager.Stop(resource);
         }
 
+        /// <inheritdoc />
         public bool Remove(long id)
         {
             var resource = Manager.Get(id);
