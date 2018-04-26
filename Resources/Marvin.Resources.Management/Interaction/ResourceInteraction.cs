@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.Text.RegularExpressions;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
+using Marvin.Resources.Interaction;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.Management
@@ -31,12 +32,7 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Type controller for type trees and construction
         /// </summary>
-        public IResourceTypeController TypeController { get; set; }
-
-        /// <summary>
-        /// Resource manager to access object instances
-        /// </summary>
-        public IRootResource Root { get; set; }
+        public IResourceTypeTree TypeController { get; set; }
 
         #endregion
 
@@ -53,20 +49,7 @@ namespace Marvin.Resources.Management
 
         public ResourceModel[] GetResourceTree()
         {
-            return new[] { ConvertResource((Resource)Root) };
-        }
-
-        private ResourceModel ConvertResource(Resource resource)
-        {
-            return new ResourceModel
-            {
-                Id = resource.Id,
-                Name = resource.Name,
-                LocalIdentifier = resource.LocalIdentifier,
-                GlobalIdentifier = resource.GlobalIdentifier,
-                Type = resource.GetType().Name,
-                References = ChildrenOnly(resource)
-            };
+            return Manager.GetRoots().Select(ConvertResource).ToArray();
         }
 
         private ResourceReferenceModel[] ChildrenOnly(Resource current)
@@ -80,6 +63,19 @@ namespace Marvin.Resources.Management
             model.Targets = current.Children.Select(ConvertResource).ToList();
 
             return new[] { model };
+        }
+
+        private ResourceModel ConvertResource(Resource resource)
+        {
+            return new ResourceModel
+            {
+                Id = resource.Id,
+                Name = resource.Name,
+                LocalIdentifier = resource.LocalIdentifier,
+                GlobalIdentifier = resource.GlobalIdentifier,
+                Type = resource.GetType().Name,
+                References = ChildrenOnly(resource)
+            };
         }
 
         ///
@@ -289,7 +285,7 @@ namespace Marvin.Resources.Management
 
             // Convert referenced resource objects and possible instance types 
             var referenceTargets = referenceModel.IsCollection ? (IEnumerable<IResource>)value : new[] { (IResource)value };
-            foreach (Resource resource in referenceTargets)
+            foreach (var resource in referenceTargets.Cast<Resource>())
             {
                 var target = GetDetails(resource, depth - 1);
                 referenceModel.Targets.Add(target);
@@ -319,19 +315,16 @@ namespace Marvin.Resources.Management
         }
 
         /// <summary>
-        /// Convert the supported types returned from <see cref="IResourceTypeController.SupportedTypes(ICollection{Type})"/>
+        /// Convert the supported types 
         /// </summary>
         private ResourceTypeModel[] SupportedTypes(ICollection<Type> typeConstraints)
         {
             return TypeController.SupportedTypes(typeConstraints).Select(ConvertType).ToArray();
         }
 
-
         /// <summary>
-        /// 
+        /// Updates the references of a resource
         /// </summary>
-        /// <param name="instance"></param>
-        /// <param name="model"></param>
         private void UpdateReferences(Resource instance, ResourceModel model)
         {
             var type = instance.GetType();
@@ -352,17 +345,17 @@ namespace Marvin.Resources.Management
         }
 
         /// <summary>
-        /// Convert <see cref="ResourceTypeNode"/> to <see cref="ResourceTypeModel"/> without converting a type twice
+        /// Convert <see cref="IResourceTypeNode"/> to <see cref="ResourceTypeModel"/> without converting a type twice
         /// </summary>
-        private ResourceTypeModel ConvertType(ResourceTypeNode node)
+        private ResourceTypeModel ConvertType(IResourceTypeNode node)
         {
             return ConvertType(node, null);
         }
 
         /// <summary>
-        /// Convert <see cref="ResourceTypeNode"/> to <see cref="ResourceTypeModel"/> without converting a type twice
+        /// Convert <see cref="IResourceTypeNode"/> to <see cref="ResourceTypeModel"/> without converting a type twice
         /// </summary>
-        private ResourceTypeModel ConvertType(ResourceTypeNode node, ResourceTypeModel baseType)
+        private ResourceTypeModel ConvertType(IResourceTypeNode node, ResourceTypeModel baseType)
         {
             var resType = node.ResourceType;
             var displayAtt = resType.GetCustomAttribute<DisplayNameAttribute>();
@@ -396,7 +389,12 @@ namespace Marvin.Resources.Management
         private IEnumerable<ResourceModel> MatchingInstances(ICollection<Type> typeConstraints)
         {
             var matches = new List<Resource>();
-            IncludeMatchingInstance((Resource)Root, typeConstraints, matches);
+
+            foreach (var root in Manager.GetRoots())
+            {
+                IncludeMatchingInstance(root, typeConstraints, matches);
+            }
+
             return matches.Select(r => new ResourceModel
             {
                 Id = r.Id,

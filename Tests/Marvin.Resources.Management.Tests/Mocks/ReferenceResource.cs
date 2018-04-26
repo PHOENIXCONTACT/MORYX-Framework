@@ -28,7 +28,7 @@ namespace Marvin.Resources.Management.Tests
     {
         private ISimpleResource _reference;
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        [ResourceReference(ResourceRelationType.CurrentExchangablePart, nameof(Reference))]
         public ISimpleResource Reference
         {
             get { return _reference; }
@@ -39,6 +39,9 @@ namespace Marvin.Resources.Management.Tests
                 SomeChanged?.Invoke(this, new[] { value });
             }
         }
+
+        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        public DerivedResource Reference2 { get; set; }
 
         [ResourceReference(ResourceRelationType.PossibleExchangablePart)]
         public IReferences<ISimpleResource> References { get; set; }

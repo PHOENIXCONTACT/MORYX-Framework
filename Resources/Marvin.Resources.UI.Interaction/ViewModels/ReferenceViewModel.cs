@@ -78,9 +78,9 @@ namespace Marvin.Resources.UI.Interaction
         }
     }
 
-    internal class SingleReferenceViewModel : ReferenceViewModel
+    public class SingleReferenceViewModel : ReferenceViewModel
     {
-        public SingleReferenceViewModel(ResourceReferenceModel model) : base(model)
+        internal SingleReferenceViewModel(ResourceReferenceModel model) : base(model)
         {
             if (model.Targets.Length == 1)
                 SelectedTarget = PossibleTargets.First(p => p.Name == model.Targets[0].Name);
@@ -105,9 +105,9 @@ namespace Marvin.Resources.UI.Interaction
         }
     }
 
-    internal class MultiReferenceViewModel : ReferenceViewModel
+    public class MultiReferenceViewModel : ReferenceViewModel
     {
-        public MultiReferenceViewModel(ResourceReferenceModel model) : base(model)
+        internal MultiReferenceViewModel(ResourceReferenceModel model) : base(model)
         {
             foreach (var target in Model.Targets)
             {

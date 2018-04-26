@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
-using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Resources.Model;
@@ -38,11 +37,6 @@ namespace Marvin.Resources.Management
         /// Error reporting in case a resource crashes
         /// </summary>
         public IModuleErrorReporting ErrorReporting { get; set; }
-
-        /// <summary>
-        /// Logger for tracing and errors
-        /// </summary>
-        public IModuleLogger Logger { get; set; }
 
         /// <summary>
         /// Config of this module
@@ -107,8 +101,7 @@ namespace Marvin.Resources.Management
 
         #region LifeCycle
 
-
-        /// 
+        /// <inheritdoc />
         public void Initialize()
         {
             _startup = ResourceStartupPhase.LoadResources;
@@ -119,7 +112,7 @@ namespace Marvin.Resources.Management
                 if (allResources.Count > 0)
                     LoadResources(allResources);
                 else
-                    CreateRoot(uow);
+                    CreateDefault(uow, Config.DefaultResource);
             }
 
             _startup = ResourceStartupPhase.Initializing;
@@ -153,36 +146,32 @@ namespace Marvin.Resources.Management
             var query = from template in allResources.AsParallel()
                         select template.Instantiate(TypeController, this);
             foreach (var resource in query)
-            {
                 AddResource(resource, false);
-            }
 
             // Link them to each other
             Parallel.ForEach(allResources, LinkReferences);
 
             // Register events after all links were set
             foreach (var resourceWrapper in _resources.Values)
-            {
-                RegisterEvents(resourceWrapper.Target, resourceWrapper.Target as IPublicResource);
-            }
+                RegisterEvents(resourceWrapper.Target);
         }
 
         /// <summary>
         /// Create root resource if the database is empty
         /// </summary>
-        private void CreateRoot(IUnitOfWork uow)
+        private void CreateDefault(IUnitOfWork uow, string type)
         {
             // Create dictionaries with initial capacity that should avoid the need of resizing
             _resources = new Dictionary<long, ResourceWrapper>(64);
             _publicResources = new SynchronizedCollection<IPublicResource>();
 
             // Create a root resource
-            var root = Create(Config.RootType);
-            ResourceEntityAccessor.SaveToEntity(uow, root);
+            var defaultResource = Create(type);
+            ResourceEntityAccessor.SaveToEntity(uow, defaultResource);
             uow.Save();
 
             // Add root to the list of resources
-            AddResource(root, true);
+            AddResource(defaultResource, true);
         }
 
         /// <summary>
@@ -199,7 +188,7 @@ namespace Marvin.Resources.Management
 
             // Register to events
             if (registerEvents)
-                RegisterEvents(instance, publicResource);
+                RegisterEvents(instance);
 
             switch (_startup)
             {
@@ -233,10 +222,11 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Register a resources events
         /// </summary>
-        private void RegisterEvents(Resource instance, IPublicResource asPublic)
+        private void RegisterEvents(Resource instance)
         {
             instance.Changed += OnResourceChanged;
 
+            var asPublic = instance as IPublicResource;
             if (asPublic != null)
                 asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
@@ -247,10 +237,11 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Register a resources events
         /// </summary>
-        private void UnregisterEvents(Resource instance, IPublicResource asPublic)
+        private void UnregisterEvents(Resource instance)
         {
             instance.Changed -= OnResourceChanged;
 
+            var asPublic = instance as IPublicResource;
             if (asPublic != null)
                 asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
@@ -317,7 +308,7 @@ namespace Marvin.Resources.Management
         {
             foreach (var resourceWrapper in _resources.Values)
             {
-                UnregisterEvents(resourceWrapper.Target, resourceWrapper.Target as IPublicResource);
+                UnregisterEvents(resourceWrapper.Target);
             }
         }
 
@@ -455,7 +446,7 @@ namespace Marvin.Resources.Management
             }
 
             // Unregister from all events to avoid memory leaks
-            UnregisterEvents(instance, instance as IPublicResource);
+            UnregisterEvents(instance);
 
             // Destroy the object
             TypeController.Destroy(instance);
@@ -502,7 +493,7 @@ namespace Marvin.Resources.Management
             if (match == null)
                 throw new ResourceNotFoundException();
 
-            return (TResource)TypeController.GetProxy(match as Resource);
+            return match;
         }
 
         public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IPublicResource
@@ -517,8 +508,12 @@ namespace Marvin.Resources.Management
 
         public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IPublicResource
         {
-            return _publicResources.OfType<TResource>().Where(r => r.Capabilities != NullCapabilities.Instance)
-                .Where(predicate).Select(r => TypeController.GetProxy(r as Resource)).Cast<TResource>();
+            return _publicResources.OfType<TResource>().Where(r => r.Capabilities != NullCapabilities.Instance).Where(predicate);
+        }
+
+        public IReadOnlyList<Resource> GetRoots()
+        {
+            return _resources.Values.Where(wapper => wapper.Target.Parent == null).Select(wrapper => wrapper.Target).ToArray();
         }
 
         private void RaiseResourceAdded(IPublicResource newResource)
@@ -532,9 +527,7 @@ namespace Marvin.Resources.Management
 
         private void RaiseCapabilitiesChanged(object originalSender, ICapabilities capabilities)
         {
-            var senderResource = (Resource)originalSender;
-            var senderProxy = TypeController.GetProxy(senderResource);
-            CapabilitiesChanged?.Invoke(senderProxy, capabilities);
+            CapabilitiesChanged?.Invoke(originalSender, capabilities);
         }
 
         #endregion

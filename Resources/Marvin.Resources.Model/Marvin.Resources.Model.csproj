@@ -53,6 +53,10 @@
       <HintPath>..\..\packages\Marvin.Model.3.0.0-dev000964\lib\net461\Marvin.Model.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.964, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Model.InMemory.3.0.0-dev000964\lib\net461\Marvin.Model.InMemory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Marvin.Model.Npgsql, Version=3.0.0.964, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Marvin.Model.Npgsql.3.0.0-dev000964\lib\net461\Marvin.Model.Npgsql.dll</HintPath>
       <Private>True</Private>
@@ -83,6 +87,7 @@
     </Compile>
     <Compile Include="API\IResourceEntityRepository.cs" />
     <Compile Include="API\IResourceRelationRepository.cs" />
+    <Compile Include="DbContext\InMemoryUnitOfWorkFactory.cs" />
     <Compile Include="DbContext\ResourcesContext.cs" />
     <Compile Include="DbContext\ResourcesUnitOfWorkFactory.cs" />
     <Compile Include="Entities\ResourceEntity.cs" />

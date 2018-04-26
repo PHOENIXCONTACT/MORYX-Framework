@@ -39,7 +39,8 @@ namespace Marvin.Resources.UI.Interaction
             get { return _selectedResource; }
             set
             {
-                if (Equals(value, _selectedResource)) return;
+                if (Equals(value, _selectedResource))
+                    return;
                 _selectedResource = value;
                 NotifyOfPropertyChange();
                 RemoveResourceCmd.RaiseCanExecuteChanged();
@@ -137,7 +138,7 @@ namespace Marvin.Resources.UI.Interaction
         /// </summary>
         private bool CanAddResource(object parameters)
         {
-            return IsDetailsInEditMode == false && SelectedResource != null;
+            return IsDetailsInEditMode == false;
         }
 
         /// <summary>
@@ -146,7 +147,10 @@ namespace Marvin.Resources.UI.Interaction
         private void AddResource(object parameters)
         {
             var typeDialog = TypeSelectorFactory.CreateTypeSelector();
-            typeDialog.TypeTree = SelectedResource.PossibleChildren;
+
+            typeDialog.TypeTree = SelectedResource == null 
+                ? ResourceController.TypeTree.Select(type => new ResourceTypeViewModel(type)) 
+                : SelectedResource.PossibleChildren;
 
             DialogManager.ShowDialog(typeDialog, delegate
             {
@@ -166,7 +170,11 @@ namespace Marvin.Resources.UI.Interaction
         /// </summary>
         private void CreateResource(string resourceTypeName, MethodEntry constructorModel)
         {
-            var parentId = _selectedResource.Id;
+            long parentId = 0;
+
+            if (_selectedResource != null)
+                parentId = _selectedResource.Id;
+
             var detailsVm = DetailsFactory.Create(resourceTypeName);
             
             Task.Run(async delegate

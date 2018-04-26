@@ -11,30 +11,22 @@ namespace Marvin.Resources.Management
     /// </summary>
     internal class ResourceTypeNode : IResourceTypeNode
     {
-        /// <summary>
-        /// Name of the resource type
-        /// </summary>
+        /// <inheritdoc />
         public string Name => ResourceType.Name;
-
-        /// <summary>
-        /// Type definition wrapped by this object
-        /// </summary>
+        
+        /// <inheritdoc />
         public Type ResourceType { get; set; }
+
+        /// <inheritdoc />
+        public bool Creatable => !ResourceType.IsAbstract;
+
+        /// <inheritdoc />
+        public MethodInfo[] Constructors { get; set; }
 
         /// <summary>
         /// Flag if this type is registered in the <see cref="IContainer"/> instance
         /// </summary>
         public bool IsRegistered { get; set; }
-
-        /// <summary>
-        /// Flag if this resource type is creatable
-        /// </summary>
-        public bool Creatable => !ResourceType.IsAbstract;
-
-        /// <summary>
-        /// Methods on resources used to construct new instances
-        /// </summary>
-        public MethodInfo[] Constructors { get; set; }
 
         /// <summary>
         /// Base type of this resource for the full type tree
@@ -46,14 +38,13 @@ namespace Marvin.Resources.Management
         /// </summary>
         public ResourceTypeNode[] DerivedTypes { get; set; }
 
-
         /// <inheritdoc />
         IResourceTypeNode IResourceTypeNode.BaseType => BaseType;
 
         /// <inheritdoc />
         IEnumerable<IResourceTypeNode> IResourceTypeNode.DerivedTypes => DerivedTypes;
 
-
+        /// <inheritdoc />
         public override string ToString() => $"{ResourceType.Name}(Registered={IsRegistered})";
     }
 }

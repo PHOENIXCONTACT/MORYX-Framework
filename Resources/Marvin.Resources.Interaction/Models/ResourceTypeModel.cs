@@ -1,8 +1,7 @@
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
 using Marvin.Serialization;
 
-namespace Marvin.Resources.Management
+namespace Marvin.Resources.Interaction
 {
     /// <summary>
     /// Type item for the tree

@@ -48,6 +48,8 @@ namespace Marvin.Resources.UI.Interaction
             }
         }
 
+        public Entry ResultEntry { get; set; }
+
         public MethodInvocationViewModel(IResourceMethodViewModel methodViewModel)
         {
             // TODO: I don't really like this
@@ -68,14 +70,14 @@ namespace Marvin.Resources.UI.Interaction
 
         private async Task Invoke(object obj)
         {
-            var result = await ResourceController.InvokeMethod(_methodViewModel.ResourceId, _methodViewModel.Model);
+            ResultEntry = await ResourceController.InvokeMethod(_methodViewModel.ResourceId, _methodViewModel.Model);
 
-            if (result == null)
+            if (ResultEntry == null)
                 InvocationResult = null;
-            else if (result.Value.Type >= EntryValueType.Class)
-                InvocationResult = new EntryViewModel(result);
+            else if (ResultEntry.Value.Type >= EntryValueType.Class)
+                InvocationResult = new EntryViewModel(ResultEntry);
             else
-                InvocationResult = new EntryViewModel(new List<Entry> {result});
+                InvocationResult = new EntryViewModel(new List<Entry> { ResultEntry });
         }
 
         private bool CanInvoke(object obj)

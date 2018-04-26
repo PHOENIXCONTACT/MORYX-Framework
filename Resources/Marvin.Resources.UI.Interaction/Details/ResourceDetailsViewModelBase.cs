@@ -124,19 +124,27 @@ namespace Marvin.Resources.UI.Interaction
         }
 
         /// <summary>
-        /// Invoke this method on the resource
+        /// Open the invocation dialog to execute a resource method
         /// </summary>
-        protected internal Task<Entry> InvokeResourceMethod(ResourceMethodViewModel method)
+        protected internal Task<Entry> OpenMethodInvocationDialog(ResourceMethodViewModel method)
         {
             var taskSource = new TaskCompletionSource<Entry>();
             var dialog = DialogFactory.CreateMethodInvocation(method);
             DialogManager.ShowDialog(dialog, delegate (IMethodInvocationViewModel completedDialog)
             {
                 DialogFactory.Destroy(completedDialog);
-                taskSource.SetResult(completedDialog.InvocationResult?.Entry);
+                taskSource.SetResult(completedDialog.ResultEntry);
             });
 
             return taskSource.Task;
+        }
+
+        /// <summary>
+        /// Invoke a resource method directly
+        /// </summary>
+        protected async Task<Entry> InvokeResourceMethod(ResourceMethodViewModel method)
+        {
+            return await ResourceController.InvokeMethod(CurrentResourceId, method.Model);
         }
         
         ///

@@ -69,7 +69,7 @@ namespace Marvin.Resources.UI.Interaction
 
         private Task InvokeMethod(object parameter)
         {
-            return _parent.InvokeResourceMethod(this);
+            return _parent.OpenMethodInvocationDialog(this);
         }
     }
 }

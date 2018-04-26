@@ -94,8 +94,8 @@ namespace Marvin.Resources.UI.Interaction
         private async Task LoadResourceTree()
         {
             ResourceTree = await WcfClient.GetResourceTreeAsync();
-            RaiseResourceTreeLoaded();
             TypeTree = await WcfClient.GetTypeTreeAsync();
+            RaiseResourceTreeLoaded();
         }
 
         public void UpdateTree()
