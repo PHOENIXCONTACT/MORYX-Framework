@@ -33,13 +33,12 @@ namespace Marvin.Resources.Interaction
         /// <summary>
         /// Registered service instances
         /// </summary>
-        protected List<TService> Clients { get; } = new List<TService>();
+        protected ICollection<TService> Clients { get; } = new SynchronizedCollection<TService>();
 
         /// <inheritdoc />
         public override void Initialize()
         {
             base.Initialize();
-
 
             Host = HostFactory.CreateHost<TService>(HostConfig);
         }
