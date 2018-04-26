@@ -9,7 +9,7 @@
              x:Name="Control">
     <UserControl.Resources>
         <DataTemplate x:Key="SingleReferenceTemplate" DataType="interaction:SingleReferenceViewModel">
-            <LabeledControlHost LabelA="{Binding Name}" LabelWidth="120">
+            <LabeledControlHost LabelA="{Binding Name}" LabelMinWidth="120">
                 <EddieComboBox DockPanel.Dock="Right" Width="200" 
                                IsEnabled="{Binding IsEditMode, ElementName=Control}"
                                ItemsSource="{Binding PossibleTargets}" SelectedItem="{Binding SelectedTarget, Mode=TwoWay}">
