@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Configuration;
+using Marvin.Resources.Interaction;
 using Marvin.Runtime.Configuration;
 
 namespace Marvin.Resources.Management
