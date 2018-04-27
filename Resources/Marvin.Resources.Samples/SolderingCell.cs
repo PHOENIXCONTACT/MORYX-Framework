@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Marvin.AbstractionLayer;
+﻿using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Resources.Management;
 
 namespace Marvin.Resources.Samples
 {

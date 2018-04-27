@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
@@ -18,6 +16,18 @@ namespace Marvin.Resources.Management
     {
         [UseChild("ResourceLinker")]
         public IModuleLogger Logger { get; set; }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Resource> SaveRoots(IUnitOfWork uow, IReadOnlyList<Resource> instances)
+        {
+            var context = new ReferenceSaverContext(uow);
+            foreach (var instance in instances)
+            {
+                var entity = GetOrCreateEntity(context, instance);
+                SaveReferences(context, instance, entity);
+            }
+            return context.EntityCache.Keys.ToArray();
+        }
 
         /// <inheritdoc />
         public void SetReferenceCollections(Resource instance)
@@ -385,10 +395,16 @@ namespace Marvin.Resources.Management
             {
                 UnitOfWork = unitOfWork;
 
-                EntityCache = new Dictionary<Resource, ResourceEntity>()
+                EntityCache = new Dictionary<Resource, ResourceEntity>
                 {
                     [initialInstance] = entity
                 };
+            }
+
+            public ReferenceSaverContext(IUnitOfWork uow)
+            {
+                UnitOfWork = uow;
+                EntityCache = new Dictionary<Resource, ResourceEntity>();
             }
 
             /// <summary>

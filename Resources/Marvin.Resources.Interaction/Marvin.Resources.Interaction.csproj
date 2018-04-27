@@ -47,6 +47,7 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessHost\ResourceInteractionInitializer.cs" />
     <Compile Include="AccessHost\IResourceInteraction.cs" />
     <Compile Include="AccessHost\ResourceInteraction.cs" />
     <Compile Include="AccessHost\ResourceInteractionHost.cs" />

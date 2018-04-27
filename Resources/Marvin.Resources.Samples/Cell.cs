@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Drivers.Marking;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Resources.Management;
 using Marvin.AbstractionLayer.Hardware;
 using Marvin.Serialization;
 
@@ -15,11 +8,11 @@ namespace Marvin.Resources.Samples
 {
     public abstract class Cell : PublicResource
     {
-
         #region Config
 
         [DataMember]
         public int LastCall { get; set; }
+
         #endregion
 
         [EditorVisible, DisplayName("Editor Value")]
