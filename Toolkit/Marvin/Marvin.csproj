@@ -206,6 +206,7 @@
     <Compile Include="Bindings\IBindingResolverChain.cs" />
     <Compile Include="Bindings\IBindingResolverFactory.cs" />
     <Compile Include="Bindings\ITextBindingResolver.cs" />
+    <Compile Include="Modules\IPriorizedInitializable.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\ByteSerializer.cs" />
