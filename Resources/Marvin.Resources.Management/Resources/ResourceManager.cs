@@ -266,7 +266,8 @@ namespace Marvin.Resources.Management
             ResourceLinker.LinkReferences(entityAccessor.Instance, entityAccessor.Relations, _resources);
         }
 
-        ///
+
+        /// <inheritdoc />
         public void Start()
         {
             _startup = ResourceStartupPhase.Starting;
@@ -286,26 +287,35 @@ namespace Marvin.Resources.Management
             _startup = ResourceStartupPhase.Started;
         }
 
+        /// <inheritdoc />
         public void Stop()
         {
             _startup = ResourceStartupPhase.Stopping;
-            Parallel.ForEach(_resources.Values, resourceWrapper =>
+
+            if (_resources != null)
             {
-                try
+                Parallel.ForEach(_resources.Values, resourceWrapper =>
                 {
-                    resourceWrapper.Stop();
-                }
-                catch (Exception e)
-                {
-                    ErrorReporting.ReportWarning(this, e);
-                }
-            });
+                    try
+                    {
+                        resourceWrapper.Stop();
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorReporting.ReportWarning(this, e);
+                    }
+                });
+            }
+
             _startup = ResourceStartupPhase.Stopped;
         }
 
-        ///
+        /// <inheritdoc />
         public void Dispose()
         {
+            if (_resources == null)
+                return;
+
             foreach (var resourceWrapper in _resources.Values)
             {
                 UnregisterEvents(resourceWrapper.Target);
