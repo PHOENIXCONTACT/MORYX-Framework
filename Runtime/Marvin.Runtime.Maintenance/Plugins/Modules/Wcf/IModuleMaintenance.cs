@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using Marvin.Runtime.Modules;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Maintenance.Plugins.Modules
@@ -31,6 +32,26 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ServerModuleModel[] GetAll();
+
+        /// <summary>
+        /// Get health state
+        /// </summary>
+        /// <param name="moduleName">Name of the module.</param>
+        [OperationContract]
+        [WebInvoke(UriTemplate = "modules/{moduleName}/healthstate", Method = WebRequestMethods.Http.Get,
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
+        ServerModuleState HealthState(string moduleName);
+
+        /// <summary>
+        /// Get health state
+        /// </summary>
+        /// <param name="moduleName">Name of the module.</param>
+        [OperationContract]
+        [WebInvoke(UriTemplate = "modules/{moduleName}/notifications", Method = WebRequestMethods.Http.Get,
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
+        NotificationModel[] Notifications(string moduleName);
 
         /// <summary>
         /// Try to start the module with the moduleName.
