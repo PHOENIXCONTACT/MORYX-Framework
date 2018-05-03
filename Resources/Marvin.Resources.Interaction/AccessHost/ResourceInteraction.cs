@@ -112,15 +112,7 @@ namespace Marvin.Resources.Interaction
         public ResourceModel Save(ResourceModel model)
         {
             // Get or create resource
-            var resource = model.Id == 0
-                ? Manager.Create(model.Type)
-                : Manager.Get(model.Id);
-
-            resource.Name = model.Name;
-            resource.LocalIdentifier = model.LocalIdentifier;
-            resource.GlobalIdentifier = model.GlobalIdentifier;
-
-            EntryConvert.UpdateInstance(resource.Descriptor, model.Properties, Serialization);
+            var resource = FromModel(model);
 
             // Add new resource to its parent
             if (model.ParentId > 0 && resource.Parent == null)
@@ -131,15 +123,13 @@ namespace Marvin.Resources.Interaction
                 parent.Children.Add(resource);
             }
 
-            // Set all other references
-            UpdateReferences(resource, model);
-
             Manager.Save(resource);
 
             return model;
         }
 
         /// <inheritdoc />
+        /// 
         public bool Start(long id)
         {
             var resource = Manager.Get(id);
@@ -277,16 +267,22 @@ namespace Marvin.Resources.Interaction
                 targetType = EntryConvert.ElementType(targetType);
             var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
             referenceModel.SupportedTypes = SupportedTypes(typeConstraints);
+
+            // Only load possible targets if we are supposed to
+            if (depth <= 0)
+                return referenceModel;
+
+            // Load possible targets from the full set of resources
             referenceModel.PossibleTargets = MatchingInstances(typeConstraints).ToList();
 
-            // Exclude other properties if this is the last layer
+            // We can not load targets if we do not have any
             var value = property.GetValue(current);
-            if (value == null || depth <= 0)
+            if (value == null)
                 return referenceModel;
 
             // Convert referenced resource objects and possible instance types 
             var referenceTargets = referenceModel.IsCollection ? (IEnumerable<IResource>)value : new[] { (IResource)value };
-            foreach (var resource in referenceTargets.Cast<Resource>())
+            foreach (Resource resource in referenceTargets)
             {
                 var target = GetDetails(resource, depth - 1);
                 referenceModel.Targets.Add(target);
@@ -334,15 +330,74 @@ namespace Marvin.Resources.Interaction
                 var property = type.GetProperty(reference.Name);
                 if (reference.IsCollection)
                 {
-
+                    var collection = ((IReferenceCollection)property.GetValue(instance)).UnderlyingCollection;
+                    // Add new items and update existing ones
+                    foreach (var targetModel in reference.Targets)
+                    {
+                        Resource target;
+                        if (targetModel.Id == 0 || collection.All(r => r.Id != targetModel.Id))
+                        {
+                            // New reference added to the collection
+                            target = FromModel(targetModel);
+                            collection.Add(target);
+                        }
+                        else
+                        {
+                            // Element already exists in the collection
+                            target = (Resource)collection.First(r => r.Id == targetModel.Id);
+                            FromModel(targetModel, target);
+                        }
+                    }
+                    // Remove deleted items
+                    var targetIds = reference.Targets.Select(t => t.Id).Distinct().ToArray();
+                    var deletedItems = collection.Where(r => !targetIds.Contains(r.Id)).ToArray();
+                    foreach (var deletedItem in deletedItems)
+                        collection.Remove(deletedItem);
                 }
                 else
                 {
                     var targetModel = reference.Targets.FirstOrDefault();
-                    var target = targetModel != null ? Manager.Get(targetModel.Id) : null;
-                    property.SetValue(instance, target);
+                    var value = (Resource)property.GetValue(instance);
+
+                    Resource target;
+                    if (targetModel == null)
+                        target = null;
+                    else if (targetModel.Id == value?.Id)
+                        target = FromModel(targetModel, value);
+                    else
+                        target = FromModel(targetModel);
+
+                    if (target != value)
+                        property.SetValue(instance, target);
                 }
             }
+        }
+
+        private Resource FromModel(ResourceModel model, Resource resource = null)
+        {
+            // Only fetch resource object if it was not given
+            if (resource == null)
+            {
+                // Get or create resource
+                resource = model.Id == 0
+                    ? Manager.Create(model.Type)
+                    : Manager.Get(model.Id);
+            }
+
+            // Copy standard properties
+            resource.Name = model.Name;
+            resource.LocalIdentifier = model.LocalIdentifier;
+            resource.GlobalIdentifier = model.GlobalIdentifier;
+
+            // Copy extended properties
+            if (model.Properties != null)
+                EntryConvert.UpdateInstance(resource.Descriptor, model.Properties, Serialization);
+
+            // Set all other references
+            if (model.References != null)
+                UpdateReferences(resource, model);
+
+            return resource;
         }
 
         /// <summary>

@@ -13,12 +13,12 @@ namespace Marvin.Resources.UI.Interaction
         /// <summary>
         /// Full type tree of the currently installed resources
         /// </summary>
-        ResourceTypeModel[] TypeTree { get; }
+        List<ResourceTypeModel> TypeTree { get; }
 
         /// <summary>
         /// Gets the current resource tree.
         /// </summary>
-        ResourceModel[] ResourceTree { get; }
+        List<ResourceModel> ResourceTree { get; }
 
         /// <summary>
         /// Creates a new resource with the given plugin name
@@ -38,7 +38,7 @@ namespace Marvin.Resources.UI.Interaction
         /// <summary>
         /// Gets the details of a resource with the resource id
         /// </summary>
-        Task<ResourceModel> GetDetails(long resourceId, int depth = 1);
+        Task<ResourceModel> GetDetails(long resourceId, int depth);
 
         /// <summary>
         /// Invoke method on a resource object
@@ -68,14 +68,14 @@ namespace Marvin.Resources.UI.Interaction
         #endregion
 
         ///
-        public ResourceTypeModel[] TypeTree { get; private set; }
+        public List<ResourceTypeModel> TypeTree { get; private set; }
 
         ///
-        public ResourceModel[] ResourceTree { get; private set; }
+        public List<ResourceModel> ResourceTree { get; private set; }
 
         public ResourceController()
         {
-            ResourceTree = new ResourceModel[0];
+            ResourceTree = new List<ResourceModel>();
         }
 
         protected override void ClientCallback(ConnectionState state, ResourceInteractionClient client)
@@ -125,7 +125,7 @@ namespace Marvin.Resources.UI.Interaction
             return WcfClient.RemoveAsync(resourceId);
         }
 
-        public Task<ResourceModel> GetDetails(long resourceId, int depth = 1)
+        public Task<ResourceModel> GetDetails(long resourceId, int depth)
         {
             return WcfClient.GetDetailsAsync(resourceId, depth);
         }

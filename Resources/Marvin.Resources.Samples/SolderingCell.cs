@@ -17,6 +17,9 @@ namespace Marvin.Resources.Samples
 
         [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
         public HeatingStation Heating { get; set; }
+
+        [ResourceReference(ResourceRelationType.PossibleExchangablePart)]
+        public IReferences<IStation> EnabledStations { get; set; }
     }
 
     public interface IStation : IResource

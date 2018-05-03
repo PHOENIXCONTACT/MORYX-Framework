@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Marvin.AbstractionLayer.UI;
 using Marvin.Container;
@@ -40,7 +41,7 @@ namespace Marvin.Resources.UI.Interaction
             return Registrations[DetailsConstants.DefaultType];
         }
 
-        private static ResourceTypeModel FindType(string searchedType, ResourceTypeModel[] typeBranch)
+        private static ResourceTypeModel FindType(string searchedType, List<ResourceTypeModel> typeBranch)
         {
             foreach (var typeModel in typeBranch)
             {

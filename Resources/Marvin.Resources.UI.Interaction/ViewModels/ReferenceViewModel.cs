@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
+using Marvin.ClientFramework.Base;
 using Marvin.Resources.UI.Interaction.ResourceInteraction;
 
 namespace Marvin.Resources.UI.Interaction
@@ -62,27 +64,16 @@ namespace Marvin.Resources.UI.Interaction
                 NotifyOfPropertyChange();
             }
         }
-
-        private ResourceViewModel _selectedPossibleTarget;
-        /// <summary>
-        /// Currently selected Driver from the PossibleDrivers list
-        /// </summary>
-        public ResourceViewModel SelectedPossibleTarget
-        {
-            get { return _selectedPossibleTarget; }
-            set
-            {
-                _selectedPossibleTarget = value;
-                NotifyOfPropertyChange();
-            }
-        }
     }
 
+    /// <summary>
+    /// View model for resource references that only reference a single target
+    /// </summary>
     public class SingleReferenceViewModel : ReferenceViewModel
     {
         internal SingleReferenceViewModel(ResourceReferenceModel model) : base(model)
         {
-            if (model.Targets.Length == 1)
+            if (model.Targets.Count == 1)
                 SelectedTarget = PossibleTargets.First(p => p.Name == model.Targets[0].Name);
         }
 
@@ -96,8 +87,10 @@ namespace Marvin.Resources.UI.Interaction
             set
             {
                 _selectedTarget = value;
-                if (Model.Targets.Length == 0)
-                    Model.Targets = new[] { value.Model };
+                if (value == null)
+                    Model.Targets.Clear();
+                else if (Model.Targets.Count == 0)
+                    Model.Targets.Add(value.Model);
                 else
                     Model.Targets[0] = value.Model;
                 NotifyOfPropertyChange();
@@ -105,14 +98,46 @@ namespace Marvin.Resources.UI.Interaction
         }
     }
 
+    /// <summary>
+    /// View model for resource reference that have multiple targets
+    /// </summary>
     public class MultiReferenceViewModel : ReferenceViewModel
     {
         internal MultiReferenceViewModel(ResourceReferenceModel model) : base(model)
         {
+            AddTarget = new DelegateCommand(AddToTargets, CanAddToTargets);
+            RemoveTarget = new DelegateCommand(RemoveFromTargets, CanRemoveFromTargets);
+
             foreach (var target in Model.Targets)
             {
                 var drvVm = new ResourceViewModel(target);
                 SelectedTargets.Add(drvVm);
+            }
+        }
+
+        /// <summary>
+        /// Delegate to add targets to the reference
+        /// </summary>
+        public DelegateCommand AddTarget { get; set; }
+
+        /// <summary>
+        /// Delegate to remove targets from the reference
+        /// </summary>
+        public DelegateCommand RemoveTarget { get; set; }
+
+
+        private ResourceViewModel _selectedPossibleTarget;
+        /// <summary>
+        /// Currently selected Driver from the PossibleDrivers list
+        /// </summary>
+        public ResourceViewModel SelectedPossibleTarget
+        {
+            get { return _selectedPossibleTarget; }
+            set
+            {
+                _selectedPossibleTarget = value;
+                AddTarget.RaiseCanExecuteChanged();
+                NotifyOfPropertyChange();
             }
         }
 
@@ -128,6 +153,41 @@ namespace Marvin.Resources.UI.Interaction
                 _selectedTargets = value;
                 NotifyOfPropertyChange();
             }
+        }
+
+        private ResourceViewModel _selectedTarget;
+        /// <summary>
+        /// Currently selected Driver from the PossibleDrivers list
+        /// </summary>
+        public ResourceViewModel SelectedTarget
+        {
+            get { return _selectedTarget; }
+            set
+            {
+                _selectedTarget = value;
+                RemoveTarget.RaiseCanExecuteChanged();
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private bool CanAddToTargets(object unused) => SelectedPossibleTarget != null;
+
+        private void AddToTargets(object unused)
+        {
+            // Update underlying model
+            Model.Targets.Add(SelectedPossibleTarget.Model);
+            // Update UI
+            SelectedTargets.Add(SelectedPossibleTarget);
+        }
+
+        private bool CanRemoveFromTargets(object unused) => SelectedTarget != null;
+
+        private void RemoveFromTargets(object unused)
+        {
+            // Remove from Model
+            Model.Targets.Remove(SelectedTarget.Model);
+            // Update UI
+            SelectedTargets.Remove(SelectedTarget);
         }
     }
 }
