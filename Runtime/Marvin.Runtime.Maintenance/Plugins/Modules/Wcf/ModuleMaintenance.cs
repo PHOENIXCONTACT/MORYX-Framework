@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
@@ -60,6 +61,32 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
                 models.Add(model);
             }
             return models.ToArray();
+        }
+
+        public ServerModuleState HealthState(string moduleName)
+        {
+            var module = ModuleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
+            if (module != null)
+            {
+                return module.State;
+            }
+
+            var ctx = WebOperationContext.Current;
+            ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+            return ServerModuleState.Failure;
+        }
+
+        public NotificationModel[] Notifications(string moduleName)
+        {
+            var module = ModuleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
+            if (module != null)
+            {
+                return module.Notifications.Select(n => new NotificationModel(n)).ToArray();
+            }
+
+            var ctx = WebOperationContext.Current;
+            ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+            return new NotificationModel[0];
         }
 
         public DependencyEvaluation GetDependencyEvaluation()
