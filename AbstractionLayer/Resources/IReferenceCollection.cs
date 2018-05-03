@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Marvin.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Management
+namespace Marvin.AbstractionLayer.Resources
 {
     /// <summary>
-    /// Interface for <see cref="ReferenceCollection{TResource}"/>
+    /// Addition interface for <see cref="IReferences{TResource}"/>
     /// </summary>
-    internal interface IReferenceCollection
+    public interface IReferenceCollection
     {
         /// <summary>
         /// The wrapped collection
@@ -21,8 +20,14 @@ namespace Marvin.Resources.Management
         event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
     }
 
-    internal class ReferenceCollectionChangedEventArgs : EventArgs
+    /// <summary>
+    /// Event args for the <see cref="IReferenceCollection.CollectionChanged"/> event
+    /// </summary>
+    public class ReferenceCollectionChangedEventArgs : EventArgs
     {
+        /// <summary>
+        /// Create a new instance of the event args
+        /// </summary>
         public ReferenceCollectionChangedEventArgs(Resource parent, PropertyInfo collectionProperty)
         {
             Parent = parent;
