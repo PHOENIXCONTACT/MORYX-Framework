@@ -199,23 +199,47 @@ namespace Marvin.Resources.Management
                 return new ResourceRelationAccessor[0];
 
             var relationRepo = uow.GetRepository<IResourceRelationRepository>();
-            var relations = (from target in relationRepo.Linq
-                             where target.Target.Deleted == null && target.SourceId == entity.Id
-                             // Attention: This is Copy&Paste because of LinQ limitations
-                             select new ResourceRelationAccessor
-                             {
-                                 Entity = target,
-                                 Role = ResourceReferenceRole.Target,
-                             }).Concat(
-                             from source in relationRepo.Linq
-                             where source.Source.Deleted == null && source.TargetId == entity.Id
-                             // Attention: This is Copy&Paste because of LinQ limitations
-                             select new ResourceRelationAccessor
-                             {
-                                 Entity = source,
-                                 Role = ResourceReferenceRole.Source,
-                             }).ToList();
-            return relations;
+            var result = (from target in relationRepo.Linq
+                          where target.Target.Deleted == null && target.SourceId == entity.Id
+                          // Attention: This is Copy&Paste because of LinQ limitations
+                          select new ResourceRelationAccessor
+                          {
+                              Entity = target,
+                              Role = ResourceReferenceRole.Target,
+                          }).Concat(
+                          from source in relationRepo.Linq
+                          where source.Source.Deleted == null && source.TargetId == entity.Id
+                          // Attention: This is Copy&Paste because of LinQ limitations
+                          select new ResourceRelationAccessor
+                          {
+                              Entity = source,
+                              Role = ResourceReferenceRole.Source,
+                          }).ToList();
+            return result;
+        }
+
+        /// <summary>
+        /// Load all relation templates from a queryable collection of <see cref="ResourceRelation"/>
+        /// </summary>
+        public static ICollection<ResourceRelationAccessor> FromQueryable(IQueryable<ResourceRelation> relations, ResourceEntity instance)
+        {
+            var result = (from target in relations
+                          where target.Target.Deleted == null && target.Source == instance
+                          // Attention: This is Copy&Paste because of LinQ limitations
+                          select new ResourceRelationAccessor
+                          {
+                              Entity = target,
+                              Role = ResourceReferenceRole.Target,
+                          }).Concat(
+                          from source in relations
+                          where source.Source.Deleted == null && source.Target == instance
+                          // Attention: This is Copy&Paste because of LinQ limitations
+                          select new ResourceRelationAccessor
+                          {
+                              Entity = source,
+                              Role = ResourceReferenceRole.Source,
+                          }).ToList();
+            return result;
         }
     }
 }

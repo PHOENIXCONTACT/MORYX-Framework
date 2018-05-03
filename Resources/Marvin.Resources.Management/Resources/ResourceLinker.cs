@@ -151,7 +151,10 @@ namespace Marvin.Resources.Management
 
         private static void SaveReferences(ReferenceSaverContext context, Resource instance, ResourceEntity entity)
         {
-            var relations = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity);
+            var relations = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity)
+                .Union(ResourceRelationAccessor.FromQueryable(context.CreatedRelations.AsQueryable(), entity))
+                .ToList();
+
             foreach (var referenceProperty in ReferenceProperties(instance.GetType(), false))
             {
                 var matches = MatchingRelations(relations, referenceProperty);
@@ -199,7 +202,7 @@ namespace Marvin.Resources.Management
                 throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}:{resource.GetType().Name} must be a Resource");
 
             // Check if there is a relation that represents this reference
-            if(referencedResource != null && matches.Any(m => m.ReferenceId == referencedResource.Id))
+            if (referencedResource != null && matches.Any(m => m.ReferenceId == referencedResource.Id))
                 return;
 
             var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
@@ -217,7 +220,7 @@ namespace Marvin.Resources.Management
             if (relEntity == null && referencedResource != null)
             {
                 // Create a new relation
-                relEntity = CreateRelationForProperty(relationRepo, referenceAtt);
+                relEntity = CreateRelationForProperty(context, relationRepo, referenceAtt);
             }
             else if (relEntity != null && referencedResource == null)
             {
@@ -235,6 +238,10 @@ namespace Marvin.Resources.Management
             // Set source and target of the relation depending on the reference roles
             var referencedEntity = GetOrCreateEntity(context, referencedResource);
             UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
+
+            // Recursively dive into newly created entities
+            if (referencedResource.Id == 0)
+                SaveReferences(context, referencedResource, referencedEntity);
         }
 
         /// <summary>
@@ -259,12 +266,16 @@ namespace Marvin.Resources.Management
             relationRepo.RemoveRange(deleted);
 
             // Now create new relations
-            var created = referencedResources.Where(r => relationTemplates.All(m => m.ReferenceId != r.Id));
+            var created = referencedResources.Where(r => relationTemplates.All(m => m.ReferenceId != r.Id)).ToList();
             foreach (var createdReference in created)
             {
+                var relEntity = CreateRelationForProperty(context, relationRepo, referenceAtt);
                 var referencedEntity = GetOrCreateEntity(context, createdReference);
-                var relEntity = CreateRelationForProperty(relationRepo, referenceAtt);
                 UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
+
+                // Recursively dive into newly created entities
+                if (createdReference.Id == 0)
+                    SaveReferences(context, createdReference, referencedEntity);
             }
         }
 
@@ -278,29 +289,23 @@ namespace Marvin.Resources.Management
                 return context.EntityCache[instance];
 
             // Get or create an entity for the instance
-            ResourceEntity referencedEntity;
-            if (instance.Id > 0)
-            {
-                context.EntityCache[instance] = referencedEntity = context.UnitOfWork.GetEntity<ResourceEntity>(instance);
-            }
-            else
-            {
-                context.EntityCache[instance] = referencedEntity = ResourceEntityAccessor.SaveToEntity(context.UnitOfWork, instance);
-                SaveReferences(context, instance, referencedEntity);
-            }
-            // Add to context cache and return
-            return referencedEntity;
+            return context.EntityCache[instance] = instance.Id > 0
+                ? context.UnitOfWork.GetEntity<ResourceEntity>(instance)
+                : ResourceEntityAccessor.SaveToEntity(context.UnitOfWork, instance);
         }
 
         /// <summary>
         /// Create a <see cref="ResourceRelation"/> entity for a property match
         /// </summary>
-        private static ResourceRelation CreateRelationForProperty(IResourceRelationRepository relationRepo, ResourceReferenceAttribute att)
+        private static ResourceRelation CreateRelationForProperty(ReferenceSaverContext context, IResourceRelationRepository relationRepo, ResourceReferenceAttribute att)
         {
             var relationType = att.RelationType;
             var relEntity = relationRepo.Create((int)relationType);
             if (!string.IsNullOrEmpty(att.Name))
                 relEntity.RelationName = att.Name;
+
+            context.CreatedRelations.Add(relEntity);
+
             return relEntity;
         }
 
@@ -362,7 +367,7 @@ namespace Marvin.Resources.Management
                            select relation);
             return matches.ToArray();
         }
-        
+
         /// <summary>
         /// Find all reference properties on a resource type
         /// </summary>
@@ -391,20 +396,16 @@ namespace Marvin.Resources.Management
         /// </summary>
         private struct ReferenceSaverContext
         {
-            public ReferenceSaverContext(IUnitOfWork unitOfWork, Resource initialInstance, ResourceEntity entity)
+            public ReferenceSaverContext(IUnitOfWork unitOfWork, Resource initialInstance, ResourceEntity entity) : this(unitOfWork)
             {
-                UnitOfWork = unitOfWork;
-
-                EntityCache = new Dictionary<Resource, ResourceEntity>
-                {
-                    [initialInstance] = entity
-                };
+                EntityCache[initialInstance] = entity;
             }
 
             public ReferenceSaverContext(IUnitOfWork uow)
             {
                 UnitOfWork = uow;
                 EntityCache = new Dictionary<Resource, ResourceEntity>();
+                CreatedRelations = new List<ResourceRelation>();
             }
 
             /// <summary>
@@ -416,6 +417,11 @@ namespace Marvin.Resources.Management
             /// Cache of instances to entities
             /// </summary>
             public IDictionary<Resource, ResourceEntity> EntityCache { get; }
+
+            /// <summary>
+            /// Accesor wrappers for relations that were created while saving references
+            /// </summary>
+            public IList<ResourceRelation> CreatedRelations { get; }
         }
     }
 }

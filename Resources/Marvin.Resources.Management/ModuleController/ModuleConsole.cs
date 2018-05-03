@@ -36,15 +36,15 @@ namespace Marvin.Resources.Management
 
         public string ExportDescription(DescriptionExportFormat format)
         {
-            return string.Empty;
+            return $"{Environment.NewLine}Possible ResourceManager commands: {Environment.NewLine}" +
+                   $"- initialize {Environment.NewLine}";
         }
 
         public void ExecuteCommand(string[] args, Action<string> outputStream)
         {
             if (args.Length <= 0)
             {
-                outputStream($"{Environment.NewLine}Possible ResourceManager commands: {Environment.NewLine}" +
-                             $"- initialize {Environment.NewLine}");
+                outputStream(ExportDescription(DescriptionExportFormat.Console));
                 return;
             }
 

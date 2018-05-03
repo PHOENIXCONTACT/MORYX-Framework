@@ -124,8 +124,10 @@ namespace Marvin.Resources.Management.Tests
             _linker.SetReferenceCollections(ref3);
             var ref4 = new DerivedResource { Id = 5, Name = "ChildOnly" };
             var ref5 = new DerivedResource { Id = 6, Name = "BackRef" };
+            _linker.SetReferenceCollections(ref5);
             // Set single references
-            instance.Parent = ref5; // Parent remains unchanged
+            instance.Parent = ref5; // Parent is set and
+            ref5.Children.Add(instance); // Bidirectional reference synced
             instance.Reference = ref2; // Reference is changed from ref1 to ref2 
             instance.Reference2 = ref3; // Reference2 is assigned with a new object
             // Fill collections
@@ -142,7 +144,7 @@ namespace Marvin.Resources.Management.Tests
             var relations = new List<ResourceRelation>
             {
                 // Parent child relations
-                Relation(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source),
+                //Relation(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source), <-- Represents the missing bidirectional parent relationship created during this test
                 Relation(2), Relation(3), Relation(5),
                 // Current exchangable part
                 Relation(2, ResourceRelationType.CurrentExchangablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)), // This is changed to ref2
@@ -178,6 +180,7 @@ namespace Marvin.Resources.Management.Tests
 
             Assert.DoesNotThrow(() => resRepo.Verify(repo => repo.Create(), Times.Once));
             Assert.DoesNotThrow(() => relRepo.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangablePart), Times.Once));
+            Assert.DoesNotThrow(() => relRepo.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Once));
             Assert.DoesNotThrow(() => relRepo.Verify(repo => repo.RemoveRange(It.Is<IEnumerable<ResourceRelation>>(removed => removed.Any())), Times.Once));
 
             var parentChild = relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).ToArray();
