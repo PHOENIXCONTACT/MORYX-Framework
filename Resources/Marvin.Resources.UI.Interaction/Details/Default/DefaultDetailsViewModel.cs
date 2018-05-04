@@ -38,7 +38,7 @@ namespace Marvin.Resources.UI.Interaction
 
         public override void EndEdit()
         {
-            ConfigEntries = ConfigViewModel.SubEntries.Select(se => se.Entry).ToArray();
+            ConfigEntries = ConfigViewModel.SubEntries.Select(se => se.Entry).ToList();
 
             base.EndEdit();
         }

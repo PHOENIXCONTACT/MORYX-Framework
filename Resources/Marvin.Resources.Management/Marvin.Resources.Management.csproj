@@ -78,7 +78,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Resources\IReferenceCollection.cs" />
     <Compile Include="Resources\IResourceFactory.cs" />
     <Compile Include="Resources\IResourceLinker.cs" />
     <Compile Include="Resources\IResourceTypeController.cs" />

@@ -26,13 +26,13 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         private Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel BaseTypeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Serialization.MethodEntry[] ConstructorsField;
+        private System.Collections.Generic.List<Marvin.Serialization.MethodEntry> ConstructorsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private bool CreatableField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel[] DerivedTypesField;
+        private System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel> DerivedTypesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DescriptionField;
@@ -67,7 +67,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Serialization.MethodEntry[] Constructors {
+        internal System.Collections.Generic.List<Marvin.Serialization.MethodEntry> Constructors {
             get {
                 return this.ConstructorsField;
             }
@@ -93,7 +93,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel[] DerivedTypes {
+        internal System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel> DerivedTypes {
             get {
                 return this.DerivedTypesField;
             }
@@ -173,7 +173,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         private string LocalIdentifierField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Serialization.MethodEntry[] MethodsField;
+        private System.Collections.Generic.List<Marvin.Serialization.MethodEntry> MethodsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string NameField;
@@ -182,10 +182,10 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         private long ParentIdField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Serialization.Entry[] PropertiesField;
+        private System.Collections.Generic.List<Marvin.Serialization.Entry> PropertiesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceReferenceModel[] ReferencesField;
+        private System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceReferenceModel> ReferencesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string TypeField;
@@ -240,7 +240,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Serialization.MethodEntry[] Methods {
+        internal System.Collections.Generic.List<Marvin.Serialization.MethodEntry> Methods {
             get {
                 return this.MethodsField;
             }
@@ -279,7 +279,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Serialization.Entry[] Properties {
+        internal System.Collections.Generic.List<Marvin.Serialization.Entry> Properties {
             get {
                 return this.PropertiesField;
             }
@@ -292,7 +292,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceReferenceModel[] References {
+        internal System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceReferenceModel> References {
             get {
                 return this.ReferencesField;
             }
@@ -346,7 +346,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         private string NameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel[] PossibleTargetsField;
+        private System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel> PossibleTargetsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceRelationType RelationTypeField;
@@ -355,10 +355,10 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         private Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceReferenceRole RoleField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel[] SupportedTypesField;
+        private System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel> SupportedTypesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel[] TargetsField;
+        private System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel> TargetsField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -410,7 +410,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel[] PossibleTargets {
+        internal System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel> PossibleTargets {
             get {
                 return this.PossibleTargetsField;
             }
@@ -449,7 +449,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel[] SupportedTypes {
+        internal System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel> SupportedTypes {
             get {
                 return this.SupportedTypesField;
             }
@@ -462,7 +462,7 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        internal Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel[] Targets {
+        internal System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel> Targets {
             get {
                 return this.TargetsField;
             }
@@ -545,16 +545,16 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
     internal interface IResourceInteraction {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IResourceInteraction/GetTypeTree", ReplyAction="http://tempuri.org/IResourceInteraction/GetTypeTreeResponse")]
-        Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel[] GetTypeTree();
+        System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel> GetTypeTree();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IResourceInteraction/GetTypeTree", ReplyAction="http://tempuri.org/IResourceInteraction/GetTypeTreeResponse")]
-        System.Threading.Tasks.Task<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel[]> GetTypeTreeAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel>> GetTypeTreeAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IResourceInteraction/GetResourceTree", ReplyAction="http://tempuri.org/IResourceInteraction/GetResourceTreeResponse")]
-        Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel[] GetResourceTree();
+        System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel> GetResourceTree();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IResourceInteraction/GetResourceTree", ReplyAction="http://tempuri.org/IResourceInteraction/GetResourceTreeResponse")]
-        System.Threading.Tasks.Task<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel[]> GetResourceTreeAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel>> GetResourceTreeAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IResourceInteraction/GetDetails", ReplyAction="http://tempuri.org/IResourceInteraction/GetDetailsResponse")]
         Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel GetDetails(long id, int depth);
@@ -632,19 +632,19 @@ namespace Marvin.Resources.UI.Interaction.ResourceInteraction {
                 base(binding, remoteAddress) {
         }
         
-        public Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel[] GetTypeTree() {
+        public System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel> GetTypeTree() {
             return base.Channel.GetTypeTree();
         }
         
-        public System.Threading.Tasks.Task<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel[]> GetTypeTreeAsync() {
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceTypeModel>> GetTypeTreeAsync() {
             return base.Channel.GetTypeTreeAsync();
         }
         
-        public Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel[] GetResourceTree() {
+        public System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel> GetResourceTree() {
             return base.Channel.GetResourceTree();
         }
         
-        public System.Threading.Tasks.Task<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel[]> GetResourceTreeAsync() {
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.Resources.UI.Interaction.ResourceInteraction.ResourceModel>> GetResourceTreeAsync() {
             return base.Channel.GetResourceTreeAsync();
         }
         

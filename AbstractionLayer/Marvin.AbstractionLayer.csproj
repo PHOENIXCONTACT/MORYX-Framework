@@ -141,6 +141,7 @@
     <Compile Include="Resources\Initializer\ResourceInitializerBase.cs" />
     <Compile Include="Resources\Initializer\ResourceInitializerConfig.cs" />
     <Compile Include="Resources\IPublicResource.cs" />
+    <Compile Include="Resources\IReferenceCollection.cs" />
     <Compile Include="Resources\IReferences.cs" />
     <Compile Include="Resources\IResource.cs" />
     <Compile Include="Resources\IResourceCreator.cs" />

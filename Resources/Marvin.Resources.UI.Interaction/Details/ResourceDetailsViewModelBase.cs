@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace Marvin.Resources.UI.Interaction
         /// <summary>
         /// Current config entries
         /// </summary>
-        protected Entry[] ConfigEntries
+        protected List<Entry> ConfigEntries
         {
             get { return EditableObject.Model.Properties; }
             set { EditableObject.Model.Properties = value; }
@@ -52,6 +53,11 @@ namespace Marvin.Resources.UI.Interaction
         /// All references of the resource
         /// </summary>
         public ReferenceViewModel[] References { get; private set; }
+
+        /// <summary>
+        /// Depth of the resource tree for GetDetails
+        /// </summary>
+        protected virtual int DetailsDepth => 1;
 
         #endregion
 
@@ -73,7 +79,7 @@ namespace Marvin.Resources.UI.Interaction
             CurrentResourceId = resourceId;
 
             // Load resource
-            var resource = await ResourceController.GetDetails(resourceId);
+            var resource = await ResourceController.GetDetails(resourceId, DetailsDepth);
 
             await AssignLoadedResource(resource);
         }
@@ -97,7 +103,7 @@ namespace Marvin.Resources.UI.Interaction
             NotifyOfPropertyChange(() => EditableObject);
 
             Methods = resource.Methods.Select(method => new ResourceMethodViewModel(method, this)).ToArray();
-            References = resource.References
+            References = resource.References.OrderBy(r => r.IsCollection)
                 .Where(r => r.RelationType != ResourceRelationType.ParentChild) // Filter parent child relationship
                 .Select(ReferenceViewModel.Create).ToArray();
 
@@ -121,6 +127,17 @@ namespace Marvin.Resources.UI.Interaction
         protected virtual Task OnConfigLoaded()
         {
             return SuccessTask;
+        }
+
+        /// <summary>
+        /// Reload config of the object from the server
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdateConfig()
+        {
+            var model = await ResourceController.GetDetails(CurrentResourceId, DetailsDepth);
+
+            ConfigEntries = model.Properties;
         }
 
         /// <summary>
@@ -167,7 +184,10 @@ namespace Marvin.Resources.UI.Interaction
     /// </summary>
     public class ResourceDetailsViewModelBase<T> : ResourceDetailsViewModelBase where T : INotifyPropertyChanged, new()
     {
-        private static readonly EntryToModelConverter ConfigConverter = EntryToModelConverter.Create<T>();
+        /// <summary>
+        /// Dedicated converter for this type of details view model
+        /// </summary>
+        public static readonly EntryToModelConverter ConfigConverter = EntryToModelConverter.Create<T>();
 
         /// <summary>
         /// Typed view model for the config
