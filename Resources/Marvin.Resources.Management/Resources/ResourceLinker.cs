@@ -23,8 +23,7 @@ namespace Marvin.Resources.Management
             var context = new ReferenceSaverContext(uow);
             foreach (var instance in instances)
             {
-                var entity = GetOrCreateEntity(context, instance);
-                SaveReferences(context, instance, entity);
+                SaveReferences(context, instance);
             }
             return context.EntityCache.Keys.ToArray();
         }
@@ -145,30 +144,40 @@ namespace Marvin.Resources.Management
         public IEnumerable<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity)
         {
             var context = new ReferenceSaverContext(uow, instance, entity);
-            SaveReferences(context, instance, entity);
+            SaveReferences(context, instance);
             return context.EntityCache.Keys.Where(i => i.Id == 0);
         }
 
-        private static void SaveReferences(ReferenceSaverContext context, Resource instance, ResourceEntity entity)
+        private static void SaveReferences(ReferenceSaverContext context, Resource instance)
         {
+            var entity = GetOrCreateEntity(context, instance);
+
             var relations = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity)
                 .Union(ResourceRelationAccessor.FromQueryable(context.CreatedRelations.AsQueryable(), entity))
                 .ToList();
 
+            var createdResources = new List<Resource>();
             foreach (var referenceProperty in ReferenceProperties(instance.GetType(), false))
             {
                 var matches = MatchingRelations(relations, referenceProperty);
                 if (typeof(IEnumerable<IResource>).IsAssignableFrom(referenceProperty.PropertyType))
                 {
                     // Save a collection reference
-                    UpdateCollectionReference(context, entity, instance, referenceProperty, matches);
+                    var created = UpdateCollectionReference(context, entity, instance, referenceProperty, matches);
+                    createdResources.AddRange(created);
                 }
                 else
                 {
                     // Save a single reference
-                    UpdateSingleReference(context, entity, instance, referenceProperty, matches);
+                    var createdResource = UpdateSingleReference(context, entity, instance, referenceProperty, matches);
+                    if (createdResource != null)
+                        createdResources.Add(createdResource);
                 }
             }
+
+            // Recursively save references for new resources
+            foreach (var resource in createdResources)
+                SaveReferences(context, resource);
         }
 
         /// <inheritdoc />
@@ -191,7 +200,7 @@ namespace Marvin.Resources.Management
         /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
         /// public Resource FriendResource { get; set; }
         /// </example>
-        private static void UpdateSingleReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> matches)
+        private static Resource UpdateSingleReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> matches)
         {
             var relationRepo = context.UnitOfWork.GetRepository<IResourceRelationRepository>();
 
@@ -203,7 +212,7 @@ namespace Marvin.Resources.Management
 
             // Check if there is a relation that represents this reference
             if (referencedResource != null && matches.Any(m => m.ReferenceId == referencedResource.Id))
-                return;
+                return null;
 
             var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
             // Get all references of this resource with the same relation type
@@ -226,22 +235,21 @@ namespace Marvin.Resources.Management
             {
                 // Delete a relation, that no longer exists
                 relationRepo.Remove(relEntity);
-                return;
+                return null;
             }
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse <<- To identify the remaining case
             else if (relEntity == null && referencedResource == null)
             {
                 // Relation did not exist before and still does not
-                return;
+                return null;
             }
 
             // Set source and target of the relation depending on the reference roles
             var referencedEntity = GetOrCreateEntity(context, referencedResource);
             UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
 
-            // Recursively dive into newly created entities
-            if (referencedResource.Id == 0)
-                SaveReferences(context, referencedResource, referencedEntity);
+            // Return referenced resource if it is new
+            return referencedResource.Id == 0 ? referencedResource : null;
         }
 
         /// <summary>
@@ -252,7 +260,7 @@ namespace Marvin.Resources.Management
         /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
         /// public IReferences&lt;Resource&gt; FriendResources { get; set; }
         /// </example>
-        private static void UpdateCollectionReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> relationTemplates)
+        private static IEnumerable<Resource> UpdateCollectionReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> relationTemplates)
         {
             var relationRepo = context.UnitOfWork.GetRepository<IResourceRelationRepository>();
             var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
@@ -272,11 +280,9 @@ namespace Marvin.Resources.Management
                 var relEntity = CreateRelationForProperty(context, relationRepo, referenceAtt);
                 var referencedEntity = GetOrCreateEntity(context, createdReference);
                 UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
-
-                // Recursively dive into newly created entities
-                if (createdReference.Id == 0)
-                    SaveReferences(context, createdReference, referencedEntity);
             }
+
+            return created.Where(cr => cr.Id == 0);
         }
 
         /// <summary>
