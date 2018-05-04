@@ -29,6 +29,7 @@
     <Property Name="Created" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
     <Property Name="Updated" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
     <Property Name="Deleted" Type="timestamp" />
+    <Property Name="Description" Type="varchar" />
   </EntityType>
   <EntityType Name="ResourceRelation">
     <Key>
@@ -36,9 +37,10 @@
     </Key>
     <Property Name="Id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="RelationType" Type="int" Nullable="false" />
-    <Property Name="RelationName" Type="varchar" />
     <Property Name="SourceId" Type="bigint" Nullable="false" />
+    <Property Name="SourceName" Type="varchar" />
     <Property Name="TargetId" Type="bigint" Nullable="false" />
+    <Property Name="TargetName" Type="varchar" />
   </EntityType>
   <Association Name="FK_ResourceRelation_ResourceEntity">
     <End Role="ResourceEntity" Type="Marvin.Resources.Model.Store.ResourceEntity" Multiplicity="1" />
