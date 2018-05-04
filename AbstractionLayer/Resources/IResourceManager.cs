@@ -25,6 +25,11 @@ namespace Marvin.AbstractionLayer.Resources
         IReadOnlyList<Resource> GetRoots();
 
         /// <summary>
+        /// Executes the intializer on this creator
+        /// </summary>
+        void ExecuteInitializer(IResourceInitializer initializer);
+
+        /// <summary>
         /// Write changes on this object to the database
         /// </summary>
         /// <param name="resource"></param>

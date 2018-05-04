@@ -9,8 +9,8 @@
              x:Name="Control">
     <UserControl.Resources>
         <DataTemplate x:Key="SingleReferenceTemplate" DataType="interaction:SingleReferenceViewModel">
-            <LabeledControlHost LabelA="{Binding Name}" LabelMinWidth="120">
-                <EddieComboBox DockPanel.Dock="Right" Width="200" 
+            <LabeledControlHost LabelA="{Binding Name}" LabelMinWidth="120" Margin="7, 0, 0, 10" FontSize="12">
+                <EddieComboBox DockPanel.Dock="Right" Width="220" ClearButtonVisibility="Visible"
                                IsEnabled="{Binding IsEditMode, ElementName=Control}"
                                ItemsSource="{Binding PossibleTargets}" SelectedItem="{Binding SelectedTarget, Mode=TwoWay}">
                     <EddieComboBox.ItemTemplate>
@@ -22,17 +22,40 @@
             </LabeledControlHost>
         </DataTemplate>
         <DataTemplate x:Key="MultiReferenceTemplate" DataType="interaction:MultiReferenceViewModel">
-            <DockPanel>
-                <TextBlock Text="{Binding Name}" FontSize="20" DockPanel.Dock="Left"/>
-                <EddieComboBox DockPanel.Dock="Right" IsEnabled="{Binding IsEditMode, ElementName=Control}" 
-                               ItemsSource="{Binding PossibleTargets}" SelectedItem="{Binding SelectedPossibleTarget, Mode=TwoWay}">
-                    <EddieComboBox.ItemTemplate>
+            <Grid  Margin="7, 0, 0, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" MinHeight="35"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{Binding Name}" DockPanel.Dock="Left" FontSize="12" Grid.Row="0" Grid.Column="0"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                    <EddieComboBox DockPanel.Dock="Left" IsEnabled="{Binding IsEditMode, ElementName=Control}"  Width="220"
+                                   ItemsSource="{Binding PossibleTargets}" SelectedItem="{Binding SelectedPossibleTarget, Mode=TwoWay}">
+                        <EddieComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </EddieComboBox.ItemTemplate>
+                    </EddieComboBox>
+                    <EddieButton DockPanel.Dock="Right" Content="Add" Command="{Binding AddTarget}"/>
+                    <EddieButton DockPanel.Dock="Right" Content="Remove" Command="{Binding RemoveTarget}"/>
+                </StackPanel>
+                
+                <EddieListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                    DockPanel.Dock="Bottom"
+                    ItemsSource="{Binding SelectedTargets}" SelectedItem="{Binding SelectedTarget, Mode=TwoWay}">
+                    <EddieListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>
                         </DataTemplate>
-                    </EddieComboBox.ItemTemplate>
-                </EddieComboBox>
-            </DockPanel>
+                    </EddieListBox.ItemTemplate>
+                </EddieListBox>
+            </Grid>
         </DataTemplate>
 
         <interaction:ReferenceDataTemplateSelector x:Key="TemplateSelector"

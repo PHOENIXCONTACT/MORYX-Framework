@@ -73,12 +73,12 @@
     </Compile>
     <Compile Include="Facades\ResourceExtension.cs" />
     <Compile Include="Facades\ResourceManagementFacade.cs" />
+    <Compile Include="Resources\IResourceInitializerFactory.cs" />
     <Compile Include="ModuleController\ModuleController.cs" />
     <Compile Include="ModuleController\ModuleConsole.cs" />
     <Compile Include="ModuleController\ModuleConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ValueProviderFilter\DataMemberAttributeValueProviderFilter.cs" />
-    <Compile Include="Resources\IReferenceCollection.cs" />
     <Compile Include="Resources\IResourceFactory.cs" />
     <Compile Include="Resources\IResourceLinker.cs" />
     <Compile Include="Resources\IResourceTypeController.cs" />

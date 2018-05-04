@@ -10,8 +10,8 @@ namespace Marvin.Resources.Interaction
     /// </summary>
     [Description("Resource to host the default web service")]
     [DependencyRegistration(typeof(IResourceInteraction))]
-    [ResourceRegistration(nameof(ResourceInteractionHost), typeof(IDefaultResource))]
-    public sealed class ResourceInteractionHost : InteractionResource<IResourceInteraction>, IDefaultResource
+    [ResourceRegistration(nameof(ResourceInteractionHost))]
+    public sealed class ResourceInteractionHost : InteractionResource<IResourceInteraction>
     {
         /// <summary>
         /// Constructor to set <see cref="HostConfig"/> defaults.

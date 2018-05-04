@@ -48,7 +48,7 @@ namespace Marvin.Resources.Samples
         }
     }
 
-    public class ManualMountingCel : MountingCell
+    public class ManualMountingCell : MountingCell
     {
 
         // Automatically detect relation name based

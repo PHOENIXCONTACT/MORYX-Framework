@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
+using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Resources.Model;
@@ -14,7 +15,7 @@ using Marvin.Tools;
 namespace Marvin.Resources.Management
 {
     [Plugin(LifeCycle.Singleton, typeof(IResourceManager))]
-    internal class ResourceManager : IResourceManager
+    internal class ResourceManager : IResourceManager, IResourceCreator
     {
         #region Dependency Injection
 
@@ -39,9 +40,10 @@ namespace Marvin.Resources.Management
         public IModuleErrorReporting ErrorReporting { get; set; }
 
         /// <summary>
-        /// Config of this module
+        /// Logger for the ResourceManager
         /// </summary>
-        public ModuleConfig Config { get; set; }
+        [UseChild(nameof(ResourceManager))]
+        public IModuleLogger Logger { get; set; }
 
         #endregion
 
@@ -95,13 +97,12 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Subset of public resources
         /// </summary>
-        private ICollection<IPublicResource> _publicResources;
+        private readonly ICollection<IPublicResource> _publicResources = new SynchronizedCollection<IPublicResource>();
 
         #endregion
 
         #region LifeCycle
 
-        /// <inheritdoc />
         public void Initialize()
         {
             _startup = ResourceStartupPhase.LoadResources;
@@ -110,9 +111,13 @@ namespace Marvin.Resources.Management
                 // Create all objects
                 var allResources = ResourceEntityAccessor.FetchResourceTemplates(uow);
                 if (allResources.Count > 0)
+                {
                     LoadResources(allResources);
+                }
                 else
-                    CreateDefault(uow, Config.DefaultResource);
+                {
+                    InitializeEmpty();
+                }
             }
 
             _startup = ResourceStartupPhase.Initializing;
@@ -134,13 +139,23 @@ namespace Marvin.Resources.Management
         }
 
         /// <summary>
+        /// Excecutes the configured resource initializer
+        /// </summary>
+        private void InitializeEmpty()
+        {
+            Logger.LogEntry(LogLevel.Warning, "The ResourceManager initialized without a resource." +
+                                              "Execute a resource initializer to add resources with \"exec ResourceManager initialize\"");
+            var processorCount = Environment.ProcessorCount;
+            _resources = new ConcurrentDictionary<long, ResourceWrapper>(processorCount, processorCount * 2);
+        }
+
+        /// <summary>
         /// Load and link all resources from the databse
         /// </summary>
         private void LoadResources(ICollection<ResourceEntityAccessor> allResources)
         {
             // Create the concurrent dictionary optimized for the current system architecture and expected collection size
             _resources = new ConcurrentDictionary<long, ResourceWrapper>(Environment.ProcessorCount, allResources.Count * 2);
-            _publicResources = new SynchronizedCollection<IPublicResource>();
 
             // Create resource objects on multiple threads
             var query = from template in allResources.AsParallel()
@@ -154,24 +169,6 @@ namespace Marvin.Resources.Management
             // Register events after all links were set
             foreach (var resourceWrapper in _resources.Values)
                 RegisterEvents(resourceWrapper.Target);
-        }
-
-        /// <summary>
-        /// Create root resource if the database is empty
-        /// </summary>
-        private void CreateDefault(IUnitOfWork uow, string type)
-        {
-            // Create dictionaries with initial capacity that should avoid the need of resizing
-            _resources = new Dictionary<long, ResourceWrapper>(64);
-            _publicResources = new SynchronizedCollection<IPublicResource>();
-
-            // Create a root resource
-            var defaultResource = Create(type);
-            ResourceEntityAccessor.SaveToEntity(uow, defaultResource);
-            uow.Save();
-
-            // Add root to the list of resources
-            AddResource(defaultResource, true);
         }
 
         /// <summary>
@@ -266,7 +263,6 @@ namespace Marvin.Resources.Management
             ResourceLinker.LinkReferences(entityAccessor.Instance, entityAccessor.Relations, _resources);
         }
 
-        ///
         public void Start()
         {
             _startup = ResourceStartupPhase.Starting;
@@ -289,23 +285,30 @@ namespace Marvin.Resources.Management
         public void Stop()
         {
             _startup = ResourceStartupPhase.Stopping;
-            Parallel.ForEach(_resources.Values, resourceWrapper =>
+
+            if (_resources != null)
             {
-                try
+                Parallel.ForEach(_resources.Values, resourceWrapper =>
                 {
-                    resourceWrapper.Stop();
-                }
-                catch (Exception e)
-                {
-                    ErrorReporting.ReportWarning(this, e);
-                }
-            });
+                    try
+                    {
+                        resourceWrapper.Stop();
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorReporting.ReportWarning(this, e);
+                    }
+                });
+            }
+
             _startup = ResourceStartupPhase.Stopped;
         }
 
-        ///
         public void Dispose()
         {
+            if (_resources == null)
+                return;
+
             foreach (var resourceWrapper in _resources.Values)
             {
                 UnregisterEvents(resourceWrapper.Target);
@@ -364,7 +367,25 @@ namespace Marvin.Resources.Management
             }
         }
 
-        ///
+        public IReadOnlyList<Resource> GetRoots()
+        {
+            return _resources.Values.Where(wapper => wapper.Target.Parent == null).Select(wrapper => wrapper.Target).ToArray();
+        }
+
+        public void ExecuteInitializer(IResourceInitializer initializer)
+        {
+            var roots = initializer.Execute(this);
+
+            if (roots.Count == 0)
+                throw new InvalidOperationException("ResourceInitializer must return at least one resource");
+
+            using (var uow = UowFactory.Create())
+            {
+                ResourceLinker.SaveRoots(uow, roots);
+                uow.Save();
+            }
+        }
+
         public bool Start(Resource resource)
         {
             try
@@ -379,7 +400,6 @@ namespace Marvin.Resources.Management
             }
         }
 
-        ///
         public bool Stop(Resource resource)
         {
             try
@@ -395,6 +415,7 @@ namespace Marvin.Resources.Management
         }
 
         #region IResourceCreator
+
         public TResource Instantiate<TResource>() where TResource : Resource
         {
             return (TResource)Instantiate(typeof(TResource).Name);
@@ -509,11 +530,6 @@ namespace Marvin.Resources.Management
         public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IPublicResource
         {
             return _publicResources.OfType<TResource>().Where(r => r.Capabilities != NullCapabilities.Instance).Where(predicate);
-        }
-
-        public IReadOnlyList<Resource> GetRoots()
-        {
-            return _resources.Values.Where(wapper => wapper.Target.Parent == null).Select(wrapper => wrapper.Target).ToArray();
         }
 
         private void RaiseResourceAdded(IPublicResource newResource)

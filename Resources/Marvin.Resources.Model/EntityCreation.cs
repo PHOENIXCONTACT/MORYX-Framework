@@ -32,7 +32,7 @@ namespace Marvin.Resources.Model
         {
             var repo = uow.GetRepository<IResourceEntityRepository>();
 
-            var resourceEntity = repo.GetByName(resource.Name) ?? repo.Create(resource.Name, resource.GetType().Name);
+            var resourceEntity = repo.Create(resource.Name, resource.GetType().Name);
             if (string.IsNullOrWhiteSpace(resourceEntity.Name))
                 resourceEntity.Name = resourceEntity.Type;
             resourceEntity.LocalIdentifier = resource.LocalIdentifier;
@@ -41,23 +41,10 @@ namespace Marvin.Resources.Model
 
             if (parent != null)
             {
-                CreateRelation(uow, ResourceRelationType.ParentChild, parent, resourceEntity, true);
+                CreateRelation(uow, ResourceRelationType.ParentChild, parent, resourceEntity);
             }
 
             return resourceEntity;
-        }
-
-
-        /// <summary>
-        /// Creates a uni directional relation between parent and child.
-        /// </summary>
-        /// <param name="uow">The resource unit of work.</param>
-        /// <param name="relType">The relation type.</param>
-        /// <param name="source">Resource entity parent.</param>
-        /// <param name="target">resource entitiy child.</param>
-        public static ResourceRelation CreateRelation(IUnitOfWork uow, ResourceRelationType relType, ResourceEntity source, ResourceEntity target)
-        {
-            return CreateRelation(uow, relType, source, target, false);
         }
 
         /// <summary>
@@ -67,14 +54,12 @@ namespace Marvin.Resources.Model
         /// <param name="relType">The relation type.</param>
         /// <param name="source">Resource entity parent.</param>
         /// <param name="target">resource entitiy child.</param>
-        /// <param name="bidirectional">Create bidirectional relation</param>
-        public static ResourceRelation CreateRelation(IUnitOfWork uow, ResourceRelationType relType,
-            ResourceEntity source, ResourceEntity target, bool bidirectional)
+        public static ResourceRelation CreateRelation(IUnitOfWork uow, ResourceRelationType relType, ResourceEntity source, ResourceEntity target)
         {
             if (source == null)
-                throw new ArgumentNullException("'source' must not be null!");
+                throw new ArgumentNullException(nameof(source));
             if (target == null)
-                throw new ArgumentNullException("'target' must not be null!");
+                throw new ArgumentNullException(nameof(target));
 
             var relation = uow.GetRepository<IResourceRelationRepository>().Create((int)relType);
             relation.Source = source;

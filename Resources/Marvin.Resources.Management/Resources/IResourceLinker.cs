@@ -13,6 +13,11 @@ namespace Marvin.Resources.Management
     internal interface IResourceLinker
     {
         /// <summary>
+        /// Saves all roots to the database
+        /// </summary>
+        IReadOnlyList<Resource> SaveRoots(IUnitOfWork uow, IReadOnlyList<Resource> instances);
+
+        /// <summary>
         /// Set all reference collections on the new instance
         /// </summary>
         void SetReferenceCollections(Resource instance);

@@ -142,6 +142,10 @@ namespace Marvin.Resources.Management
         public Resource Create(string type)
         {
             var linker = _typeCache[type];
+
+            if (!linker.Creatable)
+                throw new InvalidOperationException($"The resource of type {type} is not creatable.");
+
             var instance = linker.IsRegistered
                 ? (Resource)ResourceFactory.Create(type) // Create with factory
                 : (Resource)Activator.CreateInstance(linker.ResourceType); // Create manually
