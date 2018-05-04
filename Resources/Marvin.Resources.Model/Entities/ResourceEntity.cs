@@ -18,6 +18,8 @@ namespace Marvin.Resources.Model
         [Index]
         public virtual string GlobalIdentifier { get; set; }
 
+        public virtual string Description { get; set; }
+
         public virtual string ExtensionData { get; set; }
 
         public virtual string Type { get; set; }

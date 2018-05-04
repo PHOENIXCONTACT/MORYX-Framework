@@ -180,7 +180,7 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Optional name of the reference
         /// </summary>
-        public string Name => Entity.RelationName;
+        public string Name => Role == ResourceReferenceRole.Target ? Entity.TargetName : Entity.SourceName;
 
         /// <summary>
         /// Type of the reference relation

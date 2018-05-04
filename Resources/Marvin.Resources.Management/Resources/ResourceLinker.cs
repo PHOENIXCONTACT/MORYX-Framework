@@ -215,14 +215,14 @@ namespace Marvin.Resources.Management
                 return null;
 
             var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
-            // Get all references of this resource with the same relation type
+            // Get all references of this resource with the same relation information
             var currentReferences = (from property in ReferenceProperties(resource.GetType(), false)
                                      let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
                                      where att.RelationType == referenceAtt.RelationType
                                         && att.Name == referenceAtt.Name
                                         && att.Role == referenceAtt.Role
                                      select property.GetValue(resource)).Distinct().OfType<Resource>().ToList();
-            // Try to find a match that is not used in any reference
+            // Try to find a match that is not used in any reference but has no name yet or the same name
             var relEntity = (from match in matches
                              where currentReferences.All(cr => cr.Id != match.ReferenceId)
                              select match.Entity).FirstOrDefault();
@@ -307,8 +307,6 @@ namespace Marvin.Resources.Management
         {
             var relationType = att.RelationType;
             var relEntity = relationRepo.Create((int)relationType);
-            if (!string.IsNullOrEmpty(att.Name))
-                relEntity.RelationName = att.Name;
 
             context.CreatedRelations.Add(relEntity);
 
@@ -325,11 +323,13 @@ namespace Marvin.Resources.Management
             {
                 relEntity.Source = referencedResource;
                 relEntity.Target = resource;
+                relEntity.SourceName = att.Name;
             }
             else
             {
                 relEntity.Source = resource;
                 relEntity.Target = referencedResource;
+                relEntity.TargetName = att.Name;
             }
         }
 
@@ -361,7 +361,7 @@ namespace Marvin.Resources.Management
         }
 
         /// <summary>
-        /// Find the relation that matches the property
+        /// Find the relation that matches the property by type and role
         /// </summary>
         private static IReadOnlyList<ResourceRelationAccessor> MatchingRelations(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property)
         {
@@ -369,9 +369,9 @@ namespace Marvin.Resources.Management
             var matches = (from relation in relations
                            where attribute.Role == relation.Role
                            where attribute.RelationType == relation.RelationType // Typed relation without name or matching name
-                                 && attribute.Name == relation.Name
-                           select relation);
-            return matches.ToArray();
+                             && (string.IsNullOrEmpty(relation.Name) || attribute.Name == relation.Name)
+                           select relation).ToArray();
+            return matches;
         }
 
         /// <summary>

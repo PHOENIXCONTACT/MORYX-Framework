@@ -93,9 +93,9 @@
     <Compile Include="Entities\ResourceEntity.cs" />
     <Compile Include="Entities\ResourceRelation.cs" />
     <Compile Include="EntityCreation.cs" />
-    <Compile Include="Migrations\201804091151436_InitialCreate.cs" />
-    <Compile Include="Migrations\201804091151436_InitialCreate.Designer.cs">
-      <DependentUpon>201804091151436_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201805041324011_InitialCreate.cs" />
+    <Compile Include="Migrations\201805041324011_InitialCreate.Designer.cs">
+      <DependentUpon>201805041324011_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,8 +115,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201804091151436_InitialCreate.resx">
-      <DependentUpon>201804091151436_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201805041324011_InitialCreate.resx">
+      <DependentUpon>201805041324011_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

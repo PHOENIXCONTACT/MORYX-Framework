@@ -6,9 +6,11 @@ namespace Marvin.Resources.Model
     {
         public virtual int RelationType { get; set; }
 
-        public virtual string RelationName { get; set; }
+        public virtual string SourceName { get; set; }
 
         public virtual long SourceId { get; set; }
+
+        public virtual string TargetName { get; set; }
 
         public virtual long TargetId { get; set; }
 

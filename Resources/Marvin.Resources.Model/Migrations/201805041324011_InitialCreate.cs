@@ -15,6 +15,7 @@ namespace Marvin.Resources.Model.Migrations
                         Name = c.String(),
                         LocalIdentifier = c.String(),
                         GlobalIdentifier = c.String(),
+                        Description = c.String(),
                         ExtensionData = c.String(),
                         Type = c.String(),
                         Created = c.DateTime(nullable: false),
@@ -32,8 +33,9 @@ namespace Marvin.Resources.Model.Migrations
                     {
                         Id = c.Long(nullable: false, identity: true),
                         RelationType = c.Int(nullable: false),
-                        RelationName = c.String(),
+                        SourceName = c.String(),
                         SourceId = c.Long(nullable: false),
+                        TargetName = c.String(),
                         TargetId = c.Long(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
