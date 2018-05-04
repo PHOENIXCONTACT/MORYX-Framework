@@ -76,27 +76,6 @@ namespace Marvin.Resources.Model
 
     
         /// <summary>
-        /// There are no comments for RelationName in the schema.
-        /// </summary>
-        public virtual string RelationName
-        {
-            get
-            {
-                return _relationName;
-            }
-            set
-            {
-                if (_relationName != value)
-                {
-                    _relationName = value;
-                    OnPropertyChanged("RelationName");
-                }
-            }
-        }
-        private string _relationName;
-
-    
-        /// <summary>
         /// There are no comments for SourceId in the schema.
         /// </summary>
         public virtual long SourceId
@@ -118,6 +97,27 @@ namespace Marvin.Resources.Model
 
     
         /// <summary>
+        /// There are no comments for SourceName in the schema.
+        /// </summary>
+        public virtual string SourceName
+        {
+            get
+            {
+                return _sourceName;
+            }
+            set
+            {
+                if (_sourceName != value)
+                {
+                    _sourceName = value;
+                    OnPropertyChanged("SourceName");
+                }
+            }
+        }
+        private string _sourceName;
+
+    
+        /// <summary>
         /// There are no comments for TargetId in the schema.
         /// </summary>
         public virtual long TargetId
@@ -136,6 +136,27 @@ namespace Marvin.Resources.Model
             }
         }
         private long _targetId;
+
+    
+        /// <summary>
+        /// There are no comments for TargetName in the schema.
+        /// </summary>
+        public virtual string TargetName
+        {
+            get
+            {
+                return _targetName;
+            }
+            set
+            {
+                if (_targetName != value)
+                {
+                    _targetName = value;
+                    OnPropertyChanged("TargetName");
+                }
+            }
+        }
+        private string _targetName;
 
 
         #endregion

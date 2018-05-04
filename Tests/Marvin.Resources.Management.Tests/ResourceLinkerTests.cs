@@ -203,7 +203,7 @@ namespace Marvin.Resources.Management.Tests
             var relation = new ResourceRelation
             {
                 RelationType = (int)relationType,
-                RelationName = relationName,
+                TargetName = relationName,
                 TargetId = role == ResourceReferenceRole.Target ? id : 1,
                 SourceId = role == ResourceReferenceRole.Source ? id : 1
             };

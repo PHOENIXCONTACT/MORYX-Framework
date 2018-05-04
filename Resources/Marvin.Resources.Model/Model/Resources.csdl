@@ -29,6 +29,7 @@
     <Property Name="Created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="00e1e94e-b0a9-40ac-98f6-f3046a4fd218" />
     <Property Name="Updated" Type="DateTime" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" ed:ValidateRequired="true" ed:Guid="698f91b5-c65f-4e6a-89fe-9867c9ed216e" />
     <Property Name="Deleted" Type="DateTime" ed:ValidateRequired="false" ed:Guid="dfe3f298-5899-4da5-b85c-fa3934a0c668" />
+    <Property Name="Description" Type="String" ed:ValidateRequired="false" ed:Guid="6605616b-f3d8-44f5-a093-ef2a4387c274" />
     <NavigationProperty Name="Targets" Relationship="Marvin.Resources.Model.ResourceEntity_ResourceRelation" FromRole="Source" ToRole="Targets" ed:Guid="de200190-7576-4d64-8e60-f79b206b3972" />
     <NavigationProperty Name="Sources" Relationship="Marvin.Resources.Model.ResourceEntity_ResourceRelation1" FromRole="Target" ToRole="Sources" ed:Guid="5259ab58-0d4a-463d-98d1-d5b4bb4f8760" />
   </EntityType>
@@ -38,9 +39,10 @@
     </Key>
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" ed:ValidateRequired="true" ed:Guid="af183f92-bf3d-4432-b1f9-005f72eb7ca9" />
     <Property Name="RelationType" Type="Int32" Nullable="false" ed:ValidateRequired="true" ed:Guid="e45449a9-531d-4570-8774-a2d3ded644d1" />
-    <Property Name="RelationName" Type="String" ed:ValidateRequired="false" ed:Guid="9911e91c-17b5-4a1c-9900-8510fd889aab" />
     <Property Name="SourceId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="2e71c9bb-6b22-489d-947b-f150c4f4c52d" />
+    <Property Name="SourceName" Type="String" ed:ValidateRequired="false" ed:Guid="39d5ad33-27c0-4e3b-95a0-c5157822bc3a" />
     <Property Name="TargetId" Type="Int64" Nullable="false" ed:ValidateRequired="true" ed:Guid="e2444b21-271b-43ee-ab00-897aedfe110e" />
+    <Property Name="TargetName" Type="String" ed:ValidateRequired="false" ed:Guid="9911e91c-17b5-4a1c-9900-8510fd889aab" />
     <NavigationProperty Name="Source" Relationship="Marvin.Resources.Model.ResourceEntity_ResourceRelation" FromRole="Targets" ToRole="Source" ed:Guid="cb4dd3e1-a32f-4a20-90f3-28fa9a9c51af" />
     <NavigationProperty Name="Target" Relationship="Marvin.Resources.Model.ResourceEntity_ResourceRelation1" FromRole="Sources" ToRole="Target" ed:Guid="3769add0-7640-4737-afd9-02abd1876f90" />
   </EntityType>

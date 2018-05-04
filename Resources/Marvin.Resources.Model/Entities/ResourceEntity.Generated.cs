@@ -221,6 +221,27 @@ namespace Marvin.Resources.Model
         }
         private global::System.Nullable<System.DateTime> _deleted;
 
+    
+        /// <summary>
+        /// There are no comments for Description in the schema.
+        /// </summary>
+        public virtual string Description
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                if (_description != value)
+                {
+                    _description = value;
+                    OnPropertyChanged("Description");
+                }
+            }
+        }
+        private string _description;
+
 
         #endregion
 

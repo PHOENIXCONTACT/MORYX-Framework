@@ -13,6 +13,7 @@
           <ScalarProperty Name="Created" ColumnName="Created" />
           <ScalarProperty Name="Updated" ColumnName="Updated" />
           <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -21,9 +22,10 @@
         <MappingFragment StoreEntitySet="ResourceRelations">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="RelationType" ColumnName="RelationType" />
-          <ScalarProperty Name="RelationName" ColumnName="RelationName" />
           <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+          <ScalarProperty Name="SourceName" ColumnName="SourceName" />
           <ScalarProperty Name="TargetId" ColumnName="TargetId" />
+          <ScalarProperty Name="TargetName" ColumnName="TargetName" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
