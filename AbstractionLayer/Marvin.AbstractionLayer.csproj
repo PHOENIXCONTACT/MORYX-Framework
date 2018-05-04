@@ -136,7 +136,10 @@
     <Compile Include="Resources\Attributes\ResourceRegistrationAttribute.cs" />
     <Compile Include="Resources\Attributes\ResourcesBundleAttribute.cs" />
     <Compile Include="Resources\Attributes\ResourceTypesAttribute.cs" />
-    <Compile Include="Resources\IDefaultResource.cs" />
+    <Compile Include="Resources\Initializer\IResourceInitializer.cs" />
+    <Compile Include="Resources\Initializer\ResourceInitializerAttribute.cs" />
+    <Compile Include="Resources\Initializer\ResourceInitializerBase.cs" />
+    <Compile Include="Resources\Initializer\ResourceInitializerConfig.cs" />
     <Compile Include="Resources\IPublicResource.cs" />
     <Compile Include="Resources\IReferences.cs" />
     <Compile Include="Resources\IResource.cs" />

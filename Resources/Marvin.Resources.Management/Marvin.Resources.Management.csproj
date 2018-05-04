@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Facades\ResourceExtension.cs" />
     <Compile Include="Facades\ResourceManagementFacade.cs" />
+    <Compile Include="Resources\IResourceInitializerFactory.cs" />
     <Compile Include="ModuleController\ModuleController.cs" />
     <Compile Include="ModuleController\ModuleConsole.cs" />
     <Compile Include="ModuleController\ModuleConfig.cs" />

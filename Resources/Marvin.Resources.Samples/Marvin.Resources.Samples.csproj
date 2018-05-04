@@ -52,6 +52,7 @@
     <Compile Include="BufferResource.cs" />
     <Compile Include="Cell.cs" />
     <Compile Include="GateResource.cs" />
+    <Compile Include="Initializer\SampleMachineInitializer.cs" />
     <Compile Include="IVisualInstructor.cs" />
     <Compile Include="Machine.cs" />
     <Compile Include="MountingCell.cs" />

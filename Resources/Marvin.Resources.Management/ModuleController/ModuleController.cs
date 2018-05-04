@@ -53,7 +53,10 @@ namespace Marvin.Resources.Management
             Container.Register<IBinaryConnectionFactory>();
             Container.LoadComponents<IBinaryConnection>();
 
-            // Load driver and resources
+            // Load initializers
+            Container.LoadComponents<IResourceInitializer>();
+
+            // Load resources
             Container.LoadComponents<IResource>();
         }
 

@@ -164,7 +164,7 @@ namespace Marvin.Resources.Interaction
         public bool Remove(long id)
         {
             var resource = Manager.Get(id);
-            return Manager.Destroy(resource);
+            return ((IResourceCreator)Manager).Destroy(resource);
         }
 
         #region GetDetails
