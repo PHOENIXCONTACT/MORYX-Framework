@@ -1,5 +1,6 @@
 ﻿using Marvin.Model;
 
+// ReSharper disable once CheckNamespace
 namespace Marvin.Resources.Model
 {
     /// <summary>

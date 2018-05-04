@@ -169,10 +169,6 @@
       <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
       <Name>Marvin.Resources.Management</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Resources\Marvin.Resources.Model\Marvin.Resources.Model.csproj">
-      <Project>{e803d4a1-80da-40b7-b70c-42c4ed289f59}</Project>
-      <Name>Marvin.Resources.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Resources\Marvin.Resources.Samples\Marvin.Resources.Samples.csproj">
       <Project>{23f6025e-1348-4abf-a908-c5d360f9d486}</Project>
       <Name>Marvin.Resources.Samples</Name>

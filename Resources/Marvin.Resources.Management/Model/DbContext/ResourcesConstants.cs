@@ -1,4 +1,5 @@
-﻿namespace Marvin.Resources.Model
+﻿// ReSharper disable once CheckNamespace
+namespace Marvin.Resources.Model
 {
     /// <summary>
     /// String constants defined by the Resources database model.
