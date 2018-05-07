@@ -80,7 +80,7 @@
     <Compile Include="RecipeStorage\RecipeStorageTests.cs" />
     <Compile Include="RecipeStorage\TaskA.cs" />
     <Compile Include="RecipeStorage\TaskB.cs" />
-    <Compile Include="UnitOfWorkFactories\InMemoryUnitOfWorkFactory.cs" />
+    <Compile Include="Model\InMemoryUnitOfWorkFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AbstractionLayer\Marvin.AbstractionLayer.csproj">

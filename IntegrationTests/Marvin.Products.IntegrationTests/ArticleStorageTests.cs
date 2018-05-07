@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Marvin.AbstractionLayer;
-using Marvin.Products.IntegrationTests.UnitOfWorkFactories;
 using Marvin.Products.Model;
 using Marvin.Products.Samples;
 using Marvin.Products.Samples.Model;

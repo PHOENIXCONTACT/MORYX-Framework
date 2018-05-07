@@ -2,7 +2,7 @@
 using Marvin.Products.Model;
 using Marvin.Products.Samples.Model;
 
-namespace Marvin.Products.IntegrationTests.UnitOfWorkFactories
+namespace Marvin.Products.IntegrationTests
 {
     public class InMemoryUnitOfWorkFactory : InMemoryUnitOfWorkFactoryBase<WatchProductsContext>
     {
