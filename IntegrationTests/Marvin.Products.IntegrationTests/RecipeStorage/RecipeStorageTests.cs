@@ -1,7 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Linq;
 using Marvin.Model;
-using Marvin.Products.IntegrationTests.UnitOfWorkFactories;
 using Marvin.Products.Management;
 using Marvin.Products.Model;
 using Marvin.Workflows;
