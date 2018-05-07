@@ -369,7 +369,7 @@ namespace Marvin.Resources.Management
             var matches = (from relation in relations
                            where attribute.Role == relation.Role
                            where attribute.RelationType == relation.RelationType // Typed relation without name or matching name
-                             && (string.IsNullOrEmpty(relation.Name) || attribute.Name == relation.Name)
+                              && attribute.Name == relation.Name
                            select relation).ToArray();
             return matches;
         }

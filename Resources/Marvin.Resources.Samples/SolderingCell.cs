@@ -29,7 +29,7 @@ namespace Marvin.Resources.Samples
 
     public abstract class Station : Resource, IStation
     {
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart, ResourceReferenceRole.Source, "Back")]
+        [ResourceReference(ResourceRelationType.CurrentExchangablePart, ResourceReferenceRole.Source)]
         public SolderingCell BackRef { get; set; }
 
         public abstract void ProcessActivity(IActivity sa);
