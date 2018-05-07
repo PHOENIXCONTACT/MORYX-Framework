@@ -75,11 +75,6 @@
       <Name>Marvin.Resources.Interaction</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
-      <Project>{4CA4F6B5-4C26-4B99-8FB9-937971883083}</Project>
-      <Name>Marvin.Resources.Management</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

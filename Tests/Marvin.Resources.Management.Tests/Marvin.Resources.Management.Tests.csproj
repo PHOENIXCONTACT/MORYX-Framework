@@ -95,13 +95,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.4.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Transactions" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
@@ -113,6 +111,7 @@
     <Compile Include="Mocks\ResourceWithImplicitApi.cs" />
     <Compile Include="Mocks\ReferenceResource.cs" />
     <Compile Include="Mocks\SimpleResource.cs" />
+    <Compile Include="Model\InMemoryUnitOfWorkFactory.cs" />
     <Compile Include="ResourceLinkerTests.cs" />
     <Compile Include="ResourceManagerTests.cs" />
     <Compile Include="TypeControllerTests.cs" />
@@ -126,10 +125,6 @@
     <ProjectReference Include="..\..\Resources\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
       <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
       <Name>Marvin.Resources.Management</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Resources\Marvin.Resources.Model\Marvin.Resources.Model.csproj">
-      <Project>{e803d4a1-80da-40b7-b70c-42c4ed289f59}</Project>
-      <Name>Marvin.Resources.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using Marvin.AbstractionLayer.Hardware;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Resources.Management;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples

@@ -5,7 +5,6 @@ using System.ServiceModel;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
 using Marvin.Resources.Interaction;
-using Marvin.Resources.Management;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 

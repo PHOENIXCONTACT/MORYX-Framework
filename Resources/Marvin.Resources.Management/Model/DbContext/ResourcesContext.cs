@@ -3,6 +3,7 @@ using System.Data.Entity;
 using Marvin.Model;
 using Marvin.Model.Npgsql;
 
+// ReSharper disable once CheckNamespace
 namespace Marvin.Resources.Model
 {
     /// <summary>

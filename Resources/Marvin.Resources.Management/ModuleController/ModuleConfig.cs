@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Configuration;
-using Marvin.Resources.Interaction;
-using Marvin.Runtime.Configuration;
 
 namespace Marvin.Resources.Management
 {
@@ -14,20 +12,6 @@ namespace Marvin.Resources.Management
     [DataContract]
     public class ModuleConfig : ConfigBase
     {
-        /// <inheritdoc />
-        protected override void Initialize()
-        {
-            base.Initialize();
-
-            Initializers = new List<ResourceInitializerConfig>
-            {
-                new ResourceInitializerConfig
-                {
-                    PluginName = nameof(ResourceInteractionInitializer)
-                }
-            };
-        }
-
         /// <summary>
         /// If database is empty, this resource will be created by default.
         /// </summary>
