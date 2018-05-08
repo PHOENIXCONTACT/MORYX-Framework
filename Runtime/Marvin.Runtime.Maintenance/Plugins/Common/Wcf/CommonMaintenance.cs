@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using Marvin.Container;
-using Marvin.Tools;
 
 namespace Marvin.Runtime.Maintenance.Plugins.Common
 {
@@ -60,12 +59,12 @@ namespace Marvin.Runtime.Maintenance.Plugins.Common
         /// <inheritdoc />
         public SystemLoadResponse GetSystemLoad()
         {
-            var physicalMemory = HostExtensions.PhysicalMemory();
-            var freePhysicalMemory = HostExtensions.FreePhysicalMemory();
+            var physicalMemory = HostHelper.PhysicalMemory();
+            var freePhysicalMemory = HostHelper.FreePhysicalMemory();
 
             return new SystemLoadResponse
             {
-                CPULoad = HostExtensions.ProcessorTimePercentage(),
+                CPULoad = HostHelper.ProcessorTimePercentage(),
                 SystemMemoryLoad = (double)(physicalMemory - freePhysicalMemory) / physicalMemory * 100.0
             };
         }
@@ -73,12 +72,12 @@ namespace Marvin.Runtime.Maintenance.Plugins.Common
         /// <inheritdoc />
         public ApplicationLoadResponse GetApplicationLoad()
         {
-            var physicalMemory = HostExtensions.PhysicalMemory();
+            var physicalMemory = HostHelper.PhysicalMemory();
             var cpuLoad = 0UL;
 
             if (!Debugger.IsAttached)
             {
-                cpuLoad = HostExtensions.ProcessorTimePercentage(Process.GetCurrentProcess().ProcessName);
+                cpuLoad = HostHelper.ProcessorTimePercentage(Process.GetCurrentProcess().ProcessName);
             }
 
             return new ApplicationLoadResponse

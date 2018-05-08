@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 
-namespace Marvin.Tools
+namespace Marvin.Runtime.Maintenance.Plugins.Common
 {
     /// <summary>
     /// Extensions to retrieve system information
     /// </summary>
-    public static class HostExtensions
+    internal static class HostHelper
     {
         /// <summary>
         /// Returns the amount of physical memory installed

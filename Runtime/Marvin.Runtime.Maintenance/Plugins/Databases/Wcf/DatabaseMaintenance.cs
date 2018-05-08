@@ -177,9 +177,9 @@ namespace Marvin.Runtime.Maintenance.Plugins.Databases
             if (targetConfigurator == null)
                 return new InvocationResponse("No configurator found");
 
-            var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            ParallelOperations.ExecuteParallel(context => context.Configurator.RestoreDatabase(config, $@".\Backups\{context.FileName}"),
-                                               new { Configurator = targetConfigurator, request.BackupModel.FileName });
+            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
+            targetConfigurator.RestoreDatabase(updatedConfig, Path.Combine(Config.SetupDataDir, request.BackupFileName));
+
             return new InvocationResponse();
         }
 
@@ -327,7 +327,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Databases
 
         private BackupModel[] GetAllBackups(IModelConfigurator configurator)
         {
-            var tagetModel = configurator.TargetModel;
+            var targetModel = configurator.TargetModel;
 
             if (!Directory.Exists(Config.SetupDataDir))
             {
@@ -335,16 +335,14 @@ namespace Marvin.Runtime.Maintenance.Plugins.Databases
                 return new BackupModel[0];
             }
 
-            var allBackups = Directory.GetFiles(Config.SetupDataDir, "*.backup").ToList();
+            var allBackups = Directory.EnumerateFiles(Config.SetupDataDir, "*.backup").Where(fileName => fileName.Contains(targetModel)).ToList();
             var backups = from backup in allBackups
                 let fileName = Path.GetFileName(backup)
-                let isForTagetModel = fileName.StartsWith(tagetModel)
                 let fileInfo = new FileInfo(backup)
                 select new BackupModel
                 {
                     FileName = fileName,
                     Size = (int) fileInfo.Length / 1024,
-                    IsForTargetModel = isForTagetModel,
                     CreationDate = fileInfo.CreationTime
                 };
 

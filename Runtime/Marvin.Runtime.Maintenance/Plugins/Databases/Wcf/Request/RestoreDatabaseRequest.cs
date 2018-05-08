@@ -11,8 +11,8 @@
         public DatabaseConfigModel Config { get; set; }
 
         /// <summary>
-        /// Backup which should be restored
+        /// Name of the backup that shall be restored
         /// </summary>
-        public BackupModel BackupModel { get; set; }
+        public string BackupFileName { get; set; }
     }
 }

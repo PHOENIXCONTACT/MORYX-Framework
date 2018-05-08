@@ -58,20 +58,11 @@ namespace Marvin.Model.Npgsql
 
             Logger.LogEntry(LogLevel.Debug, "Starting to dump database with pg_dump to: {0}", fileName);
 
-            var process = new Process {EnableRaisingEvents = true};
-            process.Exited += OnProcessCompleted;
-            
-            var startInfo = process.StartInfo;
-            startInfo.UseShellExecute = false;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-  
-            startInfo.FileName = "pg_dump.exe";
-            startInfo.Arguments = $"-U {config.Username} --format=c --file={fileName} -h {config.Host} -p {config.Port} {config.Database}";
-            startInfo.EnvironmentVariables["PGPASSWORD"] = config.Password;
+            // Create process
+            var arguments = $"-U {config.Username} --format=c --file={fileName} " +
+                            $"-h {config.Host} -p {config.Port} {config.Database}";
 
-            process.OutputDataReceived += OnProcessOutputDataReceived;
-            process.ErrorDataReceived += OnProcessOutputDataReceived;
+            var process = CreateBackgroundPgProcess("pg_dump.exe", arguments, config.Password);
 
             // Configure the process using the StartInfo properties.
             process.Start();
@@ -82,7 +73,18 @@ namespace Marvin.Model.Npgsql
         /// <inheritdoc />
         public override void RestoreDatabase(IDatabaseConfig config, string filePath)
         {
-            throw new NotImplementedException();
+            Logger.LogEntry(LogLevel.Debug, "Starting to restore database with pg_restore from: {0}", filePath);
+
+            // Create process
+            var arguments = $"-U {config.Username} --format=c --single-transaction --clean " +
+                            $"-h {config.Host} -p {config.Port} -d {config.Database} {filePath}";
+
+            var process = CreateBackgroundPgProcess("pg_restore.exe", arguments, config.Password);
+            
+            // Configure the process using the StartInfo properties.
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
         }
 
         /// <inheritdoc />
@@ -103,6 +105,26 @@ namespace Marvin.Model.Npgsql
             return builder.ToString();
         }
 
+        private Process CreateBackgroundPgProcess(string fileName, string arguments, string pgPassword)
+        {
+            var process = new Process { EnableRaisingEvents = true };
+            process.Exited += OnProcessCompleted;
+
+            var startInfo = process.StartInfo;
+            startInfo.UseShellExecute = false;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            process.StartInfo.EnvironmentVariables["PGPASSWORD"] = pgPassword;
+
+            startInfo.FileName = fileName;
+            startInfo.Arguments = arguments;
+
+            process.OutputDataReceived += OnProcessOutputDataReceived;
+            process.ErrorDataReceived += OnProcessOutputDataReceived;
+
+            return process;
+        }
+
         private void OnProcessCompleted(object sender, EventArgs eventArgs)
         {
             var process = (Process)sender;
@@ -116,19 +138,19 @@ namespace Marvin.Model.Npgsql
             if (process.ExitCode != 0)
             {
                 Logger.LogEntry(LogLevel.Error, "Error while running process {0}, ExitCode: {1}!",
-                    process.ProcessName, process.ExitCode);
+                    process.Id, process.ExitCode);
             }
             else
             {
                 Logger.LogEntry(LogLevel.Debug, "Process {0} exited successfully!",
-                    process.ProcessName);
+                    process.Id);
             }
         }
 
         private void OnProcessOutputDataReceived(object sender, DataReceivedEventArgs args)
         {
             var process = (Process)sender;
-            Logger.LogEntry(LogLevel.Debug, "Process: {0}: {1}", process.ProcessName, args.Data);
+            Logger.LogEntry(LogLevel.Debug, "Process: {0}: {1}", process.Id, args.Data);
         }
     }
 }

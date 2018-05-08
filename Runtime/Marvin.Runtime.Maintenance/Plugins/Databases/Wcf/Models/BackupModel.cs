@@ -18,11 +18,6 @@ namespace Marvin.Runtime.Maintenance.Plugins.Databases
         public int Size { get; set; }
 
         /// <summary>
-        /// Flag to tell if the backup is for the target model.
-        /// </summary>
-        public bool IsForTargetModel { get; set; }
-
-        /// <summary>
         /// Date of the backup creation.
         /// </summary>
         public DateTime CreationDate { get; set; }

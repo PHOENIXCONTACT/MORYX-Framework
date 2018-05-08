@@ -13,14 +13,17 @@ namespace Marvin.Model
         /// Anything that belongs to a non existant or wrong configuration
         /// </summary>
         ConfigurationError,
+
         /// <summary>
         /// Connection could not be established
         /// </summary>
         ConnectionError,
+
         /// <summary>
         /// Connection could be established but database was not found
         /// </summary>
         ConnectionOkDbDoesNotExist,
+
         /// <summary>
         /// Connection could be established but database was found
         /// </summary>
