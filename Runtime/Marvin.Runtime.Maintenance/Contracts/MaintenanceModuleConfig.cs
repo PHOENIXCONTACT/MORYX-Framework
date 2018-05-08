@@ -21,11 +21,5 @@ namespace Marvin.Runtime.Maintenance.Contracts
         /// </summary>
         [DataMember]
         public HostConfig ProvidedEndpoint { get; set; }
-
-        /// <summary>
-        /// Flag to activate or deactivate the plugin.
-        /// </summary>
-        [DataMember]
-        public bool IsActive { get; set; }
     }
 }

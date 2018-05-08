@@ -115,7 +115,9 @@ namespace Marvin.Model
             var context = _contextFactory.CreateContext(config, ContextMode.AllOff);
             try
             {
-                return context.Database.Exists() ? TestConnectionResult.Success : TestConnectionResult.ConnectionOkDbDoesNotExist;
+                return context.Database.Exists()
+                    ? TestConnectionResult.Success
+                    : TestConnectionResult.ConnectionOkDbDoesNotExist;
             }
             catch
             {

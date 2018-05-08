@@ -5,7 +5,6 @@ using Marvin.Configuration;
 using Marvin.Runtime.Maintenance.Contracts;
 using Marvin.Runtime.Maintenance.Plugins.Common;
 using Marvin.Runtime.Maintenance.Plugins.Databases;
-using Marvin.Runtime.Maintenance.Plugins.DataStore;
 using Marvin.Runtime.Maintenance.Plugins.Logging;
 using Marvin.Runtime.Maintenance.Plugins.Modules;
 
@@ -35,11 +34,10 @@ namespace Marvin.Runtime.Maintenance
         {
             Plugins = new List<MaintenancePluginConfig>
             {
-                new ModuleMaintenanceConfig {IsActive = true},
-                new LoggingMaintenanceConfig {IsActive = true},
-                new DataStoreConfig {IsActive = true},
-                new CommonMaintenanceConfig {IsActive = true},
-                new DatabaseConfig {IsActive = true}
+                new ModuleMaintenanceConfig(),
+                new LoggingMaintenanceConfig(),
+                new CommonMaintenanceConfig(),
+                new DatabaseConfig()
             };
         }
     }

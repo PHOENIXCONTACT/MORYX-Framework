@@ -66,8 +66,8 @@ namespace Marvin.Model
         /// <inheritdoc />
         public void Initialize()
         {
-            // Activate logging
-            LoggerManagement.ActivateLogging(this);
+            // Activate logging (if loggermanagement is available)
+            LoggerManagement?.ActivateLogging(this);
 
             // Create configurator
             _configurator = new TConfigurator();

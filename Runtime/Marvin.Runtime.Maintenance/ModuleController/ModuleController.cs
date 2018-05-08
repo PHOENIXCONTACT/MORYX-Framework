@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Maintenance.Contracts;
+using Marvin.Runtime.Maintenance.Plugins;
 using Marvin.Runtime.Modules;
-using Marvin.Tools.Wcf;
 using Marvin.Tools.Wcf.FileSystem;
 
 namespace Marvin.Runtime.Maintenance
@@ -24,8 +23,6 @@ namespace Marvin.Runtime.Maintenance
 
         private IModuleManager _moduleManager;
 
-        private readonly List<IConfiguredServiceHost> _serviceHosts = new List<IConfiguredServiceHost>();
-        
         #endregion
 
         #region Dependency Injection
@@ -81,30 +78,39 @@ namespace Marvin.Runtime.Maintenance
             var pluginFac = Container.Resolve<IMaintenancePluginFactory>();
             var plugins = Container.ResolveAll<IMaintenancePlugin>().ToList();
 
-            foreach (var pluginConfig in Config.Plugins.Distinct())
+            var pluginConfigs = Config.Plugins.Distinct().ToArray();
+
+            var configuredPlugins = pluginConfigs.Select(pluginConfig => pluginFac.Create(pluginConfig)).ToList();
+            var unconfiguredPlugins = plugins.Except(configuredPlugins).ToArray();
+
+            foreach (var unconfiguredPlugin in unconfiguredPlugins)
             {
-                var plugin = pluginFac.Create(pluginConfig);
+                var baseType = unconfiguredPlugin.GetType().BaseType;
+                if (baseType == null || !typeof(MaintenancePluginBase<,>).IsAssignableFrom(baseType.GetGenericTypeDefinition()))
+                    throw new ArgumentException("MaintenancePlugins should be of type MaintenancePluginBase");
+                
+                var configType = baseType.GetGenericArguments()[0];
+
+                var pluginConfig = (MaintenancePluginConfig)Activator.CreateInstance(configType);
+
+                Config.Plugins.Add(pluginConfig);
+
+                var instance = pluginFac.Create(pluginConfig);
+                configuredPlugins.Add(instance);
+            }
+
+            foreach (var plugin in plugins)
+            {
                 try
                 {
-                    if (pluginConfig.IsActive)
-                    {
-                        plugin.Start();
-                    }
-                    plugins.Remove(plugin);
+                    plugin.Start();
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogException(LogLevel.Error, ex, "Failed to start plugin {0}", pluginConfig.PluginName);
-                    throw new Exception("Failed to start plugin " + pluginConfig.PluginName, ex);
+                    var pluginName = plugin.GetType().Name;
+                    Logger.LogException(LogLevel.Error, ex, "Failed to start plugin {0}", pluginName);
+                    throw new Exception("Failed to start plugin " + pluginName, ex);
                 }
-            }
-
-            foreach (var maintenancePlugin in plugins)
-            {
-                var config = (MaintenancePluginConfig)Activator.CreateInstance(maintenancePlugin.ConfigType);
-                config.IsActive = false;
-
-                Config.Plugins.Add(config);
             }
         }
 
@@ -113,11 +119,7 @@ namespace Marvin.Runtime.Maintenance
         /// </summary>
         protected override void OnStop()
         {
-            foreach (var serviceHost in _serviceHosts)
-            {
-                serviceHost.Dispose();
-            }
-            _serviceHosts.Clear();
+
         }
     }
 }

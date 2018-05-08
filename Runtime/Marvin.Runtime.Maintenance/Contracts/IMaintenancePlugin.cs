@@ -8,6 +8,5 @@ namespace Marvin.Runtime.Maintenance.Contracts
     /// </summary>
     public interface IMaintenancePlugin : IConfiguredPlugin<MaintenancePluginConfig>, IDisposable
     {
-        Type ConfigType { get; }
     }
 }

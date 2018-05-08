@@ -1,5 +1,4 @@
-﻿using System;
-using Marvin.Runtime.Maintenance.Contracts;
+﻿using Marvin.Runtime.Maintenance.Contracts;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Maintenance.Plugins
@@ -18,8 +17,9 @@ namespace Marvin.Runtime.Maintenance.Plugins
         /// </summary>
         protected TConf Config { get; set; }
 
-        public Type ConfigType => typeof(TConf);
-
+        /// <summary>
+        /// Factory to create WCF services
+        /// </summary>
         public IConfiguredHostFactory HostFactory { get; set; }
 
         /// <inheritdoc />
