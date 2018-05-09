@@ -222,8 +222,14 @@ namespace Marvin.Model
         /// <inheritdoc />
         public bool RollbackDatabase(IDatabaseConfig config)
         {
-            CreateDbMigrator(config).Update("0");
-            return true;
+            var dbMigrator = CreateDbMigrator(config);
+
+            if (dbMigrator != null)
+            {
+                dbMigrator.Update("0");
+                return true;
+            }
+            return false;
         }
 
         /// <inheritdoc />
@@ -299,6 +305,11 @@ namespace Marvin.Model
 
         private DbMigrator CreateDbMigrator(IDatabaseConfig config)
         {
+            if (_migrationsConfiguration == null)
+            {
+                return null;
+            }
+
             var configuration = _migrationsConfiguration;
             configuration.TargetDatabase = new DbConnectionInfo(BuildConnectionString(config), ProviderInvariantName);
 
@@ -375,8 +386,10 @@ namespace Marvin.Model
         /// </summary>
         private IEnumerable<string> GetInstalledMigrations(IDatabaseConfig config)
         {
-            return TestDatabaseConnection(config)
-                ? CreateDbMigrator(config).GetDatabaseMigrations()
+            var dbMigrator = CreateDbMigrator(config);
+
+            return TestDatabaseConnection(config) && dbMigrator != null
+                ? dbMigrator.GetDatabaseMigrations()
                 : Enumerable.Empty<string>();
         }
     }
