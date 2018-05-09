@@ -9,6 +9,9 @@
   - name: Windows Service
     href: WindowsService.md
 
+  - name: Log4Net
+    href: Log4Net.md
+
 - name: Data Models
   href: DataModel/toc.yml
 
