@@ -15,7 +15,7 @@ footer{
       <strong>MarvinPlatform</strong>
     </div>
     <div class="buttons-unit-small">
-      <a class="version-link" href="articles/Changelog.md">Changelog</a><span>|</span><a class="bitbucket-link" href="http://bitbucket-dev.europe.phoenixcontact.com/projects/MS/repos/marvinplatform/">View in BitBucket</a>
+      <a class="version-link" href="articles/Changelog.md">Changelog</a><span>|</span><a class="bitbucket-link" href="http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MarvinPlatform">View in GitLab</a>
     </div>
     <div class="minitext">
     The MaRVIN Platform is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
