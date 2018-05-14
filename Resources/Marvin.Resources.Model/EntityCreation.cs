@@ -9,6 +9,7 @@ namespace Marvin.Resources.Model
     /// <summary>
     /// Helper methods for typical resource creation tasks
     /// </summary>
+    [Obsolete("EntityCreation is obsolete and ResourceInitializer should be used. It will be removed in Platform 3.")]
     public static class EntityCreation
     {
         /// <summary>
