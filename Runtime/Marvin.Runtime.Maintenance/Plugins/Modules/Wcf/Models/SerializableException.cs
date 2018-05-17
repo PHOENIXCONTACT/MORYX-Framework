@@ -35,21 +35,21 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         /// <summary>
         /// The name of the exception type.
         /// </summary>
-        public string ExceptionTypeName { get; private set; }
+        public string ExceptionTypeName { get; set; }
 
         /// <summary>
         /// The message of the exception.
         /// </summary>
-        public string Message { get; private set; }
+        public string Message { get; set; }
 
         /// <summary>
         /// Starck trace of the exception.
         /// </summary>
-        public string StackTrace { get; private set; }
+        public string StackTrace { get; set; }
 
         /// <summary>
         /// Contains an inner exception of type <see cref="SerializableException"/> if exists.
         /// </summary>
-        public SerializableException InnerException { get; private set; }
+        public SerializableException InnerException { get; set; }
     }
 }
