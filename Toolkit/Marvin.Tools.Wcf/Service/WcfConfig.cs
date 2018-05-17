@@ -73,6 +73,7 @@ namespace Marvin.Tools.Wcf
         /// <summary>
         /// Exception message if load failed. This must not be decorated with a data member attribute.
         /// </summary>
+        [ReadOnly(true)]
         public string LoadError { get; set; }
     }
 }

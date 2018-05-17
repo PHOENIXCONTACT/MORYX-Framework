@@ -26,6 +26,7 @@ namespace Marvin.Runtime
         /// <summary>
         /// Exception message if load failed
         /// </summary>
+        [ReadOnly(true)]
         public string LoadError { get; set; }
 
         /// <summary>

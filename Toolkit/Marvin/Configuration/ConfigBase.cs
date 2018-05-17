@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace Marvin.Configuration
 {
@@ -23,6 +24,7 @@ namespace Marvin.Configuration
         /// <summary>
         /// Exception message if load failed
         /// </summary>
+        [ReadOnly(true)]
         public string LoadError { get; set; }
 
         /// <summary>

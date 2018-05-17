@@ -111,10 +111,23 @@ namespace Marvin.Serialization
         private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization)
         {
             // Prepare object
+
+            // Set if the current entry is readonly by checking if the property has a setter
+            // or the ReadOnlyAttribute was set to true
+            var isReadOnly = !property.CanWrite;
+            if (!isReadOnly)
+            {
+                var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
+                if (readOnlyAtt != null)
+                {
+                    isReadOnly = readOnlyAtt.IsReadOnly;
+                }
+            }
+
             var entryValue = new EntryValue
             {
                 Type = TransformType(property.PropertyType),
-                IsReadOnly = !property.CanWrite,
+                IsReadOnly = isReadOnly,
                 Possible = customSerialization.PossibleValues(property),
             };
 
