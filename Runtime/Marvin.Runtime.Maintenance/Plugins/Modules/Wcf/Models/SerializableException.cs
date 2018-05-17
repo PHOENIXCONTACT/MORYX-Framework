@@ -8,6 +8,14 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
     public class SerializableException
     {
         /// <summary>
+        /// Default constructor for serialization
+        /// </summary>
+        public SerializableException()
+        { 
+            
+        }
+
+        /// <summary>
         /// Constructor for the serializable exception with the occured exception.
         /// </summary>
         /// <param name="e">The exception which occured.</param>
