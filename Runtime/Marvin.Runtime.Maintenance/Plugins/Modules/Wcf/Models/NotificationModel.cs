@@ -9,6 +9,14 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
     public class NotificationModel
     {
         /// <summary>
+        /// Default constructor for serialization
+        /// </summary>
+        public NotificationModel()
+        { 
+            
+        }
+
+        /// <summary>
         /// Constructor for a notification.
         /// </summary>
         /// <param name="notification">A notification raisded by a module.</param>
