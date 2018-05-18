@@ -8,6 +8,9 @@ namespace Marvin.Notifications
     public class Notification : IManagedNotification
     {
         /// <inheritdoc />
+        public string Type { get; }
+
+        /// <inheritdoc />
         public string Identifier { get; private set; }
 
         /// <inheritdoc />
@@ -51,9 +54,6 @@ namespace Marvin.Notifications
         string IManagedNotification.Source { get; set; }
 
         /// <inheritdoc />
-        public string Type  { get; }
-
-        /// <inheritdoc />
         public Severity Severity { get; set; }
 
         /// <inheritdoc />
@@ -73,7 +73,7 @@ namespace Marvin.Notifications
         /// <summary>
         /// Creates a new notification with title and message
         /// </summary>
-        public Notification(string title, string message, Severity severity)
+        public Notification(string title, string message, Severity severity) : this()
         {
             Title = title;
             Message = message;

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Marvin.Runtime.Base;
 
 namespace Marvin.Notifications
 {
+    [DebuggerDisplay("NotificationSource: {" + nameof(Name) + "}")]
     public class NotificationSourceFacade : INotificationSource, IFacadeControl
     {
         /// <inheritdoc />
@@ -28,18 +31,10 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public void Activate()
         {
-        }
-
-        public void RaiseActivated()
-        {
-            // TODO: Raise this Event when the facade was activated not while activate. Wait for Platform 3.0.
             IsActivated = true;
             NotificationAdapter.Published += OnNotificationPublished;
             NotificationAdapter.Acknowledged += OnNotificationAcknowledged;
-            Activated?.Invoke(this, EventArgs.Empty);
         }
-
-
 
         /// <inheritdoc />
         public void Deactivate()
@@ -49,14 +44,20 @@ namespace Marvin.Notifications
 
             // TODO: Raise this Event when the facade was deactivated not while deactivate. Wait for Platform 3.0.
             IsActivated = false;
-            Deactivated?.Invoke(this, EventArgs.Empty);
+            Deactivated?.Invoke(this, NotificationAdapter.GetPublished().ToArray());
+        }
+
+        public IReadOnlyList<INotification> GetPublished()
+        {
+            ValidateHealthState();
+            return NotificationAdapter.GetPublished();
         }
 
         /// <inheritdoc />
-        public void Sync(IReadOnlyList<INotification> notifications)
+        public void Sync()
         {
             ValidateHealthState();
-            NotificationAdapter.Sync(notifications);
+            NotificationAdapter.Sync();
         }
 
         /// <inheritdoc />
@@ -101,9 +102,6 @@ namespace Marvin.Notifications
         public event EventHandler<INotification> Acknowledged;
 
         /// <inheritdoc />
-        public event EventHandler Activated;
-
-        /// <inheritdoc />
-        public event EventHandler Deactivated;
+        public event EventHandler<INotification[]> Deactivated;
     }
 }

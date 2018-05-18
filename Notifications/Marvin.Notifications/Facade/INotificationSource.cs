@@ -19,9 +19,14 @@ namespace Marvin.Notifications
         bool IsActivated { get; }
 
         /// <summary>
+        /// Returns the currently published notifications
+        /// </summary>
+        IReadOnlyList<INotification> GetPublished();
+
+        /// <summary>
         /// Restore notification on source
         /// </summary>
-        void Sync(IReadOnlyList<INotification> notifications);
+        void Sync();
 
         /// <summary>
         /// Informs the sender of the notification to acknowledge it
@@ -49,13 +54,8 @@ namespace Marvin.Notifications
         event EventHandler<INotification> Acknowledged;
 
         /// <summary>
-        /// Event will be raised if the facade was activated
-        /// </summary>
-        event EventHandler Activated;
-
-        /// <summary>
         /// Event will be raised if the facade was deactivated
         /// </summary>
-        event EventHandler Deactivated;
+        event EventHandler<INotification[]> Deactivated;
     }
 }
