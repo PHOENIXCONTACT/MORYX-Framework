@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Marvin.Container;
@@ -8,28 +9,24 @@ namespace Marvin.Notifications
     [Plugin(LifeCycle.Singleton, typeof(INotificationAdapter), typeof(INotificationSenderAdapter))]
     public class NotificationAdapter : INotificationAdapter, INotificationSenderAdapter
     {
-        private readonly ICollection<NotificationMap> _published = new List<NotificationMap>();
-        private readonly ICollection<NotificationMap> _pendingAcks = new List<NotificationMap>();
-        private readonly ICollection<NotificationMap> _pendingPubs = new List<NotificationMap>();
+        private readonly ICollection<NotificationMap> _published = new SynchronizedCollection<NotificationMap>();
+        private readonly ICollection<NotificationMap> _pendingAcks = new SynchronizedCollection<NotificationMap>();
+        private readonly ICollection<NotificationMap> _pendingPubs = new SynchronizedCollection<NotificationMap>();
 
-        private readonly IDictionary<string, INotificationSender> _senders = new Dictionary<string, INotificationSender>();
+        private readonly IDictionary<string, INotificationSender> _senders = new ConcurrentDictionary<string, INotificationSender>();
         #region Adapter <> Publisher
 
         /// <inheritdoc />
         INotificationContext INotificationAdapter.Register(INotificationSender sender)
         {
-            lock (_senders)
-            {
-                _senders.Add(sender.Identifier, sender);
-                return new NotificationContext(sender, this);
-            }
+            _senders.Add(sender.Identifier, sender);
+            return new NotificationContext(sender, this);
         }
 
         /// <inheritdoc />
         void INotificationAdapter.Unregister(INotificationSender sender)
         {
-            lock (_senders)
-                _senders.Remove(sender.Identifier);
+            _senders.Remove(sender.Identifier);
         }
 
         /// <inheritdoc />
@@ -45,13 +42,10 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         internal void Publish(INotificationSender sender, INotification notification)
         {
-            lock (_senders)
-            {
-                if (!_senders.ContainsKey(sender.Identifier))
-                    throw new InvalidOperationException("Notification cannot be published. " +
-                                                        "The sender was not registered on the adapter");
-            }
-            
+            if (!_senders.ContainsKey(sender.Identifier))
+                throw new InvalidOperationException("Notification cannot be published. " +
+                                                    "The sender was not registered on the adapter");
+
             var managed = (IManagedNotification)notification;
             managed.Identifier = Guid.NewGuid().ToString();
             managed.Created = DateTime.Now;
@@ -105,6 +99,12 @@ namespace Marvin.Notifications
         #region Publisher <> Adapter
 
         /// <inheritdoc />
+        IReadOnlyList<INotification> INotificationSenderAdapter.GetPublished()
+        {
+            return _published.Union(_pendingAcks).Select(map => map.Notification).ToArray();
+        }
+
+        /// <inheritdoc />
         void INotificationSenderAdapter.Acknowledge(INotification notification)
         {
             var map = _published.Single(m => m.Notification.Identifier == notification.Identifier);
@@ -128,7 +128,7 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
-        void INotificationSenderAdapter.Sync(IReadOnlyList<INotification> restored)
+        void INotificationSenderAdapter.Sync()
         {
             // Publish pending notifications
             var pendingPublishs = _pendingPubs.ToArray();
@@ -138,38 +138,9 @@ namespace Marvin.Notifications
             }
 
             // Acknowledge pending acknowledges
-            foreach (var notification in restored)
+            foreach (var pendingAck in _pendingAcks)
             {
-                var pendingAck = _pendingAcks.SingleOrDefault(map => map.Notification.Identifier == notification.Identifier);
-                if (pendingAck != null)
-                {
-                    Acknowledged?.Invoke(pendingAck.Sender, pendingAck.Notification);
-                    continue;
-                }
-
-                var managed = (IManagedNotification)notification;
-                var existing = _published.SingleOrDefault(m => m.Notification.Identifier == notification.Identifier);
-                if (existing != null)
-                    continue; // Notification is already available in this adapter
-
-                INotificationSender sender = null;
-                lock (_senders)
-                {
-                    if (_senders.ContainsKey(managed.Sender))
-                        sender = _senders[managed.Sender];
-                }
-                    
-                if (sender == null)
-                {
-                    // Sender cannot be found anymore. Notification will be acknowledged
-                    managed.Acknowledged = DateTime.Now;
-
-                    _pendingAcks.Add(new NotificationMap(null, notification));
-                    Acknowledged?.Invoke(this, notification);
-                    return;
-                }
-
-                _published.Add(new NotificationMap(sender, notification)); 
+                Acknowledged?.Invoke(pendingAck.Sender, pendingAck.Notification);
             }
         }
 

@@ -38,21 +38,13 @@
       <HintPath>..\..\Build\ServiceRuntime\Marvin.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Marvin.PlatformTools">
-      <HintPath>..\..\Build\ServiceRuntime\Marvin.PlatformTools.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Marvin.Runtime">
-      <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Marvin.Runtime.Base">
       <HintPath>..\..\Build\ServiceRuntime\Core\Marvin.Runtime.Base.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapter\INotificationContext.cs" />

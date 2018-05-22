@@ -4,7 +4,12 @@ using System.Collections.Generic;
 namespace Marvin.Notifications
 {
     public interface INotificationSenderAdapter
-    {
+    {        
+        /// <summary>
+        /// Returns the currently published notifications
+        /// </summary>
+        IReadOnlyList<INotification> GetPublished();
+
         /// <summary>
         /// Informs the sender of the notification to acknowledge it
         /// </summary>
@@ -13,7 +18,7 @@ namespace Marvin.Notifications
         /// <summary>
         /// Restore notification on sender adapter
         /// </summary>
-        void Sync(IReadOnlyList<INotification> notifications);
+        void Sync();
 
         /// <summary>
         /// Event to publish a notification
