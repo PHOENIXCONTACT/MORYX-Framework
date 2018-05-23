@@ -112,6 +112,7 @@
     <Compile Include="Workflows\Dummies\WorkplanDummy.cs" />
     <Compile Include="Workflows\EditingTests.cs" />
     <Compile Include="Workflows\EngineTests.cs" />
+    <Compile Include="Workflows\PathPredictionTests.cs" />
     <Compile Include="Workflows\PlacesTests.cs" />
     <Compile Include="Workflows\SerializationTest.cs" />
     <Compile Include="Workflows\StepTests.cs" />

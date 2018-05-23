@@ -58,7 +58,13 @@ namespace Marvin.Tests.Workflows
             ((IPlace)sender).Remove(token);
             StoredTokens.Add(token);
             Triggered(this, new EventArgs());
-            PlaceToken(Outputs[ResultOutput], StoredTokens.First());
+            if (ResultOutput >= 0) // Resume directly
+                PlaceToken(Outputs[ResultOutput], StoredTokens.First());
+        }
+
+        public void ResumeAsync(int result)
+        {
+            PlaceToken(Outputs[result], StoredTokens.First());
         }
 
         public event EventHandler Triggered;
