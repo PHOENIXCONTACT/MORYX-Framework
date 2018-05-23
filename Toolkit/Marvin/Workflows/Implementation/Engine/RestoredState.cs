@@ -2,11 +2,8 @@
 {
     internal class RestoredState : EngineState
     {
-        private readonly WorkflowSnapshot _snapshot;
-
-        public RestoredState(WorkflowEngine engine, WorkflowSnapshot snapshot) : base(engine)
+        public RestoredState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
         {
-            _snapshot = snapshot;
         }
 
         /// <summary>
@@ -14,8 +11,8 @@
         /// </summary>
         internal override void Start()
         {
-            Engine.State = new RunningState(Engine);
-            Engine.ExecuteResume();
+            NextState(StateRunning);
+            Context.ExecuteResume();
         }
 
         /// <summary>
@@ -23,7 +20,7 @@
         /// </summary>
         internal override WorkflowSnapshot Pause()
         {
-            return _snapshot;
+            return Context.CurrentSnapshot;
         }
 
         internal override void Destroy()

@@ -1,15 +1,14 @@
-﻿namespace Marvin.Workflows
+﻿using Marvin.StateMachines;
+
+namespace Marvin.Workflows
 {
     /// <summary>
     /// State pattern for the engine
     /// </summary>
-    internal abstract class EngineState
+    internal abstract class EngineState : StateBase<WorkflowEngine>
     {
-        protected WorkflowEngine Engine { get; private set; }
-
-        protected EngineState(WorkflowEngine engine)
+        protected EngineState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
         {
-            Engine = engine;
         }
 
         /// <summary>
@@ -17,6 +16,7 @@
         /// </summary>
         internal virtual void Initialize(IWorkflow workflow)
         {
+            InvalidState();
         }
 
         /// <summary>
@@ -24,6 +24,7 @@
         /// </summary>
         internal virtual void Start()
         {
+            InvalidState();
         }
 
         /// <summary>
@@ -31,6 +32,7 @@
         /// </summary>
         internal virtual void Completed()
         {
+            InvalidState();
         }
 
         /// <summary>
@@ -38,6 +40,7 @@
         /// </summary>
         internal virtual WorkflowSnapshot Pause()
         {
+            InvalidState();
             return null;
         }
 
@@ -46,6 +49,7 @@
         /// </summary>
         internal virtual void Restore(WorkflowSnapshot snapshot)
         {
+            InvalidState();
         }
 
         /// <summary>
@@ -53,19 +57,28 @@
         /// </summary>
         internal virtual void Destroy()
         {
-        }
-        protected void ExecuteDestroy()
-        {
-            Engine.State = new IdleState(Engine);
-            Engine.ExecuteDispose();
+            InvalidState();
         }
 
-        /// <summary>
-        /// Create new instance of the engine state
-        /// </summary>
-        internal static EngineState Create(WorkflowEngine engine)
+        protected void ExecuteDestroy()
         {
-            return new IdleState(engine);
+            NextState(StateIdle);
+            Context.ExecuteDispose();
         }
+
+        [StateDefinition(typeof(IdleState), IsInitial = true)]
+        protected const int StateIdle = 0;
+
+        [StateDefinition(typeof(ReadyState))]
+        protected const int StateReady = 10;
+
+        [StateDefinition(typeof(RestoredState))]
+        protected const int StateRestored = 15;
+
+        [StateDefinition(typeof(RunningState))]
+        protected const int StateRunning = 20;
+
+        [StateDefinition(typeof(PausedState))]
+        protected const int StatePaused = 30;
     }
 }

@@ -2,7 +2,7 @@
 {
     internal class IdleState : EngineState
     {
-        public IdleState(WorkflowEngine engine) : base(engine)
+        public IdleState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
         {
         }
 
@@ -11,8 +11,13 @@
         /// </summary>
         internal override void Initialize(IWorkflow workflow)
         {
-            Engine.State = new ReadyState(Engine);
-            Engine.ExecuteInitialize(workflow);
+            NextState(StateReady);
+            Context.ExecuteInitialize(workflow);
+        }
+
+        internal override void Destroy()
+        {
+            Context.ExecuteDispose();
         }
     }
 }
