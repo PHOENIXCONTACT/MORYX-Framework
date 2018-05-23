@@ -88,10 +88,8 @@ namespace Marvin.Tests.Workflows
 
             var rightOnly = new DummyStep(1, "Remove case");
             rightOnly.Inputs[0] = right;
-            workplan.Add(rightOnly);
-            right = Workflow.CreateConnector("Right complete");
-            workplan.Add(right);
             rightOnly.Outputs[0] = failed;
+            workplan.Add(rightOnly);
 
             return workplan;
         }
@@ -283,6 +281,59 @@ namespace Marvin.Tests.Workflows
             merge.Inputs[0] = left;
             workplan.Add(merge);
             merge.Outputs[0] = merge.Outputs[1] = complete;
+
+            return workplan;
+        }
+
+        public static WorkplanDummy WithLoop()
+        {
+            var workplan = new WorkplanDummy();
+
+            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
+            var complete = Workflow.CreateConnector("End", NodeClassification.End);
+            var failed = Workflow.CreateConnector("Failed", NodeClassification.Failed);
+            workplan.Add(inital, complete, failed);
+
+            var step = new DummyStep(2, "Feed case");
+            step.Inputs[0] = inital;
+            workplan.Add(step);
+
+            var left = Workflow.CreateConnector("Left");
+            workplan.Add(left);
+            step.Outputs[0] = left;
+            var right = Workflow.CreateConnector("Right");
+            workplan.Add(right);
+            step.Outputs[1] = right;
+
+            step = new DummyStep(3, "Mount");
+            step.Inputs[0] = left;
+            workplan.Add(step);
+            step.Outputs[2] = right;
+            left = Workflow.CreateConnector("Merge");
+            workplan.Add(left);
+            step.Outputs[0] = step.Outputs[1] = left;
+
+            step = new DummyStep(3, "Set pole");
+            step.Inputs[0] = left;
+            workplan.Add(step);
+            var oldLeft = left;
+            left = Workflow.CreateConnector("Pole set");
+            workplan.Add(left);
+            step.Outputs[0] = left;
+            step.Outputs[1] = oldLeft;
+            step.Outputs[2] = failed;
+
+            step = new DummyStep(3, "Set screw");
+            step.Inputs[0] = left;
+            workplan.Add(step);
+            step.Outputs[0] = right;
+            step.Outputs[1] = complete;
+            step.Outputs[2] = failed;
+
+            var rightOnly = new DummyStep(1, "Remove case");
+            rightOnly.Inputs[0] = right;
+            rightOnly.Outputs[0] = failed;
+            workplan.Add(rightOnly);
 
             return workplan;
         }
