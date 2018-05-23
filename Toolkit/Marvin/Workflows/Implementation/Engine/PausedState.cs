@@ -1,12 +1,11 @@
-﻿namespace Marvin.Workflows
+﻿using System;
+
+namespace Marvin.Workflows
 {
     internal class PausedState : EngineState
     {
-        private readonly WorkflowSnapshot _snapshot;
-
-        public PausedState(WorkflowEngine engine, WorkflowSnapshot snapshot) : base(engine)
+        public PausedState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
         {
-            _snapshot = snapshot;
         }
 
         /// <summary>
@@ -14,13 +13,19 @@
         /// </summary>
         internal override WorkflowSnapshot Pause()
         {
-            return _snapshot;
+            return Context.CurrentSnapshot;
+        }
+
+        internal override void Restore(WorkflowSnapshot snapshot)
+        {
+            if(snapshot != Context.CurrentSnapshot)
+                throw new InvalidOperationException("Can not restore paused engine with different snapshot. Create a new instance instead!");
         }
 
         internal override void Start()
         {
-            Engine.State = new RunningState(Engine);
-            Engine.ExecuteResume();
+            NextState(StateRunning);
+            Context.ExecuteResume();
         }
 
         internal override void Destroy()

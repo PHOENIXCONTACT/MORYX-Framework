@@ -2,23 +2,26 @@
 {
     internal class ReadyState : EngineState
     {
-        public ReadyState(WorkflowEngine engine) : base(engine)
+        public ReadyState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
         {
         }
 
-        /// <summary>
-        /// Start the engine
-        /// </summary>
+        internal override void Initialize(IWorkflow workflow)
+        {
+            // Nothing happens
+        }
+
         internal override void Start()
         {
-            Engine.State = new RunningState(Engine);
-            Engine.ExecuteStart();
+            NextState(StateRunning);
+            Context.ExecuteStart();
         }
 
         internal override void Restore(WorkflowSnapshot snapshot)
         {
-            Engine.State = new RestoredState(Engine, snapshot);
-            Engine.ExecuteRestore(snapshot);
+            NextState(StateRestored);
+            Context.CurrentSnapshot = snapshot;
+            Context.ExecuteRestore();
         }
 
         internal override void Destroy()

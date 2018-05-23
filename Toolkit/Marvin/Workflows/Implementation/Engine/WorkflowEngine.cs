@@ -2,23 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Marvin.StateMachines;
 
 namespace Marvin.Workflows
 {
-    internal class WorkflowEngine : IMonitoredEngine
+    internal class WorkflowEngine : IMonitoredEngine, IStateContext
     {
         public WorkflowEngine()
         {
-            State = EngineState.Create(this);
+            StateMachine.Initialize(this).With<EngineState>();
         }
 
-        internal EngineState State { get; set; }
+        internal EngineState State { get; private set; }
+
+        void IStateContext.SetState(IState state)
+        {
+            State = (EngineState) state;
+        }
 
         /// 
         public IWorkflow ExecutedWorkflow { get; private set; }
 
         ///
         public IWorkplanContext Context { get; set; }
+
+        /// <summary>
+        /// Reference to the snapshot, if there is one
+        /// </summary>
+        internal WorkflowSnapshot CurrentSnapshot { get; set; }
 
         ///
         public void Initialize(IWorkflow workflow)
@@ -96,7 +107,7 @@ namespace Marvin.Workflows
             return State.Pause();
         }
 
-        internal WorkflowSnapshot ExecutePause()
+        internal void ExecutePause()
         {
             // Create snapshot with workplan name
             var snapShot = new WorkflowSnapshot { WorkplanName = ExecutedWorkflow.Workplan.Name };
@@ -125,7 +136,7 @@ namespace Marvin.Workflows
                                     HolderState = holder.InternalState
                                 }).ToArray();
 
-            return snapShot;
+            CurrentSnapshot = snapShot;
         }
 
         /// <summary>
@@ -145,10 +156,10 @@ namespace Marvin.Workflows
             State.Restore(snapshot);
         }
 
-        internal void ExecuteRestore(WorkflowSnapshot snapshot)
+        internal void ExecuteRestore()
         {
             var allHolder = GetAllHolders();
-            foreach (var holder in snapshot.Holders)
+            foreach (var holder in CurrentSnapshot.Holders)
             {
                 var match = allHolder.First(h => h.Id == holder.HolderId);
                 match.Tokens = holder.Tokens;
