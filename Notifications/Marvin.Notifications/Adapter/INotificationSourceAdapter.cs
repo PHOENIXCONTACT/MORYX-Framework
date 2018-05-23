@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 namespace Marvin.Notifications
 {
-    public interface INotificationSenderAdapter
+    /// <summary>
+    /// Adapter for the <see cref="INotificationSource"/>
+    /// </summary>
+    public interface INotificationSourceAdapter
     {        
         /// <summary>
         /// Returns the currently published notifications
@@ -21,16 +24,6 @@ namespace Marvin.Notifications
         void Sync();
 
         /// <summary>
-        /// Event to publish a notification
-        /// </summary>
-        event EventHandler<INotification> Published;
-
-        /// <summary>
-        /// Event to publish an acknowledged notification
-        /// </summary>
-        event EventHandler<INotification> Acknowledged;
-
-        /// <summary>
         /// Informs a sender of an acknowledgement that it was processed
         /// </summary>
         void AcknowledgeProcessed(INotification notification);
@@ -39,5 +32,15 @@ namespace Marvin.Notifications
         /// Informs a sender of an notification that it was processed
         /// </summary>
         void PublishProcessed(INotification notification);
+
+        /// <summary>
+        /// Event to publish a notification
+        /// </summary>
+        event EventHandler<INotification> Published;
+
+        /// <summary>
+        /// Event to publish an acknowledged notification
+        /// </summary>
+        event EventHandler<INotification> Acknowledged;
     }
 }

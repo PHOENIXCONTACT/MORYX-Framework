@@ -10,13 +10,12 @@ namespace Marvin.Notifications.Tests
     [TestFixture]
     public class NotificationAdapterTests
     {
-        private INotificationAdapter _notificationAdapter;
+        private INotificationAdapter _adapter;
         private Mock<INotificationSender> _notificationSenderMock;
-        private INotificationSender _publishedEventSender;
         private IManagedNotification _publishedEventNotification;
         private IManagedNotification _acknowledgedEventNotification;
         private INotification _acknowledgeCallNotification;
-        private INotificationContext _notificationpublisher;
+        private INotificationSender _sender;
 
         /// <summary>
         /// Initialize the test-environment
@@ -24,68 +23,59 @@ namespace Marvin.Notifications.Tests
         [SetUp]
         public void SetUp()
         {
-            _notificationAdapter = new NotificationAdapter();
+            _adapter = new NotificationAdapter();
             _notificationSenderMock = new Mock<INotificationSender>();
             _notificationSenderMock.Setup(n => n.Acknowledge(It.IsAny<INotification>()))
                 .Callback((INotification notification) => _acknowledgeCallNotification = notification);
             _notificationSenderMock.SetupGet(n => n.Identifier).Returns("Mock");
+            _sender = _notificationSenderMock.Object;
 
-            _publishedEventSender = null;
             _publishedEventNotification = null;
             _acknowledgedEventNotification = null;
             _acknowledgeCallNotification = null;
 
-            ((INotificationSenderAdapter)_notificationAdapter).Published += (sender, notification) =>
+            ((INotificationSourceAdapter)_adapter).Published += (sender, notification) =>
             {
-                _publishedEventSender = sender as INotificationSender;
                 _publishedEventNotification = (IManagedNotification)notification;
             };
 
-            ((INotificationSenderAdapter)_notificationAdapter).Acknowledged += (sender, notification) =>
+            ((INotificationSourceAdapter)_adapter).Acknowledged += (sender, notification) =>
             {
                 _acknowledgedEventNotification = (IManagedNotification)notification;
             };
-
-            _notificationpublisher = _notificationAdapter.Register(_notificationSenderMock.Object);
         }
 
-        /// <summary>
-        /// Check that publishing a notification publishes an event, and marks the notification as published. Check, that notifications can not be published twice.
-        /// </summary>
-        [Test(Description = "Check that publishing a notification publishes an event, and marks the notification as published. Check, that notifications can not be published twice.")]
-        public void TestINotificationPublisherAdapterPublish()
+        [Test(Description = "Check that publishing a notification publishes an event, and marks the notification as published. " +
+                            "Check, that notifications can not be published twice.")]
+        public void AdapterPublish()
         {
             // Arrange
             var notification = new Notification();
 
             // Act
-            _notificationpublisher.Publish(notification);
+            _adapter.Publish(_sender, notification);
 
             // Assert
             Assert.NotNull(_publishedEventNotification, "Published-event was not triggered.");
-            Assert.AreEqual(_notificationSenderMock.Object, _publishedEventSender, "Published-event was triggered for wrong sender.");
             Assert.AreEqual(notification, _publishedEventNotification, "Published-event was triggered with wrong notification.");
             Assert.NotNull(_publishedEventNotification.Identifier, "Identifier should not be null.");
             Assert.AreNotEqual(_publishedEventNotification.Created, default(DateTime), "Created date should have been set");
 
             Assert.Throws<InvalidOperationException>(delegate
             {
-                _notificationpublisher.Publish(notification);
+                _adapter.Publish(_sender, notification);
             }, "The same notification was published a second time.");
         }
 
-        /// <summary>
-        /// Check that acknowledging a notification by the adapter for a known notification.
-        /// </summary>
         [Test(Description = "Check that acknowledging a notification by the adapter for a known notification.")]
-        public void TestINotificationPublisherAdapterAcknowledgeForKnownNotification()
+        public void AdapterAcknowledgeForKnownNotification()
         {
             // Arrange
             var notification = new Notification();
-            _notificationpublisher.Publish(notification);
+            _adapter.Publish(_sender, notification);
 
             // Act
-            _notificationpublisher.Acknowledge(notification);
+            _adapter.Acknowledge(_sender, notification);
 
             // Assert
             Assert.NotNull(_acknowledgedEventNotification, "Acknowledged-event was not triggered.");
@@ -94,15 +84,15 @@ namespace Marvin.Notifications.Tests
         }
 
         [Test(Description = "Check that acknowledging a notification by the adapter for a known notification.")]
-        public void AcknowledgeAKnownNotificationWhichIsAlreadyPublishedToThePublisher()
+        public void AdapterAcknowledgeKnownNotificationWhichIsAlreadyPublishedToThePublisher()
         {
             // Arrange
             var notification = new Notification();
-            _notificationpublisher.Publish(notification);
-            ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notification);
+            _adapter.Publish(_sender, notification);
+            ((INotificationSourceAdapter)_adapter).PublishProcessed(notification);
 
             // Act
-            _notificationpublisher.Acknowledge(notification);
+            _adapter.Acknowledge(_sender, notification);
 
             // Assert
             Assert.NotNull(_acknowledgedEventNotification, "Acknowledged-event was not triggered.");
@@ -110,11 +100,8 @@ namespace Marvin.Notifications.Tests
             Assert.AreNotEqual(_acknowledgedEventNotification.Acknowledged, default(DateTime), "Acknowledged date should have been set");
         }
 
-        /// <summary>
-        /// Check that acknowledging a notification by the adapter for a unknown notification throws an exception.
-        /// </summary>
         [Test(Description = "Check that acknowledging a notification by the adapter for a known notification throws an exception.")]
-        public void TestINotificationPublisherAdapterAcknowledgeForUnknownNotification()
+        public void AdapterAcknowledgeForUnknownNotification()
         {
             // Arrange
             var notification = new Notification();
@@ -122,25 +109,22 @@ namespace Marvin.Notifications.Tests
             // Act && Assert
             Assert.Throws<InvalidOperationException>(delegate
             {
-                _notificationpublisher.Acknowledge(notification);
+                _adapter.Acknowledge(_sender, notification);
             }, "Acknowledge was called for an unknown notification");
         }
 
-        /// <summary>
-        /// Check that acknowledging a notification by the SenderAdapter-interface for a known notification is delegated to the original sender.
-        /// </summary>
-        [Test(Description = "Check that acknowledging a notification by the SenderAdapter-interface for a known notification is delegated to the original sender.")]
-        public void TestINotificationSenderAdapterAcknowledgeForKnownNotification()
+        [Test(Description = "Check that acknowledging a notification by the SenderAdapter-interface " +
+                            "for a known notification is delegated to the original sender.")]
+        public void AcknowledgeForKnownNotification()
         {
             // Arrange
             var notification = new Notification();
+            _adapter.Publish(_sender, notification);
 
-            _notificationpublisher.Publish(notification);
-
-            ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notification);
+            ((INotificationSourceAdapter)_adapter).PublishProcessed(notification);
 
             // Act
-            ((INotificationSenderAdapter)_notificationAdapter).Acknowledge(notification);
+            ((INotificationSourceAdapter)_adapter).Acknowledge(notification);
 
             //Assert
             Assert.NotNull(_acknowledgeCallNotification, "Acknowledged was not called on the sender.");
@@ -151,7 +135,7 @@ namespace Marvin.Notifications.Tests
         /// Check that acknowledging a notification by the SenderAdapter-interface for an unknown notification throws an exception.
         /// </summary>
         [Test(Description = "Check that acknowledging a notification by the SenderAdapter-interface for an unknown notification throws an exception.")]
-        public void TestINotificationSenderAdapterAcknowledgeForUnknownNotification()
+        public void SenderAdapterAcknowledgeForUnknownNotification()
         {
             // Arrange
             var notification = new Notification();
@@ -159,7 +143,7 @@ namespace Marvin.Notifications.Tests
             // Act & Assert
             Assert.Throws<InvalidOperationException>(delegate
             {
-                ((INotificationSenderAdapter)_notificationAdapter).Acknowledge(notification);
+                ((INotificationSourceAdapter)_adapter).Acknowledge(notification);
             }, "Acknowledge was called for an unknown notification");
         }
 
@@ -167,20 +151,18 @@ namespace Marvin.Notifications.Tests
         public void PublishPendingNotificationsDuringTheSync()
         {
             // Arrange
-            _notificationpublisher.Publish(new Notification());
-            _notificationpublisher.Publish(new Notification());
-            _notificationpublisher.Publish(new Notification());
-            _notificationpublisher.Publish(new Notification());
+            _adapter.Publish(_sender, new Notification());
+            _adapter.Publish(_sender, new Notification());
+            _adapter.Publish(_sender, new Notification());
+            _adapter.Publish(_sender, new Notification());
             int counter = 0;
-            ((INotificationSenderAdapter) _notificationAdapter).Published += delegate { counter += 1; };
+            ((INotificationSourceAdapter) _adapter).Published += delegate { counter += 1; };
 
             // Act
-
-            ((INotificationSenderAdapter) _notificationAdapter).Sync();
+            ((INotificationSourceAdapter) _adapter).Sync();
 
             // Assert
             Assert.AreEqual(4, counter, "There should be four publish events. One for each pending notification");
-
         }
 
         [Test(Description = "Pending acknowledgements should be acknowledged again during a sync because of a restart of the Publisher")]
@@ -190,15 +172,15 @@ namespace Marvin.Notifications.Tests
             var notifiaction1 = new Notification();
             var notifiaction2 = new Notification();
 
-            _notificationpublisher.Publish(notifiaction1);
-            _notificationpublisher.Publish(notifiaction2);
-            _notificationpublisher.Acknowledge(notifiaction1);
-            _notificationpublisher.Acknowledge(notifiaction2);
+            _adapter.Publish(_sender, notifiaction1);
+            _adapter.Publish(_sender, notifiaction2);
+            _adapter.Acknowledge(_sender, notifiaction1);
+            _adapter.Acknowledge(_sender, notifiaction2);
             int counter = 0;
-            ((INotificationSenderAdapter) _notificationAdapter).Acknowledged += delegate { counter += 1; };
+            ((INotificationSourceAdapter) _adapter).Acknowledged += delegate { counter += 1; };
 
             // Act
-            ((INotificationSenderAdapter) _notificationAdapter).Sync();
+            ((INotificationSourceAdapter) _adapter).Sync();
 
             // Assert
             Assert.AreEqual(2, counter, "There should be two ackowledge events. One for each pending acknowledgement which should be synchronized with the Publisher");
@@ -210,32 +192,18 @@ namespace Marvin.Notifications.Tests
             // Arrange
             var notifiaction1 = new Notification();
             var notification2 = new Notification();
-            _notificationpublisher.Publish(notifiaction1);
-            _notificationpublisher.Publish(notification2);
-            ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notifiaction1);
-            ((INotificationSenderAdapter)_notificationAdapter).PublishProcessed(notification2);
+            _adapter.Publish(_sender, notifiaction1);
+            _adapter.Publish(_sender, notification2);
+            ((INotificationSourceAdapter)_adapter).PublishProcessed(notifiaction1);
+            ((INotificationSourceAdapter)_adapter).PublishProcessed(notification2);
             int counter = 0;
-            ((INotificationSenderAdapter) _notificationAdapter).Published += delegate { counter += 1; };
+            ((INotificationSourceAdapter) _adapter).Published += delegate { counter += 1; };
 
             // Act
-            ((INotificationSenderAdapter) _notificationAdapter).Sync();
+            ((INotificationSourceAdapter) _adapter).Sync();
 
             // Assert
             Assert.AreEqual(0, counter, "There should be no publish events because everything should be up to date");
-        }
-
-        [Test(Description = "Check that acknowledging a notification by the SenderAdapter-interface for an unknown notification throws an exception.")]
-        public void ThrowExceptionIfTheSenderPublishesANotificationButIsNotRegistered()
-        {
-            // Arrange
-            var notification = new Notification();
-            _notificationAdapter.Unregister(_notificationSenderMock.Object);
-
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(delegate
-            {
-                _notificationpublisher.Publish(notification);
-            });
         }
     }
 }

@@ -21,8 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>..\..\Build\ServiceRuntime\Bundles\Marvin.Notifications.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,18 +43,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapter\INotificationContext.cs" />
     <Compile Include="Adapter\NotificationAdapter.cs" />
-    <Compile Include="Adapter\NotificationContext.cs" />
     <Compile Include="NotificationExtensions.cs" />
     <Compile Include="Notification\INotification.cs" />
     <Compile Include="Facade\INotificationSource.cs" />
     <Compile Include="Adapter\INotificationSender.cs" />
     <Compile Include="Adapter\INotificationAdapter.cs" />
-    <Compile Include="Adapter\INotificationSenderAdapter.cs" />
+    <Compile Include="Adapter\INotificationSourceAdapter.cs" />
     <Compile Include="Notification\Notification.cs" />
     <Compile Include="Facade\NotificationSourceFacade.cs" />
     <Compile Include="Notification\Severity.cs" />

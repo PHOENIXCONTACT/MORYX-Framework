@@ -6,6 +6,10 @@ using Marvin.Runtime.Base;
 
 namespace Marvin.Notifications
 {
+    /// <summary>
+    /// Facade implementation which uses the <see cref="INotificationSourceAdapter"/> to
+    /// provide the facade api <see cref="INotificationSource"/>
+    /// </summary>
     [DebuggerDisplay("NotificationSource: {" + nameof(Name) + "}")]
     public class NotificationSourceFacade : INotificationSource, IFacadeControl
     {
@@ -15,6 +19,10 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public bool IsActivated { get; private set; }
 
+        /// <summary>
+        /// Constructor to create a new instance of <see cref="NotificationSourceFacade"/>
+        /// </summary>
+        /// <param name="name"></param>
         public NotificationSourceFacade(string name)
         {
             Name = name;
@@ -26,7 +34,7 @@ namespace Marvin.Notifications
         /// <summary>
         /// The Adapter to interact with the notification senders
         /// </summary>
-        public INotificationSenderAdapter NotificationAdapter { get; set; }
+        public INotificationSourceAdapter NotificationAdapter { get; set; }
 
         /// <inheritdoc />
         public void Activate()
@@ -47,6 +55,7 @@ namespace Marvin.Notifications
             Deactivated?.Invoke(this, NotificationAdapter.GetPublished().ToArray());
         }
 
+        /// <inheritdoc />
         public IReadOnlyList<INotification> GetPublished()
         {
             ValidateHealthState();
