@@ -1,55 +1,47 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Container;
+using System.Threading;
 
 namespace Marvin.Notifications
 {
-    [Plugin(LifeCycle.Singleton, typeof(INotificationAdapter), typeof(INotificationSenderAdapter))]
-    public class NotificationAdapter : INotificationAdapter, INotificationSenderAdapter
+    /// <summary>
+    /// Notification adapter for the server module. 
+    /// The events and calls will be redirected to the <see cref="INotificationSource"/>
+    /// </summary>
+    public class NotificationAdapter : INotificationAdapter, INotificationSourceAdapter
     {
-        private readonly ICollection<NotificationMap> _published = new SynchronizedCollection<NotificationMap>();
-        private readonly ICollection<NotificationMap> _pendingAcks = new SynchronizedCollection<NotificationMap>();
-        private readonly ICollection<NotificationMap> _pendingPubs = new SynchronizedCollection<NotificationMap>();
+        private readonly List<NotificationMap> _published = new List<NotificationMap>();
+        private readonly List<NotificationMap> _pendingAcks = new List<NotificationMap>();
+        private readonly List<NotificationMap> _pendingPubs = new List<NotificationMap>();
 
-        private readonly IDictionary<string, INotificationSender> _senders = new ConcurrentDictionary<string, INotificationSender>();
-        #region Adapter <> Publisher
+        private readonly ReaderWriterLockSlim _listLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
-        /// <inheritdoc />
-        INotificationContext INotificationAdapter.Register(INotificationSender sender)
-        {
-            _senders.Add(sender.Identifier, sender);
-            return new NotificationContext(sender, this);
-        }
+        #region Adapter <> Facade
 
         /// <inheritdoc />
-        void INotificationAdapter.Unregister(INotificationSender sender)
+        public IReadOnlyList<INotification> GetPublished(INotificationSender sender)
         {
-            _senders.Remove(sender.Identifier);
-        }
+            _listLock.EnterReadLock();
 
-        /// <inheritdoc />
-        internal IReadOnlyList<INotification> GetPublished(INotificationSender sender)
-        {
             var notifications = _published.Where(m => m.Sender == sender)
                 .Select(map => map.Notification)
                 .ToArray();
+
+            _listLock.ExitReadLock();
 
             return notifications;
         }
 
         /// <inheritdoc />
-        internal void Publish(INotificationSender sender, INotification notification)
+        public void Publish(INotificationSender sender, INotification notification)
         {
-            if (!_senders.ContainsKey(sender.Identifier))
-                throw new InvalidOperationException("Notification cannot be published. " +
-                                                    "The sender was not registered on the adapter");
-
             var managed = (IManagedNotification)notification;
             managed.Identifier = Guid.NewGuid().ToString();
             managed.Created = DateTime.Now;
             managed.Sender = sender.Identifier;
+
+            _listLock.EnterUpgradeableReadLock();
 
             // Lets check if the notification was already published
             var isPending = _pendingPubs.Union(_pendingAcks).Union(_published)
@@ -57,20 +49,28 @@ namespace Marvin.Notifications
 
             if (isPending)
             {
+                _listLock.ExitUpgradeableReadLock();
                 throw new InvalidOperationException("Notification cannot be published twice!");
             }
             
+            _listLock.EnterWriteLock();
+            
             _pendingPubs.Add(new NotificationMap(sender, notification));
 
-            Published?.Invoke(sender, notification);
+            _listLock.ExitWriteLock();
+            _listLock.ExitUpgradeableReadLock();
+
+            Published?.Invoke(this, notification);
         }
 
         /// <inheritdoc />
-        internal void Acknowledge(INotificationSender sender, INotification notification)
+        public void Acknowledge(INotificationSender sender, INotification notification)
         {
             var managed = (IManagedNotification)notification;
             managed.Acknowledged = DateTime.Now;
             managed.Acknowledger = sender.Identifier;
+
+            _listLock.EnterWriteLock();
 
             var published = _published.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
             if (published != null)
@@ -83,64 +83,135 @@ namespace Marvin.Notifications
                 published = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
 
                 if (published == null)
+                {
+                    _listLock.ExitWriteLock();
                     throw new InvalidOperationException("Notification was not managed by the adapter. " +
                                                         "The sender was not registered on the adapter");
+                }
 
                 _pendingPubs.Remove(published);
             }
 
             _pendingAcks.Add(published);
 
-            Acknowledged?.Invoke(published.Sender, published.Notification);
+            _listLock.ExitWriteLock();
+
+            Acknowledged?.Invoke(this, published.Notification);
+        }
+
+        /// <inheritdoc />
+        public void AcknowledgeAll(INotificationSender sender)
+        {
+            _listLock.EnterWriteLock();
+
+            var publishes = _published.Where(p => p.Sender == sender).ToArray();
+            _published.RemoveAll(p => p.Sender == sender);
+
+            _pendingPubs.RemoveAll(p => p.Sender == sender);
+
+            foreach (var published in publishes)
+            {
+                var managed = (IManagedNotification)published.Notification;
+                managed.Acknowledged = DateTime.Now;
+                managed.Acknowledger = sender.Identifier;
+
+                _pendingAcks.Add(published);
+            }
+
+            _listLock.ExitWriteLock();
+            
+            foreach (var published in publishes)
+                Acknowledged?.Invoke(this, published.Notification);
         }
 
         #endregion
 
-        #region Publisher <> Adapter
+        #region Facade <> Adapter
 
         /// <inheritdoc />
-        IReadOnlyList<INotification> INotificationSenderAdapter.GetPublished()
+        IReadOnlyList<INotification> INotificationSourceAdapter.GetPublished()
         {
-            return _published.Union(_pendingAcks).Select(map => map.Notification).ToArray();
+            _listLock.EnterReadLock();
+
+            var published = _published.Union(_pendingAcks).Select(map => map.Notification).ToArray();
+
+            _listLock.ExitReadLock();
+
+            return published;
         }
 
         /// <inheritdoc />
-        void INotificationSenderAdapter.Acknowledge(INotification notification)
+        void INotificationSourceAdapter.Acknowledge(INotification notification)
         {
+            _listLock.EnterReadLock();
+
             var map = _published.Single(m => m.Notification.Identifier == notification.Identifier);
+
+            _listLock.ExitReadLock();
+
             map.Sender.Acknowledge(map.Notification);
         }
 
         /// <inheritdoc />
-        void INotificationSenderAdapter.AcknowledgeProcessed(INotification notification)
+        void INotificationSourceAdapter.AcknowledgeProcessed(INotification notification)
         {
-            var map = _pendingAcks.Single(n => n.Notification.Identifier.Equals(notification.Identifier));
-            _pendingAcks.Remove(map);
+            _listLock.EnterWriteLock();
+
+            var map = _pendingAcks.SingleOrDefault(n => n.Notification.Identifier.Equals(notification.Identifier));
+
+            // Maybe already removed from this adapter
+            if (map != null)
+                _pendingAcks.Remove(map);
+
+            _listLock.ExitWriteLock();
         }
 
         /// <inheritdoc />
-        void INotificationSenderAdapter.PublishProcessed(INotification notification)
+        void INotificationSourceAdapter.PublishProcessed(INotification notification)
         {
-            var map = _pendingPubs.Single(n => n.Notification.Identifier.Equals(notification.Identifier));
+            _listLock.EnterWriteLock();
 
-            _pendingPubs.Remove(map);
-            _published.Add(map);
+            var map = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier.Equals(notification.Identifier));
+
+            if (map != null)
+            {
+                _pendingPubs.Remove(map);
+                _published.Add(map);
+                _listLock.ExitWriteLock();
+            }
+            else
+            {
+                // Notification is maybe not pending anymore - we only can acknowledge it
+                _listLock.ExitWriteLock();
+
+                var managed = (IManagedNotification)notification;
+                managed.Acknowledged = DateTime.Now;
+                managed.Acknowledger = nameof(NotificationAdapter);
+                Acknowledged?.Invoke(this, notification);
+            }
         }
 
         /// <inheritdoc />
-        void INotificationSenderAdapter.Sync()
+        void INotificationSourceAdapter.Sync()
         {
             // Publish pending notifications
+            _listLock.EnterReadLock();
             var pendingPublishs = _pendingPubs.ToArray();
+            _listLock.ExitReadLock();
+
             foreach (var pendingPublish in pendingPublishs)
             {
-                Published?.Invoke(pendingPublish.Sender, pendingPublish.Notification);
+                Published?.Invoke(this, pendingPublish.Notification);
             }
 
             // Acknowledge pending acknowledges
-            foreach (var pendingAck in _pendingAcks)
+            _listLock.EnterReadLock();
+            var pendingAcks = _pendingAcks.ToArray();
+            _listLock.ExitReadLock();
+
+            foreach (var pendingAck in pendingAcks)
             {
-                Acknowledged?.Invoke(pendingAck.Sender, pendingAck.Notification);
+                Acknowledged?.Invoke(this, pendingAck.Notification);
             }
         }
 
