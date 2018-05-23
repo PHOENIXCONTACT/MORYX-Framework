@@ -50,9 +50,18 @@ namespace Marvin.Workflows
         /// </summary>
         private static WorkflowEngine CreateWorkflowEngine(IWorkflow workflow, IWorkplanContext context)
         {
-            var engine = new WorkflowEngine {Context = context};
+            var engine = new WorkflowEngine { Context = context };
             engine.Initialize(workflow);
             return engine;
+        }
+
+        /// <summary>
+        /// Create a path predictor for this workplan that can be used
+        /// to monitor instances of the workplan.
+        /// </summary>
+        public static IPathPredictor PathPrediction(IWorkplan workplan)
+        {
+            return new PathPredictor(workplan);
         }
 
         /// <summary>
