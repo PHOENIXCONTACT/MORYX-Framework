@@ -283,6 +283,7 @@
     <Compile Include="Workflows\API\Editing\ModifiedStep.cs" />
     <Compile Include="Workflows\API\Editing\OutputDescriptionDto.cs" />
     <Compile Include="Workflows\API\Editing\SessionModification.cs" />
+    <Compile Include="Workflows\API\IPathPredictor.cs" />
     <Compile Include="Workflows\Editing\SessionModificationContext.cs" />
     <Compile Include="Workflows\API\Editing\StepClassification.cs" />
     <Compile Include="Workflows\API\Editing\UserOperation.cs" />
@@ -330,6 +331,7 @@
     <Compile Include="Workflows\Implementation\Engine\WorkflowEngine.cs" />
     <Compile Include="Workflows\Implementation\MainToken.cs" />
     <Compile Include="Workflows\Implementation\NullContext.cs" />
+    <Compile Include="Workflows\Implementation\PathPredictor.cs" />
     <Compile Include="Workflows\Implementation\Place.cs" />
     <Compile Include="Workflows\Implementation\SimpleWorkflow.cs" />
     <Compile Include="Workflows\Implementation\SplitToken.cs" />

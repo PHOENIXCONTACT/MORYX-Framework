@@ -43,4 +43,16 @@ namespace Marvin.Workflows
         /// </summary>
         event EventHandler<IPlace> Completed; 
     }
+
+    /// <summary>
+    /// Additional interface for <see cref="IWorkflowEngine"/> to monitor the current execution
+    /// </summary>
+    public interface IMonitoredEngine : IWorkflowEngine
+    {
+        /// <summary>
+        /// Event raised when a token was placed on a place with classification
+        /// <see cref="NodeClassification.Intermediate"/>
+        /// </summary>
+        event EventHandler<IPlace> PlaceReached;
+    }
 }

@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Marvin.Workflows
 {
-    internal class WorkflowEngine : IWorkflowEngine
+    internal class WorkflowEngine : IMonitoredEngine
     {
         public WorkflowEngine()
         {
@@ -37,9 +37,25 @@ namespace Marvin.Workflows
                     ((IObservableTransition)transition).Triggered += OnTransitionTriggered;
             }
             // Register to events of exit places
-            foreach (var endPlace in ExecutedWorkflow.EndPlaces())
+            foreach (var place in ExecutedWorkflow.Places)
             {
-                endPlace.TokenAdded += EndPlaceReached;
+                place.TokenAdded += OnPlaceReached;
+            }
+        }
+
+        private void OnPlaceReached(object sender, IToken token)
+        {
+            var place = (IPlace) sender;
+            // Check if the engine completed its execution
+            if (place.Classification.HasFlag(NodeClassification.Exit)
+              && (place.Classification == NodeClassification.Failed || token is MainToken))
+            {
+                State.Completed();
+                Completed(this, place);
+            }
+            else if(place.Classification == NodeClassification.Intermediate)
+            {
+                PlaceReached?.Invoke(this, place);
             }
         }
 
@@ -47,17 +63,6 @@ namespace Marvin.Workflows
         {
             // ReSharper disable once PossibleNullReferenceException
             TransitionTriggered(this, (IObservableTransition)sender);
-        }
-
-        private void EndPlaceReached(object sender, IToken token)
-        {
-            var place = (IPlace) sender;
-            // Raise only if main token reached end
-            if (place.Classification == NodeClassification.Failed || token is MainToken)
-            {
-                State.Completed();
-                Completed(this, place);
-            }
         }
 
         /// 
@@ -160,6 +165,9 @@ namespace Marvin.Workflows
 
         #endregion
 
+        ///
+        public event EventHandler<IPlace> PlaceReached;
+
         /// 
         public event EventHandler<ITransition> TransitionTriggered;
 
@@ -180,9 +188,9 @@ namespace Marvin.Workflows
                 transition.Triggered -= OnTransitionTriggered;
             }
             // Unregister from events of exit places
-            foreach (var endPlace in ExecutedWorkflow.EndPlaces())
+            foreach (var place in ExecutedWorkflow.Places)
             {
-                endPlace.TokenAdded -= EndPlaceReached;
+                place.TokenAdded -= OnPlaceReached;
             }
             ExecutedWorkflow = null;
         }
