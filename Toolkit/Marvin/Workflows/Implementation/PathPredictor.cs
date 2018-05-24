@@ -21,6 +21,9 @@ namespace Marvin.Workflows
         /// </summary>
         private readonly ICollection<IMonitoredEngine> _monitoredEngines = new List<IMonitoredEngine>();
 
+        /// <inheritdoc />
+        public int MonitoredEngines => _monitoredEngines.Count;
+
         public PathPredictor(IWorkplan workplan)
         {
             // All inputs for each output to traverse the workplan in reverse
@@ -82,6 +85,20 @@ namespace Marvin.Workflows
             }
         }
 
+        public bool Remove(IWorkflowEngine instance)
+        {
+            lock (_monitoredEngines)
+            {
+                var monitoredEngine = (IMonitoredEngine)instance;
+
+                var wasMonitored = _monitoredEngines.Remove(monitoredEngine);
+                if (wasMonitored)
+                    UnregisterEvents(monitoredEngine);
+
+                return wasMonitored;
+            }
+        }
+
         private void OnPlaceReached(object sender, IPlace place)
         {
             // Determine the result classification from this place forward
@@ -94,19 +111,13 @@ namespace Marvin.Workflows
                 PathPrediction(this, eventArgs);
 
                 // As far as we are concerne this engine is complete
-                EngineCompleted(sender, place);
+                Remove((IWorkflowEngine)sender);
             }
         }
 
         private void EngineCompleted(object sender, IPlace e)
         {
-            lock (_monitoredEngines)
-            {
-                var monitoredEngine = (IMonitoredEngine)sender;
-
-                if (_monitoredEngines.Remove(monitoredEngine))
-                    UnregisterEvents(monitoredEngine);
-            }
+            Remove((IWorkflowEngine)sender);
         }
 
 
