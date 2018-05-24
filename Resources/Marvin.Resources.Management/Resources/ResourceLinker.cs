@@ -99,7 +99,9 @@ namespace Marvin.Resources.Management
         public void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations, IDictionary<long, ResourceWrapper> allResources)
         {
             var resourceType = resource.GetType();
-            foreach (var property in ReferenceProperties(resourceType, false))
+            var referenceProperties = ReferenceProperties(resourceType, false).ToList();
+
+            foreach (var property in referenceProperties)
             {
                 // Link a list of resources
                 if (typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType))
@@ -133,11 +135,19 @@ namespace Marvin.Resources.Management
                                           select reference).ToArray();
                     if (referenceMatch.Length == 1)
                         property.SetValue(resource, referenceMatch[0]);
-                    else
-                        Logger.LogEntry(LogLevel.Warning, "Type mismatch: Can not assign any resource from [{0}] to {1} on {2}:{3} or too many matches!", string.Join(",", matches.Select(m => m.ReferenceId)), property.Name, resource.Id, resource.Name);
-
+                    else if(referenceMatch.Length > 1)
+                        Logger.LogEntry(LogLevel.Warning, "Inconclusive relation: Can not assign property {0} on {1}:{2} from [{3}]. Too many matches!", property.Name, resource.Id, resource.Name, string.Join(",", matches.Select(m => m.ReferenceId)));
+                    else if(matches.Any(m => referenceProperties.All(p => !PropertyMatchesRelation(p, m, allResources[m.ReferenceId]))))
+                        Logger.LogEntry(LogLevel.Warning, "Incompatible relation: Resources from [{0}] with relation type {1} can not be assigned to a property on {2}:{3}.", string.Join(",", matches.Select(m => m.ReferenceId)), matches[0].RelationType, resource.Id, resource.Name);
                 }
             }
+        }
+
+        private static bool PropertyMatchesRelation(PropertyInfo property, ResourceRelationAccessor relation, ResourceWrapper instance)
+        {
+            var att = property.GetCustomAttribute<ResourceReferenceAttribute>();
+            return att.Role == relation.Role && att.RelationType == relation.RelationType && att.Name == relation.Name 
+                && property.PropertyType.IsInstanceOfType(instance.Target);
         }
 
         /// <inheritdoc />

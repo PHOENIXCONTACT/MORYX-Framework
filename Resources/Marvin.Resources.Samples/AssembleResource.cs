@@ -13,6 +13,9 @@ namespace Marvin.Resources.Samples
         [ResourceReference(ResourceRelationType.Extension)]
         public AssembleFoo Setup { get; set; }
 
+        [ResourceReference(ResourceRelationType.Extension)]
+        public IVisualInstructor Instructor { get; set; }
+
         protected override void OnInitialize()
         {
             base.OnInitialize();
