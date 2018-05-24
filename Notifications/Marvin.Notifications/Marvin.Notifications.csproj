@@ -56,15 +56,13 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Adapter\INotificationContext.cs" />
     <Compile Include="Adapter\NotificationAdapter.cs" />
-    <Compile Include="Adapter\NotificationContext.cs" />
     <Compile Include="NotificationExtensions.cs" />
     <Compile Include="Notification\INotification.cs" />
     <Compile Include="Facade\INotificationSource.cs" />
     <Compile Include="Adapter\INotificationSender.cs" />
     <Compile Include="Adapter\INotificationAdapter.cs" />
-    <Compile Include="Adapter\INotificationSenderAdapter.cs" />
+    <Compile Include="Adapter\INotificationSourceAdapter.cs" />
     <Compile Include="Notification\Notification.cs" />
     <Compile Include="Facade\NotificationSourceFacade.cs" />
     <Compile Include="Notification\Severity.cs" />

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Marvin.Runtime.Modules;
 
 namespace Marvin.Notifications
 {
     /// <summary>
-    /// Default implementation of the <see cref="INotificationSource"/> facade
+    /// Facade implementation which uses the <see cref="INotificationSourceAdapter"/> to
+    /// provide the facade api <see cref="INotificationSource"/>
     /// </summary>
+    [DebuggerDisplay("NotificationSource: {" + nameof(Name) + "}")]
     public class NotificationSourceFacade : FacadeBase, INotificationSource
     {
         /// <inheritdoc />
@@ -15,6 +18,10 @@ namespace Marvin.Notifications
         /// <summary>
         /// Creates a new named notification source facade
         /// </summary>
+        /// <summary>
+        /// Constructor to create a new instance of <see cref="NotificationSourceFacade"/>
+        /// </summary>
+        /// <param name="name"></param>
         public NotificationSourceFacade(string name)
         {
             Name = name;
@@ -23,7 +30,7 @@ namespace Marvin.Notifications
         /// <summary>
         /// The Adapter to interact with the notification senders
         /// </summary>
-        public INotificationSenderAdapter NotificationAdapter { get; set; }
+        public INotificationSourceAdapter NotificationAdapter { get; set; }
 
         /// <inheritdoc />
         public override void Activate()
@@ -44,10 +51,17 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
-        public void Sync(IReadOnlyList<INotification> notifications)
+        public IReadOnlyList<INotification> GetPublished()
         {
             ValidateHealthState();
-            NotificationAdapter.Sync(notifications);
+            return NotificationAdapter.GetPublished();
+        }
+
+        /// <inheritdoc />
+        public void Sync()
+        {
+            ValidateHealthState();
+            NotificationAdapter.Sync();
         }
 
         /// <inheritdoc />

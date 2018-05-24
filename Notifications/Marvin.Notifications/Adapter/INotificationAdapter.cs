@@ -2,18 +2,29 @@
 
 namespace Marvin.Notifications
 {
+    /// <summary>
+    /// Adapter for <see cref="INotificationSender"/> to publish and acknowledge notifications
+    /// </summary>
     public interface INotificationAdapter
     {
         /// <summary>
-        /// Registers the sender at the adapter
+        /// Will return currently published notifications
         /// </summary>
-        /// <param name="sender"></param>
-        INotificationContext Register(INotificationSender sender);
+        IReadOnlyList<INotification> GetPublished(INotificationSender sender);
 
         /// <summary>
-        /// Removes the registration of the sender
+        /// Publishes the given notification
         /// </summary>
-        /// <param name="sender"></param>
-        void Unregister(INotificationSender sender);
+        void Publish(INotificationSender sender, INotification notification);
+
+        /// <summary>
+        /// Acknowledges the given notification
+        /// </summary>
+        void Acknowledge(INotificationSender sender, INotification notification);
+
+        /// <summary>
+        /// Acknowledges all notifications of the given sender
+        /// </summary>
+        void AcknowledgeAll(INotificationSender sender);
     }
 }
