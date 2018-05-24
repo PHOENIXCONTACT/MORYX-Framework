@@ -9,9 +9,19 @@ namespace Marvin.Workflows
     public interface IPathPredictor : IDisposable
     {
         /// <summary>
+        /// Number of engines currently monitored by the path predictor
+        /// </summary>
+        int MonitoredEngines { get; }
+
+        /// <summary>
         /// Monitor the engine of a worklow to predict its outcome
         /// </summary>
         void Monitor(IWorkflowEngine instance);
+
+        /// <summary>
+        /// Remove a engine instance, that shall be no longer be monitored
+        /// </summary>
+        bool Remove(IWorkflowEngine instance);
 
         /// <summary>
         /// The <see cref="IPathPredictor"/> has determined the most likely result of the
