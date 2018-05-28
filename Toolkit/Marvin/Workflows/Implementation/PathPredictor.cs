@@ -42,13 +42,16 @@ namespace Marvin.Workflows
         /// </summary>
         /// <param name="workplan"></param>
         /// <returns></returns>
-        private static IDictionary<long, HashSet<IConnector>> ReverseRelations(IWorkplan workplan)
+        private static IDictionary<long, HashSet<IWorkplanNode>> ReverseRelations(IWorkplan workplan)
         {
-            // Create dictionary of connector ids and possible inputs
-            var reversedConnections = workplan.Connectors.ToDictionary(c => c.Id, c => new HashSet<IConnector>());
+            // Create dictionary of node ids and possible inputs
+            var reversedConnections = workplan.Connectors.Cast<IWorkplanNode>().Concat(workplan.Steps)
+                .ToDictionary(c => c.Id, c => new HashSet<IWorkplanNode>());
 
             foreach (var step in workplan.Steps)
             {
+                reversedConnections[step.Id].AddRange(step.Inputs);
+
                 foreach (var output in step.Outputs)
                 {
                     reversedConnections[output.Id].AddRange(step.Inputs);
@@ -61,7 +64,7 @@ namespace Marvin.Workflows
         /// <summary>
         /// Analyze the current node and build the internal path prediction dictionary
         /// </summary>
-        private void Analyze(IConnector currentNode, IConnector resultNode, IDictionary<long, HashSet<IConnector>> reversedRelations)
+        private void Analyze(IWorkplanNode currentNode, IConnector resultNode, IDictionary<long, HashSet<IWorkplanNode>> reversedRelations)
         {
             // Try to add the result to this node. if this fails we already visited this node
             // and have a reached a recursion
@@ -80,6 +83,7 @@ namespace Marvin.Workflows
                 var monitoredEngine = (IMonitoredEngine)instance;
                 _monitoredEngines.Add(monitoredEngine);
 
+                monitoredEngine.TransitionTriggered += OnTransitionTriggered;
                 monitoredEngine.PlaceReached += OnPlaceReached;
                 monitoredEngine.Completed += EngineCompleted;
             }
@@ -99,10 +103,20 @@ namespace Marvin.Workflows
             }
         }
 
+        private void OnTransitionTriggered(object sender, ITransition transition)
+        {
+            NodeReached(sender, transition.Id);
+        }
+
         private void OnPlaceReached(object sender, IPlace place)
         {
+            NodeReached(sender, place.Id);
+        }
+
+        private void NodeReached(object sender, long nodeId)
+        {
             // Determine the result classification from this place forward
-            var classification = _workplanAnalysis[place.Id].AggregatedClassification;
+            var classification = _workplanAnalysis[nodeId].AggregatedClassification;
 
             // Publish the result if it is one of the final ones
             if (classification == NodeClassification.End || classification == NodeClassification.Failed)
@@ -130,10 +144,12 @@ namespace Marvin.Workflows
 
                 _monitoredEngines.Clear();
             }
+
         }
 
         private void UnregisterEvents(IMonitoredEngine engine)
         {
+            engine.TransitionTriggered -= OnTransitionTriggered;
             engine.PlaceReached -= OnPlaceReached;
             engine.Completed -= EngineCompleted;
         }

@@ -5,18 +5,8 @@ namespace Marvin.Workflows
     /// <summary>
     /// Single step in the workplan
     /// </summary>
-    public interface IWorkplanStep
+    public interface IWorkplanStep : IWorkplanNode
     {
-        /// <summary>
-        /// Workplan unique element id of this connector
-        /// </summary>
-        long Id { get; set; }
-
-        /// <summary>
-        /// Transition name
-        /// </summary>
-        string Name { get; }
-
         /// <summary>
         /// All inputs of this step, the amount depends on the workflow
         /// </summary>

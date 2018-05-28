@@ -284,6 +284,7 @@
     <Compile Include="Workflows\API\Editing\OutputDescriptionDto.cs" />
     <Compile Include="Workflows\API\Editing\SessionModification.cs" />
     <Compile Include="Workflows\API\IPathPredictor.cs" />
+    <Compile Include="Workflows\API\Type\IWorkplanNode.cs" />
     <Compile Include="Workflows\Editing\SessionModificationContext.cs" />
     <Compile Include="Workflows\API\Editing\StepClassification.cs" />
     <Compile Include="Workflows\API\Editing\UserOperation.cs" />
