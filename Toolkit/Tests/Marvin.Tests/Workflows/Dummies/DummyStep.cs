@@ -61,6 +61,12 @@ namespace Marvin.Tests.Workflows
             if (ResultOutput >= 0) // Resume directly
                 PlaceToken(Outputs[ResultOutput], StoredTokens.First());
         }
+        
+        public override void Resume()
+        {
+            if (StoredTokens.Any())
+                Triggered(this, new EventArgs());
+        }
 
         public void ResumeAsync(int result)
         {
