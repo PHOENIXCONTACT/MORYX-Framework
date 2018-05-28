@@ -67,6 +67,39 @@ namespace Marvin.Tests.Workflows
             Assert.AreEqual(finalResult, prediction, "Predication was incorrect");
         }
 
+        [Test(Description = "The path predictor must be able to publish a prediction when the workflow was interrupted in a predictable path")]
+        public void PublishPredictionAfterInterruption()
+        {
+            // Arrange
+            var workplan = WorkplanDummy.CreateBig();
+            var predictor = Workflow.PathPrediction(workplan);
+            NodeClassification prediction = NodeClassification.Intermediate;
+            predictor.PathPrediction += (sender, args) => prediction = args.PredictedOutcome;
+            // Start and pause engine in 
+            var engine = Workflow.CreateEngine(workplan, new NullContext());
+            var transitions = engine.ExecutedWorkflow.Transitions.OfType<DummyTransition>();
+            transitions.ForEach(dt => dt.ResultOutput = -1); // Disable automatic execution
+            transitions.First().ResultOutput = 1; // Except for the first one
+            engine.TransitionTriggered += (sender, transition) => { };
+            engine.Start();
+
+            // Act
+            var snapshot = engine.Pause(); // Snapshot of the engine in a sure failure path
+            engine.Dispose();
+            engine = Workflow.CreateEngine(workplan, new NullContext());
+            engine.Restore(snapshot); // Restore new engine from the snapshot
+            var finalResult = NodeClassification.Intermediate;
+            engine.Completed += (sender, place) => finalResult = place.Classification;
+            engine.TransitionTriggered += (sender, transition) => ThreadPool.QueueUserWorkItem(ResumeAsync, transition);
+            predictor.Monitor(engine);
+            engine.Start(); // This should resume the engine in a failure path and directly raise the event
+
+            // Assert
+            while (finalResult == NodeClassification.Intermediate)
+                Thread.Sleep(1); // Await completion
+            Assert.AreEqual(finalResult, prediction, "Predication was incorrect");
+        }
+
         private void ResumeAsync(object state)
         {
             var transition = (DummyTransition)state;

@@ -50,12 +50,14 @@ namespace Marvin.Workflows
 
             foreach (var step in workplan.Steps)
             {
-                reversedConnections[step.Id].AddRange(step.Inputs);
-
+                // The input for each output is the step itself
                 foreach (var output in step.Outputs)
                 {
-                    reversedConnections[output.Id].AddRange(step.Inputs);
+                    reversedConnections[output.Id].Add(step);
                 }
+
+                // The input of the step ar its inputs
+                reversedConnections[step.Id].AddRange(step.Inputs);
             }
 
             return reversedConnections;
