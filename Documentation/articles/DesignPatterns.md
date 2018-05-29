@@ -1,27 +1,27 @@
 ---
 uid: DesignPatterns
 ---
-Design Patters
-===============
+# Design Patters
 
 This should be an overview of design patterns and how they will be used in MarvinPlatform applications. The Platform will provide several base classes, helper, structures and implementations to support different patterns.
 
-This should no *me too* documentation. So the focus is on the implementation and usage with the MarvinPlatform.
+This should be no *me too* documentation. So the focus is on the implementation and usage with the MarvinPlatform.
 
-A good starting point is a github project where a community of developers provide a detailed description with abstract samples to implement design patterns: [Design-Patterns-for-Humans](https://github.com/kamranahmedse/design-patterns-for-humans). Other sources can also be used. The world wide web is full with tons of samples and implementations. To implement the patters all on the same way that every colleagues will understand the code, please read the next pages. 
+A good starting point is a github project where a community of developers provide a detailed description with abstract samples to implement design patterns: [Design-Patterns-for-Humans](https://github.com/kamranahmedse/design-patterns-for-humans). Other sources can also be used. The world wide web is full with tons of samples and implementations. To implement the patters all on the same way that every colleagues will understand the code, please read the next pages.
 
-# Behavioral Design Patterns
+## Behavioral Design Patterns
 
-## State
+### State
 
 *The state pattern is a behavioral software design pattern that implements a state machine in an object-oriented way. With the state pattern, a state machine is implemented by implementing each individual state as a derived class of the state pattern interface, and implementing state transitions by invoking methods defined by the pattern's superclass. The state pattern can be interpreted as a strategy pattern which is able to switch the current strategy through invocations of methods defined in the pattern's interface.* (Please read the [wikipedia article](https://en.wikipedia.org/wiki/State_pattern) carefully.)
 
-The MaRVIN Platform provides some base classes and interfaces in the [Marvin.StateMachines](xref:Marvin.StateMachines)-Namespace. The general interface of a state context is the [IStateContext](xref:Marvin.StateMachines.IStateContext). It represents the context object of the state machine and provides a `SetState` method to provide the next state. The base interface of a state is the [IState](xref:Marvin.StateMachines.IState). All states should derive from this interface. It provides actions like `OnEnter` and `OnExti` to indicate the entering and exiting of a state. For the [IState](xref:Marvin.StateMachines.IState) a base class exists. The base class will handle all the actions of the state machine. 
+The MaRVIN Platform provides some base classes and interfaces in the [Marvin.StateMachines](xref:Marvin.StateMachines)-Namespace. The general interface of a state context is the [IStateContext](xref:Marvin.StateMachines.IStateContext). It represents the context object of the state machine and provides a `SetState` method to provide the next state. The base interface of a state is the [IState](xref:Marvin.StateMachines.IState). All states should derive from this interface. It provides actions like `OnEnter` and `OnExti` to indicate the entering and exiting of a state. For the [IState](xref:Marvin.StateMachines.IState) a base class exists. The base class will handle all the actions of the state machine.
 
 In the past we implemented the states by hand. A base state implemented a `NextState()` method which created a new state depending on the given argument. This leaded to big switch- or if-blocks. With every state change a new object instance was created which extended the workload of the garbage collector. To reduce the amount of boilerplate code we implemented a dictionary with the state name as key and a creation delegate as value to create a state like this: `var state = Map[name]`. 
 This was nice because the instanciation of states was done only when the state machine was created. The problem with this idea was that it leads to Copy/Paste and much manual work for big state machines. If some state had been changed, the map had to be changed too.
 
 **Old Version 1**
+
 ````cs
 private static readonly Dictionary<string, StateConstructor> StateConstructors = new Dictionary<string, StateConstructor>
 {
@@ -97,7 +97,6 @@ The base class of the state should derive from `StateBase<TContext>` while `TCon
 The states are defined for the base class by adding the Attributes [StateDefinitionAttribute](xref:Marvin.StateMachines.StateDefinitionAttribute) above the `protected const int` Definition. The attribute defines the type of the regarding state. Additionally it have a property to set the initial state of the machine. Only one state can be the initial.
 
 Every transition of the state machine musst be provided as a `virtual`-Method which will be overwritten by the specialized state.
-
 
 ````cs
 public abstract class MyStateBase : StateBase<MyContext>
@@ -182,9 +181,9 @@ private void ReloadMachine()
 {
     // Get the key of current state
     var key = StateMachine.GetKey(_stat);
-        
+
     // ... save key to db or somewhere else
-        
+
     // Reload the state with the saved key
     StateMachine.Reload<MyStateBase>(this, key);
 } 
@@ -192,7 +191,7 @@ private void ReloadMachine()
 
 **Force a machine to a specific state**
 
-Sometimes it is required to force a specific state machine state for debugging purposes. 
+Sometimes it is required to force a specific state machine state for debugging purposes.
 It is possible to force the state machine with the static helper class [StateMachine](xref:Marvin.StateMachines.StateMachine):
 
 ````cs
@@ -203,7 +202,7 @@ private void ForceMachine()
 ````
 
 The default overload of `Force` does not call `OnExit` of the given state nor calling the `OnEnter` of the forced state. 
-A specialized overload for this can be used: 
+A specialized overload for this can be used:
 
 ````cs
 private void ForceMachine()
@@ -215,6 +214,7 @@ private void ForceMachine()
 Please open the class documentation to see all functions of the [StateMachine](xref:Marvin.StateMachines.StateMachine) class.
 
 **Some rules:**
+
 - The state base class must be abstract!
 - There musst be at least one constant integer attributed with the `StateDefinitionAttribute` upon the definition of the integer constant!
 - State types Defintions should be defined only once!

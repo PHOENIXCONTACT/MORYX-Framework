@@ -1,8 +1,8 @@
 ---
 uid: Bindings
 ---
-Bindings
-==========
+# Bindings
+
 The types of the `Marvin.Bindings`-namespace located in _Marvin.PlatformTools_ offer the functionality to dynamically resolve or update properties of objects. An [IBindingResolver](xref:Marvin.Bindings.IBindingResolver) is created by an instance of [IBindingResolverFactory](xref:Marvin.Bindings.IBindingResolverFactory) from a string like `"Branch.Name"`. The resolver will then return the value of `Name` for each `object source` passed into the `Resolve(source)`-method.
 
 It is also possible to set the value of the property by calling `Update(object, object)` on the resolver created by the factory.
@@ -15,7 +15,7 @@ public class Root
     public Branch Branch { get; set; }
 }
 
-public class Branch 
+public class Branch
 {
     public string Name { get; set; }
 }
@@ -28,7 +28,9 @@ var root = new Root()
 {
     Branch = new Branch { Name = "Thomas" }
 };
+
 var name = resolver.Resolve(root); // Value of name = "Thomas"
+
 // New or modified object
 root = new Root()
 {
@@ -41,6 +43,7 @@ resolver.Update(root, "Marie"); // Value of "root.Branch" = "Marie"
 ````
 
 ## IBindingResolver Chain
+
 Implementations of [IBindingResolver](xref:Marvin.Bindings.IBindingResolver) are build as a recursive double-linked list using their extended [IBindingResolverChain](xref:Marvin.Bindings.IBindingResolver) interface. Each link of the chain resolves a fragment of the string using the source object and passes the result to the next link. When updating a value the resolver chain is executed up to the last link and instead of calling `Resolve` on the last link, `Update` is invoked.
 
 The chain of resolvers is built by the [IBindingResolverFactory](xref:Marvin.Bindings.IBindingResolverFactory) by parsing the string and creating links token by token. A token is text fragement between two dots or an index like __name__ in `Parameters[name]`. Unlike XAML-binding not all tokens directly represent a property. An implementation of [IBindingResolverFactory](xref:Marvin.Bindings.IBindingResolverFactory) might define special keys or short-cuts.
@@ -48,6 +51,7 @@ The chain of resolvers is built by the [IBindingResolverFactory](xref:Marvin.Bin
 The platform provides a base class [BindingResolverBase](xref:Marvin.Bindings.BindingResolverBase) and four standard implementations of [IBindingResolver](xref:Marvin.Bindings.IBindingResolver).
 
 ### BindingResolverBase
+
 This base class implements the [IBindingResolverChain](xref:Marvin.Bindings.IBindingResolver) interface and should be used instead of implementing the interface manually. It provides an explicit `Resolve`-method that continues invocation on the recursive chain. If the object is `null` or this was the last link in the chain it returns the current value.
 
 A simple example for a custom resolver could resolve the type of an object.
@@ -70,6 +74,7 @@ public class TypeResolver : BindingResolverBase
 ````
 
 ### NullResolver
+
 Following the [Null-Object pattern](https://en.wikipedia.org/wiki/Null_Object_pattern) this resolver can be used whenever an instance of [IBindingResolver](xref:Marvin.Bindings.IBindingResolver) is required but no operation should be performed. The [NullResolver](xref:Marvin.Bindings.NullResolver) simply continues the chain by calling proceed with the unmodified source object.
 
 Example in code:
@@ -81,6 +86,7 @@ result = resolver.Resolve("Name"); // Value of result = "Name"
 ````
 
 ### ReflectionResolver
+
 By using reflection [this resolver](xref:Marvin.Bindings.ReflectionResolver) tries to load the value of the property from the source object. The name of the property is usually parsed as the text between dots in the binding string. The example at the top creates two reflection resolvers - one for `"Branch"` and one for `"Name"`. Because this resolver uses reflection it is significantly slower than the others and should not be used to resolve values which could be accessed another way. The resolver also supports updating the value as long as the property `CanWrite`.
 
 Example in code:
@@ -93,8 +99,8 @@ var result = resolver.Resolve("Name"); // Value of result = 4
 Example for updating a value:
 
 ````cs
-class Foo 
-{ 
+class Foo
+{
     public string Name {get; set;}
 }
 
@@ -104,6 +110,7 @@ resolver.Update(foo, "Bob");
 ````
 
 ### DelegateResolver
+
 The [delegate resolver](xref:Marvin.Bindings.DelegateResolver) can be used to implement simple custom resolution rules without creating a new implementation of [IBindingResolver](xref:Marvin.Bindings.IBindingResolver). It is created from a delegate `Func<object, object>` and will call it for each call to `Resolve()`. The result of the callback is returned.
 
 Using the DelegateResolver to provide the `GetType()` behavior:
@@ -123,6 +130,7 @@ resolver.Update(foo, "Bob");
 ````
 
 ### FormatBindingResolver
+
 The [format resolver](xref:Marvin.Bindings.FormatBindingResolver) can create format strings for objects implementing `IFormattable`. It is used by the `TextBindingResolverFactory`, that is explained further down in this documentation.
 
 An easy example using the resolver to format a string with fixed length:
@@ -133,6 +141,7 @@ var result = resolver.Resolve(3); // Value of result = "003"
 ````
 
 ### IndexResolver
+
 The [index resolver](xref:Marvin.Bindings.IndexResolver) can extract values from collections and dictionaries. Given an index like `"Thomas"` or `10` it tries to interpret those values either as indexes in `IList` or as the key in a dictionary. Because the index resolver expects a collection as `source` object it usually needs to be preceded by another resolver that resolves the collection itself. This is done be the `BindingResolverFactory` that uses a Regex to combine a `ReflectionResolver` with an `IndexResolver` when it finds a string like `Collection[index]`. It also supports the `Update`-method to set values.
 
 Using it stand-alone looks like this:
@@ -153,9 +162,10 @@ resolver.Update(dict, "OtherValue");
 ````
 
 ## IBindingResolverFactory
+
 The resolver factory builds a recursive chain of `IBindingResolver` from a string like `"Root.Branch.Name"`. The default and base implementation is [BindingResolverFactory](xref:Marvin.Bindings.BindingResolverFactory). It is similar to the binding-engine in XAML with the addition that it supports collection resolution. Custom resolver factories are built by creating a type derived from `BindingResolverFactory`. Below is an example for a factory that supports loading the objects type. The example explains the two concepts base key and custom resolution rules.
 
-~~~~{.cs}
+````cs
 public class TypeResolverFactory : BindingResolverFactory
 {
     protected override IBindingResolverChain CreateBaseResolver(string baseKey)
@@ -179,16 +189,17 @@ public class TypeResolverFactory : BindingResolverFactory
         return base.AddToChain(resolver, property);
     }
 }
-~~~~
+````
 
 ### Base Key
+
 The resolver factory, unlike XAML, offers the possibility to define logic for different base keys. The base key is per definition the text before the first dot. Per default the resolver factory ignores the base key and directly starts with a `ReflectionResolver` on the source object. This means to access our name property the binding string needs to be `"Branch.Name"`. 
 
 Base keys can be used for readability like the example for `"Root"` above or work as multiplexers with entry points into the object tree. Starting with a `NullResolver` can be more intuitive for users. Multiplexers make sense when creating a binding factory that always uses the same type of source object and this object is the entry point to a rather big object tree.
 
 Let us assume the following object tree:
 
-~~~~{.sh}
+````sh
 - Root
 -- Branch
 --- Name
@@ -203,7 +214,7 @@ Let us assume the following object tree:
 ---- Value
 ---- EntryC
 ----- LongString
-~~~~
+````
 
 If users would usually need values of one of the three entry points, they would have to build rather long binding strings like `"EntryB.Bla.EntryC.LongString"`. In such cases it makes sense to define base keys that work as short cuts and as a side effect also improve performance. For complex object structures this reduces the required knowledge of users about your design. As far as they are concerned these are four independent types.
 
@@ -227,11 +238,13 @@ protected override IBindingResolverChain CreateBaseResolver(string baseKey)
 ````
 
 ### Add To Chain
+
 As previously mentioned the binding resolvers are built as a recursive chain and the `AddToChain`-method is used to do exactly this. It is called for each segment in the binding string between dots. Per default the factory applies a property and indexer regex to this string. Derived types can use this method to include their own resolvers and logic into the resolver chain. 
 
 The new resolvers must be added to the current resolver passed into the method and then return the new end of the chain. The extension method `Extend` does exactly this and is the recommended way to do it in new binding resolver factories. The new end of the chain need to be returned because in some cases the `AddToChain` method might add more than one link to the chain. For example when working with collections, resolving `Collection[Foo]` will add a `ReflectionResolver` and an `IndexResolver` to the chain.
 
 ## Illustrated Examples
+
 Applying the previous sections to a few examples the factory and resolver chain can be illustrated with the images below.
 
 ![](images/Bindings/Example1.png)
@@ -239,6 +252,7 @@ Applying the previous sections to a few examples the factory and resolver chain 
 ![](images/Bindings/Example3.png)
 
 ## Text Bindings
+
 While there might be some use cases of those bindings by themselves, the more common use is to embed them into text. This is done by instances of [ITextBindingResolver](xref:Marvin.Bindings.ITextBindingResolver) created by the [TextBindingResolverFactory](xref:Marvin.Bindings.TextBindingResolverFactory). The text binding resolver factory is static and builds text resolvers using the given [IBindingResolverFactory](xref:Marvin.Bindings.IBindingResolverFactory). This means all custom bindings can be used within text without any additional effort.
 
 The text resolution also supports formatting by appending `":<format>"` to the binding expression. It supports the default formats of the type it is applied to. This features is implemented by appending a [FormatBindingResolver](xref:Marvin.Bindings.FormatBindingResolver) to the end of the chain.
@@ -250,7 +264,7 @@ var text = "For {Root.Branch.Name} the type of 'EntryA' is {EntryA.Type.FullName
 var resolver = TextBindingResolverFactory.Create(text, new TypeResolverFactory());
 
 // Default EntryA
-var root = new Root 
+var root = new Root
 {
     Branch = new Branch
     {
@@ -269,4 +283,4 @@ text = "The value '{Root.Branch.Name}' has {Root.Branch.Name.Length:D2} letters!
 resolver = TextBindingResolverFactory.Create(text, new BindingResolverFactory());
 
 resolved = resolver.Resolve(root);     // Value of 'resolved': "The value 'Foo' has 03 letters!"
-```` 
+````

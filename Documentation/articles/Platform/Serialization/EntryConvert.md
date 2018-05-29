@@ -1,12 +1,9 @@
 ---
 uid: EntryConvert
 ---
-Entry Convert
-=============
+# Entry Convert
 
-The static class [EntryConvert](xref:Marvin.Serialization.EntryConvert) transforms classes or objects into the MaRVIN [entry format](xref:Marvin.Serialization.Entry) and back. If you are not familiar with this format, please read this section first:
-
-@subpage platform-entryFormat
+The static class [EntryConvert](xref:Marvin.Serialization.EntryConvert) transforms classes or objects into the MaRVIN [entry format](xref:Marvin.Serialization.Entry) and back. If you are not familiar with this format, please read this section first: [EntryFormat](xref:EntryFormat)
 
 Because the `EntryConvert`-API can be confusing on first sight, we will split it into three sections. Each of these sections is explained in detail and supported with numerous examples.
 
@@ -15,14 +12,16 @@ Because the `EntryConvert`-API can be confusing on first sight, we will split it
 * **Customization:** The behavior of both encoding and decoding can be customized to specific needs by providing a strategy implementing `ICustomSerialization`
 
 ## Limitations
+
 The `EntryConvert` API can convert objects and types as long as they comply with a few basic rules:
 
 * Properties not fields: All attributes of a type must be defined as properties, not public fields. Therefor `public int Foo { get; set; }` instead of `public int Foo;`
 * Public parameterless constructor: All types within the class hierarchy need to offer a public constructor without parameters. In Generics this would be defined as `new()` or in code `public Foo() { }`
-* Primitives or classes: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum or a another class. 
+* Primitives or classes: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum or a another class.
 * Dictionaries of `<Primitive, Class`: Dictionaries are only supported if the key is a primitive type like `int` or `string` and the value is a class.
 
 ## Serialize
+
 The return value of `EncodeClass` or `EncodeObject` is a collection of entries, that contain the properties of the given argument and their recursive children. It does not return a root entry for two reasons - information like identifier (key) are missing and in most cases the root object already has a DTO and only needs a generic way to include properties of derived classes.
 
 Let's look at this with an example:
@@ -32,10 +31,12 @@ public class Foo
 {
     public int Id { get; set; }
 }
+
 public class DerivedFoo : Foo
 {
     public string SomeName { get; set; }
 }
+
 [DataContract]
 public class FooDto
 {
@@ -43,6 +44,7 @@ public class FooDto
 
     public Entry[] Properties { get; set; }
 }
+
 public void Serialize()
 {
     var fooObj = new DerivedFoo
