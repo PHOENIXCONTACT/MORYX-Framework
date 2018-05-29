@@ -30,7 +30,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Common
         /// <inheritdoc />
         public ApplicationInformationResponse GetApplicationInfo()
         {
-            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(true);
+            var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(true);
             var assemblyProductAttribute = attributes.FirstOrDefault(a => a is AssemblyProductAttribute) as AssemblyProductAttribute;
             var assemblyVersionAttribute = attributes.FirstOrDefault(a => a is AssemblyFileVersionAttribute) as AssemblyFileVersionAttribute;
             var assemblyInfoVersionAttribute = attributes.FirstOrDefault(a => a is AssemblyInformationalVersionAttribute) as AssemblyInformationalVersionAttribute;
