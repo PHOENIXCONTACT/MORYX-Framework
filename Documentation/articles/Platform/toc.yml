@@ -14,21 +14,17 @@
   href: DataModel/toc.yml
 
 - name: Collections
-  items:
-    - name: Delay Queue
-      href: DelayQueue.md
+  href: Collections/toc.yml
+
 - name: Bindings
   href: Bindings.md
 
 - name: Binary Connection
   href: BinaryConnection.md
 
+- name: Parallel Operations
+  href: ParallelOperations.md
+
 - name: Serialization
-  href: Serialization.md
-  items:
-    - name: Entry Convert
-      href: EntryConvert.md
-    - name: Entry Format
-      href: EntryFormat.md
-    - name: Entry to Model Converter
-      href: EntryToModelConverter.md
+  homepage: Serialization/index.md
+  href: Serialization/toc.yml

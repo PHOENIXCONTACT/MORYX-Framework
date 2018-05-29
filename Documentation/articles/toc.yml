@@ -1,9 +1,6 @@
 - name: Introduction
   href: index.md
 
-- name: Changelog
-  href: Changelog.md
-
 - name: Design Patterns
   href: DesignPatterns.md
 

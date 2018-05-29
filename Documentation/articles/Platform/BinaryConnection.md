@@ -1,8 +1,8 @@
 ---
 uid: BinaryConnection
 ---
-BinaryConnection
-========
+# BinaryConnection
+
 # QA - Quick Introduction
 ### Where can I find the Assembly ?
 -	BinaryConnection is part of the Assembly **Marvin.dll**.
@@ -153,6 +153,7 @@ public class IpsMessageValidator : IMessageValidator
     }
 }
 ````
+
 ## Putting it all together
 
 Finally all you have to do is create a connection instance with the IBinaryConnectionFactory and register to the events. Basic structure looks like this:
@@ -171,7 +172,7 @@ public class BinaryConnectionTester : IDevice
         _connection = ConnectionFactory.Create(_config.CommunicatorConfig, new DummyValidator());
         _connection.Received += OnReceived;
     }
-    
+
     private void OnReceived(object sender, BinaryMessage e)
     {
     }

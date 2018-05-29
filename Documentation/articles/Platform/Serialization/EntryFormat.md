@@ -1,8 +1,7 @@
 ---
 uid: EntryFormat
 ---
-Entry Format
-=====
+# Entry Format
 
 ## Introduction
 
@@ -15,8 +14,10 @@ Serialized entries can be then stored in JSON or send over WCF.
 The `Entry` class represents property definition. It consists of `EntryKey Key` and `EntryValue Value`. Both collections `Prototypes` and `Subentries` as well as `EntryValidation Validation` are optional properties. They are only used for some of the possible types of entry types. Entry class can have tree structure where `Entry` instances are located in SubEntries and/or Prototypes.
 
 We can decorate property with attributes:
-_DisplayNameAttribute_ when provided then EntryKey _Name_ will be taken from this attribute
-_DescriptionAttribute_ provides general description for Entry
+
+- `DisplayNameAttribute` when provided then EntryKey _Name_ will be taken from this attribute
+- `DescriptionAttribute` provides general description for Entry
+- `ReadOnlyAttribute` when provided, the `EntryValue.IsReadOnly` will be set to `true`
 
 ## EntryKey
 
@@ -28,25 +29,23 @@ It holds the value of the `Entry`, its type and necessary modification informati
 
 `EntryValueType.Class` is used either for properties that reference another object, items in a collection or as object prototypes. 
 
-* `Current` contains the value of the property as a string. For `EntryValueType.Class` this contains the type name of the object to replace it from a prototype or detect inheritance.
-
-* `Default` property holds value that should be put into `Current` when creating new instance of Entry or when the users wants to reset the value.
-
-* `Possible` is a collection of possible values. If this collection is not empty, the current value must be on this list.
-
-* `IsReadOnly` when set to true we can't change `Current` value.
+- `Current` contains the value of the property as a string. For `EntryValueType.Class` this contains the type name of the object to replace it from a prototype or detect inheritance.
+- `Default` property holds value that should be put into `Current` when creating new instance of Entry or when the users wants to reset the value.
+- `Possible` is a collection of possible values. If this collection is not empty, the current value must be on this list.
+- `IsReadOnly` when set to true we can't change `Current` value.
 
 ## EntryValidation
 
 Based on property attributes EntryValidation class can be created.
 
 Possible attributes are:
-* `PasswordAttribute` Property stores password
-* `MinLengthAttribute` Minimum length
-* `MaxLengthAttribute` Maximum length
-* `RegularExpressionAttribute` Specifies that `Current` value must match provided regular expression 
-* `StringLengthAttribute` Specifies the length of the value that should be provided 
-* `RequiredAttribute` Specifies if Entry current value is required to be filled
+
+- `PasswordAttribute` Property stores password
+- `MinLengthAttribute` Minimum length
+- `MaxLengthAttribute` Maximum length
+- `RegularExpressionAttribute` Specifies that `Current` value must match provided regular expression 
+- `StringLengthAttribute` Specifies the length of the value that should be provided 
+- `RequiredAttribute` Specifies if Entry current value is required to be filled
 
 Entry validation enables to check if changed property value fit validation criteria.
 

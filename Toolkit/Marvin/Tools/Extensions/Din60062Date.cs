@@ -35,7 +35,7 @@ namespace Marvin.Tools
         /// </summary>
         public override string ToString()
         {
-            return string.Format("{0}{1}", Year, Month);
+            return $"{Year}{Month}";
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Marvin.Tools
         /// </summary>
         public string ToYearAndDays()
         {
-            return string.Format("{0}-{1}", Year, Origin.DayOfYear);
+            return $"{Year}-{Origin.DayOfYear}";
         }
     }
 }

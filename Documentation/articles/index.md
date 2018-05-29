@@ -16,9 +16,8 @@ TODO!
 
 As a prerequisite, you need:
 
-- Visual Studio 2015
-- Nuget >= 4.1.0 in your *PATH*
+- .NET Build Tools > 2015 (included in Visual Studio 2015)
 
-*Step1.* `git clone ssh://git@bitbucket-dev.europe.phoenixcontact.com:7999/ms/marvinplatform.git` to get the latest code.
+*Step1.* `git clone ssh://git@gitlab-swtd.europe.phoenixcontact.com:2222/marvinplatform/MarvinPlatform.git` to get the latest code.
 
 *Step2.* Run `.\Build.ps1 -Build` under root folder.

@@ -1,12 +1,12 @@
 ---
 uid: Wcf
 ---
-Wcf Connections
-===============
+# Wcf Connections
 
-## Concept for data transmission between client and server #
+## Concept for data transmission between client and server
 
 **Glossary**
+
 | Term | Description |
 |------|-------------|
 | ServiceModel | Also known as client side *Controller*. Implements the connection handling of the service reference |
@@ -22,7 +22,7 @@ that enables a unified way of data exchange between client and server. Finally t
 * Every client module must implement its own DTO-ViewModels, which also leads to duplicated code.
 * Different client modules may need the same data but have to load it by itself.
 * Available facades leads to a high coupling between the client modules.
-    
+
 ### Future concept for Platfrom 3
 
 On server side there are different services implemeted, which are seperated by functional areas (e.g. JobService, ProductService). 
