@@ -49,26 +49,7 @@ namespace Marvin.Workflows
         private List<IConnector> _connectors;
 
         /// <see cref="IWorkplan"/>
-        public IEnumerable<IConnector> Connectors { get { return _connectors; } }
-
-        /// <summary>
-        /// Add a range of connectors to the workplan
-        /// </summary>
-        public void Add(params IConnector[] connectors)
-        {
-            foreach (var connector in connectors)
-            {
-                connector.Id = ++MaxElementId;
-                _connectors.Add(connector);
-            }
-        }
-        /// <summary>
-        /// Add a range of connectors to the workplan
-        /// </summary>
-        public bool Remove(IConnector connector)
-        {
-            return _connectors.Remove(connector);
-        }
+        public IEnumerable<IConnector> Connectors => _connectors;
 
         /// <summary>
         /// Editable list of steps
@@ -77,25 +58,28 @@ namespace Marvin.Workflows
         private List<IWorkplanStep> _steps;
 
         /// <see cref="IWorkplan"/>
-        public IEnumerable<IWorkplanStep> Steps { get { return _steps; } }
+        public IEnumerable<IWorkplanStep> Steps => _steps;
 
         /// <summary>
-        /// Add a range of steps to the workplan
+        /// Add a range of connectors to the workplan
         /// </summary>
-        public void Add(params IWorkplanStep[] steps)
+        public void Add(params IWorkplanNode[] nodes)
         {
-            foreach (var step in steps)
+            foreach (var node in nodes)
             {
-                step.Id = ++MaxElementId;
-                _steps.Add(step);
+                node.Id = ++MaxElementId;
+                if (node is IConnector)
+                    _connectors.Add((IConnector)node);
+                else
+                    _steps.Add((IWorkplanStep)node);
             }
         }
         /// <summary>
         /// Add a range of connectors to the workplan
         /// </summary>
-        public bool Remove(IWorkplanStep step)
+        public bool Remove(IWorkplanNode node)
         {
-            return _steps.Remove(step);
+            return node is IConnector ? _connectors.Remove((IConnector)node) : _steps.Remove((IWorkplanStep)node);
         }
 
         /// <summary>
@@ -104,7 +88,7 @@ namespace Marvin.Workflows
         internal static Workplan EmptyPlan()
         {
             var emptyPlan = new Workplan();
-            emptyPlan.Add(new Connector {Name = "Start", Classification = NodeClassification.Start});
+            emptyPlan.Add(new Connector { Name = "Start", Classification = NodeClassification.Start });
             emptyPlan.Add(new Connector { Name = "End", Classification = NodeClassification.End });
 
             return emptyPlan;
