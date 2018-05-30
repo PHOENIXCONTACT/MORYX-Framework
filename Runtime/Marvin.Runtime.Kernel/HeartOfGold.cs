@@ -140,8 +140,7 @@ namespace Marvin.Runtime.Kernel
                 configManager.ConfigDirectory = configDir;
 
                 // Prepare platform
-                var config = configManager.GetConfiguration<ProductConfig>();
-                RuntimePlatform.SetPlatform(config.ProductName, new Version(config.Version));
+                RuntimePlatform.SetPlatform();
 
                 // Resolve environment
                 var environment = _container.Resolve<IRunmode>(name);

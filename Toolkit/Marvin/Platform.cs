@@ -8,13 +8,9 @@ namespace Marvin
     public abstract class Platform
     {
         /// <summary>
-        /// Reference to be filled be inherited platform to provide unique API
-        /// </summary>
-        protected static Platform CurrentPlatform { get; set; }
-        /// <summary>
         /// Platform the current application was build on.
         /// </summary>
-        public static Platform Current { get { return CurrentPlatform; } }
+        public static Platform Current { get; protected set; }
 
         /// <summary>
         /// Type of this platform characterized with enum flags
@@ -23,20 +19,24 @@ namespace Marvin
         /// <summary>
         /// Name of this platform
         /// </summary>
-        public abstract string PlatformName { get; }
+        public string PlatformName { get; protected set; }
         /// <summary>
         /// Version of the platform
         /// </summary>
-        public abstract Version PlatformVersion { get; }
+        public Version PlatformVersion { get; protected set; }
 
         /// <summary>
         /// Name of the product this application belongs to
         /// </summary>
-        public abstract string ProductName { get; }
+        public string ProductName { get; protected set; }
         /// <summary>
         /// Current version of this product
         /// </summary>
-        public abstract Version ProductVersion { get; }
+        public Version ProductVersion { get; protected set; }
+        /// <summary>
+        /// Description of the MaRVIN based product
+        /// </summary>
+        public string ProductDescription { get; protected set; }
     }
 
     /// <summary>
