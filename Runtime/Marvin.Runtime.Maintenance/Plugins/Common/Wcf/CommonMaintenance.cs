@@ -30,18 +30,13 @@ namespace Marvin.Runtime.Maintenance.Plugins.Common
         /// <inheritdoc />
         public ApplicationInformationResponse GetApplicationInfo()
         {
-            var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(true);
-            var assemblyProductAttribute = attributes.FirstOrDefault(a => a is AssemblyProductAttribute) as AssemblyProductAttribute;
-            var assemblyVersionAttribute = attributes.FirstOrDefault(a => a is AssemblyFileVersionAttribute) as AssemblyFileVersionAttribute;
-            var assemblyInfoVersionAttribute = attributes.FirstOrDefault(a => a is AssemblyInformationalVersionAttribute) as AssemblyInformationalVersionAttribute;
-            var assemblyDescriptionAttribute = attributes.FirstOrDefault(a => a is AssemblyDescriptionAttribute) as AssemblyDescriptionAttribute;
-
+            var currentPlatform = Platform.Current;
             return new ApplicationInformationResponse
             {
-                AssemblyProduct = assemblyProductAttribute?.Product,
-                AssemblyVersion = assemblyVersionAttribute?.Version,
-                AssemblyInformationalVersion = assemblyInfoVersionAttribute?.InformationalVersion,
-                AssemblyDescription = assemblyDescriptionAttribute?.Description
+                AssemblyProduct = currentPlatform.ProductName,
+                AssemblyVersion = currentPlatform.ProductVersion.ToString(3),
+                AssemblyInformationalVersion = currentPlatform.ProductVersion.ToString(3),
+                AssemblyDescription = currentPlatform.ProductDescription
             };
         }
 
