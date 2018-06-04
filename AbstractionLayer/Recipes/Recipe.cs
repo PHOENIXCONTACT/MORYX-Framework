@@ -26,7 +26,7 @@ namespace Marvin.AbstractionLayer
             Revision = source.Revision;
             State = source.State;
             Origin = source.Origin;
-            Classification = Classification | RecipeClassification.Clone;
+            Classification = source.Classification | RecipeClassification.Clone;
         }
 
         /// <inheritdoc />
