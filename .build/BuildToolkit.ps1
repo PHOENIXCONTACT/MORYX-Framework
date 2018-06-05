@@ -13,10 +13,10 @@ $BuildTools = "$RootPath\packages";
 $DotBuild = "$RootPath\.build";
 
 # Artifacts
-$ArtifactsDir = "$RootPath\Artifacts";
+$ArtifactsDir = "$RootPath\artifacts";
 
 # Documentation
-$DocumentationDir = "$RootPath\Documentation";
+$DocumentationDir = "$RootPath\docs";
 $DocumentationArtifcacts = "$ArtifactsDir\Documentation";
 
 # Tests
@@ -73,9 +73,7 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     # Initialize Folders
     CreateFolderIfNotExists $BuildTools;
     CreateFolderIfNotExists $ArtifactsDir;
-    CreateFolderIfNotExists $DocumentationArtifcacts;
-    CreateFolderIfNotExists $NugetPackageArtifacts;
-
+    
     # Assign nuget.exe
     if (-not (Test-Path $global:NugetCli)) {
         Write-Host "Downloading NuGet.exe ..."
@@ -335,6 +333,8 @@ function Invoke-CoverReport {
     $reports = (Get-ChildItem $OpenCoverReportsDir -Recurse -Include '*.OpenCover.xml');
     $asArgument = [string]::Join(";",$reports);
 
+    CreateFolderIfNotExists $DocumentationArtifcacts;
+
     & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$DocumentationArtifcacts/OpenCover"
     Invoke-ExitCodeCheck $LastExitCode;
 }
@@ -358,10 +358,13 @@ function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "
     & $global:DocFxCli $Metadata;
     Invoke-ExitCodeCheck $LastExitCode;
 
+    CreateFolderIfNotExists $DocumentationArtifcacts;
     CopyAndReplaceFolder $docFxDest "$DocumentationArtifcacts\DocFx";
 }
 
 function Invoke-Pack($FilePath, [bool]$IsTool = $False) {
+    CreateFolderIfNotExists $NugetPackageArtifacts;
+
     $packargs = "-outputdirectory", "$NugetPackageArtifacts";
     $packargs += "-includereferencedprojects";
     $packargs += "-Version", "$env:MARVIN_VERSION";

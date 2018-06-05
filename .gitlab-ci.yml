@@ -24,8 +24,8 @@ Build:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts/Packages'
-      - 'Runtime/Marvin.Runtime.Console/bin/$MARVIN_BUILD_CONFIG'
+      - 'artifacts/Packages'
+      - 'src/Marvin.Runtime.Console/bin/$MARVIN_BUILD_CONFIG'
 
 SmokeTests: 
   stage: test
@@ -44,7 +44,7 @@ UnitTests:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts/Tests' 
+      - 'artifacts/Tests' 
   
 IntegrationTests: 
   stage: test
@@ -55,7 +55,7 @@ IntegrationTests:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts/Tests' 
+      - 'artifacts/Tests' 
 
 GenerateDocs:
   stage: documentation
@@ -67,7 +67,7 @@ GenerateDocs:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts/Documentation'
+      - 'artifacts/Documentation'
 
 PublishDocs: 
   stage: publish
@@ -75,7 +75,7 @@ PublishDocs:
   artifacts:
     expire_in: 1 hrs
     paths:
-      - 'Artifacts/'
+      - 'artifacts/'
 
 PublishPackages: 
   stage: publish
