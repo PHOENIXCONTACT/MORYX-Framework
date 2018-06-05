@@ -3,87 +3,87 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime", "Runtime\Marvin.Runtime\Marvin.Runtime.csproj", "{92777E64-9978-40AE-8B90-93ECBBBEFE67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime", "src\Marvin.Runtime\Marvin.Runtime.csproj", "{92777E64-9978-40AE-8B90-93ECBBBEFE67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Kernel", "Runtime\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj", "{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Kernel", "src\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj", "{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Maintenance", "Runtime\Marvin.Runtime.Maintenance\Marvin.Runtime.Maintenance.csproj", "{EB039D46-906F-44BF-AC37-B3B3634A4442}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Maintenance", "src\Marvin.Runtime.Maintenance\Marvin.Runtime.Maintenance.csproj", "{EB039D46-906F-44BF-AC37-B3B3634A4442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Kernel.Tests", "Runtime\Tests\Marvin.Runtime.Kernel.Tests\Marvin.Runtime.Kernel.Tests.csproj", "{0F2C9C4B-E9B7-43DD-9B25-72402E583D90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Kernel.Tests", "src\Tests\Marvin.Runtime.Kernel.Tests\Marvin.Runtime.Kernel.Tests.csproj", "{0F2C9C4B-E9B7-43DD-9B25-72402E583D90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.SystemTests", "Runtime\Tests\Marvin.Runtime.SystemTests\Marvin.Runtime.SystemTests.csproj", "{B47E0CB5-A3EC-4ED6-BCBF-9E3BEA6ABF5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.SystemTests", "src\Tests\Marvin.Runtime.SystemTests\Marvin.Runtime.SystemTests.csproj", "{B47E0CB5-A3EC-4ED6-BCBF-9E3BEA6ABF5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.DependentTestModule", "Runtime\DependentTestModule\Marvin.DependentTestModule.csproj", "{D8344B1F-9DB3-4E85-9195-6FFFECBF6427}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.DependentTestModule", "src\DependentTestModule\Marvin.DependentTestModule.csproj", "{D8344B1F-9DB3-4E85-9195-6FFFECBF6427}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestModule", "Runtime\TestModule\Marvin.TestModule.csproj", "{24ED97AD-6D04-4DC0-AFCB-C911EF0AA738}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestModule", "src\TestModule\Marvin.TestModule.csproj", "{24ED97AD-6D04-4DC0-AFCB-C911EF0AA738}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Tools.Wcf.SystemTests", "Runtime\Tests\Marvin.Tools.Wcf.SystemTests\Marvin.Tools.Wcf.SystemTests.csproj", "{74D4C6FE-2E58-4F31-A915-6CF061C0149B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Tools.Wcf.SystemTests", "src\Tests\Marvin.Tools.Wcf.SystemTests\Marvin.Tools.Wcf.SystemTests.csproj", "{74D4C6FE-2E58-4F31-A915-6CF061C0149B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemTests", "SystemTests", "{63266199-BAA4-4463-998A-240E130A197D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtime", "Runtime", "{7DCDBDA5-4163-41EA-B24E-9316DFB9F354}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container", "Toolkit\Marvin.Container\Marvin.Container.csproj", "{3BC04A3B-24D6-4E33-989D-33366C47DC48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container", "src\Marvin.Container\Marvin.Container.csproj", "{3BC04A3B-24D6-4E33-989D-33366C47DC48}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{10B4B5A2-3914-48B9-9304-C31338A6D980}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container.Tests", "Toolkit\Tests\Marvin.Container.Tests\Marvin.Container.Tests.csproj", "{40223040-EE74-4A4B-90CC-75E7808004F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container.Tests", "src\Tests\Marvin.Container.Tests\Marvin.Container.Tests.csproj", "{40223040-EE74-4A4B-90CC-75E7808004F4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestTools", "TestTools", "{953AAE25-26C8-4A28-AB08-61BAFE41B22F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestTools.UnitTest", "Toolkit\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj", "{505DF475-5FF5-47CC-9E3B-BBE16C359F0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestTools.UnitTest", "src\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj", "{505DF475-5FF5-47CC-9E3B-BBE16C359F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin", "Toolkit\Marvin\Marvin.csproj", "{437A03F2-1A35-41E1-A065-00DEBDDA6E79}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin", "src\Marvin\Marvin.csproj", "{437A03F2-1A35-41E1-A065-00DEBDDA6E79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container.TestPlugin", "Toolkit\Tests\Marvin.Container.TestPlugin\Marvin.Container.TestPlugin.csproj", "{DD4163B4-1696-4554-961E-DE2A3EB21ECE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container.TestPlugin", "src\Tests\Marvin.Container.TestPlugin\Marvin.Container.TestPlugin.csproj", "{DD4163B4-1696-4554-961E-DE2A3EB21ECE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container.TestRootPlugin", "Toolkit\Tests\Marvin.Container.TestRootPlugin\Marvin.Container.TestRootPlugin.csproj", "{7615C9F0-91F1-4E05-A424-6D083B8958C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container.TestRootPlugin", "src\Tests\Marvin.Container.TestRootPlugin\Marvin.Container.TestRootPlugin.csproj", "{7615C9F0-91F1-4E05-A424-6D083B8958C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{DAE7DCE8-AB9B-46A8-808D-6C6C0AAB75A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Model", "Toolkit\Marvin.Model\Marvin.Model.csproj", "{478DC949-A0B2-46B4-8645-A7DA92589B76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Model", "src\Marvin.Model\Marvin.Model.csproj", "{478DC949-A0B2-46B4-8645-A7DA92589B76}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Communication.Sockets.IntegrationTests", "Toolkit\Tests\Marvin.Communication.Sockets.IntegrationTests\Marvin.Communication.Sockets.IntegrationTests.csproj", "{FD2AA3C3-F434-4D4F-88C8-3774B48E1D9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Communication.Sockets.IntegrationTests", "src\Tests\Marvin.Communication.Sockets.IntegrationTests\Marvin.Communication.Sockets.IntegrationTests.csproj", "{FD2AA3C3-F434-4D4F-88C8-3774B48E1D9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container.TestTools", "Toolkit\Tests\Marvin.Container.TestTools\Marvin.Container.TestTools.csproj", "{B72AA993-72E5-4D14-BF5E-C2E0E8CF5186}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Container.TestTools", "src\Tests\Marvin.Container.TestTools\Marvin.Container.TestTools.csproj", "{B72AA993-72E5-4D14-BF5E-C2E0E8CF5186}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{0A466330-6ED6-4861-9C94-31B1949CDDB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Tools.Wcf.Tests", "Runtime\Tests\Marvin.Tools.Wcf.Tests\Marvin.Tools.Wcf.Tests.csproj", "{A4CA7B7C-5417-4FA9-9E0B-76D4CD4663C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Tools.Wcf.Tests", "src\Tests\Marvin.Tools.Wcf.Tests\Marvin.Tools.Wcf.Tests.csproj", "{A4CA7B7C-5417-4FA9-9E0B-76D4CD4663C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestTools.SystemTest", "Runtime\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj", "{D6DC00C6-9358-4839-84C0-44DF018A74DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestTools.SystemTest", "src\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj", "{D6DC00C6-9358-4839-84C0-44DF018A74DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartOfGold", "Runtime\Marvin.Runtime.Console\HeartOfGold.csproj", "{8441A356-C5A8-41B4-B7EE-D0411664D8AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartOfGold", "src\Marvin.Runtime.Console\HeartOfGold.csproj", "{8441A356-C5A8-41B4-B7EE-D0411664D8AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Tools.Wcf", "Toolkit\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj", "{05761BAE-8649-470D-9A8A-5C7E9D1A2F3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Tools.Wcf", "src\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj", "{05761BAE-8649-470D-9A8A-5C7E9D1A2F3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Tests", "Toolkit\Tests\Marvin.Tests\Marvin.Tests.csproj", "{05891405-D460-4EC2-9906-B9FF2FF27006}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Tests", "src\Tests\Marvin.Tests\Marvin.Tests.csproj", "{05891405-D460-4EC2-9906-B9FF2FF27006}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ManualTests", "ManualTests", "{A9C375AE-201D-46CE-9282-387026C0B2F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Workflows.Benchmark", "Toolkit\ManualTests\Marvin.Workflows.Benchmark\Marvin.Workflows.Benchmark.csproj", "{B9FBC616-5D9A-4C82-8DFB-AEFF07A239C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Workflows.Benchmark", "src\Tests\Marvin.Workflows.Benchmark\Marvin.Workflows.Benchmark.csproj", "{B9FBC616-5D9A-4C82-8DFB-AEFF07A239C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DE7526FF-6D25-4643-9AA3-C24253901C8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Tests", "Runtime\Tests\Marvin.Runtime.Tests\Marvin.Runtime.Tests.csproj", "{7448728C-9965-4874-A2E9-7BAB37E42963}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Tests", "src\Tests\Marvin.Runtime.Tests\Marvin.Runtime.Tests.csproj", "{7448728C-9965-4874-A2E9-7BAB37E42963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Model.Tests", "Toolkit\Tests\Marvin.Model.Tests\Marvin.Model.Tests.csproj", "{BA61840C-9E77-4454-88E2-7CA4E98EE4BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Model.Tests", "src\Tests\Marvin.Model.Tests\Marvin.Model.Tests.csproj", "{BA61840C-9E77-4454-88E2-7CA4E98EE4BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{74112169-6672-4907-A187-F055111940A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Model.Npgsql", "Toolkit\Marvin.Model.Npgsql\Marvin.Model.Npgsql.csproj", "{70964330-F80E-4E1E-A33B-2021BDE37B2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Model.Npgsql", "src\Marvin.Model.Npgsql\Marvin.Model.Npgsql.csproj", "{70964330-F80E-4E1E-A33B-2021BDE37B2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Model.InMemory", "Toolkit\Marvin.Model.InMemory\Marvin.Model.InMemory.csproj", "{A734BE85-33DC-4117-BD9C-B5D5B31102E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Model.InMemory", "src\Marvin.Model.InMemory\Marvin.Model.InMemory.csproj", "{A734BE85-33DC-4117-BD9C-B5D5B31102E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NpgsqlTest", "Toolkit\Tests\NpgsqlTest\NpgsqlTest.csproj", "{C48A8596-6AE0-457D-987D-2FA3C9B51751}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NpgsqlTest", "src\Tests\NpgsqlTest\NpgsqlTest.csproj", "{C48A8596-6AE0-457D-987D-2FA3C9B51751}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.UserManagement.DbAuthenticator", "Runtime\Marvin.Runtime.UserManagement.DbAuthenticator\Marvin.Runtime.UserManagement.DbAuthenticator.csproj", "{145CDA7B-9FE9-42B6-83FD-0D82891D2E5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.UserManagement.DbAuthenticator", "src\Marvin.Runtime.UserManagement.DbAuthenticator\Marvin.Runtime.UserManagement.DbAuthenticator.csproj", "{145CDA7B-9FE9-42B6-83FD-0D82891D2E5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestTools.Test.Model", "Toolkit\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj", "{29F12AD7-18DC-4DC3-B97F-BC773AC4C0EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestTools.Test.Model", "src\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj", "{29F12AD7-18DC-4DC3-B97F-BC773AC4C0EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestTools.Test.Inheritance.Model", "Toolkit\Marvin.TestTools.Test.Inheritance.Model\Marvin.TestTools.Test.Inheritance.Model.csproj", "{CBF4C42B-488D-44AF-9C60-3CD2C2AA955E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.TestTools.Test.Inheritance.Model", "src\Marvin.TestTools.Test.Inheritance.Model\Marvin.TestTools.Test.Inheritance.Model.csproj", "{CBF4C42B-488D-44AF-9C60-3CD2C2AA955E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,12 +104,12 @@ Global
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Debug|x64.Build.0 = Debug|Any CPU
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Debug|x86.Build.0 = Debug|Any CPU
-		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|Any CPU.ActiveCfg = Release(x86)|Any CPU
-		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|Any CPU.Build.0 = Release(x86)|Any CPU
-		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|x64.ActiveCfg = Release(x86)|Any CPU
-		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|x64.Build.0 = Release(x86)|Any CPU
-		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|x86.ActiveCfg = Release(x86)|Any CPU
-		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|x86.Build.0 = Release(x86)|Any CPU
+		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release(x86)|x86.Build.0 = Release|Any CPU
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release|Any CPU.Build.0 = Release|Any CPU
 		{92777E64-9978-40AE-8B90-93ECBBBEFE67}.Release|x64.ActiveCfg = Release|Any CPU
@@ -121,12 +121,12 @@ Global
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Debug|x64.Build.0 = Debug|Any CPU
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Debug|x86.Build.0 = Debug|Any CPU
-		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|Any CPU.ActiveCfg = Release(x86)|Any CPU
-		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|Any CPU.Build.0 = Release(x86)|Any CPU
-		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|x64.ActiveCfg = Release(x86)|Any CPU
-		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|x64.Build.0 = Release(x86)|Any CPU
-		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|x86.ActiveCfg = Release(x86)|Any CPU
-		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|x86.Build.0 = Release(x86)|Any CPU
+		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release(x86)|x86.Build.0 = Release|Any CPU
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}.Release|x64.ActiveCfg = Release|Any CPU

@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8441A356-C5A8-41B4-B7EE-D0411664D8AA}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Marvin.Runtime.Console</RootNamespace>
+    <AssemblyName>HeartOfGold</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Log4Net208, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.Log4Net208.3.4.1\lib\net40\Common.Logging.Log4Net208.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Config\log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj">
+      <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
+      <Name>Marvin.TestTools.Test.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.TestTools.Test.Inheritance.Model\Marvin.TestTools.Test.Inheritance.Model.csproj">
+      <Project>{cbf4c42b-488d-44af-9c60-3cd2c2aa955e}</Project>
+      <Name>Marvin.TestTools.Test.Inheritance.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.Diagnostics\Marvin.Runtime.Diagnostics.csproj">
+      <Project>{601ea517-0337-430b-840c-424b84f8f922}</Project>
+      <Name>Marvin.Runtime.Diagnostics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj">
+      <Project>{8ff77f62-43c3-40fe-9dfe-01a53fe8a68e}</Project>
+      <Name>Marvin.Runtime.Kernel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.Maintenance\Marvin.Runtime.Maintenance.csproj">
+      <Project>{eb039d46-906f-44bf-ac37-b3b3634a4442}</Project>
+      <Name>Marvin.Runtime.Maintenance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.UserManagement.DbAuthenticator\Marvin.Runtime.UserManagement.DbAuthenticator.csproj">
+      <Project>{145cda7b-9fe9-42b6-83fd-0d82891d2e5d}</Project>
+      <Name>Marvin.Runtime.UserManagement.DbAuthenticator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.UserManagement.Model\Marvin.Runtime.UserManagement.Model.csproj">
+      <Project>{e3dea671-e496-4889-98b4-f02586542a5c}</Project>
+      <Name>Marvin.Runtime.UserManagement.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.UserManagement\Marvin.Runtime.UserManagement.csproj">
+      <Project>{fb5ba113-5ebe-453b-b144-7d487953df56}</Project>
+      <Name>Marvin.Runtime.UserManagement</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

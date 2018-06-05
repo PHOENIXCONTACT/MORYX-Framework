@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.10.1\build\NUnit.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{74D4C6FE-2E58-4F31-A915-6CF061C0149B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Marvin.Tools.Wcf.SystemTests</RootNamespace>
+    <AssemblyName>Marvin.Tools.Wcf.SystemTests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClientFactoryTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\HelloWorld\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\SimpleHelloWorld\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="VersionServiceTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
+      <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
+      <Name>Marvin.Tools.Wcf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
+      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
+      <Name>Marvin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
+      <Project>{505df475-5ff5-47cc-9e3b-bbe16c359f0e}</Project>
+      <Name>Marvin.TestTools.UnitTest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Marvin.Runtime\Marvin.Runtime.csproj">
+      <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
+      <Name>Marvin.Runtime</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DependentTestModule\Marvin.DependentTestModule.csproj">
+      <Project>{D8344B1F-9DB3-4E85-9195-6FFFECBF6427}</Project>
+      <Name>Marvin.DependentTestModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TestModule\Marvin.TestModule.csproj">
+      <Project>{24ED97AD-6D04-4DC0-AFCB-C911EF0AA738}</Project>
+      <Name>Marvin.TestModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
+      <Project>{d6dc00c6-9358-4839-84c0-44df018a74dc}</Project>
+      <Name>Marvin.TestTools.SystemTest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.SystemTests\Marvin.Runtime.SystemTests.csproj">
+      <Project>{B47E0CB5-A3EC-4ED6-BCBF-9E3BEA6ABF5D}</Project>
+      <Name>Marvin.Runtime.SystemTests</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Service References\HelloWorld\HelloWorldWcfService.wsdl" />
+    <None Include="Service References\HelloWorld\HelloWorldWcfService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HelloWorld\HelloWorldWcfService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\SimpleHelloWorld\SimpleHelloWorldWcfService.wsdl" />
+    <None Include="Service References\SimpleHelloWorld\SimpleHelloWorldWcfService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\SimpleHelloWorld\SimpleHelloWorldWcfService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\HelloWorld\" />
+    <WCFMetadataStorage Include="Service References\SimpleHelloWorld\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SimpleHelloWorld\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SimpleHelloWorld\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SimpleHelloWorld\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HelloWorld\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HelloWorld\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HelloWorld\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit.3.10.1\build\NUnit.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
