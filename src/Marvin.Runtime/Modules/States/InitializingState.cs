@@ -39,7 +39,7 @@ namespace Marvin.Runtime.Modules
 
         public override void ErrorOccured()
         {
-            NextState(StateFailure);
+            NextState(StateInitializedFailure);
         }
     }
 }
