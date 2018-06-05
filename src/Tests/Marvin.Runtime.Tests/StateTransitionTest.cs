@@ -111,7 +111,7 @@ namespace Marvin.Runtime.Tests
             casted.Stop();
 
             // Validate result
-            Assert.AreEqual(ServerModuleState.Failure, casted.State, "Module did not detect error!");
+            Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module was not stopped!");
         }
 
         [Test]

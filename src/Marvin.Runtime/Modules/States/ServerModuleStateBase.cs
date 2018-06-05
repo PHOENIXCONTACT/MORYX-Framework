@@ -51,10 +51,16 @@ namespace Marvin.Runtime.Modules
         [StateDefinition(typeof(RunningState))]
         protected const int StateRunning = 40;
 
-        [StateDefinition(typeof(StoppingState))]
-        protected const int StateStopping = 50;
+        [StateDefinition(typeof(ReadyStoppingState))]
+        protected const int StateReadyStopping = 50;
 
-        [StateDefinition(typeof(FailureState))]
-        protected const int StateFailure = 60;
+        [StateDefinition(typeof(RunningStoppingState))]
+        protected const int StateRunningStopping = 55;
+
+        [StateDefinition(typeof(RunningFailureState))]
+        protected const int StateRunningFailure = 60;
+
+        [StateDefinition(typeof(InitializedFailureState))]
+        protected const int StateInitializedFailure = 65;
     }
 }

@@ -23,12 +23,12 @@
 
         public override void Stop()
         {
-            NextState(StateStopping);
+            NextState(StateRunningStopping);
         }
 
         public override void ErrorOccured()
         {
-            NextState(StateFailure);
+            NextState(StateRunningFailure);
         }
 
         public override void ValidateHealthState()

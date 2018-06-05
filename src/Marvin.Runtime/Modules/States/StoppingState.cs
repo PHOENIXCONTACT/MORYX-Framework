@@ -2,20 +2,55 @@
 
 namespace Marvin.Runtime.Modules
 {
-    internal class StoppingState : ServerModuleStateBase
+    internal class RunningStoppingState : StoppingStateBase
     {
-        public StoppingState(IServerModuleStateContext context, StateMap stateMap) 
+        public RunningStoppingState(IServerModuleStateContext context, StateMap stateMap)
+            : base(context, stateMap)
+        {
+        }
+
+        protected override void OnStopping()
+        {
+            Context.Stop();
+            Context.Destruct();
+        }
+
+        public override void ErrorOccured()
+        {
+            NextState(StateRunningFailure);
+        }
+    }
+
+    internal class ReadyStoppingState : StoppingStateBase
+    {
+        public ReadyStoppingState(IServerModuleStateContext context, StateMap stateMap)
+            : base(context, stateMap)
+        {
+        }
+
+        protected override void OnStopping()
+        {
+            Context.Destruct();
+        }
+
+        public override void ErrorOccured()
+        {
+            NextState(StateInitializedFailure);
+        }
+    }
+
+    internal abstract class StoppingStateBase : ServerModuleStateBase
+    {
+        protected StoppingStateBase(IServerModuleStateContext context, StateMap stateMap) 
             : base(context, stateMap, ServerModuleState.Stopping)
         {
         }
 
         public override void OnEnter()
         {
-            base.OnEnter();
-
             try
             {
-                Context.Stop();
+                OnStopping();
                 NextState(StateStopped);
             }
             catch (Exception ex)
@@ -23,6 +58,8 @@ namespace Marvin.Runtime.Modules
                 Context.ReportFailure(Context, ex);
             }
         }
+
+        protected abstract void OnStopping();
 
         public override void Initialize()
         {
@@ -39,9 +76,6 @@ namespace Marvin.Runtime.Modules
             // We are already stopping
         }
 
-        public override void ErrorOccured()
-        {
-            NextState(StateFailure);
-        }
+        public abstract override void ErrorOccured();
     }
 }

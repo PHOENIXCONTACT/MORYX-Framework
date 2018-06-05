@@ -11,8 +11,6 @@ namespace Marvin.Runtime.Modules
 
         public override void OnEnter()
         {
-            base.OnEnter();
-
             try
             {
                 Context.Start();
@@ -41,7 +39,7 @@ namespace Marvin.Runtime.Modules
 
         public override void ErrorOccured()
         {
-            NextState(StateFailure);
+            NextState(StateRunningFailure);
         }
     }
 }

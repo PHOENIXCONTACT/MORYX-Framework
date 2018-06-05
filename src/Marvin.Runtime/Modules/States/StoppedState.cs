@@ -19,7 +19,7 @@
 
         public override void ErrorOccured()
         {
-            NextState(StateFailure);
+            // This cannot happen
         }
     }
 }

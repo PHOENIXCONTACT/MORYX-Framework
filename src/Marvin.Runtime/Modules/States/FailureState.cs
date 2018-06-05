@@ -2,26 +2,51 @@
 
 namespace Marvin.Runtime.Modules
 {
-    internal class FailureState : ServerModuleStateBase
+    internal class InitializedFailureState : FailureStateBase
     {
-        public FailureState(IServerModuleStateContext context, StateMap stateMap) 
+        public InitializedFailureState(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap)
+        {
+        }
+
+        protected override void OnFailure()
+        {
+            Context.Destruct();
+        }
+    }
+
+    internal class RunningFailureState : FailureStateBase
+    {
+        public RunningFailureState(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap)
+        {
+        }
+
+        protected override void OnFailure()
+        {
+            Context.Stop();
+            Context.Destruct();
+        }
+    }
+
+    internal abstract class FailureStateBase : ServerModuleStateBase
+    {
+        protected FailureStateBase(IServerModuleStateContext context, StateMap stateMap) 
             : base(context, stateMap, ServerModuleState.Failure)
         {
         }
 
         public override void OnEnter()
         {
-            base.OnEnter();
-
             try
             {
-                Context.Stop();
+                OnFailure();
             }
             catch (Exception ex)
             {
                 Context.LogNotification(Context, new FailureNotification(ex, "Failed to stop faulty module!"));
             }
         }
+
+        protected abstract void OnFailure();
 
         public override void Initialize()
         {

@@ -19,7 +19,7 @@
 
         public override void Stop()
         {
-            NextState(StateStopping);
+            NextState(StateReadyStopping);
         }
 
         public override void ErrorOccured()

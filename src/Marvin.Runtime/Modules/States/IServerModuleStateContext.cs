@@ -14,6 +14,11 @@ namespace Marvin.Runtime.Modules
         void Initialize();
 
         /// <summary>
+        /// Destructs an initialized module
+        /// </summary>
+        void Destruct();
+
+        /// <summary>
         /// Start the module
         /// </summary>
         void Start();

@@ -143,6 +143,20 @@ namespace Marvin.Runtime.Modules
             _state.Stop();
         }
 
+        void IServerModuleStateContext.Destruct()
+        {
+            // Destroy local container
+            if (Container != null)
+            {
+                Container.Destroy();
+                Container = null;
+            }
+            // Deregister from logging
+            LoggerManagement.DeactivateLogging(this);
+            Logger.LogEntry(LogLevel.Info, "{0} destructed!", Name);
+        }
+
+
         void IServerModuleStateContext.Stop()
         {
             Logger.LogEntry(LogLevel.Info, "{0} is stopping...", Name);
@@ -150,18 +164,11 @@ namespace Marvin.Runtime.Modules
             try
             {
                 OnStop();
-            }
-            finally
-            {
-                // Destroy local container
-                if (Container != null)
-                {
-                    Container.Destroy();
-                    Container = null;
-                }
-                // Deregister from logging
                 Logger.LogEntry(LogLevel.Info, "{0} stopped!", Name);
-                LoggerManagement.DeactivateLogging(this);
+            }
+            catch (Exception e)
+            {
+                Logger.LogException(LogLevel.Error, e, "Exception while stopping {0}", Name);
             }
         }
 
