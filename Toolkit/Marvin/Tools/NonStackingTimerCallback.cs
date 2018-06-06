@@ -7,9 +7,8 @@ namespace Marvin.Tools
     /// This class can wrap a timer callback in a way to make sure that if the execution 
     /// exceeds the call duration the timer threads do not accumulate.
     /// </summary>
-    internal class NonStackingTimerCallback
+    public class NonStackingTimerCallback
     {
-        #region Fields
         /// <summary>
         /// Flag if callback is currently executed in other thread
         /// </summary>
@@ -24,30 +23,27 @@ namespace Marvin.Tools
         /// Callback for timer
         /// </summary>
         private readonly TimerCallback _callback;
-        #endregion
-        
-        #region Constructors
+
+        /// <summary>
+        /// Constructor to create a new instance of <see cref="NonStackingTimerCallback"/>
+        /// </summary>
         public NonStackingTimerCallback(Action timerCallback)
         {
             _callback = state => timerCallback();
         }
 
+        /// <summary>
+        /// Constructor to create a new instance of <see cref="NonStackingTimerCallback"/>
+        /// </summary>
         public NonStackingTimerCallback(TimerCallback timerCallback)
         {
             _callback = timerCallback;
         }
-        #endregion
 
         /// <summary>
         /// Callback for the threading timer that doesn't accumulate threads if execution time is greater than call period
         /// </summary>
-        public TimerCallback Callback
-        {
-            get
-            {
-                return NonStackingCall;
-            }
-        }
+        public TimerCallback Callback => NonStackingCall;
 
         /// <summary>
         /// Non stacking call to the timer callback
