@@ -204,7 +204,7 @@ namespace Marvin.Runtime.Kernel
         {
             DrawStarLine();
 
-            var title = "Marvin Runtime " + RuntimePlatform.RuntimeVersion + " Emulator";
+            var title = "Marvin Runtime " + RuntimePlatform.RuntimeVersion + " Emulator: " + Platform.Current.ProductName;
             Console.WriteLine("{0," + ((Console.WindowWidth / 2) + title.Length / 2) + "}", title);
             Console.WriteLine();
 

@@ -36,8 +36,6 @@ namespace Marvin.Runtime
                 ProductVersion = new Version(startAssembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "1.0.0"),
                 ProductDescription = startAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "No Description provided!",
             };
-
-            Current = new RuntimePlatform();
         }
 
         /// <summary>
