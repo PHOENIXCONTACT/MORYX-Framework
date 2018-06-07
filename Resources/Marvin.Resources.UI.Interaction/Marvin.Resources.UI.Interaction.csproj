@@ -53,28 +53,28 @@
       <HintPath>..\..\packages\Castle.Windsor.4.1.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Controls4Industry, Version=3.0.0.469, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Controls4Industry.3.0.0-dev000469\lib\net461\Controls4Industry.dll</HintPath>
+    <Reference Include="Controls4Industry, Version=3.0.0.992, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Controls4Industry.3.0.0-dev000992\lib\net461\Controls4Industry.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev000851\lib\net461\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.964, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev000964\lib\net461\Marvin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.ClientFramework, Version=3.0.0.469, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.ClientFramework.3.0.0-dev000469\lib\net461\Marvin.ClientFramework.dll</HintPath>
+    <Reference Include="Marvin.ClientFramework, Version=3.0.0.992, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.ClientFramework.3.0.0-dev000992\lib\net461\Marvin.ClientFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Controls, Version=3.0.0.469, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Controls.3.0.0-dev000469\lib\net461\Marvin.Controls.dll</HintPath>
+    <Reference Include="Marvin.Controls, Version=3.0.0.992, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Controls.3.0.0-dev000992\lib\net461\Marvin.Controls.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.851, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev000851\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.964, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev000964\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
