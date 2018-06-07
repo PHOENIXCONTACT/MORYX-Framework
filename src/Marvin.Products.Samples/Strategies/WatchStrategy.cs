@@ -7,20 +7,20 @@ using Marvin.Products.Samples.Model;
 
 namespace Marvin.Products.Samples
 {
-    public class WatchStrategy : ProductStrategyBase, IProductTypeStrategy
+    internal class WatchStrategy : ProductStrategyBase, IProductTypeStrategy
     {
         public WatchStrategy()
         {
             Parts = new ILinkStrategy[]
             {
-                new DefaultLinkStrategy<WatchFaceProduct>(nameof(WatchProduct.Watchface)),
+                new DefaultLinkStrategy<WatchfaceProduct>(nameof(WatchProduct.Watchface)),
                 new NeedleLinkStrategy()
             };
         }
 
         public string TargetType => nameof(WatchProduct);
 
-        public bool IncludeParent => false;
+        public ParentLoadBehaviour ParentLoading => ParentLoadBehaviour.Flat;
 
         public ILinkStrategy[] Parts { get; }
 

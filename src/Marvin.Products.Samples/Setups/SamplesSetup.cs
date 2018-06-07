@@ -20,7 +20,7 @@ namespace Marvin.Products.Samples.Setups
             //watchProperties.OperatingSystem = OperatingSystem.Windows2012Server;
             watchProduct.SetCurrentVersion(watchProperties);
 
-            var watchfaceProduct = prodRepo.Create("5678", 2, nameof(WatchFaceProduct));
+            var watchfaceProduct = prodRepo.Create("5678", 2, nameof(WatchfaceProduct));
             var watchfaceProperties = propertiesRepo.Create("Cool watchface");
             watchfaceProduct.SetCurrentVersion(watchfaceProperties);
 

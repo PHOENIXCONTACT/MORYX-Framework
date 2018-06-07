@@ -61,22 +61,27 @@
   <ItemGroup>
     <Compile Include="Article\NeedleArticle.cs" />
     <Compile Include="Article\WatchFaceArticle.cs" />
+    <Compile Include="Article\WatchPackage.cs" />
     <Compile Include="Product\NeedlePartLink.cs" />
     <Compile Include="Product\NeedleProduct.cs" />
     <Compile Include="Product\NeedleRole.cs" />
     <Compile Include="Article\WatchArticle.cs" />
     <Compile Include="Product\WatchFaceProduct.cs" />
+    <Compile Include="Product\WatchPackageProduct.cs" />
     <Compile Include="Product\WatchProduct.cs" />
-    <Compile Include="FileImporter.cs" />
-    <Compile Include="FileImporterConfig.cs" />
+    <Compile Include="Importer\FileImporter.cs" />
+    <Compile Include="Importer\FileImporterConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PrototypeImporter.cs" />
-    <Compile Include="PrototypeImporterConfig.cs" />
+    <Compile Include="Importer\PrototypeImporter.cs" />
+    <Compile Include="Importer\PrototypeImporterConfig.cs" />
     <Compile Include="Setups\SamplesSetup.cs" />
+    <Compile Include="Importer\WatchImporter.cs" />
+    <Compile Include="Strategies\WatchPackageStrategy.cs" />
     <Compile Include="WatchCustomization.cs" />
     <Compile Include="Strategies\WatchFaceStrategy.cs" />
     <Compile Include="Storages\WatchProductStorage.cs" />
     <Compile Include="Strategies\WatchStrategy.cs" />
+    <Compile Include="Importer\WatchImporterConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AbstractionLayer\Marvin.AbstractionLayer.csproj">

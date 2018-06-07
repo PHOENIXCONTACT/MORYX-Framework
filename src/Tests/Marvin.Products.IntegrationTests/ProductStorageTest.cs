@@ -24,7 +24,7 @@ namespace Marvin.Products.IntegrationTests
 
         private static WatchProduct SetupProduct()
         {
-            var watchface = new WatchFaceProduct
+            var watchface = new WatchfaceProduct
             {
                 Name = "Black water resistant",
                 Identity = new ProductIdentity("4711", 1),
@@ -51,7 +51,7 @@ namespace Marvin.Products.IntegrationTests
             {
                 Name = "Jaques Lemans",
                 Identity = new ProductIdentity("87654", 5),
-                Watchface = new ProductPartLink<WatchFaceProduct>{Product = watchface},
+                Watchface = new ProductPartLink<WatchfaceProduct>{Product = watchface},
                 Needles = needles
             };
 
@@ -115,7 +115,7 @@ namespace Marvin.Products.IntegrationTests
             var watchEntityNeedlesCount = watchEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleProduct)));
             Assert.AreEqual(watchNeedlesCount, watchEntityNeedlesCount, "Different number of needles");
 
-            var watchfaceEntity = watchEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchFaceProduct))).Child;
+            var watchfaceEntity = watchEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceProduct))).Child;
             Assert.NotNull(watchfaceEntity, "There is no watchface");
 
             var identity = (ProductIdentity) watch.Identity;
@@ -155,7 +155,7 @@ namespace Marvin.Products.IntegrationTests
             var watchStorage = new WatchProductStorage { Factory = _factory };
             watchStorage.SaveProduct(watch);
             var watchfaceId = watch.Watchface.Product.Id;
-            var watchface = (WatchFaceProduct)watchStorage.LoadProduct(watchfaceId);
+            var watchface = (WatchfaceProduct)watchStorage.LoadProduct(watchfaceId);
 
             // Assert
             Assert.NotNull(watchface, "Failed to load from database");

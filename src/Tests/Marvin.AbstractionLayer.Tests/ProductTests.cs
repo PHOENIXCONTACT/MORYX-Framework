@@ -15,7 +15,7 @@ namespace Marvin.AbstractionLayer.Tests
                 Identity = new ProductIdentity("1277125", 01)
             };
 
-            watch.Watchface.Product = new WatchFaceProduct
+            watch.Watchface.Product = new WatchfaceProduct
             {
                 Identity = new ProductIdentity("512380125", 01)
             };

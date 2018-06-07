@@ -12,7 +12,7 @@ namespace Marvin.Products.Samples
         public double Weight { get; set; }
 
         // References to product
-        public ProductPartLink<WatchFaceProduct> Watchface { get; set; } = new ProductPartLink<WatchFaceProduct>();
+        public ProductPartLink<WatchfaceProduct> Watchface { get; set; } = new ProductPartLink<WatchfaceProduct>();
 
         public List<NeedlePartLink> Needles { get; set; } = new List<NeedlePartLink>();
 

@@ -5,15 +5,15 @@ using Marvin.Products.Model;
 
 namespace Marvin.Products.Samples
 {
-    public class WatchFaceStrategy : DefaultProductStrategy<WatchFaceProduct>
+    internal class WatchfaceStrategy : DefaultProductStrategy<WatchfaceProduct>
     {
-        public WatchFaceStrategy() : base(false, true)
+        public WatchfaceStrategy() : base(false, ParentLoadBehaviour.Full)
         {
         }
 
         public override IProduct LoadProduct(IUnitOfWork uow, ProductEntity entity)
         {
-            var watchface = (WatchFaceProduct) base.LoadProduct(uow, entity);
+            var watchface = (WatchfaceProduct) base.LoadProduct(uow, entity);
             watchface.Numbers = new[] {3, 6, 9, 12};
             return watchface;
         }
@@ -26,7 +26,7 @@ namespace Marvin.Products.Samples
             var watchfaceEntity = GetProductEntity(uow, product);
             var properties = CreateVersion(uow.GetRepository<IProductPropertiesRepository>(), product, watchfaceEntity);
 
-            var watchFace = (WatchFaceProduct)product;
+            var watchFace = (WatchfaceProduct)product;
 
             // save watchNumbers
             //properties.Numbers = watchFace.Numbers;

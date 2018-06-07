@@ -30,14 +30,8 @@ namespace Marvin.Products.Samples
             Product product = null;
             switch (parameters.ProductType)
             {
-                case nameof(WatchProduct):
-                    product = new WatchProduct
-                    {
-                        Needles = new List<NeedlePartLink>()
-                    };
-                    break;
-                case nameof(WatchFaceProduct):
-                    product = new WatchFaceProduct
+                case nameof(WatchfaceProduct):
+                    product = new WatchfaceProduct
                     {
                         Numbers = new[] { 3, 6, 9, 12 }
                     };
@@ -59,7 +53,7 @@ namespace Marvin.Products.Samples
     public class WatchImportParameters : PrototypeParameters
     {
         [Required, TriggersUpdate]
-        [PossibleProductValues(nameof(WatchProduct), nameof(WatchFaceProduct), nameof(NeedleProduct))]
+        [PossibleProductValues(nameof(WatchfaceProduct), nameof(NeedleProduct))]
         public string ProductType { get; set; }
     }
 }

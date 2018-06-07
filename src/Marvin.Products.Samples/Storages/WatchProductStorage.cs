@@ -15,10 +15,11 @@ namespace Marvin.Products.Samples
         {
             return new IProductTypeStrategy[]
             {
+                new WatchPackageStrategy(), 
                 new WatchStrategy(),
-                new WatchFaceStrategy(), 
-                new DefaultProductStrategy<NeedleProduct>(true, false)
+                new WatchfaceStrategy(),
+                new DefaultProductStrategy<NeedleProduct>(true, ParentLoadBehaviour.Ignore)
             };
-        } 
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace Marvin.Products.Samples
        /// <summary>
         /// Types of recipes avaible on this application
         /// </summary>
-        public string[] RecipeTypes { get { return new[] { "TestRecipe" }; } }
+        public string[] RecipeTypes => new[] { "TestRecipe" };
 
         /// <summary>
         /// Create prototype instance of this type
