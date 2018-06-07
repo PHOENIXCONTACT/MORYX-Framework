@@ -17,7 +17,15 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// <summary>
         /// Will start the marking process and executes the given callback after finish
         /// </summary>
+        /// <param name="config">The configuration for the marking process.</param>
         /// <param name="callback">The callback which will be executed after the marking process</param>
+        void Mark(MarkingConfiguration config, DriverResponse<MarkingResponse> callback);
+
+        /// <summary>
+        /// Will start the marking process and executes the given callback after finish
+        /// </summary>
+        /// <param name="callback">The callback which will be executed after the marking process</param>
+        [Obsolete("Mark(DriverResponse<MarkingResponse> callback) is obsolete.  Use Mark(MarkingConfiguration config, DriverResponse<MarkingResponse> callback) instead.")]
         void Mark(DriverResponse<MarkingResponse> callback);
 
         /// <summary>
@@ -25,6 +33,7 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// </summary>
         /// <param name="variables">Marking variabes to set before start marking</param>
         /// <param name="callback">The callback which will be executed after the marking process</param>
+        [Obsolete("Mark(IDictionary<string, string> variables, DriverResponse<MarkingResponse> callback) is obsolete.  Use Mark(MarkingConfiguration config, DriverResponse<MarkingResponse> callback) instead.")]
         void Mark(IDictionary<string, string> variables, DriverResponse<MarkingResponse> callback);
 
         /// <summary>
@@ -34,6 +43,7 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// <param name="segment">The segment for the next marking process. Known segments: Trumpf: 1-n, Rofin: 1-n, Foba: 0-255</param>
         /// <param name="callback">The callback which will be executed after the marking process</param>
         /// <exception cref="SegmentsNotSupportedException">Will be thrown if segments are not supported</exception>
+        [Obsolete("Mark(int segment, DriverResponse<MarkingResponse> callback) is obsolete.  Use Mark(MarkingConfiguration config, DriverResponse<MarkingResponse> callback) instead.")]
         void Mark(int segment, DriverResponse<MarkingResponse> callback);
 
         /// <summary>
@@ -43,6 +53,7 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// <param name="callback">The callback which will be executed after the marking process</param>
         /// <param name="variables">Marking variabes to set before start marking</param>
         /// <exception cref="SegmentsNotSupportedException">Will be thrown if segments are not supported</exception>
+        [Obsolete("Mark((int segment, IDictionary<string, string> variables, DriverResponse<MarkingResponse> callback) is obsolete.  Use Mark(MarkingConfiguration config, DriverResponse<MarkingResponse> callback) instead.")]
         void Mark(int segment, IDictionary<string, string> variables, DriverResponse<MarkingResponse> callback);
 
         /// <summary>

@@ -70,6 +70,7 @@
     <Compile Include="Drivers\DriverNotRunningException.cs" />
     <Compile Include="Drivers\Axis\IAxesController.cs" />
     <Compile Include="Drivers\DriverState.cs" />
+    <Compile Include="Drivers\Marking\MarkingConfiguration.cs" />
     <Compile Include="Hardware\Axes.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
