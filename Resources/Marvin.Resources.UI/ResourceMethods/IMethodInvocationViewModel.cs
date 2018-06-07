@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
 using Marvin.ClientFramework.Dialog;
-using Marvin.Controls;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.UI

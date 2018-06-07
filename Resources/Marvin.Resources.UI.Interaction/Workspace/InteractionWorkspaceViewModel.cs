@@ -28,7 +28,7 @@ namespace Marvin.Resources.UI.Interaction
 
         #region Fields and Properties
 
-        public DelegateCommand AddResourceCmd { get; private set; }
+        public AsyncCommand AddResourceCmd { get; private set; }
         public AsyncCommand RemoveResourceCmd { get; private set; }
 
         public ResourceTreeItemViewModel[] ResourceTree { get; private set; }
@@ -55,7 +55,7 @@ namespace Marvin.Resources.UI.Interaction
         {
             base.OnInitialize();
 
-            AddResourceCmd = new DelegateCommand(AddResource, CanAddResource);
+            AddResourceCmd = new AsyncCommand(AddResource, CanAddResource);
             RemoveResourceCmd = new AsyncCommand(RemoveResource, CanRemoveResource);
 
             // register at controller events
@@ -144,7 +144,7 @@ namespace Marvin.Resources.UI.Interaction
         /// <summary>
         /// Will add a resource by type wich will be selected via a dialog
         /// </summary>
-        private void AddResource(object parameters)
+        private async Task AddResource(object parameters)
         {
             var typeDialog = TypeSelectorFactory.CreateTypeSelector();
 
@@ -152,23 +152,22 @@ namespace Marvin.Resources.UI.Interaction
                 ? ResourceController.TypeTree.Select(type => new ResourceTypeViewModel(type)) 
                 : SelectedResource.PossibleChildren;
 
-            DialogManager.ShowDialog(typeDialog, delegate
-            {
-                if (typeDialog.Result == false || string.IsNullOrEmpty(typeDialog.SelectedTypeName))
-                    return;
+            await DialogManager.ShowDialogAsync(typeDialog);
 
-                var resourceTypeName = typeDialog.SelectedTypeName;
-                var constructor = typeDialog.Constructor as ConstructorViewModel;
-                TypeSelectorFactory.Destroy(typeDialog);
+            if (typeDialog.Result == false || string.IsNullOrEmpty(typeDialog.SelectedTypeName))
+                return;
 
-                CreateResource(resourceTypeName, constructor?.Constructor);
-            });
+            var resourceTypeName = typeDialog.SelectedTypeName;
+            var constructor = typeDialog.Constructor as ConstructorViewModel;
+            TypeSelectorFactory.Destroy(typeDialog);
+
+            await CreateResource(resourceTypeName, constructor?.Constructor);
         }
 
         /// <summary>
         /// Will create a resource by the given type name and will show the details view
         /// </summary>
-        private void CreateResource(string resourceTypeName, MethodEntry constructorModel)
+        private async Task CreateResource(string resourceTypeName, MethodEntry constructorModel)
         {
             long parentId = 0;
 
@@ -176,17 +175,14 @@ namespace Marvin.Resources.UI.Interaction
                 parentId = _selectedResource.Id;
 
             var detailsVm = DetailsFactory.Create(resourceTypeName);
-            
-            Task.Run(async delegate
-            {
-                await LoadDetails(async delegate
-                {
-                    await detailsVm.Create(resourceTypeName, parentId, constructorModel);
-                });
-                detailsVm.EnterEditMode();
 
-                ActivateItem(detailsVm);
+            await LoadDetails(async delegate
+            {
+                await detailsVm.Create(resourceTypeName, parentId, constructorModel);
             });
+            detailsVm.EnterEditMode();
+
+            ActivateItem(detailsVm);
         }
 
         /// <summary>
@@ -202,8 +198,14 @@ namespace Marvin.Resources.UI.Interaction
         /// </summary>
         private async Task RemoveResource(object parameters)
         {
-            var result = await ResourceController.RemoveResource(SelectedResource.Id);
-            if (result == false)
+            var dialogResult = await DialogManager.ShowMessageBoxAsync($"Do you really want to remove the resource '{SelectedResource.Name}'?", 
+                "Remove Resource", MessageBoxOptions.YesNo, MessageBoxImage.Question);
+
+            if (dialogResult != MessageBoxOptions.Yes)
+                return;
+
+            var removalResult = await ResourceController.RemoveResource(SelectedResource.Id);
+            if (removalResult == false)
             {
                 DialogManager.ShowMessageBox("There was an error occured on the server, while removing the resource.",
                     "Error while removing resource", MessageBoxOptions.Ok, MessageBoxImage.Error);
