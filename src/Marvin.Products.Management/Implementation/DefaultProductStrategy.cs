@@ -13,11 +13,11 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Create a new instance of the simple strategy
         /// </summary>
-        public DefaultProductStrategy(bool skipArticles, bool includeParent)
+        public DefaultProductStrategy(bool skipArticles, ParentLoadBehaviour parentLoading)
         {
             TargetType = typeof(TProduct).Name;
             SkipArticles = skipArticles;
-            IncludeParent = includeParent;
+            ParentLoading = parentLoading;
             Parts = new ILinkStrategy[0]; // Fill with empty array per default
         }
 
@@ -27,7 +27,7 @@ namespace Marvin.Products.Management
         public string TargetType { get; }
 
         ///
-        public bool IncludeParent { get; }
+        public ParentLoadBehaviour ParentLoading { get; }
 
         /// <summary>
         /// Active strategies for the parts of the product

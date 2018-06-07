@@ -141,7 +141,7 @@ namespace Marvin.Products.Management.Modification
                 State = product.State,
                 Identifier = identity.Identifier,
                 Revision = identity.Revision
-            }; 
+            };
 
             if (flat)
                 return converted;
@@ -177,7 +177,7 @@ namespace Marvin.Products.Management.Modification
             var connectors = new List<PartConnector>();
             foreach (var property in properties)
             {
-                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType))
+                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType) && property.Name != nameof(Product.ParentLink))
                 {
                     var link = (IProductPartLink)property.GetValue(product);
                     var connector = new PartConnector
@@ -247,7 +247,7 @@ namespace Marvin.Products.Management.Modification
             if (wpRecipe != null)
             {
                 converted.WorkplanId = wpRecipe.Workplan.Id;
-            } 
+            }
 
             return converted;
         }

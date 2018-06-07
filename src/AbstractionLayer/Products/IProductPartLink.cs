@@ -9,6 +9,11 @@ namespace Marvin.AbstractionLayer
     public interface IProductPartLink : IPersistentObject
     {
         /// <summary>
+        /// Parent product for this part link
+        /// </summary>
+        IProduct Parent { get; set; }
+
+        /// <summary>
         /// Generic access to the product of this part link
         /// </summary>
         IProduct Product { get; set; }

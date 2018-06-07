@@ -27,6 +27,11 @@
         public long Id { get; set; }
 
         /// <summary>
+        /// Parent product for this part link
+        /// </summary>
+        public IProduct Parent { get; set; }
+
+        /// <summary>
         /// Generic product reference of this link
         /// </summary>
         public IProduct Product { get; set; }

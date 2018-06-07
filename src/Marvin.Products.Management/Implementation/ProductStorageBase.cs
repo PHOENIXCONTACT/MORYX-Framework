@@ -61,11 +61,11 @@ namespace Marvin.Products.Management
                 if (productEntity == null)
                     return null;
 
-                var classificationMask = (int) classifications;
+                var classificationMask = (int)classifications;
                 var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeEntityRepository>().Linq
-                    let classificationValue = recipeEntity.Classification
-                    where recipeEntity.ProductId == productId && (classificationValue & classificationMask) == classificationValue
-                    select recipeEntity).ToArray();
+                                      let classificationValue = recipeEntity.Classification
+                                      where recipeEntity.ProductId == productId && (classificationValue & classificationMask) == classificationValue
+                                      select recipeEntity).ToArray();
 
                 return recipeEntities.Select(entity => LoadRecipe(uow, entity)).ToArray();
             }
@@ -130,8 +130,8 @@ namespace Marvin.Products.Management
 
                 // Find deleted ones and remove from db
                 var deleted = from dbRecipe in prod.Recipes
-                    where recipes.All(r => r.Id != dbRecipe.Id)
-                    select dbRecipe;
+                              where recipes.All(r => r.Id != dbRecipe.Id)
+                              select dbRecipe;
                 recipeRepo.RemoveRange(deleted);
 
                 uow.Save();
@@ -204,10 +204,10 @@ namespace Marvin.Products.Management
             return Transform(context, entity, full);
         }
 
-        private IProduct Transform(IUnitOfWork uow, ProductEntity entity, bool full, IDictionary<long, IProduct> loadedProducts = null, IProduct parent = null)
+        private IProduct Transform(IUnitOfWork uow, ProductEntity entity, bool full, IDictionary<long, IProduct> loadedProducts = null, IProductPartLink parentLink = null)
         {
             // Build cache if this wasn't done before
-            if(loadedProducts == null)
+            if (loadedProducts == null)
                 loadedProducts = new Dictionary<long, IProduct>();
 
             // Take converted product from dictionary if we already transformed it
@@ -219,25 +219,14 @@ namespace Marvin.Products.Management
 
             // To correctly restore the parent relation and build a valid object tree
             // we recursively move up the tree and later extract our reference using the
-            // part name. 
-            if (full && parent == null && strategy.IncludeParent && entity.Parents.Count == 1)
+            // part name.
+            PartLink[] parentRelations;
+            if (full && parentLink == null && strategy.ParentLoading > ParentLoadBehaviour.Ignore 
+                && (parentRelations = entity.Parents.Where(p => p.Parent.Deleted == null).ToArray()).Length == 1)
             {
-                // Load parent
-                var parentRelation = entity.Parents.Single();
-                parent = Transform(uow, parentRelation.Parent, true, loadedProducts);
-
-                // Extract ourself from it
-                var selfReference = parent.GetType().GetProperty(parentRelation.PropertyName);
-
-                //ToDo: Quickfix to load a parent that has a list. Parents with lists may cause performance problems!
-                if (typeof(IEnumerable).IsAssignableFrom(selfReference.PropertyType))
-                {
-                    var partlinklist = (IEnumerable<IProductPartLink>)selfReference.GetValue(parent);
-                    var partlink = partlinklist.First(link => link.Product.Id == entity.Id);
-                    return partlink.Product;
-                }
-
-                return ((IProductPartLink) selfReference.GetValue(parent)).Product;
+                parentLink = LoadParentLink(uow, entity, strategy, parentRelations[0], loadedProducts);
+                if (strategy.ParentLoading >= ParentLoadBehaviour.Full) // For mode full our tree was loaded during parent-load
+                    return parentLink.Product;
             }
 
             // Load product
@@ -246,7 +235,7 @@ namespace Marvin.Products.Management
             // Don't load parts and parent for partial view
             if (full)
             {
-                ((Product) product).Parent = parent;
+                ((Product)product).ParentLink = parentLink;
                 LoadParts(uow, entity, strategy, product, loadedProducts);
             }
 
@@ -254,6 +243,39 @@ namespace Marvin.Products.Management
             loadedProducts[entity.Id] = product;
 
             return product;
+        }
+
+        private IProductPartLink LoadParentLink(IUnitOfWork uow, ProductEntity entity, IProductTypeStrategy strategy, PartLink parentRelation, IDictionary<long, IProduct> loadedProducts)
+        {
+            // Load parent
+            var parent = Transform(uow, parentRelation.Parent, strategy.ParentLoading >= ParentLoadBehaviour.Full, loadedProducts);
+            // Extract ourself from it
+            var selfReference = parent.GetType().GetProperty(parentRelation.PropertyName);
+
+            // For full loading we can simply extract the back reference from the parent
+            if (strategy.ParentLoading == ParentLoadBehaviour.Full)
+            {
+                var value = selfReference.GetValue(parent);
+                var valueCollection = value as IEnumerable<IProductPartLink>;
+                return valueCollection == null ? (IProductPartLink)value : valueCollection.First(link => link.Product.Id == entity.Id);
+            }
+
+            // Partial or flat loading is a little trickier
+            var parentLinkStrategy = TypeStrategies[parent.Type].Parts.First(p => p.Name == parentRelation.PropertyName);
+            var parentLink = parentLinkStrategy.Load(uow, parentRelation);
+            parentLink.Parent = parent;
+
+            // For the flat strategy we only set this one link on the parent
+            if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(selfReference.PropertyType))
+            {
+                var linkCollection = (IList) Activator.CreateInstance(selfReference.PropertyType);
+                linkCollection.Add(parentLink);
+                selfReference.SetValue(parent, linkCollection);
+            }
+            else
+                selfReference.SetValue(parent, parentLink);
+
+            return parentLink;
         }
 
         /// <summary>
@@ -294,7 +316,8 @@ namespace Marvin.Products.Management
         private IProductPartLink LoadPart(IUnitOfWork uow, IProduct parent, ILinkStrategy linkStrategy, PartLink linkEntity, IDictionary<long, IProduct> loadedProducts)
         {
             var link = linkStrategy.Load(uow, linkEntity);
-            link.Product = (Product)Transform(uow, linkEntity.Child, true, loadedProducts, parent);
+            link.Parent = parent;
+            link.Product = (Product)Transform(uow, linkEntity.Child, true, loadedProducts, link);
             return link;
         }
 
@@ -493,7 +516,7 @@ namespace Marvin.Products.Management
             strategy.LoadArticle(uow, entity, article);
 
             // Group all parts of the article by the property they belong to
-            var parts = ((IArticleParts) article).Parts;
+            var parts = ((IArticleParts)article).Parts;
             var partGroups = entity.Parts.GroupBy(p => p.PartLink.PropertyName);
 
             // Load and populate parts
@@ -519,7 +542,7 @@ namespace Marvin.Products.Management
                         var partArticle = partArticles[index];
                         var partEntity = partCollection[index];
 
-                        ((IArticleParts) partArticle).PartLinkId = partEntity.PartLinkId.Value;
+                        ((IArticleParts)partArticle).PartLinkId = partEntity.PartLinkId.Value;
                         var partWrapper = new ArticlePart(partGroup.Key, partArticle);
                         parts.Add(partWrapper);
                     }

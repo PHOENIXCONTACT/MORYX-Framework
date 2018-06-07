@@ -19,7 +19,7 @@ namespace Marvin.Products.Management
         /// this type are loaded directly. This is usually the case
         /// for sets and 1on1 relations between parent and part.
         /// </summary>
-        bool IncludeParent { get; }
+        ParentLoadBehaviour ParentLoading { get; }
 
         /// <summary>
         /// Get part descriptions for the product
