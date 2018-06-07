@@ -42,7 +42,7 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Import products for the given parameters with the named importer
         /// </summary>
-        IProduct[] ImportProducts(string importerName, IImportParameters parameters);
+        IReadOnlyList<IProduct> ImportProducts(string importerName, IImportParameters parameters);
 
             /// <summary>
         /// Retrieves the current recipe for this product

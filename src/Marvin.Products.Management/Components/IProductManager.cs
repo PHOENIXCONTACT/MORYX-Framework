@@ -55,7 +55,15 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Import the given file as a product to the database
         /// </summary>
-        IProduct[] ImportProducts(string importer, IImportParameters parameters);
+        IReadOnlyList<IProduct> ImportProducts(string importer, IImportParameters parameters);
+
+        /// <summary>
+        /// Try to delete a product. If it is still used as a part in other products, the product
+        /// is not deleted but instead all affacted products returned.
+        /// </summary>
+        /// <param name="deprecatedProduct">Product that is depracted and should be deleted.</param>
+        /// <returns>The collection of all products that would be affacted by the removal. If the collection is empty the product was removed.</returns>
+        IReadOnlyList<IProduct> DeleteProduct(IProduct deprecatedProduct);
 
         /// <summary>
         /// Create an article instance of given product

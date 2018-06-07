@@ -220,7 +220,7 @@ namespace Marvin.Products.Management
             return revision;
         }
 
-        public IProduct[] ImportProducts(string importerName, IImportParameters parameters)
+        public IReadOnlyList<IProduct> ImportProducts(string importerName, IImportParameters parameters)
         {
             var importer = _importers.First(i => i.Name == importerName);
             var imported = importer.Import(parameters);
@@ -229,6 +229,34 @@ namespace Marvin.Products.Management
                 Save(product);
             }
             return imported;
+        }
+
+        public IReadOnlyList<IProduct> DeleteProduct(IProduct deprecatedProduct)
+        {
+            using (var uow = Factory.Create())
+            {
+                var productRepo = uow.GetRepository<IProductEntityRepository>();
+                var queryResult = (from entity in productRepo.Linq
+                                   where entity.Id == deprecatedProduct.Id
+                                   select new
+                                   {
+                                       entity,
+                                       parents = (from parentLink in entity.Parents
+                                                  where parentLink.Parent.Deleted == null
+                                                  select parentLink.Parent).ToList()
+                                   }).First();
+
+                var affectedProducts = queryResult.parents;
+                // If products would be affected by the removal
+                if(affectedProducts.Count >= 1)
+                    return affectedProducts.Select(ap => Storage.TransformProduct(uow, ap, false)).ToArray();
+
+                // No products affected, so we can remove the product
+                productRepo.Remove(queryResult.entity);
+                uow.Save();
+
+                return new IProduct[0];
+            }
         }
 
         public Article CreateInstance(IProduct product, bool save)

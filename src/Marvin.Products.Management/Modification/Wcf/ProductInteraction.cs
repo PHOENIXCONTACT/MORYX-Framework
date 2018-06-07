@@ -125,6 +125,11 @@ namespace Marvin.Products.Management.Modification
             return UseConverter(c => c.ImportProduct(importerName, parameters));
         }
 
+        public ProductModel[] DeleteProduct(long id)
+        {
+            return UseConverter(c => c.DeleteProduct(id));
+        }
+
         public RecipeModel GetRecipe(long recipeId)
         {
             return UseConverter(c => c.GetRecipe(recipeId));

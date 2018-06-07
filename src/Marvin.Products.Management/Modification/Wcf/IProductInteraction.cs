@@ -6,7 +6,7 @@ using Marvin.Tools.Wcf;
 namespace Marvin.Products.Management.Modification
 {
     [ServiceContract]
-    [ServiceVersion(ServerVersion = "1.1.1.0", MinClientVersion = "1.1.1.0")]
+    [ServiceVersion(ServerVersion = "1.1.2.0", MinClientVersion = "1.1.1.0")]
     internal interface IProductInteraction
     {
         /// <summary>
@@ -69,6 +69,12 @@ namespace Marvin.Products.Management.Modification
         /// </summary>
         [OperationContract]
         ProductModel ImportProduct(string importerName, ImportParameter[] parametersModel);
+
+        /// <summary>
+        /// Try to delete a product
+        /// </summary>
+        [OperationContract]
+        ProductModel[] DeleteProduct(long id);
 
         /// <summary>
         /// Get the recipe with this id

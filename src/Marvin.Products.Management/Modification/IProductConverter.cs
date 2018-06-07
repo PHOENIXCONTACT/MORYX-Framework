@@ -17,6 +17,8 @@ namespace Marvin.Products.Management.Modification
 
         ProductModel ImportProduct(string importerName, IImportParameters parameters);
 
+        ProductModel[] DeleteProduct(long id);
+
         ProductModel Save(ProductModel product);
 
         RecipeModel GetRecipe(long recipeId);

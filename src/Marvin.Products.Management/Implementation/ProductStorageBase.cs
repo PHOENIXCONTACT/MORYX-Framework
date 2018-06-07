@@ -170,7 +170,7 @@ namespace Marvin.Products.Management
         }
 
         /// 
-        public IEnumerable<IProduct> LoadProducts()
+        public IReadOnlyList<IProduct> LoadProducts()
         {
             using (var uow = Factory.Create())
             {
@@ -195,6 +195,13 @@ namespace Marvin.Products.Management
                         ).ToList();
 
             return products;
+        }
+
+
+        /// <inheritdoc />
+        public IProduct TransformProduct(IUnitOfWork context, ProductEntity entity, bool full)
+        {
+            return Transform(context, entity, full);
         }
 
         private IProduct Transform(IUnitOfWork uow, ProductEntity entity, bool full, IDictionary<long, IProduct> loadedProducts = null, IProduct parent = null)

@@ -76,6 +76,13 @@ namespace Marvin.Products.Management.Modification
             return ConvertProduct(products[0], false);
         }
 
+        public ProductModel[] DeleteProduct(long id)
+        {
+            var product = ProductManager.GetProduct(id);
+            var products = ProductManager.DeleteProduct(product);
+            return products.Select(p => ConvertProduct(p, true)).ToArray();
+        }
+
         public RecipeModel GetRecipe(long recipeId)
         {
             var recipe = RecipeManagement.Get(recipeId);

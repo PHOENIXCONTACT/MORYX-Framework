@@ -76,7 +76,7 @@ namespace Marvin.Products.Management
             }
         }
 
-        public IProduct[] ImportProducts(string importerName, IImportParameters parameters)
+        public IReadOnlyList<IProduct> ImportProducts(string importerName, IImportParameters parameters)
         {
             ValidateHealthState();
             return ProductManager.ImportProducts(importerName, parameters);

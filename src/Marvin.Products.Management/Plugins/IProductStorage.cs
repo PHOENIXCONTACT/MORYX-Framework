@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Marvin.AbstractionLayer;
+using Marvin.Model;
+using Marvin.Products.Model;
 
 namespace Marvin.Products.Management
 {
@@ -19,9 +21,14 @@ namespace Marvin.Products.Management
         IProduct LoadProduct(ProductIdentity identity);
 
         /// <summary>
+        /// Transform a given a product entity
+        /// </summary>
+        IProduct TransformProduct(IUnitOfWork context, ProductEntity entity, bool full);
+
+        /// <summary>
         /// Loads all available products
         /// </summary>
-        IEnumerable<IProduct> LoadProducts();
+        IReadOnlyList<IProduct> LoadProducts();
 
         /// <summary>
         /// Save a product to the storage
