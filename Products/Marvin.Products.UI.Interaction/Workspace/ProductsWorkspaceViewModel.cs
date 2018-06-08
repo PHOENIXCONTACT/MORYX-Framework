@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using C4I;
 using Marvin.AbstractionLayer.UI;
 using Marvin.ClientFramework;
+using Marvin.ClientFramework.Commands;
 using Marvin.Container;
 
 namespace Marvin.Products.UI.Interaction
@@ -31,11 +31,11 @@ namespace Marvin.Products.UI.Interaction
         private StructureEntryViewModel[] _displayStructure;
         private long _selectedProductId;
         
-        public RelayCommand ImportDialogCmd { get; private set; }
+        public AsyncCommand ImportDialogCmd { get; private set; }
 
-        public RelayCommand ShowRevisionsCmd { get; private set; }
+        public AsyncCommand ShowRevisionsCmd { get; private set; }
 
-        public RelayCommand CreateRevisionCmd { get; private set; }
+        public AsyncCommand CreateRevisionCmd { get; private set; }
 
         public StructureEntryViewModel[] DisplayStructure
         {
@@ -82,9 +82,9 @@ namespace Marvin.Products.UI.Interaction
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            ImportDialogCmd = new RelayCommand(ImportProductDialog);
-            ShowRevisionsCmd = new RelayCommand(ShowRevisionsDialog, CanShowRevisions);
-            CreateRevisionCmd = new RelayCommand(CreateRevision, CanCreateRevision);
+            ImportDialogCmd = new AsyncCommand(ImportProductDialog, o => true, true);
+            ShowRevisionsCmd = new AsyncCommand(ShowRevisionsDialog, CanShowRevisions, true);
+            CreateRevisionCmd = new AsyncCommand(CreateRevision, CanCreateRevision, true);
 
             Controller.StructureUpdated += OnStructureUpdated;
 
@@ -212,19 +212,18 @@ namespace Marvin.Products.UI.Interaction
         /// <summary>
         /// Show import product dialog
         /// </summary>
-        private void ImportProductDialog(object parameters)
+        private async Task ImportProductDialog(object parameters)
         {
             var dialog = ProductDialogFactory.CreateImportDialog();
-            DialogManager.ShowDialog(dialog, delegate
-            {
-                if (dialog.ImportedProduct != null)
-                {
-                    _selectedProductId = dialog.ImportedProduct.Id;
-                    Controller.UpdateStructure();
-                }
+            await DialogManager.ShowDialogAsync(dialog).ConfigureAwait(false);
 
-                ProductDialogFactory.Destroy(dialog);
-            });
+            if (dialog.ImportedProduct != null)
+            {
+                _selectedProductId = dialog.ImportedProduct.Id;
+                Controller.UpdateStructure();
+            }
+
+            ProductDialogFactory.Destroy(dialog);
         }
 
         /// <summary>
@@ -239,28 +238,22 @@ namespace Marvin.Products.UI.Interaction
         /// <summary>
         /// Shows the revision dialog
         /// </summary>
-        private void ShowRevisionsDialog(object obj)
+        private async Task ShowRevisionsDialog(object obj)
         {
             var dialog = ProductDialogFactory.CreateShowRevisionsDialog(SelectedProduct.MaterialNumber);
-            DialogManager.ShowDialog(dialog, delegate(IRevisionsViewModel model)
+            await DialogManager.ShowDialogAsync(dialog);
+
+            if (dialog.Result && dialog.SelectedRevision.HasValue)
             {
-                var result = model.Result;
+                var selectedRevision = dialog.SelectedRevision.Value;
 
-                if (result && model.SelectedRevision.HasValue)
-                {
-                    var selectedRevision = model.SelectedRevision.Value;
+                var detailsVm = DetailsFactory.Create(SelectedProduct.Type);
+                await LoadDetails(() => detailsVm.Load(selectedRevision));
 
-                    Task.Run(async delegate
-                    {
-                        var detailsVm = DetailsFactory.Create(SelectedProduct.Type);
-                        await LoadDetails(() => detailsVm.Load(selectedRevision));
+                ActivateItem(detailsVm);
+            }
 
-                        ActivateItem(detailsVm);
-                    });
-                }
-
-                ProductDialogFactory.Destroy(dialog);
-            });
+            ProductDialogFactory.Destroy(dialog);
         }
 
         /// <summary>
@@ -275,24 +268,21 @@ namespace Marvin.Products.UI.Interaction
         /// <summary>
         /// Opens a dialog for creating a new revision of the current product
         /// </summary>
-        protected void CreateRevision(object parameters)
+        protected async Task CreateRevision(object parameters)
         {
-            var dialogModel = ProductDialogFactory.CreateCreateRevisionDialog(SelectedProduct);
-            DialogManager.ShowDialog(dialogModel, delegate
-            {
-                if (dialogModel.CreatedProductRevision != 0)
-                {
-                    Task.Run(async delegate
-                    {
-                        var detailsVm = DetailsFactory.Create(SelectedProduct.Type);
-                        await LoadDetails(() => detailsVm.Load(dialogModel.CreatedProductRevision));
+            var dialog = ProductDialogFactory.CreateCreateRevisionDialog(SelectedProduct);
+            await DialogManager.ShowDialogAsync(dialog);
 
-                        ActivateItem(detailsVm);
-                        Controller.UpdateStructure();
-                    });
-                }
-                ProductDialogFactory.Destroy(dialogModel);
-            });
+            if (dialog.CreatedProductRevision != 0)
+            {
+                var detailsVm = DetailsFactory.Create(SelectedProduct.Type);
+                await LoadDetails(() => detailsVm.Load(dialog.CreatedProductRevision));
+
+                ActivateItem(detailsVm);
+                Controller.UpdateStructure();
+            }
+
+            ProductDialogFactory.Destroy(dialog);
         }
 
         //TODO: find a better way to reselect the old product. 
