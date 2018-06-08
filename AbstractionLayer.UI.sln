@@ -3,25 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.UI.Interaction", "Resources\Marvin.Resources.UI.Interaction\Marvin.Resources.UI.Interaction.csproj", "{E0BF3F3A-2E2D-442F-BEA8-A585DC96AD99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.UI.Interaction", "src\Marvin.Resources.UI.Interaction\Marvin.Resources.UI.Interaction.csproj", "{E0BF3F3A-2E2D-442F-BEA8-A585DC96AD99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{F764D8C4-27E3-4B2D-A1AF-EE90CDB519F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{450C0703-D75E-4363-A2C3-DCA629AFB970}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.UI", "Resources\Marvin.Resources.UI\Marvin.Resources.UI.csproj", "{AFE31117-C539-48F9-8EA5-4044AAA22C69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.UI", "src\Marvin.Resources.UI\Marvin.Resources.UI.csproj", "{AFE31117-C539-48F9-8EA5-4044AAA22C69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.UI.Interaction", "Products\Marvin.Products.UI.Interaction\Marvin.Products.UI.Interaction.csproj", "{55DAA8ED-0729-4FF7-B262-E8C0F99022F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.UI.Interaction", "src\Marvin.Products.UI.Interaction\Marvin.Products.UI.Interaction.csproj", "{55DAA8ED-0729-4FF7-B262-E8C0F99022F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.UI", "Products\Marvin.Products.UI\Marvin.Products.UI.csproj", "{E04D4A2D-70FC-48CF-A412-853CE51D5D40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.UI", "src\Marvin.Products.UI\Marvin.Products.UI.csproj", "{E04D4A2D-70FC-48CF-A412-853CE51D5D40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.AbstractionLayer.UI", "AbstractionLayer.UI\Marvin.AbstractionLayer.UI.csproj", "{B9920541-7E0E-4CDE-B195-B18589A2BBB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.AbstractionLayer.UI", "src\AbstractionLayer.UI\Marvin.AbstractionLayer.UI.csproj", "{B9920541-7E0E-4CDE-B195-B18589A2BBB1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{572192C7-12A6-4CA9-9976-A0778615D9E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.AbstractionLayer.UI.Tests", "Tests\Marvin.AbstractionLayer.UI.Tests\Marvin.AbstractionLayer.UI.Tests.csproj", "{47B9DE3F-18D2-4C36-AD35-7EF06A799ED0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.AbstractionLayer.UI.Tests", "src\Tests\Marvin.AbstractionLayer.UI.Tests\Marvin.AbstractionLayer.UI.Tests.csproj", "{47B9DE3F-18D2-4C36-AD35-7EF06A799ED0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartProject.UI", "StartProject.UI\StartProject.UI.csproj", "{16013737-F584-45F2-A176-6C1AA6784918}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartProject.UI", "src\StartProject.UI\StartProject.UI.csproj", "{16013737-F584-45F2-A176-6C1AA6784918}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

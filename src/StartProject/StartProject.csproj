@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{08B7686D-63C7-498C-90F0-B756E93575DD}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>StartProject</RootNamespace>
+    <AssemblyName>StartProject</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.WcfIntegrationFacility.4.1.0\lib\net45\Castle.Facilities.WcfIntegration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Windsor.4.1.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=3.1.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework6.Npgsql.3.1.1\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin, Version=3.0.0.1360, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev001360\lib\net461\Marvin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Container, Version=3.0.0.1360, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Container.3.0.0-dev001360\lib\net461\Marvin.Container.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Model, Version=3.0.0.1360, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Model.3.0.0-dev001360\lib\net461\Marvin.Model.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Model.Npgsql, Version=3.0.0.1360, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Model.Npgsql.3.0.0-dev001360\lib\net461\Marvin.Model.Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime, Version=3.0.0.1360, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev001360\lib\net461\Marvin.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime.Kernel, Version=3.0.0.1360, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Kernel.3.0.0-dev001360\lib\net461\Marvin.Runtime.Kernel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime.Maintenance, Version=3.0.0.1360, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.3.0.0-dev001360\lib\net461\Marvin.Runtime.Maintenance.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Runtime.Maintenance.Web, Version=3.0.0.968, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.Web.3.0.0-dev000968\lib\net461\Marvin.Runtime.Maintenance.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.1360, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev001360\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.2.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Npgsql.3.2.7\lib\net451\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.4.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+      <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
+      <Name>Marvin.AbstractionLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Notifications\Marvin.Notifications.csproj">
+      <Project>{4fb1bca9-bd6d-478a-93c5-5cd4de2a2337}</Project>
+      <Name>Marvin.Notifications</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Products.Management\Marvin.Products.Management.csproj">
+      <Project>{650756a0-e077-4632-8da8-27214b5acda4}</Project>
+      <Name>Marvin.Products.Management</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Products.Model\Marvin.Products.Model.csproj">
+      <Project>{99a470c6-1224-4475-937e-e7ca0266205c}</Project>
+      <Name>Marvin.Products.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Products.Samples.Model\Marvin.Products.Samples.Model.csproj">
+      <Project>{0289483b-d623-41c1-ae3f-2f0779a472db}</Project>
+      <Name>Marvin.Products.Samples.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Products.Samples\Marvin.Products.Samples.csproj">
+      <Project>{00916431-5038-44b8-8bda-4a1b13636f32}</Project>
+      <Name>Marvin.Products.Samples</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Resources.Interaction\Marvin.Resources.Interaction.csproj">
+      <Project>{583cbd84-dd9f-4834-a89c-1625a05ee15d}</Project>
+      <Name>Marvin.Resources.Interaction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
+      <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
+      <Name>Marvin.Resources.Management</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Resources.Samples\Marvin.Resources.Samples.csproj">
+      <Project>{23f6025e-1348-4abf-a908-c5d360f9d486}</Project>
+      <Name>Marvin.Resources.Samples</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
