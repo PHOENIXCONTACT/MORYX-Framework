@@ -221,7 +221,7 @@ namespace Marvin.Products.Management
             // we recursively move up the tree and later extract our reference using the
             // part name.
             PartLink[] parentRelations;
-            if (full && parentLink == null && strategy.ParentLoading > ParentLoadBehaviour.Ignore 
+            if (full && parentLink == null && strategy.ParentLoading > ParentLoadBehaviour.Ignore
                 && (parentRelations = entity.Parents.Where(p => p.Parent.Deleted == null).ToArray()).Length == 1)
             {
                 parentLink = LoadParentLink(uow, entity, strategy, parentRelations[0], loadedProducts);
@@ -236,6 +236,8 @@ namespace Marvin.Products.Management
             if (full)
             {
                 ((Product)product).ParentLink = parentLink;
+                if (parentLink != null && parentLink.Product == null)
+                    parentLink.Product = product; // If the parent link was created and not passed we must set the reference for consitency between both modes
                 LoadParts(uow, entity, strategy, product, loadedProducts);
             }
 

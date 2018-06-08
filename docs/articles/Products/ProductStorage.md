@@ -22,7 +22,7 @@ public class WatchProductStorage : ProductStorageBase
         {
             new WatchStrategy(),
             new WatchfaceStrategy(), 
-            new DefaultProductStrategy<NeedleProduct>(true, false)
+            new DefaultProductStrategy<NeedleProduct>(true, ParentLoadBehaviour.Ignore)
         };
     } 
 }
@@ -36,9 +36,9 @@ For each product of the application the storage must provide an [IProductTypeStr
 
 The target type property defines the scope of the strategy. It must return the same value that is returned by `product.Type` and should usually be defined by a constant field on the product definition.
 
-## IncludeParent
+## ParentLoading
 
-This flag indicates that the parent shall be included as well of instances of this product type are loaded. This is usually the case for sets with 1-on-1 relationships between a product and a part. In our example we assume that a watchface is only used for one watch because the model name is printed on the watchface. Needles however can be included in numerours watches and therefor do not activate this flag.
+This enum indicates how the parent shall be treated if instances of this product type are loaded. This allows for three options - `Ignore`, `Flat` and `Full`. `Ignore` is the default for all parts that are used in multiple products. The other two options indicate whether only the parent **and** the reference to the orignal product is resolved or the full product tree of the parent. In our example we assume that a watchface is only used for one watch because the model name is printed on the watchface. Because our watch is a rather small product we can use `Full` here, however if the parent has lots of part links which we do not need, the preferred option is `Flat`. Needles on the other side can be included in numerours watches and therefor do not activate parent loading.
 
 ## Parts
 

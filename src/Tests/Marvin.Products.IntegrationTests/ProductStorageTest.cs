@@ -22,36 +22,36 @@ namespace Marvin.Products.IntegrationTests
             _factory.Initialize();
         }
 
-        private static WatchProduct SetupProduct()
+        private static WatchProduct SetupProduct(string watchName, string identifierPrefix)
         {
             var watchface = new WatchfaceProduct
             {
-                Name = "Black water resistant",
-                Identity = new ProductIdentity("4711", 1),
-                Numbers = new []{3, 6, 9, 12}
+                Name = "Black water resistant for " + watchName,
+                Identity = new ProductIdentity(identifierPrefix + "4711", 1),
+                Numbers = new[] { 3, 6, 9, 12 }
             };
 
             var needles = new List<NeedlePartLink>
             {
                 new NeedlePartLink
                 {
-                    Product = new NeedleProduct { Name = "Hours needle", Identity = new ProductIdentity("24", 1) }
+                    Product = new NeedleProduct { Name = "Hours needle", Identity = new ProductIdentity(identifierPrefix + "24", 1) }
                 },
                 new NeedlePartLink
                 {
-                    Product = new NeedleProduct { Name = "Minutes needle", Identity = new ProductIdentity("1440", 2) }
+                    Product = new NeedleProduct { Name = "Minutes needle", Identity = new ProductIdentity(identifierPrefix + "1440", 2) }
                 },
                 new NeedlePartLink
                 {
-                    Product = new NeedleProduct { Name = "Seconds needle", Identity = new ProductIdentity("86400", 3) }
+                    Product = new NeedleProduct { Name = "Seconds needle", Identity = new ProductIdentity(identifierPrefix + "86400", 3) }
                 }
             };
 
             var watch = new WatchProduct
             {
-                Name = "Jaques Lemans",
-                Identity = new ProductIdentity("87654", 5),
-                Watchface = new ProductPartLink<WatchfaceProduct>{Product = watchface},
+                Name = watchName,
+                Identity = new ProductIdentity(identifierPrefix + "87654", 5),
+                Watchface = new ProductPartLink<WatchfaceProduct> { Product = watchface },
                 Needles = needles
             };
 
@@ -62,10 +62,10 @@ namespace Marvin.Products.IntegrationTests
         public void SaveWatchProduct()
         {
             // Arrange
-            var watch = SetupProduct();
+            var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var watchStorage = new WatchProductStorage {Factory = _factory};
+            var watchStorage = new WatchProductStorage { Factory = _factory };
             var savedWatchId = watchStorage.SaveProduct(watch);
 
             // Assert
@@ -84,10 +84,10 @@ namespace Marvin.Products.IntegrationTests
         public void SaveNewWatchProductVersion()
         {
             // Arrange
-            var watch = SetupProduct();
+            var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var watchStorage = new WatchProductStorage {Factory = _factory};
+            var watchStorage = new WatchProductStorage { Factory = _factory };
             var oldWatchName = watch.Name;
             watchStorage.SaveProduct(watch);
 
@@ -118,7 +118,7 @@ namespace Marvin.Products.IntegrationTests
             var watchfaceEntity = watchEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceProduct))).Child;
             Assert.NotNull(watchfaceEntity, "There is no watchface");
 
-            var identity = (ProductIdentity) watch.Identity;
+            var identity = (ProductIdentity)watch.Identity;
             var byIdentifier = productEntityRepo.GetByIdentity(identity.Identifier, identity.Revision);
             Assert.NotNull(byIdentifier, "New version of watch not found by identifier ");
             Assert.AreEqual(savedWatchId, byIdentifier.Id, "Different id´s");
@@ -128,10 +128,10 @@ namespace Marvin.Products.IntegrationTests
         public void GetWatchProduct()
         {
             // Arrange
-            var watch = SetupProduct();
+            var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var watchStorage = new WatchProductStorage {Factory = _factory};
+            var watchStorage = new WatchProductStorage { Factory = _factory };
             var savedWatchId = watchStorage.SaveProduct(watch);
             var loadedWatch = (WatchProduct)watchStorage.LoadProduct(savedWatchId);
 
@@ -149,7 +149,7 @@ namespace Marvin.Products.IntegrationTests
         public void ParentOnWatchface()
         {
             // Arrange
-            var watch = SetupProduct();
+            var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
             var watchStorage = new WatchProductStorage { Factory = _factory };
@@ -160,8 +160,38 @@ namespace Marvin.Products.IntegrationTests
             // Assert
             Assert.NotNull(watchface, "Failed to load from database");
             Assert.NotNull(watchface.Parent, "Parent was not set");
-            var watchParent = (WatchProduct) watchface.Parent;
+            var watchParent = (WatchProduct)watchface.Parent;
             Assert.AreEqual(watchface, watchParent.Watchface.Product, "Product tree inconsistent!");
+            Assert.AreEqual(3, watchParent.Needles.Count, "Full parent loading MUST include other part links too");
+        }
+
+        [Test]
+        public void PackageOnWatch()
+        {
+            // Arrange
+            var package = new WatchPackageProduct
+            {
+                Name = "Standard box",
+                Identity = new ProductIdentity("9876543", 42),
+                PossibleWatches = new List<ProductPartLink<WatchProduct>>
+                {
+                    new ProductPartLink<WatchProduct> {Product = SetupProduct("Jaques Lemans", "1")},
+                    new ProductPartLink<WatchProduct> {Product = SetupProduct("Tag Heuer", "2")}
+                }
+            };
+
+            // Act
+            var watchStorage = new WatchProductStorage { Factory = _factory };
+            watchStorage.SaveProduct(package);
+            var watchId = package.PossibleWatches[1].Product.Id;
+            var watch = (WatchProduct)watchStorage.LoadProduct(watchId);
+
+            // Assert
+            Assert.NotNull(watch, "Failed to load from database");
+            Assert.NotNull(watch.Parent, "Parent was not set");
+            var watchParent = (WatchPackageProduct)watch.Parent;
+            Assert.AreEqual(1, watchParent.PossibleWatches.Count, "Reference should only be loaded partially");
+            Assert.AreEqual(watch, watchParent.PossibleWatches[0].Product, "Product tree inconsistent!");
         }
     }
 }
