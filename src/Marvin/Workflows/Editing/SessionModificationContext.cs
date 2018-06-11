@@ -30,9 +30,9 @@ namespace Marvin.Workflows
         /// <summary>
         /// Step was added to the session
         /// </summary>
-        public SessionModificationContext Added(WorkplanStepModel step)
+        public SessionModificationContext Added(WorkplanStepModel stepModel)
         {
-            return AddStep(step, ModificationType.Insert);
+            return AddStep(stepModel, ModificationType.Insert);
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace Marvin.Workflows
         /// <summary>
         /// Step was added to the session
         /// </summary>
-        public SessionModificationContext Updated(WorkplanStepModel step)
+        public SessionModificationContext Updated(WorkplanStepModel stepModel)
         {
-            return AddStep(step, ModificationType.Update);
+            return AddStep(stepModel, ModificationType.Update);
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace Marvin.Workflows
         /// <summary>
         /// Step was added to the session
         /// </summary>
-        public SessionModificationContext Deleted(WorkplanStepModel step)
+        public SessionModificationContext Deleted(WorkplanStepModel stepModel)
         {
-            return AddStep(step, ModificationType.Delete);
+            return AddStep(stepModel, ModificationType.Delete);
         }
 
         /// <summary>
@@ -75,11 +75,11 @@ namespace Marvin.Workflows
             return AddConnector(connector, ModificationType.Delete, new ConnectionPoint(), new ConnectionPoint());
         }
 
-        private SessionModificationContext AddStep(WorkplanStepModel step, ModificationType type)
+        private SessionModificationContext AddStep(WorkplanStepModel stepModel, ModificationType type)
         {
             _modifiedSteps.Add(new ModifiedStep
             {
-                Data = step,
+                Data = stepModel,
                 Modification = type
             });
             return this;

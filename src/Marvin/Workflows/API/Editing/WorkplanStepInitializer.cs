@@ -97,8 +97,6 @@ namespace Marvin.Workflows
                     var proto = EntryConvert.ElementType(type);
                     var entryPrototype = new EntryPrototype(proto.Name, Activator.CreateInstance(proto));
                     var prototype = EntryConvert.Prototype(entryPrototype);
-                    // TODO: Remove prototype from SubEntries
-                    entry.SubEntries.Add(prototype);
                     entry.Prototypes.Add(prototype);
                     break;
                 case EntryValueType.Enum:

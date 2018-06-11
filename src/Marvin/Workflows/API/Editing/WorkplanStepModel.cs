@@ -55,7 +55,7 @@ namespace Marvin.Workflows
         /// Descriptions for the outputs
         /// </summary>
         [DataMember]
-        public OutputDescriptionDto[] OutputDescriptions { get; set; }
+        public OutputDescription[] OutputDescriptions { get; set; }
 
         /// <summary>
         /// Serialized properties of the step
