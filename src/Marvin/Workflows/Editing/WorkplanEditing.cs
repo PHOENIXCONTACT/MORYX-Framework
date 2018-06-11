@@ -115,7 +115,7 @@ namespace Marvin.Workflows
                 Classification = StepTypeConverter.ToClassification(stepType),
                 Inputs = new ConnectorModel[step.Inputs.Length],
                 Outputs = new ConnectorModel[step.Outputs.Length],
-                OutputDescriptions = step.OutputDescriptions.Select(CopyDescription).ToArray(),
+                OutputDescriptions = step.OutputDescriptions,
                 Properties = StepCreationContainer.GetProperties(stepType, step).ToArray()
             };
 
@@ -158,20 +158,6 @@ namespace Marvin.Workflows
         private static ConnectorModel GetOrCreateConnector(IConnector connector, IDictionary<long, ConnectorModel> connectorMap)
         {
             return connectorMap.ContainsKey(connector.Id) ? connectorMap[connector.Id] : connectorMap[connector.Id] = ConnectorModel.FromConnector(connector);
-        }
-
-        /// <summary>
-        /// Copy to serializable output description
-        /// </summary>
-        /// <param name="description"></param>
-        /// <returns></returns>
-        private static OutputDescriptionDto CopyDescription(OutputDescription description)
-        {
-            return new OutputDescriptionDto
-            {
-                Success = description.Success,
-                Name = description.Name
-            };
         }
 
         /// <seealso cref="IWorkplanEditing"/>
