@@ -42,7 +42,7 @@ This enum indicates how the parent shall be treated if instances of this product
 
 ## Parts
 
-The parts property must return an array of [ILinkStrategy](@ref Marvin.Products.Management.ILinkStrategy). Each link strategy represents a product part or collection of product parts. For links without custom properties the [DefaultLinkStrategy](@ref Marvin.Products.Management.DefaultLinkStrategy) can be used while custom propertiers require a custom implementation of the interface. Instances of the default strategy should be created by using the static `CreateLink`-method.
+The parts property must return an array of [ILinkStrategy](@ref Marvin.Products.Management.ILinkStrategy). Each link strategy represents a product part or collection of product parts. For links without custom properties the [DefaultLinkStrategy](@ref Marvin.Products.Management.DefaultLinkStrategy) can be used while custom propertiers require a custom implementation of the interface.
 
 For the `WatchProduct` strategy the parts property is implemented as shown below:
 
@@ -61,7 +61,7 @@ public class WatchStrategy : ProductStrategyBase, IProductTypeStrategy
     public ILinkStrategy[] Parts { get; private set; }
 ````
 
-The implementation of the NeedleLinkStrategy is implemented below. The `PartCreation` property defines whether the article instance is constructed from the `ProductPartLink`-property of the type or restored only from the entities. Per default the product definition is used to avoid redundancy and improve object creation:
+The implementation of the NeedleLinkStrategy is implemented below. The `PartCreation` property defines whether the article instance is constructed from the `ProductPartLink`-property of the type or restored only from the entities. Per default the product definition is used to avoid redundancy and improve object creation.
 
 ````cs
 private class NeedleLinkStrategy : DefaultLinkStrategy<NeedleProduct>
@@ -84,6 +84,8 @@ private class NeedleLinkStrategy : DefaultLinkStrategy<NeedleProduct>
     }
 }
 ````
+
+Another property of `ILinkStrategy` is the flag `RecursivePartSaving` that indicates whether parts referenced by this link should also besaved recursively or remain untouched by creation or modification of a parent product. The [DefaultLinkStrategy](@ref Marvin.Products.Management.DefaultLinkStrategy) sets the flag to `false` because we consider this the common case. You can set it to `true` by overriding the property or using the constructor overload that accepts the boolean flag.
 
 ## Load Product
 

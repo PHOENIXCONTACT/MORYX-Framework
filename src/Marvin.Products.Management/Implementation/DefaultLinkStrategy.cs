@@ -13,10 +13,18 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Create instance for type accessor
         /// </summary>
-        public DefaultLinkStrategy(string name)
+        public DefaultLinkStrategy(string name) : this(name, false)
+        {
+        }
+
+        /// <summary>
+        /// Create instance for type accessor
+        /// </summary>
+        public DefaultLinkStrategy(string name, bool partSaving)
         {
             Name = name;
             TypeName = typeof(TProduct).Name;
+            RecursivePartSaving = partSaving;
         }
 
         /// <summary>
@@ -28,6 +36,12 @@ namespace Marvin.Products.Management
         /// Type of parts connected by this link
         /// </summary>
         public string TypeName { get; }
+
+        /// <summary>
+        /// Flag if the child product of this link should be saved recursively
+        /// even if it already exists
+        /// </summary>
+        public virtual bool RecursivePartSaving { get; }
 
         /// <summary>
         /// Strategy to determine how article instances are loaded as parts

@@ -5,6 +5,7 @@ using Marvin.Model;
 using Marvin.Products.Model;
 using System.Collections.Generic;
 using System.Linq;
+using Marvin.Tools;
 
 namespace Marvin.Products.Management
 {
@@ -364,7 +365,7 @@ namespace Marvin.Products.Management
                         linkEntity = linkStrategy.Create(uow, link);
                         linkEntity.Parent = entity;
                         EntityIdListener.Listen(linkEntity, link);
-                        linkEntity.Child = SaveProduct(uow, link.Product);
+                        linkEntity.Child = GetPartEntity(uow, linkStrategy, link);
                     }
                     else if (linkEntity != null && link == null) // link was removed
                     {
@@ -373,7 +374,7 @@ namespace Marvin.Products.Management
                     else if (linkEntity != null && link != null) // link was modified
                     {
                         linkStrategy.Update(uow, link, linkEntity);
-                        linkEntity.Child = SaveProduct(uow, link.Product);
+                        linkEntity.Child = GetPartEntity(uow, linkStrategy, link);
                     }
                     // else: link was null and is still null
 
@@ -402,12 +403,17 @@ namespace Marvin.Products.Management
                             linkEntity = entity.Parts.First(p => p.Id == link.Id);
                             linkStrategy.Update(uow, link, linkEntity);
                         }
-                        linkEntity.Child = SaveProduct(uow, link.Product);
+                        linkEntity.Child = GetPartEntity(uow, linkStrategy, link);
                     }
                 }
             }
 
             return entity;
+        }
+
+        private ProductEntity GetPartEntity(IUnitOfWork uow, ILinkStrategy strategy, IProductPartLink link)
+        {
+            return strategy.RecursivePartSaving || link.Product.Id == 0 ? SaveProduct(uow, link.Product) : uow.GetEntity<ProductEntity>(link.Product);
         }
 
         /// <summary>

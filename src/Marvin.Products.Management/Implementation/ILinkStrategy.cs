@@ -20,6 +20,11 @@ namespace Marvin.Products.Management
         string TypeName { get; }
 
         /// <summary>
+        /// Flag if saving a part should include saving all parts recursively
+        /// </summary>
+        bool RecursivePartSaving { get; }
+
+        /// <summary>
         /// Strategy how article parts are created during loading
         /// </summary>
         PartSourceStrategy PartCreation { get; }
