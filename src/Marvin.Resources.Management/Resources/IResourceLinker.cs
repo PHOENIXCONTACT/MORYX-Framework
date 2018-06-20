@@ -40,13 +40,13 @@ namespace Marvin.Resources.Management
         /// in relations on the fly.
         /// </summary>
         /// <returns>Found new instances</returns>
-        IEnumerable<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity);
+        IReadOnlyList<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity);
 
         /// <summary>
         /// Save changes to a single collection
         /// </summary>
         /// <returns>Found new instances</returns>
-        IEnumerable<Resource> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property);
+        IReadOnlyList<Resource> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property);
 
         /// <summary>
         /// Remove all links to the deleted instance on the reference
