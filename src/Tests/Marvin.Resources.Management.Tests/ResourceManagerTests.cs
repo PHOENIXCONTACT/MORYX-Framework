@@ -39,6 +39,8 @@ namespace Marvin.Resources.Management.Tests
             _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceCreator>())).Returns(new[] { _resourceMock });
             _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
                 .Returns(new[] { _resourceMock });
+            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>()))
+                .Returns(new Resource[0]);
 
             _resourceManager = new ResourceManager
             {
