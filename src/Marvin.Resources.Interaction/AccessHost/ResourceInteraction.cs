@@ -257,7 +257,6 @@ namespace Marvin.Resources.Interaction
 
                 Role = attribute.Role,
                 RelationType = attribute.RelationType,
-                Targets = new List<ResourceModel>(),
                 IsCollection = typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType)
             };
 
@@ -276,6 +275,7 @@ namespace Marvin.Resources.Interaction
             referenceModel.PossibleTargets = MatchingInstances(typeConstraints).ToList();
 
             // We can not load targets if we do not have any
+            referenceModel.Targets = new List<ResourceModel>();
             var value = property.GetValue(current);
             if (value == null)
                 return referenceModel;
@@ -327,6 +327,10 @@ namespace Marvin.Resources.Interaction
             var type = instance.GetType();
             foreach (var reference in model.References)
             {
+                // Skip references that were not set
+                if (reference.Targets == null)
+                    continue;
+
                 var property = type.GetProperty(reference.Name);
                 if (reference.IsCollection)
                 {
