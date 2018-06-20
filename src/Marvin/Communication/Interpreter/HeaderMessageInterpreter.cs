@@ -160,6 +160,10 @@ namespace Marvin.Communication
         /// <returns>true if the current object is equal to the other parameter; otherwise, false.</returns>
         protected virtual bool Equals(HeaderMessageInterpreter<THeader> other)
         {
+            // For the binary connection port assignment it is
+            // important to distinguish between two instances of IMessageInterpreter
+            // For this case, header interpreter of the same header are considered equal 
+            // unless a derived protocoll provides different implementations for versions of the header
             return true;
         }
 
