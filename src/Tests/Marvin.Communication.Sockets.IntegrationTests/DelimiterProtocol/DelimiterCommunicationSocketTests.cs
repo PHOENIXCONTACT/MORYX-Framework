@@ -59,7 +59,8 @@ namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
             
             Assert.NotNull(published);
 
-            Assert.AreEqual(TestDelimiterInterpreter.TestStartDelimiter.Length +  payloadMultiplier * 4 + EndDelimiterOnlyInterpreter.TestEndDelimiter.Length, published.Payload.Length);
+            Assert.AreEqual(TestDelimiterInterpreter.TestStartDelimiter.Length + payloadMultiplier * 4 +
+                EndDelimiterOnlyInterpreter.TestEndDelimiter.Length, published.Payload.Length);
         }
     }
 }

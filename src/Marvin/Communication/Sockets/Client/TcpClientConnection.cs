@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
@@ -42,6 +43,11 @@ namespace Marvin.Communication.Sockets
         private ClientStateBase _state;
 
         /// <summary>
+        /// Lock object
+        /// </summary>
+        private readonly object _stateLock = new object();
+
+        /// <summary>
         /// Current tcp client instance
         /// </summary>
         private TcpClient _tcpClient;
@@ -78,14 +84,14 @@ namespace Marvin.Communication.Sockets
         /// </summary>
         public void Start()
         {
-            lock (this)
+            lock (_stateLock)
                 _state.Connect();
         }
 
         /// <inheritdoc />
         public void Stop()
         {
-            lock (this)
+            lock (_stateLock)
                 _state.Disconnect();
         }
 
@@ -127,7 +133,7 @@ namespace Marvin.Communication.Sockets
         /// <inheritdoc />
         public void Reconnect(int delayMs)
         {
-            lock (this)
+            lock (_stateLock)
             {
                 _state.Disconnect();
                 // TODO: Find better delay
@@ -157,7 +163,7 @@ namespace Marvin.Communication.Sockets
 
         private void ConnectionCallback(IAsyncResult ar)
         {
-            lock (this)
+            lock (_stateLock)
                 _state.ConnectionCallback(ar, _tcpClient);
         }
 
@@ -187,7 +193,7 @@ namespace Marvin.Communication.Sockets
 
         private void ConnectionClosed(object sender, EventArgs eventArgs)
         {
-            lock (this)
+            lock (_stateLock)
                 _state.ConnectionClosed();
         }
 
@@ -202,15 +208,27 @@ namespace Marvin.Communication.Sockets
         }
 
         /// <inheritdoc />
-        public void Send(BinaryMessage data)
+        public void Send(BinaryMessage message)
         {
-            lock (this)
-                _state.Send(data);
+            lock (_stateLock)
+                _state.Send(message);
         }
 
         internal void ExecuteSend(BinaryMessage data)
         {
             _transmission.Send(data);
+        }
+
+        /// <inheritdoc />
+        public Task SendAsync(BinaryMessage message)
+        {
+            lock (_stateLock)
+                return _state.SendAsync(message);
+        }
+
+        internal Task ExecuteSendAsync(BinaryMessage message)
+        {
+            return _transmission.SendAsync(message);
         }
 
         private void MessageReceived(object sender, BinaryMessage message)

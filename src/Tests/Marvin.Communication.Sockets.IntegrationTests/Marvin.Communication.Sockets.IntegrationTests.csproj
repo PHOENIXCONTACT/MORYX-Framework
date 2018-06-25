@@ -47,7 +47,7 @@
     <Compile Include="ConnectionBuffer.cs" />
     <Compile Include="DelimiterProtocol\DelimiterCommunicationSocketTests.cs" />
     <Compile Include="DelimiterProtocol\EndDelimiterOnlyInterpreter.cs" />
-    <Compile Include="DelimiterProtocol\MetronicInterpreter.cs" />
+    <Compile Include="DelimiterProtocol\HtmlInterpreter.cs" />
     <Compile Include="DelimiterProtocol\TestDelimiterInterpreter.cs" />
     <Compile Include="DelimiterProtocol\DelimiterInterpreterTests.cs" />
     <Compile Include="CommunicationSocketsTests.cs" />

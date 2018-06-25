@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
@@ -33,6 +34,11 @@ namespace Marvin.Communication.Sockets
         private ServerStateBase _state;
 
         /// <summary>
+        /// Lock object
+        /// </summary>
+        private readonly object _stateLock = new object();
+
+        /// <summary>
         /// Open transmission object
         /// </summary>
         private TcpTransmission _transmission;
@@ -40,7 +46,7 @@ namespace Marvin.Communication.Sockets
         /// <summary>
         /// Static TCP server
         /// </summary>
-        internal ITcpServer Server => TcpServer.Instance;
+        internal TcpServer Server => TcpServer.Instance;
 
         /// <summary>
         /// Port this is instance is listening on
@@ -87,7 +93,7 @@ namespace Marvin.Communication.Sockets
         /// </summary>
         public void Start()
         {
-            lock (this)
+            lock (_stateLock)
                 _state.Open();
         }
 
@@ -102,7 +108,7 @@ namespace Marvin.Communication.Sockets
         /// </summary>
         public void Dispose()
         {
-            lock (this)
+            lock (_stateLock)
                 _state.Close();
         }
 
@@ -119,7 +125,7 @@ namespace Marvin.Communication.Sockets
         /// </summary>
         public void Reconnect(int delayMs)
         {
-            lock (this)
+            lock (_stateLock)
             {
                 _state.Close();
                 // TODO: Find better delay
@@ -147,7 +153,7 @@ namespace Marvin.Communication.Sockets
 
         internal void AssignConnection(TcpTransmission transmission, BinaryMessage message = null)
         {
-            lock (this)
+            lock (_stateLock)
                 _state.ConnectionAssigned(transmission, message);
         }
 
@@ -189,23 +195,32 @@ namespace Marvin.Communication.Sockets
 
         private void Disconnected(object sender, EventArgs eventArgs)
         {
-            lock (this)
+            lock (_stateLock)
                 _state.ConnectionLost();
         }
 
-        /// <summary>
-        /// Sends the specified data.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        public void Send(BinaryMessage data)
+        /// <inheritdoc />
+        public void Send(BinaryMessage message)
         {
-            lock (this)
-                _state.Send(data);
+            lock (_stateLock)
+                _state.Send(message);
         }
 
-        internal void ExecuteSend(BinaryMessage data)
+        internal void ExecuteSend(BinaryMessage message)
         {
-            _transmission.Send(data);
+            _transmission.Send(message);
+        }
+
+        /// <inheritdoc />
+        public Task SendAsync(BinaryMessage message)
+        {
+            lock (_stateLock)
+                return _state.SendAsync(message);
+        }
+
+        internal Task ExecuteSendAsync(BinaryMessage message)
+        {
+            return _transmission.SendAsync(message);
         }
 
         private void MessageReceived(object sender, BinaryMessage message)

@@ -155,7 +155,7 @@ namespace Marvin.Communication
 
             var buffer = new byte[messageLenght];
             Buffer.BlockCopy(delimited.ReadBuffer, delimited.MessageStart, buffer, 0, messageLenght);
-            return new BinaryMessage { Payload = buffer };
+            return new BinaryMessage(buffer);
         }
 
         /// <summary>

@@ -6,7 +6,10 @@ namespace Marvin.Communication.Sockets.IntegrationTests
 {
     public class SystemTestHeader : IBinaryHeader
     {
-        public static string TestString = "There is a theory which states that if ever anyone discovers exactly what the Universe is for and why it is here, it will instantly disappear and be replaced by something even more bizarre and inexplicable. There is another theory which states that this has already happened.";
+        public static string TestString = "There is a theory which states that if ever anyone discovers exactly what " +
+                                          "the Universe is for and why it is here, it will instantly disappear and be replaced by " +
+                                          "something even more bizarre and inexplicable. There is another theory which states that this " +
+                                          "has already happened.";
 
         public SystemTestHeader()
         {
@@ -17,11 +20,10 @@ namespace Marvin.Communication.Sockets.IntegrationTests
 
         public string HeaderString { get; private set; }
 
-        public bool HasStartAndStopString
-        {
-            get { return false; }
-        }
+        public bool HasStartAndStopString => false;
+
         public byte[] BlockStart { get; set; }
+
         public byte[] BlockEnd { get; set; }
 
         public int PayloadLength { get; set; }

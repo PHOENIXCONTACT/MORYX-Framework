@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Marvin.Logging;
 
 namespace Marvin.StateMachines
@@ -55,11 +56,35 @@ namespace Marvin.StateMachines
         /// </summary>
         protected void InvalidState([CallerMemberName]string methodName = "")
         {
+            throw CreateAndLogInvalidStateException(methodName);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Task" /> that has completed with a InvalidOperationException exception.
+        /// </summary>
+        protected Task InvalidStateAsync([CallerMemberName] string methodName = "")
+        {
+            return Task.FromException(CreateAndLogInvalidStateException(methodName));
+        }
+
+        /// <summary>
+        /// Creates a typed <see cref="Task{TResult}" /> that has completed with a InvalidOperationException exception.
+        /// </summary>
+        protected Task<T> InvalidStateAsync<T>([CallerMemberName] string methodName = "")
+        {
+            return Task.FromException<T>(CreateAndLogInvalidStateException(methodName));
+        }
+
+        /// <summary>
+        /// Creates a new InvalidOperationException and logs it to the context
+        /// </summary>
+        private Exception CreateAndLogInvalidStateException(string methodName)
+        {
             var error = $"The state with the name '{GetType().Name}' cannot handle the method '{methodName}'.";
 
             // ReSharper disable once SuspiciousTypeConversion.Global
             (Context as ILoggingComponent)?.Logger.LogEntry(LogLevel.Error, error);
-            throw new InvalidOperationException(error);
+            return new InvalidOperationException(error);
         }
 
         /// <summary>

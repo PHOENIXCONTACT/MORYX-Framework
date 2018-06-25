@@ -2,10 +2,7 @@
 {
     public class TestDelimiterValidator : IMessageValidator
     {
-        public bool Validate(BinaryMessage message)
-        {
-            return true;
-        }
+        public bool Validate(BinaryMessage message) => true;
 
         public IMessageInterpreter Interpreter => new TestDelimiterInterpreter();
     }

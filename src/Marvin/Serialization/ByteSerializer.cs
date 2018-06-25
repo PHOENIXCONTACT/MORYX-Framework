@@ -28,11 +28,7 @@ namespace Marvin.Serialization
             var payload = message.ToBytes();
             header.PayloadLength = payload.Length;
 
-            return new BinaryMessage<T>
-            {
-                Header = header,
-                Payload = payload
-            };
+            return new BinaryMessage<T>(header, payload);
         }
 
         /// <summary>
