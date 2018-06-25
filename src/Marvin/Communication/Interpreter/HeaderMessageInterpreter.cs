@@ -137,11 +137,7 @@ namespace Marvin.Communication
             if (includesPayload)
                 Buffer.BlockCopy(headerContext.ReadBuffer, 0, payload, 0, payloadLength);
 
-            return new BinaryMessage<THeader>
-            {
-                Header = headerContext.Header,
-                Payload = payload
-            };
+            return new BinaryMessage<THeader>(headerContext.Header, payload);
         }
 
         /// <summary>

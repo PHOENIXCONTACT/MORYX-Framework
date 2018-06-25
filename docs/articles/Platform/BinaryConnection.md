@@ -3,60 +3,26 @@ uid: BinaryConnection
 ---
 # BinaryConnection
 
-# QA - Quick Introduction
-### Where can I find the Assembly ?
--	BinaryConnection is part of the Assembly **Marvin.dll**.
--	If you want to use binary connection functionalities in your client, you should use the Assembly from **"..\Build\ClientRuntime"**.
--	If you want to use the Assembly in a BackEnd component, then you should use the Assembly from **"..\Build\ServiceRuntime"**.
-### Where can I find the .Net-Solution ?
--	Solution	:	**Toolkit.sln**
--	Project		:	**Marvin**
--	Namespace	:	**Marvin.Communication**
--	If you open **Marvin.Communication** you will see a Folder Structure which also describes the main components of binary connection.
-	-	**Marvin.Communication.Connection** includes all interfaces needed to implement BinaryConnection Objects (Config, Connection, State, ConnectionFactory)
-	-	**Marvin.Communication.Interpreter** includes all base classes to parse/interpret a Transmission Object (Interpreter, Context)
-	-	**Marvin.Communication.Transmission** includes all base classes and interfaces needed to create the Transmission Object (Message, Header, Payload, Transmission, Serialize).
-	-	**Marvin.Communication.Validation** includes an interfaces to validate a Message
-### Where to find the Unit-Tests
-- You can find the Tests in the Project `Marvin.Communication.Sockets.IntegrationTests` in the Solution `Toolkit`.
-### What is Binary Connection?
--	Binary Connection is supposed to enable **all** kind of binary communication to a physical device (like a printer), a server or any other 3rd party entity.
--	Supports Header and Delimiter based Transmissions via TCP Payload.
--	Binary Connection works with a Header and a Payload. To prevent misunderstandings Header and Payload does not equate fully to the Header and Payload definition from TCP. BinaryConnection (can) uses the TCP Payload to store Header and Payload information. If our Transmission processing is asynchronous and we can easily identify the caller of a transmission by storing the reference of the caller into the Header.
--	Binary Connection also provides an event where an interested component can register to get notified when the connection state has changed.
-### Where is the Protocol Implementation?
--	The Protocol defines a System of Communication Rules inside the Communication System.
--	To Translate a Byte Stream from the Transmission to a Message we use an Implementation of `IMessageInterpreter`.
--	To Validate if the Transmission is correct, we use an Implementation of `IMessageValidation`.
-### What is Binary Message?
--	The Binary Message is the class which is used to send Transmissions using Binary Connection to a Device. 
-### How to create an own Binary Connection Implementation?
--	Implement `IBinaryConnection` to your Connection Class (Namespace : `Marvin.Communication`).
--	Create a BinaryConnectionConfiguration Class.
--	Extend your Configuration Class with `BinaryConnectionConfig`. (Namespace : `Marvin.Communication`)
--	**Here we go!** Now Implement further, necessary functionalities you need to establish a proper Communication  or add additional Configuration Parameters to you Configuration
-### How to create an own Binary Message Implementation?
--	Create a Validator class by implementing IMessageValidator
--	Create a Interpreter class by implementing IMessageInterpreter
-	-	If you want to use a Header based Transmission then simply just extend your Message by HeaderMessageInterpreter
-	-	If you want to use a Delimiter based Transmission simply extend your Message by DelimitedMessageInterpreter
-### How did others implement?
--	[Marvin.Communication.Sockets](xref:Marvin.Communication.Sockets)
-# Usage
-Below are two examples of protocol implementations using the BinaryConnection APIs. The first one is the IPS header based protocol and the second one is an Artificial delimiter based protocol. Apart from the IMessageInterpreter and IMessageValidator implementations the API usage is similar.
+Marvin.Communication.Sockets provides two implementations of IBinaryConnection to communicate via TCP/IP as a server or a client.
+
+## Usage
+
+Below are two examples of protocol implementations using the BinaryConnection APIs. The first one is the IPS header based protocol and the second one is an Artificial delimiter based protocol. Apart from the `IMessageInterpreter` and `IMessageValidator` implementations the API usage is similar.
 
 ## Protocol implementation
+
 To implement your protocol you must create two classes: a validator and an interpreter. The interpreter is your protocol parser used to extract messages from the byte stream. The validator will check the messages and is also used to assign a socket connection to a listener in case of multiple device connections on one port. If your protocol is based on headers or delimiters you must simply derive from the base implementation.
 
 ### MessageInterpreter for Header-Protocols
 
-For header based protocols simply derive from HeaderMessageInterpreter<T> where T is the type of your header class. For the IPS-header please have a look at IpsHeader.cs(info). The base class will first read and parse the header. Then it will extract the payload length from the header and read the payload. If all is complete the binary connection publishes the message of type BinaryMessage<THeader>.
+For header based protocols simply derive from `HeaderMessageInterpreter<T>` where `T` is the type of your header class. For the IPS-header please have a look at IpsHeader.cs(info). The base class will first read and parse the header. Then it will extract the payload length from the header and read the payload. If all is complete the binary connection publishes the message of type BinaryMessage<THeader>.
 
 ````cs
 public class IpsHeaderInterpreter : HeaderMessageInterpreter<IpsHeader>
 {
-    protected override int HeaderSize { get { return IpsHeader.HeaderLength; } }
-    protected override int FooterSize { get { return 0; } }
+    protected override int HeaderSize => return IpsHeader.HeaderLength;
+
+    protected override int FooterSize => 0;
 
     private static IpsHeaderInterpreter _instance;
     public static IpsHeaderInterpreter Instance
@@ -68,7 +34,7 @@ public class IpsHeaderInterpreter : HeaderMessageInterpreter<IpsHeader>
 
 ### MessageInterpreter for Delimiter-Protocols
 
-For delimiter based protocols please derive from DelimiterMessageInterpreter and provide an appropriate BufferSize and ReadSize as well as the byte sequence of your delimiters. Since you might have more than one device it is good practice to provide a singleton instance of your protocol. To avoid double instantiation you should make the default constructor private. When selecting BufferSize and ReadSize please keep the following in mind. 
+For delimiter based protocols derive from `DelimiterMessageInterpreter` and provide an appropriate `BufferSize` and `ReadSize` as well as the byte sequence of your delimiters. Since you might have more than one device it is good practice to provide a singleton instance of your protocol. To avoid double instantiation you should make the default constructor private. When selecting BufferSize and ReadSize please keep the following in mind.
 
 **ReadBuffer considerations:**
 
@@ -80,6 +46,7 @@ For delimiter based protocols please derive from DelimiterMessageInterpreter and
 |Maximum size | FreeIdleMem / (20 * DeviceCount) | Because the buffer allocation is static the tcp buffer should at most consume 5% of the machines available memory. FreeIdleMem refers to the available memory once when all applications are running in idle state. For example a 8GB system might consume 3GB with idle Runtime and PostgreSQL. This leaves 5GB free memory of which 5% are ~268MB. For 5 devices this comes to a maximum buffer size of ~54MB. |
 
 **ReadSize considerations:**
+
 | Value | Formula | Explaination |
 |-------|---------|--------------|
 |Minimum size | 1 | Well, I guess thats obvious. |
@@ -88,63 +55,45 @@ For delimiter based protocols please derive from DelimiterMessageInterpreter and
 | Maximum size | (BufferSize / 2) | In case the first read did not result in a full message you must have enough space to store full read size in the buffer. |
 
 ````cs
-public class MetronicInterpreter : DelimitedMessageInterpreter
+public class HtmlInterpreter : DelimitedMessageInterpreter
 {
-    private MetronicInterpreter()
-    {
-    }
-    
-    private static MetronicInterpreter _instance;
+    private static HtmlInterpreter _instance;
+
     /// <summary>
     /// Singleton instance
     /// </summary>
-    public static MetronicInterpreter Instance
-    {
-        get { return _instance ?? (_instance = new MetronicInterpreter()); }
-    }
-    
+    public static HtmlInterpreter Instance => _instance ?? (_instance = new HtmlInterpreter());
+
     /// <summary>
-    /// 100 kB read buffer size for each connection
+    /// 1 MB read buffer size for each connection
     /// </summary>
-    protected override int BufferSize
-    {
-        get { return 102400; }
-    }
+    protected override int BufferSize => 1048576;
 
     /// <summary>
     /// Number of bytes to read in each iteration
     /// </summary>
-    protected override int ReadSize
-    {
-        get { return 10240; }
-    }
+    protected override int ReadSize => 10240;
 
     /// <summary>
     /// Byte sequence for start of message
     /// </summary>
-    protected override byte[] StartDelimiter
-    {
-        get { return Encoding.UTF8.GetBytes("<GP>"); }
-    }
+    protected override byte[] StartDelimiter => Encoding.UTF8.GetBytes("<html>");
 
     /// <summary>
     /// Byte sequence for end of message
     /// </summary>
-    protected override byte[] EndDelimiter
-    {
-        get { return Encoding.UTF8.GetBytes("</GP>"); }
-    }
+    protected override byte[] EndDelimiter => Encoding.UTF8.GetBytes("</html>");
 }
 ````
 
 ## Message validation
 
-Validation is similar for both types of protocols. The only difference is that header based protocols must cast the message first to BinaryMessage<THeader>. Make sure to return the singleton instance of your protocol in the validator.
+Validation is similar for both types of protocols. The only difference is that header based protocols must cast the message first to `BinaryMessage<THeader>`. Make sure to return the singleton instance of your protocol in the validator.
 
 ````cs
 public class IpsMessageValidator : IMessageValidator
 {
-    public IMessageInterpreter Interpreter { get { return IpsHeaderInterpreter.Instance; } }
+    public IMessageInterpreter Interpreter => IpsHeaderInterpreter.Instance;
 
     public bool Validate(BinaryMessage message)
     {
@@ -157,6 +106,25 @@ public class IpsMessageValidator : IMessageValidator
 ## Putting it all together
 
 Finally all you have to do is create a connection instance with the IBinaryConnectionFactory and register to the events. Basic structure looks like this:
+
+### Configuration
+
+- To open a server-socket and start listening on incoming connections the user has to use the TcpListenerConfig
+- To start a client-connection the user has to use the TcpClientConfig
+
+### Server Mode
+
+The `IBinaryConnection` will represent a `TcpListener`-Object. `TcpListener`-objects are created as transient objects by the DI-Container. `TcpListeners` are generic objects that use an `IBinaryHeader` as the generic. By knowing the header, the `TcpListeners` can request the `TcpPortListener` to read the whole header at once. It is not necessary to read byte-wise from the connection. Once a header is read, the payload can also be read blockwise.
+The `TcpListener` will then instruct the TcpServer to open a TCP-Socket and start listening. If the TCP-Socket has not already been opened, the `TcpServer` will create a TcpPortListener which opens the socket, creates a list of interested `TcpLister`-objects and starts listening. The `TcpPortListener` and the the TcpServer are also generic and use an `IBinaryHeader` as the generic. Therefore the TcpServer and the `TcpPortListener` know what byte-structure they have to expect, when a new client connects. They are able to read a whole header blockwise and may validate the header.
+If a Client connects to the socket with a complete an valid header that is assigned to this `TcpPortListener`, the `TcpPortListenr` will prompt all its listed `TcpListeners` to see who is responsible for handling the new connection. To do this, each `TcpListner` provides a validator that will validate the bytestream and may also interpret it.
+Because the `TcpServer`-class is a generic, that uses an implentation of IBinaryHeader as the generic, a TCP-Port can only be used of one specific `TcpServer<IBinaryHeader>`-implementation. That means, if a Tcp-Port has been assigned to a PhoenixPlcDevice it my not be assigned to another class of devices.
+
+### Client Mode
+
+The `IBinaryConnection` will represent an `TcpClientConnection`-Object. `TcpClientConnections` are created as transient objects by the DI-Container. They will open a connection to the configured server. If the connection disconnects the `TcpClientConnection` can be configured to immediately reconnect.
+`TcpClientConnections` are generic objects that use an `IBinaryHeader` as the generic. By knowing the header, the `TcpClientConnections` can try to read the whole header at once from a Tcp connection. It is not necessary to read byte-wise from the connection. Once a header is read, the payload can also be read blockwise.
+
+### Sample
 
 ````cs
 public class BinaryConnectionTester : IDevice
@@ -176,10 +144,31 @@ public class BinaryConnectionTester : IDevice
     private void OnReceived(object sender, BinaryMessage e)
     {
     }
-    
+
     public void Send(DeviceMessage message)
     {
         _connection.Send(new BinaryMessage { Payload = message.Payload.ToBytes() });
     }
 }
 ````
+
+## Byte-Order
+
+The byte-order for communicating with other devices, e.g. PhoenixPlc-devices, shall be the Network-Byte-Order.
+
+- The Network-Byte-Order is similar to Big-Endian or the Motorola byte-order. It is used an [Motorola](https://en.wikipedia.org/wiki/Motorola_6800) or [ARM](https://en.wikipedia.org/wiki/ARM_architecture)-based systems
+- Intel-Systems e.g. use Little-Endian and thereof have to convert data to the Network-Byte-Order before sending.
+- See also [Endianness](https://en.wikipedia.org/wiki/Endianness)
+
+The following table illustrates differences between Little-Endian and Big-Endian if the number 1.234.567.890 (0x499602D2) is transformed into a bytearray (Table from [MSDN](https://msdn.microsoft.com/en-us/library/vstudio/system.bitconverter%28v=vs.100%29.aspx))
+
+| Byte-order | Platformsamples | HEX-Representation |
+|------------|-----------------|--------------------|
+| Little-Endian | Intel | D2-02-96-49 |
+| Big-Endian/Network-Byte-Order | Motorola, PhoenixPlc | 49-96-02-D2 |
+
+### .NET Conversion-Methods
+
+The .Net-Framework offers serveral Helper Methods and Classes and should be used for the conversion of data before sending it via network. To make sure, that multibyte values have the right byte order before being converted in to a byte-stream use [IpAdress.HostToNetworkOrder](https://msdn.microsoft.com/de-de/library/653kcke1%28v=vs.110%29.aspx) For incoming data [IpAddress.NetworkToHostOrder](https://msdn.microsoft.com/de-de/library/system.net.ipaddress.networktohostorder%28v=vs.100%29.aspx) maybe used.
+
+To create Byte-Arrays the .Net-class [BitConverter](https://msdn.microsoft.com/en-us/library/vstudio/system.bitconverter%28v=vs.100%29.aspx) may be used after the multibyte values have been converted into the right order.

@@ -1,4 +1,6 @@
-﻿namespace Marvin.Communication.Sockets
+﻿using System.Threading.Tasks;
+
+namespace Marvin.Communication.Sockets
 {
     internal class ServerConnectedState: ServerStateBase
     {
@@ -10,6 +12,12 @@
         {
             Context.ExecuteSend(message);
         }
+
+        public override Task SendAsync(BinaryMessage message)
+        {
+            return Context.ExecuteSendAsync(message);
+        }
+
 
         public override void Close()
         {

@@ -248,11 +248,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
                 PayloadLength = payload.Length
             };
 
-            return new BinaryMessage<SystemTestHeader>
-            {
-                Header = header,
-                Payload = payload
-            };
+            return new BinaryMessage<SystemTestHeader>(header, payload);
         }
     }
 }

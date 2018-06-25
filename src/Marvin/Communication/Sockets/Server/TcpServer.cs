@@ -36,7 +36,7 @@ namespace Marvin.Communication.Sockets
     /// <summary>
     /// Central server for all listener connections
     /// </summary>
-    internal class TcpServer : ITcpServer
+    internal class TcpServer
     {
         private static TcpServer _instance;
         /// <summary>

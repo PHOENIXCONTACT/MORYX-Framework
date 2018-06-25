@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Threading.Tasks;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
@@ -103,11 +104,17 @@ namespace Marvin.Communication.Serial
         public event EventHandler<BinaryConnectionState> NotifyConnectionState;
 
         /// 
-        public void Send(BinaryMessage data)
+        public void Send(BinaryMessage message)
         {
             // Create bytes from message
-            var bytes = _validator.Interpreter.SerializeMessage(data);
+            var bytes = _validator.Interpreter.SerializeMessage(message);
             _serialPort.Write(bytes, 0, bytes.Length);
+        }
+
+        /// 
+        public Task SendAsync(BinaryMessage message)
+        {
+            throw new NotImplementedException();
         }
 
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs serialDataReceivedEventArgs)

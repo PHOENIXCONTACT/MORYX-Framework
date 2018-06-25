@@ -3,6 +3,7 @@
     public class SystemTestValidator : IMessageValidator
     {
         private readonly int _senderId;
+
         public SystemTestValidator(int senderId)
         {
             _senderId = senderId;
@@ -15,13 +16,7 @@
         public bool Validate(BinaryMessage message)
         {
             var sysHeader = ((BinaryMessage<SystemTestHeader>)message).Header;
-
-            if (sysHeader == null)
-            {
-                return false;
-            }
-
-            return sysHeader.ClientIdx.Equals(_senderId);
+            return sysHeader != null && sysHeader.ClientIdx.Equals(_senderId);
         }
 
         /// <summary>

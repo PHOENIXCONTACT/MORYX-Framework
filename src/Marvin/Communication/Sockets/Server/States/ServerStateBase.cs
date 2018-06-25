@@ -1,4 +1,5 @@
-﻿using Marvin.StateMachines;
+﻿using System.Threading.Tasks;
+using Marvin.StateMachines;
 
 namespace Marvin.Communication.Sockets
 {
@@ -30,6 +31,11 @@ namespace Marvin.Communication.Sockets
         public virtual void Send(BinaryMessage message)
         {
             InvalidState();
+        }
+
+        public virtual Task SendAsync(BinaryMessage message)
+        {
+            return InvalidStateAsync();
         }
 
         [StateDefinition(typeof(ServerConnectedState))]

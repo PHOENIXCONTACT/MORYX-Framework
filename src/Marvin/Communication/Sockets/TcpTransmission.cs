@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
-using Marvin.Container;
+using System.Threading.Tasks;
 using Marvin.Logging;
 using Marvin.Serialization;
 
@@ -82,10 +82,7 @@ namespace Marvin.Communication.Sockets
 
         #region Send
 
-        /// <summary>
-        /// Sends the specified message.
-        /// </summary>
-        /// <param name="message">The message.</param>
+        /// <inheritdoc />
         public void Send(BinaryMessage message)
         {
             var bytes = _interpreter.SerializeMessage(message);
@@ -95,12 +92,27 @@ namespace Marvin.Communication.Sockets
         /// <summary>
         /// Callback. Is called when the sending was completed.
         /// </summary>
-        /// <param name="result">The result.</param>
         private void SendComplete(IAsyncResult result)
         {
             try
             {
                 _stream.EndWrite(result);
+            }
+            catch (Exception ex)
+            {
+                Disconnect(ex);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task SendAsync(BinaryMessage message)
+        {
+            var bytes = _interpreter.SerializeMessage(message);
+
+            try
+            {
+                await Task.Factory.FromAsync(_stream.BeginWrite, _stream.EndWrite, bytes, 0, bytes.Length, null);
+                await _stream.FlushAsync();
             }
             catch (Exception ex)
             {

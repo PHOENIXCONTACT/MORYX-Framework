@@ -88,7 +88,6 @@
     <Compile Include="Communication\Sockets\Client\TcpClientConfig.cs" />
     <Compile Include="Communication\Sockets\Client\TcpClientConnection.cs" />
     <Compile Include="Communication\Sockets\InvalidHeaderException.cs" />
-    <Compile Include="Communication\Sockets\Server\ITcpServer.cs" />
     <Compile Include="Communication\Sockets\Server\States\ServerConnectedState.cs" />
     <Compile Include="Communication\Sockets\Server\States\ServerListeningState.cs" />
     <Compile Include="Communication\Sockets\Server\States\ServerNotListeningState.cs" />
@@ -361,7 +360,6 @@
       <Link>StateMachines\DesignPatterns.md</Link>
     </None>
     <None Include="cgbr.json" />
-    <None Include="Communication\Sockets\README.md" />
     <None Include="Marvin.nuspec">
       <SubType>Designer</SubType>
     </None>
