@@ -198,7 +198,11 @@ namespace Marvin.Resources.Management
             var matches = MatchingRelations(relations, property);
 
             var context = new ReferenceSaverContext(uow, instance, entity);
-            UpdateCollectionReference(context, entity, instance, property, matches);
+            var created = UpdateCollectionReference(context, entity, instance, property, matches);
+
+            foreach (var resource in created)
+                SaveReferences(context, resource);
+
             return context.EntityCache.Keys.Where(i => i.Id == 0).ToList();
         }
 
