@@ -13,6 +13,6 @@
         /// <summary>
         /// Inform the sender about the acknowledged notification
         /// </summary>
-        void Acknowledge(INotification notification);
+        void Acknowledge(INotification notification, object tag);
     }
 }

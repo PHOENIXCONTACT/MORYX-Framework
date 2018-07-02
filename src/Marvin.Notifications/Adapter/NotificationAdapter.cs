@@ -22,9 +22,20 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public IReadOnlyList<INotification> GetPublished(INotificationSender sender)
         {
+            return GetPublished(map => map.Sender == sender);
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<INotification> GetPublished(INotificationSender sender, object tag)
+        {
+            return GetPublished(map => map.Sender == sender && map.Tag.Equals(tag));
+        }
+
+        private IReadOnlyList<INotification> GetPublished(Func<NotificationMap, bool> filter)
+        {
             _listLock.EnterReadLock();
 
-            var notifications = _published.Where(m => m.Sender == sender)
+            var notifications = _published.Where(filter)
                 .Select(map => map.Notification)
                 .ToArray();
 
@@ -36,6 +47,18 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public void Publish(INotificationSender sender, INotification notification)
         {
+            Publish(sender, notification, null);
+        }
+
+        /// <inheritdoc />
+        public void Publish(INotificationSender sender, INotification notification, object tag)
+        {
+            if (string.IsNullOrEmpty(sender.Identifier))
+                throw new InvalidOperationException("The identifier of the sender must be set");
+
+            if (notification == null)
+                throw new ArgumentNullException(nameof(notification), "Notification must be set");
+
             var managed = (IManagedNotification)notification;
             managed.Identifier = Guid.NewGuid().ToString();
             managed.Created = DateTime.Now;
@@ -52,10 +75,10 @@ namespace Marvin.Notifications
                 _listLock.ExitUpgradeableReadLock();
                 throw new InvalidOperationException("Notification cannot be published twice!");
             }
-            
+
             _listLock.EnterWriteLock();
-            
-            _pendingPubs.Add(new NotificationMap(sender, notification));
+
+            _pendingPubs.Add(new NotificationMap(sender, notification, tag));
 
             _listLock.ExitWriteLock();
             _listLock.ExitUpgradeableReadLock();
@@ -66,6 +89,12 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public void Acknowledge(INotificationSender sender, INotification notification)
         {
+            if (string.IsNullOrEmpty(sender.Identifier))
+                throw new InvalidOperationException("The identifier of the sender must be set");
+
+            if (notification == null)
+                throw new ArgumentNullException(nameof(notification), "Notification must be set");
+
             var managed = (IManagedNotification)notification;
             managed.Acknowledged = DateTime.Now;
             managed.Acknowledger = sender.Identifier;
@@ -102,12 +131,25 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public void AcknowledgeAll(INotificationSender sender)
         {
+            AcknowledgeByFilter(sender, map => map.Sender == sender);
+        }
+
+        /// <inheritdoc />
+        public void AcknowledgeAll(INotificationSender sender, object tag)
+        {
+            AcknowledgeByFilter(sender, map => map.Sender == sender && map.Tag.Equals(tag));
+        }
+
+        /// <summary>
+        /// Acknowledges notifications by a sender and given filter
+        /// </summary>
+        private void AcknowledgeByFilter(INotificationSender sender, Predicate<NotificationMap> filter)
+        {
             _listLock.EnterWriteLock();
 
-            var publishes = _published.Where(p => p.Sender == sender).ToArray();
-            _published.RemoveAll(p => p.Sender == sender);
-
-            _pendingPubs.RemoveAll(p => p.Sender == sender);
+            var publishes = _published.Where(m => filter(m)).ToArray();
+            _published.RemoveAll(filter);
+            _pendingPubs.RemoveAll(filter);
 
             foreach (var published in publishes)
             {
@@ -119,7 +161,7 @@ namespace Marvin.Notifications
             }
 
             _listLock.ExitWriteLock();
-            
+
             foreach (var published in publishes)
                 Acknowledged?.Invoke(this, published.Notification);
         }
@@ -149,7 +191,7 @@ namespace Marvin.Notifications
 
             _listLock.ExitReadLock();
 
-            map.Sender.Acknowledge(map.Notification);
+            map.Sender.Acknowledge(map.Notification, map.Tag);
         }
 
         /// <inheritdoc />
@@ -225,15 +267,18 @@ namespace Marvin.Notifications
 
         private class NotificationMap
         {
-            public NotificationMap(INotificationSender sender, INotification notification)
+            public NotificationMap(INotificationSender sender, INotification notification, object tag)
             {
                 Sender = sender;
                 Notification = notification;
+                Tag = tag;
             }
 
             public INotification Notification { get; }
 
             public INotificationSender Sender { get; }
+
+            public object Tag { get; }
         }
     }
 }

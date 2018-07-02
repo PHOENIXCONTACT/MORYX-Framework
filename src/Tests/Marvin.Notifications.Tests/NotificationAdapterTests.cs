@@ -25,7 +25,7 @@ namespace Marvin.Notifications.Tests
         {
             _adapter = new NotificationAdapter();
             _notificationSenderMock = new Mock<INotificationSender>();
-            _notificationSenderMock.Setup(n => n.Acknowledge(It.IsAny<INotification>()))
+            _notificationSenderMock.Setup(n => n.Acknowledge(It.IsAny<INotification>(), It.IsAny<object>()))
                 .Callback((INotification notification) => _acknowledgeCallNotification = notification);
             _notificationSenderMock.SetupGet(n => n.Identifier).Returns("Mock");
             _sender = _notificationSenderMock.Object;
@@ -65,6 +65,22 @@ namespace Marvin.Notifications.Tests
             {
                 _adapter.Publish(_sender, notification);
             }, "The same notification was published a second time.");
+        }
+
+        [Test(Description = "Publishes a notification with a tag")]
+        public void AdapterPublishWithTag()
+        {
+            // Arrange
+            var notification = new Notification();
+            var tag = new object();
+
+            // Act
+            _adapter.Publish(_sender, notification, tag);
+            ((INotificationSourceAdapter)_adapter).PublishProcessed(notification);
+
+            // Arrange
+            var published = _adapter.GetPublished(_sender, tag);
+            Assert.AreEqual(1, published.Count);
         }
 
         [Test(Description = "Check that acknowledging a notification by the adapter for a known notification.")]
