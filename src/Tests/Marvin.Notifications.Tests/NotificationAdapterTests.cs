@@ -26,7 +26,7 @@ namespace Marvin.Notifications.Tests
             _adapter = new NotificationAdapter();
             _notificationSenderMock = new Mock<INotificationSender>();
             _notificationSenderMock.Setup(n => n.Acknowledge(It.IsAny<INotification>(), It.IsAny<object>()))
-                .Callback((INotification notification) => _acknowledgeCallNotification = notification);
+                .Callback((INotification notification, object tag) => _acknowledgeCallNotification = notification);
             _notificationSenderMock.SetupGet(n => n.Identifier).Returns("Mock");
             _sender = _notificationSenderMock.Object;
 
