@@ -2,6 +2,7 @@
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Marvin.Runtime.Modules;
+using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Maintenance.Plugins.Modules
@@ -121,5 +122,24 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void SetConfig(string moduleName, SaveConfigRequest request);
+
+        /// <summary>
+        /// Get all server modules.
+        /// </summary>
+        /// <returns>A list of the server modules.</returns>
+        [OperationContract]
+        [WebInvoke(UriTemplate = "modules/{moduleName}/console", Method = WebRequestMethods.Http.Get,
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
+        MethodEntry[] GetMethods(string moduleName);
+
+        /// <summary>
+        /// Invokes a method
+        /// </summary>
+        [OperationContract]
+        [WebInvoke(UriTemplate = "modules/{moduleName}/console", Method = WebRequestMethods.Http.Post,
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
+        Entry InvokeMethod(string moduleName, MethodEntry method);
     }
 }

@@ -24,13 +24,13 @@ namespace Marvin.Configuration
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer container)
         {
             return GetFields().Select(f => f.Name);
         }
 
         /// <inheritdoc />
-        public override object ConvertToConfigValue(IContainer container, string value)
+        public override object Parse(IContainer container, string value)
         {
             return GetFields().Single(f => f.Name == value).GetValue(null);
         }

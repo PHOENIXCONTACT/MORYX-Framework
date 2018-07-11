@@ -22,14 +22,15 @@ namespace Marvin.Configuration
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer container)
         {
-            return (pluginContainer == null
+            return (container == null
                     ? AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes())
                         .Where(type => _componentType.IsAssignableFrom(type) && _componentType != type)
-                    : pluginContainer.GetRegisteredImplementations(_componentType))
+                    : container.GetRegisteredImplementations(_componentType))
                 .Select(GetComponentName);
         }
+
         private static string GetComponentName(Type component)
         {
             var att = component.GetCustomAttribute<RegistrationAttribute>();

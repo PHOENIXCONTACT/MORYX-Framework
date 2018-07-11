@@ -42,7 +42,7 @@ namespace Marvin.Configuration
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer container)
         {
             var modeCalculation = (Func<int, int>)(possibleValue =>  _mode == StepMode.Addition 
                                                                    ? possibleValue + _step 

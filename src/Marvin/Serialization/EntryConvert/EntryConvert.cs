@@ -8,7 +8,7 @@ using System.Reflection;
 namespace Marvin.Serialization
 {
     /// <summary>
-    /// Non-generated part of the serialization helper
+    /// Non-generated part of the customSerialization helper
     /// </summary>
     public static partial class EntryConvert
     {
@@ -97,7 +97,7 @@ namespace Marvin.Serialization
                 },
                 Description = descriptionAtt?.Description,
                 Value = CreateEntryValue(property, customSerialization),
-                Validation = customSerialization.CreateValidation(property)
+                Validation = customSerialization.CreateValidation(property.PropertyType, property)
             };
 
             // Include prototypes for collections and classes
@@ -128,7 +128,7 @@ namespace Marvin.Serialization
             {
                 Type = TransformType(property.PropertyType),
                 IsReadOnly = isReadOnly,
-                Possible = customSerialization.PossibleValues(property),
+                Possible = customSerialization.PossibleValues(property.PropertyType, property),
             };
 
             // Get most basic default
@@ -141,7 +141,7 @@ namespace Marvin.Serialization
                 entryValue.Default = Activator.CreateInstance(property.PropertyType).ToString();
 
             // Value types should have the default value as current value
-            if (property.PropertyType.IsValueType)
+            if (ValueOrStringType(property.PropertyType))
                 entryValue.Current = entryValue.Default;
 
             return entryValue;
@@ -155,9 +155,9 @@ namespace Marvin.Serialization
             if (parent.Value.Type != EntryValueType.Collection && parent.Value.Type != EntryValueType.Class)
                 yield break;
 
-            var possibleElementValues = customSerialization.PossibleValues(property);
+            var possibleElementValues = customSerialization.PossibleValues(property.PropertyType, property);
 
-            foreach (var prototype in customSerialization.Prototypes(property))
+            foreach (var prototype in customSerialization.Prototypes(property.PropertyType, property))
             {
                 var prototypeEntry = Prototype(prototype, customSerialization);
                 prototypeEntry.Value.Possible = possibleElementValues;
@@ -246,7 +246,7 @@ namespace Marvin.Serialization
         public static IEnumerable<T> EncodeClass<T>(Type objType, ICustomSerialization customSerialization)
             where T : Entry, new()
         {
-            var filtered = customSerialization.ReadFilter(objType);
+            var filtered = customSerialization.GetProperties(objType);
             foreach (var property in filtered)
             {
                 var converted = EncodeProperty<T>(property, customSerialization);
@@ -295,7 +295,7 @@ namespace Marvin.Serialization
         public static IEnumerable<T> EncodeObject<T>(object instance, ICustomSerialization customSerialization)
             where T : Entry, new()
         {
-            var filtered = customSerialization.ReadFilter(instance.GetType());
+            var filtered = customSerialization.GetProperties(instance.GetType());
             foreach (var property in filtered)
             {
                 var value = property.GetValue(instance);
@@ -309,7 +309,7 @@ namespace Marvin.Serialization
                         if (enumurable == null)
                             break;
 
-                        var possibleElementValues = customSerialization.PossibleElementValues(property);
+                        var possibleElementValues = customSerialization.PossibleElementValues(property.PropertyType, property);
                         var strategy = CreateStrategy(value, value, property.PropertyType, customSerialization);
                         var subentries = strategy.Serialize();
                         foreach (var entry in subentries)
@@ -390,7 +390,7 @@ namespace Marvin.Serialization
                     Type = TransformType(parameter.ParameterType),
                     Current = defaultValue,
                     Default = defaultValue,
-                    Possible = serialization.PossibleValues(parameter)
+                    Possible = serialization.PossibleValues(parameterType, parameter)
                 }
             };
 
@@ -398,12 +398,12 @@ namespace Marvin.Serialization
             {
                 case EntryValueType.Class:
                     parameterModel.Value.Current = parameterType.Name;
-                    parameterModel.SubEntries = EncodeClass(parameterType).ToList();
+                    parameterModel.SubEntries = EncodeClass(parameterType, serialization).ToList();
                     break;
                 case EntryValueType.Collection:
                     var elemType = ElementType(parameterType);
                     parameterModel.Value.Current = elemType.Name;
-                    var protoType = Prototype(new EntryPrototype(elemType.Name, Activator.CreateInstance(elemType)));
+                    var protoType = Prototype(new EntryPrototype(elemType.Name, Activator.CreateInstance(elemType)), serialization);
                     parameterModel.Prototypes.Add(protoType);
                     break;
             }
@@ -420,7 +420,7 @@ namespace Marvin.Serialization
         }
 
         /// <summary>
-        /// Encode all methods of an object using a custom serialization
+        /// Encode all methods of an object using a custom customSerialization
         /// </summary>
         public static IEnumerable<MethodEntry> EncodeMethods(object source, ICustomSerialization serialization)
         {
@@ -436,11 +436,11 @@ namespace Marvin.Serialization
         }
 
         /// <summary>
-        /// Encode all methods of a type using a custom serialization
+        /// Encode all methods of a type using a custom customSerialization
         /// </summary>
         public static IEnumerable<MethodEntry> EncodeMethods(Type objType, ICustomSerialization serialization)
         {
-            var methods = serialization.MethodFilter(objType);
+            var methods = serialization.GetMethods(objType);
             return methods.Select(m => EncodeMethod(m, serialization));
         }
 
@@ -544,8 +544,8 @@ namespace Marvin.Serialization
                 // Try to assign value to the property
                 var currentValue = mapped.Property.GetValue(instance);
                 var value = mapped.Entry == null
-                    ? customSerialization.DefaultValue(mapped.Property, currentValue)
-                    : customSerialization.PropertyValue(mapped.Property, mapped.Entry, currentValue);
+                    ? customSerialization.DefaultValue(property, currentValue)
+                    : customSerialization.ConvertValue(propertyType, property, mapped.Entry, currentValue);
                 
                 // Value types and strings do not need recursion
                 if (ValueOrStringType(propertyType))
@@ -557,7 +557,7 @@ namespace Marvin.Serialization
                 {
                     // Pick collection strategy
                     var strategy = CreateStrategy(value, currentValue, propertyType, customSerialization);
-                    UpdateCollection(currentValue, mapped, strategy, customSerialization);
+                    UpdateCollection(currentValue, mapped.Property.PropertyType, mapped.Property, mapped.Entry, strategy, customSerialization);
                 }
                 // Update class
                 else if (propertyType.IsClass)
@@ -587,9 +587,9 @@ namespace Marvin.Serialization
         /// <summary>
         /// Update or fill the collection using the mapping entry
         /// </summary>
-        private static void UpdateCollection(object currentValue, MappedProperty mapped, ICollectionStrategy strategy, ICustomSerialization customSerialization)
+        private static void UpdateCollection(object currentValue, Type memberType, ICustomAttributeProvider attributeProvider, Entry rootEntry, 
+            ICollectionStrategy strategy, ICustomSerialization customSerialization)
         {
-            var rootEntry = mapped.Entry;
             var currentCollection = currentValue as ICollection;
 
             // Loop over the collection and update the entries that are still present
@@ -607,7 +607,7 @@ namespace Marvin.Serialization
 
                     if (match.Value.Type < EntryValueType.Class)
                     {
-                        item = CreatePrimitiveOrEnum(mapped.Property.PropertyType, match.Value);
+                        item = CreatePrimitiveOrEnum(memberType, match.Value);
                     }
                     else
                     {
@@ -625,12 +625,12 @@ namespace Marvin.Serialization
                 if (subEntry.Value.Type < EntryValueType.Class)
                 {
                     // Create value type
-                    item = CreatePrimitiveOrEnum(mapped.Property.PropertyType, subEntry.Value);
+                    item = CreatePrimitiveOrEnum(memberType, subEntry.Value);
                 }
                 else
                 {
                     // Create and update reference types
-                    item = customSerialization.CreateInstance(mapped, subEntry);
+                    item = customSerialization.CreateInstance(memberType, attributeProvider, subEntry);
                     item = UpdateInstance(item, subEntry.SubEntries, customSerialization);
                 }
                 strategy.Added(subEntry.Key, item);
@@ -695,9 +695,9 @@ namespace Marvin.Serialization
         }
 
         /// <summary>
-        /// Invoke a method on the target object using custom serialization
+        /// Invoke a method on the target object using custom customSerialization
         /// </summary>
-        public static Entry InvokeMethod(object target, MethodEntry methodEntry, ICustomSerialization serialization)
+        public static Entry InvokeMethod(object target, MethodEntry methodEntry, ICustomSerialization customSerialization)
         {
             var parameterEntries = methodEntry.Parameters;
             var method = target.GetType().GetMethods().First(m => m.Name == methodEntry.Name
@@ -707,7 +707,32 @@ namespace Marvin.Serialization
             var arguments = new object[parameters.Length];
             for (var i = 0; i < parameters.Length; i++)
             {
-                arguments[i] = serialization.ParameterValue(parameters[i], methodEntry.Parameters[i]);
+                var entry = methodEntry.Parameters[i];
+                var parameter = parameters[i];
+                var paramType = parameter.ParameterType;
+                var argument = customSerialization.ConvertValue(paramType, parameter, entry, null);
+
+                // Value types and strings do not need recursion
+                if (ValueOrStringType(paramType))
+                {
+                }
+                // Update collection from entry
+                else if (argument is ICollection && entry != null)
+                {
+                    // Pick collection strategy
+                    var strategy = CreateStrategy(argument, null, paramType, customSerialization);
+                    UpdateCollection(null, paramType, parameter, entry, strategy, customSerialization);
+                }
+                // Update class
+                else if (paramType.IsClass)
+                {
+                    if (entry == null)
+                        UpdateInstance(argument, new Entry[0], customSerialization);
+                    else
+                        UpdateInstance(argument, entry.SubEntries, customSerialization);
+                }
+
+                arguments[i] = argument;
             }
 
             var result = method.Invoke(target, arguments);
@@ -725,7 +750,7 @@ namespace Marvin.Serialization
             };
             if (resultModel.Value.Type == EntryValueType.Class)
             {
-                resultModel.SubEntries = EncodeObject(result).ToList();
+                resultModel.SubEntries = EncodeObject(result, customSerialization).ToList();
             }
 
             return resultModel;

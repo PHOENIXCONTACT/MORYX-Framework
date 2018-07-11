@@ -11,12 +11,6 @@ namespace Marvin.Configuration
     public abstract class PossibleValuesAttribute : Attribute
     {
         /// <summary>
-        /// All possible values for this member represented as strings. The given container might be null
-        /// and can be used to resolve possible values
-        /// </summary>
-        public abstract IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer);
-
-        /// <summary>
         /// Flag if this member implements its own string to value conversion
         /// </summary>
         public abstract bool OverridesConversion { get; }
@@ -27,9 +21,15 @@ namespace Marvin.Configuration
         public abstract bool UpdateFromPredecessor { get; }
 
         /// <summary>
+        /// All possible values for this member represented as strings. The given container might be null
+        /// and can be used to resolve possible values
+        /// </summary>
+        public abstract IEnumerable<string> GetValues(IContainer container);
+
+        /// <summary>
         /// String to value conversion
         /// </summary>
-        public virtual object ConvertToConfigValue(IContainer container, string value)
+        public virtual object Parse(IContainer container, string value)
         {
             return value;
         }

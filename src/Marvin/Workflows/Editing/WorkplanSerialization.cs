@@ -35,17 +35,17 @@ namespace Marvin.Workflows
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override IEnumerable<PropertyInfo> ReadFilter(Type sourceType)
+        public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             // Only properties with read filter
-            foreach (var property in base.ReadFilter(sourceType))
+            foreach (var property in base.GetProperties(sourceType))
             {
                 // Filter properties without initializer
                 if(property.GetCustomAttribute(typeof(InitializerAttribute)) == null)
                     continue;
 
                 // Filter properties of type workplan
-                if(IsWorkplanReference(property))
+                if(IsWorkplanReference(property.PropertyType))
                     continue;
 
                 yield return property;
@@ -60,10 +60,10 @@ namespace Marvin.Workflows
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue)
+        public override object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
         {
             // Override mechanism to load workplan references
-            if (IsWorkplanReference(property))
+            if (IsWorkplanReference(memberType))
             {
                 if (_source == null)
                     return currentValue;
@@ -72,7 +72,7 @@ namespace Marvin.Workflows
                 var currentWorkplan = (IWorkplan)currentValue;
                 return currentWorkplan.Id == newId ? currentWorkplan : _source.Load(newId);
             }
-            return base.PropertyValue(property, mappedEntry, currentValue);
+            return base.ConvertValue(memberType, attributeProvider, mappedEntry, currentValue);
         }
 
         /// <summary>

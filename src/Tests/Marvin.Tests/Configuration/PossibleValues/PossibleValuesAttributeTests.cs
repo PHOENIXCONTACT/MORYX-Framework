@@ -24,9 +24,9 @@ namespace Marvin.Tests.Configuration
             var attrWithArray = new PossibleTypesAttribute(new[] {typeof(SomeImpl) });
 
             // Act
-            var valuesFromBase = attrWithBase.ResolvePossibleValues(null).ToArray();
-            var valuesFromArray = attrWithArray.ResolvePossibleValues(null).ToArray();
-            var instance = attrWithBase.ConvertToConfigValue(null, nameof(SomeBase));
+            var valuesFromBase = attrWithBase.GetValues(null).ToArray();
+            var valuesFromArray = attrWithArray.GetValues(null).ToArray();
+            var instance = attrWithBase.Parse(null, nameof(SomeBase));
 
             // Assert
             // Check values from base type
@@ -50,7 +50,7 @@ namespace Marvin.Tests.Configuration
             var attr = new StateMachineKeysAttribute(typeof(MyStateBase));
 
             // Act
-            var possibleValues = attr.ResolvePossibleValues(null).ToArray();
+            var possibleValues = attr.GetValues(null).ToArray();
 
             // Assert
             Assert.AreEqual(3, possibleValues.Length);
