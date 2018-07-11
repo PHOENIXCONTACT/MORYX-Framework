@@ -15,89 +15,67 @@ namespace Marvin.Serialization
     public class DefaultSerialization : ICustomSerialization
     {
         /// <see cref="ICustomSerialization"/>
-        public virtual IEnumerable<PropertyInfo> ReadFilter(Type sourceType)
+        public virtual IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             return sourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual EntryPrototype[] Prototypes(PropertyInfo property)
+        public virtual EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            var elementType = property.PropertyType;
             // Check if it is a list, array or dictionary
-            if (EntryConvert.IsCollection(property.PropertyType))
+            if (EntryConvert.IsCollection(memberType))
             {
-                elementType = EntryConvert.ElementType(elementType);
+                memberType = EntryConvert.ElementType(memberType);
             }
 
             object prototype;
             // TODO: Maybe we find something better
-            if (elementType == typeof(string))
+            if (memberType == typeof(string))
             {
                 prototype = string.Empty;
             }
             else
             {
-                prototype = Activator.CreateInstance(elementType);
+                prototype = Activator.CreateInstance(memberType);
                 ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
             }
 
             return new[]
             {
-                new EntryPrototype(elementType.Name, prototype)
+                new EntryPrototype(memberType.Name, prototype)
             };
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleValues(PropertyInfo property)
-        {
-            return PossibleValues(property.PropertyType);
-        }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleValues(ParameterInfo parameter)
-        {
-            return PossibleValues(parameter.ParameterType);
-        }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleElementValues(PropertyInfo property)
-        {
-            var elementType = EntryConvert.ElementType(property.PropertyType);
-            return PossibleValues(elementType);
-        }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleElementValues(ParameterInfo parameter)
-        {
-            var elementType = EntryConvert.ElementType(parameter.ParameterType);
-            return PossibleValues(elementType);
-        }
-
-        /// <summary>
-        /// Determine possible values of a type
-        /// </summary>
-        protected virtual string[] PossibleValues(Type serializedType)
+        public virtual string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Element type for collections
-            if (EntryConvert.IsCollection(serializedType))
-                return new[] { EntryConvert.ElementType(serializedType).Name };
+            if (EntryConvert.IsCollection(memberType))
+                return new[] { EntryConvert.ElementType(memberType).Name };
 
             // Names of Enums or null
-            return serializedType.IsEnum ? Enum.GetNames(serializedType) : null;
+            return memberType.IsEnum ? Enum.GetNames(memberType) : null;
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual EntryValidation CreateValidation(PropertyInfo property)
+        public virtual string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        {
+            var elementType = EntryConvert.ElementType(memberType);
+            return PossibleValues(elementType, attributeProvider);
+        }
+
+        /// <see cref="ICustomSerialization"/>
+        public virtual EntryValidation CreateValidation(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var validation = new EntryValidation();
 
             //Determine if property is a password
-            var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
+            var passwordAttr = GetCustomAttribute<PasswordAttribute>(attributeProvider);
             if (passwordAttr != null)
                 validation.IsPassword = true;
 
-            var validationAttributes = property.GetCustomAttributes<ValidationAttribute>().ToArray();
+            var validationAttributes = GetCustomAttributes<ValidationAttribute>(attributeProvider);
             if (validationAttributes.Length == 0)
                 return validation;
 
@@ -124,7 +102,7 @@ namespace Marvin.Serialization
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual IEnumerable<MethodInfo> MethodFilter(Type sourceType)
+        public virtual IEnumerable<MethodInfo> GetMethods(Type sourceType)
         {
             return sourceType.GetMethods().Where(m => !m.IsSpecialName);
         }
@@ -163,54 +141,52 @@ namespace Marvin.Serialization
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue)
+        public virtual object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
         {
-            var propertyType = property.PropertyType;
             // Other operations depend on the element type
             switch (mappedEntry.Value.Type)
             {
                 case EntryValueType.Class:
-                    return currentValue ?? Activator.CreateInstance(propertyType);
+                    return currentValue ?? Activator.CreateInstance(memberType);
                 case EntryValueType.Collection:
-                    return CollectionBuilder(propertyType, currentValue, mappedEntry);
+                    return CollectionBuilder(memberType, currentValue, mappedEntry);
                 default:
                     var value = mappedEntry.Value.Current;
-                    return value == null ? null : EntryConvert.ToObject(propertyType, value);
+                    return value == null ? null : EntryConvert.ToObject(memberType, value);
             }
         }
-
         /// <see cref="ICustomSerialization"/>
-        public virtual object ParameterValue(ParameterInfo parameter, Entry mappedEntry)
+        public virtual object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
         {
-            var parameterType = parameter.ParameterType;
-            // Other operations depend on the element type
-            switch (mappedEntry.Value.Type)
+            if (EntryConvert.IsCollection(memberType))
             {
-                case EntryValueType.Class:
-                    return Activator.CreateInstance(parameterType);
-                case EntryValueType.Collection:
-                    return CollectionBuilder(parameterType, null, mappedEntry);
-                default:
-                    var value = mappedEntry.Value.Current;
-                    return value == null ? null : EntryConvert.ToObject(parameterType, value);
+                memberType = EntryConvert.ElementType(memberType);
             }
-        }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual object CreateInstance(MappedProperty mappedRoot, Entry encoded)
-        {
-            var elemType = mappedRoot.Property.PropertyType;
-            if (EntryConvert.IsCollection(elemType))
-            {
-                elemType = EntryConvert.ElementType(elemType);
-            }
-            return CreateInstance(elemType, encoded);
+            return CreateInstance(memberType, encoded);
         }
 
         /// <see cref="ICustomSerialization"/>
         public virtual object CreateInstance(Type elementType, Entry entry)
         {
             return Activator.CreateInstance(elementType);
+        }
+
+        /// <summary>
+        /// Replacement for the extension method to retrieve attributes
+        /// </summary>
+        protected TAttribute GetCustomAttribute<TAttribute>(ICustomAttributeProvider attributeProvider, bool inherit = true)
+            where TAttribute : Attribute
+        {
+            return (TAttribute)attributeProvider.GetCustomAttributes(typeof(TAttribute), inherit).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Replacement for the extension method to retrieve attributes
+        /// </summary>
+        protected TAttribute[] GetCustomAttributes<TAttribute>(ICustomAttributeProvider attributeProvider, bool inherit = true)
+            where TAttribute : Attribute
+        {
+            return (TAttribute[])attributeProvider.GetCustomAttributes(typeof(TAttribute), inherit);
         }
 
         /// <summary>

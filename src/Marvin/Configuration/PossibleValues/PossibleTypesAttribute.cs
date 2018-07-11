@@ -32,13 +32,13 @@ namespace Marvin.Configuration
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer container)
         {
             return _types.Select(t => t.Name);
         }
 
         /// <inheritdoc />
-        public override object ConvertToConfigValue(IContainer container, string value)
+        public override object Parse(IContainer container, string value)
         {
             var type = _types.Single(t => t.Name == value);
             return Activator.CreateInstance(type);

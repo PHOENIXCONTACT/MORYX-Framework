@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Marvin.Runtime.Modules;
+using Marvin.Serialization;
 
 namespace Marvin.Runtime.Maintenance.Plugins.Modules
 {

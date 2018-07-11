@@ -112,7 +112,7 @@
     <Compile Include="Configuration\ConfigBase.cs" />
     <Compile Include="Configuration\ConfigConstants.cs" />
     <Compile Include="Configuration\ConfigManager.cs" />
-    <Compile Include="Configuration\ConfigSerialization.cs" />
+    <Compile Include="Configuration\PossibleValuesSerialization.cs" />
     <Compile Include="Configuration\Defaults\CpuCountAttribute.cs" />
     <Compile Include="Configuration\Defaults\CurrentHostNameAttribute.cs" />
     <Compile Include="Configuration\IConfig.cs" />
@@ -241,6 +241,7 @@
     <Compile Include="Serialization\EntryConvert\EntryValue.cs" />
     <Compile Include="Serialization\EntryConvert\EntryValue.Generated.cs" />
     <Compile Include="Serialization\EntryConvert\EntryValueType.cs" />
+    <Compile Include="Serialization\EditorVisibleSerialization.cs" />
     <Compile Include="Serialization\ICustomSerialization.cs" />
     <Compile Include="Serialization\EntryConvert\EntryToModel\IEntryCollection.cs" />
     <Compile Include="Serialization\InlineConverter.cs" />

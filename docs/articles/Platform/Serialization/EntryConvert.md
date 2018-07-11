@@ -20,7 +20,7 @@ The `EntryConvert` API can convert objects and types as long as they comply with
 * Primitives or classes: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum or a another class.
 * Dictionaries of `<Primitive, Class`: Dictionaries are only supported if the key is a primitive type like `int` or `string` and the value is a class.
 
-## Serialize
+## Serialize Objects
 
 The return value of `EncodeClass` or `EncodeObject` is a collection of entries, that contain the properties of the given argument and their recursive children. It does not return a root entry for two reasons - information like identifier (key) are missing and in most cases the root object already has a DTO and only needs a generic way to include properties of derived classes.
 
@@ -75,7 +75,7 @@ public void SerializeType()
 
 If you try this examples yourself, you will notice, that properties also contains an entry with key `Id`, which is redundant with `FooDto` and part of the possibilities described for `ICustomSerialization`.
 
-## Deserialize
+## Deserialize Objects
 
 When converting the modified `IEnumerable<Entry>` back into an object there are two choices - creating a new object or updating an existing one. Using the `FooDto` from the previous example both options are shown below.
 
@@ -90,7 +90,7 @@ public void Deserialize()
     dto.Properties[0].Value.Current = "Michael";
     EntryConvert.UpdateInstance(fooObj, dto.Properties);
 }
-```` 
+````
 
 ## ICustomSerialization
 
@@ -99,15 +99,15 @@ All public methods of `EntryConvert` have overloads that expect an instance of [
 ````cs
 public class FooSerialization : DefaultSerialization
 {
-    public override void ReadFilter(Type sourceType)
+    public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
     {
         // Ignore the Id property. This example is bad practice because it will ignore every Id, not just on Foo class
-        return base.ReadFilter(sourceType).Where(property => property.Name != nameof(Foo.Id));
+        return base.GetProperties(sourceType).Where(property => property.Name != nameof(Foo.Id));
     }
 
-    public override string[] PossibleValues(PropertyInfo property)
+    public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
     {
-        if (property.Name == nameof(DerivedFoo.SomeName))
+        if (memberType.Name == nameof(DerivedFoo.SomeName))
             return new [] { "Thomas", "Dennis", "Slawa", "Robert", "Marvin", "Michael", "Sascha" };
 
         return base.PossibleValues(property);
@@ -126,4 +126,47 @@ var dto = new FooDto
 };
 dto.Properties[0].Value.Current = "Michael";
 EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
+````
+
+## Serialize Methods
+
+In the other sections you have learned that `EntryConvert` is able to serialize and deserialize objects. With the `GetMethods` and `InvokeMethod` features of `EntryConvert` you are able to build your own `RPC (Remote Procedure Call)` service.
+
+To enable the `RPC` features of `EntryConvert` you need to use the [EditorVisibleSerialization](xref:Marvin.Serialization.EditorVisibleSerialization) serializer on `EntryConvert`. Then you add the [EditorVisibleAttribute](xref:Marvin.Serialization.EditorVisibleAttribute) to all private/public methods or properties you want to expose.
+
+````cs
+public class MyLittleRPC
+{
+    [EditorVisible, Description("Does soemthing parameterized")]
+    public bool DoSomething(MyParams parameters)
+    {
+        return true;
+    }
+}
+````
+
+The serialization will be done by the method ``
+
+````cs
+public MethodEntry[] GetMethods(string moduleName)
+{
+    return EntryConvert.EncodeMethods(MyLittleRPC, CreateSerialization()).ToArray();
+}
+
+private ICustomSerialization CreateSerialization()
+{
+    return new AdvancedEditorVisibleSerialization(Container, ConfigManager);
+}
+````
+
+## Invoke Methods
+
+The following code allows you to expose and invoke you `RPC` methods or properties.
+
+````cs
+public Entry InvokeMethod(MethodEntry method)
+{
+    var result = EntryConvert.InvokeMethod(MyLittleRPC, method, CreateSerialization());
+    return result;
+}
 ````

@@ -94,8 +94,6 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             return new DependencyEvaluation(ModuleManager.DependencyEvaluation);
         }
 
-        
-
         public void Start(string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -186,13 +184,65 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             }
         }
 
+        public MethodEntry[] GetMethods(string moduleName)
+        {
+            var methods = new MethodEntry[] {};
+            var serverModule = GetModuleFromManager(moduleName);
+
+            if (serverModule?.Console != null)
+            {
+                methods = EntryConvert.EncodeMethods(serverModule.Console, CreateEditorVisibleSerialization(serverModule)).ToArray();
+            }
+
+            return methods;
+        }
+
+        public Entry InvokeMethod(string moduleName, MethodEntry method)
+        {
+            Entry result = null;
+            var serverModule = GetModuleFromManager(moduleName);
+
+            if (serverModule != null && method != null)
+            {
+                try
+                {
+                    result = EntryConvert.InvokeMethod(serverModule.Console, method,
+                        CreateEditorVisibleSerialization(serverModule));
+                }
+                catch (Exception e)
+                {
+                    result = new Entry
+                    {
+                        Description = $"Error while invoking function: {method.DisplayName}",
+                        Key = new EntryKey {Identifier = "0", Name = "Error description"},
+                        Value = new EntryValue {Current = e.Message, Type = EntryValueType.String}
+                    };
+                }
+            }
+            else
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Create serialization for this module
         /// </summary>
-        private ConfigSerialization CreateSerialization(IModule module)
+        private ICustomSerialization CreateSerialization(IModule module)
         {
             var host = (IContainerHost) module;
-            return new ConfigSerialization(host.Container, ConfigManager);
+            return new PossibleValuesSerialization(host.Container, ConfigManager);
+        }
+
+        /// <summary>
+        /// Create serialization for this module
+        /// </summary>
+        private ICustomSerialization CreateEditorVisibleSerialization(IModule module)
+        {
+            var host = (IContainerHost)module;
+            return new AdvancedEditorVisibleSerialization(host.Container, ConfigManager);
         }
 
         /// <summary>

@@ -76,12 +76,6 @@ In many cases it makes sense to limit the number of options a user or maintainer
 public abstract class PossibleValuesAttribute : Attribute
 {
     /// <summary>
-    /// All possible values for this member represented as strings. The given container might be null
-    /// and can be used to resolve possible values
-    /// </summary>
-    public abstract IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer);
-
-    /// <summary>
     /// Flag if this member implements its own string to value conversion. If this is set to false the runtime
     /// will try to convert the the value with a predefined set of conversions for native types. This must be overriden
     /// whenever your string repesents and object.
@@ -94,11 +88,16 @@ public abstract class PossibleValuesAttribute : Attribute
     /// </summary>
     public abstract bool UpdateFromPredecessor { get; }
 
+    /// <summary>
+    /// All possible values for this member represented as strings. The given container might be null
+    /// and can be used to resolve possible values
+    /// </summary>
+    public abstract IEnumerable<string> GetValues(IContainer container);
 
     /// <summary>
     /// String to value conversion. Must be override if <see cref="OverridesConversion"/> is set to true"/>
     /// </summary>
-    public virtual object ConvertToConfigValue(IContainer container, string value)
+    public virtual object Parse(IContainer container, string value)
     {
        return value;
     }

@@ -23,7 +23,7 @@ namespace Marvin.Tests.Configuration
             TransformerTestConfig config = new TransformerTestConfig();
 
             // tranform a config object
-            ConfigSerialization serialization = new ConfigSerialization(null, null);//new TransformationProviderMock(config));
+            PossibleValuesSerialization serialization = new PossibleValuesSerialization(null, null);//new TransformationProviderMock(config));
             var converted = EntryConvert.EncodeObject(config, serialization);
 
             bool foundPropertyWithDescriptionAttribute = false;
@@ -128,7 +128,7 @@ namespace Marvin.Tests.Configuration
                         {
                             var possibleValuesAttribute = (PossibleValuesAttribute) attribute;
                             foundPropertyWithValuesAttribute = true;
-                            foreach (var value in possibleValuesAttribute.ResolvePossibleValues(null))
+                            foreach (var value in possibleValuesAttribute.GetValues(null))
                             {
                                 Assert.Contains(value, entry.Value.Possible,
                                     "The value is not in the list of possible values!");
@@ -170,9 +170,9 @@ namespace Marvin.Tests.Configuration
 
             //var provider = new TransformationProviderMock(config);
             // tranform a config object
-            var configToModel = new ConfigSerialization(null, null); // provider);
+            var configToModel = new PossibleValuesSerialization(null, null); // provider);
             var converted = EntryConvert.EncodeObject(config, configToModel).ToList();
-            var modelToConfig = new ConfigSerialization(null, null); // provider);
+            var modelToConfig = new PossibleValuesSerialization(null, null); // provider);
 
             // find the int field to chang its value
             var intFieldEntry = converted.Find(entry => entry.Key.Name == "IntField");

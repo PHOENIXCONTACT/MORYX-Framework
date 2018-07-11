@@ -29,7 +29,7 @@ namespace Marvin.Configuration
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer container)
         {
             var currentDir = AppDomain.CurrentDomain.BaseDirectory;
             var dirs = new List<string>();

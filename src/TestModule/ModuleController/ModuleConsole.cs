@@ -1,12 +1,64 @@
 ﻿using System;
+using System.ComponentModel;
 using Marvin.Runtime;
 using Marvin.Runtime.Modules;
+using Marvin.Serialization;
+using IContainer = Marvin.Container.IContainer;
 
 namespace Marvin.TestModule
 {
+    internal class ShortServerInfo
+    {
+        public string ServerTime { get; set; }
+
+        public class AssemblyInfo
+        {
+            public string AssemblyProduct { get; set; }
+            public string AssemblyVersion { get; set; }
+            public string AssemblyInformationalVersion { get; set; }
+            public string AssemblyDescription { get; set; }
+
+            public void Fill()
+            {
+                var currentPlatform = Platform.Current;
+                AssemblyProduct = currentPlatform.ProductName;
+                AssemblyVersion = currentPlatform.ProductVersion.ToString(3);
+                AssemblyInformationalVersion = currentPlatform.ProductVersion.ToString(3);
+                AssemblyDescription = currentPlatform.ProductDescription;
+            }
+        }
+
+        public class HostInfo
+        {
+            public string MachineName { get; set; }
+            public string OSInformation { get; set; }
+            public long UpTime { get; set; }
+
+            public void Fill()
+            {
+                MachineName = Environment.MachineName;
+                OSInformation = Environment.OSVersion.ToString();
+                UpTime = Environment.TickCount;
+            }
+        }
+
+        public AssemblyInfo Assembly { get; set; } = new AssemblyInfo();
+        public HostInfo Host { get; set; } = new HostInfo();
+
+        public ShortServerInfo Fill()
+        {
+            ServerTime = DateTime.Now.ToLongDateString();
+            Assembly.Fill();
+            Host.Fill();
+            return this;
+        }
+    }
+
     [ServerModuleConsole]
     internal class ModuleConsole : IServerModuleConsole
     {
+        public IContainer Container { get; set; }
+
         public string ExportDescription(DescriptionExportFormat format)
         {
             switch (format)
@@ -46,6 +98,43 @@ Test module for System tests
         public void ExecuteCommand(string[] args, Action<string> outputStream)
         {
             outputStream("The TestModule does not provide any commands!");
+        }
+
+
+        [EditorVisible, Description("Shows the description of this module.")]
+        public string ModuleDescription()
+        {
+            return ExportHtmlDescription();
+        }
+
+        [EditorVisible, Description("Returns the string that was sent.")]
+        public string Echo(string message)
+        {
+            return $"Echo: {message}";
+        }
+
+        [EditorVisible, Description("Some short information about the server.")]
+        public ShortServerInfo ServerInfo()
+        {
+            return new ShortServerInfo().Fill();
+        }
+
+        [EditorVisible, Description("Echos short information about the server.")]
+        public ShortServerInfo EchoServerInfo(ShortServerInfo shortServerInfo)
+        {
+            return shortServerInfo;
+        }
+
+        [EditorVisible, Description("Returns the current module config.")]
+        public ModuleConfig CurrentModuleConfig()
+        {
+            return Container.Resolve<ModuleConfig>();
+        }
+
+        [EditorVisible, Description("Echos a module config.")]
+        public ModuleConfig EchoModuleConfig(ModuleConfig moduleConfig)
+        {
+            return moduleConfig;
         }
     }
 }

@@ -12,52 +12,41 @@ namespace Marvin.Serialization
         /// <summary>
         /// Filter the properties that shall be included in the conversion
         /// </summary>
-        IEnumerable<PropertyInfo> ReadFilter(Type sourceType);
+        IEnumerable<PropertyInfo> GetProperties(Type sourceType);
 
         /// <summary>
         /// Types that shall be included as prototypes into the entry object
         /// </summary>
-        EntryPrototype[] Prototypes(PropertyInfo property);
+        EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider);
 
         /// <summary>
         /// Possible values of a property
         /// </summary>
-        /// <param name="property">Property to check</param>
+        /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>
+        /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
         /// <returns>Possible values or null</returns>
-        string[] PossibleValues(PropertyInfo property);
-
-        /// <summary>
-        /// Possible values of a property
-        /// </summary>
-        /// <param name="parameter">A method parameter that shall be serialized</param>
-        /// <returns>Possible values or null</returns>
-        string[] PossibleValues(ParameterInfo parameter);
+        string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider);
 
         /// <summary>
         /// Possible values for the elements of a collection property
         /// </summary>
-        /// <param name="property">Property to check</param>
+        /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>
+        /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
         /// <returns>Possible values or null</returns>
-        string[] PossibleElementValues(PropertyInfo property);
-
-        /// <summary>
-        /// Possible values for the elements of a collection parameter
-        /// </summary>
-        /// <param name="parameter">Parameter to check</param>
-        /// <returns>Possible values or null</returns>
-        string[] PossibleElementValues(ParameterInfo parameter);
+        string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider);
 
         /// <summary>
         /// Entry validation object
         /// </summary>
-        /// <param name="property">Property to read validation for</param>
+        /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>
+        /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
         /// <returns>Validation object</returns>
-        EntryValidation CreateValidation(PropertyInfo property);
+        EntryValidation CreateValidation(Type memberType, ICustomAttributeProvider attributeProvider);
 
         /// <summary>
         /// Filter methods of a type that shall be serialized
         /// </summary>
-        IEnumerable<MethodInfo> MethodFilter(Type sourceType);
+        IEnumerable<MethodInfo> GetMethods(Type sourceType);
 
         /// <summary>
         /// Filter the properties that shall be included when creating the object
@@ -72,23 +61,17 @@ namespace Marvin.Serialization
         /// <summary>
         /// Value of the property extracted from the entry
         /// </summary>
-        object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue);
-
-        /// <summary>
-        /// Convert the value of a method parameter from the entry representing it.
-        /// </summary>
-        object ParameterValue(ParameterInfo parameter, Entry mappedEntry);
-
-
-        /// <summary>
-        /// Create instance of a collection item
-        /// </summary>
-        object CreateInstance(MappedProperty mappedRoot, Entry encoded);
+        object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue);
 
         /// <summary>
         /// Create instance of a given type using the entry for additional information
         /// </summary>
         object CreateInstance(Type elementType, Entry entry);
+
+        /// <summary>
+        /// Create instance of a collection item
+        /// </summary>
+        object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded);
     }
 
     /// <summary> 

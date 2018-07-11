@@ -43,9 +43,9 @@ namespace Marvin.Configuration
         /// All possible values for this member represented as strings. The given container might be null
         /// and can be used to resolve possible values
         /// </summary>
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer container)
         {
-            var possibleValues = GetPossibleTypes(pluginContainer);
+            var possibleValues = GetPossibleTypes(container);
             return possibleValues.Select(configType => configType.Name);
         }
 
@@ -56,7 +56,7 @@ namespace Marvin.Configuration
         public override bool UpdateFromPredecessor => true;
 
         /// <inheritdoc />
-        public override object ConvertToConfigValue(IContainer container, string value)
+        public override object Parse(IContainer container, string value)
         {
             var possibleTypes = GetPossibleTypes(container);
             return Activator.CreateInstance(possibleTypes.First(type => type.Name == value));
