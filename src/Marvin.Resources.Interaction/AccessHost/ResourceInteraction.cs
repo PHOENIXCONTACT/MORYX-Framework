@@ -418,7 +418,6 @@ namespace Marvin.Resources.Interaction
         private ResourceTypeModel ConvertType(IResourceTypeNode node, ResourceTypeModel baseType)
         {
             var resType = node.ResourceType;
-            var displayAtt = resType.GetCustomAttribute<DisplayNameAttribute>();
 
             if (_typeCache.ContainsKey(node.Name))
                 return _typeCache[node.Name];
@@ -427,13 +426,16 @@ namespace Marvin.Resources.Interaction
             {
                 Creatable = node.Creatable,
                 Name = Regex.Replace(node.Name, @"`\d", string.Empty), // Remove generic arguments from type name
-                DisplayName = displayAtt?.DisplayName,
-                // Read description of the type
-                Description = resType.GetCustomAttribute<DescriptionAttribute>()?.Description,
-                // Convert resource constructors
-                Constructors = node.Constructors.Select(ctr => EntryConvert.EncodeMethod(ctr, Serialization)).ToArray(),
+                BaseType = baseType,
 
-                BaseType = baseType
+                // Read display name of the type
+                DisplayName = resType.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName,
+
+                // Read description of the type
+                Description = resType.GetCustomAttribute<DescriptionAttribute>(false)?.Description,
+
+                // Convert resource constructors
+                Constructors = node.Constructors.Select(ctr => EntryConvert.EncodeMethod(ctr, Serialization)).ToArray()
             };
 
             typeModel.DerivedTypes = node.DerivedTypes.Select(t => ConvertType(t, typeModel)).ToArray();
