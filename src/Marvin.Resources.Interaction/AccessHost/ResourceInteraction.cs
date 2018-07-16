@@ -425,14 +425,15 @@ namespace Marvin.Resources.Interaction
             if (_typeCache.ContainsKey(node.Name))
                 return _typeCache[node.Name];
 
+            var name = Regex.Replace(node.Name, @"`\d", string.Empty);
             var typeModel = new ResourceTypeModel
             {
                 Creatable = node.Creatable,
-                Name = Regex.Replace(node.Name, @"`\d", string.Empty), // Remove generic arguments from type name
+                Name = name, // Remove generic arguments from type name
                 BaseType = baseType,
 
                 // Read display name of the type
-                DisplayName = resType.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName,
+                DisplayName = resType.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName ?? name,
 
                 // Read description of the type
                 Description = resType.GetCustomAttribute<DescriptionAttribute>(false)?.Description,

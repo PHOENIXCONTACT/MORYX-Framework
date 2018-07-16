@@ -1,9 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples
 {
+    [DisplayName("Handarbeitsplatz")]
+    [Description("Handarbeitsplatz für manuele Arbeiten.")]
     [ResourceRegistration(nameof(AssembleResource))]
     public class AssembleResource : Cell
     {
