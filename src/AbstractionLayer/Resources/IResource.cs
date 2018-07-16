@@ -24,10 +24,5 @@
         /// Global identifier of a resource
         /// </summary>
         string GlobalIdentifier { get; }
-
-        /// <summary>
-        /// Descritpion of a resource
-        /// </summary>
-        string Description { get; }
     }
 }
