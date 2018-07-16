@@ -43,6 +43,11 @@ namespace Marvin.Resources.Management
         public string GlobalIdentifier { get; set; }
 
         /// <summary>
+        /// Description of the resource
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// JSON serialized custom properties of the resource
         /// </summary>
         public string ExtensionData { get; set; }
@@ -74,6 +79,7 @@ namespace Marvin.Resources.Management
             resource.Name = Name;
             resource.LocalIdentifier = LocalIdentifier;
             resource.GlobalIdentifier = GlobalIdentifier;
+            resource.Description = Description;
 
             // Copy extended data from json
             if (ExtensionData != null)
@@ -108,6 +114,7 @@ namespace Marvin.Resources.Management
                 entity.Type = instance.GetType().Name;
 
             entity.Name = instance.Name;
+            entity.Description = instance.Description;
             entity.LocalIdentifier = instance.LocalIdentifier;
             entity.GlobalIdentifier = instance.GlobalIdentifier;
             entity.ExtensionData = Json.Serialize(instance, JsonSettings.Minimal);
@@ -131,6 +138,7 @@ namespace Marvin.Resources.Management
                                  Name = res.Name,
                                  LocalIdentifier = res.LocalIdentifier,
                                  GlobalIdentifier = res.GlobalIdentifier,
+                                 Description = res.Description,
                                  ExtensionData = res.ExtensionData,
                                  Relations = (from target in res.Targets
                                               where target.Target.Deleted == null

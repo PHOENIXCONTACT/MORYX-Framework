@@ -38,6 +38,9 @@ namespace Marvin.AbstractionLayer.Resources
         /// <inheritdoc />
         public string GlobalIdentifier { get; set; }
 
+        ///
+        public string Description { get; set; }
+
         /// <summary>
         /// Descriptor to provide access to this resource. Either the descriptor or 
         /// its properties and methods need to flagged with <see cref="EditorVisibleAttribute"/> 

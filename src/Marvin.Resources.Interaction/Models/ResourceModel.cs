@@ -41,6 +41,12 @@ namespace Marvin.Resources.Interaction
         public string GlobalIdentifier { get; set; }
 
         /// <summary>
+        /// Description of the recource.
+        /// </summary>
+        [DataMember]
+        public string Description { get; set; }
+
+        /// <summary>
         /// Resource type model reference
         /// </summary>
         [DataMember]

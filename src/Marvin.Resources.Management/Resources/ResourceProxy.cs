@@ -78,6 +78,9 @@ namespace Marvin.Resources.Management
         /// <inheritdoc />
         string IResource.GlobalIdentifier => Target.GlobalIdentifier;
 
+        /// <inheritdoc />
+        string IResource.Description => Target.Description;
+
         public virtual void Attach()
         {
         }

@@ -73,6 +73,7 @@ namespace Marvin.Resources.Interaction
                 Name = resource.Name,
                 LocalIdentifier = resource.LocalIdentifier,
                 GlobalIdentifier = resource.GlobalIdentifier,
+                Description = resource.Description,
                 Type = resource.GetType().Name,
                 References = ChildrenOnly(resource)
             };
@@ -175,6 +176,7 @@ namespace Marvin.Resources.Interaction
                 Name = current.Name,
                 LocalIdentifier = current.LocalIdentifier,
                 GlobalIdentifier = current.GlobalIdentifier,
+                Description = current.Description,
 
                 // Use simplified type reference
                 Type = current.GetType().Name,
@@ -392,6 +394,7 @@ namespace Marvin.Resources.Interaction
             resource.Name = model.Name;
             resource.LocalIdentifier = model.LocalIdentifier;
             resource.GlobalIdentifier = model.GlobalIdentifier;
+            resource.Description = model.Description;
 
             // Copy extended properties
             if (model.Properties != null)
@@ -463,7 +466,8 @@ namespace Marvin.Resources.Interaction
                 Name = r.Name,
                 Type = r.GetType().Name,
                 LocalIdentifier = r.LocalIdentifier,
-                GlobalIdentifier = r.GlobalIdentifier
+                GlobalIdentifier = r.GlobalIdentifier,
+                Description = r.Description
             });
         }
 
