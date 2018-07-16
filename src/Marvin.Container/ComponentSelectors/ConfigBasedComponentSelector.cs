@@ -39,9 +39,11 @@ namespace Marvin.Container
             {
                 var instance = base.BuildFactoryComponent(method, componentName, componentType, additionalArguments)(kernel, policy);
 
-                // TODO: Create better infrastructure
                 var config = additionalArguments["config"];
-                var initMethod = instance.GetType().GetMethod("Initialize", new []{ config.GetType() });
+                var configType = config.GetType();
+                var genericPluginApi = typeof(IConfiguredPlugin<>).MakeGenericType(configType);
+
+                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredPlugin<IPluginConfig>.Initialize), new[] { configType });
                 initMethod.Invoke(instance, new[] { config });
                 return instance;
             });
