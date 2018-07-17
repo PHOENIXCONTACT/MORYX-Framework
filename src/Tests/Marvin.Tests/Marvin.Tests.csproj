@@ -98,8 +98,8 @@
     <Compile Include="StateMachines\TestMachine\CState.cs" />
     <Compile Include="StateMachines\TestMachine\MyContext.cs" />
     <Compile Include="StateMachines\TestMachine\MyStateBase.cs" />
-    <Compile Include="Tools\ParallelOperationTests.cs" />
-    <Compile Include="Tools\NonStackingTimerCallbackTests.cs" />
+    <Compile Include="Threading\ParallelOperationTests.cs" />
+    <Compile Include="Threading\NonStackingTimerCallbackTests.cs" />
     <Compile Include="Workflows\CompilerTests.cs" />
     <Compile Include="Workflows\Dummies\DefaultValueStep.cs" />
     <Compile Include="Workflows\Dummies\DummyStep.cs" />

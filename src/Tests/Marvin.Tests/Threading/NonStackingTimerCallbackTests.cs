@@ -1,7 +1,7 @@
-﻿using Marvin.Tools;
+﻿using Marvin.Threading;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Tools
+namespace Marvin.Tests.Threading
 {
     [TestFixture]
     public class NonStackingTimerCallbackTests

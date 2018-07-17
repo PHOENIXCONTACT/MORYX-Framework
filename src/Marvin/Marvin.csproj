@@ -268,8 +268,8 @@
     <Compile Include="Tools\Extensions\ObservableCollectionExtension.cs" />
     <Compile Include="Tools\Extensions\StringExtensions.cs" />
     <Compile Include="Tools\Extensions\UnitOfWorkExtensions.cs" />
-    <Compile Include="Tools\NonStackingTimerCallback.cs" />
-    <Compile Include="Tools\ParallelOperations.cs" />
+    <Compile Include="Threading\NonStackingTimerCallback.cs" />
+    <Compile Include="Threading\ParallelOperations.cs" />
     <Compile Include="Tools\ReflectionTool.cs" />
     <Compile Include="Users\OperationAccess.cs" />
     <Compile Include="StateMachines\IState.cs" />

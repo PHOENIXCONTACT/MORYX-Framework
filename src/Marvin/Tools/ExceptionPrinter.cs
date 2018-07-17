@@ -20,7 +20,7 @@ namespace Marvin.Tools
             {
                 message.AppendLine(currentEx.Message);
                 var loadException = currentEx as ReflectionTypeLoadException;
-                if (loadException != null && loadException.LoaderExceptions != null)
+                if (loadException?.LoaderExceptions != null)
                     message.AppendLine($"  Loader exceptions: \n  {string.Join<Exception>("\n  ", loadException.LoaderExceptions)}");
                 currentEx = currentEx.InnerException;
             }

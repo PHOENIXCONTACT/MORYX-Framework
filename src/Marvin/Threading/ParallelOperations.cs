@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using Marvin.Modules;
-using Marvin.Threading;
+using Marvin.Tools;
 
-namespace Marvin.Tools
+namespace Marvin.Threading
 {
     /// <summary>
     /// Describes an impossible exception.
