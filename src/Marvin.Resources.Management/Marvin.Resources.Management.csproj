@@ -88,7 +88,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Facades\ResourceExtension.cs" />
+    <Compile Include="Extensions\ResourceExtensions.cs" />
     <Compile Include="Facades\ResourceManagementFacade.cs" />
     <Compile Include="Model\API\IResourceEntityRepository.cs" />
     <Compile Include="Model\API\IResourceRelationRepository.cs" />

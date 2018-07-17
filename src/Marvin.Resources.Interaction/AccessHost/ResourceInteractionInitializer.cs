@@ -15,6 +15,7 @@ namespace Marvin.Resources.Interaction
         /// <inheritdoc />
         public override string Description => "Creates a default interaction host";
 
+        /// <inheritdoc />
         public override IReadOnlyList<Resource> Execute(IResourceCreator creator)
         {
             var interactionHost = creator.Instantiate<ResourceInteractionHost>();

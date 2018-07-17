@@ -26,7 +26,7 @@ namespace Marvin.AbstractionLayer.Resources
 
         #endregion
 
-        /// <inheritdoc /> 
+        /// <inheritdoc />
         public long Id { get; set; }
 
         /// <inheritdoc />
@@ -38,7 +38,9 @@ namespace Marvin.AbstractionLayer.Resources
         /// <inheritdoc />
         public string GlobalIdentifier { get; set; }
 
-        ///
+        /// <summary>
+        /// Description of this resource
+        /// </summary>
         public string Description { get; set; }
 
         /// <summary>

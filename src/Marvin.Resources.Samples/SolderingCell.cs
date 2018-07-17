@@ -3,7 +3,7 @@ using Marvin.AbstractionLayer.Resources;
 
 namespace Marvin.Resources.Samples
 {
-    [ResourceRegistration(nameof(SolderingCell))]
+    [ResourceRegistration]
     public class SolderingCell : Cell
     {
         [ReferenceOverride(nameof(Children))]
@@ -35,7 +35,7 @@ namespace Marvin.Resources.Samples
         public abstract void ProcessActivity(IActivity sa);
     }
 
-    [ResourceRegistration(nameof(HeatingStation))]
+    [ResourceRegistration]
     public class HeatingStation : Station
     {
         [ResourceReference(ResourceRelationType.TransportRoute)]
@@ -47,7 +47,7 @@ namespace Marvin.Resources.Samples
         }
     }
 
-    [ResourceRegistration(nameof(SolderingStation))]
+    [ResourceRegistration]
     public class SolderingStation : Station
     {
         public override void ProcessActivity(IActivity sa)

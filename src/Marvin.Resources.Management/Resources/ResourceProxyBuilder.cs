@@ -62,7 +62,7 @@ namespace Marvin.Resources.Management
         /// </summary>
         public Type Build(Type resourceType, IReadOnlyList<Type> interfaces)
         {
-            var proxyName = $"{resourceType.Name}Proxy";
+            var proxyName = $"{resourceType.ResourceType()}_Proxy";
 
             // Check if this proxy is already defined in the assembly
             var proxyType = GetType(proxyName);

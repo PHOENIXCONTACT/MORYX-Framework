@@ -153,6 +153,7 @@
     <Compile Include="Resources\ProxyDetachedException.cs" />
     <Compile Include="Resources\PublicResource.cs" />
     <Compile Include="Resources\Resource.cs" />
+    <Compile Include="Resources\Extensions\ResourceExtensions.cs" />
     <Compile Include="Resources\ResourceNotFoundException.cs" />
     <Compile Include="Resources\ResourceRelationType.cs" />
     <Compile Include="Resources\ResourceBindingResolverFactory.cs" />

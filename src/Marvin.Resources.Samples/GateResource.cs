@@ -5,7 +5,7 @@ using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples
 {
-    [ResourceRegistration(nameof(GateResource))]
+    [ResourceRegistration]
     public class GateResource : Cell
     {
         public void MoveAxes(Axes axes, AxisPosition position)

@@ -6,7 +6,7 @@ using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples
 {
-    [ResourceRegistration(nameof(BufferResource))]
+    [ResourceRegistration]
     public class BufferResource : PublicResource
     {
         [ReferenceOverride(nameof(Children), AutoSave = true)]

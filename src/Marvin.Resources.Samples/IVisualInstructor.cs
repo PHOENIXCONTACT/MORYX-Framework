@@ -15,7 +15,7 @@ namespace Marvin.Resources.Samples
         void Show(string foo);
     }
 
-    [ResourceRegistration(nameof(VisualInstructor))]
+    [ResourceRegistration]
     public class VisualInstructor : Resource, IVisualInstructor
     {
         [DataMember]
@@ -70,14 +70,14 @@ namespace Marvin.Resources.Samples
         }
     }
 
-    [ResourceRegistration(nameof(AwesomeInstructor))]
+    [ResourceRegistration]
     public class AwesomeInstructor : VisualInstructor
     {
         
     }
 
     [DependencyRegistration(typeof(IInteractionService))]
-    [ResourceRegistration(nameof(InstructionServiceHost), typeof(InstructionServiceHost))]
+    [ResourceRegistration(typeof(InstructionServiceHost))]
     public class InstructionServiceHost : InteractionResource<IInteractionService>
     {
         [ReferenceOverride(nameof(Children), AutoSave = true)]

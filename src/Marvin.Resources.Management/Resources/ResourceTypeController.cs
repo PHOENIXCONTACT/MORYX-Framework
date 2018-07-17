@@ -91,6 +91,7 @@ namespace Marvin.Resources.Management
             // Start with all public types
             var allTypes = new List<Type>();
             var registeredTypes = Container.GetRegisteredImplementations(typeof(IResource)).ToList();
+
             // Load full type tree from registered resources
             foreach (var type in registeredTypes.Union(ReflectionTool.GetPublicClasses<Resource>()))
             {
@@ -106,7 +107,8 @@ namespace Marvin.Resources.Management
                 }
             }
 
-            // Convert tree to TypeLinker objects
+            // Convert tree to TypeNodes objects
+            // ReSharper disable once PossibleNullReferenceException -> There is always a base type
             foreach (var type in allTypes.Where(t => t.BaseType.IsAssignableFrom(typeof(PublicResource))))
             {
                 var linker = Convert(type, allTypes, registeredTypes);
@@ -130,11 +132,12 @@ namespace Marvin.Resources.Management
             };
 
             // Find all derived types
+            // ReSharper disable once PossibleNullReferenceException -> There is always a base type
             var derived = allTypes.Where(t => (t.BaseType.IsGenericType ? t.BaseType.GetGenericTypeDefinition() : t.BaseType) == type);
             linker.DerivedTypes = derived.Select(t => Convert(t, allTypes, registeredTypes, linker)).ToArray();
 
             // Save reference in type cache
-            _typeCache[type.Name] = linker;
+            _typeCache[linker.Name] = linker;
 
             return linker;
         }
@@ -158,7 +161,9 @@ namespace Marvin.Resources.Management
 
         public void Destroy(Resource instance)
         {
-            var linker = _typeCache[instance.GetType().Name];
+            // ReSharper disable once AssignNullToNotNullAttribute -> FullName should be not null
+            var linker = _typeCache[instance.ResourceType()];
+
             // Only factory instances need to be destroyed
             if (linker.IsRegistered)
                 ResourceFactory.Destroy(instance);
@@ -240,13 +245,15 @@ namespace Marvin.Resources.Management
                 return _proxyCache[instance.Id];
 
             var resourceType = instance.GetType();
+
             // Did we build a proxy type before, but for a different instance?
-            if (_proxyTypeCache.ContainsKey(resourceType.Name))
-                return _proxyCache[instance.Id] = InstantiateProxy(resourceType.Name, instance);
+            // ReSharper disable once AssignNullToNotNullAttribute -> FullName should be not null
+            if (_proxyTypeCache.ContainsKey(resourceType.ResourceType()))
+                return _proxyCache[instance.Id] = InstantiateProxy(resourceType.FullName, instance);
 
             // Build the proxy type for this resource type
             ProvideProxyType(resourceType);
-            return _proxyCache[instance.Id] = InstantiateProxy(resourceType.Name, instance);
+            return _proxyCache[instance.Id] = InstantiateProxy(resourceType.ResourceType(), instance);
         }
 
         /// <summary>
@@ -266,7 +273,8 @@ namespace Marvin.Resources.Management
         private void ProvideProxyType(Type resourceType)
         {
             // Step 1: Find the least specific base type that offers the same amount of interfaces
-            var targetType = _typeCache[resourceType.Name];
+            // ReSharper disable once AssignNullToNotNullAttribute -> FullName should be not null
+            var targetType = _typeCache[resourceType.ResourceType()];
             var linker = targetType;
 
             var interfaces = RelevantInterfaces(linker);
@@ -289,10 +297,10 @@ namespace Marvin.Resources.Management
 
             // Step 4: Assign the new proxy type to all derived types from the
             // match to the originally requested one
-            _proxyTypeCache[linker.Name] = proxyType.Name;
+            _proxyTypeCache[linker.Name] = proxyType.ResourceType();
             while (targetType != null && targetType != linker)
             {
-                _proxyTypeCache[targetType.Name] = proxyType.Name;
+                _proxyTypeCache[targetType.Name] = proxyType.ResourceType();
                 targetType = targetType.BaseType;
             }
         }

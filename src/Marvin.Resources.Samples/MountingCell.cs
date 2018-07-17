@@ -8,7 +8,7 @@ using Marvin.Serialization;
 namespace Marvin.Resources.Samples
 {
     [Description("Cell to mount articles on carriers!")]
-    [ResourceRegistration(nameof(MountingCell))]
+    [ResourceRegistration]
     public class MountingCell : Cell
     {
         [DataMember, EditorVisible, DefaultValue("Bye bye, WPC!")]

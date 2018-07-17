@@ -322,8 +322,7 @@ namespace Marvin.Resources.Management
         public Resource Create(string type)
         {
             // Create simplified template and instantiate
-            var template = new ResourceEntityAccessor();
-            template.Name = template.Type = type; // Initially set name to type
+            var template = new ResourceEntityAccessor {Type = type};
             var instance = template.Instantiate(TypeController, this);
 
             return instance;
@@ -339,7 +338,8 @@ namespace Marvin.Resources.Management
                 if (entity.Id == 0)
                     newResources.Add(resource);
 
-                newResources.AddRange(ResourceLinker.SaveReferences(uow, resource, entity));
+                var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);
+                newResources.AddRange(newInstances);
 
                 uow.Save();
 
@@ -418,7 +418,7 @@ namespace Marvin.Resources.Management
 
         public TResource Instantiate<TResource>() where TResource : Resource
         {
-            return (TResource)Instantiate(typeof(TResource).Name);
+            return (TResource)Instantiate(typeof(TResource).ResourceType());
         }
 
         public TResource Instantiate<TResource>(string type) where TResource : class, IResource

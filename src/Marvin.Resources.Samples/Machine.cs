@@ -4,7 +4,7 @@ using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples
 {
-    [ResourceRegistration(nameof(Machine))]
+    [ResourceRegistration]
     public class Machine : Resource
     {
         [DataMember, EditorVisible]

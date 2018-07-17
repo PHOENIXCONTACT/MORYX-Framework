@@ -74,7 +74,7 @@ namespace Marvin.Resources.Interaction
                 LocalIdentifier = resource.LocalIdentifier,
                 GlobalIdentifier = resource.GlobalIdentifier,
                 Description = resource.Description,
-                Type = resource.GetType().Name,
+                Type = resource.ResourceType(),
                 References = ChildrenOnly(resource)
             };
         }
@@ -179,7 +179,7 @@ namespace Marvin.Resources.Interaction
                 Description = current.Description,
 
                 // Use simplified type reference
-                Type = current.GetType().Name,
+                Type = current.ResourceType(),
 
                 // Recursively read children and references
                 References = ConvertReferences(current, depth),
@@ -425,15 +425,16 @@ namespace Marvin.Resources.Interaction
             if (_typeCache.ContainsKey(node.Name))
                 return _typeCache[node.Name];
 
-            var name = Regex.Replace(node.Name, @"`\d", string.Empty);
+            // Remove generic arguments from type name
             var typeModel = new ResourceTypeModel
             {
                 Creatable = node.Creatable,
-                Name = name, // Remove generic arguments from type name
+                Name = node.Name, 
                 BaseType = baseType,
 
-                // Read display name of the type
-                DisplayName = resType.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName ?? name,
+                // Read display name of the type otherwise use type short name
+                DisplayName = resType.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName ?? 
+                              Regex.Replace(resType.Name, @"`\d", string.Empty),
 
                 // Read description of the type
                 Description = resType.GetCustomAttribute<DescriptionAttribute>(false)?.Description,

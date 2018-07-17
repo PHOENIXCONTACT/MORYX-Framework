@@ -5,9 +5,8 @@ using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples
 {
-    [DisplayName("Handarbeitsplatz")]
-    [Description("Handarbeitsplatz für manuele Arbeiten.")]
-    [ResourceRegistration(nameof(AssembleResource))]
+    [ResourceRegistration]
+    [DisplayName("Handarbeitsplatz"), Description("Handarbeitsplatz für manuele Arbeiten.")]
     public class AssembleResource : Cell
     {
         [DataMember]

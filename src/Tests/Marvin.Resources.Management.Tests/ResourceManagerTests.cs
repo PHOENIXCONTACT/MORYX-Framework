@@ -34,6 +34,8 @@ namespace Marvin.Resources.Management.Tests
 
             _linkerMock = new Mock<IResourceLinker>();
             _linkerMock.Setup(l => l.GetAutoSaveCollections(It.IsAny<Resource>())).Returns(new List<IReferenceCollection>());
+            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>()))
+                .Returns(new Resource[0]);
 
             _initializerMock = new Mock<IResourceInitializer>();
             _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceCreator>())).Returns(new[] { _resourceMock });
@@ -50,13 +52,13 @@ namespace Marvin.Resources.Management.Tests
                 Logger = new DummyLogger()
             };
 
-            _typeControllerMock.Setup(tc => tc.Create(nameof(ResourceMock))).Returns(_resourceMock);
-            _typeControllerMock.Setup(tc => tc.Create(nameof(PublicResourceMock))).Returns(new PublicResourceMock());
+            _typeControllerMock.Setup(tc => tc.Create(typeof(ResourceMock).ResourceType())).Returns(_resourceMock);
+            _typeControllerMock.Setup(tc => tc.Create(typeof(PublicResourceMock).ResourceType())).Returns(new PublicResourceMock());
 
             using (var uow = _modelFactory.Create())
             {
                 var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
-                resourceRepo.Create(nameof(ResourceMock), nameof(ResourceMock));
+                resourceRepo.Create(nameof(ResourceMock), typeof(ResourceMock).ResourceType());
                 uow.Save();
             }
         }

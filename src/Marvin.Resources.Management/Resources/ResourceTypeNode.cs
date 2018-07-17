@@ -12,7 +12,7 @@ namespace Marvin.Resources.Management
     internal class ResourceTypeNode : IResourceTypeNode
     {
         /// <inheritdoc />
-        public string Name => ResourceType.Name;
+        public string Name => ResourceType.ResourceType();
         
         /// <inheritdoc />
         public Type ResourceType { get; set; }

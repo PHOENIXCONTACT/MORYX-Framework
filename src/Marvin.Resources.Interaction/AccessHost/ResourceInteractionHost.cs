@@ -9,8 +9,7 @@ namespace Marvin.Resources.Interaction
     /// Default interaction resource which hosts the default web service
     /// </summary>
     [Description("Resource to host the default web service")]
-    [DependencyRegistration(typeof(IResourceInteraction))]
-    [ResourceRegistration(nameof(ResourceInteractionHost))]
+    [ResourceRegistration, DependencyRegistration(typeof(IResourceInteraction))]
     public sealed class ResourceInteractionHost : InteractionResource<IResourceInteraction>
     {
         /// <summary>
