@@ -2,10 +2,10 @@
 using System.Threading;
 using Marvin.Modules;
 using Marvin.TestTools.UnitTest;
-using Marvin.Tools;
+using Marvin.Threading;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Tools
+namespace Marvin.Tests.Threading
 {
     [TestFixture]
     public class ParallelOperationTests : IModuleErrorReporting

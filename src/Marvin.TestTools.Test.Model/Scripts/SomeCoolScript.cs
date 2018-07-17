@@ -11,8 +11,7 @@ namespace Marvin.TestTools.Test.Model
 
         public string GetSql()
         {
-            return $"INSERT INTO {TestModelConstants.Schema.ToLower()}.\"{nameof(HouseEntity)}\"(\"{nameof(HouseEntity.Name)}\") " +
-                   "VALUES ('From CreationScript');";
+            return $"UPDATE {TestModelConstants.Schema.ToLower()}.\"{nameof(HouseEntity)}\" SET \"{nameof(HouseEntity.Name)}\" = 'From CreationScript';";
         }
     }
 }

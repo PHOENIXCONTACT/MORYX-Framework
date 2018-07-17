@@ -6,6 +6,7 @@ using System.ServiceModel.Channels;
 using System.Threading;
 using Marvin.Configuration;
 using Marvin.Logging;
+using Marvin.Threading;
 
 namespace Marvin.Tools.Wcf
 {
