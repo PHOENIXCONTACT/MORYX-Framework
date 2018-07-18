@@ -23,11 +23,11 @@ namespace Marvin.Products.Management
         /// Name of the importer
         /// </summary>
         public string Name => Config.PluginName;
-
+        
         /// <summary>
         /// Get the parameters of this importer
         /// </summary>
-        IImportParameters IProductImporter.Parameters => GenerateParameters();
+        public IImportParameters Parameters { get; private set; }
 
         /// <summary>
         /// Initialize this component with its config
@@ -36,6 +36,8 @@ namespace Marvin.Products.Management
         public virtual void Initialize(ProductImporterConfig config)
         {
             Config = (TConfig) config;
+
+            Parameters = GenerateParameters();
         }
 
         /// <summary>
@@ -88,7 +90,9 @@ namespace Marvin.Products.Management
         /// </summary>
         IProduct[] IProductImporter.Import(IImportParameters parameters)
         {
-            return Import((TParameters) parameters);
+            var products = Import((TParameters) parameters);
+            Parameters = GenerateParameters();
+            return products;
         }
 
         /// <summary>
