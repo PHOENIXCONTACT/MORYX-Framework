@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
@@ -324,6 +326,11 @@ namespace Marvin.Resources.Management
             // Create simplified template and instantiate
             var template = new ResourceEntityAccessor {Type = type};
             var instance = template.Instantiate(TypeController, this);
+
+            // Initially set name to value of DisplayNameAttribute if available
+            var typeObj = instance.GetType();
+            var displayNameAttr = typeObj.GetCustomAttribute<DisplayNameAttribute>();
+            instance.Name = displayNameAttr?.DisplayName ?? typeObj.Name;
 
             return instance;
         }

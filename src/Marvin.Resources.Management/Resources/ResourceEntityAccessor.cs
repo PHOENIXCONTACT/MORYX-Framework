@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -74,11 +73,6 @@ namespace Marvin.Resources.Management
 
             // Resources need access to the creator
             resource.Creator = creator;
-
-            // Initially set name to value of DisplayNameAttribute if available
-            var resourceType = resource.GetType();
-            var displayNameAttr = resourceType.GetCustomAttribute<DisplayNameAttribute>();
-            Name = displayNameAttr?.DisplayName ?? resourceType.Name;
 
             // Copy default properties
             resource.Id = Id;

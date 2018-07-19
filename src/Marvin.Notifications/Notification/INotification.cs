@@ -2,6 +2,9 @@ using System;
 
 namespace Marvin.Notifications
 {
+    /// <summary>
+    /// Additional notification interface to manipulate the notification properties in managing plugins
+    /// </summary>
     public interface IManagedNotification : INotification
     {
         /// <summary>

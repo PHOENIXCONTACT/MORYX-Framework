@@ -21,10 +21,12 @@ namespace Marvin.Resources.Management.Tests
         private ResourceManager _resourceManager;
         private Mock<IResourceInitializer> _initializerMock;
 
+        private const string DatabaseResourceName = "Resource Mock";
+
         [SetUp]
         public void Setup()
         {
-            _resourceMock = new ResourceMock {Name = "ResourceMock"};
+            _resourceMock = new ResourceMock();
 
             var modelFactory = new InMemoryUnitOfWorkFactory(Guid.NewGuid().ToString());
             modelFactory.Initialize();
@@ -58,7 +60,7 @@ namespace Marvin.Resources.Management.Tests
             using (var uow = _modelFactory.Create())
             {
                 var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
-                resourceRepo.Create(nameof(ResourceMock), typeof(ResourceMock).ResourceType());
+                resourceRepo.Create(DatabaseResourceName, typeof(ResourceMock).ResourceType());
                 uow.Save();
             }
         }
@@ -80,7 +82,8 @@ namespace Marvin.Resources.Management.Tests
             _resourceManager.Initialize();
 
             // Assert
-            Assert.AreEqual(1, _resourceMock.InitializeCalls);
+            Assert.AreEqual(1, _resourceMock.InitializeCalls, "The resource was not initialized.");
+            Assert.AreEqual(DatabaseResourceName, _resourceMock.Name, "Name does not match to the database entity");
         }
 
         [Test(Description = "Start call to ResourceManager starts the handled resources.")]
