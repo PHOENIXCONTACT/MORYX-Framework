@@ -7,7 +7,7 @@ namespace Marvin.Tests
     [TestFixture]
     public class EditorVisibleSerializationTests
     {
-        [Test(Description = "Retrieve only all visible only")]
+        [Test(Description = "Retrieve only all visible methods")]
         public void GetMethodsWhereEditorVisibleAttributeIsSet()
         {
             // Arrange
@@ -16,8 +16,9 @@ namespace Marvin.Tests
             var methods = EntryConvert.EncodeMethods(new EditorVisibleMixed(), new EditorVisibleSerialization()).ToList();
             
             // Assert
-            Assert.AreEqual(1, methods.Count);
-            Assert.AreEqual(nameof(EditorVisibleMixed.Method1), methods.First().Name);
+            Assert.AreEqual(2, methods.Count);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Method1), methods[0].Name);
+            Assert.AreEqual("Method3", methods[1].Name);
         }
 
         [Test(Description = "Retrieve only all visible properties")]
@@ -30,9 +31,11 @@ namespace Marvin.Tests
 
             // Assert
             Assert.IsNotNull(entries);
-            Assert.AreEqual(2, entries.Count);
+            Assert.AreEqual(4, entries.Count);
             Assert.AreEqual(nameof(EditorVisibleMixed.Property1), entries[0].Key.Name);
-            Assert.AreEqual(nameof(EditorVisibleMixed.Property2), entries[1].Key.Name);
+            Assert.AreEqual("Property2", entries[1].Key.Name);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Property3), entries[2].Key.Name);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Property5), entries[3].Key.Name);
         }
 
         [Test(Description = "Retrieve only all visible methods and properties on a class where no EditorVisible attributes are set")]
