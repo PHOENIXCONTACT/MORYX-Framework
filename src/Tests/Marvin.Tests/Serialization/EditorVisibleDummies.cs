@@ -7,8 +7,12 @@ namespace Marvin.Tests
         [EditorVisible]
         public string Property1 { get; set; } = "123456";
         [EditorVisible]
-        public bool Property2 { get; set; } = true;
-        public int Property3 { get; set; } = 98;
+        private string Property2 { get; set; } = "987654";
+        [EditorVisible]
+        public bool Property3 { get; set; } = true;
+        public int Property4 { get; set; } = 98;
+        [EditorVisible]
+        public bool Property5 { get; } = true;
 
         [EditorVisible]
         public bool Method1()
@@ -19,6 +23,12 @@ namespace Marvin.Tests
         public string Method2()
         {
             return "1234";
+        }
+
+        [EditorVisible]
+        private bool Method3()
+        {
+            return true;
         }
     }
 

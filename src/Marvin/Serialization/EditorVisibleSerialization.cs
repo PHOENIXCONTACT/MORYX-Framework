@@ -13,14 +13,14 @@ namespace Marvin.Serialization
         /// <inheritdoc />
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
-            var properties = base.GetProperties(sourceType).ToList();
+            var properties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             return properties.Where(p => Attribute.IsDefined(p, typeof(EditorVisibleAttribute)));
         }
 
         /// <inheritdoc />
         public override IEnumerable<MethodInfo> GetMethods(Type sourceType)
         {
-            var methods = base.GetMethods(sourceType);
+            var methods = sourceType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(m => !m.IsSpecialName);
 
             methods = Attribute.IsDefined(sourceType, typeof(EditorVisibleAttribute))
                 ? methods.Where(method => method.DeclaringType != typeof(object)) // Filter methods defined by object
