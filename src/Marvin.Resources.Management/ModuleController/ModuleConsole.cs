@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using Marvin.AbstractionLayer.Resources;
+using Marvin.Configuration;
 using Marvin.Runtime.Modules;
+using Marvin.Serialization;
 using Marvin.Tools;
 
 namespace Marvin.Resources.Management
@@ -144,6 +147,26 @@ namespace Marvin.Resources.Management
             outputStream($"{Environment.NewLine}Execute initializer with: {Environment.NewLine}" +
                          $"- initialize <Id> {Environment.NewLine}" +
                          $"- initialize <Name>{Environment.NewLine}");
+        }
+
+        [EditorVisible, DisplayName("Initialize Resource"), Description("Calls the configured resource initializer")]
+        public string CallResourceInitializer([PluginConfigs(typeof(IResourceInitializer), true)] ResourceInitializerConfig[] configs)
+        {
+            foreach (var config in configs)
+            {
+                try
+                {
+                    var initializer = InitializerFactory.Create(config);
+                    ResourceManager.ExecuteInitializer(initializer);
+                    InitializerFactory.Destroy(initializer);
+                }
+                catch (Exception e)
+                {
+                    return $"{config.PluginName} failed to run: {e.Message}";
+                }
+            }
+
+            return "Success";
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// <inheritdoc />
         [DataMember, Description("Name of the resource initializer")]
         [PluginNameSelector(typeof(IResourceInitializer))]
+        [DisplayName("Plugin Name")]
         public virtual string PluginName { get; set; }
 
         /// <summary>

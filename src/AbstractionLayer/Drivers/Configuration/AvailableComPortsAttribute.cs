@@ -14,7 +14,7 @@ namespace Marvin.AbstractionLayer.Drivers
         /// <summary>
         /// Resolves the registered COM ports.
         /// </summary>
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer pluginContainer)
         {
             var registryKey = Registry.LocalMachine.OpenSubKey("Hardware\\DeviceMap\\SerialComm");
 

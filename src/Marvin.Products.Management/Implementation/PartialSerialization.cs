@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Marvin.AbstractionLayer;
 using Marvin.Serialization;
+using Marvin.Tools;
 
 namespace Marvin.Products.Management
 {
@@ -21,10 +22,10 @@ namespace Marvin.Products.Management
         private static readonly string[] FilteredProperties = typeof (T).GetProperties().Select(p => p.Name).ToArray();
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override IEnumerable<PropertyInfo> ReadFilter(Type sourceType)
+        public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             // Only simple properties not defined in the base
-            return base.ReadFilter(sourceType).Where(SimpleProp);
+            return base.GetProperties(sourceType).Where(SimpleProp);
         }
 
         protected bool SimpleProp(PropertyInfo prop)
@@ -53,17 +54,17 @@ namespace Marvin.Products.Management
             return base.WriteFilter(sourceType, encoded).Where(mapped => mapped.Entry != null);
         }
 
-        public override string[] PossibleValues(PropertyInfo prop)
+        public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            var possibleAtt = prop.GetCustomAttribute<PossibleProductValuesAttribute>();
+            var possibleAtt = attributeProvider.GetCustomAttribute<PossibleProductValuesAttribute>();
             if (possibleAtt != null)
                 return possibleAtt.Values;
 
-            var keyAtt = prop.GetCustomAttribute<ProductStorageValuesAttribute>();
+            var keyAtt = attributeProvider.GetCustomAttribute<ProductStorageValuesAttribute>();
             if (keyAtt != null && Customization.SupportedStorageKeys.Contains(keyAtt.Key))
                 return Customization.AvailableStorageValues(keyAtt.Key);
 
-            return base.PossibleValues(prop);
+            return base.PossibleValues(memberType, attributeProvider);
         }
     }
 }
