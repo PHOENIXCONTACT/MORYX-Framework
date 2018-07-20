@@ -34,27 +34,11 @@ namespace Marvin.Serialization
         /// </summary>
         public static Entry CreateSub(object item, int index, ICustomSerialization customSerialization)
         {
-            var itemType = item.GetType();
-            // Entry wrapper around the object in the collection
-            var subentry = new Entry
-            {
-                Key = new EntryKey
-                {
-                    Name = GetEntryName(item),
-                    Identifier = index.ToString("D")
-                },
-                Value = new EntryValue
-                {
-                    Type = EntryConvert.TransformType(itemType),
-                    Current = EntryConvert.ValueOrStringType(itemType) ? item.ToString() : itemType.Name
-                }
-            };
+            var subEntry = EntryConvert.EncodeObject(item, customSerialization);
+            subEntry.Key.Name = GetEntryName(item);
+            subEntry.Key.Identifier = index.ToString("D");
 
-            // Recursive call for the children
-            if (subentry.Value.Type == EntryValueType.Class)
-                subentry.SubEntries.AddRange(EntryConvert.EncodeObject(item, customSerialization));
-
-            return subentry;
+            return subEntry;
         }
 
         /// <summary>

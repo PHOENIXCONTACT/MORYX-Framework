@@ -1,44 +1,26 @@
 ﻿using System;
 using System.Linq;
+using System.ComponentModel;
 using System.Reflection;
-using System.Runtime.Serialization;
 using Marvin.Serialization;
 using Marvin.Tools;
 
 namespace Marvin.Workflows
 {
     /// <summary>
-    /// Class representing a constructor argument or property based on the entry key DTO
+    /// Helper functions for WorkplanSteps
     /// </summary>
-    [DataContract]
-    public sealed class WorkplanStepInitializer : Entry
+    public static class WorkplanStepHelper
     {
-        /// <summary>
-        /// Indicator that the value is used in the constructor and therefore required
-        /// </summary>
-        [DataMember]
-        public bool FromConstructor { get; set; }
-
-        /// <summary>
-        /// Indicator if this argument references a subworkplan
-        /// </summary>
-        [DataMember]
-        public bool SubWorkplan { get; set; }
-
-        /// <summary>
-        /// Create initializer for a property - orginal purpose of initializer
-        /// </summary>
-        internal static WorkplanStepInitializer FromParameter(ParameterInfo param)
+        internal static Entry FromParameter(ParameterInfo param)
         {
             // Create initializer from constuctor parameter
             var defaultValue = param.HasDefaultValue ? param.DefaultValue : null;
             var initAtt = param.GetCustomAttribute<InitializerAttribute>();
 
             var isWorkplan = WorkplanSerialization.IsWorkplanReference(param.ParameterType);
-            var initializer = new WorkplanStepInitializer
+            var initializer = new Entry
             {
-                FromConstructor = true,
-                SubWorkplan = isWorkplan,
                 Key = new EntryKey
                 {
                     Identifier = param.Name,
@@ -51,7 +33,8 @@ namespace Marvin.Workflows
                 },
                 Description = initAtt == null ? string.Empty : initAtt.Description
             };
-            AdditonalOperations(initializer, param.ParameterType);
+
+            AdditionalOperations(initializer, param.ParameterType);
 
             return initializer;
         }
@@ -59,11 +42,11 @@ namespace Marvin.Workflows
         /// <summary>
         /// Create initializer from workplan property
         /// </summary>
-        internal static WorkplanStepInitializer FromWorkplanProperty(PropertyInfo workplanReference, object instance = null)
+        internal static Entry FromWorkplanProperty(PropertyInfo workplanReference, object instance = null)
         {
-            return new WorkplanStepInitializer
+            var description = workplanReference.GetCustomAttribute<DescriptionAttribute>();
+            return new Entry
             {
-                SubWorkplan = true,
                 Key = new EntryKey
                 {
                     Identifier = workplanReference.Name,
@@ -82,13 +65,13 @@ namespace Marvin.Workflows
         /// Additional operations to complete the different types
         /// </summary>
         /// <returns>True if the field should be skipped, otherwise false</returns>
-        private static void AdditonalOperations(Entry entry, Type type)
+        private static void AdditionalOperations(Entry entry, Type type)
         {
             switch (entry.Value.Type)
             {
                 case EntryValueType.Class:
                     // Fill subentries for this class
-                    entry.SubEntries = EntryConvert.EncodeClass(type, WorkplanSerialization.Simple).ToList();
+                    entry.SubEntries = EntryConvert.EncodeClass(type, WorkplanSerialization.Simple).SubEntries;
                     break;
                 case EntryValueType.Collection:
                     var proto = EntryConvert.ElementType(type);

@@ -7,9 +7,6 @@
 
 //TODO: Regenerate files using CGbR if fix of #30 is available in Release build: https://github.com/Toxantron/CGbR/issues/30
 
-using System;
-using System.Collections.Generic;
-
 namespace Marvin.Serialization
 {
     /// <summary>
@@ -31,33 +28,19 @@ namespace Marvin.Serialization
             copy.Description = Description; 
             if (deep)
             {
-                // In a deep clone the references are cloned 
- 
-                if (Parameters != null)
+                if (ParameterRoot != null)
                 {
-                    var tempParameters = new Entry[Parameters.Length];
-                    for (var i = 0; i < Parameters.Length; i++)
-                    {
-                        var value = Parameters[i];
-                        if (value != null)
-                        {
-                            value = value.Clone(true);
-                        }
-                        tempParameters[i] = value;
-                    }
-                    copy.Parameters = tempParameters;
+                    copy.ParameterRoot = ParameterRoot.Clone(deep);
                 }
             }
             else
             {
                 // In a shallow clone only references are copied
-                copy.Parameters = Parameters; 
+                copy.ParameterRoot = ParameterRoot; 
             }
             return copy;
         }
-
         
         #endregion
-
     }
 }

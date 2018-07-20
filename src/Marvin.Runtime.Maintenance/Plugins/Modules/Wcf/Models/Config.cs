@@ -5,6 +5,6 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
 {
     public class Config
     {
-        public List<Entry> Entries { get; set; }
+        public Entry Root { get; set; }
     }
 }

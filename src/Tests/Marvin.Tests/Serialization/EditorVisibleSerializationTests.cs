@@ -27,15 +27,15 @@ namespace Marvin.Tests
             // Arrange
 
             // Act
-            var entries = EntryConvert.EncodeObject(new EditorVisibleMixed(), new EditorVisibleSerialization()).ToList();
+            var entry = EntryConvert.EncodeObject(new EditorVisibleMixed(), new EditorVisibleSerialization());
 
             // Assert
-            Assert.IsNotNull(entries);
-            Assert.AreEqual(4, entries.Count);
-            Assert.AreEqual(nameof(EditorVisibleMixed.Property1), entries[0].Key.Name);
-            Assert.AreEqual("Property2", entries[1].Key.Name);
-            Assert.AreEqual(nameof(EditorVisibleMixed.Property3), entries[2].Key.Name);
-            Assert.AreEqual(nameof(EditorVisibleMixed.Property5), entries[3].Key.Name);
+            Assert.IsNotNull(entry);
+            Assert.AreEqual(4, entry.SubEntries.Count);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Property1), entry.SubEntries[0].Key.Name);
+            Assert.AreEqual("Property2", entry.SubEntries[1].Key.Name);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Property3), entry.SubEntries[2].Key.Name);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Property5), entry.SubEntries[3].Key.Name);
         }
 
         [Test(Description = "Retrieve only all visible methods and properties on a class where no EditorVisible attributes are set")]
@@ -47,7 +47,7 @@ namespace Marvin.Tests
             var entries = EntryConvert.EncodeObject(new NoEditorVisibleSet(), new EditorVisibleSerialization());
 
             // Assert
-            Assert.AreEqual(0, entries.Count());
+            Assert.AreEqual(0, entries.SubEntries.Count);
         }
     }
 }

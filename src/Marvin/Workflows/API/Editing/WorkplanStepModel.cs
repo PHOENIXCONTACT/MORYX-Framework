@@ -61,7 +61,7 @@ namespace Marvin.Workflows
         /// Serialized properties of the step
         /// </summary>
         [DataMember]
-        public WorkplanStepInitializer[] Properties { get; set; }
+        public Entry Properties { get; set; }
 
         /// <summary>
         /// Reference to a subworkplan

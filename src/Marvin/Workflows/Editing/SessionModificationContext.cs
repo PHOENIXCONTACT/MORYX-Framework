@@ -75,6 +75,14 @@ namespace Marvin.Workflows
             return AddConnector(connector, ModificationType.Delete, new ConnectionPoint(), new ConnectionPoint());
         }
 
+        /// <summary>
+        /// Step was added to the session
+        /// </summary>
+        public SessionModificationContext Deleted(ConnectorModel connector, ConnectionPoint source, ConnectionPoint target)
+        {
+            return AddConnector(connector, ModificationType.Delete, source, target);
+        }
+
         private SessionModificationContext AddStep(WorkplanStepModel stepModel, ModificationType type)
         {
             _modifiedSteps.Add(new ModifiedStep

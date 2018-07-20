@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Reflection;
 using Marvin.Container;
+using Marvin.Model;
 using Marvin.Runtime.Maintenance.Contracts;
 using Marvin.Runtime.Modules;
+using Marvin.Serialization;
 
 namespace Marvin.Runtime.Maintenance
 {
@@ -55,6 +57,12 @@ Available plugins:
         public void ExecuteCommand(string[] args, Action<string> outputStream)
         {
             outputStream("Maintenance does not support any console commands!");
+        }
+
+        [EditorVisible]
+        public ModuleConfig Test(ModuleConfig config)
+        {
+            return config;
         }
     }
 }
