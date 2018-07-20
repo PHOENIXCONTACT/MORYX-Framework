@@ -111,7 +111,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                         }
                         <Row className="up-space">
                             <Col md={4}>
-                                <Input type="select" value={this.props.Entry.Value.Current === null ? "" : this.props.Entry.Value.Current}
+                                <Input type="select" value={this.state.SelectedEntry}
                                        disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}
                                        onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelect(e)}>
                                     {this.preRenderOptions()}

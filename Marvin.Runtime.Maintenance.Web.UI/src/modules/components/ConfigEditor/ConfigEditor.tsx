@@ -55,12 +55,11 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
     }
 
     private static isEntryTypeSettable(entry: Entry): boolean {
-        if (entry === null || entry === undefined || entry.Parent === null || entry.Parent === undefined) {
+        if (entry === null || entry === undefined) {
             return false;
         }
 
         return entry.Value.Type === EntryValueType.Class &&
-               entry.Parent.Value.Type !== EntryValueType.Collection &&
                entry.Value.Possible != null &&
                entry.Value.Possible.length > 1;
     }
@@ -72,16 +71,22 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
     private onPatchToSelectedEntryType(): void {
         let prototype: Entry = null;
         let entryType: EntryValueType = EntryValueType.Class;
-        if (this.props.ParentEntry.Parent != null) {
-            entryType = this.props.ParentEntry.Parent.Value.Type;
+        if (this.props.ParentEntry != null) {
+            entryType = this.props.ParentEntry.Value.Type;
         }
 
         switch (entryType) {
             case EntryValueType.Class:
                 prototype = this.props.ParentEntry.Prototypes.find((proto: Entry) => proto.Key.Name === this.state.SelectedEntryType);
+                break;
+            default:
+                return;
         }
 
         const clone = Entry.cloneFromPrototype(prototype, this.props.ParentEntry.Parent);
+        clone.Prototypes = JSON.parse(JSON.stringify(this.props.ParentEntry.Prototypes));
+        clone.Key.Name = this.props.ParentEntry.Key.Name;
+        clone.Key.Identifier = this.props.ParentEntry.Key.Identifier;
 
         let subEntries: Entry[] = this.props.RootEntries;
         if (this.props.ParentEntry.Parent != null) {
@@ -91,7 +96,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         const idx = subEntries.indexOf(this.props.ParentEntry);
         if (idx !== -1) {
             subEntries[idx] = clone;
-            this.setState({SelectedEntryType: this.props.ParentEntry.Value.Current});
+            this.setState({SelectedEntryType: clone.Value.Current});
             this.props.navigateToEntry(this.props.ParentEntry);
         }
     }
