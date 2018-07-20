@@ -59,7 +59,14 @@ namespace Marvin.Workflows
         public WorkplanStepRecipe ExportRecipe(int index)
         {
             // Read mandatory initializers from constructor
-            var constructorParameters = Parameters.Select(WorkplanStepInitializer.FromParameter);
+            var constructorParameters = new Entry
+            {
+                Key = new EntryKey
+                {
+                    Name = "ConstructorParameters"
+                },
+                SubEntries = Parameters.Select(WorkplanStepHelper.FromParameter).ToList()
+            };
 
             // Read optional initializer from property
             var properties = GetProperties(StepType);
@@ -72,8 +79,8 @@ namespace Marvin.Workflows
                 Name = StepType.Name,
                 Classification = StepTypeConverter.ToClassification(StepType),
                 Description = desAtt == null ? string.Empty : desAtt.Description,
-                // Initializers are the combination of constructor parameters and properties
-                Initializers = constructorParameters.Union(properties).ToArray()
+                ConstructorParameters = constructorParameters,
+                Properties = properties
             };
 
             return recipe;
@@ -82,21 +89,32 @@ namespace Marvin.Workflows
         /// <summary>
         /// Get properties of this step type in converted form
         /// </summary>
-        public static IEnumerable<WorkplanStepInitializer> GetProperties(Type stepType, object instance = null)
+        public static Entry GetProperties(Type stepType, object instance = null)
         {
             // Encode step into Entry format
-            var initializers = instance == null
-                ? EntryConvert.EncodeClass<WorkplanStepInitializer>(stepType, WorkplanSerialization.Simple)
-                : EntryConvert.EncodeObject<WorkplanStepInitializer>(instance, WorkplanSerialization.Simple);
+            var initializer = instance == null
+                ? EntryConvert.EncodeClass(stepType, WorkplanSerialization.Simple)
+                : EntryConvert.EncodeObject(instance, WorkplanSerialization.Simple);
+
+            var entry = new Entry
+            {
+                Key = new EntryKey
+                {
+                    Name = stepType.Name
+                },
+                SubEntries = initializer.SubEntries.ToList()
+            };
 
             // Check if any workplans are referenced
             var workplan = stepType.GetProperties().FirstOrDefault(WorkplanSerialization.IsWorkplanReference);
             if (workplan == null)
-                return initializers;
+                return entry;
 
             // Append workplan property to initializers
-            var initializer = WorkplanStepInitializer.FromWorkplanProperty(workplan, instance);
-            return initializers.Union(new[] { initializer });
+            initializer = WorkplanStepHelper.FromWorkplanProperty(workplan, instance);
+            entry.SubEntries = initializer.SubEntries.ToList();
+
+            return entry;
         }
 
         /// <summary>
@@ -109,9 +127,9 @@ namespace Marvin.Workflows
         {
             // Prepare object array of arguments
             var arguments = (from param in Parameters
-                             let initializer = recipe.Initializers.First(i => i.Key.Identifier == param.Name)
-                             select initializer.SubWorkplan
-                                ? workplanSource.Load(int.Parse(initializer.Value.Current))
+                             let initializer = recipe.ConstructorParameters.SubEntries.First(i => i.Key.Identifier == param.Name)
+                             select initializer.Value.Type == EntryValueType.Int64 // ToDo: HowTo detect a workplan correctly?
+                                ? workplanSource.Load(int.Parse(initializer.Value.Current)) ?? ToObject(param.ParameterType, initializer)
                                 : ToObject(param.ParameterType, initializer)).ToArray();
 
             // Create instance
@@ -119,7 +137,7 @@ namespace Marvin.Workflows
 
             // Update
             var serialization = new WorkplanSerialization(workplanSource);
-            EntryConvert.UpdateInstance(instance, recipe.Initializers.Where(i => !i.FromConstructor), serialization);
+            EntryConvert.UpdateInstance(instance, new Entry { SubEntries = recipe.Properties.SubEntries.ToList() }, serialization);
 
             return (IWorkplanStep)instance;
         }

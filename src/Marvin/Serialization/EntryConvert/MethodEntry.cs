@@ -31,7 +31,7 @@ namespace Marvin.Serialization
         /// Arguments of the 
         /// </summary>
         [DataMember]
-        public Entry[] Parameters { get; set; }
+        public Entry ParameterRoot { get; set; }
 
         /// <inheritdoc />
         public object Clone()

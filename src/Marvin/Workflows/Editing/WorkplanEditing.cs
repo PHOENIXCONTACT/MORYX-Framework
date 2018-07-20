@@ -116,7 +116,7 @@ namespace Marvin.Workflows
                 Inputs = new ConnectorModel[step.Inputs.Length],
                 Outputs = new ConnectorModel[step.Outputs.Length],
                 OutputDescriptions = step.OutputDescriptions,
-                Properties = StepCreationContainer.GetProperties(stepType, step).ToArray()
+                Properties = StepCreationContainer.GetProperties(stepType, step)
             };
 
             // Subworkplans are enhanced with a special property
@@ -165,7 +165,7 @@ namespace Marvin.Workflows
         {
             // Find the associated server side object
             var step = _editedWorkplan.Steps.First(s => s.Id == stepModel.Id);
-            EntryConvert.UpdateInstance(step, stepModel.Properties, WorkplanSerialization.Simple);
+            EntryConvert.UpdateInstance(step, new Entry { SubEntries = stepModel.Properties.SubEntries.ToList() }, WorkplanSerialization.Simple);
             return SessionModification.Summary(UserOperation.UpdateStep).Updated(stepModel);
         }
 
@@ -412,7 +412,7 @@ namespace Marvin.Workflows
             else
             {
                 // Remove reference to the connector and the connector itself
-                summary.Deleted(ConnectorModel.FromConnector(steps.Connector));
+                summary.Deleted(ConnectorModel.FromConnector(steps.Connector), source, target);
             }
 
             return summary;

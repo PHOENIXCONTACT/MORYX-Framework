@@ -21,8 +21,8 @@ namespace Marvin.Tests
             var subType = typeof(SubClass);
 
             // Act
-            var encoded = EntryConvert.EncodeClass(type).ToArray();
-            var encodedSub = EntryConvert.EncodeClass(subType).ToArray();
+            var encoded = EntryConvert.EncodeClass(type).SubEntries;
+            var encodedSub = EntryConvert.EncodeClass(subType).SubEntries;
 
             DummyAssert(encoded, encodedSub);
         }
@@ -32,10 +32,10 @@ namespace Marvin.Tests
         {
             //Arrange
             var type = typeof(ArrayDummy);
-            var encoded = EntryConvert.EncodeClass(type).ToArray();
+            var encoded = EntryConvert.EncodeClass(type);
 
-            var entry1 = encoded[0];
-            var entry2 = encoded[1];
+            var entry1 = encoded.SubEntries[0];
+            var entry2 = encoded.SubEntries[1];
 
             for (int i = 1; i <= 5; i++)
             {
@@ -47,7 +47,7 @@ namespace Marvin.Tests
             for (int i = 1; i <= 5; i++)
             {
                 var newInstance = entry2.Prototypes[0].Instantiate();
-                newInstance.Value.Current = ("Number: " + i);
+                newInstance.Value.Current = "Number: " + i;
                 entry2.SubEntries.Add(newInstance);
             }
 
@@ -67,10 +67,10 @@ namespace Marvin.Tests
         {
             //Arrange
             var type = typeof(DictionaryClass);
-            var encoded = EntryConvert.EncodeClass(type).ToArray();
+            var encoded = EntryConvert.EncodeClass(type);
 
-            var entry1 = encoded[1];
-            var entry2 = encoded[2];
+            var entry1 = encoded.SubEntries[1];
+            var entry2 = encoded.SubEntries[2];
 
             for (int i = 1; i <= 5; i++)
             {
@@ -121,10 +121,10 @@ namespace Marvin.Tests
             };
 
             //Arrange
-            var encoded = EntryConvert.EncodeObject(dummy).ToArray();
+            var encoded = EntryConvert.EncodeObject(dummy);
 
-            var entry1 = encoded[1];
-            var entry2 = encoded[2];
+            var entry1 = encoded.SubEntries[1];
+            var entry2 = encoded.SubEntries[2];
 
 
             for (int i = 1; i <= 2; i++)
@@ -151,17 +151,14 @@ namespace Marvin.Tests
 
 
             //Act
-            EntryConvert.UpdateInstance(dummy,encoded);
+            EntryConvert.UpdateInstance(dummy, encoded);
 
             //Assert
             Assert.AreEqual(5, dummy.EnumDictionary.Count);
             Assert.AreEqual(4, dummy.SubDictionary.Count);
             Assert.AreEqual(123, dummy.SubDictionary["022"]);
             Assert.AreEqual(DummyEnum.ValueA, dummy.EnumDictionary["555"]);
-
-
         }
-
 
         [Test]
         public void UpdateArray()
@@ -175,13 +172,13 @@ namespace Marvin.Tests
             };
 
             // Act
-            var encoded = EntryConvert.EncodeObject(dummy).ToArray();
-            var entry1 = encoded[0];
-            var entry2 = encoded[1];
-            var entry3 = encoded[2];
+            var encoded = EntryConvert.EncodeObject(dummy);
+            var entry1 = encoded.SubEntries[0];
+            var entry2 = encoded.SubEntries[1];
+            var entry3 = encoded.SubEntries[2];
 
             entry1.SubEntries[1].Value.Current = "42";
-            var instance1 = encoded[0].Prototypes[0].Instantiate();
+            var instance1 = encoded.SubEntries[0].Prototypes[0].Instantiate();
             instance1.Value.Current = "1337";
             entry1.SubEntries.Add(instance1);
 
@@ -219,8 +216,8 @@ namespace Marvin.Tests
         {
             //Arrange
             var type = typeof(ListDummy);
-            var encoded = EntryConvert.EncodeClass(type).ToArray();
-            var ent = encoded[1];
+            var encoded = EntryConvert.EncodeClass(type);
+            var ent = encoded.SubEntries[1];
 
             for (int i = 1; i <= 5; i++)
             {
@@ -251,12 +248,12 @@ namespace Marvin.Tests
                 EnumList = new List<DummyEnum>() { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB}
             };
 
-            var encoded = EntryConvert.EncodeObject(dummy).ToArray();
-            var ent = encoded[1];
-            var ent2 = encoded[2];
+            var encoded = EntryConvert.EncodeObject(dummy);
+            var ent = encoded.SubEntries[1];
+            var ent2 = encoded.SubEntries[2];
 
             //Act
-            encoded[0].Value.Current = "5";
+            encoded.SubEntries[0].Value.Current = "5";
             ent.SubEntries[1].Value.Current = 12.34d.ToString();
             var newInstance = ent.Prototypes[0].Instantiate();
             newInstance.Value.Current = 133.7d.ToString();
@@ -305,7 +302,7 @@ namespace Marvin.Tests
             dummy.SubDictionary.Add(2, new SubClass() { Enum = DummyEnum.ValueB, Foo = (float)3.5 });
 
             // Act
-            var encoded = EntryConvert.EncodeObject(dummy).ToArray();
+            var encoded = EntryConvert.EncodeObject(dummy).SubEntries;
             var encodedSub = encoded[4].SubEntries[0].SubEntries;
 
             // Assert
@@ -330,10 +327,10 @@ namespace Marvin.Tests
         {
             // Arrange
             var obj = Prebuild(type, prefill);
-            var encoded = EntryConvert.EncodeObject(obj).ToArray();
+            var encoded = EntryConvert.EncodeObject(obj);
 
             // Act
-            var colEntry = CollectionEntry(encoded, type);
+            var colEntry = CollectionEntry(encoded.SubEntries, type);
 
             if (type == CollectionType.Dictionary)
             {
@@ -345,6 +342,7 @@ namespace Marvin.Tests
                     // change "Value" 
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2");
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
+                    newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
 
                     colEntry.SubEntries.Add(newInstance);
                 }
@@ -356,6 +354,7 @@ namespace Marvin.Tests
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString();
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
+                    newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
                     colEntry.SubEntries.Add(newInstance);
                 }
             }
@@ -398,10 +397,10 @@ namespace Marvin.Tests
         {
             // Arrange
             var obj = Prebuild(type, 3);
-            var encoded = EntryConvert.EncodeObject(obj).ToArray();
+            var encoded = EntryConvert.EncodeObject(obj);
 
             // Act
-            var colEntry = CollectionEntry(encoded, type);
+            var colEntry = CollectionEntry(encoded.SubEntries, type);
 
             if (type == CollectionType.Dictionary)
             {
@@ -409,6 +408,7 @@ namespace Marvin.Tests
                 {
                     //change "Key" + 10
                     entry.Key.Name = "1" + entry.SubEntries[0].Value.Current;
+                    //entry.Key.Identifier = EntryKey.CreatedIdentifier;
                     // change "Value" 
                     entry.SubEntries[0].Value.Current = "1" + entry.SubEntries[0].Value.Current;
                     entry.SubEntries[1].Value.Current = entry.SubEntries[1].Value.Possible[2];
@@ -461,10 +461,10 @@ namespace Marvin.Tests
         {
             // Arrange
             var obj = Prebuild(type, prefill);
-            var encoded = EntryConvert.EncodeObject(obj).ToArray();
+            var encoded = EntryConvert.EncodeObject(obj);
 
             // Act
-            var colEntry = CollectionEntry(encoded, type);
+            var colEntry = CollectionEntry(encoded.SubEntries, type);
             if(type == CollectionType.Dictionary)
                 colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Key.Identifier) - 1));
             else
@@ -507,20 +507,21 @@ namespace Marvin.Tests
         public void CreateInstance()
         {
             // Arrange
-            var encoded = EntryConvert.EncodeClass(typeof(DummyClass)).ToList();
+            var encoded = EntryConvert.EncodeClass(typeof(DummyClass));
 
             // Act
-            encoded[0].Value.Current = "10";
-            encoded[1].Value.Current = "Thomas";
-            encoded[3].SubEntries[1].Value.Current = encoded[3].SubEntries[1].Value.Possible[2];
+            encoded.SubEntries[0].Value.Current = "10";
+            encoded.SubEntries[1].Value.Current = "Thomas";
+            encoded.SubEntries[3].SubEntries[1].Value.Current = encoded.SubEntries[3].SubEntries[1].Value.Possible[2];
             for (int i = 4; i < 7; i++)
             {
-                var colEntry = encoded[i];
+                var colEntry = encoded.SubEntries[i];
                 for (int j = 0; j < i; j++)
                 {
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = j.ToString("F2");
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[1];
+                    newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
                     colEntry.SubEntries.Add(newInstance);
                 }
 

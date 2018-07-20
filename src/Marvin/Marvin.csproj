@@ -295,7 +295,7 @@
     <Compile Include="Workflows\API\Editing\UserOperation.cs" />
     <Compile Include="Workflows\API\Editing\WorkplanEditingSession.cs" />
     <Compile Include="Workflows\API\Editing\WorkplanStepModel.cs" />
-    <Compile Include="Workflows\API\Editing\WorkplanStepInitializer.cs" />
+    <Compile Include="Workflows\API\Editing\WorkplanStepHelper.cs" />
     <Compile Include="Workflows\API\Editing\WorkplanStepRecipe.cs" />
     <Compile Include="Workflows\API\IAttemptInvokation.cs" />
     <Compile Include="Workflows\API\IIndexResolver.cs" />

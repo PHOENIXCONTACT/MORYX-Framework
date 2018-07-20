@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Marvin.Serialization;
 
 namespace Marvin.Workflows
 {
@@ -43,6 +44,12 @@ namespace Marvin.Workflows
         /// All initializers required to create an instance of this step
         /// </summary>
         [DataMember]
-        public WorkplanStepInitializer[] Initializers { get; set; }
+        public Entry ConstructorParameters { get; set; }
+
+        /// <summary>
+        /// Properties of this step recipe
+        /// </summary>
+        [DataMember]
+        public Entry Properties { get; set; }
     }
 }

@@ -151,7 +151,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
                 var config = GetConfig(module, false);
                 var configModel = new Config
                 {
-                    Entries = EntryConvert.EncodeObject(config, serialization).ToList()
+                    Root = EntryConvert.EncodeObject(config, serialization)
                 };
                 return configModel;
             }
@@ -170,7 +170,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
                 var module = GetModuleFromManager(moduleName);
                 var serialization = CreateSerialization(module);
                 var config = GetConfig(module, true);
-                EntryConvert.UpdateInstance(config, request.Config.Entries, serialization);
+                EntryConvert.UpdateInstance(config, request.Config.Root, serialization);
                 ConfigManager.SaveConfiguration(config, request.UpdateMode == ConfigUpdateMode.UpdateLiveAndSave);
 
                 if (request.UpdateMode == ConfigUpdateMode.SaveAndReincarnate)

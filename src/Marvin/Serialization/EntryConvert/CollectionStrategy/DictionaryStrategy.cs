@@ -25,40 +25,13 @@ namespace Marvin.Serialization
             foreach (var key in _dictionary.Keys)
             {
                 var value = _dictionary[key];
-
                 var keyString = key.ToString();
-                var entry = new Entry
-                {
-                    Key = new EntryKey
-                    {
-                        Name = keyString,
-                        Identifier = keyString
-                    }
-                };
 
-                var type = value.GetType();
-                if (type.IsValueType)
-                {
-                    entry.Value = new EntryValue
-                    {
-                        Type = EntryConvert.TransformType(type),
-                        Current = value.ToString()
-                    };
-                }
-                else
-                {
-                    entry.Value = new EntryValue
-                    {
-                        Type = EntryValueType.Class,
-                        Current = value.GetType().Name
-                    };
-                }
+                var subEntry = EntryConvert.EncodeObject(value, _serialization);
+                subEntry.Key.Name = keyString;
+                subEntry.Key.Identifier = keyString;
 
-                // Recursive call for the children
-                if (entry.Value.Type == EntryValueType.Class)
-                    entry.SubEntries.AddRange(EntryConvert.EncodeObject(value, _serialization));
-
-                entries.Add(entry);
+                entries.Add(subEntry);
             }
             return entries;
         }
