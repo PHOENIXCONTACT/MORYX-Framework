@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Marvin.AbstractionLayer
@@ -26,38 +27,25 @@ namespace Marvin.AbstractionLayer
 
         ///
         // ReSharper disable once InconsistentNaming <-- too cool to rename :P
-        public Sparta Transform<Sparta>() where Sparta 
+        public Sparta Transform<Sparta>() where Sparta
             : class, IActivityTracing, new()
         {
             if (this is Sparta)
                 return this as Sparta;
 
-            // Create new instance with default properties
-            var instance = new Sparta
+            var replacement = new Sparta();
+            var replacementType = typeof(Sparta);
+            var sharedProperties = GetType().GetProperties()
+                .Where(p => p.DeclaringType.IsAssignableFrom(replacementType));
+
+            foreach (var property in sharedProperties)
             {
-                Started = Started,
-                Completed = Completed,
-                Text = Text
-            };
-
-            // Fill with additional properties
-            Fill(instance);
-
-            // Return transformed instance
-            return instance;
-        }
-
-        /// <summary>
-        /// Fill the transformed instance
-        /// </summary>
-        protected virtual void Fill<T>(T instance)
-            where T : IActivityTracing
-        {
-            var tracing = instance as Tracing;
-            if (tracing != null)
-            {
-                tracing.Progress = Progress;
+                var value = property.GetValue(this);
+                if (property.CanWrite)
+                    property.SetValue(replacement, value);
             }
+
+            return replacement;
         }
     }
 }

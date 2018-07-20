@@ -90,12 +90,13 @@ namespace Marvin.AbstractionLayer.Tests
         [Test]
         public void TestTransformWpcToNullAndBack()
         {
-            var tracing = CreateTracing<FooTracing>();
+            var tracing = CreateTracing<FooTracing>().Trace(t => t.Text = "Hello Word");
             var defaultTracing = tracing.Transform<DefaultTracing>();
             var newWpcTracing = defaultTracing.Transform<FooTracing>();
 
             Assert.AreEqual(tracing.Started, newWpcTracing.Started);
             Assert.AreEqual(tracing.Completed, newWpcTracing.Completed);
+            Assert.AreEqual(tracing.Text, newWpcTracing.Text);
             Assert.AreEqual(null, newWpcTracing.FooName);
             Assert.AreEqual(0, newWpcTracing.FooNumber);
         }
@@ -148,18 +149,6 @@ namespace Marvin.AbstractionLayer.Tests
             public void Processing()
             {
                 Progress = FooProgress.Running;
-            }
-
-            protected override void Fill<T>(T instance)
-            {
-                base.Fill(instance);
-
-                var wpc = instance as FooTracing;
-                if (wpc != null)
-                {
-                    wpc.FooName = FooName;
-                    wpc.FooNumber = FooNumber;
-                }
             }
         }
     }
