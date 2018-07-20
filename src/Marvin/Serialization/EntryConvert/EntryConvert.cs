@@ -101,8 +101,11 @@ namespace Marvin.Serialization
             };
 
             // Include prototypes for collections and classes
-            var prototypes = Prototypes(property, entry, customSerialization);
-            entry.Prototypes.AddRange(prototypes);
+            if (entry.Value.Type == EntryValueType.Collection || entry.Value.Type == EntryValueType.Class)
+            {
+                var prototypes = Prototypes(property.PropertyType, property, customSerialization);
+                entry.Prototypes.AddRange(prototypes);
+            }
 
             return entry;
         }
@@ -150,14 +153,11 @@ namespace Marvin.Serialization
         /// <summary>
         /// Create prototypes for possible values of an entry
         /// </summary>
-        private static IEnumerable<Entry> Prototypes(PropertyInfo property, Entry parent, ICustomSerialization customSerialization)
+        private static IEnumerable<Entry> Prototypes(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization)
         {
-            if (parent.Value.Type != EntryValueType.Collection && parent.Value.Type != EntryValueType.Class)
-                yield break;
+            var possibleElementValues = customSerialization.PossibleValues(memberType, customAttributeProvider);
 
-            var possibleElementValues = customSerialization.PossibleValues(property.PropertyType, property);
-
-            foreach (var prototype in customSerialization.Prototypes(property.PropertyType, property))
+            foreach (var prototype in customSerialization.Prototypes(memberType, customAttributeProvider))
             {
                 var prototypeEntry = Prototype(prototype, customSerialization);
                 prototypeEntry.Value.Possible = possibleElementValues;
@@ -398,13 +398,13 @@ namespace Marvin.Serialization
             {
                 case EntryValueType.Class:
                     parameterModel.Value.Current = parameterType.Name;
+                    parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
                     parameterModel.SubEntries = EncodeClass(parameterType, serialization).ToList();
                     break;
                 case EntryValueType.Collection:
                     var elemType = ElementType(parameterType);
                     parameterModel.Value.Current = elemType.Name;
-                    var protoType = Prototype(new EntryPrototype(elemType.Name, Activator.CreateInstance(elemType)), serialization);
-                    parameterModel.Prototypes.Add(protoType);
+                    parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
                     break;
             }
 
