@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Marvin.Serialization;
+using Marvin.Tools;
 
 namespace Marvin.Workflows
 {
@@ -63,7 +61,6 @@ namespace Marvin.Workflows
         /// </summary>
         internal static WorkplanStepInitializer FromWorkplanProperty(PropertyInfo workplanReference, object instance = null)
         {
-            var description = workplanReference.GetCustomAttribute<DescriptionAttribute>();
             return new WorkplanStepInitializer
             {
                 SubWorkplan = true,
@@ -77,7 +74,7 @@ namespace Marvin.Workflows
                     Current = instance == null ? "0" : ((IWorkplan)workplanReference.GetValue(instance)).Id.ToString("D"),
                     Type = EntryValueType.Int64
                 },
-                Description = description?.Description
+                Description = workplanReference.GetDescription()
             };
         }
 

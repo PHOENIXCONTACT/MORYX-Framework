@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
+using Marvin.Tools;
 
 namespace Marvin.Serialization
 {
@@ -22,12 +21,12 @@ namespace Marvin.Serialization
                 return itemType.Name;
 
             // Check for display name declaration
-            var displayName = itemType.GetCustomAttribute<DisplayNameAttribute>();
-            if (displayName != null)
-                return displayName.DisplayName;
+            var displayName = itemType.GetDisplayName();
+            if (!string.IsNullOrWhiteSpace(displayName))
+                return displayName;
 
             // Check if item declares its own version of ToString()
-            return itemType.GetMethod("ToString").DeclaringType == typeof(object) ? itemType.Name : item.ToString();
+            return itemType.GetMethod(nameof(ToString)).DeclaringType == typeof(object) ? itemType.Name : item.ToString();
         }
 
         /// <summary>

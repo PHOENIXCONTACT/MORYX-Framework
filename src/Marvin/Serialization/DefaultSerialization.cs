@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Marvin.Configuration;
+using Marvin.Tools;
 
 namespace Marvin.Serialization
 {
@@ -71,11 +72,11 @@ namespace Marvin.Serialization
             var validation = new EntryValidation();
 
             //Determine if property is a password
-            var passwordAttr = GetCustomAttribute<PasswordAttribute>(attributeProvider);
+            var passwordAttr = attributeProvider.GetCustomAttribute<PasswordAttribute>();
             if (passwordAttr != null)
                 validation.IsPassword = true;
 
-            var validationAttributes = GetCustomAttributes<ValidationAttribute>(attributeProvider);
+            var validationAttributes = attributeProvider.GetCustomAttributes<ValidationAttribute>();
             if (validationAttributes.Length == 0)
                 return validation;
 
@@ -169,24 +170,6 @@ namespace Marvin.Serialization
         public virtual object CreateInstance(Type elementType, Entry entry)
         {
             return Activator.CreateInstance(elementType);
-        }
-
-        /// <summary>
-        /// Replacement for the extension method to retrieve attributes
-        /// </summary>
-        protected TAttribute GetCustomAttribute<TAttribute>(ICustomAttributeProvider attributeProvider, bool inherit = true)
-            where TAttribute : Attribute
-        {
-            return (TAttribute)attributeProvider.GetCustomAttributes(typeof(TAttribute), inherit).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Replacement for the extension method to retrieve attributes
-        /// </summary>
-        protected TAttribute[] GetCustomAttributes<TAttribute>(ICustomAttributeProvider attributeProvider, bool inherit = true)
-            where TAttribute : Attribute
-        {
-            return (TAttribute[])attributeProvider.GetCustomAttributes(typeof(TAttribute), inherit);
         }
 
         /// <summary>

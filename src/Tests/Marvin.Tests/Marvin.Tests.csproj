@@ -79,6 +79,7 @@
     <Compile Include="Extensions\AppDomain\GranChildClass2.cs" />
     <Compile Include="Extensions\AppDomain\IBaseInterface.cs" />
     <Compile Include="Extensions\AppDomain\ITestInterface.cs" />
+    <Compile Include="Extensions\CustomAttributeProviderExtensionTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionTests.cs" />
     <Compile Include="Logging\LoggerManagementTests.cs" />

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Marvin.Tools;
 
 namespace Marvin.Serialization
 {
@@ -86,16 +87,15 @@ namespace Marvin.Serialization
             where T : Entry, new()
         {
             // Fill with default if entry is null
-            var descriptionAtt = property.GetCustomAttribute<DescriptionAttribute>();
-            var displayNameAtt = property.GetCustomAttribute<DisplayNameAttribute>();
+
             var entry = new T
             {
                 Key = new EntryKey
                 {
                     Identifier = property.Name,
-                    Name = displayNameAtt == null ? property.Name : displayNameAtt.DisplayName
+                    Name = property.GetDisplayName() ?? property.Name
                 },
-                Description = descriptionAtt?.Description,
+                Description = property.GetDescription(),
                 Value = CreateEntryValue(property, customSerialization),
                 Validation = customSerialization.CreateValidation(property.PropertyType, property)
             };
@@ -363,8 +363,8 @@ namespace Marvin.Serialization
             return new MethodEntry
             {
                 Name = method.Name,
-                DisplayName = method.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? method.Name,
-                Description = method.GetCustomAttribute<DescriptionAttribute>()?.Description,
+                DisplayName = method.GetDisplayName() ?? method.Name,
+                Description = method.GetDescription(),
                 Parameters = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToArray()
             };
         }
@@ -381,10 +381,10 @@ namespace Marvin.Serialization
             {
                 Key = new EntryKey
                 {
-                    Name = parameter.Name,
+                    Name = parameter.GetDisplayName() ?? parameter.Name,
                     Identifier = parameter.Name
                 },
-                Description = parameter.GetCustomAttribute<DescriptionAttribute>()?.Description,
+                Description = parameter.GetDescription(),
                 Value = new EntryValue
                 {
                     Type = TransformType(parameter.ParameterType),
