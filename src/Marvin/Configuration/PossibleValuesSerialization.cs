@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Marvin.Container;
 using Marvin.Serialization;
+using Marvin.Tools;
 
 namespace Marvin.Configuration
 {
@@ -35,7 +36,7 @@ namespace Marvin.Configuration
         public override EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Create prototypes from possible values
-            var possibleValuesAtt = GetCustomAttribute<PossibleValuesAttribute>(attributeProvider);
+            var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (possibleValuesAtt == null)
             {
                 return base.Prototypes(memberType, attributeProvider);
@@ -54,7 +55,7 @@ namespace Marvin.Configuration
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            var valuesAttribute = GetCustomAttribute<PossibleValuesAttribute>(attributeProvider);
+            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
             {
                 return base.PossibleValues(memberType, attributeProvider);
@@ -69,7 +70,7 @@ namespace Marvin.Configuration
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            var valuesAttribute = GetCustomAttribute<PossibleValuesAttribute>(attributeProvider);
+            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
             {
                 return base.PossibleElementValues(memberType, attributeProvider);
@@ -83,7 +84,7 @@ namespace Marvin.Configuration
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
         public override object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
         {
-            var possibleValuesAtt = GetCustomAttribute<PossibleValuesAttribute>(attributeProvider);
+            var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             var instance = possibleValuesAtt != null
                 ? possibleValuesAtt.Parse(Container, encoded.Value.Current)
                 : base.CreateInstance(memberType, attributeProvider, encoded);
@@ -98,7 +99,7 @@ namespace Marvin.Configuration
         {
             var value = mappedEntry.Value;
 
-            var att = GetCustomAttribute<PossibleValuesAttribute>(attributeProvider);
+            var att = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
                 return base.ConvertValue(memberType, attributeProvider, mappedEntry, currentValue);
 

@@ -40,6 +40,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Attributes\ClassDisplayAttribute.cs" />
     <Compile Include="Attributes\ForceAssemblyReferenceAttribute.cs" />
     <Compile Include="BaseTypes\MarvinException.cs" />
     <Compile Include="Bindings\BindingResolverBase.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="Tools\CrashHandler.cs" />
     <Compile Include="Tools\ExceptionPrinter.cs" />
     <Compile Include="Tools\Extensions\CollectionExtensions.cs" />
+    <Compile Include="Tools\Extensions\CustomAttributeProviderExtensions.cs" />
     <Compile Include="Tools\Extensions\DateTimeExtensions.cs" />
     <Compile Include="Tools\Extensions\DictionaryExtensions.cs" />
     <Compile Include="Tools\Extensions\Din60062Date.cs" />
