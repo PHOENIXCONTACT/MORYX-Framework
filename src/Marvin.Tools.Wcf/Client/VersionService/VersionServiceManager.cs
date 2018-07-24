@@ -32,10 +32,12 @@ namespace Marvin.Tools.Wcf
             //Set proxy
             SetProxyOnBinding(proxyConfig, binding);
 
-            var url = string.Format(@"http://{0}:{1}/{2}", host, port, ServiceName);
+            var url = $@"http://{host}:{port}/{ServiceName}";
             var endpoint = new EndpointAddress(url);
 
             var channelFactory = new ChannelFactory<IVersionService>(binding);
+            channelFactory.Endpoint.Behaviors.Add(new CultureBehavior());
+
             _versionService = channelFactory.CreateChannel(endpoint);
 
             IsInitialized = true;

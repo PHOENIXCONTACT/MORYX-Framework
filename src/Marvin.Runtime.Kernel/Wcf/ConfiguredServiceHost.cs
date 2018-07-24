@@ -16,8 +16,7 @@ namespace Marvin.Runtime.Kernel
         private readonly EndpointCollector _collector;
         private readonly WcfConfig _wcfConfig;
         private readonly IModuleLogger _logger;
-
-
+        
         private ServiceHost _service;
         private readonly ITypedHostFactory _factory;
 
@@ -124,6 +123,10 @@ namespace Marvin.Runtime.Kernel
             _endpointAddress = $"{protocol}://{_wcfConfig.Host}:{port}/{config.Endpoint}";
 
             var endpoint = _service.AddServiceEndpoint(typeof(T), binding, _endpointAddress);
+
+            // Add  behaviors
+            endpoint.Behaviors.Add(new CultureBehavior());
+            
             if (config.BindingType == ServiceBindingType.WebHttp)
             {
                 endpoint.Behaviors.Add(new WebHttpBehavior());

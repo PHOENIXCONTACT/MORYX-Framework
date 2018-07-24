@@ -274,16 +274,13 @@ namespace Marvin.Tools.Wcf
             };
 
             //Set delegate to get the inner channel of the wcf client
-            request.GetInnerChannel = delegate(ICommunicationObject client)
-            {
-                return ((T)client).InnerChannel;
-            };
+            request.GetInnerChannel = client => ((T) client).InnerChannel;
 
             //Set delegate to get the ClientCredentials of the wcf client
-            request.GetClientCredentials = delegate(ICommunicationObject client)
-            {
-                return ((T)client).ClientCredentials;
-            };
+            request.GetClientCredentials = client => ((T) client).ClientCredentials;
+
+            //Set delegate to add additional endpoint behaviors
+            request.AddEndpointBehavior = (client, behavior) => ((T) client).Endpoint.Behaviors.Add(behavior);
 
             if (string.IsNullOrEmpty(config.MinServerVersion))
             {
@@ -693,6 +690,10 @@ namespace Marvin.Tools.Wcf
 
             var clientObj = Activator.CreateInstance(monitoredClient.ClientType, clientParams.ToArray()) as ICommunicationObject;
 
+            // Add behaviors
+            monitoredClient.AddEndpointBehavior(clientObj, new CultureBehavior());
+
+            // Set credentials
             if (monitoredClientConfig != null)
             {
                 var credentials = monitoredClient.GetClientCredentials(clientObj);

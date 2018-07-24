@@ -7,6 +7,7 @@ namespace Marvin.Tools.Wcf
 {
     internal delegate ClientCredentials GetClientCredentials(ICommunicationObject client);
     internal delegate IClientChannel GetInnerChannel(ICommunicationObject client);
+    internal delegate void AddEndpointBehavior(ICommunicationObject client, IEndpointBehavior behavior);
 
     internal class MonitoredClient
     {
@@ -25,6 +26,8 @@ namespace Marvin.Tools.Wcf
         public GetClientCredentials GetClientCredentials { get; set; }
 
         public GetInnerChannel GetInnerChannel { get; set; }
+
+        public AddEndpointBehavior AddEndpointBehavior { get; set; }
 
         public object CallbackService { get; set; }
 
