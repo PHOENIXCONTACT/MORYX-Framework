@@ -144,6 +144,9 @@ namespace Marvin.Resources.Management
 
         public Resource Create(string type)
         {
+            if(!_typeCache.ContainsKey(type))
+                throw new KeyNotFoundException($"No resource of type {type} found!");
+
             var linker = _typeCache[type];
 
             if (!linker.Creatable)
