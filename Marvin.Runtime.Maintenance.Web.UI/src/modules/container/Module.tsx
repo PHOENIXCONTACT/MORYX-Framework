@@ -22,7 +22,7 @@ interface ModulePropModel {
 }
 
 interface ModuleStateModel {
-    HasWarnings: boolean;
+    HasWarningsOrErrors: boolean;
     IsNotificationDialogOpened: boolean;
     SelectedNotification: NotificationModel;
 }
@@ -43,12 +43,14 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
     constructor(props: ModulePropModel & ModuleDispatchPropModel) {
         super(props);
 
-        this.state = { HasWarnings: false, IsNotificationDialogOpened: false, SelectedNotification: null };
+        this.state = { HasWarningsOrErrors: false, IsNotificationDialogOpened: false, SelectedNotification: null };
     }
 
     public componentWillReceiveProps(nextProps: ModulePropModel): void {
-        const warnings = nextProps.Module.Notifications.filter(function(element: NotificationModel, index: number, array: NotificationModel[]): boolean { return element.NotificationType === ModuleNotificationType.Warning; });
-        this.setState({ HasWarnings: warnings.length !== 0 });
+        const warningsOrErrors = nextProps.Module.Notifications.filter(function(element: NotificationModel, index: number, array: NotificationModel[]): boolean {
+             return element.NotificationType === ModuleNotificationType.Warning || element.NotificationType === ModuleNotificationType.Failure;
+        });
+        this.setState({ HasWarningsOrErrors: warningsOrErrors.length !== 0 });
     }
 
     public startModule(): void {
@@ -127,10 +129,10 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                             </Col>
                             <Col md={6}>
                                 <h3>Error Handling</h3>
-                                {this.state.HasWarnings ? (
-                                    <Button color="warning" onClick={this.confirmModuleWarning.bind(this)}><FontAwesomeIcon icon={faCheck} className="right-space" />Confirm warnings</Button>
+                                {this.state.HasWarningsOrErrors ? (
+                                    <Button color="warning" onClick={this.confirmModuleWarning.bind(this)}><FontAwesomeIcon icon={faCheck} className="right-space" />Confirm</Button>
                                 ) : (
-                                    <span className="font-italic font-small">No warnings.</span>
+                                    <span className="font-italic font-small">No warnings or errors.</span>
                                 )}
                             </Col>
                         </Row>
