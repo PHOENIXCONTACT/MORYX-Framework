@@ -6,14 +6,12 @@
     [switch]$UnitTests,
     [switch]$IntegrationTests,
     [switch]$SystemTests,
-    
+
     [switch]$CoverReport,
     [switch]$GenerateDocs,
 
     [switch]$Pack,
-    [switch]$Publish,
-
-    [switch]$PublishSymbols
+    [switch]$Publish
 )
 
 # Extend version number
@@ -26,7 +24,7 @@ $env:MARVIN_BUILDNUMBER = [int]::Parse($env:MARVIN_BUILDNUMBER) + 364;
 Invoke-Initialize -Version (Get-Content "VERSION");
 
 if ($SetAssemblyVersion) {
-    Set-AssemblyVersions @("\\Templates\\");
+    Set-AssemblyVersions;
 }
 
 if ($Build) {
@@ -59,26 +57,12 @@ if ($GenerateDocs) {
 }
 
 if ($Pack) {
-    Invoke-PackAll
+    Invoke-SourceIndex -RawUrl $($env:CI_PROJECT_URL + "/raw")
+    Invoke-PackAll -Symbols
 }
 
 if ($Publish) {
     Invoke-Publish
-}
-
-if ($PublishSymbols) {
-    # This is temporary until the real symbol storage and nuget packages are active
-    $storage = "$RootPath\Artefacts\Symbols";
-    if (-not (Test-Path $storage)) {
-        try {
-            New-Item $storage -ItemType Directory
-        }
-        catch {
-            Write-Host "Storage $storage cannot be created.";
-            exit 1;
-        }
-    }
-    Publish-PDBs -Project "MarvinPlatform3" -Storage $storage;
 }
 
 Write-Host "Success!"

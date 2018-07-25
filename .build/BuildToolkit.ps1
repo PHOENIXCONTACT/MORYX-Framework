@@ -6,6 +6,7 @@ $DocFxVersion = "2.36.2";
 $OpenCoverToCoberturaVersion = "0.3.3";
 $ReportGeneratorVersion = "3.1.2";
 $VswhereVersion = "2.5.2";
+$GitLinkVersion = "3.1.0";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
@@ -36,6 +37,7 @@ $NugetPackageTarget = "http://nts-eu-jenk02.europe.phoenixcontact.com:5588/nuget
 
 # Define Tools
 $global:GitCli = "";
+$global:GitLink = "$BuildTools\GitLink.$GitLinkVersion\build\GitLink.exe";
 $global:NugetCli = "$BuildTools\nuget.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
@@ -63,7 +65,7 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         Write-Host "Unable to find git.exe in your PATH. Download from https://git-scm.com";
         Invoke-ExitCodeCheck 1;
     }
-    
+
     $global:GitCli = $gitCommand.Path;
 
     # Load Hash
@@ -73,7 +75,7 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     # Initialize Folders
     CreateFolderIfNotExists $BuildTools;
     CreateFolderIfNotExists $ArtifactsDir;
-    
+
     # Assign nuget.exe
     if (-not (Test-Path $global:NugetCli)) {
         Write-Host "Downloading NuGet.exe ..."
@@ -99,8 +101,8 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     else {
         $global:MSBuildCli = join-path -path (Get-ItemProperty "HKLM:\software\Microsoft\MSBuild\ToolsVersions\$MsBuildVersion")."MSBuildToolsPath" -childpath "msbuild.exe"
     }
-    
-    if ($global:MSBuildCli -eq $null -or -not (Test-Path $global:MSBuildCli)) {
+
+    if ($null -eq $global:MSBuildCli  -or -not (Test-Path $global:MSBuildCli)) {
         Write-Host "Unable to find msbuild.exe.";
         Invoke-ExitCodeCheck 1;
     }
@@ -141,15 +143,16 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
     Write-Variable "VswhereCli" $global:VswhereCli;
     Write-Variable "GitCli" $global:GitCli;
+    Write-Variable "GitLink" $global:GitLink;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
     Write-Variable "MARVIN_BRANCH" $env:MARVIN_BRANCH;
     Write-Variable "MARVIN_VERSION" $env:MARVIN_VERSION;
     Write-Variable "MARVIN_ASSEMBLY_VERSION" $env:MARVIN_ASSEMBLY_VERSION
-    
+
     # Cleanp
     if ($Cleanup) {
         Write-Step "Cleanup"
-        
+
         Write-Host "Cleaning up repository ..." -ForegroundColor Red;
         & $global:GitCli clean -f -d -x
         Invoke-ExitCodeCheck $LastExitCode;
@@ -185,7 +188,7 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
         & $global:NugetCli restore $solution -Verbosity detailed -configfile $NugetConfig;
         Invoke-ExitCodeCheck $LastExitCode;
     }
-    
+
     $additonalOptions = "";
     if (-not [string]::IsNullOrEmpty($Options)) {
         $additonalOptions = ",$Options";
@@ -362,7 +365,49 @@ function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "
     CopyAndReplaceFolder $docFxDest "$DocumentationArtifcacts\DocFx";
 }
 
-function Invoke-Pack($FilePath, [bool]$IsTool = $False) {
+function Invoke-SourceIndex([string]$RawUrl, [string]$SearchPath = [System.IO.Path]::Combine($PSScriptRoot, "..\")) {
+    Write-Step "Indexing SourceCode and patching PDBs to $RawUrl"
+
+    if (-not (Test-Path $global:GitLink)) {
+        Install-Tool "GitLink" $GitLinkVersion $global:GitLink;
+    }
+
+    $sourceLink = "$RawUrl/{revision}/{filename}";
+
+    Write-Host "SearchPath for Projects: $SearchPath";
+    $csprojs = Get-Childitem $SearchPath -recurse | Where-Object {$_.extension -eq ".csproj"}
+
+    foreach ($csporj in $csprojs) {
+        Write-Host;
+        Write-Host "Reading csproj: $($csporj.Name)"; 
+
+        $csprojXml = [xml](Get-Content $csporj.FullName);
+
+        $outputGroup = $csprojXml.Project.PropertyGroup | Where-Object Condition -Like "*$env:MARVIN_BUILD_CONFIG|AnyCPU*";
+        $outputPath = $outputGroup.OutputPath;
+
+        $assemblyGroup = $csprojXml.Project.PropertyGroup | Where-Object {-not ([string]::IsNullOrEmpty($_.AssemblyName)) }
+        $assemblyName = $assemblyGroup.AssemblyName;
+
+        $pdbFileName = $($assemblyName + ".pdb");
+        $projectPdbPath = [System.IO.Path]::Combine($outputPath, $pdbFileName);
+        $pdbPath = [System.IO.Path]::Combine($csporj.DirectoryName, $projectPdbPath);
+
+        Write-Host "PDB path of assembly for $($csporj.Name) is: $projectPdbPath"
+
+        if (-not (Test-Path $pdbPath)) {
+            Write-Host "PDB was not found. Project will be ignored!"
+            continue;
+        }
+
+        $args = "-u", "$sourceLink";
+        $args += $pdbPath
+
+        & $global:GitLink $args
+    }
+}
+
+function Invoke-Pack($FilePath, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
     CreateFolderIfNotExists $NugetPackageArtifacts;
 
     $packargs = "-outputdirectory", "$NugetPackageArtifacts";
@@ -370,6 +415,10 @@ function Invoke-Pack($FilePath, [bool]$IsTool = $False) {
     $packargs += "-Version", "$env:MARVIN_VERSION";
     $packargs += "-Prop", "Configuration=$env:MARVIN_BUILD_CONFIG";
     $packargs += "-Verbosity", "detailed";
+
+    if ($IncludeSymbols) {
+        $packargs += "-Symbols";
+    }
 
     if ($IsTool) {
         $packargs += "-Tool";
@@ -380,19 +429,19 @@ function Invoke-Pack($FilePath, [bool]$IsTool = $False) {
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-PackAll {
+function Invoke-PackAll([switch]$Symbols = $False) {
     Write-Host "Looking for .nuspec files..."
     # Look for nuspec in this directory
     foreach ($nuspecFile in Get-ChildItem $RootPath -Recurse -Filter *.nuspec) {
         $nuspecPath = $nuspecFile.FullName
         Write-Host "Packing $nuspecPath" -ForegroundColor Green
-        
+
         # Check if there is a matching proj for the nuspec
         $projectPath = [IO.Path]::ChangeExtension($nuspecPath, "csproj")
         if(Test-Path $projectPath) {
-            Invoke-Pack $projectPath
+            Invoke-Pack -FilePath $projectPath -IncludeSymbols $Symbols
         } else {
-            Invoke-Pack $nuspecPath
+            Invoke-Pack -FilePath $nuspecPath -IncludeSymbols $Symbols
         }
     }
 }
