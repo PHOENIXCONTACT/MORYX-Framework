@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using Marvin.AbstractionLayer.Resources;
+using Marvin.Modules;
 
 namespace Marvin.Resources.Samples.Initializer
 {
     [ResourceInitializer(nameof(SampleMachineInitializer))]
-    public class SampleMachineInitializer : ResourceInitializerBase
+    [ExpectedConfig(typeof(SampleMachineInitializerConfig))]
+    public class SampleMachineInitializer : ResourceInitializerBase<SampleMachineInitializerConfig>
     {
         public override string Name => "Sample Machine";
 
@@ -13,6 +15,7 @@ namespace Marvin.Resources.Samples.Initializer
         public override IReadOnlyList<Resource> Execute(IResourceCreator creator)
         {
             var machine = creator.Instantiate<Machine>();
+            machine.Name = Config.MachineName;
 
             var someGate = creator.Instantiate<GateResource>();
             someGate.Name = "Some Gate";

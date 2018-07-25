@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Runtime.Configuration;
 using Marvin.Serialization;
+using Marvin.Tools;
 
 namespace Marvin.Resources.Management
 {
     /// <summary>
     /// Implementation of <see cref="ICustomSerialization"/> for types derived from <see cref="Resource"/>
-    /// This is partially copied from <see cref="ConfigSerialization"/>, that shall be refactored/removed in Runtime 3.0
+    /// TODO: This is partially copied from <see cref="PossibleValuesSerialization"/>, that shall be refactored/removed in Runtime 3.0
     /// </summary>
     [Component(LifeCycle.Singleton, typeof(ICustomSerialization))]
     internal class ResourceSerialization : DefaultSerialization
@@ -30,12 +30,12 @@ namespace Marvin.Resources.Management
         public IRuntimeConfigManager ConfigManager { get; set; }
 
         /// <summary>
-        /// Only export properties flagged with <see cref="DataMemberAttribute"/>
+        /// Only export properties flagged with <see cref="System.Runtime.Serialization.DataMemberAttribute"/>
         /// </summary>
-        public override IEnumerable<PropertyInfo> ReadFilter(Type sourceType)
+        public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             // Always filter resource references
-            var properties = base.ReadFilter(sourceType).ToList();
+            var properties = base.GetProperties(sourceType).ToList();
             var flagged = properties.Where(p => Attribute.IsDefined(p, typeof(EditorVisibleAttribute))).ToList();
 
             // On resources only return flagged types
@@ -49,20 +49,20 @@ namespace Marvin.Resources.Management
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override EntryPrototype[] Prototypes(PropertyInfo property)
+        public override EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Create prototypes from possible values
-            var possibleValuesAtt = property.GetCustomAttribute<PossibleValuesAttribute>();
+            var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (possibleValuesAtt == null)
             {
-                return base.Prototypes(property);
+                return base.Prototypes(memberType, attributeProvider);
             }
 
-            var possibleValues = possibleValuesAtt.ResolvePossibleValues(Container);
+            var possibleValues = possibleValuesAtt.GetValues(Container);
             var list = new List<EntryPrototype>();
             foreach (var value in possibleValues)
             {
-                var prototype = possibleValuesAtt.ConvertToConfigValue(Container, value);
+                var prototype = possibleValuesAtt.Parse(Container, value);
                 ConfigManager.FillEmpty(prototype);
                 list.Add(new EntryPrototype(value, prototype));
             }
@@ -70,79 +70,51 @@ namespace Marvin.Resources.Management
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override string[] PossibleValues(PropertyInfo property)
+        public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            var valuesAttribute = property.GetCustomAttribute<PossibleValuesAttribute>();
+            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
             {
-                return base.PossibleValues(property);
+                return base.PossibleValues(memberType, attributeProvider);
             }
 
             // Use attribute
-            var values = valuesAttribute.ResolvePossibleValues(Container);
-            return values?.Distinct().ToArray();
-        }
-
-        /// <inheritdoc />
-        public override string[] PossibleValues(ParameterInfo parameter)
-        {
-            var valuesAttribute = parameter.GetCustomAttribute<PossibleValuesAttribute>();
-            if (valuesAttribute == null)
-            {
-                return base.PossibleValues(parameter);
-            }
-
-            // Use attribute
-            var values = valuesAttribute.ResolvePossibleValues(Container);
+            var values = valuesAttribute.GetValues(Container);
             return values?.Distinct().ToArray();
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override object CreateInstance(MappedProperty mappedRoot, Entry encoded)
+        public override object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
         {
-            var possibleValuesAtt = mappedRoot.Property.GetCustomAttribute<PossibleValuesAttribute>();
+            var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             var instance = possibleValuesAtt != null
-                ? possibleValuesAtt.ConvertToConfigValue(Container, encoded.Value.Current)
-                : base.CreateInstance(mappedRoot, encoded);
+                ? possibleValuesAtt.Parse(Container, encoded.Value.Current)
+                : base.CreateInstance(memberType, encoded);
             ConfigManager.FillEmpty(instance);
             return instance;
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
-        public override object PropertyValue(PropertyInfo property, Entry mappedEntry, object currentValue)
+        public override object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
         {
             var value = mappedEntry.Value;
-            var att = property.GetCustomAttribute<PossibleValuesAttribute>();
+            var att = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
-                return base.PropertyValue(property, mappedEntry, currentValue);
+                return base.ConvertValue(memberType, attributeProvider, mappedEntry, currentValue);
 
             // If old and current type are identical, keep the object
             if (value.Type == EntryValueType.Class && currentValue != null && currentValue.GetType().Name == value.Current)
                 return currentValue;
 
-            var instance = att.ConvertToConfigValue(Container, mappedEntry.Value.Current);
+            var instance = att.Parse(Container, mappedEntry.Value.Current);
             if (mappedEntry.Value.Type == EntryValueType.Class)
                 ConfigManager.FillEmpty(instance);
             return instance;
         }
 
-        public override object ParameterValue(ParameterInfo parameter, Entry mappedEntry)
+        public override IEnumerable<MethodInfo> GetMethods(Type sourceType)
         {
-            var value = mappedEntry.Value;
-            var att = parameter.GetCustomAttribute<PossibleValuesAttribute>();
-            if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
-                return base.ParameterValue(parameter, mappedEntry);
-
-            var instance = att.ConvertToConfigValue(Container, mappedEntry.Value.Current);
-            if (mappedEntry.Value.Type == EntryValueType.Class)
-                ConfigManager.FillEmpty(instance);
-
-            return instance;
-        }
-
-        public override IEnumerable<MethodInfo> MethodFilter(Type sourceType)
-        {
-            var methods = base.MethodFilter(sourceType);
+            var methods = base.GetMethods(sourceType);
 
             methods = Attribute.IsDefined(sourceType, typeof(EditorVisibleAttribute)) 
                 ? methods.Where(method => method.DeclaringType != typeof(object)) // Filter methods defined by object

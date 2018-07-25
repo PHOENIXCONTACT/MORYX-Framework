@@ -13,5 +13,10 @@ namespace Marvin.Resources.Management
         /// Creates an <see cref="IResourceInitializer"/> with the given config
         /// </summary>
         IResourceInitializer Create(ResourceInitializerConfig config);
+
+        /// <summary>
+        /// Destroys an <see cref="IResourceInitializer"/>
+        /// </summary>
+        void Destroy(IResourceInitializer resourceInitializer);
     }
 }

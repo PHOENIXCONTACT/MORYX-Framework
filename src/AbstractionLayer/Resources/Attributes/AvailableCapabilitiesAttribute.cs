@@ -48,7 +48,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// <summary>
         /// Names of available capabilities
         /// </summary>
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer pluginContainer)
         {
             return GetCapabilities().Keys;
         }
@@ -56,7 +56,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// <summary>
         /// Create capabilities object from name
         /// </summary>
-        public override object ConvertToConfigValue(IContainer container, string value)
+        public override object Parse(IContainer container, string value)
         {
             var capabilitiesType = GetCapabilities()[value];
             return Instanciate(capabilitiesType);

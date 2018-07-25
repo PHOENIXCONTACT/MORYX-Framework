@@ -37,7 +37,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// <summary>
         /// Resolve all resource type names for a resource type
         /// </summary>
-        public override IEnumerable<string> ResolvePossibleValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer pluginContainer)
         {
             var typeController = pluginContainer.Resolve<IResourceTypeTree>();
             return SelectTypeNames(typeController.SupportedTypes(TypeConstraint), new List<string>());
