@@ -122,10 +122,10 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
         return (
             <div>
                 {this.preRenderBreadcrumb()}
-                <Container fluid={true} className="up-space-lg">
+                <Container fluid={true} className="up-space-lg no-padding">
                     <Row className="config-editor-header">
-                        <Col md={5}><span className="font-bold">Property</span></Col>
-                        <Col md={7}><span className="font-bold">Value</span></Col>
+                        <Col md={5} className="no-padding"><span className="font-bold">Property</span></Col>
+                        <Col md={7} className="no-padding"><span className="font-bold">Value</span></Col>
                     </Row>
                     <ConfigEditor ParentEntry={this.state.ParentEntry}
                                   Entries={this.state.Entries}

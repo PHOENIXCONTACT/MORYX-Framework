@@ -59,9 +59,18 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
             return false;
         }
 
-        return entry.Value.Type === EntryValueType.Class &&
-               entry.Value.Possible != null &&
-               entry.Value.Possible.length > 1;
+        let isEntrySettable = entry.Value.Type === EntryValueType.Class &&
+                              entry.Value.Possible != null &&
+                              entry.Value.Possible.length > 1;
+
+        if (isEntrySettable) {
+
+            if (entry.Parent !== null && entry.Parent !== undefined) {
+                isEntrySettable = entry.Parent.Value.Type !== EntryValueType.Collection;
+            }
+        }
+
+        return isEntrySettable;
     }
 
     private onEntryTypeChange(e: React.FormEvent<HTMLInputElement>): void {
@@ -155,18 +164,18 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         return entries.map((subEntry, idx) =>
         (
             <div key={idx} className="table-row">
-                <Row style={{padding: "5px 0px 5px 0px", alignItems: "center"}}>
-                    <Col md={7} className="no-padding">
-                        <Container fluid={true}>
+                <Row className="entry-row">
+                    <Col md={5} className="no-padding">
+                        <Container fluid={true} className="no-padding">
                             <Row>
-                                <Col md={12}><span className="font-bold align-self-center">{subEntry.Key.Name}</span></Col>
+                                <Col md={12} className="no-padding"><span className="font-bold align-self-center no-padding">{subEntry.Key.Name}</span></Col>
                             </Row>
                             <Row>
-                                <Col md={12}><span className="font-disabled">{subEntry.Description}</span></Col>
+                                <Col md={12} className="no-padding"><span className="font-disabled no-padding">{subEntry.Description}</span></Col>
                             </Row>
                         </Container>
                     </Col>
-                    <Col md={5}>
+                    <Col md={7} className="no-padding">
                     {
                         this.selectPropertyByType(subEntry)
                     }
@@ -207,7 +216,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         if (this.props.ParentEntry != null && this.props.ParentEntry.Value.Type === EntryValueType.Collection) {
             entries = (
                 <Row>
-                    <Col md={12}>
+                    <Col md={12} className="no-padding">
                         <CollectionEditor Entry={this.props.ParentEntry}
                                           IsExpanded={true}
                                           RootEntries={this.props.RootEntries}
@@ -221,7 +230,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         }
 
         return (
-            <div className="config-editor">
+            <div className="config-editor" style={{marginLeft: 10}}>
                 {entries}
                 { ConfigEditor.isEntryTypeSettable(this.props.ParentEntry) &&
                     <Container fluid={true}

@@ -24,7 +24,7 @@ export default class ClassEditor extends CollapsibleEntryEditorBase<ClassEditorS
         return (
             <div>
                 <Collapse isOpen={this.props.IsExpanded}>
-                    <Container fluid={true}>
+                    <Container fluid={true} className="no-padding">
                         {this.preRenderConfigEditor()}
                     </Container>
                 </Collapse>

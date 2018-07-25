@@ -65,6 +65,18 @@ body {
   margin-top: 20px;
 }
 
+.down-space {
+  margin-bottom: 5px;
+}
+
+.down-space-lg {
+  margin-bottom: 10px;
+}
+
+.down-space-very-lg {
+  margin-bottom: 20px;
+}
+
 .auto-height {
   height: auto !important;
   overflow: auto;
@@ -218,6 +230,7 @@ body {
  */
  .config-editor-header {
    padding: 2px 0px 2px 0px;
+   margin: 0px;
    border-style: solid;
    border-width: 1px 0px 2px 0px;
    border-color: lightgray;
@@ -242,6 +255,11 @@ body {
   .row {
     margin-right: 0px;
     margin-left: 0px;
+  }
+
+  .entry-row {
+    padding: 5px 0px 5px 0px;
+    align-items: "center";
   }
   
   .table-row {

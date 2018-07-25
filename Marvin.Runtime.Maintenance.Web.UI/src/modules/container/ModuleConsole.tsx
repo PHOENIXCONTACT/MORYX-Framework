@@ -97,6 +97,11 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
     private preRenderFunctions(): React.ReactNode {
         return (
             <ListGroup>
+                <ListGroupItem color="primary"
+                               className="selectable"
+                               onClick={() => this.onReset()}>
+                    Reset
+                </ListGroupItem>
 
                 {this.state.Methods.map((methodEntry, idx) => {
                     return (
@@ -134,20 +139,11 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
             content = (
                 <Container fluid={true} className="up-space-lg">
-                    <Row>
-                        <Col md={12}>
-                            <Button color="primary"
-                                    className="float-right"
-                                    onClick={() => this.onReset()}>
-                                    Reset
-                            </Button>
-                        </Col>
-                    </Row>
                     <Row className="up-space-lg">
-                        <Col md={5}>
+                        <Col md={4}>
                             {this.preRenderFunctions()}
                         </Col>
-                        <Col md={7}>
+                        <Col md={8}>
                             {view}
                         </Col>
                     </Row>

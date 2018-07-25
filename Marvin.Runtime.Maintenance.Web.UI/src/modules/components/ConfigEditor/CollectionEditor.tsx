@@ -80,13 +80,13 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
         return (
             <div className="up-space">
                 <Collapse isOpen={this.props.IsExpanded}>
-                    <Container fluid={true}>
+                    <Container fluid={true} className="no-padding up-space down-space">
                         {
                             this.props.Entry.SubEntries.map((entry, idx) =>
                                 <div key={idx}>
-                                    <Row className="table-row">
-                                        <Col md={4}>{entry.Key.Name}</Col>
-                                        <Col>
+                                    <Row className="table-row down-space">
+                                        <Col md={6} className="no-padding">{entry.Key.Name}</Col>
+                                        <Col md={6} className="no-padding">
                                             <ButtonGroup>
                                                 <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>
                                                     <FontAwesomeIcon icon={faFolderOpen} className="right-space" />
@@ -109,15 +109,15 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                                 </div>,
                             )
                         }
-                        <Row className="up-space">
-                            <Col md={4}>
+                        <Row>
+                            <Col md={12} className="no-padding">
                                 <Input type="select" value={this.state.SelectedEntry}
+                                       className="right-space"
+                                       style={{display: "inline", width: "60%"}}
                                        disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}
                                        onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelect(e)}>
                                     {this.preRenderOptions()}
                                 </Input>
-                            </Col>
-                            <Col md={8}>
                                 <Button color="primary" onClick={() => this.addEntry()} disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}>
                                     <FontAwesomeIcon icon={faPlus} className="right-space" />
                                     Add entry
