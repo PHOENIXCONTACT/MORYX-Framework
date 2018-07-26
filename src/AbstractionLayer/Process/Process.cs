@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,22 +11,18 @@ namespace Marvin.AbstractionLayer
     public class Process : IProcess
     {
         private readonly List<IActivity> _activities = new List<IActivity>();
-
         private readonly ReaderWriterLockSlim _activitiesLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
-        /// 
-        public virtual string Type
-        {
-            get { return "Process"; }
-        }
+        /// <inheritdoc />
+        public virtual string Type => nameof(Process);
 
-        /// 
+        /// <inheritdoc />
         public long Id { get; set; }
 
-        ///
+        /// <inheritdoc />
         public IRecipe Recipe { get; set; }
 
-        /// 
+        /// <inheritdoc />
         public IEnumerable<IActivity> GetActivities()
         {
             _activitiesLock.EnterReadLock();
@@ -39,7 +34,7 @@ namespace Marvin.AbstractionLayer
             return result;
         }
 
-        /// 
+        /// <inheritdoc />
         public IEnumerable<IActivity> GetActivities(Func<IActivity, bool> predicate)
         {
             _activitiesLock.EnterReadLock();
@@ -56,7 +51,7 @@ namespace Marvin.AbstractionLayer
             return result;
         }
 
-        /// 
+        /// <inheritdoc />
         public IActivity GetActivity(ActivitySelectionType selectionType)
         {
             _activitiesLock.EnterReadLock();
@@ -68,7 +63,7 @@ namespace Marvin.AbstractionLayer
             return result;
         }
 
-        /// 
+        /// <inheritdoc />
         public IActivity GetActivity(ActivitySelectionType selectionType, Func<IActivity, bool> predicate)
         {
             _activitiesLock.EnterReadLock();
@@ -98,7 +93,7 @@ namespace Marvin.AbstractionLayer
             return result;
         }
 
-        /// 
+        /// <inheritdoc />
         public void AddActivity(IActivity toAdd)
         {
             _activitiesLock.EnterWriteLock();
@@ -108,7 +103,7 @@ namespace Marvin.AbstractionLayer
             _activitiesLock.ExitWriteLock();
         }
 
-        /// 
+        /// <inheritdoc />
         public void RemoveActivity(IActivity toRemove)
         {
             _activitiesLock.EnterWriteLock();

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Marvin.AbstractionLayer
+﻿namespace Marvin.AbstractionLayer
 {
     /// <summary>
     /// Extensions for <see cref="IProcess"/>
@@ -33,6 +31,29 @@ namespace Marvin.AbstractionLayer
         public static IActivity LastActivity(this IProcess process, string typeName)
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, a => a.Type == typeName);
+        }
+
+        /// <summary>
+        /// Gets the last activity of a certain type. Derived types are also considered.
+        /// Use <see cref="LastActivity{TActivity}(IProcess, bool)" /> if the exact type is needed.
+        /// </summary>
+        /// <typeparam name="TActivity">Type of the activity</typeparam>
+        /// <param name="process">Extended instance of <see cref="IProcess"/></param>
+        public static IActivity LastActivity<TActivity>(this IProcess process) where TActivity : IActivity
+        {
+            return process.LastActivity<TActivity>(false);
+        }
+
+        /// <summary>
+        /// Gets the last activity of a certain type.
+        /// If exact parameter is set to <c>true</c> only the exact type will be considered.
+        /// </summary>
+        /// <typeparam name="TActivity">Type of the activity</typeparam>
+        /// <param name="process">Extended instance of <see cref="IProcess"/></param>
+        /// <param name="exact">If <c>true</c> only the exact type will be considered.</param>
+        public static IActivity LastActivity<TActivity>(this IProcess process, bool exact) where TActivity : IActivity
+        {
+            return process.GetActivity(ActivitySelectionType.LastOrDefault, a => !exact && a is TActivity || exact && a.GetType() == typeof(TActivity));
         }
     }
 }
