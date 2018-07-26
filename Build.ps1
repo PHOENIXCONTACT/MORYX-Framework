@@ -57,7 +57,6 @@ if ($GenerateDocs) {
 }
 
 if ($Pack) {
-    Invoke-SourceIndex -RawUrl $($env:CI_PROJECT_URL + "/raw")
     Invoke-PackAll -Symbols
 }
 
