@@ -16,6 +16,10 @@ namespace Marvin.Communication.Sockets
         {
         }
 
+        public virtual void Reconnect(int delayMs)
+        {
+        }
+
         public virtual void Close()
         {
         }
@@ -25,6 +29,10 @@ namespace Marvin.Communication.Sockets
         }
 
         public virtual void ConnectionLost()
+        {
+        }
+
+        public virtual void ScheduledConnectTimerElapsed()
         {
         }
 
@@ -46,5 +54,9 @@ namespace Marvin.Communication.Sockets
 
         [StateDefinition(typeof(ServerNotListeningState), IsInitial = true)]
         protected const int StateNotListening = 30;
+
+        [StateDefinition(typeof(ServerReconnectingState))]
+        protected const int StateReconnecting = 40;
+
     }
 }

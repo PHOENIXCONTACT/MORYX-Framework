@@ -13,6 +13,8 @@ namespace Marvin.Communication.Sockets.IntegrationTests
         private List<ConnectionBuffer<TMessage>> _clients;
         private BinaryConnectionFactoryMock _binaryConnectionFactory;
 
+        private List<ConnectionBuffer<TMessage>> _overallClients;
+
         private int _testPort;
         protected const string TestIpAdress = "127.0.0.1";
 
@@ -26,6 +28,8 @@ namespace Marvin.Communication.Sockets.IntegrationTests
         {
             var rnd = new Random();
             _testPort = rnd.Next(2000, 2101);
+
+            _overallClients = new List<ConnectionBuffer<TMessage>>();
         }
 
         /// <summary>
@@ -105,7 +109,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
 
             // Client should be connected
             Assert.AreEqual(wantedState, _clients[clientIdx].Connection.CurrentState,
-                $"Client is not in the state '{wantedState:G}'. " +
+                $"Client ({clientIdx}) is not in the state '{wantedState:G}'. " +
                 $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {waitedFor:g}");
         }
 
@@ -160,6 +164,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
 
             var clientIdx = _clients.Count;
             _clients.Add(client);
+            _overallClients.Add(client);
 
             Console.WriteLine("CreateAndStartClient Added Client idx: {0}.", clientIdx);
 

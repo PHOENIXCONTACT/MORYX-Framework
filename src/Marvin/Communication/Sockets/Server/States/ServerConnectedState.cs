@@ -18,6 +18,21 @@ namespace Marvin.Communication.Sockets
             return Context.ExecuteSendAsync(message);
         }
 
+        public override void Reconnect(int delayMs)
+        {
+            if (delayMs > 0)
+            {
+                Context.CleanupTransmission();
+                NextState(StateReconnecting);
+                Context.ScheduleConnectTimer(delayMs);
+            }
+            else
+            {
+                Context.CleanupTransmission();
+                NextState(StateListening);
+                Context.Register();
+            }
+        }
 
         public override void Close()
         {

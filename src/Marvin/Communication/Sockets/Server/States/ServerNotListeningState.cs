@@ -11,5 +11,19 @@
             NextState(StateListening);
             Context.Register();
         }
+
+        public override void Reconnect(int delayMs)
+        {
+            if (delayMs > 0)
+            {
+                NextState(StateReconnecting);
+                Context.ScheduleConnectTimer(delayMs);
+            }
+            else
+            {
+                NextState(StateListening);
+                Context.Register();
+            }
+        }
     }
 }

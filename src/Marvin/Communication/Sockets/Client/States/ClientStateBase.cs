@@ -18,8 +18,13 @@ namespace Marvin.Communication.Sockets
         {
         }
 
+        public virtual void Reconnect(int delayMs)
+        {
+        }
+
         public virtual void Disconnect()
         {
+            InvalidState();
         }
 
         public virtual void ConnectionCallback(IAsyncResult ar, TcpClient tcpClient)
@@ -40,6 +45,10 @@ namespace Marvin.Communication.Sockets
         {
         }
 
+        public virtual void ScheduledConnectTimerElapsed()
+        {
+        }
+
         [StateDefinition(typeof(ClientConnectedState))]
         protected const int StateConnected = 10;
 
@@ -52,6 +61,10 @@ namespace Marvin.Communication.Sockets
         [StateDefinition(typeof(ClientDisconnectingState))]
         protected const int StateDisconnecting = 40;
 
-        
+        [StateDefinition(typeof(ClientRetryConnectState))]
+        protected const int StateRetryConnect = 50;
+
+        [StateDefinition(typeof(ClientReconnectingState))]
+        protected const int StateReconnecting = 60;
     }
 }

@@ -70,5 +70,34 @@ namespace Marvin.Communication.Sockets.IntegrationTests
                     "Client is in a connected-state, but there should be no server.");
             }
         }
+
+        [Test(Description = "Tries serveral unsuccessful reconnects and one successful one")]
+        public void ReconnectTest()
+        {
+            // Arrange
+            var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, -1, 0, new SystemTestValidator(0));
+
+            // Act
+            // Assert
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.AttemptingConnection);
+
+            Clients[clientIdx].Connection.Reconnect();
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.AttemptingConnection);
+
+            for (var i = 0; i < 10; i++)
+            {
+                Clients[clientIdx].Connection.Reconnect();
+                WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.AttemptingConnection);
+            }
+
+            CreateAndStartServer(IPAddress.Any, TestPort, 0, new SystemTestValidator(0));
+            Clients[clientIdx].Connection.Reconnect();
+
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
+
+            Clients[clientIdx].Connection.Stop();
+
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Disconnected);
+        }
     }
 }

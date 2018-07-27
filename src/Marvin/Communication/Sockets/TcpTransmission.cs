@@ -7,14 +7,12 @@ using Marvin.Serialization;
 
 namespace Marvin.Communication.Sockets
 {
-    /// <summary>
-    ///
-    /// </summary>
     internal class TcpTransmission : IBinaryTransmission, IDisposable
     {
         private readonly NetworkStream _stream;
         private readonly IMessageInterpreter _interpreter;
         private readonly TcpClient _client;
+        private bool _disconnected;
 
         /// <summary>
         /// Logger for logging - makes sense ;)
@@ -208,8 +206,6 @@ namespace Marvin.Communication.Sockets
         public event EventHandler<BinaryMessage> Received;
 
         #endregion
-
-        private bool _disconnected;
 
         private void Disconnect(Exception ex)
         {

@@ -127,10 +127,7 @@ namespace Marvin.Communication.Sockets
         {
             lock (_stateLock)
             {
-                _state.Close();
-                // TODO: Find better delay
-                Thread.Sleep(delayMs);
-                _state.Open();
+                _state.Reconnect(delayMs);
             }
         }
 
@@ -149,6 +146,20 @@ namespace Marvin.Communication.Sockets
         internal void Unregister()
         {
             Server.Unregister(this);
+        }
+
+        internal void ScheduleConnectTimer(int delayInMs)
+        {
+            var reconnectTimer = new Timer(OnReconnectTimer);
+            reconnectTimer.Change(delayInMs, Timeout.Infinite);
+        }
+
+        private void OnReconnectTimer(object state)
+        {
+            ((Timer)state).Dispose();
+
+            lock (_stateLock)
+                _state.ScheduledConnectTimerElapsed();
         }
 
         internal void AssignConnection(TcpTransmission transmission, BinaryMessage message = null)
@@ -191,6 +202,8 @@ namespace Marvin.Communication.Sockets
             _transmission.Received -= MessageReceived;
             _transmission.Disconnected -= Disconnected;
             _transmission = null;
+
+            Unregister();
         }
 
         private void Disconnected(object sender, EventArgs eventArgs)

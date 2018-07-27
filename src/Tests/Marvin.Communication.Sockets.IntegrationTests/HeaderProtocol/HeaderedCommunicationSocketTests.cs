@@ -209,7 +209,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
             Console.WriteLine("Sending {0} messages", numberOfMessages);
 
             SendMessages(numberOfClients, numberOfMessages, 1, ServerConnections, "ClientIdx");
-            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 5), numberOfMessages, Clients));
+            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 10), numberOfMessages, Clients));
 
             Console.WriteLine("Disconnecting all clients...");
 
@@ -237,7 +237,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
             Thread.Sleep(2000);
 
             // Assert
-            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 5), numberOfMessages, ServerConnections));
+            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 10), numberOfMessages, ServerConnections));
         }
 
         protected override BinaryMessage CreateMessage(int senderId, byte[] payload)
