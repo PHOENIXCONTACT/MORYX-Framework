@@ -1,6 +1,3 @@
-using System;
-using System.Net.Sockets;
-
 namespace Marvin.Communication.Sockets
 {
     internal class ClientDisconnectedState : ClientStateBase
@@ -9,14 +6,26 @@ namespace Marvin.Communication.Sockets
         {
         }
 
+        public override void Reconnect(int delayMs)
+        {
+            if (delayMs > 0)
+            {
+                NextState(StateRetryConnect);
+                Context.ScheduleConnectTimer(delayMs);
+            }
+            else
+            {
+                NextState(StateConnecting);
+            }
+        }
+
         public override void Connect()
         {
             NextState(StateConnecting);
         }
 
-        public override void ConnectionCallback(IAsyncResult ar, TcpClient tcpClient)
+        public override void Disconnect()
         {
-            
         }
     }
 }

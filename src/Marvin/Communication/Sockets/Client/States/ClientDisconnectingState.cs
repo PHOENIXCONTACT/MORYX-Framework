@@ -6,6 +6,11 @@
         {
         }
 
+        public override void OnEnter()
+        {
+            Context.Disconnect();
+        }
+
         public override void ConnectionClosed()
         {
             NextState(StateDisconnected);

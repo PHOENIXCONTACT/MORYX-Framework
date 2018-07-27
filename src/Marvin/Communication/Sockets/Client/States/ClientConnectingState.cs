@@ -24,14 +24,22 @@ namespace Marvin.Communication.Sockets
             }
             catch (Exception)
             {
-                Context.RetryConnect();
+                if (Context.Config.RetryWaitMs > 0)
+                {
+                    NextState(StateRetryConnect);
+                    Context.ScheduleConnectTimer(Context.Config.RetryWaitMs);
+                }
+                else
+                {
+                    Context.Connect();
+                }
             }
         }
 
         public override void Disconnect()
         {
             NextState(StateDisconnected);
-            Context.StopConnect();
+            Context.CloseClient();
         }
     }
 }

@@ -85,6 +85,8 @@
     <Compile Include="Communication\Sockets\Client\States\ClientConnectingState.cs" />
     <Compile Include="Communication\Sockets\Client\States\ClientDisconnectedState.cs" />
     <Compile Include="Communication\Sockets\Client\States\ClientDisconnectingState.cs" />
+    <Compile Include="Communication\Sockets\Client\States\ClientReconnectingState.cs" />
+    <Compile Include="Communication\Sockets\Client\States\ClientRetryConnectState.cs" />
     <Compile Include="Communication\Sockets\Client\States\ClientStateBase.cs" />
     <Compile Include="Communication\Sockets\Client\TcpClientConfig.cs" />
     <Compile Include="Communication\Sockets\Client\TcpClientConnection.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Communication\Sockets\Server\States\ServerConnectedState.cs" />
     <Compile Include="Communication\Sockets\Server\States\ServerListeningState.cs" />
     <Compile Include="Communication\Sockets\Server\States\ServerNotListeningState.cs" />
+    <Compile Include="Communication\Sockets\Server\States\ServerReconnectingState.cs" />
     <Compile Include="Communication\Sockets\Server\States\ServerStateBase.cs" />
     <Compile Include="Communication\Sockets\Server\TcpListenerConfig.cs" />
     <Compile Include="Communication\Sockets\Server\TcpListenerConnection.cs" />

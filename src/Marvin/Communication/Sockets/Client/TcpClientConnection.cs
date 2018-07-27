@@ -35,7 +35,7 @@ namespace Marvin.Communication.Sockets
         /// <summary>
         /// Config for the TCP client
         /// </summary>
-        private TcpClientConfig _config;
+        internal TcpClientConfig Config { get; private set; }
 
         /// <summary>
         /// Current state of this client connection
@@ -52,9 +52,12 @@ namespace Marvin.Communication.Sockets
         /// </summary>
         private TcpClient _tcpClient;
 
+        internal int ReconnectDelayMs { get; set; }
+
         /// <summary>
         /// Gets the current ConnectionState.
         /// </summary>
+        // ReSharper disable once InconsistentlySynchronizedField
         public BinaryConnectionState CurrentState => _state.Current;
 
         /// <summary>
@@ -72,11 +75,11 @@ namespace Marvin.Communication.Sockets
         /// <param name="config">Config of this module plugin</param>
         public void Initialize(BinaryConnectionConfig config)
         {
-            _config = (TcpClientConfig)config;
+            Config = (TcpClientConfig)config;
 
             StateMachine.Initialize(this).With<ClientStateBase>();
 
-            Endpoint = GetIpEndpointFromHost(_config.IpAdress, _config.Port);
+            Endpoint = GetIpEndpointFromHost(Config.IpAdress, Config.Port);
         }
 
         /// <summary>
@@ -106,9 +109,10 @@ namespace Marvin.Communication.Sockets
         /// <inheritdoc />
         void IStateContext.SetState(IState state)
         {
-            // ReSharper disable once InconsistentlySynchronizedField
+            // ReSharper disable InconsistentlySynchronizedField
             _state = (ClientStateBase)state;
             NotifyConnectionState?.Invoke(this, _state.Current);
+            // ReSharper enable InconsistentlySynchronizedField
         }
 
         /// <summary>
@@ -123,7 +127,6 @@ namespace Marvin.Communication.Sockets
             return new IPEndPoint(addresses[0], port);
         }
 
-
         /// <inheritdoc />
         public void Reconnect()
         {
@@ -133,13 +136,8 @@ namespace Marvin.Communication.Sockets
         /// <inheritdoc />
         public void Reconnect(int delayMs)
         {
-            lock (_stateLock)
-            {
-                _state.Disconnect();
-                // TODO: Find better delay
-                Thread.Sleep(delayMs);
-                _state.Connect();
-            }
+            lock(_state)
+                _state.Reconnect(delayMs);
         }
 
         #region Connection and transmission
@@ -152,13 +150,6 @@ namespace Marvin.Communication.Sockets
         {
             _tcpClient = new TcpClient();
             _tcpClient.BeginConnect(Endpoint.Address, Endpoint.Port, ConnectionCallback, null);
-        }
-
-        internal void RetryConnect()
-        {
-            if (_config.RetryWaitMs >= 0)
-                Thread.Sleep(_config.RetryWaitMs);
-            Connect();
         }
 
         private void ConnectionCallback(IAsyncResult ar)
@@ -176,14 +167,8 @@ namespace Marvin.Communication.Sockets
             _transmission.StartReading();
 
             // Configure TCP keep alive
-            if (_config.MonitoringIntervalMs > 0)
-                _transmission.ConfigureKeepAlive(_config.MonitoringIntervalMs, _config.MonitoringTimeoutMs);
-        }
-
-        internal void StopConnect()
-        {
-            _tcpClient.Close();
-            _tcpClient = null;
+            if (Config.MonitoringIntervalMs > 0)
+                _transmission.ConfigureKeepAlive(Config.MonitoringIntervalMs, Config.MonitoringTimeoutMs);
         }
 
         private void OnTransmissionException(object sender, Exception e)
@@ -199,12 +184,37 @@ namespace Marvin.Communication.Sockets
 
         internal void Disconnect()
         {
-            // First close the connection and then unregister events
-            _transmission.Disconnect();
-            _transmission.ExceptionOccured -= OnTransmissionException;
-            _transmission.Received -= MessageReceived;
-            _transmission.Disconnected -= ConnectionClosed;
+            var transmission = _transmission;
             _transmission = null;
+
+            var tcpClient = _tcpClient;
+
+            // First close the connection and then unregister events
+            transmission.Disconnect();
+            transmission.ExceptionOccured -= OnTransmissionException;
+            transmission.Received -= MessageReceived;
+            transmission.Disconnected -= ConnectionClosed;
+
+            tcpClient.Close();
+        }
+
+        internal void CloseClient()
+        {
+            _tcpClient.Close();
+        }
+
+        internal void ScheduleConnectTimer(int delayInMs)
+        {
+            var reconnectTimer = new Timer(OnReconnectTimer);
+            reconnectTimer.Change(delayInMs, Timeout.Infinite);
+        }
+
+        private void OnReconnectTimer(object state)
+        {
+            ((Timer)state).Dispose();
+
+            lock (_stateLock)
+                _state.ScheduledConnectTimerElapsed();
         }
 
         /// <inheritdoc />
