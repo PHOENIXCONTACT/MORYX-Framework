@@ -54,28 +54,28 @@
       <HintPath>..\..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.1510, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev001510\lib\net461\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.1602, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.3.0.0-dev001602\lib\net461\Marvin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.1510, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.3.0.0-dev001510\lib\net461\Marvin.Model.dll</HintPath>
+    <Reference Include="Marvin.Model, Version=3.0.0.1602, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Model.3.0.0-dev001602\lib\net461\Marvin.Model.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.1510, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.InMemory.3.0.0-dev001510\lib\net461\Marvin.Model.InMemory.dll</HintPath>
+    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.1602, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Model.InMemory.3.0.0-dev001602\lib\net461\Marvin.Model.InMemory.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Runtime, Version=3.0.0.1510, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Runtime.3.0.0-dev001510\lib\net461\Marvin.Runtime.dll</HintPath>
+    <Reference Include="Marvin.Runtime, Version=3.0.0.1602, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Runtime.3.0.0-dev001602\lib\net461\Marvin.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.1510, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev001510\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
+    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.1602, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev001602\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.1510, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Tools.Wcf.3.0.0-dev001510\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.1602, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Tools.Wcf.3.0.0-dev001602\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Moq, Version=4.9.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
