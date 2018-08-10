@@ -78,8 +78,10 @@ namespace Marvin.Runtime.Kernel
                 var facadeContainers = service.GetType().GetInterfaces().Where(IsInterfaceFacadeContainer);
                 foreach (var facadeContainer in facadeContainers)
                 {
-                    // Trust me, I hate this hard-coded string as much as you do. I just run out of ideas
-                    var facadeInstance = facadeContainer.GetProperty("Facade").GetValue(service);
+                    // Trust me, I hate this hard-coded string as much as you do. I just ran out of ideas
+                    // var facadeInstance = facadeContainer.GetProperty("Facade").GetValue(service);
+                    // Thanks to C# 6 we could finally get rid of this. We left it for the giggles
+                    var facadeInstance = facadeContainer.GetProperty(nameof(IFacadeContainer<object>.Facade)).GetValue(service);
                     _facadeCache[facadeInstance] = service;
                 }
             }
