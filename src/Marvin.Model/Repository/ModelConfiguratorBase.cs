@@ -386,9 +386,14 @@ namespace Marvin.Model
         /// </summary>
         private IEnumerable<string> GetInstalledMigrations(IDatabaseConfig config)
         {
-            var dbMigrator = CreateDbMigrator(config);
+            DbMigrator dbMigrator = null;
 
-            return TestDatabaseConnection(config) && dbMigrator != null
+            if (TestDatabaseConnection(config))
+            {
+                dbMigrator = CreateDbMigrator(config);
+            }
+
+            return dbMigrator != null
                 ? dbMigrator.GetDatabaseMigrations()
                 : Enumerable.Empty<string>();
         }
