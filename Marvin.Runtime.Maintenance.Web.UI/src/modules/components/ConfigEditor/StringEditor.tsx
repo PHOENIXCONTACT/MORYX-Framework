@@ -11,7 +11,7 @@ export default class StringEditor extends InputEditorBase {
     }
 
     private preRenderInput(): React.ReactNode {
-        return (<Input type="text"
+        return (<Input type={this.props.Entry.Validation.IsPassword ? "password" : "text"}
                         onChange={(e: React.FormEvent<HTMLInputElement>) => this.onValueChange(e, this.props.Entry)}
                         placeholder={"Please enter a string ..."}
                         disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}

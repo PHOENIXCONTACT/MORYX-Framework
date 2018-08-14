@@ -337,7 +337,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                         <Col md={12}><Input placeholder={"Username"} value={this.state.username} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onChangeUsername(e)} onBlur={this.onTestConnection.bind(this)} /></Col>
                                     </Row>
                                     <Row className="up-space">
-                                        <Col md={12}><Input placeholder={"Password"} value={this.state.password} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onChangePassword(e)} onBlur={this.onTestConnection.bind(this)} /></Col>
+                                        <Col md={12}><Input type="password" placeholder={"Password"} value={this.state.password} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onChangePassword(e)} onBlur={this.onTestConnection.bind(this)} /></Col>
                                     </Row>
                                     <Row className="up-space-lg">
                                         <Col md={12}>
