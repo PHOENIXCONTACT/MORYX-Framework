@@ -29,6 +29,9 @@ namespace Marvin.Notifications
             set { Acknowledged = value; }
         }
 
+        /// <inheritdoc cref="IManagedNotification.IsAcknowledgable" />
+        public bool IsAcknowledgable { get; set; }
+
         /// <inheritdoc />
         public string Acknowledger { get; private set; }
 
@@ -78,6 +81,14 @@ namespace Marvin.Notifications
             Title = title;
             Message = message;
             Severity = severity;
+        }
+
+        /// <summary>
+        /// Creates a new notification with title and message
+        /// </summary>
+        public Notification(string title, string message, Severity severity, bool isAcknowledgable) : this(title, message, severity)
+        {
+            IsAcknowledgable = isAcknowledgable;
         }
     }
 }
