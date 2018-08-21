@@ -28,7 +28,8 @@ $CoberturaReportsDir = "$ArtifactsDir\Tests"
 # Nuget
 $NugetConfig = "$dotBuild\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
-$NugetCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nuget.exe";
+$NugetCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nuget-4.7.1.exe";
+$NugetPushCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nuget-3.4.4.exe";
 $NugetPackageTarget = "http://packages-swtd.europe.phoenixcontact.com/nuget/MaRVIN-CI/";
 
 # Load partial scripts
@@ -38,6 +39,7 @@ $NugetPackageTarget = "http://packages-swtd.europe.phoenixcontact.com/nuget/MaRV
 $global:GitCli = "";
 $global:GitLink = "$BuildTools\GitLink.$GitLinkVersion\build\GitLink.exe";
 $global:NugetCli = "$BuildTools\nuget.exe";
+$global:NugetPushCli = "$BuildTools\nuget-push.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\ReportGenerator.exe";
@@ -60,7 +62,7 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
 
     # Assign git.exe
     $gitCommand = (Get-Command "git.exe" -ErrorAction SilentlyContinue);
-    if ($gitCommand -eq $null)  { 
+    if ($null -eq $gitCommand)  { 
         Write-Host "Unable to find git.exe in your PATH. Download from https://git-scm.com";
         Invoke-ExitCodeCheck 1;
     }
@@ -76,13 +78,14 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     CreateFolderIfNotExists $ArtifactsDir;
 
     # Assign nuget.exe
-    if (-not (Test-Path $global:NugetCli)) {
-        Write-Host "Downloading NuGet.exe ..."
+    if ((-not (Test-Path $global:NugetCli)) -or (-not (Test-Path $global:NugetPushCli))) {
+        Write-Host "Downloading NuGet ..."
         try {
             Invoke-WebRequest $NugetCliSource -OutFile $global:NugetCli
+            Invoke-WebRequest $NugetPushCliSource -OutFile $global:NugetPushCli
         }
         catch {
-            Write-Host "Error while downloading nuget.exe: " + $_.Exception.Message
+            Write-Host "Error while downloading NuGet: " + $_.Exception.Message
             Invoke-ExitCodeCheck 1;
         }
     }
@@ -135,6 +138,7 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Step "Printing global scope"
     Write-Variable "MSBuildCli" $global:MSBuildCli;
     Write-Variable "NugetCli" $global:NugetCli;
+    Write-Variable "NugetPushCli" $global:NugetPushCli;
     Write-Variable "OpenCoverCli" $global:OpenCoverCli;
     Write-Variable "NUnitCli" $global:NUnitCli;
     Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
@@ -450,7 +454,7 @@ function Invoke-Publish {
     $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
-        & $global:NugetCli push $package $env:MARVIN_NUGET_APIKEY -Source $NugetPackageTarget
+        & $global:NugetPushCli push $package $env:MARVIN_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity detail
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }
