@@ -28,12 +28,11 @@ $CoberturaReportsDir = "$ArtifactsDir\Tests"
 # Nuget
 $NugetConfig = "$dotBuild\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
-$NugetCliSource = "http://nts-eu-jenk02.europe.phoenixcontact.com/Symbols/nuget.exe";
-$NugetPackageTarget = "http://nts-eu-jenk02.europe.phoenixcontact.com:5588/nuget/MaRVIN-CI/";
+$NugetCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nuget.exe";
+$NugetPackageTarget = "http://packages-swtd.europe.phoenixcontact.com/nuget/MaRVIN-CI/";
 
 # Load partial scripts
 . "$DotBuild\Output.ps1";
-. "$DotBuild\SymbolStore.ps1";
 
 # Define Tools
 $global:GitCli = "";
