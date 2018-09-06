@@ -122,7 +122,7 @@ namespace Marvin.Workflows
             // Subworkplans are enhanced with a special property
             if (serialized.Classification == StepClassification.Subworkplan)
             {
-                serialized.SubworkplanId = ((ISubworkplanStep)step).WorkplanId;
+                serialized.SubworkplanId = ((ISubworkplanStep)step).Workplan.Id;
             }
 
             return serialized;

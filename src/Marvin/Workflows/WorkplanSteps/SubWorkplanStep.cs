@@ -23,7 +23,6 @@ namespace Marvin.Workflows.WorkplanSteps
         protected SubworkplanStep(IWorkplan workplan)
         {
             Workplan = workplan;
-            _workplanId = workplan.Id;
 
             // Step outputs are created from all exits of the sub workflow
             OutputDescriptions = (from connector in workplan.Connectors
@@ -41,9 +40,8 @@ namespace Marvin.Workflows.WorkplanSteps
         public override string Name => Workplan.Name;
 
         [DataMember]
-        private long _workplanId;
         /// <see cref="ISubworkplanStep"/>
-        long ISubworkplanStep.WorkplanId => _workplanId;
+        long ISubworkplanStep.WorkplanId => Workplan.Id;
 
         /// <summary>
         /// Our subworkplan
