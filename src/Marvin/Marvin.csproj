@@ -60,6 +60,7 @@
     <Compile Include="Collections\DelayQueue\States\QueueStoppedState.cs" />
     <Compile Include="Collections\DelayQueue\IDelayQueue.cs" />
     <Compile Include="Collections\MergedCollection.cs" />
+    <Compile Include="Collections\SemiNumericComparer.cs" />
     <Compile Include="Collections\SortableCollection.cs" />
     <Compile Include="Collections\WeakCollection.cs" />
     <Compile Include="Communication\Attributes\PayloadPositionAttribute.cs" />
