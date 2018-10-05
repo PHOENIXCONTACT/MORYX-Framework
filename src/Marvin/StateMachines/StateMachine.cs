@@ -200,7 +200,7 @@ namespace Marvin.StateMachines
             /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
             /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
             public void With<TStateBase>()
-                where TStateBase : StateBase<TContext>
+                where TStateBase : StateBase
             {
                 StateBase.Create<TStateBase>(_context, _key);
             }
