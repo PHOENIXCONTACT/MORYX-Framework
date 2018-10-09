@@ -28,15 +28,15 @@ namespace Marvin.Serialization
             copy.Description = Description; 
             if (deep)
             {
-                if (ParameterRoot != null)
+                if (Parameters != null)
                 {
-                    copy.ParameterRoot = ParameterRoot.Clone(deep);
+                    copy.Parameters = Parameters.Clone(deep);
                 }
             }
             else
             {
                 // In a shallow clone only references are copied
-                copy.ParameterRoot = ParameterRoot; 
+                copy.Parameters = Parameters; 
             }
             return copy;
         }

@@ -90,6 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\ArrayDummy.cs" />
     <Compile Include="Serialization\CloneTests.cs" />
+    <Compile Include="Serialization\ConstructorDummy.cs" />
     <Compile Include="Serialization\DictionaryClass.cs" />
     <Compile Include="Serialization\DummyClass.cs" />
     <Compile Include="Serialization\EditorVisibleDummies.cs" />

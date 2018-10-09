@@ -16,6 +16,11 @@ namespace Marvin.Serialization
         public string Name { get; set; }
 
         /// <summary>
+        /// Flag if this structure represents a server side constructor
+        /// </summary>
+        public bool IsConstructor { get; set; }
+
+        /// <summary>
         /// Display name for the button
         /// </summary>
         [DataMember]
@@ -31,7 +36,7 @@ namespace Marvin.Serialization
         /// Arguments of the 
         /// </summary>
         [DataMember]
-        public Entry ParameterRoot { get; set; }
+        public Entry Parameters { get; set; }
 
         /// <inheritdoc />
         public object Clone()

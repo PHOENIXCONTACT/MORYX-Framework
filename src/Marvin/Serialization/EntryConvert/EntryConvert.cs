@@ -317,33 +317,84 @@ namespace Marvin.Serialization
         }
 
         /// <summary>
-        /// Encode a <see cref="MethodInfo"/> to the transmittable <see cref="MethodEntry"/>
+        /// Encode a <see cref="MethodBase"/> to the transmittable <see cref="MethodEntry"/>
         /// using <see cref="DefaultSerialization"/>
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public static MethodEntry EncodeMethod(MethodInfo method)
+        public static MethodEntry EncodeMethod(MethodBase method)
         {
             return EncodeMethod(method, Serialization);
         }
 
         /// <summary>
-        /// Encode a <see cref="MethodInfo"/> to the transmittable <see cref="MethodEntry"/>
+        /// Encode a <see cref="MethodBase"/> to the transmittable <see cref="MethodEntry"/>
         /// </summary>
-        public static MethodEntry EncodeMethod(MethodInfo method, ICustomSerialization serialization)
+        public static MethodEntry EncodeMethod(MethodBase method, ICustomSerialization serialization)
         {
             return new MethodEntry
             {
                 Name = method.Name,
+                IsConstructor = method.IsConstructor,
                 DisplayName = method.GetDisplayName() ?? method.Name,
                 Description = method.GetDescription(),
-                ParameterRoot = new Entry
+                Parameters = new Entry
                 {
                     Key = new EntryKey { Name = "Root", Identifier = "Root" },
                     Value = new EntryValue { Type = EntryValueType.Class },
                     SubEntries = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToList()
                 }
             };
+        }
+
+        /// <summary>
+        /// Encode all methods of an object using <see cref="DefaultSerialization"/>
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeMethods(object source)
+        {
+            return EncodeMethods(source.GetType(), Serialization);
+        }
+
+        /// <summary>
+        /// Encode all methods of an object using a custom customSerialization
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeMethods(object source, ICustomSerialization serialization)
+        {
+            return EncodeMethods(source.GetType(), serialization);
+        }
+
+        /// <summary>
+        /// Encode all methods of class using <see cref="DefaultSerialization"/>
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeMethods(Type objType)
+        {
+            return EncodeMethods(objType, Serialization);
+        }
+
+        /// <summary>
+        /// Encode all methods of a type using a custom customSerialization
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeMethods(Type objType, ICustomSerialization serialization)
+        {
+            var methods = serialization.GetMethods(objType);
+            return methods.Select(m => EncodeMethod(m, serialization));
+        }
+
+        /// <summary>
+        /// Encode all constructors of a class
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeConstructors(Type objType)
+        {
+            return EncodeConstructors(objType, Serialization);
+        }
+
+        /// <summary>
+        /// Encode all constructors of a class
+        /// </summary>
+        public static IEnumerable<MethodEntry> EncodeConstructors(Type objType, ICustomSerialization serialization)
+        {
+            var constructors = objType.GetConstructors();
+            return constructors.Select(c => EncodeMethod(c, serialization));
         }
 
         /// <summary>
@@ -386,39 +437,6 @@ namespace Marvin.Serialization
             }
 
             return parameterModel;
-        }
-
-        /// <summary>
-        /// Encode all methods of an object using <see cref="DefaultSerialization"/>
-        /// </summary>
-        public static IEnumerable<MethodEntry> EncodeMethods(object source)
-        {
-            return EncodeMethods(source.GetType(), Serialization);
-        }
-
-        /// <summary>
-        /// Encode all methods of an object using a custom customSerialization
-        /// </summary>
-        public static IEnumerable<MethodEntry> EncodeMethods(object source, ICustomSerialization serialization)
-        {
-            return EncodeMethods(source.GetType(), serialization);
-        }
-
-        /// <summary>
-        /// Encode all methods of class using <see cref="DefaultSerialization"/>
-        /// </summary>
-        public static IEnumerable<MethodEntry> EncodeMethods(Type objType)
-        {
-            return EncodeMethods(objType, Serialization);
-        }
-
-        /// <summary>
-        /// Encode all methods of a type using a custom customSerialization
-        /// </summary>
-        public static IEnumerable<MethodEntry> EncodeMethods(Type objType, ICustomSerialization serialization)
-        {
-            var methods = serialization.GetMethods(objType);
-            return methods.Select(m => EncodeMethod(m, serialization));
         }
 
         #endregion
@@ -465,6 +483,30 @@ namespace Marvin.Serialization
         }
 
         /// <summary>
+        /// Create object instance from config model using entry for specialized types
+        /// </summary>
+        public static object CreateInstance(Type type, MethodEntry encodedConstructor)
+        {
+            return CreateInstance(type, encodedConstructor, Serialization);
+        }
+
+        /// <summary>
+        /// Create object instance from config model using entry for specialized types
+        /// </summary>
+        public static object CreateInstance(Type type, MethodEntry encodedConstructor, ICustomSerialization customSerialization)
+        {
+            // Retrieve the most specific constructor matched by the encoded method entry
+            var constructor = (from ctor in type.GetConstructors()
+                let parameters = ctor.GetParameters()
+                where parameters.Length == encodedConstructor.Parameters.SubEntries.Count
+                      && ParametersProvided(parameters, encodedConstructor)
+                select ctor).First();
+            var arguments = ConvertArguments(constructor, encodedConstructor, customSerialization);
+            var instance = constructor.Invoke(arguments);
+            return instance;
+        }
+
+        /// <summary>
         /// Update existing object from encoded values
         /// </summary>
         public static object UpdateInstance(object instance, Entry encoded)
@@ -492,11 +534,11 @@ namespace Marvin.Serialization
                 var value = mapped.Entry == null
                     ? customSerialization.DefaultValue(property, currentValue)
                     : customSerialization.ConvertValue(propertyType, property, mapped.Entry, currentValue);
-                
+
                 // Value types and strings do not need recursion
                 if (ValueOrStringType(propertyType))
                 {
-                    
+
                 }
                 // Update collection from entry
                 else if (value is ICollection && mapped.Entry != null)
@@ -530,7 +572,7 @@ namespace Marvin.Serialization
         /// <summary>
         /// Update or fill the collection using the mapping entry
         /// </summary>
-        private static void UpdateCollection(object currentValue, Type memberType, ICustomAttributeProvider attributeProvider, Entry rootEntry, 
+        private static void UpdateCollection(object currentValue, Type memberType, ICustomAttributeProvider attributeProvider, Entry rootEntry,
             ICollectionStrategy strategy, ICustomSerialization customSerialization)
         {
             var currentCollection = currentValue as ICollection;
@@ -642,12 +684,32 @@ namespace Marvin.Serialization
         /// </summary>
         public static Entry InvokeMethod(object target, MethodEntry methodEntry, ICustomSerialization customSerialization)
         {
-            var parameterEntries = methodEntry.ParameterRoot.SubEntries;
-            var method = target.GetType().GetMethods().First(m => m.Name == methodEntry.Name
-                                                               && m.GetParameters().All(p => parameterEntries.Any(pe => pe.Key.Identifier == p.Name)));
-            var parameters = method.GetParameters();
+            var method = target.GetType().GetMethods()
+                .First(m => m.Name == methodEntry.Name && ParametersProvided(m.GetParameters(), methodEntry));
+            var arguments = ConvertArguments(method, methodEntry, customSerialization);
 
+            var result = method.Invoke(target, arguments);
+            return result == null ? null : EncodeObject(result, customSerialization);
+        }
+
+        /// <summary>
+        /// Check if all parameters are provided by the given <see cref="MethodEntry"/>
+        /// </summary>
+        private static bool ParametersProvided(ParameterInfo[] parameters, MethodEntry encodedMethod)
+        {
+            var encodedParameters = encodedMethod.Parameters.SubEntries;
+            return parameters.All(p => encodedParameters.Any(se => se.Key.Identifier == p.Name));
+        }
+
+        /// <summary>
+        /// Convert encoded parameters to argument array for method invocation
+        /// </summary>
+        private static object[] ConvertArguments(MethodBase method, MethodEntry encodedMethod, ICustomSerialization customSerialization)
+        {
+            var parameters = method.GetParameters();
             var arguments = new object[parameters.Length];
+            var parameterEntries = encodedMethod.Parameters.SubEntries;
+
             for (var i = 0; i < parameters.Length; i++)
             {
                 var entry = parameterEntries[i];
@@ -678,8 +740,7 @@ namespace Marvin.Serialization
                 arguments[i] = argument;
             }
 
-            var result = method.Invoke(target, arguments);
-            return result == null ? null : EncodeObject(result, customSerialization);
+            return arguments;
         }
 
         #endregion

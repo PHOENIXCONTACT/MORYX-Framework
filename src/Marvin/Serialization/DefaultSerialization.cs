@@ -109,6 +109,12 @@ namespace Marvin.Serialization
         }
 
         /// <see cref="ICustomSerialization"/>
+        public virtual IEnumerable<ConstructorInfo> GetConstructors(Type sourceType)
+        {
+            return sourceType.GetConstructors();
+        }
+
+        /// <see cref="ICustomSerialization"/>
         public virtual IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
         {
             // Return pairs where available
