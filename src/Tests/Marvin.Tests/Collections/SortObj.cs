@@ -15,7 +15,7 @@ namespace Marvin.Tests.Collections
 
         public override string ToString()
         {
-            return string.Format("Order: {0} - Name: {1}", SortOrder, Name);
+            return $"Order: {SortOrder} - Name: {Name}";
         }
     }
 }

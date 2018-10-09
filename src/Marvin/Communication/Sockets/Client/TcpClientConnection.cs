@@ -52,6 +52,9 @@ namespace Marvin.Communication.Sockets
         /// </summary>
         private TcpClient _tcpClient;
 
+        /// <summary>
+        /// Temporary property used for reconnection
+        /// </summary>
         internal int ReconnectDelayMs { get; set; }
 
         /// <summary>
@@ -136,7 +139,7 @@ namespace Marvin.Communication.Sockets
         /// <inheritdoc />
         public void Reconnect(int delayMs)
         {
-            lock(_state)
+            lock(_stateLock)
                 _state.Reconnect(delayMs);
         }
 
