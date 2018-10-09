@@ -49,6 +49,10 @@ namespace Marvin.Serialization
         IEnumerable<MethodInfo> GetMethods(Type sourceType);
 
         /// <summary>
+        /// Filter relevant constructors of an object
+        /// </summary>
+        IEnumerable<ConstructorInfo> GetConstructors(Type sourceType);
+            /// <summary>
         /// Filter the properties that shall be included when creating the object
         /// </summary>
         IEnumerable<MappedProperty> WriteFilter(Type targetType, IEnumerable<Entry> entries);

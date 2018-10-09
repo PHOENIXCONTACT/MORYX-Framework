@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace Marvin.Serialization
 {
@@ -10,6 +11,14 @@ namespace Marvin.Serialization
     /// </summary>
     public class EditorVisibleSerialization : DefaultSerialization
     {
+        private static readonly Lazy<EditorVisibleSerialization> LazyInstance 
+            = new Lazy<EditorVisibleSerialization>(LazyThreadSafetyMode.ExecutionAndPublication);
+
+        /// <summary>
+        /// Singleton instance
+        /// </summary>
+        public static EditorVisibleSerialization Instance => LazyInstance.Value;
+
         /// <inheritdoc />
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
@@ -27,6 +36,12 @@ namespace Marvin.Serialization
                 : methods.Where(method => Attribute.IsDefined(method, typeof(EditorVisibleAttribute))); // Filter methods carrying the editor visible attribute
 
             return methods;
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<ConstructorInfo> GetConstructors(Type sourceType)
+        {
+            return base.GetConstructors(sourceType).Where(c => Attribute.IsDefined(c, typeof(EditorVisibleAttribute)));
         }
     }
 }

@@ -570,6 +570,24 @@ namespace Marvin.Tests
             }
         }
 
+        [Test]
+        public void CreateInstanceWithConstructor()
+        {
+            // Arrange
+            var dummyType = typeof(ConstructorDummy);
+
+            // Act
+            var constructors = EntryConvert.EncodeConstructors(dummyType).ToArray();
+            var constructor = constructors.First(c => c.Parameters.SubEntries.Count == 1);
+            constructor.Parameters.SubEntries[0].Value.Current = "42";
+            var instance = (ConstructorDummy)EntryConvert.CreateInstance(dummyType, constructor);
+
+            // Assert
+            Assert.NotNull(instance);
+            Assert.AreEqual(42, instance.Foo);
+            Assert.AreEqual(string.Empty, instance.Text, "EntryConvert did not pick the correct overload");
+        }
+
         public enum CollectionType
         {
             List,
@@ -610,7 +628,7 @@ namespace Marvin.Tests
 
         private static Entry CollectionEntry(IEnumerable<Entry> allEntries, CollectionType type)
         {
-            return allEntries.First(e => e.Key.Identifier == string.Format("Sub{0}", type.ToString("G")));
+            return allEntries.First(e => e.Key.Identifier == $"Sub{type:G}");
         }
 
         private static IList ExtractCollection(CollectionType type, DummyClass obj)
