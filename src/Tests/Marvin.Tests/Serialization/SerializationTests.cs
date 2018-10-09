@@ -314,6 +314,21 @@ namespace Marvin.Tests
             }
         }
 
+        [Test]
+        public void SurviveGetterException()
+        {
+            // Arrange
+            var dummy = new ExceptionDummy();
+
+            // Act
+            var encoded = EntryConvert.EncodeObject(dummy);
+
+            // Assert
+            Assert.NotNull(encoded);
+            Assert.AreEqual(EntryValueType.Exception, encoded.SubEntries[0].Value.Type);
+            Assert.NotNull(encoded.SubEntries[0].Value.Current);
+        }
+
         [TestCase(CollectionType.Array, 3, 2)]
         [TestCase(CollectionType.Array, 0, 4)]
         [TestCase(CollectionType.List, 5, 3)]

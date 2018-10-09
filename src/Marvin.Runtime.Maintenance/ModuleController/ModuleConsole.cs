@@ -58,11 +58,5 @@ Available plugins:
         {
             outputStream("Maintenance does not support any console commands!");
         }
-
-        [EditorVisible]
-        public ModuleConfig Test(ModuleConfig config)
-        {
-            return config;
-        }
     }
 }

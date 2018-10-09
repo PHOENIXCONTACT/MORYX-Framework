@@ -5,20 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Marvin.Tools;
-using static Marvin.Serialization.EntryConvert;
 
 namespace Marvin.Serialization
 {
-    internal class EntryConvertObjectWrapper
-    {
-        public EntryConvertObjectWrapper(object instance)
-        {
-            Instance = instance;
-        }
-
-        public object Instance { get; set; }
-    }
-
     /// <summary>
     /// Non-generated part of the customSerialization helper
     /// </summary>
@@ -72,19 +61,11 @@ namespace Marvin.Serialization
         /// <summary>
         /// Convert a single property into a derived type of entry using a custom strategy
         /// </summary>
-        /// <typeparam name="T">Type of property representation</typeparam>
         /// <returns>Covnerted property</returns>
         public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization)
         {
             // Fill with default if entry is null
-<<<<<<< HEAD
-
-            var entry = new T
-=======
-            var descriptionAtt = property.GetCustomAttribute<DescriptionAttribute>();
-            var displayNameAtt = property.GetCustomAttribute<DisplayNameAttribute>();
             var entry = new Entry
->>>>>>> Root entry refactoring
             {
                 Key = new EntryKey
                 {
@@ -109,20 +90,16 @@ namespace Marvin.Serialization
         /// <see cref="ICustomSerialization"/>
         private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization)
         {
-            // Prepare object
-
             // Set if the current entry is readonly by checking if the property has a setter
             // or the ReadOnlyAttribute was set to true
             var isReadOnly = !property.CanWrite;
             if (!isReadOnly)
             {
                 var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
-                if (readOnlyAtt != null)
-                {
-                    isReadOnly = readOnlyAtt.IsReadOnly;
-                }
+                isReadOnly = readOnlyAtt?.IsReadOnly ?? false;
             }
 
+            // Prepare object
             var entryValue = new EntryValue
             {
                 Type = TransformType(property.PropertyType),
@@ -214,20 +191,7 @@ namespace Marvin.Serialization
         /// </summary>
         public static Entry EncodeClass(Type objType, ICustomSerialization customSerialization)
         {
-            var encodedClass = new Entry
-            {
-                Key = new EntryKey
-                {
-                    Name = objType.Name,
-                    Identifier = objType.Name
-                },
-                Value = new EntryValue
-                {
-                    Current = objType.Name,
-                    Default = objType.Name,
-                    Type = TransformType(objType)
-                }
-            };
+            var encodedClass = CreateFromType(objType);
 
             var filtered = customSerialization.GetProperties(objType);
             foreach (var property in filtered)
@@ -266,30 +230,31 @@ namespace Marvin.Serialization
             var instanceType = instance.GetType();
             var isValueType = ValueOrStringType(instanceType);
 
-            var converted = new Entry
-            {
-                Key = new EntryKey
-                {
-                    Name = instanceType.Name,
-                    Identifier = instanceType.Name
-                },
-                Value = new EntryValue
-                {
-                    Current = isValueType ? instance.ToString() : instanceType.Name,
-                    Default = instanceType.Name,
-                    Type = TransformType(instanceType)
-                }
-            };
+            var converted = CreateFromType(instanceType);
 
             if (isValueType)
+            {
+                converted.Value.Current = instance.ToString();
                 return converted;
-
+            }
+            
             var filtered = customSerialization.GetProperties(instance.GetType());
             foreach (var property in filtered)
             {
-                var value = property.GetValue(instance);
-
                 var convertedProperty = EncodeProperty(property, customSerialization);
+
+                object value;
+                try
+                {
+                    value = property.GetValue(instance);
+                }
+                catch (Exception ex)
+                {
+                    value = ex;
+                    // Change type in case of exception
+                    convertedProperty.Value.Type = EntryValueType.Exception;
+                }
+                
                 switch (convertedProperty.Value.Type)
                 {
                     case EntryValueType.Collection:
@@ -298,35 +263,24 @@ namespace Marvin.Serialization
                         if (enumurable == null)
                             break;
 
-                        var possibleElementValues =
-                            customSerialization.PossibleElementValues(property.PropertyType, property);
+                        var possibleElementValues = customSerialization.PossibleElementValues(property.PropertyType, property);
                         var strategy = CreateStrategy(value, value, property.PropertyType, customSerialization);
-                        var subentries = strategy.Serialize();
-                        foreach (var entry in subentries)
+                        foreach (var entry in strategy.Serialize())
                         {
                             entry.Value.Possible = possibleElementValues;
                             convertedProperty.SubEntries.Add(entry);
                         }
-
                         break;
-
                     case EntryValueType.Class:
-                        Entry subEntry;
-                        if (value == null)
-                        {
-                            subEntry = EncodeClass(property.PropertyType, customSerialization);
-                        }
-                        else
-                        {
-                            subEntry = EncodeObject(value, customSerialization);
-                        }
-
-                        subEntry.Description = property.GetCustomAttribute<DescriptionAttribute>()?.Description;
-                        subEntry.Key.Name = property.Name;
-                        subEntry.Key.Identifier = property.Name;
-                        subEntry.Prototypes = convertedProperty.Prototypes;
-                        converted.SubEntries.Add(subEntry);
-                        continue;
+                        var subEntry = value == null 
+                            ? EncodeClass(property.PropertyType, customSerialization) 
+                            : EncodeObject(value, customSerialization);
+                        convertedProperty.Value.Current = subEntry.Value.Current;
+                        convertedProperty.SubEntries = subEntry.SubEntries;
+                        break;
+                    case EntryValueType.Exception:
+                        convertedProperty.Value.Current = value.ToString();
+                        break;
                     default:
                         convertedProperty.Value.Current = value?.ToString();
                         break;
@@ -336,6 +290,30 @@ namespace Marvin.Serialization
             }
 
             return converted;
+        }
+
+        /// <summary>
+        /// Create basic <see cref="Entry"/> instance for a given object type
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
+        private static Entry CreateFromType(Type objectType)
+        {
+            var entry = new Entry
+            {
+                Key = new EntryKey
+                {
+                    Name = objectType.Name,
+                    Identifier = objectType.Name
+                },
+                Value = new EntryValue
+                {
+                    Current = objectType.Name,
+                    Default = objectType.Name,
+                    Type = TransformType(objectType)
+                }
+            };
+            return entry;
         }
 
         /// <summary>
@@ -357,20 +335,14 @@ namespace Marvin.Serialization
             return new MethodEntry
             {
                 Name = method.Name,
-<<<<<<< HEAD
                 DisplayName = method.GetDisplayName() ?? method.Name,
                 Description = method.GetDescription(),
-                Parameters = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToArray()
-=======
-                DisplayName = method.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? method.Name,
-                Description = method.GetCustomAttribute<DescriptionAttribute>()?.Description,
                 ParameterRoot = new Entry
                 {
                     Key = new EntryKey { Name = "Root", Identifier = "Root" },
                     Value = new EntryValue { Type = EntryValueType.Class },
                     SubEntries = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToList()
                 }
->>>>>>> Root entry refactoring
             };
         }
 
@@ -403,12 +375,8 @@ namespace Marvin.Serialization
             {
                 case EntryValueType.Class:
                     parameterModel.Value.Current = parameterType.Name;
-<<<<<<< HEAD
                     parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
-                    parameterModel.SubEntries = EncodeClass(parameterType, serialization).ToList();
-=======
                     parameterModel.SubEntries = EncodeClass(parameterType, serialization).SubEntries;
->>>>>>> Root entry refactoring
                     break;
                 case EntryValueType.Collection:
                     var elemType = ElementType(parameterType);
@@ -512,6 +480,10 @@ namespace Marvin.Serialization
             var filtered = customSerialization.WriteFilter(instance.GetType(), encoded.SubEntries);
             foreach (var mapped in filtered)
             {
+                // Do not operate on faulty properties
+                if(mapped.Entry?.Value.Type == EntryValueType.Exception)
+                    continue;
+
                 var property = mapped.Property;
                 var propertyType = mapped.Property.PropertyType;
 
@@ -536,10 +508,7 @@ namespace Marvin.Serialization
                 // Update class
                 else if (propertyType.IsClass)
                 {
-                    if (mapped.Entry == null)
-                        UpdateInstance(value, new Entry(), customSerialization);
-                    else
-                        UpdateInstance(value, mapped.Entry, customSerialization);
+                   UpdateInstance(value, mapped.Entry ?? new Entry(), customSerialization);
                 }
                 else
                 {
@@ -710,24 +679,7 @@ namespace Marvin.Serialization
             }
 
             var result = method.Invoke(target, arguments);
-            if (result == null)
-                return null;
-
-            var resultModel = new Entry
-            {
-                Key = new EntryKey { Name = "ReturnValue" },
-                Value = new EntryValue
-                {
-                    Current = result.ToString(),
-                    Type = TransformType(result.GetType())
-                }
-            };
-            if (resultModel.Value.Type == EntryValueType.Class)
-            {
-                resultModel.SubEntries = EncodeObject(result, customSerialization).SubEntries;
-            }
-
-            return resultModel;
+            return result == null ? null : EncodeObject(result, customSerialization);
         }
 
         #endregion
