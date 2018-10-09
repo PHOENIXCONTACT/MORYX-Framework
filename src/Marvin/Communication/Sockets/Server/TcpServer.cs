@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Marvin.Communication.Sockets
 {
@@ -38,11 +39,16 @@ namespace Marvin.Communication.Sockets
     /// </summary>
     internal class TcpServer
     {
-        private static TcpServer _instance;
+        /// <summary>
+        /// Lazy threadsafe instance of the tcp server
+        /// </summary>
+        private static readonly Lazy<TcpServer> LazyInstance =
+            new Lazy<TcpServer>(() => new TcpServer(), LazyThreadSafetyMode.ExecutionAndPublication);
+
         /// <summary>
         /// Singleton instance of the server
         /// </summary>
-        public static TcpServer Instance => _instance ?? (_instance = new TcpServer());
+        public static TcpServer Instance => LazyInstance.Value;
 
         /// <summary>
         /// List of all running listeners
