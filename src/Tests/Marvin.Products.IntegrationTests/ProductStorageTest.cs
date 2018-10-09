@@ -196,8 +196,9 @@ namespace Marvin.Products.IntegrationTests
             Assert.AreEqual(watch, watchParent.PossibleWatches[0].Product, "Product tree inconsistent!");
         }
 
-        [Test]
-        public void LoadLatestRevision()
+        [TestCase(true, Description = "Get the latest revision of an existing product")]
+        [TestCase(false, Description = "Try to get the latest revision of a not-existing product")]
+        public void LoadLatestRevision(bool exists)
         {
             const string newName = "Jaques Lemans XS";
 
@@ -209,12 +210,19 @@ namespace Marvin.Products.IntegrationTests
             watchStorage.SaveProduct(watch);
 
             // Act
-            var loadedWatch = (WatchProduct) watchStorage.LoadProduct(ProductIdentity.AsLatestRevision(WatchMaterial));
+            var loadedWatch = (WatchProduct) watchStorage.LoadProduct(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
 
             // Assert
-            Assert.NotNull(loadedWatch);
-            Assert.AreEqual(42, ((ProductIdentity)loadedWatch.Identity).Revision);
-            Assert.AreEqual(newName, loadedWatch.Name);
+            if (exists)
+            {
+                Assert.NotNull(loadedWatch);
+                Assert.AreEqual(42, ((ProductIdentity) loadedWatch.Identity).Revision);
+                Assert.AreEqual(newName, loadedWatch.Name);
+            }
+            else
+            {
+                Assert.IsNull(loadedWatch);
+            }
         }
     }
 }

@@ -170,7 +170,16 @@ namespace Marvin.Products.Management
                 var revision = identity.Revision;
                 // If the latest revision was requested, replace it with the highest current revision
                 if (revision == ProductIdentity.LatestRevision)
-                    revision = productRepo.Linq.Where(p => p.MaterialNumber == identity.Identifier).Max(p => p.Revision);
+                {
+                    // Get all revisions of this product
+                    var revisions = productRepo.Linq
+                        .Where(p => p.MaterialNumber == identity.Identifier)
+                        .Select(p => p.Revision).ToList();
+                    if (revisions.Any())
+                        revision = revisions.Max();
+                    else
+                        return null;
+                }
 
                 var product = uow.GetRepository<IProductEntityRepository>().GetByIdentity(identity.Identifier, revision);
                 return product != null ? Transform(uow, product, true) : null;
