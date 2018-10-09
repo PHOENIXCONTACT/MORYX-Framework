@@ -60,6 +60,10 @@
         /// <summary>
         /// Value type Collection.
         /// </summary>
-        Collection
+        Collection,
+        /// <summary>
+        /// Retrieving the value caused an exception
+        /// </summary>
+        Exception,
     }
 }
