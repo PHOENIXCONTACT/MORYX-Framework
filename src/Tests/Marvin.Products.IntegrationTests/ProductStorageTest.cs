@@ -12,6 +12,8 @@ namespace Marvin.Products.IntegrationTests
     {
         private InMemoryUnitOfWorkFactory _factory;
 
+        private const string WatchMaterial = "87654";
+
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
@@ -22,12 +24,12 @@ namespace Marvin.Products.IntegrationTests
             _factory.Initialize();
         }
 
-        private static WatchProduct SetupProduct(string watchName, string identifierPrefix)
+        private static WatchProduct SetupProduct(string watchName, string identifierPrefix, short revision = 5)
         {
             var watchface = new WatchfaceProduct
             {
                 Name = "Black water resistant for " + watchName,
-                Identity = new ProductIdentity(identifierPrefix + "4711", 1),
+                Identity = new ProductIdentity(identifierPrefix + "4711", revision),
                 Numbers = new[] { 3, 6, 9, 12 }
             };
 
@@ -50,7 +52,7 @@ namespace Marvin.Products.IntegrationTests
             var watch = new WatchProduct
             {
                 Name = watchName,
-                Identity = new ProductIdentity(identifierPrefix + "87654", 5),
+                Identity = new ProductIdentity(identifierPrefix + WatchMaterial, revision),
                 Watchface = new ProductPartLink<WatchfaceProduct> { Product = watchface },
                 Needles = needles
             };
@@ -192,6 +194,27 @@ namespace Marvin.Products.IntegrationTests
             var watchParent = (WatchPackageProduct)watch.Parent;
             Assert.AreEqual(1, watchParent.PossibleWatches.Count, "Reference should only be loaded partially");
             Assert.AreEqual(watch, watchParent.PossibleWatches[0].Product, "Product tree inconsistent!");
+        }
+
+        [Test]
+        public void LoadLatestRevision()
+        {
+            const string newName = "Jaques Lemans XS";
+
+            // Arrange
+            var watchStorage = new WatchProductStorage { Factory = _factory };
+            var watch = SetupProduct("Jaques Lemans", string.Empty);
+            watchStorage.SaveProduct(watch);
+            watch = SetupProduct(newName, string.Empty, 42);
+            watchStorage.SaveProduct(watch);
+
+            // Act
+            var loadedWatch = (WatchProduct) watchStorage.LoadProduct(ProductIdentity.AsLatestRevision(WatchMaterial));
+
+            // Assert
+            Assert.NotNull(loadedWatch);
+            Assert.AreEqual(42, ((ProductIdentity)loadedWatch.Identity).Revision);
+            Assert.AreEqual(newName, loadedWatch.Name);
         }
     }
 }

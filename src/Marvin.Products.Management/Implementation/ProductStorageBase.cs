@@ -165,7 +165,14 @@ namespace Marvin.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var product = uow.GetRepository<IProductEntityRepository>().GetByIdentity(identity.Identifier, identity.Revision);
+                var productRepo = uow.GetRepository<IProductEntityRepository>();
+
+                var revision = identity.Revision;
+                // If the latest revision was requested, replace it with the highest current revision
+                if (revision == ProductIdentity.LatestRevision)
+                    revision = productRepo.Linq.Where(p => p.MaterialNumber == identity.Identifier).Max(p => p.Revision);
+
+                var product = uow.GetRepository<IProductEntityRepository>().GetByIdentity(identity.Identifier, revision);
                 return product != null ? Transform(uow, product, true) : null;
             }
         }
@@ -271,7 +278,7 @@ namespace Marvin.Products.Management
             // For the flat strategy we only set this one link on the parent
             if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(selfReference.PropertyType))
             {
-                var linkCollection = (IList) Activator.CreateInstance(selfReference.PropertyType);
+                var linkCollection = (IList)Activator.CreateInstance(selfReference.PropertyType);
                 linkCollection.Add(parentLink);
                 selfReference.SetValue(parent, linkCollection);
             }

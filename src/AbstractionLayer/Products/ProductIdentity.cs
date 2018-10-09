@@ -9,6 +9,11 @@ namespace Marvin.AbstractionLayer
     public class ProductIdentity : IIdentity
     {
         /// <summary>
+        /// Const value representing the latest revision of a product. This is intended for later changes of this constant.
+        /// </summary>
+        public const short LatestRevision = short.MinValue;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProductIdentity"/> class.
         /// </summary>
         /// <param name="identifier">The identifier.</param>
@@ -20,9 +25,14 @@ namespace Marvin.AbstractionLayer
         }
 
         /// <summary>
+        /// Create a product identity that represents the latest revision of a given identifier
+        /// </summary>
+        public static ProductIdentity AsLatestRevision(string identifier) => new ProductIdentity(identifier, LatestRevision);
+
+        /// <summary>
         /// Main and unique string identifier
         /// </summary>
-        public string Identifier { get; private set; }
+        public string Identifier { get; }
 
         /// <summary>
         /// Set the identifier for this identity
@@ -37,7 +47,7 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Revision of this instance
         /// </summary>
-        public short Revision { get; private set; }
+        public short Revision { get; }
 
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.

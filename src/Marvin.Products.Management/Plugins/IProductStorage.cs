@@ -16,7 +16,7 @@ namespace Marvin.Products.Management
         IProduct LoadProduct(long id);
 
         /// <summary>
-        /// Load product by identity
+        /// Load product by identity. This method supports loading a products latest revision
         /// </summary>
         IProduct LoadProduct(ProductIdentity identity);
 

@@ -72,7 +72,7 @@ contains information which will be used to check the constraint.
 
 ## Identity
 
-[Identities](xref:Marvin.AbstractionLayer.Identity.IIdentity) are used to represent unique properties like serial numbers and MAC adresses for Articles and material number for Products.
+[Identities](xref:Marvin.AbstractionLayer.Identity.IIdentity) are used to represent unique properties like serial numbers and MAC adresses for Articles and material number for Products. There is also the derived type [ProductIdentity](xref:Marvin.AbstractionLayer.ProductIdentity) that represents a products material number and revision. The static constructor `AsLatestRevision` also lets you refer to the latest revision for a certain material.
 
 ## Process
 
