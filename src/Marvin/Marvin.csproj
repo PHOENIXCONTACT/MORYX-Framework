@@ -295,7 +295,6 @@
     <Compile Include="Workflows\API\Editing\UserOperation.cs" />
     <Compile Include="Workflows\API\Editing\WorkplanEditingSession.cs" />
     <Compile Include="Workflows\API\Editing\WorkplanStepModel.cs" />
-    <Compile Include="Workflows\API\Editing\WorkplanStepHelper.cs" />
     <Compile Include="Workflows\API\Editing\WorkplanStepRecipe.cs" />
     <Compile Include="Workflows\API\IAttemptInvokation.cs" />
     <Compile Include="Workflows\API\IIndexResolver.cs" />
@@ -321,12 +320,9 @@
     <Compile Include="Workflows\Compiler\ICompiler.cs" />
     <Compile Include="Workflows\Compiler\OutputRelation.cs" />
     <Compile Include="Workflows\Compiler\WorkplanCompiler.cs" />
-    <Compile Include="Workflows\Editing\InitializerAttribute.cs" />
     <Compile Include="Workflows\Editing\IWorkplanAction.cs" />
     <Compile Include="Workflows\Editing\StepCreationContainer.cs" />
-    <Compile Include="Workflows\Editing\StepTypeConverter.cs" />
     <Compile Include="Workflows\Editing\WorkplanEditing.cs" />
-    <Compile Include="Workflows\Editing\WorkplanSerialization.cs" />
     <Compile Include="Workflows\Implementation\Connector.cs" />
     <Compile Include="Workflows\Implementation\Engine\EngineState.cs" />
     <Compile Include="Workflows\Implementation\Engine\IdleState.cs" />

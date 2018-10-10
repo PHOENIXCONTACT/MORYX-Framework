@@ -113,7 +113,7 @@ namespace Marvin.Tests.Workflows
             // Assert
             Assert.AreEqual(1, session.AvailableSteps.Length, "Step not resolved");
             var step = session.AvailableSteps[0];
-            var paramsToCheck = paramStepType == typeof(ParameterStep) ? step.Properties : step.ConstructorParameters;
+            var paramsToCheck = paramStepType == typeof(ParameterStep) ? step.Properties : step.Constructor.Parameters;
 
             Assert.AreEqual(1, paramsToCheck.SubEntries.Count);
             var param = paramsToCheck.SubEntries[0];
@@ -151,7 +151,7 @@ namespace Marvin.Tests.Workflows
             var step = session.AvailableSteps[0];
 
             // Act
-            var paramsToCheck = paramStepType == typeof(ParameterStep) ? step.Properties : step.ConstructorParameters;
+            var paramsToCheck = paramStepType == typeof(ParameterStep) ? step.Properties : step.Constructor.Parameters;
 
             paramsToCheck.SubEntries[0].SubEntries[0].Value.Current = "10";
             if (paramStepType == typeof(ParameterConstructorStep))
@@ -267,9 +267,7 @@ namespace Marvin.Tests.Workflows
             Assert.AreEqual(1, session.AvailableSteps.Length);
             var step = session.AvailableSteps.First();
             Assert.AreEqual(types[0].Name, step.Name);
-            Assert.AreEqual(1, step.ConstructorParameters.SubEntries.Count);
-            var wpInit = step.ConstructorParameters.SubEntries[0];
-            Assert.AreEqual(EntryValueType.Int64, wpInit.Value.Type);
+            Assert.AreEqual(StepClassification.Subworkplan, step.Classification);
         }
 
         [Test]
@@ -282,7 +280,7 @@ namespace Marvin.Tests.Workflows
 
             // Act
             var step = session.AvailableSteps[0];
-            step.ConstructorParameters.SubEntries[0].Value.Current = "1";
+            step.SubworkplanId = 1;
             editing.AddStep(step);
             var workplan = editing.Finish();
 
@@ -319,9 +317,9 @@ namespace Marvin.Tests.Workflows
             // Assert
             Assert.AreEqual(1, session.AvailableSteps.Length);
             var step = session.AvailableSteps[0];
-            Assert.AreEqual(2, step.ConstructorParameters.SubEntries.Count, "Did not use constructor with most arguments");
-            Assert.AreEqual("outputs", step.ConstructorParameters.SubEntries[0].Key.Identifier);
-            Assert.AreEqual("name", step.ConstructorParameters.SubEntries[1].Key.Identifier);
+            Assert.AreEqual(2, step.Constructor.Parameters.SubEntries.Count, "Did not use constructor with most arguments");
+            Assert.AreEqual("outputs", step.Constructor.Parameters.SubEntries[0].Key.Identifier);
+            Assert.AreEqual("name", step.Constructor.Parameters.SubEntries[1].Key.Identifier);
         }
 
         [Test]
@@ -337,12 +335,12 @@ namespace Marvin.Tests.Workflows
             // Assert
             Assert.AreEqual(1, session.AvailableSteps.Length);
             var step = session.AvailableSteps[0];
-            Assert.AreEqual(2, step.ConstructorParameters.SubEntries.Count, "Insufficient number of parameters");
+            Assert.AreEqual(2, step.Constructor.Parameters.SubEntries.Count, "Insufficient number of parameters");
             Assert.AreEqual(2, step.Properties.SubEntries.Count, "Insufficient number of properties");
             // Constructor parameters
-            Assert.IsNull(step.ConstructorParameters.SubEntries[0].Value.Default);
-            Assert.NotNull(step.ConstructorParameters.SubEntries[1].Value.Default);
-            Assert.AreEqual("2", step.ConstructorParameters.SubEntries[1].Value.Default);
+            Assert.IsNull(step.Constructor.Parameters.SubEntries[0].Value.Default);
+            Assert.NotNull(step.Constructor.Parameters.SubEntries[1].Value.Default);
+            Assert.AreEqual("2", step.Constructor.Parameters.SubEntries[1].Value.Default);
             // Properties
             Assert.NotNull(step.Properties.SubEntries[0].Value.Default, "Value types always have a default");
             Assert.NotNull(step.Properties.SubEntries[1].Value.Default, "This property should have default value");
@@ -359,8 +357,8 @@ namespace Marvin.Tests.Workflows
             var dummyRecipe = session.AvailableSteps[0];
 
             // Act
-            dummyRecipe.ConstructorParameters.SubEntries[0].Value.Current = "2";
-            dummyRecipe.ConstructorParameters.SubEntries[1].Value.Current = "Test";
+            dummyRecipe.Constructor.Parameters.SubEntries[0].Value.Current = "2";
+            dummyRecipe.Constructor.Parameters.SubEntries[1].Value.Current = "Test";
             var mod = editing.AddStep(dummyRecipe);
             var result = editing.Finish();
 
@@ -415,8 +413,8 @@ namespace Marvin.Tests.Workflows
             var dummyRecipe = session.AvailableSteps[0];
 
             // Act
-            dummyRecipe.ConstructorParameters.SubEntries[0].Value.Current = "1";
-            dummyRecipe.ConstructorParameters.SubEntries[1].Value.Current = "Test";
+            dummyRecipe.Constructor.Parameters.SubEntries[0].Value.Current = "1";
+            dummyRecipe.Constructor.Parameters.SubEntries[1].Value.Current = "Test";
 
             editing.AddStep(dummyRecipe);
             editing.AddStep(dummyRecipe);
@@ -439,8 +437,8 @@ namespace Marvin.Tests.Workflows
             var dummyRecipe = session.AvailableSteps[0];
 
             // Act
-            dummyRecipe.ConstructorParameters.SubEntries[0].Value.Current = "1";
-            dummyRecipe.ConstructorParameters.SubEntries[1].Value.Current = "Test";
+            dummyRecipe.Constructor.Parameters.SubEntries[0].Value.Current = "1";
+            dummyRecipe.Constructor.Parameters.SubEntries[1].Value.Current = "Test";
             editing.AddStep(dummyRecipe);
 
             editing.Connect(new ConnectionPoint { NodeId = 1, IsConnector = true }, new ConnectionPoint { NodeId = 3, Index = 0 });
@@ -462,8 +460,8 @@ namespace Marvin.Tests.Workflows
             editing.SetAvailableTypes(typeof(DummyStep));
             var session = editing.ExportSession();
             var dummyRecipe = session.AvailableSteps[0];
-            dummyRecipe.ConstructorParameters.SubEntries[0].Value.Current = "1";
-            dummyRecipe.ConstructorParameters.SubEntries[1].Value.Current = "Test";
+            dummyRecipe.Constructor.Parameters.SubEntries[0].Value.Current = "1";
+            dummyRecipe.Constructor.Parameters.SubEntries[1].Value.Current = "Test";
             editing.AddStep(dummyRecipe);
 
             // Act

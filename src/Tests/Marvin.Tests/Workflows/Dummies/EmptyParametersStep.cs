@@ -1,4 +1,5 @@
-﻿using Marvin.Workflows;
+﻿using Marvin.Serialization;
+using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
 
@@ -17,7 +18,7 @@ namespace Marvin.Tests.Workflows
             get { return "EmptyParameters"; }
         }
 
-        [Initializer]
+        [EditorVisible]
         public EmptyParameters Parameters { get; set; }
 
         ///

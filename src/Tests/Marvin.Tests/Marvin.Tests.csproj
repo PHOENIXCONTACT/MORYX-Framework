@@ -95,6 +95,7 @@
     <Compile Include="Serialization\DummyClass.cs" />
     <Compile Include="Serialization\EditorVisibleDummies.cs" />
     <Compile Include="Serialization\EditorVisibleSerializationTests.cs" />
+    <Compile Include="Serialization\ExceptionDummy.cs" />
     <Compile Include="Serialization\ListDummy.cs" />
     <Compile Include="Serialization\SerializationTests.cs" />
     <Compile Include="StateMachines\StateMachineTests.cs" />
