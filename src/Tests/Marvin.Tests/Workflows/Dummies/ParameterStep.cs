@@ -1,4 +1,5 @@
-﻿using Marvin.Workflows;
+﻿using Marvin.Serialization;
+using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
 
@@ -12,7 +13,7 @@ namespace Marvin.Tests.Workflows
             get { return "ParameterStep"; }
         }
         
-        [Initializer]
+        [EditorVisible]
         public DummyParameters Parameters { get; set; }
 
         ///
@@ -61,10 +62,10 @@ namespace Marvin.Tests.Workflows
 
     internal class DummyParameters
     {
-        [Initializer]
+        [EditorVisible]
         public int Number { get; set; }
 
-        [Initializer]
+        [EditorVisible]
         public string Name { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Marvin.Serialization;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -13,10 +14,10 @@ namespace Marvin.Tests.Workflows
             get { return "DefaultValue"; }
         }
 
-        [Initializer]
+        [EditorVisible]
         public int OptionalParameter { get; set; }
 
-        [DefaultValue(10), Initializer]
+        [DefaultValue(10), EditorVisible]
         public ushort OptionalWithDefault { get; set; }
 
         public DefaultValueStep(int mandatory, ushort mandatoryWithDefault = 2)

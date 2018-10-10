@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Marvin.Serialization;
+using Marvin.Workflows.WorkplanSteps;
 
 namespace Marvin.Workflows
 {
@@ -44,12 +45,18 @@ namespace Marvin.Workflows
         /// All initializers required to create an instance of this step
         /// </summary>
         [DataMember]
-        public Entry ConstructorParameters { get; set; }
+        public MethodEntry Constructor { get; set; }
 
         /// <summary>
         /// Properties of this step recipe
         /// </summary>
         [DataMember]
         public Entry Properties { get; set; }
+
+        /// <summary>
+        /// Optional reference to a subworkplan. This is only valid for <see cref="Classification"/> of <see cref="StepClassification.Subworkplan"/>.
+        /// </summary>
+        [DataMember]
+        public long SubworkplanId{ get; set; }
     }
 }

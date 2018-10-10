@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Marvin.Workflows.Transitions;
 
@@ -20,7 +21,7 @@ namespace Marvin.Workflows.WorkplanSteps
         /// Create new split instance
         /// </summary>
         /// <param name="outputs"></param>
-        public SplitWorkplanStep([Initializer("Outputs", Description = "Number of parallel paths")]int outputs = 2)
+        public SplitWorkplanStep([Display(Name = "Outputs", Description = "Number of parallel paths")]int outputs = 2)
         {
             if (outputs <= 1)
                 throw new ArgumentException("Split must have at least two outputs!");
@@ -36,10 +37,7 @@ namespace Marvin.Workflows.WorkplanSteps
         /// <summary>
         /// Transition name
         /// </summary>
-        public override string Name
-        {
-            get { return "Split"; }
-        }
+        public override string Name => "Split";
 
         /// <summary>
         /// Create transistion instance

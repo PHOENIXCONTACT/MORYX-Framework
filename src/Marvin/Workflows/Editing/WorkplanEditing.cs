@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Marvin.Serialization;
 
@@ -112,11 +111,11 @@ namespace Marvin.Workflows
                 Id = step.Id,
                 Name = step.Name,
                 Type = stepType.Name,
-                Classification = StepTypeConverter.ToClassification(stepType),
+                Classification = StepCreationContainer.ToClassification(stepType),
                 Inputs = new ConnectorModel[step.Inputs.Length],
                 Outputs = new ConnectorModel[step.Outputs.Length],
                 OutputDescriptions = step.OutputDescriptions,
-                Properties = StepCreationContainer.GetProperties(stepType, step)
+                Properties = EntryConvert.EncodeObject(step, EditorVisibleSerialization.Instance)
             };
 
             // Subworkplans are enhanced with a special property
@@ -165,7 +164,7 @@ namespace Marvin.Workflows
         {
             // Find the associated server side object
             var step = _editedWorkplan.Steps.First(s => s.Id == stepModel.Id);
-            EntryConvert.UpdateInstance(step, new Entry { SubEntries = stepModel.Properties.SubEntries.ToList() }, WorkplanSerialization.Simple);
+            EntryConvert.UpdateInstance(step, new Entry { SubEntries = stepModel.Properties.SubEntries.ToList() }, EditorVisibleSerialization.Instance);
             return SessionModification.Summary(UserOperation.UpdateStep).Updated(stepModel);
         }
 

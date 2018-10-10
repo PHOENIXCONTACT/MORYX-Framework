@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Serialization;
+using Marvin.Serialization;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -29,12 +30,9 @@ namespace Marvin.Tests.Workflows
         [DataMember]
         private readonly string _name;
         /// 
-        public override string Name
-        {
-            get { return _name; }
-        }
+        public override string Name => _name;
 
-        [Initializer]
+        [EditorVisible]
         public int Number { get; set; }
 
         ///

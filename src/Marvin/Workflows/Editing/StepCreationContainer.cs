@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Marvin.Serialization;
+using Marvin.Tools;
 using Marvin.Workflows.WorkplanSteps;
 
 namespace Marvin.Workflows
@@ -58,63 +56,25 @@ namespace Marvin.Workflows
         /// <returns></returns>
         public WorkplanStepRecipe ExportRecipe(int index)
         {
-            // Read mandatory initializers from constructor
-            var constructorParameters = new Entry
-            {
-                Key = new EntryKey
-                {
-                    Name = "ConstructorParameters"
-                },
-                SubEntries = Parameters.Select(WorkplanStepHelper.FromParameter).ToList()
-            };
-
             // Read optional initializer from property
-            var properties = GetProperties(StepType);
+            var properties = EntryConvert.EncodeClass(StepType, EditorVisibleSerialization.Instance);
 
             // Create the recipe object that can be used for user interfaces to create workplans
-            var desAtt = StepType.GetCustomAttribute<DescriptionAttribute>();
+            var classification = ToClassification(StepType);
             var recipe = new WorkplanStepRecipe
             {
                 Index = index,
                 Name = StepType.Name,
-                Classification = StepTypeConverter.ToClassification(StepType),
-                Description = desAtt == null ? string.Empty : desAtt.Description,
-                ConstructorParameters = constructorParameters,
+                Classification = classification,
+                Description = StepType.GetDescription(),
                 Properties = properties
             };
 
+            // Encode constructor only for non-subworkplan steps
+            if (classification != StepClassification.Subworkplan)
+                recipe.Constructor = EntryConvert.EncodeMethod(MainConstructor, EditorVisibleSerialization.Instance);
+
             return recipe;
-        }
-
-        /// <summary>
-        /// Get properties of this step type in converted form
-        /// </summary>
-        public static Entry GetProperties(Type stepType, object instance = null)
-        {
-            // Encode step into Entry format
-            var initializer = instance == null
-                ? EntryConvert.EncodeClass(stepType, WorkplanSerialization.Simple)
-                : EntryConvert.EncodeObject(instance, WorkplanSerialization.Simple);
-
-            var entry = new Entry
-            {
-                Key = new EntryKey
-                {
-                    Name = stepType.Name
-                },
-                SubEntries = initializer.SubEntries.ToList()
-            };
-
-            // Check if any workplans are referenced
-            var workplan = stepType.GetProperties().FirstOrDefault(WorkplanSerialization.IsWorkplanReference);
-            if (workplan == null)
-                return entry;
-
-            // Append workplan property to initializers
-            initializer = WorkplanStepHelper.FromWorkplanProperty(workplan, instance);
-            entry.SubEntries = initializer.SubEntries.ToList();
-
-            return entry;
         }
 
         /// <summary>
@@ -125,42 +85,43 @@ namespace Marvin.Workflows
         /// <returns>New workplan step instance</returns>
         public IWorkplanStep Instantiate(WorkplanStepRecipe recipe, IWorkplanSource workplanSource)
         {
-            // Prepare object array of arguments
-            var arguments = (from param in Parameters
-                             let initializer = recipe.ConstructorParameters.SubEntries.First(i => i.Key.Identifier == param.Name)
-                             select initializer.Value.Type == EntryValueType.Int64 // ToDo: HowTo detect a workplan correctly?
-                                ? workplanSource.Load(int.Parse(initializer.Value.Current)) ?? ToObject(param.ParameterType, initializer)
-                                : ToObject(param.ParameterType, initializer)).ToArray();
+            // Creation uses EntryConvert for constructor invocation unless it is a subworkplanstep
+            IWorkplanStep instance;
+            if (recipe.Classification == StepClassification.Subworkplan)
+            {
+                var workplan = workplanSource.Load(recipe.SubworkplanId);
+                instance = (IWorkplanStep)MainConstructor.Invoke(new object[] { workplan });
+            }
+            else
+            {
+                instance = (IWorkplanStep)EntryConvert.CreateInstance(StepType, recipe.Constructor, EditorVisibleSerialization.Instance);
+            }
 
-            // Create instance
-            var instance = MainConstructor.Invoke(arguments);
+            // Set properties on the entity
+            EntryConvert.UpdateInstance(instance, recipe.Properties);
 
-            // Update
-            var serialization = new WorkplanSerialization(workplanSource);
-            EntryConvert.UpdateInstance(instance, new Entry { SubEntries = recipe.Properties.SubEntries.ToList() }, serialization);
-
-            return (IWorkplanStep)instance;
+            return instance;
         }
 
         /// <summary>
-        /// Transform an entry back into the value object for a certain type
+        /// Detemine classification group for step
         /// </summary>
-        private static object ToObject(Type type, Entry entry)
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static StepClassification ToClassification(Type type)
         {
-            object value = null;
-            if (entry.Value.Type == EntryValueType.Class)
-            {
-                value = EntryConvert.CreateInstance(type, entry);
-            }
-            else if (entry.Value.Type == EntryValueType.Collection)
-            {
-                value = WorkplanSerialization.BuildCollection(type, entry);
-            }
-            else if (entry.Value.Current != null)
-            {
-                value = EntryConvert.ToObject(type, entry.Value.Current);
-            }
-            return value;
+            // Everything not explicitly set is an execution step
+            var classification = StepClassification.Execution;
+
+            // Split and join are recognized explicitly 
+            if (type == typeof(SplitWorkplanStep) || type == typeof(JoinWorkplanStep))
+                classification = StepClassification.ControlFlow;
+
+            // And subworkpans are another exception
+            else if (typeof(ISubworkplanStep).IsAssignableFrom(type))
+                classification = StepClassification.Subworkplan;
+
+            return classification;
         }
     }
 }
