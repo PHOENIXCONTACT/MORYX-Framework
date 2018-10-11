@@ -6,5 +6,5 @@ export default class MethodEntry
     Name: string;
     DisplayName: string;
     Description: string;
-    ParameterRoot: Entry;
+    Parameters: Entry;
 }

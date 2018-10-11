@@ -59,8 +59,8 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
     private onModuleMethodsLoaded(methods: MethodEntry[]): void {
         methods.forEach((element: MethodEntry) => {
-            element.ParameterRoot.SubEntries.forEach((parameter: Entry) => {
-                Config.patchParent(parameter, element.ParameterRoot);
+            element.Parameters.SubEntries.forEach((parameter: Entry) => {
+                Config.patchParent(parameter, element.Parameters);
                 Entry.generateUniqueIdentifiers(parameter);
             });
         });

@@ -38,12 +38,12 @@ class ConsoleMethodConfigurator extends React.Component<ConsoleMethodConfigurato
                         </Row>
                         <Row>
                             <Col md={12} className="up-space-lg">
-                                { this.props.Method.ParameterRoot.SubEntries.length === 0 ? (
+                                { this.props.Method.Parameters.SubEntries.length === 0 ? (
                                     <span className="font-italic">This method is parameterless.</span>
                                 ) : (
-                                    <NavigableConfigEditor Entries={this.props.Method.ParameterRoot.SubEntries}
+                                    <NavigableConfigEditor Entries={this.props.Method.Parameters.SubEntries}
                                                            ParentEntry={null}
-                                                           Root={this.props.Method.ParameterRoot}
+                                                           Root={this.props.Method.Parameters}
                                                            IsReadOnly={false}
                                                            History={this.props.history}
                                                            Location={this.props.location} />
