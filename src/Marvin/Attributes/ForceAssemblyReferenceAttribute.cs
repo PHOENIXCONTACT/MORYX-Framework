@@ -14,7 +14,7 @@ namespace Marvin
     /// AsyncMethodBuilderAttribute is a type within the third party assembly. You can use any type within the assembly.
     /// </example>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Assembly)]
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public class ForceAssemblyReferenceAttribute : Attribute
     {
         /// <inheritdoc />
