@@ -59,8 +59,8 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
     private onModuleMethodsLoaded(methods: MethodEntry[]): void {
         methods.forEach((element: MethodEntry) => {
-            element.Parameters.forEach((parameter: Entry) => {
-                Config.patchParent(parameter, null);
+            element.ParameterRoot.SubEntries.forEach((parameter: Entry) => {
+                Config.patchParent(parameter, element.ParameterRoot);
                 Entry.generateUniqueIdentifiers(parameter);
             });
         });
@@ -124,8 +124,8 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
         if (this.state.Methods.length > 0) {
             let view = <ConsoleMethodConfigurator Method={this.state.SelectedMethod}
-                                                   ModuleName={this.props.ModuleName}
-                                                   onInvokeMethod={this.onInvokeMethod.bind(this)} />;
+                                                  ModuleName={this.props.ModuleName}
+                                                  onInvokeMethod={this.onInvokeMethod.bind(this)} />;
 
             if (this.state.SelectedMethod != null) {
                 const invokeResult = this.invokeResult(this.state.SelectedMethod.Name);

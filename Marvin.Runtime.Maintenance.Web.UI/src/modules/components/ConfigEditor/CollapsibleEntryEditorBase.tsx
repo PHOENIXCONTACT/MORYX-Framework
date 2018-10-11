@@ -6,7 +6,7 @@ export interface CollapsibleEntryEditorBasePropModel {
     Entry: Entry;
     IsExpanded: boolean;
     IsReadOnly: boolean;
-    RootEntries: Entry[];
+    Root: Entry;
     navigateToEntry(entry: Entry): void;
 }
 

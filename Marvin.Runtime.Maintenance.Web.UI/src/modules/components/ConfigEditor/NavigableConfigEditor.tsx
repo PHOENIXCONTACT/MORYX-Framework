@@ -9,7 +9,7 @@ interface NavigableConfigEditorPropModel {
     ParentEntry: Entry;
     Entries: Entry[];
     IsReadOnly: boolean;
-    RootEntries: Entry[];
+    Root: Entry;
     History?: History;
     Location?: Location;
 }
@@ -129,7 +129,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
                     </Row>
                     <ConfigEditor ParentEntry={this.state.ParentEntry}
                                   Entries={this.state.Entries}
-                                  RootEntries={this.props.RootEntries}
+                                  Root={this.props.Root}
                                   navigateToEntry={this.navigateToEntry.bind(this)}
                                   IsReadOnly={this.props.IsReadOnly} />
                 </Container>

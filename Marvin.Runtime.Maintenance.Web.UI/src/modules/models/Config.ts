@@ -2,11 +2,11 @@ import Entry from "./Entry";
 
 export default class Config {
     public Module: string;
-    public Entries: Entry[];
+    public Root: Entry;
 
     public static patchConfig(config: Config): void {
-        config.Entries.forEach((entry) => {
-            Config.patchParent(entry, null);
+        config.Root.SubEntries.forEach((entry) => {
+            Config.patchParent(entry, config.Root);
             Entry.generateUniqueIdentifiers(entry);
         });
     }

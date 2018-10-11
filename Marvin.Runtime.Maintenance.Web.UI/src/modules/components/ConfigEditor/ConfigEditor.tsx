@@ -16,7 +16,7 @@ interface ConfigEditorPropModel {
     ParentEntry: Entry;
     Entries: Entry[];
     IsReadOnly: boolean;
-    RootEntries: Entry[];
+    Root: Entry;
     navigateToEntry(entry: Entry): void;
 }
 
@@ -97,10 +97,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         clone.Key.Name = this.props.ParentEntry.Key.Name;
         clone.Key.Identifier = this.props.ParentEntry.Key.Identifier;
 
-        let subEntries: Entry[] = this.props.RootEntries;
-        if (this.props.ParentEntry.Parent != null) {
-            subEntries = this.props.ParentEntry.Parent.SubEntries;
-        }
+        const subEntries: Entry[] = this.props.ParentEntry.Parent.SubEntries;
 
         const idx = subEntries.indexOf(this.props.ParentEntry);
         if (idx !== -1) {
@@ -187,7 +184,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                             <Col md={12}>
                                 <CollectionEditor Entry={subEntry}
                                                   IsExpanded={this.isExpanded(subEntry.Key.UniqueIdentifier)}
-                                                  RootEntries={this.props.RootEntries}
+                                                  Root={this.props.Root}
                                                   navigateToEntry={this.props.navigateToEntry}
                                                   IsReadOnly={this.props.IsReadOnly} />
                             </Col>
@@ -200,7 +197,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                             <Col md={12}>
                                 <ClassEditor Entry={subEntry}
                                              IsExpanded={this.isExpanded(subEntry.Key.UniqueIdentifier)}
-                                             RootEntries={this.props.RootEntries}
+                                             Root={this.props.Root}
                                              navigateToEntry={this.props.navigateToEntry}
                                              IsReadOnly={this.props.IsReadOnly} />
                             </Col>
@@ -219,7 +216,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                     <Col md={12} className="no-padding">
                         <CollectionEditor Entry={this.props.ParentEntry}
                                           IsExpanded={true}
-                                          RootEntries={this.props.RootEntries}
+                                          Root={this.props.Root}
                                           navigateToEntry={this.props.navigateToEntry}
                                           IsReadOnly={this.props.IsReadOnly} />
                     </Col>

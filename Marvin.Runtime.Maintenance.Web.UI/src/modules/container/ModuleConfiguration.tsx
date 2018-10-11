@@ -29,7 +29,7 @@ class ModuleConfiguration extends React.Component<ModuleConfigurationPropModel &
 
         const config = new Config();
         config.Module = this.props.ModuleName;
-        config.Entries = [];
+        config.Root = new Entry();
 
         this.state = {
             ModuleConfig: config,
@@ -50,8 +50,8 @@ class ModuleConfiguration extends React.Component<ModuleConfigurationPropModel &
                                  this.setState(
                                     {
                                         ModuleConfig: data,
-                                        ParentEntry: null,
-                                        CurrentSubEntries: data.Entries,
+                                        ParentEntry: data.Root,
+                                        CurrentSubEntries: data.Root.SubEntries,
                                         ConfigIsLoading: false,
                                     });
                                 });
@@ -87,7 +87,7 @@ class ModuleConfiguration extends React.Component<ModuleConfigurationPropModel &
                     }
                     <NavigableConfigEditor ParentEntry={this.state.ParentEntry}
                                            Entries={this.state.CurrentSubEntries}
-                                           RootEntries={this.state.ModuleConfig.Entries}
+                                           Root={this.state.ModuleConfig.Root}
                                            IsReadOnly={false}
                                            History={this.props.history}
                                            Location={this.props.location} />
