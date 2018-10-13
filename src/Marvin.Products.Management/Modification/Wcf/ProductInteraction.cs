@@ -4,7 +4,6 @@ using System.Linq;
 using System.ServiceModel;
 using Marvin.AbstractionLayer;
 using Marvin.Container;
-using Marvin.Products.Management.Importers;
 using Marvin.Serialization;
 
 namespace Marvin.Products.Management.Modification
@@ -56,26 +55,16 @@ namespace Marvin.Products.Management.Modification
             };
         }
 
-        private static ImportParameter[] ConvertParameters(IImportParameters parametersObject)
-        {
-            var parameters = EntryConvert.EncodeObject<ImportParameter>(parametersObject, new PartialSerialization<IImportParameters>()).ToArray();
-            var updateProperties = parametersObject.GetType().GetProperties()
-                .Where(p => Attribute.IsDefined(p, typeof(TriggersUpdateAttribute)));
-            foreach (var property in updateProperties)
-            {
-                var parameter = parameters.First(p => p.Key.Identifier == property.Name);
-                parameter.TriggersUpdate = true;
-            }
-            return parameters;
-        }
+        private static Entry ConvertParameters(IImportParameters parametersObject) => 
+            EntryConvert.EncodeObject(parametersObject, new PartialSerialization<IImportParameters>());
 
-        public ImportParameter[] UpdateParameters(string importerName, ImportParameter[] currentParameters)
+        public Entry UpdateParameters(string importerName, Entry currentParameters)
         {
             var parameters = ConvertParametersBack(importerName, currentParameters, true);
             return ConvertParameters(parameters);
         }
 
-        private IImportParameters ConvertParametersBack(string importerName, ImportParameter[] currentParameters, bool updateFirst = false)
+        private IImportParameters ConvertParametersBack(string importerName, Entry currentParameters, bool updateFirst = false)
         {
             var importer = Manager.Importers.First(i => i.Name == importerName);
             var parameters = (IImportParameters)EntryConvert.UpdateInstance(importer.Parameters, currentParameters);
@@ -119,7 +108,7 @@ namespace Marvin.Products.Management.Modification
             return UseConverter(c => c.CreateRevision(id, revisionNo, comment));
         }
 
-        public ProductModel ImportProduct(string importerName, ImportParameter[] parametersModel)
+        public ProductModel ImportProduct(string importerName, Entry parametersModel)
         {
             var parameters = ConvertParametersBack(importerName, parametersModel);
             return UseConverter(c => c.ImportProduct(importerName, parameters));

@@ -148,7 +148,7 @@ namespace Marvin.Products.Management.Modification
 
             // Properties
             var properties = product.GetType().GetProperties();
-            converted.Properties = EntryConvert.EncodeObject(product, ProductSerialization).ToArray();
+            converted.Properties = EntryConvert.EncodeObject(product, ProductSerialization);
 
             // Files
             converted.Files = ConvertFiles(product, properties);
@@ -185,7 +185,7 @@ namespace Marvin.Products.Management.Modification
                         Name = property.Name,
                         Type = FetchProductType(property.PropertyType),
                         Part = ConvertPart(link),
-                        PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, ProductSerialization).ToArray()
+                        PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, ProductSerialization)
                     };
                     connectors.Add(connector);
                 }
@@ -199,7 +199,7 @@ namespace Marvin.Products.Management.Modification
                         Name = property.Name,
                         Type = FetchProductType(linkType),
                         Parts = links.Select(ConvertPart).ToArray(),
-                        PropertyTemplates = EntryConvert.EncodeClass(linkType, ProductSerialization).ToArray()
+                        PropertyTemplates = EntryConvert.EncodeClass(linkType, ProductSerialization)
                     };
                     connectors.Add(connector);
                 }
@@ -216,7 +216,7 @@ namespace Marvin.Products.Management.Modification
             var part = new PartModel
             {
                 Product = ConvertProduct(link.Product, false),
-                Properties = EntryConvert.EncodeObject(link, ProductSerialization).ToArray()
+                Properties = EntryConvert.EncodeObject(link, ProductSerialization)
             };
             return part;
         }
@@ -238,7 +238,7 @@ namespace Marvin.Products.Management.Modification
                 Type = recipe.Type,
                 State = recipe.State,
                 Revision = recipe.Revision,
-                Ingredients = EntryConvert.EncodeObject(recipe, RecipeSerialization).ToArray(),
+                Ingredients = EntryConvert.EncodeObject(recipe, RecipeSerialization),
                 IsDefault = recipe.Classification == RecipeClassification.Default
             };
 

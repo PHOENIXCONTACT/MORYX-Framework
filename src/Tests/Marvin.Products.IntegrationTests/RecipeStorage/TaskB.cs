@@ -1,5 +1,6 @@
 ﻿using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Capabilities;
+using Marvin.Serialization;
 using Marvin.Workflows;
 
 namespace Marvin.Products.IntegrationTests
@@ -11,7 +12,7 @@ namespace Marvin.Products.IntegrationTests
 
     public class ParametersB : ParametersBase
     {
-        [Initializer]
+        [EditorVisible]
         public SubParameter[] Subs { get; set; }
 
         protected override ParametersBase ResolveBinding(IProcess process)

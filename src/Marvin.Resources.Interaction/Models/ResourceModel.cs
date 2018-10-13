@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.Interaction
@@ -56,7 +55,7 @@ namespace Marvin.Resources.Interaction
         /// A list of configs of the resource.
         /// </summary>
         [DataMember]
-        public List<Entry> Properties { get; set; }
+        public Entry Properties { get; set; }
 
         /// <summary>
         /// User callable methods of the resource

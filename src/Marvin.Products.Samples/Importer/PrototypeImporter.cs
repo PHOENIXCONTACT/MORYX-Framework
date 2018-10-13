@@ -52,7 +52,7 @@ namespace Marvin.Products.Samples
 
     public class WatchImportParameters : PrototypeParameters
     {
-        [Required, TriggersUpdate]
+        [Required]
         [PossibleProductValues(nameof(WatchfaceProduct), nameof(NeedleProduct))]
         public string ProductType { get; set; }
     }

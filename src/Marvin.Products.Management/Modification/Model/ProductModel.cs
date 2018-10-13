@@ -26,7 +26,7 @@ namespace Marvin.Products.Management.Modification
         public ProductState State { get; set; }
 
         [DataMember]
-        public Entry[] Properties { get; set; }
+        public Entry Properties { get; set; }
 
         [DataMember]
         public ProductFile[] Files { get; set; }

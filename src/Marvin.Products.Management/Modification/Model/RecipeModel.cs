@@ -50,7 +50,7 @@ namespace Marvin.Products.Management.Modification
         /// Ingredients of the recipe
         /// </summary>
         [DataMember]
-        public Entry[] Ingredients { get; set; }
+        public Entry Ingredients { get; set; }
 
         /// <summary>
         /// The id of the current referenced workplan
