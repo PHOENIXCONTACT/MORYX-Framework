@@ -14,10 +14,7 @@ namespace Marvin.Workflows.WorkplanSteps
         }
 
         /// 
-        public override string Name
-        {
-            get { return "Join"; }
-        }
+        public override string Name => "Join";
 
         /// <summary>
         /// Create new join step for certain number of inputs

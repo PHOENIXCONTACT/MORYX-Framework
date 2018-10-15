@@ -13,7 +13,7 @@
         /// <summary>
         /// Id of the connector of the output - temporary till it was mapped
         /// </summary>
-        public long ConnectorId { get; private set; }
+        public long ConnectorId { get; }
 
         /// <summary>
         /// Id of the step it was mapped to

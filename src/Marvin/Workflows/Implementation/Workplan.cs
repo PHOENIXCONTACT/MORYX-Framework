@@ -83,18 +83,6 @@ namespace Marvin.Workflows
         }
 
         /// <summary>
-        /// Create an empty plan with start and end
-        /// </summary>
-        internal static Workplan EmptyPlan()
-        {
-            var emptyPlan = new Workplan();
-            emptyPlan.Add(new Connector { Name = "Start", Classification = NodeClassification.Start });
-            emptyPlan.Add(new Connector { Name = "End", Classification = NodeClassification.End });
-
-            return emptyPlan;
-        }
-
-        /// <summary>
         /// Restore a workplan with a list of connectors and steps
         /// </summary>
         public static Workplan Restore(List<IConnector> connectors, List<IWorkplanStep> steps)

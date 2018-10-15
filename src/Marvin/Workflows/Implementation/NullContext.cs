@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Marvin.Workflows.Transitions;
-
-namespace Marvin.Workflows
+﻿namespace Marvin.Workflows
 {
     /// <summary>
     /// Null object pattern for the workplan context
