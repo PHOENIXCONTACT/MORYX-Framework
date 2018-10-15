@@ -191,7 +191,7 @@ namespace Marvin.Serialization
         /// </summary>
         public static Entry EncodeClass(Type objType, ICustomSerialization customSerialization)
         {
-            var encodedClass = CreateFromType(objType);
+            var encodedClass = CreateFromType(objType, customSerialization);
 
             var filtered = customSerialization.GetProperties(objType);
             foreach (var property in filtered)
@@ -230,7 +230,7 @@ namespace Marvin.Serialization
             var instanceType = instance.GetType();
             var isValueType = ValueOrStringType(instanceType);
 
-            var converted = CreateFromType(instanceType);
+            var converted = CreateFromType(instanceType, customSerialization);
 
             if (isValueType)
             {
@@ -295,9 +295,7 @@ namespace Marvin.Serialization
         /// <summary>
         /// Create basic <see cref="Entry"/> instance for a given object type
         /// </summary>
-        /// <param name="objectType"></param>
-        /// <returns></returns>
-        private static Entry CreateFromType(Type objectType)
+        private static Entry CreateFromType(Type objectType, ICustomSerialization serialization)
         {
             var entry = new Entry
             {
@@ -311,7 +309,8 @@ namespace Marvin.Serialization
                     Current = objectType.Name,
                     Default = objectType.Name,
                     Type = TransformType(objectType)
-                }
+                },
+                Validation = serialization.CreateValidation(objectType, objectType)
             };
             return entry;
         }
@@ -419,7 +418,8 @@ namespace Marvin.Serialization
                     Current = defaultValue,
                     Default = defaultValue,
                     Possible = serialization.PossibleValues(parameterType, parameter)
-                }
+                },
+                Validation = serialization.CreateValidation(parameterType, parameter)
             };
 
             switch (parameterModel.Value.Type)
