@@ -28,12 +28,15 @@ export default class Entry {
 
     public static generateUniqueIdentifiers(entry: Entry): void {
         EntryKey.updateUniqueIdentifier(entry.Key);
-        entry.SubEntries.forEach((subEntry: Entry) => Entry.generateUniqueIdentifiers(subEntry));
+        entry.SubEntries.forEach((subEntry: Entry) => {
+            Entry.generateUniqueIdentifiers(subEntry);
+        });
     }
 
     public static cloneFromPrototype(prototype: Entry, parent: Entry): Entry {
         const entryClone = JSON.parse(JSON.stringify(prototype));
         entryClone.Parent = parent;
+        EntryKey.updateIdentifierToCreated(entryClone.Key);
         Entry.generateUniqueIdentifiers(entryClone);
         return entryClone;
     }

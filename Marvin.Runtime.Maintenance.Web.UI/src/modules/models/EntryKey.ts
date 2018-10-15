@@ -12,4 +12,8 @@ export default class EntryKey {
     public static updateUniqueIdentifier(entryKey: EntryKey): void {
         entryKey.UniqueIdentifier = uuidv1();
     }
+
+    public static updateIdentifierToCreated(entryKey: EntryKey): void {
+        entryKey.Identifier = "CREATED";
+    }
 }
