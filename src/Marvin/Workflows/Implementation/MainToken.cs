@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Marvin.Workflows
+﻿namespace Marvin.Workflows
 {
     /// <summary>
     /// Main execution token passed trough the workflow
@@ -10,6 +8,6 @@ namespace Marvin.Workflows
         /// <summary>
         /// Token name
         /// </summary>
-        public string Name => "MainToken";
+        public string Name => nameof(MainToken);
     }
 }

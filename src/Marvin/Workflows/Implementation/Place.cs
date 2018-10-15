@@ -72,8 +72,8 @@ namespace Marvin.Workflows
         /// </summary>
         public virtual void Remove(IToken token)
         {
-            if (_tokens.Remove(token) && TokenRemoved != null)
-                TokenRemoved(this, token);
+            if (_tokens.Remove(token))
+                TokenRemoved?.Invoke(this, token);
         }
 
         /// 

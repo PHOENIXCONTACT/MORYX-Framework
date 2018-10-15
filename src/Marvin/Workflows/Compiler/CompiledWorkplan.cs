@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Marvin.Workflows.Compiler
+﻿namespace Marvin.Workflows.Compiler
 {
     /// <summary>
     /// Small POCO created by compiling a workplan object

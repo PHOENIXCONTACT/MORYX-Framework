@@ -8,7 +8,7 @@ namespace Marvin.Workflows
     internal class SplitToken : IToken
     {
         ///
-        public string Name { get { return string.Format("{0}-Partial", Original.Name); } }
+        public string Name => $"{Original.Name}-Partial";
 
         public IToken Original { get; private set; }
 

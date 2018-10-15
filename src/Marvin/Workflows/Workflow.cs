@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using Marvin.Threading;
+﻿using Marvin.Threading;
 using Marvin.Workflows.Compiler;
 using Marvin.Workflows.Validation;
 
@@ -107,24 +104,6 @@ namespace Marvin.Workflows
             where TStep : CompiledTransition
         {
             return WorkplanCompiler.Compile(workplan, context, compiler);
-        }
-
-        /// <summary>
-        /// Start workplan editing for a new workplan
-        /// </summary>
-        /// <returns></returns>
-        public static IWorkplanEditing CreateWorkplan(IWorkplanSource workplanSource)
-        {
-            return EditWorkplan(Workplan.EmptyPlan(), workplanSource);
-        }
-
-        /// <summary>
-        /// Start workplan editing for a new workplan
-        /// </summary>
-        /// <returns></returns>
-        public static IWorkplanEditing EditWorkplan(Workplan instance, IWorkplanSource workplanSource)
-        {
-            return new WorkplanEditing(instance, workplanSource);
         }
     }
 }

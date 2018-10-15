@@ -8,7 +8,7 @@ namespace Marvin.Workflows.Validation
         /// <summary>
         /// Aspect this validator covers
         /// </summary>
-        public ValidationAspect TargetAspect { get { return ValidationAspect.LoneWolf; } }
+        public ValidationAspect TargetAspect => ValidationAspect.LoneWolf;
 
         /// <summary>
         /// Validate the given workplan
