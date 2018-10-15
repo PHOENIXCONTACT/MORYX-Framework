@@ -123,7 +123,7 @@ namespace Marvin.Runtime.Kernel
             if (count == 0)
                 return;
 
-            Console.CursorLeft = Console.CursorLeft - count;
+            Console.CursorLeft = Math.Max(0, Console.CursorLeft - count);
             Console.Write(string.Empty.PadRight(count));
             Console.CursorLeft = Console.CursorLeft - count;
         }

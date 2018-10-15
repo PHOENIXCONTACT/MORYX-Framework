@@ -155,7 +155,7 @@ namespace Marvin.Runtime.Kernel
         {
             Console.WriteLine("Select your difficulty: (0 easy, 1 medium, 2 hard, 3 pain in the A)");
             int input = 0;
-            Console.Write("Your choise: ");
+            Console.Write("Your choice: ");
             int.TryParse(Console.ReadLine(), out input);
             return input <= 3 ? input : 0;
         }
