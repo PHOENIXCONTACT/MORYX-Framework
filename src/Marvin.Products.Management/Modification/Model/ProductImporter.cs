@@ -11,6 +11,6 @@ namespace Marvin.Products.Management.Modification
         public string Name { get; set; }
 
         [DataMember]
-        public ImportParameter[] Parameters { get; set; }
+        public Entry Parameters { get; set; }
     }
 }

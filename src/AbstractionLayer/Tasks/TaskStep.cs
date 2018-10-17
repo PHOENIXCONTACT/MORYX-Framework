@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Marvin.Serialization;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -20,13 +21,13 @@ namespace Marvin.AbstractionLayer
         where TProcParam : IParameters, new()
         where TParam : TProcParam, new()
     {
+        private IIndexResolver _indexResolver;
+
         /// <summary>
         /// Parameters of this step
         /// </summary>
-        [DataMember, Initializer]
+        [DataMember, EditorVisible]
         public TParam Parameters { get; set; }
-
-        private IIndexResolver _indexResolver;
 
         /// <summary>
         /// Instantiate task and provide possible results
@@ -85,7 +86,4 @@ namespace Marvin.AbstractionLayer
         where TParam : IParameters, new()
     {
     }
-
- 
-
 }

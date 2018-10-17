@@ -25,6 +25,6 @@ namespace Marvin.Products.Management.Modification
         public PartModel[] Parts { get; set; }
 
         [DataMember]
-        public Entry[] PropertyTemplates { get; set; }
+        public Entry PropertyTemplates { get; set; }
     }
 }

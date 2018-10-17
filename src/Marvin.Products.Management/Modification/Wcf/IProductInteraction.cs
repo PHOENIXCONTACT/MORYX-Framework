@@ -1,5 +1,4 @@
 ﻿using System.ServiceModel;
-using Marvin.Products.Management.Importers;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
@@ -19,7 +18,7 @@ namespace Marvin.Products.Management.Modification
         /// Update import parameters based on their current content
         /// </summary>
         [OperationContract]
-        ImportParameter[] UpdateParameters(string importer, ImportParameter[] currentParameters);
+        Entry UpdateParameters(string importer, Entry currentParameters);
 
         /// <summary>
         /// Get the product tree
@@ -68,7 +67,7 @@ namespace Marvin.Products.Management.Modification
         /// Import new products
         /// </summary>
         [OperationContract]
-        ProductModel ImportProduct(string importerName, ImportParameter[] parametersModel);
+        ProductModel ImportProduct(string importerName, Entry parametersModel);
 
         /// <summary>
         /// Try to delete a product

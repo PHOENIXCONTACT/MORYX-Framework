@@ -186,7 +186,7 @@ namespace Marvin.Resources.Interaction
 
                 // Properties and methods are read from the descriptor
                 // This can be the resource itself or a dedicated object
-                Properties = EntryConvert.EncodeObject(current.Descriptor, Serialization).ToList(),
+                Properties = EntryConvert.EncodeObject(current.Descriptor, Serialization),
                 Methods = EntryConvert.EncodeMethods(current.Descriptor, Serialization).ToArray()
             };
         }
