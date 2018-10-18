@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Marvin.TestTools.Test.Model;
 using NUnit.Framework;
 
@@ -87,6 +88,35 @@ namespace Marvin.Model.Tests
 
                 // Assert
                 Assert.AreEqual(0, cars.Count);
+            }
+        }
+
+        [Test]
+        public void AddingComplexEntityToUowWithSavingToDbAndReadingFromDb()
+        {
+            using (var uow = _unitOfWorkFactory.Create())
+            {
+                // Arrange
+                var hugePocoRepository = uow.GetRepository<IHugePocoRepository>();
+
+                // Act
+                hugePocoRepository.Create(1.0, 2, 3.5, 3, 4.8, 5, 6.7, 8, 9.2, 10);
+
+                uow.Save();
+            }
+
+            using (var uow = _unitOfWorkFactory.Create())
+            {
+                var hugePocoRepository = uow.GetRepository<IHugePocoRepository>();
+
+                var hugePocs = hugePocoRepository.GetAll();
+
+                // Assert
+                Assert.AreEqual(1, hugePocs.Count);
+
+                var hugePoco = hugePocs.First();
+                Assert.AreEqual(1.0, hugePoco.Float1);
+                Assert.AreEqual(2, hugePoco.Number1);
             }
         }
     }

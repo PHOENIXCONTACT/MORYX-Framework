@@ -56,6 +56,8 @@
   <ItemGroup>
     <Compile Include="ReferenceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryProxies\Interfaces\IWrongParamTypeRepository.cs" />
+    <Compile Include="RepositoryProxies\Interfaces\ICreateAllParamsRepository.cs" />
     <Compile Include="RepositoryProxies\Interfaces\ICreateStringParamRepository.cs" />
     <Compile Include="RepositoryProxies\Interfaces\ICreateUnknownPropertyRepository.cs" />
     <Compile Include="RepositoryProxies\Interfaces\ICreateValueParamRepository.cs" />

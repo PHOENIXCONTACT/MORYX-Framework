@@ -109,5 +109,30 @@ namespace Marvin.Model.Tests
                 _proxyBuilder.Build(typeof(ICreateWrongReturnTypeRepository));
             });
         }
+
+        [Test]
+        public void CreateWithAllParameters()
+        {
+            //Act
+            var proxyType = _proxyBuilder.Build(typeof(ICreateAllParamsRepository));
+
+            // Assert
+            var baseType = proxyType.BaseType;
+            Assert.IsNotNull(baseType);
+
+            var genericBaseType = baseType.GetGenericTypeDefinition();
+            Assert.AreEqual(typeof(Repository<>), genericBaseType);
+        }
+
+        [Test]
+        public void CreateWithWrongParameterExcepionIsThrown()
+        {
+            //Act - Assert
+            Assert.Throws<InvalidOperationException>(delegate
+            {
+                _proxyBuilder.Build(typeof(IWrongParamTypeRepository));
+            });
+
+        }
     }
 }
