@@ -30,6 +30,9 @@ namespace Marvin.Model
             if (targetProperty == null)
                 throw new InvalidOperationException($"Cannot find property with name '{propertyName}' on target type '{targetType.Name}'.");
 
+            if(!targetProperty.PropertyType.IsAssignableFrom(parameterInfo.ParameterType))
+                throw new InvalidOperationException($"Types doesn't match: Property '{parameterInfo.Name}', Target type: {targetProperty.PropertyType}, Source type: {parameterInfo.ParameterType}.");
+
             return new ParameterPropertyMap(parameterInfo, targetProperty);
         }
 

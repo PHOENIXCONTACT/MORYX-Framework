@@ -19,6 +19,7 @@ namespace Marvin.TestTools.Test.Model
             RegisterRepository<ISportCarRepository, SportCarRepository>();
             RegisterRepository<IWheelEntityRepository>();
             RegisterRepository<IJsonEntityRepository>();
+            RegisterRepository<IHugePocoRepository>();
             RegisterRepository<IHouseEntityRepository, HouseEntityRepository>(noProxy: true);
         }
     }
