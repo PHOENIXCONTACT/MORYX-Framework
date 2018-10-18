@@ -98,25 +98,6 @@ namespace Marvin.Products.Management.Modification
         /// </summary>
         [OperationContract]
         RecipeModel CreateProductionRecipe(long productId, long workplanId, string name);
-        
-        /// <summary>
-        /// Create a new workplan
-        /// </summary>
-        [OperationContract]
-        WorkplanModel CreateWorkplan(string name);
-
-        /// <summary>
-        /// Get all workplans
-        /// </summary>
-        /// <returns></returns>
-        [OperationContract]
-        WorkplanModel[] GetWorkplans();
-
-        /// <summary>
-        /// Get workplan with this id
-        /// </summary>
-        [OperationContract]
-        WorkplanModel GetWorkplan(long id);
 
         /// <summary>
         /// Provider name

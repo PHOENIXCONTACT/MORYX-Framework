@@ -28,11 +28,5 @@ namespace Marvin.Products.Management.Modification
         RecipeModel GetProductionRecipe(long productId, long workplanId);
 
         RecipeModel CreateProductionRecipe(long productId, long workplanId, string name);
-
-        WorkplanModel CreateWorkplan(string workplanName);
-
-        WorkplanModel[] GetWorkplans();
-
-        WorkplanModel GetWorkplan(long workplanId);
     }
 }
