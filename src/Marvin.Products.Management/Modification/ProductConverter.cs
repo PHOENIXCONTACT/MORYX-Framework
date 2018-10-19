@@ -5,9 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Marvin.AbstractionLayer;
 using Marvin.Container;
-using Marvin.Products.Management.Importers;
 using Marvin.Serialization;
-using Marvin.Workflows;
 
 namespace Marvin.Products.Management.Modification
 {
@@ -105,24 +103,6 @@ namespace Marvin.Products.Management.Modification
         {
             var recipe = RecipeManagement.Create(productId, workplanId, name);
             return ConvertRecipe(recipe);
-        }
-
-        public WorkplanModel CreateWorkplan(string workplanName)
-        {
-            var workplan = WorkplanManagement.Create(workplanName);
-            return ConvertWorkplan(workplan);
-        }
-
-        public WorkplanModel[] GetWorkplans()
-        {
-            var workplans = WorkplanManagement.LoadAllWorkplans();
-            return workplans.Select(ConvertWorkplan).ToArray();
-        }
-
-        public WorkplanModel GetWorkplan(long workplanId)
-        {
-            var workplan = WorkplanManagement.LoadWorkplan(workplanId);
-            return ConvertWorkplan(workplan);
         }
 
         private ProductModel ConvertProduct(IProduct product, bool flat)
@@ -250,43 +230,6 @@ namespace Marvin.Products.Management.Modification
             }
 
             return converted;
-        }
-
-        private static WorkplanModel ConvertWorkplan(IWorkplan workplan)
-        {
-            var connectors = ConvertConnectors(workplan.Connectors);
-            var workplanDto = new WorkplanModel
-            {
-                Id = workplan.Id,
-                Name = workplan.Name,
-                Version = workplan.Version,
-                State = workplan.State,
-                Connectors = connectors,
-                Steps = ConvertSteps(workplan.Steps, connectors.ToDictionary(c => c.Id, c => c))
-            };
-
-            return workplanDto;
-        }
-
-        private static ConnectorModel[] ConvertConnectors(IEnumerable<IConnector> connectors)
-        {
-            return connectors.Select(connector => new ConnectorModel()
-            {
-                Name = connector.Name,
-                Classification = connector.Classification,
-                Id = connector.Id
-            }).ToArray();
-        }
-
-        private static WorkplanStepModel[] ConvertSteps(IEnumerable<IWorkplanStep> steps, IDictionary<long, ConnectorModel> connectorCache)
-        {
-            return steps.Select(step => new WorkplanStepModel
-            {
-                Name = step.Name,
-                Inputs = step.Inputs.Select(i => connectorCache[i.Id]).ToArray(),
-                Outputs = step.Outputs.Select(o => connectorCache[o.Id]).ToArray(),
-                Id = step.Id
-            }).ToArray();
         }
 
         #endregion

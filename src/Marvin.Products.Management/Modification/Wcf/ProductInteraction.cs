@@ -139,21 +139,6 @@ namespace Marvin.Products.Management.Modification
             return UseConverter(c => c.CreateProductionRecipe(productId, workplanId, name));
         }
 
-        public WorkplanModel CreateWorkplan(string name)
-        {
-            return UseConverter(c => c.CreateWorkplan(name));
-        }
-
-        public WorkplanModel[] GetWorkplans()
-        {
-            return UseConverter(c => c.GetWorkplans());
-        }
-
-        public WorkplanModel GetWorkplan(long id)
-        {
-            return UseConverter(c => c.GetWorkplan(id));
-        }
-
         public string GetRecipeProviderName()
         {
             return ModuleController.ModuleName;
