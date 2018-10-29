@@ -104,6 +104,7 @@
     <Compile Include="StateMachines\TestMachine\CState.cs" />
     <Compile Include="StateMachines\TestMachine\MyContext.cs" />
     <Compile Include="StateMachines\TestMachine\MyStateBase.cs" />
+    <Compile Include="Threading\NotSoParallelOpsTests.cs" />
     <Compile Include="Threading\ParallelOperationTests.cs" />
     <Compile Include="Threading\NonStackingTimerCallbackTests.cs" />
     <Compile Include="Workflows\CompilerTests.cs" />
