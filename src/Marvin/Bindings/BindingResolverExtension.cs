@@ -1,4 +1,4 @@
-﻿namespace Marvin.Bindings
+namespace Marvin.Bindings
 {
     /// <summary>
     /// Extension to double link resolver objects
@@ -38,7 +38,10 @@
         {
             var next = resolver.NextResolver;
             resolver.Extend(insertedResolver);
-            return insertedResolver.Extend(next);
+            if (next != null)
+                insertedResolver.Extend(next);
+
+            return insertedResolver;
         }
 
         /// <summary>

@@ -49,6 +49,8 @@
     <Compile Include="Bindings\DelegateResolverTest.cs" />
     <Compile Include="Bindings\Dummies\ISomeInterface.cs" />
     <Compile Include="Bindings\Dummies\Foo.cs" />
+    <Compile Include="Bindings\BindingResolverExtensionTests.cs" />
+    <Compile Include="Bindings\Dummies\SomeComplexClass.cs" />
     <Compile Include="Bindings\ReflectionResolverTests.cs" />
     <Compile Include="Bindings\Dummies\SomeClass.cs" />
     <Compile Include="Bindings\Dummies\SomeHiddenPropertyClass.cs" />
