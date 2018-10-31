@@ -38,8 +38,8 @@
       <HintPath>..\..\..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.1984, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev001984\lib\net461\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.2102, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.3.0.0-dev002102\lib\net461\Marvin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Moq, Version=4.9.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="ArticlePartsTest.cs" />
     <Compile Include="ExpressionConstraintTests.cs" />
+    <Compile Include="ParameterBindingTests.cs" />
     <Compile Include="ProductConstraintTest.cs" />
     <Compile Include="ProductIdentitytests.cs" />
     <Compile Include="ProductTests.cs" />

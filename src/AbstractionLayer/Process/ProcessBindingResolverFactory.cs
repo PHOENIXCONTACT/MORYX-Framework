@@ -130,9 +130,13 @@ namespace Marvin.AbstractionLayer
                 }
 
                 // If our shortcuts do not work, use ReflectionResolver instead
+                // Due the protection level of Resolve in the base class and the implementation
+                // of IBindingResolver.Resolve which calls the whole chain the call order is important here.
+                // First the value of the replacement is called and then the replacement is placed into the chain.
                 var replacement = new ReflectionResolver("Product");
+                var resolvedValue = ((IBindingResolverChain) replacement).Resolve(source);
                 this.Replace(replacement);
-                return ((IBindingResolver)replacement).Resolve(source);
+                return resolvedValue;
             }
 
             protected override bool Update(object source, object value)
