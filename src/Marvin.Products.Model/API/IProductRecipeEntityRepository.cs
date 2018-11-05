@@ -7,5 +7,6 @@ namespace Marvin.Products.Model
     /// </summary>
     public interface IProductRecipeEntityRepository : IRepository<ProductRecipeEntity>
     {
+        ProductRecipeEntity Create(string name, int classification, int state);
     }
 }
