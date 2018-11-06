@@ -91,10 +91,21 @@ namespace Marvin.Runtime.Kernel
             {
                 // Override binding timeouts if necessary
                 port = extendedConfig.Port;
-                binding.OpenTimeout = TimeSpan.FromSeconds(extendedConfig.OpenTimeout);
-                binding.CloseTimeout = TimeSpan.FromSeconds(extendedConfig.CloseTimeout);
-                binding.SendTimeout = TimeSpan.FromSeconds(extendedConfig.SendTimeout);
-                binding.ReceiveTimeout = TimeSpan.FromSeconds(extendedConfig.ReceiveTimeout);
+                binding.OpenTimeout = extendedConfig.OpenTimeout != ExtendedHostConfig.InfiniteTimeout
+                    ? TimeSpan.FromSeconds(extendedConfig.OpenTimeout)
+                    : TimeSpan.MaxValue;
+
+                binding.CloseTimeout = extendedConfig.CloseTimeout != ExtendedHostConfig.InfiniteTimeout
+                    ? TimeSpan.FromSeconds(extendedConfig.CloseTimeout)
+                    : TimeSpan.MaxValue;
+
+                binding.SendTimeout = extendedConfig.SendTimeout != ExtendedHostConfig.InfiniteTimeout
+                    ? TimeSpan.FromSeconds(extendedConfig.SendTimeout)
+                    : TimeSpan.MaxValue;
+
+                binding.ReceiveTimeout = extendedConfig.ReceiveTimeout != ExtendedHostConfig.InfiniteTimeout
+                    ? TimeSpan.FromSeconds(extendedConfig.ReceiveTimeout)
+                    : TimeSpan.MaxValue;
             }
 
             _endpointAddress = $"{protocol}://{_wcfConfig.Host}:{port}/{config.Endpoint}";
