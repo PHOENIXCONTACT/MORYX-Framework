@@ -10,6 +10,11 @@ namespace Marvin.Tools.Wcf
     public class ExtendedHostConfig : HostConfig
     {
         /// <summary>
+        /// Constant for defining an infinite timeout
+        /// </summary>
+        public const int InfiniteTimeout = -1;
+
+        /// <summary>
         /// Flag if framework values are overriden
         /// </summary>
         [DataMember]
@@ -50,7 +55,7 @@ namespace Marvin.Tools.Wcf
         /// which no application messages are received, before it is dropped.
         /// </summary>
         [DataMember]
-        [DefaultValue(30)]
+        [DefaultValue(InfiniteTimeout)]
         public int ReceiveTimeout { get; set; }
     }
 }
