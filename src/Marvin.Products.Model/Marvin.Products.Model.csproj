@@ -116,17 +116,12 @@
     <Compile Include="Entities\StepEntity.cs" />
     <Compile Include="Entities\WorkplanEntity.cs" />
     <Compile Include="Entities\WorkplanReference.cs" />
-    <Compile Include="Migrations\201804091109101_InitialCreate.cs" />
-    <Compile Include="Migrations\201804091109101_InitialCreate.Designer.cs">
-      <DependentUpon>201804091109101_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201811061350470_InitialCreate.cs" />
+    <Compile Include="Migrations\201811061350470_InitialCreate.Designer.cs">
+      <DependentUpon>201811061350470_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201804091109101_InitialCreate.resx">
-      <DependentUpon>201804091109101_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -135,6 +130,11 @@
     <None Include="Marvin.Products.Model.nuspec" />
     <None Include="Migrations\Migrations.md" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201811061350470_InitialCreate.resx">
+      <DependentUpon>201811061350470_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
