@@ -35,7 +35,5 @@ namespace Marvin.TestTools.Test.Model
         public virtual DbSet<HugePocoEntity> HugePocos { get; set; }
 
         public virtual DbSet<HouseEntity> Houses { get; set; }
-
-        public virtual DbSet<AnotherEntity> Others { get; set; }
     }
 }
