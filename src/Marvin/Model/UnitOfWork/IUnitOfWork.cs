@@ -13,6 +13,13 @@ namespace Marvin.Model
         /// Creates an repository by the given API type
         /// </summary>
         IRepository GetRepository(Type api);
+
+        /// <summary>
+        /// Checks whether the specialized generic api exists
+        /// </summary>
+        /// <param name="api"></param>
+        /// <returns></returns>
+        bool HasRepository(Type api);
     }
 
     /// <summary>

@@ -76,11 +76,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IAnotherEntityRepository.cs" />
     <Compile Include="API\IHouseEntityRepository.cs" />
     <Compile Include="API\IHugePocoRepository.cs" />
     <Compile Include="API\IJsonEntityRepository.cs" />
+    <Compile Include="DbContext\AnotherTestModelConstants.cs" />
+    <Compile Include="DbContext\AnotherInMemoryUnitOfWorkFactory.cs" />
     <Compile Include="DbContext\InMemoryUnitOfWorkFactory.cs" />
     <Compile Include="DbContext\TestModelConstants.cs" />
+    <Compile Include="DbContext\AnotherTestModelContext.cs" />
+    <Compile Include="DbContext\AnotherTestModelUnitOfWorkFactory.cs" />
     <Compile Include="Entities\AnotherEntity.cs" />
     <Compile Include="Entities\HouseEntity.cs" />
     <Compile Include="Entities\HugePocoEntity.cs" />

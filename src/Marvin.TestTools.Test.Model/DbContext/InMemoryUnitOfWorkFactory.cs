@@ -1,10 +1,13 @@
-﻿using Marvin.Model.InMemory;
+﻿using System;
+using Marvin.Model;
+using Marvin.Model.InMemory;
 
 namespace Marvin.TestTools.Test.Model
 {
+    [ModelFactory(TestModelConstants.Namespace)]
     public class InMemoryUnitOfWorkFactory : InMemoryUnitOfWorkFactoryBase<TestModelContext>
     {
-        public InMemoryUnitOfWorkFactory()
+        public InMemoryUnitOfWorkFactory() : base(Guid.NewGuid().ToString())
         {
             
         }

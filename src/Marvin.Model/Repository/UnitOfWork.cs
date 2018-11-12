@@ -47,6 +47,12 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
+        bool IGenericUnitOfWork.HasRepository(Type api)
+        {
+            return _repositories.Any(api.IsAssignableFrom);
+        }
+
+        /// <inheritdoc />
         Action<string> IModelDiagnostics.Log
         {
             get { return _context.Database.Log; }
@@ -55,11 +61,15 @@ namespace Marvin.Model
 
         private IRepository GetRepository(Type api)
         {
-            var repoType = _repositories.Single(api.IsAssignableFrom);
+            var repoType = _repositories.SingleOrDefault(api.IsAssignableFrom);
+            if (repoType == null)
+            {
+                throw new NotSupportedException($"Api {api} was not found.");
+            }
 
-            var instance = (Repository)Activator.CreateInstance(repoType);
+            var instance = (Repository) Activator.CreateInstance(repoType);
             instance.Initialize(this, _context);
-
+            
             return instance;
         }
 

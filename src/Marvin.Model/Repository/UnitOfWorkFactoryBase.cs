@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Marvin.Configuration;
 using Marvin.Container;
@@ -110,6 +111,9 @@ namespace Marvin.Model
         /// <inheritdoc />
         public IUnitOfWork Create()
         {
+            if (_parent != null)
+                return CreateMerged();
+
             var context = CreateContext(ContextMode.AllOn);
             return Create(context);
         }
@@ -117,6 +121,9 @@ namespace Marvin.Model
         /// <inheritdoc />
         public IUnitOfWork Create(ContextMode mode)
         {
+            if (_parent != null)
+                return CreateMerged(mode);
+
             var context = CreateContext(mode);
             return Create(context);
         }
@@ -130,6 +137,16 @@ namespace Marvin.Model
         internal IUnitOfWork Create(MarvinDbContext context)
         {
             return new UnitOfWork(context, _repositories);
+        }
+
+        internal IUnitOfWork CreateMerged()
+        {
+            return new MergedUnitOfWork(_parent.Create(ContextMode.AllOn), Create(CreateContext(ContextMode.AllOn)));
+        }
+
+        internal IUnitOfWork CreateMerged(ContextMode mode)
+        {
+            return new MergedUnitOfWork(_parent.Create(mode), Create(CreateContext(mode)));
         }
 
         /// <inheritdoc />
@@ -204,7 +221,7 @@ namespace Marvin.Model
         {
             if (_repositories.Contains(apiType))
             {
-                throw new ArgumentException("Repository interface already registered");
+                throw new ArgumentException($"Repository interface already registered: {apiType}");
             }
 
             _repositories.Add(_proxyBuilder.Build(apiType));
@@ -220,7 +237,7 @@ namespace Marvin.Model
 
             if (_repositories.Contains(impl))
             {
-                throw new ArgumentException("Repository interface already registered");
+                throw new ArgumentException($"Repository interface already registered: Api {apiType}, implementation {implType}, no proxy: {noProxy}");
             }
 
             _repositories.Add(impl);
