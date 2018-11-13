@@ -22,14 +22,14 @@ namespace Marvin.Communication.Sockets
         {
             if (delayMs > 0)
             {
-                Context.CleanupTransmission();
                 NextState(StateReconnecting);
+                Context.CleanupTransmission();
                 Context.ScheduleConnectTimer(delayMs);
             }
             else
             {
-                Context.CleanupTransmission();
                 NextState(StateListening);
+                Context.CleanupTransmission();
                 Context.Register();
             }
         }

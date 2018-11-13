@@ -7,6 +7,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
         public ConnectionBuffer()
         {
             Received = new List<TMessage>();
+            LastStateChangeEvents = new List<BinaryConnectionState>();
         }
 
         public IBinaryConnection Connection { get; set; }
@@ -15,6 +16,6 @@ namespace Marvin.Communication.Sockets.IntegrationTests
 
         public int Id { get; set; }
 
-        public BinaryConnectionState LastStateChangeEvent { get; set; }
+        public List<BinaryConnectionState> LastStateChangeEvents { get; }
     }
 }

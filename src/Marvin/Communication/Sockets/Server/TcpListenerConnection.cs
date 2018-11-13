@@ -135,7 +135,14 @@ namespace Marvin.Communication.Sockets
         {
             // ReSharper disable once InconsistentlySynchronizedField
             _state = (ServerStateBase) state;
-            NotifyConnectionState?.Invoke(this, _state.CurrentState);
+            try
+            {
+                NotifyConnectionState?.Invoke(this, _state.CurrentState);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(LogLevel.Fatal, ex, "StateChanged event to {0} ran into an exception!", _state);
+            }
         }
 
         internal void Register()
@@ -238,8 +245,22 @@ namespace Marvin.Communication.Sockets
 
         private void MessageReceived(object sender, BinaryMessage message)
         {
+            if (!Validator.Validate(message))
+            {
+                // If you send us crap we shut you off!
+                Reconnect();
+                return;
+            }
+
             // ReSharper disable once PossibleNullReferenceException
-            Received(this, message);
+            try
+            {
+                Received(this, message);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(LogLevel.Fatal, ex, "Received event ran into an exception!");
+            }
         }
 
         /// <summary>
