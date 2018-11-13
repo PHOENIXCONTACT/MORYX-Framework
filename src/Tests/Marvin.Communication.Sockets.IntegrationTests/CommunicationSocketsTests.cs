@@ -80,19 +80,25 @@ namespace Marvin.Communication.Sockets.IntegrationTests
             // Act
             // Assert
             WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.AttemptingConnection);
-
-            Clients[clientIdx].Connection.Reconnect();
-            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.AttemptingConnection);
-
+            
             for (var i = 0; i < 10; i++)
             {
                 Clients[clientIdx].Connection.Reconnect();
                 WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.AttemptingConnection);
             }
 
-            CreateAndStartServer(IPAddress.Any, TestPort, 0, new SystemTestValidator(0));
-            Clients[clientIdx].Connection.Reconnect();
+            // Start server and await first connection
+            var server = CreateAndStartServer(IPAddress.Any, TestPort, 0, new SystemTestValidator(0));
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
 
+            // Close connection from client side and await new connection
+            Clients[clientIdx].Connection.Reconnect();
+            Thread.Sleep(50);
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
+
+            // Close connection from server side and await new connection
+            server.Connection.Reconnect();
+            Thread.Sleep(50);
             WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
 
             Clients[clientIdx].Connection.Stop();

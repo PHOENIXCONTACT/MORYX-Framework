@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using NUnit.Framework;
@@ -129,9 +130,39 @@ namespace Marvin.Communication.Sockets.IntegrationTests
             }
 
             // Assert
-            Clients.ForEach(c => Assert.AreEqual(BinaryConnectionState.Disconnected, c.LastStateChangeEvent, "Client did not receive Disconnected-Event"));
+            Clients.ForEach(c => Assert.AreEqual(BinaryConnectionState.Disconnected, c.LastStateChangeEvents.LastOrDefault(), "Client did not receive Disconnected-Event"));
 
-            ServerConnections.ForEach(s => Assert.AreEqual(BinaryConnectionState.Disconnected, s.LastStateChangeEvent, "Serverconnection did not receive Disconnected-Event"));
+            ServerConnections.ForEach(s => Assert.AreEqual(BinaryConnectionState.Disconnected, s.LastStateChangeEvents.LastOrDefault(), "Serverconnection did not receive Disconnected-Event"));
+        }
+
+        [TestCase(true, Description = "Server closes the connection upon receiving faulty message")]
+        [TestCase(false, Description = "Client closes the connection upon receiving faulty message")]
+        public void ReconnectAfterInvalidMessage(bool clientSendsMessage)
+        {
+            // Arrange
+            var server = CreateAndStartServer(IPAddress.Any, TestPort, 1, new SystemTestValidator(1));
+            var clientId = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 100, 1, new SystemTestValidator(1));
+            var client = GetClient(clientId);
+            // Client should be connected
+            WaitForConnectionState(clientId, new TimeSpan(0, 0, 0, 20), BinaryConnectionState.Connected);
+
+            // Act
+            var binMessage = CreateMessage(42, new byte[] { 1, 3, 3, 7, 42 });
+            if (clientSendsMessage)
+                client.Connection.Send(binMessage);
+            else
+                server.Connection.Send(binMessage);
+            Thread.Sleep(20);
+
+            // Assert
+            WaitForConnectionState(clientId, new TimeSpan(0, 0, 0, 20), BinaryConnectionState.Connected);
+            Thread.Sleep(20);
+            var connectionBuffer = clientSendsMessage ? server : client;
+            Assert.AreEqual(0, connectionBuffer.Received.Count, "Server should not receive a message");
+            var history = connectionBuffer.LastStateChangeEvents;
+            Assert.LessOrEqual(4, history.Count);
+            Assert.AreEqual(BinaryConnectionState.AttemptingConnection, history[history.Count - 2], "Server should have triggered a reconnect");
+            Assert.AreEqual(BinaryConnectionState.Connected, history[history.Count - 1], "Server should have triggered a reconnect");
         }
 
         /// <summary>

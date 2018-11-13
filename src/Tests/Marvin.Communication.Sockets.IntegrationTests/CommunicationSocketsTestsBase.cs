@@ -53,6 +53,11 @@ namespace Marvin.Communication.Sockets.IntegrationTests
         }
 
         /// <summary>
+        /// Get client by index
+        /// </summary>
+        protected ConnectionBuffer<TMessage> GetClient(int index) => _clients[index];
+
+        /// <summary>
         /// Closes all server listeners
         /// </summary>
         protected void CloseServer()
@@ -120,7 +125,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
         /// <param name="port">The port.</param>
         /// <param name="id">The identifier. This identifier has to be matched be the client that connects to this listener. The listener will be determined, when the first message is received</param>
         /// <param name="messageValidator">The message validator to be used</param>
-        protected void CreateAndStartServer(IPAddress ipAdress, int port, int id, IMessageValidator messageValidator)
+        protected ConnectionBuffer<TMessage> CreateAndStartServer(IPAddress ipAdress, int port, int id, IMessageValidator messageValidator)
         {
             var server = new ConnectionBuffer<TMessage>
             {
@@ -128,7 +133,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
                 Connection = _binaryConnectionFactory.Create(CreateServerConfig(ipAdress, port), messageValidator)
             };
             server.Connection.Received += (sender, message) => server.Received.Add((TMessage)message);
-            server.Connection.NotifyConnectionState += (sender, message) => server.LastStateChangeEvent = message;
+            server.Connection.NotifyConnectionState += (sender, message) => server.LastStateChangeEvents.Add(message);
 
             // Server should be disconnected
             Assert.AreEqual(server.Connection.CurrentState, BinaryConnectionState.Disconnected,
@@ -141,6 +146,8 @@ namespace Marvin.Communication.Sockets.IntegrationTests
                 $"server is not in the state '{BinaryConnectionState.AttemptingConnection:G}'. CurrentState: {server.Connection.CurrentState:G}");
 
             _serverConnections.Add(server);
+
+            return server;
         }
 
         /// <summary>
@@ -160,7 +167,7 @@ namespace Marvin.Communication.Sockets.IntegrationTests
             };
             client.Connection.Received +=
                 (sender, message) => client.Received.Add((TMessage)message);
-            client.Connection.NotifyConnectionState += (sender, message) => client.LastStateChangeEvent = message;
+            client.Connection.NotifyConnectionState += (sender, message) => client.LastStateChangeEvents.Add(message);
 
             var clientIdx = _clients.Count;
             _clients.Add(client);

@@ -114,7 +114,14 @@ namespace Marvin.Communication.Sockets
         {
             // ReSharper disable InconsistentlySynchronizedField
             _state = (ClientStateBase)state;
-            NotifyConnectionState?.Invoke(this, _state.Current);
+            try
+            {
+                NotifyConnectionState?.Invoke(this, _state.Current);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(LogLevel.Fatal, ex, "StateChanged event to {0} ran into an exception!", _state);
+            }
             // ReSharper enable InconsistentlySynchronizedField
         }
 
@@ -253,8 +260,15 @@ namespace Marvin.Communication.Sockets
                 return;
             }
 
-            // ReSharper disable once PossibleNullReferenceException
-            Received(this, message);
+            try
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                Received(this, message);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(LogLevel.Fatal, ex, "Received event ran into an exception!");
+            }
         }
 
         /// <inheritdoc />
