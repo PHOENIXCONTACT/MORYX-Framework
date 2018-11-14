@@ -12,7 +12,6 @@ using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading;
 using Marvin.Model;
-using Marvin.Runtime;
 using Marvin.Runtime.Modules;
 using Marvin.Serialization;
 using Marvin.TestTools.SystemTest.DatabaseMaintenance;
@@ -25,7 +24,7 @@ namespace Marvin.TestTools.SystemTest
     /// <summary>
     /// Exception in case of a not found service
     /// </summary>
-    public class MarvinServiceNotFoundException : MarvinException
+    public class MarvinServiceNotFoundException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MarvinServiceNotFoundException"/> class.
@@ -33,7 +32,9 @@ namespace Marvin.TestTools.SystemTest
         /// <param name="message">The message that describes the error.</param>
         public MarvinServiceNotFoundException(string message)
             : base(message)
-        { }
+        {
+
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarvinServiceNotFoundException"/> class.
@@ -42,19 +43,9 @@ namespace Marvin.TestTools.SystemTest
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public MarvinServiceNotFoundException(string message, Exception innerException)
             : base(message, innerException)
-        { }
+        {
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MarvinServiceNotFoundException"/> class.
-        /// </summary>
-        /// <param name="message">The error message that explains the reason for the exception.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
-        /// <param name="userRelevant">if set to <c>true</c> this exception will be displayed to the user.</param>
-        /// <param name="isFatal">if set to <c>true</c> this exception will cause a service stop.</param>
-        /// <param name="displayText">The display text.</param>
-        public MarvinServiceNotFoundException(string message, Exception innerException, bool userRelevant, bool isFatal, string displayText)
-            : base(message, innerException, userRelevant, isFatal, displayText)
-        { }
+        }
 
         /// <summary>
         /// Initializes a new instance with serialized data.
@@ -63,8 +54,9 @@ namespace Marvin.TestTools.SystemTest
         /// <param name="context">The StreamingContext that contains contextual information about the source or destination.</param>
         public MarvinServiceNotFoundException(SerializationInfo si, StreamingContext context)
             : base(si, context)
-        { }
+        {
 
+        }
     }
 
     /// <summary>

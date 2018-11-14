@@ -1,9 +1,9 @@
-﻿
+﻿using System;
 using System.Runtime.Serialization;
 
 namespace Marvin.Communication.Sockets
 {
-    internal class InvalidHeaderException : MarvinException
+    internal class InvalidHeaderException : Exception
     {
         /// <summary>
         /// Default constructor

@@ -1,11 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Marvin.Runtime.Modules
 {
     /// <summary>
     /// Exception thrown if server module wasn't ready for requested operation
     /// </summary>
-    public class HealthStateException : MarvinException
+    public class HealthStateException : Exception
     {
         /// <summary>
         /// Default constructor

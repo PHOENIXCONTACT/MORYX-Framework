@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Marvin.Runtime.Kernel
 {
-    internal class MissingFacadeException : MarvinException
+    internal class MissingFacadeException : Exception
     {
         public string ModuleName { get; set; }
         public string PropName { get; set; }
@@ -30,7 +30,7 @@ namespace Marvin.Runtime.Kernel
         }
 
         public MissingFacadeException(string moduleName, string propName, Type facadeType)
-            : base(string.Format("Found no plugin hosting a facade of type {0} which was expected by {1}.{2}", facadeType.Name, moduleName, propName))
+            : base($"Found no module hosting a facade of type {facadeType.Name} which was expected by {moduleName}.{propName}")
         {
             ModuleName = moduleName;
             PropName = propName;

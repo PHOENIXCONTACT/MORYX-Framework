@@ -1,11 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Marvin.Configuration
 {
     /// <summary>
     /// Exception 
     /// </summary>
-    public class InvalidConfigException : MarvinException
+    public class InvalidConfigException : Exception
     {
         /// <summary>
         /// Default constructor
