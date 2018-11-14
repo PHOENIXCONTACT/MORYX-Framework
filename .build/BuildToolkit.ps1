@@ -1,10 +1,10 @@
 # Tool Versions
 $MsBuildVersion = "14.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
-$NunitVersion = "3.8.0";
+$NunitVersion = "3.9.0";
 $OpenCoverVersion = "4.6.519";
-$DocFxVersion = "2.36.2";
-$OpenCoverToCoberturaVersion = "0.3.3";
-$ReportGeneratorVersion = "3.1.2";
+$DocFxVersion = "2.40.2";
+$OpenCoverToCoberturaVersion = "0.3.4";
+$ReportGeneratorVersion = "4.0.4";
 $VswhereVersion = "2.5.2";
 $GitLinkVersion = "3.1.0";
 
@@ -42,7 +42,7 @@ $global:NugetCli = "$BuildTools\nuget.exe";
 $global:NugetPushCli = "$BuildTools\nuget-push.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
-$global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\ReportGenerator.exe";
+$global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\net47\ReportGenerator.exe";
 $global:OpenCoverToCoberturaCli = "$BuildTools\OpenCoverToCoberturaConverter.$OpenCoverToCoberturaVersion\tools\OpenCoverToCoberturaConverter.exe";
 $global:VswhereCli = "$BuildTools\vswhere.$VswhereVersion\tools\vswhere.exe";
 $global:DocFxCli = "$BuildTools\docfx.console.$DocFxVersion\tools\docfx.exe";
