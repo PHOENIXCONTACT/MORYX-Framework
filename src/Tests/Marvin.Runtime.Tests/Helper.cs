@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using Marvin.Configuration;
 using Marvin.Runtime.Configuration;
 
@@ -41,7 +42,7 @@ namespace Marvin.Runtime.Tests
         public string StrategyName { get; set; }
     }
 
-    public class TestException : MarvinException
+    public class TestException : Exception
     {
     }
 }

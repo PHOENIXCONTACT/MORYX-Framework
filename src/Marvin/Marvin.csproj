@@ -42,7 +42,6 @@
     </Compile>
     <Compile Include="Attributes\ClassDisplayAttribute.cs" />
     <Compile Include="Attributes\ForceAssemblyReferenceAttribute.cs" />
-    <Compile Include="BaseTypes\MarvinException.cs" />
     <Compile Include="Bindings\BindingResolverBase.cs" />
     <Compile Include="Bindings\BindingResolverExtension.cs" />
     <Compile Include="Bindings\BindingResolverFactory.cs" />
