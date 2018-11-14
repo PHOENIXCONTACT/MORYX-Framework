@@ -11,8 +11,6 @@
             "**/bin/**",
             ".build/**",
             "/**/*Tests.csproj",
-            "/**/*Samples.csproj",
-            "/**/*Sample.csproj",
             "/**/*.Model.csproj"
           ],
           "src": "../"

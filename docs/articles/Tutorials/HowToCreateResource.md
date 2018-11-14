@@ -1,3 +1,6 @@
+---
+uid: HowToCreateAResource
+---
 How to create a resource {#howToCreateResource}
 ======
 

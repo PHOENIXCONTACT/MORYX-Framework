@@ -1,36 +1,33 @@
-ProductManagement {#architecture-ProductManagement}
-======================================
-[TOC]
+---
+uid: ProductsManagement
+---
+# ProductManagement
 
-# Description # {#ProductManagement-description}
+## Description
 
-The [ProductManagement](xref:Marvin.Products.Management) is a server module providing access 
-to [product descriptions and article data](xref:concepts-Products).
+The [ProductManagement](xref:Marvin.Products.Management) is a server module providing access to [product descriptions and article data](xref:ProductsConcept).
 
-# Provided facades # {#ProductManagement-provided}
+## Provided facades
 
 ProductManager's public API is provided by the following facades:
- 
+
 * [IProductManagement](xref:Marvin.Products.IProductManagement) 
 
-# Dependencies # {#ProductManagement-dependencies}
+## Dependencies
 
-## Referenced facades ## {#ProductManagement-references}
+## Referenced facades
 
 None. The product management does not depend on any other server module.
 
-## Used DataModels ## {#ProductManagement-models}
+## Used DataModels
 
-- [Marvin.Products.Model](xref:Marvin.Products.Model) This data model is used to store product 
-data as well as article data. The product data describes how to produce an article and represents the 
-manufacturing master data while the article data contains tracing data about every produced article 
-which is the dynamic data of the product management module.
+* [Marvin.Products.Model](xref:Marvin.Products.Model) This data model is used to store product data as well as article data. The product data describes how to produce an article and represents the manufacturing master data while the article data contains tracing data about every produced article which is the dynamic data of the product management module.
 
-# Architecture # {#ProductManagement-architecture}
+# Architecture
 The ProductManagement is the central component to manage product types and their instances. Each application can [define custom classes](xref:productDefinition) to best
 meet their requirements. Each application also defines a set of plugins to adapt the product management to their needs.
 
-## Overview ## {#ProductManagement-architecture-overview}
+## Overview
 
 Component name|Implementation|Desription
 --------------|--------------|----------
@@ -44,9 +41,7 @@ Component name|Implementation|Desription
 [IWorkplanEditingService](xref:Marvin.Products.Management.Modification.IWorkplanEditingService)|intern|Service used to edit workplan
 [IWorkplanEditingHost](xref:Marvin.Products.Management.Modification.IWorkplanEditingHost)|intern|Host for editing workplans
 
-## Diagrams ## {#ProductManagement-architecture-diagrams}
+## Diagrams
 
+TODO:
 ![](images\ProductManagement.png "EA:MARVIN.MARVIN 2.0.ControlSystem.Level-2.Implementation.ReverseEngineering.ProductManagement")
-
-# Configuration # {#ProductManagement-configuration}
-

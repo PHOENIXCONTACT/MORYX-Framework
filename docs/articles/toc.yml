@@ -1,7 +1,4 @@
 - name: Introduction
-  href: intro.md
-
-- name: Abstractions
   href: AbstractionLayer.md
 
 - name: Changelog
@@ -11,7 +8,7 @@
   items:
   - name: Concept
     href: Products/Concept.md
-  - name: ProductManagement
+  - name: Product management
     href: Products/ProductManagement.md
   - name: Definition
     href: Products/ProductDefinition.md
@@ -21,35 +18,68 @@
     href: Products/ProductStorage.md
   - name: Recipe Storage
     href: Products/RecipeStorage.md
+  - name: UI
+    href: Products/UI/Overview.md
+    items:
+      - name: Product Tree
+        href: Products/UI/ProductTree.md
+      - name: Product details
+        href: Products/UI/ProductDetails.md
 
 - name: Resources
+  href: Resources/Overview.md
   items:
-  - name: Concept
-    href: Resources/Concept.md
-  - name: ResourceManagement
+  - name: Resource type tree
+    href: Resources/ResourceTypeTree.md
+  - name: Resource object graph
+    href: Resources/ResourceObjectGraph.md
+  - name: Resource relations
+    href: Resources/ResourceRelations.md
+  - name: Resource management
     href: Resources/ResourceManagement.md
-  - name: Phoenix PLC
-    href: Resources/PhoenixPlcDriver.md
-  - name: SICK Antenna
-    href: Resources/SickAntennaDriver.md
+  - name: Resource Types
+    href: Resources/Types/Overview.md
+    items:
+      - name: Driver Resource
+        href: Resources/Types/DriverResource.md
+      - name: Interaction Resource
+        href: Resources/Types/InteractionResource.md
+  - name: UI
+    href: Resources/UI/Overview.md
+    items:
+      - name: Resource Tree
+        href: Resources/UI/ResourceTree.md
+      - name: Resource details
+        href: Resources/UI/ResourceDetails.md
+      - name: Resource Methods
+        href: Resources/UI/ResourceMethods.md
 
-- name: Protocols
+- name: Processing
   items:
-  - name: Core Protocol
-    href: Protocols/CoreProtocol.md
-  - name: Core Protocol Extension
-    href: Protocols/CoreProtocolExtension.md
+  - name: Activities
+    href: Processing/Activities.md
+  - name: Capabilites
+    href: Processing/Capabilities.md
+  - name: Constraints
+    href: Processing/Constraints.md
+  - name: Processes
+    href: Processing/Processes.md
+  - name: Tasks
+    href: Processing/Tasks.md
+  - name: Workplans
+    href: Processing/Workplans.md
 
 - name: Tutorials
   items: 
-  - name: Create a Driver
+  - name: How to create a Driver
     href: Tutorials/HowToBuildADriver.md
-  - name: Create a Resource
+  - name: How to create a Resource
     href: Tutorials/HowToCreateResource.md
-  - name: Use Constraints
+  - name: How to use Constraints
     href: Tutorials/HowToUseConstraints.md
 
 - name: UI
+  href: UI/Concept.md
   items: 
-  - name: Type based MasterDetail Views
+  - name: Type based MasterDetail views
     href: UI/TypeBasedMasterDetailUIs.md

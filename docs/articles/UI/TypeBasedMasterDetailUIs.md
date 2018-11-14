@@ -1,3 +1,6 @@
+---
+uid: MasterDetailUIs
+---
 # Type based MasterDetail UIs
 
 Within the abstraction layer we use the pattern of type based master detail views very often. Currently the Products UI and Resource UI are using this concept.

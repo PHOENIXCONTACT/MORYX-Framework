@@ -1,4 +1,7 @@
-How to build a driver {#howToBuildADriver}
+---
+uid: HowToBuildADriver
+---
+# How to build a driver {#howToBuildADriver}
 =====================
 [TOC]
 

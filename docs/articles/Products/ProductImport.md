@@ -1,8 +1,11 @@
+---
+uid: ProductsImport
+---
 # Product Import
 
 Product import includes any type of product type definition except model setups. Product import may refer to importing a file or remote source, but also the simple act of creating a product manually by supplying all necessary parameters.
 
-Product imports of a machine are created by implementing the [IProductImporter](@ref Marvin.Products.IProductImporter). As always it is recommended to derive from the base type [ProductImportBase](@ref Marvin.Products.Management.ProductImporterBase). Each importer must define its [ProductImporterConfig](@ref Marvin.Products.ProductImporterConfig) and export a typed parameters object that implements `IImportParameters`. This object is exchanged between client and server using the Entry-format. There are already two predefined types [FileImportParameters](@ref Marvin.Products.Management.FileImportParameters) and [PrototypeImportParameters](@ref Marvin.Products.Management.PrototypeImportParameters) that can be used directly or as a base class for your parameters
+Product imports of a machine are created by implementing the [IProductImporter](xref:Marvin.Products.Management.Importers.IProductImporter). As always it is recommended to derive from the base type [ProductImporterBase](xref:Marvin.Products.Management.ProductImporterBase`2). Each importer must define its [ProductImporterConfig](xref:Marvin.Products.Management.Importers.ProductImporterConfig) and export a typed parameters object that implements `IImportParameters`. This object is exchanged between client and server using the Entry-format. There are already two predefined types [FileImportParameters](xref:Marvin.Products.Management.FileImportParameters) and [PrototypeImportParameters](xref:Marvin.Products.Management.PrototypeParameters) that can be used directly or as a base class for your parameters.
 
 The base class requires three methods:
 
@@ -11,7 +14,7 @@ The base class requires three methods:
 * **Import:** Parse the parameters from the client and construct an `IProduct` instance. **DO NOT** write this to the database, but return the unsaved object instead.
 
 It is important that the new created importer is configured in the **Maintenance -> ProductManager -> Importers**.
-Otherwise it will not be shown on the client. Unless your application defines its implementation of `IProductCustomatization` use must enable `UseNullCustomization` in the Maintenance as well. 
+Otherwise it will not be shown on the client. Unless your application defines its implementation of `IProductCustomatization` use must enable `UseNullCustomization` in the Maintenance as well.
 
 ## Prototype importer
 

@@ -1,3 +1,6 @@
+---
+uid: RecipeStorage
+---
 # Recipe Storage
 
 ## Workplans
