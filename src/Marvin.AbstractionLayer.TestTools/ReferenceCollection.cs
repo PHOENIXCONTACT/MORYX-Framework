@@ -8,6 +8,5 @@ namespace Marvin.AbstractionLayer.TestTools
     /// </summary>
     public class ReferenceCollection<T> : List<T>, IReferences<T> where T : IResource
     {
-
     }
 }
