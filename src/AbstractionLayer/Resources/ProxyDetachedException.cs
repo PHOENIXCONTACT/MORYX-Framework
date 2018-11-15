@@ -1,10 +1,12 @@
-﻿namespace Marvin.AbstractionLayer.Resources
+﻿using System;
+
+namespace Marvin.AbstractionLayer.Resources
 {
     /// <summary>
     /// Exception thrown by the resource proxy fetched from the facade if it was detached and can no longer
     /// interact with the target instance.
     /// </summary>
-    public class ProxyDetachedException : MarvinException
+    public class ProxyDetachedException : Exception
     {
         /// <summary>
         /// Create new instance of the detached excpetion

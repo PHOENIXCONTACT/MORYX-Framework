@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
 using Marvin.AbstractionLayer.Capabilities;
 
 namespace Marvin.AbstractionLayer.Resources
@@ -6,22 +6,12 @@ namespace Marvin.AbstractionLayer.Resources
     /// <summary>
     /// Exception which can be thrown iff a resource was not found
     /// </summary>
-    public class ResourceNotFoundException : MarvinException
+    public class ResourceNotFoundException : Exception
     {
         /// <summary>
         /// Default constructor
         /// </summary>
         public ResourceNotFoundException()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance with serialized data.
-        /// </summary>
-        /// <param name="si">The SerializationInfo that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The StreamingContext that contains contextual information about the source or destination.</param>
-        public ResourceNotFoundException(SerializationInfo si, StreamingContext context)
-            : base(si, context)
         {
         }
 

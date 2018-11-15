@@ -1,11 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Marvin.AbstractionLayer.Drivers
 {
     /// <summary>
     /// Exception for busy drivers. The driver is running but cannot handle requests
     /// </summary>
-    public class DriverNotRunningException : MarvinException
+    public class DriverNotRunningException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DriverNotRunningException"/> class.
@@ -13,7 +14,6 @@ namespace Marvin.AbstractionLayer.Drivers
         public DriverNotRunningException()
             : base("Cannot handle request. Driver is not in state " + StateClassification.Running + "!")
         {
-
         }
 
         /// <summary>
@@ -25,6 +25,5 @@ namespace Marvin.AbstractionLayer.Drivers
             : base(si, context)
         {
         }
-
     }
 }
