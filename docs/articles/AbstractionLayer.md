@@ -46,11 +46,11 @@ A [Product](xref:Marvin.AbstractionLayer.IProduct) or better a *product descript
 
 ## Recipes
 
-A [Recipe](xref:Marvin.AbstractionLayer.Recipe) is used to combine a Workplan and a set of parameters to define all the [Activities](xref:abstractionlayer-Activities) needed for a Process
+A [Recipe](xref:Marvin.AbstractionLayer.Recipe) is used to combine a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process
 
 ## Resources
 
-The Resources package of the AbstrationLayer contains several basic classes to be used by the [Resources](xref:Marvin.Resources.IResource) and the [ResourceManager](xref:ResourceManagement)
+The Resources package of the AbstrationLayer contains several basic classes to be used by the [Resources](xref:Marvin.AbstractionLayer.Resources.IResource) and the [ResourceManager](xref:ResourceManagement)
 
 ## Tasks
 
@@ -64,6 +64,6 @@ The [Workplan](xref:Workplans) package of the AbstrationLayer contains several h
 
 You can find some tutorials here:
 
-- [How to create a Resource](xref:HowToCreateAResource)
-- [How to build a Driver](xref:HowToBuildADriver)
-- [How to use Constraints](xref:HowToUseConstraints)
+* [How to create a Resource](xref:HowToCreateAResource)
+* [How to build a Driver](xref:HowToBuildADriver)
+* [How to use Constraints](xref:HowToUseConstraints)
