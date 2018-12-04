@@ -19,9 +19,6 @@ namespace Marvin.Products.Management.Modification
         public bool IsCollection { get; set; }
 
         [DataMember]
-        public PartModel Part { get; set; }
-
-        [DataMember]
         public PartModel[] Parts { get; set; }
 
         [DataMember]

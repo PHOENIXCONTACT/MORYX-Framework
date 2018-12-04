@@ -160,11 +160,12 @@ namespace Marvin.Products.Management.Modification
                 if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType) && property.Name != nameof(Product.ParentLink))
                 {
                     var link = (IProductPartLink)property.GetValue(product);
+                    var partModel = ConvertPart(link);
                     var connector = new PartConnector
                     {
                         Name = property.Name,
                         Type = FetchProductType(property.PropertyType),
-                        Part = ConvertPart(link),
+                        Parts = partModel != null ? new[] { partModel } : new PartModel[0],
                         PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, ProductSerialization)
                     };
                     connectors.Add(connector);
@@ -278,8 +279,8 @@ namespace Marvin.Products.Management.Modification
                 var value = prop.GetValue(converted);
                 if (partConnector.IsCollection)
                     UpdateCollection((IList)value, partConnector.Parts);
-                else if (partConnector.Part != null)
-                    UpdateReference((IProductPartLink)value, partConnector.Part);
+                else if (partConnector.Parts.Length == 1)
+                    UpdateReference((IProductPartLink)value, partConnector.Parts[0]);
             }
 
             return converted;
