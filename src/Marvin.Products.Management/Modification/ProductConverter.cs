@@ -166,7 +166,7 @@ namespace Marvin.Products.Management.Modification
                         Name = property.Name,
                         Type = FetchProductType(property.PropertyType),
                         Parts = partModel != null ? new []{partModel} : new PartModel[0],
-                        PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, ProductSerialization).ToArray()
+                        PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, ProductSerialization)
                     };
                     connectors.Add(connector);
                 }
