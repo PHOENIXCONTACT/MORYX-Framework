@@ -75,8 +75,6 @@
     href: Tutorials/HowToBuildADriver.md
   - name: How to create a Resource
     href: Tutorials/HowToCreateResource.md
-  - name: How to use Constraints
-    href: Tutorials/HowToUseConstraints.md
 
 - name: UI
   href: UI/Concept.md
