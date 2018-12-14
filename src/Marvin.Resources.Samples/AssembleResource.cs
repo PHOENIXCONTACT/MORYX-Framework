@@ -12,6 +12,7 @@ namespace Marvin.Resources.Samples
         [DataMember]
         public AssembleConfig Config { get; set; }
 
+        [Description("AssembleFoo for handling setups")]
         [ResourceReference(ResourceRelationType.Extension)]
         public AssembleFoo Setup { get; set; }
 
@@ -45,6 +46,7 @@ namespace Marvin.Resources.Samples
         
     }
 
+    [Description("Some cool assemble foo")]
     public class AssembleFoo : Resource
     {
         [DataMember]

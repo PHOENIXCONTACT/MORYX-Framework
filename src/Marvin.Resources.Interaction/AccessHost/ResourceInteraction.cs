@@ -466,7 +466,7 @@ namespace Marvin.Resources.Interaction
             {
                 Id = r.Id,
                 Name = r.Name,
-                Type = r.GetType().Name,
+                Type = r.ResourceType(),
                 LocalIdentifier = r.LocalIdentifier,
                 GlobalIdentifier = r.GlobalIdentifier,
                 Description = r.Description
