@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Marvin.Serialization;
 using Marvin.Workflows;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Marvin.Tests.Workflows
@@ -22,8 +23,8 @@ namespace Marvin.Tests.Workflows
             workplan.Add(step);
 
             // Act
-            var json = Json.Serialize(workplan, JsonSettings.Minimal);
-            var deserialized = Json.Deserialize<Workplan>(json, JsonSettings.Minimal);
+            var json = JsonConvert.SerializeObject(workplan, JsonSettings.Minimal);
+            var deserialized = JsonConvert.DeserializeObject<Workplan>(json, JsonSettings.Minimal);
 
             // Assert
             var connectors = workplan.Connectors.ToList();
