@@ -34,39 +34,54 @@ namespace Marvin.Serialization
     public static class Json
     {
         /// <summary>
+        /// Json settings for optimal performance and minimal number of characters
+        /// </summary>
+        public static JsonSerializerSettings Minimal => new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
+            NullValueHandling = NullValueHandling.Ignore,
+            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+        };
+
+        /// <summary>
+        /// Json settings for human-readable text files
+        /// </summary>
+        public static JsonSerializerSettings Readable => new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,
+            TypeNameHandling = TypeNameHandling.Auto,
+            DefaultValueHandling = DefaultValueHandling.Include,
+            NullValueHandling = NullValueHandling.Include,
+            Converters = new JsonConverter[] {new StringEnumConverter()}
+        };
+
+        /// <summary>
+        /// Json settings for human-readable text files 
+        /// </summary>
+        public static JsonSerializerSettings ReadableReplace
+        {
+            get
+            {
+                var readable = Readable;
+                readable.ObjectCreationHandling = ObjectCreationHandling.Replace;
+                return readable;
+            }
+        }
+
+        /// <summary>
         /// Map from Json enum to settings object
         /// </summary>
         private static readonly IDictionary<JsonSettings, JsonSerializerSettings> SettingsMap = new Dictionary<JsonSettings, JsonSerializerSettings>
             {
                 {
-                    JsonSettings.Minimal, new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.Auto,
-                        DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
-                        NullValueHandling = NullValueHandling.Ignore,
-                        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                    }
+                    JsonSettings.Minimal, Minimal
                 },
                 {
-                    JsonSettings.Readable, new JsonSerializerSettings
-                    {
-                        Formatting = Formatting.Indented,
-                        TypeNameHandling = TypeNameHandling.Auto,
-                        DefaultValueHandling = DefaultValueHandling.Include,
-                        NullValueHandling = NullValueHandling.Include,
-                        Converters = new JsonConverter[] {new StringEnumConverter()}
-                    }
+                    JsonSettings.Readable, Readable
                 },
                 {
-                    JsonSettings.ReadableReplace, new JsonSerializerSettings
-                    {
-                        Formatting = Formatting.Indented,
-                        TypeNameHandling = TypeNameHandling.Auto,
-                        DefaultValueHandling = DefaultValueHandling.Include,
-                        ObjectCreationHandling = ObjectCreationHandling.Replace,
-                        NullValueHandling = NullValueHandling.Include,
-                        Converters = new JsonConverter[] {new StringEnumConverter()}
-                    }
+                    JsonSettings.ReadableReplace, ReadableReplace
                 }
             };
         
