@@ -249,7 +249,7 @@
     <Compile Include="Serialization\ICustomSerialization.cs" />
     <Compile Include="Serialization\EntryConvert\EntryToModel\IEntryCollection.cs" />
     <Compile Include="Serialization\InlineConverter.cs" />
-    <Compile Include="Serialization\Json.cs" />
+    <Compile Include="Serialization\JsonSettings.cs" />
     <Compile Include="Serialization\MergedSerializer.cs" />
     <Compile Include="Serialization\EntryConvert\MethodEntry.cs" />
     <Compile Include="Serialization\EntryConvert\MethodEntry.Generated.cs" />

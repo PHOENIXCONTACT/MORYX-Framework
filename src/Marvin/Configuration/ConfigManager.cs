@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Marvin.Serialization;
+using Newtonsoft.Json;
 
 namespace Marvin.Configuration
 {
@@ -80,7 +81,7 @@ namespace Marvin.Configuration
                 try
                 {
                     var fileContent = File.ReadAllText(configPath);
-                    config = (IConfig)Json.Deserialize(fileContent, confType, JsonSettings.ReadableReplace);
+                    config = (IConfig)JsonConvert.DeserializeObject(fileContent, confType, JsonSettings.ReadableReplace);
 
                     ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
                 }
@@ -118,7 +119,7 @@ namespace Marvin.Configuration
         /// </summary>
         protected void WriteToFile(object config, string name)
         {
-            var text = Json.Serialize(config, JsonSettings.Readable);
+            var text = JsonConvert.SerializeObject(config, JsonSettings.Readable);
             File.WriteAllText(GetConfigPath(name), text);
         }
 
