@@ -32,17 +32,16 @@
     <DocumentationFile>bin\Release\Marvin.AbstractionLayer.TestTools.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin, Version=3.0.0.2120, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev002120\lib\net461\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.2792, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev002792\lib\net461\Marvin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.2120, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev002120\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
+    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.2792, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev002792\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">

@@ -8,6 +8,7 @@ using Marvin.Model;
 using Marvin.Resources.Model;
 using Marvin.Serialization;
 using Marvin.Tools;
+using Newtonsoft.Json;
 
 namespace Marvin.Resources.Management
 {
@@ -83,7 +84,7 @@ namespace Marvin.Resources.Management
 
             // Copy extended data from json
             if (ExtensionData != null)
-                Json.Populate(resource, ExtensionData);
+                JsonConvert.PopulateObject(ExtensionData, resource);
 
             // Read everything else from defaults
             ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
@@ -91,16 +92,6 @@ namespace Marvin.Resources.Management
                                                         .AddDefaultValueProvider());
 
             return Instance = resource;
-        }
-
-        /// <summary>
-        /// Value provider that filters properties that shall be ignored by the provider.
-        /// It will flag all properties without <see cref="DataMember"/> attribute as handled
-        /// to break the call in <see cref="ValueProvider"/>
-        /// </summary>
-        private static bool PropertyFilter(object target, PropertyInfo property)
-        {
-            return property.GetCustomAttribute<DataMemberAttribute>() == null;
         }
 
         /// <summary>
@@ -117,7 +108,7 @@ namespace Marvin.Resources.Management
             entity.Description = instance.Description;
             entity.LocalIdentifier = instance.LocalIdentifier;
             entity.GlobalIdentifier = instance.GlobalIdentifier;
-            entity.ExtensionData = Json.Serialize(instance, JsonSettings.Minimal);
+            entity.ExtensionData = JsonConvert.SerializeObject(instance, JsonSettings.Minimal);
 
             return entity;
         }
