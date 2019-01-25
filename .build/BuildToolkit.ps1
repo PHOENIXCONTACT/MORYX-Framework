@@ -2,10 +2,10 @@
 $MsBuildVersion = "14.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
 $NunitVersion = "3.9.0";
 $OpenCoverVersion = "4.6.519";
-$DocFxVersion = "2.40.2";
+$DocFxVersion = "2.40.8";
 $OpenCoverToCoberturaVersion = "0.3.4";
-$ReportGeneratorVersion = "4.0.4";
-$VswhereVersion = "2.5.2";
+$ReportGeneratorVersion = "4.0.9";
+$VswhereVersion = "2.5.9";
 $GitLinkVersion = "3.1.0";
 
 # Folder Pathes
@@ -95,9 +95,11 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         if (-not (Test-Path $global:VswhereCli)) {
             Install-Tool "vswhere" $VswhereVersion $VswhereCli;
         }
+
         $installPath = [string] (& $global:VswhereCli -latest -prerelease -products * -requires "Microsoft.Component.MSBuild" -property "installationPath");
         if ($installPath) {
-            $global:MSBuildCli = Join-Path $installPath 'MSBuild\15.0\Bin\MSBuild.exe';
+            $msbuildExe = Get-ChildItem -Path $installPath -Filter MSBuild.exe -Recurse -ErrorAction SilentlyContinue -Force
+            $global:MSBuildCli = $msbuildExe.FullName;
         }
     }
     else {
