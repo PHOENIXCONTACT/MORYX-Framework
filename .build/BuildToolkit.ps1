@@ -121,6 +121,11 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     if (-not $env:MARVIN_OPTIMIZE_CODE) {
         $env:MARVIN_OPTIMIZE_CODE = $True;
     }
+    else {
+        if (-not [bool]::TryParse($env:MARVIN_OPTIMIZE_CODE,  [ref]$env:MARVIN_OPTIMIZE_CODE)) {
+            $env:MARVIN_OPTIMIZE_CODE = $True;
+        }
+    }
 
     if (-not $env:MARVIN_BRANCH) {
         $env:MARVIN_BRANCH = "unknown";
@@ -197,7 +202,7 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
         $additonalOptions = ",$Options";
     }
 
-    $params = "Configuration=$env:MARVIN_BUILD_CONFIG,Optimize=" + (&{If($env:MARVIN_OPTIMIZE_CODE) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
+    $params = "Configuration=$env:MARVIN_BUILD_CONFIG,Optimize=" + (&{If($env:MARVIN_OPTIMIZE_CODE -eq $True) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
 
     & $global:MSBuildCli $ProjectFile /p:$params /detailedsummary
     Invoke-ExitCodeCheck $LastExitCode;
