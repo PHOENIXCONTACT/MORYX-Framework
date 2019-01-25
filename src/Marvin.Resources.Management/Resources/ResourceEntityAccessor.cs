@@ -104,11 +104,18 @@ namespace Marvin.Resources.Management
             if (entity.Id == 0)
                 entity.Type = instance.ResourceType();
 
-            entity.Name = instance.Name;
-            entity.Description = instance.Description;
-            entity.LocalIdentifier = instance.LocalIdentifier;
-            entity.GlobalIdentifier = instance.GlobalIdentifier;
-            entity.ExtensionData = JsonConvert.SerializeObject(instance, JsonSettings.Minimal);
+            // All those checks are necessary since EF change tracker does not recognize equal values as such
+            if (entity.Name != instance.Name)
+                entity.Name = instance.Name;
+            if (entity.Description != instance.Description)
+                entity.Description = instance.Description;
+            if (entity.LocalIdentifier != instance.LocalIdentifier)
+                entity.LocalIdentifier = instance.LocalIdentifier;
+            if (entity.GlobalIdentifier != instance.GlobalIdentifier)
+                entity.GlobalIdentifier = instance.GlobalIdentifier;
+            var extensionData = JsonConvert.SerializeObject(instance, JsonSettings.Minimal);
+            if (entity.ExtensionData != extensionData)
+                entity.ExtensionData = extensionData;
 
             return entity;
         }

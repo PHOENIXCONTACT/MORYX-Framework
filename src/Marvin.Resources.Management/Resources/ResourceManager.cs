@@ -335,23 +335,35 @@ namespace Marvin.Resources.Management
             return instance;
         }
 
+        private readonly object _fallbackLock = new object();
         public void Save(Resource resource)
         {
-            using (var uow = UowFactory.Create())
+            lock (_resources.ContainsKey(resource.Id) ? _resources[resource.Id] : _fallbackLock)
             {
-                var newResources = new HashSet<Resource>();
+                using (var uow = UowFactory.Create())
+                {
+                    var newResources = new HashSet<Resource>();
 
-                var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
-                if (entity.Id == 0)
-                    newResources.Add(resource);
+                    var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
+                    if (entity.Id == 0)
+                        newResources.Add(resource);
 
-                var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);
-                newResources.AddRange(newInstances);
+                    var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);
+                    newResources.AddRange(newInstances);
 
-                uow.Save();
+                    try
+                    {
+                        uow.Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(LogLevel.Error, ex, "Error saving resource {0}-{1}!", resource.Id, resource.Name);
+                        throw;
+                    }
 
-                foreach (var instance in newResources)
-                    AddResource(instance, true);
+                    foreach (var instance in newResources)
+                        AddResource(instance, true);
+                }
             }
         }
 
