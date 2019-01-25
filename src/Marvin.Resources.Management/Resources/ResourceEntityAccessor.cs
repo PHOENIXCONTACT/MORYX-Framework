@@ -84,7 +84,7 @@ namespace Marvin.Resources.Management
 
             // Copy extended data from json
             if (ExtensionData != null)
-                JsonConvert.PopulateObject(ExtensionData, resource);
+                JsonConvert.PopulateObject(ExtensionData, resource, JsonSettings.Minimal);
 
             // Read everything else from defaults
             ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
