@@ -26,7 +26,8 @@ namespace Marvin.Serialization
         {
             var copy = new EntryValue();
             // All value types can be simply copied
-            copy.Type = Type; 
+            copy.Type = Type;
+            copy.UnitType = UnitType;
             copy.Current = Current; 
             copy.Default = Default; 
             copy.IsReadOnly = IsReadOnly; 

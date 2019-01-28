@@ -30,7 +30,6 @@ namespace Marvin.Serialization
             copy.MaxLenght = MaxLenght; 
             copy.Regex = Regex; 
             copy.IsRequired = IsRequired; 
-            copy.IsPassword = IsPassword; 
             return copy;
         }
 

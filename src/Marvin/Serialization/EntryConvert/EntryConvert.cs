@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Marvin.Configuration;
 using Marvin.Tools;
 
 namespace Marvin.Serialization
@@ -103,8 +104,9 @@ namespace Marvin.Serialization
             var entryValue = new EntryValue
             {
                 Type = TransformType(property.PropertyType),
+                UnitType = GetUnitType(property),
                 IsReadOnly = isReadOnly,
-                Possible = customSerialization.PossibleValues(property.PropertyType, property),
+                Possible = customSerialization.PossibleValues(property.PropertyType, property)
             };
 
             // Get most basic default
@@ -121,6 +123,33 @@ namespace Marvin.Serialization
                 entryValue.Current = entryValue.Default;
 
             return entryValue;
+        }
+
+        private static EntryUnitType GetUnitType(ICustomAttributeProvider property)
+        {
+            var unitType = EntryUnitType.None;
+
+            var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
+            if (passwordAttr != null)
+                unitType = EntryUnitType.Password;
+
+            var fileAttr = property.GetCustomAttribute<FileSystemPathAttribute>();
+            if (fileAttr != null)
+            {
+                switch (fileAttr.Type)
+                {
+                    case FileSystemPathType.File:
+                        unitType = EntryUnitType.File;
+                        break;
+                    case FileSystemPathType.Directory:
+                        unitType = EntryUnitType.Directory;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return unitType;
         }
 
         /// <summary>
@@ -415,6 +444,7 @@ namespace Marvin.Serialization
                 Value = new EntryValue
                 {
                     Type = TransformType(parameter.ParameterType),
+                    UnitType = GetUnitType(parameter),
                     Current = defaultValue,
                     Default = defaultValue,
                     Possible = serialization.PossibleValues(parameterType, parameter)

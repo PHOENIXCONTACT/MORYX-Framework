@@ -78,6 +78,7 @@ namespace Marvin.Tests
                     Current = (id*123).ToString("D"),
                     Default = "42",
                     Type = (EntryValueType) (id%7),
+                    UnitType = (EntryUnitType) (id%Enum.GetNames(typeof(EntryUnitType)).Length),
                     Possible = new[] {"12334", "1123361", "11236"}
                 }
             };
@@ -100,8 +101,9 @@ namespace Marvin.Tests
             // Compare value
             Assert.AreEqual(expected.Value.Current, value.Value.Current);
             Assert.AreEqual(expected.Value.Default, value.Value.Default);
-            Assert.AreEqual(expected.Value.Possible, expected.Value.Possible);
-            Assert.AreEqual(expected.Value.Type, expected.Value.Type);
+            Assert.AreEqual(expected.Value.Possible, value.Value.Possible);
+            Assert.AreEqual(expected.Value.Type, value.Value.Type);
+            Assert.AreEqual(expected.Value.UnitType, value.Value.UnitType);
 
             // Continue recursive
             Assert.AreEqual(expected.SubEntries.Count, value.SubEntries.Count);

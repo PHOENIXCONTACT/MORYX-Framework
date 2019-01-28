@@ -116,6 +116,7 @@
     <Compile Include="Configuration\ConfigBase.cs" />
     <Compile Include="Configuration\ConfigConstants.cs" />
     <Compile Include="Configuration\ConfigManager.cs" />
+    <Compile Include="Configuration\FileSystemPathAttribute.cs" />
     <Compile Include="Configuration\PossibleValuesSerialization.cs" />
     <Compile Include="Configuration\Defaults\CpuCountAttribute.cs" />
     <Compile Include="Configuration\Defaults\CurrentHostNameAttribute.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Serialization\DefaultSerialization.cs" />
     <Compile Include="Serialization\EntryConvert\Entry.cs" />
     <Compile Include="Serialization\EntryConvert\Entry.Generated.cs" />
+    <Compile Include="Serialization\EntryConvert\EntryUnitType.cs" />
     <Compile Include="Serialization\EntryConvert\EntryConvert.cs" />
     <Compile Include="Serialization\EntryConvert\EntryConvertGenerator.cs">
       <DependentUpon>EntryConvertGenerator.tt</DependentUpon>
