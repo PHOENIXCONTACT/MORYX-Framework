@@ -34,12 +34,6 @@ namespace Marvin.Serialization
         public bool IsRequired { get; set; }
 
         /// <summary>
-        /// Indicates weather the field is a password
-        /// </summary>
-        [DataMember]
-        public bool IsPassword { get; set; }
-
-        /// <summary>
         /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
         /// </summary>
         /// <returns>

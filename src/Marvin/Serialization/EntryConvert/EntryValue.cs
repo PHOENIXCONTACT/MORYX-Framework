@@ -16,6 +16,12 @@ namespace Marvin.Serialization
         public EntryValueType Type { get; set; }
 
         /// <summary>
+        /// Unit type of this entry
+        /// </summary>
+        [DataMember]
+        public EntryUnitType UnitType { get; set; }
+
+        /// <summary>
         /// Current value of this entry
         /// </summary>
         [DataMember]

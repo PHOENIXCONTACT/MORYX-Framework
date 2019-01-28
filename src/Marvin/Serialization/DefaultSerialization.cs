@@ -71,11 +71,6 @@ namespace Marvin.Serialization
         {
             var validation = new EntryValidation();
 
-            //Determine if property is a password
-            var passwordAttr = attributeProvider.GetCustomAttribute<PasswordAttribute>();
-            if (passwordAttr != null)
-                validation.IsPassword = true;
-
             var validationAttributes = attributeProvider.GetCustomAttributes<ValidationAttribute>();
             if (validationAttributes.Length == 0)
                 return validation;
