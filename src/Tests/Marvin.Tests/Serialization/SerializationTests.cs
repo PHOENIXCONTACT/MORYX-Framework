@@ -588,6 +588,183 @@ namespace Marvin.Tests
             Assert.AreEqual(string.Empty, instance.Text, "EntryConvert did not pick the correct overload");
         }
 
+        [Test]
+        public void EntryEqualsAfterCloning()
+        {
+            // Arrange
+            var entry = CreateTestEntry();
+            var clone = entry.Clone(true);
+
+            // Act
+            var equals = entry.Equals(clone);
+
+            // Assert
+            Assert.IsTrue(equals);
+        }
+
+        [Test]
+        public void EntryEqualsWhenCheckingSameInstance()
+        {
+            // Arrange
+            var entry = CreateTestEntry();
+            var entry2 = CreateTestEntry();
+
+            // Act
+            var equals = entry.Equals(entry2);
+
+            // Assert
+            Assert.IsTrue(equals);
+        }
+
+        [Test]
+        public void EntryDoesNotEqualWhenValueOnRootIsDifferent()
+        {
+            // Arrange
+            var entry = CreateTestEntry();
+            var entry2 = CreateTestEntry();
+
+            entry.Value.Current = "OtherValue";
+
+            // Act
+            var equals = entry.Equals(entry2);
+
+            // Assert
+            Assert.IsFalse(equals);
+        }
+
+        [Test]
+        public void EntryDoesNotEqualWhenNoSubEntriesArePresent()
+        {
+            // Arrange
+            var entry = CreateTestEntry();
+            var entry2 = CreateTestEntry();
+
+            entry2.SubEntries = new List<Entry>();
+
+            // Act
+            var equals = entry.Equals(entry2);
+
+            // Assert
+            Assert.IsFalse(equals);
+        }
+
+        [Test]
+        public void EntryDoesNotEqualWhenWhenASubEntryIsDifferent()
+        {
+            // Arrange
+            var entry = CreateTestEntry();
+            var entry2 = CreateTestEntry();
+
+            entry2.SubEntries[1].Value.Current = "Value";
+
+            // Act
+            var equals = entry.Equals(entry2);
+
+            // Assert
+            Assert.IsFalse(equals);
+        }
+
+        [Test]
+        public void EntryDoesNotEqualWhenWhenADeepSubEntryIsDifferent()
+        {
+            // Arrange
+            var entry = CreateTestEntry();
+            var entry2 = CreateTestEntry();
+
+            entry2.SubEntries[2].SubEntries[0].Value.Current = "Value";
+
+            // Act
+            var equals = entry.Equals(entry2);
+
+            // Assert
+            Assert.IsFalse(equals);
+        }
+
+        private Entry CreateTestEntry()
+        {
+            return new Entry
+            {
+                Key =
+                {
+                    Identifier = "Test",
+                    Name = "Test"
+                },
+                Description = "Description",
+                SubEntries =
+                {
+                    new Entry
+                    {
+                        Key =
+                        {
+                            Identifier = "L1.1",
+                            Name = "L1.1"
+                        },
+                        Description = "Description",
+                        Value =
+                        {
+                            Current = "Level1.1",
+                            Default = "",
+                            Type = EntryValueType.String
+                        }
+                    },
+                    new Entry
+                    {
+                        Key =
+                        {
+                            Identifier = "L1.2",
+                            Name = "L1.2"
+                        },
+                        Description = "Description",
+                        Value =
+                        {
+                            Current = "Level1.2",
+                            Default = "",
+                            Type = EntryValueType.String
+                        }
+                    },
+                    new Entry
+                    {
+                        Key =
+                        {
+                            Identifier = "L1.3",
+                            Name = "L1.3"
+                        },
+                        Description = "Description",
+                        SubEntries =
+                        {
+                            new Entry
+                            {
+                                Key =
+                                {
+                                    Identifier = "L2.3.1",
+                                    Name = "L2.3.1"
+                                },
+                                Description = "Description",
+                                Value =
+                                {
+                                    Current = "Level2.3.1",
+                                    Default = "",
+                                    Type = EntryValueType.String
+                                }
+                            }
+                        },
+                        Value =
+                        {
+                            Current = "",
+                            Default = "",
+                            Type = EntryValueType.Class
+                        }
+                    }
+                },
+                Value =
+                {
+                    Current = "Root",
+                    Default = "",
+                    Type = EntryValueType.String
+                }
+            };
+        }
+
         public enum CollectionType
         {
             List,
