@@ -76,6 +76,11 @@ namespace Marvin.Serialization
         /// Create instance of a collection item
         /// </summary>
         object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded);
+
+        /// <summary>
+        /// Retrieves the unit type
+        /// </summary>
+        EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property);
     }
 
     /// <summary> 

@@ -104,7 +104,7 @@ namespace Marvin.Serialization
             var entryValue = new EntryValue
             {
                 Type = TransformType(property.PropertyType),
-                UnitType = GetUnitType(property),
+                UnitType = customSerialization.GetUnitTypeByAttributes(property),
                 IsReadOnly = isReadOnly,
                 Possible = customSerialization.PossibleValues(property.PropertyType, property)
             };
@@ -123,33 +123,6 @@ namespace Marvin.Serialization
                 entryValue.Current = entryValue.Default;
 
             return entryValue;
-        }
-
-        private static EntryUnitType GetUnitType(ICustomAttributeProvider property)
-        {
-            var unitType = EntryUnitType.None;
-
-            var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
-            if (passwordAttr != null)
-                unitType = EntryUnitType.Password;
-
-            var fileAttr = property.GetCustomAttribute<FileSystemPathAttribute>();
-            if (fileAttr != null)
-            {
-                switch (fileAttr.Type)
-                {
-                    case FileSystemPathType.File:
-                        unitType = EntryUnitType.File;
-                        break;
-                    case FileSystemPathType.Directory:
-                        unitType = EntryUnitType.Directory;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            return unitType;
         }
 
         /// <summary>
@@ -444,7 +417,7 @@ namespace Marvin.Serialization
                 Value = new EntryValue
                 {
                     Type = TransformType(parameter.ParameterType),
-                    UnitType = GetUnitType(parameter),
+                    UnitType = serialization.GetUnitTypeByAttributes(parameter),
                     Current = defaultValue,
                     Default = defaultValue,
                     Possible = serialization.PossibleValues(parameterType, parameter)

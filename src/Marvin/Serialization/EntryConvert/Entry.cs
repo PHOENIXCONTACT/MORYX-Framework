@@ -9,7 +9,7 @@ namespace Marvin.Serialization
     /// Model class representing a single property of a config class
     /// </summary>
     [DataContract]
-    public partial class Entry : ICloneable
+    public partial class Entry : ICloneable, IEquatable<Entry>
     {
         /// <summary>
         /// Create new entry instance with prefilled properties
@@ -94,6 +94,46 @@ namespace Marvin.Serialization
         public object Clone()
         {
             return Clone(true);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(Entry other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (Value.Current != other.Value.Current)
+            {
+                return false;
+            }
+
+            if (SubEntries.Count != other.SubEntries.Count)
+            {
+                return false;
+            }
+
+            foreach (var leftEntry in SubEntries)
+            {
+                var rightEntry = other.SubEntries.FirstOrDefault(p => p.Key.Name == leftEntry.Key.Name);
+                if (rightEntry == null)
+                {
+                    return false;
+                }
+
+                if (!leftEntry.Equals(rightEntry))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

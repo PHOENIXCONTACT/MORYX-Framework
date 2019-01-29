@@ -167,6 +167,34 @@ namespace Marvin.Serialization
             return CreateInstance(memberType, encoded);
         }
 
+        /// <inheritdoc />
+        public EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property)
+        {
+            var unitType = EntryUnitType.None;
+
+            var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
+            if (passwordAttr != null)
+                unitType = EntryUnitType.Password;
+
+            var fileAttr = property.GetCustomAttribute<FileSystemPathAttribute>();
+            if (fileAttr != null)
+            {
+                switch (fileAttr.Type)
+                {
+                    case FileSystemPathType.File:
+                        unitType = EntryUnitType.File;
+                        break;
+                    case FileSystemPathType.Directory:
+                        unitType = EntryUnitType.Directory;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return unitType;
+        }
+
         /// <see cref="ICustomSerialization"/>
         public virtual object CreateInstance(Type elementType, Entry entry)
         {
