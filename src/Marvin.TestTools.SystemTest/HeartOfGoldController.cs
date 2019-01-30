@@ -84,7 +84,20 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         public event EventHandler<LoggerEventArgs> LogMessagesReceived;
 
-        private const int DEFAULT_TELNET_PORT = 23;
+        /// <summary>
+        /// Default telnet port - will be increased by the port increment
+        /// </summary>
+        private const int DefaultTelnetPort = 23;
+
+        /// <summary>
+        /// Default http port - will be increased by the port increment
+        /// </summary>
+        private const int DefaultHttpPort = 80;
+
+        /// <summary>
+        /// Currently defined port increment
+        /// </summary>
+        private int _portIncrement;
 
         /// <summary>
         /// Timer to get the log-entrys
@@ -128,6 +141,11 @@ namespace Marvin.TestTools.SystemTest
         /// Get or set the Telnet port number
         /// </summary>
         public int TelnetPort { get; set; }
+        
+        /// <summary>
+        /// Currently used http port
+        /// </summary>
+        public int HttpPort { get; set; }
 
         /// <summary>
         /// Gets or sets the directory of the config files.
@@ -144,8 +162,6 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         public HeartOfGoldController()
         {
-            int portOffset = 0;
-
             // Retrieve Jenkins build processor number from environment
             string executor = Environment.GetEnvironmentVariable("EXECUTOR_NUMBER");
             if (executor != null)
@@ -155,11 +171,12 @@ namespace Marvin.TestTools.SystemTest
                 if (int.TryParse(executor, out executorNum))
                 {
                     // Add Jenkins build processor number to port number to allow parallel execution of system tests.
-                    portOffset = executorNum;
+                    _portIncrement = executorNum;
                 }
             }
 
-            TelnetPort = DEFAULT_TELNET_PORT + portOffset;
+            TelnetPort = DefaultTelnetPort + _portIncrement;
+            HttpPort = DefaultHttpPort + _portIncrement;
 
             ExecutionTimeout = 0;
             TimerInterval = 1000;
@@ -233,13 +250,29 @@ namespace Marvin.TestTools.SystemTest
             Process = new Process
             {
                 // Start the heart of gold in developer mode to start as a console application (-d) and set the path to the config files (-c=path) 
-                StartInfo = new ProcessStartInfo(runtimeCommand, String.Format("-d -r=SystemTest -c={0} -p={1} -t={2}", ConfigDir, TelnetPort, ExecutionTimeout))
+                StartInfo = new ProcessStartInfo(runtimeCommand,
+                    $"-d -r=SystemTest -c={ConfigDir} -p={TelnetPort} -t={ExecutionTimeout} -pi={_portIncrement}")
+                {
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                },
             };
+
+            DataReceivedEventHandler outputDelegate = (sender, args) => 
+                Console.WriteLine("Runtime > " + args.Data);
+
+            Process.OutputDataReceived += outputDelegate;
+            Process.ErrorDataReceived += outputDelegate;
 
             try
             {
                 // start now
                 Process.Start();
+
+                // begin to read output
+                Process.BeginOutputReadLine();
+                Process.BeginErrorReadLine();
 
                 return true;
             }
@@ -256,9 +289,9 @@ namespace Marvin.TestTools.SystemTest
         public void CreateClients()
         {
             // get the wcf services of the started instance
-            _loggingClient = new LogMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress("http://localhost/LogMaintenance"));
-            _maintenanceClient = new ModuleMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress("http://localhost/ModuleMaintenance"));
-            _databaseClient = new DatabaseMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress("http://localhost/DatabaseMaintenance"));
+            _loggingClient = new LogMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress($"http://localhost:{HttpPort}/LogMaintenance"));
+            _maintenanceClient = new ModuleMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress($"http://localhost:{HttpPort}/ModuleMaintenance"));
+            _databaseClient = new DatabaseMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress($"http://localhost:{HttpPort}/DatabaseMaintenance"));
         }
 
         /// <summary>
