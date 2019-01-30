@@ -45,7 +45,7 @@ namespace Marvin.Runtime.Kernel
         /// Sets the arguments for the command run mode.
         /// </summary>
         /// <param name="args">Arguments which should be used by the run mode.</param>
-        public void Setup(RuntimeArguments args)
+        public virtual void Setup(RuntimeArguments args)
         {
             Arguments = args;
         }

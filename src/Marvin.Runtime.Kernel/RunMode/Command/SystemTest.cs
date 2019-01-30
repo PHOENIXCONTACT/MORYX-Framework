@@ -32,17 +32,23 @@ namespace Marvin.Runtime.Kernel
         private readonly UTF8Encoding _decoder = new UTF8Encoding();
         private NetworkStream _stream;
 
+        /// <inheritdoc />
+        public override void Setup(RuntimeArguments args)
+        {
+            base.Setup(args);
+
+            // Override configs port value
+            var portIncrement = int.Parse(Arguments["pi"] ?? "0");
+            var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);
+            wcfConfig.HttpPort += portIncrement;
+            wcfConfig.NetTcpPort += portIncrement;
+        }
+
         /// <summary>
         /// Boot application (Starts all modules)
         /// </summary>
         protected override void Boot()
         {
-            // Override conigs port value
-            var portIncrement = int.Parse(Arguments["pi"] ?? "0");
-            var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);
-            wcfConfig.HttpPort += portIncrement;
-            wcfConfig.NetTcpPort += portIncrement;
-
             // Prepare shutdown timer
             int timeout = int.Parse(Arguments["t"] ?? "300");
             _shutdownTimer = new Timer(ShutDownTimer, null, TimeSpan.FromSeconds(timeout), Timeout.InfiniteTimeSpan);
