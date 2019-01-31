@@ -42,7 +42,7 @@ namespace Marvin.Tools.Wcf.SystemTests
             Assert.IsTrue(result, "Service 'TestModule' did not reach state 'Running'");
 
             var channelFactory = new ChannelFactory<IVersionService>(HeartOfGoldController.CreateBasicHttpBinding());
-            _versionService = channelFactory.CreateChannel(new EndpointAddress("http://localhost/ServiceVersions"));
+            _versionService = channelFactory.CreateChannel(new EndpointAddress($"http://localhost:{_hogController.HttpPort}/ServiceVersions"));
 
             Assert.NotNull(_versionService, "Can't create VersionServiceClient");
         }
@@ -169,10 +169,12 @@ namespace Marvin.Tools.Wcf.SystemTests
             Assert.AreEqual(startLength, endpoints.Length, "{0} started", ModuleController.ModuleName);
         }
 
-        [TestCase("IHelloWorldWcfService", HelloWorldWcfService.ServerVersion, HelloWorldWcfService.MinClientVersion, ServiceBindingType.NetTcp, "net.tcp://localhost:816/HelloWorldWcfService")]
-        [TestCase("ISimpleHelloWorldWcfService", SimpleHelloWorldWcfService.ServerVersion, SimpleHelloWorldWcfService.MinClientVersion, ServiceBindingType.BasicHttp, "http://localhost:80/SimpleHelloWorldWcfService")]
+        [TestCase("IHelloWorldWcfService", HelloWorldWcfService.ServerVersion, HelloWorldWcfService.MinClientVersion, ServiceBindingType.NetTcp, "net.tcp://localhost:{PORT}/HelloWorldWcfService")]
+        [TestCase("ISimpleHelloWorldWcfService", SimpleHelloWorldWcfService.ServerVersion, SimpleHelloWorldWcfService.MinClientVersion, ServiceBindingType.BasicHttp, "http://localhost:{PORT}/SimpleHelloWorldWcfService")]
         public void TestServiceConfig(string service, string serverVersion, string minClientVersion, ServiceBindingType binding, string url)
         {
+            url = url.Replace("{PORT}", binding == ServiceBindingType.NetTcp ? _hogController.NetTcpPort.ToString() : _hogController.HttpPort.ToString());
+
             ServiceConfig serviceConfig = _versionService.GetServiceConfiguration(service);
 
             Assert.NotNull(serviceConfig, "ServiceConfig for service {0} not found.", service);
