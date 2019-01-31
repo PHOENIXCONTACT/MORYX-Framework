@@ -95,6 +95,11 @@ namespace Marvin.TestTools.SystemTest
         private const int DefaultHttpPort = 80;
 
         /// <summary>
+        /// Default net.tcp port - will be increased by the port increment
+        /// </summary>
+        private const int DefaultNetTcpPort = 816;
+
+        /// <summary>
         /// Currently defined port increment
         /// </summary>
         private int _portIncrement;
@@ -148,6 +153,11 @@ namespace Marvin.TestTools.SystemTest
         public int HttpPort { get; set; }
 
         /// <summary>
+        /// Currently used net.tcp port
+        /// </summary>
+        public int NetTcpPort { get; set; }
+
+        /// <summary>
         /// Gets or sets the directory of the config files.
         /// </summary>
         public int ExecutionTimeout { get; set; }
@@ -177,6 +187,7 @@ namespace Marvin.TestTools.SystemTest
 
             TelnetPort = DefaultTelnetPort + _portIncrement;
             HttpPort = DefaultHttpPort + _portIncrement;
+            NetTcpPort = DefaultNetTcpPort + _portIncrement;
 
             ExecutionTimeout = 0;
             TimerInterval = 1000;
@@ -243,6 +254,12 @@ namespace Marvin.TestTools.SystemTest
             if (Process != null && !Process.HasExited)
             {
                 throw new InvalidOperationException("HeartOfGold is already running.");
+            }
+
+            var wcfConfig = Path.Combine(RuntimeDir, ConfigDir, "Marvin.Tools.Wcf.WcfConfig.mcf");
+            if (File.Exists(wcfConfig))
+            {
+                File.Delete(wcfConfig);
             }
 
             string runtimeCommand = Path.Combine(RuntimeDir, exeName);

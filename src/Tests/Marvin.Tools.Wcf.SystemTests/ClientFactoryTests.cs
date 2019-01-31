@@ -139,7 +139,7 @@ namespace Marvin.Tools.Wcf.SystemTests
             {
                 ClientId = "SystemTests",
                 Host = "localhost",
-                Port = 80
+                Port = _hogController.HttpPort
             });
 
             _clientFactory.ClientConnected += OnClientConnected;
@@ -681,7 +681,7 @@ namespace Marvin.Tools.Wcf.SystemTests
                 BindingType = BindingType.NetTcp,
                 Endpoint = NetTcpEndpointName,
                 Host = host,
-                Port = 816,
+                Port = _hogController.NetTcpPort,
                 ClientVersion = HelloWorldWcfService.MinClientVersion,
                 MinServerVersion = HelloWorldWcfService.ServerVersion
             };
@@ -691,7 +691,7 @@ namespace Marvin.Tools.Wcf.SystemTests
                 BindingType = BindingType.BasicHttp,
                 Endpoint = BasicHttpEndpointName,
                 Host = host,
-                Port = 80,
+                Port = _hogController.HttpPort,
                 ClientVersion = clientVersion,
                 MinServerVersion = minServerVersion
             };
