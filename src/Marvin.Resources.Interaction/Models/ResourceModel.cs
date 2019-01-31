@@ -1,4 +1,8 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using Marvin.AbstractionLayer.Resources;
 using Marvin.Serialization;
 
 namespace Marvin.Resources.Interaction
@@ -14,12 +18,6 @@ namespace Marvin.Resources.Interaction
         /// </summary>
         [DataMember]
         public long Id { get; set; }
-
-        /// <summary>
-        /// Id of the parent resource.
-        /// </summary>
-        [DataMember]
-        public long ParentId { get; set; }
 
         /// <summary>
         /// Name of the resource.
@@ -68,5 +66,28 @@ namespace Marvin.Resources.Interaction
         /// </summary>
         [DataMember]
         public ResourceReferenceModel[] References { get; set; }
+
+        /// <summary>
+        /// Checks if resource and model are equal
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="serialization"></param>
+        /// <returns></returns>
+        internal bool DifferentFrom(Resource resource, ICustomSerialization serialization)
+        {
+            var different = resource.Name != Name ||
+                           resource.LocalIdentifier != LocalIdentifier ||
+                           resource.GlobalIdentifier != GlobalIdentifier ||
+                           resource.Description != Description;
+            if (different)
+                return true;
+
+            // Do not compare values that were not transmitted
+            if (resource.Descriptor == null || Properties == null)
+                return false;
+
+            var resourceProperties = EntryConvert.EncodeObject(resource.Descriptor, serialization);
+            return !Properties.Equals(resourceProperties);
+        }
     }
 }

@@ -33,6 +33,13 @@ namespace Marvin.Resources.Samples
 
     public class Wpc : Resource, IWpc
     {
+        [ResourceConstructor]
+        public void CreatePositions(int count)
+        {
+            var pos = Creator.Instantiate<WpcPosition>();
+            pos.Parent = this;
+            Children.Add(pos);
+        }
     }
 
     public class WpcPosition : Resource

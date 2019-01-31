@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
@@ -43,11 +44,10 @@ namespace Marvin.Resources.Interaction
         /// Creates an active resource from the given plugin name. Name should be existend to create configs for the resource.
         /// </summary>
         /// <param name="resourceType">Resource type to create instance of</param>
-        /// <param name="parentResourceId">The parent resource</param>
         /// <param name="constructor">Optional constructor method</param>
         /// <returns>A new created resource model.</returns>
         [OperationContract]
-        ResourceModel Create(string resourceType, long parentResourceId, MethodEntry constructor = null);
+        ResourceModel Create(string resourceType, MethodEntry constructor = null);
 
         /// <summary>
         /// Save resource in the database. 
