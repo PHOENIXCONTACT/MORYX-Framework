@@ -680,7 +680,23 @@ namespace Marvin.Tests
             Assert.IsFalse(equals);
         }
 
-        private Entry CreateTestEntry()
+        [Test]
+        public void EntryEqualsWithComparisonOperator()
+        {
+            // Arrange
+            var entry = CreateTestEntry();
+            var entry2 = CreateTestEntry();
+
+            // Act
+            var aEqualsB = entry == entry2;
+            var aNotEqalsB = entry != entry2;
+
+            // Assert
+            Assert.IsTrue(aEqualsB);
+            Assert.IsFalse(aNotEqalsB);
+        }
+
+        private static Entry CreateTestEntry()
         {
             return new Entry
             {
@@ -798,7 +814,7 @@ namespace Marvin.Tests
                     obj.SubDictionary = dictionary;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("type");
+                    throw new ArgumentOutOfRangeException(nameof(type));
             }
             return obj;
         }
@@ -826,7 +842,7 @@ namespace Marvin.Tests
                     collection = obj.SubDictionary.ToList();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("type");
+                    throw new ArgumentOutOfRangeException(nameof(type));
             }
             return collection;
         }
