@@ -51,6 +51,7 @@ namespace Marvin.Resources.Management.Tests
                 UowFactory = _modelFactory,
                 ResourceLinker = _linkerMock.Object,
                 TypeController = _typeControllerMock.Object,
+                Graph = new ResourceGraph { TypeController = _typeControllerMock.Object },
                 Logger = new DummyLogger()
             };
 
@@ -74,7 +75,7 @@ namespace Marvin.Resources.Management.Tests
             // Assert
             _linkerMock.Verify(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()), Times.Once);
         }
-        
+
         [Test(Description = "If resource manager starts with filled database, it will initialized with values of database.")]
         public void InitializeWithDatabaseEntity()
         {
@@ -173,7 +174,7 @@ namespace Marvin.Resources.Management.Tests
             // Arrange
             _resourceManager.Initialize();
             _resourceManager.Start();
-            
+
             var testResource = _resourceManager.Instantiate<PublicResourceMock>();
             _resourceManager.Save(testResource);
             _linkerMock.ResetCalls();
@@ -211,7 +212,7 @@ namespace Marvin.Resources.Management.Tests
             Assert.AreEqual(0, testResource.StartCalls);
         }
 
-        [TestCase(true, Description ="")]
+        [TestCase(true, Description = "")]
         [TestCase(false, Description = "")]
         public void DestroyResource(bool permanent)
         {
@@ -263,14 +264,12 @@ namespace Marvin.Resources.Management.Tests
 
             public int StopCalls { get; private set; }
 
-            
+
             public IReferences<IResource> References { get; set; }
 
             protected override void OnInitialize()
             {
                 base.OnInitialize();
-                
-
                 InitializeCalls++;
             }
 
@@ -303,12 +302,12 @@ namespace Marvin.Resources.Management.Tests
             }
 
             public event EventHandler<ICapabilities> CapabilitiesChanged;
-            
+
         }
 
         private class ResourceMock : ResourceMockBase
         {
-            
+
         }
 
         private class TestCapabilities : ICapabilities

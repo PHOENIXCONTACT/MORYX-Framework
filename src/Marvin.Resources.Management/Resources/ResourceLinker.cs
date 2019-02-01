@@ -17,6 +17,11 @@ namespace Marvin.Resources.Management
         [UseChild("ResourceLinker")]
         public IModuleLogger Logger { get; set; }
 
+        /// <summary>
+        /// Resource graph with all resources
+        /// </summary>
+        public IResourceGraph Graph { get; set; }
+
         /// <inheritdoc />
         public IReadOnlyList<Resource> SaveRoots(IUnitOfWork uow, IReadOnlyList<Resource> instances)
         {
@@ -96,7 +101,7 @@ namespace Marvin.Resources.Management
         }
 
         /// <inheritdoc />
-        public void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations, IDictionary<long, ResourceWrapper> allResources)
+        public void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations)
         {
             var resourceType = resource.GetType();
             var referenceProperties = ReferenceProperties(resourceType, false).ToList();
@@ -111,7 +116,7 @@ namespace Marvin.Resources.Management
                     var elemType = property.PropertyType.GetGenericArguments()[0];
 
                     var matches = MatchingRelations(relations, property);
-                    var resources = matches.Select(m => allResources[m.ReferenceId].Target)
+                    var resources = matches.Select(m => Graph.Get(m.ReferenceId))
                         .Where(elemType.IsInstanceOfType)
                         .OrderBy(r => r.LocalIdentifier).ThenBy(r => r.Name);
 
@@ -130,24 +135,24 @@ namespace Marvin.Resources.Management
                     // Try to find a possible match for the property
                     var propertyType = property.PropertyType;
                     var referenceMatch = (from match in matches
-                                          let reference = allResources[match.ReferenceId].Target
+                                          let reference = Graph.Get(match.ReferenceId)
                                           where propertyType.IsInstanceOfType(reference)
                                           select reference).ToArray();
                     if (referenceMatch.Length == 1)
                         property.SetValue(resource, referenceMatch[0]);
                     else if(referenceMatch.Length > 1)
                         Logger.LogEntry(LogLevel.Warning, "Inconclusive relation: Can not assign property {0} on {1}:{2} from [{3}]. Too many matches!", property.Name, resource.Id, resource.Name, string.Join(",", matches.Select(m => m.ReferenceId)));
-                    else if(matches.Any(m => referenceProperties.All(p => !PropertyMatchesRelation(p, m, allResources[m.ReferenceId]))))
+                    else if(matches.Any(m => referenceProperties.All(p => !PropertyMatchesRelation(p, m, Graph.Get(m.ReferenceId)))))
                         Logger.LogEntry(LogLevel.Warning, "Incompatible relation: Resources from [{0}] with relation type {1} can not be assigned to a property on {2}:{3}.", string.Join(",", matches.Select(m => m.ReferenceId)), matches[0].RelationType, resource.Id, resource.Name);
                 }
             }
         }
 
-        private static bool PropertyMatchesRelation(PropertyInfo property, ResourceRelationAccessor relation, ResourceWrapper instance)
+        private static bool PropertyMatchesRelation(PropertyInfo property, ResourceRelationAccessor relation, Resource instance)
         {
             var att = property.GetCustomAttribute<ResourceReferenceAttribute>();
             return att.Role == relation.Role && att.RelationType == relation.RelationType && att.Name == relation.Name 
-                && property.PropertyType.IsInstanceOfType(instance.Target);
+                && property.PropertyType.IsInstanceOfType(instance);
         }
 
         /// <inheritdoc />

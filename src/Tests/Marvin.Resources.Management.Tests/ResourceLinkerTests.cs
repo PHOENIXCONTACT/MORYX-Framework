@@ -12,13 +12,25 @@ namespace Marvin.Resources.Management.Tests
     [TestFixture]
     public class ResourceLinkerTests
     {
-        private IResourceLinker _linker;
+        private ResourceLinker _linker;
 
         [OneTimeSetUp]
         public void Setup()
         {
+            var references = new Dictionary<long, ResourceWrapper>
+            {
+                [2] = new ResourceWrapper(new SimpleResource { Id = 2, Name = "Ref1" }),
+                [3] = new ResourceWrapper(new SimpleResource { Id = 3, Name = "Pos1" }),
+                [4] = new ResourceWrapper(new DerivedResource { Id = 4, Name = "Ref2" }),
+                [5] = new ResourceWrapper(new DerivedResource { Id = 5, Name = "ChildOnly" }),
+                [6] = new ResourceWrapper(new DerivedResource { Id = 6, Name = "BackRef" }),
+            };
+            var mock = new Mock<IResourceGraph>();
+            mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => references[id].Target);
+
             _linker = new ResourceLinker
             {
+                Graph = mock.Object,
                 Logger = new DummyLogger()
             };
         }
@@ -85,10 +97,12 @@ namespace Marvin.Resources.Management.Tests
                 RelationAccessor(2, ResourceRelationType.CurrentExchangablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)),
                 RelationAccessor(4, ResourceRelationType.CurrentExchangablePart),
             };
+            var mock = new Mock<IResourceGraph>();
+            mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => references[id].Target);
 
             // Act
             _linker.SetReferenceCollections(instance);
-            _linker.LinkReferences(instance, relations, references);
+            _linker.LinkReferences(instance, relations);
 
             // Assert
             Assert.NotNull(instance.Parent, "Parent reference not set");

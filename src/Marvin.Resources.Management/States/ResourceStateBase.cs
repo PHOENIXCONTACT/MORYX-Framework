@@ -15,6 +15,11 @@ namespace Marvin.Resources.Management
         }
 
         /// <summary>
+        /// Flag if the resource is avaiable for external interaction
+        /// </summary>
+        public virtual bool IsAvailable => false;
+
+        /// <summary>
         /// Initialize the wrapped resource
         /// </summary>
         public virtual void Initialize()

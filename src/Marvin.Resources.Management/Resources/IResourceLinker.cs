@@ -33,7 +33,7 @@ namespace Marvin.Resources.Management
         /// and complete resource collection
         /// </summary>
         /// <returns>List of reference collections configured for autosave</returns>
-        void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations, IDictionary<long, ResourceWrapper> allResources);
+        void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations);
 
         /// <summary>
         /// Save all references of a resource to the database. Use the creator callback to save new instances discovered

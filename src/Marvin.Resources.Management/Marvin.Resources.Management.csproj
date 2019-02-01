@@ -106,6 +106,7 @@
     <Compile Include="Model\Entities\ResourceEntity.cs" />
     <Compile Include="Model\Entities\ResourceRelation.cs" />
     <Compile Include="Model\Migrations\Configuration.cs" />
+    <Compile Include="Resources\IManagedResourceGraph.cs" />
     <Compile Include="Resources\IResourceInitializerFactory.cs" />
     <Compile Include="ModuleController\ModuleController.cs" />
     <Compile Include="ModuleController\ModuleConsole.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Resources\IResourceFactory.cs" />
     <Compile Include="Resources\IResourceLinker.cs" />
     <Compile Include="Resources\IResourceTypeController.cs" />
+    <Compile Include="Resources\ResourceGraph.cs" />
     <Compile Include="Resources\ResourceLinker.cs" />
     <Compile Include="Resources\ResourceSerialization.cs" />
     <Compile Include="Resources\ResourceTypeNode.cs" />
