@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using Marvin.Configuration;
 using Marvin.Tools;
 
 namespace Marvin.Serialization
@@ -46,6 +46,13 @@ namespace Marvin.Serialization
 
             // otherwise create the element's type. List<Test> --> Test
             return collectionType.IsArray ? collectionType.GetElementType() : collectionType.GenericTypeArguments[0];
+        }
+
+        private static string ConvertToBase64(this Stream stream)
+        {
+            var bytes = new byte[stream.Length];
+            stream.Read(bytes, 0, (int)stream.Length);
+            return Convert.ToBase64String(bytes);
         }
 
         #region Encode
@@ -282,6 +289,16 @@ namespace Marvin.Serialization
                         break;
                     case EntryValueType.Exception:
                         convertedProperty.Value.Current = value.ToString();
+                        break;
+                    case EntryValueType.Stream:
+                        var stream = value as Stream;
+                        if (stream != null)
+                        {
+                            if (stream.CanSeek)
+                                stream.Seek(0, SeekOrigin.Begin);
+
+                            convertedProperty.Value.Current = stream.ConvertToBase64();
+                        }
                         break;
                     default:
                         convertedProperty.Value.Current = value?.ToString();
@@ -538,8 +555,8 @@ namespace Marvin.Serialization
                     ? customSerialization.DefaultValue(property, currentValue)
                     : customSerialization.ConvertValue(propertyType, property, mapped.Entry, currentValue);
 
-                // Value types and strings do not need recursion
-                if (ValueOrStringType(propertyType))
+                // Value types, strings and streams do not need recursion
+                if (ValueOrStringType(propertyType) || typeof(Stream).IsAssignableFrom(propertyType))
                 {
 
                 }

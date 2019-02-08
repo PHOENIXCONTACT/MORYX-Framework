@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 
 namespace Marvin.Serialization
 {
@@ -59,6 +60,10 @@ namespace Marvin.Serialization
             {
                 valueType = EntryValueType.Enum;
             }
+			else if (typeof(Stream).IsAssignableFrom(propertyType))
+			{
+			    valueType = EntryValueType.Stream;
+			}
             else if (typeof(IEnumerable).IsAssignableFrom(propertyType) && propertyType != typeof(string))
             {
                 valueType = EntryValueType.Collection;
