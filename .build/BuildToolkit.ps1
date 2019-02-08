@@ -98,7 +98,7 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
 
         $installPath = [string] (& $global:VswhereCli -latest -prerelease -products * -requires "Microsoft.Component.MSBuild" -property "installationPath");
         if ($installPath) {
-            $msbuildExe = Get-ChildItem -Path $installPath -Filter MSBuild.exe -Recurse -ErrorAction SilentlyContinue -Force
+            $msbuildExe = Get-ChildItem -Path $installPath -Filter MSBuild.exe -Recurse -ErrorAction SilentlyContinue -Force | Select-Object -First 1
             $global:MSBuildCli = $msbuildExe.FullName;
         }
     }
