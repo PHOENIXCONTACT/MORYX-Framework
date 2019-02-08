@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Marvin.Configuration;
@@ -148,6 +149,40 @@ namespace Marvin.Serialization
             // Other operations depend on the element type
             switch (mappedEntry.Value.Type)
             {
+                case EntryValueType.Stream:
+                    Stream targetStream;
+
+                    var safeContent = mappedEntry.Value.Current ?? "";
+                    var contentBytes = Convert.FromBase64String(safeContent);
+                    var currentStream = currentValue as Stream;
+
+                    var createNewMemoryStream = currentStream == null || !currentStream.CanWrite;
+                    if (!createNewMemoryStream && 
+                        currentStream.GetType() == typeof(MemoryStream) && 
+                        currentStream.Length < contentBytes.Length)
+                    {
+                        // MemoryStream is not expandable
+                        createNewMemoryStream = true;
+                    }
+
+                    if (currentStream != null && !createNewMemoryStream)
+                    {
+                        if (currentStream.CanSeek)
+                            currentStream.Seek(0, SeekOrigin.Begin);
+
+                        targetStream = currentStream;
+                        targetStream.Write(contentBytes, 0, contentBytes.Length);
+                        targetStream.SetLength(contentBytes.Length);
+                    }
+                    else
+                    {
+                        currentStream?.Dispose();
+
+                        targetStream = new MemoryStream(contentBytes);
+                    }
+                    
+                    return targetStream;
+
                 case EntryValueType.Class:
                     return currentValue ?? Activator.CreateInstance(memberType);
                 case EntryValueType.Collection:

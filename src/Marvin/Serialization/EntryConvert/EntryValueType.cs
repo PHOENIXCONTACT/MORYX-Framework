@@ -65,5 +65,9 @@
         /// Retrieving the value caused an exception
         /// </summary>
         Exception,
+        /// <summary>
+        /// Value type stream
+        /// </summary>
+        Stream
     }
 }

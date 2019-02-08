@@ -92,6 +92,55 @@ public void Deserialize()
 }
 ````
 
+## Serialize and deserialize Streams
+
+The EntryConvert also supports serialization and deserialization of [Streams](xref:System.IO.Stream). Therefore the stream is serialized by converting the content to a Base64 encoded string. Many stream types are supported like [MemoryStream](xref:System.IO.MemoryStream) or [FileStream](xref:System.IO.FileStream).
+
+### Limitations on serializing and deserializing Streams
+
+* The conversion to a Base64 string is done in memory, so memory is the limiting factor. Don't convert hundred of megabytes of data.
+* Deserialize tries to keep the origin stream instance. If the stream is seekable the deserializer seeks to the beginning of the stream. If the source stream is a `MemoryStream` the deserializer uses only the same instance if the `MemoryStream` is at least as big as the data to be applied. Otherwise a new instance is created.
+* If a target stream is not writeable in general a new `MemoryStream` instance is created.
+* If your target stream is a `FileStream` the file has to be opened in write mode to work correctly.
+* If the origin buffer is greater than new data the origin buffer gets truncated.
+
+### Examples
+
+The following example shows a sample class containing a `FileStream` instance. The function `Serialize` shows what to call to encode to a new `Entry`. The function `Deserialize` shows how an existing instance is updated with a corresponding `Entry`.
+
+````cs
+// Sample class that contains a FileStream object
+public class FileStreamDummy
+{
+    public FileStreamDummy(string filePath, FileMode mode)
+    {
+        FileStream = new FileStream(filePath, mode);
+    }
+
+    public FileStream FileStream { get; set; }
+}
+
+// Serialize the FileStream to an Entry
+public Entry Serialize()
+{
+    // Boilerplate, only for this example
+    var dummy = new FileStreamDummy(..., FileMode.Create);
+
+    var data = Encoding.UTF8.GetBytes("Some information about something");
+    dummy.FileStream.Write(testBytes, 0, testBytes.Length);
+
+    // Magc is done here
+    return EntryConvert.EncodeObject(dummy);
+}
+
+// Fill the data of Entry to dummy. Note that the FileStream within dummy is reused.
+public void Deserialize(Entry entry, FileStreamDummy dummy)
+{
+    // Apply entry data
+    EntryConvert.UpdateInstance(dummy, entry);
+}
+````
+
 ## ICustomSerialization
 
 All public methods of `EntryConvert` have overloads that expect an instance of [ICustomSerialization](xref:Marvin.Serialization.ICustomSerialization) to modify the behavior of the serializer where necessary. The overloads without the parameter use a Singleton instance of `DefaultSerialization`. When implementing a new version of `ICustomSerialization` it is recommended to derive from [DefaultSerialization](xref:Marvin.Serialization.DefaultSerialization) and only override what shall behave differently.

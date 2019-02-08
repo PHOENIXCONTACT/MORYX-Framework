@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Marvin.Serialization;
 using NUnit.Framework;
 
@@ -694,6 +696,143 @@ namespace Marvin.Tests
             // Assert
             Assert.IsTrue(aEqualsB);
             Assert.IsFalse(aNotEqalsB);
+        }
+
+        [Test(Description = "Encodes a MemoryStream")]
+        public void MemoryStreamEncode()
+        {
+            // Arrange
+            var testString = "This is a test";
+            var streamDummy = new MemoryStreamDummy(testString);
+
+            // Act
+            var entry = EntryConvert.EncodeObject(streamDummy);
+
+            // Assert
+            Assert.AreEqual(1, entry.SubEntries.Count);
+            Assert.AreEqual(EntryValueType.Stream, entry.SubEntries[0].Value.Type);
+            Assert.AreEqual("VGhpcyBpcyBhIHRlc3Q=", entry.SubEntries[0].Value.Current);
+        }
+
+        [Test(Description = "Decodes to a MemoryStream and creates a new stream")]
+        public void MemoryStreamDecode()
+        {
+            // Arrange
+            var testString = "This is a test";
+            var streamDummy = new MemoryStreamDummy(testString);
+            var targetStreamDummy = new MemoryStreamDummy("");
+            var streamInstanceToCheck = targetStreamDummy.MemoryStream;
+            var entry = EntryConvert.EncodeObject(streamDummy);
+            
+            // Act
+            EntryConvert.UpdateInstance(targetStreamDummy, entry);
+
+            // Assert
+            var stringValue = Encoding.UTF8.GetString(targetStreamDummy.MemoryStream.ToArray());
+
+            Assert.AreEqual(testString, stringValue);
+            Assert.AreNotSame(streamInstanceToCheck, targetStreamDummy.MemoryStream);
+        }
+
+        [Test(Description = "Decodes to a MemoryStream and reuses the stream")]
+        public void MemoryStreamDecodeReuseCurrentStream()
+        {
+            // Arrange
+            var testString = "This is a test";
+            var dummyString = "12345678912345";
+            var streamDummy = new MemoryStreamDummy(testString);
+            var targetStreamDummy = new MemoryStreamDummy(dummyString);
+            var streamInstanceToCheck = targetStreamDummy.MemoryStream;
+            var entry = EntryConvert.EncodeObject(streamDummy);
+
+            // Act
+            EntryConvert.UpdateInstance(targetStreamDummy, entry);
+
+            // Assert
+            var stringValue = Encoding.UTF8.GetString(targetStreamDummy.MemoryStream.ToArray());
+
+            Assert.AreEqual(testString, stringValue);
+            Assert.AreSame(streamInstanceToCheck, targetStreamDummy.MemoryStream);
+        }
+
+        [Test(Description = "Decodes to a MemoryStream and reuses the stream but the initial stream size is greater than the new applied value")]
+        public void MemoryStreamDecodeReuseCurrentStreamInitSizeIsGreaterThanNewData()
+        {
+            // Arrange
+            var testString = "A test";
+            var dummyString = "12345678912345";
+            var streamDummy = new MemoryStreamDummy(testString);
+            var targetStreamDummy = new MemoryStreamDummy(dummyString);
+            var streamInstanceToCheck = targetStreamDummy.MemoryStream;
+            var entry = EntryConvert.EncodeObject(streamDummy);
+
+            // Act
+            EntryConvert.UpdateInstance(targetStreamDummy, entry);
+
+            // Assert
+            var stringValue = Encoding.UTF8.GetString(targetStreamDummy.MemoryStream.ToArray());
+
+            Assert.AreEqual(testString, stringValue);
+            Assert.AreSame(streamInstanceToCheck, targetStreamDummy.MemoryStream);
+        }
+
+        [Test(Description = "Encodes a FileStream")]
+        public void FileStreamEncode()
+        {
+            // Arrange
+            var testString =  "This is a test";
+            var testFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "text.txt");
+            var streamDummy = new FileStreamDummy(testFilePath, FileMode.Create);
+            var testBytes = Encoding.UTF8.GetBytes(testString);
+            streamDummy.FileStream.Write(testBytes, 0, testBytes.Length);
+
+            // Act
+            var entry = EntryConvert.EncodeObject(streamDummy);
+
+            // Assert
+            Assert.AreEqual(1, entry.SubEntries.Count);
+            Assert.AreEqual(EntryValueType.Stream, entry.SubEntries[0].Value.Type);
+            Assert.AreEqual("VGhpcyBpcyBhIHRlc3Q=", entry.SubEntries[0].Value.Current);
+
+            streamDummy.FileStream.Close();
+            File.Delete(testFilePath);
+        }
+
+        [Test(Description = "Decodes to a FileStream and reuses the stream")]
+        public void FileStreamDecodeReuseCurrentStream()
+        {
+            // Arrange
+            var testString = "This is a test";
+            var testFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "text1.txt");
+            var testFilePath2 = Path.Combine(TestContext.CurrentContext.TestDirectory, "text2.txt");
+            var streamDummy = new FileStreamDummy(testFilePath, FileMode.Create);
+            var targetStreamDummy = new FileStreamDummy(testFilePath2, FileMode.Create);
+            var targetStreamDummyInitialData = Encoding.UTF8.GetBytes("12345678901234567890");
+            targetStreamDummy.FileStream.Write(targetStreamDummyInitialData, 0, targetStreamDummyInitialData.Length);
+
+            var streamInstanceToCheck = targetStreamDummy.FileStream;
+            var testBytes = Encoding.UTF8.GetBytes(testString);
+            streamDummy.FileStream.Write(testBytes, 0, testBytes.Length);
+
+            var entry = EntryConvert.EncodeObject(streamDummy);
+
+            // Act
+            EntryConvert.UpdateInstance(targetStreamDummy, entry);
+
+            // Assert
+            var buffer = new byte[targetStreamDummy.FileStream.Length];
+            targetStreamDummy.FileStream.Seek(0, SeekOrigin.Begin);
+            targetStreamDummy.FileStream.Read(buffer, 0, buffer.Length);
+
+            var stringValue = Encoding.UTF8.GetString(buffer);
+
+            Assert.AreEqual(testString, stringValue);
+            Assert.AreSame(streamInstanceToCheck, targetStreamDummy.FileStream);
+
+            streamDummy.FileStream.Close();
+            File.Delete(testFilePath);
+            targetStreamDummy.FileStream.Close();
+            File.Delete(testFilePath2);
         }
 
         private static Entry CreateTestEntry()
