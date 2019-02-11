@@ -346,14 +346,25 @@ namespace Marvin.Resources.Management
             var instance = args.Parent;
             var property = args.CollectionProperty;
 
-            using (var uow = UowFactory.Create())
+            lock (Graph.Get(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
             {
-                var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
+                using (var uow = UowFactory.Create())
+                {
+                    var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
 
-                uow.Save();
+                    try
+                    {
+                        uow.Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(LogLevel.Error, ex, "Error saving collection {2} on resource {0}-{1}!", instance.Id, instance.Name, property.Name);
+                        throw;
+                    }
 
-                foreach (var newResource in newResources)
-                    AddResource(newResource, true);
+                    foreach (var newResource in newResources)
+                        AddResource(newResource, true);
+                }
             }
         }
 
