@@ -96,6 +96,11 @@ namespace Marvin.Resources.Management
         /// </summary>
         private ResourceStartupPhase _startup;
 
+        /// <summary>
+        /// Fallback lock object if a new instance is saved BEFORE having the wrapper as a lock object
+        /// </summary>
+        private readonly object _fallbackLock = new object();
+
         #endregion
 
         #region LifeCycle
@@ -306,10 +311,9 @@ namespace Marvin.Resources.Management
             return instance;
         }
 
-        private readonly object _fallbackLock = new object();
         public void Save(Resource resource)
         {
-            lock (Graph.Get(resource.Id) ?? _fallbackLock)
+            lock (Graph.GetWrapper(resource.Id) ?? _fallbackLock)
             {
                 using (var uow = UowFactory.Create())
                 {
@@ -346,7 +350,7 @@ namespace Marvin.Resources.Management
             var instance = args.Parent;
             var property = args.CollectionProperty;
 
-            lock (Graph.Get(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
+            lock (Graph.GetWrapper(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
             {
                 using (var uow = UowFactory.Create())
                 {
