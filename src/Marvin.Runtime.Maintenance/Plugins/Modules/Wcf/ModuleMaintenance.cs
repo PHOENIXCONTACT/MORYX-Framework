@@ -39,6 +39,8 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             var models = new List<ServerModuleModel>(ModuleManager.AllModules.Count());
             foreach (var module in ModuleManager.AllModules)
             {
+                var notifications = module.Notifications.ToArray();
+
                 var model = new ServerModuleModel
                 {
                     Name = module.Name,
@@ -46,7 +48,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
                     HealthState = module.State,
                     StartBehaviour = ModuleManager.BehaviourAccess<ModuleStartBehaviour>(module).Behaviour,
                     FailureBehaviour = ModuleManager.BehaviourAccess<FailureBehaviour>(module).Behaviour,
-                    Notifications = module.Notifications.Select(n => new NotificationModel(n)).ToArray()
+                    Notifications = notifications.Select(n => new NotificationModel(n)).ToArray()
                 };
 
                 var dependencies = ModuleManager.StartDependencies(module);
