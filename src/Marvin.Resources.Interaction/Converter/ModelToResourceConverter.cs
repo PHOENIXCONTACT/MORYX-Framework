@@ -15,17 +15,17 @@ namespace Marvin.Resources.Interaction.Converter
         /// </summary>
         private readonly Dictionary<ResourceModel, Resource> _resourceCache = new Dictionary<ResourceModel, Resource>();
 
-        private readonly IResourceManager _resourceManager;
+        private readonly IResourceGraph _resourceGraph;
         private readonly ICustomSerialization _serialization;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="resourceManager"></param>
+        /// <param name="resourceGraph"></param>
         /// <param name="serialization"></param>
-        public ModelToResourceConverter(IResourceManager resourceManager, ICustomSerialization serialization)
+        public ModelToResourceConverter(IResourceGraph resourceGraph, ICustomSerialization serialization)
         {
-            _resourceManager = resourceManager;
+            _resourceGraph = resourceGraph;
             _serialization = serialization;
         }
 
@@ -43,8 +43,8 @@ namespace Marvin.Resources.Interaction.Converter
             {
                 // Get or create resource
                 resource = model.Id == 0
-                    ? _resourceManager.Create(model.Type)
-                    : _resourceManager.Get(model.Id);
+                    ? _resourceGraph.Instantiate(model.Type)
+                    : _resourceGraph.Get(model.Id);
                 _resourceCache[model] = resource;
             }
 

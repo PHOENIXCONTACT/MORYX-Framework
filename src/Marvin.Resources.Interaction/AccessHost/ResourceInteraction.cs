@@ -23,7 +23,7 @@ namespace Marvin.Resources.Interaction
         /// <summary>
         /// Factory to create resource instances
         /// </summary>
-        public IResourceManager Manager { get; set; }
+        public IResourceGraph Graph { get; set; }
 
         /// <summary>
         /// Type controller for type trees and construction
@@ -41,18 +41,18 @@ namespace Marvin.Resources.Interaction
         /// <inheritdoc />
         public ResourceModel[] GetResourceTree()
         {
-            var converter = new ResourceToModelConverter(Manager, TypeController, Serialization);
-            var resourceTree = Manager.GetRoots().Select(converter.ConvertResource).ToArray();
+            var converter = new ResourceToModelConverter(Graph, TypeController, Serialization);
+            var resourceTree = Graph.GetResources<Resource>(r => r.Parent == null).Select(converter.ConvertResource).ToArray();
             return resourceTree;
         }
 
         /// <inheritdoc />
         public ResourceModel GetDetails(long id, int depth = 1)
         {
-            var converter = new ResourceToModelConverter(Manager, TypeController, Serialization);
+            var converter = new ResourceToModelConverter(Graph, TypeController, Serialization);
 
             //Additionally load workpieces 
-            var resource = Manager.Get(id);
+            var resource = Graph.Get(id);
             var model = converter.GetDetails(resource, depth);
 
             return model;
@@ -61,16 +61,16 @@ namespace Marvin.Resources.Interaction
         /// <inheritdoc />
         public Entry InvokeMethod(long id, MethodEntry methodModel)
         {
-            var resource = Manager.Get(id);
+            var resource = Graph.Get(id);
             return EntryConvert.InvokeMethod(resource, methodModel, Serialization);
         }
 
         /// <inheritdoc />
         public ResourceModel Create(string resourceType, MethodEntry constructor = null)
         {
-            var converter = new ResourceToModelConverter(Manager, TypeController, Serialization);
+            var converter = new ResourceToModelConverter(Graph, TypeController, Serialization);
 
-            var resource = Manager.Create(resourceType);
+            var resource = Graph.Instantiate(resourceType);
             if (constructor != null)
                 EntryConvert.InvokeMethod(resource, constructor, Serialization);
 
@@ -83,7 +83,7 @@ namespace Marvin.Resources.Interaction
         /// <inheritdoc />
         public ResourceModel Save(ResourceModel model)
         {
-            var converter = new ModelToResourceConverter(Manager, Serialization);
+            var converter = new ModelToResourceConverter(Graph, Serialization);
 
             var resourcesToSave = new HashSet<Resource>();
             // Get or create resource
@@ -92,39 +92,17 @@ namespace Marvin.Resources.Interaction
             // Save all created or altered resources
             foreach (var resourceToSave in resourcesToSave)
             {
-                Manager.Save(resourceToSave);
+                Graph.Save(resourceToSave);
             }
 
             return model;
         }
 
         /// <inheritdoc />
-        /// 
-        public bool Start(long id)
-        {
-            var resource = Manager.Get(id);
-            return Manager.Start(resource);
-        }
-
-        /// <inheritdoc />
-        public bool Reset(long id)
-        {
-            var resource = Manager.Get(id);
-            return Manager.Start(resource) && Manager.Stop(resource);
-        }
-
-        /// <inheritdoc />
-        public bool Stop(long id)
-        {
-            var resource = Manager.Get(id);
-            return Manager.Stop(resource);
-        }
-
-        /// <inheritdoc />
         public bool Remove(long id)
         {
-            var resource = Manager.Get(id);
-            return ((IResourceCreator)Manager).Destroy(resource);
+            var resource = Graph.Get(id);
+            return Graph.Destroy(resource);
         }
     }
 }

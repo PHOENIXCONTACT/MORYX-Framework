@@ -24,19 +24,19 @@ namespace Marvin.Resources.Interaction.Converter
         /// </summary>
         private readonly Dictionary<Resource, ResourceModel> _resourceCache = new Dictionary<Resource, ResourceModel>();
 
-        private readonly IResourceManager _resourceManager;
+        private readonly IResourceGraph _resourceGraph;
         private readonly ICustomSerialization _serialization;
         private readonly IResourceTypeTree _typeController;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="resourceManager"></param>
+        /// <param name="resourceGraph"></param>
         /// <param name="typeController"></param>
         /// <param name="serialization"></param>
-        public ResourceToModelConverter(IResourceManager resourceManager, IResourceTypeTree typeController, ICustomSerialization serialization)
+        public ResourceToModelConverter(IResourceGraph resourceGraph, IResourceTypeTree typeController, ICustomSerialization serialization)
         {
-            _resourceManager = resourceManager;
+            _resourceGraph = resourceGraph;
             _typeController = typeController;
             _serialization = serialization;
         }
@@ -238,7 +238,7 @@ namespace Marvin.Resources.Interaction.Converter
         {
             var matches = new List<Resource>();
 
-            foreach (var root in _resourceManager.GetRoots())
+            foreach (var root in _resourceGraph.GetResources<Resource>(r => r.Parent == null))
             {
                 IncludeMatchingInstance(root, typeConstraints, matches);
             }

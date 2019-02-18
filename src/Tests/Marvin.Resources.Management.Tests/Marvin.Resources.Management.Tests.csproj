@@ -131,6 +131,10 @@
       <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
       <Name>Marvin.AbstractionLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Marvin.AbstractionLayer.TestTools\Marvin.AbstractionLayer.TestTools.csproj">
+      <Project>{1516374c-976f-49fc-a911-29edc481c657}</Project>
+      <Name>Marvin.AbstractionLayer.TestTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
       <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
       <Name>Marvin.Resources.Management</Name>

@@ -25,7 +25,7 @@ namespace Marvin.Resources.Samples
 
             if (Setup == null)
             {
-                Setup = Creator.Instantiate<AssembleFoo>();
+                Setup = Graph.Instantiate<AssembleFoo>();
                 RaiseResourceChanged();
             }
         }

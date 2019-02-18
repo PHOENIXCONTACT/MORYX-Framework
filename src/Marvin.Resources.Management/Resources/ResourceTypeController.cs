@@ -25,12 +25,6 @@ namespace Marvin.Resources.Management
         public IResourceFactory ResourceFactory { get; set; }
 
         /// <summary>
-        /// Dependency on the linker to provide all reference collections
-        /// on the newly created instances.
-        /// </summary>
-        public IResourceLinker ResourceLinker { get; set; }
-
-        /// <summary>
         /// Component responsible for proxy creation
         /// </summary>
         public ResourceProxyBuilder ProxyBuilder { get; set; }
@@ -157,7 +151,7 @@ namespace Marvin.Resources.Management
                 : (Resource)Activator.CreateInstance(linker.ResourceType); // Create manually
 
             // Set reference collections
-            ResourceLinker.SetReferenceCollections(instance);
+            ResourceReferenceTools.InitializeCollections(instance);
 
             return instance;
         }

@@ -37,7 +37,7 @@ namespace Marvin.Resources.Management.Tests
             var resource = new ReferenceResource();
 
             // Act
-            _linker.SetReferenceCollections(resource);
+            ResourceReferenceTools.InitializeCollections(resource);
 
             // Assert
             Assert.NotNull(resource.References);
@@ -51,8 +51,8 @@ namespace Marvin.Resources.Management.Tests
             var resource = new ReferenceResource();
 
             // Act
-            _linker.SetReferenceCollections(resource);
-            var autosave = _linker.GetAutoSaveCollections(resource);
+            ResourceReferenceTools.InitializeCollections(resource);
+            var autosave = ResourceReferenceTools.GetAutoSaveCollections(resource);
             Assert.AreEqual(1, autosave.Count);
 
             // Validate event raised on modification
@@ -92,7 +92,7 @@ namespace Marvin.Resources.Management.Tests
             };
 
             // Act
-            _linker.SetReferenceCollections(instance);
+            ResourceReferenceTools.InitializeCollections(instance);
             _linker.LinkReferences(instance, relations);
 
             // Assert
@@ -121,15 +121,15 @@ namespace Marvin.Resources.Management.Tests
         {
             // Arrange
             var instance = new ReferenceResource { Id = 1 };
-            _linker.SetReferenceCollections(instance);
+            ResourceReferenceTools.InitializeCollections(instance);
             // Prepare reference objects
             var ref1 = new SimpleResource { Id = 2, Name = "Ref1" };
             var ref2 = new SimpleResource { Id = 3, Name = "Pos1" };
             var ref3 = new DerivedResource { Name = "Ref2" };
-            _linker.SetReferenceCollections(ref3);
+            ResourceReferenceTools.InitializeCollections(ref3);
             var ref4 = new DerivedResource { Id = 5, Name = "ChildOnly" };
             var ref5 = new DerivedResource { Id = 6, Name = "BackRef" };
-            _linker.SetReferenceCollections(ref5);
+            ResourceReferenceTools.InitializeCollections(ref5);
             // Set single references
             instance.Parent = ref5; // Parent is set and
             ref5.Children.Add(instance); // Bidirectional reference synced
@@ -206,9 +206,9 @@ namespace Marvin.Resources.Management.Tests
             // Arrange
             // Create resources
             var parent = new SimpleResource { Id = 1 };
-            _linker.SetReferenceCollections(parent);
+            ResourceReferenceTools.InitializeCollections(parent);
             var child = new SimpleResource { Id = 2 };
-            _linker.SetReferenceCollections(child);
+            ResourceReferenceTools.InitializeCollections(child);
             var mocks = SetupDbMocks(new List<ResourceRelation>());
             // Setup graph mock
             _graph[1] = new ResourceWrapper(parent);
@@ -229,9 +229,9 @@ namespace Marvin.Resources.Management.Tests
             // Arrange
             // Create resources
             var parent = new SimpleResource { Id = 1 };
-            _linker.SetReferenceCollections(parent);
+            ResourceReferenceTools.InitializeCollections(parent);
             var child = new SimpleResource { Id = 2 };
-            _linker.SetReferenceCollections(child);
+            ResourceReferenceTools.InitializeCollections(child);
             // Create initial relationship
             child.Parent = parent;
             parent.Children.Add(child);
@@ -259,11 +259,11 @@ namespace Marvin.Resources.Management.Tests
             // Arrange
             // Create resources
             var parent1 = new SimpleResource { Id = 1 };
-            _linker.SetReferenceCollections(parent1);
+            ResourceReferenceTools.InitializeCollections(parent1);
             var parent2 = new SimpleResource { Id = 2 };
-            _linker.SetReferenceCollections(parent2);
+            ResourceReferenceTools.InitializeCollections(parent2);
             var child = new SimpleResource { Id = 3 };
-            _linker.SetReferenceCollections(child);
+            ResourceReferenceTools.InitializeCollections(child);
             // Create initial relationship
             child.Parent = parent1;
             parent1.Children.Add(child);
@@ -291,7 +291,7 @@ namespace Marvin.Resources.Management.Tests
         {
             // Arrange
             var instance = new ReferenceResource();
-            _linker.SetReferenceCollections(instance);
+            ResourceReferenceTools.InitializeCollections(instance);
             var deletedRef = new DerivedResource();
             instance.Reference2 = deletedRef;
             instance.References.Add(deletedRef);

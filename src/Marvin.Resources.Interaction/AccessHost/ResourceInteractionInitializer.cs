@@ -16,10 +16,10 @@ namespace Marvin.Resources.Interaction
         public override string Description => "Creates a default interaction host";
 
         /// <inheritdoc />
-        public override IReadOnlyList<Resource> Execute(IResourceCreator creator)
+        public override IReadOnlyList<Resource> Execute(IResourceGraph graph)
         {
-            var interactionHost = creator.Instantiate<ResourceInteractionHost>();
-            return new[] {interactionHost};
+            var interactionHost = graph.Instantiate<ResourceInteractionHost>();
+            return new[] { interactionHost };
         }
     }
 }

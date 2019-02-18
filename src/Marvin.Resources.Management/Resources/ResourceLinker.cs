@@ -8,6 +8,7 @@ using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Resources.Model;
 using Marvin.Tools;
+using static Marvin.Resources.Management.ResourceReferenceTools;
 
 namespace Marvin.Resources.Management
 {
@@ -31,73 +32,6 @@ namespace Marvin.Resources.Management
                 SaveReferences(context, instance);
             }
             return context.EntityCache.Keys.ToArray();
-        }
-
-        /// <inheritdoc />
-        public void SetReferenceCollections(Resource instance)
-        {
-            var resourceType = instance.GetType();
-            // Iterate all references and provide reference collections
-            var overrides = new Dictionary<PropertyInfo, ReferenceOverrideAttribute>();
-            foreach (var property in CollectionReferenceProperties(resourceType))
-            {
-                var attribute = property.GetCustomAttribute<ReferenceOverrideAttribute>();
-                if (attribute == null)
-                    // Create collection and set on property
-                    CreateCollection(instance, property);
-                else
-                    // Save overrides for later
-                    overrides[property] = attribute;
-            }
-
-            // Now set the reference overrides
-            foreach (var pair in overrides)
-            {
-                // Fetch already created reference collection
-                var targetName = pair.Value.Source;
-                var target = resourceType.GetProperty(targetName);
-                var sourceCollection = (IReferenceCollection)target.GetValue(instance);
-
-                // Create new reference collection that shares the UnderlyingCollection
-                var property = pair.Key;
-                CreateCollection(instance, property, sourceCollection.UnderlyingCollection, target);
-            }
-        }
-
-        /// <summary>
-        /// Create a <see cref="ReferenceCollection{TResource}"/> instance
-        /// </summary>
-        /// <param name="instance">The resource instance to create the collection for</param>
-        /// <param name="property">The collection property that should be filled by this collection</param>
-        /// <param name="underlyingCollection">The base collection wrapped in the reference collection. This can be null for non-override properties</param>
-        /// <param name="targetProperty">Target property of the collection. For non-overrides this equals <paramref name="property"/>.</param>
-        private static void CreateCollection(Resource instance, PropertyInfo property, ICollection<IResource> underlyingCollection = null, PropertyInfo targetProperty = null)
-        {
-            // Set target property to property if it is not given
-            if (targetProperty == null)
-                targetProperty = property;
-
-            // Create underlying collection if it is not given
-            if (underlyingCollection == null)
-                underlyingCollection = new SynchronizedCollection<IResource>();
-
-            var propertyType = property.PropertyType;
-            var referenceType = propertyType.GetGenericArguments()[0]; // Type of resource from ICollection<ResourceType>
-            var collectionType = typeof(ReferenceCollection<>).MakeGenericType(referenceType); // Make generic ReferenceCollection
-
-            // Create collection and set on instance property
-            var value = Activator.CreateInstance(collectionType, instance, targetProperty, underlyingCollection);
-            property.SetValue(instance, value);
-        }
-
-        /// <inheritdoc />
-        public ICollection<IReferenceCollection> GetAutoSaveCollections(Resource instance)
-        {
-            return (from collectionProperty in CollectionReferenceProperties(instance.GetType())
-                    let refAtt = collectionProperty.GetCustomAttribute<ResourceReferenceAttribute>()
-                    let overrideAtt = collectionProperty.GetCustomAttribute<ReferenceOverrideAttribute>()
-                    where (refAtt?.AutoSave ?? false) || (overrideAtt?.AutoSave ?? false)
-                    select (IReferenceCollection)collectionProperty.GetValue(instance)).ToList();
         }
 
         /// <inheritdoc />
@@ -472,29 +406,6 @@ namespace Marvin.Resources.Management
                               && attribute.Name == relation.Name
                            select relation).ToArray();
             return matches;
-        }
-
-        /// <summary>
-        /// Find all reference properties on a resource type
-        /// </summary>
-        private static IEnumerable<PropertyInfo> CollectionReferenceProperties(Type resourceType)
-        {
-            return from referenceProperty in ReferenceProperties(resourceType, true)
-                   let propertyType = referenceProperty.PropertyType
-                   where propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IReferences<>)
-                   select referenceProperty;
-        }
-
-        /// <summary>
-        /// All properties of a resource type that represent references or reference overrides
-        /// </summary>
-        private static IEnumerable<PropertyInfo> ReferenceProperties(Type resourceType, bool includeOverrides)
-        {
-            return from property in resourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                   where property.CanWrite &&
-                         (Attribute.IsDefined(property, typeof(ResourceReferenceAttribute))
-                          || includeOverrides && Attribute.IsDefined(property, typeof(ReferenceOverrideAttribute)))
-                   select property;
         }
 
         /// <summary>

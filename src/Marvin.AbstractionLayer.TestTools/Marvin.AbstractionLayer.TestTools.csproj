@@ -61,7 +61,7 @@
     <Compile Include="DummyProduct.cs" />
     <Compile Include="ReferenceCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\ResourceCreatorMock.cs" />
+    <Compile Include="Resources\ResourceGraphMock.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AbstractionLayer\Marvin.AbstractionLayer.csproj">

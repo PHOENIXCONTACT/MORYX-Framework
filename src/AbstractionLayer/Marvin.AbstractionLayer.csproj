@@ -145,10 +145,8 @@
     <Compile Include="Resources\IReferenceCollection.cs" />
     <Compile Include="Resources\IReferences.cs" />
     <Compile Include="Resources\IResource.cs" />
-    <Compile Include="Resources\IResourceCreator.cs" />
     <Compile Include="Resources\IResourceGraph.cs" />
     <Compile Include="Resources\IResourceManagement.cs" />
-    <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Resources\IResourceTypeNode.cs" />
     <Compile Include="Resources\IResourceTypeTree.cs" />
     <Compile Include="Resources\ProxyDetachedException.cs" />

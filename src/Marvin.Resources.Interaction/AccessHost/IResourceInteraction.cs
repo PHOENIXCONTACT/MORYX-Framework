@@ -58,30 +58,6 @@ namespace Marvin.Resources.Interaction
         ResourceModel Save(ResourceModel resource);
 
         /// <summary>
-        /// Create instance and start working
-        /// </summary>
-        /// <param name="id">Id of the resource</param>
-        /// <returns></returns>
-        [OperationContract]
-        bool Start(long id);
-
-        /// <summary>
-        /// Reset resource and start with new configuration
-        /// </summary>
-        /// <param name="id">Id of the resource</param>
-        /// <returns></returns>
-        [OperationContract]
-        bool Reset(long id);
-
-        /// <summary>
-        /// Stop execution and destroy instance
-        /// </summary>
-        /// <param name="id">Id of the resource</param>
-        /// <returns></returns>
-        [OperationContract]
-        bool Stop(long id);
-
-        /// <summary>
         /// Removes a resource from the database.
         /// </summary>
         /// <param name="id">The resource which should be removed.</param>

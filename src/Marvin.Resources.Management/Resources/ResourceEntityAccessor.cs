@@ -66,32 +66,32 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Instantiate the factory and return a populated resource object
         /// </summary>
-        public Resource Instantiate(IResourceTypeController typeController, IResourceCreator creator)
+        public Resource Instantiate(IResourceTypeController typeController, IResourceGraph graph)
         {
             // This looks a little nasty, but it is the best way to prevent castle from
             // interfering with the resource relations
-            var resource = typeController.Create(Type);
+            Instance = typeController.Create(Type);
 
             // Resources need access to the creator
-            resource.Creator = creator;
+            Instance.Graph = graph;
 
             // Copy default properties
-            resource.Id = Id;
-            resource.Name = Name;
-            resource.LocalIdentifier = LocalIdentifier;
-            resource.GlobalIdentifier = GlobalIdentifier;
-            resource.Description = Description;
+            Instance.Id = Id;
+            Instance.Name = Name;
+            Instance.LocalIdentifier = LocalIdentifier;
+            Instance.GlobalIdentifier = GlobalIdentifier;
+            Instance.Description = Description;
 
             // Copy extended data from json
             if (ExtensionData != null)
-                JsonConvert.PopulateObject(ExtensionData, resource, JsonSettings.Minimal);
+                JsonConvert.PopulateObject(ExtensionData, Instance, JsonSettings.Minimal);
 
             // Read everything else from defaults
-            ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
+            ValueProviderExecutor.Execute(Instance, new ValueProviderExecutorSettings()
                                                         .AddFilter(new DataMemberAttributeValueProviderFilter(false))
                                                         .AddDefaultValueProvider());
 
-            return Instance = resource;
+            return Instance;
         }
 
         /// <summary>

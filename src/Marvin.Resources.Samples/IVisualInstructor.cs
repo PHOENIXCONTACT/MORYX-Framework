@@ -91,7 +91,7 @@ namespace Marvin.Resources.Samples
 
             for (int clientNumber = 1; clientNumber <= clientCount; clientNumber++)
             {
-                var instructor = Creator.Instantiate<VisualInstructor>(instructorType);
+                var instructor = Graph.Instantiate<VisualInstructor>(instructorType);
                 instructor.Name = instructor.ClientId = $"Client{clientNumber}";
                 Instructors.Add(instructor);
             }

@@ -16,7 +16,7 @@ namespace Marvin.Resources.Samples
         [Description("Add typed value to the buffer")]
         public int AddValue([ResourceTypes(typeof(BufferValue))]string type, string name, string value)
         {
-            var bufferValue = Creator.Instantiate<BufferValue>(type);
+            var bufferValue = Graph.Instantiate<BufferValue>(type);
             bufferValue.Name = name;
             bufferValue.Value = value;
             Values.Add(bufferValue);
@@ -29,7 +29,7 @@ namespace Marvin.Resources.Samples
         {
             var value = Values.FirstOrDefault(v => v.Name == name);
             if (value != null)
-                Creator.Destroy(value, true);
+                Graph.Destroy(value, true);
             return Values.Count;
         }
     }

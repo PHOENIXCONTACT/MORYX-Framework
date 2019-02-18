@@ -115,9 +115,11 @@
     <Compile Include="Resources\DataMemberAttributeValueProviderFilter.cs" />
     <Compile Include="Resources\IResourceFactory.cs" />
     <Compile Include="Resources\IResourceLinker.cs" />
+    <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Resources\IResourceTypeController.cs" />
     <Compile Include="Resources\ResourceGraph.cs" />
     <Compile Include="Resources\ResourceLinker.cs" />
+    <Compile Include="Resources\ResourceReferenceTools.cs" />
     <Compile Include="Resources\ResourceSerialization.cs" />
     <Compile Include="Resources\ResourceTypeNode.cs" />
     <Compile Include="Resources\ResourceWrapper.cs" />

@@ -23,6 +23,6 @@ namespace Marvin.AbstractionLayer.Resources
         /// Within this method, the resource trees should be created
         /// It is only necessary to return the roots
         /// </summary>
-        IReadOnlyList<Resource> Execute(IResourceCreator creator);
+        IReadOnlyList<Resource> Execute(IResourceGraph graph);
     }
 }

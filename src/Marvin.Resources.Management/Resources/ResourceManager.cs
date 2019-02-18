@@ -17,7 +17,7 @@ using Marvin.Tools;
 namespace Marvin.Resources.Management
 {
     [Plugin(LifeCycle.Singleton, typeof(IResourceManager))]
-    internal class ResourceManager : IResourceManager, IResourceCreator
+    internal class ResourceManager : IResourceManager
     {
         #region Dependency Injection
 
@@ -107,6 +107,10 @@ namespace Marvin.Resources.Management
 
         public void Initialize()
         {
+            // Set delegates on graph
+            Graph.SaveDelegate = Save;
+            Graph.DestroyDelegate = Destroy;
+
             _startup = ResourceStartupPhase.LoadResources;
             using (var uow = UowFactory.Create(ContextMode.AllOff))
             {
@@ -147,7 +151,7 @@ namespace Marvin.Resources.Management
         {
             // Create resource objects on multiple threads
             var query = from template in allResources.AsParallel()
-                        select template.Instantiate(TypeController, this);
+                        select template.Instantiate(TypeController, Graph);
             foreach (var resource in query)
                 AddResource(resource, false);
 
@@ -212,7 +216,7 @@ namespace Marvin.Resources.Management
             if (asPublic != null)
                 asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
-            foreach (var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(instance))
+            foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
                 autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
         }
 
@@ -227,7 +231,7 @@ namespace Marvin.Resources.Management
             if (asPublic != null)
                 asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
-            foreach (var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(instance))
+            foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
                 autoSaveCollection.CollectionChanged -= OnAutoSaveCollectionChanged;
         }
 
@@ -295,22 +299,6 @@ namespace Marvin.Resources.Management
 
         #endregion
 
-        public Resource Get(long id) => Graph.Get(id);
-
-        public Resource Create(string type)
-        {
-            // Create simplified template and instantiate
-            var template = new ResourceEntityAccessor { Type = type };
-            var instance = template.Instantiate(TypeController, this);
-
-            // Initially set name to value of DisplayNameAttribute if available
-            var typeObj = instance.GetType();
-            var displayNameAttr = typeObj.GetCustomAttribute<DisplayNameAttribute>();
-            instance.Name = displayNameAttr?.DisplayName ?? typeObj.Name;
-
-            return instance;
-        }
-
         public void Save(Resource resource)
         {
             lock (Graph.GetWrapper(resource.Id) ?? _fallbackLock)
@@ -372,14 +360,9 @@ namespace Marvin.Resources.Management
             }
         }
 
-        public IReadOnlyList<Resource> GetRoots()
-        {
-            return Graph.GetRoots();
-        }
-
         public void ExecuteInitializer(IResourceInitializer initializer)
         {
-            var roots = initializer.Execute(this);
+            var roots = initializer.Execute(Graph);
 
             if (roots.Count == 0)
                 throw new InvalidOperationException("ResourceInitializer must return at least one resource");
@@ -391,55 +374,7 @@ namespace Marvin.Resources.Management
             }
         }
 
-        public bool Start(Resource resource)
-        {
-            try
-            {
-                ((IPlugin)resource).Start();
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorReporting.ReportWarning(this, e);
-                return false;
-            }
-        }
-
-        public bool Stop(Resource resource)
-        {
-            try
-            {
-                ((IPlugin)resource).Stop();
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorReporting.ReportWarning(this, e);
-                return false;
-            }
-        }
-
         #region IResourceCreator
-
-        public TResource Instantiate<TResource>() where TResource : Resource
-        {
-            return (TResource)Instantiate(typeof(TResource).ResourceType());
-        }
-
-        public TResource Instantiate<TResource>(string type) where TResource : class, IResource
-        {
-            return Instantiate(type) as TResource;
-        }
-
-        public Resource Instantiate(string type)
-        {
-            return Create(type);
-        }
-
-        public bool Destroy(IResource resource)
-        {
-            return Destroy(resource, false);
-        }
 
         public bool Destroy(IResource resource, bool permanent)
         {

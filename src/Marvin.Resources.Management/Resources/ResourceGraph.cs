@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
@@ -16,7 +18,7 @@ namespace Marvin.Resources.Management
     internal class ResourceGraph : IManagedResourceGraph
     {
         /// <summary>
-        /// Type controller
+        /// Type controller to create new resource objects
         /// </summary>
         public IResourceTypeController TypeController { get; set; }
 
@@ -32,6 +34,10 @@ namespace Marvin.Resources.Management
         private readonly ICollection<IPublicResource> _publicResources = new SynchronizedCollection<IPublicResource>();
 
         
+        public Action<Resource> SaveDelegate { get; set; }
+        public Func<Resource, bool, bool> DestroyDelegate { get; set; }
+
+
         public ResourceWrapper Add(Resource instance)
         {
             var wrapper = _graph[instance.Id] = new ResourceWrapper(instance);
@@ -68,12 +74,7 @@ namespace Marvin.Resources.Management
         {
             return _graph.Values;
         }
-
-        public IReadOnlyList<Resource> GetRoots()
-        {
-            return _graph.Values.Select(wrapper => wrapper.Target).Where(resource => resource.Parent == null).ToList();
-        }
-
+        
         public TResource GetResource<TResource>() where TResource : class, IResource
         {
             return GetResource<TResource>(r => true);
@@ -116,6 +117,45 @@ namespace Marvin.Resources.Management
                     let target = wrapper.Target as TResource
                     where target != null && predicate(target)
                     select target);
+        }
+
+        public Resource Instantiate(string type)
+        {
+            // Create simplified template and instantiate
+            var template = new ResourceEntityAccessor { Type = type };
+            var instance = template.Instantiate(TypeController, this);
+
+            // Initially set name to value of DisplayNameAttribute if available
+            var typeObj = instance.GetType();
+            var displayNameAttr = typeObj.GetCustomAttribute<DisplayNameAttribute>();
+            instance.Name = displayNameAttr?.DisplayName ?? typeObj.Name;
+
+            return instance;
+        }
+
+        public TResource Instantiate<TResource>() where TResource : Resource
+        {
+            return (TResource) Instantiate(typeof(TResource).ResourceType());
+        }
+
+        public TResource Instantiate<TResource>(string type) where TResource : class, IResource
+        {
+            return Instantiate(type) as TResource;
+        }
+
+        public void Save(IResource resource)
+        {
+            SaveDelegate((Resource)resource);
+        }
+
+        public bool Destroy(IResource resource)
+        {
+            return Destroy(resource, false);
+        }
+
+        public bool Destroy(IResource resource, bool permanent)
+        {
+            return DestroyDelegate((Resource)resource, permanent);
         }
     }
 }

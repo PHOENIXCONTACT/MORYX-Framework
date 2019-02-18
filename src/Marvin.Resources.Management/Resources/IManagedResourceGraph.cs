@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Marvin.AbstractionLayer.Resources;
 
 namespace Marvin.Resources.Management
@@ -24,13 +25,18 @@ namespace Marvin.Resources.Management
         ResourceWrapper GetWrapper(long id);
 
         /// <summary>
-        /// Get all root nodes
-        /// </summary>
-        IReadOnlyList<Resource> GetRoots();
-
-        /// <summary>
         /// Access the full graph
         /// </summary>
         ICollection<ResourceWrapper> GetAll();
+
+        /// <summary>
+        /// TODO: Find a better way
+        /// </summary>
+        Action<Resource> SaveDelegate { get; set; }
+
+        /// <summary>
+        /// TODO: Find a better way
+        /// </summary>
+        Func<Resource, bool, bool> DestroyDelegate { get; set; }
     }
 }

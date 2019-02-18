@@ -50,5 +50,37 @@ namespace Marvin.AbstractionLayer.Resources
         /// </summary>
         IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate)
             where TResource : class, IResource;
+
+        /// <summary>
+        /// Create a new resource instance but DO NOT save it
+        /// </summary>
+        Resource Instantiate(string type);
+
+        /// <summary>
+        /// Instantiate a typed resource
+        /// </summary>
+        TResource Instantiate<TResource>()
+            where TResource : Resource;
+
+        /// <summary>
+        /// Instantiate a typed resource
+        /// </summary>
+        TResource Instantiate<TResource>(string type)
+            where TResource : class, IResource;
+
+        /// <summary>
+        /// Write changes on this object to the database
+        /// </summary>
+        void Save(IResource resource);
+
+        /// <summary>
+        /// Remove resource, but only flag it deleted
+        /// </summary>
+        bool Destroy(IResource resource);
+
+        /// <summary>
+        /// Remove a resource permanently and irreversible
+        /// </summary>
+        bool Destroy(IResource resource, bool permanent);
     }
 }
