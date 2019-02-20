@@ -13,10 +13,10 @@ namespace Marvin.Resources.Samples
         [EditorVisible]
         public void AutoCreateWpc()
         {
-            var wpc = (Resource)Creator.Instantiate<IWpc>(WpcType);
+            var wpc = (Resource)Graph.Instantiate<IWpc>(WpcType);
             wpc.Parent = this;
 
-            var pos = Creator.Instantiate<WpcPosition>();
+            var pos = Graph.Instantiate<WpcPosition>();
             pos.Parent = wpc;
             wpc.Children.Add(pos);
 
@@ -33,6 +33,13 @@ namespace Marvin.Resources.Samples
 
     public class Wpc : Resource, IWpc
     {
+        [ResourceConstructor]
+        public void CreatePositions(int count)
+        {
+            var pos = Graph.Instantiate<WpcPosition>();
+            pos.Parent = this;
+            Children.Add(pos);
+        }
     }
 
     public class WpcPosition : Resource

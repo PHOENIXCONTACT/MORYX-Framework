@@ -12,6 +12,8 @@ namespace Marvin.Resources.Management
 
         public IResourceManager Manager { get; set; }
 
+        public IResourceGraph ResourceGraph { get; set; }
+
         public IResourceTypeController TypeController { get; set; }
 
         #endregion
@@ -47,55 +49,55 @@ namespace Marvin.Resources.Management
         public TResource GetResource<TResource>() where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return Manager.GetResource<TResource>().Proxify(TypeController);
+            return ResourceGraph.GetResource<TResource>().Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(long id) 
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return Manager.GetResource<TResource>(id).Proxify(TypeController);
+            return ResourceGraph.GetResource<TResource>(id).Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(string name) 
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return Manager.GetResource<TResource>(name).Proxify(TypeController);
+            return ResourceGraph.GetResource<TResource>(name).Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(ICapabilities requiredCapabilities) 
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return Manager.GetResource<TResource>(requiredCapabilities).Proxify(TypeController);
+            return ResourceGraph.GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities)).Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(Func<TResource, bool> predicate) 
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return Manager.GetResource(predicate).Proxify(TypeController);
+            return ResourceGraph.GetResource(predicate).Proxify(TypeController);
         }
 
         public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return Manager.GetResources<TResource>().Proxify(TypeController);
+            return ResourceGraph.GetResources<TResource>().Proxify(TypeController);
         }
 
         public IEnumerable<TResource> GetResources<TResource>(ICapabilities requiredCapabilities)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return Manager.GetResources<TResource>(requiredCapabilities).Proxify(TypeController);
+            return ResourceGraph.GetResources<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities)).Proxify(TypeController);
         }
         
         public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) 
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return Manager.GetResources(predicate).Proxify(TypeController);
+            return ResourceGraph.GetResources(predicate).Proxify(TypeController);
         }
 
         /// <inheritdoc />

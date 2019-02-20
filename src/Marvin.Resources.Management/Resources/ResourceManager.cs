@@ -17,9 +17,14 @@ using Marvin.Tools;
 namespace Marvin.Resources.Management
 {
     [Plugin(LifeCycle.Singleton, typeof(IResourceManager))]
-    internal class ResourceManager : IResourceManager, IResourceCreator
+    internal class ResourceManager : IResourceManager
     {
         #region Dependency Injection
+
+        /// <summary>
+        /// Reference to the resource graph
+        /// </summary>
+        public IManagedResourceGraph Graph { get; set; }
 
         /// <summary>
         /// Type controller managing the type tree and proxy creation
@@ -92,14 +97,9 @@ namespace Marvin.Resources.Management
         private ResourceStartupPhase _startup;
 
         /// <summary>
-        /// Direct access to all resources of the tree
+        /// Fallback lock object if a new instance is saved BEFORE having the wrapper as a lock object
         /// </summary>
-        private IDictionary<long, ResourceWrapper> _resources;
-
-        /// <summary>
-        /// Subset of public resources
-        /// </summary>
-        private readonly ICollection<IPublicResource> _publicResources = new SynchronizedCollection<IPublicResource>();
+        private readonly object _fallbackLock = new object();
 
         #endregion
 
@@ -107,6 +107,10 @@ namespace Marvin.Resources.Management
 
         public void Initialize()
         {
+            // Set delegates on graph
+            Graph.SaveDelegate = Save;
+            Graph.DestroyDelegate = Destroy;
+
             _startup = ResourceStartupPhase.LoadResources;
             using (var uow = UowFactory.Create(ContextMode.AllOff))
             {
@@ -118,13 +122,14 @@ namespace Marvin.Resources.Management
                 }
                 else
                 {
-                    InitializeEmpty();
+                    Logger.LogEntry(LogLevel.Warning, "The ResourceManager initialized without a resource." +
+                                                      "Execute a resource initializer to add resources with \"exec ResourceManager initialize\"");
                 }
             }
 
             _startup = ResourceStartupPhase.Initializing;
             // Boot resources
-            Parallel.ForEach(_resources.Values, resourceWrapper =>
+            Parallel.ForEach(Graph.GetAll(), resourceWrapper =>
             {
                 try
                 {
@@ -133,7 +138,6 @@ namespace Marvin.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    _publicResources.Remove(resourceWrapper.Target as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -141,27 +145,13 @@ namespace Marvin.Resources.Management
         }
 
         /// <summary>
-        /// Excecutes the configured resource initializer
-        /// </summary>
-        private void InitializeEmpty()
-        {
-            Logger.LogEntry(LogLevel.Warning, "The ResourceManager initialized without a resource." +
-                                              "Execute a resource initializer to add resources with \"exec ResourceManager initialize\"");
-            var processorCount = Environment.ProcessorCount;
-            _resources = new ConcurrentDictionary<long, ResourceWrapper>(processorCount, processorCount * 2);
-        }
-
-        /// <summary>
         /// Load and link all resources from the databse
         /// </summary>
         private void LoadResources(ICollection<ResourceEntityAccessor> allResources)
         {
-            // Create the concurrent dictionary optimized for the current system architecture and expected collection size
-            _resources = new ConcurrentDictionary<long, ResourceWrapper>(Environment.ProcessorCount, allResources.Count * 2);
-
             // Create resource objects on multiple threads
             var query = from template in allResources.AsParallel()
-                        select template.Instantiate(TypeController, this);
+                        select template.Instantiate(TypeController, Graph);
             foreach (var resource in query)
                 AddResource(resource, false);
 
@@ -169,7 +159,7 @@ namespace Marvin.Resources.Management
             Parallel.ForEach(allResources, LinkReferences);
 
             // Register events after all links were set
-            foreach (var resourceWrapper in _resources.Values)
+            foreach (var resourceWrapper in Graph.GetAll())
                 RegisterEvents(resourceWrapper.Target);
         }
 
@@ -178,12 +168,8 @@ namespace Marvin.Resources.Management
         /// </summary>
         private void AddResource(Resource instance, bool registerEvents)
         {
-            var wrapped = new ResourceWrapper(instance);
-            // Add to collections
-            _resources[instance.Id] = wrapped;
-            var publicResource = instance as IPublicResource;
-            if (publicResource != null)
-                _publicResources.Add(publicResource);
+            // Add instance to the graph
+            var wrapped = Graph.Add(instance);
 
             // Register to events
             if (registerEvents)
@@ -214,6 +200,7 @@ namespace Marvin.Resources.Management
             }
 
             // Inform listeners about the new resource
+            var publicResource = instance as IPublicResource;
             if (publicResource != null)
                 RaiseResourceAdded(publicResource);
         }
@@ -229,7 +216,7 @@ namespace Marvin.Resources.Management
             if (asPublic != null)
                 asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
-            foreach (var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(instance))
+            foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
                 autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
         }
 
@@ -244,7 +231,7 @@ namespace Marvin.Resources.Management
             if (asPublic != null)
                 asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
-            foreach (var autoSaveCollection in ResourceLinker.GetAutoSaveCollections(instance))
+            foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
                 autoSaveCollection.CollectionChanged -= OnAutoSaveCollectionChanged;
         }
 
@@ -262,13 +249,13 @@ namespace Marvin.Resources.Management
         /// </summary>
         private void LinkReferences(ResourceEntityAccessor entityAccessor)
         {
-            ResourceLinker.LinkReferences(entityAccessor.Instance, entityAccessor.Relations, _resources);
+            ResourceLinker.LinkReferences(entityAccessor.Instance, entityAccessor.Relations);
         }
 
         public void Start()
         {
             _startup = ResourceStartupPhase.Starting;
-            Parallel.ForEach(_resources.Values, resourceWrapper =>
+            Parallel.ForEach(Graph.GetAll(), resourceWrapper =>
             {
                 try
                 {
@@ -277,7 +264,6 @@ namespace Marvin.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    _publicResources.Remove(resourceWrapper.Target as IPublicResource);
                     ErrorReporting.ReportWarning(this, e);
                 }
             });
@@ -288,9 +274,7 @@ namespace Marvin.Resources.Management
         {
             _startup = ResourceStartupPhase.Stopping;
 
-            if (_resources != null)
-            {
-                Parallel.ForEach(_resources.Values, resourceWrapper =>
+            Parallel.ForEach(Graph.GetAll(), resourceWrapper =>
                 {
                     try
                     {
@@ -301,17 +285,13 @@ namespace Marvin.Resources.Management
                         ErrorReporting.ReportWarning(this, e);
                     }
                 });
-            }
 
             _startup = ResourceStartupPhase.Stopped;
         }
 
         public void Dispose()
         {
-            if (_resources == null)
-                return;
-
-            foreach (var resourceWrapper in _resources.Values)
+            foreach (var resourceWrapper in Graph.GetAll())
             {
                 UnregisterEvents(resourceWrapper.Target);
             }
@@ -319,39 +299,34 @@ namespace Marvin.Resources.Management
 
         #endregion
 
-        public Resource Get(long id) => _resources[id].Target;
-
-        public Resource Create(string type)
-        {
-            // Create simplified template and instantiate
-            var template = new ResourceEntityAccessor {Type = type};
-            var instance = template.Instantiate(TypeController, this);
-
-            // Initially set name to value of DisplayNameAttribute if available
-            var typeObj = instance.GetType();
-            var displayNameAttr = typeObj.GetCustomAttribute<DisplayNameAttribute>();
-            instance.Name = displayNameAttr?.DisplayName ?? typeObj.Name;
-
-            return instance;
-        }
-
         public void Save(Resource resource)
         {
-            using (var uow = UowFactory.Create())
+            lock (Graph.GetWrapper(resource.Id) ?? _fallbackLock)
             {
-                var newResources = new HashSet<Resource>();
+                using (var uow = UowFactory.Create())
+                {
+                    var newResources = new HashSet<Resource>();
 
-                var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
-                if (entity.Id == 0)
-                    newResources.Add(resource);
+                    var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
+                    if (entity.Id == 0)
+                        newResources.Add(resource);
 
-                var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);
-                newResources.AddRange(newInstances);
+                    var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);
+                    newResources.AddRange(newInstances);
 
-                uow.Save();
+                    try
+                    {
+                        uow.Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(LogLevel.Error, ex, "Error saving resource {0}-{1}!", resource.Id, resource.Name);
+                        throw;
+                    }
 
-                foreach (var instance in newResources)
-                    AddResource(instance, true);
+                    foreach (var instance in newResources)
+                        AddResource(instance, true);
+                }
             }
         }
 
@@ -363,25 +338,31 @@ namespace Marvin.Resources.Management
             var instance = args.Parent;
             var property = args.CollectionProperty;
 
-            using (var uow = UowFactory.Create())
+            lock (Graph.GetWrapper(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
             {
-                var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
-                
-                uow.Save();
+                using (var uow = UowFactory.Create())
+                {
+                    var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
 
-                foreach (var newResource in newResources)
-                    AddResource(newResource, true);
+                    try
+                    {
+                        uow.Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(LogLevel.Error, ex, "Error saving collection {2} on resource {0}-{1}!", instance.Id, instance.Name, property.Name);
+                        throw;
+                    }
+
+                    foreach (var newResource in newResources)
+                        AddResource(newResource, true);
+                }
             }
-        }
-
-        public IReadOnlyList<Resource> GetRoots()
-        {
-            return _resources.Values.Where(wapper => wapper.Target.Parent == null).Select(wrapper => wrapper.Target).ToArray();
         }
 
         public void ExecuteInitializer(IResourceInitializer initializer)
         {
-            var roots = initializer.Execute(this);
+            var roots = initializer.Execute(Graph);
 
             if (roots.Count == 0)
                 throw new InvalidOperationException("ResourceInitializer must return at least one resource");
@@ -393,55 +374,7 @@ namespace Marvin.Resources.Management
             }
         }
 
-        public bool Start(Resource resource)
-        {
-            try
-            {
-                ((IPlugin)resource).Start();
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorReporting.ReportWarning(this, e);
-                return false;
-            }
-        }
-
-        public bool Stop(Resource resource)
-        {
-            try
-            {
-                ((IPlugin)resource).Stop();
-                return true;
-            }
-            catch (Exception e)
-            {
-                ErrorReporting.ReportWarning(this, e);
-                return false;
-            }
-        }
-
         #region IResourceCreator
-
-        public TResource Instantiate<TResource>() where TResource : Resource
-        {
-            return (TResource)Instantiate(typeof(TResource).ResourceType());
-        }
-
-        public TResource Instantiate<TResource>(string type) where TResource : class, IResource
-        {
-            return Instantiate(type) as TResource;
-        }
-
-        public Resource Instantiate(string type)
-        {
-            return Create(type);
-        }
-
-        public bool Destroy(IResource resource)
-        {
-            return Destroy(resource, false);
-        }
 
         public bool Destroy(IResource resource, bool permanent)
         {
@@ -460,7 +393,7 @@ namespace Marvin.Resources.Management
                 var relations = ResourceRelationAccessor.FromEntity(uow, entity);
                 foreach (var relation in relations)
                 {
-                    var reference = _resources[relation.ReferenceId].Target;
+                    var reference = Graph.Get(relation.ReferenceId);
 
                     ResourceLinker.RemoveLinking(resource, reference);
 
@@ -480,13 +413,7 @@ namespace Marvin.Resources.Management
             TypeController.Destroy(instance);
 
             // Remove from internal collections
-            if (_resources.Remove(instance.Id))
-            {
-                // It can only be a public resource if it was port of the resources
-                _publicResources.Remove(resource as IPublicResource);
-                return true;
-            }
-            return false;
+            return Graph.Remove(instance);
         }
 
         #endregion
@@ -495,48 +422,43 @@ namespace Marvin.Resources.Management
 
         public TResource GetResource<TResource>() where TResource : class, IPublicResource
         {
-            return GetResource<TResource>(r => true);
+            return Graph.GetResource<TResource>();
         }
 
         public TResource GetResource<TResource>(long id) where TResource : class, IPublicResource
         {
-            return GetResource<TResource>(r => r.Id == id);
+            return Graph.GetResource<TResource>(r => r.Id == id);
         }
 
         public TResource GetResource<TResource>(string name) where TResource : class, IPublicResource
         {
-            return GetResource<TResource>(r => r.Name == name);
+            return Graph.GetResource<TResource>(r => r.Name == name);
         }
 
         public TResource GetResource<TResource>(ICapabilities requiredCapabilities) where TResource : class, IPublicResource
         {
-            return GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities));
+            return Graph.GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities));
         }
 
         public TResource GetResource<TResource>(Func<TResource, bool> predicate)
             where TResource : class, IPublicResource
         {
-            // Public resources without capabilities are considered non-public
-            var match = _publicResources.OfType<TResource>().SingleOrDefault(r => r.Capabilities != NullCapabilities.Instance && predicate(r));
-            if (match == null)
-                throw new ResourceNotFoundException();
-
-            return match;
+            return Graph.GetResource(predicate);
         }
 
         public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IPublicResource
         {
-            return GetResources<TResource>(r => true);
+            return Graph.GetResources<TResource>(r => true);
         }
 
         public IEnumerable<TResource> GetResources<TResource>(ICapabilities requiredCapabilities) where TResource : class, IPublicResource
         {
-            return GetResources<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities));
+            return Graph.GetResources<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities));
         }
 
         public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IPublicResource
         {
-            return _publicResources.OfType<TResource>().Where(r => r.Capabilities != NullCapabilities.Instance).Where(predicate);
+            return Graph.GetResources(predicate);
         }
 
         private void RaiseResourceAdded(IPublicResource newResource)

@@ -33,12 +33,12 @@
     <DocumentationFile>bin\Release\Marvin.Resources.Interaction.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin, Version=3.0.0.2862, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev002862\lib\net461\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.3101, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev003101\lib\net461\Marvin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.2862, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev002862\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.3101, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev003101\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -58,6 +58,8 @@
     <Compile Include="AccessHost\IResourceInteraction.cs" />
     <Compile Include="AccessHost\ResourceInteraction.cs" />
     <Compile Include="AccessHost\ResourceInteractionHost.cs" />
+    <Compile Include="Converter\ModelToResourceConverter.cs" />
+    <Compile Include="Converter\ResourceToModelConverter.cs" />
     <Compile Include="InteractionResource.cs" />
     <Compile Include="Models\ResourceModel.cs" />
     <Compile Include="Models\ResourceReferenceModel.cs" />

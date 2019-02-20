@@ -12,24 +12,24 @@ namespace Marvin.Resources.Samples.Initializer
 
         public override string Description => "Creates a sample machine and two cells";
 
-        public override IReadOnlyList<Resource> Execute(IResourceCreator creator)
+        public override IReadOnlyList<Resource> Execute(IResourceGraph graph)
         {
-            var machine = creator.Instantiate<Machine>();
+            var machine = graph.Instantiate<Machine>();
             machine.Name = Config.MachineName;
 
-            var someGate = creator.Instantiate<GateResource>();
+            var someGate = graph.Instantiate<GateResource>();
             someGate.Name = "Some Gate";
 
             someGate.Parent = machine;
             machine.Children.Add(someGate);
 
-            var anotherGate = creator.Instantiate<GateResource>();
+            var anotherGate = graph.Instantiate<GateResource>();
             anotherGate.Name = "Another Gate";
 
             anotherGate.Parent = machine;
             machine.Children.Add(anotherGate);
 
-            return new Resource[] {machine};
+            return new Resource[] { machine };
         }
     }
 }

@@ -9,9 +9,46 @@ using Marvin.Tools;
 namespace Marvin.AbstractionLayer.TestTools.Resources
 {
     /// <inheritdoc />
-    public class ResourceCreatorMock : IResourceCreator
+    public class ResourceGraphMock : IResourceGraph
     {
         private IDictionary<string, Type> _typeMap;
+
+        public List<Resource> Graph { get; set; }
+
+        public Resource Get(long id)
+        {
+            return Graph.FirstOrDefault(r => r.Id == id);
+        }
+
+        public TResource GetResource<TResource>() where TResource : class, IResource
+        {
+            throw new NotImplementedException();
+        }
+
+        public TResource GetResource<TResource>(long id) where TResource : class, IResource
+        {
+            throw new NotImplementedException();
+        }
+
+        public TResource GetResource<TResource>(string name) where TResource : class, IResource
+        {
+            throw new NotImplementedException();
+        }
+
+        public TResource GetResource<TResource>(Func<TResource, bool> predicate) where TResource : class, IResource
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IResource
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public Resource Instantiate(string type)
@@ -61,6 +98,10 @@ namespace Marvin.AbstractionLayer.TestTools.Resources
             return Destroy(resource);
         }
 
+        public void Save(IResource resource)
+        {
+        }
+
         private void SetReferenceCollections(Resource instance)
         {
             var resourceType = instance.GetType();
@@ -70,7 +111,7 @@ namespace Marvin.AbstractionLayer.TestTools.Resources
                 select prop).ToList();
             foreach (var property in properties)
             {
-                var listType = typeof(ReferenceCollection<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
+                var listType = typeof(ReferenceCollectionMock<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
                 var list = Activator.CreateInstance(listType);
                 property.SetValue(instance, list);
             }

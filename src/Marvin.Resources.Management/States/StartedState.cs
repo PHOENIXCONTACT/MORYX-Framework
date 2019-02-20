@@ -11,5 +11,10 @@
         public StartedState(ResourceWrapper context, StateMap stateMap) : base(context, stateMap)
         {
         }
+
+        /// <summary>
+        /// Indicate that resource is available for interaction
+        /// </summary>
+        public override bool IsAvailable => true;
     }
 }

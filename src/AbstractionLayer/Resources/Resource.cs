@@ -22,7 +22,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// <summary>
         /// Type controller to construct new resources
         /// </summary>
-        public IResourceCreator Creator { get; set; }
+        public IResourceGraph Graph { get; set; }
 
         #endregion
 
@@ -105,7 +105,7 @@ namespace Marvin.AbstractionLayer.Resources
         void IDisposable.Dispose()
         {
             // Remove type controller reference, just to make sure
-            Creator = null;
+            Graph = null;
 
             try
             {

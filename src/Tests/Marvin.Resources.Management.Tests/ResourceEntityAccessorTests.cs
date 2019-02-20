@@ -14,7 +14,7 @@ namespace Marvin.Resources.Management.Tests
     public class ResourceEntityAccessorTests
     {
         private IResourceTypeController _typeControllerMock;
-        private IResourceCreator _resourceCreator;
+        private IResourceGraph _resourceGraph;
 
         [SetUp]
         public void Setup()
@@ -24,8 +24,8 @@ namespace Marvin.Resources.Management.Tests
 
             _typeControllerMock = typeControllerMock.Object;
 
-            var resourceCreator = new Mock<IResourceCreator>();
-            _resourceCreator = resourceCreator.Object;
+            var resourceCreator = new Mock<IResourceGraph>();
+            _resourceGraph = resourceCreator.Object;
         }
 
         [Test(Description = "Instantiates a resource")]
@@ -44,7 +44,7 @@ namespace Marvin.Resources.Management.Tests
             };
 
             // Act
-            var resource = accessor.Instantiate(_typeControllerMock, _resourceCreator) as TestResource;
+            var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as TestResource;
 
             // Assert
             Assert.NotNull(resource);

@@ -18,22 +18,11 @@ namespace Marvin.Resources.Management
         IReadOnlyList<Resource> SaveRoots(IUnitOfWork uow, IReadOnlyList<Resource> instances);
 
         /// <summary>
-        /// Set all reference collections on the new instance
-        /// </summary>
-        void SetReferenceCollections(Resource instance);
-
-        /// <summary>
-        /// Get all autosave collections on a resource instance. This is necessary to register
-        /// to the <see cref="IReferenceCollection.CollectionChanged"/> event.
-        /// </summary>
-        ICollection<IReferenceCollection> GetAutoSaveCollections(Resource instance);
-
-        /// <summary>
         /// Link all reference properties of an instance using the relation information
         /// and complete resource collection
         /// </summary>
         /// <returns>List of reference collections configured for autosave</returns>
-        void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations, IDictionary<long, ResourceWrapper> allResources);
+        void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations);
 
         /// <summary>
         /// Save all references of a resource to the database. Use the creator callback to save new instances discovered

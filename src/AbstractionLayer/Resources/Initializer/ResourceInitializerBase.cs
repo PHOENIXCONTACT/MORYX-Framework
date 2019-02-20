@@ -55,6 +55,6 @@ namespace Marvin.AbstractionLayer.Resources
         }
 
         /// <inheritdoc />
-        public abstract IReadOnlyList<Resource> Execute(IResourceCreator creator);
+        public abstract IReadOnlyList<Resource> Execute(IResourceGraph graph);
     }
 }
