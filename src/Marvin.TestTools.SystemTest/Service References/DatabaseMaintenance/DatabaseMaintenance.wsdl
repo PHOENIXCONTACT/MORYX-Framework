@@ -4,15 +4,28 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" />
-      <xsd:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance" />
+      <xsd:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" />
+      <xsd:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" />
+      <xsd:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Model" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="IDatabaseMaintenance_GetDataModels_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetDataModels" />
+  <wsdl:message name="IDatabaseMaintenance_GetAll_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAll" />
   </wsdl:message>
-  <wsdl:message name="IDatabaseMaintenance_GetDataModels_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetDataModelsResponse" />
+  <wsdl:message name="IDatabaseMaintenance_GetAll_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllResponse" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseMaintenance_EraseAll_InputMessage">
+    <wsdl:part name="parameters" element="tns:EraseAll" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseMaintenance_EraseAll_OutputMessage">
+    <wsdl:part name="parameters" element="tns:EraseAllResponse" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseMaintenance_GetModel_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetModel" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseMaintenance_GetModel_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetModelResponse" />
   </wsdl:message>
   <wsdl:message name="IDatabaseMaintenance_SetAllConfigs_InputMessage">
     <wsdl:part name="parameters" element="tns:SetAllConfigs" />
@@ -44,12 +57,6 @@
   <wsdl:message name="IDatabaseMaintenance_CreateDatabase_OutputMessage">
     <wsdl:part name="parameters" element="tns:CreateDatabaseResponse" />
   </wsdl:message>
-  <wsdl:message name="IDatabaseMaintenance_EraseAll_InputMessage">
-    <wsdl:part name="parameters" element="tns:EraseAll" />
-  </wsdl:message>
-  <wsdl:message name="IDatabaseMaintenance_EraseAll_OutputMessage">
-    <wsdl:part name="parameters" element="tns:EraseAllResponse" />
-  </wsdl:message>
   <wsdl:message name="IDatabaseMaintenance_EraseDatabase_InputMessage">
     <wsdl:part name="parameters" element="tns:EraseDatabase" />
   </wsdl:message>
@@ -68,6 +75,18 @@
   <wsdl:message name="IDatabaseMaintenance_RestoreDatabase_OutputMessage">
     <wsdl:part name="parameters" element="tns:RestoreDatabaseResponse" />
   </wsdl:message>
+  <wsdl:message name="IDatabaseMaintenance_MigrateDatabaseModel_InputMessage">
+    <wsdl:part name="parameters" element="tns:MigrateDatabaseModel" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseMaintenance_MigrateDatabaseModel_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MigrateDatabaseModelResponse" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseMaintenance_RollbackDatabase_InputMessage">
+    <wsdl:part name="parameters" element="tns:RollbackDatabase" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseMaintenance_RollbackDatabase_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RollbackDatabaseResponse" />
+  </wsdl:message>
   <wsdl:message name="IDatabaseMaintenance_ExecuteSetup_InputMessage">
     <wsdl:part name="parameters" element="tns:ExecuteSetup" />
   </wsdl:message>
@@ -81,9 +100,17 @@
     <wsdl:part name="parameters" element="tns:ExecuteScriptResponse" />
   </wsdl:message>
   <wsdl:portType name="IDatabaseMaintenance">
-    <wsdl:operation name="GetDataModels">
-      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/GetDataModels" message="tns:IDatabaseMaintenance_GetDataModels_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/GetDataModelsResponse" message="tns:IDatabaseMaintenance_GetDataModels_OutputMessage" />
+    <wsdl:operation name="GetAll">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/GetAll" message="tns:IDatabaseMaintenance_GetAll_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/GetAllResponse" message="tns:IDatabaseMaintenance_GetAll_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="EraseAll">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/EraseAll" message="tns:IDatabaseMaintenance_EraseAll_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/EraseAllResponse" message="tns:IDatabaseMaintenance_EraseAll_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetModel">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/GetModel" message="tns:IDatabaseMaintenance_GetModel_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/GetModelResponse" message="tns:IDatabaseMaintenance_GetModel_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="SetAllConfigs">
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/SetAllConfigs" message="tns:IDatabaseMaintenance_SetAllConfigs_InputMessage" />
@@ -105,10 +132,6 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/CreateDatabase" message="tns:IDatabaseMaintenance_CreateDatabase_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/CreateDatabaseResponse" message="tns:IDatabaseMaintenance_CreateDatabase_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="EraseAll">
-      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/EraseAll" message="tns:IDatabaseMaintenance_EraseAll_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/EraseAllResponse" message="tns:IDatabaseMaintenance_EraseAll_OutputMessage" />
-    </wsdl:operation>
     <wsdl:operation name="EraseDatabase">
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/EraseDatabase" message="tns:IDatabaseMaintenance_EraseDatabase_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/EraseDatabaseResponse" message="tns:IDatabaseMaintenance_EraseDatabase_OutputMessage" />
@@ -121,6 +144,14 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/RestoreDatabase" message="tns:IDatabaseMaintenance_RestoreDatabase_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/RestoreDatabaseResponse" message="tns:IDatabaseMaintenance_RestoreDatabase_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="MigrateDatabaseModel">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/MigrateDatabaseModel" message="tns:IDatabaseMaintenance_MigrateDatabaseModel_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/MigrateDatabaseModelResponse" message="tns:IDatabaseMaintenance_MigrateDatabaseModel_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RollbackDatabase">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/RollbackDatabase" message="tns:IDatabaseMaintenance_RollbackDatabase_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/RollbackDatabaseResponse" message="tns:IDatabaseMaintenance_RollbackDatabase_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="ExecuteSetup">
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseMaintenance/ExecuteSetup" message="tns:IDatabaseMaintenance_ExecuteSetup_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/ExecuteSetupResponse" message="tns:IDatabaseMaintenance_ExecuteSetup_OutputMessage" />
@@ -130,120 +161,5 @@
       <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseMaintenance/ExecuteScriptResponse" message="tns:IDatabaseMaintenance_ExecuteScript_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="BasicHttpBinding_IDatabaseMaintenance" type="tns:IDatabaseMaintenance">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetDataModels">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/GetDataModels" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetAllConfigs">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/SetAllConfigs" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetDatabaseConfig">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/SetDatabaseConfig" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="TestDatabaseConfig">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/TestDatabaseConfig" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="CreateAll">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/CreateAll" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="CreateDatabase">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/CreateDatabase" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="EraseAll">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/EraseAll" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="EraseDatabase">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/EraseDatabase" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="DumpDatabase">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/DumpDatabase" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="RestoreDatabase">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/RestoreDatabase" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ExecuteSetup">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/ExecuteSetup" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ExecuteScript">
-      <soap:operation soapAction="http://tempuri.org/IDatabaseMaintenance/ExecuteScript" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-  </wsdl:binding>
-  <wsdl:service name="DatabaseMaintenance">
-    <wsdl:port name="BasicHttpBinding_IDatabaseMaintenance" binding="tns:BasicHttpBinding_IDatabaseMaintenance">
-      <soap:address location="http://localhost/DatabaseMaintenance" />
-    </wsdl:port>
-  </wsdl:service>
+  <wsdl:service name="DatabaseMaintenance" />
 </wsdl:definitions>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Model" />
   <xs:complexType name="ArrayOfDataModel">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="DataModel" nillable="true" type="tns:DataModel" />
@@ -8,6 +9,8 @@
   <xs:element name="ArrayOfDataModel" nillable="true" type="tns:ArrayOfDataModel" />
   <xs:complexType name="DataModel">
     <xs:sequence>
+      <xs:element minOccurs="0" name="AppliedMigrations" nillable="true" type="tns:ArrayOfDbMigrationsModel" />
+      <xs:element minOccurs="0" name="AvailableMigrations" nillable="true" type="tns:ArrayOfDbMigrationsModel" />
       <xs:element minOccurs="0" name="Backups" nillable="true" type="tns:ArrayOfBackupModel" />
       <xs:element minOccurs="0" name="Config" nillable="true" type="tns:DatabaseConfigModel" />
       <xs:element minOccurs="0" name="Scripts" nillable="true" type="tns:ArrayOfScriptModel" />
@@ -16,6 +19,18 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="DataModel" nillable="true" type="tns:DataModel" />
+  <xs:complexType name="ArrayOfDbMigrationsModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DbMigrationsModel" nillable="true" type="tns:DbMigrationsModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDbMigrationsModel" nillable="true" type="tns:ArrayOfDbMigrationsModel" />
+  <xs:complexType name="DbMigrationsModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DbMigrationsModel" nillable="true" type="tns:DbMigrationsModel" />
   <xs:complexType name="ArrayOfBackupModel">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="BackupModel" nillable="true" type="tns:BackupModel" />
@@ -26,7 +41,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="CreationDate" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FileName" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="IsForTargetModel" type="xs:boolean" />
       <xs:element minOccurs="0" name="Size" type="xs:int" />
     </xs:sequence>
   </xs:complexType>
@@ -36,7 +50,6 @@
       <xs:element minOccurs="0" name="Database" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Port" type="xs:int" />
-      <xs:element minOccurs="0" name="Schema" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Server" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="User" nillable="true" type="xs:string" />
     </xs:sequence>
@@ -68,7 +81,35 @@
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="SetupData" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="SortOrder" type="xs:int" />
+      <xs:element minOccurs="0" name="SupportedFileRegex" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="SetupModel" nillable="true" type="tns:SetupModel" />
+  <xs:complexType name="TestConnectionResponse">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Model" minOccurs="0" name="Result" type="q1:TestConnectionResult" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TestConnectionResponse" nillable="true" type="tns:TestConnectionResponse" />
+  <xs:complexType name="RestoreDatabaseRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BackupFileName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Config" nillable="true" type="tns:DatabaseConfigModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RestoreDatabaseRequest" nillable="true" type="tns:RestoreDatabaseRequest" />
+  <xs:complexType name="ExecuteSetupRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Config" nillable="true" type="tns:DatabaseConfigModel" />
+      <xs:element minOccurs="0" name="Setup" nillable="true" type="tns:SetupModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ExecuteSetupRequest" nillable="true" type="tns:ExecuteSetupRequest" />
+  <xs:complexType name="ExecuteScriptRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Config" nillable="true" type="tns:DatabaseConfigModel" />
+      <xs:element minOccurs="0" name="Script" nillable="true" type="tns:ScriptModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ExecuteScriptRequest" nillable="true" type="tns:ExecuteScriptRequest" />
 </xs:schema>

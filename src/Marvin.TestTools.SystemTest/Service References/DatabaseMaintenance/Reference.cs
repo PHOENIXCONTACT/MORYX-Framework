@@ -16,12 +16,18 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DataModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
-        "seMaintenance.Wcf")]
+        "ses")]
     [System.SerializableAttribute()]
     public partial class DataModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DbMigrationsModel> AppliedMigrationsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DbMigrationsModel> AvailableMigrationsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.BackupModel> BackupsField;
@@ -45,6 +51,32 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DbMigrationsModel> AppliedMigrations {
+            get {
+                return this.AppliedMigrationsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AppliedMigrationsField, value) != true)) {
+                    this.AppliedMigrationsField = value;
+                    this.RaisePropertyChanged("AppliedMigrations");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DbMigrationsModel> AvailableMigrations {
+            get {
+                return this.AvailableMigrationsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AvailableMigrationsField, value) != true)) {
+                    this.AvailableMigrationsField = value;
+                    this.RaisePropertyChanged("AvailableMigrations");
+                }
             }
         }
         
@@ -126,7 +158,7 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DatabaseConfigModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
-        "seMaintenance.Wcf")]
+        "ses")]
     [System.SerializableAttribute()]
     public partial class DatabaseConfigModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -141,9 +173,6 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int PortField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string SchemaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ServerField;
@@ -201,19 +230,6 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Schema {
-            get {
-                return this.SchemaField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.SchemaField, value) != true)) {
-                    this.SchemaField = value;
-                    this.RaisePropertyChanged("Schema");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Server {
             get {
                 return this.ServerField;
@@ -251,8 +267,54 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DbMigrationsModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
+        "ses")]
+    [System.SerializableAttribute()]
+    public partial class DbMigrationsModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="BackupModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
-        "seMaintenance.Wcf")]
+        "ses")]
     [System.SerializableAttribute()]
     public partial class BackupModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -264,9 +326,6 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string FileNameField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool IsForTargetModelField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int SizeField;
@@ -308,19 +367,6 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool IsForTargetModel {
-            get {
-                return this.IsForTargetModelField;
-            }
-            set {
-                if ((this.IsForTargetModelField.Equals(value) != true)) {
-                    this.IsForTargetModelField = value;
-                    this.RaisePropertyChanged("IsForTargetModel");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
         public int Size {
             get {
                 return this.SizeField;
@@ -346,7 +392,7 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ScriptModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
-        "seMaintenance.Wcf")]
+        "ses")]
     [System.SerializableAttribute()]
     public partial class ScriptModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -408,7 +454,7 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="SetupModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
-        "seMaintenance.Wcf")]
+        "ses")]
     [System.SerializableAttribute()]
     public partial class SetupModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -429,6 +475,9 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int SortOrderField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SupportedFileRegexField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -505,6 +554,19 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
             }
         }
         
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SupportedFileRegex {
+            get {
+                return this.SupportedFileRegexField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SupportedFileRegexField, value) != true)) {
+                    this.SupportedFileRegexField = value;
+                    this.RaisePropertyChanged("SupportedFileRegex");
+                }
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -517,19 +579,21 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="DumpResult", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
-        "seMaintenance")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="InvocationResponse", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins")]
     [System.SerializableAttribute()]
-    public partial class DumpResult : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+    public partial class InvocationResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DumpNameField;
+        private string ErrorMessageField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MessageField;
+        private string ExceptionTypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool SuccessField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -542,27 +606,272 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string DumpName {
+        public string ErrorMessage {
             get {
-                return this.DumpNameField;
+                return this.ErrorMessageField;
             }
             set {
-                if ((object.ReferenceEquals(this.DumpNameField, value) != true)) {
-                    this.DumpNameField = value;
-                    this.RaisePropertyChanged("DumpName");
+                if ((object.ReferenceEquals(this.ErrorMessageField, value) != true)) {
+                    this.ErrorMessageField = value;
+                    this.RaisePropertyChanged("ErrorMessage");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Message {
+        public string ExceptionType {
             get {
-                return this.MessageField;
+                return this.ExceptionTypeField;
             }
             set {
-                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
-                    this.MessageField = value;
-                    this.RaisePropertyChanged("Message");
+                if ((object.ReferenceEquals(this.ExceptionTypeField, value) != true)) {
+                    this.ExceptionTypeField = value;
+                    this.RaisePropertyChanged("ExceptionType");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Success {
+            get {
+                return this.SuccessField;
+            }
+            set {
+                if ((this.SuccessField.Equals(value) != true)) {
+                    this.SuccessField = value;
+                    this.RaisePropertyChanged("Success");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TestConnectionResponse", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
+        "ses")]
+    [System.SerializableAttribute()]
+    public partial class TestConnectionResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.Model.TestConnectionResult ResultField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.Model.TestConnectionResult Result {
+            get {
+                return this.ResultField;
+            }
+            set {
+                if ((this.ResultField.Equals(value) != true)) {
+                    this.ResultField = value;
+                    this.RaisePropertyChanged("Result");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="RestoreDatabaseRequest", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
+        "ses")]
+    [System.SerializableAttribute()]
+    public partial class RestoreDatabaseRequest : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string BackupFileNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel ConfigField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string BackupFileName {
+            get {
+                return this.BackupFileNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.BackupFileNameField, value) != true)) {
+                    this.BackupFileNameField = value;
+                    this.RaisePropertyChanged("BackupFileName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel Config {
+            get {
+                return this.ConfigField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ConfigField, value) != true)) {
+                    this.ConfigField = value;
+                    this.RaisePropertyChanged("Config");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ExecuteSetupRequest", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
+        "ses")]
+    [System.SerializableAttribute()]
+    public partial class ExecuteSetupRequest : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel ConfigField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.DatabaseMaintenance.SetupModel SetupField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel Config {
+            get {
+                return this.ConfigField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ConfigField, value) != true)) {
+                    this.ConfigField = value;
+                    this.RaisePropertyChanged("Config");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.SetupModel Setup {
+            get {
+                return this.SetupField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SetupField, value) != true)) {
+                    this.SetupField = value;
+                    this.RaisePropertyChanged("Setup");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ExecuteScriptRequest", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databa" +
+        "ses")]
+    [System.SerializableAttribute()]
+    public partial class ExecuteScriptRequest : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel ConfigField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.DatabaseMaintenance.ScriptModel ScriptField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel Config {
+            get {
+                return this.ConfigField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ConfigField, value) != true)) {
+                    this.ConfigField = value;
+                    this.RaisePropertyChanged("Config");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.ScriptModel Script {
+            get {
+                return this.ScriptField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ScriptField, value) != true)) {
+                    this.ScriptField = value;
+                    this.RaisePropertyChanged("Script");
                 }
             }
         }
@@ -581,11 +890,23 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="DatabaseMaintenance.IDatabaseMaintenance")]
     public interface IDatabaseMaintenance {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/GetDataModels", ReplyAction="http://tempuri.org/IDatabaseMaintenance/GetDataModelsResponse")]
-        System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel> GetDataModels();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/GetAll", ReplyAction="http://tempuri.org/IDatabaseMaintenance/GetAllResponse")]
+        System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel> GetAll();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/GetDataModels", ReplyAction="http://tempuri.org/IDatabaseMaintenance/GetDataModelsResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel>> GetDataModelsAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/GetAll", ReplyAction="http://tempuri.org/IDatabaseMaintenance/GetAllResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel>> GetAllAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/EraseAll", ReplyAction="http://tempuri.org/IDatabaseMaintenance/EraseAllResponse")]
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse EraseAll();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/EraseAll", ReplyAction="http://tempuri.org/IDatabaseMaintenance/EraseAllResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> EraseAllAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/GetModel", ReplyAction="http://tempuri.org/IDatabaseMaintenance/GetModelResponse")]
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel GetModel(string targetModel);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/GetModel", ReplyAction="http://tempuri.org/IDatabaseMaintenance/GetModelResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel> GetModelAsync(string targetModel);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/SetAllConfigs", ReplyAction="http://tempuri.org/IDatabaseMaintenance/SetAllConfigsResponse")]
         void SetAllConfigs(Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
@@ -600,58 +921,64 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
         System.Threading.Tasks.Task SetDatabaseConfigAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/TestDatabaseConfig", ReplyAction="http://tempuri.org/IDatabaseMaintenance/TestDatabaseConfigResponse")]
-        bool TestDatabaseConfig(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.TestConnectionResponse TestDatabaseConfig(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/TestDatabaseConfig", ReplyAction="http://tempuri.org/IDatabaseMaintenance/TestDatabaseConfigResponse")]
-        System.Threading.Tasks.Task<bool> TestDatabaseConfigAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.TestConnectionResponse> TestDatabaseConfigAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/CreateAll", ReplyAction="http://tempuri.org/IDatabaseMaintenance/CreateAllResponse")]
-        string CreateAll();
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse CreateAll();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/CreateAll", ReplyAction="http://tempuri.org/IDatabaseMaintenance/CreateAllResponse")]
-        System.Threading.Tasks.Task<string> CreateAllAsync();
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> CreateAllAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/CreateDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/CreateDatabaseResponse")]
-        string CreateDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse CreateDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/CreateDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/CreateDatabaseResponse")]
-        System.Threading.Tasks.Task<string> CreateDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/EraseAll", ReplyAction="http://tempuri.org/IDatabaseMaintenance/EraseAllResponse")]
-        string EraseAll();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/EraseAll", ReplyAction="http://tempuri.org/IDatabaseMaintenance/EraseAllResponse")]
-        System.Threading.Tasks.Task<string> EraseAllAsync();
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> CreateDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/EraseDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/EraseDatabaseResponse")]
-        string EraseDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse EraseDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/EraseDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/EraseDatabaseResponse")]
-        System.Threading.Tasks.Task<string> EraseDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> EraseDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/DumpDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/DumpDatabaseResponse")]
-        Marvin.TestTools.SystemTest.DatabaseMaintenance.DumpResult DumpDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse DumpDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/DumpDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/DumpDatabaseResponse")]
-        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.DumpResult> DumpDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> DumpDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/RestoreDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/RestoreDatabaseResponse")]
-        string RestoreDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config, Marvin.TestTools.SystemTest.DatabaseMaintenance.BackupModel backupModel);
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse RestoreDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.RestoreDatabaseRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/RestoreDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/RestoreDatabaseResponse")]
-        System.Threading.Tasks.Task<string> RestoreDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config, Marvin.TestTools.SystemTest.DatabaseMaintenance.BackupModel backupModel);
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> RestoreDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.RestoreDatabaseRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/MigrateDatabaseModel", ReplyAction="http://tempuri.org/IDatabaseMaintenance/MigrateDatabaseModelResponse")]
+        Marvin.Model.DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/MigrateDatabaseModel", ReplyAction="http://tempuri.org/IDatabaseMaintenance/MigrateDatabaseModelResponse")]
+        System.Threading.Tasks.Task<Marvin.Model.DatabaseUpdateSummary> MigrateDatabaseModelAsync(string targetModel, string migrationName, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/RollbackDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/RollbackDatabaseResponse")]
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse RollbackDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/RollbackDatabase", ReplyAction="http://tempuri.org/IDatabaseMaintenance/RollbackDatabaseResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> RollbackDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/ExecuteSetup", ReplyAction="http://tempuri.org/IDatabaseMaintenance/ExecuteSetupResponse")]
-        string ExecuteSetup(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config, Marvin.TestTools.SystemTest.DatabaseMaintenance.SetupModel setup);
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse ExecuteSetup(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.ExecuteSetupRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/ExecuteSetup", ReplyAction="http://tempuri.org/IDatabaseMaintenance/ExecuteSetupResponse")]
-        System.Threading.Tasks.Task<string> ExecuteSetupAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config, Marvin.TestTools.SystemTest.DatabaseMaintenance.SetupModel setup);
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> ExecuteSetupAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.ExecuteSetupRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/ExecuteScript", ReplyAction="http://tempuri.org/IDatabaseMaintenance/ExecuteScriptResponse")]
-        string ExecuteScript(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel model, Marvin.TestTools.SystemTest.DatabaseMaintenance.ScriptModel script);
+        Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse ExecuteScript(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.ExecuteScriptRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseMaintenance/ExecuteScript", ReplyAction="http://tempuri.org/IDatabaseMaintenance/ExecuteScriptResponse")]
-        System.Threading.Tasks.Task<string> ExecuteScriptAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel model, Marvin.TestTools.SystemTest.DatabaseMaintenance.ScriptModel script);
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> ExecuteScriptAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.ExecuteScriptRequest request);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -681,12 +1008,28 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
                 base(binding, remoteAddress) {
         }
         
-        public System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel> GetDataModels() {
-            return base.Channel.GetDataModels();
+        public System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel> GetAll() {
+            return base.Channel.GetAll();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel>> GetDataModelsAsync() {
-            return base.Channel.GetDataModelsAsync();
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel>> GetAllAsync() {
+            return base.Channel.GetAllAsync();
+        }
+        
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse EraseAll() {
+            return base.Channel.EraseAll();
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> EraseAllAsync() {
+            return base.Channel.EraseAllAsync();
+        }
+        
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel GetModel(string targetModel) {
+            return base.Channel.GetModel(targetModel);
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel> GetModelAsync(string targetModel) {
+            return base.Channel.GetModelAsync(targetModel);
         }
         
         public void SetAllConfigs(Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
@@ -705,76 +1048,84 @@ namespace Marvin.TestTools.SystemTest.DatabaseMaintenance {
             return base.Channel.SetDatabaseConfigAsync(targetModel, config);
         }
         
-        public bool TestDatabaseConfig(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.TestConnectionResponse TestDatabaseConfig(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
             return base.Channel.TestDatabaseConfig(targetModel, config);
         }
         
-        public System.Threading.Tasks.Task<bool> TestDatabaseConfigAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.TestConnectionResponse> TestDatabaseConfigAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
             return base.Channel.TestDatabaseConfigAsync(targetModel, config);
         }
         
-        public string CreateAll() {
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse CreateAll() {
             return base.Channel.CreateAll();
         }
         
-        public System.Threading.Tasks.Task<string> CreateAllAsync() {
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> CreateAllAsync() {
             return base.Channel.CreateAllAsync();
         }
         
-        public string CreateDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse CreateDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
             return base.Channel.CreateDatabase(targetModel, config);
         }
         
-        public System.Threading.Tasks.Task<string> CreateDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> CreateDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
             return base.Channel.CreateDatabaseAsync(targetModel, config);
         }
         
-        public string EraseAll() {
-            return base.Channel.EraseAll();
-        }
-        
-        public System.Threading.Tasks.Task<string> EraseAllAsync() {
-            return base.Channel.EraseAllAsync();
-        }
-        
-        public string EraseDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse EraseDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
             return base.Channel.EraseDatabase(targetModel, config);
         }
         
-        public System.Threading.Tasks.Task<string> EraseDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> EraseDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
             return base.Channel.EraseDatabaseAsync(targetModel, config);
         }
         
-        public Marvin.TestTools.SystemTest.DatabaseMaintenance.DumpResult DumpDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse DumpDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
             return base.Channel.DumpDatabase(targetModel, config);
         }
         
-        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.DumpResult> DumpDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> DumpDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
             return base.Channel.DumpDatabaseAsync(targetModel, config);
         }
         
-        public string RestoreDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config, Marvin.TestTools.SystemTest.DatabaseMaintenance.BackupModel backupModel) {
-            return base.Channel.RestoreDatabase(targetModel, config, backupModel);
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse RestoreDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.RestoreDatabaseRequest request) {
+            return base.Channel.RestoreDatabase(targetModel, request);
         }
         
-        public System.Threading.Tasks.Task<string> RestoreDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config, Marvin.TestTools.SystemTest.DatabaseMaintenance.BackupModel backupModel) {
-            return base.Channel.RestoreDatabaseAsync(targetModel, config, backupModel);
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> RestoreDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.RestoreDatabaseRequest request) {
+            return base.Channel.RestoreDatabaseAsync(targetModel, request);
         }
         
-        public string ExecuteSetup(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config, Marvin.TestTools.SystemTest.DatabaseMaintenance.SetupModel setup) {
-            return base.Channel.ExecuteSetup(targetModel, config, setup);
+        public Marvin.Model.DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+            return base.Channel.MigrateDatabaseModel(targetModel, migrationName, config);
         }
         
-        public System.Threading.Tasks.Task<string> ExecuteSetupAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config, Marvin.TestTools.SystemTest.DatabaseMaintenance.SetupModel setup) {
-            return base.Channel.ExecuteSetupAsync(targetModel, config, setup);
+        public System.Threading.Tasks.Task<Marvin.Model.DatabaseUpdateSummary> MigrateDatabaseModelAsync(string targetModel, string migrationName, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+            return base.Channel.MigrateDatabaseModelAsync(targetModel, migrationName, config);
         }
         
-        public string ExecuteScript(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel model, Marvin.TestTools.SystemTest.DatabaseMaintenance.ScriptModel script) {
-            return base.Channel.ExecuteScript(targetModel, model, script);
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse RollbackDatabase(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+            return base.Channel.RollbackDatabase(targetModel, config);
         }
         
-        public System.Threading.Tasks.Task<string> ExecuteScriptAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel model, Marvin.TestTools.SystemTest.DatabaseMaintenance.ScriptModel script) {
-            return base.Channel.ExecuteScriptAsync(targetModel, model, script);
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> RollbackDatabaseAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.DatabaseConfigModel config) {
+            return base.Channel.RollbackDatabaseAsync(targetModel, config);
+        }
+        
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse ExecuteSetup(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.ExecuteSetupRequest request) {
+            return base.Channel.ExecuteSetup(targetModel, request);
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> ExecuteSetupAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.ExecuteSetupRequest request) {
+            return base.Channel.ExecuteSetupAsync(targetModel, request);
+        }
+        
+        public Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse ExecuteScript(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.ExecuteScriptRequest request) {
+            return base.Channel.ExecuteScript(targetModel, request);
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse> ExecuteScriptAsync(string targetModel, Marvin.TestTools.SystemTest.DatabaseMaintenance.ExecuteScriptRequest request) {
+            return base.Channel.ExecuteScriptAsync(targetModel, request);
         }
     }
 }

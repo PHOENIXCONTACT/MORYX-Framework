@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Model" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Model" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="TestConnectionResult">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ConfigurationError" />
+      <xs:enumeration value="ConnectionError" />
+      <xs:enumeration value="ConnectionOkDbDoesNotExist" />
+      <xs:enumeration value="Success" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="TestConnectionResult" nillable="true" type="tns:TestConnectionResult" />
+  <xs:complexType name="DatabaseUpdateSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExecutedUpdates" nillable="true" type="tns:ArrayOfDatabaseUpdate" />
+      <xs:element minOccurs="0" name="WasUpdated" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DatabaseUpdateSummary" nillable="true" type="tns:DatabaseUpdateSummary" />
+  <xs:complexType name="ArrayOfDatabaseUpdate">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DatabaseUpdate" nillable="true" type="tns:DatabaseUpdate" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDatabaseUpdate" nillable="true" type="tns:ArrayOfDatabaseUpdate" />
+  <xs:complexType name="DatabaseUpdate">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="From" type="xs:int" />
+      <xs:element minOccurs="0" name="To" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DatabaseUpdate" nillable="true" type="tns:DatabaseUpdate" />
+</xs:schema>

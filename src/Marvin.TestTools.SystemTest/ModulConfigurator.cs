@@ -61,7 +61,7 @@ namespace Marvin.TestTools.SystemTest
             if (configIndex == null)
             {
                 // Search the trunk Entry for a matching entry
-                foreach (Entry Entry in serviceConfig.Entries)
+                foreach (Entry Entry in serviceConfig.Root.SubEntries)
                 {
                     // does the displaying value matches to the first entry of the path?
                     if (Entry.Key.Identifier == configName)
@@ -75,7 +75,7 @@ namespace Marvin.TestTools.SystemTest
             {
                 var currentIndex = -1;
                 // Search the trunk Entry for a matching entry
-                foreach (var Entry in serviceConfig.Entries)
+                foreach (var Entry in serviceConfig.Root.SubEntries)
                 {
                     // does the displaying value matches to the first entry of the path?
                     if (Entry.Key.Identifier == configName)
@@ -134,113 +134,6 @@ namespace Marvin.TestTools.SystemTest
             index++;
             // step throught the next steps of the configuration.
             return StepThroughEntryModel(foundEntry, configPath, ref index);
-        }
-
-
-        /// <summary>
-        /// Adds a configuration entry to a server moduls configuration.
-        /// </summary>
-        /// <param name="serviceConfig">The 'trunk' configuration of the server modul.</param>
-        /// <param name="pathOfConfigValues">The path to the configuration value; splited by '\\'</param>
-        /// <param name="configToAdd">The name of the configuration to add.</param>
-        /// <param name="EntryIndex">Index of the added configuration entry.</param>
-        /// <returns>
-        /// The changed 'trunk' configuration
-        /// </returns>
-        public Config AddConfiguration(Config serviceConfig, string pathOfConfigValues, string configToAdd, out int EntryIndex)
-        {
-            return AddOrChangeConfigurationType(serviceConfig, pathOfConfigValues, configToAdd, out EntryIndex);
-        }
-
-        /// <summary>
-        /// Adds a configuration entry to a server moduls configuration.
-        /// </summary>
-        /// <param name="serviceConfig">The 'trunk' configuration of the server modul.</param>
-        /// <param name="itemPath">The path to the configuration value; splited by '\\'</param>
-        /// <param name="newConfigType">The name of the configuration to add.</param>
-        /// <param name="EntryIndex">Index of the added configuration entry (for collection entrys).</param>
-        /// <returns>
-        /// The changed 'trunk' configuration
-        /// </returns>
-        public Config AddOrChangeConfigurationType(Config serviceConfig, string itemPath, string newConfigType, out int EntryIndex)
-        {
-            EntryIndex = -1;
- 
-            // find the config entry
-            Entry Entry = BrowseToConfig(serviceConfig, itemPath);
-
-            // check if there are posible values listed and if the given name is listed.
-            if (Entry.Value.Possible != null)
-                if (!Entry.Value.Possible.Contains(newConfigType))
-                    Assert.Fail("ConfigType '{0}' is not in the list of posible values!", newConfigType);
-
-            // Request a replacement for the current entry
-            var requestedConfig = _hogController.RequestEntry(serviceConfig.Module, Entry, newConfigType);
-
-            // check if it is a collection or a singel object
-            if (Entry.Value.Type == EntryValueType.Collection)
-            {
-                Entry.SubEntries.Add(requestedConfig);
-                // Get the index of the added item to identify it later.
-                EntryIndex = Entry.SubEntries.IndexOf(requestedConfig);
-            }
-            else
-            {
-                // Get the real parent config object 
-                var pathSplit = itemPath.Split('\\');
-                Entry parentEntry = null;
-
-                if (pathSplit.Length > 1)
-                {
-                    // Go one level higher
-                    string parentPath = Path.Combine(pathSplit.Take(pathSplit.Length - 1).ToArray());
-                    parentEntry = BrowseToConfig(serviceConfig, parentPath);
-                }
-
-                // Use the real parent or the base config as parent
-                if (parentEntry == null)
-                {
-                    // Remove the old entry and add the new generated item.
-                    serviceConfig.Entries.Remove(Entry);
-                    serviceConfig.Entries.Add(requestedConfig);
-                }
-                else
-                {
-                    // Remove the old entry and add the new generated item.
-                    parentEntry.SubEntries.Remove(Entry);
-                    parentEntry.SubEntries.Add(requestedConfig);
-                }
-            }
-
-            // save the changes
-            _hogController.SetConfig(serviceConfig);
-            return _hogController.GetConfig(serviceConfig.Module);       
-        }
-
-
-        /// <summary>
-        /// Changes the configuration.
-        /// </summary>
-        /// <param name="serviceConfig">The 'trunk' servermodul configuration.</param>
-        /// <param name="pathOfConfigValue">The path to the configuration value; splited by '\\'</param>
-        /// <param name="value">The new value</param>
-        /// <returns>Server modul configuration with changed value (in a subentry)</returns>
-        public Config ChangeConfig(Config serviceConfig, string pathOfConfigValue, string value)
-        {
-            // find the config entry
-            Entry Entry = BrowseToConfig(serviceConfig, pathOfConfigValue);
-
-            // check if there are posible values and if the given name is listed.
-            if (Entry.Value.Possible != null)
-                if (!Entry.Value.Possible.Contains(value))
-                    Assert.Fail("ConfigValue '{0}' is not in the list of posible values!", value);
-
-            // change the config value
-            Entry.Value.Current = value;
-
-            // save the changes
-            _hogController.SetConfig(serviceConfig);
-            return _hogController.GetConfig(serviceConfig.Module);
         }
     }
 }

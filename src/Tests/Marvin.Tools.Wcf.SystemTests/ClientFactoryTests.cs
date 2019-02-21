@@ -67,8 +67,6 @@ namespace Marvin.Tools.Wcf.SystemTests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            HogHelper.CopyTestModules();
-
             _hogController = new HeartOfGoldController
             {
                 RuntimeDir = HogHelper.RuntimeDir,
@@ -109,10 +107,6 @@ namespace Marvin.Tools.Wcf.SystemTests
 
                     Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
                 }
-
-#if ! DEBUG
-                HogHelper.DeleteTestModules();
-#endif
             }
         }
 
@@ -611,7 +605,7 @@ namespace Marvin.Tools.Wcf.SystemTests
         {
             Config config = _hogController.GetConfig("DependentTestModule");
 
-            Entry connectorConfig = config.Entries.FirstOrDefault(e => e.Key.Identifier == "SimpleHelloWorldWcfConnector");
+            Entry connectorConfig = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "SimpleHelloWorldWcfConnector");
             Assert.NotNull(connectorConfig, "Can't get config entry 'SimpleHelloWorldWcfConnector'");
 
             Entry hostConfig = connectorConfig.SubEntries.FirstOrDefault(e => e.Key.Identifier == "ConnectorHost");
@@ -624,7 +618,7 @@ namespace Marvin.Tools.Wcf.SystemTests
             {
                 bindingType.Value.Current = binding.ToString();
 
-                _hogController.SetConfig(config);
+                _hogController.SetConfig(config, "DependentTestModule");
 
                 _hogController.StopService("DependentTestModule");
                 bool result = _hogController.WaitForService("DependentTestModule", ServerModuleState.Stopped, 5);

@@ -4,24 +4,36 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" />
-      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" />
-      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Modules.Server" />
+      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" />
+      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" />
+      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Modules" />
       <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
       <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd6" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
+  <wsdl:message name="IModuleMaintenance_GetDependencyEvaluation_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDependencyEvaluation" />
+  </wsdl:message>
+  <wsdl:message name="IModuleMaintenance_GetDependencyEvaluation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDependencyEvaluationResponse" />
+  </wsdl:message>
   <wsdl:message name="IModuleMaintenance_GetAll_InputMessage">
     <wsdl:part name="parameters" element="tns:GetAll" />
   </wsdl:message>
   <wsdl:message name="IModuleMaintenance_GetAll_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetAllResponse" />
   </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_GetDependencyEvaluation_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetDependencyEvaluation" />
+  <wsdl:message name="IModuleMaintenance_HealthState_InputMessage">
+    <wsdl:part name="parameters" element="tns:HealthState" />
   </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_GetDependencyEvaluation_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetDependencyEvaluationResponse" />
+  <wsdl:message name="IModuleMaintenance_HealthState_OutputMessage">
+    <wsdl:part name="parameters" element="tns:HealthStateResponse" />
+  </wsdl:message>
+  <wsdl:message name="IModuleMaintenance_Notifications_InputMessage">
+    <wsdl:part name="parameters" element="tns:Notifications" />
+  </wsdl:message>
+  <wsdl:message name="IModuleMaintenance_Notifications_OutputMessage">
+    <wsdl:part name="parameters" element="tns:NotificationsResponse" />
   </wsdl:message>
   <wsdl:message name="IModuleMaintenance_Start_InputMessage">
     <wsdl:part name="parameters" element="tns:Start" />
@@ -41,6 +53,12 @@
   <wsdl:message name="IModuleMaintenance_Reincarnate_OutputMessage">
     <wsdl:part name="parameters" element="tns:ReincarnateResponse" />
   </wsdl:message>
+  <wsdl:message name="IModuleMaintenance_Update_InputMessage">
+    <wsdl:part name="parameters" element="tns:Update" />
+  </wsdl:message>
+  <wsdl:message name="IModuleMaintenance_Update_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateResponse" />
+  </wsdl:message>
   <wsdl:message name="IModuleMaintenance_ConfirmWarning_InputMessage">
     <wsdl:part name="parameters" element="tns:ConfirmWarning" />
   </wsdl:message>
@@ -59,38 +77,34 @@
   <wsdl:message name="IModuleMaintenance_SetConfig_OutputMessage">
     <wsdl:part name="parameters" element="tns:SetConfigResponse" />
   </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_SetStartBehaviour_InputMessage">
-    <wsdl:part name="parameters" element="tns:SetStartBehaviour" />
+  <wsdl:message name="IModuleMaintenance_GetMethods_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMethods" />
   </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_SetStartBehaviour_OutputMessage">
-    <wsdl:part name="parameters" element="tns:SetStartBehaviourResponse" />
+  <wsdl:message name="IModuleMaintenance_GetMethods_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMethodsResponse" />
   </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_SetFailureBehaviour_InputMessage">
-    <wsdl:part name="parameters" element="tns:SetFailureBehaviour" />
+  <wsdl:message name="IModuleMaintenance_InvokeMethod_InputMessage">
+    <wsdl:part name="parameters" element="tns:InvokeMethod" />
   </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_SetFailureBehaviour_OutputMessage">
-    <wsdl:part name="parameters" element="tns:SetFailureBehaviourResponse" />
-  </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_RequestEntry_InputMessage">
-    <wsdl:part name="parameters" element="tns:RequestEntry" />
-  </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_RequestEntry_OutputMessage">
-    <wsdl:part name="parameters" element="tns:RequestEntryResponse" />
-  </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_ReplaceEntry_InputMessage">
-    <wsdl:part name="parameters" element="tns:ReplaceEntry" />
-  </wsdl:message>
-  <wsdl:message name="IModuleMaintenance_ReplaceEntry_OutputMessage">
-    <wsdl:part name="parameters" element="tns:ReplaceEntryResponse" />
+  <wsdl:message name="IModuleMaintenance_InvokeMethod_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InvokeMethodResponse" />
   </wsdl:message>
   <wsdl:portType name="IModuleMaintenance">
+    <wsdl:operation name="GetDependencyEvaluation">
+      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluation" message="tns:IModuleMaintenance_GetDependencyEvaluation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluationResponse" message="tns:IModuleMaintenance_GetDependencyEvaluation_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="GetAll">
       <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/GetAll" message="tns:IModuleMaintenance_GetAll_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/GetAllResponse" message="tns:IModuleMaintenance_GetAll_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetDependencyEvaluation">
-      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluation" message="tns:IModuleMaintenance_GetDependencyEvaluation_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluationResponse" message="tns:IModuleMaintenance_GetDependencyEvaluation_OutputMessage" />
+    <wsdl:operation name="HealthState">
+      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/HealthState" message="tns:IModuleMaintenance_HealthState_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/HealthStateResponse" message="tns:IModuleMaintenance_HealthState_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Notifications">
+      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/Notifications" message="tns:IModuleMaintenance_Notifications_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/NotificationsResponse" message="tns:IModuleMaintenance_Notifications_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="Start">
       <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/Start" message="tns:IModuleMaintenance_Start_InputMessage" />
@@ -104,6 +118,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/Reincarnate" message="tns:IModuleMaintenance_Reincarnate_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/ReincarnateResponse" message="tns:IModuleMaintenance_Reincarnate_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="Update">
+      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/Update" message="tns:IModuleMaintenance_Update_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/UpdateResponse" message="tns:IModuleMaintenance_Update_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="ConfirmWarning">
       <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/ConfirmWarning" message="tns:IModuleMaintenance_ConfirmWarning_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/ConfirmWarningResponse" message="tns:IModuleMaintenance_ConfirmWarning_OutputMessage" />
@@ -116,137 +134,14 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/SetConfig" message="tns:IModuleMaintenance_SetConfig_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/SetConfigResponse" message="tns:IModuleMaintenance_SetConfig_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="SetStartBehaviour">
-      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/SetStartBehaviour" message="tns:IModuleMaintenance_SetStartBehaviour_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/SetStartBehaviourResponse" message="tns:IModuleMaintenance_SetStartBehaviour_OutputMessage" />
+    <wsdl:operation name="GetMethods">
+      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/GetMethods" message="tns:IModuleMaintenance_GetMethods_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/GetMethodsResponse" message="tns:IModuleMaintenance_GetMethods_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="SetFailureBehaviour">
-      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/SetFailureBehaviour" message="tns:IModuleMaintenance_SetFailureBehaviour_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/SetFailureBehaviourResponse" message="tns:IModuleMaintenance_SetFailureBehaviour_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="RequestEntry">
-      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/RequestEntry" message="tns:IModuleMaintenance_RequestEntry_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/RequestEntryResponse" message="tns:IModuleMaintenance_RequestEntry_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="ReplaceEntry">
-      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/ReplaceEntry" message="tns:IModuleMaintenance_ReplaceEntry_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/ReplaceEntryResponse" message="tns:IModuleMaintenance_ReplaceEntry_OutputMessage" />
+    <wsdl:operation name="InvokeMethod">
+      <wsdl:input wsaw:Action="http://tempuri.org/IModuleMaintenance/InvokeMethod" message="tns:IModuleMaintenance_InvokeMethod_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IModuleMaintenance/InvokeMethodResponse" message="tns:IModuleMaintenance_InvokeMethod_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="BasicHttpBinding_IModuleMaintenance" type="tns:IModuleMaintenance">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetAll">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/GetAll" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetDependencyEvaluation">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluation" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="Start">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/Start" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="Stop">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/Stop" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="Reincarnate">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/Reincarnate" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ConfirmWarning">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/ConfirmWarning" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetConfig">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/GetConfig" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetConfig">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/SetConfig" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetStartBehaviour">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/SetStartBehaviour" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetFailureBehaviour">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/SetFailureBehaviour" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="RequestEntry">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/RequestEntry" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ReplaceEntry">
-      <soap:operation soapAction="http://tempuri.org/IModuleMaintenance/ReplaceEntry" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-  </wsdl:binding>
-  <wsdl:service name="ModuleMaintenance">
-    <wsdl:port name="BasicHttpBinding_IModuleMaintenance" binding="tns:BasicHttpBinding_IModuleMaintenance">
-      <soap:address location="http://localhost/ModuleMaintenance" />
-    </wsdl:port>
-  </wsdl:service>
+  <wsdl:service name="ModuleMaintenance" />
 </wsdl:definitions>

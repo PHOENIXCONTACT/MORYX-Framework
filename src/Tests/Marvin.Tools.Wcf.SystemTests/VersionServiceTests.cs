@@ -21,8 +21,6 @@ namespace Marvin.Tools.Wcf.SystemTests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            HogHelper.CopyTestModules();
-
             _hogController = new HeartOfGoldController
             {
                 RuntimeDir = HogHelper.RuntimeDir,
@@ -76,10 +74,6 @@ namespace Marvin.Tools.Wcf.SystemTests
 
                     Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
                 }
-
-#if ! DEBUG
-                HogHelper.DeleteTestModules();
-#endif
             }
         }
 

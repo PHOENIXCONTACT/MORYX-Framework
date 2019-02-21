@@ -8,9 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using Marvin.Runtime;
-using Marvin.Runtime.Modules;
-
 namespace Marvin.TestTools.SystemTest.Maintenance {
     using System.Runtime.Serialization;
     using System;
@@ -18,432 +15,8 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ServerModuleModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
-        "Maintenance.Wcf")]
-    [System.SerializableAttribute()]
-    public partial class ServerModuleModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Maintenance.AssemblyModel AssemblyField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Collections.Generic.List<Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel> DependenciesField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Maintenance.FailureBehaviour FailureBehaviourField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private ServerModuleState HealthStateField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NameField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Collections.Generic.List<Marvin.TestTools.SystemTest.Maintenance.NotificationModel> NotificationsField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Maintenance.ModuleStartBehaviour StartBehaviourField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Maintenance.AssemblyModel Assembly {
-            get {
-                return this.AssemblyField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.AssemblyField, value) != true)) {
-                    this.AssemblyField = value;
-                    this.RaisePropertyChanged("Assembly");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.List<Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel> Dependencies {
-            get {
-                return this.DependenciesField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DependenciesField, value) != true)) {
-                    this.DependenciesField = value;
-                    this.RaisePropertyChanged("Dependencies");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Maintenance.FailureBehaviour FailureBehaviour {
-            get {
-                return this.FailureBehaviourField;
-            }
-            set {
-                if ((this.FailureBehaviourField.Equals(value) != true)) {
-                    this.FailureBehaviourField = value;
-                    this.RaisePropertyChanged("FailureBehaviour");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public ServerModuleState HealthState {
-            get {
-                return this.HealthStateField;
-            }
-            set {
-                if ((this.HealthStateField.Equals(value) != true)) {
-                    this.HealthStateField = value;
-                    this.RaisePropertyChanged("HealthState");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Name {
-            get {
-                return this.NameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NameField, value) != true)) {
-                    this.NameField = value;
-                    this.RaisePropertyChanged("Name");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.List<Marvin.TestTools.SystemTest.Maintenance.NotificationModel> Notifications {
-            get {
-                return this.NotificationsField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NotificationsField, value) != true)) {
-                    this.NotificationsField = value;
-                    this.RaisePropertyChanged("Notifications");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Maintenance.ModuleStartBehaviour StartBehaviour {
-            get {
-                return this.StartBehaviourField;
-            }
-            set {
-                if ((this.StartBehaviourField.Equals(value) != true)) {
-                    this.StartBehaviourField = value;
-                    this.RaisePropertyChanged("StartBehaviour");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="AssemblyModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
-        "Maintenance.Wcf")]
-    [System.SerializableAttribute()]
-    public partial class AssemblyModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string BundleField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NameField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string VersionField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Bundle {
-            get {
-                return this.BundleField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.BundleField, value) != true)) {
-                    this.BundleField = value;
-                    this.RaisePropertyChanged("Bundle");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Name {
-            get {
-                return this.NameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NameField, value) != true)) {
-                    this.NameField = value;
-                    this.RaisePropertyChanged("Name");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Version {
-            get {
-                return this.VersionField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.VersionField, value) != true)) {
-                    this.VersionField = value;
-                    this.RaisePropertyChanged("Version");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.FlagsAttribute()]
-    [System.Runtime.Serialization.DataContractAttribute(Name="FailureBehaviour", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules")]
-    public enum FailureBehaviour : int {
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Stop = 0,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        StopAndNotify = 2,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Reincarnate = 1,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ReincarnateAndNotify = 3,
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="NotificationModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
-        "Maintenance.Wcf")]
-    [System.SerializableAttribute()]
-    public partial class NotificationModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Maintenance.SerializableException ExceptionField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool ImportantField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime TimestampField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Maintenance.SerializableException Exception {
-            get {
-                return this.ExceptionField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ExceptionField, value) != true)) {
-                    this.ExceptionField = value;
-                    this.RaisePropertyChanged("Exception");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool Important {
-            get {
-                return this.ImportantField;
-            }
-            set {
-                if ((this.ImportantField.Equals(value) != true)) {
-                    this.ImportantField = value;
-                    this.RaisePropertyChanged("Important");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime Timestamp {
-            get {
-                return this.TimestampField;
-            }
-            set {
-                if ((this.TimestampField.Equals(value) != true)) {
-                    this.TimestampField = value;
-                    this.RaisePropertyChanged("Timestamp");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ModuleStartBehaviour", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules")]
-    public enum ModuleStartBehaviour : int {
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Auto = 0,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        Manual = 1,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        OnDependency = 2,
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="SerializableException", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
-        "Maintenance.Wcf")]
-    [System.SerializableAttribute()]
-    public partial class SerializableException : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ExceptionTypeNameField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Maintenance.SerializableException InnerExceptionField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MessageField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string StackTraceField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string ExceptionTypeName {
-            get {
-                return this.ExceptionTypeNameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ExceptionTypeNameField, value) != true)) {
-                    this.ExceptionTypeNameField = value;
-                    this.RaisePropertyChanged("ExceptionTypeName");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Maintenance.SerializableException InnerException {
-            get {
-                return this.InnerExceptionField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.InnerExceptionField, value) != true)) {
-                    this.InnerExceptionField = value;
-                    this.RaisePropertyChanged("InnerException");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Message {
-            get {
-                return this.MessageField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
-                    this.MessageField = value;
-                    this.RaisePropertyChanged("Message");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string StackTrace {
-            get {
-                return this.StackTraceField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.StackTraceField, value) != true)) {
-                    this.StackTraceField = value;
-                    this.RaisePropertyChanged("StackTrace");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DependencyEvaluation", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
-        "Maintenance.Wcf")]
+        "s")]
     [System.SerializableAttribute()]
     public partial class DependencyEvaluation : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -536,19 +109,34 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Config", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
-        "Maintenance.Wcf")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ServerModuleModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
+        "s")]
     [System.SerializableAttribute()]
-    public partial class Config : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+    public partial class ServerModuleModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Collections.Generic.List<Marvin.Serialization.Entry> EntriesField;
+        private Marvin.TestTools.SystemTest.Maintenance.AssemblyModel AssemblyField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ModuleField;
+        private Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel[] DependenciesField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.Runtime.Modules.FailureBehaviour FailureBehaviourField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.Runtime.Modules.ServerModuleState HealthStateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.Maintenance.NotificationModel[] NotificationsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.Runtime.Modules.ModuleStartBehaviour StartBehaviourField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -561,27 +149,466 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.List<Marvin.Serialization.Entry> Entries {
+        public Marvin.TestTools.SystemTest.Maintenance.AssemblyModel Assembly {
             get {
-                return this.EntriesField;
+                return this.AssemblyField;
             }
             set {
-                if ((object.ReferenceEquals(this.EntriesField, value) != true)) {
-                    this.EntriesField = value;
-                    this.RaisePropertyChanged("Entries");
+                if ((object.ReferenceEquals(this.AssemblyField, value) != true)) {
+                    this.AssemblyField = value;
+                    this.RaisePropertyChanged("Assembly");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Module {
+        public Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel[] Dependencies {
             get {
-                return this.ModuleField;
+                return this.DependenciesField;
             }
             set {
-                if ((object.ReferenceEquals(this.ModuleField, value) != true)) {
-                    this.ModuleField = value;
-                    this.RaisePropertyChanged("Module");
+                if ((object.ReferenceEquals(this.DependenciesField, value) != true)) {
+                    this.DependenciesField = value;
+                    this.RaisePropertyChanged("Dependencies");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.Runtime.Modules.FailureBehaviour FailureBehaviour {
+            get {
+                return this.FailureBehaviourField;
+            }
+            set {
+                if ((this.FailureBehaviourField.Equals(value) != true)) {
+                    this.FailureBehaviourField = value;
+                    this.RaisePropertyChanged("FailureBehaviour");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.Runtime.Modules.ServerModuleState HealthState {
+            get {
+                return this.HealthStateField;
+            }
+            set {
+                if ((this.HealthStateField.Equals(value) != true)) {
+                    this.HealthStateField = value;
+                    this.RaisePropertyChanged("HealthState");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.Maintenance.NotificationModel[] Notifications {
+            get {
+                return this.NotificationsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NotificationsField, value) != true)) {
+                    this.NotificationsField = value;
+                    this.RaisePropertyChanged("Notifications");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.Runtime.Modules.ModuleStartBehaviour StartBehaviour {
+            get {
+                return this.StartBehaviourField;
+            }
+            set {
+                if ((this.StartBehaviourField.Equals(value) != true)) {
+                    this.StartBehaviourField = value;
+                    this.RaisePropertyChanged("StartBehaviour");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="AssemblyModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
+        "s")]
+    [System.SerializableAttribute()]
+    public partial class AssemblyModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string BundleField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string VersionField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Bundle {
+            get {
+                return this.BundleField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.BundleField, value) != true)) {
+                    this.BundleField = value;
+                    this.RaisePropertyChanged("Bundle");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Version {
+            get {
+                return this.VersionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.VersionField, value) != true)) {
+                    this.VersionField = value;
+                    this.RaisePropertyChanged("Version");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="NotificationModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
+        "s")]
+    [System.SerializableAttribute()]
+    public partial class NotificationModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.Maintenance.SerializableException ExceptionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool ImportantField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.Modules.NotificationType NotificationTypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime TimestampField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.Maintenance.SerializableException Exception {
+            get {
+                return this.ExceptionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ExceptionField, value) != true)) {
+                    this.ExceptionField = value;
+                    this.RaisePropertyChanged("Exception");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Important {
+            get {
+                return this.ImportantField;
+            }
+            set {
+                if ((this.ImportantField.Equals(value) != true)) {
+                    this.ImportantField = value;
+                    this.RaisePropertyChanged("Important");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.Modules.NotificationType NotificationType {
+            get {
+                return this.NotificationTypeField;
+            }
+            set {
+                if ((this.NotificationTypeField.Equals(value) != true)) {
+                    this.NotificationTypeField = value;
+                    this.RaisePropertyChanged("NotificationType");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Timestamp {
+            get {
+                return this.TimestampField;
+            }
+            set {
+                if ((this.TimestampField.Equals(value) != true)) {
+                    this.TimestampField = value;
+                    this.RaisePropertyChanged("Timestamp");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SerializableException", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
+        "s")]
+    [System.SerializableAttribute()]
+    public partial class SerializableException : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ExceptionTypeNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.Maintenance.SerializableException InnerExceptionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MessageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string StackTraceField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ExceptionTypeName {
+            get {
+                return this.ExceptionTypeNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ExceptionTypeNameField, value) != true)) {
+                    this.ExceptionTypeNameField = value;
+                    this.RaisePropertyChanged("ExceptionTypeName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.Maintenance.SerializableException InnerException {
+            get {
+                return this.InnerExceptionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.InnerExceptionField, value) != true)) {
+                    this.InnerExceptionField = value;
+                    this.RaisePropertyChanged("InnerException");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Message {
+            get {
+                return this.MessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
+                    this.MessageField = value;
+                    this.RaisePropertyChanged("Message");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string StackTrace {
+            get {
+                return this.StackTraceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.StackTraceField, value) != true)) {
+                    this.StackTraceField = value;
+                    this.RaisePropertyChanged("StackTrace");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Config", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
+        "s")]
+    [System.SerializableAttribute()]
+    public partial class Config : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.Serialization.Entry RootField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.Serialization.Entry Root {
+            get {
+                return this.RootField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.RootField, value) != true)) {
+                    this.RootField = value;
+                    this.RaisePropertyChanged("Root");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SaveConfigRequest", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
+        "s")]
+    [System.SerializableAttribute()]
+    public partial class SaveConfigRequest : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.Maintenance.Config ConfigField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.TestTools.SystemTest.Maintenance.ConfigUpdateMode UpdateModeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.Maintenance.Config Config {
+            get {
+                return this.ConfigField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ConfigField, value) != true)) {
+                    this.ConfigField = value;
+                    this.RaisePropertyChanged("Config");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.TestTools.SystemTest.Maintenance.ConfigUpdateMode UpdateMode {
+            get {
+                return this.UpdateModeField;
+            }
+            set {
+                if ((this.UpdateModeField.Equals(value) != true)) {
+                    this.UpdateModeField = value;
+                    this.RaisePropertyChanged("UpdateMode");
                 }
             }
         }
@@ -598,7 +625,7 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ConfigUpdateMode", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Module" +
-        "Maintenance.Wcf")]
+        "s")]
     public enum ConfigUpdateMode : int {
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
@@ -615,17 +642,29 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="Maintenance.IModuleMaintenance")]
     public interface IModuleMaintenance {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/GetAll", ReplyAction="http://tempuri.org/IModuleMaintenance/GetAllResponse")]
-        System.Collections.Generic.List<Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel> GetAll();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/GetAll", ReplyAction="http://tempuri.org/IModuleMaintenance/GetAllResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel>> GetAllAsync();
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluation", ReplyAction="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluationResponse")]
         Marvin.TestTools.SystemTest.Maintenance.DependencyEvaluation GetDependencyEvaluation();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluation", ReplyAction="http://tempuri.org/IModuleMaintenance/GetDependencyEvaluationResponse")]
         System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Maintenance.DependencyEvaluation> GetDependencyEvaluationAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/GetAll", ReplyAction="http://tempuri.org/IModuleMaintenance/GetAllResponse")]
+        Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel[] GetAll();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/GetAll", ReplyAction="http://tempuri.org/IModuleMaintenance/GetAllResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel[]> GetAllAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/HealthState", ReplyAction="http://tempuri.org/IModuleMaintenance/HealthStateResponse")]
+        Marvin.Runtime.Modules.ServerModuleState HealthState(string moduleName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/HealthState", ReplyAction="http://tempuri.org/IModuleMaintenance/HealthStateResponse")]
+        System.Threading.Tasks.Task<Marvin.Runtime.Modules.ServerModuleState> HealthStateAsync(string moduleName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/Notifications", ReplyAction="http://tempuri.org/IModuleMaintenance/NotificationsResponse")]
+        Marvin.TestTools.SystemTest.Maintenance.NotificationModel[] Notifications(string moduleName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/Notifications", ReplyAction="http://tempuri.org/IModuleMaintenance/NotificationsResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Maintenance.NotificationModel[]> NotificationsAsync(string moduleName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/Start", ReplyAction="http://tempuri.org/IModuleMaintenance/StartResponse")]
         void Start(string moduleName);
@@ -645,6 +684,12 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/Reincarnate", ReplyAction="http://tempuri.org/IModuleMaintenance/ReincarnateResponse")]
         System.Threading.Tasks.Task ReincarnateAsync(string moduleName);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/Update", ReplyAction="http://tempuri.org/IModuleMaintenance/UpdateResponse")]
+        void Update(string moduleName, Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel module);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/Update", ReplyAction="http://tempuri.org/IModuleMaintenance/UpdateResponse")]
+        System.Threading.Tasks.Task UpdateAsync(string moduleName, Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel module);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/ConfirmWarning", ReplyAction="http://tempuri.org/IModuleMaintenance/ConfirmWarningResponse")]
         void ConfirmWarning(string moduleName);
         
@@ -658,34 +703,22 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
         System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Maintenance.Config> GetConfigAsync(string moduleName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/SetConfig", ReplyAction="http://tempuri.org/IModuleMaintenance/SetConfigResponse")]
-        void SetConfig(Marvin.TestTools.SystemTest.Maintenance.Config model, Marvin.TestTools.SystemTest.Maintenance.ConfigUpdateMode updateMode);
+        void SetConfig(string moduleName, Marvin.TestTools.SystemTest.Maintenance.SaveConfigRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/SetConfig", ReplyAction="http://tempuri.org/IModuleMaintenance/SetConfigResponse")]
-        System.Threading.Tasks.Task SetConfigAsync(Marvin.TestTools.SystemTest.Maintenance.Config model, Marvin.TestTools.SystemTest.Maintenance.ConfigUpdateMode updateMode);
+        System.Threading.Tasks.Task SetConfigAsync(string moduleName, Marvin.TestTools.SystemTest.Maintenance.SaveConfigRequest request);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/SetStartBehaviour", ReplyAction="http://tempuri.org/IModuleMaintenance/SetStartBehaviourResponse")]
-        void SetStartBehaviour(string moduleName, Marvin.TestTools.SystemTest.Maintenance.ModuleStartBehaviour startBehaviour);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/GetMethods", ReplyAction="http://tempuri.org/IModuleMaintenance/GetMethodsResponse")]
+        Marvin.Serialization.MethodEntry[] GetMethods(string moduleName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/SetStartBehaviour", ReplyAction="http://tempuri.org/IModuleMaintenance/SetStartBehaviourResponse")]
-        System.Threading.Tasks.Task SetStartBehaviourAsync(string moduleName, Marvin.TestTools.SystemTest.Maintenance.ModuleStartBehaviour startBehaviour);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/GetMethods", ReplyAction="http://tempuri.org/IModuleMaintenance/GetMethodsResponse")]
+        System.Threading.Tasks.Task<Marvin.Serialization.MethodEntry[]> GetMethodsAsync(string moduleName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/SetFailureBehaviour", ReplyAction="http://tempuri.org/IModuleMaintenance/SetFailureBehaviourResponse")]
-        void SetFailureBehaviour(string moduleName, Marvin.TestTools.SystemTest.Maintenance.FailureBehaviour failureBehaviour);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/InvokeMethod", ReplyAction="http://tempuri.org/IModuleMaintenance/InvokeMethodResponse")]
+        Marvin.Serialization.Entry InvokeMethod(string moduleName, Marvin.Serialization.MethodEntry method);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/SetFailureBehaviour", ReplyAction="http://tempuri.org/IModuleMaintenance/SetFailureBehaviourResponse")]
-        System.Threading.Tasks.Task SetFailureBehaviourAsync(string moduleName, Marvin.TestTools.SystemTest.Maintenance.FailureBehaviour failureBehaviour);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/RequestEntry", ReplyAction="http://tempuri.org/IModuleMaintenance/RequestEntryResponse")]
-        Marvin.Serialization.Entry RequestEntry(string moduleName, Marvin.Serialization.Entry parentCollection, string entryType);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/RequestEntry", ReplyAction="http://tempuri.org/IModuleMaintenance/RequestEntryResponse")]
-        System.Threading.Tasks.Task<Marvin.Serialization.Entry> RequestEntryAsync(string moduleName, Marvin.Serialization.Entry parentCollection, string entryType);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/ReplaceEntry", ReplyAction="http://tempuri.org/IModuleMaintenance/ReplaceEntryResponse")]
-        Marvin.Serialization.Entry ReplaceEntry(string moduleName, Marvin.Serialization.Entry currentEntry, string replacementType);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/ReplaceEntry", ReplyAction="http://tempuri.org/IModuleMaintenance/ReplaceEntryResponse")]
-        System.Threading.Tasks.Task<Marvin.Serialization.Entry> ReplaceEntryAsync(string moduleName, Marvin.Serialization.Entry currentEntry, string replacementType);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IModuleMaintenance/InvokeMethod", ReplyAction="http://tempuri.org/IModuleMaintenance/InvokeMethodResponse")]
+        System.Threading.Tasks.Task<Marvin.Serialization.Entry> InvokeMethodAsync(string moduleName, Marvin.Serialization.MethodEntry method);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -715,20 +748,36 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
                 base(binding, remoteAddress) {
         }
         
-        public System.Collections.Generic.List<Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel> GetAll() {
-            return base.Channel.GetAll();
-        }
-        
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel>> GetAllAsync() {
-            return base.Channel.GetAllAsync();
-        }
-        
         public Marvin.TestTools.SystemTest.Maintenance.DependencyEvaluation GetDependencyEvaluation() {
             return base.Channel.GetDependencyEvaluation();
         }
         
         public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Maintenance.DependencyEvaluation> GetDependencyEvaluationAsync() {
             return base.Channel.GetDependencyEvaluationAsync();
+        }
+        
+        public Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel[] GetAll() {
+            return base.Channel.GetAll();
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel[]> GetAllAsync() {
+            return base.Channel.GetAllAsync();
+        }
+        
+        public Marvin.Runtime.Modules.ServerModuleState HealthState(string moduleName) {
+            return base.Channel.HealthState(moduleName);
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.Runtime.Modules.ServerModuleState> HealthStateAsync(string moduleName) {
+            return base.Channel.HealthStateAsync(moduleName);
+        }
+        
+        public Marvin.TestTools.SystemTest.Maintenance.NotificationModel[] Notifications(string moduleName) {
+            return base.Channel.Notifications(moduleName);
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Maintenance.NotificationModel[]> NotificationsAsync(string moduleName) {
+            return base.Channel.NotificationsAsync(moduleName);
         }
         
         public void Start(string moduleName) {
@@ -755,6 +804,14 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
             return base.Channel.ReincarnateAsync(moduleName);
         }
         
+        public void Update(string moduleName, Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel module) {
+            base.Channel.Update(moduleName, module);
+        }
+        
+        public System.Threading.Tasks.Task UpdateAsync(string moduleName, Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel module) {
+            return base.Channel.UpdateAsync(moduleName, module);
+        }
+        
         public void ConfirmWarning(string moduleName) {
             base.Channel.ConfirmWarning(moduleName);
         }
@@ -771,44 +828,28 @@ namespace Marvin.TestTools.SystemTest.Maintenance {
             return base.Channel.GetConfigAsync(moduleName);
         }
         
-        public void SetConfig(Marvin.TestTools.SystemTest.Maintenance.Config model, Marvin.TestTools.SystemTest.Maintenance.ConfigUpdateMode updateMode) {
-            base.Channel.SetConfig(model, updateMode);
+        public void SetConfig(string moduleName, Marvin.TestTools.SystemTest.Maintenance.SaveConfigRequest request) {
+            base.Channel.SetConfig(moduleName, request);
         }
         
-        public System.Threading.Tasks.Task SetConfigAsync(Marvin.TestTools.SystemTest.Maintenance.Config model, Marvin.TestTools.SystemTest.Maintenance.ConfigUpdateMode updateMode) {
-            return base.Channel.SetConfigAsync(model, updateMode);
+        public System.Threading.Tasks.Task SetConfigAsync(string moduleName, Marvin.TestTools.SystemTest.Maintenance.SaveConfigRequest request) {
+            return base.Channel.SetConfigAsync(moduleName, request);
         }
         
-        public void SetStartBehaviour(string moduleName, Marvin.TestTools.SystemTest.Maintenance.ModuleStartBehaviour startBehaviour) {
-            base.Channel.SetStartBehaviour(moduleName, startBehaviour);
+        public Marvin.Serialization.MethodEntry[] GetMethods(string moduleName) {
+            return base.Channel.GetMethods(moduleName);
         }
         
-        public System.Threading.Tasks.Task SetStartBehaviourAsync(string moduleName, Marvin.TestTools.SystemTest.Maintenance.ModuleStartBehaviour startBehaviour) {
-            return base.Channel.SetStartBehaviourAsync(moduleName, startBehaviour);
+        public System.Threading.Tasks.Task<Marvin.Serialization.MethodEntry[]> GetMethodsAsync(string moduleName) {
+            return base.Channel.GetMethodsAsync(moduleName);
         }
         
-        public void SetFailureBehaviour(string moduleName, Marvin.TestTools.SystemTest.Maintenance.FailureBehaviour failureBehaviour) {
-            base.Channel.SetFailureBehaviour(moduleName, failureBehaviour);
+        public Marvin.Serialization.Entry InvokeMethod(string moduleName, Marvin.Serialization.MethodEntry method) {
+            return base.Channel.InvokeMethod(moduleName, method);
         }
         
-        public System.Threading.Tasks.Task SetFailureBehaviourAsync(string moduleName, Marvin.TestTools.SystemTest.Maintenance.FailureBehaviour failureBehaviour) {
-            return base.Channel.SetFailureBehaviourAsync(moduleName, failureBehaviour);
-        }
-        
-        public Marvin.Serialization.Entry RequestEntry(string moduleName, Marvin.Serialization.Entry parentCollection, string entryType) {
-            return base.Channel.RequestEntry(moduleName, parentCollection, entryType);
-        }
-        
-        public System.Threading.Tasks.Task<Marvin.Serialization.Entry> RequestEntryAsync(string moduleName, Marvin.Serialization.Entry parentCollection, string entryType) {
-            return base.Channel.RequestEntryAsync(moduleName, parentCollection, entryType);
-        }
-        
-        public Marvin.Serialization.Entry ReplaceEntry(string moduleName, Marvin.Serialization.Entry currentEntry, string replacementType) {
-            return base.Channel.ReplaceEntry(moduleName, currentEntry, replacementType);
-        }
-        
-        public System.Threading.Tasks.Task<Marvin.Serialization.Entry> ReplaceEntryAsync(string moduleName, Marvin.Serialization.Entry currentEntry, string replacementType) {
-            return base.Channel.ReplaceEntryAsync(moduleName, currentEntry, replacementType);
+        public System.Threading.Tasks.Task<Marvin.Serialization.Entry> InvokeMethodAsync(string moduleName, Marvin.Serialization.MethodEntry method) {
+            return base.Channel.InvokeMethodAsync(moduleName, method);
         }
     }
 }

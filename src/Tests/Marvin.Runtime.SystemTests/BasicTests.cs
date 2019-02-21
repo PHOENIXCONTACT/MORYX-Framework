@@ -74,7 +74,7 @@ namespace Marvin.Runtime.SystemTests
 
             Thread.Sleep(3000); // Give HoG the chance to come up.
 
-            bool stopped = _hogController.StopHeartOfGold(10);
+            bool stopped = _hogController.StopHeartOfGold(15);
 
             Assert.IsTrue(stopped, "Can't stop HeartOfGold.");
 
@@ -92,7 +92,7 @@ namespace Marvin.Runtime.SystemTests
             Assert.IsTrue(started, "Can't start HeartOfGold.");
             Assert.IsFalse(_hogController.Process.HasExited, "HeartOfGold has exited unexpectedly.");
 
-            _hogController.Process.WaitForExit(10000);
+            _hogController.Process.WaitForExit(15000);
 
             Assert.IsTrue(_hogController.Process.HasExited, "HeartOfGold did not stop.");
         }

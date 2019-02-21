@@ -168,10 +168,10 @@ namespace Marvin.Runtime.Kernel.Tests
             // Assert
             Thread.Sleep(3000); // Give the thread pool some time
 
-            mockModule1.Verify(mock => mock.Initialize(), Times.Once);
+            mockModule1.Verify(mock => mock.Initialize(), Times.Exactly(2));
             mockModule1.Verify(mock => mock.Start());
 
-            mockModule2.Verify(mock => mock.Initialize(), Times.Once);
+            mockModule2.Verify(mock => mock.Initialize(), Times.Exactly(2));
             mockModule2.Verify(mock => mock.Start());
         }
 
@@ -188,7 +188,7 @@ namespace Marvin.Runtime.Kernel.Tests
             moduleManager.StartModule(mockModule.Object);
 
             // Assert
-            mockModule.Verify(mock => mock.Initialize(), Times.Once);
+            mockModule.Verify(mock => mock.Initialize(), Times.Exactly(2));
             mockModule.Verify(mock => mock.Start());
         }
 
