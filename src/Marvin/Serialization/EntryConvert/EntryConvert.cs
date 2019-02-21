@@ -288,7 +288,7 @@ namespace Marvin.Serialization
                         convertedProperty.SubEntries = subEntry.SubEntries;
                         break;
                     case EntryValueType.Exception:
-                        convertedProperty.Value.Current = value.ToString();
+                        convertedProperty.Value.Current = ExceptionPrinter.Print((Exception)value);
                         break;
                     case EntryValueType.Stream:
                         var stream = value as Stream;
