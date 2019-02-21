@@ -57,6 +57,17 @@ IntegrationTests:
     paths:
       - 'artifacts/Tests' 
 
+SystemTests: 
+  stage: test
+  tags:
+    - vs2015
+    - powershell
+  script: .\build.ps1 -SystemTests
+  artifacts:
+    expire_in: 1 hrs
+    paths:
+      - 'artifacts/Tests' 
+      
 GenerateDocs:
   stage: documentation
   tags:

@@ -1,23 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" />
-  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance" />
-  <xs:element name="GetDataModels">
+  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" />
+  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" />
+  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Model" />
+  <xs:element name="GetAll">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="GetDataModelsResponse">
+  <xs:element name="GetAllResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="GetDataModelsResult" nillable="true" type="q1:ArrayOfDataModel" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="GetAllResult" nillable="true" type="q1:ArrayOfDataModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EraseAll">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EraseAllResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="EraseAllResult" nillable="true" type="q2:InvocationResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetModel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetModelResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="GetModelResult" nillable="true" type="q3:DataModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SetAllConfigs">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q2:DatabaseConfigModel" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="config" nillable="true" type="q4:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -30,7 +57,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q3:DatabaseConfigModel" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="config" nillable="true" type="q5:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -43,14 +70,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q4:DatabaseConfigModel" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="config" nillable="true" type="q6:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="TestDatabaseConfigResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="TestDatabaseConfigResult" type="xs:boolean" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="TestDatabaseConfigResult" nillable="true" type="q7:TestConnectionResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -62,7 +89,7 @@
   <xs:element name="CreateAllResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="CreateAllResult" nillable="true" type="xs:string" />
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="CreateAllResult" nillable="true" type="q8:InvocationResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -70,26 +97,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q5:DatabaseConfigModel" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="config" nillable="true" type="q9:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="CreateDatabaseResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="CreateDatabaseResult" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="EraseAll">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="EraseAllResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="EraseAllResult" nillable="true" type="xs:string" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="CreateDatabaseResult" nillable="true" type="q10:InvocationResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -97,14 +112,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q6:DatabaseConfigModel" />
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="config" nillable="true" type="q11:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="EraseDatabaseResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="EraseDatabaseResult" nillable="true" type="xs:string" />
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="EraseDatabaseResult" nillable="true" type="q12:InvocationResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -112,14 +127,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q7:DatabaseConfigModel" />
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="config" nillable="true" type="q13:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="DumpDatabaseResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance" minOccurs="0" name="DumpDatabaseResult" nillable="true" type="q8:DumpResult" />
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="DumpDatabaseResult" nillable="true" type="q14:InvocationResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -127,15 +142,45 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q9:DatabaseConfigModel" />
-        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="backupModel" nillable="true" type="q10:BackupModel" />
+        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="request" nillable="true" type="q15:RestoreDatabaseRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="RestoreDatabaseResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="RestoreDatabaseResult" nillable="true" type="xs:string" />
+        <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="RestoreDatabaseResult" nillable="true" type="q16:InvocationResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MigrateDatabaseModel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="migrationName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="config" nillable="true" type="q17:DatabaseConfigModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MigrateDatabaseModelResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/Marvin.Model" minOccurs="0" name="MigrateDatabaseModelResult" nillable="true" type="q18:DatabaseUpdateSummary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RollbackDatabase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
+        <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="config" nillable="true" type="q19:DatabaseConfigModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RollbackDatabaseResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="RollbackDatabaseResult" nillable="true" type="q20:InvocationResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -143,15 +188,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q11:DatabaseConfigModel" />
-        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="setup" nillable="true" type="q12:SetupModel" />
+        <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="request" nillable="true" type="q21:ExecuteSetupRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="ExecuteSetupResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="ExecuteSetupResult" nillable="true" type="xs:string" />
+        <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="ExecuteSetupResult" nillable="true" type="q22:InvocationResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -159,15 +203,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="model" nillable="true" type="q13:DatabaseConfigModel" />
-        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="script" nillable="true" type="q14:ScriptModel" />
+        <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Databases" minOccurs="0" name="request" nillable="true" type="q23:ExecuteScriptRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="ExecuteScriptResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="ExecuteScriptResult" nillable="true" type="xs:string" />
+        <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="ExecuteScriptResult" nillable="true" type="q24:InvocationResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

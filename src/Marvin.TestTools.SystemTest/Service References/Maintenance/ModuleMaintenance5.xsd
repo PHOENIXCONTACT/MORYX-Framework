@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" />
-  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" />
+  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" />
+  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" />
   <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
-  <xs:element name="GetAll">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetAllResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" minOccurs="0" name="GetAllResult" nillable="true" type="q1:ArrayOfServerModuleModel" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
   <xs:element name="GetDependencyEvaluation">
     <xs:complexType>
       <xs:sequence />
@@ -23,7 +11,47 @@
   <xs:element name="GetDependencyEvaluationResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" minOccurs="0" name="GetDependencyEvaluationResult" nillable="true" type="q2:DependencyEvaluation" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" minOccurs="0" name="GetDependencyEvaluationResult" nillable="true" type="q1:DependencyEvaluation" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAll">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" minOccurs="0" name="GetAllResult" nillable="true" type="q2:ArrayOfServerModuleModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="HealthState">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="HealthStateResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="HealthStateResult" type="q3:ServerModuleState" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Notifications">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificationsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" minOccurs="0" name="NotificationsResult" nillable="true" type="q4:ArrayOfNotificationModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -63,6 +91,19 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="Update">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" minOccurs="0" name="module" nillable="true" type="q5:ServerModuleModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="ConfirmWarning">
     <xs:complexType>
       <xs:sequence>
@@ -85,15 +126,15 @@
   <xs:element name="GetConfigResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" minOccurs="0" name="GetConfigResult" nillable="true" type="q3:Config" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" minOccurs="0" name="GetConfigResult" nillable="true" type="q6:Config" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SetConfig">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" minOccurs="0" name="model" nillable="true" type="q4:Config" />
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" minOccurs="0" name="updateMode" type="q5:ConfigUpdateMode" />
+        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" minOccurs="0" name="request" nillable="true" type="q7:SaveConfigRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -102,61 +143,32 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="SetStartBehaviour">
+  <xs:element name="GetMethods">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" minOccurs="0" name="startBehaviour" type="q6:ModuleStartBehaviour" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="SetStartBehaviourResponse">
+  <xs:element name="GetMethodsResponse">
     <xs:complexType>
-      <xs:sequence />
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="GetMethodsResult" nillable="true" type="q8:ArrayOfMethodEntry" />
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="SetFailureBehaviour">
+  <xs:element name="InvokeMethod">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" minOccurs="0" name="failureBehaviour" type="q7:FailureBehaviour" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="method" nillable="true" type="q9:MethodEntry" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="SetFailureBehaviourResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="RequestEntry">
+  <xs:element name="InvokeMethodResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="parentCollection" nillable="true" type="q8:Entry" />
-        <xs:element minOccurs="0" name="entryType" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="RequestEntryResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="RequestEntryResult" nillable="true" type="q9:Entry" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ReplaceEntry">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="currentEntry" nillable="true" type="q10:Entry" />
-        <xs:element minOccurs="0" name="replacementType" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ReplaceEntryResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="ReplaceEntryResult" nillable="true" type="q11:Entry" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="InvokeMethodResult" nillable="true" type="q10:Entry" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

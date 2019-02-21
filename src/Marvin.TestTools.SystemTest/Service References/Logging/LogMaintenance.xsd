@@ -1,71 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" />
-  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Logging" />
-  <xs:element name="GetAllPluginLogger">
+  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Logging" />
+  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" />
+  <xs:element name="GetAllLoggers">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="GetAllPluginLoggerResponse">
+  <xs:element name="GetAllLoggersResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="GetAllPluginLoggerResult" nillable="true" type="q1:ArrayOfPluginLoggerModel" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Logging" minOccurs="0" name="GetAllLoggersResult" nillable="true" type="q1:ArrayOfLoggerModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="AddRemoteAppender">
+  <xs:element name="SetLogLevel">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Logging" minOccurs="0" name="minLevel" type="q2:LogLevel" />
+        <xs:element minOccurs="0" name="loggerName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Logging" minOccurs="0" name="setLogLevelRequest" nillable="true" type="q2:SetLogLevelRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="AddRemoteAppenderResponse">
+  <xs:element name="SetLogLevelResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="AddRemoteAppenderResult" type="xs:int" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="SetLogLevelResult" nillable="true" type="q3:InvocationResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddAppender">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Logging" minOccurs="0" name="request" nillable="true" type="q4:AddAppenderRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddAppenderResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Logging" minOccurs="0" name="AddAppenderResult" nillable="true" type="q5:AddAppenderResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RemoveAppender">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="appenderId" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RemoveAppenderResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins" minOccurs="0" name="RemoveAppenderResult" nillable="true" type="q6:InvocationResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetMessages">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="appenderId" type="xs:int" />
+        <xs:element minOccurs="0" name="appenderId" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetMessagesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="GetMessagesResult" nillable="true" type="q3:LogMessages" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Logging" minOccurs="0" name="GetMessagesResult" nillable="true" type="q7:ArrayOfLogMessageModel" />
       </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="RemoveRemoteAppender">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="appenderId" type="xs:int" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="RemoveRemoteAppenderResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="SetLogLevel">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="logger" nillable="true" type="q4:PluginLoggerModel" />
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Logging" minOccurs="0" name="level" type="q5:LogLevel" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="SetLogLevelResponse">
-    <xs:complexType>
-      <xs:sequence />
     </xs:complexType>
   </xs:element>
 </xs:schema>

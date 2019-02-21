@@ -33,7 +33,7 @@ if ($Build) {
 
 if ($SmokeTests) {
     $runtimePath = "$RootPath\src\Marvin.Runtime.Console\bin\$env:MARVIN_BUILD_CONFIG\HeartOfGold.exe";
-    Invoke-SmokeTest $runtimePath 3 6000
+    Invoke-SmokeTest $runtimePath 5 6000
 }
 
 if ($UnitTests) {

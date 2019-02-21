@@ -221,7 +221,18 @@ function Invoke-Nunit([string]$SearchPath = $RootPath, [string]$SearchFilter = "
 
     $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
 
-    & $global:NUnitCli $testProjects /config:"$env:MARVIN_BUILD_CONFIG"
+	ForEach($testProject in $testProjects ) { 
+        $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
+        $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MARVIN_BUILD_CONFIG, "$projectName.dll");
+		
+		# If assembly does not exists, the project will be build
+        if (-not (Test-Path $testAssembly)) {
+            Invoke-Build $testProject 
+        }
+
+		& $global:NUnitCli $testProject /config:"$env:MARVIN_BUILD_CONFIG"
+	}	
+    
     Invoke-ExitCodeCheck $LastExitCode;
 }
 

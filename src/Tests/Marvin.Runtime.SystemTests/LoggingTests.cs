@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Marvin.Runtime.Kernel;
@@ -20,7 +21,7 @@ namespace Marvin.Runtime.SystemTests
     [TestFixture]
     public class LoggingTests : IDisposable
     {
-        private const int WaitTime = 1000;
+        private const int WaitTime = 8000;
         private const int ServerSleepTime = 100;
         private const int ClientSleepTime = 100;
 
@@ -30,14 +31,13 @@ namespace Marvin.Runtime.SystemTests
         private readonly ManualResetEvent _logMessageReceived = new ManualResetEvent(false);
         private LogLevel _receivedLevel;
         private string _receivedMessage;
-        private PluginLoggerModel[] _pluginLogger;
-        private PluginLoggerModel _testModuleLogger;
+        private LoggerModel[] _pluginLogger;
+        private LoggerModel _testModuleLogger;
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            HogHelper.CopyAssembly("Marvin.TestModule.dll");
-            HogHelper.RemoveAssembly("Marvin.DependentTestModule.dll");
+            Directory.CreateDirectory(HogHelper.ConfigDir);
 
             _configManager = new RuntimeConfigManager
             {
@@ -84,6 +84,8 @@ namespace Marvin.Runtime.SystemTests
         [OneTimeTearDown]
         public void TestFixtureCleanup()
         {
+            Directory.Delete(HogHelper.ConfigDir, true);
+
             if (_hogController.Process != null && !_hogController.Process.HasExited)
             {
                 Console.WriteLine("Killing HeartOfGold");
@@ -93,14 +95,12 @@ namespace Marvin.Runtime.SystemTests
 
                 Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
             }
-
-            HogHelper.RemoveAssembly("Marvin.TestModule.dll");
         }
 
         [TearDown]
         public void Cleanup()
         {
-            _hogController.RemoveRemoteLogAppender(_loggerId);
+            _hogController.RemoveRemoteLogAppender("TestModule", _loggerId);
         }
 
         public void Dispose()
@@ -223,17 +223,17 @@ namespace Marvin.Runtime.SystemTests
 
             Config config = _hogController.GetConfig("TestModule");
 
-            Entry logLevelEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "LogLevel");
+            Entry logLevelEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "LogLevel");
             Assert.IsNotNull(logLevelEntry, "Can't get property 'LogLevel' from config.");
             logLevelEntry.Value.Current = senderLevel.ToString();
-            _hogController.SetConfig(config);
+            _hogController.SetConfig(config, "TestModule");
 
             Thread.Sleep(ClientSleepTime);
 
             _hogController.ReincarnateServiceAsync("TestModule");
             _hogController.WaitForService("TestModule", ServerModuleState.Running, 10);
 
-            bool received = _logMessageReceived.WaitOne(WaitTime);
+            var received = _logMessageReceived.WaitOne(WaitTime);
 
             Assert.AreEqual(expectedResult, received, "Expected log message received?");
 
@@ -246,7 +246,7 @@ namespace Marvin.Runtime.SystemTests
 
         private void HandleLogMessages(object sender, HeartOfGoldController.LoggerEventArgs args)
         {
-            foreach (var message in args.Messages.Messages)
+            foreach (var message in args.Messages)
             {
                 if (!message.Message.StartsWith("Sending log message with level"))
                     continue;

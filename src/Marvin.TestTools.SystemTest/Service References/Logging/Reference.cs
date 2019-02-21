@@ -15,10 +15,10 @@ namespace Marvin.TestTools.SystemTest.Logging {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="PluginLoggerModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMai" +
-        "ntenance.Wcf")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="LoggerModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Loggin" +
+        "g")]
     [System.SerializableAttribute()]
-    public partial class PluginLoggerModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+    public partial class LoggerModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
@@ -27,13 +27,13 @@ namespace Marvin.TestTools.SystemTest.Logging {
         private Marvin.Logging.LogLevel ActiveLevelField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Logging.PluginLoggerModel[] ChildLoggerField;
+        private Marvin.TestTools.SystemTest.Logging.LoggerModel[] ChildLoggerField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string NameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Logging.PluginLoggerModel ParentField;
+        private Marvin.TestTools.SystemTest.Logging.LoggerModel ParentField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -59,7 +59,7 @@ namespace Marvin.TestTools.SystemTest.Logging {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Logging.PluginLoggerModel[] ChildLogger {
+        public Marvin.TestTools.SystemTest.Logging.LoggerModel[] ChildLogger {
             get {
                 return this.ChildLoggerField;
             }
@@ -85,7 +85,7 @@ namespace Marvin.TestTools.SystemTest.Logging {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Logging.PluginLoggerModel Parent {
+        public Marvin.TestTools.SystemTest.Logging.LoggerModel Parent {
             get {
                 return this.ParentField;
             }
@@ -109,22 +109,201 @@ namespace Marvin.TestTools.SystemTest.Logging {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="LogMessages", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMai" +
-        "ntenance.Wcf")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="SetLogLevelRequest", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Loggin" +
+        "g")]
     [System.SerializableAttribute()]
-    public partial class LogMessages : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+    public partial class SetLogLevelRequest : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.Logging.LogLevel LevelField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.Logging.LogLevel Level {
+            get {
+                return this.LevelField;
+            }
+            set {
+                if ((this.LevelField.Equals(value) != true)) {
+                    this.LevelField = value;
+                    this.RaisePropertyChanged("Level");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="InvocationResponse", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins")]
+    [System.SerializableAttribute()]
+    public partial class InvocationResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ErrorMessageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ExceptionTypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool SuccessField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ErrorMessage {
+            get {
+                return this.ErrorMessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ErrorMessageField, value) != true)) {
+                    this.ErrorMessageField = value;
+                    this.RaisePropertyChanged("ErrorMessage");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ExceptionType {
+            get {
+                return this.ExceptionTypeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ExceptionTypeField, value) != true)) {
+                    this.ExceptionTypeField = value;
+                    this.RaisePropertyChanged("ExceptionType");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Success {
+            get {
+                return this.SuccessField;
+            }
+            set {
+                if ((this.SuccessField.Equals(value) != true)) {
+                    this.SuccessField = value;
+                    this.RaisePropertyChanged("Success");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="AddAppenderRequest", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Loggin" +
+        "g")]
+    [System.SerializableAttribute()]
+    public partial class AddAppenderRequest : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Marvin.Logging.LogLevel MinLevelField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Marvin.Logging.LogLevel MinLevel {
+            get {
+                return this.MinLevelField;
+            }
+            set {
+                if ((this.MinLevelField.Equals(value) != true)) {
+                    this.MinLevelField = value;
+                    this.RaisePropertyChanged("MinLevel");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="AddAppenderResponse", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Loggin" +
+        "g")]
+    [System.SerializableAttribute()]
+    public partial class AddAppenderResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int AppenderIdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Logging.LogMessageModel[] MessagesField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool SuccessfulField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -149,32 +328,6 @@ namespace Marvin.TestTools.SystemTest.Logging {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Logging.LogMessageModel[] Messages {
-            get {
-                return this.MessagesField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MessagesField, value) != true)) {
-                    this.MessagesField = value;
-                    this.RaisePropertyChanged("Messages");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool Successful {
-            get {
-                return this.SuccessfulField;
-            }
-            set {
-                if ((this.SuccessfulField.Equals(value) != true)) {
-                    this.SuccessfulField = value;
-                    this.RaisePropertyChanged("Successful");
-                }
-            }
-        }
-        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -187,8 +340,8 @@ namespace Marvin.TestTools.SystemTest.Logging {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="LogMessageModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMai" +
-        "ntenance.Wcf")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="LogMessageModel", Namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Loggin" +
+        "g")]
     [System.SerializableAttribute()]
     public partial class LogMessageModel : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -202,7 +355,7 @@ namespace Marvin.TestTools.SystemTest.Logging {
         private Marvin.Logging.LogLevel LogLevelField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Marvin.TestTools.SystemTest.Logging.PluginLoggerModel LoggerField;
+        private Marvin.TestTools.SystemTest.Logging.LoggerModel LoggerField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MessageField;
@@ -247,7 +400,7 @@ namespace Marvin.TestTools.SystemTest.Logging {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public Marvin.TestTools.SystemTest.Logging.PluginLoggerModel Logger {
+        public Marvin.TestTools.SystemTest.Logging.LoggerModel Logger {
             get {
                 return this.LoggerField;
             }
@@ -299,35 +452,35 @@ namespace Marvin.TestTools.SystemTest.Logging {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="Logging.ILogMaintenance")]
     public interface ILogMaintenance {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetAllPluginLogger", ReplyAction="http://tempuri.org/ILogMaintenance/GetAllPluginLoggerResponse")]
-        Marvin.TestTools.SystemTest.Logging.PluginLoggerModel[] GetAllPluginLogger();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetAllLoggers", ReplyAction="http://tempuri.org/ILogMaintenance/GetAllLoggersResponse")]
+        Marvin.TestTools.SystemTest.Logging.LoggerModel[] GetAllLoggers();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetAllPluginLogger", ReplyAction="http://tempuri.org/ILogMaintenance/GetAllPluginLoggerResponse")]
-        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.PluginLoggerModel[]> GetAllPluginLoggerAsync();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/AddRemoteAppender", ReplyAction="http://tempuri.org/ILogMaintenance/AddRemoteAppenderResponse")]
-        int AddRemoteAppender(string name, Marvin.Logging.LogLevel minLevel);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/AddRemoteAppender", ReplyAction="http://tempuri.org/ILogMaintenance/AddRemoteAppenderResponse")]
-        System.Threading.Tasks.Task<int> AddRemoteAppenderAsync(string name, Marvin.Logging.LogLevel minLevel);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetMessages", ReplyAction="http://tempuri.org/ILogMaintenance/GetMessagesResponse")]
-        Marvin.TestTools.SystemTest.Logging.LogMessages GetMessages(int appenderId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetMessages", ReplyAction="http://tempuri.org/ILogMaintenance/GetMessagesResponse")]
-        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.LogMessages> GetMessagesAsync(int appenderId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/RemoveRemoteAppender", ReplyAction="http://tempuri.org/ILogMaintenance/RemoveRemoteAppenderResponse")]
-        void RemoveRemoteAppender(int appenderId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/RemoveRemoteAppender", ReplyAction="http://tempuri.org/ILogMaintenance/RemoveRemoteAppenderResponse")]
-        System.Threading.Tasks.Task RemoveRemoteAppenderAsync(int appenderId);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetAllLoggers", ReplyAction="http://tempuri.org/ILogMaintenance/GetAllLoggersResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.LoggerModel[]> GetAllLoggersAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/SetLogLevel", ReplyAction="http://tempuri.org/ILogMaintenance/SetLogLevelResponse")]
-        void SetLogLevel(Marvin.TestTools.SystemTest.Logging.PluginLoggerModel logger, Marvin.Logging.LogLevel level);
+        Marvin.TestTools.SystemTest.Logging.InvocationResponse SetLogLevel(string loggerName, Marvin.TestTools.SystemTest.Logging.SetLogLevelRequest setLogLevelRequest);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/SetLogLevel", ReplyAction="http://tempuri.org/ILogMaintenance/SetLogLevelResponse")]
-        System.Threading.Tasks.Task SetLogLevelAsync(Marvin.TestTools.SystemTest.Logging.PluginLoggerModel logger, Marvin.Logging.LogLevel level);
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.InvocationResponse> SetLogLevelAsync(string loggerName, Marvin.TestTools.SystemTest.Logging.SetLogLevelRequest setLogLevelRequest);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/AddAppender", ReplyAction="http://tempuri.org/ILogMaintenance/AddAppenderResponse")]
+        Marvin.TestTools.SystemTest.Logging.AddAppenderResponse AddAppender(Marvin.TestTools.SystemTest.Logging.AddAppenderRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/AddAppender", ReplyAction="http://tempuri.org/ILogMaintenance/AddAppenderResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.AddAppenderResponse> AddAppenderAsync(Marvin.TestTools.SystemTest.Logging.AddAppenderRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/RemoveAppender", ReplyAction="http://tempuri.org/ILogMaintenance/RemoveAppenderResponse")]
+        Marvin.TestTools.SystemTest.Logging.InvocationResponse RemoveAppender(string appenderId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/RemoveAppender", ReplyAction="http://tempuri.org/ILogMaintenance/RemoveAppenderResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.InvocationResponse> RemoveAppenderAsync(string appenderId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetMessages", ReplyAction="http://tempuri.org/ILogMaintenance/GetMessagesResponse")]
+        Marvin.TestTools.SystemTest.Logging.LogMessageModel[] GetMessages(string appenderId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILogMaintenance/GetMessages", ReplyAction="http://tempuri.org/ILogMaintenance/GetMessagesResponse")]
+        System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.LogMessageModel[]> GetMessagesAsync(string appenderId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -357,44 +510,44 @@ namespace Marvin.TestTools.SystemTest.Logging {
                 base(binding, remoteAddress) {
         }
         
-        public Marvin.TestTools.SystemTest.Logging.PluginLoggerModel[] GetAllPluginLogger() {
-            return base.Channel.GetAllPluginLogger();
+        public Marvin.TestTools.SystemTest.Logging.LoggerModel[] GetAllLoggers() {
+            return base.Channel.GetAllLoggers();
         }
         
-        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.PluginLoggerModel[]> GetAllPluginLoggerAsync() {
-            return base.Channel.GetAllPluginLoggerAsync();
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.LoggerModel[]> GetAllLoggersAsync() {
+            return base.Channel.GetAllLoggersAsync();
         }
         
-        public int AddRemoteAppender(string name, Marvin.Logging.LogLevel minLevel) {
-            return base.Channel.AddRemoteAppender(name, minLevel);
+        public Marvin.TestTools.SystemTest.Logging.InvocationResponse SetLogLevel(string loggerName, Marvin.TestTools.SystemTest.Logging.SetLogLevelRequest setLogLevelRequest) {
+            return base.Channel.SetLogLevel(loggerName, setLogLevelRequest);
         }
         
-        public System.Threading.Tasks.Task<int> AddRemoteAppenderAsync(string name, Marvin.Logging.LogLevel minLevel) {
-            return base.Channel.AddRemoteAppenderAsync(name, minLevel);
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.InvocationResponse> SetLogLevelAsync(string loggerName, Marvin.TestTools.SystemTest.Logging.SetLogLevelRequest setLogLevelRequest) {
+            return base.Channel.SetLogLevelAsync(loggerName, setLogLevelRequest);
         }
         
-        public Marvin.TestTools.SystemTest.Logging.LogMessages GetMessages(int appenderId) {
+        public Marvin.TestTools.SystemTest.Logging.AddAppenderResponse AddAppender(Marvin.TestTools.SystemTest.Logging.AddAppenderRequest request) {
+            return base.Channel.AddAppender(request);
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.AddAppenderResponse> AddAppenderAsync(Marvin.TestTools.SystemTest.Logging.AddAppenderRequest request) {
+            return base.Channel.AddAppenderAsync(request);
+        }
+        
+        public Marvin.TestTools.SystemTest.Logging.InvocationResponse RemoveAppender(string appenderId) {
+            return base.Channel.RemoveAppender(appenderId);
+        }
+        
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.InvocationResponse> RemoveAppenderAsync(string appenderId) {
+            return base.Channel.RemoveAppenderAsync(appenderId);
+        }
+        
+        public Marvin.TestTools.SystemTest.Logging.LogMessageModel[] GetMessages(string appenderId) {
             return base.Channel.GetMessages(appenderId);
         }
         
-        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.LogMessages> GetMessagesAsync(int appenderId) {
+        public System.Threading.Tasks.Task<Marvin.TestTools.SystemTest.Logging.LogMessageModel[]> GetMessagesAsync(string appenderId) {
             return base.Channel.GetMessagesAsync(appenderId);
-        }
-        
-        public void RemoveRemoteAppender(int appenderId) {
-            base.Channel.RemoveRemoteAppender(appenderId);
-        }
-        
-        public System.Threading.Tasks.Task RemoveRemoteAppenderAsync(int appenderId) {
-            return base.Channel.RemoveRemoteAppenderAsync(appenderId);
-        }
-        
-        public void SetLogLevel(Marvin.TestTools.SystemTest.Logging.PluginLoggerModel logger, Marvin.Logging.LogLevel level) {
-            base.Channel.SetLogLevel(logger, level);
-        }
-        
-        public System.Threading.Tasks.Task SetLogLevelAsync(Marvin.TestTools.SystemTest.Logging.PluginLoggerModel logger, Marvin.Logging.LogLevel level) {
-            return base.Channel.SetLogLevelAsync(logger, level);
         }
     }
 }

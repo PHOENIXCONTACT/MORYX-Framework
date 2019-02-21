@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" />
-  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Modules.Server" />
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.Modules" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" />
+  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Modules" />
   <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
+  <xs:complexType name="DependencyEvaluation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="MaxDependencies" type="xs:int" />
+      <xs:element minOccurs="0" name="MaxDependends" type="xs:int" />
+      <xs:element minOccurs="0" name="MaxDepth" type="xs:int" />
+      <xs:element minOccurs="0" name="RootModules" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DependencyEvaluation" nillable="true" type="tns:DependencyEvaluation" />
   <xs:complexType name="ArrayOfServerModuleModel">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="ServerModuleModel" nillable="true" type="tns:ServerModuleModel" />
@@ -13,11 +22,11 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="Assembly" nillable="true" type="tns:AssemblyModel" />
       <xs:element minOccurs="0" name="Dependencies" nillable="true" type="tns:ArrayOfServerModuleModel" />
-      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" minOccurs="0" name="FailureBehaviour" type="q1:FailureBehaviour" />
-      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Modules.Server" minOccurs="0" name="HealthState" type="q2:ServerModuleState" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="FailureBehaviour" type="q1:FailureBehaviour" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="HealthState" type="q2:ServerModuleState" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Notifications" nillable="true" type="tns:ArrayOfNotificationModel" />
-      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.ServerModules" minOccurs="0" name="StartBehaviour" type="q3:ModuleStartBehaviour" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="StartBehaviour" type="q3:ModuleStartBehaviour" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ServerModuleModel" nillable="true" type="tns:ServerModuleModel" />
@@ -39,6 +48,7 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="Exception" nillable="true" type="tns:SerializableException" />
       <xs:element minOccurs="0" name="Important" type="xs:boolean" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Modules" minOccurs="0" name="NotificationType" type="q4:NotificationType" />
       <xs:element minOccurs="0" name="Timestamp" type="xs:dateTime" />
     </xs:sequence>
   </xs:complexType>
@@ -52,22 +62,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="SerializableException" nillable="true" type="tns:SerializableException" />
-  <xs:complexType name="DependencyEvaluation">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="MaxDependencies" type="xs:int" />
-      <xs:element minOccurs="0" name="MaxDependends" type="xs:int" />
-      <xs:element minOccurs="0" name="MaxDepth" type="xs:int" />
-      <xs:element minOccurs="0" name="RootModules" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="DependencyEvaluation" nillable="true" type="tns:DependencyEvaluation" />
   <xs:complexType name="Config">
     <xs:sequence>
-      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Entries" nillable="true" type="q4:ArrayOfEntry" />
-      <xs:element minOccurs="0" name="Module" nillable="true" type="xs:string" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Root" nillable="true" type="q5:Entry" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Config" nillable="true" type="tns:Config" />
+  <xs:complexType name="SaveConfigRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Config" nillable="true" type="tns:Config" />
+      <xs:element minOccurs="0" name="UpdateMode" type="tns:ConfigUpdateMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SaveConfigRequest" nillable="true" type="tns:SaveConfigRequest" />
   <xs:simpleType name="ConfigUpdateMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="OnlySave" />

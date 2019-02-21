@@ -22,6 +22,7 @@
     <MetadataSource Address="http://localhost/metadata/logmaintenance" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
+    <MetadataFile FileName="LogMaintenance4.xsd" MetadataType="Schema" ID="b4e6f79d-4c11-48d9-bfef-1e163f8e5f26" SourceId="1" SourceUrl="http://localhost/Metadata/LogMaintenance?xsd=xsd4" />
     <MetadataFile FileName="LogMaintenance.xsd" MetadataType="Schema" ID="29166a03-6ee2-4565-bcbc-41420b780122" SourceId="1" SourceUrl="http://localhost/Metadata/LogMaintenance?xsd=xsd0" />
     <MetadataFile FileName="LogMaintenance1.xsd" MetadataType="Schema" ID="6bd868db-e633-49b6-9936-6e6067f38d1b" SourceId="1" SourceUrl="http://localhost/Metadata/LogMaintenance?xsd=xsd1" />
     <MetadataFile FileName="LogMaintenance2.xsd" MetadataType="Schema" ID="5ffdd384-e368-44c6-a713-2e7ed1e8239d" SourceId="1" SourceUrl="http://localhost/Metadata/LogMaintenance?xsd=xsd2" />

@@ -9,14 +9,18 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
 using System.Text;
 using System.Threading;
+using Marvin.Bindings;
 using Marvin.Model;
 using Marvin.Runtime.Modules;
 using Marvin.Serialization;
+using Marvin.TestTools.SystemTest.Clients;
 using Marvin.TestTools.SystemTest.DatabaseMaintenance;
 using Marvin.TestTools.SystemTest.Logging;
 using Marvin.TestTools.SystemTest.Maintenance;
+using InvocationResponse = Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse;
 using LogLevel = Marvin.Logging.LogLevel;
 
 namespace Marvin.TestTools.SystemTest
@@ -76,7 +80,7 @@ namespace Marvin.TestTools.SystemTest
             /// <summary>
             /// The current log messages which occured.
             /// </summary>
-            public LogMessages Messages { get; set; }
+            public LogMessageModel[] Messages { get; set; }
         }
 
         /// <summary>
@@ -112,11 +116,11 @@ namespace Marvin.TestTools.SystemTest
         /// <summary>
         /// WCF service to the HoG to configure and control services
         /// </summary>
-        private ModuleMaintenanceClient _maintenanceClient;
+        private ModuleMaintenanceWebClient _maintenanceClient;
         /// <summary>
         /// WCF service to the HoG to get append to loggers and get log-entrys
         /// </summary>
-        private LogMaintenanceClient _loggingClient;
+        private LogMaintenanceWebClient _loggingClient;
         /// <summary>
         /// WCF service to the HoG to change and check the database configurations.
         /// </summary>
@@ -306,9 +310,40 @@ namespace Marvin.TestTools.SystemTest
         public void CreateClients()
         {
             // get the wcf services of the started instance
-            _loggingClient = new LogMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress($"http://localhost:{HttpPort}/LogMaintenance"));
-            _maintenanceClient = new ModuleMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress($"http://localhost:{HttpPort}/ModuleMaintenance"));
-            _databaseClient = new DatabaseMaintenanceClient(CreateBasicHttpBinding(), new EndpointAddress($"http://localhost:{HttpPort}/DatabaseMaintenance"));
+            _loggingClient = new LogMaintenanceWebClient(HttpPort);
+            _maintenanceClient = new ModuleMaintenanceWebClient(HttpPort);
+            _databaseClient = new DatabaseMaintenanceClient(CreateBasicWebBinding(), new EndpointAddress($"http://localhost:{HttpPort}/DatabaseMaintenance"));
+        }
+
+        /// <summary>
+        /// Creates a binding for WebHttp
+        /// </summary>
+        /// <returns></returns>
+        public static Binding CreateBasicWebBinding()
+        {
+            var webHttpBinding = new WebHttpBinding
+            {
+                MaxReceivedMessageSize = int.MaxValue,
+                MaxBufferPoolSize = int.MaxValue,
+                CloseTimeout = TimeSpan.FromSeconds(30),
+                OpenTimeout = TimeSpan.FromSeconds(30),
+                ReceiveTimeout = TimeSpan.FromSeconds(30),
+                SendTimeout = TimeSpan.FromSeconds(30),
+                UseDefaultWebProxy = true,
+                ReaderQuotas =
+                {
+                    MaxStringContentLength = int.MaxValue,
+                    MaxArrayLength = int.MaxValue,
+                    MaxBytesPerRead = int.MaxValue,
+                    MaxNameTableCharCount = int.MaxValue
+                },
+                Security =
+                {
+                    Mode = WebHttpSecurityMode.None
+                }
+            };
+
+            return webHttpBinding;
         }
 
         /// <summary>
@@ -509,7 +544,7 @@ namespace Marvin.TestTools.SystemTest
             // Check service states until the timeout accures or the given state has bin reached.
             while (DateTime.Now < timeout)
             {
-                List<ServerModuleModel> modules;
+                ServerModuleModel[] modules;
 
                 try
                 {
@@ -524,7 +559,7 @@ namespace Marvin.TestTools.SystemTest
 
                     continue;
                 }
-                catch (EndpointNotFoundException)
+                catch (WebException)
                 {
                     // This may happen while HeartOfGold is starting
 
@@ -583,9 +618,9 @@ namespace Marvin.TestTools.SystemTest
         /// Get all Pluginlogger from the HoG.
         /// </summary>
         /// <returns>Array of all PluginLogger which could be fetched.</returns>
-        public PluginLoggerModel[] GetAllPluginLogger()
+        public LoggerModel[] GetAllPluginLogger()
         {
-            return WaitForServiceCall(() => _loggingClient.GetAllPluginLogger());
+            return WaitForServiceCall(() => _loggingClient.GetAllLoggers());
         }
 
         /// <summary>
@@ -593,9 +628,9 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         /// <param name="logger">The logger which should be set.</param>
         /// <param name="level">The level which should be set.</param>
-        public void SetLogLevel(PluginLoggerModel logger, LogLevel level)
+        public void SetLogLevel(LoggerModel logger, LogLevel level)
         {
-            WaitForServiceCall(() => _loggingClient.SetLogLevel(logger, level));
+            WaitForServiceCall(() => _loggingClient.SetLogLevel(logger.Name, new SetLogLevelRequest { Level = level }));
         }
 
         /// <summary>
@@ -607,12 +642,13 @@ namespace Marvin.TestTools.SystemTest
         /// <returns>The logger identifier.</returns>
         public int AddRemoteLogAppender(String logger, Marvin.Logging.LogLevel level)
         {
-            int loggerId = WaitForServiceCall(() => _loggingClient.AddRemoteAppender(logger, level));
+            var response = WaitForServiceCall(() => _loggingClient.AddAppender(new AddAppenderRequest { MinLevel = level, Name = logger } ));
+
 
             // Add to the list of loggers
             lock (_loggerIds)
             {
-                _loggerIds.Add(loggerId);
+                _loggerIds.Add(response.AppenderId);
             }
 
             lock (this)
@@ -624,16 +660,16 @@ namespace Marvin.TestTools.SystemTest
                 }
             }
 
-            return loggerId;
+            return response.AppenderId;
         }
 
         /// <summary>
         /// Disconnect from the heart of gold client logger.
         /// </summary>
         /// <param name="loggerId">The logger identifier.</param>
-        public void RemoveRemoteLogAppender(int loggerId)
+        public void RemoveRemoteLogAppender(string loggerName, int loggerId)
         {
-            WaitForServiceCall(() => _loggingClient.RemoveRemoteAppender(loggerId));
+            WaitForServiceCall(() => _loggingClient.RemoveAppender(loggerId.ToString()));
             lock (_loggerIds)
             {
                 _loggerIds.Remove(loggerId);
@@ -655,7 +691,7 @@ namespace Marvin.TestTools.SystemTest
             {
                 // The compiler generates a warning when using a foreach var in a closure...
                 var loggerIdCompileSave = loggerId;
-                WaitForServiceCall(() => _loggingClient.RemoveRemoteAppender(loggerIdCompileSave));
+                WaitForServiceCall(() => _loggingClient.RemoveAppender(loggerIdCompileSave.ToString()));
             }
 
             lock (_loggerIds)
@@ -838,23 +874,20 @@ namespace Marvin.TestTools.SystemTest
                 try
                 {
                     // Get log messages
-                    LogMessages logResult = WaitForServiceCall(() => _loggingClient.GetMessages(loggerId));
+                    var logResult = WaitForServiceCall(() => _loggingClient.GetMessages(loggerId.ToString()));
 
                     // Write the logmessages to the console to be readable in the jenkins output.
-                    foreach (LogMessageModel message in logResult.Messages)
+                    foreach (LogMessageModel message in logResult)
                     {
                         Console.WriteLine("{0:HH:mm:ss} RemoteLog:\nTimestamp: {1} | Level: {2} | Class: {3} | Message: {4}",
                                           DateTime.Now, message.Timestamp, message.LogLevel, message.ClassName, message.Message);
                     }
 
-                    if (LogMessagesReceived != null)
+                    LogMessagesReceived?.Invoke(this, new LoggerEventArgs
                     {
-                        LogMessagesReceived(this, new LoggerEventArgs
-                        {
-                            LoggerId = loggerId,
-                            Messages = logResult
-                        });
-                    }
+                        LoggerId = loggerId,
+                        Messages = logResult
+                    });
                 }
                 catch (Exception e)
                 {
@@ -863,7 +896,7 @@ namespace Marvin.TestTools.SystemTest
             }
 
             // Restart timer
-            _timer.Change(TimerInterval, Timeout.Infinite);
+            _timer?.Change(TimerInterval, Timeout.Infinite);
         }
 
 
@@ -882,33 +915,9 @@ namespace Marvin.TestTools.SystemTest
         /// The change can be done on the 'trunk'-configuration or in a sub-configuration entry.
         /// </summary>
         /// <param name="config">The changed configuration.</param>
-        public void SetConfig(Config config)
+        public void SetConfig(Config config, string moduleName)
         {
-            WaitForServiceCall(() => _maintenanceClient.SetConfig(config, ConfigUpdateMode.UpdateLiveAndSave));
-        }
-
-        /// <summary>
-        /// Add a new the configuration entry to a parent configuration.
-        /// </summary>
-        /// <param name="serviceName">Name of the service.</param>
-        /// <param name="parentEntry">The parent configuration entry, where to add the new entry.</param>
-        /// <param name="newConfigType">The type name of the new entry.</param>
-        /// <returns>The changed parent entry with the added configuration</returns>
-        public Entry RequestEntry(string serviceName, Entry parentEntry, string newConfigType)
-        {
-            return WaitForServiceCall(() => _maintenanceClient.RequestEntry(serviceName, parentEntry, newConfigType));
-        }
-
-        /// <summary>
-        /// Add a new the configuration entry to a parent configuration.
-        /// </summary>
-        /// <param name="serviceName">Name of the service.</param>
-        /// <param name="currentEntry">The parent configuration entry, where to replace the exiting entry with the new one.</param>
-        /// <param name="newConfigType">The type name of the new entry.</param>
-        /// <returns>The changed parent entry with the added configuration</returns>
-        public Entry ReplaceEntry(string serviceName, Entry currentEntry, string newConfigType)
-        {
-            return WaitForServiceCall(() => _maintenanceClient.ReplaceEntry(serviceName, currentEntry, newConfigType));
+            WaitForServiceCall(() => _maintenanceClient.SetConfig(moduleName, new SaveConfigRequest { Config = config, UpdateMode = ConfigUpdateMode.UpdateLiveAndSave }));
         }
 
         /// <summary>
@@ -955,7 +964,6 @@ namespace Marvin.TestTools.SystemTest
                 Database = database,
                 User = user,
                 Password = password,
-                Schema = schema,
                 Port = port
             };
 
@@ -968,7 +976,7 @@ namespace Marvin.TestTools.SystemTest
         /// <param name="databaseConfigModel">The database configuration to check.</param>
         /// <param name="targetModel">The model name.</param>
         /// <returns><c>true</c> if the database exists, <c>false</c> if it do not exist or the connection was not posible.</returns>
-        public bool CheckDatabase(DatabaseConfigModel databaseConfigModel, string targetModel)
+        public TestConnectionResponse CheckDatabase(DatabaseConfigModel databaseConfigModel, string targetModel)
         {
             // Check if database allready exists
             return WaitForServiceCall(() => _databaseClient.TestDatabaseConfig(targetModel, databaseConfigModel));
@@ -985,10 +993,10 @@ namespace Marvin.TestTools.SystemTest
             var result = WaitForServiceCall(() => _databaseClient.CreateDatabase(targetModel, databaseConfigModel));
 
             // result is "" when it was successfull.
-            if (string.IsNullOrEmpty(result))
+            if (result.Success)
                 return true;
 
-            Console.WriteLine("Database creation failed with error message: {0}", result);
+            Console.WriteLine("Database creation failed with error message: {0}", result.ErrorMessage);
             return false;
         }
 
@@ -1003,25 +1011,25 @@ namespace Marvin.TestTools.SystemTest
             var result = WaitForServiceCall(() => _databaseClient.EraseDatabase(targetModel, databaseConfigModel));
 
             // result is "" when it was successfull.
-            if (string.IsNullOrEmpty(result))
+            if (result.Success)
                 return true;
 
-            Console.WriteLine("Database deletion failed with error message: {0}", result);
+            Console.WriteLine("Database deletion failed with error message: {0}", result.ErrorMessage);
             return false;
         }
 
         /// <summary>
         /// Backups the database and stores the backup to the ".\Backups\" folder.
         /// </summary>
-        public DumpResult DumpDatabase(DatabaseConfigModel databaseConfigModel, string targetModel)
+        public InvocationResponse DumpDatabase(DatabaseConfigModel databaseConfigModel, string targetModel)
         {
             var result = WaitForServiceCall(() => _databaseClient.DumpDatabase(targetModel, databaseConfigModel));
 
             // result is "" when it was successfull.
-            if (string.IsNullOrEmpty(result.Message))
+            if (result.Success)
                 return result;
 
-            Console.WriteLine("Database dump failed with error message: {0}", result);
+            Console.WriteLine("Database dump failed with error message: {0}", result.ErrorMessage);
             return null;
         }
 
@@ -1030,10 +1038,10 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         public bool RestoreDatabase(DatabaseConfigModel databaseConfigModel, string targetModel, string databaseFile)
         {
-            var result = WaitForServiceCall(() => _databaseClient.RestoreDatabase(targetModel, databaseConfigModel, new BackupModel { FileName = databaseFile }));
+            var result = WaitForServiceCall(() => _databaseClient.RestoreDatabase(targetModel, new RestoreDatabaseRequest { BackupFileName = databaseFile, Config = databaseConfigModel }));
 
             // result is "" when it was successfull.
-            if (string.IsNullOrEmpty(result))
+            if (result.Success)
                 return true;
 
             Console.WriteLine("Database restore failed with error message: {0}", result);
@@ -1045,9 +1053,9 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         public bool ExecuteSetup(DatabaseConfigModel databaseConfigModel, string targetModel, SetupModel setupModel)
         {
-            var result = WaitForServiceCall(() => _databaseClient.ExecuteSetup(targetModel, databaseConfigModel, setupModel));
+            var result = WaitForServiceCall(() => _databaseClient.ExecuteSetup(targetModel, new ExecuteSetupRequest { Config = databaseConfigModel, Setup = setupModel }));
 
-            if (string.IsNullOrEmpty(result))
+            if (result.Success)
                 return true;
 
             Console.WriteLine("Setup execution failed with error message: {0}", result);

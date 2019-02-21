@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Marvin.Configuration;
@@ -40,7 +41,7 @@ namespace Marvin.Runtime.SystemTests
         [SetUp]
         public void Setup()
         {
-            HogHelper.CopyAssembly("Marvin.TestModule.dll");
+            Directory.CreateDirectory(HogHelper.ConfigDir);
 
             _configManager = new RuntimeConfigManager
             {
@@ -117,6 +118,8 @@ namespace Marvin.Runtime.SystemTests
         [TearDown]
         public void Cleanup()
         {
+            Directory.Delete(HogHelper.ConfigDir, true);
+
             if (_hogController.Process != null && !_hogController.Process.HasExited)
             {
                 Console.WriteLine("Killing HeartOfGold");
@@ -126,8 +129,6 @@ namespace Marvin.Runtime.SystemTests
                 
                 Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
             }
-
-            HogHelper.DeleteTestModules();
         }
 
         public void Dispose()
@@ -142,16 +143,17 @@ namespace Marvin.Runtime.SystemTests
         [Test]
         public void BasicConfigTest()
         {
-            Config config = _hogController.GetConfig("TestModule");
+            var moduleName = "TestModule";
+            Config config = _hogController.GetConfig(moduleName);
 
-            Entry integerEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "IntegerValue");
-            Entry doubleEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "DoubleValue");
-            Entry stringEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "StringValue");
-            Entry longEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "LongValue");
-            Entry boolEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "BoolValue");
-            Entry enumEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "EnumValue");
-            Entry testPluginEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "TestPlugin");
-            Entry pluginsEntry = config.Entries.FirstOrDefault(e => e.Key.Identifier == "Plugins");
+            Entry integerEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "IntegerValue");
+            Entry doubleEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "DoubleValue");
+            Entry stringEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "StringValue");
+            Entry longEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "LongValue");
+            Entry boolEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "BoolValue");
+            Entry enumEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "EnumValue");
+            Entry testPluginEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "TestPlugin");
+            Entry pluginsEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "Plugins");
 
             Assert.IsNotNull(integerEntry, "Can't get property 'IntegerValue' from config.");
             Assert.IsNotNull(doubleEntry, "Can't get property 'DoubleValue' from config.");
@@ -267,7 +269,7 @@ namespace Marvin.Runtime.SystemTests
             plugin1EnumEntry.Value.Current = (NewEnumValue + 3).ToString();
             // ReSharper restore SpecifyACultureInStringConversionExplicitly
 
-            _hogController.SetConfig(config);
+            _hogController.SetConfig(config, moduleName);
 
             Thread.Sleep(1000);
 

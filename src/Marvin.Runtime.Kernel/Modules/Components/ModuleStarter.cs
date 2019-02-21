@@ -69,6 +69,7 @@ namespace Marvin.Runtime.Kernel
             // Should be caught by ServerModuleBase but better be safe than sorry 
             try
             {
+                module.Initialize();
                 module.Start();
             }
             catch(Exception ex)
