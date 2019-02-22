@@ -31,6 +31,22 @@ namespace Marvin.AbstractionLayer
         public long ProcessId { get; set; }
 
         /// <summary>
+        /// Empty default constructor
+        /// </summary>
+        public ProcessHolderCapabilities()
+        {
+        }
+
+        /// <summary>
+        /// Constructor that sets the <see cref="ProcessId"/>
+        /// </summary>
+        /// <param name="processId"></param>
+        public ProcessHolderCapabilities(long processId)
+        {
+            ProcessId = processId;
+        }
+
+        /// <summary>
         /// Check if the given resource holds the process
         /// </summary>
         protected override bool ProvidedBy(ICapabilities provided)
