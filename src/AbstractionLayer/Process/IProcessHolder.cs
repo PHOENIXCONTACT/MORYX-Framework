@@ -51,7 +51,19 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         protected override bool ProvidedBy(ICapabilities provided)
         {
-            return (provided as ProcessHolderCapabilities)?.ProcessId == ProcessId;
+            var casted = provided as ProcessHolderCapabilities;
+            if (casted == null)
+                return false;
+
+            if (Relevant(ProcessId))
+                return ProcessId == casted.ProcessId;
+
+            return true;
+        }
+
+        private bool Relevant(long processId)
+        {
+            return processId > 0;
         }
     }
 }
