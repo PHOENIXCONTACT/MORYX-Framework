@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -169,12 +170,7 @@ namespace Marvin.Resources.Management
 
             var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
             // Get all references of this resource with the same relation information
-            var currentReferences = (from property in ReferenceProperties(resource.GetType(), false)
-                                     let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
-                                     where att.RelationType == referenceAtt.RelationType
-                                        && att.Name == referenceAtt.Name
-                                        && att.Role == referenceAtt.Role
-                                     select property.GetValue(resource)).Distinct().OfType<Resource>().ToList();
+            var currentReferences = CurrentReferences(resource, referenceAtt);
             // Try to find a match that is not used in any reference but has no name yet or the same name
             var relMatch = (from match in matches
                             where currentReferences.All(cr => cr.Id != match.ReferenceId)
@@ -231,8 +227,9 @@ namespace Marvin.Resources.Management
             var propertyValue = referenceProperty.GetValue(resource);
             var referencedResources = ((IEnumerable<IResource>)propertyValue).Cast<Resource>().ToList();
 
-            // First delete references that no longer exist
-            var deleted = relationTemplates.Where(m => referencedResources.All(r => r.Id != m.ReferenceId)).ToList();
+            // First delete references that are not used by ANY property of the same configuration
+            var currentReferences = CurrentReferences(resource, referenceAtt);
+            var deleted = relationTemplates.Where(m => currentReferences.All(r => r.Id != m.ReferenceId)).ToList();
             foreach (var relation in deleted)
             {
                 ClearOnTarget(relation.ReferenceId, resource, referenceAtt);
@@ -250,6 +247,39 @@ namespace Marvin.Resources.Management
             }
 
             return created.Where(cr => cr.Id == 0);
+        }
+
+        /// <summary>
+        /// Find all resources references by the instance with the same reference information
+        /// </summary>
+        private static ISet<IResource> CurrentReferences(Resource instance, ResourceReferenceAttribute referenceAtt)
+        {
+            // Get all references of this resource with the same relation information
+            var currentReferences = (from property in ReferenceProperties(instance.GetType(), false)
+                                     let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
+                                     where att.RelationType == referenceAtt.RelationType
+                                           && att.Name == referenceAtt.Name
+                                           && att.Role == referenceAtt.Role
+                                     select property.GetValue(instance)).SelectMany(ExtractAllFromProperty);
+            return new HashSet<IResource>(currentReferences);
+        }
+
+        /// <summary>
+        /// Extract all resources from the property value for single and many references
+        /// </summary>
+        private static IEnumerable<IResource> ExtractAllFromProperty(object propertyValue)
+        {
+            // Check if it is a single reference
+            var asResource = propertyValue as IResource;
+            if (asResource != null)
+                return new[] { asResource };
+
+            // Otherwise it must be a collection
+            var asEnumerable = propertyValue as IEnumerable;
+            if (asEnumerable != null)
+                return asEnumerable.Cast<IResource>();
+
+            return Enumerable.Empty<IResource>();
         }
 
         /// <summary>
