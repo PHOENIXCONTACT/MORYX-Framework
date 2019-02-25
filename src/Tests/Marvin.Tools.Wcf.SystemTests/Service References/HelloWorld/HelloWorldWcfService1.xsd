@@ -73,6 +73,13 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="DeferredDisconnect">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="waitInMs" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="HelloCallback">
     <xs:complexType>
       <xs:sequence>

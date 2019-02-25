@@ -70,6 +70,5 @@ namespace Marvin.TestModule
                 service.ThrowCallback(message);
             }
         }
-
     }
 }

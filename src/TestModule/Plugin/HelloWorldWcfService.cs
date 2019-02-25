@@ -1,4 +1,6 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
+using System.Threading;
 using Marvin.Container;
 using Marvin.Tools.Wcf;
 
@@ -40,6 +42,16 @@ namespace Marvin.TestModule
         public string ThrowCallback(string message)
         {
             return Callback.ThrowCallback(message);
+        }
+
+        public void DeferredDisconnect(int waitInMs)
+        {
+            new Timer(DeferredDisconnectCallback, this, waitInMs, -1);
+        }
+
+        private void DeferredDisconnectCallback(object state)
+        {
+            Close();
         }
     }
 }

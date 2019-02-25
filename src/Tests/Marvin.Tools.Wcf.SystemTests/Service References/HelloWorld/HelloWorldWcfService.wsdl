@@ -47,6 +47,9 @@
   <wsdl:message name="IHelloWorldWcfService_TriggerThrowCallback_InputMessage">
     <wsdl:part name="parameters" element="tns:TriggerThrowCallback" />
   </wsdl:message>
+  <wsdl:message name="IHelloWorldWcfService_DeferredDisconnect_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeferredDisconnect" />
+  </wsdl:message>
   <wsdl:message name="IHelloWorldWcfService_HelloCallback_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:HelloCallback" />
   </wsdl:message>
@@ -81,6 +84,9 @@
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="TriggerThrowCallback">
       <wsdl:input wsaw:Action="http://tempuri.org/IHelloWorldWcfService/TriggerThrowCallback" message="tns:IHelloWorldWcfService_TriggerThrowCallback_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="DeferredDisconnect">
+      <wsdl:input wsaw:Action="http://tempuri.org/IHelloWorldWcfService/DeferredDisconnect" message="tns:IHelloWorldWcfService_DeferredDisconnect_InputMessage" />
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="HelloCallback">
       <wsdl:output wsaw:Action="http://tempuri.org/IHelloWorldWcfService/HelloCallback" message="tns:IHelloWorldWcfService_HelloCallback_OutputCallbackMessage" />
@@ -143,6 +149,12 @@
     </wsdl:operation>
     <wsdl:operation name="TriggerThrowCallback">
       <soap12:operation soapAction="http://tempuri.org/IHelloWorldWcfService/TriggerThrowCallback" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="DeferredDisconnect">
+      <soap12:operation soapAction="http://tempuri.org/IHelloWorldWcfService/DeferredDisconnect" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
