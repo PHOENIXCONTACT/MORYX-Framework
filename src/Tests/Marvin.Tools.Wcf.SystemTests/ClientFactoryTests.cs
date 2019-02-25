@@ -601,6 +601,20 @@ namespace Marvin.Tools.Wcf.SystemTests
             TestConnect(ConnectionMode.New);
         }
 
+        [Test]
+        public void TestServiceClose()
+        {
+            TestConnect(ConnectionMode.New);
+
+            Clear(false);
+
+            _netTcpService.Subscribe(_clientFactory.ClientId);
+
+            _netTcpService.DeferredDisconnect(1000);
+
+            Assert.IsTrue(_netTcpDisconnectedEvent.Wait(MediumWait), "Service did not send disconnect");
+        }
+
         private void SetBindingType(BindingType binding)
         {
             Config config = _hogController.GetConfig("DependentTestModule");

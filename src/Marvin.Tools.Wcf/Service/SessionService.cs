@@ -96,17 +96,11 @@ namespace Marvin.Tools.Wcf
 
                 try
                 {
-                    if (!isFaulted)
-                        _channel.Close();
-                }
-                catch
-                {
-                    isFaulted = true;
+                    // abort in every case so the client gets a message in every case that the connection is not available anymore
+                    _channel.Abort();
                 }
                 finally
                 {
-                    if (isFaulted)
-                        _channel.Abort();
                     _channel = null;
                 }
             }

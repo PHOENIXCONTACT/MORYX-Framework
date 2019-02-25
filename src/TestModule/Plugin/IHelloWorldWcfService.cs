@@ -22,5 +22,8 @@ namespace Marvin.TestModule
         void HelloCallback(string message);
 
         string ThrowCallback(string message);
+
+        [OperationContract(IsOneWay = true)]
+        void DeferredDisconnect(int waitInMs);
     }
 }

@@ -56,6 +56,12 @@ namespace Marvin.Tools.Wcf.SystemTests.HelloWorld {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IHelloWorldWcfService/TriggerThrowCallback")]
         System.Threading.Tasks.Task TriggerThrowCallbackAsync(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IHelloWorldWcfService/DeferredDisconnect")]
+        void DeferredDisconnect(int waitInMs);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IHelloWorldWcfService/DeferredDisconnect")]
+        System.Threading.Tasks.Task DeferredDisconnectAsync(int waitInMs);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -150,6 +156,14 @@ namespace Marvin.Tools.Wcf.SystemTests.HelloWorld {
         
         public System.Threading.Tasks.Task TriggerThrowCallbackAsync(string name) {
             return base.Channel.TriggerThrowCallbackAsync(name);
+        }
+        
+        public void DeferredDisconnect(int waitInMs) {
+            base.Channel.DeferredDisconnect(waitInMs);
+        }
+        
+        public System.Threading.Tasks.Task DeferredDisconnectAsync(int waitInMs) {
+            return base.Channel.DeferredDisconnectAsync(waitInMs);
         }
     }
 }
