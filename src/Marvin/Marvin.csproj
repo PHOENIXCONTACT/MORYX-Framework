@@ -197,7 +197,6 @@
     <Compile Include="Model\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Model\UnitOfWork\IUnitOfWorkFactory.cs" />
     <Compile Include="Modules\BundleAttribute.cs" />
-    <Compile Include="Modules\IModuleErrorReporting.cs" />
     <Compile Include="Modules\IModuleNotification.cs" />
     <Compile Include="Modules\ExpectedConfigAttribute.cs" />
     <Compile Include="Modules\IPluginConfig.cs" />

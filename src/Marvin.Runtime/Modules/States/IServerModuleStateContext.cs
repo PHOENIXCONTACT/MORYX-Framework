@@ -1,4 +1,5 @@
-﻿using Marvin.Modules;
+﻿using System;
+using Marvin.Modules;
 using Marvin.StateMachines;
 
 namespace Marvin.Runtime.Modules
@@ -6,7 +7,7 @@ namespace Marvin.Runtime.Modules
     /// <summary>
     /// Interface for server module base to access state based transitions
     /// </summary>
-    internal interface IServerModuleStateContext : IStateContext, IModuleErrorReporting
+    internal interface IServerModuleStateContext : IStateContext
     {
         /// <summary>
         /// Initialize the module
@@ -34,8 +35,13 @@ namespace Marvin.Runtime.Modules
         void Stop();
 
         /// <summary>
+        /// Report a failure
+        /// </summary>
+        void ReportFailure(Exception exception);
+        
+        /// <summary>
         /// Adds a notification to the module
         /// </summary>>
-        void LogNotification(object sender, IModuleNotification notification);
+        void LogNotification(IModuleNotification notification);
     }
 }

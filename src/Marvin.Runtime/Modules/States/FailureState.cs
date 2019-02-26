@@ -42,7 +42,7 @@ namespace Marvin.Runtime.Modules
             }
             catch (Exception ex)
             {
-                Context.LogNotification(Context, new FailureNotification(ex, "Failed to stop faulty module!"));
+                Context.LogNotification(new FailureNotification(ex, "Failed to stop faulty module!"));
             }
         }
 

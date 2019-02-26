@@ -5,7 +5,7 @@ using Marvin.Logging;
 
 namespace Marvin.Runtime.Tests.Mocks
 {
-    internal class TestLoggerMgmt : ILoggerManagement
+    internal class TestLoggerMgmt : IServerLoggerManagement, IModuleLogger
     {
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
@@ -30,22 +30,6 @@ namespace Marvin.Runtime.Tests.Mocks
         }
 
         /// <summary>
-        /// Get the top level logger with this name. If this was the first request a logger will be created
-        /// </summary>
-        public IModuleLogger GetLogger(string name)
-        {
-            return GetLogger(name, LogLevel.Info);
-        }
-
-        /// <summary>
-        /// Get the top level logger with this name. If this was the first request a logger will be created
-        /// </summary>
-        public IModuleLogger GetLogger(string name, LogLevel level)
-        {
-            return new TestLogger {Name = name, ActiveLevel = level};
-        }
-
-        /// <summary>
         /// Set log level of logger
         /// </summary>
         public void SetLevel(IModuleLogger logger, LogLevel level)
@@ -62,7 +46,9 @@ namespace Marvin.Runtime.Tests.Mocks
         /// <param name="module"/>
         public void ActivateLogging(ILoggingHost module)
         {
-            module.Logger = GetLogger(module.Name);
+            Name = module.Name;
+            ActiveLevel = LogLevel.Info;
+            module.Logger = this;
         }
 
         /// <summary>
@@ -73,11 +59,13 @@ namespace Marvin.Runtime.Tests.Mocks
         {
         }
 
+        private Action<ILogMessage> _listener;
         /// <summary>
         /// Append a listener delegate to the stream of log messages
         /// </summary>
         public void AppendListenerToStream(Action<ILogMessage> onMessage)
         {
+            _listener = onMessage;
         }
 
         /// <summary>
@@ -85,6 +73,7 @@ namespace Marvin.Runtime.Tests.Mocks
         /// </summary>
         public void AppendListenerToStream(Action<ILogMessage> onMessage, LogLevel minLevel)
         {
+            _listener = onMessage;
         }
 
         /// <summary>
@@ -92,6 +81,7 @@ namespace Marvin.Runtime.Tests.Mocks
         /// </summary>
         public void AppendListenerToStream(Action<ILogMessage> onMessage, string name)
         {
+            _listener = onMessage;
         }
 
         /// <summary>
@@ -100,6 +90,7 @@ namespace Marvin.Runtime.Tests.Mocks
         /// </summary>
         public void AppendListenerToStream(Action<ILogMessage> onMessage, LogLevel minLevel, string name)
         {
+            _listener = onMessage;
         }
 
         /// <summary>
@@ -108,6 +99,52 @@ namespace Marvin.Runtime.Tests.Mocks
         /// <param name="onMessage"/>
         public void RemoveListenerFromStream(Action<ILogMessage> onMessage)
         {
+        }
+
+        public IModuleLogger GetChild(string name, Type target)
+        {
+            return this;
+        }
+
+        public IModuleLogger Parent { get; set; }
+ 
+        public string Name { get; set; }
+
+        public void LogEntry(LogLevel level, string message, params object[] formatParameters)
+        {
+            LogException(level, null, message, formatParameters);
+        }
+
+        public void LogException(LogLevel level, Exception ex, string message, params object[] formatParameters)
+        {
+            var msg = new LogMessage
+            {
+                Level = level,
+                ClassName = "Blub",
+                Exception = ex,
+                Logger = this,
+                Message = string.Format(message, formatParameters)
+            };
+
+            if (level >= LogLevel.Warning)
+                _listener(msg);
+        }
+
+        public LogLevel ActiveLevel { get; set; }
+
+        public IModuleLogger Clone(Type targetType)
+        {
+            return this;
+        }
+
+        private class LogMessage : ILogMessage
+        {
+            public IModuleLogger Logger { get; set; }
+            public string ClassName { get; set; }
+            public LogLevel Level { get; set; }
+            public string Message { get; set; }
+            public Exception Exception { get; set; }
+            public DateTime Timestamp { get; set; }
         }
     }
 }

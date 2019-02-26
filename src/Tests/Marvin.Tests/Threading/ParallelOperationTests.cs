@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
+using System.Linq;
+using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.TestTools.UnitTest;
 using Marvin.Threading;
@@ -8,7 +11,7 @@ using NUnit.Framework;
 namespace Marvin.Tests.Threading
 {
     [TestFixture]
-    public class ParallelOperationTests : IModuleErrorReporting
+    public class ParallelOperationTests
     {
         private const string ExceptionMsg = "Hello World!";
         private const int MaxTrows = 3;
@@ -16,8 +19,6 @@ namespace Marvin.Tests.Threading
 
         private ParallelOperations _threadFactory;
         private readonly ManualResetEventSlim _callbackReceivedEvent = new ManualResetEventSlim(false);
-        private readonly ManualResetEventSlim _failureReceivedEvent = new ManualResetEventSlim(false);
-        private readonly ManualResetEventSlim _warningReceivedEvent = new ManualResetEventSlim(false);
         private DummyLogger _logger;
 
         [OneTimeSetUp]
@@ -37,12 +38,10 @@ namespace Marvin.Tests.Threading
             _logger.ClearBuffer();
             _threadFactory = new ParallelOperations
             {
-                FailureReporting = this,
+                Logger = _logger,
             };
 
             _callbackReceivedEvent.Reset();
-            _failureReceivedEvent.Reset();
-            _warningReceivedEvent.Reset();
         }
 
         [TearDown]
@@ -71,17 +70,10 @@ namespace Marvin.Tests.Threading
 
             _threadFactory.ExecuteParallel(ExceptionCallback, state, critical);
 
-            if (critical)
-            {
-                _failureReceivedEvent.Wait(100);
-            }
-            else
-            {
-                _warningReceivedEvent.Wait(100);
-            }
+            AwaitLogMessage();
 
-            Assert.AreEqual(critical, _failureReceivedEvent.IsSet, "Failure received");
-            Assert.AreEqual(!critical, _warningReceivedEvent.IsSet, "Warning received");
+            Assert.AreEqual(critical, _logger.Messages.Any(m => m.Level == LogLevel.Fatal), "Failure received");
+            Assert.AreEqual(!critical, _logger.Messages.Any(m => m.Level == LogLevel.Error), "Warning received");
         }
 
         
@@ -190,36 +182,17 @@ namespace Marvin.Tests.Threading
             StateObject state = new StateObject();
 
             _threadFactory.ScheduleExecution(ExceptionCallback, state, 10, Timeout.Infinite, critical);
+           
+            AwaitLogMessage();
 
-            if (critical)
-            {
-                _failureReceivedEvent.Wait(50);
-            }
-            else
-            {
-                _warningReceivedEvent.Wait(50);
-            }
-
-            Assert.AreEqual(critical, _failureReceivedEvent.IsSet, "Failure received");
-            Assert.AreEqual(!critical, _warningReceivedEvent.IsSet, "Warning received");
+            Assert.AreEqual(critical, _logger.Messages.Any(m => m.Level == LogLevel.Fatal), "Failure received");
+            Assert.AreEqual(!critical, _logger.Messages.Any(m => m.Level == LogLevel.Error), "Warning received");
         }
 
         private void SimpleCallback(StateObject state)
         {
             state.Counter++;
             _callbackReceivedEvent.Set();
-        }
-
-        private void SleepingCallback(StateObject state)
-        {
-            Thread.Sleep(SleepTime);
-
-            state.Counter++;
-        }
-
-        private void ExceptionCallback()
-        {
-            throw new Exception(ExceptionMsg);
         }
 
         private void ExceptionCallback(StateObject state)
@@ -230,19 +203,20 @@ namespace Marvin.Tests.Threading
             }
         }
 
-        public void ReportFailure(object sender, Exception exception)
-        {
-            _failureReceivedEvent.Set();
-        }
-
-        public void ReportWarning(object sender, Exception exception)
-        {
-            _warningReceivedEvent.Set();
-        }
-
         private class StateObject
         {
             public int Counter { get; set; }
+        }
+
+        private void AwaitLogMessage()
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            while (stopWatch.ElapsedMilliseconds < 50 && _logger.Messages.Count == 0)
+            {
+                Thread.Sleep(1);
+            }
         }
     }
 }

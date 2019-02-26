@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="Helper.cs" />
     <Compile Include="Mocks\TestConfigManager.cs" />
-    <Compile Include="Mocks\TestLogger.cs" />
     <Compile Include="Mocks\TestLoggerMgmt.cs" />
     <Compile Include="ModuleBaseTest.cs" />
     <Compile Include="Modules\DelayedExceptionModule.cs" />

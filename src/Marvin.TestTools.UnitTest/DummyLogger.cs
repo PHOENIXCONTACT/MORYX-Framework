@@ -17,10 +17,7 @@ namespace Marvin.TestTools.UnitTest
         /// <summary>
         /// Retrieves all stored log messages.
         /// </summary>
-        public IEnumerable<LogMessage> Messages
-        {
-            get { return _messages.ToList(); }
-        }
+        public IReadOnlyList<LogMessage> Messages => _messages.ToList();
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

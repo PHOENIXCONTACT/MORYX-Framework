@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
@@ -62,6 +63,8 @@ namespace Marvin.Runtime.Kernel
 
         #region Forward to listeners
 
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+
         private readonly IDictionary<LogFilter, Action<ILogMessage>> _listeners =
             new Dictionary<LogFilter, Action<ILogMessage>>();
 
@@ -71,14 +74,11 @@ namespace Marvin.Runtime.Kernel
         /// <param name="logMessage">The incomming log message which should be forwarded.</param>
         protected override void ForwardToListeners(ILogMessage logMessage)
         {
-            IEnumerable<Action<ILogMessage>> matchingListeners;
-            lock (_listeners)
-            {
-                matchingListeners = (from listener in _listeners
-                    let filter = listener.Key
-                    where MessageMatchesFilter(filter, logMessage)
-                    select listener.Value).ToList();
-            }
+            _lock.EnterReadLock();
+            var matchingListeners = (from listener in _listeners
+                                     where listener.Key.Match(logMessage)
+                                     select listener.Value).ToList();
+            _lock.ExitReadLock();
 
             foreach (var listener in matchingListeners)
             {
@@ -86,26 +86,15 @@ namespace Marvin.Runtime.Kernel
             }
         }
 
-        private bool MessageMatchesFilter(LogFilter filter, ILogMessage message)
-        {
-            if (filter.FilterType == FilterType.None)
-                return true;
-            if (filter.FilterType == FilterType.NameBased)
-                return message.Logger.Name == filter.Name ||
-                       (message.Logger.Name.Contains(filter.Name) && message.Level >= LogLevel.Error);
-            if (filter.FilterType == FilterType.LevelBased)
-                return message.Level >= filter.MinLevel;
-            return (message.Logger.Name.Contains(filter.Name) && message.Level >= filter.MinLevel);
-        }
-
         /// <summary>
         /// Append a listener delegate to the stream of log messages
         /// </summary>
         public void AppendListenerToStream(Action<ILogMessage> onMessage)
         {
-            var filter = new LogFilter {FilterType = FilterType.None};
-            lock (_listeners)
-                _listeners[filter] = onMessage;
+            var filter = new LogFilter.Full();
+            _lock.EnterWriteLock();
+            _listeners[filter] = onMessage;
+            _lock.ExitWriteLock();
         }
 
         /// <summary>
@@ -113,9 +102,10 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public void AppendListenerToStream(Action<ILogMessage> onMessage, LogLevel minLevel)
         {
-            var filter = new LogFilter {FilterType = FilterType.LevelBased, MinLevel = minLevel};
-            lock (_listeners)
-                _listeners[filter] = onMessage;
+            var filter = new LogFilter.Level(minLevel);
+            _lock.EnterWriteLock();
+            _listeners[filter] = onMessage;
+            _lock.ExitWriteLock();
         }
 
         /// <summary>
@@ -123,9 +113,10 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public void AppendListenerToStream(Action<ILogMessage> onMessage, string name)
         {
-            var filter = new LogFilter {FilterType = FilterType.NameBased, Name = name};
-            lock (_listeners)
-                _listeners[filter] = onMessage;
+            var filter = new LogFilter.Name(name);
+            _lock.EnterWriteLock();
+            _listeners[filter] = onMessage;
+            _lock.ExitWriteLock();
         }
 
         /// <summary>
@@ -134,9 +125,10 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public void AppendListenerToStream(Action<ILogMessage> onMessage, LogLevel minLevel, string name)
         {
-            var filter = new LogFilter {FilterType = FilterType.NameAndLevel, MinLevel = minLevel, Name = name};
-            lock (_listeners)
-                _listeners[filter] = onMessage;
+            var filter = new LogFilter.NameAndLevel(minLevel, name);
+            _lock.EnterWriteLock();
+            _listeners[filter] = onMessage;
+            _lock.ExitWriteLock();
         }
 
         /// <summary>
@@ -145,16 +137,15 @@ namespace Marvin.Runtime.Kernel
         /// <param name="onMessage"></param>
         public void RemoveListenerFromStream(Action<ILogMessage> onMessage)
         {
-            lock (_listeners)
+            _lock.EnterWriteLock();
+            var matches = (from listener in _listeners
+                           where listener.Value.Equals(onMessage)
+                           select listener.Key).ToList();
+            foreach (var match in matches)
             {
-                var matches = (from listener in _listeners
-                    where listener.Value.Equals(onMessage)
-                    select listener.Key).ToList();
-                foreach (var match in matches)
-                {
-                    _listeners.Remove(match);
-                }
+                _listeners.Remove(match);
             }
+            _lock.ExitWriteLock();
         }
 
         #endregion

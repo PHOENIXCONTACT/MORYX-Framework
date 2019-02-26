@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using Marvin.Configuration;
 using Marvin.Container;
@@ -57,7 +58,7 @@ namespace Marvin.Runtime.Modules
         /// <summary>
         /// <see cref="ILoggerManagement"/> 
         /// </summary>
-        public ILoggerManagement LoggerManagement { get; set; }
+        public IServerLoggerManagement LoggerManagement { get; set; }
 
         /// <summary>
         /// Logger of this module.
@@ -82,6 +83,7 @@ namespace Marvin.Runtime.Modules
         {
             // Activate logging
             LoggerManagement.ActivateLogging(this);
+            LoggerManagement.AppendListenerToStream(ProcessLogMessage, LogLevel.Warning, Name);
             Logger.LogEntry(LogLevel.Info, "{0} is initializing...", Name);
             
             // Get config and parse for container settings
@@ -90,7 +92,6 @@ namespace Marvin.Runtime.Modules
 
             // Initizalize container with server module dll and this dll
             Container = ContainerFactory.Create(Strategies, GetType().Assembly)
-                .SetInstance<IModuleErrorReporting>(this)
                 .Register<IParallelOperations, ParallelOperations>()
                 // Register instances for this cycle
                 .SetInstance(Config).SetInstance(Logger);
@@ -152,6 +153,7 @@ namespace Marvin.Runtime.Modules
                 Container = null;
             }
             // Deregister from logging
+            LoggerManagement.RemoveListenerFromStream(ProcessLogMessage);
             LoggerManagement.DeactivateLogging(this);
             Logger.LogEntry(LogLevel.Info, "{0} destructed!", Name);
         }
@@ -292,45 +294,46 @@ namespace Marvin.Runtime.Modules
 
         #region ErrorReporting
 
+        private void ProcessLogMessage(ILogMessage message)
+        {
+            IModuleNotification notification;
+            // TODO: Make exception optional in notification
+            var exception = message.Exception ?? new Exception(message.Message);
+
+            // Avoid redundanten notifications for the same exception
+            if(Notifications.Any(n => n.Exception == exception))
+                return;
+
+            if (message.Level == LogLevel.Warning)
+            {
+                notification = new WarningNotification(n => Notifications.Remove(n), exception,
+                    $"Component {message.ClassName} reported an exception");
+                Notifications.Add(notification);
+            }
+            else if(message.Level >= LogLevel.Error)
+            {
+                notification = new FailureNotification(exception,
+                    $"Component {message.ClassName} reported an exception");
+                Notifications.Add(notification);
+            }
+        }
+
         /// <summary>
         /// Report internal failure to parent module
         /// </summary>
-        /// <param name="sender">The sender of the failure report.</param>
-        /// <param name="exception">The exception which should be reported.</param>
-        void IModuleErrorReporting.ReportFailure(object sender, Exception exception)
+        void IServerModuleStateContext.ReportFailure(Exception exception)
         {
-            var notification = new FailureNotification(exception, $"Component {sender.GetType().Name} reported an exception");
-            LogNotification(sender, notification);
-
-            _state.ErrorOccured();
-        }
-
-        /// <summary>
-        /// Report an error to be treated as a warning
-        /// </summary>
-        /// <param name="sender">The sender of the warning report.</param>
-        /// <param name="exception">The exception which should be reported as warning.</param>
-        void IModuleErrorReporting.ReportWarning(object sender, Exception exception)
-        {
-            var notification = new WarningNotification(n => Notifications.Remove(n), exception,
-                $"Component {sender.GetType().Name} reported an exception");
-            LogNotification(sender, notification);
+            // Publish notification
+            var notification = new FailureNotification(exception, "Exception in module life cycle!");
+            Notifications.Add(notification);
+            // Add to log
+            Logger.LogException(LogLevel.Fatal, exception, notification.Message);
         }
 
         /// <inheritdoc />
-        void IServerModuleStateContext.LogNotification(object sender, IModuleNotification notification)
-        {
-            LogNotification(sender, notification);
-        }
-
-        private void LogNotification(object sender, IModuleNotification notification)
+        void IServerModuleStateContext.LogNotification(IModuleNotification notification)
         {
             Notifications.Add(notification);
-
-            var loggingComponent = sender as ILoggingComponent;
-            var logger = loggingComponent != null ? loggingComponent.Logger : Logger;
-            logger.LogException(notification.Type == NotificationType.Warning ? LogLevel.Warning : LogLevel.Error,
-                notification.Exception, notification.Message);
         }
 
         #endregion

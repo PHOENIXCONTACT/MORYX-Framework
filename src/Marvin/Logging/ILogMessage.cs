@@ -24,6 +24,10 @@ namespace Marvin.Logging
         /// </summary>
         string Message { get; }
         /// <summary>
+        /// Optionally the exception that triggered the log message
+        /// </summary>
+        Exception Exception { get; }
+        /// <summary>
         /// The moment this message was passed to the logger
         /// </summary>
         DateTime Timestamp { get; }
