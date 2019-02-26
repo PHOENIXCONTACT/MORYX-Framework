@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.Tools;
 
@@ -44,7 +45,7 @@ namespace Marvin.Threading
         /// <summary>
         /// Dependency to report errors to plugin
         /// </summary>
-        public IModuleErrorReporting FailureReporting { get; set; }
+        public IModuleLogger Logger { get; set; }
         
         /// <inheritdoc />
         public void Register(IParallelObserver observer)
@@ -212,15 +213,10 @@ namespace Marvin.Threading
         private void HandleException(Exception ex, Delegate operation, bool criticalOperation)
         {
             var target = operation.Target ?? this;
-
-            if (criticalOperation)
-            {
-                FailureReporting.ReportFailure(target, ex);
-            }
-            else
-            {
-                FailureReporting.ReportWarning(target, ex);
-            }
+            var logger = (target as ILoggingComponent)?.Logger ?? Logger;
+            
+            logger.LogException(criticalOperation ? LogLevel.Fatal : LogLevel.Error, ex, 
+                "Exception during ParallelOperations of {0}.{1}!", operation.Method.DeclaringType?.Name ?? "Unknown", operation.Method.Name);
         }
 
         /// <summary>

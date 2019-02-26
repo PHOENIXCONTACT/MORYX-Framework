@@ -2,44 +2,60 @@
 
 namespace Marvin.Runtime.Kernel
 {
-    internal enum FilterType
+    internal abstract class LogFilter
     {
-        /// <summary>
-        /// No filtering options
-        /// </summary>
-        None = 0,
+        public abstract bool Match(ILogMessage message);
 
-        /// <summary>
-        /// Filter by name
-        /// </summary>
-        NameBased = 1,
+        internal class Full : LogFilter
+        {
+            public override bool Match(ILogMessage message) => true;
+        }
 
-        /// <summary>
-        /// Filter by level
-        /// </summary>
-        LevelBased = 2,
+        internal class Level : LogFilter
+        {
+            private readonly LogLevel _level;
 
-        /// <summary>
-        /// Filter by name and level
-        /// </summary>
-        NameAndLevel = 3
-    }
+            public Level(LogLevel level)
+            {
+                _level = level;
+            }
 
-    internal class LogFilter
-    {
-        /// <summary>
-        /// Type of filter
-        /// </summary>
-        public FilterType FilterType { get; set; }
+            public override bool Match(ILogMessage message)
+            {
+                return message.Level >= _level;
+            }
+        }
 
-        /// <summary>
-        /// Name of logger to listen to
-        /// </summary>
-        public string Name { get; set; }
+        internal class Name : LogFilter
+        {
+            private readonly string _name;
 
-        /// <summary>
-        /// Minimum level to listen to
-        /// </summary>
-        public LogLevel MinLevel { get; set; }
+            public Name(string name)
+            {
+                _name = name;
+            }
+
+            public override bool Match(ILogMessage message)
+            {
+                return message.Logger.Name.StartsWith(_name);
+            }
+        }
+
+        internal class NameAndLevel : LogFilter
+        {
+            private readonly string _name;
+            private readonly LogLevel _level;
+
+            public NameAndLevel(LogLevel level, string name)
+            {
+                _name = name;
+                _level = level;
+            }
+
+            public override bool Match(ILogMessage message)
+            {
+                return message.Level >= _level && message.Logger.Name.StartsWith(_name);
+            }
+        }
     }
 }

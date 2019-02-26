@@ -12,11 +12,11 @@ namespace Marvin.Logging
 
         public ILogTarget LogTarget { get; set; }
 
-        public string LoggerMessage { get; private set; }
-
-        public bool IsException { get; }
+        public bool IsException => Exception != null;
 
         public Exception Exception { get; }
+
+        public string LoggerMessage => $"{ClassName}:{Message ?? string.Empty}";
 
         #endregion
 
@@ -42,7 +42,6 @@ namespace Marvin.Logging
         public LogMessage(IModuleLogger logger, string className, LogLevel level, Exception exception, string message, object[] formatParameters)
             : this(logger, className, level, message, formatParameters)
         {
-            IsException = true;
             Exception = exception;
         }
 
@@ -73,9 +72,6 @@ namespace Marvin.Logging
                 // Someone failed to write a working format string
                 Message = _message + " - Format failed!";
             }
-
-            // Build message for internal common logging
-            LoggerMessage = ClassName + ": " + Message;
 
             // Concat exception to message
             if (IsException)

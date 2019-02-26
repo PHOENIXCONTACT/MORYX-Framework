@@ -152,7 +152,7 @@ namespace Marvin.Logging
                 logMessage.Format();
                 try
                 {
-                    ForwartToLogTarget(logMessage);
+                    ForwardToLogTarget(logMessage);
                     ForwardToListeners(logMessage);
                 }
                 catch (Exception ex)
@@ -163,7 +163,7 @@ namespace Marvin.Logging
             }
         }
 
-        private static void ForwartToLogTarget(LogMessage logMessage)
+        private static void ForwardToLogTarget(LogMessage logMessage)
         {
             // Forward message to internal log and all appender
             var logTarget = logMessage.LogTarget;

@@ -14,7 +14,7 @@ namespace Marvin.Runtime.Kernel.Tests
     public class ModuleManagerTests
     {
         private Mock<IConfigManager> _mockConfigManager;
-        private Mock<ILoggerManagement> _mockLoggerManagement;
+        private Mock<IServerLoggerManagement> _mockLoggerManagement;
         private Mock<IModuleLogger> _mockLogger;
 
         [SetUp]
@@ -25,7 +25,7 @@ namespace Marvin.Runtime.Kernel.Tests
             _mockConfigManager.Setup(mock => mock.GetConfiguration<ModuleManagerConfig>()).Returns(moduleManagerConfig);
             _mockConfigManager.Setup(mock => mock.GetConfiguration<RuntimeConfigManagerTestConfig2>()).Returns(new RuntimeConfigManagerTestConfig2());
 
-            _mockLoggerManagement = new Mock<ILoggerManagement>();
+            _mockLoggerManagement = new Mock<IServerLoggerManagement>();
             _mockLogger = new Mock<IModuleLogger>();
             _mockLoggerManagement.Setup(mock => mock.ActivateLogging(It.IsAny<ILoggingHost>()))
                 .Callback((ILoggingHost par) => par.Logger = _mockLogger.Object);
