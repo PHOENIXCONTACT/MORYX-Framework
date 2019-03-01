@@ -134,7 +134,7 @@ namespace Marvin.Products.Management
                     var descriptionEntity = stepEntity.OutputDescriptions.First(ode => ode.Index == index);
                     var desciption = new OutputDescription
                     {
-                        Success = descriptionEntity.Success,
+                        OutputType = descriptionEntity.OutputType,
                         Name = descriptionEntity.Name,
                         MappingValue = descriptionEntity.MappingValue
                     };
@@ -305,12 +305,12 @@ namespace Marvin.Products.Management
                     var descriptionEntity = stepEntity.OutputDescriptions.FirstOrDefault(ode => ode.Index == index);
                     if (descriptionEntity == null)
                     {
-                        descriptionEntity = descriptionRepo.Create(index, description.Success, description.MappingValue);
+                        descriptionEntity = descriptionRepo.Create(index, description.OutputType, description.MappingValue);
                         stepEntity.OutputDescriptions.Add(descriptionEntity);
                     }
                     else
                     {
-                        descriptionEntity.Success = description.Success;
+                        descriptionEntity.OutputType = description.OutputType;
                         descriptionEntity.MappingValue = description.MappingValue;
                     }
                     descriptionEntity.Name = description.Name;

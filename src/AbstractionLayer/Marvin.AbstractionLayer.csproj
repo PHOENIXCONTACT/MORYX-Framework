@@ -33,8 +33,8 @@
     <DocumentationFile>bin\Release\Marvin.AbstractionLayer.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin, Version=3.0.0.3101, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev003101\lib\net461\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.3379, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev003379\lib\net461\Marvin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -54,6 +54,7 @@
     <Compile Include="Activities\ActivityResultsAttribute.cs" />
     <Compile Include="Activities\IActivityProgress.cs" />
     <Compile Include="Activities\NullActivityParameters.cs" />
+    <Compile Include="Activities\OutputTypeAttribute.cs" />
     <Compile Include="Activities\ParametersBase.cs" />
     <Compile Include="Activities\ProcessRequirement.cs" />
     <Compile Include="Activities\ActivityResult.cs" />
