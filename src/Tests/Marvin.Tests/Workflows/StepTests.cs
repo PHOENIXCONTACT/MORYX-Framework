@@ -62,11 +62,11 @@ namespace Marvin.Tests.Workflows
             Assert.AreEqual(2, step.OutputDescriptions.Length);
             var success = step.OutputDescriptions[0];
             Assert.AreEqual("End", success.Name);
-            Assert.IsTrue(success.Success);
+            Assert.AreEqual(OutputType.Success, success.OutputType);
             Assert.AreEqual(exits[0].Id, success.MappingValue);
             var failed = step.OutputDescriptions[1];
             Assert.AreEqual("Failed", failed.Name);
-            Assert.IsFalse(failed.Success);
+            Assert.AreEqual(OutputType.Failure, failed.OutputType);
             Assert.AreEqual(exits[1].Id, failed.MappingValue);
         }
     }
