@@ -30,7 +30,7 @@ namespace Marvin.Workflows.WorkplanSteps
             OutputDescriptions = new OutputDescription[outputs];
             for (int i = 0; i < outputs; i++)
             {
-                OutputDescriptions[i] = new OutputDescription{Success = true};
+                OutputDescriptions[i] = new OutputDescription{OutputType = OutputType.Success};
             }
         }
 

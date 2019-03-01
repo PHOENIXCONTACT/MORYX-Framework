@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Marvin.Workflows.WorkplanSteps
@@ -31,7 +30,7 @@ namespace Marvin.Workflows.WorkplanSteps
                                   {
                                       Name = connector.Name,
                                       MappingValue = connector.Id,
-                                      Success = connector.Classification == NodeClassification.End
+                                      OutputType = connector.Classification == NodeClassification.End ? OutputType.Success : OutputType.Failure
                                   }).ToArray();
             Outputs = new IConnector[OutputDescriptions.Length];
         }

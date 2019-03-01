@@ -16,7 +16,7 @@ namespace Marvin.Workflows.WorkplanSteps
         {
             Inputs = new IConnector[1];
             Outputs = new IConnector[1];
-            OutputDescriptions = new[] { new OutputDescription { Name = "Complete", Success = true } };
+            OutputDescriptions = new[] { new OutputDescription { Name = "Complete", OutputType = OutputType.Success} };
         }
 
         ///
