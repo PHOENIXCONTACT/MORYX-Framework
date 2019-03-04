@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Marvin.TestTools.Test.Model;
 using NUnit.Framework;
@@ -117,6 +118,74 @@ namespace Marvin.Model.Tests
                 var hugePoco = hugePocs.First();
                 Assert.AreEqual(1.0, hugePoco.Float1);
                 Assert.AreEqual(2, hugePoco.Number1);
+            }
+        }
+
+        [Test]
+        public void AddAddsNewEntityToDb()
+        {
+            using (var uow = _unitOfWorkFactory.Create())
+            {
+                // Arrange
+                var carRepo = uow.GetRepository<ICarEntityRepository>();
+
+                // Act
+                var entity = new CarEntity { Name = "MyCar", Price = 1000 };
+                carRepo.Add(entity);
+
+                uow.Save();
+            }
+
+            using (var uow = _unitOfWorkFactory.Create())
+            {
+                var carRepo = uow.GetRepository<ICarEntityRepository>();
+
+                var car = carRepo.GetFirstOrDefaultBy("MyCar");
+
+                // Assert
+                Assert.NotNull(car);
+                Assert.AreEqual(1000, car.Price);
+                Assert.AreNotEqual(default(DateTime), car.Created);
+                Assert.AreNotEqual(default(DateTime), car.Updated);
+            }
+        }
+
+        [Test]
+        public void AddRangeAddsNewEntityToDb()
+        {
+            var entitiesCount = 100;
+
+            using (var uow = _unitOfWorkFactory.Create())
+            {
+                // Arrange
+                var carRepo = uow.GetRepository<ICarEntityRepository>();
+                var entitiesToCreate = new List<CarEntity>();
+
+                for (var idx = 0; idx < entitiesCount; ++idx)
+                {
+                    // Act
+                    entitiesToCreate.Add(new CarEntity { Name = $"MyCar{idx}", Price = 1000 + idx });
+                }
+
+                carRepo.AddRange(entitiesToCreate);
+
+                uow.Save();
+            }
+
+            using (var uow = _unitOfWorkFactory.Create())
+            {
+                var carRepo = uow.GetRepository<ICarEntityRepository>();
+
+                for (var idx = 0; idx < entitiesCount; ++idx)
+                {
+                    var car = carRepo.GetFirstOrDefaultBy($"MyCar{idx}");
+
+                    // Assert
+                    Assert.NotNull(car);
+                    Assert.AreEqual(1000+idx, car.Price);
+                    Assert.AreNotEqual(default(DateTime), car.Created);
+                    Assert.AreNotEqual(default(DateTime), car.Updated);
+                }
             }
         }
     }
