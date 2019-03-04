@@ -53,6 +53,18 @@ namespace Marvin.Model
         T Create(bool addToContext);
 
         /// <summary>
+        /// Adds an entity to the context
+        /// </summary>
+        /// <param name="entityToAdd">Entity that shall be added</param>
+        void Add(T entityToAdd);
+
+        /// <summary>
+        /// Add multiple entities to to context at one time
+        /// </summary>
+        /// <param name="entitiesToAdd">Entities that shall be added</param>
+        void AddRange(IEnumerable<T> entitiesToAdd);
+
+        /// <summary>
         /// Remove entity. ModificationTracked entities will only update the
         /// Deleted flag.
         /// </summary>

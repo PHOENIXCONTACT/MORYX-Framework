@@ -84,6 +84,18 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
+        public void Add(T entityToAdd)
+        {
+            DbSet.Add(entityToAdd);
+        }
+
+        /// <inheritdoc />
+        public void AddRange(IEnumerable<T> entitiesToAdd)
+        {
+            DbSet.AddRange(entitiesToAdd);
+        }
+
+        /// <inheritdoc />
         public void Remove(T entity)
         {
             Remove(entity, false);
