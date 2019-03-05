@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Marvin.Tests.Extensions
 {
     [TestFixture]
-    public class AppDomainExtensionTests
+    public class ReflectionToolTests
     {
         [SetUp]
         public void SetDirectory()
@@ -53,6 +53,25 @@ namespace Marvin.Tests.Extensions
             Assert.AreEqual(1, result.Length, "Unexpected number of classes.");
 
             Assert.True(result.Contains(type));
+        }
+
+        [TestCase(typeof(BaseClass), Description = "Create constructor for the base type")]
+        [TestCase(typeof(ChildClass1), Description = "Create constructor for derived type")]
+        public void CreateConstructor(Type targetType)
+        {
+            // Arrange
+            var target = typeof(BaseClass);
+
+            // Act
+            var func1 = ReflectionTool.ConstructorDelegate(target);
+            var func2 = ReflectionTool.ConstructorDelegate<BaseClass>(targetType);
+            var result1 = func1();
+            var result2 = func2();
+
+            // Assert
+            Assert.NotNull(result1);
+            Assert.NotNull(result2);
+            Assert.IsInstanceOf<BaseClass>(result1);
         }
     }
 }
