@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Marvin.Model
 {
@@ -50,28 +51,24 @@ namespace Marvin.Model
         public virtual IQueryable<T> Linq => DbSet;
 
         /// <inheritdoc />
-        public virtual T GetByKey(long id)
-        {
-            return DbSet.FirstOrDefault(e => e.Id == id);
-        }
+        public virtual T GetByKey(long id) => 
+            DbSet.Find(id);
 
         /// <inheritdoc />
-        public ICollection<T> GetAll()
-        {
-            return DbSet.ToList();
-        }
+        public virtual Task<T> GetByKeyAsnyc(long id) =>
+            DbSet.FindAsync(id);
 
         /// <inheritdoc />
-        public virtual ICollection<T> GetByKeys(long[] ids)
-        {
-            return DbSet.Where(e => ids.Contains(e.Id)).ToList();
-        }
+        public ICollection<T> GetAll() => 
+            DbSet.ToList();
 
         /// <inheritdoc />
-        public T Create()
-        {
-            return Create(true);
-        }
+        public virtual ICollection<T> GetByKeys(long[] ids) => 
+            DbSet.Where(e => ids.Contains(e.Id)).ToList();
+
+        /// <inheritdoc />
+        public T Create() => 
+            Create(true);
 
         /// <inheritdoc />
         public T Create(bool addToContext)
@@ -84,63 +81,41 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public void Add(T entityToAdd)
-        {
+        public T Add(T entityToAdd) => 
             DbSet.Add(entityToAdd);
-        }
 
         /// <inheritdoc />
-        public void AddRange(IEnumerable<T> entitiesToAdd)
-        {
+        public IEnumerable<T> AddRange(IEnumerable<T> entitiesToAdd) => 
             DbSet.AddRange(entitiesToAdd);
-        }
 
         /// <inheritdoc />
-        public void Remove(T entity)
-        {
+        public T Remove(T entity) => 
             Remove(entity, false);
-        }
 
         /// <inheritdoc />
-        public void Remove(T entity, bool permanent)
-        {
-            if (entity == null)
-                return;
-
-            ExecuteRemove(entity, permanent);
-        }
+        public T Remove(T entity, bool permanent) => 
+            entity == null ? null : ExecuteRemove(entity, permanent);
 
         /// <see cref="IRepository{T}"/>
-        public void RemoveRange(IEnumerable<T> entities)
-        {
-            RemoveRange(entities, false);   
-        }
+        public IEnumerable<T> RemoveRange(IEnumerable<T> entities) => 
+            RemoveRange(entities, false);
 
         /// <see cref="IRepository{T}"/>
-        public void RemoveRange(IEnumerable<T> entities, bool permanent)
-        {
-            if (entities == null)
-                return;
-
-            ExecuteRemoveRange(entities, permanent);
-        }
+        public IEnumerable<T> RemoveRange(IEnumerable<T> entities, bool permanent) => 
+            entities == null ? null : ExecuteRemoveRange(entities, permanent);
 
         /// <summary>
         /// Remove entity with option of permanent removal.
         /// </summary>
-        protected virtual void ExecuteRemove(T entity, bool permanent)
-        {
+        protected virtual T ExecuteRemove(T entity, bool permanent) => 
             DbSet.Remove(entity);
-        }
 
         /// <summary>
         /// Remove entities with option of permanent removal.
         /// </summary>
-        protected virtual void ExecuteRemoveRange(IEnumerable<T> entities, bool permanent)
-        {
+        protected virtual IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent) =>
             DbSet.RemoveRange(entities.ToArray());
-        }
-	}
+    }
 
     /// <summary>
     /// Base class for entity framework repositories of modification tracking entities
@@ -149,24 +124,27 @@ namespace Marvin.Model
         where T : class, IModificationTrackedEntity
     {
         /// <inheritdoc />
-        protected override void ExecuteRemove(T entity, bool permanent)
+        protected override T ExecuteRemove(T entity, bool permanent)
         {
             if (permanent)
-                base.ExecuteRemove(entity, true);
-            else
-                entity.Deleted = DateTime.Now;
+                return base.ExecuteRemove(entity, true);
+
+            entity.Deleted = DateTime.Now;
+            return entity;
         }
 
         /// <inheritdoc />
-        protected override void ExecuteRemoveRange(IEnumerable<T> entities, bool permanent)
+        protected override IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent)
         {
             if (permanent)
-                base.ExecuteRemoveRange(entities, true);
-            else
-            {
-                foreach (var entity in entities)
-                    entity.Deleted = DateTime.Now;
-            }
+               return base.ExecuteRemoveRange(entities, true);
+
+            var list = entities.ToArray();
+
+            foreach (var entity in list)
+                entity.Deleted = DateTime.Now;
+
+            return list;
         }
     }
 }
