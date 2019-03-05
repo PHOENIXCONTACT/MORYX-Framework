@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 
 namespace Marvin.Tools
 {
@@ -15,23 +17,41 @@ namespace Marvin.Tools
         /// </summary>
         public static bool TestMode { get; set; }
 
-        private static Assembly[] _relevantAssemblies;
+        private static readonly Lazy<Assembly[]> RelevantAssemblies = new Lazy<Assembly[]>(LoadAssemblies, LazyThreadSafetyMode.ExecutionAndPublication);
+        /// <summary>
+        /// Load assemblies
+        /// </summary>
+        /// <returns></returns>
+        private static Assembly[] LoadAssemblies()
+        {
+            var currentDir = Directory.GetCurrentDirectory().ToLower();
+            var relevantAssemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                // Only load non-dynamic assemblies from our directory
+                where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
+                let path = Path.GetDirectoryName(assembly.Location).ToLower()
+                where TestMode || path == currentDir
+                select assembly).ToArray();
+            return relevantAssemblies;
+        }
+
         /// <summary>
         /// Assemblies relevant for our application
         /// </summary>
         public static Assembly[] GetAssemblies()
         {
-            if (_relevantAssemblies != null)
-                return _relevantAssemblies;
+            return RelevantAssemblies.Value;
+        }
 
-            var currentDir = Directory.GetCurrentDirectory().ToLower();
-            _relevantAssemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                   // Only load non-dynamic assemblies from our directory
-                                   where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
-                                   let path = Path.GetDirectoryName(assembly.Location).ToLower()
-                                   where TestMode || path == currentDir
-                                   select assembly).ToArray();
-            return _relevantAssemblies;
+        private static readonly Lazy<Type[]> PublicClasses = new Lazy<Type[]>(LoadPublicClasses, LazyThreadSafetyMode.ExecutionAndPublication);
+        /// <summary>
+        /// Load all public classes
+        /// </summary>
+        private static Type[] LoadPublicClasses()
+        {
+            return (from assembly in RelevantAssemblies.Value
+                from type in assembly.GetExportedTypes()
+                where type.IsClass && !type.IsAbstract
+                select type).ToArray();
         }
 
         /// <summary>
@@ -59,23 +79,37 @@ namespace Marvin.Tools
             return GetPublicClasses(baseType, t => true);
         }
 
-        private static Type[] _publicClasses;
         /// <summary>
         /// Get public classes of a certain base type that match a filter
         /// </summary>
         public static Type[] GetPublicClasses(Type baseType, Predicate<Type> filter)
         {
-            if (_publicClasses == null)
-            {
-                _publicClasses = (from assembly in GetAssemblies()
-                                  from type in assembly.GetExportedTypes()
-                                  where type.IsClass && !type.IsAbstract
-                                  select type).ToArray();
-            }
-
-            return (from publicClass in _publicClasses
+            return (from publicClass in PublicClasses.Value
                     where baseType.IsAssignableFrom(publicClass) && filter(publicClass)
                     select publicClass).ToArray();
+        }
+
+        /// <summary>
+        /// Generate a delegate for fast constructor invocation of types
+        /// only known at runtime
+        /// </summary>
+        /// <typeparam name="T">Lower bound common type, for example the interface all instances share</typeparam>
+        public static Func<object> ConstructorDelegate(Type objectType)
+        {
+            return ConstructorDelegate<object>(objectType);
+        }
+
+        /// <summary>
+        /// Generate a delegate for fast constructor invocation of types
+        /// only known at runtime
+        /// </summary>
+        /// <param name="objectType">Concrete object type to construct</param>
+        /// <typeparam name="T">Lower bound common type, for example the interface all instances share</typeparam>
+        public static Func<T> ConstructorDelegate<T>(Type objectType)
+        {
+            return Expression.Lambda<Func<T>>(
+                    Expression.Convert(Expression.New(objectType), typeof(T)))
+                .Compile();
         }
     }
 }
