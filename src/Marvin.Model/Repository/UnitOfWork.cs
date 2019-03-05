@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Marvin.Model
 {
@@ -71,10 +73,39 @@ namespace Marvin.Model
             // Catch for validation error break point
             catch (DbEntityValidationException valEx)
             {
+                // ReSharper disable once UnusedVariable
                 var validationError = valEx.EntityValidationErrors;
                 throw;
             }
             // Catch for other exception break points
+            // ReSharper disable once RedundantCatchClause
+            catch (Exception)
+            {
+                // Debug entity framework exceptions
+                throw;
+            }
+        }
+
+        /// <inheritdoc />
+        public Task SaveAsync() => 
+            SaveAsync(CancellationToken.None);
+
+        /// <inheritdoc />
+        public async Task SaveAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            // Catch for validation error break point
+            catch (DbEntityValidationException valEx)
+            {
+                // ReSharper disable once UnusedVariable
+                var validationError = valEx.EntityValidationErrors;
+                throw;
+            }
+            // Catch for other exception break points
+            // ReSharper disable once RedundantCatchClause
             catch (Exception)
             {
                 // Debug entity framework exceptions
