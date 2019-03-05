@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Marvin.Model
 {
@@ -31,6 +32,11 @@ namespace Marvin.Model
         T GetByKey(long id);
 
         /// <summary>
+        /// Gets the entity with this key asynchrounous
+        /// </summary>
+        Task<T> GetByKeyAsnyc(long id);
+
+        /// <summary>
         /// Get all entities from the database
         /// </summary>
         /// <returns>A collection of entities. The result may be empty but not null.</returns>
@@ -55,35 +61,35 @@ namespace Marvin.Model
         /// <summary>
         /// Adds an entity to the context
         /// </summary>
-        /// <param name="entityToAdd">Entity that shall be added</param>
-        void Add(T entityToAdd);
+        /// <param name="entity">Entity that shall be added</param>
+        T Add(T entity);
 
         /// <summary>
         /// Add multiple entities to to context at one time
         /// </summary>
-        /// <param name="entitiesToAdd">Entities that shall be added</param>
-        void AddRange(IEnumerable<T> entitiesToAdd);
+        /// <param name="entities">Entities that shall be added</param>
+        IEnumerable<T> AddRange(IEnumerable<T> entities);
 
         /// <summary>
         /// Remove entity. ModificationTracked entities will only update the
         /// Deleted flag.
         /// </summary>
-        void Remove(T entity);
+        T Remove(T entity);
 
         /// <summary>
         /// Remove the entity and specifiy whether to remove permanenent or 
         /// simply flag it as deleted if possible.
         /// </summary>
-        void Remove(T entity, bool permanent);
+        T Remove(T entity, bool permanent);
 
         /// <summary>
         /// Remove a range of entities from the context
         /// </summary>
-        void RemoveRange(IEnumerable<T> entities);
+        IEnumerable<T> RemoveRange(IEnumerable<T> entities);
 
         /// <summary>
         /// Remove a range of entities permanent
         /// </summary>
-        void RemoveRange(IEnumerable<T> entities, bool permanent);
+        IEnumerable<T> RemoveRange(IEnumerable<T> entities, bool permanent);
     }
 }
