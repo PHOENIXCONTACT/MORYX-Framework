@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Marvin.TestTools.Test.Model;
 using NUnit.Framework;
 
@@ -153,8 +154,7 @@ namespace Marvin.Model.Tests
         [Test]
         public void AddRangeAddsNewEntityToDb()
         {
-            var entitiesCount = 100;
-
+            const int entitiesCount = 3;
             using (var uow = _unitOfWorkFactory.Create())
             {
                 // Arrange
@@ -164,11 +164,10 @@ namespace Marvin.Model.Tests
                 for (var idx = 0; idx < entitiesCount; ++idx)
                 {
                     // Act
-                    entitiesToCreate.Add(new CarEntity { Name = $"MyCar{idx}", Price = 1000 + idx });
+                    entitiesToCreate.Add(new CarEntity { Name = $"MyCar{idx}", Price = entitiesCount + idx });
                 }
 
                 carRepo.AddRange(entitiesToCreate);
-
                 uow.Save();
             }
 
@@ -182,10 +181,27 @@ namespace Marvin.Model.Tests
 
                     // Assert
                     Assert.NotNull(car);
-                    Assert.AreEqual(1000+idx, car.Price);
+                    Assert.AreEqual(entitiesCount + idx, car.Price);
                     Assert.AreNotEqual(default(DateTime), car.Created);
                     Assert.AreNotEqual(default(DateTime), car.Updated);
                 }
+            }
+        }
+
+        [Test(Description = "Uses the SaveAsync method to save an entity to the database")]
+        public async Task SaveEntityAsync()
+        {
+            using (var uow = _unitOfWorkFactory.Create())
+            {
+                // Arrange
+                var carRepo = uow.GetRepository<ICarEntityRepository>();
+                var carEntity = carRepo.Create("ABC");
+
+                // Act
+                await uow.SaveAsync();
+
+                // Assert
+                Assert.AreNotEqual(0, carEntity.Id);
             }
         }
     }

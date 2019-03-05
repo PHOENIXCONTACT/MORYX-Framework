@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Marvin.Model
 {
@@ -29,8 +31,18 @@ namespace Marvin.Model
         ContextMode Mode { get; set; }
 
         /// <summary>
-        /// Save all changes
+        /// Saves all changes made in this UnitOfWork to the underlying database.
         /// </summary>
         void Save();
+
+        /// <summary>
+        /// Asynchronously saves all changes made in this UnitOfWork to the underlying database.
+        /// </summary>
+        Task SaveAsync();
+
+        /// <summary>
+        /// Asynchronously saves all changes made in this UnitOfWork to the underlying database.
+        /// </summary>
+        Task SaveAsync(CancellationToken cancellationToken);
     }
 }
