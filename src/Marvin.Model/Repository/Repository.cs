@@ -52,11 +52,11 @@ namespace Marvin.Model
 
         /// <inheritdoc />
         public virtual T GetByKey(long id) => 
-            DbSet.Find(id);
+            DbSet.FirstOrDefault(e => e.Id == id);
 
         /// <inheritdoc />
         public virtual Task<T> GetByKeyAsnyc(long id) =>
-            DbSet.FindAsync(id);
+            DbSet.FirstOrDefaultAsync(e => e.Id == id);
 
         /// <inheritdoc />
         public ICollection<T> GetAll() => 
