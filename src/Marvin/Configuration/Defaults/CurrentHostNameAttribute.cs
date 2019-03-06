@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Net;
+using System.Net.Sockets;
 
 namespace Marvin.Configuration
 {
@@ -13,8 +14,16 @@ namespace Marvin.Configuration
         /// <summary>
         /// Creates a new instance of <see cref="CurrentHostNameAttribute"/>
         /// </summary>
-        public CurrentHostNameAttribute() : base(Dns.GetHostName())
+        public CurrentHostNameAttribute() : base("localhost")
         {
+            try
+            {
+                SetValue(Dns.GetHostName());
+            }
+            catch (SocketException)
+            {
+                // ignored -> default is "localhost"
+            }
         }
     }
 }

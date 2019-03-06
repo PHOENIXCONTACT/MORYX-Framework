@@ -13,8 +13,7 @@ namespace Marvin.Tools.Wcf
         /// <summary>
         /// Host for wcf services
         /// </summary>
-        [DataMember]
-        [DefaultValue("localhost")]
+        [DataMember, CurrentHostName]
         public string Host { get; set; }
 
         /// <summary>
