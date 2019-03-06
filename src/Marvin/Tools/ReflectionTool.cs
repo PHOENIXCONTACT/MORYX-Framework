@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
+using Marvin.Workflows.Transitions;
 
 namespace Marvin.Tools
 {
@@ -26,11 +27,11 @@ namespace Marvin.Tools
         {
             var currentDir = Directory.GetCurrentDirectory().ToLower();
             var relevantAssemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                // Only load non-dynamic assemblies from our directory
-                where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
-                let path = Path.GetDirectoryName(assembly.Location).ToLower()
-                where TestMode || path == currentDir
-                select assembly).ToArray();
+                                          // Only load non-dynamic assemblies from our directory
+                                      where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
+                                      let path = Path.GetDirectoryName(assembly.Location).ToLower()
+                                      where TestMode || path == currentDir
+                                      select assembly).ToArray();
             return relevantAssemblies;
         }
 
@@ -49,9 +50,9 @@ namespace Marvin.Tools
         private static Type[] LoadPublicClasses()
         {
             return (from assembly in RelevantAssemblies.Value
-                from type in assembly.GetExportedTypes()
-                where type.IsClass && !type.IsAbstract
-                select type).ToArray();
+                    from type in assembly.GetExportedTypes()
+                    where type.IsClass && !type.IsAbstract
+                    select type).ToArray();
         }
 
         /// <summary>
@@ -93,7 +94,6 @@ namespace Marvin.Tools
         /// Generate a delegate for fast constructor invocation of types
         /// only known at runtime
         /// </summary>
-        /// <typeparam name="T">Lower bound common type, for example the interface all instances share</typeparam>
         public static Func<object> ConstructorDelegate(Type objectType)
         {
             return ConstructorDelegate<object>(objectType);
@@ -110,6 +110,49 @@ namespace Marvin.Tools
             return Expression.Lambda<Func<T>>(
                     Expression.Convert(Expression.New(objectType), typeof(T)))
                 .Compile();
+        }
+
+        /// <summary>
+        /// Create a fast, dynamic property accessor for the property info
+        /// </summary>
+        public static IPropertyAccessor<object, object> PropertyAccessor(PropertyInfo property)
+        {
+            return PropertyAccessor<object, object>(property);
+        }
+
+        /// <summary>
+        /// Create a fast, dynamic property accessor for the property info
+        /// </summary>
+        public static IPropertyAccessor<TBase, object> PropertyAccessor<TBase>(PropertyInfo property)
+            where TBase : class
+        {
+            return PropertyAccessor<TBase, object>(property);
+        }
+
+        /// <summary>
+        /// Create a fast, dynamic property accessor for the property info
+        /// </summary>
+        public static IPropertyAccessor<TBase, TValue> PropertyAccessor<TBase, TValue>(PropertyInfo property)
+            where TBase : class
+        {
+            Type accessorType;
+
+            if (property.DeclaringType == typeof(TBase) && typeof(TValue) == property.PropertyType)
+                accessorType = typeof(DirectAccessor<,>).MakeGenericType(typeof(TBase), typeof(TValue));
+
+            else if(typeof(TBase).IsAssignableFrom(property.DeclaringType) && typeof(TValue) == property.PropertyType)
+                accessorType = typeof(InstanceCastAccessor<,,>).MakeGenericType(property.DeclaringType, typeof(TBase), typeof(TValue));
+
+            else if(typeof(TBase).IsAssignableFrom(property.DeclaringType) && typeof(TValue).IsAssignableFrom(property.PropertyType) && typeof(TValue) != typeof(object))
+                accessorType = typeof(ValueCastAccessor<,,,>).MakeGenericType(property.DeclaringType, typeof(TBase), property.PropertyType, typeof(TValue));
+
+            else if (typeof(TBase).IsAssignableFrom(property.DeclaringType) && property.PropertyType.IsAssignableFrom(typeof(TValue)) && typeof(TValue) != typeof(object))
+                accessorType = typeof(PropertyCastAccessor<,,,>).MakeGenericType(property.DeclaringType, typeof(TBase), property.PropertyType, typeof(TValue));
+
+            else
+                accessorType = typeof(ConversionAccessor<,,,>).MakeGenericType(property.DeclaringType, typeof(TBase), property.PropertyType, typeof(TValue));
+            
+            return (IPropertyAccessor<TBase, TValue>)Activator.CreateInstance(accessorType, property);
         }
     }
 }
