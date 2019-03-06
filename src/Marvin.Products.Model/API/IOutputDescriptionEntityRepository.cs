@@ -11,6 +11,6 @@ namespace Marvin.Products.Model
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        OutputDescriptionEntity Create(int index, OutputType outputType, long mappingValue); 
+        OutputDescriptionEntity Create(int index, int outputType, long mappingValue); 
     }
 }

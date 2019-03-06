@@ -171,7 +171,7 @@ namespace Marvin.Products.Samples.Model.Migrations
                     {
                         Id = c.Long(nullable: false, identity: true),
                         Index = c.Int(nullable: false),
-                        Success = c.Boolean(nullable: false),
+                        OutputType = c.Int(nullable: false),
                         Name = c.String(),
                         MappingValue = c.Long(nullable: false),
                         StepEntityId = c.Long(nullable: false),
