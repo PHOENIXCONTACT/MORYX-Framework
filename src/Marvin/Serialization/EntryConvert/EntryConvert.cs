@@ -542,12 +542,13 @@ namespace Marvin.Serialization
             var filtered = customSerialization.WriteFilter(instance.GetType(), encoded.SubEntries);
             foreach (var mapped in filtered)
             {
-                // Do not operate on faulty properties
-                if(mapped.Entry?.Value.Type == EntryValueType.Exception)
-                    continue;
-
                 var property = mapped.Property;
                 var propertyType = mapped.Property.PropertyType;
+
+                // Do not operate on faulty properties or read-only properties
+                // For security reasons read the flag from the property again
+                if (mapped.Entry?.Value.Type == EntryValueType.Exception || property.GetCustomAttribute<ReadOnlyAttribute>()?.IsReadOnly == true)
+                    continue;
 
                 // Try to assign value to the property
                 var currentValue = mapped.Property.GetValue(instance);
@@ -580,7 +581,7 @@ namespace Marvin.Serialization
                 }
 
                 // Write new value to property
-                if (property.CanWrite && value != currentValue)
+                if (property.CanWrite)
                 {
                     mapped.Property.SetValue(instance, value);
                 }
