@@ -1,4 +1,5 @@
 ﻿using Marvin.Model;
+using Marvin.Workflows;
 
 namespace Marvin.Products.Model
 {
@@ -6,7 +7,7 @@ namespace Marvin.Products.Model
     {
         public virtual int Index { get; set; }
 
-        public virtual bool Success { get; set; }
+        public virtual int OutputType { get; set; }
 
         public virtual string Name { get; set; }
 

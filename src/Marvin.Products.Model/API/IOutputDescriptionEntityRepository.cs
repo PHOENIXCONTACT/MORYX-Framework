@@ -1,4 +1,5 @@
 ﻿using Marvin.Model;
+using Marvin.Workflows;
 
 namespace Marvin.Products.Model
 {
@@ -10,6 +11,6 @@ namespace Marvin.Products.Model
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        OutputDescriptionEntity Create(int index, bool success, long mappingValue); 
+        OutputDescriptionEntity Create(int index, int outputType, long mappingValue); 
     }
 }

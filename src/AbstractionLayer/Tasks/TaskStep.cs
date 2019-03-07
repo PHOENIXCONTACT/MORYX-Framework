@@ -54,9 +54,31 @@ namespace Marvin.AbstractionLayer
                     select new OutputDescription
                     {
                         Name = name,
-                        Success = numeric == 0,
+                        OutputType = OutputTypeFromEnum(enumType, value, numeric),
                         MappingValue = numeric
                     }).ToArray();
+        }
+
+        private static OutputType OutputTypeFromEnum(Type enumType, object value, int numeric)
+        {
+            var outputType = OutputType.Unknown;
+
+            var memberInfos = enumType.GetMember(Enum.GetName(enumType, value));
+            if (memberInfos.Any())
+            {
+                var outputTypeAttr = memberInfos[0].GetCustomAttribute<OutputTypeAttribute>(false);
+                if (outputTypeAttr != null)
+                {
+                    outputType = outputTypeAttr.OutputType;
+                }
+                else
+                {
+                    outputType = numeric == 0 ? OutputType.Success : OutputType.Alternative;
+                }
+
+            }
+
+            return outputType;
         }
 
         /// <summary>
