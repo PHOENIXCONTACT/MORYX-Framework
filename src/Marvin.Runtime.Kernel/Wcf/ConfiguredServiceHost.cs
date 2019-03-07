@@ -78,32 +78,45 @@ namespace Marvin.Runtime.Kernel
                     break;
             }
 
-            // Set timeouts
-            binding.OpenTimeout = TimeSpan.FromSeconds(_wcfConfig.OpenTimeout);
-            binding.CloseTimeout = TimeSpan.FromSeconds(_wcfConfig.CloseTimeout);
-            binding.SendTimeout = TimeSpan.FromSeconds(_wcfConfig.SendTimeout);
-            binding.ReceiveTimeout = TimeSpan.FromSeconds(_wcfConfig.ReceiveTimeout);
+            // Set default timeouts
+            binding.OpenTimeout = _wcfConfig.OpenTimeout != WcfConfig.InfiniteTimeout
+                ? TimeSpan.FromSeconds(_wcfConfig.OpenTimeout)
+                : TimeSpan.MaxValue;
+
+            binding.CloseTimeout = _wcfConfig.CloseTimeout != WcfConfig.InfiniteTimeout
+                ? TimeSpan.FromSeconds(_wcfConfig.CloseTimeout)
+                : TimeSpan.MaxValue;
+
+            binding.SendTimeout = _wcfConfig.SendTimeout != WcfConfig.InfiniteTimeout
+                ? TimeSpan.FromSeconds(_wcfConfig.SendTimeout)
+                : TimeSpan.MaxValue;
+
+            binding.ReceiveTimeout = _wcfConfig.ReceiveTimeout != WcfConfig.InfiniteTimeout
+                ? TimeSpan.FromSeconds(_wcfConfig.ReceiveTimeout)
+                : TimeSpan.MaxValue;
 
             // Create endpoint address from config
             var port = config.BindingType == ServiceBindingType.NetTcp ? _wcfConfig.NetTcpPort : _wcfConfig.HttpPort;
+
+            // Override binding timeouts if necessary
             var extendedConfig = config as ExtendedHostConfig;
             if (extendedConfig != null && extendedConfig.OverrideFrameworkConfig)
             {
                 // Override binding timeouts if necessary
                 port = extendedConfig.Port;
-                binding.OpenTimeout = extendedConfig.OpenTimeout != ExtendedHostConfig.InfiniteTimeout
+                binding.OpenTimeout = extendedConfig.OpenTimeout != WcfConfig.InfiniteTimeout
                     ? TimeSpan.FromSeconds(extendedConfig.OpenTimeout)
                     : TimeSpan.MaxValue;
 
-                binding.CloseTimeout = extendedConfig.CloseTimeout != ExtendedHostConfig.InfiniteTimeout
+                binding.CloseTimeout = extendedConfig.CloseTimeout != WcfConfig.InfiniteTimeout
                     ? TimeSpan.FromSeconds(extendedConfig.CloseTimeout)
                     : TimeSpan.MaxValue;
 
-                binding.SendTimeout = extendedConfig.SendTimeout != ExtendedHostConfig.InfiniteTimeout
+                binding.SendTimeout = extendedConfig.SendTimeout != WcfConfig.InfiniteTimeout
                     ? TimeSpan.FromSeconds(extendedConfig.SendTimeout)
                     : TimeSpan.MaxValue;
 
-                binding.ReceiveTimeout = extendedConfig.ReceiveTimeout != ExtendedHostConfig.InfiniteTimeout
+                binding.ReceiveTimeout = extendedConfig.ReceiveTimeout != WcfConfig.InfiniteTimeout
                     ? TimeSpan.FromSeconds(extendedConfig.ReceiveTimeout)
                     : TimeSpan.MaxValue;
             }
