@@ -20,9 +20,20 @@ namespace Marvin.Tools
         {
             Property = property;
 
-            PropertyGetter = (Func<TConcrete, TProperty>)Delegate.CreateDelegate(typeof(Func<TConcrete, TProperty>), property.GetMethod);
-            PropertySetter = (Action<TConcrete, TProperty>)Delegate.CreateDelegate(typeof(Action<TConcrete, TProperty>), property.SetMethod);
+            if (property.CanRead)
+                PropertyGetter = (Func<TConcrete, TProperty>)Delegate.CreateDelegate(typeof(Func<TConcrete, TProperty>), property.GetMethod);
+            else
+                PropertyGetter = EmptyGetter;
+
+            if (property.CanWrite)
+                PropertySetter = (Action<TConcrete, TProperty>)Delegate.CreateDelegate(typeof(Action<TConcrete, TProperty>), property.SetMethod);
+            else
+                PropertySetter = EmptySetter;
         }
+
+        private static TProperty EmptyGetter(TConcrete instance) => default(TProperty);
+
+        private static void EmptySetter(TConcrete instance, TProperty value) { }
     }
 
     /// <summary>
