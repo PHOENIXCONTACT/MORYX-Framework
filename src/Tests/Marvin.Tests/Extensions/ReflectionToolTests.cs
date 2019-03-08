@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Marvin.Tools;
@@ -147,6 +148,92 @@ namespace Marvin.Tests.Extensions
             // Asser
             Assert.AreEqual(child1.Foo, child2.Foo);
             Assert.Less(accesor, reflection, "Accessor should be faster");
+        }
+
+        [Test(Description = "Retreive all references of a certain type")]
+        public void GetAllReferences()
+        {
+            // Arrange
+            var target = new ReferenceClass
+            {
+                Ignore = 42,
+                NotRelevant = "None",
+                BaseRef1 = new BaseClass(),
+                ChildRef = new ChildClass2(),
+                Children1 = new List<ChildClass1>(),
+                Children2 = new List<ChildClass2>(),
+                EmptyArray = new GranChildClass1[0],
+                NullArray = null
+            };
+
+            // Act
+            var references = ReflectionTool.GetReferences<BaseClass>(target).ToArray();
+
+            // Assert
+            Assert.AreEqual(6, references.Length, "Tool did not detect all references");
+        }
+
+        [Test(Description = "Return the object values of the properties")]
+        public void ReferenceContent()
+        {
+            // Arrange
+            var target = new ReferenceClass
+            {
+                ChildRef = new ChildClass2(),
+                Children2 = new List<ChildClass2> { new ChildClass2(), new ChildClass2()}
+            };
+
+            // Act
+            var references = ReflectionTool.GetReferences<ChildClass2>(target).ToArray();
+
+            // Assert
+            Assert.AreEqual(2, references.Length, "Tool did not detect all references");
+            Assert.AreEqual(target.ChildRef, references[0].First(), "Tool did not return the reference");
+            Assert.AreEqual(target.Children2.First(), references.Skip(1).First().First(), "Tool did not return the reference");
+            Assert.AreEqual(target.Children2.Skip(1).First(), references.Skip(1).First().Skip(1).First(), "Tool did not return the reference");
+        }
+
+        [Test(Description = "ReflectionTool must handle null or empty properties")]
+        public void ReferencesHandlesNullOrEmpty()
+        {
+            // Arrange
+            var target = new ReferenceClass
+            {
+                EmptyArray = new GranChildClass1[0],
+                NullArray = null
+            };
+
+            // Act
+            var references = ReflectionTool.GetReferences<ChildClass1>(target).ToArray();
+
+            // Assert
+            Assert.AreEqual(3, references.Length, "Tool did not detect all references");
+            Assert.AreEqual(0, references[0].Count());
+            Assert.AreEqual(0, references[1].Count());
+            Assert.AreEqual(0, references[2].Count());
+        }
+
+        [Test(Description = "ReflectionTool must handle null or empty properties")]
+        public void FilterReferencesWithPredicate()
+        {
+            // Arrange
+            var target = new ReferenceClass
+            {
+                Ignore = 42,
+                NotRelevant = "None",
+                BaseRef1 = new BaseClass(),
+                ChildRef = new ChildClass2(),
+                Children1 = new List<ChildClass1>(),
+                Children2 = new List<ChildClass2>(),
+                EmptyArray = new GranChildClass1[0],
+                NullArray = null
+            };
+
+            // Act
+            var references = ReflectionTool.GetReferences<BaseClass>(target, p => p.Name.StartsWith("Child")).ToArray();
+
+            // Assert
+            Assert.AreEqual(3, references.Length, "Tool did not detect all references");
         }
     }
 }

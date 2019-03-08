@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -154,5 +155,34 @@ namespace Marvin.Tools
             
             return (IPropertyAccessor<TBase, TValue>)Activator.CreateInstance(accessorType, property);
         }
+
+        /// <summary>
+        /// Get all properties and values of a certain type
+        /// </summary>
+        public static IEnumerable<IGrouping<PropertyInfo, TReference>> GetReferences<TReference>(object instance)
+        {
+            return GetReferences<TReference>(instance, p => true);
+        }
+
+        /// <summary>
+        /// Get all properties and values of a certain type
+        /// </summary>
+        public static IEnumerable<IGrouping<PropertyInfo, TReference>> GetReferences<TReference>(object instance, Predicate<PropertyInfo> predicate)
+        {
+            var type = instance.GetType();
+            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            foreach (var property in properties)
+            {
+                if (typeof(TReference).IsAssignableFrom(property.PropertyType) && predicate(property))
+                {
+                    yield return new ReferenceGroup<TReference>(property, (TReference)property.GetValue(instance));
+                }
+                else if (typeof(IEnumerable<TReference>).IsAssignableFrom(property.PropertyType) && predicate(property))
+                {
+                    yield return new ReferenceGroup<TReference>(property, (IEnumerable<TReference>)property.GetValue(instance));
+                }
+            }
+        }
+        
     }
 }

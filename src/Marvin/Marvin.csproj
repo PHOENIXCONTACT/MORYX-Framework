@@ -277,6 +277,7 @@
     <Compile Include="Threading\ParallelOperations.cs" />
     <Compile Include="Tools\IPropertyAccessor.cs" />
     <Compile Include="Tools\PropertyAccessor.cs" />
+    <Compile Include="Tools\ReferenceGroup.cs" />
     <Compile Include="Tools\ReflectionTool.cs" />
     <Compile Include="Users\OperationAccess.cs" />
     <Compile Include="StateMachines\IState.cs" />
