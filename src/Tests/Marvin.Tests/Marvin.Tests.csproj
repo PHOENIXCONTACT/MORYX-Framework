@@ -90,6 +90,16 @@
     <Compile Include="Extensions\CustomAttributeProviderExtensionTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionTests.cs" />
+    <Compile Include="Properties\Localization.de.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.de.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Localization.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.resx</DependentUpon>
+    </Compile>
     <Compile Include="Logging\LoggerManagementTests.cs" />
     <Compile Include="Logging\LoggingTests.cs" />
     <Compile Include="Logging\ModuleMock.cs" />
@@ -106,6 +116,8 @@
     <Compile Include="Serialization\ExceptionDummy.cs" />
     <Compile Include="Serialization\FileStreamDummy.cs" />
     <Compile Include="Serialization\ListDummy.cs" />
+    <Compile Include="Serialization\LocalizationSerializationTests.cs" />
+    <Compile Include="Serialization\LocalizedMethodDummyClass.cs" />
     <Compile Include="Serialization\SerializationTests.cs" />
     <Compile Include="Serialization\MemoryStreamDummy.cs" />
     <Compile Include="StateMachines\StateMachineTests.cs" />
@@ -152,6 +164,16 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Workflows\packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Localization.de.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
