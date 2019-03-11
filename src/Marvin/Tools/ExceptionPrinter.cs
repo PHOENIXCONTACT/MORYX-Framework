@@ -1,31 +1,39 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
 namespace Marvin.Tools
 {
     /// <summary>
-    /// Helper class to convert an exception to a string
+    /// Helper class to append additional information 
     /// </summary>
     public static class ExceptionPrinter
     {
         /// <summary>
         /// Create a print string from an exception object
+        /// TODO: Remove with .NET Core
         /// </summary>
         public static string Print(Exception ex)
         {
-            var message = new StringBuilder();
+            // Start with standard info
+            var message = ex.ToString();
+            var builder = new Lazy<StringBuilder>(() => new StringBuilder(message).AppendLine().AppendLine("Additional information:"));
+
+            // Append as much additional as possible
             var currentEx = ex;
             while (currentEx != null)
             {
-                message.AppendLine(currentEx.Message);
+                // Additional formatter for TypeLoad exceptions
                 var loadException = currentEx as ReflectionTypeLoadException;
-                if (loadException?.LoaderExceptions != null)
-                    message.AppendLine($"  Loader exceptions: \n  {string.Join<Exception>("\n  ", loadException.LoaderExceptions)}");
+                foreach (var exception in loadException?.LoaderExceptions ?? Enumerable.Empty<Exception>())
+                    builder.Value.AppendLine($"  Loader exception: {exception}");
+
+                // Recursively deeper into the exception
                 currentEx = currentEx.InnerException;
             }
-            message.AppendLine($"Stacktrace: \n {ex.StackTrace}");
-            return message.ToString();
+
+            return builder.IsValueCreated ? builder.ToString() : message;
         }
     }
 }

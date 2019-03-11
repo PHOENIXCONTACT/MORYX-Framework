@@ -48,13 +48,6 @@ namespace Marvin.Serialization
             return collectionType.IsArray ? collectionType.GetElementType() : collectionType.GenericTypeArguments[0];
         }
 
-        private static string ConvertToBase64(this Stream stream)
-        {
-            var bytes = new byte[stream.Length];
-            stream.Read(bytes, 0, (int)stream.Length);
-            return Convert.ToBase64String(bytes);
-        }
-
         #region Encode
 
         /// <summary>
@@ -297,7 +290,7 @@ namespace Marvin.Serialization
                             if (stream.CanSeek)
                                 stream.Seek(0, SeekOrigin.Begin);
 
-                            convertedProperty.Value.Current = stream.ConvertToBase64();
+                            convertedProperty.Value.Current = ConvertToBase64(stream);
                         }
                         break;
                     default:
@@ -332,6 +325,16 @@ namespace Marvin.Serialization
                 Validation = serialization.CreateValidation(objectType, objectType)
             };
             return entry;
+        }
+
+        /// <summary>
+        /// Read a stream as Base64
+        /// </summary>
+        private static string ConvertToBase64(Stream stream)
+        {
+            var bytes = new byte[stream.Length];
+            stream.Read(bytes, 0, (int)stream.Length);
+            return Convert.ToBase64String(bytes);
         }
 
         /// <summary>
