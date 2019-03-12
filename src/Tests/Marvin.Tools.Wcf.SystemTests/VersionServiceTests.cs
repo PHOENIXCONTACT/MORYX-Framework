@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.Threading;
 using Marvin.DependentTestModule;
@@ -30,7 +31,7 @@ namespace Marvin.Tools.Wcf.SystemTests
 
             Console.WriteLine("Starting HeartOfGold");
 
-            bool started = _hogController.StartHeartOfGold();
+            var started = _hogController.StartHeartOfGold();
             _hogController.CreateClients();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
@@ -59,40 +60,40 @@ namespace Marvin.Tools.Wcf.SystemTests
         [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
-            if (_hogController.Process != null && !_hogController.Process.HasExited)
-            {
-                Console.WriteLine("Trying to stop HeartOfGold");
+            if (_hogController.Process == null || _hogController.Process.HasExited)
+                return;
 
-                _hogController.StopHeartOfGold(10);
+            Console.WriteLine("Trying to stop HeartOfGold");
 
-                if (!_hogController.Process.HasExited)
-                {
-                    Console.WriteLine("Killing HeartOfGold");
-                    _hogController.Process.Kill();
+            _hogController.StopHeartOfGold(10);
 
-                    Thread.Sleep(1000);
+            if (_hogController.Process.HasExited)
+                return;
 
-                    Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
-                }
-            }
+            Console.WriteLine("Killing HeartOfGold");
+            _hogController.Process.Kill();
+
+            Thread.Sleep(1000);
+
+            Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
         }
 
         public void Dispose()
         {
-            if (_hogController != null)
-            {
-                _hogController.Dispose();
-                _hogController = null;
-            }
+            if (_hogController == null)
+                return;
+
+            _hogController.Dispose();
+            _hogController = null;
         }
 
         [TestCase(SimpleHelloWorldWcfService.ServiceName, SimpleHelloWorldWcfService.ServerVersion, SimpleHelloWorldWcfService.MinClientVersion)]
         [TestCase(HelloWorldWcfService.ServiceName, HelloWorldWcfService.ServerVersion, HelloWorldWcfService.MinClientVersion)]
         public void TestEndpointData(string serviceName, string serverVersion, string minClientVersion)
         {
-            ServiceEndpoint[] endpoints = _versionService.ActiveEndpoints();
+            var endpoints = _versionService.ActiveEndpoints();
 
-            ServiceEndpoint endpoint = endpoints.FirstOrDefault(e => e.Endpoint == serviceName);
+            var endpoint = endpoints.FirstOrDefault(e => e.Endpoint == serviceName);
 
             Assert.NotNull(endpoint, "Endpoint for service {0} not found.", serviceName);
 
@@ -124,14 +125,14 @@ namespace Marvin.Tools.Wcf.SystemTests
         [Test]
         public void TestActiveEndpointsLifeCycle()
         {
-            ServiceEndpoint[] endpoints = _versionService.ActiveEndpoints();
+            var endpoints = _versionService.ActiveEndpoints();
 
-            int startLength = endpoints.Length;
+            var startLength = endpoints.Length;
 
             Assert.Greater(startLength, 2);
 
             _hogController.StopService(DependentTestModule.ModuleController.ModuleName);
-            bool result = _hogController.WaitForService(DependentTestModule.ModuleController.ModuleName, ServerModuleState.Stopped, 5);
+            var result = _hogController.WaitForService(DependentTestModule.ModuleController.ModuleName, ServerModuleState.Stopped, 5);
             Assert.IsTrue(result, "Service '{0}' did not reach state 'Stopped'", DependentTestModule.ModuleController.ModuleName);
 
             endpoints = _versionService.ActiveEndpoints();
@@ -163,14 +164,14 @@ namespace Marvin.Tools.Wcf.SystemTests
             Assert.AreEqual(startLength, endpoints.Length, "{0} started", ModuleController.ModuleName);
         }
 
-        [TestCase("IHelloWorldWcfService", HelloWorldWcfService.ServerVersion, HelloWorldWcfService.MinClientVersion, ServiceBindingType.NetTcp, "net.tcp://localhost:{PORT}/HelloWorldWcfService")]
-        [TestCase("ISimpleHelloWorldWcfService", SimpleHelloWorldWcfService.ServerVersion, SimpleHelloWorldWcfService.MinClientVersion, ServiceBindingType.BasicHttp, "http://localhost:{PORT}/SimpleHelloWorldWcfService")]
+        [TestCase("IHelloWorldWcfService", HelloWorldWcfService.ServerVersion, HelloWorldWcfService.MinClientVersion, ServiceBindingType.NetTcp, "net.tcp://{HOST}:{PORT}/HelloWorldWcfService")]
+        [TestCase("ISimpleHelloWorldWcfService", SimpleHelloWorldWcfService.ServerVersion, SimpleHelloWorldWcfService.MinClientVersion, ServiceBindingType.BasicHttp, "http://{HOST}:{PORT}/SimpleHelloWorldWcfService")]
         public void TestServiceConfig(string service, string serverVersion, string minClientVersion, ServiceBindingType binding, string url)
         {
-            url = url.Replace("{PORT}", binding == ServiceBindingType.NetTcp ? _hogController.NetTcpPort.ToString() : _hogController.HttpPort.ToString());
+            url = url.Replace("{PORT}", binding == ServiceBindingType.NetTcp ? _hogController.NetTcpPort.ToString() : _hogController.HttpPort.ToString())
+                .Replace("{HOST}", Dns.GetHostName());
 
-            ServiceConfig serviceConfig = _versionService.GetServiceConfiguration(service);
-
+            var serviceConfig = _versionService.GetServiceConfiguration(service);
             Assert.NotNull(serviceConfig, "ServiceConfig for service {0} not found.", service);
 
             Assert.AreEqual(serverVersion, serviceConfig.ServerVersion);
@@ -182,8 +183,8 @@ namespace Marvin.Tools.Wcf.SystemTests
         [Test]
         public void TestServiceConfigLifeCycle()
         {
-            string helloServiceName = typeof(IHelloWorldWcfService).Name;
-            string simpleServiceName = typeof(ISimpleHelloWorldWcfService).Name;
+            var helloServiceName = typeof(IHelloWorldWcfService).Name;
+            var simpleServiceName = typeof(ISimpleHelloWorldWcfService).Name;
 
             ServiceConfig[] serviceConfigs = GetServiceConfigs();
 
@@ -229,7 +230,7 @@ namespace Marvin.Tools.Wcf.SystemTests
 
         private ServiceConfig[] GetServiceConfigs()
         {
-            ServiceConfig[] result = new ServiceConfig[2];
+            var result = new ServiceConfig[2];
 
             result[0] = _versionService.GetServiceConfiguration(typeof(IHelloWorldWcfService).Name);
             result[1] = _versionService.GetServiceConfiguration(typeof(ISimpleHelloWorldWcfService).Name);

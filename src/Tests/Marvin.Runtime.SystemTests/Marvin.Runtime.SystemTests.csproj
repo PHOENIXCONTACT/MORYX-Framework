@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="BasicTests.cs" />
     <Compile Include="BasicConfigTests.cs" />
+    <Compile Include="DatabaseTests.cs" />
     <Compile Include="HogHelper.cs" />
     <Compile Include="LoggingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

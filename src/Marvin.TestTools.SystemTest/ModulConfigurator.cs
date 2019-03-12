@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Marvin.Serialization;
+﻿using Marvin.Serialization;
 using Marvin.TestTools.SystemTest.Maintenance;
 using NUnit.Framework;
 
@@ -107,7 +104,7 @@ namespace Marvin.TestTools.SystemTest
         /// <param name="configPath">The path to the configuration value; splited by '\\'</param>
         /// <param name="index">The index of the current path step</param>
         /// <returns>the found configuration</returns>
-        private Entry StepThroughEntryModel(Entry currentConfig, string[] configPath, ref int index)
+        private static Entry StepThroughEntryModel(Entry currentConfig, string[] configPath, ref int index)
         {
             // check if last index has been reached.
             if (index >= configPath.Length)
