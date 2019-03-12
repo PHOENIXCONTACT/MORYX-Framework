@@ -5,7 +5,6 @@ using Marvin.Configuration;
 using Marvin.Model;
 using Marvin.Modules;
 using Marvin.TestTools.SystemTest.DatabaseMaintenance;
-using Marvin.TestTools.SystemTest.Mocks;
 
 namespace Marvin.TestTools.SystemTest
 {

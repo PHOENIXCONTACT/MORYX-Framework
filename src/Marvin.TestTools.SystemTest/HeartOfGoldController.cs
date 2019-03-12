@@ -5,17 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.ServiceModel.Description;
 using System.Text;
 using System.Threading;
-using Marvin.Bindings;
 using Marvin.Model;
 using Marvin.Runtime.Modules;
-using Marvin.Serialization;
 using Marvin.TestTools.SystemTest.Clients;
 using Marvin.TestTools.SystemTest.DatabaseMaintenance;
 using Marvin.TestTools.SystemTest.Logging;
@@ -34,10 +29,8 @@ namespace Marvin.TestTools.SystemTest
         /// Initializes a new instance of the <see cref="MarvinServiceNotFoundException"/> class.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        public MarvinServiceNotFoundException(string message)
-            : base(message)
+        public MarvinServiceNotFoundException(string message) : base(message)
         {
-
         }
 
         /// <summary>
@@ -45,21 +38,8 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
-        public MarvinServiceNotFoundException(string message, Exception innerException)
-            : base(message, innerException)
+        public MarvinServiceNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance with serialized data.
-        /// </summary>
-        /// <param name="si">The SerializationInfo that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The StreamingContext that contains contextual information about the source or destination.</param>
-        public MarvinServiceNotFoundException(SerializationInfo si, StreamingContext context)
-            : base(si, context)
-        {
-
         }
     }
 
@@ -106,7 +86,7 @@ namespace Marvin.TestTools.SystemTest
         /// <summary>
         /// Currently defined port increment
         /// </summary>
-        private int _portIncrement;
+        private readonly int _portIncrement;
 
         /// <summary>
         /// Timer to get the log-entrys
@@ -203,8 +183,7 @@ namespace Marvin.TestTools.SystemTest
         /// <param name="buildDirectoryName">The build directory. Default is 'Build'</param>
         /// <param name="runtimeDirectoryName">The runtime directory. Default is 'ServiceRuntime'</param>
         /// <param name="configDirecoryName">The configuration direcory. Default is 'Config'</param>
-        public HeartOfGoldController(string buildDirectoryName, string runtimeDirectoryName, string configDirecoryName)
-            : this()
+        public HeartOfGoldController(string buildDirectoryName, string runtimeDirectoryName, string configDirecoryName) : this()
         {
             // Search for the runtime executable with the given directorys
             SearchForRuntime(buildDirectoryName, runtimeDirectoryName, configDirecoryName);
@@ -217,15 +196,6 @@ namespace Marvin.TestTools.SystemTest
         public bool StartHeartOfGold()
         {
             return StartHeartOfGold("HeartOfGold.exe");
-        }
-
-        /// <summary>
-        /// Starts the HeartOfGold executable in x86 mode.
-        /// </summary>
-        /// <returns><c>true</c> if start succeeds, <c>false</c> if not</returns>
-        public bool StartHeartOfGoldX86()
-        {
-            return StartHeartOfGold("HeartOfGold_x86.exe");
         }
 
         /// <summary>
@@ -244,29 +214,21 @@ namespace Marvin.TestTools.SystemTest
         {
             // check the runtime directory
             if (RuntimeDir == null)
-            {
                 throw new InvalidOperationException("Can't start HeartOfGold without RuntimeDir.");
-            }
 
             // check the config directory
             if (ConfigDir == null)
-            {
                 throw new InvalidOperationException("Can't start HeartOfGold without ConfigDir.");
-            }
 
             // check that the process is not allready running 
             if (Process != null && !Process.HasExited)
-            {
                 throw new InvalidOperationException("HeartOfGold is already running.");
-            }
 
             var wcfConfig = Path.Combine(RuntimeDir, ConfigDir, "Marvin.Tools.Wcf.WcfConfig.mcf");
             if (File.Exists(wcfConfig))
-            {
                 File.Delete(wcfConfig);
-            }
 
-            string runtimeCommand = Path.Combine(RuntimeDir, exeName);
+            var runtimeCommand = Path.Combine(RuntimeDir, exeName);
 
             Process = new Process
             {
@@ -276,8 +238,9 @@ namespace Marvin.TestTools.SystemTest
                 {
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    UseShellExecute = false
-                },
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
             };
 
             DataReceivedEventHandler outputDelegate = (sender, args) => 
@@ -511,32 +474,32 @@ namespace Marvin.TestTools.SystemTest
         /// <summary>
         /// Waits for a number of given services until they reach the Running state.
         /// </summary>
-        /// <param name="services">The services to wait for</param>
+        /// <param name="moduleNames">The services to wait for</param>
         /// <returns>True if all services reached the Running state, false otherwise</returns>
-        public bool WaitForServices(string[] services)
+        public bool WaitForServices(string[] moduleNames)
         {
-            return WaitForServices(services, ServerModuleState.Running, 30.0);
+            return WaitForServices(moduleNames, ServerModuleState.Running, 30.0);
         }
 
         /// <summary>
         /// Waits for a number of given services until they reach the given state.
         /// </summary>
-        /// <param name="services">The services to wait for</param>
+        /// <param name="moduleNames">The services to wait for</param>
         /// <param name="state">The state that should be reached by the services.</param>
         /// <returns>True if all services reached the expected state, false otherwise</returns>
-        public bool WaitForServices(string[] services, ServerModuleState state)
+        public bool WaitForServices(string[] moduleNames, ServerModuleState state)
         {
-            return WaitForServices(services, state, 30.0);
+            return WaitForServices(moduleNames, state, 30.0);
         }
 
         /// <summary>
         /// Waits for a number of given services until they reach the given state.
         /// </summary>
-        /// <param name="services">The services to wait for</param>
+        /// <param name="moduleNames">The services to wait for</param>
         /// <param name="state">The state that should be reached by the services.</param>
         /// <param name="timeoutInSeconds">The timeout for the services to reach the given state; in seconds.</param>
         /// <returns>True if all services reached the expected state, false otherwise</returns>
-        public bool WaitForServices(string[] services, ServerModuleState state, double timeoutInSeconds)
+        public bool WaitForServices(string[] moduleNames, ServerModuleState state, double timeoutInSeconds)
         {
             // Calculate timeout time.
             DateTime timeout = DateTime.Now.AddSeconds(timeoutInSeconds);
@@ -544,12 +507,12 @@ namespace Marvin.TestTools.SystemTest
             // Check service states until the timeout accures or the given state has bin reached.
             while (DateTime.Now < timeout)
             {
-                ServerModuleModel[] modules;
+                ServerModuleModel[] moduleModels;
 
                 try
                 {
                     // Get all existing services of the heart of gold instance.
-                    modules = _maintenanceClient.GetAll();
+                    moduleModels = _maintenanceClient.GetAll();
                 }
                 catch (FaultException)
                 {
@@ -583,32 +546,27 @@ namespace Marvin.TestTools.SystemTest
                 }
 
                 // Will be set to false if any service didn't reached the given state.
-                bool statesReached = true;
+                var statesReached = true;
 
                 // Search the plugins with the given names
-                foreach (string service in services)
+                foreach (var service in moduleNames)
                 {
-                    ServerModuleModel module = modules.FirstOrDefault(m => m.Name == service);
+                    var module = moduleModels.FirstOrDefault(m => m.Name == service);
 
                     if (module == null)
-                    {
-                        throw new MarvinServiceNotFoundException(string.Format("No service found with name '{0}'!", service));
-                    }
+                        throw new MarvinServiceNotFoundException($"No service found with name '{service}'!");
 
                     // Check the state of the plugin
-                    if (module.HealthState != state)
-                    {
-                        statesReached = false;
+                    if (module.HealthState == state)
+                        continue;
 
-                        break;
-                    }
+                    statesReached = false;
+                    break;
                 }
 
                 // Check if all services have reached the given state
                 if (statesReached)
-                {
                     return true;
-                }
             }
 
             return false;
@@ -640,10 +598,9 @@ namespace Marvin.TestTools.SystemTest
         /// <param name="logger">The name of the logger to connect to.</param>
         /// <param name="level">The logging level to get.</param>
         /// <returns>The logger identifier.</returns>
-        public int AddRemoteLogAppender(String logger, Marvin.Logging.LogLevel level)
+        public int AddRemoteLogAppender(string logger, LogLevel level)
         {
             var response = WaitForServiceCall(() => _loggingClient.AddAppender(new AddAppenderRequest { MinLevel = level, Name = logger } ));
-
 
             // Add to the list of loggers
             lock (_loggerIds)
@@ -666,6 +623,7 @@ namespace Marvin.TestTools.SystemTest
         /// <summary>
         /// Disconnect from the heart of gold client logger.
         /// </summary>
+        /// <param name="loggerName">Name of the logger</param>
         /// <param name="loggerId">The logger identifier.</param>
         public void RemoveRemoteLogAppender(string loggerName, int loggerId)
         {
@@ -719,7 +677,7 @@ namespace Marvin.TestTools.SystemTest
             {
                 try
                 {
-                    T result = taskToTry();
+                    var result = taskToTry();
                     return result;
                 }
                 catch (EndpointNotFoundException ex)
@@ -743,7 +701,7 @@ namespace Marvin.TestTools.SystemTest
                 throw lastException;
             }
 
-            throw new Exception(String.Format("WaitForServiceCall timeed out after {0} seconds", timeoutInSeconds));
+            throw new Exception($"WaitForServiceCall timeed out after {timeoutInSeconds} seconds");
         }
 
         /// <summary>
@@ -752,7 +710,7 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         /// <param name="taskToTry">The task to try.</param>
         /// <param name="timeoutInSeconds">The timeout in seconds.</param>
-        private void WaitForServiceCall(Action taskToTry, double timeoutInSeconds = 5.0)
+        private static void WaitForServiceCall(Action taskToTry, double timeoutInSeconds = 5.0)
         {
             var timeoutTime = DateTime.Now.AddSeconds(timeoutInSeconds);
 
@@ -818,44 +776,42 @@ namespace Marvin.TestTools.SystemTest
             DirectoryInfo buildDir = null;
 
             // Get current directory
-            Assembly assembly = GetType().Assembly;
-            String location = assembly.Location;
-            FileInfo fi = new FileInfo(location);
-            DirectoryInfo currentDir = fi.Directory;
+            var assembly = GetType().Assembly;
+            string location = assembly.Location;
+            var fi = new FileInfo(location);
+            var currentDir = fi.Directory;
 
             // Search for the "build" folder in the current directory.
             while (buildDir == null && currentDir != null)
             {
                 // Is the current directory the "build" directory?
+                // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
                 if (currentDir.Name == buildDirectoryName)
-                {
                     buildDir = currentDir;
-                }
                 else
-                {
                     // Try to find the "build directory in the subfolders. buildDir will stay null when it is not found.
                     buildDir = currentDir.EnumerateDirectories(buildDirectoryName).FirstOrDefault();
-                }
 
                 // go one folder backwards with the current directory
                 currentDir = currentDir.Parent;
             }
 
             if (buildDir == null)
-                throw new DirectoryNotFoundException(string.Format("The build directory '{0}' could not be found!", buildDirectoryName));
+                throw new DirectoryNotFoundException($"The build directory '{buildDirectoryName}' could not be found!");
 
             // Find the runtime directory
-            DirectoryInfo runtimeDir = buildDir.EnumerateDirectories(runtimeDirectoryName).FirstOrDefault();
+            var runtimeDir = buildDir.EnumerateDirectories(runtimeDirectoryName).FirstOrDefault();
 
             if (runtimeDir == null)
-                throw new DirectoryNotFoundException(string.Format("The runtime directory '{0}' could not be found!", runtimeDirectoryName));
+                throw new DirectoryNotFoundException($"The runtime directory '{runtimeDirectoryName}' could not be found!");
             RuntimeDir = runtimeDir.FullName;
 
             // find the config directory
-            DirectoryInfo configDir = runtimeDir.EnumerateDirectories(configDirectoryName).FirstOrDefault();
+            var configDir = runtimeDir.EnumerateDirectories(configDirectoryName).FirstOrDefault();
 
             if (configDir == null)
-                throw new DirectoryNotFoundException(string.Format("The config directory '{0}' could not be found!", configDirectoryName));
+                throw new DirectoryNotFoundException($"The config directory '{configDirectoryName}' could not be found!");
+
             ConfigDir = configDir.FullName;
         }
 
@@ -914,7 +870,6 @@ namespace Marvin.TestTools.SystemTest
         /// Sets the configuration of a given service.
         /// The change can be done on the 'trunk'-configuration or in a sub-configuration entry.
         /// </summary>
-        /// <param name="config">The changed configuration.</param>
         public void SetConfig(Config config, string moduleName)
         {
             WaitForServiceCall(() => _maintenanceClient.SetConfig(moduleName, new SaveConfigRequest { Config = config, UpdateMode = ConfigUpdateMode.UpdateLiveAndSave }));
@@ -1084,6 +1039,5 @@ namespace Marvin.TestTools.SystemTest
                 Thread.Sleep(1000);
             }
         }
-
     }
 }

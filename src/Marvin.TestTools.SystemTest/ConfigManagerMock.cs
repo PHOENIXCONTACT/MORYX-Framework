@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Marvin.Configuration;
 
-namespace Marvin.TestTools.SystemTest.Mocks
+namespace Marvin.TestTools.SystemTest
 {
     /// <summary>
     /// Mock of a config manger to use with the unit of work factory

@@ -21,7 +21,7 @@ namespace Marvin.Runtime.SystemTests
     [TestFixture]
     public class LoggingTests : IDisposable
     {
-        private const int WaitTime = 8000;
+        private const int WaitTime = 1000;
         private const int ServerSleepTime = 100;
         private const int ClientSleepTime = 100;
 
@@ -113,92 +113,14 @@ namespace Marvin.Runtime.SystemTests
         }
 
         [TestCase(LogLevel.Fatal, LogLevel.Fatal, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Error, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Warning, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Info, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Trace, true)]
-
         [TestCase(LogLevel.Error, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Error, LogLevel.Error, true)]
-        [TestCase(LogLevel.Error, LogLevel.Warning, true)]
-        [TestCase(LogLevel.Error, LogLevel.Info, true)]
-        [TestCase(LogLevel.Error, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Error, LogLevel.Trace, true)]
-
-        [TestCase(LogLevel.Warning, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Warning, LogLevel.Error, false)]
-        [TestCase(LogLevel.Warning, LogLevel.Warning, true)]
-        [TestCase(LogLevel.Warning, LogLevel.Info, true)]
-        [TestCase(LogLevel.Warning, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Warning, LogLevel.Trace, true)]
-
-        [TestCase(LogLevel.Info, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Info, LogLevel.Error, false)]
-        [TestCase(LogLevel.Info, LogLevel.Warning, false)]
-        [TestCase(LogLevel.Info, LogLevel.Info, true)]
-        [TestCase(LogLevel.Info, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Info, LogLevel.Trace, true)]
-
-        [TestCase(LogLevel.Debug, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Debug, LogLevel.Error, false)]
-        [TestCase(LogLevel.Debug, LogLevel.Warning, false)]
-        [TestCase(LogLevel.Debug, LogLevel.Info, false)]
-        [TestCase(LogLevel.Debug, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Debug, LogLevel.Trace, true)]
-
-        [TestCase(LogLevel.Trace, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Error, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Warning, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Info, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Debug, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Trace, true)]
         public void BasicLoggingTest1(LogLevel senderLevel, LogLevel receiverLevel, bool expectedResult)
         {
             BasicLoggingTest(senderLevel, LogLevel.Trace, receiverLevel, expectedResult);
         }
 
         [TestCase(LogLevel.Fatal, LogLevel.Fatal, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Error, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Warning, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Info, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Fatal, LogLevel.Trace, true)]
-
         [TestCase(LogLevel.Error, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Error, LogLevel.Error, true)]
-        [TestCase(LogLevel.Error, LogLevel.Warning, true)]
-        [TestCase(LogLevel.Error, LogLevel.Info, true)]
-        [TestCase(LogLevel.Error, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Error, LogLevel.Trace, true)]
-
-        [TestCase(LogLevel.Warning, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Warning, LogLevel.Error, false)]
-        [TestCase(LogLevel.Warning, LogLevel.Warning, true)]
-        [TestCase(LogLevel.Warning, LogLevel.Info, true)]
-        [TestCase(LogLevel.Warning, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Warning, LogLevel.Trace, true)]
-
-        [TestCase(LogLevel.Info, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Info, LogLevel.Error, false)]
-        [TestCase(LogLevel.Info, LogLevel.Warning, false)]
-        [TestCase(LogLevel.Info, LogLevel.Info, true)]
-        [TestCase(LogLevel.Info, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Info, LogLevel.Trace, true)]
-
-        [TestCase(LogLevel.Debug, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Debug, LogLevel.Error, false)]
-        [TestCase(LogLevel.Debug, LogLevel.Warning, false)]
-        [TestCase(LogLevel.Debug, LogLevel.Info, false)]
-        [TestCase(LogLevel.Debug, LogLevel.Debug, true)]
-        [TestCase(LogLevel.Debug, LogLevel.Trace, true)]
-
-        [TestCase(LogLevel.Trace, LogLevel.Fatal, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Error, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Warning, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Info, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Debug, false)]
-        [TestCase(LogLevel.Trace, LogLevel.Trace, true)]
         public void BasicLoggingTest2(LogLevel senderLevel, LogLevel receiverLevel, bool expectedResult)
         {
             BasicLoggingTest(senderLevel, receiverLevel, LogLevel.Trace, expectedResult);
@@ -242,7 +164,6 @@ namespace Marvin.Runtime.SystemTests
                 Assert.AreEqual(senderLevel, _receivedLevel, _receivedMessage);
             }
         }
-
 
         private void HandleLogMessages(object sender, HeartOfGoldController.LoggerEventArgs args)
         {
