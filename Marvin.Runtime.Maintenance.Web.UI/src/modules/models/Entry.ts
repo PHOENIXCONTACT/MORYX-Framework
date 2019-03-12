@@ -1,3 +1,4 @@
+import Config from "./Config";
 import EntryKey from "./EntryKey";
 import EntryValidation from "./EntryValidation";
 import EntryValue from "./EntryValue";
@@ -35,7 +36,9 @@ export default class Entry {
 
     public static cloneFromPrototype(prototype: Entry, parent: Entry): Entry {
         const entryClone = JSON.parse(JSON.stringify(prototype));
-        entryClone.Parent = parent;
+
+        Config.patchParent(entryClone, parent);
+
         EntryKey.updateIdentifierToCreated(entryClone.Key);
         Entry.generateUniqueIdentifiers(entryClone);
         return entryClone;
