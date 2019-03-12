@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Serialization;
 
@@ -24,18 +21,6 @@ namespace Marvin.Resources.Interaction
         /// </summary>
         [DataMember]
         public string Name { get; set; }
-
-        /// <summary>
-        /// The local identifier of the resource.
-        /// </summary>
-        [DataMember]
-        public string LocalIdentifier { get; set; }
-
-        /// <summary>
-        /// The global identifier of the recource.
-        /// </summary>
-        [DataMember]
-        public string GlobalIdentifier { get; set; }
 
         /// <summary>
         /// Description of the recource.
@@ -76,9 +61,7 @@ namespace Marvin.Resources.Interaction
         internal bool DifferentFrom(Resource resource, ICustomSerialization serialization)
         {
             var different = resource.Name != Name ||
-                           resource.LocalIdentifier != LocalIdentifier ||
-                           resource.GlobalIdentifier != GlobalIdentifier ||
-                           resource.Description != Description;
+                            resource.Description != Description;
             if (different)
                 return true;
 

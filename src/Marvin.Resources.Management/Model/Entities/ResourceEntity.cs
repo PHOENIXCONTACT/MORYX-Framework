@@ -10,15 +10,6 @@ namespace Marvin.Resources.Model
         [Index]
         public virtual string Name { get; set; }
 
-        /// <summary>
-        /// Identifier used within this system - e.g. the COM-Number within the machine.
-        /// </summary>
-        [Index]
-        public virtual string LocalIdentifier { get; set; }
-
-        [Index]
-        public virtual string GlobalIdentifier { get; set; }
-
         public virtual string Description { get; set; }
 
         public virtual string ExtensionData { get; set; }

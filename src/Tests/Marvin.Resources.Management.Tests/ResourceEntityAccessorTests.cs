@@ -3,7 +3,6 @@ using Marvin.AbstractionLayer.Resources;
 using Marvin.Model;
 using Marvin.Resources.Model;
 using Marvin.Serialization;
-using Marvin.Tools;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -37,8 +36,6 @@ namespace Marvin.Resources.Management.Tests
                 Id = 10,
                 Type = typeof(TestResource).ResourceType(),
                 Name = nameof(ResourceEntityAccessor.Name),
-                LocalIdentifier = nameof(ResourceEntityAccessor.LocalIdentifier),
-                GlobalIdentifier = nameof(ResourceEntityAccessor.GlobalIdentifier),
                 Description = nameof(ResourceEntityAccessor.Description),
                 ExtensionData = JsonConvert.SerializeObject(new TestResource { Data = new ExtensionDataInherited() }, JsonSettings.Minimal)
             };
@@ -51,8 +48,6 @@ namespace Marvin.Resources.Management.Tests
             Assert.AreEqual(10, resource.Id);
             Assert.AreEqual(accessor.Type, resource.GetType().ResourceType());
             Assert.AreEqual(accessor.Name, resource.Name);
-            Assert.AreEqual(accessor.LocalIdentifier, resource.LocalIdentifier);
-            Assert.AreEqual(accessor.GlobalIdentifier, resource.GlobalIdentifier);
             Assert.AreEqual(accessor.Description, resource.Description);
 
             Assert.NotNull(resource.Data);
@@ -70,8 +65,6 @@ namespace Marvin.Resources.Management.Tests
             var id = createNew ? 0 : 10;
             var type = createNew ? typeof(TestResource).ResourceType() : "";
             const string name = nameof(ResourceEntityAccessor.Name);
-            const string localIdentifier = nameof(ResourceEntityAccessor.LocalIdentifier);
-            const string globalIdentifier = nameof(ResourceEntityAccessor.GlobalIdentifier);
             const string description = nameof(ResourceEntityAccessor.Description);
 
             var entity = new ResourceEntity
@@ -79,8 +72,6 @@ namespace Marvin.Resources.Management.Tests
                 Id = id,
                 Type = type,
                 Name = "",
-                LocalIdentifier = "",
-                GlobalIdentifier = "",
                 Description = ""
             };
 
@@ -95,8 +86,6 @@ namespace Marvin.Resources.Management.Tests
             {
                 Name = name,
                 Data = new ExtensionDataInherited(),
-                LocalIdentifier = localIdentifier,
-                GlobalIdentifier = globalIdentifier,
                 Description = description
             };
 
@@ -110,8 +99,6 @@ namespace Marvin.Resources.Management.Tests
             Assert.AreEqual(id, resourceEntity.Id);
             Assert.AreEqual(type, resourceEntity.Type);
             Assert.AreEqual(name, resourceEntity.Name);
-            Assert.AreEqual(localIdentifier, resourceEntity.LocalIdentifier);
-            Assert.AreEqual(globalIdentifier, resourceEntity.GlobalIdentifier);
             Assert.AreEqual(description, resourceEntity.Description);
             Assert.AreEqual(extensionDataJson, resourceEntity.ExtensionData);
         }

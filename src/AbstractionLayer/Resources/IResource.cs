@@ -14,15 +14,5 @@
         /// Name of this resource instance
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Gets information about this resource.
-        /// </summary>
-        string LocalIdentifier { get; }
-
-        /// <summary>
-        /// Global identifier of a resource
-        /// </summary>
-        string GlobalIdentifier { get; }
     }
 }

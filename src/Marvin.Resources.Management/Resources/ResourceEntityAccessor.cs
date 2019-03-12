@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Configuration;
 using Marvin.Model;
@@ -32,16 +30,6 @@ namespace Marvin.Resources.Management
         /// Name of the resource
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Local identifier of the resource within its context
-        /// </summary>
-        public string LocalIdentifier { get; set; }
-
-        /// <summary>
-        /// Global identifier of the resource
-        /// </summary>
-        public string GlobalIdentifier { get; set; }
 
         /// <summary>
         /// Description of the resource
@@ -78,8 +66,6 @@ namespace Marvin.Resources.Management
             // Copy default properties
             Instance.Id = Id;
             Instance.Name = Name;
-            Instance.LocalIdentifier = LocalIdentifier;
-            Instance.GlobalIdentifier = GlobalIdentifier;
             Instance.Description = Description;
 
             // Copy extended data from json
@@ -109,10 +95,6 @@ namespace Marvin.Resources.Management
                 entity.Name = instance.Name;
             if (entity.Description != instance.Description)
                 entity.Description = instance.Description;
-            if (entity.LocalIdentifier != instance.LocalIdentifier)
-                entity.LocalIdentifier = instance.LocalIdentifier;
-            if (entity.GlobalIdentifier != instance.GlobalIdentifier)
-                entity.GlobalIdentifier = instance.GlobalIdentifier;
             var extensionData = JsonConvert.SerializeObject(instance, JsonSettings.Minimal);
             if (entity.ExtensionData != extensionData)
                 entity.ExtensionData = extensionData;
@@ -134,8 +116,6 @@ namespace Marvin.Resources.Management
                                  Id = res.Id,
                                  Type = res.Type,
                                  Name = res.Name,
-                                 LocalIdentifier = res.LocalIdentifier,
-                                 GlobalIdentifier = res.GlobalIdentifier,
                                  Description = res.Description,
                                  ExtensionData = res.ExtensionData,
                                  Relations = (from target in res.Targets

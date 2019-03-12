@@ -145,8 +145,9 @@ namespace Marvin.Resources.Management.Tests
             _resourceManager.Start();
             _linkerMock.Invocations.Clear();
 
+            _resourceMock.Name = "A Resource Description";
+
             // Act
-            _resourceMock.LocalIdentifier = "Local";
             _resourceManager.Save(_resourceMock);
 
             // Assert
@@ -157,7 +158,7 @@ namespace Marvin.Resources.Management.Tests
                 var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
                 var entity = resourceRepo.GetByKey(_resourceMock.Id);
 
-                Assert.AreEqual(_resourceMock.LocalIdentifier, entity.LocalIdentifier);
+                Assert.AreEqual(_resourceMock.Description, entity.Description);
             }
         }
 
@@ -173,7 +174,7 @@ namespace Marvin.Resources.Management.Tests
             _linkerMock.ResetCalls();
 
             // Act
-            testResource.GlobalIdentifier = "Hello World";
+            testResource.Name = "Hello World";
             testResource.RaiseChanged();
 
             // Assert
@@ -187,7 +188,7 @@ namespace Marvin.Resources.Management.Tests
             }
 
             Assert.IsNotNull(entity);
-            Assert.AreEqual(testResource.GlobalIdentifier, entity.GlobalIdentifier);
+            Assert.AreEqual(testResource.Name, entity.Name);
         }
 
         [Test(Description = "Adds a resource while the ResourceManager was initialized but not started")]

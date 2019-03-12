@@ -56,8 +56,6 @@ namespace Marvin.Resources.Interaction.Converter
 
             // Copy standard properties
             resource.Name = model.Name;
-            resource.LocalIdentifier = model.LocalIdentifier;
-            resource.GlobalIdentifier = model.GlobalIdentifier;
             resource.Description = model.Description;
 
             // Copy extended properties
