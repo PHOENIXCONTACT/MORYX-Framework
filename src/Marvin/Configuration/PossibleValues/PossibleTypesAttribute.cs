@@ -38,14 +38,7 @@ namespace Marvin.Configuration
         }
 
         /// <inheritdoc />
-        public override object Parse(IContainer container, string value)
-        {
-            var type = _types.Single(t => t.Name == value);
-            return Activator.CreateInstance(type);
-        }
-
-        /// <inheritdoc />
-        public override bool OverridesConversion => true;
+        public override bool OverridesConversion => false;
 
         /// <inheritdoc />
         public override bool UpdateFromPredecessor => false;
