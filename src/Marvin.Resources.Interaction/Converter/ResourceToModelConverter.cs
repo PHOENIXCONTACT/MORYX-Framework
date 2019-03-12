@@ -57,8 +57,6 @@ namespace Marvin.Resources.Interaction.Converter
                 {
                     Id = current.Id,
                     Name = current.Name,
-                    LocalIdentifier = current.LocalIdentifier,
-                    GlobalIdentifier = current.GlobalIdentifier,
                     Description = current.Description,
 
                     // Use simplified type reference
@@ -112,8 +110,6 @@ namespace Marvin.Resources.Interaction.Converter
             {
                 Id = resource.Id,
                 Name = resource.Name,
-                LocalIdentifier = resource.LocalIdentifier,
-                GlobalIdentifier = resource.GlobalIdentifier,
                 Description = resource.Description,
                 Type = resource.ResourceType(),
                 References = ChildrenOnly(resource)
@@ -248,8 +244,6 @@ namespace Marvin.Resources.Interaction.Converter
                 Id = r.Id,
                 Name = r.Name,
                 Type = r.ResourceType(),
-                LocalIdentifier = r.LocalIdentifier,
-                GlobalIdentifier = r.GlobalIdentifier,
                 Description = r.Description
             });
         }

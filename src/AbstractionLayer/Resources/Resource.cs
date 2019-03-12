@@ -32,12 +32,6 @@ namespace Marvin.AbstractionLayer.Resources
         /// <inheritdoc />
         public string Name { get; set; }
 
-        /// <inheritdoc />
-        public string LocalIdentifier { get; set; }
-
-        /// <inheritdoc />
-        public string GlobalIdentifier { get; set; }
-
         /// <summary>
         /// Description of this resource
         /// </summary>

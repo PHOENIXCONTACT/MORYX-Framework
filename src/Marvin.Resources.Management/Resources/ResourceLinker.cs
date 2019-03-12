@@ -52,7 +52,7 @@ namespace Marvin.Resources.Management
                     var matches = MatchingRelations(relations, property);
                     var resources = matches.Select(m => Graph.Get(m.ReferenceId))
                         .Where(elemType.IsInstanceOfType)
-                        .OrderBy(r => r.LocalIdentifier).ThenBy(r => r.Name);
+                        .OrderBy(r => r.Name);
 
                     foreach (var referencedResource in resources)
                     {
