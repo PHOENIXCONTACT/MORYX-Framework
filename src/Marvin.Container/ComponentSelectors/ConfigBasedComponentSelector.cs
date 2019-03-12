@@ -32,8 +32,7 @@ namespace Marvin.Container
         /// <param name="componentName">Name of component being constructed</param>
         /// <param name="componentType">Type of component being constructed</param>
         /// <param name="additionalArguments">Additional arguments passed. In our case "T config"</param>
-        /// <returns></returns>
-        protected override Func<IKernelInternal, IReleasePolicy, object> BuildFactoryComponent(MethodInfo method, string componentName, Type componentType, IDictionary additionalArguments)
+        protected override Func<IKernelInternal, IReleasePolicy, object> BuildFactoryComponent(MethodInfo method, string componentName, Type componentType, Arguments additionalArguments)
         {
             var createFunc = new Func<IKernelInternal, IReleasePolicy, object>((kernel, policy) =>
             {
