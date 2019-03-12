@@ -26,7 +26,6 @@ namespace Marvin.Tests.Configuration
             // Act
             var valuesFromBase = attrWithBase.GetValues(null).ToArray();
             var valuesFromArray = attrWithArray.GetValues(null).ToArray();
-            var instance = attrWithBase.Parse(null, nameof(SomeBase));
 
             // Assert
             // Check values from base type
@@ -37,10 +36,6 @@ namespace Marvin.Tests.Configuration
             // Check values from array types
             Assert.AreEqual(1, valuesFromArray.Length);
             Assert.AreEqual(nameof(SomeImpl), valuesFromArray[0]);
-
-            // Check instance
-            Assert.NotNull(instance);
-            Assert.AreEqual(instance.GetType(), typeof(SomeBase));
         }
 
         [Test(Description = "Uses the " + nameof(StateMachineKeysAttribute) + " to read possible state keys from the given state machine type.")]
