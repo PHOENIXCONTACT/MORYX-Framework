@@ -103,8 +103,8 @@ namespace Marvin.Runtime.Kernel
             lock (this)
             {
                 ClearCurrentConsoleLine();
-                var module = (IServerModule)sender;
-                Console.Write(module.Name.PadRight(35) + " changed state to".PadRight(30));
+                var serverModule = (IServerModule)sender;
+                Console.Write(serverModule.Name.PadRight(35) + " changed state to".PadRight(30));
                 CommandHelper.PrintState(eventArgs.NewState, true);
                 WriteBashPostString();
             }
@@ -119,11 +119,11 @@ namespace Marvin.Runtime.Kernel
                 handler.ExportValidCommands(pad);
                 Console.WriteLine();
             }
-            Console.WriteLine("clear".PadRight(pad) + "Clears the console and prints the state of all services");
+            Console.WriteLine("clear".PadRight(pad) + "Clears the console and prints the state of all modules");
             Console.WriteLine();
             Console.WriteLine("help".PadRight(pad) + "Prints this page");
             Console.WriteLine();
-            Console.WriteLine("exit".PadRight(pad) + "Stops all services and closes the application");
+            Console.WriteLine("exit".PadRight(pad) + "Stops all modules and closes the application");
             Console.WriteLine();
         }
 
@@ -204,7 +204,7 @@ namespace Marvin.Runtime.Kernel
         {
             DrawStarLine();
 
-            var title = "Marvin Runtime " + RuntimePlatform.RuntimeVersion + " Emulator: " + Platform.Current.ProductName;
+            var title = "MARVIN Runtime " + RuntimePlatform.RuntimeVersion + " Emulator: " + Platform.Current.ProductName;
             Console.WriteLine("{0," + ((Console.WindowWidth / 2) + title.Length / 2) + "}", title);
             Console.WriteLine();
 
