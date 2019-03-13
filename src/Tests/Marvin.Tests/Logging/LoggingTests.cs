@@ -60,7 +60,7 @@ namespace Marvin.Tests.Logging
         {
             DateTime t1 = DateTime.Now;
 
-            _logger.LogEntry(LogLevel.Info, LogMsgFormat, LogMsgArgument);
+            _logger.Log(LogLevel.Info, LogMsgFormat, LogMsgArgument);
 
             _loggerManagement.MessageReceivedEvent.Wait(1000);
 
@@ -164,7 +164,7 @@ namespace Marvin.Tests.Logging
         public void BasicEntryLoggingTest(LogLevel senderLevel, LogLevel loggerLevel, bool expectedResult)
         {
             _loggerManagement.SetLevel(_module.Logger, loggerLevel);
-            _logger.LogEntry(senderLevel, LogMsgFormat, LogMsgArgument);
+            _logger.Log(senderLevel, LogMsgFormat, LogMsgArgument);
 
             _loggerManagement.MessageReceivedEvent.Wait(EventWaitTime);
 

@@ -36,7 +36,7 @@ namespace Marvin.Tools.Wcf
         {
             var context = OperationContext.Current;
 
-            Logger.LogEntry(LogLevel.Info, "New subscription for client '{0}'", clientId);
+            Logger.Log(LogLevel.Info, "New subscription for client '{0}'", clientId);
 
             _channel = context.Channel;
             _channel.Closed += OnChannelClosed;
@@ -56,7 +56,7 @@ namespace Marvin.Tools.Wcf
         /// <see cref="ISessionService.Unsubscribe()"/>
         public void Unsubscribe()
         {
-            Logger.LogEntry(LogLevel.Info, "Removing subscription for client '{0}'", ClientId);
+            Logger.Log(LogLevel.Info, "Removing subscription for client '{0}'", ClientId);
 
             CleanUp(false);
         }
@@ -64,7 +64,7 @@ namespace Marvin.Tools.Wcf
         /// <see cref="ISessionService.Close()"/>
         public void Close()
         {
-            Logger.LogEntry(LogLevel.Info, "Closing channel for client '{0}'", ClientId);
+            Logger.Log(LogLevel.Info, "Closing channel for client '{0}'", ClientId);
 
             CleanUp(false);
         }
@@ -108,14 +108,14 @@ namespace Marvin.Tools.Wcf
 
         private void OnChannelFaulted(object sender, EventArgs e)
         {
-            Logger.LogEntry(LogLevel.Warning, "{0} channel to client '{1}' faulted.", GetType().Name, ClientId);
+            Logger.Log(LogLevel.Warning, "{0} channel to client '{1}' faulted.", GetType().Name, ClientId);
 
             CleanUp(true);
         }
 
         private void OnChannelClosed(object sender, EventArgs e)
         {
-            Logger.LogEntry(LogLevel.Info, "{0} channel to client '{1}' closed.", GetType().Name, ClientId);
+            Logger.Log(LogLevel.Info, "{0} channel to client '{1}' closed.", GetType().Name, ClientId);
 
             CleanUp(true);
         }

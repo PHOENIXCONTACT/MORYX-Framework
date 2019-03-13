@@ -155,7 +155,7 @@ namespace Marvin.Runtime.Kernel
         /// <inheritdoc />
         public void Start()
         {
-            _logger?.LogEntry(LogLevel.Info, "Starting wcf service {0} with version {1}", _endpointAddress,
+            _logger?.Log(LogLevel.Info, "Starting wcf service {0} with version {1}", _endpointAddress,
                 (_endpointVersion ?? new ServiceVersionAttribute()).ServerVersion);
 
             _service.Open();
@@ -179,7 +179,7 @@ namespace Marvin.Runtime.Kernel
             _collector.RemoveEndpoint(_hostConfig.Endpoint);
             _collector.RemoveService(_type);
 
-            _logger?.LogEntry(LogLevel.Info, "Stopping service {0}", _endpointAddress);
+            _logger?.Log(LogLevel.Info, "Stopping service {0}", _endpointAddress);
 
             if (_service != null && _service.State != CommunicationState.Faulted)
             {

@@ -9,7 +9,7 @@ namespace Marvin.Communication.Serial
     {
         internal static SerialPort FromConfig(SerialBinaryConfig config, IModuleLogger logger)
         {
-            logger.LogEntry(LogLevel.Debug, "ConfigComPort started");
+            logger.Log(LogLevel.Debug, "ConfigComPort started");
 
             // Create a new _serialPort object with default settings.
             var serialPort = new SerialPort(config.Port);
@@ -30,11 +30,11 @@ namespace Marvin.Communication.Serial
                 serialPort.ReadBufferSize = config.ReadBufferSize;
                 serialPort.WriteBufferSize = config.WriteBufferSize;
 
-                logger.LogEntry(LogLevel.Debug, "ConfigPort: Opening");
+                logger.Log(LogLevel.Debug, "ConfigPort: Opening");
 
                 serialPort.Open();
 
-                logger.LogEntry(LogLevel.Debug, "ConfigPort: Opened");
+                logger.Log(LogLevel.Debug, "ConfigPort: Opened");
 
                 return serialPort;
             }
@@ -49,7 +49,7 @@ namespace Marvin.Communication.Serial
                     msg.AppendLine().AppendFormat("    Device {0}", s);
                 }
 
-                logger.LogEntry(LogLevel.Error, msg.ToString());
+                logger.Log(LogLevel.Error, msg.ToString());
 
                 throw;
             }

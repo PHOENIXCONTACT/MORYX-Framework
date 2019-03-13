@@ -56,7 +56,7 @@ namespace Marvin.Model.Npgsql
             var dumpName = $"{DateTime.Now:dd-MM-yyyy-hh-mm-ss}_{TargetModel}_{config.Database}.backup";
             var fileName = Path.Combine(targetPath, dumpName);
 
-            Logger.LogEntry(LogLevel.Debug, "Starting to dump database with pg_dump to: {0}", fileName);
+            Logger.Log(LogLevel.Debug, "Starting to dump database with pg_dump to: {0}", fileName);
 
             // Create process
             var arguments = $"-U {config.Username} --format=c --file={fileName} " +
@@ -73,7 +73,7 @@ namespace Marvin.Model.Npgsql
         /// <inheritdoc />
         public override void RestoreDatabase(IDatabaseConfig config, string filePath)
         {
-            Logger.LogEntry(LogLevel.Debug, "Starting to restore database with pg_restore from: {0}", filePath);
+            Logger.Log(LogLevel.Debug, "Starting to restore database with pg_restore from: {0}", filePath);
 
             // Create process
             var arguments = $"-U {config.Username} --format=c --single-transaction --clean " +
@@ -137,12 +137,12 @@ namespace Marvin.Model.Npgsql
 
             if (process.ExitCode != 0)
             {
-                Logger.LogEntry(LogLevel.Error, "Error while running process {0}, ExitCode: {1}!",
+                Logger.Log(LogLevel.Error, "Error while running process {0}, ExitCode: {1}!",
                     process.Id, process.ExitCode);
             }
             else
             {
-                Logger.LogEntry(LogLevel.Debug, "Process {0} exited successfully!",
+                Logger.Log(LogLevel.Debug, "Process {0} exited successfully!",
                     process.Id);
             }
         }
@@ -150,7 +150,7 @@ namespace Marvin.Model.Npgsql
         private void OnProcessOutputDataReceived(object sender, DataReceivedEventArgs args)
         {
             var process = (Process)sender;
-            Logger.LogEntry(LogLevel.Debug, "Process: {0}: {1}", process.Id, args.Data);
+            Logger.Log(LogLevel.Debug, "Process: {0}: {1}", process.Id, args.Data);
         }
     }
 }

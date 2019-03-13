@@ -86,8 +86,7 @@ namespace Marvin.Tools.Wcf.FileSystem
             }
             finally
             {
-                if(targetStream != null)
-                    targetStream.Dispose();
+                targetStream?.Dispose();
             }
         }
 
@@ -116,7 +115,7 @@ namespace Marvin.Tools.Wcf.FileSystem
 
         protected string BuildAbsoluteRootPath(string relativePath)
         {
-            return string.Format("{0}\\{1}", Root, relativePath);
+            return $"{Root}\\{relativePath}";
         }
 
 

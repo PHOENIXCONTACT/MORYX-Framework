@@ -181,7 +181,7 @@ namespace Marvin.Communication.Sockets
         /// <param name="transmission">Open connection</param>
         internal void ExecuteAssignConnection(TcpTransmission transmission)
         {
-            Logger.LogEntry(LogLevel.Info, "Connection established on port {0}", _config.Port);
+            Logger.Log(LogLevel.Info, "Connection established on port {0}", _config.Port);
             _transmission = transmission;
             _transmission.Disconnected += Disconnected;
             _transmission.Received += MessageReceived;
