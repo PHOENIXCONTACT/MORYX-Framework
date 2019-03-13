@@ -72,7 +72,7 @@ namespace Marvin.Logging
         /// <summary>
         /// Add a new entry to the log
         /// </summary>
-        public void LogEntry(LogLevel level, string message, params object[] formatParameters)
+        public void Log(LogLevel level, string message, params object[] formatParameters)
         {
             if (level < ActiveLevel)
                 return;

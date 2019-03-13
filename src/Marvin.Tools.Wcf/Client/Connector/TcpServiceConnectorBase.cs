@@ -120,7 +120,7 @@ namespace Marvin.Tools.Wcf
                 {
                     case ConnectionState.Success:
                         WcfClient = (T) client;
-                        Logger.LogEntry(LogLevel.Info, "WCF client for '{0}' successfully created, client state '{1}'.",
+                        Logger.Log(LogLevel.Info, "WCF client for '{0}' successfully created, client state '{1}'.",
                             ClientConfig.Endpoint, WcfClient.State);
                         StartHeartbeat();
                         RaiseConnected();
@@ -137,21 +137,21 @@ namespace Marvin.Tools.Wcf
                         break;
 
                     case ConnectionState.ConnectionLost:
-                        Logger.LogEntry(LogLevel.Warning, "Connection to '{0}' lost.", ClientConfig.Endpoint, result);
+                        Logger.Log(LogLevel.Warning, "Connection to '{0}' lost.", ClientConfig.Endpoint, result);
                         StopHeartbeat();
                         RaiseDisconnected();
                         WcfClient = null;
                         break;
 
                     case ConnectionState.Closed:
-                        Logger.LogEntry(LogLevel.Warning, "Connection to '{0}' closed.", ClientConfig.Endpoint, result);
+                        Logger.Log(LogLevel.Warning, "Connection to '{0}' closed.", ClientConfig.Endpoint, result);
                         StopHeartbeat();
                         RaiseDisconnected();
                         WcfClient = null;
                         break;
 
                     default:
-                        Logger.LogEntry(LogLevel.Warning, "WCF client for '{0}' could not be created, result '{1}'.",
+                        Logger.Log(LogLevel.Warning, "WCF client for '{0}' could not be created, result '{1}'.",
                             ClientConfig.Endpoint, result);
                         break;
                 }
@@ -185,7 +185,7 @@ namespace Marvin.Tools.Wcf
         /// <param name="clientId">The client identifier.</param>
         public void ReSubscribe(string clientId)
         {
-            Logger.LogEntry(LogLevel.Debug, "ReSubscribe '{0}'", GetType().Name);
+            Logger.Log(LogLevel.Debug, "ReSubscribe '{0}'", GetType().Name);
 
             try
             {
@@ -205,7 +205,7 @@ namespace Marvin.Tools.Wcf
         /// <returns>A Task which represents the asynchronous operation.</returns>
         public Task ReSubscribeAsync(string clientId)
         {
-            Logger.LogEntry(LogLevel.Debug, "ReSubscribeAsync '{0}'", GetType().Name);
+            Logger.Log(LogLevel.Debug, "ReSubscribeAsync '{0}'", GetType().Name);
 
             try
             {

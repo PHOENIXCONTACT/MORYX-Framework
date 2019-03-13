@@ -68,7 +68,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Logging
         /// </summary>
         public int AddRemoteLogAppender(string name, LogLevel level)
         {
-            Logger.LogEntry(LogLevel.Info, "Added appender with name {0} and level {1}", name, level);
+            Logger.Log(LogLevel.Info, "Added appender with name {0} and level {1}", name, level);
 
             var appender = new RemoteAppender();
             if (string.IsNullOrEmpty(name) && level == LogLevel.Trace)

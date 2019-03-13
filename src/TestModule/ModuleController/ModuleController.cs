@@ -35,7 +35,7 @@ namespace Marvin.TestModule
         /// </summary>
         protected override void OnStart()
         {
-            Logger.LogEntry(Config.LogLevel, "Sending log message with level '{0}'", Config.LogLevel);
+            Logger.Log(Config.LogLevel, "Sending log message with level '{0}'", Config.LogLevel);
 
             Thread.Sleep(Config.SleepTime); // Just for system testing.
             //Container.Resolve<JsonTest>().Start();

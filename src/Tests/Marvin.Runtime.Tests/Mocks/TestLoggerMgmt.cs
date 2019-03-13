@@ -110,7 +110,7 @@ namespace Marvin.Runtime.Tests.Mocks
  
         public string Name { get; set; }
 
-        public void LogEntry(LogLevel level, string message, params object[] formatParameters)
+        public void Log(LogLevel level, string message, params object[] formatParameters)
         {
             LogException(level, null, message, formatParameters);
         }

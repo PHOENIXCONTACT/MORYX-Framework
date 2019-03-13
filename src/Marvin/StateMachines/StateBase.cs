@@ -83,7 +83,7 @@ namespace Marvin.StateMachines
             var error = $"The state with the name '{GetType().Name}' cannot handle the method '{methodName}'.";
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            (Context as ILoggingComponent)?.Logger.LogEntry(LogLevel.Error, error);
+            (Context as ILoggingComponent)?.Logger.Log(LogLevel.Error, error);
             return new InvalidOperationException(error);
         }
 

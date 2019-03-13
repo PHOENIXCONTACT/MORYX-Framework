@@ -131,7 +131,7 @@ namespace Marvin.Runtime.Kernel
                 return;
             }
 
-            _logger.LogEntry(LogLevel.Error, "Found no plugin hosting a facade of type {0} which is required by {1}.{2}",
+            _logger.Log(LogLevel.Error, "Found no plugin hosting a facade of type {0} which is required by {1}.{2}",
                 propType.Name, service.Name, importingProperty.Property);
             throw new MissingFacadeException(service.Name, importingProperty.Property.Name, propType);
         }
@@ -188,7 +188,7 @@ namespace Marvin.Runtime.Kernel
             // For each element try to find it as a dependency of its dependencies
             foreach (var dependency in _cache.Values.Where(item => FindInDependencies(item, item)))
             {
-                _logger.LogEntry(LogLevel.Fatal, "Plugin dependency tree is not recursion free! Cause: {0}", dependency.RepresentedModule.Name);
+                _logger.Log(LogLevel.Fatal, "Plugin dependency tree is not recursion free! Cause: {0}", dependency.RepresentedModule.Name);
             }
 
             return eval;

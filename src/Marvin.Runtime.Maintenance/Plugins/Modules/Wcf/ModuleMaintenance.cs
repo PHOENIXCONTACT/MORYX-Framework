@@ -121,14 +121,14 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             var startBehaviour = ModuleManager.BehaviourAccess<ModuleStartBehaviour>(serverModule);
             if (startBehaviour.Behaviour != module.StartBehaviour)
             {
-                Logger.LogEntry(LogLevel.Info, "Changing start behaviour of {0} to {1}", moduleName, module.StartBehaviour);
+                Logger.Log(LogLevel.Info, "Changing start behaviour of {0} to {1}", moduleName, module.StartBehaviour);
                 startBehaviour.Behaviour = module.StartBehaviour;
             }
 
             var failureBehaviour = ModuleManager.BehaviourAccess<FailureBehaviour>(serverModule);
             if (failureBehaviour.Behaviour != module.FailureBehaviour)
             {
-                Logger.LogEntry(LogLevel.Info, "Changing failure behaviour of {0} to {1}", moduleName, module.FailureBehaviour);
+                Logger.Log(LogLevel.Info, "Changing failure behaviour of {0} to {1}", moduleName, module.FailureBehaviour);
                 failureBehaviour.Behaviour = module.FailureBehaviour;
             }
         }
@@ -145,7 +145,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
 
         public Config GetConfig(string moduleName)
         {
-            Logger.LogEntry(LogLevel.Info, "Converting config of plugin {0}", moduleName);
+            Logger.Log(LogLevel.Info, "Converting config of plugin {0}", moduleName);
             try
             {
                 var module = GetModuleFromManager(moduleName);

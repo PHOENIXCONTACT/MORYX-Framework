@@ -54,7 +54,7 @@ namespace Marvin.Communication.Sockets
         private void RaiseDisconnected()
         {
             if (Disconnected == null)
-                _logger.LogEntry(LogLevel.Warning, "Client disconnected, but listener already removed!");
+                _logger.Log(LogLevel.Warning, "Client disconnected, but listener already removed!");
             else
                 Disconnected(this, new EventArgs());
         }
@@ -197,7 +197,7 @@ namespace Marvin.Communication.Sockets
         private void PublishMessage(BinaryMessage message)
         {
             if (Received == null && _disconnected) // Still feels like a hack
-                _logger.LogEntry(LogLevel.Error, "Connection already closed, but a final message was received and can not be published!");
+                _logger.Log(LogLevel.Error, "Connection already closed, but a final message was received and can not be published!");
             else
                 Received.Invoke(this, message);
         }

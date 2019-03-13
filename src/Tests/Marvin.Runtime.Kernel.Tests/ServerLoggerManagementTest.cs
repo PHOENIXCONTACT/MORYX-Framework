@@ -139,7 +139,7 @@ namespace Marvin.Runtime.Kernel.Tests
             Thread.Sleep(10);
 
             // create a logmessage
-            host.Logger.LogEntry(LogLevel.Debug, "Testing sucks!");
+            host.Logger.Log(LogLevel.Debug, "Testing sucks!");
 
             // wait a short time or until the message has been received.
             manualResetEvent.WaitOne(10000); // large timer for debug
@@ -157,7 +157,7 @@ namespace Marvin.Runtime.Kernel.Tests
             // the logger should not change to null!
             Assert.NotNull(host.Logger, "The logger changend to null!");
             // log another message
-            host.Logger.LogEntry(LogLevel.Debug, "Testing is useful!");
+            host.Logger.Log(LogLevel.Debug, "Testing is useful!");
 
             // wait a time; now the message should not be forwarded!
             manualResetEvent.WaitOne(1000); // small timer because it normaly must exceed to proceed
@@ -177,7 +177,7 @@ namespace Marvin.Runtime.Kernel.Tests
             Assert.AreEqual(loggerInstance, loggerInstance2, "After reactivation we got a new logger instance!");
 
             // log another message
-            host.Logger.LogEntry(LogLevel.Debug, "Testing is very useful!");
+            host.Logger.Log(LogLevel.Debug, "Testing is very useful!");
             // wait for the logmessage
             manualResetEvent.WaitOne(10000); // large timer for debug
            
@@ -249,7 +249,7 @@ namespace Marvin.Runtime.Kernel.Tests
             }, minLevel);
 
             // add logentry
-            host.Logger.LogEntry(messageLevel, "Testing rocks!");
+            host.Logger.Log(messageLevel, "Testing rocks!");
 
             // wait to receive the log
             manualResetEvent.WaitOne(1000); // large timer for debug

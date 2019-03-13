@@ -73,7 +73,7 @@ namespace Marvin.TestTools.UnitTest
         /// <summary>
         /// Add a new entry to the log
         /// </summary>
-        public void LogEntry(LogLevel level, string message, params object[] formatParameters)
+        public void Log(LogLevel level, string message, params object[] formatParameters)
         {
             Console.WriteLine($"Class: {GetCallingTypeName()}, " +
                               $"LogLevel: {level}, " +

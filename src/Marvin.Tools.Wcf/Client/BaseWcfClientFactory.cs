@@ -96,7 +96,7 @@ namespace Marvin.Tools.Wcf
         /// </summary>
         public void Dispose()
         {
-            Logger.LogEntry(LogLevel.Info, "Disposing WcfClientFactory!");
+            Logger.Log(LogLevel.Info, "Disposing WcfClientFactory!");
 
             if (_monitorTimer != null)
             {
@@ -215,11 +215,11 @@ namespace Marvin.Tools.Wcf
             var client = GetMonitoredClients(c => c.ClientInfo.Id == clientId).FirstOrDefault();
             if (client == null)
             {
-                Logger.LogEntry(LogLevel.Error, "Can't destroy unknown WCF client {0}", clientId);
+                Logger.Log(LogLevel.Error, "Can't destroy unknown WCF client {0}", clientId);
                 throw new InvalidOperationException($"Client with id {clientId} was not found");
             }
 
-            Logger.LogEntry(LogLevel.Info, "Destroying WCF client {0}", clientId);
+            Logger.Log(LogLevel.Info, "Destroying WCF client {0}", clientId);
             client.Destroy = true;
         }
 
@@ -287,11 +287,11 @@ namespace Marvin.Tools.Wcf
 
             if (string.IsNullOrEmpty(config.MinServerVersion))
             {
-                Logger.LogEntry(LogLevel.Info, "Creating WCF client {0} for '{1}' without version check", request.ClientInfo.Id, serviceName);
+                Logger.Log(LogLevel.Info, "Creating WCF client {0} for '{1}' without version check", request.ClientInfo.Id, serviceName);
             }
             else
             {
-                Logger.LogEntry(LogLevel.Info, "Creating WCF client {0} for '{1}', client version {2}, min. service version {3}",
+                Logger.Log(LogLevel.Info, "Creating WCF client {0} for '{1}', client version {2}, min. service version {3}",
                     request.ClientInfo.Id, serviceName, config.ClientVersion, config.MinServerVersion);
             }
 
@@ -423,7 +423,7 @@ namespace Marvin.Tools.Wcf
             }
             else
             {
-                Logger.LogEntry(LogLevel.Debug, "Trying to get version info for service '{0}'", client.ServiceName);
+                Logger.Log(LogLevel.Debug, "Trying to get version info for service '{0}'", client.ServiceName);
 
                 var version = VersionService.GetServerVersion(client.Config.Endpoint);
                 if (string.IsNullOrEmpty(version))
@@ -433,7 +433,7 @@ namespace Marvin.Tools.Wcf
                 }
 
                 // Finally reached the server
-                Logger.LogEntry(LogLevel.Debug, "Got version '{0}' info for service '{1}'", version, client.ServiceName);
+                Logger.Log(LogLevel.Debug, "Got version '{0}' info for service '{1}'", version, client.ServiceName);
 
                 client.ClientInfo.ServerVersion = version;
 
@@ -451,7 +451,7 @@ namespace Marvin.Tools.Wcf
         /// </summary>
         private void RecieveVersionWithoutConfig(MonitoredClient client)
         {
-            Logger.LogEntry(LogLevel.Debug, "Trying to get service configuration for service '{0}'", client.ServiceName);
+            Logger.Log(LogLevel.Debug, "Trying to get service configuration for service '{0}'", client.ServiceName);
 
             client.ServiceConfiguration = VersionService.GetServiceConfiguration(client.ServiceName);
 
@@ -463,7 +463,7 @@ namespace Marvin.Tools.Wcf
             }
 
             // Finally reached the server
-            Logger.LogEntry(LogLevel.Debug, "Got service configuration for service '{0}'", client.ServiceName);
+            Logger.Log(LogLevel.Debug, "Got service configuration for service '{0}'", client.ServiceName);
 
             client.ClientInfo.ServerVersion = client.ServiceConfiguration.ServerVersion;
             client.ClientInfo.MinClientVersion = client.ServiceConfiguration.MinClientVersion;
@@ -508,7 +508,7 @@ namespace Marvin.Tools.Wcf
         /// </summary>
         private void HandleConnectionFailure(MonitoredClient client, string message)
         {
-            Logger.LogEntry(LogLevel.Debug, "Can't get version info for service '{0}': {1}", client.ServiceName, message);
+            Logger.Log(LogLevel.Debug, "Can't get version info for service '{0}': {1}", client.ServiceName, message);
 
             client.ClientInfo.ServerVersion = WcfClientInfo.Unknown;
             client.ClientInfo.MinClientVersion = WcfClientInfo.Unknown;
@@ -569,7 +569,7 @@ namespace Marvin.Tools.Wcf
         public event EventHandler<WcfClientInfo> ClientInfoChanged;
         private void RaiseClientInfoChanged(WcfClientInfo clientInfo)
         {
-            Logger.LogEntry(LogLevel.Debug, "Firing ClientConnected");
+            Logger.Log(LogLevel.Debug, "Firing ClientConnected");
 
             if (ClientInfoChanged != null && clientInfo != null)
                 ClientInfoChanged(this, clientInfo);
@@ -579,7 +579,7 @@ namespace Marvin.Tools.Wcf
         public event EventHandler<string> ClientDisconnected;
         private void RaiseClientDisconnected(string endpoint)
         {
-            Logger.LogEntry(LogLevel.Debug, "Firing ClientDisconnected for endpoint '{0}'", endpoint);
+            Logger.Log(LogLevel.Debug, "Firing ClientDisconnected for endpoint '{0}'", endpoint);
             ClientDisconnected?.Invoke(this, endpoint);
         }
 
@@ -587,14 +587,14 @@ namespace Marvin.Tools.Wcf
         public event EventHandler<string> ClientConnected;
         private void RaiseClientConnected(string endpoint)
         {
-            Logger.LogEntry(LogLevel.Debug, "Firing ClientConnected for endpoint '{0}'", endpoint);
+            Logger.Log(LogLevel.Debug, "Firing ClientConnected for endpoint '{0}'", endpoint);
             ClientConnected?.Invoke(this, endpoint);
 
             //If now all clients connected, we can raise the event
             var clients = GetMonitoredClients();
             if (clients.All(client => client.State == InternalConnectionState.Success))
             {
-                Logger.LogEntry(LogLevel.Debug, "Firing AllClientsConnected");
+                Logger.Log(LogLevel.Debug, "Firing AllClientsConnected");
                 AllClientsConnected?.Invoke(this, new EventArgs());
             }
         }
@@ -619,11 +619,11 @@ namespace Marvin.Tools.Wcf
         {
             if (client == null)
             {
-                Logger.LogEntry(LogLevel.Warning, "Connection of unknown client/callback {0}", reason);
+                Logger.Log(LogLevel.Warning, "Connection of unknown client/callback {0}", reason);
                 return;
             }
 
-            Logger.LogEntry(LogLevel.Warning, "Connection/Callback to '{0}' {1}", client.ServiceName, reason);
+            Logger.Log(LogLevel.Warning, "Connection/Callback to '{0}' {1}", client.ServiceName, reason);
 
             // State of the client. If the client was destroyed, the internal connection state will be set to closed.
             // If the client was not destroryed, the connection was lost.

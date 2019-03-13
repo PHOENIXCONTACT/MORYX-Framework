@@ -84,7 +84,7 @@ namespace Marvin.Runtime.Modules
             // Activate logging
             LoggerManagement.ActivateLogging(this);
             LoggerManagement.AppendListenerToStream(ProcessLogMessage, LogLevel.Warning, Name);
-            Logger.LogEntry(LogLevel.Info, "{0} is initializing...", Name);
+            Logger.Log(LogLevel.Info, "{0} is initializing...", Name);
             
             // Get config and parse for container settings
             Config = ConfigManager.GetConfiguration<TConf>();
@@ -107,7 +107,7 @@ namespace Marvin.Runtime.Modules
                 subInitializer.Initialize(Container);
             }
 
-            Logger.LogEntry(LogLevel.Info, "{0} initialized!", Name);
+            Logger.Log(LogLevel.Info, "{0} initialized!", Name);
 
             // After initializing the module, all notifications are unnecessary
             Notifications.Clear();
@@ -120,11 +120,11 @@ namespace Marvin.Runtime.Modules
         
         void IServerModuleStateContext.Start()
         {
-            Logger.LogEntry(LogLevel.Info, "{0} is starting...", Name);
+            Logger.Log(LogLevel.Info, "{0} is starting...", Name);
 
             OnStart();
 
-            Logger.LogEntry(LogLevel.Info, "{0} started!", Name);
+            Logger.Log(LogLevel.Info, "{0} started!", Name);
         }
 
         void IServerModuleStateContext.Started()
@@ -146,11 +146,11 @@ namespace Marvin.Runtime.Modules
         
         void IServerModuleStateContext.Stop()
         {
-            Logger.LogEntry(LogLevel.Info, "{0} is stopping...", Name);
+            Logger.Log(LogLevel.Info, "{0} is stopping...", Name);
 
             OnStop();
 
-            Logger.LogEntry(LogLevel.Info, "{0} stopped!", Name);
+            Logger.Log(LogLevel.Info, "{0} stopped!", Name);
         }
 
         void IServerModuleStateContext.Destruct()
@@ -164,7 +164,7 @@ namespace Marvin.Runtime.Modules
             // Deregister from logging
             LoggerManagement.RemoveListenerFromStream(ProcessLogMessage);
             LoggerManagement.DeactivateLogging(this);
-            Logger.LogEntry(LogLevel.Info, "{0} destructed!", Name);
+            Logger.Log(LogLevel.Info, "{0} destructed!", Name);
         }
 
         #endregion

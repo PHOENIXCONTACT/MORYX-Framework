@@ -53,7 +53,7 @@ namespace Marvin.Logging
         /// <summary>
         /// Add a new entry to the log
         /// </summary>
-        void LogEntry(LogLevel level, string message, params object[] formatParameters);
+        void Log(LogLevel level, string message, params object[] formatParameters);
 
         /// <summary>
         /// Log a caught exception

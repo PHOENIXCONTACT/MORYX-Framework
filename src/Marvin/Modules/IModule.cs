@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Marvin.Modules
+﻿namespace Marvin.Modules
 {
     /// <summary>
     /// Base interface for all major components of applications within the Marvin platform application family.
