@@ -279,7 +279,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Databases
 
         private DataModel Convert(IModelConfigurator configurator)
         {
-            if (configurator == null)
+            if (configurator?.Config == null)
             {
                 return null;
             }

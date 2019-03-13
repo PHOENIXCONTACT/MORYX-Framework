@@ -211,8 +211,11 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
 }
 
 function Invoke-Nunit([string]$SearchPath = $RootPath, [string]$SearchFilter = "*.csproj") {
+	$randomIncrement = Get-Random -Minimum 2000 -Maximum 2100
     Write-Step "Running $Name Tests: $SearchPath"
 
+	$env:PORT_INCREMENT = $randomIncrement;
+	
     if (-not (Test-Path $global:NUnitCli)) {
         Install-Tool "NUnit.Console" $NunitVersion $global:NunitCli;
     }
