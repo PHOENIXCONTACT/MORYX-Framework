@@ -70,7 +70,7 @@ namespace Marvin.Tests.Extensions
             var provider = (ICustomAttributeProvider)typeof(DotnetAttributesDummy);
 
             // Act
-            var attr = provider.GetCustomAttribute<DataAttribute>();
+            var attr = provider.GetCustomAttribute<AssemblyTitleAttribute>();
 
             // Assert
             Assert.IsNull(attr);
