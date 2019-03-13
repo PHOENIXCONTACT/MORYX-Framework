@@ -104,7 +104,7 @@ namespace Marvin.TestTools.SystemTest
         /// <summary>
         /// WCF service to the HoG to change and check the database configurations.
         /// </summary>
-        private DatabaseMaintenanceClient _databaseClient;
+        private DatabaseMaintenanceWebClient _databaseClient;
 
         /// <summary>
         /// List of all append logger ids
@@ -115,6 +115,11 @@ namespace Marvin.TestTools.SystemTest
         /// Starts and stops the Heart of Gold Executable
         /// </summary>
         public Process Process { get; private set; }
+
+        /// <summary>
+        /// Name of the executable under test
+        /// </summary>
+        public string ApplicationExeName { get; set; } = "HeartOfGold.exe";
 
         /// <summary>
         /// Gets or sets the directory of the runtime executable.
@@ -156,16 +161,16 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         public HeartOfGoldController()
         {
-            // Retrieve Jenkins build processor number from environment
-            string executor = Environment.GetEnvironmentVariable("EXECUTOR_NUMBER");
-            if (executor != null)
+            // Check for port increment
+            var portIncrement = Environment.GetEnvironmentVariable("PORT_INCREMENT");
+            if (portIncrement != null)
             {
-                int executorNum;
+                int portIncrementNum;
 
-                if (int.TryParse(executor, out executorNum))
+                if (int.TryParse(portIncrement, out portIncrementNum))
                 {
                     // Add Jenkins build processor number to port number to allow parallel execution of system tests.
-                    _portIncrement = executorNum;
+                    _portIncrement = portIncrementNum;
                 }
             }
 
@@ -195,7 +200,7 @@ namespace Marvin.TestTools.SystemTest
         /// <returns><c>true</c> if start succeeds, <c>false</c> if not</returns>
         public bool StartHeartOfGold()
         {
-            return StartHeartOfGold("HeartOfGold.exe");
+            return StartHeartOfGold(ApplicationExeName);
         }
 
         /// <summary>
@@ -275,7 +280,7 @@ namespace Marvin.TestTools.SystemTest
             // get the wcf services of the started instance
             _loggingClient = new LogMaintenanceWebClient(HttpPort);
             _maintenanceClient = new ModuleMaintenanceWebClient(HttpPort);
-            _databaseClient = new DatabaseMaintenanceClient(CreateBasicWebBinding(), new EndpointAddress($"http://localhost:{HttpPort}/DatabaseMaintenance"));
+            _databaseClient = new DatabaseMaintenanceWebClient(HttpPort);
         }
 
         /// <summary>

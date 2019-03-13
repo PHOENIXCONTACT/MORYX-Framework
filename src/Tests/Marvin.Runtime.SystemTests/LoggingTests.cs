@@ -21,7 +21,7 @@ namespace Marvin.Runtime.SystemTests
     [TestFixture]
     public class LoggingTests : IDisposable
     {
-        private const int WaitTime = 1000;
+        private const int WaitTime = 3000;
         private const int ServerSleepTime = 100;
         private const int ClientSleepTime = 100;
 
