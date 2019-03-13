@@ -16,10 +16,5 @@
         {
             // Stop again doent matter
         }
-
-        public override void ErrorOccured()
-        {
-            // This cannot happen
-        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Marvin.Runtime.Modules
+﻿using System;
+
+namespace Marvin.Runtime.Modules
 {
     internal class RunningState : ServerModuleStateBase
     {
@@ -8,7 +10,15 @@
 
         public override void OnEnter()
         {
-            Context.Started();
+            try
+            {
+                Context.Started();
+            }
+            catch (Exception ex)
+            {
+                Context.ReportFailure(ex);
+                NextState(StateRunningFailure);
+            }
         }
 
         public override void Initialize()
@@ -24,11 +34,6 @@
         public override void Stop()
         {
             NextState(StateRunningStopping);
-        }
-
-        public override void ErrorOccured()
-        {
-            NextState(StateRunningFailure);
         }
 
         public override void ValidateHealthState()

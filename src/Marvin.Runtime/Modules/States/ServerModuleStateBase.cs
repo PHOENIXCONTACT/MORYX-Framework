@@ -26,11 +26,6 @@ namespace Marvin.Runtime.Modules
             InvalidState();
         }
 
-        public virtual void ErrorOccured()
-        {
-            InvalidState();
-        }
-
         public virtual void ValidateHealthState()
         {
             throw new HealthStateException(Classification);

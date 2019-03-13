@@ -60,14 +60,5 @@ namespace Marvin.Runtime.Tests.Modules
                     throw new Exception("I am done here!");
             }
         }
-
-        public void RaiseException(bool critical)
-        {
-            var parallelOps = Container.Resolve<IParallelOperations>();
-            parallelOps.ExecuteParallel(() =>
-            {
-                throw new Exception("Parallel ops failed");
-            }, critical);
-        }
     }
 }

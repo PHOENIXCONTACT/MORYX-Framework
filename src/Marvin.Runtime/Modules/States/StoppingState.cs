@@ -11,13 +11,15 @@ namespace Marvin.Runtime.Modules
 
         protected override void OnStopping()
         {
-            Context.Stop();
-            Context.Destruct();
-        }
-
-        public override void ErrorOccured()
-        {
-            NextState(StateRunningFailure);
+            try
+            {
+                Context.Stop();
+            }
+            catch (Exception ex)
+            {
+                Context.ReportFailure(ex);
+                NextState(StateRunningFailure);
+            }
         }
     }
 
@@ -30,12 +32,6 @@ namespace Marvin.Runtime.Modules
 
         protected override void OnStopping()
         {
-            Context.Destruct();
-        }
-
-        public override void ErrorOccured()
-        {
-            NextState(StateInitializedFailure);
         }
     }
 
@@ -48,14 +44,18 @@ namespace Marvin.Runtime.Modules
 
         public override void OnEnter()
         {
+            OnStopping();
+
             try
             {
-                OnStopping();
+                // Regardless of the previous state we need to destruct the container
+                Context.Destruct();
                 NextState(StateStopped);
             }
             catch (Exception ex)
             {
                 Context.ReportFailure(ex);
+                NextState(StateInitializedFailure);
             }
         }
 
@@ -75,7 +75,5 @@ namespace Marvin.Runtime.Modules
         {
             // We are already stopping
         }
-
-        public abstract override void ErrorOccured();
     }
 }

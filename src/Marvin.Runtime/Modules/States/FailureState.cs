@@ -10,7 +10,6 @@ namespace Marvin.Runtime.Modules
 
         protected override void OnFailure()
         {
-            Context.Destruct();
         }
     }
 
@@ -22,8 +21,14 @@ namespace Marvin.Runtime.Modules
 
         protected override void OnFailure()
         {
-            Context.Stop();
-            Context.Destruct();
+            try
+            {
+                Context.Stop();
+            }
+            catch (Exception ex)
+            {
+                Context.LogNotification(new FailureNotification(ex, "Failed to stop faulty module!"));
+            }
         }
     }
 
@@ -36,13 +41,17 @@ namespace Marvin.Runtime.Modules
 
         public override void OnEnter()
         {
+            OnFailure();
+
             try
             {
-                OnFailure();
+                // Regardless of the previous step we need to try destroying the container
+                // This can still cause Exceptions in Dispose
+                Context.Destruct();
             }
             catch (Exception ex)
             {
-                Context.LogNotification(new FailureNotification(ex, "Failed to stop faulty module!"));
+                Context.LogNotification(new FailureNotification(ex, "Failed to destroy faulty container!"));
             }
         }
 
@@ -56,11 +65,6 @@ namespace Marvin.Runtime.Modules
         public override void Stop()
         {
             NextState(StateStopped);
-        }
-
-        public override void ErrorOccured()
-        {
-            // Nothing to do here. We are already in Failure
         }
     }
 }
