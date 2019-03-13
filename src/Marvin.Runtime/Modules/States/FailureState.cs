@@ -1,4 +1,5 @@
 ﻿using System;
+using Marvin.Notifications;
 
 namespace Marvin.Runtime.Modules
 {
@@ -27,7 +28,7 @@ namespace Marvin.Runtime.Modules
             }
             catch (Exception ex)
             {
-                Context.LogNotification(new FailureNotification(ex, "Failed to stop faulty module!"));
+                Context.LogNotification(new ModuleNotification(Severity.Error, "Failed to stop faulty module!", ex));
             }
         }
     }
@@ -51,7 +52,7 @@ namespace Marvin.Runtime.Modules
             }
             catch (Exception ex)
             {
-                Context.LogNotification(new FailureNotification(ex, "Failed to destroy faulty container!"));
+                Context.LogNotification(new ModuleNotification(Severity.Error, "Failed to destroy faulty container!", ex));
             }
         }
 

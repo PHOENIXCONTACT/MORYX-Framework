@@ -37,7 +37,7 @@ namespace Marvin.Runtime.Modules
         /// <summary>
         /// Report a failure
         /// </summary>
-        void ReportFailure(Exception exception);
+        void ReportError(Exception exception);
         
         /// <summary>
         /// Adds a notification to the module

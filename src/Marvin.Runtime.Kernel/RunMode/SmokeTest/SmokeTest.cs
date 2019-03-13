@@ -4,7 +4,7 @@ using System.Threading;
 using System.Timers;
 using Marvin.Configuration;
 using Marvin.Model;
-using Marvin.Modules;
+using Marvin.Notifications;
 using Marvin.Runtime.Modules;
 using Marvin.Tools;
 using Marvin.Tools.Wcf;
@@ -270,7 +270,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
             {
                 var module = (IServerModule)sender;
                 Console.WriteLine("Module {0} failed with Exception:\n", module.Name);
-                Console.WriteLine(ExceptionPrinter.Print(module.Notifications.OrderBy(n => n.Timestamp).Last(n => n.Type == NotificationType.Failure).Exception));
+                Console.WriteLine(ExceptionPrinter.Print(module.Notifications.OrderBy(n => n.Timestamp).Last(n => n.Severity == Severity.Error).Exception));
                 _failed = true;
                 _awaitStep.Set();
             }
