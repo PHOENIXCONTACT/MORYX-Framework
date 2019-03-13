@@ -284,63 +284,6 @@ namespace Marvin.TestTools.SystemTest
         }
 
         /// <summary>
-        /// Creates a binding for WebHttp
-        /// </summary>
-        /// <returns></returns>
-        public static Binding CreateBasicWebBinding()
-        {
-            var webHttpBinding = new WebHttpBinding
-            {
-                MaxReceivedMessageSize = int.MaxValue,
-                MaxBufferPoolSize = int.MaxValue,
-                CloseTimeout = TimeSpan.FromSeconds(30),
-                OpenTimeout = TimeSpan.FromSeconds(30),
-                ReceiveTimeout = TimeSpan.FromSeconds(30),
-                SendTimeout = TimeSpan.FromSeconds(30),
-                UseDefaultWebProxy = true,
-                ReaderQuotas =
-                {
-                    MaxStringContentLength = int.MaxValue,
-                    MaxArrayLength = int.MaxValue,
-                    MaxBytesPerRead = int.MaxValue,
-                    MaxNameTableCharCount = int.MaxValue
-                },
-                Security =
-                {
-                    Mode = WebHttpSecurityMode.None
-                }
-            };
-
-            return webHttpBinding;
-        }
-
-        /// <summary>
-        /// Creates a binding for BasicHttp
-        /// </summary>
-        /// <returns></returns>
-        public static Binding CreateBasicHttpBinding()
-        {
-            BasicHttpBinding binding = new BasicHttpBinding(BasicHttpSecurityMode.None)
-            {
-                MaxBufferSize = int.MaxValue,
-                MaxReceivedMessageSize = int.MaxValue,
-                ReceiveTimeout = new TimeSpan(0, 0, 0, 30),
-                SendTimeout = new TimeSpan(0, 0, 0, 30),
-                OpenTimeout = new TimeSpan(0, 0, 0, 30),
-                CloseTimeout = new TimeSpan(0, 0, 0, 30),
-                ReaderQuotas =
-                {
-                    MaxArrayLength = int.MaxValue,
-                    MaxStringContentLength = int.MaxValue,
-                    MaxBytesPerRead = int.MaxValue
-                },
-            };
-
-            return binding;
-        }
-
-
-        /// <summary>
         /// Stops the started HeartOfGold instance.
         /// </summary>
         /// <param name="timeoutInSeconds">The number of seconds to wait for the process to finish.</param>

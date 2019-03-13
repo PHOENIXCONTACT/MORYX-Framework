@@ -40,7 +40,7 @@ namespace Marvin.Tools.Wcf.SystemTests
             var result = _hogController.WaitForService(DependentTestModule.ModuleController.ModuleName, ServerModuleState.Running, 10);
             Assert.IsTrue(result, "Service 'TestModule' did not reach state 'Running'");
 
-            var channelFactory = new ChannelFactory<IVersionService>(HeartOfGoldController.CreateBasicHttpBinding());
+            var channelFactory = new ChannelFactory<IVersionService>(BindingFactory.CreateDefaultBasicHttpBinding(false, null));
             _versionService = channelFactory.CreateChannel(new EndpointAddress($"http://localhost:{_hogController.HttpPort}/ServiceVersions"));
 
             Assert.NotNull(_versionService, "Can't create VersionServiceClient");
