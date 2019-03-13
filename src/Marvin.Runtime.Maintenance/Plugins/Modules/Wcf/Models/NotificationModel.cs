@@ -1,5 +1,6 @@
 ﻿using System;
 using Marvin.Modules;
+using Marvin.Notifications;
 
 namespace Marvin.Runtime.Maintenance.Plugins.Modules
 {
@@ -23,21 +24,14 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         public NotificationModel(IModuleNotification notification)
         {
             Timestamp = notification.Timestamp;
-            //todo: when is a notification important?
-            //Important = notification.ImportantNotification;
             Exception = new SerializableException(notification.Exception);
-            NotificationType = notification.Type;
+            Severity = notification.Severity;
         }
 
         /// <summary>
         /// The timestamp when the notofication occured..
         /// </summary>
         public DateTime Timestamp { get; set; }
-
-        /// <summary>
-        /// Flag if this notification is important.
-        /// </summary>
-        public bool Important { get; set; }
 
         /// <summary>
         /// An exception.
@@ -47,6 +41,6 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         /// <summary>
         /// Kind of notification
         /// </summary>
-        public NotificationType NotificationType { get; set; }
+        public Severity Severity { get; set; }
     }
 }

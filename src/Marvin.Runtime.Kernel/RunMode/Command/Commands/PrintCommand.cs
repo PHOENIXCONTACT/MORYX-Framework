@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Marvin.Container;
 using Marvin.Modules;
+using Marvin.Notifications;
 using Marvin.Runtime.Modules;
 using Marvin.Tools;
 
@@ -50,7 +51,21 @@ namespace Marvin.Runtime.Kernel
         {
             var versionAttribute = module.GetType().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
 
-            Console.Write("Service: " + module.Name.PadRight(30));
+            Console.Write("Module: " + module.Name);
+
+            var warningCount = module.Notifications.Count(n => n.Severity == Severity.Warning);
+            var errorCount = module.Notifications.Count(n => n.Severity >= Severity.Error);
+
+            Console.Write(" (");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write(warningCount);
+            Console.ResetColor();
+            Console.Write(" | ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(errorCount);
+            Console.ResetColor();
+            Console.Write(")".PadRight(20));
+
             CommandHelper.PrintState(module.State, false, 17);
             Console.WriteLine("Version: " + (versionAttribute == null ? "N/A" : versionAttribute.Version));
 
@@ -63,17 +78,20 @@ namespace Marvin.Runtime.Kernel
                 switch (printOption)
                 {
                     case "-e":
-                        var predicate = new Func<IModuleNotification, bool>(n => n.Type == NotificationType.Failure || n.Type == NotificationType.Warning);
+                        var predicate = new Func<IModuleNotification, bool>(n => n.Severity >= Severity.Error || n.Severity == Severity.Warning);
                         if (!module.Notifications.Any(predicate))
                             break;
-                        Console.WriteLine("Exception stack for " + module.Name + ":");
-                        Console.WriteLine(ExceptionPrinter.Print(module.Notifications.OrderBy(n => n.Timestamp).Last(predicate).Exception));
+                        Console.WriteLine("Notifications for " + module.Name + ":");
+
+                        var relevantNotifications = module.Notifications.Where(predicate).OrderBy(n => n.Timestamp);
+                        foreach (var notification in relevantNotifications)
+                            PrintNotification(notification);
                         break;
                     case "-d":
                         Console.WriteLine("Dependencies of " + module.Name + ":");
                         foreach (var startDependency in ModuleManager.StartDependencies(module))
                         {
-                            Console.WriteLine(" Service: " + startDependency.Name.PadRight(29) + "State: " +
+                            Console.WriteLine(" Module: " + startDependency.Name.PadRight(29) + "State: " +
                                               startDependency.State);
                         }
                         break;
@@ -84,15 +102,44 @@ namespace Marvin.Runtime.Kernel
         }
 
         /// <summary>
+        /// Prints a module notiication to the console
+        /// </summary>
+        private static void PrintNotification(IModuleNotification notification)
+        {
+            var dashes = Enumerable.Repeat("-", Console.WindowWidth);
+            var line = dashes.Aggregate((sum, next) => sum + next);
+            Console.WriteLine(line);
+
+            Console.WriteLine("Timestamp: " + notification.Timestamp);
+
+            Console.Write("Severity: ");
+
+            if (notification.Severity == Severity.Warning)
+                Console.ForegroundColor = ConsoleColor.Yellow;
+
+            if (notification.Severity >= Severity.Error)
+                Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.WriteLine(notification.Severity);
+            Console.ResetColor();
+
+            Console.WriteLine("Message: " + notification.Message);
+            Console.Write("Exception: ");
+
+            if (notification.Exception != null)
+                Console.WriteLine(Environment.NewLine + ExceptionPrinter.Print(notification.Exception));
+        }
+
+        /// <summary>
         /// Print all valid commands
         /// </summary>
         public void ExportValidCommands(int pad)
         {
             Console.WriteLine("print [all]".PadRight(pad) + "Prints current state of all services");
-            Console.WriteLine("print <servicename>".PadRight(pad) +
-                              "Prints current state of service named <servicename>.");
+            Console.WriteLine("print <module name>".PadRight(pad) +
+                              "Prints current state of service named <module name>.");
             Console.WriteLine("  - options: [-e] [-d]");
-            Console.WriteLine("[-e]".PadLeft(pad - 1).PadRight(pad) + "shows exception for this service.");
+            Console.WriteLine("[-e]".PadLeft(pad - 1).PadRight(pad) + "shows notifications for this module.");
             Console.WriteLine("[-d]".PadLeft(pad - 1).PadRight(pad) + "print all dependencies");
             Console.WriteLine();
         }

@@ -72,8 +72,7 @@
     <Compile Include="Modules\ServerModuleFacadeControllerBase.cs" />
     <Compile Include="Modules\ServerModuleState.cs" />
     <Compile Include="Modules\ServerNotificationCollection.cs" />
-    <Compile Include="Modules\Notifications\FailureNotification.cs" />
-    <Compile Include="Modules\Notifications\WarningNotification.cs" />
+    <Compile Include="Modules\Notifications\ModuleNotification.cs" />
     <Compile Include="RuntimePlatform.cs" />
     <Compile Include="Modules\Management\IDependencyTreeValidation.cs" />
     <Compile Include="Modules\Management\IModuleDependencyTree.cs" />

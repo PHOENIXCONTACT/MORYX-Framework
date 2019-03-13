@@ -1,28 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Marvin.Notifications;
 
 namespace Marvin.Modules
 {
-    /// <summary>
-    /// Different levels to diffentiate the severity of a message
-    /// </summary>
-    public enum NotificationType
-    {
-        /// <summary>
-        /// Information about occured events that are nether a warning nor an error
-        /// </summary>
-        Info,
-        /// <summary>
-        /// Events that may destabilize the component
-        /// </summary>
-        Warning,
-        /// <summary>
-        /// Critical events that may obstruct any further execution
-        /// </summary>
-        Failure
-    }
-
     /// <summary>
     /// Notification raised by a module. May disappear automatically or has to be acknowledged explicitly
     /// </summary>
@@ -31,7 +13,7 @@ namespace Marvin.Modules
         /// <summary>
         /// Type of this notification
         /// </summary>
-        NotificationType Type { get; }
+        Severity Severity { get; }
 
         /// <summary>
         /// Confirm acknowledgement of this notification

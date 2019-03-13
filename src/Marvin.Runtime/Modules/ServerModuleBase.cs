@@ -7,6 +7,7 @@ using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
+using Marvin.Notifications;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Wcf;
 using Marvin.StateMachines;
@@ -289,24 +290,20 @@ namespace Marvin.Runtime.Modules
 
         private void ProcessLogMessage(ILogMessage message)
         {
-            IModuleNotification notification;
-            // TODO: Make exception optional in notification
-            var exception = message.Exception ?? new Exception(message.Message);
-
-            // Avoid redundanten notifications for the same exception
-            if(Notifications.Any(n => n.Exception == exception))
-                return;
-
             if (message.Level == LogLevel.Warning)
             {
-                notification = new WarningNotification(n => Notifications.Remove(n), exception,
-                    $"Component {message.ClassName} reported an exception");
+                var notification = new ModuleNotification(Severity.Warning,
+                    $"Component {message.ClassName} reported an {message.Level}: {message.Message}", message.Exception,
+                    n => Notifications.Remove(n));
+
                 Notifications.Add(notification);
             }
             else if(message.Level >= LogLevel.Error)
             {
-                notification = new FailureNotification(exception,
-                    $"Component {message.ClassName} reported an exception");
+                var notification = new ModuleNotification(Severity.Error,
+                    $"Component {message.ClassName} reported an {message.Level}: {message.Message}", message.Exception,
+                    n => Notifications.Remove(n));
+
                 Notifications.Add(notification);
             }
         }
@@ -314,13 +311,10 @@ namespace Marvin.Runtime.Modules
         /// <summary>
         /// Report internal failure to parent module
         /// </summary>
-        void IServerModuleStateContext.ReportFailure(Exception exception)
+        void IServerModuleStateContext.ReportError(Exception exception)
         {
-            // Publish notification
-            var notification = new FailureNotification(exception, "Exception in module life cycle!");
-            Notifications.Add(notification);
             // Add to log
-            Logger.LogException(LogLevel.Fatal, exception, notification.Message);
+            Logger.LogException(LogLevel.Fatal, exception, "Exception in module lifecycle!");
         }
 
         /// <inheritdoc />

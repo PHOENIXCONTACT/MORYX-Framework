@@ -17,7 +17,7 @@ namespace Marvin.Runtime.Modules
             }
             catch (Exception ex)
             {
-                Context.ReportFailure(ex);
+                Context.ReportError(ex);
                 NextState(StateRunningFailure);
             }
         }
@@ -54,7 +54,7 @@ namespace Marvin.Runtime.Modules
             }
             catch (Exception ex)
             {
-                Context.ReportFailure(ex);
+                Context.ReportError(ex);
                 NextState(StateInitializedFailure);
             }
         }
