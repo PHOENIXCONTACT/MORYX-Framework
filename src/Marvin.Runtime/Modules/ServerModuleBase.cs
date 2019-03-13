@@ -117,6 +117,15 @@ namespace Marvin.Runtime.Modules
         {
             _state.Start();
         }
+        
+        void IServerModuleStateContext.Start()
+        {
+            Logger.LogEntry(LogLevel.Info, "{0} is starting...", Name);
+
+            OnStart();
+
+            Logger.LogEntry(LogLevel.Info, "{0} started!", Name);
+        }
 
         void IServerModuleStateContext.Started()
         {
@@ -130,18 +139,18 @@ namespace Marvin.Runtime.Modules
         {
         }
 
-        void IServerModuleStateContext.Start()
-        {
-            Logger.LogEntry(LogLevel.Info, "{0} is starting...", Name);
-
-            OnStart();
-
-            Logger.LogEntry(LogLevel.Info, "{0} started!", Name);
-        }
-
         void IServerModule.Stop()
         {
             _state.Stop();
+        }
+        
+        void IServerModuleStateContext.Stop()
+        {
+            Logger.LogEntry(LogLevel.Info, "{0} is stopping...", Name);
+
+            OnStop();
+
+            Logger.LogEntry(LogLevel.Info, "{0} stopped!", Name);
         }
 
         void IServerModuleStateContext.Destruct()
@@ -156,22 +165,6 @@ namespace Marvin.Runtime.Modules
             LoggerManagement.RemoveListenerFromStream(ProcessLogMessage);
             LoggerManagement.DeactivateLogging(this);
             Logger.LogEntry(LogLevel.Info, "{0} destructed!", Name);
-        }
-
-
-        void IServerModuleStateContext.Stop()
-        {
-            Logger.LogEntry(LogLevel.Info, "{0} is stopping...", Name);
-
-            try
-            {
-                OnStop();
-                Logger.LogEntry(LogLevel.Info, "{0} stopped!", Name);
-            }
-            catch (Exception e)
-            {
-                Logger.LogException(LogLevel.Error, e, "Exception while stopping {0}", Name);
-            }
         }
 
         #endregion

@@ -115,19 +115,6 @@ namespace Marvin.Runtime.Tests
         }
 
         [Test]
-        public void RunningToFailure()
-        {
-            var casted = (IServerModule)_moduleUnderTest;
-            casted.Initialize();
-            casted.Start();
-            Assert.AreEqual(ServerModuleState.Running, casted.State, "Module not in running state!");
-
-            _moduleUnderTest.RaiseException(true);
-            Thread.Sleep(200);
-            Assert.AreEqual(ServerModuleState.Failure, casted.State, "Module did not enter failure state!");
-        }
-
-        [Test]
         public void FailureInStopped()
         {
             var module = new DelayedExceptionModule

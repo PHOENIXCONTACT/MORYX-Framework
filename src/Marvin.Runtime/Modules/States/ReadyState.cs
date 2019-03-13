@@ -21,10 +21,5 @@
         {
             NextState(StateReadyStopping);
         }
-
-        public override void ErrorOccured()
-        {
-
-        }
     }
 }
