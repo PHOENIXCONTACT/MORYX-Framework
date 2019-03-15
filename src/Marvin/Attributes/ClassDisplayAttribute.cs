@@ -1,18 +1,45 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Marvin
 {
     /// <summary>
     /// Extension to the <see cref="DisplayAttribute"/> which supports also classes
     /// </summary>
+    /// TODO: Remove with upgrade to .NET Core
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class ClassDisplayAttribute : Attribute
     {
         private readonly DisplayAttribute _display = new DisplayAttribute();
 
-        // TODO: Remove with upgrade to .NET Core
         // Comments are copy and paste of the DisplayAttribute
+
+        /// <summary>
+        /// Gets or sets the ShortName attribute property, which may be a resource key string.
+        /// <para>
+        /// Consumers must use the <see cref="GetShortName"/> method to retrieve the UI display string.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// The property contains either the literal, non-localized string or the resource key
+        /// to be used in conjunction with <see cref="ResourceType"/> to configure a localized
+        /// short name for display.
+        /// <para>
+        /// The <see cref="GetShortName"/> method will return either the literal, non-localized
+        /// string or the localized string when <see cref="ResourceType"/> has been specified.
+        /// </para>
+        /// </remarks>
+        /// <value>
+        /// The short name is generally used as the grid column label for a UI element bound to the member
+        /// bearing this attribute.  A <c>null</c> or empty string is legal, and consumers must allow for that.
+        /// </value>
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "The property and method are a matched pair")]
+        public string ShortName
+        {
+            get { return _display.ShortName; }
+            set { _display.ShortName = value; }
+        }
 
         /// <summary>
         /// Gets or sets the Name attribute property, which may be a resource key string.
@@ -33,6 +60,7 @@ namespace Marvin
         /// The name is generally used as the field label for a UI element bound to the member
         /// bearing this attribute.  A <c>null</c> or empty string is legal, and consumers must allow for that.
         /// </value>
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "The property and method are a matched pair")]
         public string Name
         {
             get { return _display.Name; }
@@ -58,10 +86,63 @@ namespace Marvin
         /// Description is generally used as a tool tip or description a UI element bound to the member
         /// bearing this attribute.  A <c>null</c> or empty string is legal, and consumers must allow for that.
         /// </value>
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "The property and method are a matched pair")]
         public string Description
         {
             get { return _display.Description; }
             set { _display.Description = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the Prompt attribute property, which may be a resource key string.
+        /// <para>
+        /// Consumers must use the <see cref="GetPrompt"/> method to retrieve the UI display string.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// The property contains either the literal, non-localized string or the resource key
+        /// to be used in conjunction with <see cref="ResourceType"/> to configure a localized
+        /// prompt for display.
+        /// <para>
+        /// The <see cref="GetPrompt"/> method will return either the literal, non-localized
+        /// string or the localized string when <see cref="ResourceType"/> has been specified.
+        /// </para>
+        /// </remarks>
+        /// <value>
+        /// A prompt is generally used as a prompt or watermark for a UI element bound to the member
+        /// bearing this attribute.  A <c>null</c> or empty string is legal, and consumers must allow for that.
+        /// </value>
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "The property and method are a matched pair")]
+        public string Prompt
+        {
+            get { return _display.Prompt; }
+            set { _display.Prompt = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the GroupName attribute property, which may be a resource key string.
+        /// <para>
+        /// Consumers must use the <see cref="GetGroupName"/> method to retrieve the UI display string.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// The property contains either the literal, non-localized string or the resource key
+        /// to be used in conjunction with <see cref="ResourceType"/> to configure a localized
+        /// group name for display.
+        /// <para>
+        /// The <see cref="GetGroupName"/> method will return either the literal, non-localized
+        /// string or the localized string when <see cref="ResourceType"/> has been specified.
+        /// </para>
+        /// </remarks>
+        /// <value>
+        /// A group name is used for grouping fields into the UI.  A <c>null</c> or empty string is legal,
+        /// and consumers must allow for that.
+        /// </value>
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "The property and method are a matched pair")]
+        public string GroupName
+        {
+            get { return _display.GroupName; }
+            set { _display.GroupName = value; }
         }
 
         /// <summary>
@@ -82,6 +163,33 @@ namespace Marvin
         public ClassDisplayAttribute()
         {
         }
+
+        /// <summary>
+        /// Gets the UI display string for ShortName.
+        /// <para>
+        /// This can be either a literal, non-localized string provided to <see cref="ShortName"/> or the
+        /// localized string found when <see cref="ResourceType"/> has been specified and <see cref="ShortName"/>
+        /// represents a resource key within that resource type.
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// When <see cref="ResourceType"/> has not been specified, the value of
+        /// <see cref="ShortName"/> will be returned.
+        /// <para>
+        /// When <see cref="ResourceType"/> has been specified and <see cref="ShortName"/>
+        /// represents a resource key within that resource type, then the localized value will be returned.
+        /// </para>
+        /// <para>
+        /// If <see cref="ShortName"/> is <c>null</c>, the value from <see cref="GetName"/> will be returned.
+        /// </para>
+        /// </returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// After setting both the <see cref="ResourceType"/> property and the <see cref="ShortName"/> property,
+        /// but a public static property with a name matching the <see cref="ShortName"/> value couldn't be found
+        /// on the <see cref="ResourceType"/>.
+        /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This method does work using a property of the same name")]
+        public string GetShortName() => _display.GetShortName();
 
         /// <summary>
         /// Gets the UI display string for Name.
@@ -108,6 +216,7 @@ namespace Marvin
         /// but a public static property with a name matching the <see cref="Name"/> value couldn't be found
         /// on the <see cref="ResourceType"/>.
         /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This method does work using a property of the same name")]
         public string GetName() => _display.GetName();
 
         /// <summary>
@@ -131,6 +240,55 @@ namespace Marvin
         /// but a public static property with a name matching the <see cref="Description"/> value couldn't be found
         /// on the <see cref="ResourceType"/>.
         /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This method does work using a property of the same name")]
         public string GetDescription() => _display.GetDescription();
+
+        /// <summary>
+        /// Gets the UI display string for Prompt.
+        /// <para>
+        /// This can be either a literal, non-localized string provided to <see cref="Prompt"/> or the
+        /// localized string found when <see cref="ResourceType"/> has been specified and <see cref="Prompt"/>
+        /// represents a resource key within that resource type.
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// When <see cref="ResourceType"/> has not been specified, the value of
+        /// <see cref="Prompt"/> will be returned.
+        /// <para>
+        /// When <see cref="ResourceType"/> has been specified and <see cref="Prompt"/>
+        /// represents a resource key within that resource type, then the localized value will be returned.
+        /// </para>
+        /// </returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// After setting both the <see cref="ResourceType"/> property and the <see cref="Prompt"/> property,
+        /// but a public static property with a name matching the <see cref="Prompt"/> value couldn't be found
+        /// on the <see cref="ResourceType"/>.
+        /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This method does work using a property of the same name")]
+        public string GetPrompt() => _display.GetPrompt();
+
+        /// <summary>
+        /// Gets the UI display string for GroupName.
+        /// <para>
+        /// This can be either a literal, non-localized string provided to <see cref="GroupName"/> or the
+        /// localized string found when <see cref="ResourceType"/> has been specified and <see cref="GroupName"/>
+        /// represents a resource key within that resource type.
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// When <see cref="ResourceType"/> has not been specified, the value of
+        /// <see cref="GroupName"/> will be returned.
+        /// <para>
+        /// When <see cref="ResourceType"/> has been specified and <see cref="GroupName"/>
+        /// represents a resource key within that resource type, then the localized value will be returned.
+        /// </para>
+        /// </returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// After setting both the <see cref="ResourceType"/> property and the <see cref="GroupName"/> property,
+        /// but a public static property with a name matching the <see cref="GroupName"/> value couldn't be found
+        /// on the <see cref="ResourceType"/>.
+        /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This method does work using a property of the same name")]
+        public string GetGroupName() => _display.GetGroupName();
     }
 }

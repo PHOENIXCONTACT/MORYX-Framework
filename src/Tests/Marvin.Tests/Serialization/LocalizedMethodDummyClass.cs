@@ -5,9 +5,9 @@ namespace Marvin.Tests
 {
     public class LocalizedMethodDummyClass
     {
-        [Display(Name = nameof(Localization.InitiateWorldTermination), Description = nameof(Localization.InitiateWorldTerminationDescription), ResourceType = typeof(Localization))]
-        public bool InitiateWorldTermination([Display(Name = nameof(Localization.EvacuatePeopleParam), Description = nameof(Localization.EvacuatePeopleParamDescription), ResourceType = typeof(Localization))] bool evacuatePeople,
-                                             [Display(Name = nameof(Localization.NameOfTerminatorParam), ResourceType = typeof(Localization))] string nameOfTerminator)
+        [Display(Name = nameof(strings.InitiateWorldTermination), Description = nameof(strings.InitiateWorldTerminationDescription), ResourceType = typeof(strings))]
+        public bool InitiateWorldTermination([Display(Name = nameof(strings.EvacuatePeopleParam), Description = nameof(strings.EvacuatePeopleParamDescription), ResourceType = typeof(strings))] bool evacuatePeople,
+                                             [Display(Name = nameof(strings.NameOfTerminatorParam), ResourceType = typeof(strings))] string nameOfTerminator)
         {
             return true;
         }

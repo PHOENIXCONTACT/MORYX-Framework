@@ -1005,6 +1005,7 @@ namespace Marvin.Tests
                 new {Name = "BoolArray", Type = EntryValueType.Collection, ReadOnly = false},
                 new {Name = "BoolList", Type = EntryValueType.Collection, ReadOnly = false},
                 new {Name = "BoolEnumerable", Type = EntryValueType.Collection, ReadOnly = false},
+                new {Name = "SingleClassNonLocalized", Type = EntryValueType.Class, ReadOnly = false}
             };
             Assert.AreEqual(expected.Length, encoded.Count, "Number of entries does not match");
             for (int i = 0; i < encoded.Count; i++)
