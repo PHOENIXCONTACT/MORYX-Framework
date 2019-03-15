@@ -90,15 +90,15 @@
     <Compile Include="Extensions\CustomAttributeProviderExtensionTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionTests.cs" />
-    <Compile Include="Properties\Localization.de.Designer.cs">
+    <Compile Include="Properties\strings.de.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Localization.de.resx</DependentUpon>
+      <DependentUpon>strings.de.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Localization.Designer.cs">
+    <Compile Include="Properties\strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Localization.resx</DependentUpon>
+      <DependentUpon>strings.resx</DependentUpon>
     </Compile>
     <Compile Include="Logging\LoggerManagementTests.cs" />
     <Compile Include="Logging\LoggingTests.cs" />
@@ -166,13 +166,14 @@
     <None Include="Workflows\packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Localization.de.resx">
+    <EmbeddedResource Include="Properties\strings.de.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Localization.de.Designer.cs</LastGenOutput>
+      <LastGenOutput>strings.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Localization.resx">
+    <EmbeddedResource Include="Properties\strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

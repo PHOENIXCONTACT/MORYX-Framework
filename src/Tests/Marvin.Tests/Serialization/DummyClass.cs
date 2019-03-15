@@ -4,20 +4,17 @@ using Marvin.Tests.Properties;
 
 namespace Marvin.Tests
 {
-    [ClassDisplay(Name = nameof(Localization.CrashTestDummy), ResourceType = typeof(Localization))]
+    [ClassDisplay(Name = nameof(strings.CrashTestDummy), ResourceType = typeof(strings))]
     public class DummyClass
     {
-        [Display(Name = nameof(Localization.Number), Description = nameof(Localization.NumberDescription), ResourceType = typeof(Localization))]
+        [Display(Name = nameof(strings.Number), Description = nameof(strings.NumberDescription), ResourceType = typeof(strings))]
         public int Number { get; set; }
 
         public string Name { get; set; }
 
         public int ReadOnly => 10;
 
-        [Display(Name = nameof(Localization.SubClass), Description = nameof(Localization.SubClassDescription))]
-        public SubClass SingleClassNonLocalized { get; set; }
-
-        [Display(Name = nameof(Localization.SubClass), Description = nameof(Localization.SubClassDescription), ResourceType = typeof(Localization))]
+        [Display(Name = nameof(strings.SubClass), Description = nameof(strings.SubClassDescription), ResourceType = typeof(strings))]
         public SubClass SingleClass { get; set; }
 
         public SubClass[] SubArray { get; set; }
@@ -39,9 +36,12 @@ namespace Marvin.Tests
         public List<bool> BoolList { get; set; }
 
         public IEnumerable<DummyEnum> BoolEnumerable { get; set; }
+
+        [Display(Name = nameof(strings.SubClass), Description = nameof(strings.SubClassDescription))]
+        public SubClass SingleClassNonLocalized { get; set; }
     }
 
-    [ClassDisplay(Name = nameof(Localization.NoShownAsProperty), Description = nameof(Localization.NoShownAsPropertyDescription), ResourceType = typeof(Localization))]
+    [ClassDisplay(Name = nameof(strings.NoShownAsProperty), Description = nameof(strings.NoShownAsPropertyDescription), ResourceType = typeof(strings))]
     public class SubClass
     {
         public float Foo { get; set; }
