@@ -90,12 +90,7 @@
     <Compile Include="Extensions\CustomAttributeProviderExtensionTests.cs" />
     <Compile Include="Extensions\DateTimeExtensionTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionTests.cs" />
-    <Compile Include="Properties\strings.de.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>strings.de.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\strings.Designer.cs">
+    <Compile Include="Serialization\strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>strings.resx</DependentUpon>
@@ -117,7 +112,6 @@
     <Compile Include="Serialization\FileStreamDummy.cs" />
     <Compile Include="Serialization\ListDummy.cs" />
     <Compile Include="Serialization\LocalizationSerializationTests.cs" />
-    <Compile Include="Serialization\LocalizedMethodDummyClass.cs" />
     <Compile Include="Serialization\SerializationTests.cs" />
     <Compile Include="Serialization\MemoryStreamDummy.cs" />
     <Compile Include="StateMachines\StateMachineTests.cs" />
@@ -165,11 +159,8 @@
     <None Include="Workflows\packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\strings.de.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>strings.de.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\strings.resx">
+    <EmbeddedResource Include="Serialization\strings.de.resx" />
+    <EmbeddedResource Include="Serialization\strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
