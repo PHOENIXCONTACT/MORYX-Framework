@@ -24,7 +24,7 @@ namespace Marvin.Tools.Wcf
         /// Gets the client information by the identifier.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
-        WcfClientInfo GetClientInfoById(long clientId);
+        WcfClientInfo GetClientById(long clientId);
 
         /// <summary>
         /// Raised when a client is disconnected from its service. The service's name is passed to the event handler.
@@ -35,11 +35,6 @@ namespace Marvin.Tools.Wcf
         /// Raised when a client is connected to its service. The service's name is passed to the event handler.
         /// </summary>
         event EventHandler<string> ClientConnected;
-
-        /// <summary>
-        /// Raised when all clients are connected to their services.
-        /// </summary>
-        event EventHandler AllClientsConnected;
 
         /// <summary>
         /// Raised when a client's state changes. The client's WcfClientInfo object is passed to the event handler.

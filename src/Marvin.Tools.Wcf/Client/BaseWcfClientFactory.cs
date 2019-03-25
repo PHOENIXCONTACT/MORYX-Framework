@@ -224,7 +224,7 @@ namespace Marvin.Tools.Wcf
         }
 
         ///
-        public WcfClientInfo GetClientInfoById(long clientId)
+        public WcfClientInfo GetClientById(long clientId)
         {
             var clientInfo = _clientInfos.FirstOrDefault(c => c.Id == clientId);
             if (clientInfo == null)
@@ -475,7 +475,6 @@ namespace Marvin.Tools.Wcf
 
         /// <summary>
         /// Handles the state of the connection.
-        /// TODO: remove the invoke of the create client method. Seperation of concerns
         /// </summary>
         private void HandleConnectionState(MonitoredClient client, InternalConnectionState newState)
         {

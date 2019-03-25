@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Marvin.Tests.Properties {
+namespace Marvin.Tests.Serialization {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Marvin.Tests.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Marvin.Tests.Properties.strings", typeof(strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Marvin.Tests.Serialization.strings", typeof(strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,15 @@ namespace Marvin.Tests.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class Name.
+        /// </summary>
+        public static string ClassName {
+            get {
+                return ResourceManager.GetString("ClassName", resourceCulture);
             }
         }
         
@@ -147,6 +156,33 @@ namespace Marvin.Tests.Properties {
         public static string NumberDescription {
             get {
                 return ResourceManager.GetString("NumberDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property Description.
+        /// </summary>
+        public static string PropDisplayAttribute_Description {
+            get {
+                return ResourceManager.GetString("PropDisplayAttribute_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some String.
+        /// </summary>
+        public static string PropDisplayAttribute_Name {
+            get {
+                return ResourceManager.GetString("PropDisplayAttribute_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string PropDisplayNameAttribute {
+            get {
+                return ResourceManager.GetString("PropDisplayNameAttribute", resourceCulture);
             }
         }
         

@@ -48,7 +48,6 @@ namespace Marvin.Tools.Wcf.SystemTests
         private readonly ManualResetEventSlim _netTcpDisconnectedEvent = new ManualResetEventSlim(false);
         private readonly ManualResetEventSlim _basicHttpConnectedEvent = new ManualResetEventSlim(false);
         private readonly ManualResetEventSlim _basicHttpDisconnectedEvent = new ManualResetEventSlim(false);
-        private readonly ManualResetEventSlim _allClientsConnectedEvent = new ManualResetEventSlim(false);
         private readonly ManualResetEventSlim _clientInfoChangedEvent = new ManualResetEventSlim(false);
         private static readonly ManualResetEventSlim NetTcpCallbackReceived = new ManualResetEventSlim(false);
         private static readonly ManualResetEventSlim NetTcpThrowCallbackReceived = new ManualResetEventSlim(false);
@@ -138,7 +137,6 @@ namespace Marvin.Tools.Wcf.SystemTests
 
             _clientFactory.ClientConnected += OnClientConnected;
             _clientFactory.ClientDisconnected += OnClientDisconnected;
-            _clientFactory.AllClientsConnected += OnAllClientsConnected;
             _clientFactory.ClientInfoChanged += OnClientInfoChanged;
         }
 
@@ -151,7 +149,6 @@ namespace Marvin.Tools.Wcf.SystemTests
             {
                 _clientFactory.ClientConnected -= OnClientConnected;
                 _clientFactory.ClientDisconnected -= OnClientDisconnected;
-                _clientFactory.AllClientsConnected -= OnAllClientsConnected;
                 _clientFactory.ClientInfoChanged -= OnClientInfoChanged;
                 
                 _clientFactory.Dispose();
@@ -196,11 +193,6 @@ namespace Marvin.Tools.Wcf.SystemTests
             }
         }
 
-        private void OnAllClientsConnected(object sender, EventArgs e)
-        {
-            _allClientsConnectedEvent.Set();
-        }
-
         private void OnClientInfoChanged(object sender, WcfClientInfo clientInfo)
         {
             WcfClientInfo clone = clientInfo.Clone();
@@ -220,11 +212,9 @@ namespace Marvin.Tools.Wcf.SystemTests
 
             _netTcpConnectedEvent.Wait(MediumWait);
             _basicHttpConnectedEvent.Wait(ShortWait);
-            _allClientsConnectedEvent.Wait(ShortWait);
 
             Assert.IsTrue(_netTcpConnectedEvent.IsSet, "No ClientConnected received for IHelloWorldWcfService");
             Assert.IsTrue(_basicHttpConnectedEvent.IsSet, "No ClientConnected received for ISimpleHelloWorldWcfService");
-            Assert.IsTrue(_allClientsConnectedEvent.IsSet, "No AllClientConnected received");
 
             Assert.NotNull(_basicHttpService, "Didn't get SimpleHelloWorld service");
             Assert.AreEqual(ConnectionState.Success, _basicHttpState, "SimpleHelloWorld state");
@@ -292,21 +282,18 @@ namespace Marvin.Tools.Wcf.SystemTests
 
             _netTcpConnectedEvent.Wait(LongWait);
             _basicHttpConnectedEvent.Wait(ShortWait);
-            _allClientsConnectedEvent.Wait(ShortWait);
 
             lock (_receivedClientInfos)
             {
                 if (expectEvents)
                 {
                     Assert.IsTrue(_netTcpConnectedEvent.IsSet, "No ClientConnected received for IHelloWorldWcfService");
-                    Assert.IsTrue(_allClientsConnectedEvent.IsSet, "No AllClientConnected received");
                     Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.FailedTry && i.Tries > 1), "Received IHelloWorldWcfService client info event 'FailedTry'");
                     Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.Success && i.Tries == 1), "Received IHelloWorldWcfService client info event 'Success'");
                 }
                 else
                 {
                     Assert.IsFalse(_netTcpConnectedEvent.IsSet, "ClientConnected received for IHelloWorldWcfService");
-                    Assert.IsTrue(_allClientsConnectedEvent.IsSet, "No AllClientConnected received");
                     Assert.Null(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName), "Received initial IHelloWorldWcfService client info event");
                 }
 
@@ -359,21 +346,18 @@ namespace Marvin.Tools.Wcf.SystemTests
 
             _netTcpConnectedEvent.Wait(LongWait);
             _basicHttpConnectedEvent.Wait(ShortWait);
-            _allClientsConnectedEvent.Wait(ShortWait);
 
             lock (_receivedClientInfos)
             {
                 if (expectEvents)
                 {
                     Assert.IsTrue(_netTcpConnectedEvent.IsSet, "No ClientConnected received for IHelloWorldWcfService");
-                    Assert.IsTrue(_allClientsConnectedEvent.IsSet, "No AllClientConnected received");
                     Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.FailedTry && i.Tries > 1), "Received IHelloWorldWcfService client info event 'FailedTry'");
                     Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.Success && i.Tries == 1), "Received IHelloWorldWcfService client info event 'Success'");
                 }
                 else
                 {
                     Assert.IsFalse(_netTcpConnectedEvent.IsSet, "ClientConnected received for IHelloWorldWcfService");
-                    Assert.IsFalse(_allClientsConnectedEvent.IsSet, "AllClientConnected received");
                     Assert.Null(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName), "Received initial IHelloWorldWcfService client info event");
                 }
 
@@ -390,11 +374,9 @@ namespace Marvin.Tools.Wcf.SystemTests
 
             _netTcpConnectedEvent.Wait(MediumWait);
             _basicHttpConnectedEvent.Wait(ShortWait);
-            _allClientsConnectedEvent.Wait(ShortWait);
 
             Assert.IsFalse(_netTcpConnectedEvent.IsSet, "ClientConnected received for IHelloWorldWcfService");
             Assert.IsTrue(_basicHttpConnectedEvent.IsSet, "No ClientConnected received for ISimpleHelloWorldWcfService");
-            Assert.IsFalse(_allClientsConnectedEvent.IsSet, "AllClientConnected received");
 
             Assert.NotNull(_basicHttpService, "Didn't get SimpleHelloWorld service");
             Assert.AreEqual(ConnectionState.Success, _basicHttpState, "SimpleHelloWorld state");
@@ -425,11 +407,9 @@ namespace Marvin.Tools.Wcf.SystemTests
 
             _basicHttpConnectedEvent.Wait(MediumWait);
             _netTcpConnectedEvent.Wait(ShortWait);
-            _allClientsConnectedEvent.Wait(ShortWait);
 
             Assert.IsTrue(_netTcpConnectedEvent.IsSet, "No ClientConnected received for IHelloWorldWcfService");
             Assert.IsFalse(_basicHttpConnectedEvent.IsSet, "ClientConnected received for ISimpleHelloWorldWcfService");
-            Assert.IsFalse(_allClientsConnectedEvent.IsSet, "AllClientConnected received");
 
             Assert.Null(_basicHttpService, "Got SimpleHelloWorld service");
             Assert.AreEqual(ConnectionState.VersionMissmatch, _basicHttpState, "SimpleHelloWorld state");
@@ -719,7 +699,6 @@ namespace Marvin.Tools.Wcf.SystemTests
             _basicHttpConnectedEvent.Reset();
             _netTcpDisconnectedEvent.Reset();
             _basicHttpDisconnectedEvent.Reset();
-            _allClientsConnectedEvent.Reset();
             _clientInfoChangedEvent.Reset();
             NetTcpCallbackReceived.Reset();
             NetTcpThrowCallbackReceived.Reset();
@@ -756,7 +735,6 @@ namespace Marvin.Tools.Wcf.SystemTests
                 NetTcpThrowCallbackReceived.Set();
 
                 // The exception here is on purpose!
-
                 throw new NotImplementedException();
             }
         }

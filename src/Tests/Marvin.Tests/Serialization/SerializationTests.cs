@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using Marvin.Serialization;
+using Marvin.Tests.Serialization;
 using NUnit.Framework;
 
 namespace Marvin.Tests
@@ -169,8 +173,8 @@ namespace Marvin.Tests
             var dummy = new ArrayDummy
             {
                 Array = new[] { 2, 5, 7 },
-                Keys = new string[] { "test1_2", "test_02", "1245" },
-                Enums = new DummyEnum[] { DummyEnum.Unset, DummyEnum.ValueB, DummyEnum.ValueA }
+                Keys = new[] { "test1_2", "test_02", "1245" },
+                Enums = new[] { DummyEnum.Unset, DummyEnum.ValueB, DummyEnum.ValueA }
             };
 
             // Act

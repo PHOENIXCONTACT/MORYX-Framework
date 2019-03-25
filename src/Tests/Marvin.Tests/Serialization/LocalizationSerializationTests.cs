@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Threading;
 using Marvin.Serialization;
-using Marvin.Tests.Properties;
+using Marvin.Tests.Serialization;
 using NUnit.Framework;
 
 namespace Marvin.Tests
@@ -12,6 +13,34 @@ namespace Marvin.Tests
     {
         private readonly CultureInfo _germanCulture = new CultureInfo("de");
         private readonly CultureInfo _invariantCulture = new CultureInfo("en");
+
+        [Test]
+        public void Localization()
+        {
+            var resourceManager = new ResourceManager(typeof(strings));
+            var germanCulture = new CultureInfo("de");
+            var invariantCulture = new CultureInfo("en");
+
+            // Switch to german
+            Thread.CurrentThread.CurrentUICulture = germanCulture;
+            var expectedDisplayPropName = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Name), germanCulture);
+            var expectedDisplayPropDescription = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Description), germanCulture);
+            var encoded = EntryConvert.EncodeClass(typeof(LocalizedClass));
+
+            Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].Key.Name);
+            Assert.AreEqual(expectedDisplayPropDescription, encoded.SubEntries[0].Description);
+            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1]);
+
+            // Switch to invariant
+            Thread.CurrentThread.CurrentUICulture = invariantCulture;
+            expectedDisplayPropName = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Name), invariantCulture);
+            expectedDisplayPropDescription = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Description), germanCulture);
+            encoded = EntryConvert.EncodeClass(typeof(LocalizedClass));
+
+            Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].Key.Name);
+            Assert.AreEqual(expectedDisplayPropDescription, encoded.SubEntries[0].Description);
+            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1]);
+        }
 
         [Test]
         public void PropertyLocalization()
