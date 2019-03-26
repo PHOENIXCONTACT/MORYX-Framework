@@ -1,7 +1,6 @@
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { AppState } from "../redux/AppState";
-import { ActionType } from "../redux/Types";
 
 interface ClockPropModel {
     Time?: string;

@@ -1,4 +1,4 @@
-import { faEdit } from "@fortawesome/fontawesome-free-solid";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as moment from "moment";
 import * as React from "react";
@@ -28,7 +28,7 @@ interface LogStateModel {
 }
 
 export default class Logger extends React.Component<LogPropsModel, LogStateModel> {
-    private updateLogMessagesTimer: number;
+    private updateLogMessagesTimer: NodeJS.Timeout;
 
     constructor(props: LogPropsModel) {
         super(props);

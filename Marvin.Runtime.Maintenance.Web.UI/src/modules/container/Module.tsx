@@ -1,7 +1,7 @@
-import { faCheck, faHospital, faPlay, faSquare, faStop } from "@fortawesome/fontawesome-free-solid";
+import { faCheck, faHospital, faPlay, faSquare, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table } from "reactstrap";
 import { ActionType } from "../../common/redux/Types";
@@ -32,7 +32,7 @@ interface ModuleDispatchPropModel {
     onUpdateFailureBehaviour?(moduleName: string, failureBehaviour: FailureBehaviour): void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionType<{}>>): ModuleDispatchPropModel => {
+const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModuleDispatchPropModel => {
     return {
         onUpdateStartBehaviour: (moduleName: string, startBehaviour: ModuleStartBehaviour) => dispatch(updateStartBehaviour(moduleName, startBehaviour)),
         onUpdateFailureBehaviour: (moduleName: string, failureBehaviour: FailureBehaviour) => dispatch(updateFailureBehaviour(moduleName, failureBehaviour)),

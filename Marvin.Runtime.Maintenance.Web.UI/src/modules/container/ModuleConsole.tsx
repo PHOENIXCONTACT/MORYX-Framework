@@ -1,8 +1,8 @@
-import { faTerminal } from "@fortawesome/fontawesome-free-solid";
+import { faTerminal } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Row } from "reactstrap";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";
 import { ActionType } from "../../common/redux/Types";
@@ -23,7 +23,7 @@ interface ModuleConsoleDispatchPropsModel {
     onShowWaitDialog?(showWaitDialog: boolean): void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionType<{}>>): ModuleConsoleDispatchPropsModel => {
+const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModuleConsoleDispatchPropsModel => {
     return {
         onShowWaitDialog: (showWaitDialog: boolean) => dispatch(updateShowWaitDialog(showWaitDialog)),
     };

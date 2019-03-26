@@ -1,4 +1,4 @@
-import { faArrowsAltV, faFolderOpen } from "@fortawesome/fontawesome-free-solid";
+import { faArrowsAltV, faFolderOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Row, Table } from "reactstrap";
@@ -109,12 +109,10 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
 
     public selectPropertyByType(entry: Entry): React.ReactNode {
         switch (entry.Value.Type) {
-            case EntryValueType.Byte:
-            {
+            case EntryValueType.Byte: {
                 return (<ByteEditor Entry={entry} IsReadOnly={this.props.IsReadOnly} />);
             }
-            case EntryValueType.Boolean:
-            {
+            case EntryValueType.Boolean: {
                 return (<BooleanEditor Entry={entry} IsReadOnly={this.props.IsReadOnly} />);
             }
             case EntryValueType.Int16:
@@ -124,21 +122,17 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
             case EntryValueType.Int64:
             case EntryValueType.UInt64:
             case EntryValueType.Single:
-            case EntryValueType.Double:
-            {
+            case EntryValueType.Double: {
                 return (<NumberEditor Entry={entry} IsReadOnly={this.props.IsReadOnly} />);
             }
-            case EntryValueType.String:
-            {
+            case EntryValueType.String: {
                 return (<StringEditor Entry={entry} IsReadOnly={this.props.IsReadOnly} />);
             }
-            case EntryValueType.Enum:
-            {
+            case EntryValueType.Enum: {
                 return (<EnumEditor Entry={entry} IsReadOnly={this.props.IsReadOnly} />);
             }
             case EntryValueType.Collection:
-            case EntryValueType.Class:
-            {
+            case EntryValueType.Class: {
                 return (
                     <ButtonGroup>
                         <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>

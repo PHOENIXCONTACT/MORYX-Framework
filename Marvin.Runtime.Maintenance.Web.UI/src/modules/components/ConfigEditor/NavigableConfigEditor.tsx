@@ -59,7 +59,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
                 const entryChain: Entry[] = [];
                 let currentEntry: Entry = null;
 
-                query.path.split(",").forEach((element: string) => {
+                (query.path as string).split(",").forEach((element: string) => {
                     const searchableEntries: Entry[] = currentEntry != null ? currentEntry.SubEntries : entries;
                     const filtered = searchableEntries.filter((entry) => entry.Key.Name === element);
 

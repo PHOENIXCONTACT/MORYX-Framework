@@ -1,4 +1,4 @@
-import createHashHistory from "history/createHashHistory";
+import { createHashHistory } from "history";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -7,9 +7,10 @@ import { ConnectedRouter, routerMiddleware, routerReducer } from "react-router-r
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import App from "./common/container/App";
 import { AppState, getAppReducer, initialAppState } from "./common/redux/AppState";
+import { ActionType } from "./common/redux/Types";
 
 export const history = createHashHistory();
-const store = createStore<AppState>(getAppReducer, initialAppState);
+const store = createStore<AppState, ActionType<{}>, any, any>(getAppReducer, initialAppState);
 
 ReactDOM.render(
     <Provider store={store}>

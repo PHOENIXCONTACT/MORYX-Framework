@@ -1,9 +1,9 @@
-import { faBars, faCubes, faDatabase, faSitemap } from "@fortawesome/fontawesome-free-solid";
+import { faBars, faCubes, faDatabase, faSitemap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as moment from "moment";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Link, Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 import { Card, CardBody, CardFooter, CardHeader, CardText, CardTitle, Col, Collapse, Container, Modal, ModalBody, ModalHeader, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Row } from "reactstrap";
 import Dashboard from "../../dashboard/container/Dashboard";
@@ -62,7 +62,7 @@ const mapStateToProps = (state: AppState): AppPropModel => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionType<{}>>): AppDispatchPropModel => {
+const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): AppDispatchPropModel => {
     return {
         onUpdateServerTime: (serverTime: string) => dispatch(updateServerTime(serverTime)),
         onUpdateApplicationInfo: (applicationInfo: ApplicationInformationResponse) => dispatch(updateApplicationInfo(applicationInfo)),
@@ -78,8 +78,8 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionType<{}>>): AppDispatchProp
 };
 
 class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDispatchPropModel> {
-    private updateClockTimer: number;
-    private updateLoadAndModulesTimer: number;
+    private updateClockTimer: NodeJS.Timeout;
+    private updateLoadAndModulesTimer: NodeJS.Timeout;
     private notificationSystem: NotificationSystem.System = null;
 
     constructor(props: AppPropModel & RouteComponentProps<{}> & AppDispatchPropModel) {

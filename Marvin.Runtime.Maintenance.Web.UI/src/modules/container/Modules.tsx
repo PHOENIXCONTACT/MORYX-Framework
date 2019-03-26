@@ -1,8 +1,8 @@
-import { faCogs, faComment, faSitemap, faSquare, faTerminal } from "@fortawesome/fontawesome-free-solid";
+import { faCogs, faComment, faSitemap, faSquare, faTerminal } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import RoutingMenu from "../../common/components/Menu/RoutingMenu";
@@ -30,7 +30,7 @@ interface ModulesDispatchPropModel {
     onUpdateModules?(modules: ServerModuleModel[]): void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionType<{}>>): ModulesDispatchPropModel => {
+const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModulesDispatchPropModel => {
     return {
         onUpdateModules: (modules: ServerModuleModel[]) => dispatch(updateModules(modules)),
     };
@@ -50,7 +50,7 @@ interface ModulesStateModel {
 }
 
 class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropModel, ModulesStateModel> {
-    private updateModulesTimer: number;
+    private updateModulesTimer: NodeJS.Timeout;
 
     constructor(props: ModulesPropModel & ModulesDispatchPropModel) {
         super(props);

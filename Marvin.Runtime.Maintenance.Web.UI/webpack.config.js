@@ -11,6 +11,11 @@ module.exports = (env, options) => {
             path: __dirname + "/dist",
         },
 
+        performance: {
+            maxEntrypointSize: 2048000,
+            maxAssetSize: 2048000
+        },
+
         devServer: {
             contentBase: __dirname + "/dist"
         },

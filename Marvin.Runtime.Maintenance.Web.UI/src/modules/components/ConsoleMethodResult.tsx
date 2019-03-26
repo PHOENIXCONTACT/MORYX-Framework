@@ -39,7 +39,7 @@ class ConsoleMethodResult extends React.Component<ConsoleMethodResultPropModel &
                         </Row>
                         <Row>
                             <Col md={12} className="up-space-lg">
-                                <NavigableConfigEditor Entries={[this.props.InvokeResult]}
+                                <NavigableConfigEditor Entries={this.props.InvokeResult.SubEntries}
                                                        ParentEntry={null}
                                                        Root={this.props.InvokeResult}
                                                        IsReadOnly={true}

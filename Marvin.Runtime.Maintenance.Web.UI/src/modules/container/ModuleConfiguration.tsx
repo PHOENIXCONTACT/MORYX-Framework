@@ -1,4 +1,4 @@
-import { faCogs, faSave, faSync, faUndo } from "@fortawesome/fontawesome-free-solid";
+import { faCogs, faSave, faSync, faUndo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");

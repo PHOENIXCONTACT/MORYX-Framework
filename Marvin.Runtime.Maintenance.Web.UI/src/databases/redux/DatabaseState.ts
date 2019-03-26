@@ -16,12 +16,10 @@ export const initialDatabaseState: DatabaseState = {
 
 export function getDatabaseReducer(state: DatabaseState = initialDatabaseState, action: ActionType<{}>): DatabaseState {
   switch (action.type) {
-    case UPDATE_DATABASE_CONFIGS:
-    {
+    case UPDATE_DATABASE_CONFIGS: {
         return { ...state, DatabaseConfigs: action.payload as DataModel[] };
     }
-    case UPDATE_DATABASE_CONFIG:
-    {
+    case UPDATE_DATABASE_CONFIG: {
         const databaseConfig = action.payload as DataModel;
 
         return {

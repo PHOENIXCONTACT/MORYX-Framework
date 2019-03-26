@@ -1,4 +1,4 @@
-import { faAngleDown, faAngleRight } from "@fortawesome/fontawesome-free-solid";
+import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Location, UnregisterCallback } from "history";
 import * as React from "react";

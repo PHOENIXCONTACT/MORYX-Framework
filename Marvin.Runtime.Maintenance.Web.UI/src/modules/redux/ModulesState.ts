@@ -23,12 +23,10 @@ export const initialModulesState: ModulesState = {
 
 export function getModulesReducer(state: ModulesState = initialModulesState, action: ActionType<{}>): ModulesState {
   switch (action.type) {
-    case UPDATE_MODULES:
-    {
+    case UPDATE_MODULES: {
       return { ...state, Modules: action.payload as ServerModuleModel[] };
     }
-    case UPDATE_HEALTHSTATE:
-    {
+    case UPDATE_HEALTHSTATE: {
       const localPayload = action.payload as {  moduleName: string, healthState: ModuleServerModuleState };
 
       return {
@@ -37,8 +35,7 @@ export function getModulesReducer(state: ModulesState = initialModulesState, act
           (module, i) => module.Name === localPayload.moduleName ? {...module, HealthState: localPayload.healthState} : module),
       };
     }
-    case UPDATE_NOTIFICATIONS:
-    {
+    case UPDATE_NOTIFICATIONS: {
       const localPayload = action.payload as {  moduleName: string, notifications: NotificationModel[] };
 
       return {
@@ -47,8 +44,7 @@ export function getModulesReducer(state: ModulesState = initialModulesState, act
           (module, i) => module.Name === localPayload.moduleName ? {...module, Notifications: localPayload.notifications} : module),
       };
     }
-    case UPDATE_START_BEHAVIOUR:
-    {
+    case UPDATE_START_BEHAVIOUR: {
       const localPayload = action.payload as { moduleName: string, startBehaviour: ModuleStartBehaviour };
 
       return {
@@ -57,8 +53,7 @@ export function getModulesReducer(state: ModulesState = initialModulesState, act
           (module, i) => module.Name === localPayload.moduleName ? {...module, StartBehaviour: localPayload.startBehaviour} : module),
       };
     }
-    case UPDATE_FAILURE_BEHAVIOUR:
-    {
+    case UPDATE_FAILURE_BEHAVIOUR: {
       const localPayload = action.payload as { moduleName: string, failureBehaviour: FailureBehaviour };
 
       return {

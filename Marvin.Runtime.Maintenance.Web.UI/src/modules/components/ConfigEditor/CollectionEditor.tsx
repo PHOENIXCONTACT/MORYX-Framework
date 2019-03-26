@@ -1,4 +1,4 @@
-import { faArrowsAltV, faFolderOpen, faPlus, faTrash } from "@fortawesome/fontawesome-free-solid";
+import { faArrowsAltV, faFolderOpen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import { Button, ButtonGroup, Col, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Input, Row } from "reactstrap";

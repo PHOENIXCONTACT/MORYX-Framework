@@ -1,7 +1,7 @@
-import { faCubes } from "@fortawesome/fontawesome-free-solid";
+import { faCubes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Card, CardBody, CardHeader, Col, Container, Progress, Row } from "reactstrap";
 import CommonRestClient from "../../common/api/CommonRestClient";
 import ApplicationInformationResponse from "../../common/api/responses/ApplicationInformationResponse";

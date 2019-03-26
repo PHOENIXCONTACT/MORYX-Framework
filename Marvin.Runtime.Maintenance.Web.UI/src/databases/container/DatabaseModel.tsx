@@ -1,9 +1,9 @@
-import { faBriefcase, faCheck, faDatabase, faExclamation, faPlug, faSpinner, faTable } from "@fortawesome/fontawesome-free-solid";
+import { faBriefcase, faCheck, faDatabase, faExclamation, faPlug, faSpinner, faTable } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as moment from "moment";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Link, Route, Switch } from "react-router-dom";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Form, FormGroup, Input, Nav, NavItem, NavLink, Row, TabContent, TabPane, UncontrolledTooltip } from "reactstrap";
 import kbToString from "../../common/converter/ByteConverter";
@@ -31,7 +31,7 @@ interface DatabaseModelDispatchPropsModel {
     onShowWaitDialog?(showWaitDialog: boolean): void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionType<{}>>): DatabaseModelDispatchPropsModel => {
+const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): DatabaseModelDispatchPropsModel => {
     return {
         onUpdateDatabaseConfig: (databaseConfig: DataModel) => dispatch(updateDatabaseConfig(databaseConfig)),
         onShowWaitDialog: (showWaitDialog: boolean) => dispatch(updateShowWaitDialog(showWaitDialog)),

@@ -1,8 +1,8 @@
-import { faBriefcase, faClone, faComment } from "@fortawesome/fontawesome-free-solid";
+import { faBriefcase, faClone, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Link, Route, Switch } from "react-router-dom";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import RoutingMenu from "../../common/components/Menu/RoutingMenu";
@@ -33,7 +33,7 @@ const mapStateToProps = (state: AppState): DatabasesPropsModel => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionType<{}>>): DatabasesDispatchPropModel => {
+const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): DatabasesDispatchPropModel => {
     return {
         onUpdateDatabaseConfigs: (databaseConfigs: DataModel[]) => dispatch(updateDatabaseConfigs(databaseConfigs)),
     };
@@ -58,8 +58,10 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
         this.setState({ IsLoading: true });
 
         this.props.RestClient.databaseModels().then((data) => {
-            this.props.onUpdateDatabaseConfigs(data);
-            this.setState({ MenuModel: { MenuItems: data.map((dataModel, idx) => Database.createMenuItem(dataModel)) }, IsLoading: false });
+            const validModels = data.filter((model) => model);
+
+            this.props.onUpdateDatabaseConfigs(validModels);
+            this.setState({ MenuModel: { MenuItems: validModels.map((dataModel, idx) => Database.createMenuItem(dataModel)) }, IsLoading: false });
         });
     }
 

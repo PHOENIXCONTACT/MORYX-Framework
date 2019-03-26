@@ -22,20 +22,16 @@ export const initialDashboardState: DashboardState = {
 
 export function getDashboardReducer(state: DashboardState = initialDashboardState, action: ActionType<{}>): DashboardState {
   switch (action.type) {
-    case UPDATE_APPLICATION_INFO:
-    {
+    case UPDATE_APPLICATION_INFO: {
         return { ...state, ApplicationInfo: action.payload as ApplicationInformationResponse };
     }
-    case UPDATE_HOST_INFO:
-    {
+    case UPDATE_HOST_INFO: {
         return { ...state, HostInfo: action.payload as HostInformationResponse };
     }
-    case UPDATE_APPLICATION_LOAD:
-    {
+    case UPDATE_APPLICATION_LOAD: {
         return { ...state, ApplicationLoad: action.payload as ApplicationLoadResponse };
     }
-    case UPDATE_SYSTEM_LOAD:
-    {
+    case UPDATE_SYSTEM_LOAD: {
         const systemLoadResponse = action.payload as SystemLoadResponse;
         const samples = state.SystemLoad.slice();
         if (samples.length === 5) {

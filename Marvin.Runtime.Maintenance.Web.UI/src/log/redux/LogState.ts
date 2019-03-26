@@ -16,8 +16,7 @@ export const initialLogState: LogState = {
 
 export function getLogReducer(state: LogState = initialLogState, action: ActionType<{}>): LogState {
   switch (action.type) {
-    case UPDATE_LOGGERS:
-    {
+    case UPDATE_LOGGERS: {
         return { ...state, Loggers: action.payload as LoggerModel[] };
     }
   }

@@ -1,9 +1,9 @@
-import { faEdit, faList } from "@fortawesome/fontawesome-free-solid";
+import { faEdit, faList } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Location, UnregisterCallback } from "history";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
-import { connect, Dispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Link, Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 import { Card, CardBody, CardHeader, Col, Container, Input, Nav, NavItem, NavLink, Row, TabContent, TabPane } from "reactstrap";
 import TreeMenu from "../../common/components/Menu/TreeMenu";
@@ -37,7 +37,7 @@ const mapStateToProps = (state: AppState): LogPropsModel => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionType<{}>>): LogDispatchPropModel => {
+const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): LogDispatchPropModel => {
     return {
         onUpdateLoggers: (loggers: LoggerModel[]) => dispatch(updateLoggers(loggers)),
     };

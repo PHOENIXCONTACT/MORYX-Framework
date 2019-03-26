@@ -23,25 +23,20 @@ export const initialCommonState: CommonState = {
 
 export function getCommonReducer(state: CommonState = initialCommonState, action: ActionType<{}>): CommonState {
   switch (action.type) {
-    case UPDATE_RESTCLIENT_ENDPOINT:
-    {
+    case UPDATE_RESTCLIENT_ENDPOINT: {
         const endpoint = action.payload as RestClientEndpoint;
         return { ...state, RestClient: new CommonRestClient(endpoint.Host, endpoint.Port) };
     }
-    case UPDATE_SERVER_TIME:
-    {
+    case UPDATE_SERVER_TIME: {
         return { ...state, ServerTime: action.payload as string };
     }
-    case UPDATE_IS_CONNECTED:
-    {
+    case UPDATE_IS_CONNECTED: {
         return { ...state, IsConnected: action.payload as boolean };
     }
-    case UPDATE_NOTIFICATION_INSTANCE:
-    {
+    case UPDATE_NOTIFICATION_INSTANCE: {
         return { ...state, NotificationSystem: action.payload as NotificationSystem.System };
     }
-    case UPDATE_SHOW_WAIT_DIALOG:
-    {
+    case UPDATE_SHOW_WAIT_DIALOG: {
         return { ...state, ShowWaitDialog: action.payload as boolean };
     }
   }

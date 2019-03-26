@@ -1,4 +1,4 @@
-import { faSitemap } from "@fortawesome/fontawesome-free-solid";
+import { faSitemap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";
 import { Link } from "react-router-dom";
