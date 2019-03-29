@@ -77,21 +77,6 @@
     <Compile Include="FactoryCreationContext.cs" />
     <Compile Include="HeartOfGoldController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\DatabaseMaintenance\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Service References\Logging\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Service References\Maintenance\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -103,124 +88,15 @@
     <None Include="Properties\DataSources\Marvin.Serialization.Entry1.datasource" />
     <None Include="Properties\DataSources\Marvin.TestTools.SystemTest.ServiceReferences.DatabaseMaintenanceService.DataModel.datasource" />
     <None Include="Properties\DataSources\Marvin.TestTools.SystemTest.ServiceReferences.DatabaseMaintenanceService.DumpResult.datasource" />
-    <None Include="Service References\DatabaseMaintenance\DatabaseMaintenance.wsdl" />
-    <None Include="Service References\DatabaseMaintenance\DatabaseMaintenance.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DatabaseMaintenance\DatabaseMaintenance1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DatabaseMaintenance\DatabaseMaintenance2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DatabaseMaintenance\DatabaseMaintenance3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DatabaseMaintenance\Marvin.TestTools.SystemTest.DatabaseMaintenance.DataModel.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\DatabaseMaintenance\Marvin.TestTools.SystemTest.DatabaseMaintenance.DumpResult.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Logging\LogMaintenance.wsdl" />
-    <None Include="Service References\Logging\LogMaintenance.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Logging\LogMaintenance1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Logging\LogMaintenance2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Logging\LogMaintenance3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Logging\Marvin.TestTools.SystemTest.Logging.LogMessages.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Logging\Marvin.TestTools.SystemTest.Logging.PluginLoggerModel.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Maintenance\Marvin.TestTools.SystemTest.Maintenance.Config.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Maintenance\Marvin.TestTools.SystemTest.Maintenance.DependencyEvaluation.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Maintenance\Marvin.TestTools.SystemTest.Maintenance.ServerModuleModel.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Maintenance\ModuleMaintenance.wsdl" />
-    <None Include="Service References\Maintenance\ModuleMaintenance.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Maintenance\ModuleMaintenance1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Maintenance\ModuleMaintenance2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Maintenance\ModuleMaintenance3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Maintenance\ModuleMaintenance4.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Maintenance\ModuleMaintenance5.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\Maintenance\ModuleMaintenance6.xsd">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\DatabaseMaintenance\" />
-    <WCFMetadataStorage Include="Service References\Logging\" />
-    <WCFMetadataStorage Include="Service References\Maintenance\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\DatabaseMaintenance\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\DatabaseMaintenance\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\DatabaseMaintenance\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Logging\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Logging\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Logging\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Maintenance\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Maintenance\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Maintenance\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Marvin.Model\Marvin.Model.csproj">
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
       <Name>Marvin.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.Maintenance\Marvin.Runtime.Maintenance.csproj">
+      <Project>{eb039d46-906f-44bf-ac37-b3b3634a4442}</Project>
+      <Name>Marvin.Runtime.Maintenance</Name>
     </ProjectReference>
     <ProjectReference Include="..\Marvin\Marvin.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
@@ -229,10 +105,6 @@
     <ProjectReference Include="..\Marvin.Runtime\Marvin.Runtime.csproj">
       <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>
       <Name>Marvin.Runtime</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tests\Marvin.Tools.Wcf.Tests\Marvin.Tools.Wcf.Tests.csproj">
-      <Project>{a4ca7b7c-5417-4fa9-9e0b-76d4cd4663c9}</Project>
-      <Name>Marvin.Tools.Wcf.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

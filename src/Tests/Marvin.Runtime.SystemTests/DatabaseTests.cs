@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using Marvin.Model;
+using Marvin.Runtime.Maintenance.Plugins.Databases;
 using Marvin.Runtime.Modules;
 using Marvin.TestTools.SystemTest;
-using Marvin.TestTools.SystemTest.DatabaseMaintenance;
 using Marvin.TestTools.Test.Inheritance.Model;
 using NUnit.Framework;
 

@@ -6,17 +6,16 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading;
+using Marvin.Logging;
 using Marvin.Model;
+using Marvin.Runtime.Maintenance.Plugins;
+using Marvin.Runtime.Maintenance.Plugins.Databases;
+using Marvin.Runtime.Maintenance.Plugins.Logging;
+using Marvin.Runtime.Maintenance.Plugins.Modules;
 using Marvin.Runtime.Modules;
 using Marvin.TestTools.SystemTest.Clients;
-using Marvin.TestTools.SystemTest.DatabaseMaintenance;
-using Marvin.TestTools.SystemTest.Logging;
-using Marvin.TestTools.SystemTest.Maintenance;
-using InvocationResponse = Marvin.TestTools.SystemTest.DatabaseMaintenance.InvocationResponse;
-using LogLevel = Marvin.Logging.LogLevel;
 
 namespace Marvin.TestTools.SystemTest
 {
