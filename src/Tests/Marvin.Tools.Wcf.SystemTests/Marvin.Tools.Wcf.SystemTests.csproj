@@ -61,6 +61,10 @@
     <Compile Include="VersionServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Marvin.Runtime.Maintenance\Marvin.Runtime.Maintenance.csproj">
+      <Project>{EB039D46-906F-44BF-AC37-B3B3634A4442}</Project>
+      <Name>Marvin.Runtime.Maintenance</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
       <Name>Marvin.Tools.Wcf</Name>

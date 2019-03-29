@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Marvin.Model;
-using Marvin.TestTools.SystemTest.DatabaseMaintenance;
+using Marvin.Runtime.Maintenance.Plugins;
+using Marvin.Runtime.Maintenance.Plugins.Databases;
 
 namespace Marvin.TestTools.SystemTest.Clients
 {
@@ -11,9 +12,9 @@ namespace Marvin.TestTools.SystemTest.Clients
         {
         }
 
-        public List<DataModel> GetAll()
+        public DataModel[] GetAll()
         {
-            return Get<List<DataModel>>("models");
+            return Get<DataModel[]>("models");
         }
 
         public Task<List<DataModel>> GetAllAsync()

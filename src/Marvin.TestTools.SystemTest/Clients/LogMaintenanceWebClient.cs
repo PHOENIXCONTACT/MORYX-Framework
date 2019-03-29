@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Marvin.TestTools.SystemTest.Logging;
+using Marvin.Runtime.Maintenance.Plugins;
+using Marvin.Runtime.Maintenance.Plugins.Logging;
 
 namespace Marvin.TestTools.SystemTest.Clients
 {

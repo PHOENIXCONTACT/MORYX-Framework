@@ -52,6 +52,10 @@
     <Compile Include="LifeCycleTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Marvin.Runtime.Maintenance\Marvin.Runtime.Maintenance.csproj">
+      <Project>{EB039D46-906F-44BF-AC37-B3B3634A4442}</Project>
+      <Name>Marvin.Runtime.Maintenance</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Marvin.TestTools.Test.Inheritance.Model\Marvin.TestTools.Test.Inheritance.Model.csproj">
       <Project>{cbf4c42b-488d-44af-9c60-3cd2c2aa955e}</Project>
       <Name>Marvin.TestTools.Test.Inheritance.Model</Name>

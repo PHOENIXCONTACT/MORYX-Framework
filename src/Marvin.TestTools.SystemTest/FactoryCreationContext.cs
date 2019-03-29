@@ -4,7 +4,8 @@ using Castle.Windsor;
 using Marvin.Configuration;
 using Marvin.Model;
 using Marvin.Modules;
-using Marvin.TestTools.SystemTest.DatabaseMaintenance;
+using Marvin.Runtime.Maintenance.Plugins.Databases;
+using DatabaseConfig = Marvin.Model.DatabaseConfig;
 
 namespace Marvin.TestTools.SystemTest
 {
