@@ -10,6 +10,11 @@ namespace Marvin.Serialization
     public interface ICustomSerialization
     {
         /// <summary>
+        /// Gets or sets the <see cref="IFormatProvider"/> used or parsing and writing
+        /// </summary>
+        IFormatProvider FormatProvider { get; set; }
+
+        /// <summary>
         /// Filter the properties that shall be included in the conversion
         /// </summary>
         IEnumerable<PropertyInfo> GetProperties(Type sourceType);

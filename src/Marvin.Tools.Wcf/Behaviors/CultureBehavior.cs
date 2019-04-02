@@ -1,9 +1,13 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 using System.Threading;
+using CultureNotFoundException = System.Globalization.CultureNotFoundException;
 
 namespace Marvin.Tools.Wcf
 {
@@ -50,7 +54,32 @@ namespace Marvin.Tools.Wcf
             if (headerIndex != -1)
             {
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(request.Headers.GetHeader<string>(headerIndex));
+                return null;
             }
+
+            var httpRequest = request.Properties.FirstOrDefault(p => p.Value is HttpRequestMessageProperty).Value as HttpRequestMessageProperty;
+            var acceptedLanguages = httpRequest?.Headers["Accept-Language"];
+
+            if (acceptedLanguages != null)
+            {
+                var languages = acceptedLanguages.Split(',')
+                    .Select(StringWithQualityHeaderValue.Parse)
+                    .OrderByDescending(s => s.Quality.GetValueOrDefault(1));
+
+                foreach (var weightedLanguage in languages)
+                {
+                    try
+                    {
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfoByIetfLanguageTag(weightedLanguage.Value);
+                        break;
+                    }
+                    catch (CultureNotFoundException)
+                    {
+                        // ignored
+                    }
+                }
+            }
+
             return null;
         }
 

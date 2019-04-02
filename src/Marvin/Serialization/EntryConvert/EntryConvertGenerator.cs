@@ -80,8 +80,9 @@ namespace Marvin.Serialization
         /// </summary>
         /// <param name="type">Desired property type</param>
         /// <param name="value">String value</param>
+		/// <param name="formatProvider"><see cref="IFormatProvider"/> used for parsing value</param>
         /// <returns>Typed object with parsed value</returns>
-        public static object ToObject(Type type, string value)
+        public static object ToObject(Type type, string value, IFormatProvider formatProvider)
         {
             // Traditional retransformation
             object result = null;
@@ -91,7 +92,7 @@ namespace Marvin.Serialization
 			}
 			else if (type == typeof(Byte))
 			{
-				result = Byte.Parse(value);
+				result = Byte.Parse(value, formatProvider);
 			}
 			else if (type == typeof(Boolean))
 			{
@@ -99,35 +100,35 @@ namespace Marvin.Serialization
 			}
 			else if (type == typeof(Int16))
 			{
-				result = Int16.Parse(value);
+				result = Int16.Parse(value, formatProvider);
 			}
 			else if (type == typeof(UInt16))
 			{
-				result = UInt16.Parse(value);
+				result = UInt16.Parse(value, formatProvider);
 			}
 			else if (type == typeof(Int32))
 			{
-				result = Int32.Parse(value);
+				result = Int32.Parse(value, formatProvider);
 			}
 			else if (type == typeof(UInt32))
 			{
-				result = UInt32.Parse(value);
+				result = UInt32.Parse(value, formatProvider);
 			}
 			else if (type == typeof(Int64))
 			{
-				result = Int64.Parse(value);
+				result = Int64.Parse(value, formatProvider);
 			}
 			else if (type == typeof(UInt64))
 			{
-				result = UInt64.Parse(value);
+				result = UInt64.Parse(value, formatProvider);
 			}
 			else if (type == typeof(Single))
 			{
-				result = Single.Parse(value);
+				result = Single.Parse(value, formatProvider);
 			}
 			else if (type == typeof(Double))
 			{
-				result = Double.Parse(value);
+				result = Double.Parse(value, formatProvider);
 			}
 			else if (type.IsEnum)
             {
@@ -142,8 +143,9 @@ namespace Marvin.Serialization
         /// </summary>
         /// <param name="type">Entry value type</param>
         /// <param name="value">String value</param>
+		/// <param name="formatProvider"><see cref="IFormatProvider"/> used for parsing value</param>
         /// <returns>Typed object with parsed value</returns>
-        public static object ToObject(EntryValueType type, string value)
+        public static object ToObject(EntryValueType type, string value, IFormatProvider formatProvider)
         {
             // Traditional retransformation
             object result = null;
@@ -153,34 +155,34 @@ namespace Marvin.Serialization
 					result = value;
 					break;
 				case EntryValueType.Byte:
-					result = Byte.Parse(value);
+					result = Byte.Parse(value, formatProvider);
 					break;
 				case EntryValueType.Boolean:
 					result = Boolean.Parse(value);
 					break;
 				case EntryValueType.Int16:
-					result = Int16.Parse(value);
+					result = Int16.Parse(value, formatProvider);
 					break;
 				case EntryValueType.UInt16:
-					result = UInt16.Parse(value);
+					result = UInt16.Parse(value, formatProvider);
 					break;
 				case EntryValueType.Int32:
-					result = Int32.Parse(value);
+					result = Int32.Parse(value, formatProvider);
 					break;
 				case EntryValueType.UInt32:
-					result = UInt32.Parse(value);
+					result = UInt32.Parse(value, formatProvider);
 					break;
 				case EntryValueType.Int64:
-					result = Int64.Parse(value);
+					result = Int64.Parse(value, formatProvider);
 					break;
 				case EntryValueType.UInt64:
-					result = UInt64.Parse(value);
+					result = UInt64.Parse(value, formatProvider);
 					break;
 				case EntryValueType.Single:
-					result = Single.Parse(value);
+					result = Single.Parse(value, formatProvider);
 					break;
 				case EntryValueType.Double:
-					result = Double.Parse(value);
+					result = Double.Parse(value, formatProvider);
 					break;
             }
 

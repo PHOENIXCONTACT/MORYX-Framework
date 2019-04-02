@@ -72,7 +72,7 @@ namespace Marvin.Serialization
         private object KeyValue(string key)
         {
             var keyType = _dictionary.GetType().GenericTypeArguments[0];
-            var keyvalue = EntryConvert.ToObject(keyType, key);
+            var keyvalue = EntryConvert.ToObject(keyType, key, _serialization.FormatProvider);
             return keyvalue;
         }
     }

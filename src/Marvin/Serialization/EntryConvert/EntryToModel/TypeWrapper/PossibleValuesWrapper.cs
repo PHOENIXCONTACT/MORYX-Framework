@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Marvin.Serialization
 {
@@ -28,11 +28,12 @@ namespace Marvin.Serialization
         /// Create wrapper around the property
         /// </summary>
         /// <param name="property">Property that shall be wrapped</param>
+        /// <param name="formatProvider"><see cref="IFormatProvider"/> used for parsing and writing</param>
         /// <returns>Wrapped property</returns>
-        public PropertyTypeWrapper Wrap(PropertyInfo property)
+        public PropertyTypeWrapper Wrap(PropertyInfo property, IFormatProvider formatProvider)
         {
             var key = AttributeWrapperFactory.FromAttributeOrNull(property);
-            return new PossibleValuesWrapper(property, key ?? PossibleValuesRegex.Match(property.Name).Groups["key"].Value)
+            return new PossibleValuesWrapper(property, key ?? PossibleValuesRegex.Match(property.Name).Groups["key"].Value, formatProvider)
             {
                 Required = key != null
             };
@@ -44,7 +45,7 @@ namespace Marvin.Serialization
         /// <summary>
         /// Create match wrapper for a property
         /// </summary>
-        public PossibleValuesWrapper(PropertyInfo property, string key) : base(property)
+        public PossibleValuesWrapper(PropertyInfo property, string key, IFormatProvider formatProvider) : base(property, formatProvider)
         {
             Key = key;
         }
