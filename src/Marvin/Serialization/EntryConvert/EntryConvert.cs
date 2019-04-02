@@ -120,7 +120,7 @@ namespace Marvin.Serialization
 
             // Value types should have the default value as current value
             if (ValueOrStringType(property.PropertyType))
-                entryValue.Current = entryValue.Default;
+                entryValue.Current = ConvertToString(entryValue.Default, customSerialization.FormatProvider);
 
             return entryValue;
         }
@@ -201,7 +201,7 @@ namespace Marvin.Serialization
                 var converted = EncodeProperty(property, customSerialization);
                 // Assign default to current
                 var value = converted.Value;
-                value.Current = value.Default;
+                value.Current = ConvertToString(value.Default, customSerialization.FormatProvider);
                 // Recursive call for classes
                 if (converted.Value.Type == EntryValueType.Class)
                 {
@@ -236,7 +236,7 @@ namespace Marvin.Serialization
 
             if (isValueType)
             {
-                converted.Value.Current = instance.ToString();
+                converted.Value.Current = ConvertToString(instance, customSerialization.FormatProvider);
                 return converted;
             }
             
@@ -277,7 +277,7 @@ namespace Marvin.Serialization
                         var subEntry = value == null 
                             ? EncodeClass(property.PropertyType, customSerialization) 
                             : EncodeObject(value, customSerialization);
-                        convertedProperty.Value.Current = subEntry.Value.Current;
+                        convertedProperty.Value.Current = ConvertToString(subEntry.Value.Current, customSerialization.FormatProvider);
                         convertedProperty.SubEntries = subEntry.SubEntries;
                         break;
                     case EntryValueType.Exception:
@@ -294,7 +294,7 @@ namespace Marvin.Serialization
                         }
                         break;
                     default:
-                        convertedProperty.Value.Current = value?.ToString();
+                        convertedProperty.Value.Current = ConvertToString(value, customSerialization.FormatProvider);
                         break;
                 }
 
@@ -617,7 +617,7 @@ namespace Marvin.Serialization
 
                     if (match.Value.Type < EntryValueType.Class)
                     {
-                        item = CreatePrimitiveOrEnum(memberType, match.Value);
+                        item = CreatePrimitiveOrEnum(memberType, match.Value, customSerialization.FormatProvider);
                     }
                     else
                     {
@@ -635,7 +635,7 @@ namespace Marvin.Serialization
                 if (subEntry.Value.Type < EntryValueType.Class)
                 {
                     // Create value type
-                    item = CreatePrimitiveOrEnum(memberType, subEntry.Value);
+                    item = CreatePrimitiveOrEnum(memberType, subEntry.Value, customSerialization.FormatProvider);
                 }
                 else
                 {
@@ -653,19 +653,19 @@ namespace Marvin.Serialization
         /// <summary>
         /// Create object for primitive values like int/string or enums
         /// </summary>
-        private static object CreatePrimitiveOrEnum(Type propertyType, EntryValue entryValue)
+        private static object CreatePrimitiveOrEnum(Type propertyType, EntryValue entryValue, IFormatProvider formatProvider)
         {
             object item;
             // All value types
             if (entryValue.Type < EntryValueType.Enum)
             {
                 // Create value type
-                item = ToObject(entryValue.Type, entryValue.Current);
+                item = ToObject(entryValue.Type, entryValue.Current, formatProvider);
             }
             else
             {
                 var elementType = ElementType(propertyType);
-                item = ToObject(elementType, entryValue.Current);
+                item = ToObject(elementType, entryValue.Current, formatProvider);
             }
             return item;
         }
@@ -769,5 +769,22 @@ namespace Marvin.Serialization
         }
 
         #endregion
+
+        /// <summary>
+        /// Converts given value typed instance to a string with the given <see cref="IFormatProvider"/>
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="formatProvider"></param>
+        /// <returns></returns>
+        public static string ConvertToString(object value, IFormatProvider formatProvider)
+        {
+            var convertible = value as IConvertible;
+            if (convertible != null)
+            {
+                return convertible.ToString(formatProvider);
+            }
+
+            return value?.ToString();
+        }
     }
 }

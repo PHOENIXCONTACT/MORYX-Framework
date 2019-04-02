@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace Marvin.Serialization
 {
@@ -19,10 +20,11 @@ namespace Marvin.Serialization
         /// Create wrapper around the property
         /// </summary>
         /// <param name="property">Property that shall be wrapped</param>
+        /// <param name="formatProvider"><see cref="IFormatProvider"/> used for parsing and writing</param>
         /// <returns>Wrapped property</returns>
-        public PropertyTypeWrapper Wrap(PropertyInfo property)
+        public PropertyTypeWrapper Wrap(PropertyInfo property, IFormatProvider formatProvider)
         {
-            var wrapper = new PropertyTypeWrapper(property)
+            var wrapper = new PropertyTypeWrapper(property, formatProvider)
             {
                 Key = property.Name,
                 Required = false

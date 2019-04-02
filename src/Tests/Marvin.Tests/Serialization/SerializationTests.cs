@@ -4,11 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Resources;
 using System.Text;
-using System.Threading;
 using Marvin.Serialization;
-using Marvin.Tests.Serialization;
 using NUnit.Framework;
 
 namespace Marvin.Tests
@@ -260,9 +257,9 @@ namespace Marvin.Tests
 
             //Act
             encoded.SubEntries[0].Value.Current = "5";
-            ent.SubEntries[1].Value.Current = 12.34d.ToString();
+            ent.SubEntries[1].Value.Current = 12.34d.ToString(CultureInfo.InvariantCulture);
             var newInstance = ent.Prototypes[0].Instantiate();
-            newInstance.Value.Current = 133.7d.ToString();
+            newInstance.Value.Current = 133.7d.ToString(CultureInfo.InvariantCulture);
             ent.SubEntries.Add(newInstance);
 
             ent2.SubEntries[1].Value.Current = "ValueB";
@@ -347,8 +344,9 @@ namespace Marvin.Tests
         public void AddEntry(CollectionType type, int prefill, int newValues)
         {
             // Arrange
+            var defaultSerialization = new DefaultSerialization();
             var obj = Prebuild(type, prefill);
-            var encoded = EntryConvert.EncodeObject(obj);
+            var encoded = EntryConvert.EncodeObject(obj, defaultSerialization);
 
             // Act
             var colEntry = CollectionEntry(encoded.SubEntries, type);
@@ -361,7 +359,7 @@ namespace Marvin.Tests
                     //change "Key" + 10
                     newInstance.Key.Name = (prefill + i).ToString();
                     // change "Value" 
-                    newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2");
+                    newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
                     newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
 
@@ -528,7 +526,8 @@ namespace Marvin.Tests
         public void CreateInstance()
         {
             // Arrange
-            var encoded = EntryConvert.EncodeClass(typeof(DummyClass));
+            var defaultSerialization = new DefaultSerialization();
+            var encoded = EntryConvert.EncodeClass(typeof(DummyClass), defaultSerialization);
 
             // Act
             encoded.SubEntries[0].Value.Current = "10";
@@ -540,7 +539,7 @@ namespace Marvin.Tests
                 for (int j = 0; j < i; j++)
                 {
                     var newInstance = colEntry.Prototypes[0].Instantiate();
-                    newInstance.SubEntries[0].Value.Current = j.ToString("F2");
+                    newInstance.SubEntries[0].Value.Current = j.ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[1];
                     newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
                     colEntry.SubEntries.Add(newInstance);
@@ -553,7 +552,7 @@ namespace Marvin.Tests
             Assert.AreEqual(10, obj.Number);
             Assert.AreEqual("Thomas", obj.Name);
             Assert.AreEqual(DummyEnum.ValueB, obj.SingleClass.Enum);
-            var colAssert = new[] { CollectionType.Array, CollectionType.List, CollectionType.Enumerable, };
+            var colAssert = new[] { CollectionType.Array, CollectionType.List, CollectionType.Enumerable };
             for (int i = 0; i < colAssert.Length; i++)
             {
                 var length = 4 + i;
@@ -837,6 +836,38 @@ namespace Marvin.Tests
             File.Delete(testFilePath);
             targetStreamDummy.FileStream.Close();
             File.Delete(testFilePath2);
+        }
+
+        [TestCase("en-US", Description = "Testing format parsing and writing with en-US")]
+        [TestCase("de-DE", Description = "Testing format parsing and writing with de-DE")]
+        [TestCase("de-BE", Description = "Testing format parsing and writing with de-BE")]
+        [TestCase("fr-FR", Description = "Testing format parsing and writing with fr-FR")]
+        [TestCase("ru-RU", Description = "Testing format parsing and writing with ru-RU")]
+        [TestCase("zh-CN", Description = "Testing format parsing and writing with zh-CN")]
+        [TestCase("he-IL", Description = "Testing format parsing and writing with he-IL")]
+        [TestCase("ar-EG", Description = "Testing format parsing and writing with ar-EG")]
+        public void FormatProviderTest(string cultureName)
+        {
+            // Arrange
+            var formatProvider = new CultureInfo(cultureName);
+            var serialization = new DefaultSerialization { FormatProvider = formatProvider };
+
+            var dummy = new DummyClass
+            {
+                Number = 1001,
+                SingleClass = new SubClass { Foo = 1.1234f }
+            };
+
+            // Act
+            var encoded = EntryConvert.EncodeObject(dummy, serialization);
+            var dummyDecoded = EntryConvert.CreateInstance<DummyClass>(encoded, serialization);
+
+            // Assert
+            Assert.AreEqual(1001.ToString(formatProvider), encoded.SubEntries[0].Value.Current);
+            Assert.AreEqual(1.1234f.ToString(formatProvider), encoded.SubEntries[3].SubEntries[0].Value.Current);
+
+            Assert.AreEqual(1001, dummyDecoded.Number);
+            Assert.AreEqual(1.1234f, dummyDecoded.SingleClass.Foo);
         }
 
         private static Entry CreateTestEntry()

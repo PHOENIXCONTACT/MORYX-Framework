@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Marvin.Configuration;
 using Marvin.Tools;
 
@@ -16,6 +17,17 @@ namespace Marvin.Serialization
     /// </summary>
     public class DefaultSerialization : ICustomSerialization
     {
+        /// <summary>
+        /// Constructor to construct a <see cref="DefaultSerialization"/> instance
+        /// </summary>
+        public DefaultSerialization()
+        {
+            FormatProvider = Thread.CurrentThread.CurrentCulture;
+        }
+
+        /// <inheritdoc />
+        public IFormatProvider FormatProvider { get; set; }
+
         /// <see cref="ICustomSerialization"/>
         public virtual IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
@@ -189,7 +201,7 @@ namespace Marvin.Serialization
                     return CollectionBuilder(memberType, currentValue, mappedEntry);
                 default:
                     var value = mappedEntry.Value.Current;
-                    return value == null ? null : EntryConvert.ToObject(memberType, value);
+                    return value == null ? null : EntryConvert.ToObject(memberType, value, FormatProvider);
             }
         }
         /// <see cref="ICustomSerialization"/>

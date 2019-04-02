@@ -43,11 +43,11 @@ namespace Marvin.Serialization
         /// <summary>
         /// Create converter from dynamic type object
         /// </summary>
-        public static EntryToModelConverter Create(Type type)
+        public static EntryToModelConverter Create(Type type, IFormatProvider formatProvider)
         {
             var properties = (from prop in type.GetProperties()
                               let factory = TypeWrapperFactories.FirstOrDefault(f => f.CanWrap(prop))
-                              select factory.Wrap(prop)).ToArray();
+                              select factory.Wrap(prop, formatProvider)).ToArray();
             return new EntryToModelConverter(properties);
         }
 

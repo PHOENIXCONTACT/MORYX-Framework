@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace Marvin.Serialization
 {
@@ -10,11 +11,14 @@ namespace Marvin.Serialization
         /// <summary>
         /// Create match wrapper for a property
         /// </summary>
-        public PropertyTypeWrapper(PropertyInfo property)
+        public PropertyTypeWrapper(PropertyInfo property, IFormatProvider formatProvider)
         {
             Property = property;
             Required = true;
+            FormatProvider = formatProvider;
         }
+
+        public IFormatProvider FormatProvider { get; }
 
         /// <summary>
         /// Wrapped property
@@ -64,7 +68,7 @@ namespace Marvin.Serialization
         protected virtual object ReadFromConfig(Entry entry)
         {
             // Synchronus resolution
-            return EntryConvert.ToObject(Property.PropertyType, entry.Value.Current);
+            return EntryConvert.ToObject(Property.PropertyType, entry.Value.Current, FormatProvider);
         }
 
         /// <summary>

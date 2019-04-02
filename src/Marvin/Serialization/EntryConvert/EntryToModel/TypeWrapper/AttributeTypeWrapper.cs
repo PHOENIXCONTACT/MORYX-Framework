@@ -20,11 +20,12 @@ namespace Marvin.Serialization
         /// Create wrapper around the property
         /// </summary>
         /// <param name="property">Property that shall be wrapped</param>
+        /// <param name="formatProvider"><see cref="IFormatProvider"/> used for parsing and writing</param>
         /// <returns>Wrapped property</returns>
-        public PropertyTypeWrapper Wrap(PropertyInfo property)
+        public PropertyTypeWrapper Wrap(PropertyInfo property, IFormatProvider formatProvider)
         {
             var att = property.GetCustomAttribute<ConfigKeyAttribute>();
-            return new PropertyTypeWrapper(property) { Key = att.Key };
+            return new PropertyTypeWrapper(property, formatProvider) { Key = att.Key };
         }
 
         /// <summary>

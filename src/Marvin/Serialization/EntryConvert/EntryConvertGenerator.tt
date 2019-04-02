@@ -5,13 +5,17 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Marvin.Serialization" #>
+<#@ import namespace="System.IO" #>
 <#@ output extension=".cs" #>
 <#
-var ignoredValues = new[] { EntryValueType.Class, EntryValueType.Collection, EntryValueType.String, EntryValueType.Enum, EntryValueType.Exception }
+var ignoredValues = new[] { EntryValueType.Class, EntryValueType.Collection, EntryValueType.String, EntryValueType.Enum, EntryValueType.Exception, EntryValueType.Stream }
 						.Select(v => v.ToString("G")).ToArray();
+var nonFormatProviderParsing = new[] { EntryValueType.Boolean }
+								.Select(v => v.ToString("G")).ToArray();
 #>
 using System;
 using System.Collections;
+using System.IO;
 
 namespace Marvin.Serialization
 {
@@ -44,6 +48,10 @@ namespace Marvin.Serialization
             {
                 valueType = EntryValueType.Enum;
             }
+			else if (typeof(Stream).IsAssignableFrom(propertyType))
+			{
+			    valueType = EntryValueType.Stream;
+			}
             else if (typeof(IEnumerable).IsAssignableFrom(propertyType) && propertyType != typeof(string))
             {
                 valueType = EntryValueType.Collection;
@@ -60,8 +68,9 @@ namespace Marvin.Serialization
         /// </summary>
         /// <param name="type">Desired property type</param>
         /// <param name="value">String value</param>
+		/// <param name="formatProvider"><see cref="IFormatProvider"/> used for parsing value</param>
         /// <returns>Typed object with parsed value</returns>
-        public static object ToObject(Type type, string value)
+        public static object ToObject(Type type, string value, IFormatProvider formatProvider)
         {
             // Traditional retransformation
             object result = null;
@@ -75,7 +84,20 @@ namespace Marvin.Serialization
 #>
 			else if (type == typeof(<#= enumValue #>))
 			{
+<#
+		if(!nonFormatProviderParsing.Contains(enumValue))
+		{
+#>
+				result = <#= enumValue #>.Parse(value, formatProvider);
+<#
+		}
+		else
+		{
+#>
 				result = <#= enumValue #>.Parse(value);
+<#
+		}
+#>
 			}
 <#
     }
@@ -93,8 +115,9 @@ namespace Marvin.Serialization
         /// </summary>
         /// <param name="type">Entry value type</param>
         /// <param name="value">String value</param>
+		/// <param name="formatProvider"><see cref="IFormatProvider"/> used for parsing value</param>
         /// <returns>Typed object with parsed value</returns>
-        public static object ToObject(EntryValueType type, string value)
+        public static object ToObject(EntryValueType type, string value, IFormatProvider formatProvider)
         {
             // Traditional retransformation
             object result = null;
@@ -108,7 +131,20 @@ namespace Marvin.Serialization
     {
 #>
 				case EntryValueType.<#= enumValue #>:
+<#
+		if(!nonFormatProviderParsing.Contains(enumValue))
+		{
+#>
+					result = <#= enumValue #>.Parse(value, formatProvider);
+<#
+		}
+		else
+		{
+#>
 					result = <#= enumValue #>.Parse(value);
+<#
+		}
+#>
 					break;
 <#
     }
