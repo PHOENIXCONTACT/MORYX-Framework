@@ -5,6 +5,7 @@ using System.Net;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Threading;
 using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
@@ -150,6 +151,8 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             {
                 var module = GetModuleFromManager(moduleName);
                 var serialization = CreateSerialization(module);
+                serialization.FormatProvider = Thread.CurrentThread.CurrentUICulture;
+
                 var config = GetConfig(module, false);
                 var configModel = new Config
                 {
@@ -171,6 +174,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             {
                 var module = GetModuleFromManager(moduleName);
                 var serialization = CreateSerialization(module);
+                serialization.FormatProvider = Thread.CurrentThread.CurrentUICulture;
                 var config = GetConfig(module, true);
                 EntryConvert.UpdateInstance(config, request.Config.Root, serialization);
                 ConfigManager.SaveConfiguration(config, request.UpdateMode == ConfigUpdateMode.UpdateLiveAndSave);

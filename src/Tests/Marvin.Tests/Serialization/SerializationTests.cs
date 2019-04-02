@@ -244,6 +244,8 @@ namespace Marvin.Tests
         public void UpdatePrimitiveList()
         {
             //Arrange
+            var defaultSerialization = new DefaultSerialization { FormatProvider = new CultureInfo("en-US")};
+
             var dummy = new ListDummy()
             {
                 Number = 0,
@@ -251,15 +253,15 @@ namespace Marvin.Tests
                 EnumList = new List<DummyEnum>() { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB}
             };
 
-            var encoded = EntryConvert.EncodeObject(dummy);
+            var encoded = EntryConvert.EncodeObject(dummy, defaultSerialization);
             var ent = encoded.SubEntries[1];
             var ent2 = encoded.SubEntries[2];
 
             //Act
             encoded.SubEntries[0].Value.Current = "5";
-            ent.SubEntries[1].Value.Current = 12.34d.ToString(CultureInfo.InvariantCulture);
+            ent.SubEntries[1].Value.Current = 12.34d.ToString(defaultSerialization.FormatProvider);
             var newInstance = ent.Prototypes[0].Instantiate();
-            newInstance.Value.Current = 133.7d.ToString(CultureInfo.InvariantCulture);
+            newInstance.Value.Current = 133.7d.ToString(defaultSerialization.FormatProvider);
             ent.SubEntries.Add(newInstance);
 
             ent2.SubEntries[1].Value.Current = "ValueB";
@@ -267,7 +269,7 @@ namespace Marvin.Tests
             newInstance.Value.Current = "ValueA";
             ent2.SubEntries.Add(newInstance);
 
-            EntryConvert.UpdateInstance(dummy, encoded);
+            EntryConvert.UpdateInstance(dummy, encoded, defaultSerialization);
 
             //Assert
             Assert.AreEqual(5, dummy.Number);

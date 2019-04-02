@@ -10,7 +10,7 @@ namespace Marvin.Tests
     {
         public const string PropDisplayNameAttributeDisplayName = "Display Name";
 
-        [Display(Name = nameof(strings.PropDisplayAttribute_Name), ResourceType = typeof(strings))]
+        [Display(Name = nameof(strings.PropDisplayAttribute_Name), Description = nameof(strings.PropDisplayAttribute_Description), ResourceType = typeof(strings))]
         public string PropDisplayAttribute { get; set; }
 
         [DisplayName(PropDisplayNameAttributeDisplayName)]

@@ -29,17 +29,17 @@ namespace Marvin.Tests
 
             Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].Key.Name);
             Assert.AreEqual(expectedDisplayPropDescription, encoded.SubEntries[0].Description);
-            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1]);
+            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1].Key.Name);
 
             // Switch to invariant
             Thread.CurrentThread.CurrentUICulture = invariantCulture;
             expectedDisplayPropName = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Name), invariantCulture);
-            expectedDisplayPropDescription = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Description), germanCulture);
+            expectedDisplayPropDescription = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Description), invariantCulture);
             encoded = EntryConvert.EncodeClass(typeof(LocalizedClass));
 
             Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].Key.Name);
             Assert.AreEqual(expectedDisplayPropDescription, encoded.SubEntries[0].Description);
-            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1]);
+            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1].Key.Name);
         }
 
         [Test]
