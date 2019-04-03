@@ -145,7 +145,7 @@ namespace Marvin.StateMachines
         /// </example>
         public static void Force(StateBase current, int forceState)
         {
-            Force(current, forceState, false, false);
+            Force(current, forceState, true, true);
         }
 
         /// <summary>
