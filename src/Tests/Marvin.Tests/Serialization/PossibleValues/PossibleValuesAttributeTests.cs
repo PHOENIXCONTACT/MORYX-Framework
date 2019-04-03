@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
-using Marvin.Configuration;
+using Marvin.Serialization;
 using Marvin.Tools;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Configuration
+namespace Marvin.Tests
 {
     [TestFixture]
     public class PossibleValuesAttributeTests

@@ -3,6 +3,9 @@
 
 - name: Entry Format
   href: EntryFormat.md
+
+- name: Possible Values
+  href: PossibleValues.md
   
 - name: Entry to Model Converter
   href: EntryToModelConverter.md

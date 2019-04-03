@@ -4,7 +4,7 @@ using System.Linq;
 using Marvin.Container;
 using Marvin.Tools;
 
-namespace Marvin.Configuration
+namespace Marvin.Serialization
 {
     /// <summary>
     /// <see cref="PossibleValuesAttribute"/> to provide possible types by an array or base type

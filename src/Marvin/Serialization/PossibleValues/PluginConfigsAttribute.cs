@@ -5,7 +5,7 @@ using System.Reflection;
 using Marvin.Container;
 using Marvin.Modules;
 
-namespace Marvin.Configuration
+namespace Marvin.Serialization
 {
     /// <summary>
     /// Similar to the <see cref="PluginNameSelectorAttribute"/> this attribute provides a list of component configurations. 

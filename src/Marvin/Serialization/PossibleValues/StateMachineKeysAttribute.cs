@@ -5,7 +5,7 @@ using System.Reflection;
 using Marvin.Container;
 using Marvin.StateMachines;
 
-namespace Marvin.Configuration
+namespace Marvin.Serialization
 {
     /// <summary>
     /// <see cref="PossibleValuesAttribute"/> to provide possible StateMachine keys

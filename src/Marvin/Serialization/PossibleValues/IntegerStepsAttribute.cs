@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Marvin.Container;
 
-namespace Marvin.Configuration
+namespace Marvin.Serialization
 {
     /// <summary>
     /// Mode of the integer steps

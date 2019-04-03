@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Marvin.Configuration;
 using Marvin.Logging;
 using Marvin.Runtime.Configuration;
+using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.TestModule
