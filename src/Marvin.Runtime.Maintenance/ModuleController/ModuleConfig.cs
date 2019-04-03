@@ -7,6 +7,7 @@ using Marvin.Runtime.Maintenance.Plugins.Common;
 using Marvin.Runtime.Maintenance.Plugins.Databases;
 using Marvin.Runtime.Maintenance.Plugins.Logging;
 using Marvin.Runtime.Maintenance.Plugins.Modules;
+using Marvin.Serialization;
 
 namespace Marvin.Runtime.Maintenance
 {

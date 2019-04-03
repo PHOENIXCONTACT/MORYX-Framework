@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Marvin.Configuration;
 using Marvin.Modules;
+using Marvin.Serialization;
 
 namespace Marvin.TestModule
 {

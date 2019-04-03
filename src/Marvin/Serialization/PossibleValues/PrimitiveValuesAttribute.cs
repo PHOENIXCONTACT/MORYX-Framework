@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Marvin.Container;
 
-namespace Marvin.Configuration
+namespace Marvin.Serialization
 {
     /// <summary>
     /// Attribute to enrich a config file with possible values for a property.

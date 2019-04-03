@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Marvin.Configuration;
+using Marvin.Serialization;
 
 namespace Marvin.Tests.Configuration
 {

@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Marvin.Configuration;
 using Marvin.Runtime.Maintenance.Contracts;
+using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Maintenance.Plugins.Databases

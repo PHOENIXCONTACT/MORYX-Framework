@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Marvin.Container;
 
-namespace Marvin.Configuration
+namespace Marvin.Serialization
 {
     /// <summary>
     /// Base attribute for all attributes that support multiple values

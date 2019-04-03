@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Marvin.Container;
 
-namespace Marvin.Configuration
+namespace Marvin.Serialization
 {
     /// <summary>
     /// <see cref="PossibleValuesAttribute"/> to provide possible plugin names

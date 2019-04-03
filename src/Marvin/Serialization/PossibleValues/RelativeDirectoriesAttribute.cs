@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Marvin.Container;
 
-namespace Marvin.Configuration
+namespace Marvin.Serialization
 {
     /// <summary>
     /// <see cref="PossibleValuesAttribute"/> to provide a path relative to the BaseDirectory

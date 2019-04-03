@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Marvin.Configuration;
 using Marvin.Runtime.Configuration;
+using Marvin.Serialization;
 
 namespace Marvin.DependentTestModule
 {
