@@ -8,6 +8,6 @@
         /// <summary>
         /// Extension of the config files used in the platform
         /// </summary>
-        public const string FileExtension = ".mcf";
+        public const string FileExtension = ".json";
     }
 }
