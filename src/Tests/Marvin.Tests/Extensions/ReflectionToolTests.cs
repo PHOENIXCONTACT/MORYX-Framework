@@ -76,6 +76,27 @@ namespace Marvin.Tests.Extensions
             Assert.IsInstanceOf<BaseClass>(result1);
         }
 
+        [TestCase(true, Description = "Create TypeChecker including derived types")]
+        [TestCase(false, Description = "CreateTypeChecker compares types directly")]
+        public void TypeChecker(bool derivedTypes)
+        {
+            // Arrange
+            var matchObject = new ChildClass1();
+            var noMatch = new ChildClass2();
+            var sameTypeCheck = ReflectionTool.TypePredicate(typeof(ChildClass1), derivedTypes);
+            var derivedTypeCheck = ReflectionTool.TypePredicate(typeof(BaseClass), derivedTypes);
+
+            // Act
+            var isSame = sameTypeCheck(matchObject);
+            var different = sameTypeCheck(noMatch);
+            var isDerived = derivedTypeCheck(matchObject);
+
+            // Assert
+            Assert.IsTrue(isSame, "Comparison for the same type must always return true");
+            Assert.IsFalse(different, "Comparison for incompatible types must return false");
+            Assert.AreEqual(derivedTypes, isDerived, "Comparison for derived types should only work if configured that way");
+        }
+
         [Test(Description = "Create accessor to read and write custom property")]
         public void PropertyAccessor()
         {

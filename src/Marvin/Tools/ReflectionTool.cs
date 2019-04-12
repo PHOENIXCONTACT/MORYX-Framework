@@ -114,6 +114,29 @@ namespace Marvin.Tools
         }
 
         /// <summary>
+        /// Generates a delegate to perform fast type checks on given objects including
+        /// instances of derived types
+        /// </summary>
+        /// <param name="targetType">The type to compare objects to</param>
+        public static Func<object, bool> TypePredicate(Type targetType)
+        {
+            return TypePredicate(targetType, true);
+        }
+
+        /// <summary>
+        /// Generates a delegate to perform fast type checks on given objects
+        /// </summary>
+        /// <param name="targetType">The type to compare objects to</param>
+        /// <param name="derivedTypes">Indicator if derived types should be considered as matches</param>
+        public static Func<object, bool> TypePredicate(Type targetType, bool derivedTypes)
+        {
+            var parameter = Expression.Parameter(typeof(object));
+            var typeCompare = derivedTypes ? Expression.TypeIs(parameter, targetType) : Expression.TypeEqual(parameter, targetType);
+            var expression = Expression.Lambda<Func<object, bool>>(typeCompare, parameter);
+            return expression.Compile();
+        }
+
+        /// <summary>
         /// Create a fast, dynamic property accessor for the property info
         /// </summary>
         public static IPropertyAccessor<object, object> PropertyAccessor(PropertyInfo property)
@@ -141,10 +164,10 @@ namespace Marvin.Tools
             if (property.DeclaringType == typeof(TBase) && typeof(TValue) == property.PropertyType)
                 accessorType = typeof(DirectAccessor<,>).MakeGenericType(typeof(TBase), typeof(TValue));
 
-            else if(typeof(TBase).IsAssignableFrom(property.DeclaringType) && typeof(TValue) == property.PropertyType)
+            else if (typeof(TBase).IsAssignableFrom(property.DeclaringType) && typeof(TValue) == property.PropertyType)
                 accessorType = typeof(InstanceCastAccessor<,,>).MakeGenericType(property.DeclaringType, typeof(TBase), typeof(TValue));
 
-            else if(typeof(TBase).IsAssignableFrom(property.DeclaringType) && typeof(TValue).IsAssignableFrom(property.PropertyType) && typeof(TValue) != typeof(object))
+            else if (typeof(TBase).IsAssignableFrom(property.DeclaringType) && typeof(TValue).IsAssignableFrom(property.PropertyType) && typeof(TValue) != typeof(object))
                 accessorType = typeof(ValueCastAccessor<,,,>).MakeGenericType(property.DeclaringType, typeof(TBase), property.PropertyType, typeof(TValue));
 
             else if (typeof(TBase).IsAssignableFrom(property.DeclaringType) && property.PropertyType.IsAssignableFrom(typeof(TValue)) && typeof(TValue) != typeof(object))
@@ -152,7 +175,7 @@ namespace Marvin.Tools
 
             else
                 accessorType = typeof(ConversionAccessor<,,,>).MakeGenericType(property.DeclaringType, typeof(TBase), property.PropertyType, typeof(TValue));
-            
+
             return (IPropertyAccessor<TBase, TValue>)Activator.CreateInstance(accessorType, property);
         }
 
@@ -183,6 +206,5 @@ namespace Marvin.Tools
                 }
             }
         }
-        
     }
 }
