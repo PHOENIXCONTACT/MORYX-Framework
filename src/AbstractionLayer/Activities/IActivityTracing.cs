@@ -18,6 +18,11 @@ namespace Marvin.AbstractionLayer
         DateTime? Completed { get; set;  }
 
         /// <summary>
+        /// Contains the error code that is associated with the error that caused e.g. an activity failure
+        /// </summary>
+        int ErrorCode { get; set; }
+
+        /// <summary>
         /// Optional tracing text for errors or information
         /// </summary>
         string Text { get; set; }
