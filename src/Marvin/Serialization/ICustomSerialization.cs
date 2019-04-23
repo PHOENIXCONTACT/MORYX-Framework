@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Marvin.Serialization
 {
     /// <summary>
-    /// Strategy interface passed into the serializers 
+    /// Strategy interface passed into the serializers
     /// </summary>
     public interface ICustomSerialization
     {
@@ -88,7 +88,7 @@ namespace Marvin.Serialization
         EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property);
     }
 
-    /// <summary> 
+    /// <summary>
     /// Prototype object for a key
     /// </summary>
     public struct EntryPrototype
