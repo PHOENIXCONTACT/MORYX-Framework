@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.ServiceModel;
@@ -34,10 +33,46 @@ namespace Marvin.Tools.Wcf
         public void ApplyDispatchBehavior(System.ServiceModel.Description.ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
         {
             endpointDispatcher.DispatchRuntime.MessageInspectors.Add(new CultureMessageInspector());
+            endpointDispatcher.DispatchRuntime.MessageInspectors.Add(new AcceptLanguageInspector());
         }
 
         /// <inheritdoc />
         public void Validate(System.ServiceModel.Description.ServiceEndpoint endpoint)
+        {
+        }
+    }
+
+    internal class AcceptLanguageInspector : IDispatchMessageInspector
+    {
+        object IDispatchMessageInspector.AfterReceiveRequest(ref Message request, IClientChannel channel, InstanceContext instanceContext)
+        {
+            var httpRequest = request.Properties.FirstOrDefault(p => p.Value is HttpRequestMessageProperty).Value as HttpRequestMessageProperty;
+            var acceptedLanguages = httpRequest?.Headers["Accept-Language"];
+
+            if (acceptedLanguages == null)
+                return null;
+
+            var languages = acceptedLanguages.Split(',')
+                .Select(StringWithQualityHeaderValue.Parse)
+                .OrderByDescending(s => s.Quality.GetValueOrDefault(1));
+
+            foreach (var weightedLanguage in languages)
+            {
+                try
+                {
+                    Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfoByIetfLanguageTag(weightedLanguage.Value);
+                    break;
+                }
+                catch (CultureNotFoundException)
+                {
+                    // ignored
+                }
+            }
+
+            return null;
+        }
+
+        void IDispatchMessageInspector.BeforeSendReply(ref Message reply, object correlationState)
         {
         }
     }
@@ -52,33 +87,7 @@ namespace Marvin.Tools.Wcf
         {
             var headerIndex = request.Headers.FindHeader(HeaderKey, HeaderNamespace);
             if (headerIndex != -1)
-            {
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(request.Headers.GetHeader<string>(headerIndex));
-                return null;
-            }
-
-            var httpRequest = request.Properties.FirstOrDefault(p => p.Value is HttpRequestMessageProperty).Value as HttpRequestMessageProperty;
-            var acceptedLanguages = httpRequest?.Headers["Accept-Language"];
-
-            if (acceptedLanguages != null)
-            {
-                var languages = acceptedLanguages.Split(',')
-                    .Select(StringWithQualityHeaderValue.Parse)
-                    .OrderByDescending(s => s.Quality.GetValueOrDefault(1));
-
-                foreach (var weightedLanguage in languages)
-                {
-                    try
-                    {
-                        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfoByIetfLanguageTag(weightedLanguage.Value);
-                        break;
-                    }
-                    catch (CultureNotFoundException)
-                    {
-                        // ignored
-                    }
-                }
-            }
 
             return null;
         }

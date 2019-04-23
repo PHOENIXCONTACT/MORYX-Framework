@@ -239,7 +239,7 @@ namespace Marvin.Serialization
                 converted.Value.Current = ConvertToString(instance, customSerialization.FormatProvider);
                 return converted;
             }
-            
+
             var filtered = customSerialization.GetProperties(instance.GetType());
             foreach (var property in filtered)
             {
@@ -256,7 +256,7 @@ namespace Marvin.Serialization
                     // Change type in case of exception
                     convertedProperty.Value.Type = EntryValueType.Exception;
                 }
-                
+
                 switch (convertedProperty.Value.Type)
                 {
                     case EntryValueType.Collection:
@@ -274,8 +274,8 @@ namespace Marvin.Serialization
                         }
                         break;
                     case EntryValueType.Class:
-                        var subEntry = value == null 
-                            ? EncodeClass(property.PropertyType, customSerialization) 
+                        var subEntry = value == null
+                            ? EncodeClass(property.PropertyType, customSerialization)
                             : EncodeObject(value, customSerialization);
                         convertedProperty.Value.Current = ConvertToString(subEntry.Value.Current, customSerialization.FormatProvider);
                         convertedProperty.SubEntries = subEntry.SubEntries;
@@ -773,18 +773,13 @@ namespace Marvin.Serialization
         /// <summary>
         /// Converts given value typed instance to a string with the given <see cref="IFormatProvider"/>
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="formatProvider"></param>
+        /// <param name="value">Value to convert</param>
+        /// <param name="formatProvider">Format provider used to convert the value to string</param>
         /// <returns></returns>
-        public static string ConvertToString(object value, IFormatProvider formatProvider)
+        private static string ConvertToString(object value, IFormatProvider formatProvider)
         {
             var convertible = value as IConvertible;
-            if (convertible != null)
-            {
-                return convertible.ToString(formatProvider);
-            }
-
-            return value?.ToString();
+            return convertible != null ? convertible.ToString(formatProvider) : value?.ToString();
         }
     }
 }

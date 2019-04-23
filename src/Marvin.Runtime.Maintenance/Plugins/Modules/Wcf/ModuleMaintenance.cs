@@ -75,6 +75,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             }
 
             var ctx = WebOperationContext.Current;
+            // ReSharper disable once PossibleNullReferenceException
             ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
             return ServerModuleState.Failure;
         }
@@ -88,6 +89,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             }
 
             var ctx = WebOperationContext.Current;
+            // ReSharper disable once PossibleNullReferenceException
             ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
             return new NotificationModel[0];
         }
@@ -151,7 +153,6 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             {
                 var module = GetModuleFromManager(moduleName);
                 var serialization = CreateSerialization(module);
-                serialization.FormatProvider = Thread.CurrentThread.CurrentUICulture;
 
                 var config = GetConfig(module, false);
                 var configModel = new Config
@@ -174,13 +175,12 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             {
                 var module = GetModuleFromManager(moduleName);
                 var serialization = CreateSerialization(module);
-                serialization.FormatProvider = Thread.CurrentThread.CurrentUICulture;
                 var config = GetConfig(module, true);
                 EntryConvert.UpdateInstance(config, request.Config.Root, serialization);
                 ConfigManager.SaveConfiguration(config, request.UpdateMode == ConfigUpdateMode.UpdateLiveAndSave);
 
                 if (request.UpdateMode == ConfigUpdateMode.SaveAndReincarnate)
-                    // This has to be done parallel so we can also reinc maintenance itself
+                    // This has to be done parallel so we can also reincarnate the Maintenance itself
                     ParallelOperations.ExecuteParallel(() => ModuleManager.ReincarnateModule(module));
             }
             catch (Exception ex)
@@ -227,7 +227,9 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             }
             else
             {
-                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+                var ctx = WebOperationContext.Current;
+                // ReSharper disable once PossibleNullReferenceException
+                ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
             }
 
             return result;
@@ -239,7 +241,10 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         private ICustomSerialization CreateSerialization(IModule module)
         {
             var host = (IContainerHost) module;
-            return new PossibleValuesSerialization(host.Container, ConfigManager);
+            return new PossibleValuesSerialization(host.Container, ConfigManager)
+            {
+                FormatProvider = Thread.CurrentThread.CurrentUICulture
+            };
         }
 
         /// <summary>
@@ -248,7 +253,10 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         private ICustomSerialization CreateEditorVisibleSerialization(IModule module)
         {
             var host = (IContainerHost)module;
-            return new AdvancedEditorVisibleSerialization(host.Container, ConfigManager);
+            return new AdvancedEditorVisibleSerialization(host.Container, ConfigManager)
+            {
+                FormatProvider = Thread.CurrentThread.CurrentUICulture
+            };
         }
 
         /// <summary>

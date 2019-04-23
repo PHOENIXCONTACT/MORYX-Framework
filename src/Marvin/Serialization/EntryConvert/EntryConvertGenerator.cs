@@ -84,7 +84,7 @@ namespace Marvin.Serialization
         /// <returns>Typed object with parsed value</returns>
         public static object ToObject(Type type, string value, IFormatProvider formatProvider)
         {
-            // Traditional retransformation
+            // Traditional re-transformation
             object result = null;
 			if (type == typeof(string))
 			{
@@ -147,7 +147,7 @@ namespace Marvin.Serialization
         /// <returns>Typed object with parsed value</returns>
         public static object ToObject(EntryValueType type, string value, IFormatProvider formatProvider)
         {
-            // Traditional retransformation
+            // Traditional re-transformation
             object result = null;
 			switch (type)
 			{
