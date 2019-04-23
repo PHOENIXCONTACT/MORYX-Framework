@@ -102,6 +102,7 @@ namespace Marvin.Runtime.Modules
 
             OnInitialize();
 
+            // Execute SubInitializer
             var subInits = Container.ResolveAll<ISubInitializer>() ?? new ISubInitializer[0];
             foreach (var subInitializer in subInits)
             {
