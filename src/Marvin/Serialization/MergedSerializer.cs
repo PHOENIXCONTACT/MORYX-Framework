@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Linq;
 using Marvin.Communication;
 
@@ -31,7 +31,7 @@ namespace Marvin.Serialization
             /// <summary>
             /// Chain of responsibility of serializers
             /// </summary>
-            private readonly IList<IByteSerializer<T>> _serializers = new List<IByteSerializer<T>>();
+            private readonly ConcurrentBag<IByteSerializer<T>> _serializers = new ConcurrentBag<IByteSerializer<T>>();
 
             /// <summary>
             /// Initialize merged serializer with a minimum of one target
