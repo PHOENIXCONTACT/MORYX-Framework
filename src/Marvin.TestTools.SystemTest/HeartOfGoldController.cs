@@ -68,11 +68,6 @@ namespace Marvin.TestTools.SystemTest
         public event EventHandler<LoggerEventArgs> LogMessagesReceived;
 
         /// <summary>
-        /// Default telnet port - will be increased by the port increment
-        /// </summary>
-        private const int DefaultTelnetPort = 23;
-
-        /// <summary>
         /// Default http port - will be increased by the port increment
         /// </summary>
         private const int DefaultHttpPort = 80;
@@ -131,11 +126,6 @@ namespace Marvin.TestTools.SystemTest
         public string ConfigDir { get; set; }
 
         /// <summary>
-        /// Get or set the Telnet port number
-        /// </summary>
-        public int TelnetPort { get; set; }
-        
-        /// <summary>
         /// Currently used http port
         /// </summary>
         public int HttpPort { get; set; }
@@ -173,7 +163,6 @@ namespace Marvin.TestTools.SystemTest
                 }
             }
 
-            TelnetPort = DefaultTelnetPort + _portIncrement;
             HttpPort = DefaultHttpPort + _portIncrement;
             NetTcpPort = DefaultNetTcpPort + _portIncrement;
 
@@ -238,10 +227,11 @@ namespace Marvin.TestTools.SystemTest
             {
                 // Start the heart of gold in developer mode to start as a console application (-d) and set the path to the config files (-c=path) 
                 StartInfo = new ProcessStartInfo(runtimeCommand,
-                    $"-d -r=SystemTest -c={ConfigDir} -p={TelnetPort} -t={ExecutionTimeout} -pi={_portIncrement}")
+                    $"-d -r=SystemTest -c={ConfigDir} -t={ExecutionTimeout} -pi={_portIncrement}")
                 {
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
+                    RedirectStandardInput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
@@ -252,7 +242,6 @@ namespace Marvin.TestTools.SystemTest
 
             Process.OutputDataReceived += outputDelegate;
             Process.ErrorDataReceived += outputDelegate;
-
             try
             {
                 // start now
@@ -272,7 +261,7 @@ namespace Marvin.TestTools.SystemTest
         }
 
         /// <summary>
-        /// Create the WCF and telnet clients needed to communicate with the server under test.
+        /// Create the WCF clients needed to communicate with the server under test.
         /// </summary>
         public void CreateClients()
         {
@@ -291,28 +280,10 @@ namespace Marvin.TestTools.SystemTest
         {
             RemoveRemoteLogAppender();
 
-            var success = true;
-            var tcpClient = new TcpClient();
-            try
-            {
-                tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, TelnetPort));
-                var exitBytes = new UTF8Encoding().GetBytes("exit");
-                using (var stream = tcpClient.GetStream())
-                {
-                    stream.Write(exitBytes, 0, exitBytes.Length);
-                }
-            }
-            catch
-            {
-                success = false;
-            }
-            finally
-            {
-                tcpClient.Close();
-                Process.WaitForExit(timeoutInSeconds * 1000);
-            }
+            Process.StandardInput.WriteLine("exit");
+            Process.StandardInput.Close();
 
-            return success;
+            return Process.WaitForExit(timeoutInSeconds * 1000);
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using Marvin.Configuration;
@@ -28,9 +27,7 @@ namespace Marvin.Runtime.Kernel
         public IConfigManager ConfigManager { get; set; }
 
         private Timer _shutdownTimer;
-        private TcpListener _listener;
         private readonly UTF8Encoding _decoder = new UTF8Encoding();
-        private NetworkStream _stream;
 
         /// <inheritdoc />
         public override void Setup(RuntimeArguments args)
@@ -53,11 +50,6 @@ namespace Marvin.Runtime.Kernel
             int timeout = int.Parse(Arguments["t"] ?? "300");
             _shutdownTimer = new Timer(ShutDownTimer, null, TimeSpan.FromSeconds(timeout), Timeout.InfiniteTimeSpan);
 
-            // Prepare TCP listener
-            int port = int.Parse(Arguments["p"] ?? "23");
-            _listener = new TcpListener(IPAddress.Loopback, port);
-            _listener.Start();
-
             // Register to service manager event            
             ModuleManager.ModuleStateChanged += OnModuleStateChanged;
             base.Boot();
@@ -68,21 +60,18 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         protected override void RunTextEnvironment()
         {
-            var client = _listener.AcceptTcpClient();
-            _stream = client.GetStream();
-
             var command = string.Empty;
-            var buffer = new byte[BufferSize];
             while (command != "exit")
             {
-                var read = _stream.Read(buffer, 0, BufferSize);
-                command = _decoder.GetString(buffer, 0, read);
+                command = Console.ReadLine();
 
                 switch (command)
                 {
                     case "exit":
                         break;
-                    default: ExecuteCommand(command);
+                    default:
+                        ExecuteCommand(command);
+                        command = string.Empty;
                         break;
                 }
             }
@@ -94,14 +83,6 @@ namespace Marvin.Runtime.Kernel
         /// <param name="lines">Text which should be printed.</param>
         protected override void PrintText(params string[] lines)
         {
-            if (_stream == null)
-                return;
-
-            foreach (var line in lines)
-            {
-                var bytes = _decoder.GetBytes(line);
-                _stream.Write(bytes, 0, bytes.Length);
-            }
         }
 
         /// <summary>
@@ -140,13 +121,6 @@ namespace Marvin.Runtime.Kernel
             ModuleManager.ModuleStateChanged -= OnModuleStateChanged;
 
             _shutdownTimer.Dispose();
-
-            if (_stream != null)
-            {
-                _stream.Dispose();
-            }
-
-            _listener.Stop();
 
             Thread.Sleep(100);
         }
