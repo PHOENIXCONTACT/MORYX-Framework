@@ -126,9 +126,6 @@
   <data name="PropDisplayAttribute_Description" xml:space="preserve">
     <value>Eigenschaftsbeschreibung</value>
   </data>
-  <data name="CrashTestDummy" xml:space="preserve">
-    <value>Crash Test Dummy</value>
-  </data>
   <data name="EvacuatePeopleParam" xml:space="preserve">
     <value>Leute evakuieren</value>
   </data>
@@ -143,23 +140,5 @@
   </data>
   <data name="NameOfTerminatorParam" xml:space="preserve">
     <value>Name des Terminierers</value>
-  </data>
-  <data name="NoShownAsProperty" xml:space="preserve">
-    <value>Wird nicht als Eigenschaft angezeigt</value>
-  </data>
-  <data name="NoShownAsPropertyDescription" xml:space="preserve">
-    <value>Wird durch ein Eigenschaftsattribut überschrieben</value>
-  </data>
-  <data name="Number" xml:space="preserve">
-    <value>Eine Nummer</value>
-  </data>
-  <data name="NumberDescription" xml:space="preserve">
-    <value>Das is eine einfache Nummer</value>
-  </data>
-  <data name="SubClass" xml:space="preserve">
-    <value>Unterklasse</value>
-  </data>
-  <data name="SubClassDescription" xml:space="preserve">
-    <value>Unterklassenbeschreibung</value>
   </data>
 </root>

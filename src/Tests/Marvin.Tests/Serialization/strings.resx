@@ -129,9 +129,6 @@
   <data name="PropDisplayAttribute_Description" xml:space="preserve">
     <value>Property Description</value>
   </data>
-  <data name="CrashTestDummy" xml:space="preserve">
-    <value>CrashTest Dummy</value>
-  </data>
   <data name="EvacuatePeopleParam" xml:space="preserve">
     <value>Evacuate people</value>
   </data>
@@ -147,22 +144,10 @@
   <data name="NameOfTerminatorParam" xml:space="preserve">
     <value>Name of Terminator</value>
   </data>
-  <data name="NoShownAsProperty" xml:space="preserve">
-    <value>Not shown as property</value>
-  </data>
-  <data name="NoShownAsPropertyDescription" xml:space="preserve">
-    <value>Is overriden by property display attribute</value>
-  </data>
-  <data name="Number" xml:space="preserve">
-    <value>A Number</value>
-  </data>
-  <data name="NumberDescription" xml:space="preserve">
-    <value>That's a simple number</value>
-  </data>
   <data name="SubClass" xml:space="preserve">
-    <value>Sub class</value>
+    <value>SomeCustom</value>
   </data>
   <data name="SubClassDescription" xml:space="preserve">
-    <value>Sub class description</value>
+    <value>SomeCustomDescription</value>
   </data>
 </root>

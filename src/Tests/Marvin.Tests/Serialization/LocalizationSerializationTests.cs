@@ -15,7 +15,7 @@ namespace Marvin.Tests
         private readonly CultureInfo _invariantCulture = new CultureInfo("en");
 
         [Test]
-        public void Localization()
+        public void PropertyLocalization()
         {
             var resourceManager = new ResourceManager(typeof(strings));
             var germanCulture = new CultureInfo("de");
@@ -43,39 +43,6 @@ namespace Marvin.Tests
         }
 
         [Test]
-        public void PropertyLocalization()
-        {
-            // Arrange
-            var dummyClass = new DummyClass();
-
-            // Act
-            Thread.CurrentThread.CurrentUICulture = _germanCulture;
-            var entriesGerman = EntryConvert.EncodeObject(dummyClass);
-
-            Thread.CurrentThread.CurrentUICulture = _invariantCulture;
-            var entriesInvariant = EntryConvert.EncodeObject(dummyClass);
-
-            // Assert
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.CrashTestDummy), _germanCulture), entriesGerman.Key.Name);
-            Assert.AreEqual(null, entriesGerman.Description);
-
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.Number), _germanCulture), entriesGerman.SubEntries[0].Key.Name);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NumberDescription), _germanCulture), entriesGerman.SubEntries[0].Description);
-
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.SubClass), _germanCulture), entriesGerman.SubEntries[3].Key.Name);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.SubClassDescription), _germanCulture), entriesGerman.SubEntries[3].Description);
-
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.CrashTestDummy), _invariantCulture), entriesInvariant.Key.Name);
-            Assert.AreEqual(null, entriesInvariant.Description);
-
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.Number), _invariantCulture), entriesInvariant.SubEntries[0].Key.Name);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NumberDescription), _invariantCulture), entriesInvariant.SubEntries[0].Description);
-
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.SubClass), _invariantCulture), entriesInvariant.SubEntries[3].Key.Name);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.SubClassDescription), _invariantCulture), entriesInvariant.SubEntries[3].Description);
-        }
-
-        [Test]
         public void NonLocalized()
         {
             // Arrange
@@ -86,15 +53,15 @@ namespace Marvin.Tests
             var entriesGerman = EntryConvert.EncodeObject(dummyClass);
 
             // Assert
-            Assert.AreEqual(nameof(strings.SubClass), entriesGerman.SubEntries[14].Key.Name);
-            Assert.AreEqual(nameof(strings.SubClassDescription), entriesGerman.SubEntries[14].Description);
+            Assert.AreEqual(nameof(DummyClass.SingleClassNonLocalized), entriesGerman.SubEntries[14].Key.Name);
+            Assert.IsNull(entriesGerman.SubEntries[14].Description);
         }
 
         [Test]
         public void LocalizedClassDisplay()
         {
             // Arrange
-            var subClass = new SubClass();
+            var subClass = new LocalizedClass();
 
             // Act
             Thread.CurrentThread.CurrentUICulture = _germanCulture;
@@ -104,11 +71,8 @@ namespace Marvin.Tests
             var entriesInvariant = EntryConvert.EncodeObject(subClass);
 
             // Assert
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NoShownAsProperty), _germanCulture), entriesGerman.Key.Name);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NoShownAsPropertyDescription), _germanCulture), entriesGerman.Description);
-
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NoShownAsProperty), _invariantCulture), entriesInvariant.Key.Name);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NoShownAsPropertyDescription), _invariantCulture), entriesInvariant.Description);
+            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.ClassName), _germanCulture), entriesGerman.Key.Name);
+            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.ClassName), _invariantCulture), entriesInvariant.Key.Name);
         }
 
         [Test]
