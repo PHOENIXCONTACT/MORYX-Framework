@@ -169,8 +169,8 @@ namespace Marvin.Serialization
                     var currentStream = currentValue as Stream;
 
                     var createNewMemoryStream = currentStream == null || !currentStream.CanWrite;
-                    if (!createNewMemoryStream && 
-                        currentStream.GetType() == typeof(MemoryStream) && 
+                    if (!createNewMemoryStream &&
+                        currentStream.GetType() == typeof(MemoryStream) &&
                         currentStream.Length < contentBytes.Length)
                     {
                         // MemoryStream is not expandable
@@ -192,7 +192,7 @@ namespace Marvin.Serialization
 
                         targetStream = new MemoryStream(contentBytes);
                     }
-                    
+
                     return targetStream;
 
                 case EntryValueType.Class:

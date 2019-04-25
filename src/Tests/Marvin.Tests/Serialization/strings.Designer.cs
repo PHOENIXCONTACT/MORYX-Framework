@@ -19,7 +19,7 @@ namespace Marvin.Tests.Serialization {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class strings {
@@ -70,15 +70,6 @@ namespace Marvin.Tests.Serialization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CrashTest Dummy.
-        /// </summary>
-        public static string CrashTestDummy {
-            get {
-                return ResourceManager.GetString("CrashTestDummy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Evacuate people.
         /// </summary>
         public static string EvacuatePeopleParam {
@@ -124,42 +115,6 @@ namespace Marvin.Tests.Serialization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not shown as property.
-        /// </summary>
-        public static string NoShownAsProperty {
-            get {
-                return ResourceManager.GetString("NoShownAsProperty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Is overriden by property display attribute.
-        /// </summary>
-        public static string NoShownAsPropertyDescription {
-            get {
-                return ResourceManager.GetString("NoShownAsPropertyDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A Number.
-        /// </summary>
-        public static string Number {
-            get {
-                return ResourceManager.GetString("Number", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to That&apos;s a simple number.
-        /// </summary>
-        public static string NumberDescription {
-            get {
-                return ResourceManager.GetString("NumberDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Property Description.
         /// </summary>
         public static string PropDisplayAttribute_Description {
@@ -187,7 +142,7 @@ namespace Marvin.Tests.Serialization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sub class.
+        ///   Looks up a localized string similar to SomeCustom.
         /// </summary>
         public static string SubClass {
             get {
@@ -196,7 +151,7 @@ namespace Marvin.Tests.Serialization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sub class description.
+        ///   Looks up a localized string similar to SomeCustomDescription.
         /// </summary>
         public static string SubClassDescription {
             get {
