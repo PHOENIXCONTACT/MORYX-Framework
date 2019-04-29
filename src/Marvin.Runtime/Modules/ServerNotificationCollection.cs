@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Marvin.Modules;
 
-namespace Marvin.Runtime.Base
+namespace Marvin.Runtime.Modules
 {
     internal class ServerNotificationCollection : INotificationCollection
     {
