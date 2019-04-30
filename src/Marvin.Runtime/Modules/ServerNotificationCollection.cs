@@ -62,7 +62,7 @@ namespace Marvin.Runtime.Modules
         {
             bool removed;
             lock (_lockObj)
-                removed = _internalList.Contains(item);
+                removed = _internalList.Remove(item);
 
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
             return removed;
