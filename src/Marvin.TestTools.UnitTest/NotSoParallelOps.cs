@@ -154,6 +154,34 @@ namespace Marvin.TestTools.UnitTest
             }
         }
 
+        /// <inheritdoc />
+        public EventHandler DecoupleListener(EventHandler<EventArgs> target)
+        {
+            return (o, e) => target(o, e);
+        }
+
+        /// <summary>
+        /// Instead of decoupling it simply returns the same listener
+        /// </summary>
+        public EventHandler<TEventArgs> DecoupleListener<TEventArgs>(EventHandler<TEventArgs> target)
+        {
+            return target;
+        }
+
+        /// <inheritdoc />
+        public EventHandler RemoveListener(EventHandler<EventArgs> target)
+        {
+            return (o, e) => target(o, e);
+        }
+
+        /// <summary>
+        /// Instead of decoupling it simply returns the same listener
+        /// </summary>
+        public EventHandler<TEventArgs> RemoveListener<TEventArgs>(EventHandler<TEventArgs> target)
+        {
+            return target;
+        }
+
         /// <summary>
         /// Waits until all scheduled executions has been finished. Note that all execution routines has to be called already.
         /// </summary>
