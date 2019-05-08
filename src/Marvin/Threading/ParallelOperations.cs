@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Marvin.Logging;
 using Marvin.Modules;
@@ -41,12 +43,17 @@ namespace Marvin.Threading
     public class ParallelOperations : IParallelObservation
     {
         private readonly List<IParallelObserver> _observers = new List<IParallelObserver>();
-    
+
+        /// <summary>
+        /// All active event decouples
+        /// </summary>
+        private readonly IDictionary<Delegate, IDisposable> _eventDecouplers = new Dictionary<Delegate, IDisposable>();
+
         /// <summary>
         /// Dependency to report errors to plugin
         /// </summary>
         public IModuleLogger Logger { get; set; }
-        
+
         /// <inheritdoc />
         public void Register(IParallelObserver observer)
         {
@@ -87,13 +94,13 @@ namespace Marvin.Threading
         /// <summary>
         /// Execute operation on ThreadPool thread
         /// </summary>
-        public void ExecuteParallel<T>(Action<T> operation, T userState, bool criticalOperation) where T : class 
+        public void ExecuteParallel<T>(Action<T> operation, T userState, bool criticalOperation) where T : class
         {
             foreach (var observer in _observers)
             {
                 observer.Scheduled(operation, userState);
             }
-            
+
             ThreadPool.QueueUserWorkItem(state =>
             {
                 foreach (var observer in _observers)
@@ -141,7 +148,7 @@ namespace Marvin.Threading
         /// <summary>
         /// Execute non-critical operation periodically but non-stacking
         /// </summary>
-        public int ScheduleExecution<T>(Action<T> operation, T userState, int delayMs, int periodMs) where T : class 
+        public int ScheduleExecution<T>(Action<T> operation, T userState, int delayMs, int periodMs) where T : class
         {
             return ScheduleExecution(operation, userState, delayMs, periodMs, false);
         }
@@ -149,7 +156,7 @@ namespace Marvin.Threading
         /// <summary>
         /// Execute operation periodically but non-stacking
         /// </summary>
-        public int ScheduleExecution<T>(Action<T> operation, T userState, int delayMs, int periodMs, bool criticalOperation) where T : class 
+        public int ScheduleExecution<T>(Action<T> operation, T userState, int delayMs, int periodMs, bool criticalOperation) where T : class
         {
             foreach (var observer in _observers)
             {
@@ -167,7 +174,7 @@ namespace Marvin.Threading
                 try
                 {
                     operation((T)state);
-                    if(periodMs <= 0)
+                    if (periodMs <= 0)
                         StopExecution(id);
                 }
                 catch (Exception ex)
@@ -207,16 +214,92 @@ namespace Marvin.Threading
 
         #endregion
 
+        #region Event Decoupling
+
+        /// <inheritdoc />
+        public EventHandler DecoupleListener(EventHandler<EventArgs> target)
+        {
+            var decoupler = CreateDecoupler(target);
+            return decoupler.EventListener;
+        }
+
+        /// <inheritdoc />
+        public EventHandler<TEventArgs> DecoupleListener<TEventArgs>(EventHandler<TEventArgs> target)
+        {
+            var decoupler = CreateDecoupler(target);
+            return decoupler.EventListener;
+        }
+
+        /// <summary>
+        /// Create a typed event decoupler for the given listener delegate
+        /// </summary>
+        private EventDecoupler<TEventArgs> CreateDecoupler<TEventArgs>(EventHandler<TEventArgs> target)
+        {
+            // Extract logger from target
+            var logger = ExtractLoggerFromDelegate(target);
+            var decoupler = new EventDecoupler<TEventArgs>(logger, target);
+
+            lock (_eventDecouplers)
+                _eventDecouplers[target] = decoupler;
+
+            return decoupler;
+        }
+
+        /// <inheritdoc />
+        public EventHandler RemoveListener(EventHandler<EventArgs> target)
+        {
+            var decoupler = RemoveDecoupler(target);
+            return decoupler.EventListener;
+        }
+
+        /// <inheritdoc />
+        public EventHandler<TEventArgs> RemoveListener<TEventArgs>(EventHandler<TEventArgs> target)
+        {
+            var decoupler = RemoveDecoupler(target);
+            return decoupler.EventListener;
+        }
+
+        /// <summary>
+        /// Remove the decoupler from the collection and dispose it
+        /// </summary>
+        private EventDecoupler<TEventArgs> RemoveDecoupler<TEventArgs>(EventHandler<TEventArgs> target)
+        {
+            EventDecoupler<TEventArgs> decoupler;
+            lock (_eventDecouplers)
+            {
+                if (!_eventDecouplers.ContainsKey(target))
+                    throw new InvalidOperationException("Can not remove a previously unregistered listener!");
+
+                decoupler = (EventDecoupler<TEventArgs>)_eventDecouplers[target];
+                _eventDecouplers.Remove(target);
+            }
+
+            decoupler.Dispose();
+            return decoupler;
+        }
+        
+        #endregion
+
         /// <summary>
         /// Handle exception that occured in execution and would have killed the application
         /// </summary>
         private void HandleException(Exception ex, Delegate operation, bool criticalOperation)
         {
+            var logger = ExtractLoggerFromDelegate(operation);
+            logger.LogException(criticalOperation ? LogLevel.Fatal : LogLevel.Error, ex,
+                "Exception during ParallelOperations of {0}.{1}!", operation.Method.DeclaringType?.Name ?? "Unknown", operation.Method.Name);
+        }
+
+        /// <summary>
+        /// Try to extract a logger from the operation
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        private IModuleLogger ExtractLoggerFromDelegate(Delegate operation)
+        {
             var target = operation.Target ?? this;
             var logger = (target as ILoggingComponent)?.Logger ?? Logger;
-            
-            logger.LogException(criticalOperation ? LogLevel.Fatal : LogLevel.Error, ex, 
-                "Exception during ParallelOperations of {0}.{1}!", operation.Method.DeclaringType?.Name ?? "Unknown", operation.Method.Name);
+            return logger;
         }
 
         /// <summary>
@@ -224,12 +307,14 @@ namespace Marvin.Threading
         /// </summary>
         public void Dispose()
         {
-            // Dispose all timers
-            foreach (var runningTimer in _runningTimers.Values)
+            // Dispose all timers and event decouples
+            foreach (var runningTimer in _runningTimers.Values.Concat(_eventDecouplers.Values))
             {
                 runningTimer.Dispose();
             }
+            // Dispose all
             _runningTimers.Clear();
+            _eventDecouplers.Clear();
         }
     }
 }

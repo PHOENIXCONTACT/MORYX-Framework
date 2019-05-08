@@ -259,6 +259,7 @@
     <Compile Include="StateMachines\StateBase.cs" />
     <Compile Include="StateMachines\StateDefinitionAttribute.cs" />
     <Compile Include="StateMachines\StateMachine.cs" />
+    <Compile Include="Threading\EventDecoupler.cs" />
     <Compile Include="Threading\IParallelObservation.cs" />
     <Compile Include="Threading\IParallelObserver.cs" />
     <Compile Include="Threading\IParallelOperations.cs" />

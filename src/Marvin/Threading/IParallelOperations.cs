@@ -1,4 +1,5 @@
 ﻿using System;
+using Marvin.Logging;
 
 namespace Marvin.Threading
 {
@@ -50,5 +51,35 @@ namespace Marvin.Threading
         /// </summary>
         /// <param name="timerId"></param>
         void StopExecution(int timerId);
+
+        /// <summary>
+        /// Decouple the event listener delegate from the event invocation thread
+        /// </summary>
+        /// <param name="target">Target delegate</param>
+        /// <returns>The decoupling event listener</returns>
+        EventHandler DecoupleListener(EventHandler<EventArgs> target);
+
+        /// <summary>
+        /// Decouple the event listener delegate from the event invocation thread
+        /// </summary>
+        /// <typeparam name="TEventArgs">Type of event args</typeparam>
+        /// <param name="target">Target delegate</param>
+        /// <returns>The decoupling event listener</returns>
+        EventHandler<TEventArgs> DecoupleListener<TEventArgs>(EventHandler<TEventArgs> target);
+
+        /// <summary>
+        /// Remove the decouple listener from the event
+        /// </summary>
+        /// <param name="target">Target delegate that is removed as a listener</param>
+        /// <returns>The decoupling event listener</returns>
+        EventHandler RemoveListener(EventHandler<EventArgs> target);
+
+        /// <summary>
+        /// Remove the decouple listener from the event
+        /// </summary>
+        /// <typeparam name="TEventArgs">Type of event args</typeparam>
+        /// <param name="target">Target delegate that is removed as a listener</param>
+        /// <returns>The decoupling event listener</returns>
+        EventHandler<TEventArgs> RemoveListener<TEventArgs>(EventHandler<TEventArgs> target);
     }
 }
