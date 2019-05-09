@@ -102,7 +102,7 @@ namespace Marvin.Tests.Threading
 
         private void BlockingTarget(object sender, ManualResetEvent blockingEvent)
         {
-            blockingEvent.WaitOne(1000);
+            blockingEvent.WaitOne(250);
         }
 
         #endregion
