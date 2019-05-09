@@ -35,7 +35,7 @@ namespace Marvin.Tests.Threading
         public void CanBeRemoved()
         {
             // Arrange
-            var listener = new EventHandler<EventArgs>((sender, args) => {});
+            var listener = new EventHandler<EventArgs>((sender, args) => { });
 
             // Act
             SimpleEventSource += _parallelOperations.DecoupleListener(listener);
@@ -148,6 +148,65 @@ namespace Marvin.Tests.Threading
         public void FaultyListener(object sender, EventArgs e)
         {
             throw new Exception("Test");
+        }
+
+        #endregion
+
+        #region Multi-threaded and ordered
+
+        private const int MaxIndex = 100;
+
+        private event EventHandler<int> IndexEvent; 
+
+        [Test]
+        public void WriteFromMultipleThreads()
+        {
+            // Arrange
+            var index = 0;
+            IndexEvent += _parallelOperations.DecoupleListener<int>(IndexListener);
+
+            // Act
+            // 8 Threads write to the event with increasing numbers
+            for (int run = 4; run >= 1; run--)
+            {
+                for (int thread = 1; thread <= 8; thread++)
+                {
+                    ThreadPool.QueueUserWorkItem(state =>
+                    {
+                        int next;
+                        do
+                        {
+                            next = Interlocked.Increment(ref index);
+                            IndexEvent(this, next);
+
+                        } while (next < MaxIndex / run);
+                    });
+                }
+                // Give the queue time to catch up
+                var runFragment = MaxIndex / run;
+                while (_count < (index > runFragment ? index : runFragment))
+                    Thread.Sleep(1);
+            }
+
+            // Assert
+            var expected = Enumerable.Range(1, index).Sum();
+            Assert.AreEqual(expected, _total, "Sums do not match");
+        }
+
+        private int _count;
+
+        private int _total;
+
+        private void IndexListener(object sender, int index)
+        {
+            // Increment in multiple steps to increase the risk of overlap
+            var value = _total;
+            Thread.Sleep(1);
+            var newValue = value + index;
+            Thread.Sleep(1);
+            _total = newValue;
+            
+            _count++;
         }
 
         #endregion
