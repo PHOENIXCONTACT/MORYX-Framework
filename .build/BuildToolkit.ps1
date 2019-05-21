@@ -26,7 +26,7 @@ $OpenCoverReportsDir = "$ArtifactsDir\Tests"
 $CoberturaReportsDir = "$ArtifactsDir\Tests"
 
 # Nuget
-$NugetConfig = "$dotBuild\NuGet.Config";
+$NugetConfig = "$RootPath\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
 $NugetCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nuget-4.7.1.exe";
 $NugetPushCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nuget-3.4.4.exe";
