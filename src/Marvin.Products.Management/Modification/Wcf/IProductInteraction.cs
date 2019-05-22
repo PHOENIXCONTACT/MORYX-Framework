@@ -1,4 +1,5 @@
 ﻿using System.ServiceModel;
+using Marvin.Products.Management.Importers;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
@@ -82,6 +83,12 @@ namespace Marvin.Products.Management.Modification
         RecipeModel GetRecipe(long recipeId);
 
         /// <summary>
+        /// Get all recipes for the given product
+        /// </summary>
+        [OperationContract]
+        RecipeModel[] GetRecipes(long productId);
+
+        /// <summary>
         /// Create a new recipe
         /// </summary>
         [OperationContract]
@@ -98,6 +105,31 @@ namespace Marvin.Products.Management.Modification
         /// </summary>
         [OperationContract]
         RecipeModel CreateProductionRecipe(long productId, long workplanId, string name);
+
+        /// <summary>
+        /// Saves a recipe
+        /// </summary>
+        [OperationContract]
+        bool SaveProductionRecipe(RecipeModel recipe);
+
+        /// <summary>
+        /// Create a new workplan
+        /// </summary>
+        [OperationContract]
+        WorkplanModel CreateWorkplan(string name);
+
+        /// <summary>
+        /// Get all workplans
+        /// </summary>
+        /// <returns></returns>
+        [OperationContract]
+        WorkplanModel[] GetWorkplans();
+
+        /// <summary>
+        /// Get workplan with this id
+        /// </summary>
+        [OperationContract]
+        WorkplanModel GetWorkplan(long id);
 
         /// <summary>
         /// Provider name
