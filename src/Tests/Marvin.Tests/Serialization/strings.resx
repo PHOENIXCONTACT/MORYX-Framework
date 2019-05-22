@@ -146,8 +146,10 @@
   </data>
   <data name="SubClass" xml:space="preserve">
     <value>SomeCustom</value>
+    
   </data>
   <data name="SubClassDescription" xml:space="preserve">
     <value>SomeCustomDescription</value>
+    
   </data>
 </root>

@@ -5,6 +5,9 @@
     /// </summary>
     public class AddAppenderResponse
     {
+        /// <summary>
+        /// Id of the logging appender
+        /// </summary>
         public int AppenderId { get; set; }
     }
 }
