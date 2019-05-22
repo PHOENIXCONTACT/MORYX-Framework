@@ -22,8 +22,8 @@ namespace Marvin.Runtime.Kernel
             _sharedProvider = new SharedConfigProvider(this);
             ValueProviders = new IValueProvider[]
             {
-                new SharedConfigProvider(this), 
-                new DefaultValueProvider(), 
+                new SharedConfigProvider(this),
+                new DefaultValueProvider(),
             };
         }
 
@@ -33,7 +33,7 @@ namespace Marvin.Runtime.Kernel
         protected override IValueProvider[] ValueProviders { get; }
 
         /// <summary>
-        /// Fill all available emtpy properties of the config.
+        /// Fill all available empty properties of the config.
         /// </summary>
         /// <param name="obj">The config for which the fill process should be done.</param>
         public void FillEmpty(object obj)
@@ -60,10 +60,10 @@ namespace Marvin.Runtime.Kernel
         }
 
         /// <summary>
-        /// Save the given config and perfom if necessary a live update of the module with the config entries.
+        /// Save the given config and perform if necessary a live update of the module with the config entries.
         /// </summary>
         /// <param name="configuration">The configuration which should be saved.</param>
-        /// <param name="liveUpdate">Should a live update of the configuration be perfomed?</param>
+        /// <param name="liveUpdate">Should a live update of the configuration be performed?</param>
         /// <param name="name">Name of the configuration</param>
         public void SaveConfiguration(IConfig configuration, bool liveUpdate, string name)
         {

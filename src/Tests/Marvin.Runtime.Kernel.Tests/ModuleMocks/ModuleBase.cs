@@ -24,7 +24,7 @@ namespace Marvin.Runtime.Kernel.Tests.ModuleMocks
         public IServerModuleConsole Console { get; private set; }
 
         /// <summary>
-        /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start 
+        /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start
         ///             any active functionality and/or periodic execution of logic.
         /// </summary>
         public void Initialize()
@@ -45,6 +45,10 @@ namespace Marvin.Runtime.Kernel.Tests.ModuleMocks
         {
         }
 
+#pragma warning disable 67
+        /// <inheritdoc />
         public event EventHandler<ModuleStateChangedEventArgs> StateChanged;
+#pragma warning restore 67
+
     }
 }

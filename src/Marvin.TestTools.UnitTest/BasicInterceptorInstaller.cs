@@ -8,10 +8,10 @@ namespace Marvin.TestTools.UnitTest
     /// </summary>
     public class BasicInterceptorInstaller : IContainerInstaller
     {
+        /// <inheritdoc />
         public void Install(IComponentRegistrator registrator)
         {
             registrator.Register(typeof(EmptyInterceptor));
-
             registrator.Register(typeof(DummyLogger), new []{typeof(IModuleLogger)});
         }
     }

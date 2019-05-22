@@ -7,19 +7,19 @@ namespace Marvin.Workflows.WorkplanSteps
     /// Base class for all steps that are build around another workplan
     /// </summary>
     [DataContract]
-    public abstract class SubworkplanStep : WorkplanStepBase, ISubworkplanStep
+    public abstract class SubWorkplanStep : WorkplanStepBase, ISubworkplanStep
     {
         /// <summary>
         /// Create empty instance and set workplan later
         /// </summary>
-        protected SubworkplanStep()
+        protected SubWorkplanStep()
         {
         }
 
         /// <summary>
         /// Create step from another workflow
         /// </summary>
-        protected SubworkplanStep(IWorkplan workplan)
+        protected SubWorkplanStep(IWorkplan workplan)
         {
             Workplan = workplan;
 
@@ -38,14 +38,15 @@ namespace Marvin.Workflows.WorkplanSteps
         /// <see cref="IWorkplanStep"/>
         public override string Name => Workplan.Name;
 
+        /// <see cref="ISubworkplanStep.WorkplanId"/>
         [DataMember]
-        /// <see cref="ISubworkplanStep"/>
         long ISubworkplanStep.WorkplanId => Workplan.Id;
 
         /// <summary>
-        /// Our subworkplan
+        /// Our SubWorkplan
         /// </summary>
         protected IWorkplan Workplan { get; private set; }
+
         /// <see cref="ISubworkplanStep"/>
         IWorkplan ISubworkplanStep.Workplan
         {

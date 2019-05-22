@@ -7,13 +7,15 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
     /// </summary>
     public class DependencyEvaluation
     {
+        /// <summary>
+        /// Default constructor for deserialization
+        /// </summary>
         public DependencyEvaluation()
         {
-            
         }
 
         /// <summary>
-        /// Consructor for the dependency evaluation. Sets all properties from the given parameter.
+        /// Constructor for the dependency evaluation. Sets all properties from the given parameter.
         /// </summary>
         /// <param name="source">The source which should be used.</param>
         public DependencyEvaluation(IDependencyEvaluation source)
@@ -40,7 +42,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         public int MaxDependencies { get; set; }
 
         /// <summary>
-        /// Maximum number of dependends
+        /// Maximum number of dependents
         /// </summary>
         public int MaxDependends { get; set; }
     }

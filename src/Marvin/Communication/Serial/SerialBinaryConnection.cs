@@ -54,7 +54,7 @@ namespace Marvin.Communication.Serial
             _validator = validator;
         }
 
-        /// 
+        ///
         public void Initialize(BinaryConnectionConfig config)
         {
             _config = (SerialBinaryConfig) config;
@@ -76,7 +76,7 @@ namespace Marvin.Communication.Serial
             //TODO: Distinguish between IDisposable.Dispose() and Stop()
         }
 
-        /// 
+        ///
         public void Dispose()
         {
             _serialPort.DataReceived -= OnDataReceived;
@@ -86,7 +86,7 @@ namespace Marvin.Communication.Serial
             CurrentState = BinaryConnectionState.Disconnected;
         }
 
-        /// 
+        ///
         public void Reconnect()
         {
         }
@@ -97,13 +97,15 @@ namespace Marvin.Communication.Serial
             throw new NotImplementedException();
         }
 
-        ///
+        /// <inheritdoc />
         public BinaryConnectionState CurrentState { get; private set; }
 
-        ///
+#pragma warning disable 67
+        /// <inheritdoc />
         public event EventHandler<BinaryConnectionState> NotifyConnectionState;
+#pragma warning restore 67
 
-        /// 
+        /// <inheritdoc />
         public void Send(BinaryMessage message)
         {
             // Create bytes from message
@@ -111,7 +113,7 @@ namespace Marvin.Communication.Serial
             _serialPort.Write(bytes, 0, bytes.Length);
         }
 
-        /// 
+        ///
         public Task SendAsync(BinaryMessage message)
         {
             throw new NotImplementedException();

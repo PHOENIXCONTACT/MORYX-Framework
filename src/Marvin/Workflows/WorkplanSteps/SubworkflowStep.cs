@@ -7,7 +7,7 @@ namespace Marvin.Workflows.WorkplanSteps
     /// Step that creates <see cref="SubworkflowTransition"/> with the given workplan
     /// </summary>
     [DataContract]
-    public class SubworkflowStep : SubworkplanStep
+    public class SubworkflowStep : SubWorkplanStep
     {
         private SubworkflowStep()
         {
