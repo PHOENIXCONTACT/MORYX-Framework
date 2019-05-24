@@ -41,6 +41,10 @@ namespace Marvin.Communication.Sockets
             _client = client;
             _stream = client.GetStream();
             _logger = logger;
+
+            // Assign callbacks to make sure the delegate does get collected by the GC
+            ReadCallback = ReadComplete;
+            SendCallback = SendComplete;
         }
 
         private void RaiseException(Exception ex)
@@ -84,8 +88,14 @@ namespace Marvin.Communication.Sockets
         public void Send(BinaryMessage message)
         {
             var bytes = _interpreter.SerializeMessage(message);
-            _stream.BeginWrite(bytes, 0, bytes.Length, SendComplete, null);
+            _stream.BeginWrite(bytes, 0, bytes.Length, SendCallback, null);
         }
+
+        /// <summary>
+        /// Reference to the callback to avoid access violation exceptions
+        /// https://social.msdn.microsoft.com/Forums/vstudio/en-US/f5e90354-6ef9-410e-a53b-3f7a3a0dd625/unhandled-accessviolationexception-in-external-code-systemthreadingiocompletioncallback?forum=csharpgeneral
+        /// </summary>
+        private AsyncCallback SendCallback { get; }
 
         /// <summary>
         /// Callback. Is called when the sending was completed.
@@ -138,7 +148,7 @@ namespace Marvin.Communication.Sockets
                 if (_disconnected)
                     return;
 
-                _stream.BeginRead(transmission.ReadBuffer, transmission.CurrentIndex, transmission.ReadSize, ReadComplete, transmission);
+                _stream.BeginRead(transmission.ReadBuffer, transmission.CurrentIndex, transmission.ReadSize, ReadCallback, transmission);
             }
             catch (ObjectDisposedException)
             {
@@ -149,6 +159,12 @@ namespace Marvin.Communication.Sockets
                 Disconnect();
             }
         }
+
+        /// <summary>
+        /// Reference to the callback to avoid access violation exceptions
+        /// https://social.msdn.microsoft.com/Forums/vstudio/en-US/f5e90354-6ef9-410e-a53b-3f7a3a0dd625/unhandled-accessviolationexception-in-external-code-systemthreadingiocompletioncallback?forum=csharpgeneral
+        /// </summary>
+        private AsyncCallback ReadCallback { get; }
 
         private void ReadComplete(IAsyncResult ar)
         {
