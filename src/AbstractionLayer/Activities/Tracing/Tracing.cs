@@ -8,21 +8,26 @@ namespace Marvin.AbstractionLayer
     /// Activity trace information
     /// </summary>
     [DataContract]
-    public abstract class Tracing : IActivityTracing
+    public class Tracing : IActivityTracing
     {
-        ///
-        public abstract string Type { get; }
+        /// <inheritdoc />
+        public virtual string Type => nameof(Tracing);
 
-        ///
+        /// <inheritdoc />
         public DateTime? Started { get; set; }
 
-        ///
+        /// <inheritdoc />
         public DateTime? Completed { get; set; }
 
-        ///
+        /// <inheritdoc />
         public string Text { get; set; }
 
-        /// 
+        /// <inheritdoc />
+        public int ErrorCode { get; set; }
+
+        /// <summary>
+        /// Generic progress information
+        /// </summary>
         public int Progress { get; set; }
 
         ///
@@ -36,6 +41,7 @@ namespace Marvin.AbstractionLayer
             var replacement = new Sparta();
             var replacementType = typeof(Sparta);
             var sharedProperties = GetType().GetProperties()
+                // ReSharper disable once PossibleNullReferenceException
                 .Where(p => p.DeclaringType.IsAssignableFrom(replacementType));
 
             foreach (var property in sharedProperties)

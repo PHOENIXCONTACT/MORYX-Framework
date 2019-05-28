@@ -18,7 +18,7 @@ namespace Marvin.Resources.Management.Tests
         private readonly Dictionary<long, ResourceWrapper> _graph = new Dictionary<long, ResourceWrapper>();
 
         [OneTimeSetUp]
-        public void Setup()
+        public void PrepareLinker()
         {
             var mock = new Mock<IResourceGraph>();
             mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => _graph.ContainsKey(id) ? _graph[id].Target : null);
@@ -28,6 +28,12 @@ namespace Marvin.Resources.Management.Tests
                 Graph = mock.Object,
                 Logger = new DummyLogger()
             };
+        }
+
+        [TearDown]
+        public void ClearGraph()
+        {
+            _graph.Clear();
         }
 
         [Test(Description = "Set all reference collections on the test resource including overrides")]
@@ -130,9 +136,15 @@ namespace Marvin.Resources.Management.Tests
             var ref4 = new DerivedResource { Id = 5, Name = "ChildOnly" };
             var ref5 = new DerivedResource { Id = 6, Name = "BackRef" };
             ResourceReferenceTools.InitializeCollections(ref5);
+            // Fill graph
+            _graph[1] = new ResourceWrapper(instance);
+            _graph[2] = new ResourceWrapper(ref1);
+            _graph[3] = new ResourceWrapper(ref2);
+            _graph[5] = new ResourceWrapper(ref4);
+            _graph[6] = new ResourceWrapper(ref5);
             // Set single references
             instance.Parent = ref5; // Parent is set and
-            ref5.Children.Add(instance); // Bidirectional reference synced
+            // ref5.Children.Add(instance); Bidirectional reference synced --> no longer necessary
             instance.Reference = ref2; // Reference is changed from ref1 to ref2 
             instance.Reference2 = ref3; // Reference2 is assigned with a new object
             // Fill collections
@@ -159,17 +171,17 @@ namespace Marvin.Resources.Management.Tests
             var mocks = SetupDbMocks(relations);
 
             // Act
-            var newResources = _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 })
-                .ToArray();
+            var newResources = _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
-            Assert.AreEqual(1, newResources.Length);
+            Assert.AreEqual(1, newResources.Count);
             Assert.AreEqual(ref3, newResources[0]);
+            Assert.IsTrue(ref5.Children.Contains(instance), "Backlink sync failed for parent ref5");
 
-            Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Once));
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangablePart), Times.Once));
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Once));
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once));
+            Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Once), "Linker did not detect the new resource");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangablePart), Times.Once), "Linker did not create relation for ref3 in References");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Once), "Linker did not create relation for parent ref5");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once), "Linker did not remove relation 1-3");
 
             var parentChild = relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).ToArray();
             Assert.AreEqual(4, parentChild.Length);
@@ -181,6 +193,45 @@ namespace Marvin.Resources.Management.Tests
             Assert.AreEqual(2, possiblePart.Length);
             Assert.AreEqual(1, possiblePart.Count(r => r.Target.Id == 2));
             Assert.AreEqual(1, possiblePart.Count(r => r.Target.Id == 0));
+        }
+
+        [Test(Description = "Multiple references of the same relation type should not interfere with each other")]
+        public void ReferenceInterferenceOnSave()
+        {
+            // Arrange
+            var instance = new InterferenceResource() { Id = 1 };
+            ResourceReferenceTools.InitializeCollections(instance);
+            // Prepare reference objects
+            var derived = new DerivedResource { Id = 2, Name = "Ref1" };
+            var other = new OtherResource { Id = 3, Name = "Ref2" };
+            var different = new DifferentResource { Id = 4, Name = "Different" };
+            // Fill graph
+            _graph[1] = new ResourceWrapper(instance);
+            _graph[2] = new ResourceWrapper(derived);
+            _graph[3] = new ResourceWrapper(other);
+            _graph[4] = new ResourceWrapper(different);
+            // Set references
+            instance.Derived = derived;
+            instance.Others.Add(other);
+            instance.Different = different;
+
+            // Setup uow and repo to simulate the current database
+            var relations = new List<ResourceRelation>
+            {
+                // Current exchangable parts
+                Relation(2, 1, ResourceRelationType.CurrentExchangablePart),
+                Relation(3, 1, ResourceRelationType.CurrentExchangablePart),
+                Relation(4, 1, ResourceRelationType.CurrentExchangablePart),
+            };
+            var mocks = SetupDbMocks(relations);
+
+            // Act
+            _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+
+            // Assert
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 2)), Times.Never), "Linker did remove relation 1-2");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-3");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-4");
         }
 
         private ResourceRelation Relation(long id, long otherId,

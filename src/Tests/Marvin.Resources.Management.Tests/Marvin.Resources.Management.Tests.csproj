@@ -115,7 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mocks\DerivedResource.cs" />
+    <Compile Include="Mocks\InterferenceResource.cs" />
     <Compile Include="Mocks\NonPublicResource.cs" />
+    <Compile Include="Mocks\OtherResource.cs" />
     <Compile Include="Mocks\ResourceWithImplicitApi.cs" />
     <Compile Include="Mocks\ReferenceResource.cs" />
     <Compile Include="Mocks\SimpleResource.cs" />

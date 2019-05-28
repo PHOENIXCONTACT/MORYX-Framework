@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using Marvin.AbstractionLayer;
 using Marvin.Serialization;
 
@@ -35,12 +36,6 @@ namespace Marvin.Products.Management.Modification
         public int Revision { get; set; }
 
         /// <summary>
-        /// Flag if this recipe is the current recipe
-        /// </summary>
-        [DataMember]
-        public bool IsDefault { get; set; }
-
-        /// <summary>
         /// Type of the recipe
         /// </summary>
         [DataMember]
@@ -57,5 +52,11 @@ namespace Marvin.Products.Management.Modification
         /// </summary>
         [DataMember]
         public long WorkplanId { get; set; }
+
+        /// <summary>
+        /// Classification of the recipe
+        /// </summary>
+        [DataMember]
+        public RecipeClassificationModel Classification { get; set; }
     }
 }

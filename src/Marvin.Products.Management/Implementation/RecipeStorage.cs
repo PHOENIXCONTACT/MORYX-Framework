@@ -218,6 +218,7 @@ namespace Marvin.Products.Management
             var steps = SaveSteps(uow, workplanEntity, workplan);
             var connectors = SaveConnectors(uow, workplanEntity, workplan);
             LinkSteps(uow, workplan, steps, connectors);
+            RemoveUnusedConnectors(uow, workplanEntity, workplan);
 
             return workplanEntity;
         }
@@ -228,13 +229,6 @@ namespace Marvin.Products.Management
         private static IDictionary<long, ConnectorEntity> SaveConnectors(IUnitOfWork uow, WorkplanEntity workplanEntity, Workplan workplan)
         {
             var connectorRepo = uow.GetRepository<IConnectorEntityRepository>();
-
-            // Remove connectors, that are now longer part of the workplan
-            var removedConnectors = workplanEntity.Connectors.Where(ce => workplan.Connectors.All(c => c.Id != ce.ConnectorId));
-            foreach (var removedConnector in removedConnectors.ToList())
-            {
-                RemoveConnector(connectorRepo, removedConnector);
-            }
 
             var connectorEntities = new Dictionary<long, ConnectorEntity>();
             foreach (var connector in workplan.Connectors)
@@ -250,18 +244,6 @@ namespace Marvin.Products.Management
             }
 
             return connectorEntities;
-        }
-
-        /// <summary>
-        /// Remove connector and update its usages to null
-        /// </summary>
-        private static void RemoveConnector(IConnectorEntityRepository connectorRepo, ConnectorEntity removedConnector)
-        {
-            foreach (var connectorUsage in removedConnector.Usages)
-            {
-                connectorUsage.Connector = null;
-            }
-            connectorRepo.Remove(removedConnector);
         }
 
         /// <summary>
@@ -388,6 +370,18 @@ namespace Marvin.Products.Management
                     connectorReference.Step = stepEntity;
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove all unused connectors AFTER the new linking was applied
+        /// </summary>
+        private static void RemoveUnusedConnectors(IUnitOfWork uow, WorkplanEntity workplanEntity, Workplan workplan)
+        {
+            var connectorRepo = uow.GetRepository<IConnectorEntityRepository>();
+
+            // Remove connectors, that are now longer part of the workplan
+            var removedConnectors = workplanEntity.Connectors.Where(ce => workplan.Connectors.All(c => c.Id != ce.ConnectorId));
+            connectorRepo.RemoveRange(removedConnectors);
         }
     }
 }

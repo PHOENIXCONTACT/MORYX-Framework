@@ -11,6 +11,11 @@ namespace Marvin.AbstractionLayer
     public enum RecipeClassification
     {
         /// <summary>
+        /// Unset value as enum default
+        /// </summary>
+        Unset = 0,
+
+        /// <summary>
         /// Recipe is a default for the production of the product
         /// </summary>
         Default = 1,

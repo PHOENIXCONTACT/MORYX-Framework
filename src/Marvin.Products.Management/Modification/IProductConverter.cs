@@ -1,7 +1,4 @@
 ﻿using Marvin.AbstractionLayer;
-using Marvin.Products.Management.Importers;
-
-using Marvin.Serialization;
 
 namespace Marvin.Products.Management.Modification
 {
@@ -23,10 +20,20 @@ namespace Marvin.Products.Management.Modification
 
         RecipeModel GetRecipe(long recipeId);
 
+        RecipeModel[] GetRecipes(long productId);
+
         RecipeModel CreateRecipe(string recipeType);
 
         RecipeModel GetProductionRecipe(long productId, long workplanId);
 
         RecipeModel CreateProductionRecipe(long productId, long workplanId, string name);
+
+        bool SaveProductionRecipe(RecipeModel recipe);
+
+        WorkplanModel CreateWorkplan(string workplanName);
+
+        WorkplanModel[] GetWorkplans();
+
+        WorkplanModel GetWorkplan(long workplanId);
     }
 }

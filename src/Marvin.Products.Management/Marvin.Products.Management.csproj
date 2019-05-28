@@ -101,8 +101,10 @@
     <Compile Include="Modification\Model\ProductModel.cs" />
     <Compile Include="Modification\Model\ProductImporter.cs" />
     <Compile Include="Modification\Model\ProductRevisionEntry.cs" />
+    <Compile Include="Modification\Model\RecipeClassificationModel.cs" />
     <Compile Include="Modification\Model\RecipeModel.cs" />
     <Compile Include="Modification\Model\StorageValue.cs" />
+    <Compile Include="Modification\Model\WorkplanModel.cs" />
     <Compile Include="Modification\ProductConverter.cs" />
     <Compile Include="Modification\Wcf\NullCustomization.cs" />
     <Compile Include="Modification\Wcf\ProductInteraction.cs" />

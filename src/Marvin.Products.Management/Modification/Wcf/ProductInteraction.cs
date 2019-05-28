@@ -55,7 +55,7 @@ namespace Marvin.Products.Management.Modification
             };
         }
 
-        private static Entry ConvertParameters(IImportParameters parametersObject) => 
+        private static Entry ConvertParameters(IImportParameters parametersObject) =>
             EntryConvert.EncodeObject(parametersObject, new PartialSerialization<IImportParameters>());
 
         public Entry UpdateParameters(string importerName, Entry currentParameters)
@@ -124,6 +124,11 @@ namespace Marvin.Products.Management.Modification
             return UseConverter(c => c.GetRecipe(recipeId));
         }
 
+        public RecipeModel[] GetRecipes(long productId)
+        {
+            return UseConverter(c => c.GetRecipes(productId));
+        }
+
         public RecipeModel CreateRecipe(string recipeType)
         {
             return UseConverter(c => c.CreateRecipe(recipeType));
@@ -137,6 +142,26 @@ namespace Marvin.Products.Management.Modification
         public RecipeModel CreateProductionRecipe(long productId, long workplanId, string name)
         {
             return UseConverter(c => c.CreateProductionRecipe(productId, workplanId, name));
+        }
+
+        public bool SaveProductionRecipe(RecipeModel recipe)
+        {
+            return UseConverter(c => c.SaveProductionRecipe(recipe));
+        }
+
+        public WorkplanModel CreateWorkplan(string name)
+        {
+            return UseConverter(c => c.CreateWorkplan(name));
+        }
+
+        public WorkplanModel[] GetWorkplans()
+        {
+            return UseConverter(c => c.GetWorkplans());
+        }
+
+        public WorkplanModel GetWorkplan(long id)
+        {
+            return UseConverter(c => c.GetWorkplan(id));
         }
 
         public string GetRecipeProviderName()

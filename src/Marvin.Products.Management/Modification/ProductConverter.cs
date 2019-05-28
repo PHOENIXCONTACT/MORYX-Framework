@@ -6,6 +6,7 @@ using System.Reflection;
 using Marvin.AbstractionLayer;
 using Marvin.Container;
 using Marvin.Serialization;
+using Marvin.Workflows;
 
 namespace Marvin.Products.Management.Modification
 {
@@ -32,7 +33,7 @@ namespace Marvin.Products.Management.Modification
         }
 
         // Null object pattern for identity
-        private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(String.Empty, 0);
+        private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
 
         private static readonly PartialSerialization<Product> ProductSerialization = new PartialSerialization<Product>();
         private static readonly PartialSerialization<ProductRecipe> RecipeSerialization = new PartialSerialization<ProductRecipe>();
@@ -87,6 +88,12 @@ namespace Marvin.Products.Management.Modification
             return ConvertRecipe(recipe);
         }
 
+        public RecipeModel[] GetRecipes(long productId)
+        {
+            var product = ProductManager.GetProduct(productId);
+            return RecipeManagement.GetAllByProduct(product).Select(ConvertRecipe).ToArray();
+        }
+
         public RecipeModel CreateRecipe(string recipeType)
         {
             var recipe = Customization.RecipePrototype(recipeType);
@@ -103,6 +110,30 @@ namespace Marvin.Products.Management.Modification
         {
             var recipe = RecipeManagement.Create(productId, workplanId, name);
             return ConvertRecipe(recipe);
+        }
+
+        public bool SaveProductionRecipe(RecipeModel recipe)
+        {
+            var productionRecipe = ConvertRecipeBack(recipe);
+            return RecipeManagement.Save(productionRecipe) > 0;
+        }
+
+        public WorkplanModel CreateWorkplan(string workplanName)
+        {
+            var workplan = WorkplanManagement.Create(workplanName);
+            return ConvertWorkplan(workplan);
+        }
+
+        public WorkplanModel[] GetWorkplans()
+        {
+            var workplans = WorkplanManagement.LoadAllWorkplans();
+            return workplans.Select(ConvertWorkplan).ToArray();
+        }
+
+        public WorkplanModel GetWorkplan(long workplanId)
+        {
+            var workplan = WorkplanManagement.LoadWorkplan(workplanId);
+            return ConvertWorkplan(workplan);
         }
 
         private ProductModel ConvertProduct(IProduct product, bool flat)
@@ -220,8 +251,26 @@ namespace Marvin.Products.Management.Modification
                 State = recipe.State,
                 Revision = recipe.Revision,
                 Ingredients = EntryConvert.EncodeObject(recipe, RecipeSerialization),
-                IsDefault = recipe.Classification == RecipeClassification.Default
             };
+
+            switch (recipe.Classification)
+            {
+                case RecipeClassification.Unset:
+                    converted.Classification = RecipeClassificationModel.Unset;
+                    break;
+                case RecipeClassification.Default:
+                    converted.Classification = RecipeClassificationModel.Default;
+                    break;
+                case RecipeClassification.Alternative:
+                    converted.Classification = RecipeClassificationModel.Alternative;
+                    break;
+                case RecipeClassification.Intermediate:
+                    converted.Classification = RecipeClassificationModel.Intermediate;
+                    break;
+                case RecipeClassification.Part:
+                    converted.Classification = RecipeClassificationModel.Part;
+                    break;
+            }
 
             //TODO: provide known types for recipe dto
             var wpRecipe = recipe as IWorkplanRecipe;
@@ -231,6 +280,19 @@ namespace Marvin.Products.Management.Modification
             }
 
             return converted;
+        }
+
+        private static WorkplanModel ConvertWorkplan(IWorkplan workplan)
+        {
+            var workplanDto = new WorkplanModel
+            {
+                Id = workplan.Id,
+                Name = workplan.Name,
+                Version = workplan.Version,
+                State = workplan.State
+            };
+
+            return workplanDto;
         }
 
         #endregion
@@ -250,6 +312,29 @@ namespace Marvin.Products.Management.Modification
             productRecipe.Name = recipe.Name;
             productRecipe.Revision = recipe.Revision;
             productRecipe.State = recipe.State;
+            productRecipe.Workplan = WorkplanManagement.LoadAllWorkplans().FirstOrDefault(w => w.Id == recipe.WorkplanId);
+
+            switch (recipe.Classification)
+            {
+                case RecipeClassificationModel.Unset:
+                    productRecipe.Classification = RecipeClassification.Unset;
+                    break;
+                case RecipeClassificationModel.Default:
+                    productRecipe.Classification = RecipeClassification.Default;
+                    break;
+                case RecipeClassificationModel.Alternative:
+                    productRecipe.Classification = RecipeClassification.Alternative;
+                    break;
+                case RecipeClassificationModel.Intermediate:
+                    productRecipe.Classification = RecipeClassification.Intermediate;
+                    break;
+                case RecipeClassificationModel.Part:
+                    productRecipe.Classification = RecipeClassification.Part;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             EntryConvert.UpdateInstance(productRecipe, recipe.Ingredients, RecipeSerialization);
             return productRecipe;
         }
