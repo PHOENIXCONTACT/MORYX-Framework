@@ -24,7 +24,8 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         public NotificationModel(IModuleNotification notification)
         {
             Timestamp = notification.Timestamp;
-            Exception = new SerializableException(notification.Exception);
+            if(notification.Exception != null)
+                Exception = new SerializableException(notification.Exception);
             Severity = notification.Severity;
         }
 
