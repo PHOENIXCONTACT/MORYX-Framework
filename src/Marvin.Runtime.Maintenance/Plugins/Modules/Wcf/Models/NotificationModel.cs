@@ -26,6 +26,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
             Timestamp = notification.Timestamp;
             if(notification.Exception != null)
                 Exception = new SerializableException(notification.Exception);
+            Message = notification.Message;
             Severity = notification.Severity;
         }
 
@@ -38,6 +39,11 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         /// An exception.
         /// </summary>
         public SerializableException Exception { get; set; }
+
+        /// <summary>
+        /// Notification message
+        /// </summary>
+        string Message { get; }
 
         /// <summary>
         /// Kind of notification
