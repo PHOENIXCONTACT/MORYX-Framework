@@ -313,7 +313,7 @@ namespace Marvin.Serialization
             {
                 Key = new EntryKey
                 {
-                    Name = objectType.GetDisplayName(),
+                    Name = objectType.GetDisplayName() ?? objectType.Name,
                     Identifier = objectType.Name
                 },
                 Value = new EntryValue
