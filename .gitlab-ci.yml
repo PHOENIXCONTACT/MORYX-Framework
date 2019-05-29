@@ -25,7 +25,7 @@ Build:
     expire_in: 1 hrs
     paths:
       - 'artifacts/Packages'
-      - 'src/Marvin.Runtime.Console/bin/$MARVIN_BUILD_CONFIG'
+      - 'src/StartProject/bin/$MARVIN_BUILD_CONFIG'
 
 SmokeTests: 
   stage: test

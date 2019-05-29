@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8441A356-C5A8-41B4-B7EE-D0411664D8AA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Marvin.Runtime.Console</RootNamespace>
-    <AssemblyName>HeartOfGold</AssemblyName>
+    <RootNamespace>StartProject</RootNamespace>
+    <AssemblyName>StartProject</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
