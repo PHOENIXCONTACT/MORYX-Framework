@@ -13,7 +13,7 @@ namespace Marvin.Runtime.SystemTests
 #endif
         public HeartOfGoldController HogController { get; set; }
 
-        public static string RuntimeDir => TestContext.CurrentContext.TestDirectory + @"\..\..\..\..\Marvin.Runtime.Console\bin\" + Configuration;
+        public static string RuntimeDir => TestContext.CurrentContext.TestDirectory + @"\..\..\..\..\StartProject\bin\" + Configuration;
 
         public static string ConfigDirParam => Path.Combine("Config", "SystemTests");
 

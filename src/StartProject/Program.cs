@@ -1,9 +1,9 @@
 ﻿using Marvin.Runtime.Kernel;
 
-namespace Marvin.Runtime.Console
+namespace StartProject
 {
     /// <summary>
-    /// Static programm class
+    /// Static program class
     /// </summary>
     public static class Program
     {

@@ -113,7 +113,7 @@ namespace Marvin.TestTools.SystemTest
         /// <summary>
         /// Name of the executable under test
         /// </summary>
-        public string ApplicationExeName { get; set; } = "HeartOfGold.exe";
+        public string ApplicationExeName { get; set; } = "StartProject.exe";
 
         /// <summary>
         /// Gets or sets the directory of the runtime executable.
