@@ -43,7 +43,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         /// <summary>
         /// Notification message
         /// </summary>
-        string Message { get; }
+        public string Message { get; }
 
         /// <summary>
         /// Kind of notification
