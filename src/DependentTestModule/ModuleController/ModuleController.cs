@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
+using Marvin.Logging;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Modules;
 using Marvin.TestModule;
@@ -28,7 +30,6 @@ namespace Marvin.DependentTestModule
         /// </summary>
         protected override void OnInitialize()
         {
-
             Container.LoadComponents<ISimpleHelloWorldWcfConnector>();
         }
 
