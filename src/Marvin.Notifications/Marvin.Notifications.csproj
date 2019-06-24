@@ -62,7 +62,6 @@
     <Compile Include="Adapter\INotificationSourceAdapter.cs" />
     <Compile Include="Notification\Notification.cs" />
     <Compile Include="Facade\NotificationSourceFacade.cs" />
-    <Compile Include="Notification\Severity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
