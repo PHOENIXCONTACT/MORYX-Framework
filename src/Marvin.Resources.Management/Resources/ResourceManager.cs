@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
@@ -40,11 +37,6 @@ namespace Marvin.Resources.Management
         /// Access to the database
         /// </summary>
         public IUnitOfWorkFactory UowFactory { get; set; }
-
-        /// <summary>
-        /// Error reporting in case a resource crashes
-        /// </summary>
-        public IModuleErrorReporting ErrorReporting { get; set; }
 
         /// <summary>
         /// Logger for the ResourceManager
@@ -122,7 +114,7 @@ namespace Marvin.Resources.Management
                 }
                 else
                 {
-                    Logger.LogEntry(LogLevel.Warning, "The ResourceManager initialized without a resource." +
+                    Logger.Log(LogLevel.Warning, "The ResourceManager initialized without a resource." +
                                                       "Execute a resource initializer to add resources with \"exec ResourceManager initialize\"");
                 }
             }
@@ -138,7 +130,7 @@ namespace Marvin.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    ErrorReporting.ReportWarning(this, e);
+                    Logger.LogException(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
                 }
             });
             _startup = ResourceStartupPhase.Initialized;
@@ -264,7 +256,7 @@ namespace Marvin.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    ErrorReporting.ReportWarning(this, e);
+                    Logger.LogException(LogLevel.Warning, e, "Failed to start resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
                 }
             });
             _startup = ResourceStartupPhase.Started;
@@ -282,7 +274,7 @@ namespace Marvin.Resources.Management
                     }
                     catch (Exception e)
                     {
-                        ErrorReporting.ReportWarning(this, e);
+                        Logger.LogException(LogLevel.Warning, e, "Failed to stop resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
                     }
                 });
 

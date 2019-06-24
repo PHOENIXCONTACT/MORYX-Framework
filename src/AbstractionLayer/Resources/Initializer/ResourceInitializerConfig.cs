@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Marvin.Configuration;
 using Marvin.Modules;
+using Marvin.Serialization;
 
 namespace Marvin.AbstractionLayer.Resources
 {
