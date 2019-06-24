@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Configuration;
+using Marvin.Serialization;
 
 namespace Marvin.Resources.Management
 {

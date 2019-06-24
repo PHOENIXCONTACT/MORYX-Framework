@@ -35,9 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Effort, Version=2.0.5.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Effort.EF6.2.0.5\lib\net45\Effort.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Effort, Version=2.1.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Effort.EF6.2.1.0\lib\net45\Effort.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -47,25 +46,21 @@
       <HintPath>..\..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.3427, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev003427\lib\net461\Marvin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.3.0.0-dev004731\lib\net461\Marvin.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.3427, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.3.0.0-dev003427\lib\net461\Marvin.Model.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Model, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Model.3.0.0-dev004731\lib\net461\Marvin.Model.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.3427, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.InMemory.3.0.0-dev003427\lib\net461\Marvin.Model.InMemory.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Model.InMemory.3.0.0-dev004731\lib\net461\Marvin.Model.InMemory.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NMemory, Version=3.0.0.0, Culture=neutral, PublicKeyToken=afc61983f100d280, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NMemory.3.0.2\lib\net45\NMemory.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\packages\NMemory.3.1.0\lib\net45\NMemory.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>

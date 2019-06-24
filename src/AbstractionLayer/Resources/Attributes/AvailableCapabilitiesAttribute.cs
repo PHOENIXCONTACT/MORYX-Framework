@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Marvin.AbstractionLayer.Capabilities;
-using Marvin.Configuration;
 using Marvin.Container;
+using Marvin.Serialization;
 using Marvin.Tools;
 
 namespace Marvin.AbstractionLayer.Resources

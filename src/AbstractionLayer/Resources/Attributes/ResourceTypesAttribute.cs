@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Marvin.Configuration;
 using Marvin.Container;
+using Marvin.Serialization;
 
 namespace Marvin.AbstractionLayer.Resources
 {

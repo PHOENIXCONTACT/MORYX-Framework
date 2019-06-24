@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Marvin.Configuration;
 using Marvin.Container;
+using Marvin.Serialization;
 using Microsoft.Win32;
 
 namespace Marvin.AbstractionLayer.Drivers

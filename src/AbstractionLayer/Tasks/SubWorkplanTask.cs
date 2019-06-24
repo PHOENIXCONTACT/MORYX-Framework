@@ -10,7 +10,7 @@ namespace Marvin.AbstractionLayer
     /// The description of SubWorkplanActivity
     /// </summary>
     [DataContract]
-    public abstract class SubWorkplanTask<TParameters> : SubworkplanStep
+    public abstract class SubWorkplanTask<TParameters> : SubWorkplanStep
         where TParameters : SubWorkplanParameters, new()
     {
         /// <summary>
