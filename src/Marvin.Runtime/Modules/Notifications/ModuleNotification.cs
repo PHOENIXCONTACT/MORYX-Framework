@@ -1,7 +1,7 @@
 ﻿using System;
+using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.Notifications;
-using Marvin.Tools;
 
 namespace Marvin.Runtime.Modules
 {
@@ -58,10 +58,39 @@ namespace Marvin.Runtime.Modules
             _confirmationDelegate = confirmationDelegate;
         }
 
+        public ModuleNotification(LogLevel logLevel, string message, Exception exception)
+            : this(LogLevelToSeverity(logLevel), message, exception, EmptyDelegate)
+        {
+        }
+
+        public ModuleNotification(LogLevel logLevel, string message, Exception exception, Action<ModuleNotification> confirmationDelegate)
+            : this(LogLevelToSeverity(logLevel), message, exception, confirmationDelegate)
+        {
+        }
+
         public bool Confirm()
         {
             _confirmationDelegate?.Invoke(this);
             return true;
+        }
+
+        private static Severity LogLevelToSeverity(LogLevel logLevel)
+        {
+            switch (logLevel)
+            {
+                case LogLevel.Trace:
+                case LogLevel.Debug:
+                case LogLevel.Info:
+                    return Severity.Info;
+                case LogLevel.Warning:
+                    return Severity.Warning;
+                case LogLevel.Error:
+                    return Severity.Error;
+                case LogLevel.Fatal:
+                    return Severity.Fatal;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null);
+            }
         }
     }
 }
