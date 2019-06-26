@@ -38,13 +38,11 @@
       <HintPath>..\..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Castle.Facilities.WcfIntegration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.WcfIntegrationFacility.4.1.0\lib\net45\Castle.Facilities.WcfIntegration.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Castle.Facilities.WcfIntegration, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.WcfIntegrationFacility.5.0.0\lib\net45\Castle.Facilities.WcfIntegration.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Windsor.4.1.0\lib\net45\Castle.Windsor.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Windsor.5.0.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
@@ -62,36 +60,37 @@
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev001913\lib\net461\Marvin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev004731\lib\net461\Marvin.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Container, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Container.3.0.0-dev001913\lib\net461\Marvin.Container.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Container, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Container.3.0.0-dev004731\lib\net461\Marvin.Container.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev001913\lib\net461\Marvin.Runtime.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Runtime, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev004731\lib\net461\Marvin.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime.Kernel, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Kernel.3.0.0-dev001913\lib\net461\Marvin.Runtime.Kernel.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Runtime.Kernel, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Kernel.3.0.0-dev004731\lib\net461\Marvin.Runtime.Kernel.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime.Maintenance, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.3.0.0-dev001913\lib\net461\Marvin.Runtime.Maintenance.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Runtime.Maintenance, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.3.0.0-dev004731\lib\net461\Marvin.Runtime.Maintenance.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev001913\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev004731\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Discovery" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

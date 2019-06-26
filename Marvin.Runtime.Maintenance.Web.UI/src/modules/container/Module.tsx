@@ -9,11 +9,11 @@ import { HealthStateBadge } from "../../dashboard/components/HealthStateBadge";
 import ModulesRestClient from "../api/ModulesRestClient";
 import { ModuleNotificationTypeToCssClassConverter } from "../converter/ModuleNotificationTypeToCssClassConverter";
 import { FailureBehaviour } from "../models/FailureBehaviour";
-import { ModuleNotificationType } from "../models/ModuleNotificationType";
 import { ModuleStartBehaviour } from "../models/ModuleStartBehaviour";
 import NotificationModel from "../models/NotificationModel";
 import SerializableException from "../models/SerializableException";
 import ServerModuleModel from "../models/ServerModuleModel";
+import { Serverity } from "../models/Severity";
 import { updateFailureBehaviour, updateStartBehaviour } from "../redux/ModulesActions";
 
 interface ModulePropModel {
@@ -48,7 +48,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
 
     public componentWillReceiveProps(nextProps: ModulePropModel): void {
         const warningsOrErrors = nextProps.Module.Notifications.filter(function(element: NotificationModel, index: number, array: NotificationModel[]): boolean {
-             return element.NotificationType === ModuleNotificationType.Warning || element.NotificationType === ModuleNotificationType.Failure;
+             return element.Severity === Serverity.Warning || element.Severity === Serverity.Error || element.Severity === Serverity.Fatal;
         });
         this.setState({ HasWarningsOrErrors: warningsOrErrors.length !== 0 });
     }
@@ -80,7 +80,9 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
     }
 
     private openNotificationDetailsDialog(e: React.MouseEvent<HTMLElement>, notification: NotificationModel): void {
-        this.setState({ IsNotificationDialogOpened: true, SelectedNotification: notification });
+        if (notification.Exception != null) {
+            this.setState({ IsNotificationDialogOpened: true, SelectedNotification: notification });
+        }
     }
 
     private closeNotificationDetailsDialog(): void {
@@ -232,11 +234,11 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                             this.props.Module.Notifications.map((notification, idx) =>
                                                 <tr key={idx} className={"selectable"} style={{alignItems: "center"}}
                                                     onClick={(e: React.MouseEvent<HTMLElement>) => this.openNotificationDetailsDialog(e, notification)}>
-                                                    <td><span className="align-self-center">{notification.Exception.ExceptionTypeName}</span></td>
-                                                    <td><span className="align-self-center">{notification.Exception.Message}</span></td>
+                                                    <td><span className="align-self-center">{notification.Exception != null ? notification.Exception.ExceptionTypeName : "-"}</span></td>
+                                                    <td><span className="align-self-center">{notification.Exception != null ? notification.Exception.Message : notification.Message}</span></td>
                                                     <td>
-                                                        <span className="align-self-center" style={ModuleNotificationTypeToCssClassConverter.Convert(notification.NotificationType)}>
-                                                            {ModuleNotificationType[notification.NotificationType]}
+                                                        <span className="align-self-center" style={ModuleNotificationTypeToCssClassConverter.Convert(notification.Severity)}>
+                                                            {Serverity[notification.Severity]}
                                                         </span>
                                                     </td>
                                                 </tr>,
@@ -257,7 +259,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                 <Row>
                                     <Col md={2}><span className="font-bold">Type</span></Col>
                                     <Col md={10}>
-                                        <span style={ModuleNotificationTypeToCssClassConverter.Convert(this.state.SelectedNotification.NotificationType)}>
+                                        <span style={ModuleNotificationTypeToCssClassConverter.Convert(this.state.SelectedNotification.Severity)}>
                                             {this.state.SelectedNotification.Exception.ExceptionTypeName}
                                         </span>
                                     </Col>

@@ -31,21 +31,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev001913\lib\net461\Marvin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev004731\lib\net461\Marvin.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev001913\lib\net461\Marvin.Runtime.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Runtime, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev004731\lib\net461\Marvin.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime.Maintenance, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.3.0.0-dev001913\lib\net461\Marvin.Runtime.Maintenance.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Runtime.Maintenance, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.3.0.0-dev004731\lib\net461\Marvin.Runtime.Maintenance.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.1913, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev001913\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev004731\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

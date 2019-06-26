@@ -1,17 +1,20 @@
 import * as React from "react";
-import { ModuleNotificationType } from "../models/ModuleNotificationType";
+import { Serverity } from "../models/Severity";
 
 export class ModuleNotificationTypeToCssClassConverter {
-    public static Convert(healthState: ModuleNotificationType): React.CSSProperties {
+    public static Convert(healthState: Serverity): React.CSSProperties {
         switch (healthState) {
-            case ModuleNotificationType.Info: {
+            case Serverity.Info: {
                 return { color: "black" };
             }
-            case ModuleNotificationType.Warning: {
-                return { color: "yellow" };
+            case Serverity.Warning: {
+                return { color: "orange" };
             }
-            case ModuleNotificationType.Failure: {
+            case Serverity.Error: {
                 return { color: "red" };
+            }
+            case Serverity.Fatal: {
+                return { color: "purple" };
             }
             default: {
                 return { color: "black" };

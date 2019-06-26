@@ -12,6 +12,14 @@ export default class Entry {
     public Validation: EntryValidation;
     public Parent: Entry;
 
+    constructor() {
+        this.Key = new EntryKey();
+        this.Value = new EntryValue();
+        this.SubEntries = [];
+        this.Prototypes = [];
+        this.Validation = new EntryValidation();
+    }
+
     public static entryChain(entry: Entry): Entry[] {
         const entryChain: Entry[] = [entry];
         let currentEntry = entry;

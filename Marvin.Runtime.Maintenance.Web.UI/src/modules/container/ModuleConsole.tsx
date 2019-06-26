@@ -77,8 +77,17 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
         this.props.RestClient.invokeMethod(this.props.ModuleName, methodEntry).then((data) => {
             this.props.onShowWaitDialog(false);
-            Config.patchParent(data, null);
-            this.onUpdateInvokeResults({ MethodName: methodEntry.Name, Result: data });
+
+            let resultEntry = data;
+
+            // Result of void functions is an empty entry
+            if (Object.keys(resultEntry).length > 0) {
+                Config.patchParent(resultEntry, null);
+            } else {
+                resultEntry = new Entry();
+            }
+
+            this.onUpdateInvokeResults({ MethodName: methodEntry.Name, Result: resultEntry });
         });
     }
 
