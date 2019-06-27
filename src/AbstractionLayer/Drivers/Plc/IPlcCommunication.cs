@@ -8,9 +8,14 @@ namespace Marvin.AbstractionLayer.Drivers.Plc
     public interface IPlcCommunication
     {
         /// <summary>
-        /// Reference to the underlying driver of this communication 
+        /// Reference to the underlying driver of this communication
         /// </summary>
         IPlcDriver Driver { get; }
+
+        /// <summary>
+        /// Identifier of this communication
+        /// </summary>
+        string Identifier { get; }
 
         /// <summary>
         /// Send message to plc and don't care for a response
@@ -23,7 +28,7 @@ namespace Marvin.AbstractionLayer.Drivers.Plc
         void Send(IQuickCast message, DriverResponse<PlcTransmissionResult> response);
 
         /// <summary>
-        /// Event rasied when the plc driver receives a message
+        /// Event raised when the plc driver receives a message
         /// </summary>
         event EventHandler<IQuickCast> Received;
     }
