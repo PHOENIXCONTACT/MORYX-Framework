@@ -7,7 +7,7 @@
     /// <typeparam name="TSvcMgr">The service manager interface</typeparam>
     /// <typeparam name="TService">The service interface</typeparam>
     public abstract class BasicNetTcpConnectorPlugin<TConfig, TSvcMgr, TService> : BasicWcfConnectorPlugin<TConfig, TSvcMgr>
-        where TConfig : IWcfServiceConfig 
+        where TConfig : IWcfServiceConfig
         where TSvcMgr : class, IWcfServiceManager
         where TService : class, ISessionService
     {
@@ -21,12 +21,5 @@
             Service = HostFactory.CreateHost<TService>(Config.ConnectorHost);
             Service.Start();
         }
-
-        /// <inheritdoc />
-        public override void Stop()
-        {
-            
-        }
-
     }
 }

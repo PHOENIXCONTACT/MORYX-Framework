@@ -40,7 +40,7 @@ namespace Marvin.Communication.Sockets
     internal class TcpServer
     {
         /// <summary>
-        /// Lazy threadsafe instance of the tcp server
+        /// Lazy ThreadSafe instance of the tcp server
         /// </summary>
         private static readonly Lazy<TcpServer> LazyInstance =
             new Lazy<TcpServer>(() => new TcpServer(), LazyThreadSafetyMode.ExecutionAndPublication);

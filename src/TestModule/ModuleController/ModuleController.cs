@@ -20,6 +20,8 @@ namespace Marvin.TestModule
         [Named(TestModelConstants.Namespace)]
         public IUnitOfWorkFactory TestFactory { get; set; }
 
+        private IHelloWorldWcfConnector _connector;
+
         #region State transition
         // ReSharper disable RedundantOverridenMember
         /// <summary>
@@ -38,14 +40,12 @@ namespace Marvin.TestModule
             Logger.Log(Config.LogLevel, "Sending log message with level '{0}'", Config.LogLevel);
 
             Thread.Sleep(Config.SleepTime); // Just for system testing.
-            //Container.Resolve<JsonTest>().Start();
 
             var factory = Container.Resolve<IHelloWorldWcfConnectorFactory>();
 
-            var connector = factory.Create(Config.HelloWorldWcfConnector);
-
-            connector.Initialize(Config.HelloWorldWcfConnector);
-            connector.Start();
+            _connector = factory.Create(Config.HelloWorldWcfConnector);
+            _connector.Initialize(Config.HelloWorldWcfConnector);
+            _connector.Start();
 
             // Activate facades
             ActivateFacade(_testModule);
@@ -60,12 +60,17 @@ namespace Marvin.TestModule
 
             // Deactivate facades
             DeactivateFacade(_testModule);
+
+            // Stop connector
+            _connector.Stop();
+            _connector = null;
         }
         #endregion
 
         #region FacadeContainer
 
         private readonly TestModuleFacade _testModule = new TestModuleFacade();
+
         ITestModule IFacadeContainer<ITestModule>.Facade => _testModule;
 
         #endregion

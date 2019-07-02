@@ -10,7 +10,7 @@ namespace Marvin.Tools.Wcf
     /// This class converts ID collections into fast transmittable strings
     /// Structure: 8    Char entry count n
     ///            2    Char entry length calculated from greatest value
-    ///            16   Char offset for smallest value         
+    ///            16   Char offset for smallest value
     ///            n*l  Char id collection
     /// </summary>
     public static class WcfAccelerator
@@ -46,7 +46,7 @@ namespace Marvin.Tools.Wcf
             builder.Append(offset.ToString("x16"));
 
             // Append all IDs
-            var formatString = string.Format("x{0}", entryLength);
+            var formatString = $"x{entryLength}";
             foreach (var id in ids)
             {
                 builder.Append((id - offset).ToString(formatString));

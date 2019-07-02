@@ -17,10 +17,11 @@ namespace Marvin.Tools.Wcf
         /// </summary>
         [UseChild("WcfService")]
         public IModuleLogger Logger { get; set; }
-        
+
         private readonly List<T> _services = new List<T>();
+
         /// <summary>
-        /// Thread safe snapshot of the currently subsribed clients
+        /// Thread safe snapshot of the currently subscribed clients
         /// </summary>
         protected IEnumerable<T> Services
         {
@@ -36,7 +37,7 @@ namespace Marvin.Tools.Wcf
         {
             T casted = service as T;
             if (casted == null)
-                throw new ArgumentException("Type of service does not match managed type", "service");
+                throw new ArgumentException("Type of service does not match managed type", nameof(service));
 
             lock (_services)
             {

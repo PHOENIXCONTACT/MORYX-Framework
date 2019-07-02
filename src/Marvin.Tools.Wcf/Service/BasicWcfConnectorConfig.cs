@@ -11,7 +11,7 @@ namespace Marvin.Tools.Wcf
     public abstract class BasicWcfConnectorConfig : UpdatableEntry, IWcfServiceConfig
     {
         /// <summary>
-        /// The plugin's name
+        /// The plugin name
         /// </summary>
         public virtual string PluginName { get; protected set; }
 
@@ -35,6 +35,6 @@ namespace Marvin.Tools.Wcf
         [DataMember]
         [Description("Host config")]
         public HostConfig ConnectorHost { get; set; }
-         
+
     }
 }

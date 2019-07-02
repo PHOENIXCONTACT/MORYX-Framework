@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using Marvin.Logging;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Modules;
 using Marvin.TestModule;
@@ -15,10 +14,7 @@ namespace Marvin.DependentTestModule
         /// <summary>
         /// Name of this module
         /// </summary>
-        public override string Name
-        {
-            get { return ModuleName; }
-        }
+        public override string Name => ModuleName;
 
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public ITestModule TestModule { get; set; }
@@ -33,6 +29,8 @@ namespace Marvin.DependentTestModule
             Container.LoadComponents<ISimpleHelloWorldWcfConnector>();
         }
 
+        private ISimpleHelloWorldWcfConnector _connector;
+
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
@@ -40,12 +38,11 @@ namespace Marvin.DependentTestModule
         {
             Thread.Sleep(2000); // Just for system testing.
 
-            ISimpleHelloWorldWcfConnectorFactory factory = Container.Resolve<ISimpleHelloWorldWcfConnectorFactory>();
+            var factory = Container.Resolve<ISimpleHelloWorldWcfConnectorFactory>();
+            _connector = factory.Create(Config.SimpleHelloWorldWcfConnector);
 
-            ISimpleHelloWorldWcfConnector connector = factory.Create(Config.SimpleHelloWorldWcfConnector);
-
-            connector.Initialize(Config.SimpleHelloWorldWcfConnector);
-            connector.Start();
+            _connector.Initialize(Config.SimpleHelloWorldWcfConnector);
+            _connector.Start();
 
             // Activate facades
             ActivateFacade(_testModuleFacade);
@@ -60,15 +57,16 @@ namespace Marvin.DependentTestModule
 
             // Deactivate facades
             DeactivateFacade(_testModuleFacade);
+
+            // Stop connector
+            _connector.Stop();
+            _connector = null;
         }
         #endregion
 
         #region FacadeContainer
         private readonly DependentTestModuleFacade _testModuleFacade = new DependentTestModuleFacade();
-        IDependentTestModule IFacadeContainer<IDependentTestModule>.Facade
-        {
-            get { return _testModuleFacade; }
-        }
+        IDependentTestModule IFacadeContainer<IDependentTestModule>.Facade => _testModuleFacade;
 
         #endregion
     }
