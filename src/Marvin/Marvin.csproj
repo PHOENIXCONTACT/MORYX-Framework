@@ -272,6 +272,7 @@
     <Compile Include="Tools\Extensions\CustomAttributeProviderExtensions.cs" />
     <Compile Include="Tools\Extensions\DateTimeExtensions.cs" />
     <Compile Include="Tools\Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Tools\Extensions\EditableObjectExtensions.cs" />
     <Compile Include="Tools\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Tools\Extensions\StringExtensions.cs" />
     <Compile Include="Tools\Extensions\UnitOfWorkExtensions.cs" />
