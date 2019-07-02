@@ -120,7 +120,7 @@ namespace Marvin.Tests
                 {
                     {"011", DummyEnum.Unset },
                     {"022", DummyEnum.ValueB }
-                } 
+                }
             };
 
             //Arrange
@@ -291,7 +291,7 @@ namespace Marvin.Tests
         [Test]
         public void EncodeObject()
         {
-            // Arrange 
+            // Arrange
             var dummy = new DummyClass
             {
                 Number = 10,
@@ -360,7 +360,7 @@ namespace Marvin.Tests
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     //change "Key" + 10
                     newInstance.Key.Name = (prefill + i).ToString();
-                    // change "Value" 
+                    // change "Value"
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
                     newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
@@ -430,7 +430,7 @@ namespace Marvin.Tests
                     //change "Key" + 10
                     entry.Key.Name = "1" + entry.SubEntries[0].Value.Current;
                     //entry.Key.Identifier = EntryKey.CreatedIdentifier;
-                    // change "Value" 
+                    // change "Value"
                     entry.SubEntries[0].Value.Current = "1" + entry.SubEntries[0].Value.Current;
                     entry.SubEntries[1].Value.Current = entry.SubEntries[1].Value.Possible[2];
                 }
@@ -728,7 +728,7 @@ namespace Marvin.Tests
             var targetStreamDummy = new MemoryStreamDummy("");
             var streamInstanceToCheck = targetStreamDummy.MemoryStream;
             var entry = EntryConvert.EncodeObject(streamDummy);
-            
+
             // Act
             EntryConvert.UpdateInstance(targetStreamDummy, entry);
 
@@ -842,7 +842,6 @@ namespace Marvin.Tests
 
         [TestCase("en-US", Description = "Testing format parsing and writing with en-US")]
         [TestCase("de-DE", Description = "Testing format parsing and writing with de-DE")]
-        [TestCase("de-BE", Description = "Testing format parsing and writing with de-BE")]
         [TestCase("fr-FR", Description = "Testing format parsing and writing with fr-FR")]
         [TestCase("ru-RU", Description = "Testing format parsing and writing with ru-RU")]
         [TestCase("zh-CN", Description = "Testing format parsing and writing with zh-CN")]
@@ -969,7 +968,7 @@ namespace Marvin.Tests
         {
             var obj = new DummyClass();
             var elements = new List<SubClass>();
-            var dictionary = new Dictionary<int, SubClass>(); 
+            var dictionary = new Dictionary<int, SubClass>();
             for (int i = 1; i <= values; i++)
             {
                 elements.Add(new SubClass { Foo = i, Enum = DummyEnum.ValueA });
