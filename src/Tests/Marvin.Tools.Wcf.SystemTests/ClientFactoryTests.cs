@@ -150,7 +150,7 @@ namespace Marvin.Tools.Wcf.SystemTests
                 _clientFactory.ClientConnected -= OnClientConnected;
                 _clientFactory.ClientDisconnected -= OnClientDisconnected;
                 _clientFactory.ClientInfoChanged -= OnClientInfoChanged;
-                
+
                 _clientFactory.Dispose();
 
                 _clientFactory = null;

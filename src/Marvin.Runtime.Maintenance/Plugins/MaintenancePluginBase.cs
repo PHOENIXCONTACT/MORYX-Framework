@@ -38,16 +38,12 @@ namespace Marvin.Runtime.Maintenance.Plugins
         /// <inheritdoc />
         public virtual void Stop()
         {
-            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+            _host?.Stop();
         }
 
         /// <inheritdoc />
         public virtual void Dispose()
         {
-            if (_host == null)
-                return;
-
-            _host.Dispose();
             _host = null;
         }
     }

@@ -16,7 +16,7 @@ namespace Marvin.Runtime.Kernel
         private readonly EndpointCollector _collector;
         private readonly WcfConfig _wcfConfig;
         private readonly IModuleLogger _logger;
-        
+
         private ServiceHost _service;
         private readonly ITypedHostFactory _factory;
 
@@ -98,8 +98,7 @@ namespace Marvin.Runtime.Kernel
             var port = config.BindingType == ServiceBindingType.NetTcp ? _wcfConfig.NetTcpPort : _wcfConfig.HttpPort;
 
             // Override binding timeouts if necessary
-            var extendedConfig = config as ExtendedHostConfig;
-            if (extendedConfig != null && extendedConfig.OverrideFrameworkConfig)
+            if (config is ExtendedHostConfig extendedConfig && extendedConfig.OverrideFrameworkConfig)
             {
                 // Override binding timeouts if necessary
                 port = extendedConfig.Port;
@@ -126,7 +125,7 @@ namespace Marvin.Runtime.Kernel
 
             // Add  behaviors
             endpoint.Behaviors.Add(new CultureBehavior());
-            
+
             if (config.BindingType == ServiceBindingType.WebHttp)
             {
                 endpoint.Behaviors.Add(new WebHttpBehavior());
@@ -172,12 +171,6 @@ namespace Marvin.Runtime.Kernel
 
         /// <inheritdoc />
         public void Stop()
-        {
-            //TODO: Distinguish between IDisposable.Dispose() and Stop()
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
         {
             _collector.RemoveEndpoint(_hostConfig.Endpoint);
             _collector.RemoveService(_type);

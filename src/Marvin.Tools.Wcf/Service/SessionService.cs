@@ -6,7 +6,7 @@ using Marvin.Logging;
 namespace Marvin.Tools.Wcf
 {
     /// <summary>
-    /// Baseclass of a WebService without callback
+    /// BaseClass of a WebService without callback
     /// </summary>
     /// <typeparam name="TManager">Type of the service manager</typeparam>
     public abstract class SessionService<TManager> : ISessionService

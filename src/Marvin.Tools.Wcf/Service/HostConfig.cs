@@ -23,7 +23,7 @@ namespace Marvin.Tools.Wcf
         public ServiceBindingType BindingType { get; set; }
 
         /// <summary>
-        /// Flag if service requires Authentification
+        /// Flag if service requires Authentication
         /// </summary>
         [DataMember]
         public bool RequiresAuthentification { get; set; }

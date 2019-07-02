@@ -14,6 +14,6 @@ namespace Marvin.DependentTestModule
             ConnectorHost.BindingType = ServiceBindingType.BasicHttp;
         }
 
-        public override string PluginName { get { return SimpleHelloWorldWcfConnector.PluginName; }}
+        public override string PluginName => nameof(SimpleHelloWorldWcfConnector);
     }
 }
