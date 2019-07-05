@@ -23,12 +23,12 @@ namespace Marvin.AbstractionLayer.Drivers.Plc
     /// Extension of the <see cref="IPlcDriver"/> interface that allows changing serializer
     /// </summary>
     /// <typeparam name="THeader"></typeparam>
-    public interface IPlcDriver<THeader> : IPlcDriver 
+    public interface IPlcDriver<THeader> : IPlcDriver
         where THeader : IBinaryHeader, new()
     {
         /// <summary>
         /// Serializer used by this plc driver instance
         /// </summary>
-        IByteSerializer<THeader> Serializer { get; set; } 
+        IByteSerializer<THeader> Serializer { get; set; }
     }
 }
