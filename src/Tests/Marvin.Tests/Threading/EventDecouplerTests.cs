@@ -131,12 +131,10 @@ namespace Marvin.Tests.Threading
             else
                 SimpleEventSource += _parallelOperations.DecoupleListener(FaultyListener);
             // Act
-            var cycles = 5;
             SimpleEventSource(this, EventArgs.Empty);
-            while (!logger.Messages.Any() && cycles > 0)
+            while (!logger.Messages.Any())
             {
                 Thread.Sleep(1);
-                cycles--;
             }
 
             // Assert
