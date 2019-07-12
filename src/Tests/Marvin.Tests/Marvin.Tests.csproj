@@ -1,189 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.11.0\build\NUnit.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{05891405-D460-4EC2-9906-B9FF2FF27006}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Tests</RootNamespace>
-    <AssemblyName>Marvin.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Bindings\Dummies\Branch.cs" />
-    <Compile Include="Bindings\DelegateResolverTest.cs" />
-    <Compile Include="Bindings\Dummies\ISomeInterface.cs" />
-    <Compile Include="Bindings\Dummies\Foo.cs" />
-    <Compile Include="Bindings\BindingResolverExtensionTests.cs" />
-    <Compile Include="Bindings\Dummies\SomeComplexClass.cs" />
-    <Compile Include="Bindings\ReflectionResolverTests.cs" />
-    <Compile Include="Bindings\Dummies\SomeClass.cs" />
-    <Compile Include="Bindings\Dummies\SomeHiddenPropertyClass.cs" />
-    <Compile Include="Bindings\Dummies\SomeImplementation.cs" />
-    <Compile Include="Bindings\UpdateValueTest.cs" />
-    <Compile Include="Collections\DelayQueueTests.cs" />
-    <Compile Include="Collections\StringNumericComparerTests.cs" />
-    <Compile Include="Collections\SortableCollectionTests.cs" />
-    <Compile Include="Collections\SortObj.cs" />
-    <Compile Include="Configuration\CachedConfigManagerTests.cs" />
-    <Compile Include="Configuration\ConfigManagerTests.cs" />
-    <Compile Include="Configuration\FaultyConfig.cs" />
-    <Compile Include="Serialization\EntryModelDummyServer.cs" />
-    <Compile Include="Serialization\EntryToModelConverterTests.cs" />
-    <Compile Include="Serialization\LocalizedClass.cs" />
-    <Compile Include="Serialization\PossibleValues\PossibleValuesAttributeTests.cs" />
-    <Compile Include="Configuration\TestConfig.cs" />
-    <Compile Include="Configuration\Transformer\ModelTransformerTest.cs" />
-    <Compile Include="Configuration\Transformer\TransformerTestConfig.cs" />
-    <Compile Include="Configuration\ValueProvider\NoStringValueProviderFilter.cs" />
-    <Compile Include="Configuration\ValueProvider\TestConfig1.cs" />
-    <Compile Include="Configuration\ValueProvider\TestConfig4.cs" />
-    <Compile Include="Configuration\ValueProvider\TestConfig3.cs" />
-    <Compile Include="Configuration\ValueProvider\TestConfig2.cs" />
-    <Compile Include="Configuration\ValueProvider\ValueProviderTests.cs" />
-    <Compile Include="Extensions\AppDomain\ReferenceClass.cs" />
-    <Compile Include="Extensions\ReflectionToolTests.cs" />
-    <Compile Include="Extensions\AppDomain\AbstractBaseClass.cs" />
-    <Compile Include="Extensions\AppDomain\BaseClass.cs" />
-    <Compile Include="Extensions\AppDomain\ChildClass1.cs" />
-    <Compile Include="Extensions\AppDomain\ChildClass2.cs" />
-    <Compile Include="Extensions\AppDomain\GranChildClass1.cs" />
-    <Compile Include="Extensions\AppDomain\GranChildClass2.cs" />
-    <Compile Include="Extensions\AppDomain\IBaseInterface.cs" />
-    <Compile Include="Extensions\AppDomain\ITestInterface.cs" />
-    <Compile Include="Extensions\CustomAttributeProviderExtensionTests.cs" />
-    <Compile Include="Extensions\DateTimeExtensionTests.cs" />
-    <Compile Include="Extensions\EnumerableExtensionTests.cs" />
-    <Compile Include="Serialization\strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>strings.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Logging\LoggerManagementTests.cs" />
-    <Compile Include="Logging\LoggingTests.cs" />
-    <Compile Include="Logging\ModuleMock.cs" />
-    <Compile Include="Logging\TestLoggerManagement.cs" />
-    <Compile Include="Modules\PriorityTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\ArrayDummy.cs" />
-    <Compile Include="Serialization\CloneTests.cs" />
-    <Compile Include="Serialization\ConstructorDummy.cs" />
-    <Compile Include="Serialization\DictionaryClass.cs" />
-    <Compile Include="Serialization\DummyClass.cs" />
-    <Compile Include="Serialization\EditorVisibleDummies.cs" />
-    <Compile Include="Serialization\EditorVisibleSerializationTests.cs" />
-    <Compile Include="Serialization\ExceptionDummy.cs" />
-    <Compile Include="Serialization\FileStreamDummy.cs" />
-    <Compile Include="Serialization\ListDummy.cs" />
-    <Compile Include="Serialization\LocalizationSerializationTests.cs" />
-    <Compile Include="Serialization\SerializationTests.cs" />
-    <Compile Include="Serialization\MemoryStreamDummy.cs" />
-    <Compile Include="StateMachines\StateMachineTests.cs" />
-    <Compile Include="StateMachines\TestMachine\AState.cs" />
-    <Compile Include="StateMachines\TestMachine\BState.cs" />
-    <Compile Include="StateMachines\TestMachine\CState.cs" />
-    <Compile Include="StateMachines\TestMachine\MyContext.cs" />
-    <Compile Include="StateMachines\TestMachine\MyStateBase.cs" />
-    <Compile Include="Threading\EventDecouplerTests.cs" />
-    <Compile Include="Threading\NotSoParallelOpsTests.cs" />
-    <Compile Include="Threading\ParallelOperationTests.cs" />
-    <Compile Include="Threading\NonStackingTimerCallbackTests.cs" />
-    <Compile Include="Workflows\CompilerTests.cs" />
-    <Compile Include="Workflows\Dummies\DefaultValueStep.cs" />
-    <Compile Include="Workflows\Dummies\DummyStep.cs" />
-    <Compile Include="Workflows\Dummies\DummyStepCompiler.cs" />
-    <Compile Include="Workflows\Dummies\DummyToken.cs" />
-    <Compile Include="Workflows\Dummies\EmptyParametersStep.cs" />
-    <Compile Include="Workflows\Dummies\InvalidStep.cs" />
-    <Compile Include="Workflows\Dummies\ParameterStep.cs" />
-    <Compile Include="Workflows\Dummies\PausableStep.cs" />
-    <Compile Include="Workflows\Dummies\WorkplanDummy.cs" />
-    <Compile Include="Workflows\EngineTests.cs" />
-    <Compile Include="Workflows\PathPredictionTests.cs" />
-    <Compile Include="Workflows\PlacesTests.cs" />
-    <Compile Include="Workflows\SerializationTest.cs" />
-    <Compile Include="Workflows\StepTests.cs" />
-    <Compile Include="Workflows\TransitionTests.cs" />
+    <ProjectReference Include="..\..\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj" />
+    <ProjectReference Include="..\..\Marvin\Marvin.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
-      <Project>{505DF475-5FF5-47CC-9E3B-BBE16C359F0E}</Project>
-      <Name>Marvin.TestTools.UnitTest</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
-      <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
-      <Name>Marvin</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Workflows\packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Serialization\strings.de.resx" />
-    <EmbeddedResource Include="Serialization\strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>strings.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit.3.11.0\build\NUnit.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
