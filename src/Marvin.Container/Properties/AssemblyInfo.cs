@@ -5,7 +5,6 @@ using Marvin.Container;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.Container")]
 [assembly: AssemblyDescription("Handling of container structure.")]
 [assembly: AssemblyCulture("")]
 
