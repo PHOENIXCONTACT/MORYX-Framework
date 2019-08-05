@@ -44,7 +44,7 @@ namespace Marvin.Serialization
             : base(property, formatProvider)
         {
             Key = key;
-            _converter = EntryToModelConverter.Create(property.PropertyType);
+            _converter = EntryToModelConverter.Create(property.PropertyType, formatProvider);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Marvin.Serialization
         protected override object ReadFromConfig(Entry entry)
         {
             var instance = Activator.CreateInstance(Property.PropertyType);
-            _converter.FromConfig(entry.SubEntries, instance);
+            _converter.FromModel(entry, instance);
             return instance;
         }
 
@@ -63,7 +63,7 @@ namespace Marvin.Serialization
         public override void ReadValue(object source, Entry target)
         {
             var value = Property.GetValue(source);
-            _converter.ToConfig(value, target.SubEntries);
+            _converter.ToModel(value, target);
         }
     }
 }

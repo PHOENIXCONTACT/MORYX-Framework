@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Marvin.Serialization
@@ -29,7 +30,17 @@ namespace Marvin.Serialization
         /// <returns></returns>
         public static EntryToModelConverter Create<T>()
         {
-            return Create(typeof(T));
+            return Create(typeof(T), CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Create a new converter instance using the generic type
+        /// </summary>
+        /// <typeparam name="T">Type of object</typeparam>
+        /// <returns></returns>
+        public static EntryToModelConverter Create<T>(IFormatProvider formatProvider)
+        {
+            return Create(typeof(T), formatProvider);
         }
 
         /// <summary>
@@ -37,7 +48,7 @@ namespace Marvin.Serialization
         /// </summary>
         public static EntryToModelConverter Create(object target)
         {
-            return Create(target.GetType());
+            return Create(target.GetType(), CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -54,7 +65,7 @@ namespace Marvin.Serialization
         /// <summary>
         /// Read values from config to view model
         /// </summary>
-        public void FromConfig(IEnumerable<Entry> source, object target)
+        public void FromModel(Entry source, object target)
         {
             foreach (var match in EnumerateConfig(source))
             {
@@ -65,7 +76,7 @@ namespace Marvin.Serialization
         /// <summary>
         /// Copy values from model to config
         /// </summary>
-        public void ToConfig(object source, IEnumerable<Entry> target)
+        public void ToModel(object source, Entry target)
         {
             foreach (var match in EnumerateConfig(target))
             {
@@ -78,10 +89,10 @@ namespace Marvin.Serialization
         /// </summary>
         /// <param name="model">Config model</param>
         /// <returns></returns>
-        private IEnumerable<PropertyInstanceWrapper> EnumerateConfig(IEnumerable<Entry> model)
+        private IEnumerable<PropertyInstanceWrapper> EnumerateConfig(Entry model)
         {
             // Fast access cache of the config
-            var cache = model.ToDictionary(e => e.Key.Identifier, e => e);
+            var cache = model.SubEntries.ToDictionary(e => e.Key.Identifier, e => e);
             foreach (var property in _properties)
             {
                 if (cache.ContainsKey(property.Key))
@@ -97,6 +108,7 @@ namespace Marvin.Serialization
         private static readonly ITypeWrapperFactory[] TypeWrapperFactories =
         {
             new CollectionWrapperFactory(),
+            new DictionaryWrapperFactory(),
             new ClassWrapperFactory(),
             new PossibleValuesWrapperFactory(),
             new AttributeWrapperFactory(),

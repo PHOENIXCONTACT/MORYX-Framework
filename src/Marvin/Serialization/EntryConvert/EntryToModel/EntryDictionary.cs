@@ -8,67 +8,64 @@ namespace Marvin.Serialization
     /// Collection type for typed representations of config collections
     /// </summary>
     /// <typeparam name="T">Type of elements in the collection</typeparam>
-    public class EntryCollection<T> : EntryCollectionBase<T>
+    public class EntryDictionary<T> : EntryCollectionBase<T>
         where T : class, new()
     {
         /// <summary>
         /// Internally we wrap an observable collection
         /// </summary>
-        private readonly IList<ModelAndEntry> _internalCollection = new List<ModelAndEntry>();
+        private readonly Dictionary<string, ModelAndEntry> _internalCollection = new Dictionary<string, ModelAndEntry>();
 
         /// <summary>
         /// Create a new instance of the collection
         /// </summary>
         /// <param name="collectionRoot"></param>
-        public EntryCollection(Entry collectionRoot) : base(collectionRoot)
+        public EntryDictionary(Entry collectionRoot) : base(collectionRoot)
         {
             foreach (var subEntry in collectionRoot.SubEntries)
             {
-                Add(Convert(subEntry));
+                _internalCollection.Add(subEntry.Key.Identifier, Convert(subEntry));
             }
 
-            LoadPrototype();
-        }
-
-        /// <summary>
-        /// Adds the prototype instance to the collection
-        /// </summary>
-        public void AddPrototype()
-        {
-            Add(InternalPrototype);
             LoadPrototype();
         }
 
         /// <summary>
         /// Add a new entry to the collection
         /// </summary>
-        public void Add(string type)
+        public void Add(string key, string type)
         {
             var newEntry = CollectionRoot.GetPrototype(type).Instantiate();
             var converted = Convert(newEntry);
-            Add(converted);
+            Add(key, converted);
         }
 
-        private void Add(ModelAndEntry newItem)
+        private void Add(string key, ModelAndEntry newItem)
         {
-            _internalCollection.Add(newItem);
+            _internalCollection.Add(key, newItem);
             RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItem.Instance));
         }
 
         /// <summary>
         /// Remove item from collection
         /// </summary>
-        public void Remove(T item)
+        public void Remove(string key)
         {
-            for (var index = 0; index < _internalCollection.Count; index++)
+            var item = _internalCollection.FirstOrDefault(k => k.Key == key);
+            if (_internalCollection.Remove(key))
             {
-                if (_internalCollection[index].Instance != item)
-                    continue;
-
-                _internalCollection.RemoveAt(index);
-                RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
-                break;
+                RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item.Value.Instance));
             }
+        }
+
+        /// <summary>
+        /// Returns an instance by the given key
+        /// </summary>
+        /// <param name="key"></param>
+        public T this[string key]
+        {
+            get { return _internalCollection[key].Instance; }
+            set { _internalCollection[key].Instance = value; }
         }
 
         /// <inheritdoc />
@@ -80,16 +77,21 @@ namespace Marvin.Serialization
         /// <summary>
         /// Write instance values to model
         /// </summary>
-        private static Entry WriteToEntry(ModelAndEntry item)
+        private static Entry WriteToEntry(KeyValuePair<string, ModelAndEntry> item)
         {
-            Converter.ToModel(item.Instance, item.Model);
-            return item.Model;
+            Converter.ToModel(item.Value.Instance, item.Value.Model);
+            return item.Value.Model;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+        /// </returns>
         public override IEnumerator<T> GetEnumerator()
         {
-            return _internalCollection.Select(e => e.Instance).GetEnumerator();
+            return _internalCollection.Select(e => e.Value.Instance).GetEnumerator();
         }
 
         /// <summary>
@@ -102,7 +104,5 @@ namespace Marvin.Serialization
         {
             return $"{typeof(T).Name}[{_internalCollection.Count}]";
         }
-
-
     }
 }
