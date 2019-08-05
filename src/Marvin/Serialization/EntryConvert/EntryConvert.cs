@@ -776,7 +776,7 @@ namespace Marvin.Serialization
         /// <param name="value">Value to convert</param>
         /// <param name="formatProvider">Format provider used to convert the value to string</param>
         /// <returns></returns>
-        private static string ConvertToString(object value, IFormatProvider formatProvider)
+        internal static string ConvertToString(object value, IFormatProvider formatProvider)
         {
             var convertible = value as IConvertible;
             return convertible != null ? convertible.ToString(formatProvider) : value?.ToString();

@@ -129,6 +129,9 @@
     <Compile Include="Configuration\IProxyConfig.cs" />
     <Compile Include="Configuration\IUpdatableConfig.cs" />
     <Compile Include="Configuration\PasswordAttribute.cs" />
+    <Compile Include="Serialization\EntryConvert\EntryToModel\EntryCollectionBase.cs" />
+    <Compile Include="Serialization\EntryConvert\EntryToModel\EntryDictionary.cs" />
+    <Compile Include="Serialization\EntryConvert\EntryToModel\TypeWrapper\DictionaryWrapper.cs" />
     <Compile Include="Serialization\PossibleValues\IntegerStepsAttribute.cs" />
     <Compile Include="Serialization\PossibleValues\PluginConfigsAttribute.cs" />
     <Compile Include="Serialization\PossibleValues\PluginNameSelectorAttribute.cs" />

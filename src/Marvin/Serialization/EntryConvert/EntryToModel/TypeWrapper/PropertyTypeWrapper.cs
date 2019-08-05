@@ -36,7 +36,7 @@ namespace Marvin.Serialization
         public bool Required { get; protected internal set; }
 
         /// <summary>
-        /// Create a typewrapper for a certain object and config
+        /// Create a type wrapper for a certain object and config
         /// </summary>
         /// <param name="value">Value that represents this property in the config</param>
         public PropertyInstanceWrapper Instantiate(Entry value)
@@ -59,7 +59,7 @@ namespace Marvin.Serialization
         public virtual void ReadValue(object source, Entry target)
         {
             var value = Property.GetValue(source);
-            target.Value.Current = value?.ToString() ?? string.Empty;
+            target.Value.Current = EntryConvert.ConvertToString(value, FormatProvider) ?? string.Empty;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Marvin.Serialization
         /// </summary>
         protected virtual object ReadFromConfig(Entry entry)
         {
-            // Synchronus resolution
+            // Synchronous resolution
             return EntryConvert.ToObject(Property.PropertyType, entry.Value.Current, FormatProvider);
         }
 

@@ -34,7 +34,7 @@ namespace Marvin.Serialization
         internal static string FromAttributeOrNull(PropertyInfo property)
         {
             var att = property.GetCustomAttribute<ConfigKeyAttribute>();
-            return att == null ? null : att.Key;
+            return att?.Key;
         }
     }
 
@@ -46,7 +46,7 @@ namespace Marvin.Serialization
         /// <summary>
         /// Key in config structure
         /// </summary>
-        public string Key { get; private set; }
+        public string Key { get; }
 
         /// <summary>
         /// Fetch possible value instead of current value
