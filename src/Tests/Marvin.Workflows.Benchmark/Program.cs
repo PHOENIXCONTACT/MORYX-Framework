@@ -80,17 +80,17 @@ namespace Marvin.Workflows.Benchmark
             Console.WriteLine("|------+-----------+-----------+----------");
             foreach (var step in compiled.Steps)
             {
-                Console.WriteLine("|  {0:D2}  |   {1}   |    {2:D2}     |  {3} ", 
+                Console.WriteLine("|  {0:D2}  |   {1}   |    {2:D2}     |  {3} ",
                     step.Id, step.IsOutfeed.ToString().PadRight(5), step.Station, step.Name);
             }
 
             Console.WriteLine();
             Console.WriteLine("Decision matrix:");
             // Write header
-            Console.Write("|   |");   
+            Console.Write("|   |");
             foreach (var step in compiled.Steps.Where(s => !s.IsOutfeed))
             {
-                Console.Write(" {0:D2} |", step.Id);   
+                Console.Write(" {0:D2} |", step.Id);
             }
             Console.WriteLine();
             Console.Write("|---+");
