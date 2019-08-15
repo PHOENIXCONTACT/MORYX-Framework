@@ -54,6 +54,7 @@
     <Compile Include="Modules\ConfigParser.cs" />
     <Compile Include="Modules\FacadeBase.cs" />
     <Compile Include="Modules\ILifeCycleBoundFacade.cs" />
+    <Compile Include="Modules\Notifications\LogMessageToNotification.cs" />
     <Compile Include="Modules\States\ReadyState.cs" />
     <Compile Include="Modules\States\FailureState.cs" />
     <Compile Include="Modules\States\InitializingState.cs" />

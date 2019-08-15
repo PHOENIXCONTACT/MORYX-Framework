@@ -291,26 +291,12 @@ namespace Marvin.Runtime.Modules
 
         private void ProcessLogMessage(ILogMessage message)
         {
-            var notification = new ModuleNotification(message.Level,
-                                               $"Component {message.ClassName} reported an {message.Level}: {message.Message}", 
-                                                      message.Exception,
-                                    n => Notifications.Remove(n));
+            // Ignore messages lower than warning
+            if(message.Level < LogLevel.Warning)
+                return;
 
-            switch (message.Level)
-            {
-                case LogLevel.Trace:
-                case LogLevel.Debug:
-                case LogLevel.Info:
-                    // Don't create notifications for this kind of messages
-                    return;
-                case LogLevel.Warning:
-                case LogLevel.Error:
-                case LogLevel.Fatal:
-                    Notifications.Add(notification);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var notification = LogMessageToNotification.Convert(message, n => Notifications.Remove(n));
+            Notifications.Add(notification);
         }
 
         /// <summary>
