@@ -77,7 +77,7 @@ namespace Marvin.Products.Management
             // Deactivate facades
             DeactivateFacade(_productManagement);
 
-            _host.Dispose();
+            _host.Stop();
             _host = null;
         }
         #endregion

@@ -75,32 +75,32 @@
       <HintPath>..\..\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev004731\lib\net461\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.5699, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev005699\lib\net461\Marvin.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Container, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Container.3.0.0-dev004731\lib\net461\Marvin.Container.dll</HintPath>
+    <Reference Include="Marvin.Container, Version=3.0.0.5699, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Container.3.0.0-dev005699\lib\net461\Marvin.Container.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Model.3.0.0-dev004731\lib\net461\Marvin.Model.dll</HintPath>
+    <Reference Include="Marvin.Model, Version=3.0.0.5699, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Model.3.0.0-dev005699\lib\net461\Marvin.Model.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Model.Npgsql, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Model.Npgsql.3.0.0-dev004731\lib\net461\Marvin.Model.Npgsql.dll</HintPath>
+    <Reference Include="Marvin.Model.Npgsql, Version=3.0.0.5699, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Model.Npgsql.3.0.0-dev005699\lib\net461\Marvin.Model.Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev004731\lib\net461\Marvin.Runtime.dll</HintPath>
+    <Reference Include="Marvin.Runtime, Version=3.0.0.5699, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev005699\lib\net461\Marvin.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime.Kernel, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Kernel.3.0.0-dev004731\lib\net461\Marvin.Runtime.Kernel.dll</HintPath>
+    <Reference Include="Marvin.Runtime.Kernel, Version=3.0.0.5699, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Kernel.3.0.0-dev005699\lib\net461\Marvin.Runtime.Kernel.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime.Maintenance, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.3.0.0-dev004731\lib\net461\Marvin.Runtime.Maintenance.dll</HintPath>
+    <Reference Include="Marvin.Runtime.Maintenance, Version=3.0.0.5699, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.3.0.0-dev005699\lib\net461\Marvin.Runtime.Maintenance.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Runtime.Maintenance.Web, Version=3.0.0.3505, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.Web.3.0.0-dev003505\lib\net461\Marvin.Runtime.Maintenance.Web.dll</HintPath>
+    <Reference Include="Marvin.Runtime.Maintenance.Web, Version=3.0.0.4925, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.Web.3.0.0-dev004925\lib\net461\Marvin.Runtime.Maintenance.Web.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.4731, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev004731\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.5699, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev005699\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

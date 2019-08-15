@@ -54,7 +54,7 @@ namespace Marvin.Resources.Interaction
         /// <inheritdoc />
         protected override void OnDispose()
         {
-            Host.Dispose();
+            Host.Stop();
 
             base.OnDispose();
         }
