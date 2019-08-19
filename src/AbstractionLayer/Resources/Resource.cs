@@ -10,7 +10,7 @@ namespace Marvin.AbstractionLayer.Resources
     /// Base class for all resources to reduce boilerplate code
     /// </summary>
     [DataContract]
-    public abstract class Resource : ILoggingComponent, IResource, IPlugin, IDisposable, IPersistentObject, IInitializable
+    public abstract class Resource : ILoggingComponent, IResource, IInitializablePlugin, IDisposable, IPersistentObject
     {
         #region Dependencies
 
