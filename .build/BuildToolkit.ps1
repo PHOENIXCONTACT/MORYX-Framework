@@ -11,7 +11,6 @@ $GitLinkVersion = "3.1.0";
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
 $BuildTools = "$RootPath\packages";
-$DotBuild = "$RootPath\.build";
 
 # Artifacts
 $ArtifactsDir = "$RootPath\artifacts";
@@ -33,7 +32,7 @@ $NugetPushCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nug
 $NugetPackageTarget = "http://packages-swtd.europe.phoenixcontact.com/nuget/MaRVIN-CI/";
 
 # Load partial scripts
-. "$DotBuild\Output.ps1";
+. "$PSScriptRoot\Output.ps1";
 
 # Define Tools
 $global:GitCli = "";
@@ -214,6 +213,12 @@ function Invoke-Nunit([string]$SearchPath = $RootPath, [string]$SearchFilter = "
 	$randomIncrement = Get-Random -Minimum 2000 -Maximum 2100
     Write-Step "Running $Name Tests: $SearchPath"
 
+    $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
+    if ($testProjects.Length -eq 0) {
+        Write-Host-Warning "No test projects found!"
+        return;
+    }
+
 	$env:PORT_INCREMENT = $randomIncrement;
 	
     if (-not (Test-Path $global:NUnitCli)) {
@@ -221,8 +226,6 @@ function Invoke-Nunit([string]$SearchPath = $RootPath, [string]$SearchFilter = "
     }
 
     CreateFolderIfNotExists $NunitReportsDir;
-
-    $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
 
 	ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
@@ -255,6 +258,12 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
         return;
     }
 
+    $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
+    if ($testProjects.Length -eq 0) {
+        Write-Host-Warning "No test projects found!"
+        return;
+    }
+
     if (-not (Test-Path $global:NUnitCli)) {
         Install-Tool "NUnit.Console" $NunitVersion $global:NunitCli;
     }
@@ -271,7 +280,6 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     CreateFolderIfNotExists $CoberturaReportsDir;
     CreateFolderIfNotExists $NunitReportsDir;
 
-    $testProjects = Get-ChildItem $SearchPath -Recurse -Include $SearchFilter
     ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
         $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MARVIN_BUILD_CONFIG, "$projectName.dll");
