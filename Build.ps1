@@ -20,15 +20,6 @@ $env:MARVIN_BUILDNUMBER = [int]::Parse($env:MARVIN_BUILDNUMBER) + 364;
 # Load Toolkit
 . ".build\BuildToolkit.ps1"
 
-# Set build version to 15 if build in CI 
-# CI runner have problems with satelite assemblies in msbuild-14
-if ($env:GITLAB_CI) {
-    $MsBuildVersion = "15.0"
-}
-else {
-    $MsBuildVersion = "14.0"
-}
-
 # Initialize Toolkit
 Invoke-Initialize -Version (Get-Content "VERSION");
 

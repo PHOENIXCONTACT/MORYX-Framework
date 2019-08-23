@@ -17,7 +17,7 @@ cache:
 Build: 
   stage: build
   tags:
-    - vs2015
+    - msbuild16
     - powershell
   script:
     - .\build.ps1 -SetAssemblyVersion -Build -Pack
@@ -30,7 +30,7 @@ Build:
 SmokeTests: 
   stage: test
   tags:
-    - vs2015
+    - msbuild16
     - postgres
     - powershell
   script: .\build.ps1 -SmokeTests  
@@ -38,7 +38,7 @@ SmokeTests:
 UnitTests: 
   stage: test
   tags:
-    - vs2015
+    - msbuild16
     - powershell
   script: .\build.ps1 -UnitTests 
   artifacts:
@@ -49,7 +49,7 @@ UnitTests:
 IntegrationTests: 
   stage: test
   tags:
-    - vs2015
+    - msbuild16
     - powershell
   script: .\build.ps1 -IntegrationTests
   artifacts:
@@ -60,7 +60,7 @@ IntegrationTests:
 SystemTests: 
   stage: test
   tags:
-    - vs2015
+    - msbuild16
     - powershell
   script: .\build.ps1 -SystemTests
   artifacts:
@@ -71,7 +71,7 @@ SystemTests:
 GenerateDocs:
   stage: documentation
   tags:
-    - vs2015
+    - msbuild16
     - powershell
   script: 
     - .\build.ps1 -CoverReport -GenerateDocs 
@@ -91,7 +91,7 @@ PublishDocs:
 PublishPackages: 
   stage: publish
   tags:
-    - vs2015
+    - msbuild16
     - powershell
   script: 
     - .\build.ps1 -Publish

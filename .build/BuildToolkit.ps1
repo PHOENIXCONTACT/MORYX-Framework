@@ -1,11 +1,11 @@
 # Tool Versions
-$MsBuildVersion = "14.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
-$NunitVersion = "3.9.0";
+$MsBuildVersion = "15.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
+$NunitVersion = "3.10.0";
 $OpenCoverVersion = "4.7.922";
 $DocFxVersion = "2.40.11";
 $OpenCoverToCoberturaVersion = "0.3.4";
-$ReportGeneratorVersion = "4.0.15";
-$VswhereVersion = "2.6.7";
+$ReportGeneratorVersion = "4.2.15";
+$VswhereVersion = "2.7.1";
 $GitLinkVersion = "3.1.0";
 
 # Folder Pathes
@@ -27,9 +27,9 @@ $CoberturaReportsDir = "$ArtifactsDir\Tests"
 # Nuget
 $NugetConfig = "$RootPath\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
-$NugetCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nuget-4.7.1.exe";
-$NugetPushCliSource = "http://packages-swtd.europe.phoenixcontact.com/source/nuget-3.4.4.exe";
-$NugetPackageTarget = "http://packages-swtd.europe.phoenixcontact.com/nuget/MaRVIN-CI/";
+$NugetCliSource = "https://packages-ctvc.europe.phoenixcontact.com/source/nuget-4.7.1.exe";
+$NugetPushCliSource = "https://packages-ctvc.europe.phoenixcontact.com/source/nuget-3.4.4.exe";
+$NugetPackageTarget = "https://packages-ctvc.europe.phoenixcontact.com/nuget/MaRVIN-CI/";
 
 # Load partial scripts
 . "$PSScriptRoot\Output.ps1";
