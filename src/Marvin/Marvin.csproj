@@ -267,6 +267,7 @@
     <Compile Include="Threading\IParallelObservation.cs" />
     <Compile Include="Threading\IParallelObserver.cs" />
     <Compile Include="Threading\IParallelOperations.cs" />
+    <Compile Include="Threading\ParallelOperationsQueue.cs" />
     <Compile Include="Tools\AppDomainBuilder.cs" />
     <Compile Include="Tools\CallerId.cs" />
     <Compile Include="Tools\CrashHandler.cs" />

@@ -237,7 +237,7 @@ namespace Marvin.Threading
         {
             // Extract logger from target
             var logger = ExtractLoggerFromDelegate(target);
-            var decoupler = new EventDecoupler<TEventArgs>(target, this);
+            var decoupler = new EventDecoupler<TEventArgs>(target, this, logger);
 
             lock (_eventDecouplers)
                 _eventDecouplers.Add(target, decoupler);
@@ -319,64 +319,19 @@ namespace Marvin.Threading
         /// and forwards them on a dedicated worker thread
         /// </summary>
         /// <typeparam name="TEventArgs">Arguments for the <see cref="EventHandler{TEventArgs}"/> delegate</typeparam>
-        private class EventDecoupler<TEventArgs>
+        private class EventDecoupler<TEventArgs> : ParallelOperationsQueue<Tuple<object, TEventArgs>>
         {
-            /// <summary>
-            /// Thread counter of active 
-            /// </summary>
-            private int _pendingElements;
-
-            /// <summary>
-            /// Queue of unprocessed events
-            /// </summary>
-            private readonly ConcurrentQueue<Tuple<object, TEventArgs>> _eventQueue = new ConcurrentQueue<Tuple<object, TEventArgs>>();
-
-            /// <summary>
-            /// Target callback for the event
-            /// </summary>
-            private EventHandler<TEventArgs> EventTarget { get; }
-
-            /// <summary>
-            /// Reference to the managing <see cref="IParallelOperations"/> instance
-            /// </summary>
-            private ParallelOperations ParallelOperations { get; }
-
             /// <summary>
             /// Create a new <see cref="EventDecoupler{TEventArgs}"/> to decouple a single listener from an event
             /// </summary>
-            public EventDecoupler(EventHandler<TEventArgs> eventTarget, ParallelOperations parallelOperations)
+            public EventDecoupler(EventHandler<TEventArgs> eventTarget, IParallelOperations parallelOperations, IModuleLogger logger)
+             : base(elem => eventTarget(elem.Item1, elem.Item2), parallelOperations, logger)
             {
-                EventTarget = eventTarget;
-                ParallelOperations = parallelOperations;
-            }
-
-            /// <summary>
-            /// Target for the worker thread to process the event queue
-            /// </summary>
-            private void ProcessEventQueue()
-            {
-                do
-                {
-                    _eventQueue.TryDequeue(out var nextEvent);
-
-                    try
-                    {
-                        EventTarget.Invoke(nextEvent.Item1, nextEvent.Item2);
-                    }
-                    catch (Exception ex)
-                    {
-                        var logger = ParallelOperations.ExtractLoggerFromDelegate(EventTarget);
-                        logger.LogException(LogLevel.Error, ex, "Exception during decoupled event execution!");
-                    }
-                } while (Interlocked.Decrement(ref _pendingElements) > 0);
             }
 
             public void EventListener(object sender, TEventArgs eventArgs)
             {
-                _eventQueue.Enqueue(new Tuple<object, TEventArgs>(sender, eventArgs));
-
-                if (Interlocked.Increment(ref _pendingElements) == 1)
-                    ParallelOperations.ExecuteParallel(ProcessEventQueue);
+                Enqueue(new Tuple<object, TEventArgs>(sender, eventArgs));
             }
         }
     }
