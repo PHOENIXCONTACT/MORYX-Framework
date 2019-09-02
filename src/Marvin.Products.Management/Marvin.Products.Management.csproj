@@ -106,6 +106,8 @@
     <Compile Include="ModuleController\ModuleConfig.cs" />
     <Compile Include="ModuleController\ModuleController.cs" />
     <Compile Include="ModuleController\ModuleConsole.cs" />
+    <Compile Include="Plugins\Importers\DefaultImporter.cs" />
+    <Compile Include="Plugins\Importers\DefaultImporterConfig.cs" />
     <Compile Include="Plugins\Importers\IProductImporter.cs" />
     <Compile Include="Plugins\Importers\ProductImporterConfig.cs" />
     <Compile Include="Plugins\IProductStorage.cs" />

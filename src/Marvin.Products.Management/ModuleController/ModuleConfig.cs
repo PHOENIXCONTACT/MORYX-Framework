@@ -29,6 +29,17 @@ namespace Marvin.Products.Management
             };
         }
 
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            // Default importer is always included -> hence the name DEFAULT
+            Importers = new List<ProductImporterConfig>
+            {
+                new DefaultImporterConfig()
+            };
+        }
+
         /// <summary>
         /// The interaction host.
         /// </summary>
