@@ -1,4 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Serialization;
 
@@ -23,7 +26,7 @@ namespace Marvin.Resources.Interaction
         public string Name { get; set; }
 
         /// <summary>
-        /// Description of the recource.
+        /// Description of the resource
         /// </summary>
         [DataMember]
         public string Description { get; set; }
@@ -35,13 +38,20 @@ namespace Marvin.Resources.Interaction
         public string Type { get; set; }
 
         /// <summary>
+        /// Indicates that this model does not represent the full
+        /// resource but only its key properties
+        /// </summary>
+        [DataMember]
+        public bool PartiallyLoaded { get; set; }
+
+        /// <summary>
         /// A list of configs of the resource.
         /// </summary>
         [DataMember]
         public Entry Properties { get; set; }
 
         /// <summary>
-        /// User callable methods of the resource
+        /// User callable methods for instances of this type
         /// </summary>
         [DataMember]
         public MethodEntry[] Methods { get; set; }
@@ -61,12 +71,12 @@ namespace Marvin.Resources.Interaction
         internal bool DifferentFrom(Resource resource, ICustomSerialization serialization)
         {
             var different = resource.Name != Name ||
-                            resource.Description != Description;
+                           resource.Description != Description;
             if (different)
                 return true;
 
             // Do not compare values that were not transmitted
-            if (resource.Descriptor == null || Properties == null)
+            if (resource.Descriptor == null || PartiallyLoaded)
                 return false;
 
             var resourceProperties = EntryConvert.EncodeObject(resource.Descriptor, serialization);

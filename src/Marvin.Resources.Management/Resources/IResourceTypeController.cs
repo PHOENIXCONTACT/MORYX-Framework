@@ -11,9 +11,9 @@ namespace Marvin.Resources.Management
     internal interface IResourceTypeController : IPlugin
     {
         /// <summary>
-        /// Types derived from <see cref="Resource"/> and their derived types
+        /// Type tree starting at <see cref="Resource"/>
         /// </summary>
-        IEnumerable<ResourceTypeNode> RootTypes { get; }
+        ResourceTypeNode RootType { get; }
 
         /// <summary>
         /// Get the proxy for this resource

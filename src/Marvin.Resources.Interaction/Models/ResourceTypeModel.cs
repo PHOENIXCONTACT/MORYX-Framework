@@ -16,7 +16,7 @@ namespace Marvin.Resources.Interaction
         public string Name { get; set; }
 
         /// <summary>
-        /// Displayname of this resource type
+        /// Display name of this resource type
         /// </summary>
         [DataMember]
         public string DisplayName { get; set; }
@@ -38,6 +38,12 @@ namespace Marvin.Resources.Interaction
         /// </summary>
         [DataMember]
         public MethodEntry[] Constructors { get; set; }
+
+        /// <summary>
+        /// Reference properties of this type
+        /// </summary>
+        [DataMember]
+        public ReferenceTypeModel[] References { get; set; }
 
         /// <summary>
         /// Back reference to the base type

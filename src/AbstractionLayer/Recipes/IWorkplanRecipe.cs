@@ -14,7 +14,7 @@ namespace Marvin.AbstractionLayer
         IWorkplan Workplan { get; set; }
 
         /// <summary>
-        /// Steps that shall be skiped
+        /// Steps that shall be skipped
         /// </summary>
         ICollection<long> DisabledSteps { get; }
 

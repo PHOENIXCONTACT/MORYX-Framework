@@ -18,7 +18,7 @@ namespace Marvin.Products.Management
 
         public IRecipeManagement RecipeManagement { get; set; }
 
-        public IWorkplanManagement Workplans { get; set; }
+        public IWorkplans Workplans { get; set; }
 
         #endregion
 
@@ -36,10 +36,10 @@ namespace Marvin.Products.Management
 
         public string Name => ModuleController.ModuleName;
 
-        public IEnumerable<IProduct> GetAllProducts()
+        public IReadOnlyList<IProduct> GetProducts(ProductQuery query)
         {
             ValidateHealthState();
-            return ProductManager.GetAll();
+            return ProductManager.GetProducts(query);
         }
 
         public IProduct GetProduct(long id)
@@ -59,6 +59,12 @@ namespace Marvin.Products.Management
             ProductChanged?.Invoke(this, product);
         }
         public event EventHandler<IProduct> ProductChanged;
+
+        public IProduct Duplicate(IProduct template, ProductIdentity newIdentity)
+        {
+            ValidateHealthState();
+            return ProductManager.Duplicate(template.Id, newIdentity);
+        }
 
         public long SaveProduct(IProduct modifiedInstance)
         {
@@ -118,7 +124,7 @@ namespace Marvin.Products.Management
             ValidateHealthState();
             var wp = Workplans.LoadWorkplan(workplanId);
             if(wp == null)
-                throw new KeyNotFoundException(string.Format("No workplan with id '{0}' found!", workplanId));
+                throw new KeyNotFoundException($"No workplan with id '{workplanId}' found!");
             return wp;
         }
 

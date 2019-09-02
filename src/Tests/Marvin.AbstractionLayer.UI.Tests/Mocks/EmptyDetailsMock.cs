@@ -5,9 +5,10 @@
     {
         public bool InitializeCalled { get; private set; }
 
-        protected override void Initialize()
+        protected override void OnInitialize()
         {
-            base.Initialize();
+            base.OnInitialize();
+
             InitializeCalled = true;
         }
     }

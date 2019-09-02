@@ -35,3 +35,4 @@ using Marvin.Products.Management;
 // Marvin attributes
 [assembly: Bundle(AbstractionLayerBundle.Name, AbstractionLayerBundle.Version)]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+[assembly: InternalsVisibleTo("Marvin.Products.IntegrationTests")]

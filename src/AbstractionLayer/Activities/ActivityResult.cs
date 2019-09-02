@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// Inidicator if this result is considered successful
+        /// Indicator if this result is considered successful
         /// </summary>
         public bool Success { get; set; }
 

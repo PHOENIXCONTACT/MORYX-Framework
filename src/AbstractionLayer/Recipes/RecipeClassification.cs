@@ -3,15 +3,15 @@
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Classification of recipes as a Bitflag. Bits 0 -> 30 are free for recipe defintions. Bit 31 indicates a <see cref="Clone"/>.
-    /// <see cref="CloneFilter"/> is represented as 0111...1111 to filter and revert clones. 
+    /// Classification of recipes as a BitFlag. Bits 0 -> 30 are free for recipe definitions. Bit 31 indicates a <see cref="Clone"/>.
+    /// <see cref="CloneFilter"/> is represented as 0111...1111 to filter and revert clones.
     /// Using binary AND and OR can convert and filter clones.
     /// </summary>
     [Flags]
     public enum RecipeClassification
     {
         /// <summary>
-        /// Unset value as enum default
+        /// Unset classification
         /// </summary>
         Unset = 0,
 
@@ -38,11 +38,11 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Classification that can filter clone in binary AND
         /// </summary>
-        CloneFilter = int.MaxValue, 
+        CloneFilter = int.MaxValue,
 
         /// <summary>
         /// Recipe is a clone of any of the previous types
         /// </summary>
-        Clone = int.MinValue, 
+        Clone = int.MinValue
     }
 }

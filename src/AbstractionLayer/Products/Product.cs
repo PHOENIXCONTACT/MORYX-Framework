@@ -9,29 +9,22 @@ namespace Marvin.AbstractionLayer
     [DataContract]
     public abstract class Product : IProduct
     {
-        /// <summary>
-        /// Unique type name of this instance
-        /// </summary>
+        /// <inheritdoc />
         public abstract string Type { get; }
 
-        ///
+        /// <inheritdoc />
         public long Id { get; set; }
 
-        ///
+        /// <inheritdoc />
         public string Name { get; set; }
 
-        ///
+        /// <inheritdoc />
         public IProduct Parent => ParentLink?.Parent;
 
-        ///
+        /// <inheritdoc />
         public IProductPartLink ParentLink { get; set; }
 
-        /// 
-        public ProductState State { get; set; }
-
-        /// <summary>
-        /// Identity of this product
-        /// </summary>
+        /// <inheritdoc />
         public IIdentity Identity { get; set; }
 
         /// <summary>

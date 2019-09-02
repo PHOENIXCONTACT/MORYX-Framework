@@ -21,7 +21,6 @@ namespace Marvin.Products.Model
             RegisterRepository<IProductEntityRepository>();
             RegisterRepository<IProductPropertiesRepository>();
             RegisterRepository<IProductRecipeEntityRepository>();
-            RegisterRepository<IRevisionHistoryRepository>();
             RegisterRepository<IStepEntityRepository>();
             RegisterRepository<IWorkplanEntityRepository>();
             RegisterRepository<IWorkplanReferenceRepository>();

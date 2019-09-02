@@ -79,6 +79,20 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
+        public void PublishedForeign(INotification notification)
+        {
+            ValidateHealthState();
+            NotificationAdapter.PublishedForeign(notification);
+        }
+
+        /// <inheritdoc />
+        public void AcknowledgedForeign(INotification notification)
+        {
+            ValidateHealthState();
+            NotificationAdapter.AcknowledgedForeign(notification);
+        }
+
+        /// <inheritdoc />
         public void AcknowledgeProcessed(INotification notification)
         {
             ValidateHealthState();

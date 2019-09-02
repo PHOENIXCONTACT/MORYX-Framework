@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using Marvin.AbstractionLayer;
 using Marvin.Container;
+using Marvin.Modules;
 using Marvin.Products.Management;
 using Marvin.Products.Management.Importers;
-using Marvin.Modules;
 
 namespace Marvin.Products.Samples
 {
@@ -25,14 +25,14 @@ namespace Marvin.Products.Samples
                 Identity = new ProductIdentity(parameters.Identifier, parameters.Revision),
                 Watchface = new ProductPartLink<WatchfaceProduct>
                 {
-                    Product = (WatchfaceProduct)Storage.LoadProduct(new ProductIdentity(parameters.WatchfaceIdentifier, 1))
+                    Product = (WatchfaceProduct)Storage.LoadProduct(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
                 },
                 Needles = new List<NeedlePartLink>
                 {
                     new NeedlePartLink
                     {
                         Role = NeedleRole.Minutes,
-                        Product = (NeedleProduct)Storage.LoadProduct(new ProductIdentity(parameters.MinuteNeedleIdentifier, 1))
+                        Product = (NeedleProduct)Storage.LoadProduct(new ProductIdentity(parameters.MinuteNeedleIdentifier, ProductIdentity.LatestRevision))
                     }
                 }
             };

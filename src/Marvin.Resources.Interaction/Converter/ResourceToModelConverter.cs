@@ -24,30 +24,38 @@ namespace Marvin.Resources.Interaction.Converter
         /// </summary>
         private readonly Dictionary<Resource, ResourceModel> _resourceCache = new Dictionary<Resource, ResourceModel>();
 
-        private readonly IResourceGraph _resourceGraph;
-        private readonly ICustomSerialization _serialization;
-        private readonly IResourceTypeTree _typeController;
+        protected ICustomSerialization Serialization { get; }
+
+        protected IResourceTypeTree TypeController { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="resourceGraph"></param>
         /// <param name="typeController"></param>
         /// <param name="serialization"></param>
-        public ResourceToModelConverter(IResourceGraph resourceGraph, IResourceTypeTree typeController, ICustomSerialization serialization)
+        public ResourceToModelConverter(IResourceTypeTree typeController, ICustomSerialization serialization)
         {
-            _resourceGraph = resourceGraph;
-            _typeController = typeController;
-            _serialization = serialization;
+            TypeController = typeController;
+            Serialization = serialization;
+        }
+
+        /// <summary>
+        /// Convert a resource instance
+        /// </summary>
+        /// <param name="current"></param>
+        /// <returns></returns>
+        public ResourceModel GetDetails(Resource current)
+        {
+            return ToModel(current, false);
         }
 
         /// <summary>
         /// Recursive function to load resource and its children
         /// </summary>
         /// <param name="current">Current instance</param>
-        /// <param name="depth"></param>
+        /// <param name="partially">Model does not represent the full resource</param>
         /// <returns></returns>
-        public ResourceModel GetDetails(Resource current, int depth)
+        protected ResourceModel ToModel(Resource current, bool partially)
         {
             ResourceModel model;
             if (!_resourceCache.TryGetValue(current, out model))
@@ -60,17 +68,25 @@ namespace Marvin.Resources.Interaction.Converter
                     Description = current.Description,
 
                     // Use simplified type reference
-                    Type = current.ResourceType(),
-
-                    // Properties and methods are read from the descriptor
-                    // This can be the resource itself or a dedicated object
-                    Properties = EntryConvert.EncodeObject(current.Descriptor, _serialization),
-                    Methods = EntryConvert.EncodeMethods(current.Descriptor, _serialization).ToArray()
+                    Type = current.ResourceType()
                 };
                 _resourceCache.Add(current, model);
 
-                // Recursively read children and references
-                model.References = ConvertReferences(current, depth);
+                // Set partial flag or load complex properties depending on details depth
+                if (partially)
+                {
+                    model.PartiallyLoaded = true;
+                }
+                else
+                {
+                    // Properties and methods are read from the descriptor
+                    // This can be the resource itself or a dedicated object
+                    model.Properties = EntryConvert.EncodeObject(current.Descriptor, Serialization);
+                    model.Methods = EntryConvert.EncodeMethods(current.Descriptor, Serialization).ToArray();
+                    // Recursively read children and references
+                    model.References = ConvertReferences(current);
+                }
+
             }
 
             return model;
@@ -79,56 +95,27 @@ namespace Marvin.Resources.Interaction.Converter
         /// <summary>
         /// Convert all references of a resource
         /// </summary>
-        private ResourceReferenceModel[] ConvertReferences(Resource current, int depth)
+        private ResourceReferenceModel[] ConvertReferences(Resource current)
         {
             var properties = current.GetType().GetProperties();
             // Find all reference properties on the object
             var referenceProperties = GetReferences(properties);
-            // Find all properties that define a type override of existing references
-            var referenceOverrides = GetReferenceOverrides(properties);
 
             // Convert all references to DTOs
-            return referenceProperties.Select(prop => ConvertReference(current, prop, referenceOverrides, depth)).ToArray();
-        }
-
-        private ResourceReferenceModel[] ChildrenOnly(Resource current)
-        {
-            // Get the children reference
-            var childrenProperty = current.GetType().GetProperty(nameof(Resource.Children));
-            // Find possible overrides on the children reference
-            var referenceOverrides = GetReferenceOverrides(current.GetType().GetProperties());
-
-            var model = ConvertReference(current, childrenProperty, referenceOverrides);
-            model.Targets = current.Children.Select(ConvertResource).ToList();
-
-            return new[] { model };
-        }
-
-        public ResourceModel ConvertResource(Resource resource)
-        {
-            return new ResourceModel
-            {
-                Id = resource.Id,
-                Name = resource.Name,
-                Description = resource.Description,
-                Type = resource.ResourceType(),
-                References = ChildrenOnly(resource)
-            };
+            return referenceProperties.Select(prop => ConvertReference(current, prop)).ToArray();
         }
 
         #region Convert References
 
         /// <summary>
-        /// Get all references 
+        /// Get all reference properties
         /// </summary>
-        /// <param name="properties"></param>
-        /// <returns></returns>
-        private static IEnumerable<PropertyInfo> GetReferences(IEnumerable<PropertyInfo> properties)
+        protected static IEnumerable<PropertyInfo> GetReferences(IEnumerable<PropertyInfo> properties)
         {
             var referenceProperties = (from prop in properties
                                        let propType = prop.PropertyType
                                        // Find all properties referencing a resource or a collection of resources
-                                        // Exclude read only properties, because they are simple type overrides of other references
+                                       // Exclude read only properties, because they are simple type overrides of other references
                                        where prop.CanWrite && Attribute.IsDefined(prop, typeof(ResourceReferenceAttribute))
                                        select prop).ToList();
             return referenceProperties;
@@ -153,50 +140,27 @@ namespace Marvin.Resources.Interaction.Converter
         /// <summary>
         /// Convert a property referencing another resource into a <see cref="ResourceReferenceModel"/>
         /// </summary>
-        private ResourceReferenceModel ConvertReference(Resource current, PropertyInfo property, IDictionary<string, List<Type>> overrides, int depth = 0)
+        protected ResourceReferenceModel ConvertReference(Resource current, PropertyInfo property)
         {
-            var attribute = property.GetCustomAttribute<ResourceReferenceAttribute>();
-
             // Create reference model from property information and optional attribute
             var referenceModel = new ResourceReferenceModel
             {
                 Name = property.Name,
-                Description = property.GetCustomAttribute<DescriptionAttribute>()?.Description,
-
-                Role = attribute.Role,
-                RelationType = attribute.RelationType,
-                IsCollection = typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType)
+                Targets = new List<ResourceModel>(),
             };
 
-            // Get type constraints
-            Type targetType = property.PropertyType;
-            if (referenceModel.IsCollection)
-                targetType = EntryConvert.ElementType(targetType);
-            var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
-            referenceModel.SupportedTypes = SupportedTypes(typeConstraints);
-
-            // Only load possible targets if we are supposed to
-            if (depth <= 0)
-                return referenceModel;
-
-            // Load possible targets from the full set of resources
-            referenceModel.PossibleTargets = MatchingInstances(typeConstraints).ToList();
-
-            // We can not load targets if we do not have any
-            referenceModel.Targets = new List<ResourceModel>();
+            // We can not set current targets if we do not have any
             var value = property.GetValue(current);
             if (value == null)
                 return referenceModel;
 
-            // Convert referenced resource objects and possible instance types 
-            var referenceTargets = referenceModel.IsCollection ? (IEnumerable<IResource>)value : new[] { (IResource)value };
+            // Convert referenced resource objects and possible instance types
+            var referenceTargets = (value as IEnumerable<IResource>) ?? new[] { (IResource)value };
             foreach (Resource resource in referenceTargets)
             {
-                var target = GetDetails(resource, depth - 1);
-                referenceModel.Targets.Add(target);
-                // Possible targets must always include the current target, even if its not part of the tree
-                if (referenceModel.PossibleTargets.All(pt => pt.Id != target.Id))
-                    referenceModel.PossibleTargets.Add(target);
+                // Load references partially UNLESS they are new, unsaved objects
+                var model = ToModel(resource, resource.Id > 0);
+                referenceModel.Targets.Add(model);
             }
 
             return referenceModel;
@@ -220,60 +184,17 @@ namespace Marvin.Resources.Interaction.Converter
         }
 
         /// <summary>
-        /// Convert the supported types 
+        /// Convert <see cref="IResourceTypeNode"/> to <see cref="ResourceTypeModel"/> without converting a type twice
         /// </summary>
-        private ResourceTypeModel[] SupportedTypes(ICollection<Type> typeConstraints)
+        internal ResourceTypeModel ConvertType(IResourceTypeNode node)
         {
-            return _typeController.SupportedTypes(typeConstraints).Select(t => ConvertType(t, _serialization)).ToArray();
-        }
-
-        /// <summary>
-        /// Find all resources of the tree that are possible instances for a reference of that type
-        /// </summary>
-        private IEnumerable<ResourceModel> MatchingInstances(ICollection<Type> typeConstraints)
-        {
-            var matches = new List<Resource>();
-
-            foreach (var root in _resourceGraph.GetResources<Resource>(r => r.Parent == null))
-            {
-                IncludeMatchingInstance(root, typeConstraints, matches);
-            }
-
-            return matches.Select(r => new ResourceModel
-            {
-                Id = r.Id,
-                Name = r.Name,
-                Type = r.ResourceType(),
-                Description = r.Description
-            });
-        }
-
-        /// <summary>
-        /// Include this resource into the collection of matches if it is an instance of the desired type
-        /// </summary>
-        private static void IncludeMatchingInstance(Resource current, ICollection<Type> typeConstraints, ICollection<Resource> currentMatches)
-        {
-            if (typeConstraints.All(tc => tc.IsInstanceOfType(current)))
-                currentMatches.Add(current);
-
-            foreach (var child in current.Children)
-            {
-                IncludeMatchingInstance(child, typeConstraints, currentMatches);
-            }
+            return ConvertType(node, null);
         }
 
         /// <summary>
         /// Convert <see cref="IResourceTypeNode"/> to <see cref="ResourceTypeModel"/> without converting a type twice
         /// </summary>
-        internal static ResourceTypeModel ConvertType(IResourceTypeNode node, ICustomSerialization serialization)
-        {
-            return ConvertType(node, null, serialization);
-        }
-
-        /// <summary>
-        /// Convert <see cref="IResourceTypeNode"/> to <see cref="ResourceTypeModel"/> without converting a type twice
-        /// </summary>
-        internal static ResourceTypeModel ConvertType(IResourceTypeNode node, ResourceTypeModel baseType, ICustomSerialization serialization)
+        internal ResourceTypeModel ConvertType(IResourceTypeNode node, ResourceTypeModel baseType)
         {
             var resType = node.ResourceType;
 
@@ -295,14 +216,45 @@ namespace Marvin.Resources.Interaction.Converter
                 Description = resType.GetCustomAttribute<DescriptionAttribute>(false)?.Description,
 
                 // Convert resource constructors
-                Constructors = node.Constructors.Select(ctr => EntryConvert.EncodeMethod(ctr, serialization)).ToArray()
+                Constructors = node.Constructors.Select(ctr => EntryConvert.EncodeMethod(ctr, Serialization)).ToArray()
             };
 
-            typeModel.DerivedTypes = node.DerivedTypes.Select(t => ConvertType(t, typeModel, serialization)).ToArray();
+            // Convert reference properties
+            var properties = node.ResourceType.GetProperties();
+            var references = GetReferences(properties);
+            var overrides = GetReferenceOverrides(properties);
+            typeModel.References = references.Select(reference => ConvertReferenceProperty(reference, overrides)).ToArray();
+
+            typeModel.DerivedTypes = node.DerivedTypes.Select(t => ConvertType(t, typeModel)).ToArray();
 
             TypeCache[node.Name] = typeModel;
 
             return typeModel;
+        }
+
+        private ReferenceTypeModel ConvertReferenceProperty(PropertyInfo property, IDictionary<string, List<Type>> overrides)
+        {
+            var referenceAttr = property.GetCustomAttribute<ResourceReferenceAttribute>();
+            // Create reference model from property information and optional attribute
+            var referenceModel = new ReferenceTypeModel()
+            {
+                Name = property.Name,
+                DisplayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? property.Name, //TODO: Platform 3: Replace with GetDisplayName()
+                Description = property.GetCustomAttribute<DescriptionAttribute>()?.Description, //TODO: Platform 3: Replace with GetDescription()
+                Role = referenceAttr.Role,
+                RelationType = referenceAttr.RelationType,
+                IsRequired = referenceAttr.IsRequired,
+                IsCollection = typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType)
+            };
+
+            // Get type constraints
+            Type targetType = property.PropertyType;
+            if (referenceModel.IsCollection)
+                targetType = EntryConvert.ElementType(targetType);
+            var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
+            referenceModel.SupportedTypes = TypeController.SupportedTypes(typeConstraints).Select(t => t.Name).ToArray();
+
+            return referenceModel;
         }
 
         #endregion

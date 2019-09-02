@@ -4,17 +4,17 @@ namespace Marvin.Products.Management.Modification
 {
     internal interface IProductConverter
     {
-        ProductModel[] GetRootProducts();
+        ProductModel[] GetProducts(ProductQuery query);
+
+        ProductModel Create(string type);
 
         ProductModel GetProduct(long id);
 
-        ProductModel ReleaseProduct(long id);
-
-        ProductModel CreateRevision(long id, short revisionNo, string comment);
+        DuplicateProductResponse Duplicate(long id, string identifier, short revisionNo);
 
         ProductModel ImportProduct(string importerName, IImportParameters parameters);
 
-        ProductModel[] DeleteProduct(long id);
+        bool DeleteProduct(long id);
 
         ProductModel Save(ProductModel product);
 
@@ -24,16 +24,8 @@ namespace Marvin.Products.Management.Modification
 
         RecipeModel CreateRecipe(string recipeType);
 
-        RecipeModel GetProductionRecipe(long productId, long workplanId);
-
-        RecipeModel CreateProductionRecipe(long productId, long workplanId, string name);
-
-        bool SaveProductionRecipe(RecipeModel recipe);
-
-        WorkplanModel CreateWorkplan(string workplanName);
+        RecipeModel SaveRecipe(RecipeModel recipe);
 
         WorkplanModel[] GetWorkplans();
-
-        WorkplanModel GetWorkplan(long workplanId);
     }
 }

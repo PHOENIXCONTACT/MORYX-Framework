@@ -3,9 +3,9 @@ namespace Marvin.AbstractionLayer
     /// <summary>
     /// Recipe to create instances of a product
     /// </summary>
-    public class ProductRecipe : WorkplanRecipe, IProductRecipe
+    public class ProductRecipe : Recipe, IProductRecipe
     {
-        /// 
+        /// <inheritdoc />
         public override string Type => nameof(ProductRecipe);
 
         /// <summary>
@@ -16,7 +16,7 @@ namespace Marvin.AbstractionLayer
         }
 
         /// <summary>
-        /// Clone a product recipe 
+        /// Clone a product recipe
         /// </summary>
         protected ProductRecipe(ProductRecipe source)
             : base(source)
@@ -24,19 +24,11 @@ namespace Marvin.AbstractionLayer
             Product = source.Product;
         }
 
-        /// 
+        /// <inheritdoc />
         public IProduct Product { get; set; }
-        
+
         /// <inheritdoc />
         public virtual IProduct Target => Product;
-
-        /// <summary>
-        /// Create a <see cref="ProductionProcess"/> for this recipe
-        /// </summary>
-        public override IProcess CreateProcess()
-        {
-            return new ProductionProcess { Recipe = this };
-        }
 
         /// <inheritdoc />
         public override IRecipe Clone()

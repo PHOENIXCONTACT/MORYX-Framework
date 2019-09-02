@@ -1,12 +1,11 @@
-﻿using System;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Resources.Interaction
 {
     /// <summary>
-    /// Interface to provide functions for interaction of resources. 
+    /// Interface to provide functions for interaction of resources.
     /// </summary>
     [ServiceContract]
     [ServiceVersion(ServerVersion = "2.0.0", MinClientVersion = "2.0.0")]
@@ -16,23 +15,23 @@ namespace Marvin.Resources.Interaction
         /// Full type tree of currently installed resources
         /// </summary>
         [OperationContract]
-        ResourceTypeModel[] GetTypeTree();
+        ResourceTypeModel GetTypeTree();
 
         /// <summary>
-        /// Gets the complete resource tree.
-        /// </summary>
+        /// Load resources by query
+        /// <param name="query"></param>
         /// <returns></returns>
+        /// </summary>
         [OperationContract]
-        ResourceModel[] GetResourceTree();
+        ResourceModel[] GetResources(ResourceQuery query);
 
         /// <summary>
         /// Get the details of the given resource.
         /// </summary>
-        /// <param name="id">Id of the resource</param>
-        /// <param name="depth">Loading depth</param>
-        /// <returns>A model with all deails loaded.</returns>
+        /// <param name="ids">Ids of the resources</param>
+        /// <returns>A model with all details loaded.</returns>
         [OperationContract]
-        ResourceModel GetDetails(long id, int depth = 1);
+        ResourceModel[] GetDetails(long[] ids);
 
         /// <summary>
         /// Invoke method on the resource
@@ -41,7 +40,7 @@ namespace Marvin.Resources.Interaction
         Entry InvokeMethod(long id, MethodEntry method);
 
         /// <summary>
-        /// Creates an active resource from the given plugin name. Name should be existend to create configs for the resource.
+        /// Creates an active resource from the given plugin name. Name should be existent to create configs for the resource.
         /// </summary>
         /// <param name="resourceType">Resource type to create instance of</param>
         /// <param name="constructor">Optional constructor method</param>
@@ -50,9 +49,9 @@ namespace Marvin.Resources.Interaction
         ResourceModel Create(string resourceType, MethodEntry constructor = null);
 
         /// <summary>
-        /// Save resource in the database. 
+        /// Save resource in the database.
         /// </summary>
-        /// <param name="resource">The resource which shoule be saved.</param>
+        /// <param name="resource">The resource which should be saved.</param>
         /// <returns>The saved resource with the database id.</returns>
         [OperationContract]
         ResourceModel Save(ResourceModel resource);

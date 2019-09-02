@@ -1,5 +1,5 @@
 ﻿using System.ServiceModel;
-using Marvin.Products.Management.Importers;
+using Marvin.AbstractionLayer;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
@@ -16,23 +16,16 @@ namespace Marvin.Products.Management.Modification
         ProductCustomization GetCustomization();
 
         /// <summary>
-        /// Update import parameters based on their current content
+        /// Gets all products by filter
         /// </summary>
         [OperationContract]
-        Entry UpdateParameters(string importer, Entry currentParameters);
+        ProductModel[] GetProducts(ProductQuery query);
 
         /// <summary>
-        /// Get the product tree
+        /// Create a new instance of the given type
         /// </summary>
         [OperationContract]
-        ProductStructureEntry[] GetProductStructure();
-
-        /// <summary>
-        /// Get producible root products
-        /// </summary>
-        /// <returns></returns>
-        [OperationContract]
-        ProductModel[] GetAllProducts();
+        ProductModel CreateProduct(string type);
 
         /// <summary>
         /// Get details of a product
@@ -41,28 +34,22 @@ namespace Marvin.Products.Management.Modification
         ProductModel GetProductDetails(long id);
 
         /// <summary>
-        /// Get all revisions of a product
-        /// </summary>
-        [OperationContract]
-        ProductRevisionEntry[] GetProductRevisions(string identifier);
-
-        /// <summary>
         /// Save changes to a product
         /// </summary>
         [OperationContract]
         ProductModel SaveProduct(ProductModel instance);
 
         /// <summary>
-        /// Release the product
+        /// Create a new revision or copy of the product
         /// </summary>
         [OperationContract]
-        ProductModel ReleaseProduct(long id);
+        DuplicateProductResponse DuplicateProduct(long sourceId, string identifier, short revisionNo);
 
         /// <summary>
-        /// Create a new revision of the product
+        /// Try to delete a product
         /// </summary>
         [OperationContract]
-        ProductModel CreateRevision(long id, short revisionNo, string comment);
+        bool DeleteProduct(long id);
 
         /// <summary>
         /// Import new products
@@ -71,10 +58,10 @@ namespace Marvin.Products.Management.Modification
         ProductModel ImportProduct(string importerName, Entry parametersModel);
 
         /// <summary>
-        /// Try to delete a product
+        /// Update import parameters based on their current content
         /// </summary>
         [OperationContract]
-        ProductModel[] DeleteProduct(long id);
+        Entry UpdateParameters(string importer, Entry currentParameters);
 
         /// <summary>
         /// Get the recipe with this id
@@ -95,28 +82,10 @@ namespace Marvin.Products.Management.Modification
         RecipeModel CreateRecipe(string recipeType);
 
         /// <summary>
-        /// Get a recipe for this workplan
-        /// </summary>
-        [OperationContract]
-        RecipeModel GetProductionRecipe(long productId, long workplanId);
-
-        /// <summary>
-        /// Create a recipe for this workplan with the given name
-        /// </summary>
-        [OperationContract]
-        RecipeModel CreateProductionRecipe(long productId, long workplanId, string name);
-
-        /// <summary>
         /// Saves a recipe
         /// </summary>
         [OperationContract]
-        bool SaveProductionRecipe(RecipeModel recipe);
-
-        /// <summary>
-        /// Create a new workplan
-        /// </summary>
-        [OperationContract]
-        WorkplanModel CreateWorkplan(string name);
+        RecipeModel SaveRecipe(RecipeModel recipe);
 
         /// <summary>
         /// Get all workplans
@@ -124,12 +93,6 @@ namespace Marvin.Products.Management.Modification
         /// <returns></returns>
         [OperationContract]
         WorkplanModel[] GetWorkplans();
-
-        /// <summary>
-        /// Get workplan with this id
-        /// </summary>
-        [OperationContract]
-        WorkplanModel GetWorkplan(long id);
 
         /// <summary>
         /// Provider name

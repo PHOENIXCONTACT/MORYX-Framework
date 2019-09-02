@@ -30,7 +30,7 @@ public class PropertyDummy : Resource
 }
 ```
 
-The ability to make changes at runtime that are automatically saved is not limited to an existing resource instance. It is also possible to change [relations](xref:ResourceRelations) between resources to expand and reduce the resource graph at runtime. To make sure the resource manager knows of the new resource and takes care of its dependencies and reference properties, it is not possible to create new resources naturally through constructor invocation. Instead each resource can use the [IResourceCreator](xref:Marvin.AbstractionLayer.Resources.IResourceCreator) to create and destroy resource instances. Resources access the creator through the inherited `Creator` property. Behind the creator interface hides the resource manager itself. It sets the reference on each instance it loads in the startup phase and those created through the creator interface at runtime. This ensures that dynamic resource creation is not limited to the ﬁrst generation of objects, but works indeﬁnitely. The code below shows the usage of the resource creator. The `Grow` method in the example shows all three different alternatives to instantiate resources with the creator. The statically typed one is the replacement for direct constructor invocation. The type speciﬁed is also the type of the returned object. The other two overloads are similar to the factory pattern and can return different objects speciﬁed by the type string.
+The ability to make changes at runtime that are automatically saved is not limited to an existing resource instance. It is also possible to change [relations](xref:ResourceRelations) between resources to expand and reduce the resource graph at runtime. To make sure the resource manager knows of the new resource and takes care of its dependencies and reference properties, it is not possible to create new resources naturally through constructor invocation. Instead each resource can use the [IResourceGraph](xref:Marvin.AbstractionLayer.Resources.IResourceGraph) to create and destroy resource instances. Resources access the graph through the inherited `Graph` property. It sets the reference on each instance it loads in the startup phase and those created through the graph interface at runtime. This ensures that dynamic resource creation is not limited to the ﬁrst generation of objects, but works indeﬁnitely. The code below shows the usage of the resource graph. The `Grow` method in the example shows all three different alternatives to instantiate resources with the graph. The statically typed one is the replacement for direct constructor invocation. The type speciﬁed is also the type of the returned object. The other two overloads are similar to the factory pattern and can return different objects speciﬁed by the type string.
 
 This makes object creation more ﬂexible than a constructor and enables subclassing the created resource type. This feature can be combined with the [ResourceTypes](xref:Marvin.AbstractionLayer.Resources.ResourceTypesAttribute) attribute to generate a drop-down box of available resource types for properties or method parameters.
 
@@ -43,20 +43,20 @@ public class DynamicTree : Resource
     public void Grow()
     {
         // Grow statically typed
-        IBranch branch = Creator.Instantiate<Branch>();
+        IBranch branch = Graph.Instantiate<Branch>();
         // Grow dynamically typed
-        branch = Creator.Instantiate<IBranch>(BranchType);
+        branch = Graph.Instantiate<IBranch>(BranchType);
         // Grow dynamic
-        Resource child = Creator.Instantiate("SomeType");
+        Resource child = Graph.Instantiate("SomeType");
     }
 
     public void Shrink()
     {
         var child = Children.First ();
         // Remove reversible
-        Creator.Destroy(child);
+        Graph.Destroy(child);
         // Remove permanently
-        Creator.Destroy(child, true)
+        Graph.Destroy(child, true)
     }
 }
 

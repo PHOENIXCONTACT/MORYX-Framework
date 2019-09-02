@@ -3,7 +3,7 @@ uid: ResourceManagement
 ---
 # Resource management
 
-The new resources management also changes the way other modules interact with resources. The API offers direct access to all of the resource methods, properties and events as long as they are declared through an interface derived from IPublicResource and export any capabilities. Public resources with NullCapabilities, the null object implementation of ICapabilities, are considered non-public. Users of the resource management can resolve instances by type, name or capabilities over the facade.
+The new resources management also changes the way other modules interact with resources. The API offers direct access to all of the resource methods, properties and events as long as they are declared through an interface derived from IPublicResource. Public resources with NullCapabilities, the null object implementation of ICapabilities, are considered non-public. Users of the resource management can resolve instances by type, name or capabilities over the facade.
 
 ```cs
 // Get by name

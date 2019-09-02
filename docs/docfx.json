@@ -38,6 +38,12 @@
           "obj/**",
           "_site/**"
         ]
+      },
+      {
+        "files": [
+          "manual/**.md",
+          "manual/**/toc.yml"
+        ]
       }
     ],
     "resource": [

@@ -20,12 +20,12 @@ namespace Marvin.AbstractionLayer
     /// Wrapper structure to read and write single value
     /// from parts collection without heap allocation
     /// </summary>
-    internal struct SinglePart<T> : IPartWrapper<T> 
+    internal struct SinglePart<T> : IPartWrapper<T>
         where T : Article
     {
         private readonly string _name;
         private readonly ICollection<ArticlePart> _allParts;
-        
+
         ///
         internal SinglePart(ICollection<ArticlePart> allParts, string name)
         {
@@ -33,7 +33,7 @@ namespace Marvin.AbstractionLayer
             _name = name;
         }
 
-        /// 
+        ///
         public T Part
         {
             get
@@ -46,7 +46,7 @@ namespace Marvin.AbstractionLayer
                 var match = _allParts.FirstOrDefault(NameMatch);
                 if (match == null && value != null) // Initial set
                     _allParts.Add(new ArticlePart(_name, value));
-                else if (match != null && value == null) // Remove of exisiting value
+                else if (match != null && value == null) // Remove of existing value
                     _allParts.Remove(match);
                 else if (value != null) // Override of existing value
                     match.Article = value;
@@ -70,7 +70,7 @@ namespace Marvin.AbstractionLayer
         private readonly string _name;
         private readonly ICollection<ArticlePart> _allParts;
 
-        /// 
+        ///
         internal MultipleParts(ICollection<ArticlePart> allParts, string name)
         {
             _allParts = allParts;
@@ -107,34 +107,25 @@ namespace Marvin.AbstractionLayer
             }
         }
 
-        /// 
+        ///
         public bool Remove(T item)
         {
             return _allParts.Remove(new ArticlePart(_name, item));
         }
 
-        /// 
-        public int Count
-        {
-            get
-            {
-                return _allParts.Count(NameMatch);
-            }
-        }
+        ///
+        public int Count => _allParts.Count(NameMatch);
 
-        /// 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        ///
+        public bool IsReadOnly => false;
 
-        /// 
+        ///
         public IEnumerator<T> GetEnumerator()
         {
             return FilteredParts().GetEnumerator();
         }
 
-        /// 
+        ///
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

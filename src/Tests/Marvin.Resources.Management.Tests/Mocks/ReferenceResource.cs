@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Marvin.AbstractionLayer.Resources;
 
@@ -22,6 +23,21 @@ namespace Marvin.Resources.Management.Tests
         event EventHandler<ISimpleResource> ReferenceChanged;
 
         event EventHandler<ISimpleResource[]> SomeChanged;
+    }
+
+    public class RequiredReferenceResource : Resource
+    {
+        [ResourceReference(ResourceRelationType.Extension)]
+        public SimpleResource NotRequired { get; set; }
+
+        [ResourceReference(ResourceRelationType.CurrentExchangablePart, IsRequired = true)]
+        public SimpleResource Reference { get; set; }
+
+        [ResourceReference(ResourceRelationType.TransportSystem)]
+        public IReferences<SimpleResource> NotRequiredReferences { get; set; }
+
+        [ResourceReference(ResourceRelationType.PossibleExchangablePart, IsRequired = true)]
+        public IReferences<SimpleResource> References { get; set; }
     }
 
     public class ReferenceResource : PublicResource, IReferenceResource

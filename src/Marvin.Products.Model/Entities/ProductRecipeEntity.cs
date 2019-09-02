@@ -12,7 +12,7 @@ namespace Marvin.Products.Model
 
         public virtual int State { get; set; }
 
-        public virtual long WorkplanId { get; set; }
+        public virtual long? WorkplanId { get; set; }
 
         public virtual long ProductId { get; set; }
 

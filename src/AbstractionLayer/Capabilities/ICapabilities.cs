@@ -3,7 +3,7 @@
 namespace Marvin.AbstractionLayer.Capabilities
 {
     /// <summary>
-    /// Common capibilities interface
+    /// Common capabilities interface
     /// </summary>
     public interface ICapabilities
     {
@@ -13,7 +13,7 @@ namespace Marvin.AbstractionLayer.Capabilities
         bool IsCombined { get; }
 
         /// <summary>
-        /// Checks whether this capilities are fully provided by the other object object complies to the given one.
+        /// Checks whether this capability are fully provided by the other object object complies to the given one.
         /// </summary>
         /// <param name="provided">The candidate of provided capabilities</param>
         /// <returns><c>true</c> if this capabilities are provided by the given ones or <c>false</c> otherwise.</returns>
@@ -22,7 +22,7 @@ namespace Marvin.AbstractionLayer.Capabilities
         /// <summary>
         /// Check if this capability can provide the required capabilities
         /// </summary>
-        /// <param name="required">The required capabilites we have to match</param>
+        /// <param name="required">The required capabilities we have to match</param>
         /// <returns></returns>
         bool Provides(ICapabilities required);
 

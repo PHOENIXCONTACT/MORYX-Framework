@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Defeins how activities should be loaded from a <see cref="IProcess"/>
+    /// Defines how activities should be loaded from a <see cref="IProcess"/>
     /// </summary>
     public enum ActivitySelectionType
     {
@@ -30,9 +30,9 @@ namespace Marvin.AbstractionLayer
     }
 
     /// <summary>
-    /// A process is a sequence of activities defined and parameterized by a recipe. 
-    /// All activities created for the process are stored with the process for tracing purposes. 
-    /// All objects represesting a process implement the <see cref="IProcess"/> interface.
+    /// A process is a sequence of activities defined and parameterized by a recipe.
+    /// All activities created for the process are stored with the process for tracing purposes.
+    /// All objects representing a process implement the <see cref="IProcess"/> interface.
     /// </summary>
     public interface IProcess : IQuickCast, IPersistentObject, IConstraintContext
     {
@@ -67,7 +67,7 @@ namespace Marvin.AbstractionLayer
         void AddActivity(IActivity toAdd);
 
         /// <summary>
-        /// Remove an activiy from the list
+        /// Remove an activity from the list
         /// </summary>
         void RemoveActivity(IActivity toRemove);
     }

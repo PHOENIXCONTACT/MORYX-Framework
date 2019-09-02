@@ -7,7 +7,7 @@ namespace Marvin.Notifications
     /// Adapter for the <see cref="INotificationSource"/>
     /// </summary>
     public interface INotificationSourceAdapter
-    {        
+    {
         /// <summary>
         /// Returns the currently published notifications
         /// </summary>
@@ -32,6 +32,16 @@ namespace Marvin.Notifications
         /// Informs a sender of an notification that it was processed
         /// </summary>
         void PublishProcessed(INotification notification);
+
+        /// <summary>
+        /// Will be called when a foreign notification was published
+        /// </summary>
+        void PublishedForeign(INotification notification);
+
+        /// <summary>
+        /// Will be called when a foreign notification was published
+        /// </summary>
+        void AcknowledgedForeign(INotification notification);
 
         /// <summary>
         /// Event to publish a notification

@@ -103,7 +103,6 @@
     <Compile Include="Mocks\DialogManagerMock.cs" />
     <Compile Include="Mocks\MasterDetailsWorkspaceMock.cs" />
     <Compile Include="Mocks\EmptyDetailsMock.cs" />
-    <Compile Include="MasterDetailsWorkspaceTests.cs" />
     <Compile Include="Mocks\DetailsComponentMock.cs" />
     <Compile Include="Mocks\DetailsComponentRegistrationAttribute.cs" />
     <Compile Include="DetailsComponentSelectorTests.cs" />

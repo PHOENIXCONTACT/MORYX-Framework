@@ -1,9 +1,9 @@
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Recepie which is related to a product
+    /// Recipe which is related to a product
     /// </summary>
-    public interface IProductRecipe : IWorkplanRecipe
+    public interface IProductRecipe : IRecipe
     {
         /// <summary>
         /// The product that defines this recipe and is the final

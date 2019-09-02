@@ -8,7 +8,7 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     public class ProductReference : IProduct
     {
-        /// 
+        ///
         public const string TypeName = nameof(ProductReference);
 
         /// <summary>
@@ -52,11 +52,6 @@ namespace Marvin.AbstractionLayer
         /// Reference does not have a parent
         /// </summary>
         public IProductPartLink ParentLink { get; }
-
-        /// <summary>
-        /// Current state of this product
-        /// </summary>
-        public ProductState State { get; set; }
 
         /// <summary>
         /// Identity of this product

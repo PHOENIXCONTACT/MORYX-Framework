@@ -1,30 +1,22 @@
 - name: Introduction
   href: AbstractionLayer.md
 
-- name: Changelog
-  href: Changelog.md
-
 - name: Products
   items:
   - name: Concept
     href: Products/Concept.md
-  - name: Product management
+  - name: Product Management
     href: Products/ProductManagement.md
   - name: Definition
     href: Products/ProductDefinition.md
-  - name: Import
+  - name: Product Import
     href: Products/ProductImport.md
-  - name: Storage
+  - name: Product Storage
     href: Products/ProductStorage.md
   - name: Recipe Storage
     href: Products/RecipeStorage.md
-  - name: UI
-    href: Products/UI/Overview.md
-    items:
-      - name: Product Tree
-        href: Products/UI/ProductTree.md
-      - name: Product details
-        href: Products/UI/ProductDetails.md
+  - name: User Interface
+    href: Products/ProductManagementUI.md
 
 - name: Resources
   href: Resources/Overview.md
@@ -44,15 +36,8 @@
         href: Resources/Types/DriverResource.md
       - name: Interaction Resource
         href: Resources/Types/InteractionResource.md
-  - name: UI
-    href: Resources/UI/Overview.md
-    items:
-      - name: Resource Tree
-        href: Resources/UI/ResourceTree.md
-      - name: Resource details
-        href: Resources/UI/ResourceDetails.md
-      - name: Resource Methods
-        href: Resources/UI/ResourceMethods.md
+  - name: User Interface
+    href: Resources/ResourceManagementUI.md
 
 - name: Processing
   items:

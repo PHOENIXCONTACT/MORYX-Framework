@@ -26,11 +26,6 @@ namespace Marvin.Products.Management
         IProduct TransformProduct(IUnitOfWork context, ProductEntity entity, bool full);
 
         /// <summary>
-        /// Loads all available products
-        /// </summary>
-        IReadOnlyList<IProduct> LoadProducts();
-
-        /// <summary>
         /// Save a product to the storage
         /// </summary>
         long SaveProduct(IProduct modifiedInstance);

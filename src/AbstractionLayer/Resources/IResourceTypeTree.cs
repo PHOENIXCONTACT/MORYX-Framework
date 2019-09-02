@@ -9,9 +9,14 @@ namespace Marvin.AbstractionLayer.Resources
     public interface IResourceTypeTree
     {
         /// <summary>
-        /// Types derived from <see cref="Resource"/> and their derived types
+        /// Type tree starting at <see cref="Resource"/>
         /// </summary>
-        IEnumerable<IResourceTypeNode> RootTypes { get; }
+        IResourceTypeNode RootType { get; }
+
+        /// <summary>
+        /// Indexed selection of a resource type
+        /// </summary>
+        IResourceTypeNode this[string typeName] { get; }
 
         /// <summary>
         /// Find all types that implement the given type constraint

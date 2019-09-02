@@ -42,11 +42,15 @@ A [Process](xref:Processes) consists of a series of activities.
 
 ## Products
 
-A [Product](xref:Marvin.AbstractionLayer.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Marvin.AbstractionLayer.ProductRecipe) together with a Workplan to define how to produce an Article.
+A [Product](xref:Marvin.AbstractionLayer.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Marvin.AbstractionLayer.ProductRecipe) to provide a basic structure to produce an Article.
 
 ## Recipes
 
-A [Recipe](xref:Marvin.AbstractionLayer.Recipe) is used to combine a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process
+A [Recipe](xref:Marvin.AbstractionLayer.Recipe) is the base for all recipes which combines all needed data for a process.
+
+A [ProductRecipe](xref:Marvin.AbstractionLayer.ProductRecipe) provides a basic structure to use a product for production cases.
+
+A [WorkplanRecipe](xref:Marvin.AbstractionLayer.WorkplanRecipe) provides a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process.
 
 ## Resources
 

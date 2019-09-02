@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Marvin.AbstractionLayer.Resources;
@@ -27,7 +28,7 @@ namespace Marvin.Resources.Management
         /// <inheritdoc />
         public IReadOnlyList<Resource> SaveRoots(IUnitOfWork uow, IReadOnlyList<Resource> instances)
         {
-            var context = new ReferenceSaverContext(uow);
+            var context = new ReferenceSaverContext(uow, Graph);
             foreach (var instance in instances)
             {
                 SaveReferences(context, instance);
@@ -40,21 +41,19 @@ namespace Marvin.Resources.Management
         {
             var resourceType = resource.GetType();
             var referenceProperties = ReferenceProperties(resourceType, false).ToList();
-
+            // Create delegate once to optimize memory usage
+            var resolverDelegate = new Func<ResourceRelationAccessor, Resource>(ResolveRefernceWithGraph);
             foreach (var property in referenceProperties)
             {
+                var matches = MatchingRelations(relations, property).ToList();
+                var resources = InstanceProjection(matches, property, resolverDelegate)
+                    .OrderBy(r => r.Name).ToList();
+
                 // Link a list of resources
                 if (typeof(IEnumerable<IResource>).IsAssignableFrom(property.PropertyType))
                 {
-                    // Read attribute and get the ReferenceCollection
+                    // Get the reference collection
                     var value = (IReferenceCollection)property.GetValue(resource);
-                    var elemType = property.PropertyType.GetGenericArguments()[0];
-
-                    var matches = MatchingRelations(relations, property);
-                    var resources = matches.Select(m => Graph.Get(m.ReferenceId))
-                        .Where(elemType.IsInstanceOfType)
-                        .OrderBy(r => r.Name);
-
                     foreach (var referencedResource in resources)
                     {
                         value.UnderlyingCollection.Add(referencedResource);
@@ -63,19 +62,9 @@ namespace Marvin.Resources.Management
                 // Link a single reference
                 else
                 {
-                    var matches = MatchingRelations(relations, property);
-                    if (matches.Count == 0)
-                        continue;
-
-                    // Try to find a possible match for the property
-                    var propertyType = property.PropertyType;
-                    var referenceMatch = (from match in matches
-                                          let reference = Graph.Get(match.ReferenceId)
-                                          where propertyType.IsInstanceOfType(reference)
-                                          select reference).ToArray();
-                    if (referenceMatch.Length == 1)
-                        property.SetValue(resource, referenceMatch[0]);
-                    else if (referenceMatch.Length > 1)
+                    if (resources.Count == 1)
+                        property.SetValue(resource, resources[0]);
+                    else if (resources.Count > 1)
                         Logger.Log(LogLevel.Warning, "Inconclusive relation: Can not assign property {0} on {1}:{2} from [{3}]. Too many matches!", property.Name, resource.Id, resource.Name, string.Join(",", matches.Select(m => m.ReferenceId)));
                     else if (matches.Any(m => referenceProperties.All(p => !PropertyMatchesRelation(p, m, Graph.Get(m.ReferenceId)))))
                         Logger.Log(LogLevel.Warning, "Incompatible relation: Resources from [{0}] with relation type {1} can not be assigned to a property on {2}:{3}.", string.Join(",", matches.Select(m => m.ReferenceId)), matches[0].RelationType, resource.Id, resource.Name);
@@ -93,7 +82,7 @@ namespace Marvin.Resources.Management
         /// <inheritdoc />
         public IReadOnlyList<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity)
         {
-            var context = new ReferenceSaverContext(uow, instance, entity);
+            var context = new ReferenceSaverContext(uow, Graph, instance, entity);
             SaveReferences(context, instance);
             return context.EntityCache.Keys.Where(i => i.Id == 0).ToList();
         }
@@ -110,16 +99,17 @@ namespace Marvin.Resources.Management
             foreach (var referenceProperty in ReferenceProperties(instance.GetType(), false))
             {
                 var matches = MatchingRelations(relations, referenceProperty);
+                var typeMatches = TypeFilter(matches, referenceProperty, context.ResolveReference).ToList();
                 if (typeof(IEnumerable<IResource>).IsAssignableFrom(referenceProperty.PropertyType))
                 {
                     // Save a collection reference
-                    var created = UpdateCollectionReference(context, entity, instance, referenceProperty, matches);
+                    var created = UpdateCollectionReference(context, entity, instance, referenceProperty, typeMatches);
                     createdResources.AddRange(created);
                 }
                 else
                 {
                     // Save a single reference
-                    var createdResource = UpdateSingleReference(context, entity, instance, referenceProperty, matches);
+                    var createdResource = UpdateSingleReference(context, entity, instance, referenceProperty, typeMatches);
                     if (createdResource != null)
                         createdResources.Add(createdResource);
                 }
@@ -135,10 +125,11 @@ namespace Marvin.Resources.Management
         {
             var entity = uow.GetEntity<ResourceEntity>(instance);
             var relations = ResourceRelationAccessor.FromEntity(uow, entity);
-            var matches = MatchingRelations(relations, property);
 
-            var context = new ReferenceSaverContext(uow, instance, entity);
-            var created = UpdateCollectionReference(context, entity, instance, property, matches);
+            var context = new ReferenceSaverContext(uow, Graph, instance, entity);
+            var matches = MatchingRelations(relations, property);
+            var typeMatches = TypeFilter(matches, property, context.ResolveReference).ToList();
+            var created = UpdateCollectionReference(context, entity, instance, property, typeMatches);
 
             foreach (var resource in created)
                 SaveReferences(context, resource);
@@ -164,16 +155,22 @@ namespace Marvin.Resources.Management
             if (value != null && referencedResource == null)
                 throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}:{resource.GetType().Name} must be a Resource");
 
+            var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
+
+            // Validate if required property is set
+            if (referencedResource == null && referenceAtt.IsRequired)
+                throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was null!");
+
             // Check if there is a relation that represents this reference
-            if (referencedResource != null && matches.Any(m => m.ReferenceId == referencedResource.Id))
+            if (referencedResource != null && matches.Any(m => referencedResource == context.ResolveReference(m)))
                 return null;
 
-            var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
             // Get all references of this resource with the same relation information
             var currentReferences = CurrentReferences(resource, referenceAtt);
-            // Try to find a match that is not used in any reference but has no name yet or the same name
+
+            // Try to find a match that is not used in any reference
             var relMatch = (from match in matches
-                            where currentReferences.All(cr => cr.Id != match.ReferenceId)
+                            where currentReferences.All(cr => cr != context.ResolveReference(match))
                             select match).FirstOrDefault();
             var relEntity = relMatch?.Entity;
             if (relEntity == null && referencedResource != null)
@@ -185,7 +182,7 @@ namespace Marvin.Resources.Management
             else if (relEntity != null && referencedResource == null)
             {
                 // Delete a relation, that no longer exists
-                ClearOnTarget(relMatch.ReferenceId, resource, referenceAtt);
+                ClearOnTarget(context.ResolveReference(relMatch), resource, referenceAtt);
                 relationRepo.Remove(relEntity);
                 return null;
             }
@@ -198,7 +195,7 @@ namespace Marvin.Resources.Management
             // Relation was updated, make sure the backlinks match
             else
             {
-                ClearOnTarget(relMatch.ReferenceId, resource, referenceAtt);
+                ClearOnTarget(context.ResolveReference(relMatch), resource, referenceAtt);
                 SetOnTarget(referencedResource, resource, referenceAtt);
             }
 
@@ -227,17 +224,21 @@ namespace Marvin.Resources.Management
             var propertyValue = referenceProperty.GetValue(resource);
             var referencedResources = ((IEnumerable<IResource>)propertyValue).Cast<Resource>().ToList();
 
+            // Check required attribute against empty collections
+            if(referencedResources.Count == 0 && referenceAtt.IsRequired)
+                throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was empty!");
+
             // First delete references that are not used by ANY property of the same configuration
             var currentReferences = CurrentReferences(resource, referenceAtt);
-            var deleted = relationTemplates.Where(m => currentReferences.All(r => r.Id != m.ReferenceId)).ToList();
+            var deleted = relationTemplates.Where(m => currentReferences.All(cr =>  cr != context.ResolveReference(m))).ToList();
             foreach (var relation in deleted)
             {
-                ClearOnTarget(relation.ReferenceId, resource, referenceAtt);
+                ClearOnTarget(context.ResolveReference(relation), resource, referenceAtt);
                 relationRepo.Remove(relation.Entity);
             }
 
             // Now create new relations
-            var created = referencedResources.Where(r => relationTemplates.All(m => m.ReferenceId != r.Id)).ToList();
+            var created = referencedResources.Where(rr => relationTemplates.All(m => rr != context.ResolveReference(m))).ToList();
             foreach (var createdReference in created)
             {
                 SetOnTarget(createdReference, resource, referenceAtt);
@@ -303,9 +304,11 @@ namespace Marvin.Resources.Management
         /// </summary>
         private static bool IsInstanceOfReference(PropertyInfo property, Resource value)
         {
+            var typeLimit = property.PropertyType;
             if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(IReferences<>))
-                return property.PropertyType.GetGenericArguments()[0].IsInstanceOfType(value);
-            return property.PropertyType.IsInstanceOfType(value);
+                // TODO: Replace with type check API on IReferences
+                typeLimit = property.PropertyType.GetGenericArguments()[0];
+            return typeLimit.IsInstanceOfType(value);
         }
 
         /// <summary>
@@ -317,35 +320,36 @@ namespace Marvin.Resources.Management
             if (prop == null)
                 return; // No back-link -> nothing to do
             // Update back-link property
-            var propValue = prop.GetValue(target);
             if (prop.PropertyType.IsInstanceOfType(value))
             {
                 prop.SetValue(target, value);
             }
-            else if (propValue is IReferenceCollection)
+            else
             {
-                ((IReferenceCollection)propValue).UnderlyingCollection.Add(value);
+                var collection = prop.GetValue(target) as IReferenceCollection;
+                if (collection != null && !collection.UnderlyingCollection.Contains(value))
+                    collection.UnderlyingCollection.Add(value);
             }
+
         }
 
         /// <summary>
         /// Remove the reference to the resource on a target object
         /// </summary>
-        private void ClearOnTarget(long oldReference, Resource value, ResourceReferenceAttribute referenceAtt)
+        private void ClearOnTarget(Resource target, Resource value, ResourceReferenceAttribute referenceAtt)
         {
-            var target = Graph.Get(oldReference);
             var prop = FindBackLink(target, value, referenceAtt);
             if (prop == null)
                 return; // No back-link -> nothing to do
             // Update property ONLY if it currently points to our resource
             var propValue = prop.GetValue(target);
-            if (prop.PropertyType.IsInstanceOfType(value) && propValue == value)
+            if (propValue == value)
             {
                 prop.SetValue(target, null);
             }
-            else if (propValue is IReferenceCollection)
+            else
             {
-                ((IReferenceCollection)propValue).UnderlyingCollection.Remove(value);
+                (propValue as IReferenceCollection)?.UnderlyingCollection.Remove(value);
             }
         }
 
@@ -358,10 +362,19 @@ namespace Marvin.Resources.Management
             if (context.EntityCache.ContainsKey(instance))
                 return context.EntityCache[instance];
 
+            ResourceEntity entity;
+            if (instance.Id > 0)
+            {
+                entity = context.UnitOfWork.GetEntity<ResourceEntity>(instance);
+            }
+            else
+            {
+                entity = ResourceEntityAccessor.SaveToEntity(context.UnitOfWork, instance);
+                context.ResourceLookup[entity] = instance;
+            }
+
             // Get or create an entity for the instance
-            return context.EntityCache[instance] = instance.Id > 0
-                ? context.UnitOfWork.GetEntity<ResourceEntity>(instance)
-                : ResourceEntityAccessor.SaveToEntity(context.UnitOfWork, instance);
+            return context.EntityCache[instance] = entity;
         }
 
         /// <summary>
@@ -427,31 +440,67 @@ namespace Marvin.Resources.Management
         /// <summary>
         /// Find the relation that matches the property by type and role
         /// </summary>
-        private static IReadOnlyList<ResourceRelationAccessor> MatchingRelations(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property)
+        private static IEnumerable<ResourceRelationAccessor> MatchingRelations(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property)
         {
             var attribute = property.GetCustomAttribute<ResourceReferenceAttribute>();
-            var matches = (from relation in relations
-                           where attribute.Role == relation.Role
-                           where attribute.RelationType == relation.RelationType // Typed relation without name or matching name
-                              && attribute.Name == relation.Name
-                           select relation).ToArray();
+            var matches = from relation in relations
+                          where relation.Role == attribute.Role
+                          where relation.RelationType == attribute.RelationType
+                          where relation.Name == attribute.Name
+                          select relation;
             return matches;
         }
 
         /// <summary>
+        /// Resolve instance matches for relations
+        /// </summary>
+        public static IEnumerable<Resource> InstanceProjection(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property,
+            Func<ResourceRelationAccessor, Resource> instanceResolver)
+        {
+            return relations.Select(instanceResolver).Where(instance => IsInstanceOfReference(property, instance));
+        }
+
+        /// <summary>
+        /// Filter relations by type compatibility
+        /// </summary>
+        /// <param name="relations"></param>
+        /// <param name="property"></param>
+        /// <param name="instanceResolver"></param>
+        /// <returns></returns>
+        public static IEnumerable<ResourceRelationAccessor> TypeFilter(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property,
+            Func<ResourceRelationAccessor, Resource> instanceResolver)
+        {
+            return from relation in relations
+                   let target = instanceResolver(relation)
+                   where IsInstanceOfReference(property, target)
+                   select relation;
+        }
+
+        /// <summary>
+        /// Reusable method for resolver delegate
+        /// </summary>
+        /// <param name="relation"></param>
+        /// <returns></returns>
+        private Resource ResolveRefernceWithGraph(ResourceRelationAccessor relation) => Graph.Get(relation.ReferenceId);
+
+        /// <summary>
         /// Context for the recursive save references structure
         /// </summary>
-        private struct ReferenceSaverContext
+        private class ReferenceSaverContext
         {
-            public ReferenceSaverContext(IUnitOfWork unitOfWork, Resource initialInstance, ResourceEntity entity) : this(unitOfWork)
+            private readonly IResourceGraph _graph;
+
+            public ReferenceSaverContext(IUnitOfWork unitOfWork, IResourceGraph graph, Resource initialInstance, ResourceEntity entity) : this(unitOfWork, graph)
             {
                 EntityCache[initialInstance] = entity;
             }
 
-            public ReferenceSaverContext(IUnitOfWork uow)
+            public ReferenceSaverContext(IUnitOfWork uow, IResourceGraph graph)
             {
+                _graph = graph;
                 UnitOfWork = uow;
                 EntityCache = new Dictionary<Resource, ResourceEntity>();
+                ResourceLookup = new Dictionary<ResourceEntity, Resource>();
                 CreatedRelations = new List<ResourceRelation>();
             }
 
@@ -466,9 +515,22 @@ namespace Marvin.Resources.Management
             public IDictionary<Resource, ResourceEntity> EntityCache { get; }
 
             /// <summary>
+            /// Reverse <see cref="EntityCache"/> to fetch instances by resource
+            /// </summary>
+            public IDictionary<ResourceEntity, Resource> ResourceLookup { get; }
+
+            /// <summary>
             /// Accesor wrappers for relations that were created while saving references
             /// </summary>
             public IList<ResourceRelation> CreatedRelations { get; }
+
+            /// <summary>
+            /// Resolve a relation reference
+            /// </summary>
+            public Resource ResolveReference(ResourceRelationAccessor relation)
+            {
+                return relation.ReferenceId > 0 ? _graph.Get(relation.ReferenceId) : ResourceLookup[relation.ReferenceEntity];
+            }
         }
     }
 }

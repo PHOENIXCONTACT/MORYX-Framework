@@ -10,7 +10,7 @@ namespace Marvin.AbstractionLayer
     {
         /// <summary>
         /// Id of the <see cref="IProductPartLink"/> that created this part.
-        /// 0 means this article was created from a product 
+        /// 0 means this article was created from a product
         /// directly.
         /// </summary>
         long PartLinkId { get; set; }
@@ -40,7 +40,7 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Name of this part
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Article instance of this part
@@ -50,10 +50,7 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Id of the <see cref="IProductPartLink"/>
         /// </summary>
-        public long PartLinkId 
-        {
-            get { return ((IArticleParts) Article).PartLinkId; } 
-        }
+        public long PartLinkId => ((IArticleParts) Article).PartLinkId;
 
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
@@ -122,7 +119,7 @@ namespace Marvin.AbstractionLayer
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0} - {1}", Name, Article.Type);
+            return $"{Name} - {Article.Type}";
         }
     }
 }

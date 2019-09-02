@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using Marvin.Container;
 using Marvin.Model;
 using Marvin.Products.Model;
@@ -9,8 +7,8 @@ using Marvin.Workflows;
 
 namespace Marvin.Products.Management
 {
-    [Component(LifeCycle.Singleton, typeof(IWorkplanManagement))]
-    internal class WorkplanManagement : IWorkplanManagement
+    [Component(LifeCycle.Singleton, typeof(IWorkplans))]
+    internal class WorkplanManagement : IWorkplans
     {
         #region Dependencies
 
@@ -18,37 +16,19 @@ namespace Marvin.Products.Management
 
         #endregion
 
-        public IWorkplan Create(string name)
-        {
-            using (var uow = ModelFactory.Create())
-            {
-                var wp = new Workplan
-                {
-                    Name = name,
-                    Version = 1,
-                    State = (int)WorkplanState.New
-                };
-                RecipeStorage.SaveWorkplan(uow, wp);
-
-                uow.Save();
-
-                return wp;
-            }
-        }
-
         public IReadOnlyList<Workplan> LoadAllWorkplans()
         {
             using (var uow = ModelFactory.Create())
             {
                 var repo = uow.GetRepository<IWorkplanEntityRepository>();
                 var workplans = (from entity in repo.Linq.Active()
-                                 select new Workplan
-                                 {
-                                     Id = entity.Id,
-                                     Name = entity.Name,
-                                     Version = entity.Version,
-                                     State = (WorkplanState)entity.State
-                                 }).ToArray();
+                    select new Workplan
+                    {
+                        Id = entity.Id,
+                        Name = entity.Name,
+                        Version = entity.Version,
+                        State = (WorkplanState)entity.State
+                    }).ToArray();
                 return workplans;
             }
         }
@@ -79,7 +59,7 @@ namespace Marvin.Products.Management
             {
                 var repo = uow.GetRepository<IWorkplanEntityRepository>();
                 var workplan = repo.GetByKey(workplanId);
-                if (workplan == null || workplan.State != (int)WorkplanState.New)
+                if (workplan == null)
                     return; // TODO: Any feedback?
                 repo.Remove(workplan);
                 uow.Save();

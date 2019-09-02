@@ -5,6 +5,7 @@ using Marvin.Container;
 using Marvin.Modules;
 using Marvin.Products.Management;
 using Marvin.Products.Management.Importers;
+using Marvin.Serialization;
 
 namespace Marvin.Products.Samples
 {
@@ -16,7 +17,7 @@ namespace Marvin.Products.Samples
         {
             if (string.IsNullOrEmpty(currentParameters.Name) && !string.IsNullOrEmpty(currentParameters.ProductType))
             {
-                currentParameters.Name = currentParameters.ProductType + "_";
+                currentParameters.Name = currentParameters.ProductType;
             }
 
             return currentParameters;
@@ -39,6 +40,12 @@ namespace Marvin.Products.Samples
                 case nameof(NeedleProduct):
                     product = new NeedleProduct();
                     break;
+                case nameof(WatchProduct):
+                    product = new WatchProduct();
+                    break;
+                case nameof(WatchPackageProduct):
+                    product = new WatchPackageProduct();
+                    break;
             }
 
             var identifier = parameters.Identifier;
@@ -53,7 +60,8 @@ namespace Marvin.Products.Samples
     public class WatchImportParameters : PrototypeParameters
     {
         [Required]
-        [PossibleProductValues(nameof(WatchfaceProduct), nameof(NeedleProduct))]
+        [PrimitiveValues(nameof(WatchfaceProduct), nameof(NeedleProduct), 
+            nameof(WatchPackageProduct), nameof(WatchProduct))]
         public string ProductType { get; set; }
     }
 }
