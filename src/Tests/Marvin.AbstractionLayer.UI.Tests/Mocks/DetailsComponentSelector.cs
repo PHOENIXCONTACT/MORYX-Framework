@@ -2,15 +2,10 @@
 
 namespace Marvin.AbstractionLayer.UI.Tests
 {
-    public class DetailsComponentSelector : DetailsComponentSelector<IDetailsComponent, IInteractionController>
+    public class DetailsComponentSelector : DetailsComponentSelector<IDetailsComponent>
     {
-        public DetailsComponentSelector(IContainer container, IInteractionController controller) : base(container, controller)
+        public DetailsComponentSelector(IContainer container) : base(container)
         {
         }
-    }
-
-    public class InteractionControllerMock : IInteractionController
-    {
-        
     }
 }

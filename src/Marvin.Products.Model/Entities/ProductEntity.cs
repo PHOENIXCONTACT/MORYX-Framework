@@ -5,7 +5,7 @@ namespace Marvin.Products.Model
 {
     public class ProductEntity : ModificationTrackedEntityBase
     {
-        public virtual string MaterialNumber { get; set; }
+        public virtual string Identifier { get; set; }
     
         public virtual short Revision { get; set; }
     

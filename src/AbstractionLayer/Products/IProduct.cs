@@ -24,11 +24,6 @@ namespace Marvin.AbstractionLayer
         IProductPartLink ParentLink { get; }
 
         /// <summary>
-        /// Current state of this product
-        /// </summary>
-        ProductState State { get; set; }
-
-        /// <summary>
         /// Create article instance of this type
         /// </summary>
         Article CreateInstance();

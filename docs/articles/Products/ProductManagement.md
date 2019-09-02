@@ -31,17 +31,13 @@ meet their requirements. Each application also defines a set of plugins to adapt
 
 Component name|Implementation|Desription
 --------------|--------------|----------
-[IProductManager](xref:Marvin.Products.Management.IProductManager)|intern|The API of the ProductManager
-[IProductStorage](xref:Marvin.Products.IProductStorage)|extern|The plant specific product storage
-[IProductInteraction](xref:Marvin.Products.Management.Modification.IProductInteraction)|intern|Defines teAPI of the product WCF service.
-[IProductConverter](xref:Marvin.Products.Management.Modification.IProductConverter)|intern| *TBD*
-[ICustomization](xref:Marvin.Products.ICustomization)|extern|Plugin to fetch possible values from storage
-[IProductImporter](xref:Marvin.Products.IProductImporter)|intern/extern|Plugins that can import products from file
-[IRecipeManagement](xref:Marvin.Products.Management.IRecipeManagement)|intern|Component to handle all recipe operations
-[IWorkplanEditingService](xref:Marvin.Products.Management.Modification.IWorkplanEditingService)|intern|Service used to edit workplan
-[IWorkplanEditingHost](xref:Marvin.Products.Management.Modification.IWorkplanEditingHost)|intern|Host for editing workplans
+[IProductManager](xref:Marvin.Products.Management.IProductManager)|internal|The API of the ProductManager
+[IProductStorage](xref:Marvin.Products.IProductStorage)|external|The plant specific product storage
+[IProductInteraction](xref:Marvin.Products.Management.Modification.IProductInteraction)|internal|Defines teAPI of the product WCF service.
+[IProductConverter](xref:Marvin.Products.Management.Modification.IProductConverter)|internal| *TBD*
+[IProductImporter](xref:Marvin.Products.IProductImporter)|internal/external|Plugins that can import products from file
+[IRecipeManagement](xref:Marvin.Products.Management.IRecipeManagement)|internal|Component to handle all recipe operations
 
 ## Diagrams
 
-TODO:
-![](images\ProductManagement.png "EA:MARVIN.MARVIN 2.0.ControlSystem.Level-2.Implementation.ReverseEngineering.ProductManagement")
+TODO

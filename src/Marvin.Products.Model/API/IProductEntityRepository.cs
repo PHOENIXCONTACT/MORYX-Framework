@@ -10,13 +10,13 @@ namespace Marvin.Products.Model
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        ProductEntity Create(string materialNumber, short revision, string typeName);
+        ProductEntity Create(string identifier, short revision, string typeName);
 
         /// <summary>
         /// This method returns the first matching ProductEntity for given parameters
         /// </summary>
-        /// <param name="materialNumber">Value for MaterialNumber the ProductEntity has to match</param>
+        /// <param name="identifier">Value for MaterialNumber the ProductEntity has to match</param>
         /// <param name="revision">Value for Revision the ProductEntity has to match</param>
-        ProductEntity GetByIdentity(string materialNumber, short revision);
+        ProductEntity GetByIdentity(string identifier, short revision);
     }
 }

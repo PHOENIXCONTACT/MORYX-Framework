@@ -42,10 +42,10 @@ namespace Marvin.Products.Management.Modification
         public string Type { get; set; }
 
         /// <summary>
-        /// Ingredients of the recipe
+        /// Properties of the recipe
         /// </summary>
         [DataMember]
-        public Entry Ingredients { get; set; }
+        public Entry Properties { get; set; }
 
         /// <summary>
         /// The id of the current referenced workplan

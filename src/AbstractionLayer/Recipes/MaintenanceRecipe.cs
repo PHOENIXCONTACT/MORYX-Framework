@@ -1,11 +1,11 @@
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Recipe to instantiate a maintenacne recipe.
+    /// Recipe to instantiate a maintenance recipe.
     /// </summary>
     public abstract class MaintenanceRecipe : Recipe
     {
-        /// 
+        /// <inheritdoc />
         public sealed override string Type => nameof(MaintenanceRecipe);
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         protected MaintenanceRecipe()
         {
-            
+
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Marvin.AbstractionLayer
         protected MaintenanceRecipe(MaintenanceRecipe source)
             : base(source)
         {
-            
+
         }
     }
 }

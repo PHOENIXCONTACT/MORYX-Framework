@@ -7,7 +7,7 @@ namespace Marvin.AbstractionLayer.UI.Tests
 
         public bool InitializeCalled { get; private set; }
 
-        public void Initialize(IInteractionController controller, string typeName)
+        public void Initialize(string typeName)
         {
             InitializeCalled = true;
         }

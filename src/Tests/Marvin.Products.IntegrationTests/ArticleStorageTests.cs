@@ -128,7 +128,7 @@ namespace Marvin.Products.IntegrationTests
 
             // Assert
             Assert.NotNull(article, "Failed to load from db!");
-            Assert.IsInstanceOf<WatchFaceArticle>(article.WatchFace, "Failed to fetch single part");
+            Assert.IsInstanceOf<WatchfaceArticle>(article.Watchface, "Failed to fetch single part");
             Assert.AreEqual(3, ((IArticleParts)article).Parts.Count, "Invalid number of parts fetched!");
         }
 

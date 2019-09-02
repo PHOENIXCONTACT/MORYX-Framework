@@ -1,4 +1,5 @@
-﻿using Marvin.AbstractionLayer;
+﻿using System.ComponentModel;
+using Marvin.AbstractionLayer;
 
 namespace Marvin.Products.Samples
 {
@@ -12,6 +13,8 @@ namespace Marvin.Products.Samples
         {
         }
 
+        [DisplayName("Rolle")]
+        [Description("Rolle des Zeigers")]
         public NeedleRole Role { get; set; }
 
         public override Article Instantiate()

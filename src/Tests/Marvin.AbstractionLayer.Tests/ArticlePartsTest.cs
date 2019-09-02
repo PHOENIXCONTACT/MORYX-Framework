@@ -14,7 +14,7 @@ namespace Marvin.AbstractionLayer.Tests
             // Arrange
             var dummy = new WatchArticle
             {
-                WatchFace = new WatchFaceArticle(),
+                Watchface = new WatchfaceArticle(),
                 Neddles = new List<NeedleArticle>
                 {
                     new NeedleArticle(),
@@ -27,10 +27,10 @@ namespace Marvin.AbstractionLayer.Tests
 
             // Assert
             Assert.AreEqual(3, parts.Count, "Invalid number of parts in container!");
-            Assert.AreEqual(1, parts.Count(p => p.Name == nameof(dummy.WatchFace)), "Single part saved more than once!");
+            Assert.AreEqual(1, parts.Count(p => p.Name == nameof(dummy.Watchface)), "Single part saved more than once!");
             Assert.AreEqual(2, parts.Count(p => p.Name == nameof(dummy.Neddles)), "Collection was not saved correctly!");
             // Check type to be sure
-            Assert.IsInstanceOf<WatchFaceArticle>(parts.First(p => p.Name == nameof(dummy.WatchFace)).Article, "Type of part does not match!");
+            Assert.IsInstanceOf<WatchfaceArticle>(parts.First(p => p.Name == nameof(dummy.Watchface)).Article, "Type of part does not match!");
             Assert.IsInstanceOf<NeedleArticle>(parts.First(p => p.Name == nameof(dummy.Neddles)).Article, "Type of collection value does not match!");
         }
 
@@ -42,12 +42,12 @@ namespace Marvin.AbstractionLayer.Tests
             var parts = ((IArticleParts) dummy).Parts;
 
             // Act
-            parts.Add(new ArticlePart(nameof(dummy.WatchFace), new WatchFaceArticle()));
+            parts.Add(new ArticlePart(nameof(dummy.Watchface), new WatchfaceArticle()));
             parts.Add(new ArticlePart(nameof(dummy.Neddles), new NeedleArticle()));
             parts.Add(new ArticlePart(nameof(dummy.Neddles), new NeedleArticle()));
 
             // Assert
-            Assert.NotNull(dummy.WatchFace, "Part not set from container!");
+            Assert.NotNull(dummy.Watchface, "Part not set from container!");
             Assert.NotNull(dummy.Neddles, "Collection is null!");
             Assert.AreEqual(2, dummy.Neddles.Count, "Number of parts invalid!");
         }
@@ -66,7 +66,7 @@ namespace Marvin.AbstractionLayer.Tests
             // Assert
             Assert.NotNull(dummy.Neddles, "Collection null!");
             Assert.AreEqual(2, dummy.Neddles.Count, "Collection count invalid!");
-            Assert.IsNull(dummy.WatchFace, "Part must be null if it was not set!");
+            Assert.IsNull(dummy.Watchface, "Part must be null if it was not set!");
         }
 
         [Test]
@@ -77,10 +77,10 @@ namespace Marvin.AbstractionLayer.Tests
             var parts = ((IArticleParts)dummy).Parts;
 
             // Act
-            parts.Add(new ArticlePart(nameof(dummy.WatchFace), new WatchFaceArticle()));
+            parts.Add(new ArticlePart(nameof(dummy.Watchface), new WatchfaceArticle()));
 
             // Assert
-            Assert.NotNull(dummy.WatchFace, "Part not set from container!");
+            Assert.NotNull(dummy.Watchface, "Part not set from container!");
             Assert.NotNull(dummy.Neddles, "Collection is null!");
             Assert.AreEqual(0, dummy.Neddles.Count, "There should be no parts in the collection");
         }

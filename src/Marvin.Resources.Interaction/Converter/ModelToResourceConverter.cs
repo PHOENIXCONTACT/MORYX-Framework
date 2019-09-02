@@ -82,9 +82,9 @@ namespace Marvin.Resources.Interaction.Converter
                     continue;
 
                 var property = type.GetProperty(reference.Name);
-                if (reference.IsCollection)
+                if (property.GetValue(instance) is IReferenceCollection asCollection)
                 {
-                    var collection = ((IReferenceCollection)property.GetValue(instance)).UnderlyingCollection;
+                    var collection = asCollection.UnderlyingCollection;
                     // Add new items and update existing ones
                     foreach (var targetModel in reference.Targets)
                     {

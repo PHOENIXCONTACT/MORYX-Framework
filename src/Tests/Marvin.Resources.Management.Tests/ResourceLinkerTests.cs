@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Model;
@@ -195,7 +196,7 @@ namespace Marvin.Resources.Management.Tests
             Assert.AreEqual(1, possiblePart.Count(r => r.Target.Id == 0));
         }
 
-        [Test(Description = "Multiple references of the same relation type should not interfere with each other")]
+        [Test(Description = "Multiple references of the same relation type shoudl not interfere with each other")]
         public void ReferenceInterferenceOnSave()
         {
             // Arrange
@@ -356,6 +357,32 @@ namespace Marvin.Resources.Management.Tests
             // Assert
             Assert.IsNull(instance.Reference2);
             Assert.AreEqual(1, instance.References.Count);
+        }
+
+        [TestCase(false, false, Description = "Validation should go through if both required properties are set")]
+        [TestCase(true, false, Description = "Validation should fail if the reference is null")]
+        [TestCase(false, true, Description = "Validation should fail if the references are empty")]
+        [TestCase(true, true, Description = "Validation should fail if both required are empty")]
+        public void CheckRequiredReference(bool isNull, bool isEmpty)
+        {
+            // Arrange
+            var instance = new RequiredReferenceResource();
+            var reference = new SimpleResource();
+            ResourceReferenceTools.InitializeCollections(instance);
+            ResourceReferenceTools.InitializeCollections(reference);
+            var dbMocks = SetupDbMocks(new List<ResourceRelation>());
+
+            // Act
+            if (!isNull)
+                instance.Reference = reference;
+            if (!isEmpty)
+                instance.References.Add(reference);
+
+            // Assert
+            if (isNull || isEmpty)
+                Assert.Throws<ValidationException>(() => _linker.SaveReferences(dbMocks.Item1.Object, instance, new ResourceEntity()));
+            else
+                Assert.DoesNotThrow(() => _linker.SaveReferences(dbMocks.Item1.Object, instance, new ResourceEntity()));
         }
 
         private static Tuple<Mock<IUnitOfWork>, Mock<IResourceRelationRepository>, Mock<IResourceEntityRepository>> SetupDbMocks(List<ResourceRelation> relations)

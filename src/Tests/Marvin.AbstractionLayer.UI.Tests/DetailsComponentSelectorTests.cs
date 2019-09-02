@@ -13,9 +13,7 @@ namespace Marvin.AbstractionLayer.UI.Tests
         public void SetUp()
         {
             _container = new LocalContainer();
-
             _container.Register<DetailsComponentSelector, DetailsComponentSelector>();
-            _container.Register<IInteractionController, InteractionControllerMock>();
 
             //Register component factory
             _container.Register<IDetailsComponentFactory>();

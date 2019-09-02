@@ -9,6 +9,7 @@ namespace Marvin.AbstractionLayer.Resources
     /// Attribute to decorate properties or method parameters of type string and return
     /// all possible resource types.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class ResourceTypesAttribute : PossibleValuesAttribute
     {
         /// <summary>

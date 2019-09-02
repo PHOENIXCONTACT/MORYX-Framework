@@ -14,6 +14,8 @@ namespace Marvin.AbstractionLayer.Resources
         /// </summary>
         ICollection<IResource> UnderlyingCollection { get; }
 
+        // TODO: This needs an API for type checks
+
         /// <summary>
         /// Event raised when the collection was changed
         /// </summary>

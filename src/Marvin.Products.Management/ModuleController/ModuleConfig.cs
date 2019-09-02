@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Marvin.AbstractionLayer;
 using Marvin.Configuration;
 using Marvin.Products.Management.Importers;
-using Marvin.Runtime.Configuration;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
@@ -36,28 +36,29 @@ namespace Marvin.Products.Management
         public HostConfig InteractionHost { get; set; }
 
         /// <summary>
-        /// Released products can be edited
-        /// </summary>
-        [DataMember, Description("Released products can be edited")]
-        public bool ReleasedProductEditable { get; set; }
-
-        /// <summary>
-        /// Flag if this application uses recipes
-        /// </summary>
-        [DataMember, Description("Flag if this application uses recipes")]
-        public bool HasRecipes { get; set; }
-
-        /// <summary>
-        /// Flag if the module should use the null customization
-        /// </summary>
-        [DataMember, Description("Flag if the module should use the null customization")]
-        public bool UseNullCustomization { get; set; }
-
-        /// <summary>
-        /// List of configured importes
+        /// List of configured importers
         /// </summary>
         [DataMember, Description("List of configured importes")]
         [PluginConfigs(typeof(IProductImporter), false)]
         public List<ProductImporterConfig> Importers { get; set; }
+
+        /// <summary>
+        /// TODO: Remove in AL5 and read from configured recipe strategies and do the same for products
+        /// </summary>
+        [DataMember, Description("Recipe types that can be configured through the UI")]
+        public List<SupportRecipe> SupportedRecipes { get; set; }
+    }
+
+    /// <summary>
+    /// Necessary intermediate class for Platform2.7 Maintenance
+    /// </summary>
+    [DataContract]
+    public class SupportRecipe
+    {
+        /// <summary>
+        /// The value itself
+        /// </summary>
+        [DataMember, PossibleTypes(typeof(IProductRecipe))]
+        public string Type { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Marvin.AbstractionLayer;
 using Marvin.Modules;
 using Marvin.Products.Management.Importers;
-using Marvin.Products.Management.Modification;
 
 namespace Marvin.Products.Management
 {
@@ -20,7 +19,7 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Returns all products on this machine
         /// </summary>
-        IEnumerable<IProduct> GetAll();
+        IReadOnlyList<IProduct> GetProducts(ProductQuery query);
 
         /// <summary>
         /// Load product instance by id
@@ -33,6 +32,11 @@ namespace Marvin.Products.Management
         IProduct GetProduct(ProductIdentity identity);
 
         /// <summary>
+        /// Create a new product for the given group type
+        /// </summary>
+        IProduct Create(string type);
+
+        /// <summary>
         /// Event raised when a product changed
         /// </summary>
         event EventHandler<IProduct> ProductChanged;
@@ -43,14 +47,9 @@ namespace Marvin.Products.Management
         long Save(IProduct modifiedInstance);
 
         /// <summary>
-        /// Release this product to be available for production
-        /// </summary>
-        IProduct Release(long id);
-
-        /// <summary>
         /// Create revision of this product with provided revision number
         /// </summary>
-        IProduct CreateRevision(long productId, short revisionNo, string comment);
+        IProduct Duplicate(long sourceId, ProductIdentity identity);
 
         /// <summary>
         /// Import the given file as a product to the database
@@ -58,17 +57,16 @@ namespace Marvin.Products.Management
         IReadOnlyList<IProduct> ImportProducts(string importer, IImportParameters parameters);
 
         /// <summary>
-        /// Try to delete a product. If it is still used as a part in other products, the product
-        /// is not deleted but instead all affacted products returned.
+        /// Try to delete a product. If it is still used as a part in other products, it will return <c>false</c>
         /// </summary>
-        /// <param name="deprecatedProduct">Product that is depracted and should be deleted.</param>
-        /// <returns>The collection of all products that would be affacted by the removal. If the collection is empty the product was removed.</returns>
-        IReadOnlyList<IProduct> DeleteProduct(IProduct deprecatedProduct);
+        /// <param name="productId">Id of the product that is deprecated and should be deleted.</param>
+        /// <returns><value>True</value> if the product was removed, <value>false</value> otherwise</returns>
+        bool DeleteProduct(long productId);
 
         /// <summary>
         /// Create an article instance of given product
         /// </summary>
-        /// <param name="product">Product to instanciate</param>
+        /// <param name="product">Product to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
         Article CreateInstance(IProduct product, bool save);
@@ -94,15 +92,5 @@ namespace Marvin.Products.Management
         /// Updates the database from the article instance
         /// </summary>
         void SaveArticles(params Article[] articles);
-
-        /// <summary>
-        /// Export the full tree
-        /// </summary>
-        ProductStructureEntry[] ExportTree();
-
-        /// <summary>
-        /// Load full revision graph
-        /// </summary>
-        ProductRevisionEntry[] Revisions(string identifier);
     }
 }

@@ -137,7 +137,7 @@ namespace Marvin.Resources.Management
         }
 
         /// <summary>
-        /// Load and link all resources from the databse
+        /// Load and link all resources from the database
         /// </summary>
         private void LoadResources(ICollection<ResourceEntityAccessor> allResources)
         {
@@ -174,12 +174,12 @@ namespace Marvin.Resources.Management
                     break;
                 case ResourceStartupPhase.Initializing:
                 case ResourceStartupPhase.Initialized:
-                    // Resources those are created during the initialize of a resource are automaticaly initialized also.
+                    // Resources those are created during the initialize of a resource are automatically initialized also.
                     wrapped.Initialize();
                     break;
                 case ResourceStartupPhase.Starting:
                 case ResourceStartupPhase.Started:
-                    // Resources those are created during the start of a resource are automaticaly initialized and started also.
+                    // Resources those are created during the start of a resource are automatically initialized and started also.
                     wrapped.Initialize();
                     wrapped.Start();
                     break;
@@ -412,46 +412,6 @@ namespace Marvin.Resources.Management
 
         #region IResourceManagement
 
-        public TResource GetResource<TResource>() where TResource : class, IPublicResource
-        {
-            return Graph.GetResource<TResource>();
-        }
-
-        public TResource GetResource<TResource>(long id) where TResource : class, IPublicResource
-        {
-            return Graph.GetResource<TResource>(r => r.Id == id);
-        }
-
-        public TResource GetResource<TResource>(string name) where TResource : class, IPublicResource
-        {
-            return Graph.GetResource<TResource>(r => r.Name == name);
-        }
-
-        public TResource GetResource<TResource>(ICapabilities requiredCapabilities) where TResource : class, IPublicResource
-        {
-            return Graph.GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities));
-        }
-
-        public TResource GetResource<TResource>(Func<TResource, bool> predicate)
-            where TResource : class, IPublicResource
-        {
-            return Graph.GetResource(predicate);
-        }
-
-        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IPublicResource
-        {
-            return Graph.GetResources<TResource>(r => true);
-        }
-
-        public IEnumerable<TResource> GetResources<TResource>(ICapabilities requiredCapabilities) where TResource : class, IPublicResource
-        {
-            return Graph.GetResources<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities));
-        }
-
-        public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IPublicResource
-        {
-            return Graph.GetResources(predicate);
-        }
 
         private void RaiseResourceAdded(IPublicResource newResource)
         {

@@ -10,9 +10,9 @@ namespace Marvin.AbstractionLayer
     public interface IProductManagement : IRecipeProvider, IWorkplans
     {
         /// <summary>
-        /// Get all products
+        /// Get products based on a query
         /// </summary>
-        IEnumerable<IProduct> GetAllProducts();
+        IReadOnlyList<IProduct> GetProducts(ProductQuery query);
 
         /// <summary>
         /// Load product instance by id
@@ -27,7 +27,13 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Event raised when a product changed
         /// </summary>
-        event EventHandler<IProduct> ProductChanged; 
+        event EventHandler<IProduct> ProductChanged;
+
+        /// <summary>
+        /// Duplicate a product under a new identity
+        /// </summary>
+        /// <exception cref="IdentityConflictException">Thrown when the new identity causes conflicts</exception>
+        IProduct Duplicate(IProduct template, ProductIdentity newIdentity);
 
         /// <summary>
         /// Save a product to the database

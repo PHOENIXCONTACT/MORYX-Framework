@@ -7,6 +7,9 @@ namespace Marvin.Products.Management.Modification
     internal class PartModel
     {
         [DataMember]
+        public long Id { get; set; }
+
+        [DataMember]
         public Entry Properties { get; set; }
 
         [DataMember]

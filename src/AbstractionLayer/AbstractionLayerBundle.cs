@@ -6,13 +6,13 @@
     public class AbstractionLayerBundle
     {
         /// <summary>
-        /// Name string of the Jobs bundle
+        /// Name string of the bundle
         /// </summary>
         public const string Name = "Marvin.AbstractionLayer";
 
         /// <summary>
         /// Current version of this bundle
         /// </summary>
-        public const string Version = "3.0.0";
+        public const string Version = "5.0.0";
     }
 }

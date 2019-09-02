@@ -21,7 +21,7 @@ namespace Marvin.Products.Management
         public string File { get; set; }
 
         /// <summary>
-        /// Read file depending on wether it is a base64 encoded string or a filepath
+        /// Read file depending on whether it is a base64 encoded string or a filepath
         /// </summary>
         public Stream ReadFile()
         {

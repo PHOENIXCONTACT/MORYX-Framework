@@ -44,6 +44,7 @@ namespace Marvin.Resources.Management.Tests
                 .Returns(new Resource[0]);
 
             _initializerMock = new Mock<IResourceInitializer>();
+            _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>())).Returns(new[] { _resourceMock });
             _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
                 .Returns(new[] { _resourceMock });
             _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>()))
@@ -71,6 +72,16 @@ namespace Marvin.Resources.Management.Tests
                 resourceRepo.Create(DatabaseResourceName, typeof(ResourceMock).ResourceType());
                 uow.Save();
             }
+        }
+
+        [Test(Description = "Executes a resource initializer on the manager to add resources")]
+        public void ExecuteInitializer()
+        {
+            // Act
+            _resourceManager.ExecuteInitializer(_initializerMock.Object);
+
+            // Assert
+            _linkerMock.Verify(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()), Times.Once);
         }
 
         [Test(Description = "If resource manager starts with filled database, it will initialized with values of database.")]
@@ -163,7 +174,7 @@ namespace Marvin.Resources.Management.Tests
         }
 
         [Test(Description = "Resources should be saved on Changed event")]
-        public void SaveResourceOnResouceChanged()
+        public void SaveResourceOnResourceChanged()
         {
             // Arrange
             _resourceManager.Initialize();
@@ -171,7 +182,7 @@ namespace Marvin.Resources.Management.Tests
 
             var testResource = _graph.Instantiate<PublicResourceMock>();
             _resourceManager.Save(testResource);
-            _linkerMock.ResetCalls();
+            _linkerMock.Invocations.Clear();
 
             // Act
             testResource.Name = "Hello World";
@@ -225,7 +236,7 @@ namespace Marvin.Resources.Management.Tests
 
             _typeControllerMock.Verify(t => t.Destroy(testResource), Times.Once);
 
-            Assert.Throws<ResourceNotFoundException>(() => _resourceManager.GetResource<PublicResourceMock>(new TestCapabilities()));
+            Assert.Throws<ResourceNotFoundException>(() => _graph.GetResource<PublicResourceMock>());
 
             using (var uow = _modelFactory.Create())
             {

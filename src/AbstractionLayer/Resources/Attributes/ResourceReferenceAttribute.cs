@@ -11,17 +11,17 @@ namespace Marvin.AbstractionLayer.Resources
         /// <summary>
         /// Name of the reference
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Type of relation with the referenced resource
         /// </summary>
-        public ResourceRelationType RelationType { get; private set; }
+        public ResourceRelationType RelationType { get; }
 
         /// <summary>
         /// Role of the referenced resource in the relation
         /// </summary>
-        public ResourceReferenceRole Role { get; private set; }
+        public ResourceReferenceRole Role { get; }
 
         /// <summary>
         /// Automatically save changes to the collection of references
@@ -29,16 +29,21 @@ namespace Marvin.AbstractionLayer.Resources
         public bool AutoSave { get; set; }
 
         /// <summary>
-        /// Create a typed reference with <see cref="ResourceReferenceRole.Target"/> 
+        /// Reference is required and must be set
+        /// </summary>
+        public bool IsRequired { get; set; }
+
+        /// <summary>
+        /// Create a typed reference with <see cref="ResourceReferenceRole.Target"/>
         /// </summary>
         /// <param name="relationType">Type of the reference</param>
-        public ResourceReferenceAttribute(ResourceRelationType relationType) 
+        public ResourceReferenceAttribute(ResourceRelationType relationType)
             : this(relationType, ResourceReferenceRole.Target, null)
         {
         }
 
         /// <summary>
-        /// Create a typed reference with <see cref="ResourceReferenceRole.Target"/> 
+        /// Create a typed reference with <see cref="ResourceReferenceRole.Target"/>
         /// </summary>
         /// <param name="relationType">Type of the reference</param>
         /// <param name="name">Name of the reference if there is more than one</param>

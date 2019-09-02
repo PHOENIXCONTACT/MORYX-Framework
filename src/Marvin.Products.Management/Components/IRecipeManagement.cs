@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Marvin.AbstractionLayer;
-using Marvin.Workflows;
 
 namespace Marvin.Products.Management
 {
@@ -26,22 +25,9 @@ namespace Marvin.Products.Management
         IReadOnlyList<IProductRecipe> GetRecipes(IProduct product, RecipeClassification classifications);
 
         /// <summary>
-        /// Retrieves a full recipe for a combination of product and workplan.
-        /// </summary>
-        /// <param name="productId">The product's ID</param>
-        /// <param name="workplanId">The worklan's ID</param>
-        /// <returns>The recipe or null if there is no recipe for the given combination of product and workplan.</returns>
-        IProductRecipe GetRecipe(long productId, long workplanId);
-
-        /// <summary>
         /// A recipe was changed, give users the chance to update their reference
         /// </summary>
         event EventHandler<IRecipe> RecipeChanged;
-
-        /// <summary>
-        /// Create a full recipe for a combination of product and workplan.
-        /// </summary>
-        IProductRecipe Create(long productId, long workplanId, string name);
 
         /// <summary>
         /// Save recipe to DB
@@ -49,7 +35,7 @@ namespace Marvin.Products.Management
         long Save(IProductRecipe instance);
 
         /// <summary>
-        /// Saves multiple recipies
+        /// Saves multiple recipes
         /// </summary>
         void Save(long productId, ICollection<IProductRecipe> recipes);
     }

@@ -42,15 +42,6 @@ namespace Marvin.Products.Management
             // Load all product plugins
             Container.LoadComponents<IProductStorage>();
             Container.LoadComponents<IProductImporter>();
-
-            if (Config.UseNullCustomization)
-            {
-                Container.Register<ICustomization, NullCustomization>();
-            }
-            else
-            {
-                Container.LoadComponents<ICustomization>();
-            }
         }
 
         /// <summary>

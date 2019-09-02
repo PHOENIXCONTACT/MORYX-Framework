@@ -1,5 +1,13 @@
-- name: Documentation
+- name: User Manual
+  href: manual/
+
+- name: Developer
   href: articles/
-- name: API Documentation
+  
+- name: API
   href: api/
   homepage: api/index.md
+
+- name: Migrations
+  href: migrations/
+  homepage: migrations/index.md

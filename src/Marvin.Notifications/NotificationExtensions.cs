@@ -16,6 +16,7 @@ namespace Marvin.Notifications
 
             container.SetInstance((INotificationAdapter)adapter, "NotificationAdapter");
             container.SetInstance((INotificationSourceAdapter)adapter, "NotificationSenderAdapter");
+            container.SetInstance((IForeignNotificationListener)adapter, "ForeignNotificationListener");
 
             return container;
         }

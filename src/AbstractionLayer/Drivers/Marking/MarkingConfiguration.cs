@@ -30,12 +30,12 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// <summary>
         /// Displacement along the X-axis in mm.
         /// </summary>
-        public int? XAxis { get; protected set; }
+        public double? XAxis { get; protected set; }
 
         /// <summary>
         /// Displacement along the Y-axis in mm.
         /// </summary>
-        public int? YAxis { get; protected set; }
+        public double? YAxis { get; protected set; }
 
         /// <summary>
         /// Constuctor to set the necessary information when creating.
@@ -54,7 +54,7 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// <param name="xaxis">Displacement along the X-axis in mm.</param>
         /// <param name="yaxis">Displacement along the Y-axis in mm.</param>
         /// <returns>This object.</returns>
-        public MarkingConfiguration SetTransformation(double resizingFactor, double angle, int xaxis, int yaxis)
+        public MarkingConfiguration SetTransformation(double resizingFactor, double angle, double xaxis, double yaxis)
         {
             ResizingFactor = resizingFactor;
             Angle = angle;

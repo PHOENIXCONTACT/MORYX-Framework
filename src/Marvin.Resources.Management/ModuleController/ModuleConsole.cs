@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Linq;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Configuration;
 using Marvin.Runtime.Modules;
 using Marvin.Serialization;
 using Marvin.Tools;
@@ -87,7 +86,7 @@ namespace Marvin.Resources.Management
                 var index = initializerPos - 1;
                 if (index >= _initializers.Length)
                 {
-                    outputStream($"ResourceInitializier with position {initializerPos} does not exists");
+                    outputStream($"ResourceInitializer with position {initializerPos} does not exists");
                     ListResourceInitializers(outputStream);
                 }
 
@@ -101,7 +100,7 @@ namespace Marvin.Resources.Management
 
                 if (initializer == null)
                 {
-                    outputStream($"ResourceInitializier with name '{name}' does not exists");
+                    outputStream($"ResourceInitializer with name '{name}' does not exists");
                     ListResourceInitializers(outputStream);
                 }
                 else
@@ -115,9 +114,9 @@ namespace Marvin.Resources.Management
         {
             try
             {
-                outputStream($"Executing initializier '{initializer.Name}' ...");
+                outputStream($"Executing initializer '{initializer.Name}' ...");
                 ResourceManager.ExecuteInitializer(initializer);
-                outputStream("Successfull! Restart the module to load the changes!");
+                outputStream("Successful! Restart the module to load the changes!");
                 outputStream(string.Empty);
             }
             catch (Exception e)
@@ -168,5 +167,6 @@ namespace Marvin.Resources.Management
 
             return "Success";
         }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.ServiceModel;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
@@ -28,34 +29,32 @@ namespace Marvin.Resources.Interaction
         /// <summary>
         /// Type controller for type trees and construction
         /// </summary>
-        public IResourceTypeTree TypeController { get; set; }
+        public IResourceTypeTree TypeTree { get; set; }
 
         #endregion
 
         /// <inheritdoc />
-        public ResourceTypeModel[] GetTypeTree()
+        public ResourceTypeModel GetTypeTree()
         {
-            return TypeController.RootTypes.Select(t => ResourceToModelConverter.ConvertType(t, Serialization)).ToArray();
+            var converter = new ResourceToModelConverter(TypeTree, Serialization);
+            return converter.ConvertType(TypeTree.RootType);
         }
 
         /// <inheritdoc />
-        public ResourceModel[] GetResourceTree()
+        public ResourceModel[] GetResources(ResourceQuery query)
         {
-            var converter = new ResourceToModelConverter(Graph, TypeController, Serialization);
-            var resourceTree = Graph.GetResources<Resource>(r => r.Parent == null).Select(converter.ConvertResource).ToArray();
-            return resourceTree;
+            var filter = new ResourceQueryFilter(query, TypeTree);
+            var resources = Graph.GetResources<Resource>(filter.Match).ToArray();
+
+            var converter = new ResourceQueryConverter(TypeTree, Serialization, query);
+            return converter.QueryConversion(resources);
         }
 
         /// <inheritdoc />
-        public ResourceModel GetDetails(long id, int depth = 1)
+        public ResourceModel[] GetDetails(long[] ids)
         {
-            var converter = new ResourceToModelConverter(Graph, TypeController, Serialization);
-
-            //Additionally load workpieces 
-            var resource = Graph.Get(id);
-            var model = converter.GetDetails(resource, depth);
-
-            return model;
+            var converter = new ResourceToModelConverter(TypeTree, Serialization);
+            return ids.Select(Graph.Get).Select(converter.GetDetails).ToArray();
         }
 
         /// <inheritdoc />
@@ -68,13 +67,13 @@ namespace Marvin.Resources.Interaction
         /// <inheritdoc />
         public ResourceModel Create(string resourceType, MethodEntry constructor = null)
         {
-            var converter = new ResourceToModelConverter(Graph, TypeController, Serialization);
+            var converter = new ResourceToModelConverter(TypeTree, Serialization);
 
             var resource = Graph.Instantiate(resourceType);
             if (constructor != null)
                 EntryConvert.InvokeMethod(resource, constructor, Serialization);
 
-            var model = converter.GetDetails(resource, int.MaxValue);
+            var model = converter.GetDetails(resource);
             model.Methods = new MethodEntry[0]; // Reset methods because the can not be invoked on new objects
 
             return model;
@@ -103,6 +102,64 @@ namespace Marvin.Resources.Interaction
         {
             var resource = Graph.Get(id);
             return Graph.Destroy(resource);
+        }
+
+        private class ResourceQueryFilter
+        {
+            private readonly ResourceQuery _query;
+            private readonly IReadOnlyList<IResourceTypeNode> _typeNodes;
+
+            public ResourceQueryFilter(ResourceQuery query, IResourceTypeTree typeTree)
+            {
+                _query = query;
+                _typeNodes = query.Types?.Select(typeName => typeTree[typeName]).Where(t => t != null).ToArray();
+            }
+
+            public bool Match(Resource instance)
+            {
+                // Check type of instance
+                // TODO: Use type wrapper
+                if (_typeNodes?.Count > 0 && !_typeNodes.Any(tn => tn.ResourceType.IsInstanceOfType(instance)))
+                    return false;
+
+                // Next check for reference filters
+                if (_query.ReferenceCondition == null)
+                    return true;
+
+                var referenceCondition = _query.ReferenceCondition;
+                var references = (from property in instance.GetType().GetProperties()
+                    let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
+                    where att != null
+                    select new {property, att}).ToList();
+
+                // Find properties matching the condition
+                PropertyInfo[] matches;
+                if (!string.IsNullOrEmpty(referenceCondition.Name))
+                {
+                    matches = references.Where(r => r.property.Name == referenceCondition.Name)
+                        .Select(r => r.property).ToArray();
+                }
+                else
+                {
+                    matches = references
+                        .Where(r => r.att.RelationType == referenceCondition.RelationType && r.att.Role == referenceCondition.Role)
+                        .Select(r => r.property).ToArray();
+                }
+                if(matches.Length != 1)
+                    return false;
+
+                if (referenceCondition.ValueConstraint == ReferenceValue.Irrelevant)
+                    return true;
+
+                var propertyValue = matches[0].GetValue(instance);
+                if (referenceCondition.ValueConstraint == ReferenceValue.NullOrEmpty)
+                    return propertyValue == null || (propertyValue as IReferenceCollection)?.UnderlyingCollection.Count == 0;
+
+                if (referenceCondition.ValueConstraint == ReferenceValue.NotEmpty)
+                    return (propertyValue as IReferenceCollection)?.UnderlyingCollection.Count > 0 || propertyValue != null;
+
+                return true;
+            }
         }
     }
 }

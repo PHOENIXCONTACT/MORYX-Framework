@@ -20,13 +20,13 @@ namespace Marvin.AbstractionLayer.Resources
         public IModuleLogger Logger { get; set; }
 
         /// <summary>
-        /// Type controller to construct new resources
+        /// Reference to the graph for interaction
         /// </summary>
         public IResourceGraph Graph { get; set; }
 
         #endregion
 
-        /// <inheritdoc />
+        /// <summary>Database key of the resource</summary>
         public long Id { get; set; }
 
         /// <inheritdoc />
@@ -98,7 +98,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// <inheritdoc />
         void IDisposable.Dispose()
         {
-            // Remove type controller reference, just to make sure
+            // Remove graph reference, just to make sure
             Graph = null;
 
             try
@@ -112,7 +112,9 @@ namespace Marvin.AbstractionLayer.Resources
         }
 
         /// <summary>
-        /// Resource specific implementation of <see cref="IDisposable.Dispose"/>
+        /// Resource specific implementation of Dispose instead of overriding <see cref="IDisposable.Dispose"/>.
+        /// This ensures, that developers do not accidentally forget to call <code>base.Dispose()</code> and
+        /// create a memory leak
         /// </summary>
         protected virtual void OnDispose()
         {

@@ -38,14 +38,9 @@ namespace Marvin.Resources.Management
 
         /// <summary>
         /// Cache of all proxy instances that were created during the runtime of the ResourceManagement. They
-        /// all need to be 
+        /// all need to be
         /// </summary>
         private readonly Dictionary<long, IResourceProxy> _proxyCache = new Dictionary<long, IResourceProxy>();
-
-        /// <summary>
-        /// All types derived from <see cref="Resource"/>
-        /// </summary>
-        private readonly List<ResourceTypeNode> _rootTypes = new List<ResourceTypeNode>();
 
         /// <summary>
         /// Cache to directly access a resource type
@@ -53,12 +48,18 @@ namespace Marvin.Resources.Management
         private readonly Dictionary<string, ResourceTypeNode> _typeCache = new Dictionary<string, ResourceTypeNode>();
 
         /// <inheritdoc />
-        public IEnumerable<ResourceTypeNode> RootTypes => _rootTypes.AsReadOnly();
+        public ResourceTypeNode RootType { get; private set; }
 
         /// <inheritdoc />
-        IEnumerable<IResourceTypeNode> IResourceTypeTree.RootTypes => _rootTypes.AsReadOnly();
+        public IResourceTypeNode this[string typeName] =>
+            _typeCache.ContainsKey(typeName) ? _typeCache[typeName] : null;
 
         /// <inheritdoc />
+        IResourceTypeNode IResourceTypeTree.RootType => RootType;
+
+        /// <summary>
+        /// Start the type controller and build the type tree
+        /// </summary>
         public void Start()
         {
             // Define module on first start
@@ -91,23 +92,18 @@ namespace Marvin.Resources.Management
             {
                 var buffer = type;
                 // Exclude the different base types from "Marvin.Resources" from the type tree
-                while (buffer != null && !buffer.IsAssignableFrom(typeof(PublicResource)))
+                do
                 {
                     if (buffer.IsGenericType) // Generic base types appear multiple times, use only the generic type
                         buffer = buffer.GetGenericTypeDefinition();
                     if (!allTypes.Contains(buffer))
                         allTypes.Add(buffer);
                     buffer = buffer.BaseType;
-                }
+                } while (buffer != null && buffer != typeof(Resource));
             }
 
             // Convert tree to TypeNodes objects
-            // ReSharper disable once PossibleNullReferenceException -> There is always a base type
-            foreach (var type in allTypes.Where(t => t.BaseType.IsAssignableFrom(typeof(PublicResource))))
-            {
-                var linker = Convert(type, allTypes, registeredTypes);
-                _rootTypes.Add(linker);
-            }
+            RootType = Convert(typeof(Resource), allTypes, registeredTypes);
         }
 
         private ResourceTypeNode Convert(Type type, ICollection<Type> allTypes, ICollection<Type> registeredTypes, ResourceTypeNode baseType = null)
@@ -188,10 +184,7 @@ namespace Marvin.Resources.Management
         public IEnumerable<ResourceTypeNode> SupportedTypes(ICollection<Type> constraints)
         {
             var types = new List<ResourceTypeNode>();
-            foreach (var typeLinker in RootTypes)
-            {
-                SupportingType(typeLinker, constraints, types);
-            }
+            SupportingType(RootType, constraints, types);
             return types;
         }
         /// <inheritdoc />
@@ -304,7 +297,7 @@ namespace Marvin.Resources.Management
 
         /// <summary>
         /// Get all interfaces of a linker that are relevant for the public proxy. This excludes all non-public
-        /// interfaces or interfaces that are not derived from IPublicResource. 
+        /// interfaces or interfaces that are not derived from IPublicResource.
         /// </summary>
         private static IReadOnlyList<Type> RelevantInterfaces(ResourceTypeNode node)
         {

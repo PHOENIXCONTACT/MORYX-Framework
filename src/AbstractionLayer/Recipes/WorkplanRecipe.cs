@@ -4,11 +4,11 @@ using Marvin.Workflows;
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Recipe which additionaly contains a workplan
+    /// Recipe which additional contains a workplan
     /// </summary>
     public class WorkplanRecipe : Recipe, IWorkplanRecipe
     {
-        /// 
+        /// <inheritdoc />
         public override string Type => nameof(WorkplanRecipe);
 
         /// <summary>

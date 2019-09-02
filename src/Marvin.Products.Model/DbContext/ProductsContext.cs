@@ -33,8 +33,6 @@ namespace Marvin.Products.Model
     
         public virtual DbSet<PartLink> PartLinks { get; set; }
     
-        public virtual DbSet<RevisionHistory> RevisionHistories { get; set; }
-    
         public virtual DbSet<ProductRecipeEntity> ProductRecipeEntities { get; set; }
     
         public virtual DbSet<ProductProperties> ProductProperties { get; set; }
@@ -118,11 +116,11 @@ namespace Marvin.Products.Model
                 .WithMany(w => w.Parents)
                 .HasForeignKey(s => s.SubWorkplanId);
 
-            // Workplan entity
-            modelBuilder.Entity<WorkplanEntity>()
-                .HasMany(w => w.Recipes)
-                .WithRequired(r => r.Workplan)
-                .HasForeignKey(r => r.WorkplanId);
+            // RecipeEntity
+            modelBuilder.Entity<ProductRecipeEntity>()
+                .HasOptional(r => r.Workplan)
+                .WithMany(w => w.Recipes)
+                .HasForeignKey(s => s.WorkplanId);
 
             // ProductEntity
             modelBuilder.Entity<ProductEntity>()
@@ -155,28 +153,22 @@ namespace Marvin.Products.Model
                 .WithRequired(p => p.Product)
                 .HasForeignKey(p => p.ProductId);
 
-            // RevisionHistory
-            modelBuilder.Entity<RevisionHistory>()
-                .HasRequired(p => p.ProductRevision)
-                .WithMany()
-                .HasForeignKey(p => p.ProductRevisionId);
-
             // Indexes
             modelBuilder.Entity<ProductEntity>()
-                .Property(e => e.MaterialNumber)
+                .Property(e => e.Identifier)
                 .HasColumnAnnotation(
                     IndexAnnotation.AnnotationName,
                     new IndexAnnotation(new[]
                     {
-                        new IndexAttribute("MaterialNumber_Revision_Index", 1),
-                        new IndexAttribute("Material_Number")
+                        new IndexAttribute("Identifier_Revision_Index", 1),
+                        new IndexAttribute("Identifier")
                     }));
 
             modelBuilder.Entity<ProductEntity>()
                 .Property(e => e.Revision)
                 .HasColumnAnnotation(
                     IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new IndexAttribute("MaterialNumber_Revision_Index", 2)));
+                    new IndexAnnotation(new IndexAttribute("Identifier_Revision_Index", 2)));
 
             modelBuilder.Entity<ArticleEntity>()
                 .Property(e => e.State)

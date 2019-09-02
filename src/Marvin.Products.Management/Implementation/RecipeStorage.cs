@@ -29,7 +29,10 @@ namespace Marvin.Products.Management
             productRecipe.Revision = recipeEntity.Revision;
             productRecipe.State = (RecipeState)recipeEntity.State;
             productRecipe.Product = new ProductReference(recipeEntity.ProductId);
-            productRecipe.Workplan = LoadWorkplan(recipeEntity.Workplan);
+
+            var workplanRecipe = productRecipe as IWorkplanRecipe;
+            if (workplanRecipe != null)
+                workplanRecipe.Workplan = LoadWorkplan(recipeEntity.Workplan);
         }
 
         /// <summary>
@@ -50,8 +53,11 @@ namespace Marvin.Products.Management
             entity.State = (int)recipe.State;
             entity.Classification = (int)recipe.Classification;
             entity.ProductId = recipe.Product.Id;
-            entity.WorkplanId = recipe.Workplan.Id;
-            
+
+            var workplanRecipe = recipe as IWorkplanRecipe;
+            if (workplanRecipe != null)
+                entity.WorkplanId = workplanRecipe.Workplan.Id;
+
             return entity;
         }
 
@@ -98,8 +104,6 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Load connectors and return them as a map EntityId => IConnector instance
         /// </summary>
-        /// <param name="workplan"></param>
-        /// <returns></returns>
         private static Dictionary<long, IConnector> LoadConnectors(WorkplanEntity workplan)
         {
             return workplan.Connectors.ToDictionary(
@@ -132,13 +136,13 @@ namespace Marvin.Products.Management
                 for (int index = 0; index < step.OutputDescriptions.Length; index++)
                 {
                     var descriptionEntity = stepEntity.OutputDescriptions.First(ode => ode.Index == index);
-                    var desciption = new OutputDescription
+                    var description = new OutputDescription
                     {
                         OutputType = (OutputType)descriptionEntity.OutputType,
                         Name = descriptionEntity.Name,
                         MappingValue = descriptionEntity.MappingValue
                     };
-                    step.OutputDescriptions[index] = desciption;
+                    step.OutputDescriptions[index] = description;
                 }
 
                 // Restore parameters from JSON
@@ -182,7 +186,7 @@ namespace Marvin.Products.Management
 
             return references;
         }
-       
+
 
         /// <summary>
         /// Save a workplan to the database
@@ -200,8 +204,8 @@ namespace Marvin.Products.Management
                 workplanEntity = workplanRepo.Create(workplan.Name, workplan.Version, (int)workplan.State);
                 EntityIdListener.Listen(workplanEntity, workplan);
             }
-            // If it was modified or the version increased we create a new one and reference the old one 
-            else if (workplan.State == WorkplanState.Released || workplan.Version > workplanEntity.Version)
+            // If it was modified or the version increased we create a new one and reference the old one
+            else if (workplan.Version > workplanEntity.Version)
             {
                 var reference = referenceRepo.Create((int)WorkplanReferenceType.NewVersion);
                 reference.Source = workplanEntity;
@@ -329,7 +333,7 @@ namespace Marvin.Products.Management
             {
                 var stepEntity = steps[step.Id];
 
-                // Update inputs and outpus
+                // Update inputs and output
                 UpdateConnectors(referenceRepo, stepEntity, step, ConnectorRole.Input, connectors);
                 UpdateConnectors(referenceRepo, stepEntity, step, ConnectorRole.Output, connectors);
             }
@@ -365,7 +369,7 @@ namespace Marvin.Products.Management
                 }
                 else
                 {
-                    // Connector null and no entity exists 
+                    // Connector null and no entity exists
                     connectorReference = referenceRepo.Create(index, role);
                     connectorReference.Step = stepEntity;
                 }

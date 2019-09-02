@@ -6,10 +6,10 @@ using System.Threading;
 namespace Marvin.Notifications
 {
     /// <summary>
-    /// Notification adapter for the server module. 
+    /// Notification adapter for the server module.
     /// The events and calls will be redirected to the <see cref="INotificationSource"/>
     /// </summary>
-    public class NotificationAdapter : INotificationAdapter, INotificationSourceAdapter
+    public class NotificationAdapter : INotificationAdapter, INotificationSourceAdapter, IForeignNotificationListener
     {
         private readonly List<NotificationMap> _published = new List<NotificationMap>();
         private readonly List<NotificationMap> _pendingAcks = new List<NotificationMap>();
@@ -47,7 +47,7 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public void Publish(INotificationSender sender, INotification notification)
         {
-            Publish(sender, notification, null);
+            Publish(sender, notification, new object());
         }
 
         /// <inheritdoc />
@@ -137,7 +137,7 @@ namespace Marvin.Notifications
         /// <inheritdoc />
         public void AcknowledgeAll(INotificationSender sender, object tag)
         {
-            AcknowledgeByFilter(sender, map => map.Sender == sender && map.Tag.Equals(tag));
+            AcknowledgeByFilter(sender, map => map.Sender == sender && Equals(map.Tag, tag));
         }
 
         /// <summary>
@@ -234,6 +234,20 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
+        void INotificationSourceAdapter.PublishedForeign(INotification notification)
+        {
+            // Just forward to listener event
+            ForeignPublished?.Invoke(this, notification);
+        }
+
+        /// <inheritdoc />
+        void INotificationSourceAdapter.AcknowledgedForeign(INotification notification)
+        {
+            // Just forward to listener event
+            ForeignAcknowledged?.Invoke(this, notification);
+        }
+
+        /// <inheritdoc />
         void INotificationSourceAdapter.Sync()
         {
             // Publish pending notifications
@@ -262,6 +276,12 @@ namespace Marvin.Notifications
 
         /// <inheritdoc />
         public event EventHandler<INotification> Acknowledged;
+
+        /// <inheritdoc />
+        public event EventHandler<INotification> ForeignPublished;
+
+        /// <inheritdoc />
+        public event EventHandler<INotification> ForeignAcknowledged;
 
         #endregion
 

@@ -17,9 +17,8 @@ namespace Marvin.Products.IntegrationTests
         public void TestFixtureSetUp()
         {
             Effort.Provider.EffortProviderConfiguration.RegisterProvider();
-            //DbConfiguration.SetConfiguration(new EntityFrameworkConfiguration());
 
-            // prepare inmemory resource db
+            // prepare in-memory resource db
             _factory = new InMemoryUnitOfWorkFactory("RecipeStorageTests");
             _factory.Initialize();
         }
@@ -111,9 +110,5 @@ namespace Marvin.Products.IntegrationTests
 
             return workplan;
         }
-
-        
-
-        
     }
 }

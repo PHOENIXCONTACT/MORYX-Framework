@@ -17,42 +17,6 @@ namespace Marvin.Resources.Interaction
         public string Name { get; set; }
 
         /// <summary>
-        /// Description of this reference
-        /// </summary>
-        [DataMember]
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Types that can be assigned to this reference
-        /// </summary>
-        [DataMember]
-        public ResourceTypeModel[] SupportedTypes { get; set; }
-
-        /// <summary>
-        /// Resources that could be assigned to this reference
-        /// </summary>
-        [DataMember]
-        public List<ResourceModel> PossibleTargets { get; set; }
-
-        /// <summary>
-        /// Role of the referenced resource in the relationship
-        /// </summary>
-        [DataMember]
-        public ResourceReferenceRole Role { get; set; }
-
-        /// <summary>
-        /// Type of resource relation
-        /// </summary>
-        [DataMember]
-        public ResourceRelationType RelationType { get; set; }
-
-        /// <summary>
-        /// Flag if this reference is a collection
-        /// </summary>
-        [DataMember]
-        public bool IsCollection { get; set; }
-
-        /// <summary>
         /// Targets of this reference
         /// </summary>
         [DataMember]

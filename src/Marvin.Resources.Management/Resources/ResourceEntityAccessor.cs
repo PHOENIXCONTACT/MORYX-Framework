@@ -74,8 +74,8 @@ namespace Marvin.Resources.Management
 
             // Read everything else from defaults
             ValueProviderExecutor.Execute(Instance, new ValueProviderExecutorSettings()
-                                                        .AddFilter(new DataMemberAttributeValueProviderFilter(false))
-                                                        .AddDefaultValueProvider());
+                .AddFilter(new DataMemberAttributeValueProviderFilter(false))
+                .AddDefaultValueProvider());
 
             return Instance;
         }
@@ -172,11 +172,16 @@ namespace Marvin.Resources.Management
         /// Type of the reference relation
         /// </summary>
         public ResourceRelationType RelationType => (ResourceRelationType)Entity.RelationType;
-
+        
         /// <summary>
         /// Id of the referenced resource
         /// </summary>
         public long ReferenceId => Role == ResourceReferenceRole.Target ? Entity.TargetId : Entity.SourceId;
+
+        /// <summary>
+        /// References entity
+        /// </summary>
+        public ResourceEntity ReferenceEntity => Role == ResourceReferenceRole.Target ? Entity.Target : Entity.Source;
 
         /// <summary>
         /// Load all relations template of a resource entity

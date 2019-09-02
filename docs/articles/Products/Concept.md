@@ -16,7 +16,7 @@ In the context of MARVIN, the product is mainly the technical description and th
 
 A recipe is used inside the MARVIN ControlSystem by the ProcessController to provide a workplan for a `process` and to provide additional parameters related to the `workplan`. All recipes a derived from [Recipe](xref:Marvin.AbstractionLayer.Recipe).
 
-The Abstraction Layer provides the [ProductRecipe](xref:Marvin.AbstractionLayer.ProductRecipe) which is used to control a production `process`. It belongs to a `product` and is used to link the product description to the corresponding workplan. The provided parameter is the product to be produced. The product data should contain the data needed by production process, eg. the material needed, technical parameters for automatic testing, etc.
+The Abstraction Layer provides the [IProductRecipe](xref:Marvin.AbstractionLayer.IProductRecipe) and [IWorkplanRecipe](xref:Marvin.AbstractionLayer.IWorkplanRecipe) which can be used separatly or combined like in the MARVIN ControlSystem to control a production `process` with the belonging `product` and the corresponding workplan. The provided parameter is the product to be produced. The product data should contain the data needed by production process, eg. the material needed, technical parameters for automatic testing, etc.
 
 ### Workplan
 

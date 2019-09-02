@@ -2,6 +2,6 @@
 {
     public class MasterDetailsWorkspaceMock : MasterDetailsWorkspace<IDetailsComponent, IDetailsComponentFactory, EmptyDetailsMock>
     {
-        
+
     }
 }

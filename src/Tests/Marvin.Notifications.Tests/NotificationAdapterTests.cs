@@ -206,11 +206,11 @@ namespace Marvin.Notifications.Tests
         public void NothingToDoIfEverythingIsUpToDate()
         {
             // Arrange
-            var notifiaction1 = new Notification();
+            var notification1 = new Notification();
             var notification2 = new Notification();
-            _adapter.Publish(_sender, notifiaction1);
+            _adapter.Publish(_sender, notification1);
             _adapter.Publish(_sender, notification2);
-            ((INotificationSourceAdapter)_adapter).PublishProcessed(notifiaction1);
+            ((INotificationSourceAdapter)_adapter).PublishProcessed(notification1);
             ((INotificationSourceAdapter)_adapter).PublishProcessed(notification2);
             int counter = 0;
             ((INotificationSourceAdapter) _adapter).Published += delegate { counter += 1; };
@@ -220,6 +220,40 @@ namespace Marvin.Notifications.Tests
 
             // Assert
             Assert.AreEqual(0, counter, "There should be no publish events because everything should be up to date");
+        }
+
+        [Test(Description = "The adapter should publish foreign notifications as event")]
+        public void PublishForeignNotificationAsEvent()
+        {
+            // Arrange
+            var notification = new Notification();
+
+            INotification foreignPublished = null;
+            ((IForeignNotificationListener) _adapter).ForeignPublished +=
+                delegate(object sender, INotification published) { foreignPublished = published; };
+
+            // Act
+            ((INotificationSourceAdapter)_adapter).PublishedForeign(notification);
+
+            // Assert
+            Assert.NotNull(foreignPublished, "Foreign notification was not published as event");
+        }
+
+        [Test(Description = "The adapter should publish foreign notification acknowledgments as event")]
+        public void AcknowledgedForeignNotificationAsEvent()
+        {
+            // Arrange
+            var notification = new Notification();
+
+            INotification foreignAcknowledged = null;
+            ((IForeignNotificationListener)_adapter).ForeignAcknowledged +=
+                delegate (object sender, INotification acknowledged) { foreignAcknowledged = acknowledged; };
+
+            // Act
+            ((INotificationSourceAdapter)_adapter).AcknowledgedForeign(notification);
+
+            // Assert
+            Assert.NotNull(foreignAcknowledged, "Foreign notification acknowledgement was not published as event");
         }
     }
 }

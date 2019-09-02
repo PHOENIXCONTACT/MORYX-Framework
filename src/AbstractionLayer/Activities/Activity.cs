@@ -9,7 +9,7 @@ namespace Marvin.AbstractionLayer
     public abstract class Activity : IActivity
     {
         #region Activity definition
-        
+
         ///
         public abstract ProcessRequirement ProcessRequirement { get; }
 
@@ -17,7 +17,7 @@ namespace Marvin.AbstractionLayer
         public abstract ICapabilities RequiredCapabilities { get; }
 
         /// <summary>
-        /// Untyped parameters object 
+        /// Untyped parameters object
         /// </summary>
         public IParameters Parameters { get; set; }
 
@@ -34,7 +34,7 @@ namespace Marvin.AbstractionLayer
         ///
         public IProcess Process { get; set; }
 
-        /// 
+        ///
         public IActivityTracing Tracing { get; set; }
 
         ///
@@ -46,20 +46,20 @@ namespace Marvin.AbstractionLayer
         #endregion
 
         /// <summary>
-        /// Initialize activity with <see cref="DefaultTracing"/>
+        /// Initialize activity with <see cref="Tracing"/>
         /// </summary>
         internal Activity()
         {
-            Tracing = new DefaultTracing();
+            Tracing = new Tracing();
         }
 
-        ///
+        /// <inheritdoc />
         public ActivityResult Complete(long resultNumber)
         {
             return Result = CreateResult(resultNumber);
         }
 
-        /// 
+        /// <inheritdoc />
         public ActivityResult Fail()
         {
             return Result = CreateFailureResult();
@@ -91,7 +91,7 @@ namespace Marvin.AbstractionLayer
     /// Base class for all <see cref="IActivity"/> with parameters and tracing
     /// </summary>
     /// <typeparam name="TParam">
-    ///     Type of the parameters object. 
+    ///     Type of the parameters object.
     ///     Use <see cref="NullActivityParameters"/> if your activity does not require parameters
     /// </typeparam>
     /// <typeparam name="TTracing">Type of the tracing object.</typeparam>
@@ -119,10 +119,10 @@ namespace Marvin.AbstractionLayer
     /// Base class for all <see cref="IActivity"/> with parameters
     /// </summary>
     /// <typeparam name="TParam">
-    ///     Type of the parameters object. 
+    ///     Type of the parameters object.
     ///     Use <see cref="NullActivityParameters"/> if your activity does not require parameters
     /// </typeparam>
-    public abstract class Activity<TParam> : Activity<TParam, DefaultTracing>
+    public abstract class Activity<TParam> : Activity<TParam, Tracing>
         where TParam : IParameters
     {
     }

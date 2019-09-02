@@ -23,9 +23,6 @@ namespace Marvin.Products.Management.Modification
         public string Type { get; set; }
 
         [DataMember]
-        public ProductState State { get; set; }
-
-        [DataMember]
         public Entry Properties { get; set; }
 
         [DataMember]

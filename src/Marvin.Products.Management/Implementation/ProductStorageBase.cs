@@ -10,7 +10,7 @@ using Marvin.Tools;
 namespace Marvin.Products.Management
 {
     /// <summary>
-    /// Base class for product storage. Contains basic functionality to load and save a product. 
+    /// Base class for product storage. Contains basic functionality to load and save a product.
     /// Also has the possibility to store a version to each save.
     /// </summary>
     public abstract class ProductStorageBase : IProductStorage
@@ -40,7 +40,7 @@ namespace Marvin.Products.Management
 
         #region Recipes
 
-        /// 
+        /// <inheritdoc />
         public IProductRecipe LoadRecipe(long recipeId)
         {
             using (var uow = Factory.Create())
@@ -52,7 +52,7 @@ namespace Marvin.Products.Management
             }
         }
 
-        /// 
+        /// <inheritdoc />
         public IReadOnlyList<IProductRecipe> LoadRecipes(long productId, RecipeClassification classifications)
         {
             using (var uow = Factory.Create())
@@ -63,7 +63,7 @@ namespace Marvin.Products.Management
                     return null;
 
                 var classificationMask = (int)classifications;
-                var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeEntityRepository>().Linq
+                var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeEntityRepository>().Linq.Active().ToArray()
                                       let classificationValue = recipeEntity.Classification
                                       where recipeEntity.ProductId == productId && (classificationValue & classificationMask) == classificationValue
                                       select recipeEntity).ToArray();
@@ -73,7 +73,7 @@ namespace Marvin.Products.Management
         }
 
         /// <summary>
-        /// Load recipe object from entity. 
+        /// Load recipe object from entity.
         /// </summary>
         private IProductRecipe LoadRecipe(IUnitOfWork uow, ProductRecipeEntity recipeEntity)
         {
@@ -93,7 +93,7 @@ namespace Marvin.Products.Management
             return new ProductRecipe();
         }
 
-        /// 
+        ///
         public long SaveRecipe(IProductRecipe recipe)
         {
             using (var uow = Factory.Create())
@@ -112,7 +112,7 @@ namespace Marvin.Products.Management
             return RecipeStorage.SaveRecipe(uow, recipe);
         }
 
-        /// 
+        /// <inheritdoc />
         public void SaveRecipes(long productId, ICollection<IProductRecipe> recipes)
         {
             using (var uow = Factory.Create())
@@ -143,7 +143,7 @@ namespace Marvin.Products.Management
 
         #region Load product
 
-        /// 
+        /// <inheritdoc />
         public IProduct LoadProduct(long id)
         {
             using (var uow = Factory.Create())
@@ -160,7 +160,7 @@ namespace Marvin.Products.Management
             return Transform(uow, product, true);
         }
 
-        /// 
+        /// <inheritdoc />
         public IProduct LoadProduct(ProductIdentity identity)
         {
             using (var uow = Factory.Create())
@@ -173,7 +173,7 @@ namespace Marvin.Products.Management
                 {
                     // Get all revisions of this product
                     var revisions = productRepo.Linq
-                        .Where(p => p.MaterialNumber == identity.Identifier)
+                        .Where(p => p.Identifier == identity.Identifier)
                         .Select(p => p.Revision).ToList();
                     if (revisions.Any())
                         revision = revisions.Max();
@@ -181,39 +181,11 @@ namespace Marvin.Products.Management
                         return null;
                 }
 
-                var product = uow.GetRepository<IProductEntityRepository>().GetByIdentity(identity.Identifier, revision);
+                var product = uow.GetRepository<IProductEntityRepository>().Linq.Active()
+                    .FirstOrDefault(p => p.Identifier == identity.Identifier && p.Revision == revision);
                 return product != null ? Transform(uow, product, true) : null;
             }
         }
-
-        /// 
-        public IReadOnlyList<IProduct> LoadProducts()
-        {
-            using (var uow = Factory.Create())
-            {
-                var products = ProductList(uow);
-                return products.Select(p => Transform(uow, p, false)).ToList();
-            }
-        }
-
-        /// <summary>
-        /// Filter the products shown in product lists
-        /// </summary>
-        protected virtual ICollection<ProductEntity> ProductList(IUnitOfWork uow)
-        {
-            var repo = uow.GetRepository<IProductEntityRepository>();
-
-            // All products that are producible
-            var products = (from product in repo.Linq
-                            where product.Deleted == null
-                            where product.Recipes.Any() | !product.Parents.Any()
-                            orderby product.MaterialNumber, product.Revision ascending
-                            select product
-                        ).ToList();
-
-            return products;
-        }
-
 
         /// <inheritdoc />
         public IProduct TransformProduct(IUnitOfWork context, ProductEntity entity, bool full)
@@ -404,11 +376,12 @@ namespace Marvin.Products.Management
                                     where links.All(l => l.Id != link.Id)
                                     select link).ToArray();
                     linkStrategy.Delete(uow, toDelete);
-                    // Save those curently active
+                    // Save those currently active
+                    var currentEntities = FindLinks(linkStrategy.Name, entity).ToArray();
                     foreach (var link in links)
                     {
                         PartLink linkEntity;
-                        if (link.Id == 0)
+                        if (link.Id == 0 || (linkEntity = currentEntities.FirstOrDefault(p => p.Id == link.Id)) == null)
                         {
                             linkEntity = linkStrategy.Create(uow, link);
                             linkEntity.Parent = entity;
@@ -416,7 +389,6 @@ namespace Marvin.Products.Management
                         }
                         else
                         {
-                            linkEntity = entity.Parts.First(p => p.Id == link.Id);
                             linkStrategy.Update(uow, link, linkEntity);
                         }
                         linkEntity.Child = GetPartEntity(uow, linkStrategy, link);
@@ -536,7 +508,7 @@ namespace Marvin.Products.Management
             if (strategy.SkipArticles)
                 return;
 
-            // Transfrom entity to article
+            // Transform entity to article
             strategy.LoadArticle(uow, entity, article);
 
             // Group all parts of the article by the property they belong to

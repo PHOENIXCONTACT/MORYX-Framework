@@ -51,7 +51,7 @@ namespace Marvin.AbstractionLayer.Tests
             Activity activity = CreateActivity();
             activity.Tracing.Started = _startDateTime;
             activity.Tracing.Completed = _endDateTime;
-            var defaultTracing = activity.TransformTracing<DefaultTracing>();
+            var defaultTracing = activity.TransformTracing<Tracing>();
 
             Assert.AreEqual(_startDateTime, defaultTracing.Started);
             Assert.AreEqual(_endDateTime, defaultTracing.Completed);
@@ -79,9 +79,9 @@ namespace Marvin.AbstractionLayer.Tests
         [Test]
         public void TestNullTracingTransform()
         {
-            var trace = CreateTracing<DefaultTracing>();
+            var trace = CreateTracing<Tracing>();
 
-            var defaultTracing = trace.Transform<DefaultTracing>();
+            var defaultTracing = trace.Transform<Tracing>();
 
             Assert.AreEqual(trace.Started, defaultTracing.Started);
             Assert.AreEqual(trace.Completed, defaultTracing.Completed);
@@ -91,14 +91,14 @@ namespace Marvin.AbstractionLayer.Tests
         public void TestTransformWpcToNullAndBack()
         {
             var tracing = CreateTracing<FooTracing>().Trace(t => t.Text = "Hello Word");
-            var defaultTracing = tracing.Transform<DefaultTracing>();
+            var defaultTracing = tracing.Transform<Tracing>();
             var newWpcTracing = defaultTracing.Transform<FooTracing>();
 
             Assert.AreEqual(tracing.Started, newWpcTracing.Started);
             Assert.AreEqual(tracing.Completed, newWpcTracing.Completed);
             Assert.AreEqual(tracing.Text, newWpcTracing.Text);
-            Assert.AreEqual(null, newWpcTracing.FooName);
-            Assert.AreEqual(0, newWpcTracing.FooNumber);
+            Assert.AreEqual("42", newWpcTracing.FooName);
+            Assert.AreEqual(42, newWpcTracing.FooNumber);
         }
 
         [Test]

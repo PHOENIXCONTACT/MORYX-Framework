@@ -97,7 +97,6 @@
     <Compile Include="API\IProductEntityRepository.cs" />
     <Compile Include="API\IProductPropertiesRepository.cs" />
     <Compile Include="API\IProductRecipeEntityRepository.cs" />
-    <Compile Include="API\IRevisionHistoryRepository.cs" />
     <Compile Include="API\IStepEntityRepository.cs" />
     <Compile Include="API\IWorkplanEntityRepository.cs" />
     <Compile Include="API\IWorkplanReferenceRepository.cs" />
@@ -114,17 +113,16 @@
     <Compile Include="Entities\ProductEntity.cs" />
     <Compile Include="Entities\ProductProperties.cs" />
     <Compile Include="Entities\ProductRecipeEntity.cs" />
-    <Compile Include="Entities\RevisionHistory.cs" />
     <Compile Include="Entities\StepEntity.cs" />
     <Compile Include="Entities\WorkplanEntity.cs" />
     <Compile Include="Entities\WorkplanReference.cs" />
-    <Compile Include="Migrations\201811061350470_InitialCreate.cs" />
-    <Compile Include="Migrations\201811061350470_InitialCreate.Designer.cs">
-      <DependentUpon>201811061350470_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201908290842533_InitialCreate.cs" />
+    <Compile Include="Migrations\201908290842533_InitialCreate.Designer.cs">
+      <DependentUpon>201908290842533_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201903011328548_OutputDescription_OutputType.cs" />
-    <Compile Include="Migrations\201903011328548_OutputDescription_OutputType.Designer.cs">
-      <DependentUpon>201903011328548_OutputDescription_OutputType.cs</DependentUpon>
+    <Compile Include="Migrations\201908290844215_OutputDescription_OutputType.cs" />
+    <Compile Include="Migrations\201908290844215_OutputDescription_OutputType.Designer.cs">
+      <DependentUpon>201908290844215_OutputDescription_OutputType.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -138,11 +136,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201811061350470_InitialCreate.resx">
-      <DependentUpon>201811061350470_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201908290842533_InitialCreate.resx">
+      <DependentUpon>201908290842533_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903011328548_OutputDescription_OutputType.resx">
-      <DependentUpon>201903011328548_OutputDescription_OutputType.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201908290844215_OutputDescription_OutputType.resx">
+      <DependentUpon>201908290844215_OutputDescription_OutputType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

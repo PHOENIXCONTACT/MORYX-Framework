@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Resources;
+using Marvin.Modules;
 using Marvin.Resources.Management;
 
 // General Information about an assembly is controlled through the following 
@@ -31,7 +33,7 @@ using Marvin.Resources.Management;
 // [assembly: AssemblyVersion("1.0.*")]
 
 // Marvin attributes
-[assembly: ResourcesBundle]
+[assembly: Bundle(AbstractionLayerBundle.Name, AbstractionLayerBundle.Version)]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo(ResourceProxyBuilder.AssemblyName)]
 [assembly: InternalsVisibleTo("Marvin.Resources.IntegrationTests")]
