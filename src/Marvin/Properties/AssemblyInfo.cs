@@ -17,4 +17,3 @@ using System.Runtime.InteropServices;
 [assembly: Guid("dab57c78-aafc-4046-8a03-d45e0f97f6dc")]
 
 [assembly: InternalsVisibleTo("Marvin.Tests")]
-[assembly: InternalsVisibleTo("Marvin.Workflows.Tests")]

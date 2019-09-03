@@ -33,9 +33,8 @@
     <DocumentationFile>bin\Release\Marvin.Model.InMemory.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Effort, Version=2.1.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Effort.EF6.2.1.0\lib\net45\Effort.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Effort, Version=2.2.2.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Effort.EF6.2.2.2\lib\net45\Effort.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
