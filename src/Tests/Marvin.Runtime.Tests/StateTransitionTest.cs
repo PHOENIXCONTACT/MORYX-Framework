@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using Marvin.Runtime.Kernel;
 using Marvin.Runtime.Modules;
 using Marvin.Runtime.Tests.Mocks;
