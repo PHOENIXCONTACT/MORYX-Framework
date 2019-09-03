@@ -10,11 +10,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Windsor" Version="5.0.0" />
+    <ProjectReference Include="..\Marvin\Marvin.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Marvin\Marvin.csproj" />
+    <PackageReference Include="System.IO.Ports" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

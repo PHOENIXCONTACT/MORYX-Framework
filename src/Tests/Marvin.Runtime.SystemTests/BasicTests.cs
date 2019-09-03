@@ -52,7 +52,7 @@ namespace Marvin.Runtime.SystemTests
         [Test]
         public void TestPath()
         {
-            FileInfo fi = new FileInfo(Path.Combine(HogHelper.RuntimeDir, "HeartOfGold.exe"));
+            FileInfo fi = new FileInfo(Path.Combine(HogHelper.RuntimeDir, _hogController.ApplicationExeName));
 
             Assert.IsTrue(fi.Exists, "File '{0}' does not exist.", fi.FullName);
         }
