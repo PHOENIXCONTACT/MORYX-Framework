@@ -83,7 +83,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.Container", "src\Mar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.Container.Tests", "src\Tests\Marvin.Container.Tests\Marvin.Container.Tests.csproj", "{4FBD4612-B024-4991-BDD5-2BF980D124EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Workflows.Benchmark", "src\Tests\Marvin.Workflows.Benchmark\Marvin.Workflows.Benchmark.csproj", "{91EEF547-A6B5-449F-BF2A-BF8C09D0477E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.Workflows.Benchmark", "src\Tests\Marvin.Workflows.Benchmark\Marvin.Workflows.Benchmark.csproj", "{91EEF547-A6B5-449F-BF2A-BF8C09D0477E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Communication.Serial", "src\Marvin.Communication.Serial\Marvin.Communication.Serial.csproj", "{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -642,6 +644,24 @@ Global
 		{91EEF547-A6B5-449F-BF2A-BF8C09D0477E}.Release|x64.Build.0 = Release|Any CPU
 		{91EEF547-A6B5-449F-BF2A-BF8C09D0477E}.Release|x86.ActiveCfg = Release|Any CPU
 		{91EEF547-A6B5-449F-BF2A-BF8C09D0477E}.Release|x86.Build.0 = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Debug|x86.Build.0 = Debug|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release(x86)|x86.Build.0 = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|x64.Build.0 = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -690,8 +710,8 @@ Global
 		{91EEF547-A6B5-449F-BF2A-BF8C09D0477E} = {A9C375AE-201D-46CE-9282-387026C0B2F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_TaskErrorCategory = Message
-		RESX_ShowErrorsInErrorList = True
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
+		RESX_ShowErrorsInErrorList = True
+		RESX_TaskErrorCategory = Message
 	EndGlobalSection
 EndGlobal

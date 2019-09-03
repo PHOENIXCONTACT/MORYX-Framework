@@ -126,7 +126,7 @@ namespace Marvin.Runtime.SystemTests
                 _hogController.KillHeartOfGold();
 
                 Thread.Sleep(1000);
-                
+
                 Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
             }
         }
