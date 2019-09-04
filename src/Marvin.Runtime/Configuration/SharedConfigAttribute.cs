@@ -1,5 +1,6 @@
 ﻿using System;
 using Marvin.Configuration;
+
 namespace Marvin.Runtime.Configuration
 {
     /// <summary>
@@ -22,8 +23,8 @@ namespace Marvin.Runtime.Configuration
         /// </summary>
         public bool UseCopy
         {
-            get; 
+            get;
             private set;
-        }        
+        }
     }
 }

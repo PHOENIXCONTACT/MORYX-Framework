@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Logging;
 using Marvin.Modules;
-using Marvin.Notifications;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Wcf;
 using Marvin.StateMachines;
 using Marvin.Threading;
-using Marvin.Tools;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Modules
 {
     /// <summary>
-    /// Base class for a server module. Provides all necessary methods to be a server module.  
+    /// Base class for a server module. Provides all necessary methods to be a server module.
     /// </summary>
     /// <typeparam name="TConf">Configuration type for the server module.</typeparam>
     [DebuggerDisplay("{" + nameof(Name) + "} - {" + nameof(State) + "}")]
@@ -47,7 +44,7 @@ namespace Marvin.Runtime.Modules
         #region ValidateHealthState
 
         /// <summary>
-        /// Does a validaton of the health state. Only states indicating <see cref="ServerModuleState.Running"/> will not 
+        /// Does a validaton of the health state. Only states indicating <see cref="ServerModuleState.Running"/> will not
         /// throw an <see cref="HealthStateException"/>
         /// </summary>
         protected void ValidateHealthState() => _state.ValidateHealthState();
@@ -57,7 +54,7 @@ namespace Marvin.Runtime.Modules
         #region Logging
 
         /// <summary>
-        /// <see cref="ILoggerManagement"/> 
+        /// <see cref="ILoggerManagement"/>
         /// </summary>
         public IServerLoggerManagement LoggerManagement { get; set; }
 
@@ -86,7 +83,7 @@ namespace Marvin.Runtime.Modules
             LoggerManagement.ActivateLogging(this);
             LoggerManagement.AppendListenerToStream(ProcessLogMessage, LogLevel.Warning, Name);
             Logger.Log(LogLevel.Info, "{0} is initializing...", Name);
-            
+
             // Get config and parse for container settings
             Config = ConfigManager.GetConfiguration<TConf>();
             ConfigParser.ParseStrategies(Config, Strategies);
@@ -119,7 +116,7 @@ namespace Marvin.Runtime.Modules
         {
             _state.Start();
         }
-        
+
         void IServerModuleStateContext.Start()
         {
             Logger.Log(LogLevel.Info, "{0} is starting...", Name);
@@ -145,7 +142,7 @@ namespace Marvin.Runtime.Modules
         {
             _state.Stop();
         }
-        
+
         void IServerModuleStateContext.Stop()
         {
             Logger.Log(LogLevel.Info, "{0} is stopping...", Name);

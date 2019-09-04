@@ -1,5 +1,4 @@
 ﻿using System;
-using Marvin.Logging;
 using Marvin.Modules;
 using Marvin.Notifications;
 
@@ -38,12 +37,12 @@ namespace Marvin.Runtime.Modules
         {
         }
 
-        public ModuleNotification(Severity severity, string message, Action<ModuleNotification> confirmationDelegate) 
+        public ModuleNotification(Severity severity, string message, Action<ModuleNotification> confirmationDelegate)
             : this(severity, message, null, confirmationDelegate)
         {
         }
 
-        public ModuleNotification(Severity severity, string message, Exception exception) 
+        public ModuleNotification(Severity severity, string message, Exception exception)
             : this(severity, message, exception, EmptyDelegate)
         {
         }
