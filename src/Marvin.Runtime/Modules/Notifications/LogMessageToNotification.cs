@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using Marvin.Logging;
-using Marvin.Modules;
 using Marvin.Notifications;
 
 namespace Marvin.Runtime.Modules
