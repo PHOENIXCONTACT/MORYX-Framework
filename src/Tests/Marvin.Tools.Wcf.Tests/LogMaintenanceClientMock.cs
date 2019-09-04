@@ -6,26 +6,26 @@ namespace Marvin.Tools.Wcf.Tests
     {
         public LogMaintenanceClientMock() {
         }
-        
-        public LogMaintenanceClientMock(string endpointConfigurationName) : 
+
+        public LogMaintenanceClientMock(string endpointConfigurationName) :
                 base(endpointConfigurationName) {
         }
-        
-        public LogMaintenanceClientMock(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
-        }
-        
-        public LogMaintenanceClientMock(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+
+        public LogMaintenanceClientMock(string endpointConfigurationName, string remoteAddress) :
                 base(endpointConfigurationName, remoteAddress) {
         }
 
-        public LogMaintenanceClientMock(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public LogMaintenanceClientMock(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) :
+                base(endpointConfigurationName, remoteAddress) {
+        }
+
+        public LogMaintenanceClientMock(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) :
                 base(binding, remoteAddress) {
         }
-        
+
         public new void Open()
         {
-            
+
         }
     }
 }

@@ -9,5 +9,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
     <description>$description$</description>
+    <dependencies>
+      <dependency id="System.IO.Ports" version="4.5.0" />
+    </dependencies>
   </metadata>
 </package>
