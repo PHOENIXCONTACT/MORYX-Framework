@@ -8,8 +8,8 @@ namespace Marvin.Runtime.Kernel
     /// <summary>
     /// Console for the developer to debug and monitor the HoG while developing.
     /// </summary>
-    [Runmode(RunmodeName)]
-    public class DeveloperConsole : CommandRunmode
+    [RunMode(RunmodeName)]
+    public class DeveloperConsole : CommandRunMode
     {
         /// <summary>
         /// Name of the run mode.
@@ -32,7 +32,7 @@ namespace Marvin.Runtime.Kernel
                 SetConsoleCtrlHandler(_handler, true);
             }
 
-            // Register to service manager event            
+            // Register to service manager event
             ModuleManager.ModuleStateChanged += OnModuleStateChanged;
 
             // Welcome message and start
@@ -61,7 +61,7 @@ namespace Marvin.Runtime.Kernel
                         break;
                     case "clear": ClearConsole();
                         break;
-                    case "exit": 
+                    case "exit":
                         break;
                     default: ExecuteCommand(command);
                         break;
@@ -89,7 +89,7 @@ namespace Marvin.Runtime.Kernel
         {
             foreach (var line in lines)
             {
-                Console.WriteLine(line);   
+                Console.WriteLine(line);
             }
         }
 
@@ -138,8 +138,8 @@ namespace Marvin.Runtime.Kernel
         private const int SC_CLOSE = 0xF060;
 
         /// <summary>
-        /// Deletes an item from the specified menu. 
-        /// If the menu item opens a menu or submenu, this function destroys the 
+        /// Deletes an item from the specified menu.
+        /// If the menu item opens a menu or submenu, this function destroys the
         /// handle to the menu or submenu and frees the memory used by the menu or submenu.
         /// https://msdn.microsoft.com/en-us/library/ms647629(VS.85).aspx
         /// </summary>
@@ -147,7 +147,7 @@ namespace Marvin.Runtime.Kernel
         public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
 
         /// <summary>
-        /// Enables the application to access the window menu (also known as the system menu or the control menu) 
+        /// Enables the application to access the window menu (also known as the system menu or the control menu)
         /// for copying and modifying.
         /// https://msdn.microsoft.com/en-us/library/ms647985(v=vs.85).aspx
         /// </summary>
@@ -164,7 +164,7 @@ namespace Marvin.Runtime.Kernel
 
         #endregion
 
-        #region Exit Signals 
+        #region Exit Signals
 
         // Code taken from http://stackoverflow.com/questions/474679/capture-console-exit-c-sharp
 

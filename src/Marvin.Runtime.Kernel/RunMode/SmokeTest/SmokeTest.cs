@@ -15,8 +15,8 @@ namespace Marvin.Runtime.Kernel.SmokeTest
     /// <summary>
     /// Smoke test will start the runtime and try to load the modules, start them and shut them down again.
     /// </summary>
-    [Runmode("SmokeTest")]
-    public class SmokeTest : IRunmode
+    [RunMode("SmokeTest")]
+    public class SmokeTest : IRunMode
     {
         // ReSharper disable LocalizableElement
 
@@ -45,7 +45,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
         private bool _failed;
         private bool _timedOut;
 
-        private int _expected;
+        private int _expectedModules;
         private bool _fullTest;
 
         private int _digits;
@@ -59,18 +59,18 @@ namespace Marvin.Runtime.Kernel.SmokeTest
         /// <param name="args">The argument list for the smoke test.</param>
         public void Setup(RuntimeArguments args)
         {
+            var errors = RuntimeArguments.Parse(out SmokeTestOptions options);
+
             // Read arguments
-            _expected = int.Parse(args["e"] ?? "3");
-            _fullTest = args.HasArgument("f");
+            _expectedModules = options.ExpectedModules;
+            _fullTest = options.FullTest;
 
-            // Override conigs port value
-            var portIncrement = int.Parse(args["pi"] ?? "0");
+            // Override configs port value
             var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);
-            wcfConfig.HttpPort += portIncrement;
-            wcfConfig.NetTcpPort += portIncrement;
+            wcfConfig.HttpPort += options.PortIncrement;
+            wcfConfig.NetTcpPort += options.PortIncrement;
 
-            var noChangeInterval = double.Parse(args["i"] ?? "60000");
-            _noChangeTimer = new Timer(noChangeInterval);
+            _noChangeTimer = new Timer(options.NoChangeInterval);
             _noChangeTimer.Elapsed += OperationTimedOut;
         }
 
@@ -84,10 +84,10 @@ namespace Marvin.Runtime.Kernel.SmokeTest
         {
             // Check if all modules were found
             var modulesCount = ModuleManager.AllModules.Count();
-            if (_expected > modulesCount)
+            if (_expectedModules > modulesCount)
             {
                 // Return error if insufficient number of modules was found
-                Console.WriteLine("Number of modules doesn't match! Expected {0} - found {1}", _expected, modulesCount);
+                Console.WriteLine("Number of modules doesn't match! Expected {0} - found {1}", _expectedModules, modulesCount);
                 return RuntimeErrorCode.Error;
             }
 
@@ -163,7 +163,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
                 return RuntimeErrorCode.Error;
 
             Console.WriteLine("System passed all tests");
-            if (_expected == _modulesCount)
+            if (_expectedModules == _modulesCount)
                 return RuntimeErrorCode.NoError;
 
             Console.WriteLine("Found more modules than expected!");

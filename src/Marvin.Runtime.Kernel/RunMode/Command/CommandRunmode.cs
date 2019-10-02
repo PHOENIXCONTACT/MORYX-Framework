@@ -9,7 +9,7 @@ namespace Marvin.Runtime.Kernel
     /// <summary>
     /// Command run mode. Provides serveral command functionallity. 
     /// </summary>
-    public abstract class CommandRunmode : IRunmode
+    public abstract class CommandRunMode : IRunMode
     {
         /// <summary>
         /// Module manager instance. Injected by the castle container

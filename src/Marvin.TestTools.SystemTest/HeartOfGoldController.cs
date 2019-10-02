@@ -4,10 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.ServiceModel;
-using System.Text;
 using System.Threading;
+using Marvin.Configuration;
 using Marvin.Logging;
 using Marvin.Model;
 using Marvin.Runtime.Maintenance.Plugins;
@@ -83,7 +82,7 @@ namespace Marvin.TestTools.SystemTest
         private readonly int _portIncrement;
 
         /// <summary>
-        /// Timer to get the log-entrys
+        /// Timer to get the log entries
         /// </summary>
         private Timer _timer;
 
@@ -92,7 +91,7 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         private ModuleMaintenanceWebClient _maintenanceClient;
         /// <summary>
-        /// WCF service to the HoG to get append to loggers and get log-entrys
+        /// WCF service to the HoG to get append to loggers and get log entries
         /// </summary>
         private LogMaintenanceWebClient _loggingClient;
         /// <summary>
@@ -154,9 +153,7 @@ namespace Marvin.TestTools.SystemTest
             var portIncrement = Environment.GetEnvironmentVariable("PORT_INCREMENT");
             if (portIncrement != null)
             {
-                int portIncrementNum;
-
-                if (int.TryParse(portIncrement, out portIncrementNum))
+                if (int.TryParse(portIncrement, out var portIncrementNum))
                 {
                     // Add Jenkins build processor number to port number to allow parallel execution of system tests.
                     _portIncrement = portIncrementNum;
@@ -175,11 +172,11 @@ namespace Marvin.TestTools.SystemTest
         /// </summary>
         /// <param name="buildDirectoryName">The build directory. Default is 'Build'</param>
         /// <param name="runtimeDirectoryName">The runtime directory. Default is 'ServiceRuntime'</param>
-        /// <param name="configDirecoryName">The configuration direcory. Default is 'Config'</param>
-        public HeartOfGoldController(string buildDirectoryName, string runtimeDirectoryName, string configDirecoryName) : this()
+        /// <param name="configDirectoryName">The configuration directory. Default is 'Config'</param>
+        public HeartOfGoldController(string buildDirectoryName, string runtimeDirectoryName, string configDirectoryName) : this()
         {
-            // Search for the runtime executable with the given directorys
-            SearchForRuntime(buildDirectoryName, runtimeDirectoryName, configDirecoryName);
+            // Search for the runtime executable with the given directories
+            SearchForRuntime(buildDirectoryName, runtimeDirectoryName, configDirectoryName);
         }
 
         /// <summary>
@@ -213,11 +210,11 @@ namespace Marvin.TestTools.SystemTest
             if (ConfigDir == null)
                 throw new InvalidOperationException("Can't start HeartOfGold without ConfigDir.");
 
-            // check that the process is not allready running 
+            // check that the process is not already running
             if (Process != null && !Process.HasExited)
                 throw new InvalidOperationException("HeartOfGold is already running.");
 
-            var wcfConfig = Path.Combine(RuntimeDir, ConfigDir, "Marvin.Tools.Wcf.WcfConfig.mcf");
+            var wcfConfig = Path.Combine(RuntimeDir, ConfigDir, "Marvin.Tools.Wcf.WcfConfig" + ConfigConstants.FileExtension);
             if (File.Exists(wcfConfig))
                 File.Delete(wcfConfig);
 
@@ -225,9 +222,9 @@ namespace Marvin.TestTools.SystemTest
 
             Process = new Process
             {
-                // Start the heart of gold in developer mode to start as a console application (-d) and set the path to the config files (-c=path) 
+                // Start the heart of gold in developer mode to start as a console application (-d) and set the path to the config files (-c=path)
                 StartInfo = new ProcessStartInfo(runtimeCommand,
-                    $"-d -r=SystemTest -c={ConfigDir} -t={ExecutionTimeout} -pi={_portIncrement}")
+                    $"-d -r SystemTest -c {ConfigDir} -t {ExecutionTimeout} -p {_portIncrement}")
                 {
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -237,11 +234,11 @@ namespace Marvin.TestTools.SystemTest
                 }
             };
 
-            DataReceivedEventHandler outputDelegate = (sender, args) => 
+            void OutputDelegate(object sender, DataReceivedEventArgs args) =>
                 Console.WriteLine("Runtime > " + args.Data);
 
-            Process.OutputDataReceived += outputDelegate;
-            Process.ErrorDataReceived += outputDelegate;
+            Process.OutputDataReceived += OutputDelegate;
+            Process.ErrorDataReceived += OutputDelegate;
             try
             {
                 // start now
@@ -422,7 +419,7 @@ namespace Marvin.TestTools.SystemTest
             // Calculate timeout time.
             DateTime timeout = DateTime.Now.AddSeconds(timeoutInSeconds);
 
-            // Check service states until the timeout accures or the given state has bin reached.
+            // Check service states until the timeout accrues or the given state has bin reached.
             while (DateTime.Now < timeout)
             {
                 ServerModuleModel[] moduleModels;
@@ -491,7 +488,7 @@ namespace Marvin.TestTools.SystemTest
         }
 
         /// <summary>
-        /// Get all Pluginlogger from the HoG.
+        /// Get all ModuleLogger from the HoG.
         /// </summary>
         /// <returns>Array of all PluginLogger which could be fetched.</returns>
         public LoggerModel[] GetAllPluginLogger()
@@ -500,7 +497,7 @@ namespace Marvin.TestTools.SystemTest
         }
 
         /// <summary>
-        /// Set the log level of a specific pluginlogger on the HoG.
+        /// Set the log level of a specific ModuleLogger on the HoG.
         /// </summary>
         /// <param name="logger">The logger which should be set.</param>
         /// <param name="level">The level which should be set.</param>
@@ -511,7 +508,7 @@ namespace Marvin.TestTools.SystemTest
 
         /// <summary>
         /// Connect to a heart of gold client logger.
-        /// Used to receive the logging entrys generated by the heart of gold instance.
+        /// Used to receive the logging entries generated by the heart of gold instance.
         /// </summary>
         /// <param name="logger">The name of the logger to connect to.</param>
         /// <param name="level">The logging level to get.</param>
@@ -530,7 +527,7 @@ namespace Marvin.TestTools.SystemTest
             {
                 if (_timer == null)
                 {
-                    // initialize the timer to get the logging entrys
+                    // initialize the timer to get the logging entries
                     _timer = new Timer(ReadLogTimerElapsed, null, TimerInterval, Timeout.Infinite);
                 }
             }
@@ -577,8 +574,8 @@ namespace Marvin.TestTools.SystemTest
         }
 
         /// <summary>
-        /// Tries to execute a method until it succeeds or the timeout occures.
-        /// Catches EndpointNotFoundExceptions of wcf services and retrys to execute the method after 100ms.
+        /// Tries to execute a method until it succeeds or the timeout occured.
+        /// Catches EndpointNotFoundExceptions of wcf services and retries to execute the method after 100ms.
         /// </summary>
         /// <typeparam name="T">Type of the return value of the <para>taskToTry</para></typeparam>
         /// <param name="taskToTry">The task to try.</param>
@@ -619,12 +616,12 @@ namespace Marvin.TestTools.SystemTest
                 throw lastException;
             }
 
-            throw new Exception($"WaitForServiceCall timeed out after {timeoutInSeconds} seconds");
+            throw new Exception($"WaitForServiceCall timed out after {timeoutInSeconds} seconds");
         }
 
         /// <summary>
-        /// Tries to execute a method until it succeeds or the timeout occures.
-        /// Catches EndpointNotFoundExceptions of wcf services and retrys to execute the method after 100ms.
+        /// Tries to execute a method until it succeeds or the timeout occured.
+        /// Catches EndpointNotFoundExceptions of wcf services and retries to execute the method after 100ms.
         /// </summary>
         /// <param name="taskToTry">The task to try.</param>
         /// <param name="timeoutInSeconds">The timeout in seconds.</param>
@@ -639,7 +636,7 @@ namespace Marvin.TestTools.SystemTest
                 try
                 {
                     taskToTry();
-                    return; // Execution was successfull; return now!
+                    return; // Execution was successful; return now!
                 }
                 catch (EndpointNotFoundException ex)
                 {
@@ -649,7 +646,7 @@ namespace Marvin.TestTools.SystemTest
                 }
                 catch (Exception ex)
                 {
-                    // remember exeption and throw at last.
+                    // remember exception and throw at last.
                     lastException = ex;
                     break;
                 }
@@ -684,11 +681,11 @@ namespace Marvin.TestTools.SystemTest
         }
 
         /// <summary>
-        /// Searches for the runtime directorys.
+        /// Searches for the runtime directories.
         /// </summary>
         /// <param name="buildDirectoryName">Name of the build directory.</param>
         /// <param name="runtimeDirectoryName">Name of the runtime directory.</param>
-        /// <param name="configDirectoryName">Name of the configuration direcory.</param>
+        /// <param name="configDirectoryName">Name of the configuration directory.</param>
         private void SearchForRuntime(string buildDirectoryName, string runtimeDirectoryName, string configDirectoryName)
         {
             DirectoryInfo buildDir = null;
@@ -735,7 +732,7 @@ namespace Marvin.TestTools.SystemTest
 
         private void ReadLogTimerElapsed(object state)
         {
-            // Read logentrys of all registered loggers
+            // Read log entries of all registered loggers
             int[] loggerIds;
 
             lock (_loggerIds)
@@ -750,7 +747,7 @@ namespace Marvin.TestTools.SystemTest
                     // Get log messages
                     var logResult = WaitForServiceCall(() => _loggingClient.GetMessages(loggerId.ToString()));
 
-                    // Write the logmessages to the console to be readable in the jenkins output.
+                    // Write the log messages to the console to be readable in the jenkins output.
                     foreach (LogMessageModel message in logResult)
                     {
                         Console.WriteLine("{0:HH:mm:ss} RemoteLog:\nTimestamp: {1} | Level: {2} | Class: {3} | Message: {4}",
@@ -830,8 +827,8 @@ namespace Marvin.TestTools.SystemTest
         /// <returns>Created database configuration.</returns>
         public static DatabaseConfigModel CreateDatabaseConfig(string server, string database, string user, string password, string schema, int port = 5432)
         {
-            // Initalize the database config
-            DatabaseConfigModel databaseConfigModel = new DatabaseConfigModel
+            // Initialize the database config
+            var databaseConfigModel = new DatabaseConfigModel
             {
                 Server = server,
                 Database = database,
@@ -844,28 +841,28 @@ namespace Marvin.TestTools.SystemTest
         }
 
         /// <summary>
-        /// Checks if the database allready exists.
+        /// Checks if the database already exists.
         /// </summary>
         /// <param name="databaseConfigModel">The database configuration to check.</param>
         /// <param name="targetModel">The model name.</param>
-        /// <returns><c>true</c> if the database exists, <c>false</c> if it do not exist or the connection was not posible.</returns>
+        /// <returns><c>true</c> if the database exists, <c>false</c> if it do not exist or the connection was not possible.</returns>
         public TestConnectionResponse CheckDatabase(DatabaseConfigModel databaseConfigModel, string targetModel)
         {
-            // Check if database allready exists
+            // Check if database already exists
             return WaitForServiceCall(() => _databaseClient.TestDatabaseConfig(targetModel, databaseConfigModel));
         }
 
         /// <summary>
         /// Creates the database as defined in the database configuration.
         /// </summary>
-        /// <param name="databaseConfigModel">The database configuration with the create informations.</param>
+        /// <param name="databaseConfigModel">The database configuration with the create information.</param>
         /// <param name="targetModel">The model name.</param>
         /// <returns><c>true</c> if the database was created successfully, <c>false</c> if not</returns>
         public bool CreateDatabase(DatabaseConfigModel databaseConfigModel, string targetModel)
         {
             var result = WaitForServiceCall(() => _databaseClient.CreateDatabase(targetModel, databaseConfigModel));
 
-            // result is "" when it was successfull.
+            // result is "" when it was successful.
             if (result.Success)
                 return true;
 
@@ -876,14 +873,14 @@ namespace Marvin.TestTools.SystemTest
         /// <summary>
         /// Deletes the database as defined in the database configuration.
         /// </summary>
-        /// <param name="databaseConfigModel">The database configuration with the delete informations.</param>
+        /// <param name="databaseConfigModel">The database configuration with the delete information.</param>
         /// <param name="targetModel">The model name.</param>
         /// <returns><c>true</c> if the database has been deleted successfully, <c>false</c> if not</returns>
         public bool DeleteDatabase(DatabaseConfigModel databaseConfigModel, string targetModel)
         {
             var result = WaitForServiceCall(() => _databaseClient.EraseDatabase(targetModel, databaseConfigModel));
 
-            // result is "" when it was successfull.
+            // result is "" when it was successful.
             if (result.Success)
                 return true;
 
@@ -898,7 +895,7 @@ namespace Marvin.TestTools.SystemTest
         {
             var result = WaitForServiceCall(() => _databaseClient.DumpDatabase(targetModel, databaseConfigModel));
 
-            // result is "" when it was successfull.
+            // result is "" when it was successful.
             if (result.Success)
                 return result;
 
@@ -913,7 +910,7 @@ namespace Marvin.TestTools.SystemTest
         {
             var result = WaitForServiceCall(() => _databaseClient.RestoreDatabase(targetModel, new RestoreDatabaseRequest { BackupFileName = databaseFile, Config = databaseConfigModel }));
 
-            // result is "" when it was successfull.
+            // result is "" when it was successful.
             if (result.Success)
                 return true;
 
@@ -945,7 +942,7 @@ namespace Marvin.TestTools.SystemTest
         {
             try
             {
-                // activate the new database. this will reincanate the services on the heart of gold
+                // activate the new database. this will reincarnate the services on the heart of gold
                 WaitForServiceCall(() => _databaseClient.SetDatabaseConfig(targetModel, databaseConfigModel));
             }
             catch

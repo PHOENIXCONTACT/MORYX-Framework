@@ -7,8 +7,8 @@ namespace Marvin.Runtime.Kernel.Update
     /// <summary>
     /// Runmode used to update all models
     /// </summary>
-    [Runmode(RunModeName)]
-    public class UpdateRunmode : IRunmode
+    [RunMode(RunModeName)]
+    public class UpdateRunMode : IRunMode
     {
         /// <summary>
         /// Const name of the RunMode. 

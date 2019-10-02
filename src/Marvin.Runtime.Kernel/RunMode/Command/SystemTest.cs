@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using Marvin.Configuration;
 using Marvin.Runtime.Modules;
@@ -9,36 +7,29 @@ using Marvin.Tools.Wcf;
 namespace Marvin.Runtime.Kernel
 {
     /// <summary>
-    /// Provides a runmode which is used for system tests.
+    /// Provides a RunMode which is used for system tests.
     /// </summary>
-    [Runmode(RunmodeName)]
-    public class SystemTest : CommandRunmode
+    [RunMode(nameof(SystemTest))]
+    public class SystemTest : CommandRunMode
     {
-        /// <summary>
-        /// Name of the runmode.
-        /// </summary>
-        public const string RunmodeName = "SystemTest";
-
-        private const int BufferSize = 256;
-
         /// <summary>
         /// Configuration manager instance. Injected by castle.
         /// </summary>
         public IConfigManager ConfigManager { get; set; }
 
         private Timer _shutdownTimer;
-        private readonly UTF8Encoding _decoder = new UTF8Encoding();
+        private SystemTestOptions _options;
 
         /// <inheritdoc />
         public override void Setup(RuntimeArguments args)
         {
             base.Setup(args);
+            RuntimeArguments.Parse(out _options);
 
             // Override configs port value
-            var portIncrement = int.Parse(Arguments["pi"] ?? "0");
             var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);
-            wcfConfig.HttpPort += portIncrement;
-            wcfConfig.NetTcpPort += portIncrement;
+            wcfConfig.HttpPort += _options.PortIncrement;
+            wcfConfig.NetTcpPort += _options.PortIncrement;
         }
 
         /// <summary>
@@ -47,10 +38,10 @@ namespace Marvin.Runtime.Kernel
         protected override void Boot()
         {
             // Prepare shutdown timer
-            int timeout = int.Parse(Arguments["t"] ?? "300");
+            var timeout = _options.ShutdownTimeout;
             _shutdownTimer = new Timer(ShutDownTimer, null, TimeSpan.FromSeconds(timeout), Timeout.InfiniteTimeSpan);
 
-            // Register to service manager event            
+            // Register to service manager event
             ModuleManager.ModuleStateChanged += OnModuleStateChanged;
             base.Boot();
         }
