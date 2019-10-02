@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using CommandLine;
 using Marvin.Container;
 using Marvin.Model;
 using Marvin.Modules;
@@ -42,14 +44,19 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public RuntimeErrorCode Run()
         {
-            _arguments = RuntimeArguments.BuildArgumentDict(_args);
+            var errors = RuntimeArguments.Build(_args, out _arguments);
 
-            // Look for help command
-            if (_arguments.HasArgument("h", "help"))
-            {
-                HelpPrinter.Print();
+            // Check for general errors
+            if (_arguments == null)
+                return RuntimeErrorCode.Error;
+
+            // Check if help was executed
+            if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 return RuntimeErrorCode.NoError;
-            }
+
+            // Check for other general errors
+            if (errors.Any())
+                return RuntimeErrorCode.Error;
 
             // Set working directory to location of this exe
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
@@ -67,7 +74,7 @@ namespace Marvin.Runtime.Kernel
             _container = CreateContainer();
 
             // Load and run environment
-            var env = LoadEnvironment(_arguments);
+            var env = LoadEnvironment();
             var result = env == null ? RuntimeErrorCode.Error : RunEnvironment(env);
 
             // Clean up and exit
@@ -98,7 +105,7 @@ namespace Marvin.Runtime.Kernel
             container.ExecuteInstaller(new AutoInstaller(GetType().Assembly));
 
             // Load additional runtimes
-            container.LoadComponents<IRunmode>();
+            container.LoadComponents<IRunMode>();
 
             // Load kernel and core modules
             container.LoadComponents<object>(type => type.GetCustomAttribute<KernelComponentAttribute>() != null);
@@ -116,24 +123,23 @@ namespace Marvin.Runtime.Kernel
         /// <summary>
         /// Method to wrap all boot exceptions
         /// </summary>
-        /// <param name="args">Arguments</param>
-        private IRunmode LoadEnvironment(RuntimeArguments args)
+        private IRunMode LoadEnvironment()
         {
             try
             {
                 // Determine matching environment
                 string name;
-                if (args.HasValue("r"))
-                    name = args["r"];
-                else if (args.HasArgument("dbUpdate"))
-                    name = UpdateRunmode.RunModeName;
-                else if (args.HasArgument("d") || Environment.UserInteractive)
+                if (!string.IsNullOrWhiteSpace(_arguments.RunMode))
+                    name = _arguments.RunMode;
+                else if (_arguments.DbUpdate)
+                    name = UpdateRunMode.RunModeName;
+                else if (_arguments.DeveloperConsole || Environment.UserInteractive)
                     name = DeveloperConsole.RunmodeName;
                 else
                     name = ServiceRunMode.RunModeName;
 
                 // Prepare config
-                var configDir = args["c"] ?? "Config";
+                var configDir = _arguments.ConfigDir;
                 if (!Directory.Exists(configDir))
                     Directory.CreateDirectory(configDir);
                 var configManager = _container.Resolve<IRuntimeConfigManager>();
@@ -143,10 +149,10 @@ namespace Marvin.Runtime.Kernel
                 RuntimePlatform.SetPlatform();
 
                 // Resolve environment
-                var environment = _container.Resolve<IRunmode>(name);
+                var environment = _container.Resolve<IRunMode>(name);
                 if (environment == null)
                     throw new ArgumentException("Failed to load environment. Name unknown!");
-                environment.Setup(args);
+                environment.Setup(_arguments);
 
                 // Init all components that require a start up
                 var initializable = _container.ResolveAll<IInitializable>();
@@ -168,7 +174,7 @@ namespace Marvin.Runtime.Kernel
         /// Method to wrap all execution exceptions
         /// </summary>
         /// <param name="environment">Environment to execute</param>
-        private static RuntimeErrorCode RunEnvironment(IRunmode environment)
+        private static RuntimeErrorCode RunEnvironment(IRunMode environment)
         {
             try
             {

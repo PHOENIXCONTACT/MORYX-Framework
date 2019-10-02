@@ -1,89 +1,89 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+using CommandLine;
 
 namespace Marvin.Runtime.Kernel
 {
     /// <summary>
-    /// Helper class to build argument object from argument strings
+    /// Class to build argument object from argument strings
     /// </summary>
     public class RuntimeArguments
     {
-        private readonly Dictionary<string, string> _arguments;
-
-        private RuntimeArguments(Dictionary<string, string> arguments)
-        {
-            _arguments = arguments;
-        }
+        private static IReadOnlyList<string> _allArguments;
 
         /// <summary>
-        /// Find out if there is an argument in the fragments.
+        /// Directory where configs are saved.
         /// </summary>
-        /// <param name="fragments">An amount of fragments which should be checked.</param>
-        /// <returns>True when an argument could be found in the fragments.</returns>
-        public bool HasArgument(params string[] fragments)
-        {
-            return fragments.Any(fragment => _arguments.ContainsKey(fragment));
-        }
+        [Option('c', "configDir", Required = false, Default = "Config", HelpText = "Directory where configs are saved.")]
+        public string ConfigDir { get; set; }
 
         /// <summary>
-        /// Determine if the key exists and has a non null or empty value.
+        /// Specify the RunMode to use.
         /// </summary>
-        /// <param name="key">The key which should be checked.</param>
-        /// <returns>True when the key exists and has a non null or empty value.</returns>
-        public bool HasValue(string key)
-        {
-            return _arguments.ContainsKey(key) && !string.IsNullOrEmpty(_arguments[key]);
-        }
+        [Option('r', "runMode", Required = false, HelpText = "Specify the RunMode to use.")]
+        public string RunMode { get; set; }
 
         /// <summary>
-        /// extension to enable the get of a value to a certain key.
+        /// Argument for starting the database update run mode
         /// </summary>
-        /// <param name="key">The key for which the value should be get.</param>
-        /// <returns>The value or null if the key is not present in the dictionary.s</returns>
-        public string this[string key]
-        {
-            get { return _arguments.ContainsKey(key) ? _arguments[key] : null; }
-        }
+        [Option('u', "dbUpdate", Required = false, HelpText = "Update all databases with outdated versions.")]
+        public bool DbUpdate { get; set; }
+
+        /// <summary>
+        /// Starts runtime in developer console
+        /// </summary>
+        [Option('d', "dev", Required = false, HelpText = "Starts runtime in developer console")]
+        public bool DeveloperConsole { get; set; }
 
         /// <summary>
         /// Creates a dictionary from the arg input for all arguments which are supported.
         /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns>A new runtime arguments instance with the arguments from the params.</returns>
-        public static RuntimeArguments BuildArgumentDict(IEnumerable<string> args)
+        public static IReadOnlyList<Error> Build(IReadOnlyList<string> args, out RuntimeArguments parsed)
         {
-            var result = new Dictionary<string, string>();
-
-            var argumentRegex = new Regex(@"-{1,2}(?<key>\w+)=?(?<value>\S+)?");
-            foreach (var argument in args)
+            _allArguments = args;
+            return Parse(out parsed, delegate(ParserSettings settings)
             {
-                var match = argumentRegex.Match(argument);
-                if (!match.Success)
-                    continue;
-
-                bool hasValue = match.Groups["value"].Success;
-                result[match.Groups["key"].Value] = hasValue ? match.Groups["value"].Value : null;
-            }
-
-            return new RuntimeArguments(result);
+                settings.AutoHelp = true;
+                settings.HelpWriter = Console.Out;
+                settings.AutoVersion = true;
+            });
         }
 
         /// <summary>
-        /// Returns a string that represents the current object.
+        /// Parses a list of arguments to the given options class
         /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        public override string ToString()
+        public static IEnumerable<Error> Parse<T>(out T parsed) where T : class, new()
         {
-            var builder = new StringBuilder();
-            foreach (var argument in _arguments)
+            return Parse(out parsed, null);
+        }
+
+        /// <summary>
+        /// Private parse function
+        /// </summary>
+        private static IReadOnlyList<Error> Parse<T>(out T parsed, Action<ParserSettings> configuration) where T : class, new()
+        {
+            var parser = new Parser(delegate(ParserSettings settings)
             {
-                builder.AppendFormat("{0}={1}", argument.Key, argument.Value).AppendLine();
-            }
-            return builder.ToString();
+                settings.AutoVersion = false;
+                settings.AutoHelp = false;
+                settings.HelpWriter = null;
+                configuration?.Invoke(settings);
+
+                settings.IgnoreUnknownArguments = true;
+            });
+
+            IEnumerable<Error> parseErrors = null;
+            T parsedOptions = null;
+
+            parser.ParseArguments<T>(_allArguments)
+                .WithParsed(options => parsedOptions = options)
+                .WithNotParsed(errors => parseErrors = errors);
+
+            parser.Dispose();
+
+            parsed = parsedOptions;
+            return parseErrors != null ? parseErrors.ToArray() : new Error[0];
         }
     }
 }

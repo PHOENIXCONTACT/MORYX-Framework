@@ -246,7 +246,7 @@ function Invoke-SmokeTest([string]$RuntimePath, [int]$ModulesCount, [int]$Interr
     $randomIncrement = Get-Random -Minimum 2000 -Maximum 2100
     Write-Step "Invoking Runtime SmokeTest Modules: $ModulesCount, Interrupt Time: $InterruptTime, Port Increment: $randomIncrement."  
 
-    & "$RuntimePath" @("-r=SmokeTest", "-e=$ModulesCount", "-i=$InterruptTime", "-pi=$randomIncrement")
+    & "$RuntimePath" @("-r SmokeTest", "-e $ModulesCount", "-i $InterruptTime", "-p $randomIncrement")
     Invoke-ExitCodeCheck $LastExitCode;
 }
 

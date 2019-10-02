@@ -3,9 +3,9 @@
 namespace Marvin.Runtime.Kernel
 {
     /// <summary>
-    /// Base contract for all runmodes
+    /// Base contract for all RunModes
     /// </summary>
-    public interface IRunmode
+    public interface IRunMode
     {
         /// <summary>
         /// Service manager instance

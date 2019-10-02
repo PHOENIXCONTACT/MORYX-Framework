@@ -6,8 +6,8 @@ namespace Marvin.Runtime.Kernel
     /// <summary>
     /// Environment wrapper for the windows service
     /// </summary>
-    [Runmode(RunModeName)]
-    public class ServiceRunMode : IRunmode
+    [RunMode(RunModeName)]
+    public class ServiceRunMode : IRunMode
     {
         /// <summary>
         /// Const name of the RunMode. 
