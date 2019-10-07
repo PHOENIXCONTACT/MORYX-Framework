@@ -2,20 +2,14 @@
 using System.Linq;
 using Marvin.Container;
 using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Kernel
 {
     /// <summary>
-    /// Command run mode. Provides serveral command functionallity. 
+    /// Command run mode. Provides several command functionality.
     /// </summary>
-    public abstract class CommandRunMode : IRunMode
+    public abstract class CommandRunMode<TOptions> : RunModeBase<TOptions> where TOptions : RuntimeOptions
     {
-        /// <summary>
-        /// Module manager instance. Injected by the castle container
-        /// </summary>
-        public IModuleManager ModuleManager { get; set; }
-
         /// <summary>
         /// Config manger instance. Injected by the castle container
         /// </summary>
@@ -36,26 +30,12 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         protected ICommandHandler[] CommandHandler;
 
-        /// <summary>
-        /// Get/set  the runtime arguments.
-        /// </summary>
-        protected RuntimeArguments Arguments { get; set; }
-
-        /// <summary>
-        /// Sets the arguments for the command run mode.
-        /// </summary>
-        /// <param name="args">Arguments which should be used by the run mode.</param>
-        public virtual void Setup(RuntimeArguments args)
-        {
-            Arguments = args;
-        }
-
         private void InitializeLocalContainer()
         {
             // Prepare local container
             _container = new CastleContainer()
                 .SetInstance(ModuleManager).SetInstance(ConfigLoader)
-                .SetInstance(Logger).SetInstance(Arguments);
+                .SetInstance(Logger);
 
             _container.LoadComponents<ICommandHandler>();
 
@@ -66,7 +46,7 @@ namespace Marvin.Runtime.Kernel
         /// Sequence of states which should be done in the right order.
         /// </summary>
         /// <returns>0 when all methods run through without error.</returns>
-        public RuntimeErrorCode Run()
+        public override RuntimeErrorCode Run()
         {
             InitializeLocalContainer();
 
@@ -102,7 +82,7 @@ namespace Marvin.Runtime.Kernel
         }
 
         /// <summary>
-        /// Execute an enterd command. 
+        /// Execute an enterd command.
         /// </summary>
         /// <param name="command">The command which should be executed.</param>
         protected void ExecuteCommand(string command)

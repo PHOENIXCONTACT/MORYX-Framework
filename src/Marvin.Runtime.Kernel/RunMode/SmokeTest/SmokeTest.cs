@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Timers;
+using CommandLine;
+using CommandLine.Text;
 using Marvin.Configuration;
 using Marvin.Model;
 using Marvin.Notifications;
@@ -13,18 +16,51 @@ using Timer = System.Timers.Timer;
 namespace Marvin.Runtime.Kernel.SmokeTest
 {
     /// <summary>
-    /// Smoke test will start the runtime and try to load the modules, start them and shut them down again.
+    /// Starts the runtime and executes the smoke tests.
     /// </summary>
-    [RunMode("SmokeTest")]
-    public class SmokeTest : IRunMode
+    [Verb("smokeTest", HelpText = "Starts the runtime and executes the smoke tests.")]
+    public class SmokeTestOptions : RuntimeOptions
     {
-        // ReSharper disable LocalizableElement
+        /// <summary>
+        /// Expected number of runtime modules.
+        /// </summary>
+        [Option('e', "expected", Required = true, HelpText = "Expected number of runtime modules.", Default = 3)]
+        public int ExpectedModules { get; set; }
 
         /// <summary>
-        /// ModuleManager to interact wit modules
+        /// If set, full test will be executed
         /// </summary>
-        public IModuleManager ModuleManager { get; set; }
+        [Option('f', "full", Required = false, HelpText = "If set, full test will be executed.")]
+        public bool FullTest { get; set; }
 
+        /// <summary>
+        /// Increments all ports for the SmokeTest
+        /// </summary>
+        [Option('p', "portIncrement", Required = false, HelpText = "Increments all ports for the SmokeTest.", Default = 0)]
+        public int PortIncrement { get; set; }
+
+        /// <summary>
+        /// Time in ms to wait for a state change of a module.
+        /// </summary>
+        [Option('i', "interval", Required = false, HelpText = "Time in ms to wait for a state change of a module.", Default = 60000)]
+        public int NoChangeInterval { get; set; }
+
+        /// <summary>
+        /// Examples for the help output
+        /// </summary>
+        [Usage]
+        public static IEnumerable<Example> Examples =>
+            new List<Example> {
+                new Example("Sample with 5 expected modules", new SmokeTestOptions { ExpectedModules = 5, PortIncrement = 4711})
+            };
+    }
+
+    /// <summary>
+    /// Smoke test will start the runtime and try to load the modules, start them and shut them down again.
+    /// </summary>
+    [RunMode(nameof(SmokeTest), typeof(SmokeTestOptions))]
+    public class SmokeTest : RunModeBase<SmokeTestOptions>
+    {
         /// <summary>
         /// ConfigManager to receive the <see cref="WcfConfig"/>
         /// </summary>
@@ -54,23 +90,23 @@ namespace Marvin.Runtime.Kernel.SmokeTest
         #endregion
 
         /// <summary>
-        /// Setup the smoke test with some optinal arguments.
+        /// Setup the smoke test with some optional arguments.
         /// </summary>
         /// <param name="args">The argument list for the smoke test.</param>
-        public void Setup(RuntimeArguments args)
+        public override void Setup(RuntimeOptions args)
         {
-            var errors = RuntimeArguments.Parse(out SmokeTestOptions options);
+            base.Setup(args);
 
             // Read arguments
-            _expectedModules = options.ExpectedModules;
-            _fullTest = options.FullTest;
+            _expectedModules = Options.ExpectedModules;
+            _fullTest = Options.FullTest;
 
             // Override configs port value
             var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);
-            wcfConfig.HttpPort += options.PortIncrement;
-            wcfConfig.NetTcpPort += options.PortIncrement;
+            wcfConfig.HttpPort += Options.PortIncrement;
+            wcfConfig.NetTcpPort += Options.PortIncrement;
 
-            _noChangeTimer = new Timer(options.NoChangeInterval);
+            _noChangeTimer = new Timer(Options.NoChangeInterval);
             _noChangeTimer.Elapsed += OperationTimedOut;
         }
 
@@ -80,7 +116,7 @@ namespace Marvin.Runtime.Kernel.SmokeTest
         /// Prepare the smoke test. Create all databases for the needed modules, count the modules, delete databases after run of tests.
         /// </summary>
         /// <returns>The result of the tests.</returns>
-        public RuntimeErrorCode Run()
+        public override RuntimeErrorCode Run()
         {
             // Check if all modules were found
             var modulesCount = ModuleManager.AllModules.Count();

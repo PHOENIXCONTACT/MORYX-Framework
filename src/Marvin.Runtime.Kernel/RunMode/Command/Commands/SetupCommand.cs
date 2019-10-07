@@ -11,11 +11,11 @@ namespace Marvin.Runtime.Kernel
     internal class SetupCommand : ICommandHandler
     {
         public IRuntimeConfigManager ConfigManager { get; set; }
-        public RuntimeArguments CommandArgs { get; set; }
+
         public IModuleManager ModuleManager { get; set; }
 
         /// <summary>
-        /// Check if this 
+        /// Check if this
         /// </summary>
         public bool CanHandle(string command)
         {
@@ -50,9 +50,9 @@ namespace Marvin.Runtime.Kernel
             var halfLine = new StringBuilder();
             for (var i = 0; i < (Console.WindowWidth - 15) / 2; i++)
                 halfLine.Append("-");
+
             Console.WriteLine(halfLine + " Current setup " + halfLine);
             Console.WriteLine("Execution directory: " + Directory.GetCurrentDirectory());
-            Console.WriteLine("Arguments:\n" + CommandArgs);
             Console.WriteLine("ConfigDir: " + ConfigManager.ConfigDirectory);
         }
 
