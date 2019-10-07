@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +9,6 @@ using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
-using Marvin.Runtime.Kernel.Update;
 using Marvin.Runtime.Modules;
 using Marvin.Tools;
 
@@ -25,18 +25,15 @@ namespace Marvin.Runtime.Kernel
         /// Current global container
         /// </summary>
         private IContainer _container;
-
-        /// <summary>
-        /// Arguments passed to this instance
-        /// </summary>
-        private RuntimeArguments _arguments;
-
         /// <summary>
         /// Creates an instance of the <see cref="HeartOfGold"/>
         /// </summary>
         public HeartOfGold(string[] args)
         {
             _args = args;
+
+            if (_args.Length == 0)
+                _args = new[] { DeveloperConsoleOptions.VerbName };
         }
 
         /// <summary>
@@ -44,20 +41,6 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public RuntimeErrorCode Run()
         {
-            var errors = RuntimeArguments.Build(_args, out _arguments);
-
-            // Check for general errors
-            if (_arguments == null)
-                return RuntimeErrorCode.Error;
-
-            // Check if help was executed
-            if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
-                return RuntimeErrorCode.NoError;
-
-            // Check for other general errors
-            if (errors.Any())
-                return RuntimeErrorCode.Error;
-
             // Set working directory to location of this exe
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
 
@@ -74,8 +57,23 @@ namespace Marvin.Runtime.Kernel
             _container = CreateContainer();
 
             // Load and run environment
-            var env = LoadEnvironment();
-            var result = env == null ? RuntimeErrorCode.Error : RunEnvironment(env);
+            var loadResult = LoadEnvironment(out var env);
+            var returnCode = RuntimeErrorCode.NoError;
+            switch (loadResult)
+            {
+                case EnvironmentLoadResult.Error:
+                    returnCode = RuntimeErrorCode.Error;
+                    break;
+                case EnvironmentLoadResult.HelpRequested:
+                    returnCode = RuntimeErrorCode.NoError;
+                    break;
+                case EnvironmentLoadResult.BadVerb:
+                    returnCode = RuntimeErrorCode.Error;
+                    break;
+                case EnvironmentLoadResult.Success:
+                    returnCode = RunEnvironment(env);
+                    break;
+            }
 
             // Clean up and exit
             try
@@ -90,7 +88,7 @@ namespace Marvin.Runtime.Kernel
             AppDomain.CurrentDomain.AssemblyResolve -= AppDomainBuilder.ResolveAssembly;
             AppDomain.CurrentDomain.UnhandledException -= CrashHandler.HandleCrash;
 
-            return result;
+            return returnCode;
         }
 
         /// <summary>
@@ -123,51 +121,85 @@ namespace Marvin.Runtime.Kernel
         /// <summary>
         /// Method to wrap all boot exceptions
         /// </summary>
-        private IRunMode LoadEnvironment()
+        private EnvironmentLoadResult LoadEnvironment(out IRunMode runMode)
         {
+            EnvironmentInfo env = null;
+            var loadResult = EnvironmentLoadResult.Error;
+
             try
             {
-                // Determine matching environment
-                string name;
-                if (!string.IsNullOrWhiteSpace(_arguments.RunMode))
-                    name = _arguments.RunMode;
-                else if (_arguments.DbUpdate)
-                    name = UpdateRunMode.RunModeName;
-                else if (_arguments.DeveloperConsole || Environment.UserInteractive)
-                    name = DeveloperConsole.RunmodeName;
-                else
-                    name = ServiceRunMode.RunModeName;
+                var runModes = _container.ResolveAll<IRunMode>();
+                var runModeMap = (from existing in runModes
+                    let runModeAttr = existing.GetType().GetCustomAttribute<RunModeAttribute>()
+                    select new EnvironmentInfo
+                    {
+                        RunMode = existing,
+                        OptionType = runModeAttr.OptionType
+                    }).ToArray();
 
-                // Prepare config
-                var configDir = _arguments.ConfigDir;
-                if (!Directory.Exists(configDir))
-                    Directory.CreateDirectory(configDir);
-                var configManager = _container.Resolve<IRuntimeConfigManager>();
-                configManager.ConfigDirectory = configDir;
+                var optionTypes = runModeMap.Select(r => r.OptionType).ToArray();
+                Parser.Default.ParseArguments(_args, optionTypes)
+                    .WithParsed(delegate(object parsed)
+                    {
+                        // Select run mode
+                        env = runModeMap.First(m => m.OptionType == parsed.GetType());
+                        env.Options = (RuntimeOptions) parsed;
+                        loadResult = EnvironmentLoadResult.Success;
+                    })
+                    .WithNotParsed(delegate(IEnumerable<Error> errors)
+                    {
+                        var errorArr = errors.ToArray();
+                        if (errorArr.Any(e => e.Tag == ErrorType.HelpRequestedError || e.Tag == ErrorType.HelpVerbRequestedError))
+                        {
+                            loadResult = EnvironmentLoadResult.HelpRequested;
+                            return;
+                        }
 
-                // Prepare platform
-                RuntimePlatform.SetPlatform();
+                        if (errorArr.Any(e => e.Tag == ErrorType.BadVerbSelectedError || e.Tag == ErrorType.NoVerbSelectedError))
+                        {
+                            loadResult = EnvironmentLoadResult.BadVerb;
+                            return;
+                            //throw new ArgumentException("Failed to load environment. Name unknown!");
+                        }
 
-                // Resolve environment
-                var environment = _container.Resolve<IRunMode>(name);
-                if (environment == null)
-                    throw new ArgumentException("Failed to load environment. Name unknown!");
-                environment.Setup(_arguments);
+                        loadResult = EnvironmentLoadResult.Error;
+                    });
 
-                // Init all components that require a start up
-                var initializable = _container.ResolveAll<IInitializable>();
-                foreach (var init in initializable)
+
+                if (env != null && loadResult == EnvironmentLoadResult.Success)
                 {
-                    init.Initialize();
-                }
+                    // Prepare config
+                    var configDir = env.Options.ConfigDir;
+                    if (!Directory.Exists(configDir))
+                        Directory.CreateDirectory(configDir);
+                    var configManager = _container.Resolve<IRuntimeConfigManager>();
+                    configManager.ConfigDirectory = configDir;
 
-                return environment;
+                    // Setup environment
+                    env.RunMode.Setup(env.Options);
+
+                    // Prepare platform
+                    RuntimePlatform.SetPlatform();
+
+                    // Init all components that require a start up
+                    var initializable = _container.ResolveAll<IInitializable>();
+                    foreach (var init in initializable)
+                    {
+                        init.Initialize();
+                    }
+                }
             }
             catch (Exception ex)
             {
+                loadResult = EnvironmentLoadResult.Error;
                 CrashHandler.HandleCrash(null, new UnhandledExceptionEventArgs(ex, true));
-                return null;
             }
+            finally
+            {
+                runMode = env?.RunMode;
+            }
+
+            return loadResult;
         }
 
         /// <summary>
@@ -185,6 +217,23 @@ namespace Marvin.Runtime.Kernel
                 CrashHandler.HandleCrash(null, new UnhandledExceptionEventArgs(ex, true));
                 return RuntimeErrorCode.Error;
             }
+        }
+
+        private class EnvironmentInfo
+        {
+            public IRunMode RunMode { get; set; }
+
+            public Type OptionType { get; set; }
+
+            public RuntimeOptions Options { get; set; }
+        }
+
+        private enum EnvironmentLoadResult
+        {
+            Error,
+            Success,
+            HelpRequested,
+            BadVerb
         }
     }
 }

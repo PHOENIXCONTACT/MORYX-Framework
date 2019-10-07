@@ -1,43 +1,33 @@
 ﻿using System;
+using CommandLine;
 using Marvin.Model;
-using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Kernel.Update
 {
     /// <summary>
-    /// Runmode used to update all models
+    /// Option class for the <see cref="DbUpdateRunMode"/>
     /// </summary>
-    [RunMode(RunModeName)]
-    public class UpdateRunMode : IRunMode
+    [Verb("dbUpdate", HelpText = "Updates all existing databases.")]
+    public class DbUpdateOptions : RuntimeOptions
     {
-        /// <summary>
-        /// Const name of the RunMode. 
-        /// </summary>
-        public const string RunModeName = "DbUpdate";
+    }
 
-        /// <summary>
-        /// Service manager instance
-        /// </summary>
-        public IModuleManager ModuleManager { get; set; }
-
+    /// <summary>
+    /// RunMode used to update all models
+    /// </summary>
+    [RunMode(nameof(DbUpdateRunMode), typeof(DbUpdateOptions))]
+    public class DbUpdateRunMode : RunModeBase<DbUpdateOptions>
+    {
         /// <summary>
         /// Update each model
         /// </summary>
         public IModelConfigurator[] Configurators { get; set; }
 
         /// <summary>
-        /// Setup the environment by passing the command line arguments
-        /// </summary>
-        /// <param name="args">Command line arguments</param>
-        public void Setup(RuntimeArguments args)
-        {
-        }
-
-        /// <summary>
         /// Run environment
         /// </summary>
         /// <returns>0: All fine - 1: Warning - 2: Error</returns>
-        public RuntimeErrorCode Run()
+        public override RuntimeErrorCode Run()
         {
             Console.WriteLine("Updating databases...");
             foreach (var configurator in Configurators)

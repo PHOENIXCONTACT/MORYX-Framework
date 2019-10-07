@@ -224,7 +224,7 @@ namespace Marvin.TestTools.SystemTest
             {
                 // Start the heart of gold in developer mode to start as a console application (-d) and set the path to the config files (-c=path)
                 StartInfo = new ProcessStartInfo(runtimeCommand,
-                    $"-d -r SystemTest -c {ConfigDir} -t {ExecutionTimeout} -p {_portIncrement}")
+                    $"systemTest -c {ConfigDir} -t {ExecutionTimeout} -p {_portIncrement}")
                 {
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

@@ -132,24 +132,23 @@
     <Compile Include="RunMode\Command\Commands\StopCommand.cs" />
     <Compile Include="RunMode\Command\DeveloperConsole.cs" />
     <Compile Include="RunMode\Command\SystemTest.cs" />
-    <Compile Include="RunMode\Command\SystemTestOptions.cs" />
     <Compile Include="RunMode\IRunMode.cs" />
     <Compile Include="RunMode\RunModeAttribute.cs" />
-    <Compile Include="RunMode\RuntimeArguments.cs" />
     <Compile Include="RunMode\RuntimeErrorCode.cs" />
+    <Compile Include="RunMode\RuntimeOptions.cs" />
     <Compile Include="RunMode\Service\ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="RunMode\Service\ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
+    <Compile Include="RunMode\RunModeBase.cs" />
     <Compile Include="RunMode\Service\Service.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="RunMode\Service\ServiceRunMode.cs" />
     <Compile Include="RunMode\SmokeTest\SmokeTest.cs" />
-    <Compile Include="RunMode\SmokeTest\SmokeTestOptions.cs" />
-    <Compile Include="RunMode\Update\UpdateRunMode.cs" />
+    <Compile Include="RunMode\Update\DbUpdateRunMode.cs" />
     <Compile Include="Wcf\BindingFactories.cs" />
     <Compile Include="Wcf\ClientFactory.cs" />
     <Compile Include="Wcf\ClientFactoryConfig.cs" />

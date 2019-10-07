@@ -16,7 +16,7 @@ namespace Marvin.Runtime.Kernel
         /// Setup the environment by passing the command line arguments
         /// </summary>
         /// <param name="args">Command line arguments</param>
-        void Setup(RuntimeArguments args);
+        void Setup(RuntimeOptions args);
 
         /// <summary>
         /// Run environment

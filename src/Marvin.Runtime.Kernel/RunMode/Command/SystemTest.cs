@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
+using CommandLine;
+using CommandLine.Text;
 using Marvin.Configuration;
 using Marvin.Runtime.Modules;
 using Marvin.Tools.Wcf;
@@ -7,11 +10,46 @@ using Marvin.Tools.Wcf;
 namespace Marvin.Runtime.Kernel
 {
     /// <summary>
+    /// Option class for the <see cref="SystemTest"/>
+    /// </summary>
+    [Verb("systemTest", HelpText = "Starts the runtime in system test mode. Less console output and more options.")]
+    public class SystemTestOptions : RuntimeOptions
+    {
+        /// <summary>
+        /// Increments all ports for the SystemTest
+        /// </summary>
+        [Option('p', "portIncrement", Required = false, Default = 0, HelpText = "Increments all ports for the SystemTest.")]
+        public int PortIncrement { get; set; }
+
+        /// <summary>
+        /// Timeout to wait for a module shutdown
+        /// </summary>
+        [Option('t', "shutdown", Required = false, Default = 300, HelpText = "Timeout to wait for a module shutdown.")]
+        public int ShutdownTimeout { get; set; }
+
+        /// <summary>
+        /// Examples for the help output
+        /// </summary>
+        [Usage]
+        public static IEnumerable<Example> Examples =>
+            new List<Example> {
+                new Example("Custom config directory", new SystemTestOptions { ConfigDir = @"C:\YourApp\Config"}),
+                new Example("Add port increment for all http and net.tcp ports", new SystemTestOptions { PortIncrement = 4711}),
+                new Example("Override shutdown time out", new SystemTestOptions { ShutdownTimeout = 800}),
+            };
+    }
+
+    /// <summary>
     /// Provides a RunMode which is used for system tests.
     /// </summary>
-    [RunMode(nameof(SystemTest))]
-    public class SystemTest : CommandRunMode
+    [RunMode(nameof(SystemTest), typeof(SystemTestOptions))]
+    public class SystemTest : CommandRunMode<SystemTestOptions>
     {
+        /// <summary>
+        /// Const name of the RunMode.
+        /// </summary>
+        public const string RunModeName = "SystemTest";
+
         /// <summary>
         /// Configuration manager instance. Injected by castle.
         /// </summary>
@@ -21,10 +59,10 @@ namespace Marvin.Runtime.Kernel
         private SystemTestOptions _options;
 
         /// <inheritdoc />
-        public override void Setup(RuntimeArguments args)
+        public override void Setup(RuntimeOptions args)
         {
             base.Setup(args);
-            RuntimeArguments.Parse(out _options);
+            _options = (SystemTestOptions) args;
 
             // Override configs port value
             var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);

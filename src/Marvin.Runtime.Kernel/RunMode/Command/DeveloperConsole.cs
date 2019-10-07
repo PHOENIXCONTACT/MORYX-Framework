@@ -1,21 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using CommandLine;
+using CommandLine.Text;
 using Marvin.Runtime.Modules;
 
 namespace Marvin.Runtime.Kernel
 {
     /// <summary>
-    /// Console for the developer to debug and monitor the HoG while developing.
+    /// Option class for the <see cref="DeveloperConsole"/>
     /// </summary>
-    [RunMode(RunmodeName)]
-    public class DeveloperConsole : CommandRunMode
+    [Verb(VerbName, HelpText = "Starts the runtime with the developer console.")]
+    public class DeveloperConsoleOptions : RuntimeOptions
     {
         /// <summary>
-        /// Name of the run mode.
+        /// Name of the verb
         /// </summary>
-        public const string RunmodeName = "Console";
+        internal const string VerbName = "dev";
 
+        /// <summary>
+        /// Examples for the help output
+        /// </summary>
+        [Usage]
+        public static IEnumerable<Example> Examples =>
+            new List<Example> {
+                new Example("Starts developer console with custom config directory", new DeveloperConsoleOptions { ConfigDir = @"C:\YourApp\Config"})
+            };
+    }
+
+    /// <summary>
+    /// Console for the developer to debug and monitor the HoG while developing.
+    /// </summary>
+    [RunMode(nameof(DeveloperConsole), typeof(DeveloperConsoleOptions))]
+    public class DeveloperConsole : CommandRunMode<DeveloperConsoleOptions>
+    {
         /// <summary>
         /// Register necessary controls and initialize the module.
         /// </summary>
