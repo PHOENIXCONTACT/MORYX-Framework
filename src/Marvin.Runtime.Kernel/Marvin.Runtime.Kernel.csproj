@@ -57,19 +57,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Services" />
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Activation" />
-    <Reference Include="System.ServiceModel.Discovery" />
     <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
@@ -119,7 +111,6 @@
     <Compile Include="RunMode\Command\Commands\DefaultHandler.cs" />
     <Compile Include="RunMode\Command\Commands\GarbageCommand.cs" />
     <Compile Include="RunMode\Command\Commands\ICommandHandler.cs" />
-    <Compile Include="RunMode\Command\Commands\InstallCommand.cs" />
     <Compile Include="RunMode\Command\Commands\LoggerCommand.cs" />
     <Compile Include="RunMode\Command\Commands\PrintCommand.cs" />
     <Compile Include="RunMode\Command\Commands\ProductCommand.cs" />
@@ -131,24 +122,18 @@
     <Compile Include="RunMode\Command\Commands\StartCommand.cs" />
     <Compile Include="RunMode\Command\Commands\StopCommand.cs" />
     <Compile Include="RunMode\Command\DeveloperConsole.cs" />
+    <Compile Include="RunMode\Command\DeveloperConsoleOptions.cs" />
     <Compile Include="RunMode\Command\SystemTest.cs" />
+    <Compile Include="RunMode\Command\SystemTestOptions.cs" />
     <Compile Include="RunMode\IRunMode.cs" />
     <Compile Include="RunMode\RunModeAttribute.cs" />
     <Compile Include="RunMode\RuntimeErrorCode.cs" />
     <Compile Include="RunMode\RuntimeOptions.cs" />
-    <Compile Include="RunMode\Service\ProjectInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="RunMode\Service\ProjectInstaller.Designer.cs">
-      <DependentUpon>ProjectInstaller.cs</DependentUpon>
-    </Compile>
     <Compile Include="RunMode\RunModeBase.cs" />
-    <Compile Include="RunMode\Service\Service.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="RunMode\Service\ServiceRunMode.cs" />
     <Compile Include="RunMode\SmokeTest\SmokeTest.cs" />
-    <Compile Include="RunMode\Update\DbUpdateRunMode.cs" />
+    <Compile Include="RunMode\SmokeTest\SmokeTestOptions.cs" />
+    <Compile Include="RunMode\DbUpdate\DbUpdateOptions.cs" />
+    <Compile Include="RunMode\DbUpdate\DbUpdateRunMode.cs" />
     <Compile Include="Wcf\BindingFactories.cs" />
     <Compile Include="Wcf\ClientFactory.cs" />
     <Compile Include="Wcf\ClientFactoryConfig.cs" />
@@ -183,11 +168,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <EmbeddedResource Include="RunMode\Service\ProjectInstaller.resx">
-      <DependentUpon>ProjectInstaller.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
   </PropertyGroup>

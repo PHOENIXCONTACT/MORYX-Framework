@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
-using CommandLine;
-using CommandLine.Text;
 using Marvin.Configuration;
 using Marvin.Runtime.Modules;
 using Marvin.Tools.Wcf;
@@ -10,39 +7,9 @@ using Marvin.Tools.Wcf;
 namespace Marvin.Runtime.Kernel
 {
     /// <summary>
-    /// Option class for the <see cref="SystemTest"/>
-    /// </summary>
-    [Verb("systemTest", HelpText = "Starts the runtime in system test mode. Less console output and more options.")]
-    public class SystemTestOptions : RuntimeOptions
-    {
-        /// <summary>
-        /// Increments all ports for the SystemTest
-        /// </summary>
-        [Option('p', "portIncrement", Required = false, Default = 0, HelpText = "Increments all ports for the SystemTest.")]
-        public int PortIncrement { get; set; }
-
-        /// <summary>
-        /// Timeout to wait for a module shutdown
-        /// </summary>
-        [Option('t', "shutdown", Required = false, Default = 300, HelpText = "Timeout to wait for a module shutdown.")]
-        public int ShutdownTimeout { get; set; }
-
-        /// <summary>
-        /// Examples for the help output
-        /// </summary>
-        [Usage]
-        public static IEnumerable<Example> Examples =>
-            new List<Example> {
-                new Example("Custom config directory", new SystemTestOptions { ConfigDir = @"C:\YourApp\Config"}),
-                new Example("Add port increment for all http and net.tcp ports", new SystemTestOptions { PortIncrement = 4711}),
-                new Example("Override shutdown time out", new SystemTestOptions { ShutdownTimeout = 800}),
-            };
-    }
-
-    /// <summary>
     /// Provides a RunMode which is used for system tests.
     /// </summary>
-    [RunMode(nameof(SystemTest), typeof(SystemTestOptions))]
+    [RunMode(typeof(SystemTestOptions))]
     public class SystemTest : CommandRunMode<SystemTestOptions>
     {
         /// <summary>

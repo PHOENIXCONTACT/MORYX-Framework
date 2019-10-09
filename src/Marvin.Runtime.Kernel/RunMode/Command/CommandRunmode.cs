@@ -30,18 +30,6 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         protected ICommandHandler[] CommandHandler;
 
-        private void InitializeLocalContainer()
-        {
-            // Prepare local container
-            _container = new CastleContainer()
-                .SetInstance(ModuleManager).SetInstance(ConfigLoader)
-                .SetInstance(Logger);
-
-            _container.LoadComponents<ICommandHandler>();
-
-            CommandHandler = _container.ResolveAll<ICommandHandler>().Union(new[] { new DefaultHandler(), }).ToArray();
-        }
-
         /// <summary>
         /// Sequence of states which should be done in the right order.
         /// </summary>
@@ -81,8 +69,20 @@ namespace Marvin.Runtime.Kernel
             ModuleManager.StopModules();
         }
 
+        private void InitializeLocalContainer()
+        {
+            // Prepare local container
+            _container = new CastleContainer()
+                .SetInstance(ModuleManager).SetInstance(ConfigLoader)
+                .SetInstance(Logger);
+
+            _container.LoadComponents<ICommandHandler>();
+
+            CommandHandler = _container.ResolveAll<ICommandHandler>().Union(new[] { new DefaultHandler(), }).ToArray();
+        }
+
         /// <summary>
-        /// Execute an enterd command.
+        /// Execute an entered command.
         /// </summary>
         /// <param name="command">The command which should be executed.</param>
         protected void ExecuteCommand(string command)
