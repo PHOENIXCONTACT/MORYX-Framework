@@ -2,12 +2,12 @@
 using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Marvin.Runtime.WinService
 {
     /// <summary>
-    /// MARVIN service
+    /// Windows service implementation as runtime run mode
     /// </summary>
-    internal class MarvinService : ServiceBase
+    internal class HeartOfGoldService : ServiceBase
     {
         private readonly IModuleManager _moduleManager;
         private readonly IRuntimeConfigManager _configLoader;
@@ -15,9 +15,10 @@ namespace Marvin.Runtime.Kernel
         /// <summary>
         /// Constructor for the service
         /// </summary>
-        public MarvinService(IModuleManager moduleManager, IRuntimeConfigManager configLoader)
+        public HeartOfGoldService(IModuleManager moduleManager, IRuntimeConfigManager configLoader)
         {
-            InitializeComponent();
+            ServiceName = Platform.Current.ProductName;
+
             _moduleManager = moduleManager;
             _configLoader = configLoader;
         }
@@ -35,7 +36,7 @@ namespace Marvin.Runtime.Kernel
 
         protected override void OnStart(string[] args)
         {
-            EventLog.WriteEntry("Marvin core service starting...");
+            EventLog.WriteEntry($"{ServiceName} service starting...");
             Start();
         }
 
@@ -51,16 +52,16 @@ namespace Marvin.Runtime.Kernel
 
         protected override void OnStop()
         {
-            EventLog.WriteEntry("Marvin core service stopping...");
+            EventLog.WriteEntry($"{ServiceName} service stopping...");
             Stop(false);
-            EventLog.WriteEntry("Marvin core service stopped!");
+            EventLog.WriteEntry($"{ServiceName} service stopped!");
         }
 
         protected override void OnShutdown()
         {
             EventLog.WriteEntry("Stopping due to shutdown...");
             Stop(false);
-            EventLog.WriteEntry("Marvin service stopped!");
+            EventLog.WriteEntry($"{ServiceName} service stopped!");
         }
 
         #endregion
@@ -79,19 +80,6 @@ namespace Marvin.Runtime.Kernel
                 _configLoader.ClearCache();
             else
                 _configLoader.SaveAll();
-        }
-
-        #endregion
-
-        #region Vom Komponenten-Designer generierter Code
-
-        /// <summary> 
-        /// Erforderliche Methode für die Designerunterstützung. 
-        /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            ServiceName = Platform.Current.ProductName;
         }
 
         #endregion

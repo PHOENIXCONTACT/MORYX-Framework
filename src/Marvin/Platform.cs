@@ -16,10 +16,12 @@ namespace Marvin
         /// Type of this platform characterized with enum flags
         /// </summary>
         public abstract PlatformType Type { get; }
+
         /// <summary>
         /// Name of this platform
         /// </summary>
         public string PlatformName { get; protected set; }
+
         /// <summary>
         /// Version of the platform
         /// </summary>
@@ -29,10 +31,12 @@ namespace Marvin
         /// Name of the product this application belongs to
         /// </summary>
         public string ProductName { get; protected set; }
+
         /// <summary>
         /// Current version of this product
         /// </summary>
         public Version ProductVersion { get; protected set; }
+
         /// <summary>
         /// Description of the MARVIN based product
         /// </summary>

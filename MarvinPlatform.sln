@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartProject", "src\StartProject\StartProject.csproj", "{8441A356-C5A8-41B4-B7EE-D0411664D8AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime", "src\Marvin.Runtime\Marvin.Runtime.csproj", "{92777E64-9978-40AE-8B90-93ECBBBEFE67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.Runtime", "src\Marvin.Runtime\Marvin.Runtime.csproj", "{92777E64-9978-40AE-8B90-93ECBBBEFE67}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Kernel", "src\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj", "{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}"
 EndProject
@@ -85,7 +85,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.Container.Tests", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.Workflows.Benchmark", "src\Tests\Marvin.Workflows.Benchmark\Marvin.Workflows.Benchmark.csproj", "{91EEF547-A6B5-449F-BF2A-BF8C09D0477E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Communication.Serial", "src\Marvin.Communication.Serial\Marvin.Communication.Serial.csproj", "{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marvin.Communication.Serial", "src\Marvin.Communication.Serial\Marvin.Communication.Serial.csproj", "{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.WinService", "src\Marvin.Runtime.WinService\Marvin.Runtime.WinService.csproj", "{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -662,6 +664,24 @@ Global
 		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|x64.Build.0 = Release|Any CPU
 		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|x86.ActiveCfg = Release|Any CPU
 		{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}.Release|x86.Build.0 = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Debug|x64.Build.0 = Debug|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Debug|x86.Build.0 = Debug|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release(x86)|x86.Build.0 = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release|x64.ActiveCfg = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release|x64.Build.0 = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release|x86.ActiveCfg = Release|Any CPU
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -708,10 +728,11 @@ Global
 		{9CA8EB0B-E8F3-49B4-9948-92A36F32F334} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 		{4FBD4612-B024-4991-BDD5-2BF980D124EA} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 		{91EEF547-A6B5-449F-BF2A-BF8C09D0477E} = {A9C375AE-201D-46CE-9282-387026C0B2F6}
+		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
-		RESX_ShowErrorsInErrorList = True
 		RESX_TaskErrorCategory = Message
+		RESX_ShowErrorsInErrorList = True
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 	EndGlobalSection
 EndGlobal

@@ -29,10 +29,10 @@ namespace Marvin.Runtime
             var startAssembly = Assembly.GetEntryAssembly();
             Current = new RuntimePlatform
             {
-                PlatformName = "Runtime",
+                PlatformName = startAssembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "Runtime",
                 PlatformVersion = typeof(RuntimePlatform).Assembly.GetName().Version,
                 // TODO: Is this the right place to get this information
-                ProductName = startAssembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "MARVIN Application",
+                ProductName = startAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "MARVIN Application",
                 ProductVersion = new Version(startAssembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "1.0.0"),
                 ProductDescription = startAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "No Description provided!",
             };

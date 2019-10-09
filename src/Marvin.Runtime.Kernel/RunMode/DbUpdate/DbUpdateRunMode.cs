@@ -1,21 +1,12 @@
 ﻿using System;
-using CommandLine;
 using Marvin.Model;
 
-namespace Marvin.Runtime.Kernel.Update
+namespace Marvin.Runtime.Kernel.DbUpdate
 {
-    /// <summary>
-    /// Option class for the <see cref="DbUpdateRunMode"/>
-    /// </summary>
-    [Verb("dbUpdate", HelpText = "Updates all existing databases.")]
-    public class DbUpdateOptions : RuntimeOptions
-    {
-    }
-
     /// <summary>
     /// RunMode used to update all models
     /// </summary>
-    [RunMode(nameof(DbUpdateRunMode), typeof(DbUpdateOptions))]
+    [RunMode(typeof(DbUpdateOptions))]
     public class DbUpdateRunMode : RunModeBase<DbUpdateOptions>
     {
         /// <summary>

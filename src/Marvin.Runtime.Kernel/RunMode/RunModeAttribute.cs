@@ -16,13 +16,11 @@ namespace Marvin.Runtime.Kernel
         /// <summary>
         /// Constructor with life cycle
         /// </summary>
-        /// <param name="name">Name of the runtime environment</param>
         /// <param name="optionType">Type of options parsed from arguments</param>
-        public RunModeAttribute(string name, Type optionType)
+        public RunModeAttribute(Type optionType)
             : base(LifeCycle.Singleton, typeof(IRunMode))
         {
             OptionType = optionType;
-            Name = name;
         }
     }
 }
