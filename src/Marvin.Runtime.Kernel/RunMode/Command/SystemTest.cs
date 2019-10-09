@@ -23,18 +23,16 @@ namespace Marvin.Runtime.Kernel
         public IConfigManager ConfigManager { get; set; }
 
         private Timer _shutdownTimer;
-        private SystemTestOptions _options;
 
         /// <inheritdoc />
         public override void Setup(RuntimeOptions args)
         {
             base.Setup(args);
-            _options = (SystemTestOptions) args;
 
             // Override configs port value
             var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);
-            wcfConfig.HttpPort += _options.PortIncrement;
-            wcfConfig.NetTcpPort += _options.PortIncrement;
+            wcfConfig.HttpPort += Options.PortIncrement;
+            wcfConfig.NetTcpPort += Options.PortIncrement;
         }
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace Marvin.Runtime.Kernel
         protected override void Boot()
         {
             // Prepare shutdown timer
-            var timeout = _options.ShutdownTimeout;
+            var timeout = Options.ShutdownTimeout;
             _shutdownTimer = new Timer(ShutDownTimer, null, TimeSpan.FromSeconds(timeout), Timeout.InfiniteTimeSpan);
 
             // Register to service manager event

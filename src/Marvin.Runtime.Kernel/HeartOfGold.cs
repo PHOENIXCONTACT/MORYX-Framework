@@ -159,7 +159,6 @@ namespace Marvin.Runtime.Kernel
                         {
                             loadResult = EnvironmentLoadResult.BadVerb;
                             return;
-                            //throw new ArgumentException("Failed to load environment. Name unknown!");
                         }
 
                         loadResult = EnvironmentLoadResult.Error;
