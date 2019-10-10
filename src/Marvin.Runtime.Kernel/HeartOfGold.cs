@@ -19,7 +19,7 @@ namespace Marvin.Runtime.Kernel
     /// </summary>
     public class HeartOfGold
     {
-        private readonly string[] _args;
+        private string[] _args;
 
         /// <summary>
         /// Current global container
@@ -30,10 +30,7 @@ namespace Marvin.Runtime.Kernel
         /// </summary>
         public HeartOfGold(string[] args)
         {
-            _args = args;
-
-            if (_args.Length == 0)
-                _args = new[] { DeveloperConsoleOptions.VerbName };
+            PrepareArguments(args);
         }
 
         /// <summary>
@@ -42,6 +39,7 @@ namespace Marvin.Runtime.Kernel
         public RuntimeErrorCode Run()
         {
             // Set working directory to location of this exe
+            // ReSharper disable once AssignNullToNotNullAttribute
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
 
             // Load all assemblies from directory before accessing any other code
@@ -61,14 +59,13 @@ namespace Marvin.Runtime.Kernel
             var returnCode = RuntimeErrorCode.NoError;
             switch (loadResult)
             {
+                case EnvironmentLoadResult.BadVerb:
+                case EnvironmentLoadResult.NoVerb:
                 case EnvironmentLoadResult.Error:
                     returnCode = RuntimeErrorCode.Error;
                     break;
                 case EnvironmentLoadResult.HelpRequested:
                     returnCode = RuntimeErrorCode.NoError;
-                    break;
-                case EnvironmentLoadResult.BadVerb:
-                    returnCode = RuntimeErrorCode.Error;
                     break;
                 case EnvironmentLoadResult.Success:
                     returnCode = RunEnvironment(env);
@@ -99,94 +96,58 @@ namespace Marvin.Runtime.Kernel
         {
             var container = new GlobalContainer();
 
-            // Register runtimes
+            // Register local components
             container.ExecuteInstaller(new AutoInstaller(GetType().Assembly));
 
-            // Load additional runtimes
+            // Load additional run modes
             container.LoadComponents<IRunMode>();
 
             // Load kernel and core modules
             container.LoadComponents<object>(type => type.GetCustomAttribute<KernelComponentAttribute>() != null);
             container.LoadComponents<IServerModule>(module => module.GetCustomAttribute<ServerModuleAttribute>() != null);
 
-            // Load models
+            // Load data models
             container.LoadComponents<IUnitOfWorkFactory>();
 
-            // Load user modules
+            // Load server modules
             container.LoadComponents<IServerModule>();
 
             return container;
         }
 
         /// <summary>
-        /// Method to wrap all boot exceptions
+        /// Selects and loads the environment by arguments of the heart of gold
         /// </summary>
         private EnvironmentLoadResult LoadEnvironment(out IRunMode runMode)
         {
+            var runModes = _container.ResolveAll<IRunMode>();
+            var runModeMap = (from existing in runModes
+                let runModeAttr = existing.GetType().GetCustomAttribute<RunModeAttribute>()
+                where runModeAttr != null
+                select new EnvironmentInfo
+                {
+                    RunMode = existing,
+                    OptionType = runModeAttr.OptionType
+                }).ToArray();
+
+            var optionTypes = runModeMap.Select(r => r.OptionType).ToArray();
+
             EnvironmentInfo env = null;
             var loadResult = EnvironmentLoadResult.Error;
-
             try
             {
-                var runModes = _container.ResolveAll<IRunMode>();
-                var runModeMap = (from existing in runModes
-                    let runModeAttr = existing.GetType().GetCustomAttribute<RunModeAttribute>()
-                    select new EnvironmentInfo
-                    {
-                        RunMode = existing,
-                        OptionType = runModeAttr.OptionType
-                    }).ToArray();
-
-                var optionTypes = runModeMap.Select(r => r.OptionType).ToArray();
                 Parser.Default.ParseArguments(_args, optionTypes)
-                    .WithParsed(delegate(object parsed)
-                    {
-                        // Select run mode
-                        env = runModeMap.First(m => m.OptionType == parsed.GetType());
-                        env.Options = (RuntimeOptions) parsed;
-                        loadResult = EnvironmentLoadResult.Success;
-                    })
-                    .WithNotParsed(delegate(IEnumerable<Error> errors)
-                    {
-                        var errorArr = errors.ToArray();
-                        if (errorArr.Any(e => e.Tag == ErrorType.HelpRequestedError || e.Tag == ErrorType.HelpVerbRequestedError))
-                        {
-                            loadResult = EnvironmentLoadResult.HelpRequested;
-                            return;
-                        }
-
-                        if (errorArr.Any(e => e.Tag == ErrorType.BadVerbSelectedError || e.Tag == ErrorType.NoVerbSelectedError))
-                        {
-                            loadResult = EnvironmentLoadResult.BadVerb;
-                            return;
-                        }
-
-                        loadResult = EnvironmentLoadResult.Error;
-                    });
-
-
-                if (env != null && loadResult == EnvironmentLoadResult.Success)
+                .WithParsed(delegate(object parsed)
                 {
-                    // Prepare config
-                    var configDir = env.Options.ConfigDir;
-                    if (!Directory.Exists(configDir))
-                        Directory.CreateDirectory(configDir);
-                    var configManager = _container.Resolve<IRuntimeConfigManager>();
-                    configManager.ConfigDirectory = configDir;
+                    // Select run mode
+                    env = runModeMap.First(m => m.OptionType == parsed.GetType());
+                    env.Options = (RuntimeOptions) parsed;
+                    loadResult = EnvironmentLoadResult.Success;
+                })
+                .WithNotParsed(errors => loadResult = EvaluateParserErrors(errors));
 
-                    // Setup environment
-                    env.RunMode.Setup(env.Options);
-
-                    // Prepare platform
-                    RuntimePlatform.SetPlatform();
-
-                    // Init all components that require a start up
-                    var initializable = _container.ResolveAll<IInitializable>();
-                    foreach (var init in initializable)
-                    {
-                        init.Initialize();
-                    }
-                }
+                if (loadResult == EnvironmentLoadResult.Success)
+                    SetupEnvironment(env);
             }
             catch (Exception ex)
             {
@@ -198,6 +159,79 @@ namespace Marvin.Runtime.Kernel
                 runMode = env?.RunMode;
             }
 
+            return loadResult;
+        }
+
+        /// <summary>
+        /// Setups the loaded environment (config dir,  platform and initializables)
+        /// </summary>
+        private void SetupEnvironment(EnvironmentInfo env)
+        {
+            // Prepare config directory
+            var configDir = env.Options.ConfigDir;
+            if (!Directory.Exists(configDir))
+                Directory.CreateDirectory(configDir);
+            var configManager = _container.Resolve<IRuntimeConfigManager>();
+            configManager.ConfigDirectory = configDir;
+
+            // Setup environment
+            env.RunMode.Setup(env.Options);
+
+            // Prepare platform
+            RuntimePlatform.SetPlatform();
+
+            // Init all components that require a start up
+            var initializable = _container.ResolveAll<IInitializable>();
+            initializable.ForEach(i => i.Initialize());
+        }
+
+        /// <summary>
+        /// Prepares the application arguments and adds the developer console verb if no verb was selected
+        /// </summary>
+        private void PrepareArguments(string[] args)
+        {
+            // The next lines adds the developer console verb if no verb was selected
+            if (args.Length == 0)
+            {
+                _args = new[] { DeveloperConsoleOptions.VerbName };
+            }
+            else if (args.Length > 0
+                     && !args[0].ToLower().Contains("help")
+                     && (args[0].StartsWith("-") || args[0].StartsWith("--")))
+            {
+                _args = new string[args.Length + 1];
+                _args[0] = DeveloperConsoleOptions.VerbName;
+                args.CopyTo(_args, 1);
+            }
+            else
+            {
+                _args = args;
+            }
+        }
+
+        private static EnvironmentLoadResult EvaluateParserErrors(IEnumerable<Error> errors)
+        {
+            EnvironmentLoadResult loadResult;
+            var errorArr = errors.ToArray();
+            if (errorArr.Any(e => e.Tag == ErrorType.HelpRequestedError || e.Tag == ErrorType.HelpVerbRequestedError))
+            {
+                loadResult = EnvironmentLoadResult.HelpRequested;
+                return loadResult;
+            }
+
+            if (errorArr.Any(e => e.Tag == ErrorType.BadVerbSelectedError || e.Tag == ErrorType.NoVerbSelectedError))
+            {
+                loadResult = EnvironmentLoadResult.BadVerb;
+                return loadResult;
+            }
+
+            if (errorArr.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
+            {
+                loadResult = EnvironmentLoadResult.NoVerb;
+                return loadResult;
+            }
+
+            loadResult = EnvironmentLoadResult.Error;
             return loadResult;
         }
 
@@ -232,7 +266,8 @@ namespace Marvin.Runtime.Kernel
             Error,
             Success,
             HelpRequested,
-            BadVerb
+            BadVerb,
+            NoVerb,
         }
     }
 }
