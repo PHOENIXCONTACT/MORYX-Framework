@@ -49,11 +49,7 @@ The sample could be started with:
 $> .\Application.exe demo --sleepTime 10000
 ````
 
-## Available RunModes
-
-Current 4 Runmodes are implemented. 2 of those are directly build into the HeartOfGold and 2 are placed in a seperate library. Some of this define arguments that can be passed to the Runtime in the form "-{Argument}={Parameter}".
-
-### Developer Console
+## Developer Console
 
 This is the default RunMode for development and application debugging. It offers a simple command line interface to interact with modules and the kernel.
 
@@ -82,7 +78,7 @@ Whenever a module name shall be entered the console provide auto complete by ent
 
 Arguments: The developer console does not define any custom arguments. It does not read any arguments either.
 
-### WinService
+## Windows Service
 
 This RunMode is used to execute the Runtime fully headless as windows service. It does not require a logged in user. This should be the default RunMode in productive use. From now on your application will be executed directly on system startup.
 Like any other Windows Service it can also declare dependencies. Because every application build on the Runtime has different dependencies they were not hard coded into this RunMode. When the install command is run there is also a parameter for service dependencies. Those names are passed to the operating system as dependencies. Refer to WinServiceDependencies for a tutorial.
@@ -100,7 +96,7 @@ $> .\Application.exe --install --c C:\YourApp\Config --dependencies postgresql-x
 $> .\Application.exe --uninstall
 ````
 
-### SmokeTest
+## SmokeTest
 
 As the name suggests this RunMode is used to perform a simple smoke test of the system. This means all modules are started, restarted and stopped once. The smoke test also checks the number of executed modules to make sure no module library was skipped due to a TypeLoadException or similar. It will also monitor the time it takes modules to transition from one state to another. If this time exceeds a given interval the smoke test fails as well.
 
@@ -112,7 +108,7 @@ $> .\Application.exe smokeTest --expected 5 --portIncrement 4711
 ````
 
 
-### SystemTest
+## SystemTest
 
 As the name suggests this RunMode is used to perform a system tests. Traditionally the console was used for this but sometimes the unit test would crash an the process would remain alive on the build system blocking all other builds. The SystemTest RunMode overcomes this deficit by implementing a timeout to kill the process if it does not receive a shutdown command. The textual interface was also redirected to telnet for low level remote access.
 
