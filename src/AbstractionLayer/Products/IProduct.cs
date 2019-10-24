@@ -13,6 +13,11 @@ namespace Marvin.AbstractionLayer
         string Name { get; }
 
         /// <summary>
+        /// State of the product
+        /// </summary>
+        ProductTypeState State { get; }
+
+        /// <summary>
         /// Parent of this product, if it was used as a part. This
         /// is <value>null</value> for "Root-Products"
         /// </summary>

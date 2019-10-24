@@ -6,6 +6,8 @@ namespace Marvin.Products.Model
     {
         public virtual string Name { get; set; }
 
+        public virtual int State { get; set; }
+
         public virtual long? ProductId { get; set; }
 
         public virtual ProductEntity Product { get; set; }

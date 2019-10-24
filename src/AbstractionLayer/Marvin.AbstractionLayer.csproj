@@ -122,6 +122,7 @@
     <Compile Include="Products\ProductNotFoundException.cs" />
     <Compile Include="Products\ProductQuery.cs" />
     <Compile Include="Products\ProductReference.cs" />
+    <Compile Include="Products\ProductTypeState.cs" />
     <Compile Include="Recipes\RecipeNotFoundException.cs" />
     <Compile Include="Recipes\IProductRecipe.cs" />
     <Compile Include="Recipes\IRecipe.cs" />

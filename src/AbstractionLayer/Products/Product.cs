@@ -19,6 +19,9 @@ namespace Marvin.AbstractionLayer
         public string Name { get; set; }
 
         /// <inheritdoc />
+        public ProductTypeState State { get; set; }
+
+        /// <inheritdoc />
         public IProduct Parent => ParentLink?.Parent;
 
         /// <inheritdoc />

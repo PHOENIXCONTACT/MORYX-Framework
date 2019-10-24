@@ -16,20 +16,20 @@ namespace Marvin.Products.Samples.Setups
 
             // Create products
             var watchProduct = prodRepo.Create("1234", 1, nameof(WatchProduct));
-            var watchProperties = propertiesRepo.Create("Cool Watch");
+            var watchProperties = propertiesRepo.Create("Cool Watch", 1);
             //watchProperties.OperatingSystem = OperatingSystem.Windows2012Server;
             watchProduct.SetCurrentVersion(watchProperties);
 
             var watchfaceProduct = prodRepo.Create("5678", 2, nameof(WatchfaceProduct));
-            var watchfaceProperties = propertiesRepo.Create("Cool watchface");
+            var watchfaceProperties = propertiesRepo.Create("Cool watchface", 1);
             watchfaceProduct.SetCurrentVersion(watchfaceProperties);
 
             var hourProduct = prodRepo.Create("567871", 3, nameof(NeedleProduct));
-            var hourProperties = propertiesRepo.Create("Hour");
+            var hourProperties = propertiesRepo.Create("Hour", 1);
             hourProduct.SetCurrentVersion(hourProperties);
 
             var secondsProduct = prodRepo.Create("3455644", 3, nameof(NeedleProduct));
-            var secondsProperties = propertiesRepo.Create("Seconds");
+            var secondsProperties = propertiesRepo.Create("Seconds", 1);
             secondsProduct.SetCurrentVersion(secondsProperties);
 
             // Create part links

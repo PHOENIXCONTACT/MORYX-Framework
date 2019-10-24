@@ -10,6 +10,6 @@ namespace Marvin.Products.Model
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        ProductProperties Create(string name); 
+        ProductProperties Create(string name, int state); 
     }
 }
