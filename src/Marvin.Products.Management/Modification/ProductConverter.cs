@@ -133,6 +133,7 @@ namespace Marvin.Products.Management.Modification
                 Id = product.Id,
                 Type = product.Type,
                 Name = product.Name,
+                State = product.State,
                 Identifier = identity.Identifier,
                 Revision = identity.Revision
             };
@@ -353,6 +354,7 @@ namespace Marvin.Products.Management.Modification
 
             converted.Identity = new ProductIdentity(product.Identifier, product.Revision);
             converted.Name = product.Name;
+            converted.State = product.State;
 
             // Copy extended properties
             var properties = converted.GetType().GetProperties();

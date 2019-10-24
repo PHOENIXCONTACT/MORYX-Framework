@@ -20,6 +20,7 @@ namespace Marvin.Products.Management
             to.Id = from.Id;
             to.Identity = new ProductIdentity(from.Identifier, from.Revision);
             to.Name = from.CurrentVersion.Name;
+            to.State = (ProductTypeState) from.CurrentVersion.State;
         }
 
         /// <summary>
@@ -59,6 +60,7 @@ namespace Marvin.Products.Management
 
             var properties = version as ProductProperties;
             properties.Name = product.Name ?? string.Empty;
+            properties.State = (int) product.State;
             entity.SetCurrentVersion(properties);
 
             return version;

@@ -43,6 +43,9 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         public string Name { get; set; }
 
+        /// <inheritdoc />
+        public ProductTypeState State { get; set; }
+
         /// <summary>
         /// Reference does not have a parent
         /// </summary>
