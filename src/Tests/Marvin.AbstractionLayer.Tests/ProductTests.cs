@@ -10,12 +10,12 @@ namespace Marvin.AbstractionLayer.Tests
         [Test]
         public void InstantiateProduct()
         {
-            var watch = new WatchProduct()
+            var watch = new WatchType()
             {
                 Identity = new ProductIdentity("1277125", 01),
-                Watchface = new ProductPartLink<WatchfaceProduct>
+                Watchface = new ProductPartLink<WatchfaceType>
                 {
-                    Product = new WatchfaceProduct
+                    Product = new WatchfaceType
                     {
                         Identity = new ProductIdentity("512380125", 01)
                     }
@@ -26,8 +26,8 @@ namespace Marvin.AbstractionLayer.Tests
             {
                 watch.Needles.Add(new NeedlePartLink
                 {
-                    Role = (NeedleRole)i-1,
-                    Product = new NeedleProduct
+                    Role = (NeedleRole)i - 1,
+                    Product = new NeedleType
                     {
                         Identity = new ProductIdentity("12641" + i, (short)(i % 4))
                     }
@@ -36,11 +36,11 @@ namespace Marvin.AbstractionLayer.Tests
 
 
             // Create article instance
-            var watchInstance = (WatchArticle)watch.CreateInstance();
+            var watchInstance = (WatchInstance)watch.CreateInstance();
 
             // Assert
-            Assert.AreEqual(watch, watchInstance.Product, "Wrong watch product");
-            Assert.AreEqual(watch.Watchface.Product, watchInstance.Watchface.Product, "Wrong watchface product");
+            Assert.AreEqual(watch, watchInstance.ProductType, "Wrong watch product");
+            Assert.AreEqual(watch.Watchface.Product, watchInstance.Watchface.ProductType, "Wrong watchface product");
             Assert.AreEqual(NeedleRole.Hours, watch.Needles.ElementAt(0).Role, "Role not set on instance");
         }
     }

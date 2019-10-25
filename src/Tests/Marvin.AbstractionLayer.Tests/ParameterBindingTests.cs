@@ -8,7 +8,7 @@ namespace Marvin.AbstractionLayer.Tests
     [TestFixture]
     public class ParameterBindingTests
     {
-        [TestCase("Article.Product", typeof(DummyProduct))]
+        [TestCase("Article.ProductType", typeof(DummyType))]
         [TestCase("Recipe.Config[Foo].Length", typeof(int))]
         [TestCase("Product.Part.Product.Name", typeof(string))]
         [TestCase("Product.Part.Name", typeof(string), Description = "Use part link shortcut")]
@@ -50,7 +50,7 @@ namespace Marvin.AbstractionLayer.Tests
         public void ShortcutRemoval()
         {
             // Arrange
-            var resolver = new ProcessBindingResolverFactory().Create("Article.Product.Dummy.Product.Name");
+            var resolver = new ProcessBindingResolverFactory().Create("ProductInstance.ProductType.Dummy.ProductType.Name");
             var process = DummyProcess();
             int oldCount = 0, newCount = 0;
 
@@ -80,7 +80,7 @@ namespace Marvin.AbstractionLayer.Tests
         {
             public string Part { get; set; }  // e.g. Product.Part.Product
 
-            public IProduct Target { get; set; }
+            public IProductType Target { get; set; }
 
             private IBindingResolver _resolver;
             protected override ParametersBase ResolveBinding(IProcess process)
@@ -90,23 +90,23 @@ namespace Marvin.AbstractionLayer.Tests
 
                 return new InsertPartParameters
                 {
-                    Target = (IProduct)_resolver.Resolve(process)
+                    Target = (IProductType)_resolver.Resolve(process)
                 };
             }
         }
 
         private static IProcess DummyProcess()
         {
-            var product = new DummyProduct()
+            var product = new DummyType()
             {
                 Id = 42,
                 Name = "Bob",
                 Foo = 1337,
                 Bobs = new[] { 1, 3, 7, 42, 1337 },
                 Identity = new ProductIdentity("123456", 01),
-                Part = new ProductPartLink<DummyProduct>(2)
+                Part = new ProductPartLink<DummyType>(2)
                 {
-                    Product = new DummyProduct
+                    Product = new DummyType
                     {
                         Identity = new ProductIdentity("654321", 01),
                         Name = "Thomas",
@@ -125,13 +125,10 @@ namespace Marvin.AbstractionLayer.Tests
                     Product = product,
                     Config = new Dictionary<string, string> { { "Foo", "Blah" } }
                 },
-                Article = product.CreateInstance()
+                ProductInstance = product.CreateInstance()
             };
-            process.Article.Id = 42;
-            process.Article.Reworked = true;
-            process.Article.State = ArticleState.Success;
-            process.Article.Identity = new ProductIdentity("Test", 1);
-            ((DummyArticle)process.Article).Blah = (float)0.815;
+            process.ProductInstance.Id = 42;
+            ((DummyInstance)process.ProductInstance).Blah = (float)0.815;
 
             return process;
         }
@@ -143,7 +140,7 @@ namespace Marvin.AbstractionLayer.Tests
             public Dictionary<string, string> Config { get; set; }
         }
 
-        private class DummyProduct : Product
+        private class DummyType : ProductType
         {
             public override string Type
             {
@@ -156,28 +153,28 @@ namespace Marvin.AbstractionLayer.Tests
 
             public DummyValue Dummy => new DummyValue(this);
 
-            protected override Article Instantiate()
+            protected override ProductInstance Instantiate()
             {
-                return new DummyArticle();
+                return new DummyInstance();
             }
 
-            public ProductPartLink<DummyProduct> Part { get; set; }
+            public ProductPartLink<DummyType> Part { get; set; }
         }
 
         private class DummyValue
         {
-            public DummyValue(DummyProduct product)
+            public DummyValue(DummyType type)
             {
-                Product = product;
+                ProductType = type;
             }
 
             /// <summary>
             /// Fake property to test shortcut resolution
             /// </summary>
-            public DummyProduct Product { get; }
+            public DummyType ProductType { get; }
         }
 
-        private class DummyArticle : Article<DummyProduct>
+        private class DummyInstance : ProductInstance<DummyType>
         {
             ///
             public override string Type

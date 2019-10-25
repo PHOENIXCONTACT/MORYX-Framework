@@ -23,7 +23,7 @@ namespace Marvin.AbstractionLayer.Tests
             {
                 Recipe = new ProductRecipe
                 {
-                    Product = new WatchProduct
+                    Product = new WatchType
                     {
                         Identity = new ProductIdentity("10101", 2)
                     }

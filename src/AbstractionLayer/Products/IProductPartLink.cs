@@ -11,17 +11,17 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Parent product for this part link
         /// </summary>
-        IProduct Parent { get; set; }
+        IProductType Parent { get; set; }
 
         /// <summary>
         /// Generic access to the product of this part link
         /// </summary>
-        IProduct Product { get; set; }
+        IProductType Product { get; set; }
 
         /// <summary>
         /// Create single article instance for this part
         /// </summary>
-        Article Instantiate();
+        ProductInstance Instantiate();
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     /// <typeparam name="TProduct"></typeparam>
     public interface IProductPartLink<TProduct> : IProductPartLink 
-        where TProduct : IProduct
+        where TProduct : IProductType
     {
         /// <summary>
         /// Typed product of this part
@@ -46,7 +46,7 @@ namespace Marvin.AbstractionLayer
         /// Instantiate article collection
         /// </summary>
         public static ICollection<TArticle> Instantiate<TArticle>(this IEnumerable<IProductPartLink> parts)
-            where TArticle : Article
+            where TArticle : ProductInstance
         {
             return parts.Select(p => (TArticle)p.Instantiate()).ToList();
         }

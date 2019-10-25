@@ -138,7 +138,7 @@ Instances of products are defined as classes and in most cases there is a 1:1 re
 
 * Analog and digital watches are represented by two product classes `AnalogWatchProduct` and `DigitalWatchProduct` to avoid having an empty collection of needles in digital watches, but both create `Watch` articles * The `WatchfaceProduct` creates instances of `AnalogWatch` or `DigitalWatch` depending on the value of `IsDigital` of the watch face.
 
-All article class definitions must be derived from [Article](xref:Marvin.AbstractionLayer.Article) and only define instance properties valid for the single physical instance. The base class already defines instance properties like state, production date or identity (serial number). Articles also define references to article instances of its parts. To provide generic components with an easier way to handle the recursive tree articles export the interface [IArticleParts](xref:Marvin.AbstractionLayer.IArticleParts). This interface returns all parts of an article as a collection of named part references called [ArticlePart](xref:Marvin.AbstractionLayer.ArticlePart). To avoid reflection the properties are mapped directly into a collection instead of building it from the type definition later. The [Article](xref:Marvin.AbstractionLayer.Article) class defines two methods `Single()` and `Multiple` to make this mapping process easier to application developers.
+All article class definitions must be derived from [Article](xref:Marvin.AbstractionLayer.Article) and only define instance properties valid for the single physical instance. The base class already defines instance properties like state, production date or identity (serial number). Articles also define references to article instances of its parts. 
 
 ### Sample Code
 
@@ -153,16 +153,8 @@ public class WatchArticle : Article<WatchProduct>
 
     public DateTime DeliveryDate { get; set; }
 
-    public WatchfaceArticle Watchface
-    {
-        get { return Single<WatchfaceArticle>().Part; }
-        set { Single<WatchfaceArticle>().Part = value; }
-    }
+    public WatchfaceArticle Watchface { get; set; }
 
-    public ICollection<NeedleArticle> Neddles
-    {
-        get { return Multiple<NeedleArticle>(); }
-        set { Multiple(value); }
-    }
+    public ICollection<NeedleArticle> Neddles { get; set; }
 }
 ````

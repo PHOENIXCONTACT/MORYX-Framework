@@ -10,6 +10,6 @@ namespace Marvin.Products.Samples.Model
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        SmartWatchProductPropertiesEntity Create(string name); 
+        SmartWatchProductPropertiesEntity Create(int state); 
     }
 }

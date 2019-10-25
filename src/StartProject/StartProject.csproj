@@ -167,10 +167,6 @@
       <Project>{99a470c6-1224-4475-937e-e7ca0266205c}</Project>
       <Name>Marvin.Products.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Products.Samples.Model\Marvin.Products.Samples.Model.csproj">
-      <Project>{0289483b-d623-41c1-ae3f-2f0779a472db}</Project>
-      <Name>Marvin.Products.Samples.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Products.Samples\Marvin.Products.Samples.csproj">
       <Project>{00916431-5038-44b8-8bda-4a1b13636f32}</Project>
       <Name>Marvin.Products.Samples</Name>

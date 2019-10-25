@@ -6,7 +6,7 @@ using Marvin.Bindings;
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Default factory that can create resolvers for <see cref="IProduct"/>, <see cref="Article"/>, <see cref="Process"/>
+    /// Default factory that can create resolvers for <see cref="IProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/>
     /// and <see cref="IRecipe"/>. It also creates a resolver for unknown keys.
     /// </summary>
     public class ProcessBindingResolverFactory : BindingResolverFactory
@@ -21,9 +21,11 @@ namespace Marvin.AbstractionLayer
                 case "Recipe":
                     return new DelegateResolver(source => ((IProcess)source).Recipe);
                 case "Product":
+                case "ProductType":
                     return new ProductResolver();
                 case "Article":
-                    return new DelegateResolver(source => (source as ProductionProcess)?.Article);
+                case "ProductInstance":
+                    return new DelegateResolver(source => (source as ProductionProcess)?.ProductInstance);
                 default:
                     return null;
             }
@@ -48,7 +50,7 @@ namespace Marvin.AbstractionLayer
             if (property == nameof(IIdentity.Identifier))
                 return resolver.Extend(new IdentifierResolver());
 
-            if (property == nameof(Product))
+            if (property == nameof(ProductType))
                 return resolver.Extend(new ProductResolver());
 
             return base.AddToChain(resolver, property);
@@ -123,17 +125,17 @@ namespace Marvin.AbstractionLayer
                     return product;
                 }
 
-                var article = source as Article;
+                var article = source as ProductInstance;
                 if (article != null)
                 {
-                    return article.Product;
+                    return article.ProductType;
                 }
 
                 // If our shortcuts do not work, use ReflectionResolver instead
                 // Due the protection level of Resolve in the base class and the implementation
                 // of IBindingResolver.Resolve which calls the whole chain the call order is important here.
                 // First the value of the replacement is called and then the replacement is placed into the chain.
-                var replacement = new ReflectionResolver("Product");
+                var replacement = new ReflectionResolver(nameof(ProductInstance.ProductType));
                 var resolvedValue = ((IBindingResolverChain) replacement).Resolve(source);
                 this.Replace(replacement);
                 return resolvedValue;

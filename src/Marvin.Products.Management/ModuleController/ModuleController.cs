@@ -42,6 +42,11 @@ namespace Marvin.Products.Management
             // Load all product plugins
             Container.LoadComponents<IProductStorage>();
             Container.LoadComponents<IProductImporter>();
+            // Load strategies
+            Container.LoadComponents<IProductTypeStrategy>();
+            Container.LoadComponents<IProductInstanceStrategy>();
+            Container.LoadComponents<IProductLinkStrategy>();
+            Container.LoadComponents<IProductRecipeStrategy>();
         }
 
         /// <summary>
@@ -50,6 +55,7 @@ namespace Marvin.Products.Management
         protected override void OnStart()
         {
             // Start Manager
+            Container.Resolve<IProductStorage>().Start();
             Container.Resolve<IProductManager>().Start();
 
             // Start all plugins

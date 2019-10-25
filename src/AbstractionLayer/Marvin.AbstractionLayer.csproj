@@ -121,8 +121,8 @@
     <Compile Include="Products\ProductFile.cs" />
     <Compile Include="Products\ProductNotFoundException.cs" />
     <Compile Include="Products\ProductQuery.cs" />
-    <Compile Include="Products\ProductReference.cs" />
     <Compile Include="Products\ProductTypeState.cs" />
+    <Compile Include="Products\ProductTypeReference.cs" />
     <Compile Include="Recipes\RecipeNotFoundException.cs" />
     <Compile Include="Recipes\IProductRecipe.cs" />
     <Compile Include="Recipes\IRecipe.cs" />
@@ -159,10 +159,8 @@
     <Compile Include="Resources\ResourceRelationType.cs" />
     <Compile Include="Resources\ResourceBindingResolverFactory.cs" />
     <Compile Include="Activities\IActivity.cs" />
-    <Compile Include="Articles\Article.cs" />
-    <Compile Include="Articles\ArticleParts.cs" />
-    <Compile Include="Articles\ArticleState.cs" />
-    <Compile Include="Articles\IArticleParts.cs" />
+    <Compile Include="Products\ProductInstance.cs" />
+    <Compile Include="Products\ProductInstanceState.cs" />
     <Compile Include="Identity\IIdentity.cs" />
     <Compile Include="Identity\NumberIdentity.cs" />
     <Compile Include="Process\IProcess.cs" />
@@ -172,9 +170,9 @@
     <Compile Include="Capabilities\ICapabilities.cs" />
     <Compile Include="Capabilities\ConcreteCapabilities.cs" />
     <Compile Include="Process\ProductionProcess.cs" />
-    <Compile Include="Products\IProduct.cs" />
+    <Compile Include="Products\IProductType.cs" />
     <Compile Include="Products\IProductPartLink.cs" />
-    <Compile Include="Products\Product.cs" />
+    <Compile Include="Products\ProductType.cs" />
     <Compile Include="Products\ProductIdentity.cs" />
     <Compile Include="Products\ProductPartLink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

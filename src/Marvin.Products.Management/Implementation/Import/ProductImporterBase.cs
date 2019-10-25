@@ -88,7 +88,7 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Import products using given parameters
         /// </summary>
-        IProduct[] IProductImporter.Import(IImportParameters parameters)
+        IProductType[] IProductImporter.Import(IImportParameters parameters)
         {
             var products = Import((TParameters) parameters);
             Parameters = GenerateParameters();
@@ -98,6 +98,6 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Import products using typed parameters
         /// </summary>
-        protected abstract IProduct[] Import(TParameters parameters);
+        protected abstract IProductType[] Import(TParameters parameters);
     }
 }

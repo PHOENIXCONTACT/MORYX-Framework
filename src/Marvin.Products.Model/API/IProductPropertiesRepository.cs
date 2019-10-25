@@ -7,9 +7,5 @@ namespace Marvin.Products.Model
     /// </summary>
     public interface IProductPropertiesRepository : IRepository<ProductProperties>
     {
-        /// <summary>
-        /// Creates instance with all not nullable properties prefilled
-        /// </summary>
-        ProductProperties Create(string name, int state); 
     }
 }

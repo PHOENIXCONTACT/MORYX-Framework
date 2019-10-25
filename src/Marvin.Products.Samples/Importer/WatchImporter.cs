@@ -17,27 +17,27 @@ namespace Marvin.Products.Samples
         /// <summary>
         /// Import a product using given parameters
         /// </summary>
-        protected override IProduct[] Import(SpecializedWatchImportParameters parameters)
+        protected override IProductType[] Import(SpecializedWatchImportParameters parameters)
         {
-            var product = new WatchProduct
+            var product = new WatchType
             {
                 Name = parameters.Name,
                 Identity = new ProductIdentity(parameters.Identifier, parameters.Revision),
-                Watchface = new ProductPartLink<WatchfaceProduct>
+                Watchface = new ProductPartLink<WatchfaceType>
                 {
-                    Product = (WatchfaceProduct)Storage.LoadProduct(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
+                    Product = (WatchfaceType)Storage.LoadProductType(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
                 },
                 Needles = new List<NeedlePartLink>
                 {
                     new NeedlePartLink
                     {
                         Role = NeedleRole.Minutes,
-                        Product = (NeedleProduct)Storage.LoadProduct(new ProductIdentity(parameters.MinuteNeedleIdentifier, ProductIdentity.LatestRevision))
+                        Product = (NeedleType)Storage.LoadProductType(new ProductIdentity(parameters.MinuteNeedleIdentifier, ProductIdentity.LatestRevision))
                     }
                 }
             };
 
-            return new IProduct[] { product };
+            return new IProductType[] { product };
         }
     }
 

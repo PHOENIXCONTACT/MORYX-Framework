@@ -34,7 +34,7 @@ namespace Marvin.Products.Management.Modification
             // Check type
             var type = prop.PropertyType;
             if (type == typeof(ProductFile) ||
-                typeof(IProduct).IsAssignableFrom(type) ||
+                typeof(IProductType).IsAssignableFrom(type) ||
                 typeof (IProductPartLink).IsAssignableFrom(type) ||
                 typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(type))
                 return false;

@@ -13,6 +13,6 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// The article produced by this process.
         /// </summary>
-        public Article Article { get; set; }
+        public ProductInstance ProductInstance { get; set; }
     }
 }

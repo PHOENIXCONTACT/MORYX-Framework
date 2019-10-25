@@ -22,14 +22,14 @@ namespace Marvin.Products.Management
             return Storage.LoadRecipe(recipeId);
         }
 
-        public IReadOnlyList<IProductRecipe> GetAllByProduct(IProduct product)
+        public IReadOnlyList<IProductRecipe> GetAllByProduct(IProductType productType)
         {
-            return Storage.LoadRecipes(product.Id, RecipeClassification.CloneFilter);
+            return Storage.LoadRecipes(productType.Id, RecipeClassification.CloneFilter);
         }
 
-        public IReadOnlyList<IProductRecipe> GetRecipes(IProduct product, RecipeClassification classification)
+        public IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classification)
         {
-            return Storage.LoadRecipes(product.Id, classification);
+            return Storage.LoadRecipes(productType.Id, classification);
         }
 
         public long Save(IProductRecipe recipe)

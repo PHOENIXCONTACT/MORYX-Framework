@@ -25,10 +25,10 @@ namespace Marvin.AbstractionLayer
         }
 
         /// <inheritdoc />
-        public IProduct Product { get; set; }
+        public IProductType Product { get; set; }
 
         /// <inheritdoc />
-        public virtual IProduct Target => Product;
+        public virtual IProductType Target => Product;
 
         /// <inheritdoc />
         public override IRecipe Clone()

@@ -13,23 +13,23 @@ namespace Marvin.Products.Management.Importers
     [Plugin(LifeCycle.Transient, typeof(IProductImporter), Name = nameof(DefaultImporter))]
     public class DefaultImporter : ProductImporterBase<DefaultImporterConfig, DefaultImporterParameters>
     {
-        protected override IProduct[] Import(DefaultImporterParameters parameters)
+        protected override IProductType[] Import(DefaultImporterParameters parameters)
         {
             // TODO: Use type wrapper
-            var type = ReflectionTool.GetPublicClasses<Product>(p => p.Name == parameters.ProductType)
+            var type = ReflectionTool.GetPublicClasses<ProductType>(p => p.Name == parameters.ProductType)
                 .First();
 
-            var productType = (Product)Activator.CreateInstance(type);
+            var productType = (ProductType)Activator.CreateInstance(type);
             productType.Identity = new ProductIdentity(parameters.Identifier, parameters.Revision);
             productType.Name = parameters.Name;
 
-            return new IProduct[] { productType };
+            return new IProductType[] { productType };
         }
     }
 
     public class DefaultImporterParameters : PrototypeParameters
     {
-        [Required, PossibleTypes(typeof(Product))]
+        [Required, PossibleTypes(typeof(ProductType))]
         public string ProductType { get; set; }
     }
 }

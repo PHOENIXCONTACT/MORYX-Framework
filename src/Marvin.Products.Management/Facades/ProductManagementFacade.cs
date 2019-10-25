@@ -24,52 +24,52 @@ namespace Marvin.Products.Management
 
         public void Activate()
         {
-            ProductManager.ProductChanged += OnProductChanged;
+            ProductManager.TypeChanged += OnTypeChanged;
             RecipeManagement.RecipeChanged += OnRecipeChanged;
         }
 
         public void Deactivate()
         {
-            ProductManager.ProductChanged -= OnProductChanged;
+            ProductManager.TypeChanged -= OnTypeChanged;
             RecipeManagement.RecipeChanged -= OnRecipeChanged;
         }
 
         public string Name => ModuleController.ModuleName;
 
-        public IReadOnlyList<IProduct> GetProducts(ProductQuery query)
+        public IReadOnlyList<IProductType> GetTypes(ProductQuery query)
         {
             ValidateHealthState();
-            return ProductManager.GetProducts(query);
+            return ProductManager.GetTypes(query);
         }
 
-        public IProduct GetProduct(long id)
+        public IProductType GetType(long id)
         {
             ValidateHealthState();
-            return ProductManager.GetProduct(id);
+            return ProductManager.GetType(id);
         }
 
-        public IProduct GetProduct(ProductIdentity identity)
+        public IProductType GetType(ProductIdentity identity)
         {
             ValidateHealthState();
-            return ProductManager.GetProduct(identity);
+            return ProductManager.GetType(identity);
         }
 
-        private void OnProductChanged(object sender, IProduct product)
+        private void OnTypeChanged(object sender, IProductType productType)
         {
-            ProductChanged?.Invoke(this, product);
+            TypeChanged?.Invoke(this, productType);
         }
-        public event EventHandler<IProduct> ProductChanged;
+        public event EventHandler<IProductType> TypeChanged;
 
-        public IProduct Duplicate(IProduct template, ProductIdentity newIdentity)
+        public IProductType Duplicate(IProductType template, ProductIdentity newIdentity)
         {
             ValidateHealthState();
             return ProductManager.Duplicate(template.Id, newIdentity);
         }
 
-        public long SaveProduct(IProduct modifiedInstance)
+        public long SaveType(IProductType modifiedInstance)
         {
             ValidateHealthState();
-            return ProductManager.Save(modifiedInstance);
+            return ProductManager.SaveType(modifiedInstance);
         }
 
 
@@ -82,10 +82,10 @@ namespace Marvin.Products.Management
             }
         }
 
-        public IReadOnlyList<IProduct> ImportProducts(string importerName, IImportParameters parameters)
+        public IReadOnlyList<IProductType> ImportTypes(string importerName, IImportParameters parameters)
         {
             ValidateHealthState();
-            return ProductManager.ImportProducts(importerName, parameters);
+            return ProductManager.ImportTypes(importerName, parameters);
         }
 
         public IRecipe LoadRecipe(long id)
@@ -98,10 +98,10 @@ namespace Marvin.Products.Management
             return ReplaceOrigin(recipe);
         }
 
-        public IReadOnlyList<IProductRecipe> GetRecipes(IProduct product, RecipeClassification classification)
+        public IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classification)
         {
             ValidateHealthState();
-            var recipes = RecipeManagement.GetRecipes(product, classification);
+            var recipes = RecipeManagement.GetRecipes(productType, classification);
             return recipes.Select(ReplaceOrigin).ToArray();
         }
 
@@ -146,46 +146,46 @@ namespace Marvin.Products.Management
             return Workplans.SaveWorkplan(workplan);
         }
 
-        public Article CreateInstance(IProduct product)
+        public ProductInstance CreateInstance(IProductType productType)
         {
             ValidateHealthState();
-            return ProductManager.CreateInstance(product, false);
+            return ProductManager.CreateInstance(productType, false);
         }
 
-        public Article CreateInstance(IProduct product, bool save)
+        public ProductInstance CreateInstance(IProductType productType, bool save)
         {
             ValidateHealthState();
-            return ProductManager.CreateInstance(product, save);
+            return ProductManager.CreateInstance(productType, save);
         }
 
-        public Article GetArticle(long id)
+        public ProductInstance GetInstance(long id)
         {
             ValidateHealthState();
-            return ProductManager.GetArticle(id);
+            return ProductManager.GetInstance(id);
         }
 
-        public void SaveArticle(Article article)
+        public void SaveInstance(ProductInstance productInstance)
         {
             ValidateHealthState();
-            ProductManager.SaveArticles(article);
+            ProductManager.SaveInstances(productInstance);
         }
 
-        public void SaveArticles(Article[] article)
+        public void SaveInstances(ProductInstance[] productInstance)
         {
             ValidateHealthState();
-            ProductManager.SaveArticles(article);
+            ProductManager.SaveInstances(productInstance);
         }
 
-        public IEnumerable<Article> GetArticles(ArticleState state)
+        public IEnumerable<ProductInstance> GetInstances(ProductInstanceState state)
         {
             ValidateHealthState();
-            return ProductManager.GetArticles(state);
+            return ProductManager.GetInstances(state);
         }
 
-        public IEnumerable<Article> GetArticles(int state)
+        public IEnumerable<ProductInstance> GetInstances(int state)
         {
             ValidateHealthState();
-            return ProductManager.GetArticles(state);
+            return ProductManager.GetInstances(state);
         }
 
         private static void ValidateRecipe(IProductRecipe recipe)

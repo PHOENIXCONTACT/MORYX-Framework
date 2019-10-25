@@ -88,13 +88,13 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="API\IArticleEntityRepository.cs" />
+    <Compile Include="API\IProductFileEntityRepository.cs" />
+    <Compile Include="API\IProductInstanceEntityRepository.cs" />
     <Compile Include="API\IConnectorEntityRepository.cs" />
     <Compile Include="API\IConnectorReferenceRepository.cs" />
     <Compile Include="API\IOutputDescriptionEntityRepository.cs" />
     <Compile Include="API\IPartLinkRepository.cs" />
-    <Compile Include="API\IProductDocumentRepository.cs" />
-    <Compile Include="API\IProductEntityRepository.cs" />
+    <Compile Include="API\IProductTypeEntityRepository.cs" />
     <Compile Include="API\IProductPropertiesRepository.cs" />
     <Compile Include="API\IProductRecipeEntityRepository.cs" />
     <Compile Include="API\IStepEntityRepository.cs" />
@@ -103,27 +103,20 @@
     <Compile Include="DbContext\ProductsConstants.cs" />
     <Compile Include="DbContext\ProductsContext.cs" />
     <Compile Include="DbContext\ProductsUnitOfWorkFactory.cs" />
-    <Compile Include="Entities\ArticleEntity.cs" />
+    <Compile Include="Entities\ProductFileEntity.cs" />
+    <Compile Include="Entities\ProductInstanceEntity.cs" />
     <Compile Include="Entities\ConnectorEntity.cs" />
     <Compile Include="Entities\ConnectorReference.cs" />
     <Compile Include="Entities\ConnectorRole.cs" />
+    <Compile Include="Entities\IGenericColumns.cs" />
     <Compile Include="Entities\OutputDescriptionEntity.cs" />
     <Compile Include="Entities\PartLink.cs" />
-    <Compile Include="Entities\ProductDocument.cs" />
-    <Compile Include="Entities\ProductEntity.cs" />
+    <Compile Include="Entities\ProductTypeEntity.cs" />
     <Compile Include="Entities\ProductProperties.cs" />
     <Compile Include="Entities\ProductRecipeEntity.cs" />
     <Compile Include="Entities\StepEntity.cs" />
     <Compile Include="Entities\WorkplanEntity.cs" />
     <Compile Include="Entities\WorkplanReference.cs" />
-    <Compile Include="Migrations\201908290842533_InitialCreate.cs" />
-    <Compile Include="Migrations\201908290842533_InitialCreate.Designer.cs">
-      <DependentUpon>201908290842533_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201908290844215_OutputDescription_OutputType.cs" />
-    <Compile Include="Migrations\201908290844215_OutputDescription_OutputType.Designer.cs">
-      <DependentUpon>201908290844215_OutputDescription_OutputType.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -134,14 +127,6 @@
     <None Include="Marvin.Products.Model.nuspec" />
     <None Include="Migrations\Migrations.md" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201908290842533_InitialCreate.resx">
-      <DependentUpon>201908290842533_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201908290844215_OutputDescription_OutputType.resx">
-      <DependentUpon>201908290844215_OutputDescription_OutputType.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

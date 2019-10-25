@@ -30,7 +30,7 @@ namespace Marvin.Products.Management.Modification
         // Null object pattern for identity
         private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
 
-        private static readonly PartialSerialization<Product> ProductSerialization = new PartialSerialization<Product>();
+        private static readonly PartialSerialization<ProductType> ProductSerialization = new PartialSerialization<ProductType>();
         private static readonly EditorVisibleSerialization RecipeSerialization = new EditorVisibleSerialization();
 
         private readonly List<ProductModel> _productCache = new List<ProductModel>();
@@ -39,21 +39,21 @@ namespace Marvin.Products.Management.Modification
 
         #region To Model
 
-        public ProductModel[] GetProducts(ProductQuery query)
+        public ProductModel[] GetTypes(ProductQuery query)
         {
-            var products = ProductManager.GetProducts(query);
+            var products = ProductManager.GetTypes(query);
             return products.Select(p => ConvertProduct(p, true)).ToArray();
         }
 
         public ProductModel Create(string type)
         {
-            var product = ProductManager.Create(type);
+            var product = ProductManager.CreateType(type);
             return ConvertProduct(product, true);
         }
 
         public ProductModel GetProduct(long id)
         {
-            var product = ProductManager.GetProduct(id);
+            var product = ProductManager.GetType(id);
             return ConvertProduct(product, false);
         }
 
@@ -76,13 +76,13 @@ namespace Marvin.Products.Management.Modification
 
         public ProductModel ImportProduct(string importerName, IImportParameters parameters)
         {
-            var products = ProductManager.ImportProducts(importerName, parameters);
+            var products = ProductManager.ImportTypes(importerName, parameters);
             return ConvertProduct(products[0], false);
         }
 
         public bool DeleteProduct(long id)
         {
-            return ProductManager.DeleteProduct(id);
+            return ProductManager.DeleteType(id);
         }
 
         public RecipeModel GetRecipe(long recipeId)
@@ -93,7 +93,7 @@ namespace Marvin.Products.Management.Modification
 
         public RecipeModel[] GetRecipes(long productId)
         {
-            var product = ProductManager.GetProduct(productId);
+            var product = ProductManager.GetType(productId);
             return RecipeManagement.GetAllByProduct(product).Select(ConvertRecipe).ToArray();
         }
 
@@ -120,20 +120,20 @@ namespace Marvin.Products.Management.Modification
             return workplans.Select(ConvertWorkplan).ToArray();
         }
 
-        private ProductModel ConvertProduct(IProduct product, bool flat)
+        private ProductModel ConvertProduct(IProductType productType, bool flat)
         {
-            var converted = _productCache.FirstOrDefault(p => p.Id == product.Id);
+            var converted = _productCache.FirstOrDefault(p => p.Id == productType.Id);
             if (converted != null)
                 return converted;
 
             // Base object
-            var identity = (ProductIdentity)product.Identity ?? EmptyIdentity;
+            var identity = (ProductIdentity)productType.Identity ?? EmptyIdentity;
             converted = new ProductModel
             {
-                Id = product.Id,
-                Type = product.Type,
-                Name = product.Name,
-                State = product.State,
+                Id = productType.Id,
+                Type = productType.Type,
+                Name = productType.Name,
+                State = productType.State,
                 Identifier = identity.Identifier,
                 Revision = identity.Revision
             };
@@ -142,41 +142,41 @@ namespace Marvin.Products.Management.Modification
                 return converted;
 
             // Properties
-            var properties = product.GetType().GetProperties();
-            converted.Properties = EntryConvert.EncodeObject(product, ProductSerialization);
+            var properties = productType.GetType().GetProperties();
+            converted.Properties = EntryConvert.EncodeObject(productType, ProductSerialization);
 
             // Files
-            converted.Files = ConvertFiles(product, properties);
+            converted.Files = ConvertFiles(productType, properties);
 
             // Recipes
-            var recipes = RecipeManagement.GetAllByProduct(product);
+            var recipes = RecipeManagement.GetAllByProduct(productType);
             converted.Recipes = recipes.Select(ConvertRecipe).ToArray();
 
             // Parts
-            ConvertParts(product, properties, converted);
+            ConvertParts(productType, properties, converted);
 
             _productCache.Add(converted);
             return converted;
         }
 
-        private static ProductFile[] ConvertFiles(IProduct product, IEnumerable<PropertyInfo> properties)
+        private static ProductFile[] ConvertFiles(IProductType productType, IEnumerable<PropertyInfo> properties)
         {
             var files = (from property in properties
                          where property.PropertyType == typeof(ProductFile)
-                         select (ProductFile)property.GetValue(product)).ToArray();
+                         select (ProductFile)property.GetValue(productType)).ToArray();
             return files;
         }
 
-        private void ConvertParts(IProduct product, IEnumerable<PropertyInfo> properties, ProductModel converted)
+        private void ConvertParts(IProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
         {
             var connectors = new List<PartConnector>();
             foreach (var property in properties)
             {
                 var displayName = property.GetDisplayName();
 
-                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType) && property.Name != nameof(Product.ParentLink))
+                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType) && property.Name != nameof(ProductType.ParentLink))
                 {
-                    var link = (IProductPartLink)property.GetValue(product);
+                    var link = (IProductPartLink)property.GetValue(productType);
                     var partModel = ConvertPart(link);
                     var connector = new PartConnector
                     {
@@ -190,7 +190,7 @@ namespace Marvin.Products.Management.Modification
                 }
                 else if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(property.PropertyType))
                 {
-                    var links = (IEnumerable<IProductPartLink>)property.GetValue(product);
+                    var links = (IEnumerable<IProductPartLink>)property.GetValue(productType);
                     var linkType = property.PropertyType.GetGenericArguments()[0];
                     var connector = new PartConnector
                     {
@@ -288,12 +288,12 @@ namespace Marvin.Products.Management.Modification
         public ProductModel Save(ProductModel productModel)
         {
             var product = ConvertProductBack(productModel);
-            ProductManager.Save(product);
+            ProductManager.SaveType(product);
 
             return ConvertProduct(product, false);
         }
 
-        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProduct product)
+        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductType productType)
         {
             IProductRecipe productRecipe;
             if (recipe.Id == 0)
@@ -315,7 +315,7 @@ namespace Marvin.Products.Management.Modification
 
             if (productRecipe.Product == null)
             {
-                productRecipe.Product = product;
+                productRecipe.Product = productType;
             }
 
             switch (recipe.Classification)
@@ -343,14 +343,14 @@ namespace Marvin.Products.Management.Modification
             return productRecipe;
         }
 
-        private IProduct ConvertProductBack(ProductModel product)
+        private IProductType ConvertProductBack(ProductModel product)
         {
             // Fetch instance and copy base values
-            Product converted;
+            ProductType converted;
             if (product.Id == 0)
-                converted = (Product)ProductManager.Create(product.Type);
+                converted = (ProductType)ProductManager.CreateType(product.Type);
             else
-                converted = (Product)ProductManager.GetProduct(product.Id);
+                converted = (ProductType)ProductManager.GetType(product.Id);
 
             converted.Identity = new ProductIdentity(product.Identifier, product.Revision);
             converted.Name = product.Name;
@@ -413,7 +413,7 @@ namespace Marvin.Products.Management.Modification
                     unused.Remove(match);
                 }
                 EntryConvert.UpdateInstance(match, partModel.Properties);
-                match.Product = (Product)ProductManager.GetProduct(partModel.Product.Id);
+                match.Product = (ProductType)ProductManager.GetType(partModel.Product.Id);
             }
 
             // Clear all values no longer present in the model
@@ -424,7 +424,7 @@ namespace Marvin.Products.Management.Modification
         private void UpdateReference(IProductPartLink value, PartModel part)
         {
             EntryConvert.UpdateInstance(value, part.Properties);
-            value.Product = (Product)ProductManager.GetProduct(part.Product.Id);
+            value.Product = (ProductType)ProductManager.GetType(part.Product.Id);
         }
 
         private static void ConvertFilesBack(object converted, ProductModel product, PropertyInfo[] properties)
@@ -432,7 +432,7 @@ namespace Marvin.Products.Management.Modification
             foreach (var fileModel in product.Files)
             {
                 var prop = properties.First(p => p.Name == fileModel.Name);
-                prop.SetValue(converted, fileModel.File);
+                prop.SetValue(converted, fileModel);
             }
         }
         #endregion

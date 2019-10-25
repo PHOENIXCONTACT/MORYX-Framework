@@ -68,22 +68,30 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Implementation\ILinkStrategy.cs" />
+    <Compile Include="Implementation\Storage\AutoConfigurator.cs" />
+    <Compile Include="Implementation\Storage\InstanceStrategyBase.cs" />
+    <Compile Include="Components\IProductInstanceStrategy.cs" />
+    <Compile Include="Components\IProductRecipeStrategy.cs" />
+    <Compile Include="Implementation\Storage\RecipeStrategyBase.cs" />
+    <Compile Include="Components\IPropertyMappedConfiguration.cs" />
+    <Compile Include="Implementation\Storage\StrategyBase.cs" />
+    <Compile Include="Components\IProductLinkStrategy.cs" />
     <Compile Include="Implementation\Import\FileImportParameters.cs" />
     <Compile Include="Implementation\Import\PrototypeImportParameters.cs" />
-    <Compile Include="Implementation\IProductTypeStrategy.cs" />
-    <Compile Include="Implementation\DefaultLinkStrategy.cs" />
-    <Compile Include="Implementation\ParentLoadBehaviour.cs" />
-    <Compile Include="Implementation\PartSourceStrategy.cs" />
-    <Compile Include="Implementation\ProductStrategyBase.cs" />
+    <Compile Include="Components\IStorageStrategyFactory.cs" />
+    <Compile Include="Components\IProductTypeStrategy.cs" />
+    <Compile Include="Implementation\Storage\LinkStrategyBase.cs" />
+    <Compile Include="Implementation\Storage\PartSourceStrategy.cs" />
+    <Compile Include="Implementation\Storage\StrategyConfigurationAttribute.cs" />
+    <Compile Include="Implementation\Storage\TypeStrategyBase.cs" />
     <Compile Include="Implementation\RecipeStorage.cs" />
     <Compile Include="Components\IProductImporterFactory.cs" />
     <Compile Include="Components\IProductManager.cs" />
     <Compile Include="Implementation\Import\ProductImporterBase.cs" />
-    <Compile Include="Implementation\ProductStorageBase.cs" />
+    <Compile Include="Implementation\Storage\ProductStorage.cs" />
     <Compile Include="Components\IRecipeManagement.cs" />
     <Compile Include="Implementation\RecipeManagement.cs" />
-    <Compile Include="Implementation\DefaultProductStrategy.cs" />
+    <Compile Include="Implementation\Storage\ProductTypeConfiguration.cs" />
     <Compile Include="Implementation\WorkplanManagement.cs" />
     <Compile Include="Implementation\ProductManager.cs" />
     <Compile Include="Implementation\WorkplanReferenceType.cs" />
@@ -108,9 +116,29 @@
     <Compile Include="ModuleController\ModuleConsole.cs" />
     <Compile Include="Plugins\Importers\DefaultImporter.cs" />
     <Compile Include="Plugins\Importers\DefaultImporterConfig.cs" />
-    <Compile Include="Plugins\Importers\IProductImporter.cs" />
-    <Compile Include="Plugins\Importers\ProductImporterConfig.cs" />
-    <Compile Include="Plugins\IProductStorage.cs" />
+    <Compile Include="Plugins\GenericStrategies\AvailableColumnsAttribute.cs" />
+    <Compile Include="Plugins\GenericStrategies\DifferentialContractResolver.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericEntityMapper.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericInstanceConfiguration.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericInstanceStrategy.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericLinkConfiguration.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericLinkStrategy.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericRecipeConfiguration.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericRecipeStrategy.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericTypeConfiguration.cs" />
+    <Compile Include="Plugins\GenericStrategies\GenericTypeStrategy.cs" />
+    <Compile Include="Plugins\GenericStrategies\IGenericMapper.cs" />
+    <Compile Include="Plugins\GenericStrategies\IGenericMapperConfiguration.cs" />
+    <Compile Include="Plugins\GenericStrategies\IPropertyMapper.cs" />
+    <Compile Include="Plugins\GenericStrategies\IPropertyMapperFactory.cs" />
+    <Compile Include="Plugins\GenericStrategies\PropertyMapper.cs" />
+    <Compile Include="Plugins\GenericStrategies\PropertyMapperConfig.cs" />
+    <Compile Include="Components\IProductImporter.cs" />
+    <Compile Include="Components\ProductImporterConfig.cs" />
+    <Compile Include="Components\IProductStorage.cs" />
+    <Compile Include="Plugins\NullStrategies\PropertylessStrategyConfigurationAttribute.cs" />
+    <Compile Include="Plugins\NullStrategies\SimpleLinkStrategy.cs" />
+    <Compile Include="Plugins\NullStrategies\SkipArticlesStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Facades\ProductManagementFacade.cs" />
     <Compile Include="Modification\Wcf\IProductInteraction.cs" />
@@ -133,6 +161,7 @@
     <None Include="Marvin.Products.Management.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
