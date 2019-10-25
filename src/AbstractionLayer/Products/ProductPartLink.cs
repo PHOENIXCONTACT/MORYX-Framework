@@ -29,20 +29,20 @@
         /// <summary>
         /// Parent product for this part link
         /// </summary>
-        public IProduct Parent { get; set; }
+        public IProductType Parent { get; set; }
 
         /// <summary>
         /// Generic product reference of this link
         /// </summary>
-        public IProduct Product { get; set; }
+        public IProductType Product { get; set; }
 
         /// <summary>
         /// Create single article instance for this part
         /// </summary>
-        public virtual Article Instantiate()
+        public virtual ProductInstance Instantiate()
         {
             var article = Product.CreateInstance();
-            ((IArticleParts)article).PartLinkId = Id;
+            article.PartLink = this;
             return article;
         }
     }
@@ -51,7 +51,7 @@
     /// Class to create generic part structure
     /// </summary>
     public class ProductPartLink<TProduct> : ProductPartLink, IProductPartLink<TProduct>
-        where TProduct : class, IProduct
+        where TProduct : class, IProductType
     {
         /// <summary>
         /// Default constructor for a new part link

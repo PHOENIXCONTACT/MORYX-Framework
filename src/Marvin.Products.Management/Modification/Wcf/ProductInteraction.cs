@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -28,20 +29,18 @@ namespace Marvin.Products.Management.Modification
         {
             return new ProductCustomization
             {
-                ProductTypes = ReflectionTool.GetPublicClasses<Product>()
-                    // TODO: Replace with GetDisplayName in Platform3
+                ProductTypes = ReflectionTool.GetPublicClasses<ProductType>(new IsConfiguredFilter(Config.TypeStrategies).IsConfigured)
                     .Select(pt => new ProductTypeModel
                     {
                         Name = pt.Name,
-                        DisplayName = pt.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? pt.Name,
+                        DisplayName = pt.GetDisplayName() ?? pt.Name,
                         BaseType = pt.BaseType?.Name
                     }).ToArray(),
-                RecipeTypes = ReflectionTool.GetPublicClasses<IProductRecipe>(t => Config.SupportedRecipes.Any(sp => t.Name == sp.Type))
-                    // TODO: Replace with GetDisplayName in Platform3
+                RecipeTypes = ReflectionTool.GetPublicClasses<IProductRecipe>(new IsConfiguredFilter(Config.RecipeStrategies).IsConfigured)
                     .Select(rt => new RecipeTypeModel
                     {
                         Name = rt.Name,
-                        DisplayName = rt.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? rt.Name,
+                        DisplayName = rt.GetDisplayName() ?? rt.Name,
                         HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(rt)
                     }).ToArray(),
                 Importers = Manager.Importers.Select(i => new ProductImporter
@@ -50,6 +49,21 @@ namespace Marvin.Products.Management.Modification
                     Parameters = ConvertParameters(i.Parameters)
                 }).ToArray()
             };
+        }
+
+        private class IsConfiguredFilter
+        {
+            private readonly IReadOnlyList<IProductStrategyConfiguation> _configurations;
+
+            public IsConfiguredFilter(IReadOnlyList<IProductStrategyConfiguation> configurations)
+            {
+                _configurations = configurations;
+            }
+
+            public bool IsConfigured(Type candidate)
+            {
+                return _configurations.Any(config => config.TargetType == candidate.Name);
+            }
         }
 
         private static Entry ConvertParameters(IImportParameters parametersObject) =>
@@ -72,7 +86,7 @@ namespace Marvin.Products.Management.Modification
 
         public ProductModel[] GetProducts(ProductQuery query)
         {
-            return UseConverter(c => c.GetProducts(query));
+            return UseConverter(c => c.GetTypes(query));
         }
 
         public ProductModel CreateProduct(string type)

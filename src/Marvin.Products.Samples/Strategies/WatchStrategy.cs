@@ -1,112 +1,78 @@
 ﻿using System;
+using System.Globalization;
 using Marvin.AbstractionLayer;
+using Marvin.Container;
 using Marvin.Model;
 using Marvin.Products.Management;
 using Marvin.Products.Model;
-using Marvin.Products.Samples.Model;
+using Marvin.Tools;
 
 namespace Marvin.Products.Samples
 {
-    internal class WatchStrategy : ProductStrategyBase, IProductTypeStrategy
+    [StrategyConfiguration(typeof(WatchType), DerivedTypes = false)]
+    [Plugin(LifeCycle.Transient, typeof(IProductTypeStrategy), Name = nameof(WatchStrategy))]
+    public class WatchStrategy : TypeStrategyBase
     {
-        public WatchStrategy()
+        /// <inheritdoc />
+        public override bool HasChanged(IProductType current, IGenericColumns dbProperties)
         {
-            Parts = new ILinkStrategy[]
-            {
-                new DefaultLinkStrategy<WatchfaceProduct>(nameof(WatchProduct.Watchface)),
-                new NeedleLinkStrategy()
-            };
+            var watch = (WatchType) current;
+            return Math.Abs(watch.Weight - dbProperties.Float1) > 0.01 
+                || Math.Abs(watch.Price - dbProperties.Float2) > 0.01;
         }
 
-        public string TargetType => nameof(WatchProduct);
-
-        public ParentLoadBehaviour ParentLoading => ParentLoadBehaviour.Flat;
-
-        public ILinkStrategy[] Parts { get; }
-
-        public IProduct LoadProduct(IUnitOfWork uow, ProductEntity entity)
+        /// <inheritdoc />
+        public override void SaveType(IProductType source, IGenericColumns target)
         {
-            // Load extended repo and entity here
-
-            var properties = entity.CurrentVersion as AnalogWatchProductPropertiesEntity;
-
-            // Transform watch
-            var watch = new WatchProduct
-            {
-                Weight = 123.1,
-                Price = 1299.99
-            };
-            CopyToProduct(entity, watch);
-
-            return watch;
+            var watch = (WatchType)source;
+            target.Float1 = watch.Weight;
+            target.Float2 = watch.Price;
         }
 
-        public ProductEntity SaveProduct(IUnitOfWork uow, IProduct product)
+        /// <inheritdoc />
+        public override void LoadType(IGenericColumns source, IProductType target)
         {
-            var propRepo = uow.GetRepository<IProductPropertiesRepository>();
+            var watch = (WatchType)target;
+            watch.Weight = source.Float1;
+            watch.Price = source.Float2;
+        }
+    }
 
-            var watch = (WatchProduct)product;
-
-            var watchEntity = GetProductEntity(uow, product);
-            CreateVersion(propRepo, product, watchEntity);
-
-            return watchEntity;
+    [StrategyConfiguration(typeof(WatchInstance), DerivedTypes = false)]
+    [Plugin(LifeCycle.Transient, typeof(IProductInstanceStrategy), Name = nameof(WatchInstanceStrategy))]
+    public class WatchInstanceStrategy : InstanceStrategyBase
+    {
+        /// <inheritdoc />
+        public override void SaveInstance(ProductInstance source, IGenericColumns target)
+        {
+            var watch = (WatchInstance) source;
+            target.Integer1 = watch.TimeSet ? 1 : 0;
+            target.Integer2 = watch.DeliveryDate.ToBinary();
         }
 
-        public bool SkipArticles => false;
-
-        public PartSourceStrategy ArticleCreation => PartSourceStrategy.FromPartlink;
-
-        public void LoadArticle(IUnitOfWork uow, ArticleEntity entity, Article article)
+        /// <inheritdoc />
+        public override void LoadInstance(IGenericColumns source, ProductInstance target)
         {
-            var watch = (WatchArticle)article;
+            var watch = (WatchInstance) target;
+            watch.TimeSet = source.Integer1 == 1;
+            watch.DeliveryDate = DateTime.FromBinary(source.Integer2);
+        }
+    }
 
-            CopyToArticle(entity, article);
-
-            // Restore TimeSet flag
-            watch.TimeSet = (entity.State >> 8) >= 1;
-
-            // Restore date
-            var binaryDate = long.Parse(entity.ExtensionData);
-            watch.ProductionDate = DateTime.FromBinary(binaryDate);
+    [StrategyConfiguration(typeof(NeedlePartLink))]
+    [Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(NeedleLinkStrategy))]
+    public class NeedleLinkStrategy : LinkStrategyBase
+    {
+        public override void LoadPartLink(IGenericColumns linkEntity, IProductPartLink target)
+        {
+            var link = (NeedlePartLink) target;
+            link.Role = (NeedleRole) linkEntity.Integer1;
         }
 
-        public ArticleEntity SaveArticle(IUnitOfWork uow, Article article)
+        public override void SavePartLink(IProductPartLink source, IGenericColumns target)
         {
-            var watch = (WatchArticle)article;
-
-            var entity = GetArticleEntity(uow, article);
-            CopyToArticleEntity(article, entity, true);
-
-            // Include TimeSet-flag in state
-            if (watch.TimeSet)
-                entity.State |= (1 << 8);
-
-            // Save date as binary
-            var binaryDate = watch.DeliveryDate.ToBinary();
-            entity.ExtensionData = binaryDate.ToString("X");
-
-            return entity;
-        }
-
-        private class NeedleLinkStrategy : DefaultLinkStrategy<NeedleProduct>
-        {
-            protected internal NeedleLinkStrategy() : base(nameof(WatchProduct.Needles))
-            {
-            }
-
-            //public override PartSourceStrategy PartCreation => PartSourceStrategy.FromEntities;
-
-            public override IProductPartLink Load(IUnitOfWork uow, PartLink linkEntity)
-            {
-                return new NeedlePartLink(linkEntity.Id) { Role = NeedleRole.Minutes };
-            }
-
-            // ReSharper disable once RedundantOverridenMember <-- For demonstration
-            public override PartLink Create(IUnitOfWork uow, IProductPartLink link)
-            {
-                return base.Create(uow, link);
-            }
+            var link = (NeedlePartLink) source;
+            target.Integer1 = (int) link.Role;
         }
     }
 }

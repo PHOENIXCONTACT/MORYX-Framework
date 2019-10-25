@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Marvin.AbstractionLayer;
 using Marvin.Products.Management;
+using Marvin.Products.Management.NullStrategies;
 using Marvin.Products.Model;
 using Marvin.Products.Samples;
 using Marvin.Products.Samples.Recipe;
 using Marvin.Tools;
 using Marvin.Workflows;
+using Moq;
 using NUnit.Framework;
 
 namespace Marvin.Products.IntegrationTests
@@ -20,18 +24,22 @@ namespace Marvin.Products.IntegrationTests
 
         private const string WatchMaterial = "87654";
 
+        private ProductStorage _storage;
+
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
+            // Enable test mode
+            ReflectionTool.TestMode = true;
+            // This call is necessary for NUnit to load the type
+            var someType = new WatchType();
+
             Effort.Provider.EffortProviderConfiguration.RegisterProvider();
 
             // prepare inmemory resource db
             _factory = new InMemoryUnitOfWorkFactory("ProductStorageTest");
             _factory.Initialize();
-
-            // Enable test mode
-            ReflectionTool.TestMode = true;
-
+            
             // prepare empty workplan
             var workplan = new Workplan { Name = "TestWorkplan" };
             workplan.AddConnector("Start", NodeClassification.Start);
@@ -44,9 +52,251 @@ namespace Marvin.Products.IntegrationTests
             }
         }
 
-        private static WatchProduct SetupProduct(string watchName, string identifierPrefix, short revision = 5)
+        [SetUp]
+        public void PrepareStorage()
         {
-            var watchface = new WatchfaceProduct
+            var strategyFactory = CreateStrategyFactory();
+
+            _storage = new ProductStorage
+            {
+                Factory = _factory,
+                StrategyFactory = strategyFactory.Object
+            };
+            _storage.Config = new ModuleConfig
+            {
+                TypeStrategies = new List<ProductTypeConfiguration>
+                {
+                    new ProductTypeConfiguration
+                    {
+                        TargetType = nameof(WatchType),
+                        PluginName = nameof(WatchStrategy)
+                    },
+                    new GenericTypeConfiguration
+                    {
+                        TargetType = nameof(WatchfaceType),
+                        PropertyConfigs = new List<PropertyMapperConfig>()
+                        {
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(WatchfaceType.IsDigital),
+                                Column = nameof(IGenericColumns.Integer1),
+                                PluginName = nameof(IntegerColumnMapper)
+                            }
+                        },
+                        JsonColumn = nameof(IGenericColumns.Text8)
+                    },
+                    new GenericTypeConfiguration
+                    {
+                        TargetType = nameof(NeedleType),
+                        PropertyConfigs = new List<PropertyMapperConfig>(),
+                        JsonColumn = nameof(IGenericColumns.Text8)
+                    },
+                    new GenericTypeConfiguration
+                    {
+                        TargetType = nameof(WatchPackageType),
+                        JsonColumn = nameof(IGenericColumns.Text8),
+                        PropertyConfigs = new List<PropertyMapperConfig>()
+                    }
+                },
+                InstanceStrategies = new List<ProductInstanceConfiguration>
+                {
+                    new GenericInstanceConfiguration
+                    {
+                        TargetType = nameof(WatchInstance),
+                        PluginName = nameof(WatchStrategy),
+                        JsonColumn = nameof(IGenericColumns.Text8),
+                        PropertyConfigs = new List<PropertyMapperConfig>
+                        {
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(WatchInstance.DeliveryDate),
+                                Column = nameof(IGenericColumns.Integer1),
+                                PluginName = nameof(IntegerColumnMapper)
+                            },
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(WatchInstance.TimeSet),
+                                Column = nameof(IGenericColumns.Integer2),
+                                PluginName = nameof(IntegerColumnMapper)
+                            }
+                        }
+                    },
+                    new GenericInstanceConfiguration
+                    {
+                        TargetType = nameof(WatchfaceInstance),
+                        PropertyConfigs = new List<PropertyMapperConfig>(),
+                        JsonColumn = nameof(IGenericColumns.Text8)
+                    },
+                    new ProductInstanceConfiguration()
+                    {
+                        TargetType = nameof(NeedleInstance),
+                        PluginName = nameof(SkipArticlesStrategy)
+                    },
+                },
+                LinkStrategies = new List<ProductLinkConfiguration>
+                {
+                    new ProductLinkConfiguration()
+                    {
+                        TargetType = nameof(WatchType),
+                        PartName = nameof(WatchType.Watchface),
+                        PluginName = nameof(SimpleLinkStrategy)
+                    },
+                    new GenericLinkConfiguration
+                    {
+                        TargetType = nameof(WatchType),
+                        PartName = nameof(WatchType.Needles),
+                        JsonColumn = nameof(IGenericColumns.Text8),
+                        PropertyConfigs = new List<PropertyMapperConfig>
+                        {
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(NeedlePartLink.Role),
+                                PluginName = nameof(IntegerColumnMapper),
+                                Column = nameof(IGenericColumns.Integer1)
+                            }
+                        }
+                    },
+                    new ProductLinkConfiguration()
+                    {
+                        TargetType = nameof(WatchPackageType),
+                        PartName = nameof(WatchPackageType.PossibleWatches),
+                        PluginName = nameof(SimpleLinkStrategy)
+                    },
+                },
+                RecipeStrategies = new List<ProductRecipeConfiguration>
+                {
+                    new GenericRecipeConfiguration
+                    {
+                        TargetType = nameof(WatchProductRecipe),
+                        JsonColumn = nameof(IGenericColumns.Text8),
+                        PropertyConfigs = new List<PropertyMapperConfig>()
+                    }
+                }
+            };
+
+            _storage.Start();
+        }
+
+        private Mock<IStorageStrategyFactory> CreateStrategyFactory()
+        {
+            var mapperFactory = new Mock<IPropertyMapperFactory>();
+            mapperFactory.Setup(mf => mf.Create(It.IsAny<PropertyMapperConfig>(), It.IsAny<Type>()))
+                .Returns<PropertyMapperConfig, Type>((config, type) =>
+                {
+                    IPropertyMapper mapper = null;
+                    switch (config.PluginName)
+                    {
+                        case nameof(IntegerColumnMapper):
+                            mapper = new IntegerColumnMapper(type);
+                            break;
+                        case nameof(TextColumnMapper):
+                            mapper = new TextColumnMapper(type);
+                            break;
+                    }
+
+                    mapper.Initialize(config);
+
+                    return mapper;
+                });
+
+            var strategyFactory = new Mock<IStorageStrategyFactory>();
+            strategyFactory.Setup(f => f.CreateTypeStrategy(It.IsAny<ProductTypeConfiguration>()))
+                .Returns<ProductTypeConfiguration>(config =>
+                {
+                    IProductTypeStrategy strategy = null;
+                    switch (config.PluginName)
+                    {
+                        case nameof(WatchStrategy):
+                            strategy = new WatchStrategy();
+                            break;
+                        case nameof(GenericTypeStrategy):
+                            strategy = new GenericTypeStrategy
+                            {
+                                EntityMapper = new GenericEntityMapper<ProductType, IProductPartLink>
+                                {
+                                    MapperFactory = mapperFactory.Object
+                                }
+                            };
+                            break;
+                    }
+
+                    strategy.Initialize(config);
+
+                    return strategy;
+                });
+
+            strategyFactory.Setup(f => f.CreateInstanceStrategy(It.IsAny<ProductInstanceConfiguration>()))
+                .Returns<ProductInstanceConfiguration>(config =>
+                {
+                    IProductInstanceStrategy strategy = null;
+                    switch (config.PluginName)
+                    {
+                        case nameof(GenericInstanceStrategy):
+                            strategy = new GenericInstanceStrategy()
+                            {
+                                EntityMapper = new GenericEntityMapper<ProductInstance, ProductInstance>
+                                {
+                                    MapperFactory = mapperFactory.Object
+                                }
+                            };
+                            break;
+                        case nameof(SkipArticlesStrategy):
+                            strategy = new SkipArticlesStrategy();
+                            break;
+                    }
+
+                    strategy.Initialize(config);
+
+                    return strategy;
+                });
+
+            strategyFactory.Setup(f => f.CreateLinkStrategy(It.IsAny<ProductLinkConfiguration>()))
+                .Returns<ProductLinkConfiguration>(config =>
+                {
+                    IProductLinkStrategy strategy = null;
+                    switch (config.PluginName)
+                    {
+                        case nameof(GenericLinkStrategy):
+                            strategy = new GenericLinkStrategy()
+                            {
+                                EntityMapper = new GenericEntityMapper<ProductPartLink, ProductType>
+                                {
+                                    MapperFactory = mapperFactory.Object
+                                }
+                            };
+                            break;
+                        case nameof(SimpleLinkStrategy):
+                            strategy = new SimpleLinkStrategy();
+                            break;
+                    }
+
+                    strategy.Initialize(config);
+
+                    return strategy;
+                });
+
+            strategyFactory.Setup(f => f.CreateRecipeStrategy(It.IsAny<ProductRecipeConfiguration>()))
+                .Returns<ProductRecipeConfiguration>(config =>
+                {
+                    IProductRecipeStrategy strategy = new GenericRecipeStrategy
+                    {
+                        EntityMapper = new GenericEntityMapper<ProductRecipe, IProductType>
+                        {
+                            MapperFactory = mapperFactory.Object
+                        }
+                    };
+
+                    strategy.Initialize(config);
+
+                    return strategy;
+                });
+
+            return strategyFactory;
+        }
+
+        private static WatchType SetupProduct(string watchName, string identifierPrefix, short revision = 5)
+        {
+            var watchface = new WatchfaceType
             {
                 Name = "Black water resistant for " + watchName,
                 Identity = new ProductIdentity(identifierPrefix + "4711", revision),
@@ -57,24 +307,25 @@ namespace Marvin.Products.IntegrationTests
             {
                 new NeedlePartLink
                 {
-                    Product = new NeedleProduct { Name = "Hours needle", Identity = new ProductIdentity(identifierPrefix + "24", 1) }
+                    Product = new NeedleType { Name = "Hours needle", Identity = new ProductIdentity(identifierPrefix + "24", 1) }
                 },
                 new NeedlePartLink
                 {
-                    Product = new NeedleProduct { Name = "Minutes needle", Identity = new ProductIdentity(identifierPrefix + "1440", 2) }
+                    Product = new NeedleType { Name = "Minutes needle", Identity = new ProductIdentity(identifierPrefix + "1440", 2) }
                 },
                 new NeedlePartLink
                 {
-                    Product = new NeedleProduct { Name = "Seconds needle", Identity = new ProductIdentity(identifierPrefix + "B86400", 3) }
+                    Product = new NeedleType { Name = "Seconds needle", Identity = new ProductIdentity(identifierPrefix + "B86400", 3) }
                 }
             };
 
-            var watch = new WatchProduct
+            var watch = new WatchType
             {
                 Name = watchName,
                 Identity = new ProductIdentity(identifierPrefix + WatchMaterial, revision),
-                Watchface = new ProductPartLink<WatchfaceProduct> { Product = watchface },
-                Needles = needles
+                Watchface = new ProductPartLink<WatchfaceType> { Product = watchface },
+                Needles = needles,
+                Weight = 123.45
             };
 
             return watch;
@@ -87,13 +338,12 @@ namespace Marvin.Products.IntegrationTests
             var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var watchStorage = new WatchProductStorage { Factory = _factory };
-            var savedWatchId = watchStorage.SaveProduct(watch);
+            var savedWatchId = _storage.SaveProduct(watch);
 
             // Assert
             using (var uow = _factory.Create())
             {
-                var productEntityRepo = uow.GetRepository<IProductEntityRepository>();
+                var productEntityRepo = uow.GetRepository<IProductTypeEntityRepository>();
 
                 var watchEntity = productEntityRepo.GetByKey(savedWatchId);
                 Assert.NotNull(watchEntity, "Failed to save or id not written");
@@ -109,39 +359,35 @@ namespace Marvin.Products.IntegrationTests
             var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var watchStorage = new WatchProductStorage { Factory = _factory };
-            var oldWatchName = watch.Name;
-            watchStorage.SaveProduct(watch);
-
-            const string newWatchName = "Daniel Wellington";
-            watch.Name = newWatchName;
-            var savedWatchId = watchStorage.SaveProduct(watch);
+            watch.Weight = 234.56;
+            _storage.SaveProduct(watch);
+            var savedWatchId = _storage.SaveProduct(watch);
 
             // Assert
             using (var uow = _factory.Create())
             {
-                var productEntityRepo = uow.GetRepository<IProductEntityRepository>();
+                var productEntityRepo = uow.GetRepository<IProductTypeEntityRepository>();
 
                 var watchEntity = productEntityRepo.GetByKey(savedWatchId);
                 Assert.NotNull(watchEntity, "Failed to save or id not written");
-                Assert.AreEqual(oldWatchName, watchEntity.OldVersions.First().Name, "Old data are not equal to the previous version");
-                Assert.AreEqual(newWatchName, watchEntity.CurrentVersion.Name, "Latest changes are not in the new version");
+                Assert.AreEqual(123.45, watchEntity.OldVersions.First().Float1, "Old data are not equal to the previous version");
+                Assert.AreEqual(234.56, watchEntity.CurrentVersion.Float1, "Latest changes are not in the new version");
 
                 CheckProduct(watch, watchEntity, productEntityRepo, savedWatchId);
             }
         }
 
-        private static void CheckProduct(WatchProduct watch, ProductEntity watchEntity, IProductEntityRepository productEntityRepo, long savedWatchId)
+        private static void CheckProduct(WatchType watch, ProductTypeEntity watchTypeEntity, IProductTypeEntityRepository productTypeEntityRepo, long savedWatchId)
         {
             var watchNeedlesCount = watch.Needles.Count;
-            var watchEntityNeedlesCount = watchEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleProduct)));
+            var watchEntityNeedlesCount = watchTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleType)));
             Assert.AreEqual(watchNeedlesCount, watchEntityNeedlesCount, "Different number of needles");
 
-            var watchfaceEntity = watchEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceProduct))).Child;
+            var watchfaceEntity = watchTypeEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceType))).Child;
             Assert.NotNull(watchfaceEntity, "There is no watchface");
 
             var identity = (ProductIdentity)watch.Identity;
-            var byIdentifier = productEntityRepo.GetByIdentity(identity.Identifier, identity.Revision);
+            var byIdentifier = productTypeEntityRepo.GetByIdentity(identity.Identifier, identity.Revision);
             Assert.NotNull(byIdentifier, "New version of watch not found by identifier ");
             Assert.AreEqual(savedWatchId, byIdentifier.Id, "Different id´s");
         }
@@ -153,9 +399,8 @@ namespace Marvin.Products.IntegrationTests
             var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var watchStorage = new WatchProductStorage { Factory = _factory };
-            var savedWatchId = watchStorage.SaveProduct(watch);
-            var loadedWatch = (WatchProduct)watchStorage.LoadProduct(savedWatchId);
+            var savedWatchId = _storage.SaveProduct(watch);
+            var loadedWatch = (WatchType)_storage.LoadProductType(savedWatchId);
 
             // Assert
             Assert.NotNull(loadedWatch, "Failed to load from database");
@@ -167,55 +412,6 @@ namespace Marvin.Products.IntegrationTests
             Assert.AreEqual(watch.Watchface.Product.Numbers.Length, loadedWatch.Watchface.Product.Numbers.Length, "Different number of watch numbers");
         }
 
-        [Test]
-        public void ParentOnWatchface()
-        {
-            // Arrange
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
-
-            // Act
-            var watchStorage = new WatchProductStorage { Factory = _factory };
-            watchStorage.SaveProduct(watch);
-            var watchfaceId = watch.Watchface.Product.Id;
-            var watchface = (WatchfaceProduct)watchStorage.LoadProduct(watchfaceId);
-
-            // Assert
-            Assert.NotNull(watchface, "Failed to load from database");
-            Assert.NotNull(watchface.Parent, "Parent was not set");
-            var watchParent = (WatchProduct)watchface.Parent;
-            Assert.AreEqual(watchface, watchParent.Watchface.Product, "Product tree inconsistent!");
-            Assert.AreEqual(3, watchParent.Needles.Count, "Full parent loading MUST include other part links too");
-        }
-
-        [Test]
-        public void PackageOnWatch()
-        {
-            // Arrange
-            var package = new WatchPackageProduct
-            {
-                Name = "Standard box",
-                Identity = new ProductIdentity("9876543", 42),
-                PossibleWatches = new List<ProductPartLink<WatchProduct>>
-                {
-                    new ProductPartLink<WatchProduct> {Product = SetupProduct("Jaques Lemans", "1")},
-                    new ProductPartLink<WatchProduct> {Product = SetupProduct("Tag Heuer", "2")}
-                }
-            };
-
-            // Act
-            var watchStorage = new WatchProductStorage { Factory = _factory };
-            watchStorage.SaveProduct(package);
-            var watchId = package.PossibleWatches[1].Product.Id;
-            var watch = (WatchProduct)watchStorage.LoadProduct(watchId);
-
-            // Assert
-            Assert.NotNull(watch, "Failed to load from database");
-            Assert.NotNull(watch.Parent, "Parent was not set");
-            var watchParent = (WatchPackageProduct)watch.Parent;
-            Assert.AreEqual(1, watchParent.PossibleWatches.Count, "Reference should only be loaded partially");
-            Assert.AreEqual(watch, watchParent.PossibleWatches[0].Product, "Product tree inconsistent!");
-        }
-
         [TestCase(true, Description = "Get the latest revision of an existing product")]
         [TestCase(false, Description = "Try to get the latest revision of a not-existing product")]
         public void LoadLatestRevision(bool exists)
@@ -223,14 +419,13 @@ namespace Marvin.Products.IntegrationTests
             const string newName = "Jaques Lemans XS";
 
             // Arrange
-            var watchStorage = new WatchProductStorage { Factory = _factory };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            watchStorage.SaveProduct(watch);
+            _storage.SaveProduct(watch);
             watch = SetupProduct(newName, string.Empty, 42);
-            watchStorage.SaveProduct(watch);
+            _storage.SaveProduct(watch);
 
             // Act
-            var loadedWatch = (WatchProduct)watchStorage.LoadProduct(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
+            var loadedWatch = (WatchType)_storage.LoadProductType(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
 
             // Assert
             if (exists)
@@ -249,33 +444,32 @@ namespace Marvin.Products.IntegrationTests
         public void GetProductByQuery()
         {
             // Arrange
-            var watchStorage = new WatchProductStorage { Factory = _factory };
             var productMgr = new ProductManager
             {
                 Factory = _factory,
-                Storage = watchStorage
+                Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            watchStorage.SaveProduct(watch);
+            _storage.SaveProduct(watch);
             watch = SetupProduct("Jaques Lemans", string.Empty, 17);
-            watchStorage.SaveProduct(watch);
+            _storage.SaveProduct(watch);
 
             // Act
-            var all = productMgr.GetProducts(new ProductQuery());
-            var latestRevision = productMgr.GetProducts(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
-            var byType = productMgr.GetProducts(new ProductQuery { Type = nameof(NeedleProduct) });
-            var allRevision = productMgr.GetProducts(new ProductQuery { Identifier = WatchMaterial });
-            var latestByType = productMgr.GetProducts(new ProductQuery
+            var all = productMgr.GetTypes(new ProductQuery());
+            var latestRevision = productMgr.GetTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
+            var byType = productMgr.GetTypes(new ProductQuery { Type = nameof(NeedleType) });
+            var allRevision = productMgr.GetTypes(new ProductQuery { Identifier = WatchMaterial });
+            var latestByType = productMgr.GetTypes(new ProductQuery
             {
-                Type = nameof(WatchProduct),
+                Type = nameof(WatchType),
                 RevisionFilter = RevisionFilter.Latest
             });
-            var usages = productMgr.GetProducts(new ProductQuery
+            var usages = productMgr.GetTypes(new ProductQuery
             {
                 Identifier = "24",
                 Selector = Selector.Parent
             });
-            var needles = productMgr.GetProducts(new ProductQuery
+            var needles = productMgr.GetTypes(new ProductQuery
             {
                 Name = "needle",
                 RevisionFilter = RevisionFilter.Latest
@@ -283,10 +477,10 @@ namespace Marvin.Products.IntegrationTests
 
             // Assert
             Assert.Greater(all.Count, latestRevision.Count);
-            Assert.IsTrue(byType.All(p => p is NeedleProduct));
+            Assert.IsTrue(byType.All(p => p is NeedleType));
             Assert.IsTrue(allRevision.All(p => p.Identity.Identifier == WatchMaterial));
             Assert.GreaterOrEqual(latestByType.Count, 1);
-            Assert.IsTrue(usages.All(u => u is WatchProduct));
+            Assert.IsTrue(usages.All(u => u is WatchType));
             Assert.GreaterOrEqual(needles.Count, 3);
         }
 
@@ -294,17 +488,16 @@ namespace Marvin.Products.IntegrationTests
         public void ShouldReturnNoProductsForWildcardInName()
         {
             // Arrange
-            var watchStorage = new WatchProductStorage { Factory = _factory };
             var productMgr = new ProductManager
             {
                 Factory = _factory,
-                Storage = watchStorage
+                Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            watchStorage.SaveProduct(watch);
+            _storage.SaveProduct(watch);
 
             // Act
-            var needles = productMgr.GetProducts(new ProductQuery
+            var needles = productMgr.GetTypes(new ProductQuery
             {
                 Name = "*needle",
                 RevisionFilter = RevisionFilter.Latest
@@ -318,17 +511,16 @@ namespace Marvin.Products.IntegrationTests
         public void IdentifierQueryShouldNotBeCaseSensitive()
         {
             // Arrange
-            var watchStorage = new WatchProductStorage { Factory = _factory };
             var productMgr = new ProductManager
             {
                 Factory = _factory,
-                Storage = watchStorage
+                Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            watchStorage.SaveProduct(watch);
+            _storage.SaveProduct(watch);
 
             // Act
-            var products = productMgr.GetProducts(new ProductQuery
+            var products = productMgr.GetTypes(new ProductQuery
             {
                 Identifier = "b*",
                 RevisionFilter = RevisionFilter.Latest
@@ -344,15 +536,14 @@ namespace Marvin.Products.IntegrationTests
         public void DuplicateProduct(bool crossTypeIdentifier, bool revisionTaken)
         {
             // Arrange
-            var watchStorage = new WatchProductStorage { Factory = _factory };
             var productMgr = new ProductManager
             {
                 Factory = _factory,
-                Storage = watchStorage
+                Storage = _storage
             };
-            productMgr.ProductChanged += (sender, product) => { };
+            productMgr.TypeChanged += (sender, product) => { };
             var watch = SetupProduct("Jaques Lemans", "321");
-            watchStorage.SaveProduct(watch);
+            _storage.SaveProduct(watch);
             var recipe = new WatchProductRecipe
             {
                 Product = watch,
@@ -360,10 +551,10 @@ namespace Marvin.Products.IntegrationTests
                 Name = "TestRecipe",
                 Workplan = new Workplan { Id = _workplanId }
             };
-            watchStorage.SaveRecipe(recipe);
+            _storage.SaveRecipe(recipe);
 
             // Act (& Assert)
-            WatchProduct duplicate = null;
+            WatchType duplicate = null;
             if (crossTypeIdentifier | revisionTaken)
             {
                 var newIdentity = crossTypeIdentifier
@@ -371,7 +562,7 @@ namespace Marvin.Products.IntegrationTests
                     : new ProductIdentity("321" + WatchMaterial, 5);
                 var ex = Assert.Throws<IdentityConflictException>(() =>
                 {
-                    duplicate = (WatchProduct)productMgr.Duplicate(watch.Id, newIdentity);
+                    duplicate = (WatchType)productMgr.Duplicate(watch.Id, newIdentity);
                 });
                 Assert.AreEqual(crossTypeIdentifier, ex.InvalidTemplate);
                 return;
@@ -380,12 +571,12 @@ namespace Marvin.Products.IntegrationTests
             {
                 Assert.DoesNotThrow(() =>
                 {
-                    duplicate = (WatchProduct)productMgr.Duplicate(watch.Id,
+                    duplicate = (WatchType)productMgr.Duplicate(watch.Id,
                         new ProductIdentity("654" + WatchMaterial, 1));
                 });
             }
 
-            var recipeDuplicates = watchStorage.LoadRecipes(duplicate.Id, RecipeClassification.CloneFilter);
+            var recipeDuplicates = _storage.LoadRecipes(duplicate.Id, RecipeClassification.CloneFilter);
 
             // Assert
             Assert.AreEqual(watch.Watchface.Product.Id, duplicate.Watchface.Product.Id);
@@ -401,34 +592,75 @@ namespace Marvin.Products.IntegrationTests
         public void RemoveProduct(bool stillUsed)
         {
             // Arrange
-            var watchStorage = new WatchProductStorage { Factory = _factory };
             var productMgr = new ProductManager
             {
                 Factory = _factory,
-                Storage = watchStorage
+                Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", "567");
-            watchStorage.SaveProduct(watch);
+            _storage.SaveProduct(watch);
 
             // Act
             bool result;
             if (stillUsed)
-                result = productMgr.DeleteProduct(watch.Watchface.Product.Id);
+                result = productMgr.DeleteType(watch.Watchface.Product.Id);
             else
-                result = productMgr.DeleteProduct(watch.Id);
+                result = productMgr.DeleteType(watch.Id);
 
             // Assert
             Assert.AreEqual(stillUsed, !result);
             if (stillUsed)
                 return;
 
-            var matches = productMgr.GetProducts(new ProductQuery
+            var matches = productMgr.GetTypes(new ProductQuery
             {
                 RevisionFilter = RevisionFilter.Specific,
                 Revision = 5,
                 Identifier = watch.Identity.Identifier
             });
             Assert.AreEqual(0, matches.Count);
+        }
+
+        [Test]
+        public void SaveAndLoadArticle()
+        {
+            // Arrange
+            var watch = SetupProduct("Jaques Lemans", string.Empty);
+            _storage.SaveProduct(watch);
+            // Reload from storage for partlink ids if the object exists
+            watch = (WatchType) _storage.LoadProductType(watch.Id);
+
+            // Act
+            var article = (WatchInstance)watch.CreateInstance();
+            article.TimeSet = true;
+            article.DeliveryDate = DateTime.Now;
+            _storage.SaveArticles(new[] { article });
+
+            // Assert
+            using (var uow = _factory.Create())
+            {
+                var root = uow.GetRepository<IProductInstanceEntityRepository>().GetByKey(article.Id);
+                Assert.NotNull(root, "Failed to save or id not written");
+                Assert.AreEqual(article.DeliveryDate.Ticks, root.Integer1, "DateTime not saved");
+                Assert.AreEqual(1, root.Integer2, "Bool not saved");
+
+                var parts = root.Parts;
+                Assert.AreEqual(1, parts.Count, "Invalid number of parts!"); // needles will be skipped for saving
+
+                var single = parts.FirstOrDefault(p => p.PartLinkId == watch.Watchface.Id);
+                Assert.NotNull(single, "Single part not saved!");
+            }
+
+            // Act
+            var watchCopy = (WatchInstance)_storage.LoadArticle(article.Id);
+
+            // Assert
+            Assert.NotNull(watchCopy);
+            Assert.AreEqual(article.DeliveryDate, watchCopy.DeliveryDate);
+            Assert.AreEqual(article.TimeSet, watchCopy.TimeSet);
+            Assert.NotNull(article.Watchface);
+            Assert.NotNull(article.Needles);
+            Assert.AreEqual(3, article.Needles.Count);
         }
     }
 }

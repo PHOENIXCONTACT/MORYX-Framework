@@ -17,12 +17,12 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Will load all recipes by the given product
         /// </summary>
-        IReadOnlyList<IProductRecipe> GetAllByProduct(IProduct product);
+        IReadOnlyList<IProductRecipe> GetAllByProduct(IProductType productType);
 
         /// <summary>
         /// Retrieves a recipe for the product
         /// </summary>
-        IReadOnlyList<IProductRecipe> GetRecipes(IProduct product, RecipeClassification classifications);
+        IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classifications);
 
         /// <summary>
         /// A recipe was changed, give users the chance to update their reference

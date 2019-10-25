@@ -23,7 +23,7 @@ namespace Marvin.Products.Samples
         /// <summary>
         /// Import a product using given parameters
         /// </summary>
-        protected override IProduct[] Import(FileImportParameters parameters)
+        protected override IProductType[] Import(FileImportParameters parameters)
         {
             using (var stream = parameters.ReadFile())
             {
@@ -32,9 +32,9 @@ namespace Marvin.Products.Samples
                 var revision = short.Parse(textReader.ReadLine() ?? "0");
                 var name = textReader.ReadLine();
 
-                return new IProduct[]
+                return new IProductType[]
                 {
-                    new NeedleProduct
+                    new NeedleType
                     {
                         Name = name,
                         Identity = new ProductIdentity(identifier, revision)

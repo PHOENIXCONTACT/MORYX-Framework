@@ -1,23 +1,35 @@
-﻿namespace Marvin.AbstractionLayer
+﻿using System.Runtime.Serialization;
+
+namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Adapter for product files. Use this property 
+    /// Adapter for product files
     /// </summary>
+    [DataContract]
     public class ProductFile
     {
         /// <summary>
         /// Original name of the file
         /// </summary>
+        [DataMember]
         public string Name { get; set; }
 
         /// <summary>
         /// Type of this file
         /// </summary>
-        public FileType Type { get; set; }
+        [DataMember]
+        public string MimeType { get; set; }
 
         /// <summary>
-        /// The complete file
+        /// Path or URL to the file
         /// </summary>
-        public byte[] File { get; set; }
+        [DataMember]
+        public string FilePath { get; set; }
+
+        /// <summary>
+        /// Hash for the internal file manager
+        /// </summary>
+        [DataMember]
+        public string FileHash { get; set; }
     }
 }

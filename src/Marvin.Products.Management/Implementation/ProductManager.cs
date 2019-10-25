@@ -33,15 +33,8 @@ namespace Marvin.Products.Management
 
         public IProductImporter[] Importers => _importers.ToArray();
 
-        private IDictionary<string, Type> _types;
-
         #endregion
-
-        public ProductManager()
-        {
-            _types = ReflectionTool.GetPublicClasses<Product>().ToDictionary(t => t.Name, t => t);
-        }
-
+        
         public void Start()
         {
             _importers = (from importerConfig in Config.Importers
@@ -56,125 +49,43 @@ namespace Marvin.Products.Management
         {
         }
 
-        public IReadOnlyList<IProduct> GetProducts(ProductQuery query)
+        public IReadOnlyList<IProductType> GetTypes(ProductQuery query)
         {
-            using (var uow = Factory.Create(ContextMode.AllOff))
-            {
-                var baseSet = uow.GetRepository<IProductEntityRepository>().Linq;
-                var productsQuery = query.IncludeDeleted ? baseSet : baseSet.Active();
-
-                // Filter by type
-                if (!string.IsNullOrEmpty(query.Type))
-                {
-                    if (query.ExcludeDerivedTypes)
-                        productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
-                    else
-                    {
-                        var queryType = _types[query.Type];
-                        var allTypes = ReflectionTool.GetPublicClasses(queryType).Select(t => t.Name);
-                        productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
-                    }
-                }
-
-                // Filter by identifier
-                if (!string.IsNullOrEmpty(query.Identifier))
-                {
-                    var identifierMatches = Regex.Match(query.Identifier, "(?<startCard>\\*)?(?<filter>\\w*)(?<endCard>\\*)?");
-                    var identifier = identifierMatches.Groups["filter"].Value.ToLower();
-                    if (identifierMatches.Groups["startCard"].Success && identifierMatches.Groups["endCard"].Success)
-                        productsQuery = productsQuery.Where(p => p.Identifier.ToLower().Contains(identifier));
-                    else if (identifierMatches.Groups["startCard"].Success)
-                        productsQuery = productsQuery.Where(p => p.Identifier.ToLower().EndsWith(identifier));
-                    else if (identifierMatches.Groups["endCard"].Success)
-                        productsQuery = productsQuery.Where(p => p.Identifier.ToLower().StartsWith(identifier));
-                    else
-                        productsQuery = productsQuery.Where(p => p.Identifier.ToLower() == identifier);
-                }
-
-                // Filter by revision
-                if (query.RevisionFilter == RevisionFilter.Latest)
-                {
-                    var compareSet = baseSet.Active();
-                    productsQuery = productsQuery.Where(p => p.Revision == compareSet.Where(compare => compare.Identifier == p.Identifier).Max(compare => compare.Revision));
-                }
-                else if (query.RevisionFilter == RevisionFilter.Specific)
-                {
-                    productsQuery = productsQuery.Where(p => p.Revision == query.Revision);
-                }
-
-                // Filter by name
-                if (!string.IsNullOrEmpty(query.Name))
-                    productsQuery = productsQuery.Where(p => p.CurrentVersion.Name.ToLower().Contains(query.Name.ToLower()));
-
-                // Filter by recipe
-                if (query.RecipeFilter == RecipeFilter.WithRecipe)
-                    productsQuery = productsQuery.Where(p => p.Recipes.Any());
-                else if (query.RecipeFilter == RecipeFilter.WithoutRecipes)
-                    productsQuery = productsQuery.Where(p => p.Recipes.Count == 0);
-
-                // Apply selector
-                switch (query.Selector)
-                {
-                    case Selector.Parent:
-                        productsQuery = productsQuery.SelectMany(p => p.Parents).Where(p => p.Parent.Deleted == null)
-                            .Select(link => link.Parent);
-                        break;
-                    case Selector.Parts:
-                        productsQuery = productsQuery.SelectMany(p => p.Parts).Where(p => p.Parent.Deleted == null)
-                            .Select(link => link.Child);
-                        break;
-                }
-
-                // Include current version
-                productsQuery = productsQuery.Include(p => p.CurrentVersion);
-
-                // Execute the query
-                var products = productsQuery.OrderBy(p => p.TypeName)
-                    .ThenBy(p => p.Identifier)
-                    .ThenBy(p => p.Revision).ToList();
-                // TODO: Move to Storage in AL5 and use TypeWrapper with constructor delegate
-                return products.Select(p =>
-                {
-                    var instance = (Product)Activator.CreateInstance(_types[p.TypeName]);
-                    instance.Id = p.Id;
-                    instance.Identity = new ProductIdentity(p.Identifier, p.Revision);
-                    instance.Name = p.CurrentVersion.Name;
-                    return instance;
-                }).ToList();
-            }
+            return Storage.GetProductTypes(query);
         }
 
-        public IProduct GetProduct(long id)
+        public IProductType GetType(long id)
         {
-            return Storage.LoadProduct(id);
+            return Storage.LoadProductType(id);
         }
 
-        public IProduct GetProduct(ProductIdentity identity)
+        public IProductType GetType(ProductIdentity identity)
         {
-            return Storage.LoadProduct(identity);
+            return Storage.LoadProductType(identity);
         }
 
-        public long Save(IProduct modifiedInstance)
+        public long SaveType(IProductType modifiedInstance)
         {
             var saved = Storage.SaveProduct(modifiedInstance);
             RaiseProductChanged(modifiedInstance);
             return saved;
         }
 
-        public IProduct Create(string type)
+        public IProductType CreateType(string type)
         {
             // TODO: Use type wrapper
-            var product = (Product)Activator.CreateInstance(_types[type]);
+            var productType = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == type).First();
+            var product = (ProductType)Activator.CreateInstance(productType);
             return product;
         }
 
-        public IProduct Duplicate(long sourceId, ProductIdentity newIdentity)
+        public IProductType Duplicate(long sourceId, ProductIdentity newIdentity)
         {
             // Fetch source object from db
-            var duplicate = (Product)Storage.LoadProduct(sourceId);
+            var duplicate = (ProductType)Storage.LoadProductType(sourceId);
 
             // Fetch existing products for identity validation
-            var existing = GetProducts(new ProductQuery { Identifier = newIdentity.Identifier });
+            var existing = GetTypes(new ProductQuery { Identifier = newIdentity.Identifier });
             // Check if the same revision already exists
             if (existing.Any(e => ((ProductIdentity)e.Identity).Revision == newIdentity.Revision))
                 throw new IdentityConflictException();
@@ -207,22 +118,22 @@ namespace Marvin.Products.Management
             return duplicate;
         }
 
-        public IReadOnlyList<IProduct> ImportProducts(string importerName, IImportParameters parameters)
+        public IReadOnlyList<IProductType> ImportTypes(string importerName, IImportParameters parameters)
         {
             var importer = _importers.First(i => i.Name == importerName);
             var imported = importer.Import(parameters);
             foreach (var product in imported)
             {
-                Save(product);
+                SaveType(product);
             }
             return imported;
         }
 
-        public bool DeleteProduct(long productId)
+        public bool DeleteType(long productId)
         {
             using (var uow = Factory.Create())
             {
-                var productRepo = uow.GetRepository<IProductEntityRepository>();
+                var productRepo = uow.GetRepository<IProductTypeEntityRepository>();
                 var queryResult = (from entity in productRepo.Linq
                                    where entity.Id == productId
                                    select new
@@ -246,40 +157,40 @@ namespace Marvin.Products.Management
             }
         }
 
-        public Article CreateInstance(IProduct product, bool save)
+        public ProductInstance CreateInstance(IProductType productType, bool save)
         {
-            var instance = product.CreateInstance();
+            var instance = productType.CreateInstance();
             if (save)
-                SaveArticles(instance);
+                SaveInstances(instance);
             return instance;
         }
 
-        public void SaveArticles(params Article[] articles)
+        public void SaveInstances(params ProductInstance[] productInstances)
         {
-            Storage.SaveArticles(articles);
+            Storage.SaveArticles(productInstances);
         }
 
-        public Article GetArticle(long id)
+        public ProductInstance GetInstance(long id)
         {
             return Storage.LoadArticle(id);
         }
 
-        public IEnumerable<Article> GetArticles(ArticleState state)
+        public IEnumerable<ProductInstance> GetInstances(ProductInstanceState state)
+        {
+            return Storage.LoadArticles((int)state);
+        }
+
+        public IEnumerable<ProductInstance> GetInstances(int state)
         {
             return Storage.LoadArticles(state);
         }
 
-        public IEnumerable<Article> GetArticles(int state)
-        {
-            return Storage.LoadArticles(state);
-        }
-
-        private void RaiseProductChanged(IProduct product)
+        private void RaiseProductChanged(IProductType productType)
         {
             // This must never by null
             // ReSharper disable once PossibleNullReferenceException
-            ProductChanged(this, product);
+            TypeChanged(this, productType);
         }
-        public event EventHandler<IProduct> ProductChanged;
+        public event EventHandler<IProductType> TypeChanged;
     }
 }

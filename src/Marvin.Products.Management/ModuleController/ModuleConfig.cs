@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer;
@@ -54,22 +55,31 @@ namespace Marvin.Products.Management
         public List<ProductImporterConfig> Importers { get; set; }
 
         /// <summary>
-        /// TODO: Remove in AL5 and read from configured recipe strategies and do the same for products
+        /// Configured strategies for the different product types
         /// </summary>
-        [DataMember, Description("Recipe types that can be configured through the UI")]
-        public List<SupportRecipe> SupportedRecipes { get; set; }
-    }
+        [DataMember, Description("Configured strategies for the different product types")]
+        [PluginConfigs(typeof(IProductTypeStrategy))]
+        public List<ProductTypeConfiguration> TypeStrategies { get; set; }
 
-    /// <summary>
-    /// Necessary intermediate class for Platform2.7 Maintenance
-    /// </summary>
-    [DataContract]
-    public class SupportRecipe
-    {
         /// <summary>
-        /// The value itself
+        /// Configured strategies for the different product instances
         /// </summary>
-        [DataMember, PossibleTypes(typeof(IProductRecipe))]
-        public string Type { get; set; }
+        [DataMember, Description("Configured strategies for the different product instances")]
+        [PluginConfigs(typeof(IProductInstanceStrategy))]
+        public List<ProductInstanceConfiguration> InstanceStrategies { get; set; }
+
+        /// <summary>
+        /// Configured strategies for the different product part links
+        /// </summary>
+        [DataMember, Description("Configured strategies for the different product part links")]
+        [PluginConfigs(typeof(IProductLinkStrategy))]
+        public List<ProductLinkConfiguration> LinkStrategies { get; set; }
+
+        /// <summary>
+        /// Configured strategies for the different product recipes
+        /// </summary>
+        [DataMember, Description("Configured strategies for the different product recipes")]
+        [PluginConfigs(typeof(IProductRecipeStrategy))]
+        public List<ProductRecipeConfiguration> RecipeStrategies { get; set; }
     }
 }

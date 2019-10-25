@@ -29,8 +29,8 @@ public class PrototypeImporterConfig : ProductImporterConfig
 
 public class WatchImportParameters : PrototypeParameters
 {
-    [Required, TriggersUpdate]
-    [PossibleProductValues(nameof(WatchProduct), nameof(WatchfaceProduct), nameof(NeedleProduct))]
+    [Required]
+    [PossibleTypes(typeof(Product))]
     public string ProductType { get; set; }
 }
 

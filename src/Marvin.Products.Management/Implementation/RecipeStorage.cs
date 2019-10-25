@@ -28,7 +28,7 @@ namespace Marvin.Products.Management
             productRecipe.Classification = (RecipeClassification)recipeEntity.Classification;
             productRecipe.Revision = recipeEntity.Revision;
             productRecipe.State = (RecipeState)recipeEntity.State;
-            productRecipe.Product = new ProductReference(recipeEntity.ProductId);
+            productRecipe.Product = new ProductTypeReference(recipeEntity.ProductId);
 
             var workplanRecipe = productRecipe as IWorkplanRecipe;
             if (workplanRecipe != null)
@@ -36,18 +36,13 @@ namespace Marvin.Products.Management
         }
 
         /// <summary>
-        /// Get or create product entity for the business object
+        /// Save recipe to given <see cref="IUnitOfWork"/>
         /// </summary>
-        public static ProductRecipeEntity GetRecipeEntity(IUnitOfWork uow, IProductRecipe recipe)
+        public static ProductRecipeEntity SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
         {
-            return uow.GetEntity<ProductRecipeEntity>(recipe);
-        }
+            var entity = uow.GetEntity<ProductRecipeEntity>(recipe);
 
-        /// <summary>
-        /// Copy all properties to the entity
-        /// </summary>
-        public static ProductRecipeEntity CopyToRecipeEntity(IProductRecipe recipe, ProductRecipeEntity entity)
-        {
+            entity.Type = recipe.Type;
             entity.Revision = recipe.Revision;
             entity.Name = recipe.Name;
             entity.State = (int)recipe.State;
@@ -60,17 +55,6 @@ namespace Marvin.Products.Management
 
             return entity;
         }
-
-        /// <summary>
-        /// Save recipe to given <see cref="IUnitOfWork"/>
-        /// </summary>
-        public static ProductRecipeEntity SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
-        {
-            var recipeEntity = GetRecipeEntity(uow, recipe);
-
-            return CopyToRecipeEntity(recipe, recipeEntity);
-        }
-
 
         /// <summary>
         /// Loads a workplan from database

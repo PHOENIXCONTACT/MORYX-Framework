@@ -19,78 +19,78 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Returns all products on this machine
         /// </summary>
-        IReadOnlyList<IProduct> GetProducts(ProductQuery query);
+        IReadOnlyList<IProductType> GetTypes(ProductQuery query);
 
         /// <summary>
         /// Load product instance by id
         /// </summary>
-        IProduct GetProduct(long id);
+        IProductType GetType(long id);
 
         /// <summary>
         /// Load product by identity
         /// </summary>
-        IProduct GetProduct(ProductIdentity identity);
+        IProductType GetType(ProductIdentity identity);
 
         /// <summary>
         /// Create a new product for the given group type
         /// </summary>
-        IProduct Create(string type);
+        IProductType CreateType(string type);
 
         /// <summary>
         /// Event raised when a product changed
         /// </summary>
-        event EventHandler<IProduct> ProductChanged;
+        event EventHandler<IProductType> TypeChanged;
 
         /// <summary>
         /// Save a product to the database
         /// </summary>
-        long Save(IProduct modifiedInstance);
+        long SaveType(IProductType modifiedInstance);
 
         /// <summary>
         /// Create revision of this product with provided revision number
         /// </summary>
-        IProduct Duplicate(long sourceId, ProductIdentity identity);
+        IProductType Duplicate(long sourceId, ProductIdentity identity);
 
         /// <summary>
         /// Import the given file as a product to the database
         /// </summary>
-        IReadOnlyList<IProduct> ImportProducts(string importer, IImportParameters parameters);
+        IReadOnlyList<IProductType> ImportTypes(string importer, IImportParameters parameters);
 
         /// <summary>
         /// Try to delete a product. If it is still used as a part in other products, it will return <c>false</c>
         /// </summary>
         /// <param name="productId">Id of the product that is deprecated and should be deleted.</param>
         /// <returns><value>True</value> if the product was removed, <value>false</value> otherwise</returns>
-        bool DeleteProduct(long productId);
+        bool DeleteType(long productId);
 
         /// <summary>
         /// Create an article instance of given product
         /// </summary>
-        /// <param name="product">Product to instantiate</param>
+        /// <param name="productType">Product to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
-        Article CreateInstance(IProduct product, bool save);
+        ProductInstance CreateInstance(IProductType productType, bool save);
 
         /// <summary>
         /// Get an article with the given id.
         /// </summary>
         /// <param name="id">The id for the article which should be searched for.</param>
         /// <returns>The article with the id when it exists.</returns>
-        Article GetArticle(long id);
+        ProductInstance GetInstance(long id);
 
         /// <summary>
         /// Gets a list of articles by a given state
         /// </summary>
-        IEnumerable<Article> GetArticles(ArticleState state);
+        IEnumerable<ProductInstance> GetInstances(ProductInstanceState state);
 
         /// <summary>
         /// Load articles using combined bit flags
         /// </summary>
-        IEnumerable<Article> GetArticles(int state);
+        IEnumerable<ProductInstance> GetInstances(int state);
 
         /// <summary>
         /// Updates the database from the article instance
         /// </summary>
-        void SaveArticles(params Article[] articles);
+        void SaveInstances(params ProductInstance[] productInstances);
     }
 }

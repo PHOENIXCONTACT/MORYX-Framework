@@ -1,10 +1,9 @@
 ﻿using Marvin.Model.InMemory;
 using Marvin.Products.Model;
-using Marvin.Products.Samples.Model;
 
 namespace Marvin.Products.IntegrationTests
 {
-    public class InMemoryUnitOfWorkFactory : InMemoryUnitOfWorkFactoryBase<WatchProductsContext>
+    public class InMemoryUnitOfWorkFactory : InMemoryUnitOfWorkFactoryBase<ProductsContext>
     {
         public InMemoryUnitOfWorkFactory(string instanceId) : base(instanceId)
         {
@@ -12,21 +11,17 @@ namespace Marvin.Products.IntegrationTests
 
         protected override void Configure()
         {
-            RegisterRepository<IArticleEntityRepository>();
+            RegisterRepository<IProductInstanceEntityRepository>();
             RegisterRepository<IConnectorEntityRepository>();
             RegisterRepository<IConnectorReferenceRepository>();
             RegisterRepository<IOutputDescriptionEntityRepository>();
             RegisterRepository<IPartLinkRepository>();
-            RegisterRepository<IProductDocumentRepository>();
-            RegisterRepository<IProductEntityRepository>();
+            RegisterRepository<IProductTypeEntityRepository>();
             RegisterRepository<IProductPropertiesRepository>();
             RegisterRepository<IProductRecipeEntityRepository>();
             RegisterRepository<IStepEntityRepository>();
             RegisterRepository<IWorkplanEntityRepository>();
             RegisterRepository<IWorkplanReferenceRepository>();
-
-            RegisterRepository<ISmartWatchProductPropertiesEntityRepository>();
-            RegisterRepository<IAnalogWatchProductPropertiesEntityRepository>();
         }
     }
 }

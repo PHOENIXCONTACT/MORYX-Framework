@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Marvin.Products.Samples.XML</DocumentationFile>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -57,27 +58,23 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Article\NeedleArticle.cs" />
-    <Compile Include="Article\WatchFaceArticle.cs" />
-    <Compile Include="Article\WatchPackage.cs" />
-    <Compile Include="Product\NeedlePartLink.cs" />
-    <Compile Include="Product\NeedleProduct.cs" />
-    <Compile Include="Product\NeedleRole.cs" />
-    <Compile Include="Article\WatchArticle.cs" />
-    <Compile Include="Product\WatchFaceProduct.cs" />
-    <Compile Include="Product\WatchPackageProduct.cs" />
-    <Compile Include="Product\WatchProduct.cs" />
+    <Compile Include="ProductInstances\NeedleInstance.cs" />
+    <Compile Include="ProductInstances\WatchInstance.cs" />
+    <Compile Include="ProductInstances\WatchfaceInstance.cs" />
+    <Compile Include="ProductInstances\WatchPackageInstance.cs" />
     <Compile Include="Importer\FileImporter.cs" />
     <Compile Include="Importer\FileImporterConfig.cs" />
+    <Compile Include="Importer\WatchImporter.cs" />
+    <Compile Include="Importer\WatchImporterConfig.cs" />
+    <Compile Include="ProductTypes\NeedlePartLink.cs" />
+    <Compile Include="ProductTypes\NeedleType.cs" />
+    <Compile Include="ProductTypes\NeedleRole.cs" />
+    <Compile Include="ProductTypes\WatchfaceType.cs" />
+    <Compile Include="ProductTypes\WatchPackageType.cs" />
+    <Compile Include="ProductTypes\WatchType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recipe\WatchProductRecipe.cs" />
-    <Compile Include="Setups\SamplesSetup.cs" />
-    <Compile Include="Importer\WatchImporter.cs" />
-    <Compile Include="Strategies\WatchPackageStrategy.cs" />
-    <Compile Include="Strategies\WatchFaceStrategy.cs" />
-    <Compile Include="Storages\WatchProductStorage.cs" />
     <Compile Include="Strategies\WatchStrategy.cs" />
-    <Compile Include="Importer\WatchImporterConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
@@ -94,10 +91,6 @@
       <Project>{650756A0-E077-4632-8DA8-27214B5ACDA4}</Project>
       <Name>Marvin.Products.Management</Name>
       <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.Products.Samples.Model\Marvin.Products.Samples.Model.csproj">
-      <Project>{0289483b-d623-41c1-ae3f-2f0779a472db}</Project>
-      <Name>Marvin.Products.Samples.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@ namespace Marvin.Products.Management.Modification
 {
     internal interface IProductConverter
     {
-        ProductModel[] GetProducts(ProductQuery query);
+        ProductModel[] GetTypes(ProductQuery query);
 
         ProductModel Create(string type);
 

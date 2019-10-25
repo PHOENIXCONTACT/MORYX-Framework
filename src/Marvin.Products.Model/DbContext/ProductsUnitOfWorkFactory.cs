@@ -12,13 +12,12 @@ namespace Marvin.Products.Model
         /// <inheritdoc />
         protected override void Configure()
         {
-            RegisterRepository<IArticleEntityRepository>();
+            RegisterRepository<IProductInstanceEntityRepository>();
             RegisterRepository<IConnectorEntityRepository>();
             RegisterRepository<IConnectorReferenceRepository>();
             RegisterRepository<IOutputDescriptionEntityRepository>();
             RegisterRepository<IPartLinkRepository>();
-            RegisterRepository<IProductDocumentRepository>();
-            RegisterRepository<IProductEntityRepository>();
+            RegisterRepository<IProductTypeEntityRepository>();
             RegisterRepository<IProductPropertiesRepository>();
             RegisterRepository<IProductRecipeEntityRepository>();
             RegisterRepository<IStepEntityRepository>();

@@ -18,10 +18,10 @@ namespace Marvin.Products.Samples.Recipe
         }
 
         /// <inheritdoc />
-        public IProduct Product { get; set; }
+        public IProductType Product { get; set; }
 
         /// <inheritdoc />
-        public virtual IProduct Target => Product;
+        public virtual IProductType Target => Product;
 
         [EditorVisible]
         [DisplayName("Cores Installed")]

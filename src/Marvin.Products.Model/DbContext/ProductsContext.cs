@@ -29,19 +29,19 @@ namespace Marvin.Products.Model
         {
         }
 
-        public virtual DbSet<ProductEntity> ProductEntities { get; set; }
+        public virtual DbSet<ProductTypeEntity> ProductEntities { get; set; }
     
         public virtual DbSet<PartLink> PartLinks { get; set; }
     
         public virtual DbSet<ProductRecipeEntity> ProductRecipeEntities { get; set; }
     
         public virtual DbSet<ProductProperties> ProductProperties { get; set; }
-    
-        public virtual DbSet<ArticleEntity> ArticleEntities { get; set; }
+
+        public virtual DbSet<ProductFileEntity> ProductFiles { get; set; }
+
+        public virtual DbSet<ProductInstanceEntity> ArticleEntities { get; set; }
     
         public virtual DbSet<WorkplanEntity> WorkplanEntities { get; set; }
-
-        public virtual DbSet<ProductDocument> ProductDocuments { get; set; }
 
         public virtual DbSet<WorkplanReference> WorkplanReferences { get; set; }
     
@@ -70,18 +70,18 @@ namespace Marvin.Products.Model
                 .HasForeignKey(s => s.SourceId);
 
             // Article
-            modelBuilder.Entity<ArticleEntity>()
-                .HasRequired(p => p.Product)
+            modelBuilder.Entity<ProductInstanceEntity>()
+                .HasRequired(p => p.ProductType)
                 .WithMany()
                 .HasForeignKey(p => p.ProductId);
 
-            modelBuilder.Entity<ArticleEntity>()
+            modelBuilder.Entity<ProductInstanceEntity>()
                 .HasOptional(a => a.Parent)
                 .WithMany(a => a.Parts)
                 .HasForeignKey(a => a.ParentId)
                 .WillCascadeOnDelete(true);
 
-            modelBuilder.Entity<ArticleEntity>()
+            modelBuilder.Entity<ProductInstanceEntity>()
                 .HasOptional(a => a.PartLink)
                 .WithMany()
                 .HasForeignKey(a => a.PartLinkId);
@@ -123,38 +123,33 @@ namespace Marvin.Products.Model
                 .HasForeignKey(s => s.WorkplanId);
 
             // ProductEntity
-            modelBuilder.Entity<ProductEntity>()
+            modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.Parts)
                 .WithRequired(p => p.Parent)
                 .HasForeignKey(p => p.ParentId);
 
-            modelBuilder.Entity<ProductEntity>()
+            modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.Parents)
                 .WithRequired(p => p.Child)
                 .HasForeignKey(p => p.ChildId);
 
-            modelBuilder.Entity<ProductEntity>()
+            modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.Recipes)
-                .WithRequired(p => p.Product)
+                .WithRequired(p => p.ProductType)
                 .HasForeignKey(p => p.ProductId);
 
-            modelBuilder.Entity<ProductEntity>()
+            modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.OldVersions)
-                .WithOptional(p => p.Product)
+                .WithOptional(p => p.ProductType)
                 .HasForeignKey(p => p.ProductId);
 
-            modelBuilder.Entity<ProductEntity>()
+            modelBuilder.Entity<ProductTypeEntity>()
                 .HasRequired(p => p.CurrentVersion)
                 .WithMany()
                 .HasForeignKey(t => t.CurrentVersionId);
 
-            modelBuilder.Entity<ProductEntity>()
-                .HasMany(p => p.Documents)
-                .WithRequired(p => p.Product)
-                .HasForeignKey(p => p.ProductId);
-
             // Indexes
-            modelBuilder.Entity<ProductEntity>()
+            modelBuilder.Entity<ProductTypeEntity>()
                 .Property(e => e.Identifier)
                 .HasColumnAnnotation(
                     IndexAnnotation.AnnotationName,
@@ -164,17 +159,11 @@ namespace Marvin.Products.Model
                         new IndexAttribute("Identifier")
                     }));
 
-            modelBuilder.Entity<ProductEntity>()
+            modelBuilder.Entity<ProductTypeEntity>()
                 .Property(e => e.Revision)
                 .HasColumnAnnotation(
                     IndexAnnotation.AnnotationName,
                     new IndexAnnotation(new IndexAttribute("Identifier_Revision_Index", 2)));
-
-            modelBuilder.Entity<ArticleEntity>()
-                .Property(e => e.State)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new IndexAttribute()));
         }
     }
 }
