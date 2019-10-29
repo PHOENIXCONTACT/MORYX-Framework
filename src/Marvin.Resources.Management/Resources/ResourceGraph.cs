@@ -110,7 +110,7 @@ namespace Marvin.Resources.Management
         {
             // Use short cut if a public resource is requested
             if (typeof(IPublicResource).IsAssignableFrom(typeof(TResource)))
-                return _publicResources.Where(p => p.Capabilities != NullCapabilities.Instance && _graph[p.Id].State.IsAvailable).OfType<TResource>().Where(predicate);
+                return _publicResources.Where(p => _graph[p.Id].State.IsAvailable).OfType<TResource>().Where(predicate);
 
             // Otherwise iterate the full graph
             return (from wrapper in _graph.Values
