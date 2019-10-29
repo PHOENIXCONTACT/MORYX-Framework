@@ -92,7 +92,7 @@ namespace Marvin.Runtime.Kernel
                 if (!WaitingModules.ContainsKey(module))
                     return;
 
-                // To increase boot speed we fork plugin start if more than one dependends was found
+                // To increase boot speed we fork plugin start if more than one dependents was found
                 foreach (var waitingModule in WaitingModules[module].ToArray())
                 {
                     WaitingModules[module].Remove(waitingModule);
