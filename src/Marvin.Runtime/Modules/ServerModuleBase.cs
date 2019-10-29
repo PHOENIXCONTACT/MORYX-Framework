@@ -74,7 +74,8 @@ namespace Marvin.Runtime.Modules
 
         void IInitializable.Initialize()
         {
-            _state.Initialize();
+            lock (_stateLock)
+                _state.Initialize();
         }
 
         void IServerModuleStateContext.Initialize()
@@ -88,7 +89,7 @@ namespace Marvin.Runtime.Modules
             Config = ConfigManager.GetConfiguration<TConf>();
             ConfigParser.ParseStrategies(Config, Strategies);
 
-            // Initizalize container with server module dll and this dll
+            // Initialize container with server module dll and this dll
             Container = ContainerFactory.Create(Strategies, GetType().Assembly)
                 .Register<IParallelOperations, ParallelOperations>()
                 // Register instances for this cycle
@@ -114,7 +115,8 @@ namespace Marvin.Runtime.Modules
 
         void IServerModule.Start()
         {
-            _state.Start();
+            lock (_stateLock)
+                _state.Start();
         }
 
         void IServerModuleStateContext.Start()
@@ -140,7 +142,8 @@ namespace Marvin.Runtime.Modules
 
         void IServerModule.Stop()
         {
-            _state.Stop();
+            lock (_stateLock)
+                _state.Stop();
         }
 
         void IServerModuleStateContext.Stop()
@@ -237,11 +240,11 @@ namespace Marvin.Runtime.Modules
 
         private ServerModuleStateBase _state;
 
+        private readonly object _stateLock = new object();
+
         void IStateContext.SetState(IState state)
         {
-            var oldState = ServerModuleState.Stopped;
-            if (_state != null)
-                oldState = _state.Classification;
+            var oldState = _state?.Classification ?? ServerModuleState.Stopped;
 
             _state = (ServerModuleStateBase)state;
 
@@ -289,7 +292,7 @@ namespace Marvin.Runtime.Modules
         private void ProcessLogMessage(ILogMessage message)
         {
             // Ignore messages lower than warning
-            if(message.Level < LogLevel.Warning)
+            if (message.Level < LogLevel.Warning)
                 return;
 
             var notification = LogMessageToNotification.Convert(message, n => Notifications.Remove(n));
