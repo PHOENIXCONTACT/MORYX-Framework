@@ -24,7 +24,7 @@ namespace Marvin.Products.Management
 
         public IReadOnlyList<IProductRecipe> GetAllByProduct(IProductType productType)
         {
-            return Storage.LoadRecipes(productType.Id, RecipeClassification.CloneFilter);
+            return Storage.LoadRecipes(productType.Id, RecipeClassification.Unset);
         }
 
         public IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classification)
