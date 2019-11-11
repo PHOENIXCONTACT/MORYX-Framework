@@ -74,6 +74,9 @@
     <Compile Include="Drivers\Axis\IAxesController.cs" />
     <Compile Include="Drivers\DriverState.cs" />
     <Compile Include="Drivers\Marking\MarkingConfiguration.cs" />
+    <Compile Include="Drivers\PickByLight\InstructionConfirmation.cs" />
+    <Compile Include="Drivers\PickByLight\IPickByLightDriver.cs" />
+    <Compile Include="Drivers\PickByLight\LightInstructions.cs" />
     <Compile Include="Hardware\Axes.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
