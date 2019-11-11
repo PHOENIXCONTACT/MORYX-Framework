@@ -31,5 +31,10 @@ namespace Marvin.AbstractionLayer.Drivers.Rfid
         /// The time when the tag was readed
         /// </summary>
         public DateTime TimeStamp { get; set; }
+
+        /// <summary>
+        /// Movement direction of the rfid tag
+        /// </summary>
+        public RfidDirection Direction { get; set; }
     }
 }

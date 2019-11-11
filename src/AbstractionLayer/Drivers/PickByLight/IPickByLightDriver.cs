@@ -5,7 +5,7 @@ namespace Marvin.AbstractionLayer.Drivers.PickByLight
     /// <summary>
     /// Interface for the pick by light driver
     /// </summary>
-    public interface IPickByLightDriver : IDriver
+    public interface IPickByLightDriver : IInOutDriver<LightInstructions, int>
     {
         /// <summary>
         /// Activate instruction for this address
