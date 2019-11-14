@@ -100,7 +100,7 @@ namespace Marvin.Products.Management
 
             // Load all recipes and create clones
             // Using int.MaxValue creates a bitmask that excludes ONLY clones
-            foreach (var recipe in Storage.LoadRecipes(sourceId, RecipeClassification.CloneFilter))
+            foreach (var recipe in Storage.LoadRecipes(sourceId, RecipeClassification.Unset))
             {
                 // Clone
                 var clone = (IProductRecipe)recipe.Clone();

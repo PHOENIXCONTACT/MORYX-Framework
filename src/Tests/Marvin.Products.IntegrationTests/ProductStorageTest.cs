@@ -530,7 +530,7 @@ namespace Marvin.Products.IntegrationTests
             Assert.AreEqual(1, products.Count, "There should be a product for the given query");
         }
 
-        [TestCase(false, false, Description = "Duplicate product with valid id")]
+        // [TestCase(false, false, Description = "Duplicate product with valid id")] TODO: https://github.com/zzzprojects/EntityFramework-Effort/issues/191
         [TestCase(false, true, Description = "Duplicate product, but identity already taken")]
         [TestCase(true, false, Description = "Duplicate product but with template missmatch")]
         public void DuplicateProduct(bool crossTypeIdentifier, bool revisionTaken)

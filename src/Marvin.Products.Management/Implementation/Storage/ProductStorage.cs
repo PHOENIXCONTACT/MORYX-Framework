@@ -156,9 +156,12 @@ namespace Marvin.Products.Management
                     return null;
 
                 var classificationMask = (int)classifications;
-                var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeEntityRepository>().Linq.Active().ToArray()
+                var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeEntityRepository>().Linq.Active()
                                       let classificationValue = recipeEntity.Classification
-                                      where recipeEntity.ProductId == productId && (classificationValue & classificationMask) == classificationValue
+                                      where recipeEntity.ProductId == productId
+                                      where classificationValue >= 0 // We never return clones in this query
+                                      where (classificationValue & classificationMask) == classificationMask
+
                                       select recipeEntity).ToArray();
 
                 return recipeEntities.Select(entity => LoadRecipe(uow, entity)).ToArray();
