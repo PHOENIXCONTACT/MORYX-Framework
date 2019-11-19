@@ -8,10 +8,10 @@ namespace Marvin.Notifications
     public class Notification : IManagedNotification
     {
         /// <inheritdoc />
-        public string Identifier { get; private set; }
+        public Guid Identifier { get; private set; }
 
         /// <inheritdoc />
-        string IManagedNotification.Identifier
+        Guid IManagedNotification.Identifier
         {
             get => Identifier;
             set => Identifier = value;

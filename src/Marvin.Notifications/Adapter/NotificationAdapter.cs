@@ -60,7 +60,7 @@ namespace Marvin.Notifications
                 throw new ArgumentNullException(nameof(notification), "Notification must be set");
 
             var managed = (IManagedNotification)notification;
-            managed.Identifier = Guid.NewGuid().ToString();
+            managed.Identifier = Guid.NewGuid();
             managed.Created = DateTime.Now;
             managed.Sender = sender.Identifier;
 
