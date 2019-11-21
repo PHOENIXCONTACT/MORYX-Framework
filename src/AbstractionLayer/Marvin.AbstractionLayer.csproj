@@ -113,7 +113,6 @@
     <Compile Include="HandlerMap\HandlerMap.cs" />
     <Compile Include="HandlerMap\IHandlerMap.cs" />
     <Compile Include="Identity\IIdentifiableObject.cs" />
-    <Compile Include="Process\IProcessHolder.cs" />
     <Compile Include="Process\ProcessBindingResolverFactory.cs" />
     <Compile Include="Process\ProcessExtensions.cs" />
     <Compile Include="AbstractionLayerBundle.cs" />
