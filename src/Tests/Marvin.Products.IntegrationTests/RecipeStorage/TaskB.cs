@@ -31,8 +31,6 @@ namespace Marvin.Products.IntegrationTests
     [ActivityResults(typeof(DefaultActivityResult))]
     public class ActivityB : Activity<ParametersB>
     {
-        public override string Type => nameof(ActivityB);
-
         public override ProcessRequirement ProcessRequirement { get; }
 
         public override ICapabilities RequiredCapabilities { get; }

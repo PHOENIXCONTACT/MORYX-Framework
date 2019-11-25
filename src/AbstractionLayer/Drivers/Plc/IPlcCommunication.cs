@@ -20,16 +20,16 @@ namespace Marvin.AbstractionLayer.Drivers.Plc
         /// <summary>
         /// Send message to plc and don't care for a response
         /// </summary>
-        void Send(IQuickCast message);
+        void Send(object message);
 
         /// <summary>
         /// Send object to the PLC and await a transmission confirmation
         /// </summary>
-        void Send(IQuickCast message, DriverResponse<PlcTransmissionResult> response);
+        void Send(object message, DriverResponse<PlcTransmissionResult> response);
 
         /// <summary>
         /// Event raised when the plc driver receives a message
         /// </summary>
-        event EventHandler<IQuickCast> Received;
+        event EventHandler<object> Received;
     }
 }

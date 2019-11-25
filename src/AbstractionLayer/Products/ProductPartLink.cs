@@ -73,19 +73,8 @@
         /// </summary>
         public new TProduct Product
         {
-            get { return (TProduct)base.Product; }
-            set { base.Product = value; }
-        }
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        public override string ToString()
-        {
-            return Product.Type;
+            get => (TProduct)base.Product;
+            set => base.Product = value;
         }
     }
 }

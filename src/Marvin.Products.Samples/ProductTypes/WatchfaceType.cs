@@ -6,8 +6,6 @@ namespace Marvin.Products.Samples
     [DisplayName("Watchface")]
     public class WatchfaceType : ProductType
     {
-        public override string Type => nameof(WatchfaceType);
-
         [Description("Numbers on the watchface")]
         public int[] Numbers { get; set; }
 

@@ -132,8 +132,6 @@ namespace Marvin.AbstractionLayer.Tests
 
         private class FooTracing : Tracing, IActivityProgress
         {
-            public override string Type => nameof(FooTracing);
-
             public string FooName { get; set; }
 
             public int FooNumber { get; set; }

@@ -7,9 +7,6 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     public abstract class Recipe : IRecipe, ICloneable
     {
-        /// <inheritdoc />
-        public abstract string Type { get; }
-
         /// <summary>
         /// Default constructor to create a new recipe
         /// </summary>

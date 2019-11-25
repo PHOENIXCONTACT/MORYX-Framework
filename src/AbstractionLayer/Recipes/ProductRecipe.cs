@@ -5,9 +5,6 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     public class ProductRecipe : Recipe, IProductRecipe
     {
-        /// <inheritdoc />
-        public override string Type => nameof(ProductRecipe);
-
         /// <summary>
         /// Create a new product recipe
         /// </summary>

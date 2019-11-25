@@ -29,9 +29,6 @@ namespace Marvin.AbstractionLayer
         public long Id { get; set; }
 
         ///
-        public abstract string Type { get; }
-
-        ///
         public IProcess Process { get; set; }
 
         ///

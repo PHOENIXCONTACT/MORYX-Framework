@@ -11,9 +11,6 @@ namespace Marvin.AbstractionLayer
     public class Tracing : IActivityTracing
     {
         /// <inheritdoc />
-        public virtual string Type => nameof(Tracing);
-
-        /// <inheritdoc />
         public DateTime? Started { get; set; }
 
         /// <inheritdoc />

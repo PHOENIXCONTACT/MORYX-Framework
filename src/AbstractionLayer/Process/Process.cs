@@ -14,9 +14,6 @@ namespace Marvin.AbstractionLayer
         private readonly ReaderWriterLockSlim _activitiesLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
         /// <inheritdoc />
-        public virtual string Type => nameof(Process);
-
-        /// <inheritdoc />
         public long Id { get; set; }
 
         /// <inheritdoc />

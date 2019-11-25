@@ -1,5 +1,4 @@
 using Marvin.AbstractionLayer.Capabilities;
-using Marvin.AbstractionLayer.Resources;
 
 namespace Marvin.AbstractionLayer
 {
@@ -8,36 +7,17 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     public class SubWorkplanActivity : Activity<SubWorkplanParameters>
     {
-        /// <processor>ClassName</processor>
-        public const string TypeName = "SubWorkplanActivity";
-
-        /// <summary>
-        /// Unique type name of this instance
-        /// </summary>
-        public override string Type
-        {
-            get { return TypeName; }
-        }
-
         ///
-        public override ICapabilities RequiredCapabilities
-        {
-            get { return Parameters.Capilities; }
-        }
+        public override ICapabilities RequiredCapabilities => Parameters.Capilities;
 
         /// <summary>
         /// Specifies the special article requirements of this type
         /// </summary>
-        public override ProcessRequirement ProcessRequirement
-        {
-            get { return Parameters.ProcessRequirements; }
-        }
+        public override ProcessRequirement ProcessRequirement => Parameters.ProcessRequirements;
 
         /// <summary>
         /// Create a typed result object for this activity based on the result number
         /// </summary>
-        /// <param name="resultNumber"></param>
-        /// <returns></returns>
         protected override ActivityResult CreateResult(long resultNumber)
         {
             return ActivityResult.Create(resultNumber == Parameters.SuccessResult, resultNumber);

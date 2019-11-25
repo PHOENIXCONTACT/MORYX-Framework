@@ -131,7 +131,7 @@ namespace Marvin.Products.Management.Modification
             converted = new ProductModel
             {
                 Id = productType.Id,
-                Type = productType.Type,
+                Type = productType.GetType().Name,
                 Name = productType.Name,
                 State = productType.State,
                 Identifier = identity.Identifier,
@@ -236,7 +236,7 @@ namespace Marvin.Products.Management.Modification
             {
                 Id = recipe.Id,
                 Name = recipe.Name,
-                Type = recipe.Type,
+                Type = recipe.GetType().Name,
                 State = recipe.State,
                 Revision = recipe.Revision,
                 Properties = EntryConvert.EncodeObject(recipe, RecipeSerialization),

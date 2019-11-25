@@ -201,7 +201,7 @@ namespace Marvin.Products.Management
         {
             var entity = RecipeStorage.SaveRecipe(uow, recipe);
 
-            RecipeStrategies[recipe.Type].SaveRecipe(recipe, entity);
+            RecipeStrategies[recipe.GetType().Name].SaveRecipe(recipe, entity);
 
             return entity;
         }
@@ -476,7 +476,7 @@ namespace Marvin.Products.Management
 
         private ProductTypeEntity SaveProduct(IUnitOfWork uow, IProductType modifiedInstance)
         {
-            var strategy = TypeStrategies[modifiedInstance.Type];
+            var strategy = TypeStrategies[modifiedInstance.GetType().Name];
 
             // Get or create entity
             var repo = uow.GetRepository<IProductTypeEntityRepository>();
@@ -484,7 +484,7 @@ namespace Marvin.Products.Management
             var entity = repo.GetByIdentity(identity.Identifier, identity.Revision);
             if (entity == null)
             {
-                entity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.Type);
+                entity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().Name);
                 EntityIdListener.Listen(entity, modifiedInstance);
             }
             else
@@ -545,9 +545,9 @@ namespace Marvin.Products.Management
                                     select link).ToArray();
                     linkStrategy.DeletePartLink(toDelete);
                     linkRepo.RemoveRange(toDelete);
-                    
+
                     // Save those currently active
-                    var currentEntities = FindLinks(linkStrategy.PropertyName, entity).ToArray();                    
+                    var currentEntities = FindLinks(linkStrategy.PropertyName, entity).ToArray();
                     foreach (var link in links)
                     {
                         PartLink linkEntity;
@@ -663,7 +663,7 @@ namespace Marvin.Products.Management
             var product = productInstance.ProductType;
 
             // Check if instances of this type are persisted
-            var strategy = InstanceStrategies[productInstance.Type];
+            var strategy = InstanceStrategies[productInstance.GetType().Name];
             if (strategy.SkipInstances)
                 return;
 
@@ -681,7 +681,7 @@ namespace Marvin.Products.Management
             // Load and populate parts
             foreach (var partGroup in partGroups)
             {
-                var linkStrategy = LinkStrategies[product.Type][partGroup.Key.Name];
+                var linkStrategy = LinkStrategies[product.GetType().Name][partGroup.Key.Name];
                 if (linkStrategy.PartCreation == PartSourceStrategy.FromPartlink && partEntityGroups.ContainsKey(partGroup.Key.Name))
                 {
                     // Update all parts that are also present as entities
@@ -750,7 +750,7 @@ namespace Marvin.Products.Management
         private ProductInstanceEntity SaveArticle(IUnitOfWork uow, ProductInstance productInstance)
         {
             // Check if this type is persisted
-            var strategy = InstanceStrategies[productInstance.Type];
+            var strategy = InstanceStrategies[productInstance.GetType().Name];
             if (strategy.SkipInstances)
                 return null;
 

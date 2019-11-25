@@ -10,9 +10,6 @@ namespace Marvin.Products.Samples
     [DisplayName("Packaging")]
     public class WatchPackageType : ProductType
     {
-        /// <inheritdoc />
-        public override string Type => nameof(WatchPackageType);
-
         /// <summary>
         /// Watches that can be shipped in this package
         /// </summary>

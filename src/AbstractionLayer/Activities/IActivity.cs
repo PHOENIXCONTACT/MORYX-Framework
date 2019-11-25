@@ -6,7 +6,7 @@ namespace Marvin.AbstractionLayer
     /// <summary>
     /// Activity interface
     /// </summary>
-    public interface IActivity : IQuickCast, IDisposable
+    public interface IActivity : IDisposable
     {
         /// <summary>
         /// The ID of the Activity itself.
