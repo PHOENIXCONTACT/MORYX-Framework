@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for root classes of message definitions
     /// </summary>
-    public interface IBinaryRoot<THeader> : IByteSerializable, IQuickCast
+    public interface IBinaryRoot<THeader> : IByteSerializable
         where THeader : IBinaryHeader
     {
         /// <summary>
