@@ -67,9 +67,9 @@ namespace Marvin.Notifications
     }
 
     /// <summary>
-    /// Message for a consumer 
+    /// Message for a consumer
     /// </summary>
-    public interface INotification : IQuickCast
+    public interface INotification
     {
         /// <summary>
         /// Unique identifier of this notification
@@ -97,7 +97,7 @@ namespace Marvin.Notifications
         DateTime Created { get; }
 
         /// <summary>
-        /// If null, the notification was not acknowledged. 
+        /// If null, the notification was not acknowledged.
         /// If not null, the notification was already acknowledged
         /// </summary>
         DateTime? Acknowledged { get; }
@@ -109,7 +109,7 @@ namespace Marvin.Notifications
 
         /// <summary>
         /// Who or what acknowledged the notification, if it was acknowledged.
-        /// <see cref="Acknowledged"/> shows if the notification has been acknowledged. 
+        /// <see cref="Acknowledged"/> shows if the notification has been acknowledged.
         /// </summary>
         string Acknowledger { get; }
     }

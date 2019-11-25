@@ -5,7 +5,7 @@ namespace Marvin.AbstractionLayer
     /// <summary>
     /// Interface for activity trace information
     /// </summary>
-    public interface IActivityTracing : IQuickCast
+    public interface IActivityTracing
     {
         /// <summary>
         /// The time when this activity was started.

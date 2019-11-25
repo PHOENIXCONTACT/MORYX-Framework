@@ -34,7 +34,7 @@
         /// </summary>
         public static IActivity LastActivity(this IProcess process, string typeName)
         {
-            return process.GetActivity(ActivitySelectionType.LastOrDefault, a => a.Type == typeName);
+            return process.GetActivity(ActivitySelectionType.LastOrDefault, a => a.GetType().Name == typeName);
         }
 
         /// <summary>

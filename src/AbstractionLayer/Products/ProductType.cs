@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Identity;
+﻿using Marvin.AbstractionLayer.Identity;
 
 namespace Marvin.AbstractionLayer
 {
@@ -8,9 +7,6 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     public abstract class ProductType : IProductType
     {
-        /// <inheritdoc />
-        public abstract string Type { get; }
-
         /// <inheritdoc />
         public long Id { get; set; }
 

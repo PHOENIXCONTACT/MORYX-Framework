@@ -8,14 +8,6 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     public class ProductTypeReference : IProductType
     {
-        ///
-        public const string TypeName = nameof(ProductTypeReference);
-
-        /// <summary>
-        /// Unique type name of this instance
-        /// </summary>
-        public string Type => TypeName;
-
         /// <summary>
         /// Create a reference product by giving an id
         /// </summary>

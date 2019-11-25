@@ -6,8 +6,6 @@ namespace Marvin.Products.Samples
 {
     public class WatchInstance : ProductInstance<WatchType>
     {
-        public override string Type => nameof(WatchInstance);
-
         public bool TimeSet { get; set; }
 
         public DateTime DeliveryDate { get; set; }

@@ -8,9 +8,6 @@ namespace Marvin.AbstractionLayer
     public class RecipeReference : IRecipe
     {
         /// <inheritdoc />
-        public string Type => nameof(RecipeReference);
-
-        /// <inheritdoc />
         public long Id { get; set; }
 
         /// <inheritdoc />

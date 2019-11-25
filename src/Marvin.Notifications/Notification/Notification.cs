@@ -8,16 +8,13 @@ namespace Marvin.Notifications
     public class Notification : IManagedNotification
     {
         /// <inheritdoc />
-        public string Type { get; }
-
-        /// <inheritdoc />
         public string Identifier { get; private set; }
 
         /// <inheritdoc />
         string IManagedNotification.Identifier
         {
-            get { return Identifier; }
-            set { Identifier = value; }
+            get => Identifier;
+            set => Identifier = value;
         }
 
         /// <inheritdoc />
@@ -25,8 +22,8 @@ namespace Marvin.Notifications
 
         DateTime? IManagedNotification.Acknowledged
         {
-            get { return Acknowledged; }
-            set { Acknowledged = value; }
+            get => Acknowledged;
+            set => Acknowledged = value;
         }
 
         /// <inheritdoc cref="IManagedNotification.IsAcknowledgable" />
@@ -37,8 +34,8 @@ namespace Marvin.Notifications
 
         string IManagedNotification.Acknowledger
         {
-            get { return Acknowledger; }
-            set { Acknowledger = value; }
+            get => Acknowledger;
+            set => Acknowledger = value;
         }
 
         /// <inheritdoc />
@@ -46,8 +43,8 @@ namespace Marvin.Notifications
 
         DateTime IManagedNotification.Created
         {
-            get { return Created; }
-            set { Created = value; }
+            get => Created;
+            set => Created = value;
         }
 
         /// <inheritdoc />
@@ -70,7 +67,6 @@ namespace Marvin.Notifications
         /// </summary>
         public Notification()
         {
-            Type = GetType().Name;
         }
 
         /// <summary>

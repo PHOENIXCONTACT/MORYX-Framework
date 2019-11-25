@@ -6,9 +6,6 @@
     public class DummyProductType : ProductType
     {
         /// <inheritdoc />
-        public override string Type => nameof(DummyProductType);
-
-        /// <inheritdoc />
         protected override ProductInstance Instantiate()
         {
             return new DummyProductInstance();

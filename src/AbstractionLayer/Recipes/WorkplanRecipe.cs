@@ -8,9 +8,6 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     public class WorkplanRecipe : Recipe, IWorkplanRecipe
     {
-        /// <inheritdoc />
-        public override string Type => nameof(WorkplanRecipe);
-
         /// <summary>
         /// Prepare recipe by filling DisabledSteps and TaskAssignment properties
         /// </summary>

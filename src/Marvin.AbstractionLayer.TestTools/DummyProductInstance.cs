@@ -5,7 +5,5 @@
     /// </summary>
     public class DummyProductInstance : ProductInstance
     {
-        /// <inheritdoc />
-        public override string Type => nameof(DummyProductInstance);
     }
 }

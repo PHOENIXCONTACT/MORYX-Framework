@@ -7,9 +7,6 @@ namespace Marvin.Products.Samples
     /// </summary>
     public class WatchPackageInstance : ProductInstance<WatchPackageType>
     {
-        /// <inheritdoc />
-        public override string Type => nameof(WatchPackageInstance);
-
         /// <summary>
         /// Reference to the watch packed in this box
         /// </summary>

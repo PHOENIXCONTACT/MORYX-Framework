@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Identity;
+﻿using System.Runtime.Serialization;
 
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Base class for all articles.
+    /// Base class for all product instances.
     /// </summary>
     [DataContract]
-    public abstract class ProductInstance : IQuickCast, IPersistentObject
+    public abstract class ProductInstance : IPersistentObject
     {
-        ///
-        public abstract string Type { get; }
-
         /// <summary>
         /// The ID of this article
         /// </summary>
@@ -47,8 +40,8 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         public new TProduct ProductType
         {
-            get { return (TProduct) base.ProductType; } 
-            set { base.ProductType = value; }
+            get => (TProduct) base.ProductType;
+            set => base.ProductType = value;
         }
     }
 }

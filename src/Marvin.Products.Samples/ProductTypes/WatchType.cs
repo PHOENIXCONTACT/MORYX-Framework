@@ -7,8 +7,6 @@ namespace Marvin.Products.Samples
     [DisplayName("Watch")]
     public class WatchType : ProductType
     {
-        public override string Type => nameof(WatchType);
-
         // Watch attributes
         [Description("Price of the watch")]
         public double Price { get; set; }

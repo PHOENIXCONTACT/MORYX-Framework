@@ -6,8 +6,6 @@ namespace Marvin.Products.Samples.Recipe
 {
     public class WatchProductRecipe : WorkplanRecipe, IProductRecipe
     {
-        public override string Type => nameof(WatchProductRecipe);
-
         public WatchProductRecipe()
         {
         }

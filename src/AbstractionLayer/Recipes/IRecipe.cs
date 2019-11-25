@@ -3,7 +3,7 @@
     /// <summary>
     /// A recipe is used to provide data for a process and to provide additional parameters.
     /// </summary>
-    public interface IRecipe : IQuickCast, IPersistentObject
+    public interface IRecipe : IPersistentObject
     {
         /// <summary>
         /// Name of the recipe

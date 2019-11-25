@@ -42,7 +42,7 @@ namespace Marvin.Products.Management
         {
             var entity = uow.GetEntity<ProductRecipeEntity>(recipe);
 
-            entity.Type = recipe.Type;
+            entity.Type = recipe.GetType().Name;
             entity.Revision = recipe.Revision;
             entity.Name = recipe.Name;
             entity.State = (int)recipe.State;

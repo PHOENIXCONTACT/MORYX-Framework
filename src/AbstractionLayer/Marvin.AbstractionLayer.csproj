@@ -33,8 +33,8 @@
     <DocumentationFile>bin\Release\Marvin.AbstractionLayer.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin, Version=3.0.0.7157, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev007157\lib\netstandard2.0\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.7513, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev007513\lib\netstandard2.0\Marvin.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -129,7 +129,6 @@
     <Compile Include="Recipes\IProductRecipe.cs" />
     <Compile Include="Recipes\IRecipe.cs" />
     <Compile Include="Recipes\IWorkplanRecipe.cs" />
-    <Compile Include="Recipes\MaintenanceRecipe.cs" />
     <Compile Include="Recipes\RecipeClassification.cs" />
     <Compile Include="Recipes\RecipeReference.cs" />
     <Compile Include="Recipes\RecipeState.cs" />
@@ -195,6 +194,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Hardware\Axes.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Axes.cs</LastGenOutput>

@@ -142,11 +142,6 @@ namespace Marvin.AbstractionLayer.Tests
 
         private class DummyType : ProductType
         {
-            public override string Type
-            {
-                get { return "DummyProduct"; }
-            }
-
             public int Foo { get; set; }
 
             public int[] Bobs { get; set; }
@@ -176,12 +171,6 @@ namespace Marvin.AbstractionLayer.Tests
 
         private class DummyInstance : ProductInstance<DummyType>
         {
-            ///
-            public override string Type
-            {
-                get { return "DummyArticle"; }
-            }
-
             public float Blah { get; set; }
         }
     }

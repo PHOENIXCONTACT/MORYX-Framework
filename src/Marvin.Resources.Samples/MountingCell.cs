@@ -21,12 +21,12 @@ namespace Marvin.Resources.Samples
         {
             base.OnInitialize();
 
-            Driver.Received += new HandlerMap<IQuickCast>($"{Id}-{Name}")
-                .Register<IQuickCast>(OnPlcMessage)
+            Driver.Received += new HandlerMap<object>($"{Id}-{Name}")
+                .Register<object>(OnPlcMessage)
                 .ReceivedHandler;
         }
 
-        private static void OnPlcMessage(object sender, IQuickCast readyToWork)
+        private static void OnPlcMessage(object sender, object message)
         {
             // Handler that also uses the sender
         }
