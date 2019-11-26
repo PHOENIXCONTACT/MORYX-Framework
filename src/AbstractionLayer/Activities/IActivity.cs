@@ -14,11 +14,6 @@ namespace Marvin.AbstractionLayer
         long Id { get; }
 
         /// <summary>
-        /// The ID of the Resource this activity shall be or was executed on, or <c>0</c> if no resource was selected yet.
-        /// </summary>
-        long ResourceId { get; set; }
-
-        /// <summary>
         /// Parameters of the activity
         /// </summary>
         IParameters Parameters { get; set; }

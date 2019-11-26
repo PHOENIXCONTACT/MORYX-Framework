@@ -35,9 +35,6 @@ namespace Marvin.AbstractionLayer
         public IActivityTracing Tracing { get; set; }
 
         ///
-        public long ResourceId { get; set; }
-
-        ///
         public ActivityResult Result { get; set; }
 
         #endregion

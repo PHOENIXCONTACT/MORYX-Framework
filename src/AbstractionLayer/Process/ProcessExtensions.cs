@@ -10,7 +10,7 @@
         /// </summary>
         public static IActivity NextActivity(this IProcess process)
         {
-            return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.ResourceId == 0);
+            return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.Tracing?.Started == null);
         }
 
         /// <summary>
@@ -18,7 +18,7 @@
         /// </summary>
         public static IActivity CurrentActivity(this IProcess process)
         {
-            return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.ResourceId != 0 && activity.Result == null);
+            return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.Tracing?.Started != null && activity.Result == null);
         }
 
         /// <summary>
