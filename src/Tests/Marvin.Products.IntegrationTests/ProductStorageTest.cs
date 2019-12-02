@@ -567,16 +567,14 @@ namespace Marvin.Products.IntegrationTests
                 Assert.AreEqual(crossTypeIdentifier, ex.InvalidTemplate);
                 return;
             }
-            else
-            {
-                Assert.DoesNotThrow(() =>
-                {
-                    duplicate = (WatchType)productMgr.Duplicate(watch.Id,
-                        new ProductIdentity("654" + WatchMaterial, 1));
-                });
-            }
 
-            var recipeDuplicates = _storage.LoadRecipes(duplicate.Id, RecipeClassification.CloneFilter);
+            Assert.DoesNotThrow(() =>
+            {
+                duplicate = (WatchType)productMgr.Duplicate(watch.Id,
+                    new ProductIdentity("654" + WatchMaterial, 1));
+            });
+
+            var recipeDuplicates = _storage.LoadRecipes(duplicate.Id, RecipeClassification.Unset);
 
             // Assert
             Assert.AreEqual(watch.Watchface.Product.Id, duplicate.Watchface.Product.Id);
