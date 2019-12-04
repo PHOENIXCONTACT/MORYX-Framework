@@ -73,8 +73,10 @@ namespace Marvin.Logging
 
         private void LogMessage(LogMessage logMessage)
         {
+            logMessage.Format();
+
             if (logMessage.IsException)
-                _logTarget.Log(LogLevel.Error, logMessage.LoggerMessage, logMessage.Exception); 
+                _logTarget.Log(LogLevel.Error, logMessage.LoggerMessage, logMessage.Exception);
             else
                 _logTarget.Log(LogLevel.Error, logMessage.LoggerMessage);
         }
