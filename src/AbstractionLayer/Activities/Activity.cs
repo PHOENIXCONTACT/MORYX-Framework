@@ -104,8 +104,15 @@ namespace Marvin.AbstractionLayer
         ///
         public new TParam Parameters
         {
-            get { return (TParam)base.Parameters; }
-            set { base.Parameters = value; }
+            get => (TParam)base.Parameters;
+            set => base.Parameters = value;
+        }
+
+        ///
+        public new TTracing Tracing
+        {
+            get => (TTracing) base.Tracing;
+            set => base.Tracing = value;
         }
     }
 
