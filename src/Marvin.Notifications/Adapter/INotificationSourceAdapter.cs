@@ -34,16 +34,6 @@ namespace Marvin.Notifications
         void PublishProcessed(INotification notification);
 
         /// <summary>
-        /// Will be called when a foreign notification was published
-        /// </summary>
-        void PublishedForeign(INotification notification);
-
-        /// <summary>
-        /// Will be called when a foreign notification was published
-        /// </summary>
-        void AcknowledgedForeign(INotification notification);
-
-        /// <summary>
         /// Event to publish a notification
         /// </summary>
         event EventHandler<INotification> Published;

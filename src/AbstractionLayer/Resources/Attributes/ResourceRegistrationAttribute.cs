@@ -16,9 +16,9 @@ namespace Marvin.AbstractionLayer.Resources
         public new string Name => base.Name;
 
         /// <summary>
-        /// Generic registration with lifecylce <see cref="LifeCycle.Transient"/>
+        /// Generic registration with lifecycle <see cref="LifeCycle.Transient"/>
         /// </summary>
-        public ResourceRegistrationAttribute() 
+        public ResourceRegistrationAttribute()
             : base(LifeCycle.Transient, typeof(IResource))
         {
         }
