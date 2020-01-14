@@ -137,6 +137,7 @@
     <Compile Include="Recipes\WorkplanRecipe.cs" />
     <Compile Include="Resources\Attributes\AvailableCapabilitiesAttribute.cs" />
     <Compile Include="Resources\Attributes\ReferenceOverrideAttribute.cs" />
+    <Compile Include="Resources\Attributes\ResourceAvailableAsAttribute.cs" />
     <Compile Include="Resources\Attributes\ResourceConstructorAttribute.cs" />
     <Compile Include="Resources\Attributes\ResourceReferenceAttribute.cs" />
     <Compile Include="Resources\Attributes\ResourceReferenceRole.cs" />
