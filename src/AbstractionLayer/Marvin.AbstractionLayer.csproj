@@ -113,9 +113,11 @@
     <Compile Include="HandlerMap\HandlerMap.cs" />
     <Compile Include="HandlerMap\IHandlerMap.cs" />
     <Compile Include="Identity\IIdentifiableObject.cs" />
+    <Compile Include="Activities\ActivityBindingResolverFactory.cs" />
     <Compile Include="Process\ProcessBindingResolverFactory.cs" />
     <Compile Include="Process\ProcessExtensions.cs" />
     <Compile Include="AbstractionLayerBundle.cs" />
+    <Compile Include="Recipes\RecipeBindingResolverFactory.cs" />
     <Compile Include="Products\FileType.cs" />
     <Compile Include="Products\IdentityConflictException.cs" />
     <Compile Include="Products\Import\IFileImportParameters.cs" />
