@@ -117,6 +117,7 @@
     <Compile Include="Process\ProcessBindingResolverFactory.cs" />
     <Compile Include="Process\ProcessExtensions.cs" />
     <Compile Include="AbstractionLayerBundle.cs" />
+    <Compile Include="Products\IProductionDate.cs" />
     <Compile Include="Recipes\RecipeBindingResolverFactory.cs" />
     <Compile Include="Products\FileType.cs" />
     <Compile Include="Products\IdentityConflictException.cs" />
