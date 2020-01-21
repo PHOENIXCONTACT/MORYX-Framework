@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using Npgsql;
 
-namespace Marvin.Model.Npgsql
+namespace Marvin.Model.PostgreSQL
 {
     /// <summary>
     /// Registers Npgsql as EntityFramework provider.

@@ -5,7 +5,7 @@
 // associated with an assembly.
 [assembly: AssemblyProduct("MARVIN Platform")]
 [assembly: AssemblyCompany("PHOENIX CONTACT")]
-[assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT 2019")]
+[assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT 2020")]
 [assembly: AssemblyTrademark("")]
 
 [assembly: AssemblyConfiguration("Debug")]

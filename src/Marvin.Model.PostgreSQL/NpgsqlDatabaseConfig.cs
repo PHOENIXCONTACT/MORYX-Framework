@@ -1,17 +1,17 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Marvin.Model.Npgsql
+namespace Marvin.Model.PostgreSQL
 {
     /// <summary>
     /// Database config for the Npgsql databases
     /// </summary>
     [DataContract]
-    public class NpgsqDatabaseConfig : DatabaseConfig
+    public class NpgsqlDatabaseConfig : DatabaseConfig
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="NpgsqDatabaseConfig"/>
+        /// Creates a new instance of the <see cref="NpgsqlDatabaseConfig"/>
         /// </summary>
-        public NpgsqDatabaseConfig()
+        public NpgsqlDatabaseConfig()
         {
             // Set default values
             Host = "localhost";

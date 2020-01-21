@@ -142,9 +142,9 @@
       <Project>{a734be85-33dc-4117-bd9c-b5d5b31102e3}</Project>
       <Name>Marvin.Model.InMemory</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Model.Npgsql\Marvin.Model.Npgsql.csproj">
+    <ProjectReference Include="..\Marvin.Model.PostgreSQL\Marvin.Model.PostgreSQL.csproj">
       <Project>{70964330-f80e-4e1e-a33b-2021bde37b2f}</Project>
-      <Name>Marvin.Model.Npgsql</Name>
+      <Name>Marvin.Model.PostgreSQL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Marvin.Model\Marvin.Model.csproj">
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
