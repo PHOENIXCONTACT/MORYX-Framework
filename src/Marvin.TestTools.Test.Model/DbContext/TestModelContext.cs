@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Data.Entity;
 using Marvin.Model;
-using Marvin.Model.Npgsql;
+using Marvin.Model.PostgreSQL;
 
 namespace Marvin.TestTools.Test.Model
 {

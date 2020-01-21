@@ -3,7 +3,7 @@ using System.Threading;
 using Marvin.Configuration;
 using Marvin.Container;
 using Marvin.Model;
-using Marvin.Model.Npgsql;
+using Marvin.Model.PostgreSQL;
 using Marvin.TestTools.Test.Inheritance.Model;
 using Marvin.TestTools.Test.Model;
 using Moq;
@@ -14,7 +14,7 @@ namespace NpgsqlTest
     {
         static void Main(string[] args)
         {
-            var dbConfig = new NpgsqDatabaseConfig
+            var dbConfig = new NpgsqlDatabaseConfig
             {
                 Database = "NpgsqlTest",
                 Username = "postgres",
@@ -24,7 +24,7 @@ namespace NpgsqlTest
             };
 
             var configManagerMock = new Mock<IConfigManager>();
-            configManagerMock.Setup(c => c.GetConfiguration<NpgsqDatabaseConfig>(It.IsAny<string>())).Returns(dbConfig);
+            configManagerMock.Setup(c => c.GetConfiguration<NpgsqlDatabaseConfig>(It.IsAny<string>())).Returns(dbConfig);
 
             var parentFactory = new TestModelUnitOfWorkFactory { ConfigManager = configManagerMock.Object };
 

@@ -5,12 +5,12 @@ using System.IO;
 using Marvin.Logging;
 using Npgsql;
 
-namespace Marvin.Model.Npgsql
+namespace Marvin.Model.PostgreSQL
 {
     /// <summary>
     /// Used to configure, create and update data models
     /// </summary>
-    public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqDatabaseConfig>
+    public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDatabaseConfig>
     {
         /// <inheritdoc />
         protected override string ProviderInvariantName => "Npgsql";
@@ -36,7 +36,7 @@ namespace Marvin.Model.Npgsql
         /// <inheritdoc />
         public override void DeleteDatabase(IDatabaseConfig config)
         {
-            // Close all connections to the server. 
+            // Close all connections to the server.
             // Its not possible to delete the database while there are open connections.
             NpgsqlConnection.ClearAllPools();
 
@@ -80,7 +80,7 @@ namespace Marvin.Model.Npgsql
                             $"-h {config.Host} -p {config.Port} -d {config.Database} {filePath}";
 
             var process = CreateBackgroundPgProcess("pg_restore.exe", arguments, config.Password);
-            
+
             // Configure the process using the StartInfo properties.
             process.Start();
             process.BeginOutputReadLine();

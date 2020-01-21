@@ -1,5 +1,5 @@
 ﻿using Marvin.Model;
-using Marvin.Model.Npgsql;
+using Marvin.Model.PostgreSQL;
 
 namespace Marvin.TestTools.Test.Model
 {
