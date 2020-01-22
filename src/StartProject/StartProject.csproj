@@ -100,18 +100,6 @@
       <Project>{eb039d46-906f-44bf-ac37-b3b3634a4442}</Project>
       <Name>Marvin.Runtime.Maintenance</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.UserManagement.DbAuthenticator\Marvin.Runtime.UserManagement.DbAuthenticator.csproj">
-      <Project>{145cda7b-9fe9-42b6-83fd-0d82891d2e5d}</Project>
-      <Name>Marvin.Runtime.UserManagement.DbAuthenticator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.UserManagement.Model\Marvin.Runtime.UserManagement.Model.csproj">
-      <Project>{e3dea671-e496-4889-98b4-f02586542a5c}</Project>
-      <Name>Marvin.Runtime.UserManagement.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.UserManagement\Marvin.Runtime.UserManagement.csproj">
-      <Project>{fb5ba113-5ebe-453b-b144-7d487953df56}</Project>
-      <Name>Marvin.Runtime.UserManagement</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TestModule\Marvin.TestModule.csproj">
       <Project>{24ed97ad-6d04-4dc0-afcb-c911ef0aa738}</Project>
       <Name>Marvin.TestModule</Name>

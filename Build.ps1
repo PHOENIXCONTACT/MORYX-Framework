@@ -37,7 +37,7 @@ if ($Build) {
 
 if ($SmokeTests) {
     $runtimePath = "$RootPath\src\StartProject\bin\$env:MARVIN_BUILD_CONFIG\StartProject.exe";
-    Invoke-SmokeTest $runtimePath 5 6000
+    Invoke-SmokeTest $runtimePath 4 6000
 }
 
 if ($UnitTests) {
