@@ -1,0 +1,5 @@
+- name: Introduction
+  href: index.md
+
+- name: Architecture
+  href: architecture/toc.yml
