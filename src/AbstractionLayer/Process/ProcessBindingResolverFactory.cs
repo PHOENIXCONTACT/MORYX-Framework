@@ -48,103 +48,111 @@ namespace Marvin.AbstractionLayer
             resolver = resolver.Extend(new PartLinkShortCut());
 
             if (property == nameof(IIdentity.Identifier))
-                return resolver.Extend(new IdentifierResolver());
+                return resolver.Extend(new IdentifierShortCut());
 
             if (property == nameof(ProductType))
                 return resolver.Extend(new ProductResolver());
 
             return base.AddToChain(resolver, property);
         }
+    }
 
-        /// <summary>
-        /// Special resolver that can detect <see cref="IProductPartLink{T}"/> and skip the additional reference to
-        /// <see cref="IProductPartLink{T}.Product"/>.
-        /// </summary>
-        private class PartLinkShortCut : BindingResolverBase
+    /// <summary>
+    /// Special resolver that can detect <see cref="IProductPartLink{T}"/> and skip the additional reference to
+    /// <see cref="IProductPartLink{T}.Product"/>.
+    /// </summary>
+    public class PartLinkShortCut : BindingResolverBase
+    {
+        /// <inheritdoc />
+        protected override object Resolve(object source)
         {
-            protected override object Resolve(object source)
+            if (!(source is IProductPartLink partLink))
             {
-                var partLink = source as IProductPartLink;
-                if (partLink == null)
-                {
-                    // Our object is not a part link, so we leave the chain
-                    this.Remove();
-                    return source;
-                }
-
-                // Object is part link 
-                // 1. Try to read from object
-                var linkResult = NextResolver?.Resolve(partLink);
-
-                // 2. Try to read from product
-                var prodResult = NextResolver?.Resolve(partLink.Product);
-
-                // 3. Make sure we do not have a naming conflict
-                if (linkResult != null && prodResult != null)
-                {
-                    throw new InvalidOperationException("Binding value inconclusive on part link and product!");
-                }
-
-                return linkResult != null ? (object)partLink : partLink.Product;
+                // Our object is not a part link, so we leave the chain
+                this.Remove();
+                return source;
             }
 
-            protected override bool Update(object source, object value)
+            // Object is part link 
+            // 1. Try to read from object
+            var linkResult = NextResolver?.Resolve(partLink);
+
+            // 2. Try to read from product
+            var prodResult = NextResolver?.Resolve(partLink.Product);
+
+            // 3. Make sure we do not have a naming conflict
+            if (linkResult != null && prodResult != null)
             {
-                throw new InvalidOperationException("PartLinks cannot be updated.");
+                throw new InvalidOperationException("Binding value inconclusive on part link and product!");
             }
+
+            return linkResult != null ? (object)partLink : partLink.Product;
         }
 
-        /// <summary>
-        /// Uses the <see cref="IIdentifiableObject"/> interface to resolve the identifier
-        /// of <see cref="IIdentity"/>
-        /// </summary>
-        private class IdentifierResolver : BindingResolverBase
+        protected override bool Update(object source, object value)
         {
-            protected override object Resolve(object source)
-            {
-                return (source as IIdentifiableObject)?.Identity.Identifier;
-            }
+            throw new InvalidOperationException("PartLinks cannot be updated.");
+        }
+    }
 
-            protected override bool Update(object source, object value)
-            {
-                throw new InvalidOperationException("Identifier cannot be updated.");
-            }
+    /// <summary>
+    /// Uses the <see cref="IIdentifiableObject"/> interface to resolve the identifier
+    /// of <see cref="IIdentity"/>
+    /// </summary>
+    public class IdentifierShortCut : BindingResolverBase
+    {
+        /// <inheritdoc />
+        protected override object Resolve(object source)
+        {
+            return (source as IIdentifiableObject)?.Identity.Identifier;
         }
 
-        /// <summary>
-        /// Resolver to extract the product of a <see cref="ProductionProcess"/>
-        /// </summary>
-        private class ProductResolver : BindingResolverBase
+        /// <inheritdoc />
+        protected override bool Update(object source, object value)
         {
-            protected sealed override object Resolve(object source)
+            throw new InvalidOperationException("Identifier cannot be updated.");
+        }
+    }
+
+    /// <summary>
+    /// Resolver to extract the product of a <see cref="ProductionProcess"/>
+    /// </summary>
+    public class ProductResolver : BindingResolverBase
+    {
+        /// <inheritdoc />
+        protected sealed override object Resolve(object source)
+        {
+            if (source is IProcess process)
             {
-                var process = source as IProcess;
-                if (process != null)
-                {
-                    var product = (process.Recipe as IProductRecipe)?.Product;
-                    return product;
-                }
-
-                var article = source as ProductInstance;
-                if (article != null)
-                {
-                    return article.ProductType;
-                }
-
-                // If our shortcuts do not work, use ReflectionResolver instead
-                // Due the protection level of Resolve in the base class and the implementation
-                // of IBindingResolver.Resolve which calls the whole chain the call order is important here.
-                // First the value of the replacement is called and then the replacement is placed into the chain.
-                var replacement = new ReflectionResolver(nameof(ProductInstance.ProductType));
-                var resolvedValue = ((IBindingResolverChain) replacement).Resolve(source);
-                this.Replace(replacement);
-                return resolvedValue;
+                var product = (process.Recipe as IProductRecipe)?.Product;
+                return product;
             }
 
-            protected override bool Update(object source, object value)
+            if (source is IActivity activity)
             {
-                throw new InvalidOperationException("Products cannot be updated!");
+                var product = (activity.Process.Recipe as IProductRecipe)?.Product;
+                return product;
             }
+
+            if (source is ProductInstance instance)
+            {
+                return instance.ProductType;
+            }
+
+            // If our shortcuts do not work, use ReflectionResolver instead
+            // Due the protection level of Resolve in the base class and the implementation
+            // of IBindingResolver.Resolve which calls the whole chain the call order is important here.
+            // First the value of the replacement is called and then the replacement is placed into the chain.
+            var replacement = new ReflectionResolver(nameof(ProductInstance.ProductType));
+            var resolvedValue = ((IBindingResolverChain) replacement).Resolve(source);
+            this.Replace(replacement);
+            return resolvedValue;
+        }
+
+        /// <inheritdoc />
+        protected override bool Update(object source, object value)
+        {
+            throw new InvalidOperationException("Products cannot be updated!");
         }
     }
 }

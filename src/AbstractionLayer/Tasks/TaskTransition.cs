@@ -26,18 +26,12 @@ namespace Marvin.AbstractionLayer
         private readonly IIndexResolver _indexResolver;
 
         /// <summary>
-        /// Pre-assigned resource of this task
-        /// </summary>
-        private readonly long _resourceId;
-
-        /// <summary>
         /// Create a new instance of the <see cref="TaskTransition{T}"/>
         /// </summary>
         public TaskTransition(IParameters parameters, IIndexResolver resolver, long resourceId)
         {
             _parameters = parameters;
             _indexResolver = resolver;
-            _resourceId = resourceId;
         }
 
         ///
@@ -96,7 +90,6 @@ namespace Marvin.AbstractionLayer
             var activity = new TActivity
             {
                 Parameters = _parameters.Bind(process),
-                ResourceId = _resourceId,
                 Process = process
             };
 

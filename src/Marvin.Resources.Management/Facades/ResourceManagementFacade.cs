@@ -18,17 +18,17 @@ namespace Marvin.Resources.Management
 
         #endregion
 
-        /// <see cref="IFacadeControl.ValidateHealthState"/> 
+        /// <see cref="IFacadeControl.ValidateHealthState"/>
         public Action ValidateHealthState { get; set; }
 
-        /// <seealso cref="IFacadeControl"/> 
+        /// <seealso cref="IFacadeControl"/>
         public void Activate()
         {
             Manager.ResourceAdded += OnResourceAdded;
             Manager.CapabilitiesChanged += OnCapabilitiesChanged;
         }
-        
-        /// <seealso cref="IFacadeControl"/> 
+
+        /// <seealso cref="IFacadeControl"/>
         public void Deactivate()
         {
             Manager.ResourceAdded -= OnResourceAdded;
@@ -52,28 +52,28 @@ namespace Marvin.Resources.Management
             return ResourceGraph.GetResource<TResource>().Proxify(TypeController);
         }
 
-        public TResource GetResource<TResource>(long id) 
+        public TResource GetResource<TResource>(long id)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(id).Proxify(TypeController);
         }
 
-        public TResource GetResource<TResource>(string name) 
+        public TResource GetResource<TResource>(string name)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(name).Proxify(TypeController);
         }
 
-        public TResource GetResource<TResource>(ICapabilities requiredCapabilities) 
+        public TResource GetResource<TResource>(ICapabilities requiredCapabilities)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities)).Proxify(TypeController);
         }
 
-        public TResource GetResource<TResource>(Func<TResource, bool> predicate) 
+        public TResource GetResource<TResource>(Func<TResource, bool> predicate)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
@@ -92,8 +92,8 @@ namespace Marvin.Resources.Management
             ValidateHealthState();
             return ResourceGraph.GetResources<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities)).Proxify(TypeController);
         }
-        
-        public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) 
+
+        public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();

@@ -92,6 +92,20 @@ namespace Marvin.Resources.Management.Tests
             Assert.AreEqual(70, proxy.Foo);
         }
 
+        [Test(Description = "Calls a method on proxy from interface which is declared within the ResourceAvailableAsAttribute")]
+        public void CallMethodOnProxyFromNonPublicResourceApi()
+        {
+            // Arrange
+            var instance = new SimpleResource { Id = 4, Foo = 10 };
+
+            // Act: Build proxy
+            var proxy = _typeController.GetProxy(instance);
+
+            // Assert
+            Assert.IsInstanceOf<INonResourceInterface>(proxy);
+            Assert.DoesNotThrow(() => ((INonResourceInterface)proxy).Validate());
+        }
+
         [Test]
         public void CallMethodOnDerivedType()
         {
@@ -113,7 +127,7 @@ namespace Marvin.Resources.Management.Tests
             // Arrange: Create instance
             var instance = new ResourceWithImplicitApi();
 
-            // Act: 
+            // Act:
             IResourceWithImplicitApi proxy = null;
             Assert.DoesNotThrow(() => proxy = (IResourceWithImplicitApi) _typeController.GetProxy(instance));
 
@@ -170,7 +184,7 @@ namespace Marvin.Resources.Management.Tests
             called = false;
             _typeController.Stop();
             instance.Foo = 10;
-            
+
             // Assert: Event was not raised and proxy can no longer be used
             Assert.IsFalse(called);
             Assert.Throws<ProxyDetachedException>(() => proxy.MultiplyFoo(2));
@@ -189,7 +203,7 @@ namespace Marvin.Resources.Management.Tests
                 Reference = ref1,
                 NonPublic = nonPub
             };
-            instance.References = new ReferenceCollection<ISimpleResource>(instance, 
+            instance.References = new ReferenceCollection<ISimpleResource>(instance,
                 instance.GetType().GetProperty(nameof(ReferenceResource.References)), new List<IResource>())
             {
                 ref2
@@ -211,7 +225,7 @@ namespace Marvin.Resources.Management.Tests
             // Act: Set resource property through proxy
             proxy.Reference = references[0];
             proxy.SetReference(reference);
-            
+
             // Make sure all references where replaced with proxies
             Assert.AreNotEqual(ref1, reference);
             Assert.AreNotEqual(ref2, references[0]);

@@ -9,7 +9,7 @@ namespace Marvin.Notifications
     /// Notification adapter for the server module.
     /// The events and calls will be redirected to the <see cref="INotificationSource"/>
     /// </summary>
-    public class NotificationAdapter : INotificationAdapter, INotificationSourceAdapter, IForeignNotificationListener
+    public class NotificationAdapter : INotificationAdapter, INotificationSourceAdapter
     {
         private readonly List<NotificationMap> _published = new List<NotificationMap>();
         private readonly List<NotificationMap> _pendingAcks = new List<NotificationMap>();
@@ -60,7 +60,7 @@ namespace Marvin.Notifications
                 throw new ArgumentNullException(nameof(notification), "Notification must be set");
 
             var managed = (IManagedNotification)notification;
-            managed.Identifier = Guid.NewGuid().ToString();
+            managed.Identifier = Guid.NewGuid();
             managed.Created = DateTime.Now;
             managed.Sender = sender.Identifier;
 
@@ -234,20 +234,6 @@ namespace Marvin.Notifications
         }
 
         /// <inheritdoc />
-        void INotificationSourceAdapter.PublishedForeign(INotification notification)
-        {
-            // Just forward to listener event
-            ForeignPublished?.Invoke(this, notification);
-        }
-
-        /// <inheritdoc />
-        void INotificationSourceAdapter.AcknowledgedForeign(INotification notification)
-        {
-            // Just forward to listener event
-            ForeignAcknowledged?.Invoke(this, notification);
-        }
-
-        /// <inheritdoc />
         void INotificationSourceAdapter.Sync()
         {
             // Publish pending notifications
@@ -276,12 +262,6 @@ namespace Marvin.Notifications
 
         /// <inheritdoc />
         public event EventHandler<INotification> Acknowledged;
-
-        /// <inheritdoc />
-        public event EventHandler<INotification> ForeignPublished;
-
-        /// <inheritdoc />
-        public event EventHandler<INotification> ForeignAcknowledged;
 
         #endregion
 

@@ -11,7 +11,7 @@ namespace Marvin.Notifications
         /// Override with setter.
         /// <inheritdoc cref="INotification.Identifier"/>
         /// </summary>
-        new string Identifier { get; set; }
+        new Guid Identifier { get; set; }
 
         /// <summary>
         /// Override with setter.
@@ -74,7 +74,7 @@ namespace Marvin.Notifications
         /// <summary>
         /// Unique identifier of this notification
         /// </summary>
-        string Identifier { get; }
+        Guid Identifier { get; }
 
         /// <summary>
         /// The severity of this notification

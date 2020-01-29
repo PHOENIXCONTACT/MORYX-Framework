@@ -44,6 +44,10 @@ Skilled workers can also remove products, if they are no longer needed, faulty o
 
 The default Product Detail View is divided up into aspects. An aspect represents only a part of a product. 
 
+The aspects for a product type can be configured with the configuration:
+
+![](images/aspectConfigurator.png)
+
 ### Aspect: Properties
 
 The properties aspect can display the general properties of a product. By default they will be displayed by the generic entry editor.

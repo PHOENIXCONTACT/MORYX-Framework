@@ -304,11 +304,15 @@ namespace Marvin.Resources.Management
             var interfaces = node.ResourceType.GetInterfaces();
             var relevantInterfaces = new List<Type>(interfaces.Length); // At max all interfaces are relevant
 
+            // Load additional public interfaces from resource registration attribute
+            var additionalPublicInterfaces = node.ResourceType.GetCustomAttribute<ResourceAvailableAsAttribute>()?.AvailableAs ?? Enumerable.Empty<Type>();
+
             // Add all resources derived from IResource, but not IResource itself
             relevantInterfaces.AddRange(from resourceInterface in interfaces
                                         where resourceInterface.IsPublic
-                                              && typeof(IResource).IsAssignableFrom(resourceInterface)
-                                              && !resourceInterface.IsAssignableFrom(typeof(IResource))
+                                              && ((typeof(IResource).IsAssignableFrom(resourceInterface)
+                                              && !resourceInterface.IsAssignableFrom(typeof(IResource)))
+                                                  || additionalPublicInterfaces.Contains(resourceInterface))
                                         select resourceInterface);
 
             // Add all interfaces that are NOT derived from IResource BUT part of any of the relevant interfaces

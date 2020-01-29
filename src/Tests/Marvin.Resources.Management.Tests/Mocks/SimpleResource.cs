@@ -25,7 +25,13 @@ namespace Marvin.Resources.Management.Tests
         event EventHandler SomeEvent;
     }
 
-    public class SimpleResource : PublicResource, ISimpleResource, IDuplicateFoo
+    public interface INonResourceInterface
+    {
+        void Validate();
+    }
+
+    [ResourceAvailableAs(typeof(INonResourceInterface))]
+    public class SimpleResource : PublicResource, ISimpleResource, IDuplicateFoo, INonResourceInterface
     {
         private int _foo;
 
@@ -58,6 +64,10 @@ namespace Marvin.Resources.Management.Tests
         public void RaiseEvent()
         {
             SomeEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Validate()
+        {
         }
     }
 }

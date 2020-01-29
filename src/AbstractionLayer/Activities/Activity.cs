@@ -35,9 +35,6 @@ namespace Marvin.AbstractionLayer
         public IActivityTracing Tracing { get; set; }
 
         ///
-        public long ResourceId { get; set; }
-
-        ///
         public ActivityResult Result { get; set; }
 
         #endregion
@@ -107,8 +104,15 @@ namespace Marvin.AbstractionLayer
         ///
         public new TParam Parameters
         {
-            get { return (TParam)base.Parameters; }
-            set { base.Parameters = value; }
+            get => (TParam)base.Parameters;
+            set => base.Parameters = value;
+        }
+
+        ///
+        public new TTracing Tracing
+        {
+            get => (TTracing) base.Tracing;
+            set => base.Tracing = value;
         }
     }
 

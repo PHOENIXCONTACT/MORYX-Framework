@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Marvin.Container;
 
 namespace Marvin.AbstractionLayer.Resources
@@ -16,9 +17,9 @@ namespace Marvin.AbstractionLayer.Resources
         public new string Name => base.Name;
 
         /// <summary>
-        /// Generic registration with lifecylce <see cref="LifeCycle.Transient"/>
+        /// Generic registration with lifecycle <see cref="LifeCycle.Transient"/>
         /// </summary>
-        public ResourceRegistrationAttribute() 
+        public ResourceRegistrationAttribute()
             : base(LifeCycle.Transient, typeof(IResource))
         {
         }
@@ -28,6 +29,14 @@ namespace Marvin.AbstractionLayer.Resources
         /// </summary>
         public ResourceRegistrationAttribute(Type customRegistration)
             : base(LifeCycle.Singleton, typeof(IResource), customRegistration)
+        {
+        }
+
+        /// <summary>
+        /// Constructor of custom type with lifecycle <see cref="LifeCycle.Singleton"/>
+        /// </summary>
+        public ResourceRegistrationAttribute(Type customRegistration, params Type[] customRegistrations)
+            : base(LifeCycle.Singleton, customRegistrations.Union(new[] { typeof(IResource), customRegistration }).ToArray())
         {
         }
     }
