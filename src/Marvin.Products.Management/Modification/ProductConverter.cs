@@ -174,7 +174,7 @@ namespace Marvin.Products.Management.Modification
             {
                 var displayName = property.GetDisplayName();
 
-                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType) && property.Name != nameof(ProductType.ParentLink))
+                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType))
                 {
                     var link = (IProductPartLink)property.GetValue(productType);
                     var partModel = ConvertPart(link);

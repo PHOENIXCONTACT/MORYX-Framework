@@ -398,12 +398,7 @@ namespace Marvin.Products.Management
 
             // Don't load parts and parent for partial view
             if (full)
-            {
-                product.ParentLink = parentLink;
-                if (parentLink != null && parentLink.Product == null)
-                    parentLink.Product = product; // If the parent link was created and not passed we must set the reference for consitency between both modes
                 LoadParts(uow, typeEntity, product, loadedProducts);
-            }
 
             // Assign instance to dictionary of loaded products
             loadedProducts[typeEntity.Id] = product;
@@ -431,7 +426,6 @@ namespace Marvin.Products.Management
                         var link = LinkConstructors[$"{type.Name}.{property.Name}"]();
                         link.Id = linkEntity.Id;
                         part.LoadPartLink(linkEntity, link);
-                        link.Parent = productType;
                         link.Product = (ProductType)Transform(uow, linkEntity.Child, true, loadedProducts, link);
                         value = link;
                     }
@@ -445,7 +439,6 @@ namespace Marvin.Products.Management
                         var link = LinkConstructors[$"{type.Name}.{property.Name}"]();
                         link.Id = linkEntity.Id;
                         part.LoadPartLink(linkEntity, link);
-                        link.Parent = productType;
                         link.Product = (ProductType)Transform(uow, linkEntity.Child, true, loadedProducts, link);
                         links.Add(link);
                     }

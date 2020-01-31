@@ -61,8 +61,7 @@ namespace Marvin.Products.Management
             // Configure part links
             // TODO: Use type wrapper
             var links = product.GetProperties()
-                .Where(p => typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) || typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))
-                .Where(link => link.Name != nameof(ProductType.ParentLink));
+                .Where(p => typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) || typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType));
             foreach (var link in links)
             {
                 if (Config.LinkStrategies.Any(s => s.TargetType == productType && s.PartName == link.Name))

@@ -17,16 +17,6 @@ namespace Marvin.AbstractionLayer
         /// </summary>
         ProductTypeState State { get; }
 
-        /// <summary>
-        /// Parent of this product, if it was used as a part. This
-        /// is <value>null</value> for "Root-Products"
-        /// </summary>
-        IProductType Parent { get; }
-
-        /// <summary>
-        /// Reversed part link reference to this product
-        /// </summary>
-        IProductPartLink ParentLink { get; }
 
         /// <summary>
         /// Create article instance of this type
