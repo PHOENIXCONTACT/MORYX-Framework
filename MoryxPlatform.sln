@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartProject", "src\StartProject\StartProject.csproj", "{8441A356-C5A8-41B4-B7EE-D0411664D8AA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Core", "src\StartProject.Core\StartProject.Core.csproj", "{DE77822B-592E-4192-97F7-EC9ADDAFEAE3}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime", "src\Moryx.Runtime\Moryx.Runtime.csproj", "{92777E64-9978-40AE-8B90-93ECBBBEFE67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.Kernel", "src\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj", "{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kernel", "src\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj", "{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.Maintenance", "src\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj", "{EB039D46-906F-44BF-AC37-B3B3634A4442}"
 EndProject
@@ -80,6 +82,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Communication.Serial", "src\Moryx.Communication.Serial\Moryx.Communication.Serial.csproj", "{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.WinService", "src\Moryx.Runtime.WinService\Moryx.Runtime.WinService.csproj", "{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.Wcf", "src\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj", "{1CE2D3B1-DE76-4A59-B3CB-76F120624C11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.SmokeTest", "src\Moryx.Runtime.SmokeTest\Moryx.Runtime.SmokeTest.csproj", "{F297C67F-AA7C-4687-912E-5970022165F9}"
 EndProject

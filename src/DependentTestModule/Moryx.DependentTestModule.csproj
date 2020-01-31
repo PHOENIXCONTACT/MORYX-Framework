@@ -62,6 +62,10 @@
     <Compile Include="Facades\DependentTestModuleFacade.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj">
+      <Project>{1ce2d3b1-de76-4a59-b3cb-76f120624c11}</Project>
+      <Name>Marvin.Runtime.Wcf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
       <Name>Moryx.Tools.Wcf</Name>

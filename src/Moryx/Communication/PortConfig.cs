@@ -5,13 +5,13 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.Tools.Wcf
+namespace Moryx.Communication
 {
     /// <summary>
     /// Global part configuration class to simplify port change
     /// </summary>
     [DataContract]
-    public class WcfConfig : IConfig
+    public class PortConfig : IConfig
     {
         /// <summary>
         /// Constant for defining an infinite timeout

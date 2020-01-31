@@ -6,18 +6,19 @@ using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
+using Moryx.Communication;
 using Moryx.Logging;
 using Moryx.Tools.Wcf;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Wcf
 {
     internal class ConfiguredServiceHost : IConfiguredServiceHost
     {
         /// <summary>
         /// Di container of parent plugin for component resolution
         /// </summary>
-        private readonly EndpointCollector _collector;
-        private readonly WcfConfig _wcfConfig;
+        private readonly IEndpointCollector _collector;
+        private readonly PortConfig _portConfig;
         private readonly IModuleLogger _logger;
 
         private ServiceHost _service;
@@ -32,11 +33,11 @@ namespace Moryx.Runtime.Kernel
         private ServiceVersionAttribute _endpointVersion;
 
         public ConfiguredServiceHost(ITypedHostFactory factory, IModuleLogger parentLogger,
-            EndpointCollector endpointCollector, WcfConfig wcfConfig)
+            IEndpointCollector endpointCollector, PortConfig portConfig)
         {
             _factory = factory;
             _collector = endpointCollector;
-            _wcfConfig = wcfConfig;
+            _portConfig = portConfig;
 
             if (parentLogger != null)
                 _logger = parentLogger.GetChild("WcfHosting", GetType());
@@ -63,7 +64,7 @@ namespace Moryx.Runtime.Kernel
             // Create service host
             _service = _factory.CreateServiceHost<T>();
             _type = typeof (T);
-            _endpointVersion = _type.GetCustomAttribute<ServiceVersionAttribute>();
+            _endpointVersion = CustomAttributeExtensions.GetCustomAttribute<ServiceVersionAttribute>(_type);
 
             // Configure host
             _service.CloseTimeout = TimeSpan.Zero;
@@ -81,48 +82,48 @@ namespace Moryx.Runtime.Kernel
             }
 
             // Set default timeouts
-            binding.OpenTimeout = _wcfConfig.OpenTimeout != WcfConfig.InfiniteTimeout
-                ? TimeSpan.FromSeconds(_wcfConfig.OpenTimeout)
+            binding.OpenTimeout = _portConfig.OpenTimeout != PortConfig.InfiniteTimeout
+                ? TimeSpan.FromSeconds(_portConfig.OpenTimeout)
                 : TimeSpan.MaxValue;
 
-            binding.CloseTimeout = _wcfConfig.CloseTimeout != WcfConfig.InfiniteTimeout
-                ? TimeSpan.FromSeconds(_wcfConfig.CloseTimeout)
+            binding.CloseTimeout = _portConfig.CloseTimeout != PortConfig.InfiniteTimeout
+                ? TimeSpan.FromSeconds(_portConfig.CloseTimeout)
                 : TimeSpan.MaxValue;
 
-            binding.SendTimeout = _wcfConfig.SendTimeout != WcfConfig.InfiniteTimeout
-                ? TimeSpan.FromSeconds(_wcfConfig.SendTimeout)
+            binding.SendTimeout = _portConfig.SendTimeout != PortConfig.InfiniteTimeout
+                ? TimeSpan.FromSeconds(_portConfig.SendTimeout)
                 : TimeSpan.MaxValue;
 
-            binding.ReceiveTimeout = _wcfConfig.ReceiveTimeout != WcfConfig.InfiniteTimeout
-                ? TimeSpan.FromSeconds(_wcfConfig.ReceiveTimeout)
+            binding.ReceiveTimeout = _portConfig.ReceiveTimeout != PortConfig.InfiniteTimeout
+                ? TimeSpan.FromSeconds(_portConfig.ReceiveTimeout)
                 : TimeSpan.MaxValue;
 
             // Create endpoint address from config
-            var port = config.BindingType == ServiceBindingType.NetTcp ? _wcfConfig.NetTcpPort : _wcfConfig.HttpPort;
+            var port = config.BindingType == ServiceBindingType.NetTcp ? _portConfig.NetTcpPort : _portConfig.HttpPort;
 
             // Override binding timeouts if necessary
             if (config is ExtendedHostConfig extendedConfig && extendedConfig.OverrideFrameworkConfig)
             {
                 // Override binding timeouts if necessary
                 port = extendedConfig.Port;
-                binding.OpenTimeout = extendedConfig.OpenTimeout != WcfConfig.InfiniteTimeout
+                binding.OpenTimeout = extendedConfig.OpenTimeout != PortConfig.InfiniteTimeout
                     ? TimeSpan.FromSeconds(extendedConfig.OpenTimeout)
                     : TimeSpan.MaxValue;
 
-                binding.CloseTimeout = extendedConfig.CloseTimeout != WcfConfig.InfiniteTimeout
+                binding.CloseTimeout = extendedConfig.CloseTimeout != PortConfig.InfiniteTimeout
                     ? TimeSpan.FromSeconds(extendedConfig.CloseTimeout)
                     : TimeSpan.MaxValue;
 
-                binding.SendTimeout = extendedConfig.SendTimeout != WcfConfig.InfiniteTimeout
+                binding.SendTimeout = extendedConfig.SendTimeout != PortConfig.InfiniteTimeout
                     ? TimeSpan.FromSeconds(extendedConfig.SendTimeout)
                     : TimeSpan.MaxValue;
 
-                binding.ReceiveTimeout = extendedConfig.ReceiveTimeout != WcfConfig.InfiniteTimeout
+                binding.ReceiveTimeout = extendedConfig.ReceiveTimeout != PortConfig.InfiniteTimeout
                     ? TimeSpan.FromSeconds(extendedConfig.ReceiveTimeout)
                     : TimeSpan.MaxValue;
             }
 
-            _endpointAddress = $"{protocol}://{_wcfConfig.Host}:{port}/{config.Endpoint}";
+            _endpointAddress = $"{protocol}://{_portConfig.Host}:{port}/{config.Endpoint}";
 
             var endpoint = _service.AddServiceEndpoint(typeof(T), binding, _endpointAddress);
 
@@ -139,7 +140,7 @@ namespace Moryx.Runtime.Kernel
                 var serviceMetadataBehavior = new ServiceMetadataBehavior
                 {
                     HttpGetEnabled = true,
-                    HttpGetUrl = new Uri($"http://{_wcfConfig.Host}:{_wcfConfig.HttpPort}/Metadata/{config.Endpoint}")
+                    HttpGetUrl = new Uri($"http://{_portConfig.Host}:{_portConfig.HttpPort}/Metadata/{config.Endpoint}")
                 };
                 _service.Description.Behaviors.Add(serviceMetadataBehavior);
             }
@@ -149,7 +150,7 @@ namespace Moryx.Runtime.Kernel
                 var serviceDebugBehavior = _service.Description.Behaviors.Find<ServiceDebugBehavior>();
                 serviceDebugBehavior.IncludeExceptionDetailInFaults = true;
                 serviceDebugBehavior.HttpHelpPageEnabled = true;
-                serviceDebugBehavior.HttpHelpPageUrl = new Uri($"http://{_wcfConfig.Host}:{_wcfConfig.HttpPort}/Help/{config.Endpoint}");
+                serviceDebugBehavior.HttpHelpPageUrl = new Uri($"http://{_portConfig.Host}:{_portConfig.HttpPort}/Help/{config.Endpoint}");
             }
 
             _hostConfig = config;

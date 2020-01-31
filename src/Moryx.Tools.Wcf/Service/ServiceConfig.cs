@@ -36,9 +36,9 @@ namespace Moryx.Tools.Wcf
         public string MinClientVersion { get; set; }
 
         /// <summary>
-        /// <c>True</c> if service requires authentification
+        /// <c>True</c> if service requires authentication
         /// </summary>
         [DataMember]
-        public bool RequiresAuthentification { get; set; }
+        public bool RequiresAuthentication { get; set; }
     }
 }

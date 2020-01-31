@@ -13,13 +13,13 @@ namespace Moryx.Tools.Wcf
 
         public string ServerVersion { get; set; }
 
-        public bool RequiresAuthentification { get; set; }
+        public bool RequiresAuthentication { get; set; }
 
         public string MinClientVersion { get; set; }
 
         internal ServiceConfiguration()
         {
-            
+
         }
 
         internal ServiceConfiguration(ServiceConfig wcfDto)
@@ -27,8 +27,8 @@ namespace Moryx.Tools.Wcf
             ServiceUrl = wcfDto.ServiceUrl;
             ServerVersion = wcfDto.ServerVersion;
             MinClientVersion = wcfDto.MinClientVersion;
-            RequiresAuthentification = wcfDto.RequiresAuthentification;
-            
+            RequiresAuthentication = wcfDto.RequiresAuthentication;
+
             switch (wcfDto.Binding)
             {
                 case ServiceBindingType.BasicHttp:
@@ -38,8 +38,8 @@ namespace Moryx.Tools.Wcf
                     BindingType = BindingType.NetTcp;
                     break;
                 default:
-                    throw new ArgumentException(string.Format("Server binding type '{0}' not supported.", wcfDto.Binding));
-            }  
+                    throw new ArgumentException($"Server binding type '{wcfDto.Binding}' not supported.");
+            }
         }
     }
 }

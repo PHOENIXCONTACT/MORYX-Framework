@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Maintenance.Plugins.Modules;
@@ -62,7 +63,7 @@ namespace Moryx.Runtime.SystemTests
             {
                 SleepTime = 0,
 
-                Config = new WcfConfig(),
+                Config = new PortConfig(),
 
                 IntegerValue = OrgIntegerValue,
                 DoubleValue = OrgDoubleValue,

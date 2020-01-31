@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Logging;
 using Moryx.Runtime.Configuration;
@@ -30,7 +31,7 @@ namespace Moryx.TestModule
     public class ModuleConfig : ConfigBase
     {
         [SharedConfig(false)]
-        public WcfConfig Config { get; set; }
+        public PortConfig Config { get; set; }
 
         [DataMember]
         [DefaultValue(0x2)]

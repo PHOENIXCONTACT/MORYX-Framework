@@ -18,11 +18,9 @@ namespace Moryx.Runtime.Kernel
         /// <inheritdoc />
         public IContainer Create(IDictionary<Type, string> strategies, Assembly moduleAssembly)
         {
-            var container = new WcfLocalContainer(strategies)
+            var container = new LocalContainer(strategies)
                 .ExecuteInstaller(new AutoInstaller(moduleAssembly));
-
             return container;
         }
-
     }
 }

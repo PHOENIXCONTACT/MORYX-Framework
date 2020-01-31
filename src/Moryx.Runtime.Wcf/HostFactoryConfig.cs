@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Wcf
 {
     /// <summary>
     /// Configuration for the host factory.

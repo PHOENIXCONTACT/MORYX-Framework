@@ -95,7 +95,6 @@
     <Compile Include="Service\ServiceManager.cs" />
     <Compile Include="Service\ServiceVersionAttribute.cs" />
     <Compile Include="Service\SessionService.cs" />
-    <Compile Include="Service\WcfConfig.cs" />
     <Compile Include="WcfAccelerator.cs" />
   </ItemGroup>
   <ItemGroup>

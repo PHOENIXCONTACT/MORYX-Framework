@@ -4,13 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Moryx.Container;
 using Moryx.Tools.Wcf;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Wcf
 {
-    [Plugin(LifeCycle.Singleton)]
-    internal class EndpointCollector
+    internal class EndpointCollector : IEndpointCollector
     {
         private readonly Dictionary<string, ServiceVersionAttribute> _endpoints = new Dictionary<string, ServiceVersionAttribute>();
         private readonly Dictionary<string, ServiceConfig> _services = new Dictionary<string, ServiceConfig>();
@@ -33,7 +31,7 @@ namespace Moryx.Runtime.Kernel
                     ServiceUrl = serviceUrl,
                     ServerVersion = version.ServerVersion,
                     MinClientVersion = version.MinClientVersion,
-                    RequiresAuthentification = requiresAuthentication
+                    RequiresAuthentication = requiresAuthentication
                 };
             }
         }

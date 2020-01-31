@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Castle.Facilities.TypedFactory;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Moryx.Tools;
@@ -174,7 +175,7 @@ namespace Moryx.Container
 
         #region Register methods
 
-        /// 
+        ///
         public IContainer Register<TService, TComp>()
             where TService : class
             where TComp : TService
@@ -183,7 +184,7 @@ namespace Moryx.Container
             return this;
         }
 
-        /// 
+        ///
         public IContainer Register<TService, TComp>(string name, LifeCycle lifeCycle)
             where TService : class
             where TComp : TService
@@ -199,7 +200,7 @@ namespace Moryx.Container
             return this;
         }
 
-        /// 
+        ///
         public IContainer Register<TFactory>(string name) where TFactory : class
         {
             var factoryType = typeof(TFactory);
@@ -239,6 +240,15 @@ namespace Moryx.Container
                 Container.Register(Component.For<T>().Instance(instance).Named(name));
             }
             return this;
+        }
+
+        public void Extend<TExtension>() where TExtension : new()
+        {
+            if (!typeof(IFacility).IsAssignableFrom(typeof(TExtension)))
+                throw new InvalidOperationException();
+
+            var facility = (IFacility)new TExtension();
+            Container.AddFacility(facility);
         }
 
         #endregion

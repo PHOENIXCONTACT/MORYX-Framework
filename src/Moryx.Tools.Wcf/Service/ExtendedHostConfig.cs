@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Moryx.Communication;
 
 namespace Moryx.Tools.Wcf
 {
@@ -53,7 +54,7 @@ namespace Moryx.Tools.Wcf
         /// which no application messages are received, before it is dropped.
         /// </summary>
         [DataMember]
-        [DefaultValue(WcfConfig.InfiniteTimeout)]
+        [DefaultValue(PortConfig.InfiniteTimeout)]
         public int ReceiveTimeout { get; set; }
     }
 }

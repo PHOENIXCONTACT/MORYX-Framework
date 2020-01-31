@@ -7,7 +7,7 @@ using Castle.Facilities.WcfIntegration;
 using Castle.MicroKernel;
 using Moryx.Tools.Wcf;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Wcf
 {
     internal class TypedHostFactory : DefaultServiceHostFactory, ITypedHostFactory
     {

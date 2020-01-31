@@ -1,19 +1,20 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Tools.Wcf;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Wcf
 {
     /// <summary>
     /// Factory for the clients.
     /// </summary>
     [InitializableKernelComponent(typeof(IWcfClientFactory))]
-    public class ClientFactory : BaseWcfClientFactory, IInitializable, ILoggingHost
+    internal class WcfClientFactory : BaseWcfClientFactory, IInitializable, ILoggingHost
     {
         /// <summary>
         /// Injected by global container
@@ -28,7 +29,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Name of this host. Used for logger name structure
         /// </summary>
-        public string Name { get { return "ClientFactory"; } }
+        public string Name => "ClientFactory";
 
         /// <summary>
         /// Initialize the client factory.
@@ -37,11 +38,10 @@ namespace Moryx.Runtime.Kernel
         {
             Logging.ActivateLogging(this);
 
-            ClientFactoryConfig factoryConfig = ConfigManager.GetConfiguration<ClientFactoryConfig>();
-            ProxyConfig proxyConfig = ConfigManager.GetConfiguration<ProxyConfig>();
+            var factoryConfig = ConfigManager.GetConfiguration<ClientFactoryConfig>();
+            var proxyConfig = ConfigManager.GetConfiguration<ProxyConfig>();
 
             Initialize(factoryConfig, proxyConfig, new SimpleThreadContext());
         }
-
     }
 }
