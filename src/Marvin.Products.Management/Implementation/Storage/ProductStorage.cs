@@ -481,14 +481,19 @@ namespace Marvin.Products.Management
             // Get or create entity
             var repo = uow.GetRepository<IProductTypeEntityRepository>();
             var identity = (ProductIdentity)modifiedInstance.Identity;
-            var entity = repo.GetByIdentity(identity.Identifier, identity.Revision);
-            if (entity == null)
+            ProductTypeEntity entity;
+            var entities = repo.Linq
+                .Where(p => p.Identifier == identity.Identifier && p.Revision == identity.Revision)
+                .ToList();
+            // If entity does not exist or was deleted, create a new one
+            if (entities.All(p => p.Deleted != null))
             {
                 entity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().Name);
                 EntityIdListener.Listen(entity, modifiedInstance);
             }
             else
             {
+                entity = entities.First(p => p.Deleted == null);
                 entity.Name = modifiedInstance.Name;
                 // Set id in case it was imported under existing material and revision
                 modifiedInstance.Id = entity.Id;
