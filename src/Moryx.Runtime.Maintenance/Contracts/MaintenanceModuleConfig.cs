@@ -4,7 +4,6 @@
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Modules;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance.Contracts
 {
@@ -18,11 +17,5 @@ namespace Moryx.Runtime.Maintenance.Contracts
         /// Name of the plugin.
         /// </summary>
         public abstract string PluginName { get; }
-
-        /// <summary>
-        /// Endpoint which the plugin provides.
-        /// </summary>
-        [DataMember]
-        public HostConfig ProvidedEndpoint { get; set; }
     }
 }

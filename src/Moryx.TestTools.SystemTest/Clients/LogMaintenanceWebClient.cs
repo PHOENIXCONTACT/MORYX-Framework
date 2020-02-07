@@ -3,12 +3,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Moryx.Runtime.Maintenance.Plugins;
-using Moryx.Runtime.Maintenance.Plugins.Logging;
+using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Runtime.Maintenance.Logging;
 
 namespace Moryx.TestTools.SystemTest.Clients
 {
-    public class LogMaintenanceWebClient :  TestWebClientBase, ILogMaintenance
+    public class LogMaintenanceWebClient : TestWebClientBase
     {
         public LogMaintenanceWebClient(int port) : base($"http://localhost:{port}/LogMaintenance/")
         {

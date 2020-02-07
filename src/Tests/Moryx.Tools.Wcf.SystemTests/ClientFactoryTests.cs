@@ -7,7 +7,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using Moryx.DependentTestModule;
-using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Maintenance.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.SystemTests;
 using Moryx.Tools.Wcf.SystemTests.HelloWorld;

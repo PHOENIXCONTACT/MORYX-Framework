@@ -4,13 +4,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moryx.Model;
-using Moryx.Model.Configuration;
+using Moryx.Runtime.Maintenance.Contracts;
 using Moryx.Runtime.Maintenance.Plugins;
-using Moryx.Runtime.Maintenance.Plugins.Databases;
+using Moryx.Runtime.Maintenance.Databases;
 
 namespace Moryx.TestTools.SystemTest.Clients
 {
-    public class DatabaseMaintenanceWebClient : TestWebClientBase, IDatabaseMaintenance
+    public class DatabaseMaintenanceWebClient : TestWebClientBase
     {
         public DatabaseMaintenanceWebClient(int port) : base($"http://localhost:{port}/DatabaseMaintenance/")
         {

@@ -3,13 +3,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Maintenance.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 
 namespace Moryx.TestTools.SystemTest.Clients
 {
-    public class ModuleMaintenanceWebClient : TestWebClientBase, IModuleMaintenance
+    public class ModuleMaintenanceWebClient : TestWebClientBase
     {
         public ModuleMaintenanceWebClient(int port) : base($"http://localhost:{port}/ModuleMaintenance/")
         {

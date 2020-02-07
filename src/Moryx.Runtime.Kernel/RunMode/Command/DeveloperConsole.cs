@@ -19,13 +19,13 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         protected override void Boot()
         {
-            // Disable close button. The user have to use the 'exit' command
-            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_CLOSE, MF_BYCOMMAND);
-
             // Register console control to capture close event on windows machines
             // based on http://stackoverflow.com/questions/474679/capture-console-exit-c-sharp
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
+                // Disable close button. The user have to use the 'exit' command
+                DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_CLOSE, MF_BYCOMMAND);
+
                 _handler = Handler;
                 SetConsoleCtrlHandler(_handler, true);
             }

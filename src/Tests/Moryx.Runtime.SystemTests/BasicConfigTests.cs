@@ -9,7 +9,7 @@ using System.Threading;
 using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Runtime.Kernel;
-using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Maintenance.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Moryx.TestModule;

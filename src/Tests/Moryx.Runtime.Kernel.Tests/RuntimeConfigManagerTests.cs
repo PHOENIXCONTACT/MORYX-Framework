@@ -22,14 +22,14 @@ namespace Moryx.Runtime.Kernel.Tests
         /// <summary>
         /// Initializes this test.
         /// </summary>
-        [OneTimeSetUp] 
+        [OneTimeSetUp]
         public void Init()
         {
             _manager = new RuntimeConfigManager();
             _manager.ConfigDirectory = _tempDirectory;
 
             DeleteTempFolder();
-            CreateTempFolder();          
+            CreateTempFolder();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Moryx.Runtime.Kernel.Tests
             Assert.NotNull(config, "Config not saved!");
             // get a copy of the config
             var copyOfConfig = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
-            
+
             // add the config changed event
             config.ConfigChanged += delegate(object sender, ConfigChangedEventArgs args)
             {
@@ -66,7 +66,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // change a property of the copied config (the original will not cause any event on save)
             copyOfConfig.BooleanField = true;
             _manager.SaveConfiguration(copyOfConfig, liveUpdate);
-         
+
             // wait for the event
             manualResetEvent.WaitOne(1000);
 
@@ -82,14 +82,14 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             DeleteTempFolder();
             CreateTempFolder();
-            
+
             _manager.SaveConfiguration(new RuntimeConfigManagerTestConfig1());
 
             var config = _manager.GetConfiguration(typeof(RuntimeConfigManagerTestConfig1), false);
 
             Assert.NotNull(config, "Config not saved!");
         }
-        
+
         /// <summary>
         /// Tests the clear cache method
         /// </summary>
@@ -119,7 +119,7 @@ namespace Moryx.Runtime.Kernel.Tests
 
             // check if the cache has been cleared
             Assert.AreNotEqual(config, config2, "The cache has not been cleared correctly, we get the same instance again.");
-            Assert.False(config.IntField == config2.IntField, "The new value should not be saved."); 
+            Assert.False(config.IntField == config2.IntField, "The new value should not be saved.");
 
             // get config from cache
             config = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>();
@@ -208,7 +208,7 @@ namespace Moryx.Runtime.Kernel.Tests
 
             // fillup empty properties
             _manager.FillEmpty(emptyConfig);
-           
+
             // check that no property value has been overwritten.
             Assert.False(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, "Enum field has been overwritten!");
             Assert.False(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Nullable boolean field has not been overwritten!");

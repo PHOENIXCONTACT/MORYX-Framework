@@ -7,12 +7,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
+    <ProjectReference Include="..\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="app.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 </Project>

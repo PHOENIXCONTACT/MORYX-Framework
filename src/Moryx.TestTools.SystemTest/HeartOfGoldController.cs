@@ -11,10 +11,10 @@ using System.ServiceModel;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Logging;
-using Moryx.Runtime.Maintenance.Plugins;
-using Moryx.Runtime.Maintenance.Plugins.Databases;
-using Moryx.Runtime.Maintenance.Plugins.Logging;
-using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Runtime.Maintenance.Databases;
+using Moryx.Runtime.Maintenance.Logging;
+using Moryx.Runtime.Maintenance.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.SystemTest.Clients;
 

@@ -84,8 +84,6 @@
     <Compile Include="Service\FileSystem\FileModel.cs" />
     <Compile Include="Service\FileSystem\FileSystemService.cs" />
     <Compile Include="Service\FileSystem\IFileSystemService.cs" />
-    <Compile Include="Service\FileSystem\IPolicyRetriever.cs" />
-    <Compile Include="Service\FileSystem\PolicyRetriever.cs" />
     <Compile Include="Service\FileSystem\RemoteFile.cs" />
     <Compile Include="Service\FileSystem\SimpleStreamingServiceBase.cs" />
     <Compile Include="Service\HostConfig.cs" />

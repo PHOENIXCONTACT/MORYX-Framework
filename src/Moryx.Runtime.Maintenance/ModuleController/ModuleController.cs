@@ -9,11 +9,9 @@ using Moryx.Model;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Runtime.Maintenance.Logging;
 using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Modules;
-using Moryx.Runtime.Wcf;
-using Moryx.Tools.Wcf;
-using Moryx.Tools.Wcf.FileSystem;
 
 namespace Moryx.Runtime.Maintenance
 {
@@ -45,11 +43,6 @@ namespace Moryx.Runtime.Maintenance
         /// </summary>
         public IRuntimeConfigManager RuntimeConfigManager { get; set; }
 
-        /// <summary>
-        /// Host factory to create wcf services
-        /// </summary>
-        public IWcfHostFactory WcfHostFactory { get; set; }
-
         #endregion
 
         /// <summary>
@@ -60,10 +53,7 @@ namespace Moryx.Runtime.Maintenance
         /// <inheritdoc />
         protected override void OnInitialize()
         {
-            Container.RegisterWcf(WcfHostFactory, Logger);
-
-            Container.Register<IPolicyRetriever, PolicyRetriever>()
-                .SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
+            Container.SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
                 .SetInstance(LoggerManagement);
 
             Container.SetInstance(DbContextManager);
@@ -74,6 +64,8 @@ namespace Moryx.Runtime.Maintenance
         /// <inheritdoc />
         protected override void OnStart()
         {
+            Container.Resolve<ILoggingAppender>().Start();
+
             var pluginFac = Container.Resolve<IMaintenancePluginFactory>();
             var plugins = Container.ResolveAll<IMaintenancePlugin>().ToList();
 
@@ -85,7 +77,7 @@ namespace Moryx.Runtime.Maintenance
             foreach (var unconfiguredPlugin in unconfiguredPlugins)
             {
                 var baseType = unconfiguredPlugin.GetType().BaseType;
-                if (baseType == null || !typeof(MaintenancePluginBase<,>).IsAssignableFrom(baseType.GetGenericTypeDefinition()))
+                if (baseType == null || !typeof(MaintenancePluginBase<>).IsAssignableFrom(baseType.GetGenericTypeDefinition()))
                     throw new ArgumentException("MaintenancePlugins should be of type MaintenancePluginBase");
 
                 var configType = baseType.GetGenericArguments()[0];
@@ -116,6 +108,7 @@ namespace Moryx.Runtime.Maintenance
         /// <inheritdoc />
         protected override void OnStop()
         {
+            Container.Resolve<ILoggingAppender>().Stop();
 
         }
 

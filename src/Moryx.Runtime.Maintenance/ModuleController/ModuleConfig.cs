@@ -6,10 +6,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Runtime.Maintenance.Contracts;
-using Moryx.Runtime.Maintenance.Plugins.Common;
-using Moryx.Runtime.Maintenance.Plugins.Databases;
-using Moryx.Runtime.Maintenance.Plugins.Logging;
-using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Serialization;
 
 namespace Moryx.Runtime.Maintenance
@@ -32,16 +29,29 @@ namespace Moryx.Runtime.Maintenance
         public List<MaintenancePluginConfig> Plugins { get; set; }
 
         /// <summary>
+        /// If a logging appender exceeds this timeouts its config stream is closed
+        /// </summary>
+        [DataMember]
+        [Description("If a logging appender exceeds this timeouts its config stream is closed")]
+        [DefaultValue(30000)]
+        public int AppenderTimeOut { get; set; }
+
+        /// <summary>
+        /// Folder where the setup data is stored.
+        /// </summary>
+        [DataMember]
+        [RelativeDirectories]
+        [DefaultValue(@".\Backups\")]
+        public string SetupDataDir { get; set; }
+
+        /// <summary>
         /// Initialize the maintenance module.
         /// </summary>
         protected override void Initialize()
         {
             Plugins = new List<MaintenancePluginConfig>
             {
-                new ModuleMaintenanceConfig(),
-                new LoggingMaintenanceConfig(),
-                new CommonMaintenanceConfig(),
-                new DatabaseConfig()
+                new DefaultMaintenanceConfig()
             };
         }
     }
