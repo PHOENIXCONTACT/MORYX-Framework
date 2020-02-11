@@ -14,7 +14,7 @@ The following posibilities are supported:
 
 ## Aspects
 
-Aspects are presented as `Tabs` whithin the default product detail view. They can be enabled by adding them to the [ModuleConfig](xref:Marvin.Products.UI.Interaction.ModuleConfig) like in the following example:
+Aspects are presented as `Tabs` whithin the default product detail view. An aspect allows to create a view for specific information of a product like properties, parts or recipes. It is also possible to create aspects to show a combination of the mentioned information. The `EditMode` like a `BeginEdit`, `EndEdit` or `CancelEdit` will be handled by the product itself but an aspect get this call before the product to have the possibility to store some aspect specific information. Each aspect can be enabled by adding them to the [ModuleConfig](xref:Marvin.Products.UI.Interaction.ModuleConfig) like in the following example:
 
 ````json
 {
