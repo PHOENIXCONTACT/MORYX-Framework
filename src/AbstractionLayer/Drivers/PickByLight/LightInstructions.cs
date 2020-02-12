@@ -8,10 +8,10 @@
         /// <summary>
         /// Activate light instructions
         /// </summary>
-        public LightInstructions(long colorCode, string instruction)
+        public LightInstructions(int color, string instruction)
         {
             Active = true;
-            ColorCode = colorCode;
+            Color = color;
             Instruction = instruction;
         }
 
@@ -21,9 +21,9 @@
         public bool Active { get; }
 
         /// <summary>
-        /// Encoded color 
+        /// RGB color
         /// </summary>
-        public long ColorCode { get; }
+        public int Color { get; }
 
         /// <summary>
         /// Instruction text
