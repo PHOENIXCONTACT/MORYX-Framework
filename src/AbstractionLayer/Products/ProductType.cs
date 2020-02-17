@@ -17,12 +17,6 @@ namespace Marvin.AbstractionLayer
         public ProductTypeState State { get; set; }
 
         /// <inheritdoc />
-        public IProductType Parent => ParentLink?.Parent;
-
-        /// <inheritdoc />
-        public IProductPartLink ParentLink { get; set; }
-
-        /// <inheritdoc />
         public IIdentity Identity { get; set; }
 
         /// <summary>

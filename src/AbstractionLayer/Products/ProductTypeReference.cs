@@ -39,16 +39,6 @@ namespace Marvin.AbstractionLayer
         public ProductTypeState State { get; set; }
 
         /// <summary>
-        /// Reference does not have a parent
-        /// </summary>
-        public IProductType Parent { get; }
-
-        /// <summary>
-        /// Reference does not have a parent
-        /// </summary>
-        public IProductPartLink ParentLink { get; }
-
-        /// <summary>
         /// Identity of this product
         /// </summary>
         public IIdentity Identity { get; set; }

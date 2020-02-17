@@ -404,8 +404,6 @@ namespace Marvin.Products.IntegrationTests
 
             // Assert
             Assert.NotNull(loadedWatch, "Failed to load from database");
-            Assert.NotNull(loadedWatch.Watchface.Product.Parent, "Parent was not set");
-            Assert.AreEqual(loadedWatch.Watchface.Product.Parent, loadedWatch, "Invalid parent");
             Assert.AreEqual(watch.Identity.Identifier, loadedWatch.Identity.Identifier, "Different identifier of the saved an loaded watch");
             Assert.AreEqual(watch.Watchface.Product.Identity.Identifier, loadedWatch.Watchface.Product.Identity.Identifier, "Different watchface identifier of the saved and loaded watch");
             Assert.AreEqual(watch.Needles.Count, loadedWatch.Needles.Count, "Different number of needles");

@@ -100,8 +100,8 @@ namespace Marvin.Products.Management.Modification
         public RecipeModel CreateRecipe(string recipeType)
         {
             // TODO: Use type wrapper
-            var type = ReflectionTool.GetPublicClasses<ProductRecipe>(t => t.Name == recipeType).First();
-            var recipe = (ProductRecipe) Activator.CreateInstance(type);
+            var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipeType).First();
+            var recipe = (IProductRecipe) Activator.CreateInstance(type);
             return ConvertRecipe(recipe);
         }
 
@@ -174,7 +174,7 @@ namespace Marvin.Products.Management.Modification
             {
                 var displayName = property.GetDisplayName();
 
-                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType) && property.Name != nameof(ProductType.ParentLink))
+                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType))
                 {
                     var link = (IProductPartLink)property.GetValue(productType);
                     var partModel = ConvertPart(link);
@@ -298,8 +298,8 @@ namespace Marvin.Products.Management.Modification
             IProductRecipe productRecipe;
             if (recipe.Id == 0)
             {
-                var type = ReflectionTool.GetPublicClasses<ProductRecipe>(t => t.Name == recipe.Type).First();
-                productRecipe = (ProductRecipe)Activator.CreateInstance(type);
+                var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipe.Type).First();
+                productRecipe = (IProductRecipe)Activator.CreateInstance(type);
             }
             else
                 productRecipe = RecipeManagement.Get(recipe.Id);
