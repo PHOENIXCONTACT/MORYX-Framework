@@ -80,6 +80,10 @@
       <Project>{e1227a92-c942-42d3-a35a-d4c4c3574e78}</Project>
       <Name>Marvin.Runtime.Maintenance.Web</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Marvin.Runtime.ModuleFailureReporter\Marvin.Runtime.ModuleFailureReporter.csproj">
+      <Project>{e08fd6ff-cd55-49c1-bc28-951af7750d7b}</Project>
+      <Name>Marvin.Runtime.ModuleFailureReporter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.WinService\Marvin.Runtime.WinService.csproj">
       <Project>{45bf2368-b7c9-42a1-9587-f3b3eade4a67}</Project>
       <Name>Marvin.Runtime.WinService</Name>
@@ -91,10 +95,6 @@
     <ProjectReference Include="..\Marvin.TestTools.Test.Inheritance.Model\Marvin.TestTools.Test.Inheritance.Model.csproj">
       <Project>{cbf4c42b-488d-44af-9c60-3cd2c2aa955e}</Project>
       <Name>Marvin.TestTools.Test.Inheritance.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.Diagnostics\Marvin.Runtime.Diagnostics.csproj">
-      <Project>{601ea517-0337-430b-840c-424b84f8f922}</Project>
-      <Name>Marvin.Runtime.Diagnostics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj">
       <Project>{8ff77f62-43c3-40fe-9dfe-01a53fe8a68e}</Project>
