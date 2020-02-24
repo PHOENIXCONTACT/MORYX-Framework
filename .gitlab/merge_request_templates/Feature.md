@@ -21,21 +21,19 @@ The bullet points will be edited by the reviewer
 
 **Typical tasks**
 
+- [ ] Merge-Request is well described
+- [ ] Added `Obsolete` attributes if necessary
 - [ ] Critical sections are *documented in code*
-- [ ] Public *interfaces are documented*
-- [ ] *Unit-Tests* for all public methods are available
-- [ ] *Build* is stable
-- [ ] Running on test machines (at least on simulation)
-- [ ] *Documentation* is created / updated (incl. Enterprise Architect)
-- [ ] *Manual*  is created / updated
+- [ ] *Tests* available or extended
+- [ ] *Documentation* is created / updated
+- [ ] Running in test environment
+- [ ] *Manual* is created / updated
 
 **Clean code**
 
-- [ ] *Copy local* set to `false` (MarvinPlatform 2.x based projects)
+- [ ] *Copy local* set to `false`
 - [ ] *All* unused references are removed
 - [ ] Clean code rules are respected with passion (naming, ...)
-- [ ] No (additional) compiler *warnings*
-- [ ] Limited *public API*
 - [ ] Avoid *copy and pasted* code snippets
 
 /label ~Feature
