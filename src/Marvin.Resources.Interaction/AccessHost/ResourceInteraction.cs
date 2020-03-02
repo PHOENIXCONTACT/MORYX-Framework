@@ -117,9 +117,9 @@ namespace Marvin.Resources.Interaction
 
             public bool Match(Resource instance)
             {
-                // Check type of instance
+                // Check type of instance, if filter is set
                 // TODO: Use type wrapper
-                if (_typeNodes?.Count > 0 && !_typeNodes.Any(tn => tn.ResourceType.IsInstanceOfType(instance)))
+                if (_typeNodes != null && _typeNodes.All(tn => !tn.ResourceType.IsInstanceOfType(instance)))
                     return false;
 
                 // Next check for reference filters
