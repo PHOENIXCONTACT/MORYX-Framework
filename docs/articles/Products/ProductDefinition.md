@@ -3,7 +3,7 @@ uid: ProductsDefinition
 ---
 # Product Definition
 
-The product definition is done on two levels. Level 1 defines the product group and level 2 a concrete variant from this group. Following the type-instance-pattern this is still on the type side. Within MaRVIN instances of products are called articles. You might consider the two synonyms and you are probably right, but we had to come up with a naming rule and this is the best we could do. If you think you could have done better, you should have been there, because this was way to painful to do it again.
+The product definition is done on two levels. Level 1 defines the product group and level 2 a concrete variant from this group. Following the type-instance-pattern this is still on the type side. Within MARVIN instances of products are called articles. You might consider the two synonyms and you are probably right, but we had to come up with a naming rule and this is the best we could do. If you think you could have done better, you should have been there, because this was way to painful to do it again.
 When defining products and articles, it is important to avoid redundant information. All articles reference their product type definition. Article attributes should
 be limited to those of the concrete physical instance like production date, serial number or quality control result.
 
