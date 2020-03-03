@@ -27,7 +27,7 @@ $CoberturaReportsDir = "$ArtifactsDir\Tests"
 # Nuget
 $NugetConfig = "$RootPath\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
-$NugetCliSource = "https://packages-ctvc.europe.phoenixcontact.com/source/nuget-5.2.0.exe";
+$NugetCliSource = "https://packages-ctvc.europe.phoenixcontact.com/source/nuget-5.4.0.exe";
 $NugetPushCliSource = "https://packages-ctvc.europe.phoenixcontact.com/source/nuget-3.4.4.exe";
 $NugetPackageTarget = "https://packages-ctvc.europe.phoenixcontact.com/nuget/MaRVIN-CI/";
 
