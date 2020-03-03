@@ -51,22 +51,22 @@ namespace Marvin.Products.Management
 
         public IReadOnlyList<IProductType> GetTypes(ProductQuery query)
         {
-            return Storage.GetProductTypes(query);
+            return Storage.GetTypes(query);
         }
 
         public IProductType GetType(long id)
         {
-            return Storage.LoadProductType(id);
+            return Storage.LoadType(id);
         }
 
         public IProductType GetType(ProductIdentity identity)
         {
-            return Storage.LoadProductType(identity);
+            return Storage.LoadType(identity);
         }
 
         public long SaveType(IProductType modifiedInstance)
         {
-            var saved = Storage.SaveProduct(modifiedInstance);
+            var saved = Storage.SaveType(modifiedInstance);
             RaiseProductChanged(modifiedInstance);
             return saved;
         }
@@ -82,7 +82,7 @@ namespace Marvin.Products.Management
         public IProductType Duplicate(long sourceId, ProductIdentity newIdentity)
         {
             // Fetch source object from db
-            var duplicate = (ProductType)Storage.LoadProductType(sourceId);
+            var duplicate = (ProductType)Storage.LoadType(sourceId);
 
             // Fetch existing products for identity validation
             var existing = GetTypes(new ProductQuery { Identifier = newIdentity.Identifier });
@@ -96,7 +96,7 @@ namespace Marvin.Products.Management
             // Reset database id, assign identity and save
             duplicate.Id = 0;
             duplicate.Identity = newIdentity;
-            duplicate.Id = Storage.SaveProduct(duplicate);
+            duplicate.Id = Storage.SaveType(duplicate);
 
             // Load all recipes and create clones
             // Using int.MaxValue creates a bitmask that excludes ONLY clones
@@ -167,22 +167,22 @@ namespace Marvin.Products.Management
 
         public void SaveInstances(params ProductInstance[] productInstances)
         {
-            Storage.SaveArticles(productInstances);
+            Storage.SaveInstances(productInstances);
         }
 
         public ProductInstance GetInstance(long id)
         {
-            return Storage.LoadArticle(id);
+            return Storage.LoadInstance(id);
         }
 
         public IEnumerable<ProductInstance> GetInstances(ProductInstanceState state)
         {
-            return Storage.LoadArticles((int)state);
+            return Storage.LoadInstances((int)state);
         }
 
         public IEnumerable<ProductInstance> GetInstances(int state)
         {
-            return Storage.LoadArticles(state);
+            return Storage.LoadInstances(state);
         }
 
         private void RaiseProductChanged(IProductType productType)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Marvin.AbstractionLayer;
 using Marvin.Products.Management;
 using Marvin.Products.Management.NullStrategies;
@@ -16,7 +15,7 @@ using NUnit.Framework;
 namespace Marvin.Products.IntegrationTests
 {
     [TestFixture]
-    public class ProductStorageTest
+    public class ProductStorageTests
     {
         private long _workplanId;
 
@@ -39,7 +38,7 @@ namespace Marvin.Products.IntegrationTests
             // prepare inmemory resource db
             _factory = new InMemoryUnitOfWorkFactory("ProductStorageTest");
             _factory.Initialize();
-            
+
             // prepare empty workplan
             var workplan = new Workplan { Name = "TestWorkplan" };
             workplan.AddConnector("Start", NodeClassification.Start);
@@ -338,7 +337,7 @@ namespace Marvin.Products.IntegrationTests
             var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var savedWatchId = _storage.SaveProduct(watch);
+            var savedWatchId = _storage.SaveType(watch);
 
             // Assert
             using (var uow = _factory.Create())
@@ -360,8 +359,8 @@ namespace Marvin.Products.IntegrationTests
 
             // Act
             watch.Weight = 234.56;
-            _storage.SaveProduct(watch);
-            var savedWatchId = _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
+            var savedWatchId = _storage.SaveType(watch);
 
             // Assert
             using (var uow = _factory.Create())
@@ -399,8 +398,8 @@ namespace Marvin.Products.IntegrationTests
             var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var savedWatchId = _storage.SaveProduct(watch);
-            var loadedWatch = (WatchType)_storage.LoadProductType(savedWatchId);
+            var savedWatchId = _storage.SaveType(watch);
+            var loadedWatch = (WatchType)_storage.LoadType(savedWatchId);
 
             // Assert
             Assert.NotNull(loadedWatch, "Failed to load from database");
@@ -418,12 +417,12 @@ namespace Marvin.Products.IntegrationTests
 
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
             watch = SetupProduct(newName, string.Empty, 42);
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
 
             // Act
-            var loadedWatch = (WatchType)_storage.LoadProductType(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
+            var loadedWatch = (WatchType)_storage.LoadType(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
 
             // Assert
             if (exists)
@@ -448,9 +447,9 @@ namespace Marvin.Products.IntegrationTests
                 Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
             watch = SetupProduct("Jaques Lemans", string.Empty, 17);
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
 
             // Act
             var all = productMgr.GetTypes(new ProductQuery());
@@ -492,7 +491,7 @@ namespace Marvin.Products.IntegrationTests
                 Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
 
             // Act
             var needles = productMgr.GetTypes(new ProductQuery
@@ -515,7 +514,7 @@ namespace Marvin.Products.IntegrationTests
                 Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
 
             // Act
             var products = productMgr.GetTypes(new ProductQuery
@@ -541,7 +540,7 @@ namespace Marvin.Products.IntegrationTests
             };
             productMgr.TypeChanged += (sender, product) => { };
             var watch = SetupProduct("Jaques Lemans", "321");
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
             var recipe = new WatchProductRecipe
             {
                 Product = watch,
@@ -594,7 +593,7 @@ namespace Marvin.Products.IntegrationTests
                 Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", "567");
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
 
             // Act
             bool result;
@@ -618,19 +617,19 @@ namespace Marvin.Products.IntegrationTests
         }
 
         [Test]
-        public void SaveAndLoadArticle()
+        public void SaveAndLoadInstance()
         {
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveProduct(watch);
+            _storage.SaveType(watch);
             // Reload from storage for partlink ids if the object exists
-            watch = (WatchType) _storage.LoadProductType(watch.Id);
+            watch = (WatchType) _storage.LoadType(watch.Id);
 
             // Act
             var article = (WatchInstance)watch.CreateInstance();
             article.TimeSet = true;
             article.DeliveryDate = DateTime.Now;
-            _storage.SaveArticles(new[] { article });
+            _storage.SaveInstances(new[] { article });
 
             // Assert
             using (var uow = _factory.Create())
@@ -648,7 +647,7 @@ namespace Marvin.Products.IntegrationTests
             }
 
             // Act
-            var watchCopy = (WatchInstance)_storage.LoadArticle(article.Id);
+            var watchCopy = (WatchInstance)_storage.LoadInstance(article.Id);
 
             // Assert
             Assert.NotNull(watchCopy);
