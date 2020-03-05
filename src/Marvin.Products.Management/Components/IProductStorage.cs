@@ -14,44 +14,44 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Get products by query
         /// </summary>
-        IReadOnlyList<IProductType> GetProductTypes(ProductQuery query);
+        IReadOnlyList<IProductType> GetTypes(ProductQuery query);
 
         /// <summary>
         /// Load product instance by id
         /// </summary>
-        IProductType LoadProductType(long id);
+        IProductType LoadType(long id);
 
         /// <summary>
         /// Load product by identity. This method supports loading a products latest revision
         /// </summary>
-        IProductType LoadProductType(ProductIdentity identity);
+        IProductType LoadType(ProductIdentity identity);
 
         /// <summary>
-        /// Transform a given a product entity
+        /// Transform a given a type entity
         /// </summary>
-        IProductType TransformProduct(IUnitOfWork context, ProductTypeEntity typeEntity, bool full);
+        IProductType TransformType(IUnitOfWork context, ProductTypeEntity typeEntity, bool full);
 
         /// <summary>
-        /// Save a product to the storage
+        /// Save a type to the storage
         /// </summary>
-        long SaveProduct(IProductType modifiedInstance);
+        long SaveType(IProductType modifiedInstance);
 
         /// <summary>
-        /// Get an article with the given id.
+        /// Get an instance with the given id.
         /// </summary>
         /// <param name="id">The id for the article which should be searched for.</param>
         /// <returns>The article with the id when it exists.</returns>
-        ProductInstance LoadArticle(long id);
+        ProductInstance LoadInstance(long id);
 
         /// <summary>
-        /// Load articles using combined bit flags
+        /// Load instances using combined bit flags
         /// </summary>
-        IEnumerable<ProductInstance> LoadArticles(int state);
+        IEnumerable<ProductInstance> LoadInstances(int state);
 
         /// <summary>
-        /// Updates the database from the article instance
+        /// Updates the database from the instance
         /// </summary>
-        void SaveArticles(ProductInstance[] productInstance);
+        void SaveInstances(ProductInstance[] productInstance);
 
         /// <summary>
         /// Loads a recipe from the storage

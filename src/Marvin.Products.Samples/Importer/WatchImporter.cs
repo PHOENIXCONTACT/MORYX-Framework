@@ -25,14 +25,14 @@ namespace Marvin.Products.Samples
                 Identity = new ProductIdentity(parameters.Identifier, parameters.Revision),
                 Watchface = new ProductPartLink<WatchfaceType>
                 {
-                    Product = (WatchfaceType)Storage.LoadProductType(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
+                    Product = (WatchfaceType)Storage.LoadType(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
                 },
                 Needles = new List<NeedlePartLink>
                 {
                     new NeedlePartLink
                     {
                         Role = NeedleRole.Minutes,
-                        Product = (NeedleType)Storage.LoadProductType(new ProductIdentity(parameters.MinuteNeedleIdentifier, ProductIdentity.LatestRevision))
+                        Product = (NeedleType)Storage.LoadType(new ProductIdentity(parameters.MinuteNeedleIdentifier, ProductIdentity.LatestRevision))
                     }
                 }
             };

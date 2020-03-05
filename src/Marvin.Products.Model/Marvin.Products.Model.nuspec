@@ -4,7 +4,7 @@
     <id>$id$</id>
     <version>$version$</version>
     <title>$title$</title>
-    <authors>MaRVIN Team</authors>
+    <authors>MARVIN Team</authors>
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>

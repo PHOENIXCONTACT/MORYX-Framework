@@ -237,7 +237,7 @@ namespace Marvin.Products.Management
 
         #region Load product
 
-        public IReadOnlyList<IProductType> GetProductTypes(ProductQuery query)
+        public IReadOnlyList<IProductType> GetTypes(ProductQuery query)
         {
             using (var uow = Factory.Create(ContextMode.AllOff))
             {
@@ -326,7 +326,7 @@ namespace Marvin.Products.Management
         }
 
         /// <inheritdoc />
-        public IProductType LoadProductType(long id)
+        public IProductType LoadType(long id)
         {
             using (var uow = Factory.Create())
             {
@@ -343,7 +343,7 @@ namespace Marvin.Products.Management
         }
 
         /// <inheritdoc />
-        public IProductType LoadProductType(ProductIdentity identity)
+        public IProductType LoadType(ProductIdentity identity)
         {
             using (var uow = Factory.Create())
             {
@@ -370,7 +370,7 @@ namespace Marvin.Products.Management
         }
 
         /// <inheritdoc />
-        public IProductType TransformProduct(IUnitOfWork context, ProductTypeEntity typeEntity, bool full)
+        public IProductType TransformType(IUnitOfWork context, ProductTypeEntity typeEntity, bool full)
         {
             return Transform(context, typeEntity, full);
         }
@@ -455,7 +455,7 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Save a product to the database
         /// </summary>
-        public long SaveProduct(IProductType modifiedInstance)
+        public long SaveType(IProductType modifiedInstance)
         {
             using (var uow = Factory.Create())
             {
@@ -598,7 +598,7 @@ namespace Marvin.Products.Management
         /// </summary>
         /// <param name="id">The id for the article which should be searched for.</param>
         /// <returns>The article with the id when it exists.</returns>
-        public ProductInstance LoadArticle(long id)
+        public ProductInstance LoadInstance(long id)
         {
             using (var uow = Factory.Create())
             {
@@ -611,7 +611,7 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Gets a list of articles by a given state
         /// </summary>
-        public IEnumerable<ProductInstance> LoadArticles(int state)
+        public IEnumerable<ProductInstance> LoadInstances(int state)
         {
             using (var uow = Factory.Create())
             {
@@ -724,7 +724,7 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Updates the database from the article instance
         /// </summary>
-        public void SaveArticles(ProductInstance[] productInstances)
+        public void SaveInstances(ProductInstance[] productInstances)
         {
             using (var uow = Factory.Create())
             {
