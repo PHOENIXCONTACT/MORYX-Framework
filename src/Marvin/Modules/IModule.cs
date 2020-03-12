@@ -1,4 +1,7 @@
-﻿namespace Marvin.Modules
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Modules
 {
     /// <summary>
     /// Base interface for all major components of applications within the Marvin platform application family.

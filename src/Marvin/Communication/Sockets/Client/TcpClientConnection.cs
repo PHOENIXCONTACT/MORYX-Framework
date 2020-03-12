@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;

@@ -1,4 +1,7 @@
-﻿using Marvin.Bindings;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Marvin.Bindings;
 using NUnit.Framework;
 
 namespace Marvin.Tests.Bindings

@@ -1,4 +1,7 @@
-﻿using System.Net;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Marvin.Model;

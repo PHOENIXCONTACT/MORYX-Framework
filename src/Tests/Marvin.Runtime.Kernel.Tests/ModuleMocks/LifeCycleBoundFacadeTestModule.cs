@@ -1,4 +1,7 @@
-﻿using Marvin.Runtime.Kernel.Tests.Dummys;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Marvin.Runtime.Kernel.Tests.Dummys;
 using Marvin.Runtime.Kernel.Tests.ModuleMocks.Facade;
 using Marvin.Runtime.Modules;
 

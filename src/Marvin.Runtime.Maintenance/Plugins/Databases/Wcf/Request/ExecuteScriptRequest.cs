@@ -1,4 +1,7 @@
-﻿namespace Marvin.Runtime.Maintenance.Plugins.Databases
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Runtime.Maintenance.Plugins.Databases
 {
     /// <summary>
     /// Request to execute a database script

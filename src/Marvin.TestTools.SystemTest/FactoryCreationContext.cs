@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Marvin.Configuration;

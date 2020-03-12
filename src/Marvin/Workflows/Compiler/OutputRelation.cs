@@ -1,4 +1,7 @@
-﻿namespace Marvin.Workflows.Compiler
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Workflows.Compiler
 {
     /// <summary>
     /// Class representing a steps relations to other steps

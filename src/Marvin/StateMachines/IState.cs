@@ -1,4 +1,7 @@
-﻿namespace Marvin.StateMachines
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.StateMachines
 {
     /// <summary>
     /// Interface representing an state machine state

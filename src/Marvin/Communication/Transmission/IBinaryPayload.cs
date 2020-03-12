@@ -1,4 +1,7 @@
-﻿namespace Marvin.Communication
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Communication
 {
     /// <summary>
     /// Interface for all classes used as DTO for binary communication

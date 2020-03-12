@@ -1,4 +1,7 @@
-﻿using Marvin.Tools.Wcf.Tests.Logging;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Marvin.Tools.Wcf.Tests.Logging;
 
 namespace Marvin.Tools.Wcf.Tests
 {
