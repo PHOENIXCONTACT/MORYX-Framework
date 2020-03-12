@@ -1,4 +1,7 @@
-﻿namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
 {
     public class TestDelimiterValidator : IMessageValidator
     {

@@ -1,4 +1,7 @@
-﻿namespace Marvin.Configuration
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Configuration
 {
     /// <summary>
     /// Central component for all access to configuration objects. This should be implemented on every platform the

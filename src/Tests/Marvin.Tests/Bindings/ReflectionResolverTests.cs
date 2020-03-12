@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Reflection;
 using Marvin.Bindings;
 using NUnit.Framework;
 

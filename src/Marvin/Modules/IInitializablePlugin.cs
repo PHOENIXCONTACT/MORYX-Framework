@@ -1,4 +1,7 @@
-﻿namespace Marvin.Modules
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Modules
 {
     /// <summary>
     /// Based on <see cref="IInitializable"/> and <see cref="IPlugin"/> it offers a simple three-stage lifecycle. 

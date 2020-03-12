@@ -1,4 +1,7 @@
-﻿namespace Marvin.Threading
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Threading
 {
     /// <summary>
     /// Extension of <see cref="IParallelOperations"/> to register an <see cref="IParallelObserver"/>

@@ -1,4 +1,7 @@
-﻿namespace Marvin.Modules
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Modules
 {
     /// <summary>
     /// Because most parts of Marvin are constructed by a DI-Container we do not have control over the time and context 

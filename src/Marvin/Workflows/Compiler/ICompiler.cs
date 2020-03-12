@@ -1,4 +1,7 @@
-﻿namespace Marvin.Workflows.Compiler
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Workflows.Compiler
 {
     /// <summary>
     /// Strategy used to compile a step from the workplan

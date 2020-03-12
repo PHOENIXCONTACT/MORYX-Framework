@@ -1,4 +1,7 @@
-﻿using System.Threading;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Threading;
 using Marvin.Runtime.Kernel;
 using Marvin.Runtime.Modules;
 using Marvin.Runtime.Tests.Mocks;

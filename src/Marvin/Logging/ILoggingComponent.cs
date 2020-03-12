@@ -1,4 +1,7 @@
-﻿namespace Marvin.Logging
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Logging
 {
     /// <summary>
     /// This interface allows framework components to access a module logger and log entries in their name
