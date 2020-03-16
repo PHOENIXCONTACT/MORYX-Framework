@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import * as chartjs from "chart.js";
 import * as React from "react";
 import { ChartData, Line } from "react-chartjs-2";

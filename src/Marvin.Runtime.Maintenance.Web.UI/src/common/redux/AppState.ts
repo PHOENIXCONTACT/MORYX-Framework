@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { routerReducer, RouterState } from "react-router-redux";
 import { DashboardState, getDashboardReducer, initialDashboardState } from "../../dashboard/redux/DashboardState";
 import { DatabaseState, getDatabaseReducer, initialDatabaseState } from "../../databases/redux/DatabaseState";

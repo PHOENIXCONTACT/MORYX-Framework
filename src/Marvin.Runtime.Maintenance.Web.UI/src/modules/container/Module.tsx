@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { faCheck, faHospital, faPlay, faSquare, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as React from "react";

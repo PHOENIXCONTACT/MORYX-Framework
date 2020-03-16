@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import * as React from "react";
 import { Button, ButtonGroup, Col, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Row, UncontrolledDropdown } from "reactstrap";
 import Entry from "../../models/Entry";

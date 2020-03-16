@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
 import { ActionType } from "../../common/redux/Types";
 import LoggerModel from "../models/LoggerModel";
 

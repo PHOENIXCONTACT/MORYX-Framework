@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import NotificationSystem = require("react-notification-system");
 import RestClientEndpoint from "../models/RestClientEnpoint";
 import { ActionType } from "./Types";

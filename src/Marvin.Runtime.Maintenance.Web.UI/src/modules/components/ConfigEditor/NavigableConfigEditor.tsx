@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Action, History, Location, UnregisterCallback } from "history";
 import * as qs from "query-string";
 import * as React from "react";

@@ -10,7 +10,7 @@
         "build": "npm install && rimraf dist/*.js && webpack --mode production --config webpack.prod.config.js"
     },
     "author": "mma",
-    "license": "ISC",
+    "license": "Apache-2.0",
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.8.1",
         "@fortawesome/free-solid-svg-icons": "^5.8.1",

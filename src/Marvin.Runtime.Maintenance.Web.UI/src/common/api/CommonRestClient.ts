@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import ApplicationInformationResponse from "./responses/ApplicationInformationResponse";
 import ApplicationLoadResponse from "./responses/ApplicationLoadResponse";
 import HostInformationResponse from "./responses/HostInformationResponse";

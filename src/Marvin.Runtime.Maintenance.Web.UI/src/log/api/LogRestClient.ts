@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
 import InvocationResponse from "../../common/api/responses/InvocationResponse";
 import RestClientBase from "../../common/api/RestClientBase";
 import LoggerModel from "../models/LoggerModel";

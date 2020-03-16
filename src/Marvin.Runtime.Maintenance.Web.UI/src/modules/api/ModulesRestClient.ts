@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import RestClientBase from "../../common/api/RestClientBase";
 import Config from "../models/Config";
 import Entry from "../models/Entry";

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { createHashHistory } from "history";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
