@@ -1,4 +1,7 @@
-﻿namespace Marvin.AbstractionLayer.Drivers.Scales
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.AbstractionLayer.Drivers.Scales
 {
     /// <summary>
     /// Result weight scales

@@ -1,4 +1,7 @@
-﻿namespace Marvin.AbstractionLayer
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.AbstractionLayer
 {
     /// <summary>
     /// This is a protected base class that can not not be extended outside this assembly

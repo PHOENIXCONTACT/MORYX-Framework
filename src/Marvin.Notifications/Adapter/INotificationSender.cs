@@ -1,4 +1,7 @@
-﻿namespace Marvin.Notifications
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Notifications
 {
     /// <summary>
     /// Interface for components which are sending notifications

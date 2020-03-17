@@ -1,4 +1,7 @@
-﻿namespace Marvin.Products.Model
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.Products.Model
 {
     /// <summary>
     /// String constants defined by the Products database model.

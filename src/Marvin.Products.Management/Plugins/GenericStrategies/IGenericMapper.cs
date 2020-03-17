@@ -1,4 +1,7 @@
-﻿using Marvin.Products.Model;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Marvin.Products.Model;
 
 namespace Marvin.Products.Management
 {
