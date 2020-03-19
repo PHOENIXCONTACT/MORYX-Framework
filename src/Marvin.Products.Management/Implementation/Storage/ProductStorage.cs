@@ -240,7 +240,7 @@ namespace Marvin.Products.Management
 
         #region Load product
 
-        public IReadOnlyList<IProductType> GetTypes(ProductQuery query)
+        public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
         {
             using (var uow = Factory.Create(ContextMode.AllOff))
             {
@@ -594,13 +594,13 @@ namespace Marvin.Products.Management
 
         #endregion
 
-        #region Get articles
+        #region Get instances
 
         /// <summary>
-        /// Get an article with the given id.
+        /// Get an instance with the given id.
         /// </summary>
-        /// <param name="id">The id for the article which should be searched for.</param>
-        /// <returns>The article with the id when it exists.</returns>
+        /// <param name="id">The id for the instance which should be searched for.</param>
+        /// <returns>The instance with the id when it exists.</returns>
         public ProductInstance LoadInstance(long id)
         {
             using (var uow = Factory.Create())
@@ -612,7 +612,7 @@ namespace Marvin.Products.Management
         }
 
         /// <summary>
-        /// Gets a list of articles by a given state
+        /// Gets a list of instances by a given state
         /// </summary>
         public IEnumerable<ProductInstance> LoadInstances(int state)
         {
@@ -631,7 +631,7 @@ namespace Marvin.Products.Management
         {
             var results = new ProductInstance[entities.Count];
 
-            // Fetch all products we need to load articles
+            // Fetch all products we need to load product instances
             var productMap = new Dictionary<long, IProductType>();
             var requiredProducts = entities.Select(e => e.ProductId).Distinct();
             foreach (var productId in requiredProducts)
@@ -639,17 +639,17 @@ namespace Marvin.Products.Management
                 productMap[productId] = LoadProduct(uow, productId);
             }
 
-            // Create article instance using the type and fill properties
+            // Create product instance using the type and fill properties
             var index = 0;
             foreach (var entity in entities)
             {
                 var product = productMap[entity.ProductId];
-                var article = product.CreateInstance();
-                article.Id = entity.Id;
+                var instance = product.CreateInstance();
+                instance.Id = entity.Id;
 
-                TransformArticle(uow, entity, article);
+                TransformInstance(uow, entity, instance);
 
-                results[index++] = article;
+                results[index++] = instance;
             }
 
             return results;
@@ -658,20 +658,20 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Recursive function to transform entities into objects
         /// </summary>
-        private void TransformArticle(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance)
+        private void TransformInstance(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance)
         {
-            // Transform the article if it has a dedicated storage
-            var product = productInstance.ProductType;
+            // Transform the instance if it has a dedicated storage
+            var product = productInstance.Type;
 
             // Check if instances of this type are persisted
             var strategy = InstanceStrategies[productInstance.GetType().Name];
             if (strategy.SkipInstances)
                 return;
 
-            // Transfrom entity to article
+            // Transfrom entity to instance
             strategy.LoadInstance(entity, productInstance);
 
-            // Group all parts of the article by the property they belong to
+            // Group all parts of the instance by the property they belong to
             var partLinks = ReflectionTool.GetReferences<IProductPartLink>(product)
                 .SelectMany(g => g).ToList();
             var partGroups = ReflectionTool.GetReferences<ProductInstance>(productInstance)
@@ -689,7 +689,7 @@ namespace Marvin.Products.Management
                     foreach (var partEntity in partEntityGroups[partGroup.Key.Name])
                     {
                         var part = partGroup.Value.First(p => p.PartLink.Id == partEntity.PartLinkId);
-                        TransformArticle(uow, partEntity, part);
+                        TransformInstance(uow, partEntity, part);
                     }
                 }
                 else if(linkStrategy.PartCreation == PartSourceStrategy.FromEntities)
@@ -725,16 +725,16 @@ namespace Marvin.Products.Management
         #region Save Article
 
         /// <summary>
-        /// Updates the database from the article instance
+        /// Updates the database from the product instance
         /// </summary>
         public void SaveInstances(ProductInstance[] productInstances)
         {
             using (var uow = Factory.Create())
             {
                 // Write all to entity objects
-                foreach (var article in productInstances)
+                foreach (var instance in productInstances)
                 {
-                    SaveArticle(uow, article);
+                    SaveInstance(uow, instance);
                 }
 
                 // Save transaction
@@ -743,12 +743,12 @@ namespace Marvin.Products.Management
         }
 
         /// <summary>
-        /// Base implementation to save an article hierarchy.
+        /// Base implementation to save an instance hierarchy.
         /// </summary>
         /// <param name="uow">An open unit of work</param>
-        /// <param name="productInstance">The article to save</param>
-        /// <returns>The article entity.</returns>
-        private ProductInstanceEntity SaveArticle(IUnitOfWork uow, ProductInstance productInstance)
+        /// <param name="productInstance">The instance to save</param>
+        /// <returns>The instance entity.</returns>
+        private ProductInstanceEntity SaveInstance(IUnitOfWork uow, ProductInstance productInstance)
         {
             // Check if this type is persisted
             var strategy = InstanceStrategies[productInstance.GetType().Name];
@@ -757,7 +757,7 @@ namespace Marvin.Products.Management
 
             // Save to entity
             var archived = uow.GetEntity<ProductInstanceEntity>(productInstance);
-            archived.ProductId = productInstance.ProductType.Id;
+            archived.ProductId = productInstance.Type.Id;
             strategy.SaveInstance(productInstance, archived);
 
             // Save its parts if the have a dedicated archive
@@ -766,7 +766,7 @@ namespace Marvin.Products.Management
             {
                 foreach (var part in partGroup)
                 {
-                    var partEntity = SaveArticle(uow, part);
+                    var partEntity = SaveInstance(uow, part);
                     if (partEntity == null) // Parts are null when they are skipped
                         continue;
 

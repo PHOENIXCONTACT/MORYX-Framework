@@ -17,7 +17,7 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Get products by query
         /// </summary>
-        IReadOnlyList<IProductType> GetTypes(ProductQuery query);
+        IReadOnlyList<IProductType> LoadTypes(ProductQuery query);
 
         /// <summary>
         /// Load product instance by id
@@ -42,8 +42,8 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Get an instance with the given id.
         /// </summary>
-        /// <param name="id">The id for the article which should be searched for.</param>
-        /// <returns>The article with the id when it exists.</returns>
+        /// <param name="id">The id for the instance which should be searched for.</param>
+        /// <returns>The instance with the id when it exists.</returns>
         ProductInstance LoadInstance(long id);
 
         /// <summary>

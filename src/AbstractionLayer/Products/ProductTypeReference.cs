@@ -47,7 +47,7 @@ namespace Marvin.AbstractionLayer
         public IIdentity Identity { get; set; }
 
         /// <summary>
-        /// Create article instance of this type
+        /// Create instance of this type
         /// </summary>
         public ProductInstance CreateInstance()
         {

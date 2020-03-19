@@ -32,7 +32,7 @@ namespace Marvin.AbstractionLayer
         IActivityTracing Tracing { get; }
 
         /// <summary>
-        /// Specifies the special article requirements of this type
+        /// Specifies the special process requirements of this type
         /// </summary>
         ProcessRequirement ProcessRequirement { get; }
 

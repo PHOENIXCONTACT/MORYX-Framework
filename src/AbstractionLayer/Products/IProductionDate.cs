@@ -6,7 +6,7 @@ using System;
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Interface for articles with production date
+    /// Interface for product instances with production date
     /// </summary>
     public interface IProductionDate
     {

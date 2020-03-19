@@ -17,7 +17,7 @@ namespace Marvin.AbstractionLayer
         IProductType Product { get; set; }
 
         /// <summary>
-        /// Create single article instance for this part
+        /// Create single product instance for this part
         /// </summary>
         ProductInstance Instantiate();
     }
@@ -26,7 +26,7 @@ namespace Marvin.AbstractionLayer
     /// API for part wrapper
     /// </summary>
     /// <typeparam name="TProduct"></typeparam>
-    public interface IProductPartLink<TProduct> : IProductPartLink 
+    public interface IProductPartLink<TProduct> : IProductPartLink
         where TProduct : IProductType
     {
         /// <summary>
@@ -36,17 +36,17 @@ namespace Marvin.AbstractionLayer
     }
 
     /// <summary>
-    /// Extension to instantiate article collection from product parts collection
+    /// Extension to instantiate instance collection from product type parts collection
     /// </summary>
     public static class PartLinkExtension
     {
         /// <summary>
-        /// Instantiate article collection
+        /// Instantiate product instance collection
         /// </summary>
-        public static ICollection<TArticle> Instantiate<TArticle>(this IEnumerable<IProductPartLink> parts)
-            where TArticle : ProductInstance
+        public static ICollection<TInstance> Instantiate<TInstance>(this IEnumerable<IProductPartLink> parts)
+            where TInstance : ProductInstance
         {
-            return parts.Select(p => (TArticle)p.Instantiate()).ToList();
+            return parts.Select(p => (TInstance)p.Instantiate()).ToList();
         }
     }
 }

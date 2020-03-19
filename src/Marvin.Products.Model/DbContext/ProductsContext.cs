@@ -19,12 +19,12 @@ namespace Marvin.Products.Model
     {
         /// <inheritdoc />
         public ProductsContext()
-        { 
+        {
         }
 
         /// <inheritdoc />
         public ProductsContext(string connectionString, ContextMode mode) : base(connectionString, mode)
-        {           
+        {
         }
 
         /// <inheritdoc />
@@ -33,27 +33,27 @@ namespace Marvin.Products.Model
         }
 
         public virtual DbSet<ProductTypeEntity> ProductEntities { get; set; }
-    
+
         public virtual DbSet<PartLink> PartLinks { get; set; }
-    
+
         public virtual DbSet<ProductRecipeEntity> ProductRecipeEntities { get; set; }
-    
+
         public virtual DbSet<ProductProperties> ProductProperties { get; set; }
 
         public virtual DbSet<ProductFileEntity> ProductFiles { get; set; }
 
-        public virtual DbSet<ProductInstanceEntity> ArticleEntities { get; set; }
-    
+        public virtual DbSet<ProductInstanceEntity> ProductInstanceEntities { get; set; }
+
         public virtual DbSet<WorkplanEntity> WorkplanEntities { get; set; }
 
         public virtual DbSet<WorkplanReference> WorkplanReferences { get; set; }
-    
+
         public virtual DbSet<StepEntity> StepEntities { get; set; }
 
         public virtual DbSet<ConnectorEntity> ConnectorEntities { get; set; }
 
         public virtual DbSet<ConnectorReference> ConnectorReferences { get; set; }
-    
+
         public virtual DbSet<OutputDescriptionEntity> OutputDescriptionEntities { get; set; }
 
         /// <inheritdoc />

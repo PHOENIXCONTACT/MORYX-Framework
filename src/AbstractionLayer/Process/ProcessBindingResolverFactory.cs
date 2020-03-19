@@ -139,14 +139,14 @@ namespace Marvin.AbstractionLayer
 
             if (source is ProductInstance instance)
             {
-                return instance.ProductType;
+                return instance.Type;
             }
 
             // If our shortcuts do not work, use ReflectionResolver instead
             // Due the protection level of Resolve in the base class and the implementation
             // of IBindingResolver.Resolve which calls the whole chain the call order is important here.
             // First the value of the replacement is called and then the replacement is placed into the chain.
-            var replacement = new ReflectionResolver(nameof(ProductInstance.ProductType));
+            var replacement = new ReflectionResolver(nameof(ProductInstance.Type));
             var resolvedValue = ((IBindingResolverChain) replacement).Resolve(source);
             this.Replace(replacement);
             return resolvedValue;

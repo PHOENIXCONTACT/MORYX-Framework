@@ -10,7 +10,7 @@ using Marvin.Serialization;
 
 namespace Marvin.Resources.Samples
 {
-    [Description("Cell to mount articles on carriers!")]
+    [Description("Cell to mount product instances on carriers!")]
     [ResourceRegistration]
     public class MountingCell : Cell
     {

@@ -39,22 +39,22 @@ namespace Marvin.Products.Management
 
         public string Name => ModuleController.ModuleName;
 
-        public IReadOnlyList<IProductType> GetTypes(ProductQuery query)
+        public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
         {
             ValidateHealthState();
-            return ProductManager.GetTypes(query);
+            return ProductManager.LoadTypes(query);
         }
 
-        public IProductType GetType(long id)
+        public IProductType LoadType(long id)
         {
             ValidateHealthState();
-            return ProductManager.GetType(id);
+            return ProductManager.LoadType(id);
         }
 
-        public IProductType GetType(ProductIdentity identity)
+        public IProductType LoadType(ProductIdentity identity)
         {
             ValidateHealthState();
-            return ProductManager.GetType(identity);
+            return ProductManager.LoadType(identity);
         }
 
         private void OnTypeChanged(object sender, IProductType productType)

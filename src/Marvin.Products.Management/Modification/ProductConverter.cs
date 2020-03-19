@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Marvin.AbstractionLayer;
@@ -44,7 +43,7 @@ namespace Marvin.Products.Management.Modification
 
         public ProductModel[] GetTypes(ProductQuery query)
         {
-            var products = ProductManager.GetTypes(query);
+            var products = ProductManager.LoadTypes(query);
             return products.Select(p => ConvertProduct(p, true)).ToArray();
         }
 
@@ -56,7 +55,7 @@ namespace Marvin.Products.Management.Modification
 
         public ProductModel GetProduct(long id)
         {
-            var product = ProductManager.GetType(id);
+            var product = ProductManager.LoadType(id);
             return ConvertProduct(product, false);
         }
 
@@ -96,7 +95,7 @@ namespace Marvin.Products.Management.Modification
 
         public RecipeModel[] GetRecipes(long productId)
         {
-            var product = ProductManager.GetType(productId);
+            var product = ProductManager.LoadType(productId);
             return RecipeManagement.GetAllByProduct(product).Select(ConvertRecipe).ToArray();
         }
 
@@ -353,7 +352,7 @@ namespace Marvin.Products.Management.Modification
             if (product.Id == 0)
                 converted = (ProductType)ProductManager.CreateType(product.Type);
             else
-                converted = (ProductType)ProductManager.GetType(product.Id);
+                converted = (ProductType)ProductManager.LoadType(product.Id);
 
             converted.Identity = new ProductIdentity(product.Identifier, product.Revision);
             converted.Name = product.Name;
@@ -416,7 +415,7 @@ namespace Marvin.Products.Management.Modification
                     unused.Remove(match);
                 }
                 EntryConvert.UpdateInstance(match, partModel.Properties);
-                match.Product = (ProductType)ProductManager.GetType(partModel.Product.Id);
+                match.Product = (ProductType)ProductManager.LoadType(partModel.Product.Id);
             }
 
             // Clear all values no longer present in the model
@@ -427,7 +426,7 @@ namespace Marvin.Products.Management.Modification
         private void UpdateReference(IProductPartLink value, PartModel part)
         {
             EntryConvert.UpdateInstance(value, part.Properties);
-            value.Product = (ProductType)ProductManager.GetType(part.Product.Id);
+            value.Product = (ProductType)ProductManager.LoadType(part.Product.Id);
         }
 
         private static void ConvertFilesBack(object converted, ProductModel product, PropertyInfo[] properties)

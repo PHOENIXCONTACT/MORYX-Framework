@@ -22,17 +22,17 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Returns all products on this machine
         /// </summary>
-        IReadOnlyList<IProductType> GetTypes(ProductQuery query);
+        IReadOnlyList<IProductType> LoadTypes(ProductQuery query);
 
         /// <summary>
         /// Load product instance by id
         /// </summary>
-        IProductType GetType(long id);
+        IProductType LoadType(long id);
 
         /// <summary>
         /// Load product by identity
         /// </summary>
-        IProductType GetType(ProductIdentity identity);
+        IProductType LoadType(ProductIdentity identity);
 
         /// <summary>
         /// Create a new product for the given group type
@@ -67,7 +67,7 @@ namespace Marvin.Products.Management
         bool DeleteType(long productId);
 
         /// <summary>
-        /// Create an article instance of given product
+        /// Create an instance of given product
         /// </summary>
         /// <param name="productType">Product to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
@@ -75,24 +75,24 @@ namespace Marvin.Products.Management
         ProductInstance CreateInstance(IProductType productType, bool save);
 
         /// <summary>
-        /// Get an article with the given id.
+        /// Get an instance with the given id.
         /// </summary>
-        /// <param name="id">The id for the article which should be searched for.</param>
-        /// <returns>The article with the id when it exists.</returns>
+        /// <param name="id">The id for the instance which should be searched for.</param>
+        /// <returns>The instance with the id when it exists.</returns>
         ProductInstance GetInstance(long id);
 
         /// <summary>
-        /// Gets a list of articles by a given state
+        /// Gets a list of instances by a given state
         /// </summary>
         IEnumerable<ProductInstance> GetInstances(ProductInstanceState state);
 
         /// <summary>
-        /// Load articles using combined bit flags
+        /// Load instances using combined bit flags
         /// </summary>
         IEnumerable<ProductInstance> GetInstances(int state);
 
         /// <summary>
-        /// Updates the database from the article instance
+        /// Updates the database from the instance
         /// </summary>
         void SaveInstances(params ProductInstance[] productInstances);
     }

@@ -26,7 +26,7 @@ namespace Marvin.Products.Management
         string PropertyName { get; }
 
         /// <summary>
-        /// Strategy how article parts are created during loading
+        /// Strategy how product instance parts are created during loading
         /// </summary>
         PartSourceStrategy PartCreation { get; }
 

@@ -3,13 +3,12 @@ uid: ProductsDefinition
 ---
 # Product Definition
 
-The product definition is done on two levels. Level 1 defines the product group and level 2 a concrete variant from this group. Following the type-instance-pattern this is still on the type side. Within MARVIN instances of products are called articles. You might consider the two synonyms and you are probably right, but we had to come up with a naming rule and this is the best we could do. If you think you could have done better, you should have been there, because this was way to painful to do it again.
-When defining products and articles, it is important to avoid redundant information. All articles reference their product type definition. Article attributes should
+The product definition is done on two levels. Level 1 defines the product group and level 2 a concrete variant from this group. Following the type-instance-pattern this is still on the type side. Within MARVIN instances of products are called product instances. When defining products and instances, it is important to avoid redundant information. All instances reference their product type definition. Article attributes should
 be limited to those of the concrete physical instance like production date, serial number or quality control result.
 
 ## Product - Level 1
 
-The level 1 product group definition is done by creating a class used to represent instances of the group. Such a group and its respective class could be a [watch](xref:Marvin.Products.Samples.WatchProduct) or one of its [needles](xref:Marvin.Products.Samples.NeedleProduct). The properties of the class define attributes each product of the group defines. Properties derived from `ProductPartLink` reference other  products that represent parts. The product base class defines standard attributes like database id, name and identity. Each product class also implements a method `CreateInstance()` that acts as a strategy to create articles for this type of product.
+The level 1 product group definition is done by creating a class used to represent instances of the group. Such a group and its respective class could be a [watch](xref:Marvin.Products.Samples.WatchProduct) or one of its [needles](xref:Marvin.Products.Samples.NeedleProduct). The properties of the class define attributes each product of the group defines. Properties derived from `ProductPartLink` reference other  products that represent parts. The product base class defines standard attributes like database id, name and identity. Each product class also implements a method `CreateInstance()` that acts as a strategy to create instances for this type of product.
 
 ## Product Parts
 
@@ -17,7 +16,7 @@ In most cases it makes sense to model complex products as compositions of parts 
 
 ## Create Instance
 
-Each product must provide a method to create typed instances of itself. Those instances are represented by classes derived from [Article](xref:Marvin.AbstractionLayer.Article) as described below. To create instances of complex products a recursive approach is used. Each product only creates an instance of itself and fills its parts by creating instances of its parts. Unlike products, articles do not define link objects for references but the link attributes become part of the instance attributes. This makes sense if you think about our previous example of watch needles. While the needle product may be used in different roles in different watches the one concrete needle used to assemble a single watch most definitly has one and only one role.
+Each product must provide a method to create typed instances of itself. Those instances are represented by classes derived from [Article](xref:Marvin.AbstractionLayer.Article) as described below. To create instances of complex products a recursive approach is used. Each product only creates an instance of itself and fills its parts by creating instances of its parts. Unlike products, instances do not define link objects for references but the link attributes become part of the instance attributes. This makes sense if you think about our previous example of watch needles. While the needle product may be used in different roles in different watches the one concrete needle used to assemble a single watch most definitly has one and only one role.
 
 ### Sample code
 
@@ -132,29 +131,27 @@ var tagHeuer = new WatchProduct
 };
 ````
 
-## Article Definition
+## Instance Definition
 
-Instances of products are defined as classes and in most cases there is a 1:1 relation between an article and its product. In some exceptions two product types create the same article type and in theory a product may create articles of different types based on its properties. Below are fictional examples for both cases that not necessarily make sense in real world applications:
+Instances of products are defined as classes and in most cases there is a 1:1 relation between an instance and its product. In some exceptions two product types create the same instance type and in theory a product may create instances of different types based on its properties. Below are fictional examples for both cases that not necessarily make sense in real world applications:
 
-* Analog and digital watches are represented by two product classes `AnalogWatchProduct` and `DigitalWatchProduct` to avoid having an empty collection of needles in digital watches, but both create `Watch` articles * The `WatchfaceProduct` creates instances of `AnalogWatch` or `DigitalWatch` depending on the value of `IsDigital` of the watch face.
+* Analog and digital watches are represented by two product classes `AnalogWatchProduct` and `DigitalWatchProduct` to avoid having an empty collection of needles in digital watches, but both create `Watch` instances * The `WatchfaceProduct` creates instances of `AnalogWatch` or `DigitalWatch` depending on the value of `IsDigital` of the watch face.
 
-All article class definitions must be derived from [Article](xref:Marvin.AbstractionLayer.Article) and only define instance properties valid for the single physical instance. The base class already defines instance properties like state, production date or identity (serial number). Articles also define references to article instances of its parts. 
+All instance class definitions must be derived from [ProductInstance](xref:Marvin.AbstractionLayer.ProductInstance) and only define instance properties valid for the single physical instance. The base class already defines instance properties like state, production date or identity (serial number). Articles also define references to instances of its parts.
 
 ### Sample Code
 
-For our watch example the article definition is shown below. Possible instance attributes for a watch could be the delivery date in addition to the production date for the warranty times. Another instance field is the `TimeSet`-flag if the time was preset to the current local time.
+For our watch example the instance definition is shown below. Possible instance attributes for a watch could be the delivery date in addition to the production date for the warranty times. Another instance field is the `TimeSet`-flag if the time was preset to the current local time.
 
 ````cs
-public class WatchArticle : Article<WatchProduct>
+public class WatchInstance: ProductInstance<WatchProduct>
 {
-    public override string Type => nameof(WatchArticle);
-
     public bool TimeSet { get; set; }
 
     public DateTime DeliveryDate { get; set; }
 
-    public WatchfaceArticle Watchface { get; set; }
+    public WatchfaceInstance Watchface { get; set; }
 
-    public ICollection<NeedleArticle> Neddles { get; set; }
+    public ICollection<NeedleInstance> Neddles { get; set; }
 }
 ````

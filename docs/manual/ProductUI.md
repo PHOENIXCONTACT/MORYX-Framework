@@ -1,6 +1,6 @@
 # Product Management
 
-The product management manages all information of a product from the master data over the production until the finished article. In the context of the Control System a product the type or the "catalog" product which a custom can choose for an order. The article is the instance or the physical produced part which gets a customer for his order.
+The product management manages all information of a product from the master data over the production until the finished instance. In the context of the Control System a product the type or the "catalog" product which a custom can choose for an order. The product is the instance or the physical produced product which gets a customer for his order.
 
 ## Overview
 

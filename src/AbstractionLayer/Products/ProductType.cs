@@ -34,14 +34,13 @@ namespace Marvin.AbstractionLayer
         }
 
         /// <summary>
-        /// Create article instance of this type
+        /// Create instance of this type
         /// </summary>
-        /// <returns></returns>
         public ProductInstance CreateInstance()
         {
-            var article = Instantiate();
-            article.ProductType = this;
-            return article;
+            var instance = Instantiate();
+            instance.Type = this;
+            return instance;
         }
 
         /// <summary>

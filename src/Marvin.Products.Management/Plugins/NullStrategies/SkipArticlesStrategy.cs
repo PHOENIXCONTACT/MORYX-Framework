@@ -8,7 +8,7 @@ using Marvin.Products.Model;
 namespace Marvin.Products.Management.NullStrategies
 {
     /// <summary>
-    /// Strategiy for articles that should not be saved to the database
+    /// Strategiy for product instances that should not be saved to the database
     /// </summary>
     [PropertylessStrategyConfiguration(typeof(ProductInstance), DerivedTypes = true)]
     [Plugin(LifeCycle.Transient, typeof(IProductInstanceStrategy), Name = nameof(SkipArticlesStrategy))]

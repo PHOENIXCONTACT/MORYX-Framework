@@ -22,7 +22,7 @@ namespace Marvin.AbstractionLayer
 
 
         /// <summary>
-        /// Create article instance of this type
+        /// Create instance of this type
         /// </summary>
         ProductInstance CreateInstance();
     }

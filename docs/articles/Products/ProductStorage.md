@@ -7,7 +7,7 @@ Section [Product Definition](xref:ProductsDefinition) describes how applications
 
 ## Product Type Strategy
 
-For each product of the application the storage must provide an [IProductTypeStrategy](xref:Marvin.Products.Management.IProductTypeStrategy). That can be either a custom implementation or the GenericProductStrategy for simple products. The strategy defines different properties and methods that need to be implemented. To avoid redundant code it is recommended to derive all implementations from [TypeStrategyBase](xref:Marvin.Products.Management.TypeStrategyBase). 
+For each product of the application the storage must provide an [IProductTypeStrategy](xref:Marvin.Products.Management.IProductTypeStrategy). That can be either a custom implementation or the GenericProductStrategy for simple products. The strategy defines different properties and methods that need to be implemented. To avoid redundant code it is recommended to derive all implementations from [TypeStrategyBase](xref:Marvin.Products.Management.TypeStrategyBase).
 
 ### Target Type
 
@@ -69,7 +69,7 @@ public override void LoadType(IGenericColumns source, IProduct target)
 
 Just like product types the part link strategies need to be configured. For part links without any properties the `SimpleLinkStrategy` can be used, for easy types the `GenericLinkStrategy` and otherwise a custom strategy. Each link strategy represents a product part or collection of product parts.
 
-The implementation of the NeedleLinkStrategy is implemented below. The `PartCreation` property defines whether the article instance is constructed from the `ProductPartLink`-property of the type or restored only from the entities. Per default the product definition is used to avoid redundancy and improve object creation.
+The implementation of the NeedleLinkStrategy is implemented below. The `PartCreation` property defines whether the instance is constructed from the `ProductPartLink`-property of the type or restored only from the entities. Per default the product definition is used to avoid redundancy and improve object creation.
 
 ````cs
 private class NeedleLinkStrategy : LinkStrategyBase<NeedleProduct>
@@ -88,39 +88,39 @@ private class NeedleLinkStrategy : LinkStrategyBase<NeedleProduct>
 }
 ````
 
-### Load Articles
+### Load Instances
 
-As explained in [Product Definition](xref:ProductsDefinition) articles are supposed to be limited to instance attributes and part link attributes. This limitation should be extended and even increased for the article storage. In a regular industry or production environment an application may have houndreds of different products, but it will soon have thousands or millions of articles. When it comes to articles every byte of wasted memory quickly turns into wasted storage in the dimensions of MegaBytes or GigaBytes. To reduce the required instance storage to an absolute minimum the [ProductStorage](xref:Marvin.Products.Management.ProductStorage) recreates article objects from their products instead of trying to recreate them from the entity. This approach covers all instance attributes, that can be derived from the type definition like part link attributes - e.g. the role of our needle in a watch. All the strategy implementation has to do is copy instance properties from the entity to the created and typed object.
+As explained in [Product Definition](xref:ProductsDefinition) product instances are supposed to be limited to instance attributes and part link attributes. This limitation should be extended and even increased for the instance storage. In a regular industry or production environment an application may have houndreds of different products, but it will soon have thousands or millions of instances. When it comes to instances every byte of wasted memory quickly turns into wasted storage in the dimensions of MegaBytes or GigaBytes. To reduce the required instance storage to an absolute minimum the [ProductStorage](xref:Marvin.Products.Management.ProductStorage) recreates instance objects from their products instead of trying to recreate them from the entity. This approach covers all instance attributes, that can be derived from the type definition like part link attributes - e.g. the role of our needle in a watch. All the strategy implementation has to do is copy instance properties from the entity to the created and typed object.
 
 #### Sample Code
 
-We only have to configure the instance strategy for the root article. Watchface articles use the empty `GenericProductStrategy` implementation while needles are not saved at all by configuring the `SkipArticlesStrategy`. Not having to persist needles is one of the benefits of recreating the article from the product instead from the entity. The only instance information `Role` is restored by creating an instance of the watch product. Keeping the previous two sections in mind this example shows how article storage is supposed to be efficient and not pretty or even human readable.
+We only have to configure the instance strategy for the root instance. Watchface instances use the empty `GenericProductStrategy` implementation while needles are not saved at all by configuring the `SkipArticlesStrategy`. Not having to persist needles is one of the benefits of recreating the instance from the product instead from the entity. The only instance information `Role` is restored by creating an instance of the watch product. Keeping the previous two sections in mind this example shows how instance storage is supposed to be efficient and not pretty or even human readable.
 
 ````cs
-public void LoadInstance(IGenericColumns source, Article target);
+public void LoadInstance(IGenericColumns source, ProductInstance target);
 {
-    var watch = (WatchArticle)article;
+    var watchInstance = (WatchInstance)instance;
 
     // Restore instance attributes
-    watch.DeliveryDate = DateTime.FromBinary(source.Integer1);
-    watch.TimeSet = source.Integer2 > 0;
+    watchInstance.DeliveryDate = DateTime.FromBinary(source.Integer1);
+    watchInstance.TimeSet = source.Integer2 > 0;
 }
 ````
 
-### Save Articles
+### Save Instances
 
-The recommendations for article storage obviously apply to `SaveInstance` as well. When writing the instance to the database keep in mind what information need to be stored and which can be recreated from the product and its parts. Once you identified those attributes split them into three groups:
+The recommendations for instance storage obviously apply to `SaveInstance` as well. When writing the instance to the database keep in mind what information need to be stored and which can be recreated from the product and its parts. Once you identified those attributes split them into three groups:
 
 * can be stored in the generic columns
 
 #### Sampe Code
 
 ````cs
-public void SaveInstance(Article source, IGenericColumns target);
+public void SaveInstance(ProductInstance source, IGenericColumns target);
 {
-    var watch = (WatchArticle)source;
+    var watchInstance = (WatchInstance)source;
 
-    target.Integer1 = watch.DeliverDate.Ticks
-    target.Integer2 = watch.TimeSet ? 1 : 0;
+    target.Integer1 = watchInstance.DeliverDate.Ticks
+    target.Integer2 = watchInstance.TimeSet ? 1 : 0;
 }
 ````

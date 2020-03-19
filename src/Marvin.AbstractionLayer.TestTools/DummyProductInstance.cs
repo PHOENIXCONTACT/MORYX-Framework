@@ -4,7 +4,7 @@
 namespace Marvin.AbstractionLayer.TestTools
 {
     /// <summary>
-    /// Dummy implementation of an article. Created by the <see cref="DummyProductType"/>
+    /// Dummy implementation of an product instance. Created by the <see cref="DummyProductType"/>
     /// </summary>
     public class DummyProductInstance : ProductInstance
     {

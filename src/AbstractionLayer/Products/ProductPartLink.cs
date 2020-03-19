@@ -40,13 +40,13 @@ namespace Marvin.AbstractionLayer
         public IProductType Product { get; set; }
 
         /// <summary>
-        /// Create single article instance for this part
+        /// Create single instance for this part
         /// </summary>
         public virtual ProductInstance Instantiate()
         {
-            var article = Product.CreateInstance();
-            article.PartLink = this;
-            return article;
+            var instance = Product.CreateInstance();
+            instance.PartLink = this;
+            return instance;
         }
     }
 

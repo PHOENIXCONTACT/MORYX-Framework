@@ -25,12 +25,12 @@ namespace Marvin.Products.Management
         bool SkipInstances { get; }
 
         /// <summary>
-        /// Save article instance to database
+        /// Save instance to database
         /// </summary>
         void SaveInstance(ProductInstance source, IGenericColumns target);
 
         /// <summary>
-        /// Load additional article properties from entity and write them to the business object
+        /// Load additional instance properties from entity and write them to the business object
         /// </summary>
         void LoadInstance(IGenericColumns source, ProductInstance target);
     }

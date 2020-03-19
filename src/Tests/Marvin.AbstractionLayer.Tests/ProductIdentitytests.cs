@@ -27,8 +27,7 @@ namespace Marvin.AbstractionLayer.Tests
         [Test]
         public void ToStringTest()
         {
-            var expectedString = string.Format("{0}-{1:D2}", Identifier, Revision);
-
+            var expectedString = $"{Identifier}-{Revision:D2}";
             Assert.AreEqual(expectedString, _identity.ToString());
         }
 

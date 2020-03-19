@@ -14,7 +14,7 @@ namespace Marvin.AbstractionLayer
         public override ICapabilities RequiredCapabilities => Parameters.Capilities;
 
         /// <summary>
-        /// Specifies the special article requirements of this type
+        /// Specifies the special process requirements of this type
         /// </summary>
         public override ProcessRequirement ProcessRequirement => Parameters.ProcessRequirements;
 

@@ -38,7 +38,7 @@ namespace Marvin.AbstractionLayer.Tests
             }
 
 
-            // Create article instance
+            // Create instance
             var watchInstance = (WatchInstance)watch.CreateInstance();
 
             // Assert
