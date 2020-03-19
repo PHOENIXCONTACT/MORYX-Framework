@@ -36,7 +36,7 @@ namespace Marvin.AbstractionLayer.Identity
         [DataMember]
         public int NumberType { get; protected set; }
 
-        /// 
+        ///
         public virtual void SetIdentifier(string identifier)
         {
             Identifier = identifier;

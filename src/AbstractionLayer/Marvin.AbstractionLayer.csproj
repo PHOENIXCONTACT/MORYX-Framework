@@ -112,6 +112,7 @@
     <Compile Include="Constraints\NullConstraint.cs" />
     <Compile Include="HandlerMap\HandlerMap.cs" />
     <Compile Include="HandlerMap\IHandlerMap.cs" />
+    <Compile Include="Identity\BatchIdentity.cs" />
     <Compile Include="Identity\IIdentifiableObject.cs" />
     <Compile Include="Activities\ActivityBindingResolverFactory.cs" />
     <Compile Include="Process\ProcessBindingResolverFactory.cs" />
