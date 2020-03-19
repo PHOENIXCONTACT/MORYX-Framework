@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Marvin.AbstractionLayer.Identity;
 
 namespace Marvin.AbstractionLayer
 {
@@ -6,12 +7,17 @@ namespace Marvin.AbstractionLayer
     /// Base class for all product instances.
     /// </summary>
     [DataContract]
-    public abstract class ProductInstance : IPersistentObject
+    public abstract class ProductInstance : IPersistentObject, IIdentifiableObject
     {
         /// <summary>
-        /// The ID of this article
+        /// The Id of this instance
         /// </summary>
         public long Id { get; set; }
+
+        /// <summary>
+        /// Generic identity of this instance
+        /// </summary>
+        public IIdentity Identity { get; set; }
 
         /// <summary>
         /// The current state of the instance
