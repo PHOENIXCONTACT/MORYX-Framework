@@ -80,10 +80,6 @@
       <Project>{e1227a92-c942-42d3-a35a-d4c4c3574e78}</Project>
       <Name>Marvin.Runtime.Maintenance.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.ModuleFailureReporter\Marvin.Runtime.ModuleFailureReporter.csproj">
-      <Project>{e08fd6ff-cd55-49c1-bc28-951af7750d7b}</Project>
-      <Name>Marvin.Runtime.ModuleFailureReporter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.WinService\Marvin.Runtime.WinService.csproj">
       <Project>{45bf2368-b7c9-42a1-9587-f3b3eade4a67}</Project>
       <Name>Marvin.Runtime.WinService</Name>

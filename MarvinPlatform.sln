@@ -89,8 +89,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.WinService",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.Maintenance.Web", "src\Marvin.Runtime.Maintenance.Web\Marvin.Runtime.Maintenance.Web.csproj", "{E1227A92-C942-42D3-A35A-D4C4C3574E78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Runtime.ModuleFailureReporter", "src\Marvin.Runtime.ModuleFailureReporter\Marvin.Runtime.ModuleFailureReporter.csproj", "{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -684,24 +682,6 @@ Global
 		{E1227A92-C942-42D3-A35A-D4C4C3574E78}.Release|x64.Build.0 = Release|Any CPU
 		{E1227A92-C942-42D3-A35A-D4C4C3574E78}.Release|x86.ActiveCfg = Release|Any CPU
 		{E1227A92-C942-42D3-A35A-D4C4C3574E78}.Release|x86.Build.0 = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Debug|x64.Build.0 = Debug|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Debug|x86.Build.0 = Debug|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release(x86)|x64.ActiveCfg = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release(x86)|x64.Build.0 = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release(x86)|x86.ActiveCfg = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release(x86)|x86.Build.0 = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release|x64.ActiveCfg = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release|x64.Build.0 = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release|x86.ActiveCfg = Release|Any CPU
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -749,11 +729,10 @@ Global
 		{91EEF547-A6B5-449F-BF2A-BF8C09D0477E} = {A9C375AE-201D-46CE-9282-387026C0B2F6}
 		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 		{E1227A92-C942-42D3-A35A-D4C4C3574E78} = {DE7526FF-6D25-4643-9AA3-C24253901C8C}
-		{E08FD6FF-CD55-49C1-BC28-951AF7750D7B} = {DE7526FF-6D25-4643-9AA3-C24253901C8C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_TaskErrorCategory = Message
-		RESX_ShowErrorsInErrorList = True
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
+		RESX_ShowErrorsInErrorList = True
+		RESX_TaskErrorCategory = Message
 	EndGlobalSection
 EndGlobal
