@@ -1,4 +1,7 @@
-﻿using Marvin.Runtime.Maintenance.Contracts;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Marvin.Runtime.Maintenance.Contracts;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Runtime.Maintenance.Plugins
