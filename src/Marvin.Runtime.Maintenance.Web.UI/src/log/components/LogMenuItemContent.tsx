@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 const TraceImg = require("../images/Trace.png");
 const DebugImg = require("../images/Debug.png");
 const InfoImg = require("../images/Info.png");
