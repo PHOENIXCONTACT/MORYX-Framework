@@ -219,7 +219,7 @@ class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDi
                         <Row>
                             <ul>
                                 <li>Maintenance {VERSION}</li>
-                                <li>&copy; 2018 PHOENIX CONTACT Corporate Technolgy &amp; Value Chain</li>
+                                <li>&copy; 2020 PHOENIX CONTACT</li>
                             </ul>
                         </Row>
                     </Container>
