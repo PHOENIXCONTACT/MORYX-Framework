@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Base class for all product instances.

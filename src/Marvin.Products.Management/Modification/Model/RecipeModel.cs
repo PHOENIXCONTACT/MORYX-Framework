@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Serialization;
 
 namespace Marvin.Products.Management.Modification

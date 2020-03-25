@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Identity;
+using Marvin.AbstractionLayer.Products;
 using Marvin.Model;
 using Marvin.Products.Model;
 using Marvin.Tools;

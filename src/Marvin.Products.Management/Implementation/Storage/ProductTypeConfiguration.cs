@@ -4,6 +4,8 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Configuration;
 using Marvin.Modules;
 using Marvin.Serialization;

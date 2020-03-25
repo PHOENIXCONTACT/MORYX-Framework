@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Recipes
 {
     /// <summary>
     /// A recipe is used to provide data for a process and to provide additional parameters.

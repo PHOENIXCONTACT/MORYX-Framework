@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 using static System.IO.File;
 
 namespace Marvin.Products.Management

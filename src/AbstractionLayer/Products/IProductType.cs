@@ -3,7 +3,7 @@
 
 using Marvin.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Interface for all typed products
@@ -19,7 +19,6 @@ namespace Marvin.AbstractionLayer
         /// State of the product
         /// </summary>
         ProductTypeState State { get; }
-
 
         /// <summary>
         /// Create instance of this type

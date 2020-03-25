@@ -4,6 +4,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 
 namespace Marvin.Products.Management
 {

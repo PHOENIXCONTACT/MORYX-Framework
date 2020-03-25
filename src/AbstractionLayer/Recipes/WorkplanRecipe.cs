@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Marvin.Workflows;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Recipe which additional contains a workplan

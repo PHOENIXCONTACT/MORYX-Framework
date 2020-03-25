@@ -3,6 +3,7 @@
 
 using System.ServiceModel;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 

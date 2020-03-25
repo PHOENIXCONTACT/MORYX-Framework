@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Marvin.AbstractionLayer.Products;
 using NUnit.Framework;
 
 namespace Marvin.AbstractionLayer.Tests

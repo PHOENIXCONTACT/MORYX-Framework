@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.AbstractionLayer.Drivers
+namespace Marvin.AbstractionLayer.Drivers.InOut
 {
     /// <summary>
     /// Interface for drivers that offer data input

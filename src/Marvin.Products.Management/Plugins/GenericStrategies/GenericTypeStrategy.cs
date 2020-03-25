@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 using Marvin.Container;
 using Marvin.Model;
 using Marvin.Modules;

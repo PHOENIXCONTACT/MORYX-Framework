@@ -4,6 +4,8 @@
 using System;
 using System.Text.RegularExpressions;
 using Marvin.AbstractionLayer.Identity;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Bindings;
 
 namespace Marvin.AbstractionLayer

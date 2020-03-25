@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Drivers
+namespace Marvin.AbstractionLayer.Drivers.InOut
 {
     /// <summary>
     /// Flags enums of the supported modes of an <see cref="IInOutDriver{TIn,TOut}"/>

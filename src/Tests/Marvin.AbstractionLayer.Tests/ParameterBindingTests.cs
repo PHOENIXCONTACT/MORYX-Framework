@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Bindings;
 using NUnit.Framework;
 

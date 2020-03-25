@@ -4,7 +4,7 @@
 using System;
 using Marvin.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Identity for products consisting of identifier and revision

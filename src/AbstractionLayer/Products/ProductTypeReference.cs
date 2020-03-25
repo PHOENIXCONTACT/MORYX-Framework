@@ -4,7 +4,7 @@
 using System;
 using Marvin.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Temporary product reference to be replaced by the product management
@@ -20,7 +20,7 @@ namespace Marvin.AbstractionLayer
         }
 
         /// <summary>
-        /// Create a refernce product by giving an identity
+        /// Create a reference product by giving an identity
         /// </summary>
         /// <param name="identity">Identity information of this ProductReference</param>
         public ProductTypeReference(IIdentity identity)

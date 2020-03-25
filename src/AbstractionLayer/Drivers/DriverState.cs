@@ -12,7 +12,7 @@ namespace Marvin.AbstractionLayer.Drivers
     public abstract class DriverState<TContext> : StateBase<TContext>, IDriverState
         where TContext : Driver
     {
-        /// 
+        /// <inheritdoc />
         public StateClassification Classification { get; protected set; }
 
         /// <summary>

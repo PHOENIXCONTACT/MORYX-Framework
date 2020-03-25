@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
+using Marvin.AbstractionLayer.Products;
 using Marvin.Products.Samples;
 using NUnit.Framework;
 

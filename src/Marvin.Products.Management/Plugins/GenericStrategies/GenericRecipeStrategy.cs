@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Container;
 using Marvin.Modules;
 using Marvin.Products.Model;

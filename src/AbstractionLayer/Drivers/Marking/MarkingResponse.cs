@@ -9,11 +9,10 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
     public class MarkingResponse : TransmissionResult
     {
         /// <summary>
-        /// Successfull marking
+        /// Successful marking
         /// </summary>
         public MarkingResponse()
         {
-            
         }
 
         /// <summary>
@@ -22,7 +21,6 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// <param name="errorMessage">Occured error</param>
         public MarkingResponse(string errorMessage) : base(new TransmissionError(errorMessage))
         {
-            
         }
     }
 }
