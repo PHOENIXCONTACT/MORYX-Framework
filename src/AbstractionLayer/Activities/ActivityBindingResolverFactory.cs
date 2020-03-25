@@ -25,8 +25,10 @@ namespace Marvin.AbstractionLayer
                     return new DelegateResolver(source => ((IActivity)source).Process);
                 case "Recipe":
                     return new DelegateResolver(source => ((IActivity)source).Process.Recipe);
+                case "Product":
                 case "ProductType":
                     return new ProductResolver();
+                case "Article":
                 case "ProductInstance":
                     return new DelegateResolver(source => (((IActivity)source).Process as ProductionProcess)?.ProductInstance);
                 default:
