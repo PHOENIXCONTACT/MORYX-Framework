@@ -33,8 +33,8 @@
     <DocumentationFile>bin\Release\Marvin.AbstractionLayer.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin, Version=3.0.0.8618, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev008618\lib\netstandard2.0\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.9258, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.3.0.0-dev009258\lib\netstandard2.0\Marvin.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
