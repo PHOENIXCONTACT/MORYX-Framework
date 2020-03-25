@@ -120,7 +120,6 @@
     <Compile Include="AbstractionLayerBundle.cs" />
     <Compile Include="Products\IProductionDate.cs" />
     <Compile Include="Recipes\RecipeBindingResolverFactory.cs" />
-    <Compile Include="Products\FileType.cs" />
     <Compile Include="Products\IdentityConflictException.cs" />
     <Compile Include="Products\Import\IFileImportParameters.cs" />
     <Compile Include="Products\Import\IImportParameters.cs" />
@@ -195,7 +194,7 @@
     <Compile Include="Tasks\TaskStep.cs" />
     <Compile Include="Tasks\TaskTransition.cs" />
     <Compile Include="Workplan\ProcessContext.cs" />
-    <Compile Include="Workplan\WorkplanExtentions.cs" />
+    <Compile Include="Workplan\WorkplanExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
