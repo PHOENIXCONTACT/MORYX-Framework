@@ -1,4 +1,7 @@
-﻿namespace Marvin.AbstractionLayer.TestTools
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.AbstractionLayer.TestTools
 {
     /// <summary>
     /// Dummy implementation of an article. Created by the <see cref="DummyProductType"/>

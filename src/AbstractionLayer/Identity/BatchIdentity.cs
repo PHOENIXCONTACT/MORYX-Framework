@@ -1,4 +1,7 @@
-﻿namespace Marvin.AbstractionLayer.Identity
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.AbstractionLayer.Identity
 {
     /// <summary>
     /// Identity to assign on <see cref="ProductInstance"/> to identify batches

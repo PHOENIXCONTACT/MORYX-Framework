@@ -55,26 +55,26 @@
     <Reference Include="CommandLine, Version=2.7.82.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\CommandLineParser.2.7.82\lib\net461\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="Controls4Industry, Version=3.0.0.8841, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Controls4Industry.3.0.0-dev008841\lib\net461\Controls4Industry.dll</HintPath>
+    <Reference Include="Controls4Industry, Version=3.0.0.8885, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Controls4Industry.3.0.0-dev008885\lib\net461\Controls4Industry.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.8894, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev008894\lib\netstandard2.0\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.9258, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.3.0.0-dev009258\lib\netstandard2.0\Marvin.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.ClientFramework, Version=3.0.0.8841, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.ClientFramework.3.0.0-dev008841\lib\net461\Marvin.ClientFramework.dll</HintPath>
+    <Reference Include="Marvin.ClientFramework, Version=3.0.0.8885, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.ClientFramework.3.0.0-dev008885\lib\net461\Marvin.ClientFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.ClientFramework.Kernel, Version=3.0.0.8841, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.ClientFramework.Kernel.3.0.0-dev008841\lib\net461\Marvin.ClientFramework.Kernel.dll</HintPath>
+    <Reference Include="Marvin.ClientFramework.Kernel, Version=3.0.0.8885, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.ClientFramework.Kernel.3.0.0-dev008885\lib\net461\Marvin.ClientFramework.Kernel.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Container, Version=3.0.0.8894, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Container.3.0.0-dev008894\lib\netstandard2.0\Marvin.Container.dll</HintPath>
+    <Reference Include="Marvin.Container, Version=3.0.0.9258, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Container.3.0.0-dev009258\lib\netstandard2.0\Marvin.Container.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.8894, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev008894\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
+    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.9258, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev009258\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.8894, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Tools.Wcf.3.0.0-dev008894\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.9258, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Tools.Wcf.3.0.0-dev009258\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>

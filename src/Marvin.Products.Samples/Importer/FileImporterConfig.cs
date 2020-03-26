@@ -1,4 +1,7 @@
-﻿using System.Runtime.Serialization;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Runtime.Serialization;
 using Marvin.Products.Management.Importers;
 
 namespace Marvin.Products.Samples

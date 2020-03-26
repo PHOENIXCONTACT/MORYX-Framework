@@ -1,4 +1,7 @@
-﻿using Marvin.Model.InMemory;
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Marvin.Model.InMemory;
 
 // ReSharper disable once CheckNamespace
 namespace Marvin.Resources.Model

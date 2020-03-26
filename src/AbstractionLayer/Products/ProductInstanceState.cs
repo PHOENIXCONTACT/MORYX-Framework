@@ -1,4 +1,7 @@
-﻿namespace Marvin.AbstractionLayer
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Marvin.AbstractionLayer
 {
     /// <summary>
     /// The state of an Article. This will not occupy more than 4 Bits. Other enums can be added by bit-shifting
