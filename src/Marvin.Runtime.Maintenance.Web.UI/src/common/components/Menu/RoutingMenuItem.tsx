@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiChevronDown, mdiChevronUp } from "@mdi/js";
+import Icon from "@mdi/react";
 import { Location, UnregisterCallback } from "history";
 import * as React from "react";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
@@ -80,7 +80,7 @@ class RoutingMenuItem extends React.Component<RouteComponentProps<{}> & MenuItem
                         <Col md={hasSubItems ? 10 : 12} style={{display: "flex"}}>
                             <Link to={this.props.MenuItem.NavPath} className={bold} style={{flex: "1"}}>
                                 { this.props.MenuItem.Icon != undefined &&
-                                    <FontAwesomeIcon icon={this.props.MenuItem.Icon} style={{marginRight: "4px"}} />
+                                    <Icon path={this.props.MenuItem.Icon} className="icon right-space" />
                                 }
                                 <span style={{wordBreak: "break-all"}}>{this.props.MenuItem.Name}</span>
                             </Link>
@@ -88,7 +88,7 @@ class RoutingMenuItem extends React.Component<RouteComponentProps<{}> & MenuItem
                         </Col>
                         <Col md={hasSubItems ? 2 : 0}>
                             { hasSubItems &&
-                                <FontAwesomeIcon icon={this.state.IsOpened ? faAngleDown : faAngleRight} />
+                                <Icon path={this.state.IsOpened ? mdiChevronUp : mdiChevronDown} className="icon"/>
                             }
                         </Col>
                     </Row>

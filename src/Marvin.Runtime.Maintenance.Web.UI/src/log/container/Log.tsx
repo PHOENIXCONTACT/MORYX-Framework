@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faEdit, faList } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiFormatListBulletedSquare, mdiSquareEditOutline } from "@mdi/js";
+import Icon from "@mdi/react";
 import { Location, UnregisterCallback } from "history";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
@@ -173,7 +173,7 @@ class Log extends React.Component<LogPropsModel & LogDispatchPropModel, LogState
                 <Col md={3}>
                     <Card>
                         <CardHeader tag="h2">
-                            <FontAwesomeIcon icon={faList} className="right-space" />
+                            <Icon path={mdiFormatListBulletedSquare} className="icon right-space" />
                             Loggers
                         </CardHeader>
                         <CardBody>
@@ -186,7 +186,7 @@ class Log extends React.Component<LogPropsModel & LogDispatchPropModel, LogState
                 <Col md={9}>
                     <Card>
                         <CardHeader tag="h2">
-                            <FontAwesomeIcon icon={faEdit} className="right-space" />
+                            <Icon path={mdiSquareEditOutline} className="icon right-space" />
                             Log
                         </CardHeader>
                         <CardBody>

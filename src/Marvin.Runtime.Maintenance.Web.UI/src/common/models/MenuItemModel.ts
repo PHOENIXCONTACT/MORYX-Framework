@@ -7,7 +7,7 @@ import * as React from "react";
 
 export const enum IconType {
     Image,
-    FontAwesome
+    Icon
 }
 
 export default interface MenuItemModel {

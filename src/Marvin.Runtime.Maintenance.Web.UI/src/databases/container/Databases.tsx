@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faBriefcase, faClone, faComment } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiBriefcase, mdiCheckboxMultipleBlank, mdiComment} from "@mdi/js";
+import Icon from "@mdi/react";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
@@ -74,7 +74,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
         return {
             Name: dataModel.TargetModel,
             NavPath: "/databases/" + dataModel.TargetModel,
-            Icon: faBriefcase,
+            Icon: mdiBriefcase,
             SubMenuItems: [],
         };
     }
@@ -97,7 +97,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                 <Col md={3}>
                     <Card>
                         <CardHeader tag="h2">
-                            <FontAwesomeIcon icon={faClone} className="right-space" />
+                            <Icon path={mdiCheckboxMultipleBlank} className="icon right-space" />
                             Available database models
                         </CardHeader>
                         <CardBody>
@@ -114,7 +114,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                         <Route exact={true} path="/databases" render={() =>
                             <Card>
                                 <CardHeader tag="h2">
-                                    <FontAwesomeIcon icon={faComment} className="right-space" />
+                                    <Icon path={mdiComment} className="icon right-space" />
                                     Information
                                 </CardHeader>
                                 <CardBody>

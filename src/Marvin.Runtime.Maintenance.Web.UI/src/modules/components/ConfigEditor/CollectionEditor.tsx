@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faArrowsAltV, faFolderOpen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiChevronDown, mdiFolderOpen, mdiPlus, mdiTrashCanOutline } from "@mdi/js";
+import Icon from "@mdi/react";
 import * as React from "react";
 import { Button, ButtonGroup, Col, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Input, Row } from "reactstrap";
 import Entry from "../../models/Entry";
@@ -94,15 +94,15 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                                         <Col md={6} className="no-padding">
                                             <ButtonGroup>
                                                 <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>
-                                                    <FontAwesomeIcon icon={faFolderOpen} className="right-space" />
+                                                    <Icon path={mdiFolderOpen} className="icon right-space" />
                                                     Open
                                                 </Button>
                                                 <Button color="secondary" onClick={() => this.toggleCollapsible(entry.Key.UniqueIdentifier)}>
-                                                    <FontAwesomeIcon icon={faArrowsAltV} className="right-space" />
+                                                    <Icon path={mdiChevronDown} className="icon right-space" />
                                                     Expand
                                                 </Button>
                                                 <Button color="secondary" onClick={() => this.removeEntry(entry)} disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}>
-                                                    <FontAwesomeIcon icon={faTrash} className="right-space" />
+                                                    <Icon path={mdiTrashCanOutline} className="icon right-space" />
                                                     Remove
                                                 </Button>
                                             </ButtonGroup>
@@ -124,7 +124,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                                     {this.preRenderOptions()}
                                 </Input>
                                 <Button color="primary" onClick={() => this.addEntry()} disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}>
-                                    <FontAwesomeIcon icon={faPlus} className="right-space" />
+                                    <Icon path={mdiPlus} className="icon-white right-space" />
                                     Add entry
                                 </Button>
                             </Col>

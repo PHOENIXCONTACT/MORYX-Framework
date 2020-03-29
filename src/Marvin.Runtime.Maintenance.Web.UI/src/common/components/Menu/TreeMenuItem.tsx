@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiChevronDown, mdiChevronUp } from "@mdi/js";
+import Icon from "@mdi/react";
 import * as React from "react";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { Col, Collapse, Container, Row } from "reactstrap";
@@ -52,17 +52,16 @@ export default class TreeMenuItem extends React.Component<MenuItemProps, MenuIte
 
     public render(): React.ReactNode {
         const hasSubItems = this.props.MenuItem.SubMenuItems.length > 0;
-        const iconType = this.props.MenuItem.IconType == undefined ? IconType.FontAwesome : IconType.Image;
+        const iconType = this.props.MenuItem.IconType == undefined ? IconType.Icon : IconType.Image;
         const defaultContent = (
             <div>
-                { this.props.MenuItem.Icon !== undefined && iconType === IconType.FontAwesome &&
-
-                    <FontAwesomeIcon icon={this.props.MenuItem.Icon} style={{marginRight: "4px"}} />
+                { this.props.MenuItem.Icon !== undefined && iconType === IconType.Icon &&
+                    <Icon path={this.props.MenuItem.Icon} className="icon right-space" />
                 }
                 { this.props.MenuItem.Icon !== undefined && iconType === IconType.Image &&
                     <img src={this.props.MenuItem.Icon} style={{marginRight: "4px"}} />
                 }
-                <FontAwesomeIcon icon={this.props.MenuItem.Icon} style={{marginRight: "4px"}} />
+                <Icon path={this.props.MenuItem.Icon} className="icon right-sapce" />
                 <span style={{wordBreak: "break-all"}}>{this.props.MenuItem.Name}</span>
             </div>
         );
@@ -83,7 +82,7 @@ export default class TreeMenuItem extends React.Component<MenuItemProps, MenuIte
                         </Col>
                         <Col md={2} onClick={(e: React.MouseEvent<HTMLElement>) => this.handleMenuItemClick(e)}>
                             { hasSubItems &&
-                                <FontAwesomeIcon icon={this.state.IsOpened ? faAngleDown : faAngleRight} />
+                                <Icon path={this.state.IsOpened ? mdiChevronUp : mdiChevronDown} className="icon"/>
                             }
                         </Col>
                     </Row>

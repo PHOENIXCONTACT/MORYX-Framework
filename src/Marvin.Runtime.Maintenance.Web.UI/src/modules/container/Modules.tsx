@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faCogs, faComment, faSitemap, faSquare, faTerminal } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {mdiCogs, mdiComment, mdiConsoleLine, mdiHexagon, mdiHexagonMultiple} from "@mdi/js";
+import Icon from "@mdi/react";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
@@ -80,20 +80,20 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
         return {
             Name: moduleModel.Name,
             NavPath: "/modules/" + moduleModel.Name,
-            Icon: faSquare,
+            Icon: mdiHexagon,
             Content: (<span className="font-small" style={{float: "right"}}><HealthStateBadge HealthState={moduleModel.HealthState} /></span>),
             SubMenuItems:
             [
                 {
                     Name: "Configuration",
                     NavPath: "/modules/" + moduleModel.Name + "/configuration",
-                    Icon: faCogs,
+                    Icon: mdiCogs,
                     SubMenuItems: [],
                 },
                 {
                     Name: "Console",
                     NavPath: "/modules/" + moduleModel.Name + "/console",
-                    Icon: faTerminal,
+                    Icon: mdiConsoleLine,
                     SubMenuItems: [],
                 },
             ],
@@ -136,7 +136,7 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                 <Col md={3}>
                     <Card>
                         <CardHeader tag="h2">
-                            <FontAwesomeIcon icon={faSitemap} className="right-space" />
+                            <Icon path={mdiHexagonMultiple} className="icon right-space" />
                             Modules
                         </CardHeader>
                         <CardBody>
@@ -149,7 +149,7 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                         <Route exact={true} path="/modules" render={() =>
                             <Card>
                                 <CardHeader tag="h2">
-                                    <FontAwesomeIcon icon={faComment} className="right-space" />
+                                    <Icon path={mdiComment} className="icon right-space" />
                                     Information
                                 </CardHeader>
                                 <CardBody>

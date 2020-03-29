@@ -3,8 +3,6 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as moment from "moment";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");

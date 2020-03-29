@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faArrowsAltV, faFolderOpen } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiChevronDown, mdiChevronUp, mdiFolderOpen} from "@mdi/js";
+import Icon from "@mdi/react";
 import * as React from "react";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Row, Table } from "reactstrap";
 import Entry from "../../models/Entry";
@@ -141,11 +141,11 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                 return (
                     <ButtonGroup>
                         <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>
-                            <FontAwesomeIcon icon={faFolderOpen} className="right-space" />
+                            <Icon path={mdiFolderOpen} className="icon right-space" />
                             Open
                         </Button>
                         <Button color="secondary" onClick={() => this.toggleCollapsible(entry.Key.UniqueIdentifier)}>
-                            <FontAwesomeIcon icon={faArrowsAltV} className="right-space" />
+                            <Icon path={this.isExpanded(entry.Key.UniqueIdentifier) ? mdiChevronUp : mdiChevronDown} className="icon right-space" />
                             {this.isExpanded(entry.Key.UniqueIdentifier) ? "Collapse" : "Expand"}
                         </Button>
                     </ButtonGroup>
@@ -243,7 +243,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                                     }
                                 </Input>
                             </Col>
-                            <Col md={2}>
+                            <Col>
                                 <Button color="primary"
                                         disabled={this.state.SelectedEntryType === "" || this.state.SelectedEntryType === this.props.ParentEntry.Value.Current}
                                         onClick={() => this.onPatchToSelectedEntryType()}>

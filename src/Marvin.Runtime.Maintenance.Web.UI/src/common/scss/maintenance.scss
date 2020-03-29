@@ -45,6 +45,31 @@ body {
   color: #333;
 }
 
+svg.icon {
+  height: 20px;
+}
+
+svg.icon-white {
+  height: 20px;
+  path {
+    fill: #ffffff;
+  }
+}
+
+svg.icon-green {
+  height: 20px;
+  path {
+    fill: green;
+  }
+}
+
+svg.icon-red {
+  height: 20px;
+  path {
+    fill: red;
+  }
+}
+
 .container-fluid {
   max-width:1560px;
 }

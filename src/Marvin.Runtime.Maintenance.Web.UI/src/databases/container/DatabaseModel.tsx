@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faBriefcase, faCheck, faDatabase, faExclamation, faPlug, faSpinner, faTable } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiBriefcase, mdiCheck, mdiDatabase, mdiExclamationThick, mdiLoading, mdiPowerPlug, mdiTable} from "@mdi/js";
+import Icon from "@mdi/react";
 import * as moment from "moment";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
@@ -271,27 +271,27 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     private preRenderConnectionCheckIcon(): React.ReactNode {
         switch (this.state.testConnectionResult) {
             case TestConnectionResult.Success:
-                return (<FontAwesomeIcon icon={faCheck} style={{color: "green"}} />);
+                return (<Icon path={mdiCheck} className="icon-green" />);
             case TestConnectionResult.ConfigurationError:
                 return (<div style={{display: "inline", color: "red"}} id="TestConnectionErrorHint">
-                            <FontAwesomeIcon icon={faExclamation} className="right-space" />
-                            <FontAwesomeIcon icon={faTable} />
+                            <Icon path={mdiExclamationThick} className="icon-red right-space" />
+                            <Icon path={mdiTable} className="icon-red"/>
                             <UncontrolledTooltip placement="right" target="TestConnectionErrorHint">
                                 Please check if model configuration exists on server.
                             </UncontrolledTooltip>
                         </div>);
             case TestConnectionResult.ConnectionError:
                 return (<div style={{display: "inline", color: "red"}} id="TestConnectionErrorHint">
-                            <FontAwesomeIcon icon={faExclamation} className="right-space" />
-                            <FontAwesomeIcon icon={faPlug} />
+                            <Icon path={mdiExclamationThick} className="icon-red right-space" />
+                            <Icon path={mdiPowerPlug} className="icon-red"/>
                             <UncontrolledTooltip placement="right" target="TestConnectionErrorHint">
                                 Please check host, port and credentials.
                             </UncontrolledTooltip>
                         </div>);
             case TestConnectionResult.ConnectionOkDbDoesNotExist:
                 return (<div style={{display: "inline", color: "red"}} id="TestConnectionErrorHint">
-                        <FontAwesomeIcon icon={faExclamation} className="right-space" />
-                        <FontAwesomeIcon icon={faDatabase} />
+                        <Icon path={mdiExclamationThick} className="icon-red right-space" />
+                        <Icon path={mdiDatabase} className="icon-red"/>
                         <UncontrolledTooltip placement="right" target="TestConnectionErrorHint">
                             The connection to the database could be established but the database could not be found. Please check the name of the database or create it before.
                         </UncontrolledTooltip>
@@ -305,7 +305,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         return (
             <Card>
                 <CardHeader tag="h2">
-                    <FontAwesomeIcon icon={faBriefcase} className="right-space" />
+                    <Icon path={mdiBriefcase} className="icon right-space" />
                     {this.props.DataModel.TargetModel}
                 </CardHeader>
                 <CardBody>
@@ -315,7 +315,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                 <h3>
                                     <span className="right-space">Connection</span>
                                     { this.state.testConnectionPending ? (
-                                        <FontAwesomeIcon icon={faSpinner} spin={true} />
+                                        <Icon path={mdiLoading} spin={true} className="icon"/>
                                     ) : this.preRenderConnectionCheckIcon() }
                                 </h3>
                             </Col>

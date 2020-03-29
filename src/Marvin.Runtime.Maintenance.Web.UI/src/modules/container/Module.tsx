@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faCheck, faHospital, faPlay, faSquare, faStop } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiCheck, mdiHexagon, mdiPlay, mdiRestart, mdiStop} from "@mdi/js";
+import Icon from "@mdi/react";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -120,7 +120,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
         return (
             <Card>
                 <CardHeader tag="h2">
-                    <FontAwesomeIcon icon={faSquare} className="right-space" />
+                    <Icon path={mdiHexagon} className="icon right-space" />
                     {this.props.Module.Name} - General
                 </CardHeader>
                 <CardBody>
@@ -129,15 +129,15 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                             <Col md={6}>
                                 <h3>Control</h3>
                                 <ButtonGroup>
-                                    <Button color="primary" onClick={this.startModule.bind(this)}><FontAwesomeIcon icon={faPlay} className="right-space" />Start</Button>
-                                    <Button color="primary" onClick={this.stopModule.bind(this)}><FontAwesomeIcon icon={faStop} className="right-space" />Stop</Button>
-                                    <Button color="primary" onClick={this.reincarnateModule.bind(this)}><FontAwesomeIcon icon={faHospital} className="right-space" />Reincarnate</Button>
+                                    <Button color="primary" onClick={this.startModule.bind(this)}><Icon path={mdiPlay} className="icon-white right-space" />Start</Button>
+                                    <Button color="primary" onClick={this.stopModule.bind(this)}><Icon path={mdiStop} className="icon-white right-space" />Stop</Button>
+                                    <Button color="primary" onClick={this.reincarnateModule.bind(this)}><Icon path={mdiRestart} className="icon-white right-space" />Reincarnate</Button>
                                 </ButtonGroup>
                             </Col>
                             <Col md={6}>
                                 <h3>Error Handling</h3>
                                 {this.state.HasWarningsOrErrors ? (
-                                    <Button color="warning" onClick={this.confirmModuleWarning.bind(this)}><FontAwesomeIcon icon={faCheck} className="right-space" />Confirm</Button>
+                                    <Button color="warning" onClick={this.confirmModuleWarning.bind(this)}><Icon path={mdiCheck} className="icon right-space" />Confirm</Button>
                                 ) : (
                                     <span className="font-italic font-small">No warnings or errors.</span>
                                 )}

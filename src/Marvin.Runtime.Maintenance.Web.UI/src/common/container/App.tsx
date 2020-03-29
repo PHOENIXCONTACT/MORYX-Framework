@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { faBars, faCubes, faDatabase, faSitemap } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { mdiDatabase, mdiFormatListBulletedSquare, mdiHexagonMultiple, mdiTools } from "@mdi/js";
+import Icon from "@mdi/react";
 import * as moment from "moment";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
@@ -163,26 +163,26 @@ class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDi
 
                     <Navbar className="navbar-default" expand="md">
                         <NavbarBrand href="#/">
-                            <FontAwesomeIcon icon={faCubes} className="right-space" />
+                            <Icon path={mdiTools} className="icon right-space" />
                             Maintenance
                         </NavbarBrand>
                         <Collapse navbar={true}>
                             <Nav className="navbar-left" navbar={true}>
                                 <NavItem className={this.isRouteActive("/modules") ? "active" : ""}>
                                     <Link to="/modules">
-                                        <FontAwesomeIcon icon={faSitemap} className="right-space" />
+                                        <Icon path={mdiHexagonMultiple} className="icon right-space" />
                                         Modules
                                     </Link>
                                 </NavItem>
                                 <NavItem className={this.isRouteActive("/databases") ? "active" : ""}>
                                     <Link to="/databases">
-                                        <FontAwesomeIcon icon={faDatabase} className="right-space" />
+                                        <Icon path={mdiDatabase}className="icon right-space" />
                                         Databases
                                     </Link>
                                 </NavItem>
                                 <NavItem className={this.isRouteActive("/log") ? "active" : ""}>
                                     <Link to="/log">
-                                        <FontAwesomeIcon icon={faBars} className="right-space" />
+                                        <Icon path={mdiFormatListBulletedSquare} className="icon right-space" />
                                         Log
                                     </Link>
                                 </NavItem>
