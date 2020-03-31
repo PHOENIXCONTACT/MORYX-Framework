@@ -119,6 +119,14 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         $env:MARVIN_BUILD_CONFIG = "Debug";
     }
 
+    if (-not $env:MARVIN_BUILD_VERBOSITY) {
+        $env:MARVIN_BUILD_VERBOSITY = "minimal"
+    }
+
+    if (-not $env:MARVIN_NUGET_VERBOSITY) {
+        $env:MARVIN_NUGET_VERBOSITY = "normal"
+    }
+
     if (-not $env:MARVIN_OPTIMIZE_CODE) {
         $env:MARVIN_OPTIMIZE_CODE = $True;
     }
@@ -194,7 +202,7 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
     ForEach ($solution in (Get-ChildItem $RootPath -Filter "*.sln")) {
         Write-Host "Restoring Nuget packages of $solution";
 
-        & $global:NugetCli restore $solution -Verbosity detailed -configfile $NugetConfig;
+        & $global:NugetCli restore $solution -Verbosity $env:MARVIN_NUGET_VERBOSITY -configfile $NugetConfig;
         Invoke-ExitCodeCheck $LastExitCode;
     }
 
@@ -205,7 +213,7 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
 
     $params = "Configuration=$env:MARVIN_BUILD_CONFIG,Optimize=" + (&{If($env:MARVIN_OPTIMIZE_CODE -eq $True) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
 
-    & $global:MSBuildCli $ProjectFile /p:$params /detailedsummary
+    & $global:MSBuildCli $ProjectFile /p:$params /verbosity:$env:MARVIN_BUILD_VERBOSITY
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
@@ -446,7 +454,7 @@ function Invoke-Pack($FilePath, [bool]$IsTool = $False, [bool]$IncludeSymbols = 
     $packargs += "-includereferencedprojects";
     $packargs += "-Version", "$env:MARVIN_VERSION";
     $packargs += "-Prop", "Configuration=$env:MARVIN_BUILD_CONFIG";
-    $packargs += "-Verbosity", "detailed";
+    $packargs += "-Verbosity", "$env:MARVIN_NUGET_VERBOSITY";
 
     if ($IncludeSymbols) {
         $packargs += "-Symbols";
@@ -483,7 +491,7 @@ function Invoke-Publish {
     $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
-        & $global:NugetPushCli push $package $env:MARVIN_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity detail
+        & $global:NugetPushCli push $package $env:MARVIN_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity $env:MARVIN_NUGET_VERBOSITY
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }

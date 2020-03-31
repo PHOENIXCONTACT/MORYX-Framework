@@ -27,10 +27,13 @@ For downloading Nuget-Packages, we need Nuget itself. So the first Step is to do
 ````sh
 $env:MARVIN_BUILDNUMBER
 $env:MARVIN_BRANCH
-$env:MARVIN_BUILD_CONFIG
-$env:MARVIN_OPTIMIZE_CODE
 $env:MARVIN_VERSION
+$env:MARVIN_BUILD_CONFIG
+$env:MARVIN_BUILD_VERBOSITY
+$env:MARVIN_OPTIMIZE_CODE
 $env:MARVIN_ASSEMBLY_VERSION
+$env:MARVIN_NUGET_APIKEY
+$env:MARVIN_NUGET_VERBOSITY
 ````
 
 ## Available Functions
