@@ -11,8 +11,8 @@ on:
 env:
   MARVIN_OPTIMIZE_CODE: "false"
   MARVIN_BUILD_CONFIG: "Release"
-  MARVIN_BUILDNUMBER: $GITHUB_RUN_NUMBER
-  MARVIN_BRANCH: "master"
+  MARVIN_BUILDNUMBER: ${{github.run_number}}
+  MARVIN_BRANCH: ${{github.ref}}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
