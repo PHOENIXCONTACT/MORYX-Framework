@@ -8,9 +8,14 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  MARVIN_OPTIMIZE_CODE: "false"
+  MARVIN_BUILD_CONFIG: "Release"
+  MARVIN_BUILDNUMBER: $GITHUB_RUN_NUMBER
+  MARVIN_BRANCH: "master"
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: windows-latest
@@ -20,7 +25,7 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     
-    - name: setup-msbuild
+    - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
     
     - name: Setup NuGet.exe
@@ -28,4 +33,12 @@ jobs:
 
     - name: Build
       shell: pwsh
-      run: ./Build.ps1 -Build
+      run: ./Build.ps1 -SetAssemblyVersion
+
+    - name: Build
+      shell: pwsh
+      run: ./Build.ps1 -Build -Pack
+
+    - name: Pack packages
+      shell: pwsh
+      run: ./Build.ps1 -Pack
