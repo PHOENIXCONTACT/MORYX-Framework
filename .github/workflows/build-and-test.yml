@@ -31,13 +31,13 @@ jobs:
     - name: Setup NuGet.exe
       uses: NuGet/setup-nuget@v1.0.2
 
-    - name: Build
+    - name: Set assembly versions
       shell: pwsh
       run: ./Build.ps1 -SetAssemblyVersion
 
     - name: Build
       shell: pwsh
-      run: ./Build.ps1 -Build -Pack
+      run: ./Build.ps1 -Build
 
     - name: Pack packages
       shell: pwsh
