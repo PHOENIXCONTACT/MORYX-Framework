@@ -14,15 +14,8 @@
     [switch]$Publish
 )
 
-# Extend version number
-$env:MARVIN_BUILDNUMBER = [int]::Parse($env:MARVIN_BUILDNUMBER) + 364;
-
 # Load Toolkit
 . ".build\BuildToolkit.ps1"
-
-# Set build version to 15 if build in CI 
-# CI runner have problems with satelite assemblies in msbuild-14
-$MsBuildVersion = "latest"
 
 # Initialize Toolkit
 Invoke-Initialize -Version (Get-Content "VERSION");

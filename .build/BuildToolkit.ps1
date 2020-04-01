@@ -1,5 +1,4 @@
 # Tool Versions
-$MsBuildVersion = "15.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
 $NunitVersion = "3.11.1";
 $OpenCoverVersion = "4.7.922";
 $DocFxVersion = "2.52.0";
@@ -27,8 +26,6 @@ $CoberturaReportsDir = "$ArtifactsDir\Tests"
 # Nuget
 $NugetConfig = "$RootPath\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
-$NugetCliSource = "https://packages-ctvc.europe.phoenixcontact.com/source/nuget-5.4.0.exe";
-$NugetPushCliSource = "https://packages-ctvc.europe.phoenixcontact.com/source/nuget-3.4.4.exe";
 $NugetPackageTarget = "https://packages-ctvc.europe.phoenixcontact.com/nuget/MaRVIN-CI/";
 
 # Load partial scripts
@@ -37,8 +34,9 @@ $NugetPackageTarget = "https://packages-ctvc.europe.phoenixcontact.com/nuget/MaR
 # Define Tools
 $global:GitCli = "";
 $global:GitLink = "$BuildTools\GitLink.$GitLinkVersion\build\GitLink.exe";
-$global:NugetCli = "$BuildTools\nuget.exe";
-$global:NugetPushCli = "$BuildTools\nuget-push.exe";
+$global:MSBuildCli = "msbuild.exe";
+$global:NugetCli = "nuget.exe";
+$global:NugetPushCli = "nuget.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\net47\ReportGenerator.exe";
@@ -75,40 +73,6 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     # Initialize Folders
     CreateFolderIfNotExists $BuildTools;
     CreateFolderIfNotExists $ArtifactsDir;
-
-    # Assign nuget.exe
-    if ((-not (Test-Path $global:NugetCli)) -or (-not (Test-Path $global:NugetPushCli))) {
-        Write-Host "Downloading NuGet ..."
-        try {
-            Invoke-WebRequest $NugetCliSource -OutFile $global:NugetCli
-            Invoke-WebRequest $NugetPushCliSource -OutFile $global:NugetPushCli
-        }
-        catch {
-            Write-Host "Error while downloading NuGet: " + $_.Exception.Message
-            Invoke-ExitCodeCheck 1;
-        }
-    }
-
-    # Assign msbuild.exe
-    if ($MsBuildVersion -eq "latest" -or $MsBuildVersion -eq "15.0") {
-        if (-not (Test-Path $global:VswhereCli)) {
-            Install-Tool "vswhere" $VswhereVersion $VswhereCli;
-        }
-
-        $installPath = [string] (& $global:VswhereCli -latest -prerelease -products * -requires "Microsoft.Component.MSBuild" -property "installationPath");
-        if ($installPath) {
-            $msbuildExe = Get-ChildItem -Path $installPath -Filter MSBuild.exe -Recurse -ErrorAction SilentlyContinue -Force | Select-Object -First 1
-            $global:MSBuildCli = $msbuildExe.FullName;
-        }
-    }
-    else {
-        $global:MSBuildCli = join-path -path (Get-ItemProperty "HKLM:\software\Microsoft\MSBuild\ToolsVersions\$MsBuildVersion")."MSBuildToolsPath" -childpath "msbuild.exe"
-    }
-
-    if ($null -eq $global:MSBuildCli  -or -not (Test-Path $global:MSBuildCli)) {
-        Write-Host "Unable to find msbuild.exe.";
-        Invoke-ExitCodeCheck 1;
-    }
 
     # Environment Variable Defaults
     if (-not $env:MARVIN_BUILDNUMBER) {
