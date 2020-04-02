@@ -31,6 +31,14 @@
         {
             "type": "PowerShell",
             "request": "launch",
+            "name": "CoverReport",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-CoverReport"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
             "name": "SystemTests",
             "script": "${workspaceRoot}\\Build.ps1",
             "args": ["-SystemTests"],

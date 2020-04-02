@@ -46,7 +46,7 @@ if ($SystemTests) {
 }
 
 if ($CoverReport) {
-    Invoke-CoverReport
+    Invoke-CodecovUpload
 }
 
 if ($GenerateDocs) {

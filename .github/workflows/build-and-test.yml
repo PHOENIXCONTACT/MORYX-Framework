@@ -13,6 +13,7 @@ env:
   MARVIN_BUILD_CONFIG: "Release"
   MARVIN_BUILDNUMBER: ${{github.run_number}}
   MARVIN_BRANCH: ${{github.ref}}
+  MARVIN_CODECOV_SECRET: ${{secrets.CODECOV_TOKEN}}
 
 jobs:
   build:
@@ -59,6 +60,10 @@ jobs:
         - name: UnitTests
           shell: pwsh
           run: ./Build.ps1 -UnitTests
+
+        - name: Cover Report
+          shell: pwsh
+          run: ./Build.ps1 -CoverReport
 
         - name: Upload package artifacts
           uses: actions/upload-artifact@v1

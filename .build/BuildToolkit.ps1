@@ -3,6 +3,7 @@ $NunitVersion = "3.11.1";
 $OpenCoverVersion = "4.7.922";
 $DocFxVersion = "2.52.0";
 $OpenCoverToCoberturaVersion = "0.3.4";
+$CodecovVersion = "1.10.0";
 $ReportGeneratorVersion = "4.5.6";
 $VswhereVersion = "2.8.4";
 $GitLinkVersion = "3.1.0";
@@ -39,6 +40,7 @@ $global:NugetCli = "nuget.exe";
 $global:NugetPushCli = "nuget.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
+$global:CodecovCli = "$BuildTools\Codecov.$CodecovVersion\tools\codecov.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\net47\ReportGenerator.exe";
 $global:OpenCoverToCoberturaCli = "$BuildTools\OpenCoverToCoberturaConverter.$OpenCoverToCoberturaVersion\tools\OpenCoverToCoberturaConverter.exe";
 $global:VswhereCli = "$BuildTools\vswhere.$VswhereVersion\tools\vswhere.exe";
@@ -346,6 +348,25 @@ function Invoke-CoverReport {
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
+function Invoke-CodecovUpload {
+    Write-Step "Uploading OpenCover reports to codecov. Searching for OpenCover.xml files in $OpenCoverReportsDir."
+
+    if (-not (Test-Path $global:CodecovCli)) {
+        Install-Tool "Codecov" $CodecovVersion $global:CodecovCli;
+    }
+
+    $reports = (Get-ChildItem $OpenCoverReportsDir -Recurse -Include '*.OpenCover.xml');
+    $reportsArgument = [string]::Join(" ",$reports);
+    $covargs = "-f", "'$reportsArgument'";
+
+    if ($env:MARVIN_CODECOV_SECRET) {
+        $covargs += "-t", "$env:MARVIN_CODECOV_SECRET";
+    }
+
+    & $global:CodecovCli @covargs;
+    #Invoke-ExitCodeCheck $LastExitCode;
+}
+
 function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "docfx.json")) {
     Write-Step "Generating documentation using DocFx"
 
@@ -579,19 +600,6 @@ function Set-VsTemplateVersion([string]$VsTemplate) {
     $templateContent.Save($vsTemplate)
 
     Write-Host "Version $env:MARVIN_ASSEMBLY_VERSION applied to $VsTemplate!"
-}
-
-function Install-EddieLight([string]$Version, [string]$TargetPath) {
-    Write-Step "Installing EddieLight"
-
-    $eddieLightPackage = "Marvin.Runtime.EddieLight";
-    $eddieLightSource = [System.IO.Path]::Combine($BuildTools, "$eddieLightPackage.$Version\EddieLight\");
-    $heartOfSilver = [System.IO.Path]::Combine($eddieLightSource, "SilverlightApp\HeartOfSilver.xap");
-    $eddieLightPackage = "Marvin.Runtime.EddieLight";
-
-    Install-Tool $eddieLightPackage $Version $heartOfSilver;
-
-    CopyAndReplaceFolder $eddieLightSource $TargetPath;
 }
 
 function CreateFolderIfNotExists([string]$Folder) {
