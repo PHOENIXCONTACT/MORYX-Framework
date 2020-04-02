@@ -33,11 +33,10 @@ $NugetPackageTarget = "https://packages-ctvc.europe.phoenixcontact.com/nuget/MaR
 . "$PSScriptRoot\Output.ps1";
 
 # Define Tools
-$global:GitCli = "";
-$global:GitLink = "$BuildTools\GitLink.$GitLinkVersion\build\GitLink.exe";
 $global:MSBuildCli = "msbuild.exe";
 $global:NugetCli = "nuget.exe";
-$global:NugetPushCli = "nuget.exe";
+$global:GitCli = "";
+$global:GitLink = "$BuildTools\GitLink.$GitLinkVersion\build\GitLink.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:CodecovCli = "$BuildTools\Codecov.$CodecovVersion\tools\codecov.exe";
@@ -116,11 +115,9 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Variable "NunitReportsDir" $NunitReportsDir;
 
     Write-Step "Printing global scope"
-    Write-Variable "MSBuildCli" $global:MSBuildCli;
-    Write-Variable "NugetCli" $global:NugetCli;
-    Write-Variable "NugetPushCli" $global:NugetPushCli;
     Write-Variable "OpenCoverCli" $global:OpenCoverCli;
     Write-Variable "NUnitCli" $global:NUnitCli;
+    Write-Variable "CodecovCli" $global:OpenCoverCli;
     Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
     Write-Variable "DocFxCli" $global:DocFxCli;
     Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
@@ -349,13 +346,13 @@ function Invoke-CoverReport {
 }
 
 function Invoke-CodecovUpload {
-    Write-Step "Uploading OpenCover reports to codecov. Searching for OpenCover.xml files in $OpenCoverReportsDir."
+    Write-Step "Uploading cover reports to codecov. Searching for OpenCover.xml files in $OpenCoverReportsDir."
 
     if (-not (Test-Path $global:CodecovCli)) {
         Install-Tool "Codecov" $CodecovVersion $global:CodecovCli;
     }
 
-    $reports = (Get-ChildItem $OpenCoverReportsDir -Recurse -Include '*.OpenCover.xml');
+    $reports = (Get-ChildItem $OpenCoverReportsDir -Recurse -Include '*.OpenCover.xml' | Resolve-Path -Relative);
     $reportsArgument = [string]::Join(" ",$reports);
     $covargs = "-f", "'$reportsArgument'";
 
@@ -476,7 +473,7 @@ function Invoke-Publish {
     $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
-        & $global:NugetPushCli push $package $env:MARVIN_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity $env:MARVIN_NUGET_VERBOSITY
+        & $global:NugetCli push $package $env:MARVIN_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity $env:MARVIN_NUGET_VERBOSITY
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }

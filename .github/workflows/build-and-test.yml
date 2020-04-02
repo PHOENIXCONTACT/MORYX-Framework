@@ -59,13 +59,13 @@ jobs:
 
         - name: UnitTests
           shell: pwsh
-          run: ./Build.ps1 -UnitTests
+          run: ./Build.ps1 -UnitTests -IntegrationTests
 
         - name: Cover Report
           shell: pwsh
           run: ./Build.ps1 -CoverReport
 
-        - name: Upload package artifacts
+        - name: Upload test results
           uses: actions/upload-artifact@v1
           with:
             name: test-results
