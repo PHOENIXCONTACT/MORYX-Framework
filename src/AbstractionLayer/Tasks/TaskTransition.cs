@@ -31,7 +31,7 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Create a new instance of the <see cref="TaskTransition{T}"/>
         /// </summary>
-        public TaskTransition(IParameters parameters, IIndexResolver resolver, long resourceId)
+        public TaskTransition(IParameters parameters, IIndexResolver resolver)
         {
             _parameters = parameters;
             _indexResolver = resolver;

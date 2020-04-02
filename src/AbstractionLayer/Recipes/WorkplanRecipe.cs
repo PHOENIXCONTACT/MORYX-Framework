@@ -17,7 +17,6 @@ namespace Marvin.AbstractionLayer.Recipes
         public WorkplanRecipe()
         {
             DisabledSteps = new List<long>();
-            TaskAssignment = new Dictionary<long, long>();
         }
 
         /// <summary>
@@ -28,7 +27,6 @@ namespace Marvin.AbstractionLayer.Recipes
         {
             Workplan = source.Workplan;
             DisabledSteps = source.DisabledSteps;
-            TaskAssignment = source.TaskAssignment;
         }
 
         /// <inheritdoc />
@@ -36,9 +34,6 @@ namespace Marvin.AbstractionLayer.Recipes
 
         /// <inheritdoc />
         public ICollection<long> DisabledSteps { get; }
-
-        /// <inheritdoc />
-        public IDictionary<long, long> TaskAssignment { get; }
 
         /// <inheritdoc />
         public override IRecipe Clone()

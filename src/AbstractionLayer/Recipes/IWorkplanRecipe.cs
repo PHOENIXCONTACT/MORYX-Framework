@@ -20,10 +20,5 @@ namespace Marvin.AbstractionLayer.Recipes
         /// Steps that shall be skipped
         /// </summary>
         ICollection<long> DisabledSteps { get; }
-
-        /// <summary>
-        /// Pre-assigned resources for tasks from the workplan
-        /// </summary>
-        IDictionary<long, long> TaskAssignment { get; }
     }
 }

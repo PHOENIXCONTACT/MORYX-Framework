@@ -29,14 +29,5 @@ namespace Marvin.AbstractionLayer
         {
             return ((IWorkplanRecipe)Process.Recipe).DisabledSteps.Contains(step.Id);
         }
-
-        /// <summary>
-        /// Find a preassigned resource id
-        /// </summary>
-        public long PreassignedResource(long taskId)
-        {
-            var recipe = (IWorkplanRecipe) Process.Recipe;
-            return recipe.TaskAssignment.ContainsKey(taskId) ? recipe.TaskAssignment[taskId] : 0;
-        }
     }
 }

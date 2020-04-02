@@ -93,10 +93,8 @@ namespace Marvin.AbstractionLayer
                 return new NullTransition();
 
             // Create transition
-            var processContext = (ProcessContext)context;
-            var resourceId = processContext.PreassignedResource(Id);
             var indexResolver = _indexResolver ?? (_indexResolver = TransitionBase.CreateIndexResolver(OutputDescriptions));
-            return new TaskTransition<TActivity>(Parameters, indexResolver, resourceId);
+            return new TaskTransition<TActivity>(Parameters, indexResolver);
         }
     }
 
