@@ -43,6 +43,8 @@ namespace Marvin.Products.Management
         {
             Container.SetInstance(ProductsModel, ProductsConstants.Namespace);
 
+            Container.SetInstance(ConfigManager);
+
             // Load all product plugins
             Container.LoadComponents<IProductStorage>();
             Container.LoadComponents<IProductImporter>();

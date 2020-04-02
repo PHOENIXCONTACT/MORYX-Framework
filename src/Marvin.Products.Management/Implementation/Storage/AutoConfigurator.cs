@@ -108,11 +108,7 @@ namespace Marvin.Products.Management
                        "Available types: " + string.Join(", ", types.Select(t => t.Name));
 
             var result = string.Empty;
-            if (instanceType == null)
-            {
-                result += $"Found no instance for product type '{instanceType}'";
-            }
-            else if (Config.InstanceStrategies.Any(s => s.TargetType == instanceType))
+            if (Config.InstanceStrategies.Any(s => s.TargetType == instanceType))
             {
                 result += $"Product {instanceType} already has an InstanceStrategy configured. Overwriting configs is not supported!\n";
             }
@@ -145,17 +141,14 @@ namespace Marvin.Products.Management
                        "Available types: " + string.Join(", ", types.Select(t => t.Name));
 
             var result = string.Empty;
-            if (recipeType == null)
-            {
-                result += $"Found no instance for recipe type '{recipeType}'";
-            }
-            else if (Config.RecipeStrategies.Any(s => s.TargetType == recipeType))
+            if (Config.RecipeStrategies.Any(s => s.TargetType == recipeType))
             {
                 result += $"Recipe {recipeType} already has a RecipeStrategy configured. Overwriting configs is not supported!\n";
             }
             else
             {
-                var recipeConfig = StrategyConfig<IProductRecipeStrategy, ProductRecipeConfiguration, IProductRecipe>(recipe);
+                // ProductionRecipe is technically not the correct base type, BUT it defines all relevant properties, which is the only thing that matters
+                var recipeConfig = StrategyConfig<IProductRecipeStrategy, ProductRecipeConfiguration, ProductionRecipe>(recipe);
                 if (recipeConfig == null)
                 {
                     result += $"Found no matching recipe strategy for {recipeType}. Make sure you declared the '{nameof(StrategyConfigurationAttribute)}'!\n";

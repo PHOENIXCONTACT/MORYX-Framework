@@ -21,7 +21,7 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Injected entity mapper
         /// </summary>
-        public GenericEntityMapper<ProductRecipe, IProductType> EntityMapper { get; set; }
+        public GenericEntityMapper<ProductionRecipe, IProductType> EntityMapper { get; set; }
 
         /// <summary>
         /// Initialize the type strategy

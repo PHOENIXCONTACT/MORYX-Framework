@@ -18,6 +18,8 @@ namespace Marvin.Products.Management
     {
         public AutoConfigurator Configurator { get; set; }
 
+        public IConfigManager ConfigManager { get; set; }
+
         public string ExportDescription(DescriptionExportFormat format)
         {
             switch (format)
@@ -79,6 +81,13 @@ namespace Marvin.Products.Management
         public string ConfigureRecipe([PossibleTypes(typeof(IProductRecipe))] string recipeType)
         {
             return Configurator.ConfigureRecipe(recipeType);
+        }
+
+        [EditorVisible]
+        [Description("Save latest changes to config")]
+        public void SaveConfig()
+        {
+            ConfigManager.SaveConfiguration(Configurator.Config);
         }
     }
 }

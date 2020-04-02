@@ -284,7 +284,7 @@ namespace Marvin.Products.IntegrationTests
                 {
                     IProductRecipeStrategy strategy = new GenericRecipeStrategy
                     {
-                        EntityMapper = new GenericEntityMapper<ProductRecipe, IProductType>
+                        EntityMapper = new GenericEntityMapper<ProductionRecipe, IProductType>
                         {
                             MapperFactory = mapperFactory.Object
                         }

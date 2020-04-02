@@ -82,7 +82,7 @@ namespace Marvin.Products.Management
     [DataContract]
     public class ProductRecipeConfiguration : IProductStrategyConfiguation
     {
-        [DataMember, PossibleTypes(typeof(ProductRecipe))]
+        [DataMember, PossibleTypes(typeof(IProductRecipe))]
         public string TargetType { get; set; }
 
         [DataMember, PluginNameSelector(typeof(IProductRecipeStrategy))]
