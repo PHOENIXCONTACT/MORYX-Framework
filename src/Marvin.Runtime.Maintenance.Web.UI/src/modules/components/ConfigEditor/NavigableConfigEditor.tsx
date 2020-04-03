@@ -64,9 +64,9 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
                 const entryChain: Entry[] = [];
                 let currentEntry: Entry = null;
 
-                (query.path as string).split(",").forEach((element: string) => {
+                (query.path as string).split("/").forEach((element: string) => {
                     const searchableEntries: Entry[] = currentEntry != null ? currentEntry.SubEntries : entries;
-                    const filtered = searchableEntries.filter((entry) => entry.Key.Name === element);
+                    const filtered = searchableEntries.filter((entry) => entry.Key.Identifier === element);
 
                     if (filtered.length > 0) {
                         currentEntry = filtered[0];
@@ -94,7 +94,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
     }
 
     private updatePath(entryChain: Entry[]): void {
-        this.props.History.push("?path=" + entryChain.map((entry) => entry.Key.Name).join(","));
+        this.props.History.push("?path=" + entryChain.map((entry) => entry.Key.Identifier).join("/"));
     }
 
     private onClickBreadcrumb(entry: Entry): void {
