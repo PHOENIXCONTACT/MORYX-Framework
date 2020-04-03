@@ -32,6 +32,6 @@ namespace Marvin.Products.Model
         /// <summary>
         /// Type that references this file
         /// </summary>
-        public virtual ProductTypeEntity ProductType { get; set; }
+        public virtual ProductTypeEntity Product { get; set; }
     }
 }

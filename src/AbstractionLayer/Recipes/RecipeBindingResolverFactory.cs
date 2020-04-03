@@ -8,7 +8,7 @@ using Marvin.AbstractionLayer.Identity;
 using Marvin.Bindings;
 using Marvin.Workflows;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Resolver factory that accepts recipes as input arguments
@@ -22,6 +22,7 @@ namespace Marvin.AbstractionLayer
             {
                 case "Recipe":
                     return new NullResolver();
+                case "ProductType":
                 case "Product":
                     return new DelegateResolver(source => (source as IProductRecipe)?.Product);
                 case "Workplan":

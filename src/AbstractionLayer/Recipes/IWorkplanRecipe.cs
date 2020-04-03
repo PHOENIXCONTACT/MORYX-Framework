@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Marvin.Workflows;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Implementation of <see cref="IRecipe"/> with an defined <see cref="IWorkplan"/>
@@ -20,10 +20,5 @@ namespace Marvin.AbstractionLayer
         /// Steps that shall be skipped
         /// </summary>
         ICollection<long> DisabledSteps { get; }
-
-        /// <summary>
-        /// Pre-assigned resources for tasks from the workplan
-        /// </summary>
-        IDictionary<long, long> TaskAssignment { get; }
     }
 }

@@ -11,7 +11,7 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
     public class NotificationResponse : TransmissionResult
     {
         /// <summary>
-        /// Trumpf specific number of error
+        /// Specific number of error
         /// </summary>
         public int No { get; set; }
 

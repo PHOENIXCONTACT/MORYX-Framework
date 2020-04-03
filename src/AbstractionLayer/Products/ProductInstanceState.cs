@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// The state of an Article. This will not occupy more than 4 Bits. Other enums can be added by bit-shifting
@@ -14,12 +14,12 @@ namespace Marvin.AbstractionLayer
         Initial = 0,
 
         /// <summary>
-        /// The article is currently in production
+        /// The instance is currently in production
         /// </summary>
         InProduction = 1,
 
         /// <summary>
-        /// The production on this article was paused
+        /// The production on this instance was paused
         /// </summary>
         Paused = 2,
 
@@ -34,7 +34,7 @@ namespace Marvin.AbstractionLayer
         Failure = 4,
 
         /// <summary>
-        /// State of part is inherited from the parent article
+        /// State of part is inherited from the parent instance
         /// </summary>
         Inherited = 5
     }

@@ -19,12 +19,12 @@ namespace Marvin.Products.Model
     {
         /// <inheritdoc />
         public ProductsContext()
-        { 
+        {
         }
 
         /// <inheritdoc />
         public ProductsContext(string connectionString, ContextMode mode) : base(connectionString, mode)
-        {           
+        {
         }
 
         /// <inheritdoc />
@@ -33,27 +33,27 @@ namespace Marvin.Products.Model
         }
 
         public virtual DbSet<ProductTypeEntity> ProductEntities { get; set; }
-    
+
         public virtual DbSet<PartLink> PartLinks { get; set; }
-    
+
         public virtual DbSet<ProductRecipeEntity> ProductRecipeEntities { get; set; }
-    
+
         public virtual DbSet<ProductProperties> ProductProperties { get; set; }
 
         public virtual DbSet<ProductFileEntity> ProductFiles { get; set; }
 
-        public virtual DbSet<ProductInstanceEntity> ArticleEntities { get; set; }
-    
+        public virtual DbSet<ProductInstanceEntity> ProductInstanceEntities { get; set; }
+
         public virtual DbSet<WorkplanEntity> WorkplanEntities { get; set; }
 
         public virtual DbSet<WorkplanReference> WorkplanReferences { get; set; }
-    
+
         public virtual DbSet<StepEntity> StepEntities { get; set; }
 
         public virtual DbSet<ConnectorEntity> ConnectorEntities { get; set; }
 
         public virtual DbSet<ConnectorReference> ConnectorReferences { get; set; }
-    
+
         public virtual DbSet<OutputDescriptionEntity> OutputDescriptionEntities { get; set; }
 
         /// <inheritdoc />
@@ -72,9 +72,9 @@ namespace Marvin.Products.Model
                 .WithMany(w => w.SourceReferences)
                 .HasForeignKey(s => s.SourceId);
 
-            // Article
+            // Product Instances
             modelBuilder.Entity<ProductInstanceEntity>()
-                .HasRequired(p => p.ProductType)
+                .HasRequired(p => p.Product)
                 .WithMany()
                 .HasForeignKey(p => p.ProductId);
 
@@ -138,12 +138,12 @@ namespace Marvin.Products.Model
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.Recipes)
-                .WithRequired(p => p.ProductType)
+                .WithRequired(p => p.Product)
                 .HasForeignKey(p => p.ProductId);
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.OldVersions)
-                .WithOptional(p => p.ProductType)
+                .WithOptional(p => p.Product)
                 .HasForeignKey(p => p.ProductId);
 
             modelBuilder.Entity<ProductTypeEntity>()

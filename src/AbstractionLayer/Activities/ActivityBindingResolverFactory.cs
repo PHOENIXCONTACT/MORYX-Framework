@@ -1,6 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Bindings;
 
 namespace Marvin.AbstractionLayer
@@ -25,8 +27,10 @@ namespace Marvin.AbstractionLayer
                     return new DelegateResolver(source => ((IActivity)source).Process);
                 case "Recipe":
                     return new DelegateResolver(source => ((IActivity)source).Process.Recipe);
+                case "Product":
                 case "ProductType":
-                    return new ProductResolver();
+                    return new ProductResolver(baseKey);
+                case "Article":
                 case "ProductInstance":
                     return new DelegateResolver(source => (((IActivity)source).Process as ProductionProcess)?.ProductInstance);
                 default:

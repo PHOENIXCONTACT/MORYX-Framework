@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 using Marvin.Container;
 using Marvin.Model;
 using Marvin.Products.Management.Importers;
@@ -41,6 +42,8 @@ namespace Marvin.Products.Management
         protected override void OnInitialize()
         {
             Container.SetInstance(ProductsModel, ProductsConstants.Namespace);
+
+            Container.SetInstance(ConfigManager);
 
             // Load all product plugins
             Container.LoadComponents<IProductStorage>();

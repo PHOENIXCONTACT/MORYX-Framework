@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Container;
 using Marvin.Model;
 using Marvin.Products.Management.Importers;
@@ -37,7 +37,7 @@ namespace Marvin.Products.Management
         public IProductImporter[] Importers => _importers.ToArray();
 
         #endregion
-        
+
         public void Start()
         {
             _importers = (from importerConfig in Config.Importers
@@ -52,17 +52,17 @@ namespace Marvin.Products.Management
         {
         }
 
-        public IReadOnlyList<IProductType> GetTypes(ProductQuery query)
+        public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
         {
-            return Storage.GetTypes(query);
+            return Storage.LoadTypes(query);
         }
 
-        public IProductType GetType(long id)
+        public IProductType LoadType(long id)
         {
             return Storage.LoadType(id);
         }
 
-        public IProductType GetType(ProductIdentity identity)
+        public IProductType LoadType(ProductIdentity identity)
         {
             return Storage.LoadType(identity);
         }
@@ -88,7 +88,7 @@ namespace Marvin.Products.Management
             var duplicate = (ProductType)Storage.LoadType(sourceId);
 
             // Fetch existing products for identity validation
-            var existing = GetTypes(new ProductQuery { Identifier = newIdentity.Identifier });
+            var existing = LoadTypes(new ProductQuery { Identifier = newIdentity.Identifier });
             // Check if the same revision already exists
             if (existing.Any(e => ((ProductIdentity)e.Identity).Revision == newIdentity.Revision))
                 throw new IdentityConflictException();

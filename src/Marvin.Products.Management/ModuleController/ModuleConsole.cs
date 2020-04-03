@@ -5,6 +5,8 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Configuration;
 using Marvin.Runtime.Modules;
 using Marvin.Serialization;
@@ -15,6 +17,8 @@ namespace Marvin.Products.Management
     internal class ModuleConsole : IServerModuleConsole
     {
         public AutoConfigurator Configurator { get; set; }
+
+        public IConfigManager ConfigManager { get; set; }
 
         public string ExportDescription(DescriptionExportFormat format)
         {
@@ -77,6 +81,13 @@ namespace Marvin.Products.Management
         public string ConfigureRecipe([PossibleTypes(typeof(IProductRecipe))] string recipeType)
         {
             return Configurator.ConfigureRecipe(recipeType);
+        }
+
+        [EditorVisible]
+        [Description("Save latest changes to config")]
+        public void SaveConfig()
+        {
+            ConfigManager.SaveConfiguration(Configurator.Config);
         }
     }
 }

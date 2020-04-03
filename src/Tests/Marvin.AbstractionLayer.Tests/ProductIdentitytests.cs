@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Marvin.AbstractionLayer.Products;
 using NUnit.Framework;
 
 namespace Marvin.AbstractionLayer.Tests
@@ -27,8 +28,7 @@ namespace Marvin.AbstractionLayer.Tests
         [Test]
         public void ToStringTest()
         {
-            var expectedString = string.Format("{0}-{1:D2}", Identifier, Revision);
-
+            var expectedString = $"{Identifier}-{Revision:D2}";
             Assert.AreEqual(expectedString, _identity.ToString());
         }
 

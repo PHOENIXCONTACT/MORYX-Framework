@@ -4,12 +4,12 @@
 namespace Marvin.Products.Management
 {
     /// <summary>
-    /// Different types of article creation
+    /// Different types of instance creation
     /// </summary>
     public enum PartSourceStrategy
     {
         /// <summary>
-        /// Default article creation from partlink
+        /// Default instance creation from partlink
         /// </summary>
         FromPartlink = 0,
 

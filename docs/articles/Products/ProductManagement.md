@@ -5,7 +5,7 @@ uid: ProductsManagement
 
 ## Description
 
-The [ProductManagement](xref:Marvin.Products.Management) is a server module providing access to [product descriptions and article data](xref:ProductsConcept).
+The [ProductManagement](xref:Marvin.Products.Management) is a server module providing access to [product descriptions and instance data](xref:ProductsConcept).
 
 ## Provided facades
 
@@ -21,7 +21,7 @@ None. The product management does not depend on any other server module.
 
 ## Used DataModels
 
-* [Marvin.Products.Model](xref:Marvin.Products.Model) This data model is used to store product data as well as article data. The product data describes how to produce an article and represents the manufacturing master data while the article data contains tracing data about every produced article which is the dynamic data of the product management module.
+* [Marvin.Products.Model](xref:Marvin.Products.Model) This data model is used to store product data as well as instance data. The product data describes how to produce an product instance and represents the manufacturing master data while the instance data contains tracing data about every produced instance which is the dynamic data of the product management module.
 
 # Architecture
 The ProductManagement is the central component to manage product types and their instances. Each application can [define custom classes](xref:productDefinition) to best

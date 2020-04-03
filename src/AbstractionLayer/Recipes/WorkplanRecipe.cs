@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Marvin.Workflows;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Recipe which additional contains a workplan
@@ -17,7 +17,6 @@ namespace Marvin.AbstractionLayer
         public WorkplanRecipe()
         {
             DisabledSteps = new List<long>();
-            TaskAssignment = new Dictionary<long, long>();
         }
 
         /// <summary>
@@ -28,7 +27,6 @@ namespace Marvin.AbstractionLayer
         {
             Workplan = source.Workplan;
             DisabledSteps = source.DisabledSteps;
-            TaskAssignment = source.TaskAssignment;
         }
 
         /// <inheritdoc />
@@ -36,9 +34,6 @@ namespace Marvin.AbstractionLayer
 
         /// <inheritdoc />
         public ICollection<long> DisabledSteps { get; }
-
-        /// <inheritdoc />
-        public IDictionary<long, long> TaskAssignment { get; }
 
         /// <inheritdoc />
         public override IRecipe Clone()

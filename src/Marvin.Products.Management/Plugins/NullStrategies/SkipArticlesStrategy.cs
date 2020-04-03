@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 using Marvin.Container;
 using Marvin.Products.Model;
 
 namespace Marvin.Products.Management.NullStrategies
 {
     /// <summary>
-    /// Strategiy for articles that should not be saved to the database
+    /// Strategiy for product instances that should not be saved to the database
     /// </summary>
     [PropertylessStrategyConfiguration(typeof(ProductInstance), DerivedTypes = true)]
     [Plugin(LifeCycle.Transient, typeof(IProductInstanceStrategy), Name = nameof(SkipArticlesStrategy))]

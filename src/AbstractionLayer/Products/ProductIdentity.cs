@@ -4,10 +4,10 @@
 using System;
 using Marvin.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
-    /// Identity for products consisting of article number and revision
+    /// Identity for products consisting of identifier and revision
     /// </summary>
     public class ProductIdentity : IIdentity
     {

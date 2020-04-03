@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 using Marvin.Model;
 using Marvin.Modules;
 using Marvin.Products.Model;
@@ -26,7 +27,7 @@ namespace Marvin.Products.Management
         string PropertyName { get; }
 
         /// <summary>
-        /// Strategy how article parts are created during loading
+        /// Strategy how product instance parts are created during loading
         /// </summary>
         PartSourceStrategy PartCreation { get; }
 

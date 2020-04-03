@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Base class that allows to assign a value to <see cref="IPersistentObject.Id"/>
@@ -40,13 +40,13 @@ namespace Marvin.AbstractionLayer
         public IProductType Product { get; set; }
 
         /// <summary>
-        /// Create single article instance for this part
+        /// Create single instance for this part
         /// </summary>
         public virtual ProductInstance Instantiate()
         {
-            var article = Product.CreateInstance();
-            article.PartLink = this;
-            return article;
+            var instance = Product.CreateInstance();
+            instance.PartLink = this;
+            return instance;
         }
     }
 

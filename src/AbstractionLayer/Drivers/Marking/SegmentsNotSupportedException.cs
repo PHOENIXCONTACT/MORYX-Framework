@@ -15,7 +15,7 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// </summary>
         public SegmentsNotSupportedException() : base("The driver does not support segments")
         {
-            
-        } 
+
+        }
     }
 }

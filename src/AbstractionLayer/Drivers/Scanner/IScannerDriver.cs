@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Marvin.AbstractionLayer.Drivers.InOut;
 
 namespace Marvin.AbstractionLayer.Drivers.Scanner
 {

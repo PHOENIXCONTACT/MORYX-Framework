@@ -10,7 +10,6 @@ namespace Marvin.AbstractionLayer.Drivers.Axis
     /// </summary>
     public interface IAxesController : IDriver
     {
-
         /// <summary>
         /// Will move the axis of the laser to the given position
         /// </summary>

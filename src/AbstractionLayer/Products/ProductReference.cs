@@ -4,26 +4,26 @@
 using System;
 using Marvin.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Temporary product reference to be replaced by the product management
     /// </summary>
-    public class ProductTypeReference : IProductType
+    public class ProductReference : IProductType
     {
         /// <summary>
         /// Create a reference product by giving an id
         /// </summary>
-        public ProductTypeReference(long id)
+        public ProductReference(long id)
         {
             Id = id;
         }
 
         /// <summary>
-        /// Create a refernce product by giving an identity
+        /// Create a reference product by giving an identity
         /// </summary>
         /// <param name="identity">Identity information of this ProductReference</param>
-        public ProductTypeReference(IIdentity identity)
+        public ProductReference(IIdentity identity)
         {
             Identity = identity;
         }
@@ -39,7 +39,7 @@ namespace Marvin.AbstractionLayer
         public string Name { get; set; }
 
         /// <inheritdoc />
-        public ProductTypeState State { get; set; }
+        public ProductState State { get; set; }
 
         /// <summary>
         /// Identity of this product
@@ -47,7 +47,7 @@ namespace Marvin.AbstractionLayer
         public IIdentity Identity { get; set; }
 
         /// <summary>
-        /// Create article instance of this type
+        /// Create instance of this type
         /// </summary>
         public ProductInstance CreateInstance()
         {

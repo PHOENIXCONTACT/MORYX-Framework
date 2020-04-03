@@ -3,6 +3,7 @@
 
 using System.IO;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 using Marvin.Container;
 using Marvin.Modules;
 using Marvin.Products.Management;

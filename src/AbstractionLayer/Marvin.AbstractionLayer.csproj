@@ -119,8 +119,9 @@
     <Compile Include="Process\ProcessExtensions.cs" />
     <Compile Include="AbstractionLayerBundle.cs" />
     <Compile Include="Products\IProductionDate.cs" />
+    <Compile Include="Recipes\IProductionRecipe.cs" />
+    <Compile Include="Recipes\ProductionRecipe.cs" />
     <Compile Include="Recipes\RecipeBindingResolverFactory.cs" />
-    <Compile Include="Products\FileType.cs" />
     <Compile Include="Products\IdentityConflictException.cs" />
     <Compile Include="Products\Import\IFileImportParameters.cs" />
     <Compile Include="Products\Import\IImportParameters.cs" />
@@ -129,8 +130,8 @@
     <Compile Include="Products\ProductFile.cs" />
     <Compile Include="Products\ProductNotFoundException.cs" />
     <Compile Include="Products\ProductQuery.cs" />
-    <Compile Include="Products\ProductTypeState.cs" />
-    <Compile Include="Products\ProductTypeReference.cs" />
+    <Compile Include="Products\ProductState.cs" />
+    <Compile Include="Products\ProductReference.cs" />
     <Compile Include="Recipes\RecipeNotFoundException.cs" />
     <Compile Include="Recipes\IProductRecipe.cs" />
     <Compile Include="Recipes\IRecipe.cs" />
@@ -195,7 +196,7 @@
     <Compile Include="Tasks\TaskStep.cs" />
     <Compile Include="Tasks\TaskTransition.cs" />
     <Compile Include="Workplan\ProcessContext.cs" />
-    <Compile Include="Workplan\WorkplanExtentions.cs" />
+    <Compile Include="Workplan\WorkplanExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Container;
 using Marvin.Model;
 

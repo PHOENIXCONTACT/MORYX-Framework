@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Products.Management;
 using Marvin.Products.Management.NullStrategies;
 using Marvin.Products.Model;
@@ -282,7 +284,7 @@ namespace Marvin.Products.IntegrationTests
                 {
                     IProductRecipeStrategy strategy = new GenericRecipeStrategy
                     {
-                        EntityMapper = new GenericEntityMapper<ProductRecipe, IProductType>
+                        EntityMapper = new GenericEntityMapper<ProductionRecipe, IProductType>
                         {
                             MapperFactory = mapperFactory.Object
                         }
@@ -379,13 +381,13 @@ namespace Marvin.Products.IntegrationTests
             }
         }
 
-        private static void CheckProduct(WatchType watch, ProductTypeEntity watchTypeEntity, IProductTypeEntityRepository productTypeEntityRepo, long savedWatchId)
+        private static void CheckProduct(WatchType watch, ProductTypeEntity watchProductTypeEntity, IProductTypeEntityRepository productTypeEntityRepo, long savedWatchId)
         {
             var watchNeedlesCount = watch.Needles.Count;
-            var watchEntityNeedlesCount = watchTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleType)));
+            var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleType)));
             Assert.AreEqual(watchNeedlesCount, watchEntityNeedlesCount, "Different number of needles");
 
-            var watchfaceEntity = watchTypeEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceType))).Child;
+            var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceType))).Child;
             Assert.NotNull(watchfaceEntity, "There is no watchface");
 
             var identity = (ProductIdentity)watch.Identity;
@@ -455,21 +457,21 @@ namespace Marvin.Products.IntegrationTests
             _storage.SaveType(watch);
 
             // Act
-            var all = productMgr.GetTypes(new ProductQuery());
-            var latestRevision = productMgr.GetTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
-            var byType = productMgr.GetTypes(new ProductQuery { Type = nameof(NeedleType) });
-            var allRevision = productMgr.GetTypes(new ProductQuery { Identifier = WatchMaterial });
-            var latestByType = productMgr.GetTypes(new ProductQuery
+            var all = productMgr.LoadTypes(new ProductQuery());
+            var latestRevision = productMgr.LoadTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
+            var byType = productMgr.LoadTypes(new ProductQuery { Type = nameof(NeedleType) });
+            var allRevision = productMgr.LoadTypes(new ProductQuery { Identifier = WatchMaterial });
+            var latestByType = productMgr.LoadTypes(new ProductQuery
             {
                 Type = nameof(WatchType),
                 RevisionFilter = RevisionFilter.Latest
             });
-            var usages = productMgr.GetTypes(new ProductQuery
+            var usages = productMgr.LoadTypes(new ProductQuery
             {
                 Identifier = "24",
                 Selector = Selector.Parent
             });
-            var needles = productMgr.GetTypes(new ProductQuery
+            var needles = productMgr.LoadTypes(new ProductQuery
             {
                 Name = "needle",
                 RevisionFilter = RevisionFilter.Latest
@@ -497,7 +499,7 @@ namespace Marvin.Products.IntegrationTests
             _storage.SaveType(watch);
 
             // Act
-            var needles = productMgr.GetTypes(new ProductQuery
+            var needles = productMgr.LoadTypes(new ProductQuery
             {
                 Name = "*needle",
                 RevisionFilter = RevisionFilter.Latest
@@ -520,7 +522,7 @@ namespace Marvin.Products.IntegrationTests
             _storage.SaveType(watch);
 
             // Act
-            var products = productMgr.GetTypes(new ProductQuery
+            var products = productMgr.LoadTypes(new ProductQuery
             {
                 Identifier = "b*",
                 RevisionFilter = RevisionFilter.Latest
@@ -610,7 +612,7 @@ namespace Marvin.Products.IntegrationTests
             if (stillUsed)
                 return;
 
-            var matches = productMgr.GetTypes(new ProductQuery
+            var matches = productMgr.LoadTypes(new ProductQuery
             {
                 RevisionFilter = RevisionFilter.Specific,
                 Revision = 5,
@@ -629,17 +631,17 @@ namespace Marvin.Products.IntegrationTests
             watch = (WatchType) _storage.LoadType(watch.Id);
 
             // Act
-            var article = (WatchInstance)watch.CreateInstance();
-            article.TimeSet = true;
-            article.DeliveryDate = DateTime.Now;
-            _storage.SaveInstances(new[] { article });
+            var instance = (WatchInstance)watch.CreateInstance();
+            instance.TimeSet = true;
+            instance.DeliveryDate = DateTime.Now;
+            _storage.SaveInstances(new[] { instance });
 
             // Assert
             using (var uow = _factory.Create())
             {
-                var root = uow.GetRepository<IProductInstanceEntityRepository>().GetByKey(article.Id);
+                var root = uow.GetRepository<IProductInstanceEntityRepository>().GetByKey(instance.Id);
                 Assert.NotNull(root, "Failed to save or id not written");
-                Assert.AreEqual(article.DeliveryDate.Ticks, root.Integer1, "DateTime not saved");
+                Assert.AreEqual(instance.DeliveryDate.Ticks, root.Integer1, "DateTime not saved");
                 Assert.AreEqual(1, root.Integer2, "Bool not saved");
 
                 var parts = root.Parts;
@@ -650,15 +652,15 @@ namespace Marvin.Products.IntegrationTests
             }
 
             // Act
-            var watchCopy = (WatchInstance)_storage.LoadInstance(article.Id);
+            var watchCopy = (WatchInstance)_storage.LoadInstance(instance.Id);
 
             // Assert
             Assert.NotNull(watchCopy);
-            Assert.AreEqual(article.DeliveryDate, watchCopy.DeliveryDate);
-            Assert.AreEqual(article.TimeSet, watchCopy.TimeSet);
-            Assert.NotNull(article.Watchface);
-            Assert.NotNull(article.Needles);
-            Assert.AreEqual(3, article.Needles.Count);
+            Assert.AreEqual(instance.DeliveryDate, watchCopy.DeliveryDate);
+            Assert.AreEqual(instance.TimeSet, watchCopy.TimeSet);
+            Assert.NotNull(instance.Watchface);
+            Assert.NotNull(instance.Needles);
+            Assert.AreEqual(3, instance.Needles.Count);
         }
     }
 }

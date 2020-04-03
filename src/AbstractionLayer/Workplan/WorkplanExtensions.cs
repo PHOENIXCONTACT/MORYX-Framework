@@ -6,9 +6,9 @@ using Marvin.Workflows.Validation;
 namespace Marvin.AbstractionLayer
 {
     /// <summary>
-    /// Extentions for workplan objects
+    /// Extensions for workplan objects
     /// </summary>
-    public static class WorkplanExtentions
+    public static class WorkplanExtensions
     {
         /// <summary>
         /// Adds a step to the workplan

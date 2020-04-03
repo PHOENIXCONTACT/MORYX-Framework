@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Provides recipes for production

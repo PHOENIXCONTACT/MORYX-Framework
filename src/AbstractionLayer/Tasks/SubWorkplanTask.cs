@@ -42,15 +42,12 @@ namespace Marvin.AbstractionLayer
             if (context.IsDisabled(this))
                 return new NullTransition();
 
-            // Create transition
-            var processContext = (ProcessContext)context;
-            var resourceId = processContext.PreassignedResource(Id);
             // Lazy index resolver creation
             var indexResolver = _indexResolver ?? (_indexResolver = TransitionBase.CreateIndexResolver(OutputDescriptions));
             // Lazy parameters creation
             var parameters = _parameters ?? (_parameters = CreateParameters());
 
-            return new TaskTransition<SubWorkplanActivity>(parameters, indexResolver, resourceId);
+            return new TaskTransition<SubWorkplanActivity>(parameters, indexResolver);
         }
 
         /// <summary>

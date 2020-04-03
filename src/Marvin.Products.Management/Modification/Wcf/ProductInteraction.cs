@@ -8,6 +8,8 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Container;
 using Marvin.Serialization;
 using Marvin.Tools;
@@ -33,14 +35,14 @@ namespace Marvin.Products.Management.Modification
             return new ProductCustomization
             {
                 ProductTypes = ReflectionTool.GetPublicClasses<ProductType>(new IsConfiguredFilter(Config.TypeStrategies).IsConfigured)
-                    .Select(pt => new ProductTypeModel
+                    .Select(pt => new ProductDefinitionModel
                     {
                         Name = pt.Name,
                         DisplayName = pt.GetDisplayName() ?? pt.Name,
-                        BaseType = pt.BaseType?.Name
+                        BaseDefinition = pt.BaseType?.Name
                     }).ToArray(),
                 RecipeTypes = ReflectionTool.GetPublicClasses<IProductRecipe>(new IsConfiguredFilter(Config.RecipeStrategies).IsConfigured)
-                    .Select(rt => new RecipeTypeModel
+                    .Select(rt => new RecipeDefinitionModel
                     {
                         Name = rt.Name,
                         DisplayName = rt.GetDisplayName() ?? rt.Name,

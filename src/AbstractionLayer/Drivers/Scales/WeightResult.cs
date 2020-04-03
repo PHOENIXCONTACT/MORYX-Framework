@@ -13,7 +13,7 @@ namespace Marvin.AbstractionLayer.Drivers.Scales
         /// </summary>
         public WeightResult(TransmissionError error) : base(error)
         {
-            
+
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Marvin.AbstractionLayer.Drivers.Scales
         ///
         public override string ToString()
         {
-            return string.Format("{0:0.00} {1}", Weight, Unit);
+            return $"{Weight:0.00} {Unit}";
         }
     }
 }

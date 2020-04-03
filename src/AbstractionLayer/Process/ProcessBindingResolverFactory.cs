@@ -4,6 +4,8 @@
 using System;
 using System.Text.RegularExpressions;
 using Marvin.AbstractionLayer.Identity;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Bindings;
 
 namespace Marvin.AbstractionLayer
@@ -25,7 +27,7 @@ namespace Marvin.AbstractionLayer
                     return new DelegateResolver(source => ((IProcess)source).Recipe);
                 case "Product":
                 case "ProductType":
-                    return new ProductResolver();
+                    return new ProductResolver(baseKey);
                 case "Article":
                 case "ProductInstance":
                     return new DelegateResolver(source => (source as ProductionProcess)?.ProductInstance);
@@ -53,8 +55,8 @@ namespace Marvin.AbstractionLayer
             if (property == nameof(IIdentity.Identifier))
                 return resolver.Extend(new IdentifierShortCut());
 
-            if (property == nameof(ProductType))
-                return resolver.Extend(new ProductResolver());
+            if (property == nameof(ProductType) || property == nameof(ProductInstance.Type))
+                return resolver.Extend(new ProductResolver(property));
 
             return base.AddToChain(resolver, property);
         }
@@ -76,7 +78,7 @@ namespace Marvin.AbstractionLayer
                 return source;
             }
 
-            // Object is part link 
+            // Object is part link
             // 1. Try to read from object
             var linkResult = NextResolver?.Resolve(partLink);
 
@@ -122,6 +124,13 @@ namespace Marvin.AbstractionLayer
     /// </summary>
     public class ProductResolver : BindingResolverBase
     {
+        private readonly string _fallbackProperty;
+
+        public ProductResolver(string fallbackProperty)
+        {
+            _fallbackProperty = fallbackProperty;
+        }
+
         /// <inheritdoc />
         protected sealed override object Resolve(object source)
         {
@@ -139,14 +148,14 @@ namespace Marvin.AbstractionLayer
 
             if (source is ProductInstance instance)
             {
-                return instance.ProductType;
+                return instance.Type;
             }
 
             // If our shortcuts do not work, use ReflectionResolver instead
             // Due the protection level of Resolve in the base class and the implementation
             // of IBindingResolver.Resolve which calls the whole chain the call order is important here.
             // First the value of the replacement is called and then the replacement is placed into the chain.
-            var replacement = new ReflectionResolver(nameof(ProductInstance.ProductType));
+            var replacement = new ReflectionResolver(_fallbackProperty);
             var resolvedValue = ((IBindingResolverChain) replacement).Resolve(source);
             this.Replace(replacement);
             return resolvedValue;

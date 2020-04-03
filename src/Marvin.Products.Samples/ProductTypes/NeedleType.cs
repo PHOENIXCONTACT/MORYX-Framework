@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 
 namespace Marvin.Products.Samples
 {

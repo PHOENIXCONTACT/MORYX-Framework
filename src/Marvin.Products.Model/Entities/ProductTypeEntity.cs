@@ -7,11 +7,11 @@ using System.Collections.Generic;
 namespace Marvin.Products.Model
 {
     public class ProductTypeEntity : ModificationTrackedEntityBase
-    {        
+    {
         public virtual string TypeName { get; set; }
 
         public virtual string Identifier { get; set; }
-    
+
         public virtual short Revision { get; set; }
 
         public virtual string Name { get; set; }

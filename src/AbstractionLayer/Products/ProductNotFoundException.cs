@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Exception thrown when a product for a certain id was not found

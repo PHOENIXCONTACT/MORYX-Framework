@@ -3,14 +3,14 @@ uid: ProductsConcept
 ---
 # Products
 
-The abstraction layer provides just basic interfaces and classes to handle `products` and `articles`.
+The abstraction layer provides just basic interfaces and classes to handle `products` and `product instances`.
 They are used in derived projects only. The following picture shows the stucture how a product is placed in an application and which components will use it. In the following sections are short descriptions about each part of the product concept.
 
 ![Product Concept Structure](images\ProductConcept.png)
 
 ## Product
 
-In the context of MARVIN, the product is mainly the technical description and the rule how to produce an `article`. The rule itself is provided by a `recipe`. A product inside MARVIN is represented by an object implementing the [IProduct](xref:Marvin.AbstractionLayer.IProduct) interface.
+In the context of MARVIN, the product is mainly the technical description and the rule how to produce an `product instance`. The rule itself is provided by a `recipe`. A product inside MARVIN is represented by an object implementing the [IProduct](xref:Marvin.AbstractionLayer.IProduct) interface.
 
 ### Recipe
 
@@ -26,8 +26,8 @@ The workplan defines the steps needed to run a `process`. For each step it defin
 
 A process is a sequence of `activities` defined by a `workplan` and parameterized by a `recipe`. All activities created for the process are stored with the process for tracing purposes. All objects represesting a process implement the [IProcess](xref:Marvin.AbstractionLayer.IProcess) interface.
 
-A [ProductionProcess](xref:Marvin.AbstractionLayer.ProductionProcess) refers the `article` it produces. Every process refers exactly one article. The article may be removed from the facility and reworked somewhere else. If it is inserted later, a new ProductionProcess is created. The article refers all processes involved in its production.
+A [ProductionProcess](xref:Marvin.AbstractionLayer.ProductionProcess) refers the `product instance` it produces. Every process refers exactly one product instance. The product instance may be removed from the facility and reworked somewhere else. If it is inserted later, a new ProductionProcess is created. The instance refers all processes involved in its production.
 
-## Article
+## Product Instance
 
-An article is the produced instance of a `product`. The article data itself is created by [IProduct's](xref:Marvin.AbstractionLayer.IProduct) [CreateInstance()](xref:Marvin.AbstractionLayer.IProduct.CreateInstance) method. An article inside MARVIN is represented by an object derived from [Article](xref:Marvin.AbstractionLayer.Article).
+An instance is the produced instance of a `product`. The product instance data itself is created by [IProduct's](xref:Marvin.AbstractionLayer.IProduct) [CreateInstance()](xref:Marvin.AbstractionLayer.IProduct.CreateInstance) method. An product instance inside MARVIN is represented by an object derived from [ProductInstance](xref:Marvin.AbstractionLayer.ProductInstance).

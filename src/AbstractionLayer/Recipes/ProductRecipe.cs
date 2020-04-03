@@ -1,7 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.AbstractionLayer
+using Marvin.AbstractionLayer.Products;
+
+namespace Marvin.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Recipe to create instances of a product

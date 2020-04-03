@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Marvin.Products.Management.Modification
 {
     [DataContract]
-    internal class ProductTypeModel
+    internal class ProductDefinitionModel
     {
         [DataMember]
         public string Name { get; set; }
@@ -15,6 +15,6 @@ namespace Marvin.Products.Management.Modification
         public string DisplayName { get; set; }
 
         [DataMember]
-        public string BaseType { get; set; }
+        public string BaseDefinition { get; set; }
     }
 }

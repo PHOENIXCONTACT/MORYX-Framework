@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Base class for all product instances.
@@ -23,14 +23,14 @@ namespace Marvin.AbstractionLayer
         public IIdentity Identity { get; set; }
 
         /// <summary>
+        /// The product type of this instance
+        /// </summary>
+        public IProductType Type { get; set; }
+
+        /// <summary>
         /// The current state of the instance
         /// </summary>
         public ProductInstanceState State { get; set; }
-
-        /// <summary>
-        /// Product this article is an instance of
-        /// </summary>
-        public IProductType ProductType { get; set; }
 
         /// <summary>
         /// Part link that created this <see cref="ProductInstance"/>. This is <value>null</value> for root instances
@@ -39,7 +39,7 @@ namespace Marvin.AbstractionLayer
     }
 
     /// <summary>
-    /// Generic base class for product access
+    /// Generic base class for product type access
     /// </summary>
     public abstract class ProductInstance<TProduct> : ProductInstance
         where TProduct : IProductType
@@ -47,10 +47,10 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Typed property for product access
         /// </summary>
-        public new TProduct ProductType
+        public new TProduct Type
         {
-            get => (TProduct) base.ProductType;
-            set => base.ProductType = value;
+            get => (TProduct) base.Type;
+            set => base.Type = value;
         }
     }
 }

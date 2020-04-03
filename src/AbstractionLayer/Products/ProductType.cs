@@ -3,7 +3,7 @@
 
 using Marvin.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Base class for all products
@@ -17,7 +17,7 @@ namespace Marvin.AbstractionLayer
         public string Name { get; set; }
 
         /// <inheritdoc />
-        public ProductTypeState State { get; set; }
+        public ProductState State { get; set; }
 
         /// <inheritdoc />
         public IIdentity Identity { get; set; }
@@ -34,14 +34,13 @@ namespace Marvin.AbstractionLayer
         }
 
         /// <summary>
-        /// Create article instance of this type
+        /// Create instance of this type
         /// </summary>
-        /// <returns></returns>
         public ProductInstance CreateInstance()
         {
-            var article = Instantiate();
-            article.ProductType = this;
-            return article;
+            var instance = Instantiate();
+            instance.Type = this;
+            return instance;
         }
 
         /// <summary>

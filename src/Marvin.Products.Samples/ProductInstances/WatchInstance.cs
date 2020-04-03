@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
 
 namespace Marvin.Products.Samples
 {

@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Workflows;
 
 namespace Marvin.AbstractionLayer
@@ -27,15 +28,6 @@ namespace Marvin.AbstractionLayer
         public virtual bool IsDisabled(IWorkplanStep step)
         {
             return ((IWorkplanRecipe)Process.Recipe).DisabledSteps.Contains(step.Id);
-        }
-
-        /// <summary>
-        /// Find a preassigned resource id
-        /// </summary>
-        public long PreassignedResource(long taskId)
-        {
-            var recipe = (IWorkplanRecipe) Process.Recipe;
-            return recipe.TaskAssignment.ContainsKey(taskId) ? recipe.TaskAssignment[taskId] : 0;
         }
     }
 }

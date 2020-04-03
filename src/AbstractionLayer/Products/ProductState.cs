@@ -1,12 +1,12 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
     /// Current state of a product
     /// </summary>
-    public enum ProductTypeState
+    public enum ProductState
     {
         /// <summary>
         /// Object was created, but not reviewed or released for production

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Marvin.AbstractionLayer;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Model;
 using Marvin.Products.Model;
 using Marvin.Tools;
@@ -28,7 +30,7 @@ namespace Marvin.Products.Management
             productRecipe.Classification = (RecipeClassification)recipeEntity.Classification;
             productRecipe.Revision = recipeEntity.Revision;
             productRecipe.State = (RecipeState)recipeEntity.State;
-            productRecipe.Product = new ProductTypeReference(recipeEntity.ProductId);
+            productRecipe.Product = new ProductReference(recipeEntity.ProductId);
 
             var workplanRecipe = productRecipe as IWorkplanRecipe;
             if (workplanRecipe != null)

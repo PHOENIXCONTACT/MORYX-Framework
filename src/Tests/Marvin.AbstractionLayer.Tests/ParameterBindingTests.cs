@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using Marvin.AbstractionLayer.Products;
+using Marvin.AbstractionLayer.Recipes;
 using Marvin.Bindings;
 using NUnit.Framework;
 
@@ -49,11 +51,11 @@ namespace Marvin.AbstractionLayer.Tests
             Assert.Throws<InvalidOperationException>(() => resolver.Resolve(DummyProcess()));
         }
 
-        [Test(Description = "Remove Product shortcut resolve if source is neither Article nor Process")]
+        [Test(Description = "Remove Product shortcut resolve if source is neither product instance nor Process")]
         public void ShortcutRemoval()
         {
             // Arrange
-            var resolver = new ProcessBindingResolverFactory().Create("ProductInstance.ProductType.Dummy.ProductType.Name");
+            var resolver = new ProcessBindingResolverFactory().Create("ProductInstance.Type.Dummy.ProductType.Name");
             var process = DummyProcess();
             int oldCount = 0, newCount = 0;
 

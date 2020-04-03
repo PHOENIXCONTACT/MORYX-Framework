@@ -3,10 +3,10 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer
+namespace Marvin.AbstractionLayer.Products
 {
     /// <summary>
-    /// Interface for articles with production date
+    /// Interface for product instances with production date
     /// </summary>
     public interface IProductionDate
     {
