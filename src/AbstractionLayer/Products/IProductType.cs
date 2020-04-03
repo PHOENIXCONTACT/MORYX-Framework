@@ -18,7 +18,7 @@ namespace Marvin.AbstractionLayer.Products
         /// <summary>
         /// State of the product
         /// </summary>
-        ProductTypeState State { get; }
+        ProductState State { get; }
 
         /// <summary>
         /// Create instance of this type

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Marvin.Products.Management.Modification
 {
     [DataContract]
-    internal class RecipeTypeModel
+    internal class RecipeDefinitionModel
     {
         [DataMember]
         public string Name { get; set; }

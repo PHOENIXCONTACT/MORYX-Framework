@@ -30,7 +30,7 @@ namespace Marvin.Products.Management
             productRecipe.Classification = (RecipeClassification)recipeEntity.Classification;
             productRecipe.Revision = recipeEntity.Revision;
             productRecipe.State = (RecipeState)recipeEntity.State;
-            productRecipe.Product = new ProductTypeReference(recipeEntity.ProductId);
+            productRecipe.Product = new ProductReference(recipeEntity.ProductId);
 
             var workplanRecipe = productRecipe as IWorkplanRecipe;
             if (workplanRecipe != null)

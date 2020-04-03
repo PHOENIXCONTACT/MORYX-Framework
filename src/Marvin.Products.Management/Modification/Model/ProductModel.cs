@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Products;
 using Marvin.Serialization;
 
@@ -18,7 +17,7 @@ namespace Marvin.Products.Management.Modification
         public string Name { get; set; }
 
         [DataMember]
-        public ProductTypeState State { get; set; }
+        public ProductState State { get; set; }
 
         [DataMember]
         public string Identifier { get; set; }

@@ -381,13 +381,13 @@ namespace Marvin.Products.IntegrationTests
             }
         }
 
-        private static void CheckProduct(WatchType watch, ProductTypeEntity watchTypeEntity, IProductTypeEntityRepository productTypeEntityRepo, long savedWatchId)
+        private static void CheckProduct(WatchType watch, ProductTypeEntity watchProductTypeEntity, IProductTypeEntityRepository productTypeEntityRepo, long savedWatchId)
         {
             var watchNeedlesCount = watch.Needles.Count;
-            var watchEntityNeedlesCount = watchTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleType)));
+            var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleType)));
             Assert.AreEqual(watchNeedlesCount, watchEntityNeedlesCount, "Different number of needles");
 
-            var watchfaceEntity = watchTypeEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceType))).Child;
+            var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceType))).Child;
             Assert.NotNull(watchfaceEntity, "There is no watchface");
 
             var identity = (ProductIdentity)watch.Identity;

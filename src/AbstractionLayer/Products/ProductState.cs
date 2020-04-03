@@ -6,7 +6,7 @@ namespace Marvin.AbstractionLayer.Products
     /// <summary>
     /// Current state of a product
     /// </summary>
-    public enum ProductTypeState
+    public enum ProductState
     {
         /// <summary>
         /// Object was created, but not reviewed or released for production

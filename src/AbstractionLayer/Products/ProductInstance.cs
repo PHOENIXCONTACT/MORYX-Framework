@@ -23,7 +23,7 @@ namespace Marvin.AbstractionLayer.Products
         public IIdentity Identity { get; set; }
 
         /// <summary>
-        /// The current state of the instance
+        /// The product type of this instance
         /// </summary>
         public IProductType Type { get; set; }
 
@@ -47,7 +47,7 @@ namespace Marvin.AbstractionLayer.Products
         /// <summary>
         /// Typed property for product access
         /// </summary>
-        public new TProduct ProductType
+        public new TProduct Type
         {
             get => (TProduct) base.Type;
             set => base.Type = value;

@@ -10,10 +10,10 @@ namespace Marvin.Products.Management.Modification
     internal class ProductCustomization
     {
         [DataMember]
-        public ProductTypeModel[] ProductTypes { get; set; }
+        public ProductDefinitionModel[] ProductTypes { get; set; }
 
         [DataMember]
-        public RecipeTypeModel[] RecipeTypes { get; set; }
+        public RecipeDefinitionModel[] RecipeTypes { get; set; }
 
         [DataMember]
         public ProductImporter[] Importers { get; set; }

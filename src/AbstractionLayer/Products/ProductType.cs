@@ -17,7 +17,7 @@ namespace Marvin.AbstractionLayer.Products
         public string Name { get; set; }
 
         /// <inheritdoc />
-        public ProductTypeState State { get; set; }
+        public ProductState State { get; set; }
 
         /// <inheritdoc />
         public IIdentity Identity { get; set; }

@@ -36,10 +36,10 @@ namespace Marvin.Products.Management
 
         [DataMember, PluginNameSelector(typeof(IProductTypeStrategy))]
         public virtual string PluginName { get; set; }
-        
+
         public override string ToString()
         {
-            return $"{TargetType}=>{PluginName}";
+            return $"{TargetType} => {PluginName}";
         }
     }
 
@@ -75,7 +75,7 @@ namespace Marvin.Products.Management
 
         public override string ToString()
         {
-            return $"{TargetType}.{PartName}=>{PluginName}";
+            return $"{TargetType}.{PartName} => {PluginName}";
         }
     }
 
@@ -90,7 +90,7 @@ namespace Marvin.Products.Management
 
         public override string ToString()
         {
-            return $"{TargetType}=>{PluginName}";
+            return $"{TargetType} => {PluginName}";
         }
     }
 }

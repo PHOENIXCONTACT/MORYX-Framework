@@ -397,7 +397,7 @@ namespace Marvin.Products.Management
             var product = TypeConstructors[typeEntity.TypeName]();
             product.Id = typeEntity.Id;
             product.Name = typeEntity.Name;
-            product.State = (ProductTypeState)typeEntity.CurrentVersion.State;
+            product.State = (ProductState)typeEntity.CurrentVersion.State;
             product.Identity = new ProductIdentity(typeEntity.Identifier, typeEntity.Revision);
             strategy.LoadType(typeEntity.CurrentVersion, product);
 
@@ -479,32 +479,32 @@ namespace Marvin.Products.Management
             // Get or create entity
             var repo = uow.GetRepository<IProductTypeEntityRepository>();
             var identity = (ProductIdentity)modifiedInstance.Identity;
-            ProductTypeEntity entity;
+            ProductTypeEntity typeEntity;
             var entities = repo.Linq
                 .Where(p => p.Identifier == identity.Identifier && p.Revision == identity.Revision)
                 .ToList();
             // If entity does not exist or was deleted, create a new one
             if (entities.All(p => p.Deleted != null))
             {
-                entity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().Name);
-                EntityIdListener.Listen(entity, modifiedInstance);
+                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().Name);
+                EntityIdListener.Listen(typeEntity, modifiedInstance);
             }
             else
             {
-                entity = entities.First(p => p.Deleted == null);
-                entity.Name = modifiedInstance.Name;
+                typeEntity = entities.First(p => p.Deleted == null);
+                typeEntity.Name = modifiedInstance.Name;
                 // Set id in case it was imported under existing material and revision
-                modifiedInstance.Id = entity.Id;
+                modifiedInstance.Id = typeEntity.Id;
             }
             // Check if we need to create a new version
-            if (entity.CurrentVersion == null || entity.CurrentVersion.State != (int)modifiedInstance.State || strategy.HasChanged(modifiedInstance, entity.CurrentVersion))
+            if (typeEntity.CurrentVersion == null || typeEntity.CurrentVersion.State != (int)modifiedInstance.State || strategy.HasChanged(modifiedInstance, typeEntity.CurrentVersion))
             {
                 var version = uow.GetRepository<IProductPropertiesRepository>().Create();
                 version.State = (int)modifiedInstance.State;
-                entity.SetCurrentVersion(version);
+                typeEntity.SetCurrentVersion(version);
             }
 
-            strategy.SaveType(modifiedInstance, entity.CurrentVersion);
+            strategy.SaveType(modifiedInstance, typeEntity.CurrentVersion);
 
             // And nasty again!
             var type = modifiedInstance.GetType();
@@ -516,11 +516,11 @@ namespace Marvin.Products.Management
                 if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType))
                 {
                     var link = (IProductPartLink)value;
-                    var linkEntity = FindLink(linkStrategy.PropertyName, entity);
+                    var linkEntity = FindLink(linkStrategy.PropertyName, typeEntity);
                     if (linkEntity == null && link != null) // link is new
                     {
                         linkEntity = linkRepo.Create(linkStrategy.PropertyName);
-                        linkEntity.Parent = entity;
+                        linkEntity.Parent = typeEntity;
                         linkStrategy.SavePartLink(link, linkEntity);
                         EntityIdListener.Listen(linkEntity, link);
                         linkEntity.Child = GetPartEntity(uow, link);
@@ -542,7 +542,7 @@ namespace Marvin.Products.Management
                 {
                     var links = (IEnumerable<IProductPartLink>)value;
                     // Delete the removed ones
-                    var toDelete = (from link in entity.Parts
+                    var toDelete = (from link in typeEntity.Parts
                                     where link.PropertyName == linkStrategy.PropertyName
                                     where links.All(l => l.Id != link.Id)
                                     select link).ToArray();
@@ -550,19 +550,19 @@ namespace Marvin.Products.Management
                     linkRepo.RemoveRange(toDelete);
 
                     // Save those currently active
-                    var currentEntities = FindLinks(linkStrategy.PropertyName, entity).ToArray();
+                    var currentEntities = FindLinks(linkStrategy.PropertyName, typeEntity).ToArray();
                     foreach (var link in links)
                     {
                         PartLink linkEntity;
                         if (link.Id == 0 || (linkEntity = currentEntities.FirstOrDefault(p => p.Id == link.Id)) == null)
                         {
                             linkEntity = linkRepo.Create(linkStrategy.PropertyName);
-                            linkEntity.Parent = entity;
+                            linkEntity.Parent = typeEntity;
                             EntityIdListener.Listen(linkEntity, link);
                         }
                         else
                         {
-                            linkEntity = entity.Parts.First(p => p.Id == link.Id);
+                            linkEntity = typeEntity.Parts.First(p => p.Id == link.Id);
                         }
                         linkStrategy.SavePartLink(link, linkEntity);
                         linkEntity.Child = GetPartEntity(uow, link);
@@ -570,7 +570,7 @@ namespace Marvin.Products.Management
                 }
             }
 
-            return entity;
+            return typeEntity;
         }
 
         private ProductTypeEntity GetPartEntity(IUnitOfWork uow, IProductPartLink link)
@@ -581,17 +581,17 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Find the link for this property name
         /// </summary>
-        private static PartLink FindLink(string propertyName, ProductTypeEntity productType)
+        private static PartLink FindLink(string propertyName, ProductTypeEntity typeEntity)
         {
-            return productType.Parts.FirstOrDefault(p => p.PropertyName == propertyName);
+            return typeEntity.Parts.FirstOrDefault(p => p.PropertyName == propertyName);
         }
 
         /// <summary>
         /// Find all links for this product name
         /// </summary>
-        private static IEnumerable<PartLink> FindLinks(string propertyName, ProductTypeEntity productType)
+        private static IEnumerable<PartLink> FindLinks(string propertyName, ProductTypeEntity typeEntity)
         {
-            return productType.Parts.Where(p => p.PropertyName == propertyName);
+            return typeEntity.Parts.Where(p => p.PropertyName == propertyName);
         }
 
         #endregion

@@ -21,7 +21,7 @@ namespace Marvin.Products.Model
 
         public virtual long ProductId { get; set; }
 
-        public virtual ProductTypeEntity ProductType { get; set; }
+        public virtual ProductTypeEntity Product { get; set; }
 
         public virtual WorkplanEntity Workplan { get; set; }
 

@@ -72,9 +72,9 @@ namespace Marvin.Products.Model
                 .WithMany(w => w.SourceReferences)
                 .HasForeignKey(s => s.SourceId);
 
-            // Article
+            // Product Instances
             modelBuilder.Entity<ProductInstanceEntity>()
-                .HasRequired(p => p.ProductType)
+                .HasRequired(p => p.Product)
                 .WithMany()
                 .HasForeignKey(p => p.ProductId);
 
@@ -138,12 +138,12 @@ namespace Marvin.Products.Model
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.Recipes)
-                .WithRequired(p => p.ProductType)
+                .WithRequired(p => p.Product)
                 .HasForeignKey(p => p.ProductId);
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.OldVersions)
-                .WithOptional(p => p.ProductType)
+                .WithOptional(p => p.Product)
                 .HasForeignKey(p => p.ProductId);
 
             modelBuilder.Entity<ProductTypeEntity>()

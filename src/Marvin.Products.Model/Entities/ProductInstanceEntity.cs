@@ -17,7 +17,7 @@ namespace Marvin.Products.Model
     
         public virtual long? PartLinkId { get; set; }
 
-        public virtual ProductTypeEntity ProductType { get; set; }
+        public virtual ProductTypeEntity Product { get; set; }
     
         public virtual ICollection<ProductInstanceEntity> Parts { get; set; }
 

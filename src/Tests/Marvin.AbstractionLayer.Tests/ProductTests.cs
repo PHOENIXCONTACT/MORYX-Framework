@@ -25,7 +25,7 @@ namespace Marvin.AbstractionLayer.Tests
                     }
                 }
             };
-            
+
             for (int i = 1; i <= 4; i++)
             {
                 watch.Needles.Add(new NeedlePartLink
@@ -43,8 +43,8 @@ namespace Marvin.AbstractionLayer.Tests
             var watchInstance = (WatchInstance)watch.CreateInstance();
 
             // Assert
-            Assert.AreEqual(watch, watchInstance.ProductType, "Wrong watch product");
-            Assert.AreEqual(watch.Watchface.Product, watchInstance.Watchface.ProductType, "Wrong watchface product");
+            Assert.AreEqual(watch, watchInstance.Type, "Wrong watch product");
+            Assert.AreEqual(watch.Watchface.Product, watchInstance.Watchface.Type, "Wrong watchface product");
             Assert.AreEqual(NeedleRole.Hours, watch.Needles.ElementAt(0).Role, "Role not set on instance");
         }
     }
