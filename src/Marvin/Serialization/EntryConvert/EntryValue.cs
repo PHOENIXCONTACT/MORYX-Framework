@@ -10,7 +10,7 @@ namespace Marvin.Serialization
     /// Value of an config entry
     /// </summary>
     [DataContract]
-    public partial class EntryValue : ICloneable
+    public class EntryValue : ICloneable
     {
         /// <summary>
         /// Type of this entry
@@ -62,6 +62,25 @@ namespace Marvin.Serialization
         public object Clone()
         {
             return Clone(false);
+        }
+
+        /// <summary>
+        /// Method to create a deep or shallow copy of this object
+        /// </summary>
+        public EntryValue Clone(bool deep)
+        {
+            // All value types can be simply copied
+            var copy = new EntryValue
+            {
+                Type = Type,
+                UnitType = UnitType,
+                Current = Current,
+                Default = Default,
+                IsReadOnly = IsReadOnly,
+                Possible = Possible
+            };
+
+            return copy;
         }
     }
 }
