@@ -76,9 +76,29 @@ namespace Marvin.Serialization
                 UnitType = UnitType,
                 Current = Current,
                 Default = Default,
-                IsReadOnly = IsReadOnly,
-                Possible = Possible
+                IsReadOnly = IsReadOnly
             };
+
+            if (deep)
+            {
+                // In a deep clone the references are cloned 
+
+                if (Possible != null)
+                {
+                    var tempPossible = new string[Possible.Length];
+                    for (var i = 0; i < Possible.Length; i++)
+                    {
+                        var value = Possible[i];
+                        tempPossible[i] = value;
+                    }
+                    copy.Possible = tempPossible;
+                }
+            }
+            else
+            {
+                // In a shallow clone only references are copied
+                copy.Possible = Possible;
+            }
 
             return copy;
         }

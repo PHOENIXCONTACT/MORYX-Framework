@@ -30,9 +30,9 @@ namespace Marvin.Tests
             var expectedDisplayPropDescription = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Description), germanCulture);
             var encoded = EntryConvert.EncodeClass(typeof(LocalizedClass));
 
-            Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].Name);
+            Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].DisplayName);
             Assert.AreEqual(expectedDisplayPropDescription, encoded.SubEntries[0].Description);
-            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1].Name);
+            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1].DisplayName);
 
             // Switch to invariant
             Thread.CurrentThread.CurrentUICulture = invariantCulture;
@@ -40,9 +40,9 @@ namespace Marvin.Tests
             expectedDisplayPropDescription = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Description), invariantCulture);
             encoded = EntryConvert.EncodeClass(typeof(LocalizedClass));
 
-            Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].Name);
+            Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].DisplayName);
             Assert.AreEqual(expectedDisplayPropDescription, encoded.SubEntries[0].Description);
-            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1].Name);
+            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1].DisplayName);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Marvin.Tests
             var entriesGerman = EntryConvert.EncodeObject(dummyClass);
 
             // Assert
-            Assert.AreEqual(nameof(DummyClass.SingleClassNonLocalized), entriesGerman.SubEntries[14].Name);
+            Assert.AreEqual(nameof(DummyClass.SingleClassNonLocalized), entriesGerman.SubEntries[14].DisplayName);
             Assert.IsNull(entriesGerman.SubEntries[14].Description);
         }
 
@@ -74,8 +74,8 @@ namespace Marvin.Tests
             var entriesInvariant = EntryConvert.EncodeObject(subClass);
 
             // Assert
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.ClassName), _germanCulture), entriesGerman.Name);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.ClassName), _invariantCulture), entriesInvariant.Name);
+            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.ClassName), _germanCulture), entriesGerman.DisplayName);
+            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.ClassName), _invariantCulture), entriesInvariant.DisplayName);
         }
 
         [Test]
@@ -95,19 +95,19 @@ namespace Marvin.Tests
             Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTermination), _germanCulture), entriesGerman[0].DisplayName);
             Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTerminationDescription), _germanCulture), entriesGerman[0].Description);
 
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParam), _germanCulture), entriesGerman[0].Parameters.SubEntries[0].Name);
+            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParam), _germanCulture), entriesGerman[0].Parameters.SubEntries[0].DisplayName);
             Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParamDescription), _germanCulture), entriesGerman[0].Parameters.SubEntries[0].Description);
 
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NameOfTerminatorParam), _germanCulture), entriesGerman[0].Parameters.SubEntries[1].Name);
+            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NameOfTerminatorParam), _germanCulture), entriesGerman[0].Parameters.SubEntries[1].DisplayName);
             Assert.IsNull(entriesGerman[0].Parameters.SubEntries[1].Description);
 
             Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTermination), _invariantCulture), entriesInvariant[0].DisplayName);
             Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTerminationDescription), _invariantCulture), entriesInvariant[0].Description);
 
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParam), _invariantCulture), entriesInvariant[0].Parameters.SubEntries[0].Name);
+            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParam), _invariantCulture), entriesInvariant[0].Parameters.SubEntries[0].DisplayName);
             Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParamDescription), _invariantCulture), entriesInvariant[0].Parameters.SubEntries[0].Description);
 
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NameOfTerminatorParam), _invariantCulture), entriesInvariant[0].Parameters.SubEntries[1].Name);
+            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NameOfTerminatorParam), _invariantCulture), entriesInvariant[0].Parameters.SubEntries[1].DisplayName);
             Assert.IsNull(entriesInvariant[0].Parameters.SubEntries[1].Description);
         }
     }
