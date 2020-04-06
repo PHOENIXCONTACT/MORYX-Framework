@@ -42,18 +42,18 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     }
 
     public addEntry(): void {
-        const prototype = this.props.Entry.Prototypes.find((proto: Entry) => proto.Key.Name === this.state.SelectedEntry);
+        const prototype = this.props.Entry.Prototypes.find((proto: Entry) => proto.Name === this.state.SelectedEntry);
         const entryClone = Entry.cloneFromPrototype(prototype, this.props.Entry);
 
         let counter: number = 0;
-        let entryName: string = entryClone.Key.Name;
+        let entryName: string = entryClone.Name;
 
-        while (this.props.Entry.SubEntries.find((subEntry: Entry) => subEntry.Key.Name === entryName) !== undefined) {
+        while (this.props.Entry.SubEntries.find((subEntry: Entry) => subEntry.Name === entryName) !== undefined) {
             ++counter;
-            entryName = entryClone.Key.Name + " " + counter.toString();
+            entryName = entryClone.Name + " " + counter.toString();
         }
 
-        entryClone.Key.Name = entryName;
+        entryClone.Name = entryName;
         this.props.Entry.SubEntries.push(entryClone);
 
         this.forceUpdate();
@@ -90,14 +90,14 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                             this.props.Entry.SubEntries.map((entry, idx) =>
                                 <div key={idx}>
                                     <Row className="table-row down-space">
-                                        <Col md={6} className="no-padding">{entry.Key.Name}</Col>
+                                        <Col md={6} className="no-padding">{entry.Name}</Col>
                                         <Col md={6} className="no-padding">
                                             <ButtonGroup>
                                                 <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>
                                                     <Icon path={mdiFolderOpen} className="icon right-space" />
                                                     Open
                                                 </Button>
-                                                <Button color="secondary" onClick={() => this.toggleCollapsible(entry.Key.UniqueIdentifier)}>
+                                                <Button color="secondary" onClick={() => this.toggleCollapsible(entry.UniqueIdentifier)}>
                                                     <Icon path={mdiChevronDown} className="icon right-space" />
                                                     Expand
                                                 </Button>
@@ -108,7 +108,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                                             </ButtonGroup>
                                         </Col>
                                     </Row>
-                                    <Collapse isOpen={this.isExpanded(entry.Key.UniqueIdentifier)}>
+                                    <Collapse isOpen={this.isExpanded(entry.UniqueIdentifier)}>
                                         {this.preRenderConfigEditor(entry)}
                                     </Collapse>
                                 </div>,

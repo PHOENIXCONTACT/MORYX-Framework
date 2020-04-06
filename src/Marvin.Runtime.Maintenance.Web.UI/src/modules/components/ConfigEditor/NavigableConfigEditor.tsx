@@ -66,7 +66,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
 
                 (query.path as string).split("/").forEach((element: string) => {
                     const searchableEntries: Entry[] = currentEntry != null ? currentEntry.SubEntries : entries;
-                    const filtered = searchableEntries.filter((entry) => entry.Key.Identifier === element);
+                    const filtered = searchableEntries.filter((entry) => entry.Identifier === element);
 
                     if (filtered.length > 0) {
                         currentEntry = filtered[0];
@@ -94,7 +94,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
     }
 
     private updatePath(entryChain: Entry[]): void {
-        this.props.History.push("?path=" + entryChain.map((entry) => entry.Key.Identifier).join("/"));
+        this.props.History.push("?path=" + entryChain.map((entry) => entry.Identifier).join("/"));
     }
 
     private onClickBreadcrumb(entry: Entry): void {
@@ -112,7 +112,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
     private preRenderBreadcrumb(): React.ReactNode {
         const entryChainButtons = this.state.EntryChain.map((entry, idx) =>
         (
-            <Button key={idx} color="light" onClick={() => this.onClickBreadcrumb(entry)} disabled={idx === this.state.EntryChain.length - 1}>{entry.Key.Name}</Button>
+            <Button key={idx} color="light" onClick={() => this.onClickBreadcrumb(entry)} disabled={idx === this.state.EntryChain.length - 1}>{entry.Name}</Button>
         ));
 
         return (

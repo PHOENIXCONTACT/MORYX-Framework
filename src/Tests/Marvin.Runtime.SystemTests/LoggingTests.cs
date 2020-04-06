@@ -148,7 +148,7 @@ namespace Marvin.Runtime.SystemTests
 
             Config config = _hogController.GetConfig("TestModule");
 
-            Entry logLevelEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "LogLevel");
+            Entry logLevelEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "LogLevel");
             Assert.IsNotNull(logLevelEntry, "Can't get property 'LogLevel' from config.");
             logLevelEntry.Value.Current = senderLevel.ToString();
             _hogController.SetConfig(config, "TestModule");

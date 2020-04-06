@@ -149,14 +149,14 @@ namespace Marvin.Runtime.SystemTests
             var moduleName = "TestModule";
             Config config = _hogController.GetConfig(moduleName);
 
-            Entry integerEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "IntegerValue");
-            Entry doubleEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "DoubleValue");
-            Entry stringEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "StringValue");
-            Entry longEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "LongValue");
-            Entry boolEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "BoolValue");
-            Entry enumEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "EnumValue");
-            Entry testPluginEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "TestPlugin");
-            Entry pluginsEntry = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "Plugins");
+            Entry integerEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "IntegerValue");
+            Entry doubleEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "DoubleValue");
+            Entry stringEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "StringValue");
+            Entry longEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "LongValue");
+            Entry boolEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "BoolValue");
+            Entry enumEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "EnumValue");
+            Entry testPluginEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "TestPlugin");
+            Entry pluginsEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "Plugins");
 
             Assert.IsNotNull(integerEntry, "Can't get property 'IntegerValue' from config.");
             Assert.IsNotNull(doubleEntry, "Can't get property 'DoubleValue' from config.");
@@ -172,26 +172,26 @@ namespace Marvin.Runtime.SystemTests
             Entry pluginEntry0 = pluginsEntry.SubEntries[0];
             Entry pluginEntry1 = pluginsEntry.SubEntries[1];
 
-            Entry pluginIntegerEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginIntegerValue");
-            Entry pluginDoubleEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginDoubleValue");
-            Entry pluginStringEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginStringValue");
-            Entry pluginLongEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginLongValue");
-            Entry pluginBoolEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginBoolValue");
-            Entry pluginEnumEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginEnumValue");
+            Entry pluginIntegerEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
+            Entry pluginDoubleEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
+            Entry pluginStringEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
+            Entry pluginLongEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
+            Entry pluginBoolEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
+            Entry pluginEnumEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
 
-            Entry plugin0IntegerEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginIntegerValue");
-            Entry plugin0DoubleEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginDoubleValue");
-            Entry plugin0StringEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginStringValue");
-            Entry plugin0LongEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginLongValue");
-            Entry plugin0BoolEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginBoolValue");
-            Entry plugin0EnumEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginEnumValue");
+            Entry plugin0IntegerEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
+            Entry plugin0DoubleEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
+            Entry plugin0StringEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
+            Entry plugin0LongEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
+            Entry plugin0BoolEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
+            Entry plugin0EnumEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
 
-            Entry plugin1IntegerEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginIntegerValue");
-            Entry plugin1DoubleEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginDoubleValue");
-            Entry plugin1StringEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginStringValue");
-            Entry plugin1LongEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginLongValue");
-            Entry plugin1BoolEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginBoolValue");
-            Entry plugin1EnumEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Key.Identifier == "PluginEnumValue");
+            Entry plugin1IntegerEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
+            Entry plugin1DoubleEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
+            Entry plugin1StringEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
+            Entry plugin1LongEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
+            Entry plugin1BoolEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
+            Entry plugin1EnumEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
 
             Assert.IsNotNull(pluginIntegerEntry, "Can't get property 'PluginIntegerValue' from config.");
             Assert.IsNotNull(pluginDoubleEntry, "Can't get property 'PluginDoubleValue' from config.");

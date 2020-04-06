@@ -45,12 +45,12 @@ namespace Marvin.Serialization
             return _currentArray.GetValue(int.Parse(key));
         }
 
-        public void Added(EntryKey key, object addedValue)
+        public void Added(Entry entry, object addedValue)
         {
             _array.SetValue(addedValue, _index++);
         }
 
-        public void Updated(EntryKey key, object updatedValue)
+        public void Updated(Entry entry, object updatedValue)
         {
             _array.SetValue(updatedValue, _index++);
         }

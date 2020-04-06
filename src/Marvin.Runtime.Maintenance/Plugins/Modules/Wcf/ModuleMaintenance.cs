@@ -223,7 +223,8 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
                     result = new Entry
                     {
                         Description = $"Error while invoking function: {method.DisplayName}",
-                        Key = new EntryKey {Identifier = "0", Name = "Error description"},
+                        Name = "Error description",
+                        Identifier = "0",
                         Value = new EntryValue {Current = e.Message, Type = EntryValueType.String}
                     };
                 }

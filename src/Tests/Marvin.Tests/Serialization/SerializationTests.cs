@@ -82,7 +82,7 @@ namespace Marvin.Tests
             {
                 var newInstance = entry1.Prototypes[0].Instantiate();
                 newInstance.Value.Current = (1 + i).ToString();
-                newInstance.Key.Name = "Key" + i;
+                newInstance.Name = "Key" + i;
                 entry1.SubEntries.Add(newInstance);
             }
 
@@ -90,7 +90,7 @@ namespace Marvin.Tests
             {
                 var newInstance = entry2.Prototypes[0].Instantiate();
                 newInstance.Value.Current = ((DummyEnum)(i % 3)).ToString();
-                newInstance.Key.Name = "Key_0121" + i;
+                newInstance.Name = "Key_0121" + i;
                 entry2.SubEntries.Add(newInstance);
             }
 
@@ -137,23 +137,23 @@ namespace Marvin.Tests
             {
                 var newInstance = entry1.Prototypes[0].Instantiate();
                 newInstance.Value.Current = (1 + i).ToString();
-                newInstance.Key.Name = "Key" + i;
+                newInstance.Name = "Key" + i;
                 entry1.SubEntries.Add(newInstance);
             }
 
             entry1.SubEntries[0].Value.Current = "123";
-            entry1.SubEntries[0].Key.Name = "022";
+            entry1.SubEntries[0].Name = "022";
 
             for (int i = 1; i <= 3; i++)
             {
                 var newInstance = entry2.Prototypes[0].Instantiate();
                 newInstance.Value.Current = ((DummyEnum)(i % 3)).ToString();
-                newInstance.Key.Name = "Key_0121" + i;
+                newInstance.Name = "Key_0121" + i;
                 entry2.SubEntries.Add(newInstance);
             }
 
             entry2.SubEntries[0].Value.Current = DummyEnum.ValueA.ToString();
-            entry2.SubEntries[0].Key.Name = "555";
+            entry2.SubEntries[0].Name = "555";
 
 
             //Act
@@ -362,11 +362,11 @@ namespace Marvin.Tests
                 {
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     //change "Key" + 10
-                    newInstance.Key.Name = (prefill + i).ToString();
+                    newInstance.Name = (prefill + i).ToString();
                     // change "Value"
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
-                    newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
+                    newInstance.Identifier = Entry.CreatedIdentifier;
 
                     colEntry.SubEntries.Add(newInstance);
                 }
@@ -378,7 +378,7 @@ namespace Marvin.Tests
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString();
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
-                    newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
+                    newInstance.Identifier = Entry.CreatedIdentifier;
                     colEntry.SubEntries.Add(newInstance);
                 }
             }
@@ -431,7 +431,7 @@ namespace Marvin.Tests
                 foreach (var entry in colEntry.SubEntries)
                 {
                     //change "Key" + 10
-                    entry.Key.Name = "1" + entry.SubEntries[0].Value.Current;
+                    entry.Name = "1" + entry.SubEntries[0].Value.Current;
                     //entry.Key.Identifier = EntryKey.CreatedIdentifier;
                     // change "Value"
                     entry.SubEntries[0].Value.Current = "1" + entry.SubEntries[0].Value.Current;
@@ -490,9 +490,9 @@ namespace Marvin.Tests
             // Act
             var colEntry = CollectionEntry(encoded.SubEntries, type);
             if(type == CollectionType.Dictionary)
-                colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Key.Identifier) - 1));
+                colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier) - 1));
             else
-                colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Key.Identifier)));
+                colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier)));
             EntryConvert.UpdateInstance(obj, encoded);
 
             // Assert
@@ -546,7 +546,7 @@ namespace Marvin.Tests
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = j.ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[1];
-                    newInstance.Key.Identifier = EntryKey.CreatedIdentifier;
+                    newInstance.Identifier = Entry.CreatedIdentifier;
                     colEntry.SubEntries.Add(newInstance);
                 }
 
@@ -878,21 +878,15 @@ namespace Marvin.Tests
         {
             return new Entry
             {
-                Key =
-                {
-                    Identifier = "Test",
-                    Name = "Test"
-                },
+                Identifier = "Test",
+                Name = "Test",
                 Description = "Description",
                 SubEntries =
                 {
                     new Entry
                     {
-                        Key =
-                        {
-                            Identifier = "L1.1",
-                            Name = "L1.1"
-                        },
+                        Identifier = "L1.1",
+                        Name = "L1.1",
                         Description = "Description",
                         Value =
                         {
@@ -903,11 +897,8 @@ namespace Marvin.Tests
                     },
                     new Entry
                     {
-                        Key =
-                        {
-                            Identifier = "L1.2",
-                            Name = "L1.2"
-                        },
+                        Identifier = "L1.2",
+                        Name = "L1.2",
                         Description = "Description",
                         Value =
                         {
@@ -918,21 +909,15 @@ namespace Marvin.Tests
                     },
                     new Entry
                     {
-                        Key =
-                        {
-                            Identifier = "L1.3",
-                            Name = "L1.3"
-                        },
+                        Identifier = "L1.3",
+                        Name = "L1.3",
                         Description = "Description",
                         SubEntries =
                         {
                             new Entry
                             {
-                                Key =
-                                {
-                                    Identifier = "L2.3.1",
-                                    Name = "L2.3.1"
-                                },
+                                Identifier = "L2.3.1",
+                                Name = "L2.3.1",
                                 Description = "Description",
                                 Value =
                                 {
@@ -999,7 +984,7 @@ namespace Marvin.Tests
 
         private static Entry CollectionEntry(IEnumerable<Entry> allEntries, CollectionType type)
         {
-            return allEntries.First(e => e.Key.Identifier == $"Sub{type:G}");
+            return allEntries.First(e => e.Identifier == $"Sub{type:G}");
         }
 
         private static IList ExtractCollection(CollectionType type, DummyClass obj)
@@ -1049,13 +1034,13 @@ namespace Marvin.Tests
             Assert.AreEqual(expected.Length, encoded.Count, "Number of entries does not match");
             for (int i = 0; i < encoded.Count; i++)
             {
-                Assert.AreEqual(expected[i].Name, encoded[i].Key.Identifier, "Property name missmatch");
+                Assert.AreEqual(expected[i].Name, encoded[i].Identifier, "Property name missmatch");
                 Assert.AreEqual(expected[i].Type, encoded[i].Value.Type, "Type missmatch");
                 Assert.AreEqual(expected[i].ReadOnly, encoded[i].Value.IsReadOnly, "ReadOnly missmatch");
             }
-            Assert.AreEqual("Foo", encodedSub[0].Key.Identifier, "Name missmatch");
+            Assert.AreEqual("Foo", encodedSub[0].Identifier, "Name missmatch");
             Assert.AreEqual(EntryValueType.Single, encodedSub[0].Value.Type, "Float not detected");
-            Assert.AreEqual("Enum", encodedSub[1].Key.Identifier);
+            Assert.AreEqual("Enum", encodedSub[1].Identifier);
             Assert.AreEqual(EntryValueType.Enum, encodedSub[1].Value.Type, "Enum not detected");
             Assert.AreEqual("Unset", encodedSub[1].Value.Default);
             Assert.AreEqual(3, encodedSub[1].Value.Possible.Length, "Possible values not set");

@@ -3,13 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import uuidv1 = require("uuid/v1");
 import Config from "./Config";
-import EntryKey from "./EntryKey";
 import EntryValidation from "./EntryValidation";
 import EntryValue from "./EntryValue";
 
 export default class Entry {
-    public Key: EntryKey;
+    public Name: string;
+    public Identifier: string;
+    public UniqueIdentifier: string;
     public Value: EntryValue;
     public SubEntries: Entry[];
     public Prototypes: Entry[];
@@ -18,7 +20,7 @@ export default class Entry {
     public Parent: Entry;
 
     constructor() {
-        this.Key = new EntryKey();
+        this.UniqueIdentifier = uuidv1();
         this.Value = new EntryValue();
         this.SubEntries = [];
         this.Prototypes = [];
@@ -41,7 +43,7 @@ export default class Entry {
     }
 
     public static generateUniqueIdentifiers(entry: Entry): void {
-        EntryKey.updateUniqueIdentifier(entry.Key);
+        entry.UniqueIdentifier = uuidv1();
         entry.SubEntries.forEach((subEntry: Entry) => {
             Entry.generateUniqueIdentifiers(subEntry);
         });
@@ -52,7 +54,8 @@ export default class Entry {
 
         Config.patchParent(entryClone, parent);
 
-        EntryKey.updateIdentifierToCreated(entryClone.Key);
+        entryClone.Identifier = uuidv1();
+        entryClone.IsKnown = false;
         Entry.generateUniqueIdentifiers(entryClone);
         return entryClone;
     }

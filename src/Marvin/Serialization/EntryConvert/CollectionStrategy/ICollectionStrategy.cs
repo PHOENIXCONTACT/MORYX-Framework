@@ -30,12 +30,12 @@ namespace Marvin.Serialization
         /// <summary>
         /// Called when a new value was added
         /// </summary>
-        void Added(EntryKey key, object addedValue);
+        void Added(Entry entry, object addedValue);
 
         /// <summary>
         /// Method called when a value was updated
         /// </summary>
-        void Updated(EntryKey key, object updatedValue);
+        void Updated(Entry entry, object updatedValue);
 
         /// <summary>
         /// Remove a value from the collection that is missing in the entry collection

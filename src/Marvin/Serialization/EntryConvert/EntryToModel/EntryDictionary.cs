@@ -27,7 +27,7 @@ namespace Marvin.Serialization
         {
             foreach (var subEntry in collectionRoot.SubEntries)
             {
-                _internalCollection.Add(subEntry.Key.Identifier, Convert(subEntry));
+                _internalCollection.Add(subEntry.Identifier, Convert(subEntry));
             }
 
             LoadPrototype();

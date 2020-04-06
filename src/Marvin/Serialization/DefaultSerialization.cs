@@ -130,7 +130,7 @@ namespace Marvin.Serialization
         {
             // Return pairs where available
             return from entry in encoded
-                   let property = sourceType.GetProperty(entry.Key.Identifier)
+                   let property = sourceType.GetProperty(entry.Identifier)
                    select new MappedProperty
                    {
                        Entry = entry,

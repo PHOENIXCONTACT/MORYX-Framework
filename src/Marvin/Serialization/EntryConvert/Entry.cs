@@ -12,24 +12,35 @@ namespace Marvin.Serialization
     /// Model class representing a single property of a config class
     /// </summary>
     [DataContract]
-    public partial class Entry : ICloneable, IEquatable<Entry>
+    public class Entry : ICloneable, IEquatable<Entry>
     {
         /// <summary>
         /// Create new entry instance with prefilled properties
         /// </summary>
         public Entry()
         {
-            Key = new EntryKey();
             Value = new EntryValue();
             SubEntries = new List<Entry>();
             Prototypes = new List<Entry>();
         }
 
         /// <summary>
-        /// Unique key of the entry
+        /// Name of the item - property name or list item name
         /// </summary>
         [DataMember]
-        public EntryKey Key { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Unique identfier - property name or item index
+        /// </summary>
+        [DataMember]
+        public string Identifier { get; set; }
+
+        /// <summary>
+        /// Identifier used for entry objects that function as prototypes
+        /// </summary>
+        public const // TODO: Additional line: Wait for CGbR fix of constant https://github.com/Toxantron/CGbR/issues/24
+            string CreatedIdentifier = "CREATED";
 
         /// <summary>
         /// Description of the entry
@@ -85,6 +96,72 @@ namespace Marvin.Serialization
             Clone(true);
 
         /// <summary>
+        /// Method to create a deep or shallow copy of this object
+        /// </summary>
+        public Entry Clone(bool deep)
+        {
+            var copy = new Entry
+            {
+                Name = Name, 
+                Identifier = Identifier, 
+                Description = Description
+            };
+
+            // All value types can be simply copied
+            if (deep)
+            {
+                // In a deep clone the references are cloned 
+                if (Value != null)
+                {
+                    copy.Value = Value.Clone(true);
+                }
+                if (Validation != null)
+                {
+                    copy.Validation = Validation.Clone(true);
+                }
+
+                if (SubEntries != null)
+                {
+                    var tempSubEntries = new List<Entry>(SubEntries.Count);
+                    for (var i = 0; i < SubEntries.Count; i++)
+                    {
+                        var value = SubEntries[i];
+                        if (value != null)
+                        {
+                            value = value.Clone(true);
+                        }
+                        tempSubEntries.Add(value);
+                    }
+                    copy.SubEntries = tempSubEntries;
+                }
+
+                if (Prototypes != null)
+                {
+                    var tempPrototypes = new List<Entry>(Prototypes.Count);
+                    for (var i = 0; i < Prototypes.Count; i++)
+                    {
+                        var value = Prototypes[i];
+                        if (value != null)
+                        {
+                            value = value.Clone(true);
+                        }
+                        tempPrototypes.Add(value);
+                    }
+                    copy.Prototypes = tempPrototypes;
+                }
+            }
+            else
+            {
+                // In a shallow clone only references are copied
+                copy.Value = Value;
+                copy.Validation = Validation;
+                copy.SubEntries = SubEntries;
+                copy.Prototypes = Prototypes;
+            }
+            return copy;
+        }
+
+        /// <summary>
         /// Overload of the comparison operator mapped to the <see cref="Equals(Entry)"/> method
         /// </summary>
         public static bool operator ==(Entry left, Entry right)
@@ -120,7 +197,7 @@ namespace Marvin.Serialization
 
             foreach (var leftEntry in SubEntries)
             {
-                var rightEntry = other.SubEntries.FirstOrDefault(p => p.Key.Name == leftEntry.Key.Name);
+                var rightEntry = other.SubEntries.FirstOrDefault(p => p.Name == leftEntry.Name);
                 if (rightEntry == null)
                     return false;
 
@@ -145,7 +222,7 @@ namespace Marvin.Serialization
             {
                 // ReSharper disable NonReadonlyMemberInGetHashCode
                 // These valuses will not be modified
-                var hashCode = Key.Identifier.GetHashCode();
+                var hashCode = Identifier.GetHashCode();
                 hashCode = (hashCode * 397) ^ Value.Current.GetHashCode();
                 hashCode = (hashCode * 397) ^ SubEntries.GetHashCode();
                 return hashCode;
@@ -154,6 +231,6 @@ namespace Marvin.Serialization
 
         /// <inheritdoc />
         public override string ToString() => 
-            $"{Key.Name}: {Value.Current}";
+            $"{Name}: {Value.Current}";
     }
 }

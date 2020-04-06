@@ -91,7 +91,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
 
         switch (entryType) {
             case EntryValueType.Class:
-                prototype = this.props.ParentEntry.Prototypes.find((proto: Entry) => proto.Key.Name === this.state.SelectedEntryType);
+                prototype = this.props.ParentEntry.Prototypes.find((proto: Entry) => proto.Name === this.state.SelectedEntryType);
                 break;
             default:
                 return;
@@ -99,8 +99,8 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
 
         const clone = Entry.cloneFromPrototype(prototype, this.props.ParentEntry.Parent);
         clone.Prototypes = JSON.parse(JSON.stringify(this.props.ParentEntry.Prototypes));
-        clone.Key.Name = this.props.ParentEntry.Key.Name;
-        clone.Key.Identifier = this.props.ParentEntry.Key.Identifier;
+        clone.Name = this.props.ParentEntry.Name;
+        clone.Identifier = this.props.ParentEntry.Identifier;
 
         const subEntries: Entry[] = this.props.ParentEntry.Parent.SubEntries;
 
@@ -144,9 +144,9 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                             <Icon path={mdiFolderOpen} className="icon right-space" />
                             Open
                         </Button>
-                        <Button color="secondary" onClick={() => this.toggleCollapsible(entry.Key.UniqueIdentifier)}>
-                            <Icon path={this.isExpanded(entry.Key.UniqueIdentifier) ? mdiChevronUp : mdiChevronDown} className="icon right-space" />
-                            {this.isExpanded(entry.Key.UniqueIdentifier) ? "Collapse" : "Expand"}
+                        <Button color="secondary" onClick={() => this.toggleCollapsible(entry.UniqueIdentifier)}>
+                            <Icon path={this.isExpanded(entry.UniqueIdentifier) ? mdiChevronUp : mdiChevronDown} className="icon right-space" />
+                            {this.isExpanded(entry.UniqueIdentifier) ? "Collapse" : "Expand"}
                         </Button>
                     </ButtonGroup>
                 );
@@ -164,7 +164,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                     <Col md={5} className="no-padding">
                         <Container fluid={true} className="no-padding">
                             <Row>
-                                <Col md={12} className="no-padding"><span className="font-bold align-self-center no-padding">{subEntry.Key.Name}</span></Col>
+                                <Col md={12} className="no-padding"><span className="font-bold align-self-center no-padding">{subEntry.Name}</span></Col>
                             </Row>
                             <Row>
                                 <Col md={12} className="no-padding"><span className="font-disabled no-padding">{subEntry.Description}</span></Col>
@@ -182,7 +182,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                         <Row>
                             <Col md={12}>
                                 <CollectionEditor Entry={subEntry}
-                                                  IsExpanded={this.isExpanded(subEntry.Key.UniqueIdentifier)}
+                                                  IsExpanded={this.isExpanded(subEntry.UniqueIdentifier)}
                                                   Root={this.props.Root}
                                                   navigateToEntry={this.props.navigateToEntry}
                                                   IsReadOnly={this.props.IsReadOnly} />
@@ -195,7 +195,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                         <Row>
                             <Col md={12}>
                                 <ClassEditor Entry={subEntry}
-                                             IsExpanded={this.isExpanded(subEntry.Key.UniqueIdentifier)}
+                                             IsExpanded={this.isExpanded(subEntry.UniqueIdentifier)}
                                              Root={this.props.Root}
                                              navigateToEntry={this.props.navigateToEntry}
                                              IsReadOnly={this.props.IsReadOnly} />

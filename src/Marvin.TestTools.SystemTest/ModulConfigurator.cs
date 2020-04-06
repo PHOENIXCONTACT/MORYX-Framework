@@ -64,7 +64,7 @@ namespace Marvin.TestTools.SystemTest
                 foreach (Entry Entry in serviceConfig.Root.SubEntries)
                 {
                     // does the displaying value matches to the first entry of the path?
-                    if (Entry.Key.Identifier == configName)
+                    if (Entry.Identifier == configName)
                     {
                         Assert.IsNull(foundEntry, "Found more than one config entry model named '{0}'. You must provide the index of the config entry model!", configName);
                         foundEntry = Entry;
@@ -78,7 +78,7 @@ namespace Marvin.TestTools.SystemTest
                 foreach (var Entry in serviceConfig.Root.SubEntries)
                 {
                     // does the displaying value matches to the first entry of the path?
-                    if (Entry.Key.Identifier == configName)
+                    if (Entry.Identifier == configName)
                     {
                         currentIndex++;
                         if (currentIndex == configIndex)
@@ -120,7 +120,7 @@ namespace Marvin.TestTools.SystemTest
             foreach (var Entry in currentConfig.SubEntries)
             {
                 // does the displaying value matches to current path?
-                if (Entry.Key.Identifier == configName)
+                if (Entry.Identifier == configName)
                 {
                     Assert.IsNull(foundEntry, "Found more than one config entry model named '{0}'. You must provide the index of the config entry model!", configName);
                     foundEntry = Entry;
@@ -128,7 +128,7 @@ namespace Marvin.TestTools.SystemTest
             }
 
             // Fail if the config entry wasn't found
-            Assert.IsNotNull(foundEntry,"Config entry '{0}' was not found in the sub config of '{1}'!", configName, currentConfig.Key);
+            Assert.IsNotNull(foundEntry,"Config entry '{0}' was not found in the sub config of '{1}'!", configName, currentConfig);
             
             // next index of the config path 
             index++;
