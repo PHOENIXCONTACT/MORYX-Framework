@@ -42,18 +42,18 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     }
 
     public addEntry(): void {
-        const prototype = this.props.Entry.Prototypes.find((proto: Entry) => proto.Name === this.state.SelectedEntry);
+        const prototype = this.props.Entry.Prototypes.find((proto: Entry) => proto.DisplayName === this.state.SelectedEntry);
         const entryClone = Entry.cloneFromPrototype(prototype, this.props.Entry);
 
         let counter: number = 0;
-        let entryName: string = entryClone.Name;
+        let entryName: string = entryClone.DisplayName;
 
-        while (this.props.Entry.SubEntries.find((subEntry: Entry) => subEntry.Name === entryName) !== undefined) {
+        while (this.props.Entry.SubEntries.find((subEntry: Entry) => subEntry.DisplayName === entryName) !== undefined) {
             ++counter;
-            entryName = entryClone.Name + " " + counter.toString();
+            entryName = entryClone.DisplayName + " " + counter.toString();
         }
 
-        entryClone.Name = entryName;
+        entryClone.DisplayName = entryName;
         this.props.Entry.SubEntries.push(entryClone);
 
         this.forceUpdate();
@@ -90,7 +90,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                             this.props.Entry.SubEntries.map((entry, idx) =>
                                 <div key={idx}>
                                     <Row className="table-row down-space">
-                                        <Col md={6} className="no-padding">{entry.Name}</Col>
+                                        <Col md={6} className="no-padding">{entry.DisplayName}</Col>
                                         <Col md={6} className="no-padding">
                                             <ButtonGroup>
                                                 <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>

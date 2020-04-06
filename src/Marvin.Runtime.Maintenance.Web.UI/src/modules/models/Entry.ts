@@ -9,7 +9,7 @@ import EntryValidation from "./EntryValidation";
 import EntryValue from "./EntryValue";
 
 export default class Entry {
-    public Name: string;
+    public DisplayName: string;
     public Identifier: string;
     public UniqueIdentifier: string;
     public Value: EntryValue;
@@ -54,8 +54,7 @@ export default class Entry {
 
         Config.patchParent(entryClone, parent);
 
-        entryClone.Identifier = uuidv1();
-        entryClone.IsKnown = false;
+        entryClone.Identifier = "CREATED";
         Entry.generateUniqueIdentifiers(entryClone);
         return entryClone;
     }

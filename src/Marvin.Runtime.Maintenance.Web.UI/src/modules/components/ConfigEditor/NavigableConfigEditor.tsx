@@ -112,7 +112,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
     private preRenderBreadcrumb(): React.ReactNode {
         const entryChainButtons = this.state.EntryChain.map((entry, idx) =>
         (
-            <Button key={idx} color="light" onClick={() => this.onClickBreadcrumb(entry)} disabled={idx === this.state.EntryChain.length - 1}>{entry.Name}</Button>
+            <Button key={idx} color="light" onClick={() => this.onClickBreadcrumb(entry)} disabled={idx === this.state.EntryChain.length - 1}>{entry.DisplayName}</Button>
         ));
 
         return (

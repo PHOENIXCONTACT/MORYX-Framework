@@ -15,6 +15,11 @@ namespace Marvin.Serialization
     public class Entry : ICloneable, IEquatable<Entry>
     {
         /// <summary>
+        /// Identifier used for entry objects that function as prototypes
+        /// </summary>
+        public const string CreatedIdentifier = "CREATED";
+
+        /// <summary>
         /// Create new entry instance with prefilled properties
         /// </summary>
         public Entry()
@@ -28,19 +33,13 @@ namespace Marvin.Serialization
         /// Name of the item - property name or list item name
         /// </summary>
         [DataMember]
-        public string Name { get; set; }
+        public string DisplayName { get; set; }
 
         /// <summary>
-        /// Unique identfier - property name or item index
+        /// Unique identifier - property name or item index
         /// </summary>
         [DataMember]
         public string Identifier { get; set; }
-
-        /// <summary>
-        /// Identifier used for entry objects that function as prototypes
-        /// </summary>
-        public const // TODO: Additional line: Wait for CGbR fix of constant https://github.com/Toxantron/CGbR/issues/24
-            string CreatedIdentifier = "CREATED";
 
         /// <summary>
         /// Description of the entry
@@ -102,7 +101,7 @@ namespace Marvin.Serialization
         {
             var copy = new Entry
             {
-                Name = Name, 
+                DisplayName = DisplayName, 
                 Identifier = Identifier, 
                 Description = Description
             };
@@ -197,7 +196,7 @@ namespace Marvin.Serialization
 
             foreach (var leftEntry in SubEntries)
             {
-                var rightEntry = other.SubEntries.FirstOrDefault(p => p.Name == leftEntry.Name);
+                var rightEntry = other.SubEntries.FirstOrDefault(p => p.Identifier == leftEntry.Identifier);
                 if (rightEntry == null)
                     return false;
 
@@ -221,7 +220,7 @@ namespace Marvin.Serialization
             unchecked
             {
                 // ReSharper disable NonReadonlyMemberInGetHashCode
-                // These valuses will not be modified
+                // These values will not be modified
                 var hashCode = Identifier.GetHashCode();
                 hashCode = (hashCode * 397) ^ Value.Current.GetHashCode();
                 hashCode = (hashCode * 397) ^ SubEntries.GetHashCode();
@@ -231,6 +230,6 @@ namespace Marvin.Serialization
 
         /// <inheritdoc />
         public override string ToString() => 
-            $"{Name}: {Value.Current}";
+            $"{DisplayName}: {Value.Current}";
     }
 }

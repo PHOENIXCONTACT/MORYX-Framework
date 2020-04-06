@@ -30,38 +30,39 @@ namespace Marvin.Tests
             var encoded = EntryConvert.EncodeClass(type).SubEntries;
             var encodedSub = EntryConvert.EncodeClass(subType).SubEntries;
 
+            // Assert
             DummyAssert(encoded, encodedSub);
         }
 
         [Test]
         public void CreateInstanceWithArray()
         {
-            //Arrange
+            // Arrange
             var type = typeof(ArrayDummy);
             var encoded = EntryConvert.EncodeClass(type);
 
             var entry1 = encoded.SubEntries[0];
             var entry2 = encoded.SubEntries[1];
 
-            for (int i = 1; i <= 5; i++)
+            for (var i = 1; i <= 5; i++)
             {
                 var newInstance = entry1.Prototypes[0].Instantiate();
                 newInstance.Value.Current = (1 + i).ToString();
                 entry1.SubEntries.Add(newInstance);
             }
 
-            for (int i = 1; i <= 5; i++)
+            for (var i = 1; i <= 5; i++)
             {
                 var newInstance = entry2.Prototypes[0].Instantiate();
                 newInstance.Value.Current = "Number: " + i;
                 entry2.SubEntries.Add(newInstance);
             }
 
-            //Act
+            // Act
             var dummy = EntryConvert.CreateInstance<ArrayDummy>(encoded);
 
-            //Assert
-            for (int i = 1; i <= 5; i++)
+            // Assert
+            for (var i = 1; i <= 5; i++)
             {
                 Assert.AreEqual(i + 1, dummy.Array[i - 1]);
                 Assert.AreEqual("Number: " + i, dummy.Keys[i - 1]);
@@ -71,95 +72,92 @@ namespace Marvin.Tests
         [Test]
         public void CreateInstanceWithDictionary()
         {
-            //Arrange
+            // Arrange
             var type = typeof(DictionaryClass);
             var encoded = EntryConvert.EncodeClass(type);
 
             var entry1 = encoded.SubEntries[1];
             var entry2 = encoded.SubEntries[2];
 
-            for (int i = 1; i <= 5; i++)
+            for (var i = 1; i <= 5; i++)
             {
                 var newInstance = entry1.Prototypes[0].Instantiate();
                 newInstance.Value.Current = (1 + i).ToString();
-                newInstance.Name = "Key" + i;
+                newInstance.DisplayName = "Key" + i;
                 entry1.SubEntries.Add(newInstance);
             }
 
-            for (int i = 1; i <= 3; i++)
+            for (var i = 1; i <= 3; i++)
             {
                 var newInstance = entry2.Prototypes[0].Instantiate();
                 newInstance.Value.Current = ((DummyEnum)(i % 3)).ToString();
-                newInstance.Name = "Key_0121" + i;
+                newInstance.DisplayName = "Key_0121" + i;
                 entry2.SubEntries.Add(newInstance);
             }
 
-
-            //Act
+            // Act
             var dummy = EntryConvert.CreateInstance<DictionaryClass>(encoded);
 
-            //Assert
-            for (int i = 1; i <= 5; i++)
+            // Assert
+            for (var i = 1; i <= 5; i++)
             {
                 Assert.AreEqual(3, dummy.EnumDictionary.Count );
                 Assert.AreEqual(5 , dummy.SubDictionary.Count);
                 Assert.AreEqual(6, dummy.SubDictionary["Key5"]);
                 Assert.AreEqual(DummyEnum.Unset, dummy.EnumDictionary["Key_01213"]);
             }
-
         }
 
         [Test]
         public void UpdateDictionary()
         {
-            var dummy = new DictionaryClass()
+            // Arrange
+            var dummy = new DictionaryClass
             {
-                SubDictionary = new Dictionary<string, int>()
+                SubDictionary = new Dictionary<string, int>
                 {
                     {"077", 6 },
                     {"088", 9 }
                 },
-                EnumDictionary = new Dictionary<string, DummyEnum>()
+                EnumDictionary = new Dictionary<string, DummyEnum>
                 {
                     {"011", DummyEnum.Unset },
                     {"022", DummyEnum.ValueB }
                 }
             };
 
-            //Arrange
             var encoded = EntryConvert.EncodeObject(dummy);
 
             var entry1 = encoded.SubEntries[1];
             var entry2 = encoded.SubEntries[2];
 
 
-            for (int i = 1; i <= 2; i++)
+            for (var i = 1; i <= 2; i++)
             {
                 var newInstance = entry1.Prototypes[0].Instantiate();
                 newInstance.Value.Current = (1 + i).ToString();
-                newInstance.Name = "Key" + i;
+                newInstance.DisplayName = "Key" + i;
                 entry1.SubEntries.Add(newInstance);
             }
 
             entry1.SubEntries[0].Value.Current = "123";
-            entry1.SubEntries[0].Name = "022";
+            entry1.SubEntries[0].DisplayName = "022";
 
-            for (int i = 1; i <= 3; i++)
+            for (var i = 1; i <= 3; i++)
             {
                 var newInstance = entry2.Prototypes[0].Instantiate();
                 newInstance.Value.Current = ((DummyEnum)(i % 3)).ToString();
-                newInstance.Name = "Key_0121" + i;
+                newInstance.DisplayName = "Key_0121" + i;
                 entry2.SubEntries.Add(newInstance);
             }
 
             entry2.SubEntries[0].Value.Current = DummyEnum.ValueA.ToString();
-            entry2.SubEntries[0].Name = "555";
+            entry2.SubEntries[0].DisplayName = "555";
 
-
-            //Act
+            // Act
             EntryConvert.UpdateInstance(dummy, encoded);
 
-            //Assert
+            // Assert
             Assert.AreEqual(5, dummy.EnumDictionary.Count);
             Assert.AreEqual(4, dummy.SubDictionary.Count);
             Assert.AreEqual(123, dummy.SubDictionary["022"]);
@@ -215,52 +213,49 @@ namespace Marvin.Tests
             Assert.AreEqual(DummyEnum.ValueB, dummy.Enums[3]);
         }
 
-
-
         [Test]
         public void CreateInstanceWithPrimitiveList()
         {
-            //Arrange
+            // Arrange
             var type = typeof(ListDummy);
             var encoded = EntryConvert.EncodeClass(type);
             var ent = encoded.SubEntries[1];
 
-            for (int i = 1; i <= 5; i++)
+            for (var i = 1; i <= 5; i++)
             {
                 var newInstance = ent.Prototypes[0].Instantiate();
                 newInstance.Value.Current = (1 + i).ToString();
                 ent.SubEntries.Add(newInstance);
             }
 
-            //Act
+            // Act
             var listDummy = EntryConvert.CreateInstance<ListDummy>(encoded);
 
-            //Assert
-            for (int i = 1; i <= 5; i++)
+            // Assert
+            for (var i = 1; i <= 5; i++)
             {
                 Assert.AreEqual(i + 1, listDummy.DoubleList[i - 1]);
             }
-
         }
 
         [Test]
         public void UpdatePrimitiveList()
         {
-            //Arrange
+            // Arrange
             var defaultSerialization = new DefaultSerialization { FormatProvider = new CultureInfo("en-US")};
 
-            var dummy = new ListDummy()
+            var dummy = new ListDummy
             {
                 Number = 0,
-                DoubleList = new List<double>() {1.7, 2.5, 3},
-                EnumList = new List<DummyEnum>() { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB}
+                DoubleList = new List<double> {1.7, 2.5, 3},
+                EnumList = new List<DummyEnum> { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB}
             };
 
             var encoded = EntryConvert.EncodeObject(dummy, defaultSerialization);
             var ent = encoded.SubEntries[1];
             var ent2 = encoded.SubEntries[2];
 
-            //Act
+            // Act
             encoded.SubEntries[0].Value.Current = "5";
             ent.SubEntries[1].Value.Current = 12.34d.ToString(defaultSerialization.FormatProvider);
             var newInstance = ent.Prototypes[0].Instantiate();
@@ -274,7 +269,7 @@ namespace Marvin.Tests
 
             EntryConvert.UpdateInstance(dummy, encoded, defaultSerialization);
 
-            //Assert
+            // Assert
             Assert.AreEqual(5, dummy.Number);
             Assert.AreEqual(4, dummy.DoubleList.Count);
             Assert.AreEqual(1.7, dummy.DoubleList[0]);
@@ -289,8 +284,6 @@ namespace Marvin.Tests
             Assert.AreEqual(DummyEnum.ValueA, dummy.EnumList[3]);
         }
 
-
-
         [Test]
         public void EncodeObject()
         {
@@ -299,7 +292,7 @@ namespace Marvin.Tests
             {
                 Number = 10,
                 Name = "Thomas",
-                SingleClass = null,//new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB },
+                SingleClass = null,
                 SubArray = new[] { new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB } },
                 SubList = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
                 SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
@@ -316,7 +309,7 @@ namespace Marvin.Tests
             // Assert
             DummyAssert(encoded, encodedSub);
             var expected = new[] { "10", "Thomas", "10" };
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
                 Assert.AreEqual(expected[i], encoded[i].Value.Current, "Property value missmatch");
             }
@@ -358,27 +351,27 @@ namespace Marvin.Tests
 
             if (type == CollectionType.Dictionary)
             {
-                for (int i = 1; i <= newValues; i++)
+                for (var i = 1; i <= newValues; i++)
                 {
                     var newInstance = colEntry.Prototypes[0].Instantiate();
-                    //change "Key" + 10
-                    newInstance.Name = (prefill + i).ToString();
+                    // change "Key" + 10
+                    newInstance.DisplayName = (prefill + i).ToString();
                     // change "Value"
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
-                    newInstance.Identifier = Entry.CreatedIdentifier;
+                    newInstance.Identifier = "Some initial identifier";
 
                     colEntry.SubEntries.Add(newInstance);
                 }
             }
             else
             {
-                for (int i = 1; i <= newValues; i++)
+                for (var i = 1; i <= newValues; i++)
                 {
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString();
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
-                    newInstance.Identifier = Entry.CreatedIdentifier;
+                    newInstance.Identifier = "Some initial identifier";
                     colEntry.SubEntries.Add(newInstance);
                 }
             }
@@ -393,7 +386,7 @@ namespace Marvin.Tests
             if (type == CollectionType.Dictionary)
             {
                 var array = (collection as IEnumerable<KeyValuePair<int,SubClass>>).ToArray();
-                for (int i = 0; i < totalSize; i++)
+                for (var i = 0; i < totalSize; i++)
                 {
                     Assert.AreEqual((float)i + 1, array[i].Key, "Key not set!");
                     Assert.AreEqual((float)i + 1, array[i].Value.Foo, "Value not set!");
@@ -404,7 +397,7 @@ namespace Marvin.Tests
             else
             {
                 var array = (collection as IEnumerable<SubClass>).ToArray();
-                for (int i = 0; i < totalSize; i++)
+                for (var i = 0; i < totalSize; i++)
                 {
                     Assert.AreEqual((float)i + 1, array[i].Foo, "Value not set!");
                     var expectedEnum = i < prefill ? DummyEnum.ValueA : DummyEnum.ValueB;
@@ -431,8 +424,7 @@ namespace Marvin.Tests
                 foreach (var entry in colEntry.SubEntries)
                 {
                     //change "Key" + 10
-                    entry.Name = "1" + entry.SubEntries[0].Value.Current;
-                    //entry.Key.Identifier = EntryKey.CreatedIdentifier;
+                    entry.DisplayName = "1" + entry.SubEntries[0].Value.Current;
                     // change "Value"
                     entry.SubEntries[0].Value.Current = "1" + entry.SubEntries[0].Value.Current;
                     entry.SubEntries[1].Value.Current = entry.SubEntries[1].Value.Possible[2];
@@ -443,7 +435,7 @@ namespace Marvin.Tests
                 // Assert
                 var collection = ExtractCollection(type, obj);
 
-                for (int i = 0; i < collection.Count; i++)
+                for (var i = 0; i < collection.Count; i++)
                 {
                     Assert.IsTrue(obj.SubDictionary.ContainsKey(11 + i));
                     Assert.AreEqual((float)11 + i, obj.SubDictionary[11 + i].Foo);
@@ -464,7 +456,7 @@ namespace Marvin.Tests
 
                 var array = (collection as IEnumerable<SubClass>).ToArray();
 
-                for (int i = 0; i < collection.Count; i++)
+                for (var i = 0; i < collection.Count; i++)
                 {
                     Assert.AreEqual((float)11 + i, array[i].Foo);
                     Assert.AreEqual(DummyEnum.ValueB, array[i].Enum);
@@ -504,7 +496,7 @@ namespace Marvin.Tests
             if (type == CollectionType.Dictionary)
             {
                 var array = (collection as IEnumerable<KeyValuePair<int, SubClass>>).ToArray();
-                for (int i = 0; i < prefill; i++)
+                for (var i = 0; i < prefill; i++)
                 {
                     if (removedIndexes.Contains(i))
                         continue;
@@ -516,7 +508,7 @@ namespace Marvin.Tests
             else
             {
                 var array = (collection as IEnumerable<SubClass>).ToArray();
-                for (int i = 0; i < prefill; i++)
+                for (var i = 0; i < prefill; i++)
                 {
                     if (removedIndexes.Contains(i))
                         continue;
@@ -538,15 +530,15 @@ namespace Marvin.Tests
             encoded.SubEntries[0].Value.Current = "10";
             encoded.SubEntries[1].Value.Current = "Thomas";
             encoded.SubEntries[3].SubEntries[1].Value.Current = encoded.SubEntries[3].SubEntries[1].Value.Possible[2];
-            for (int i = 4; i < 7; i++)
+            for (var i = 4; i < 7; i++)
             {
                 var colEntry = encoded.SubEntries[i];
-                for (int j = 0; j < i; j++)
+                for (var j = 0; j < i; j++)
                 {
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = j.ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[1];
-                    newInstance.Identifier = Entry.CreatedIdentifier;
+                    newInstance.Identifier = "Some initial identifier";
                     colEntry.SubEntries.Add(newInstance);
                 }
 
@@ -558,7 +550,7 @@ namespace Marvin.Tests
             Assert.AreEqual("Thomas", obj.Name);
             Assert.AreEqual(DummyEnum.ValueB, obj.SingleClass.Enum);
             var colAssert = new[] { CollectionType.Array, CollectionType.List, CollectionType.Enumerable };
-            for (int i = 0; i < colAssert.Length; i++)
+            for (var i = 0; i < colAssert.Length; i++)
             {
                 var length = 4 + i;
                 var collection = ExtractCollection(colAssert[i], obj);
@@ -571,7 +563,7 @@ namespace Marvin.Tests
                 else
                 {
                     var array = (collection as IEnumerable<SubClass>).ToArray();
-                    for (int j = 0; j < length; j++)
+                    for (var j = 0; j < length; j++)
                     {
                         Assert.AreEqual((float)j, array[j].Foo);
                         Assert.AreEqual(DummyEnum.ValueA, array[j].Enum);
@@ -699,11 +691,11 @@ namespace Marvin.Tests
 
             // Act
             var aEqualsB = entry == entry2;
-            var aNotEqalsB = entry != entry2;
+            var aNotEqualsB = entry != entry2;
 
             // Assert
             Assert.IsTrue(aEqualsB);
-            Assert.IsFalse(aNotEqalsB);
+            Assert.IsFalse(aNotEqualsB);
         }
 
         [Test(Description = "Encodes a MemoryStream")]
@@ -879,14 +871,14 @@ namespace Marvin.Tests
             return new Entry
             {
                 Identifier = "Test",
-                Name = "Test",
+                DisplayName = "Test",
                 Description = "Description",
                 SubEntries =
                 {
                     new Entry
                     {
                         Identifier = "L1.1",
-                        Name = "L1.1",
+                        DisplayName = "L1.1",
                         Description = "Description",
                         Value =
                         {
@@ -898,7 +890,7 @@ namespace Marvin.Tests
                     new Entry
                     {
                         Identifier = "L1.2",
-                        Name = "L1.2",
+                        DisplayName = "L1.2",
                         Description = "Description",
                         Value =
                         {
@@ -910,14 +902,14 @@ namespace Marvin.Tests
                     new Entry
                     {
                         Identifier = "L1.3",
-                        Name = "L1.3",
+                        DisplayName = "L1.3",
                         Description = "Description",
                         SubEntries =
                         {
                             new Entry
                             {
                                 Identifier = "L2.3.1",
-                                Name = "L2.3.1",
+                                DisplayName = "L2.3.1",
                                 Description = "Description",
                                 Value =
                                 {
@@ -957,7 +949,7 @@ namespace Marvin.Tests
             var obj = new DummyClass();
             var elements = new List<SubClass>();
             var dictionary = new Dictionary<int, SubClass>();
-            for (int i = 1; i <= values; i++)
+            for (var i = 1; i <= values; i++)
             {
                 elements.Add(new SubClass { Foo = i, Enum = DummyEnum.ValueA });
                 dictionary.Add(i, new SubClass { Foo = i, Enum = DummyEnum.ValueA });
@@ -1032,7 +1024,7 @@ namespace Marvin.Tests
                 new {Name = "SingleClassNonLocalized", Type = EntryValueType.Class, ReadOnly = false}
             };
             Assert.AreEqual(expected.Length, encoded.Count, "Number of entries does not match");
-            for (int i = 0; i < encoded.Count; i++)
+            for (var i = 0; i < encoded.Count; i++)
             {
                 Assert.AreEqual(expected[i].Name, encoded[i].Identifier, "Property name missmatch");
                 Assert.AreEqual(expected[i].Type, encoded[i].Value.Type, "Type missmatch");

@@ -68,13 +68,13 @@ namespace Marvin.Tests.Configuration
                     if (attribute == null)
                     {
                         foundPropertyWithDisplayNameAttribute = true;
-                        Assert.AreEqual(entry.Name, propertyInfo.Name, "The display name is not equal to the property name!");
+                        Assert.AreEqual(entry.DisplayName, propertyInfo.Name, "The display name is not equal to the property name!");
                     }
                     else
                     {
                         var defaultValueAttribute = (DisplayNameAttribute)attribute;
                         foundPropertyWithDisplayNameAttribute = true;
-                        Assert.AreEqual(defaultValueAttribute.DisplayName, entry.Name, "The display name doen't match to the attributes value!");
+                        Assert.AreEqual(defaultValueAttribute.DisplayName, entry.DisplayName, "The display name doen't match to the attributes value!");
                     }
 
                     // check for default value attributes
@@ -177,7 +177,7 @@ namespace Marvin.Tests.Configuration
             var convertedObject = EntryConvert.EncodeObject(config, configToModel);
 
             // find the int field to chang its value
-            var intFieldEntry = convertedObject.SubEntries.Find(entry => entry.Name == "IntField");
+            var intFieldEntry = convertedObject.SubEntries.Find(entry => entry.DisplayName == "IntField");
             // check the initial value
             Assert.AreEqual(intFieldEntry.Value.Current, config.IntField.ToString(), "Initially the the gerneric and the object must be the same.");
             // change the value

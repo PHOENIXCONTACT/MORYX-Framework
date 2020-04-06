@@ -31,7 +31,7 @@ namespace Marvin.Serialization
                 var keyString = key.ToString();
 
                 var subEntry = EntryConvert.EncodeObject(value, _serialization);
-                subEntry.Name = keyString;
+                subEntry.DisplayName = keyString;
                 subEntry.Identifier = keyString;
 
                 entries.Add(subEntry);
@@ -52,7 +52,7 @@ namespace Marvin.Serialization
 
         public void Added(Entry entry, object addedValue)
         {
-            var keyValue = EntryValue(entry.Name);
+            var keyValue = EntryValue(entry.DisplayName);
             _dictionary.Add(keyValue, addedValue);
         }
 

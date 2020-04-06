@@ -68,7 +68,7 @@ namespace Marvin.Serialization
             // Fill with default if entry is null
             var entry = new Entry
             {
-                Name = property.GetDisplayName() ?? property.Name,
+                DisplayName = property.GetDisplayName() ?? property.Name,
                 Identifier = property.Name,
                 Description = property.GetDescription(),
                 Value = CreateEntryValue(property, customSerialization),
@@ -157,7 +157,7 @@ namespace Marvin.Serialization
                 var value = type.Prototype.ToString();
                 encoded = new Entry
                 {
-                    Name = type.Key,
+                    DisplayName = type.Key,
                     Identifier = Entry.CreatedIdentifier,
                     Value = new EntryValue
                     {
@@ -305,7 +305,7 @@ namespace Marvin.Serialization
         {
             var entry = new Entry
             {
-                Name = objectType.GetDisplayName() ?? objectType.Name,
+                DisplayName = objectType.GetDisplayName() ?? objectType.Name,
                 Identifier = objectType.Name,
                 Value = new EntryValue
                 {
@@ -353,7 +353,7 @@ namespace Marvin.Serialization
                 Description = method.GetDescription(),
                 Parameters = new Entry
                 {
-                    Name = "Root", 
+                    DisplayName = "Root", 
                     Identifier = "Root",
                     Value = new EntryValue { Type = EntryValueType.Class },
                     SubEntries = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToList()
@@ -421,7 +421,7 @@ namespace Marvin.Serialization
 
             var parameterModel = new Entry
             {
-                Name = parameter.GetDisplayName() ?? parameter.Name,
+                DisplayName = parameter.GetDisplayName() ?? parameter.Name,
                 Identifier = parameter.Name,
                 Description = parameter.GetDescription(),
                 Value = new EntryValue
