@@ -2,10 +2,8 @@
 $NunitVersion = "3.11.1";
 $OpenCoverVersion = "4.7.922";
 $DocFxVersion = "2.52.0";
-$OpenCoverToCoberturaVersion = "0.3.4";
 $CodecovVersion = "1.10.0";
 $ReportGeneratorVersion = "4.5.6";
-$VswhereVersion = "2.8.4";
 $GitLinkVersion = "3.1.0";
 
 # Folder Pathes
@@ -22,7 +20,6 @@ $DocumentationArtifcacts = "$ArtifactsDir\Documentation";
 # Tests
 $NunitReportsDir = "$ArtifactsDir\Tests";
 $OpenCoverReportsDir = "$ArtifactsDir\Tests"
-$CoberturaReportsDir = "$ArtifactsDir\Tests"
 
 # Nuget
 $NugetConfig = "$RootPath\NuGet.Config";
@@ -41,8 +38,6 @@ $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:CodecovCli = "$BuildTools\Codecov.$CodecovVersion\tools\codecov.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\net47\ReportGenerator.exe";
-$global:OpenCoverToCoberturaCli = "$BuildTools\OpenCoverToCoberturaConverter.$OpenCoverToCoberturaVersion\tools\OpenCoverToCoberturaConverter.exe";
-$global:VswhereCli = "$BuildTools\vswhere.$VswhereVersion\tools\vswhere.exe";
 $global:DocFxCli = "$BuildTools\docfx.console.$DocFxVersion\tools\docfx.exe";
 
 # Git
@@ -120,14 +115,17 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Variable "CodecovCli" $global:OpenCoverCli;
     Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
     Write-Variable "DocFxCli" $global:DocFxCli;
-    Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
-    Write-Variable "VswhereCli" $global:VswhereCli;
     Write-Variable "GitCli" $global:GitCli;
     Write-Variable "GitLink" $global:GitLink;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
     Write-Variable "MARVIN_BRANCH" $env:MARVIN_BRANCH;
     Write-Variable "MARVIN_VERSION" $env:MARVIN_VERSION;
-    Write-Variable "MARVIN_ASSEMBLY_VERSION" $env:MARVIN_ASSEMBLY_VERSION
+    Write-Variable "MARVIN_ASSEMBLY_VERSION" $env:MARVIN_ASSEMBLY_VERSION;
+    Write-Variable "MARVIN_BUILDNUMBER" $env:MARVIN_BUILDNUMBER;
+    Write-Variable "MARVIN_BUILD_CONFIG" $env:MARVIN_BUILD_CONFIG;
+    Write-Variable "MARVIN_BUILD_VERBOSITY" $env:MARVIN_BUILD_VERBOSITY;
+    Write-Variable "MARVIN_OPTIMIZE_CODE" $env:MARVIN_OPTIMIZE_CODE;
+    Write-Variable "MARVIN_NUGET_VERBOSITY" $env:MARVIN_NUGET_VERBOSITY;
 
     # Cleanp
     if ($Cleanup) {
@@ -243,10 +241,6 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
         Install-Tool "OpenCover" $OpenCoverVersion $global:OpenCoverCli;
     }
 
-    if (-not (Test-Path $global:OpenCoverToCoberturaCli)) {
-        Install-Tool "OpenCoverToCoberturaConverter" $OpenCoverToCoberturaVersion $global:OpenCoverToCoberturaCli;
-    }
-
     CreateFolderIfNotExists $OpenCoverReportsDir;
     CreateFolderIfNotExists $CoberturaReportsDir;
     CreateFolderIfNotExists $NunitReportsDir;
@@ -259,7 +253,6 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
 
         $nunitXml = ($NunitReportsDir + "\$projectName.TestResult.xml");
         $openCoverXml = ($OpenCoverReportsDir + "\$projectName.OpenCover.xml");
-        $coberturaXml = ($CoberturaReportsDir + "\$projectName.Cobertura.xml");
 
         # If assembly does not exists, the project will be build
         if (-not (Test-Path $testAssembly)) {
@@ -319,7 +312,6 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
             Invoke-ExitCodeCheck $exitCode;
         }
 
-        & $global:OpenCoverToCoberturaCli -input:$openCoverXml -output:$coberturaXml -sources:$rootPath
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }
