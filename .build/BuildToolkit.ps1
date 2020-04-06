@@ -242,7 +242,6 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     }
 
     CreateFolderIfNotExists $OpenCoverReportsDir;
-    CreateFolderIfNotExists $CoberturaReportsDir;
     CreateFolderIfNotExists $NunitReportsDir;
 
     ForEach($testProject in $testProjects ) { 
@@ -344,10 +343,7 @@ function Invoke-CodecovUpload {
         Install-Tool "Codecov" $CodecovVersion $global:CodecovCli;
     }
 
-    $reports = (Get-ChildItem $OpenCoverReportsDir -Recurse -Include '*.OpenCover.xml' | Resolve-Path -Relative);
-    $reportsArgument = [string]::Join(" ",$reports);
-    $covargs = "-f", "'$reportsArgument'";
-
+    $covargs = "-f", "$OpenCoverReportsDir\*.OpenCover.xml";
     if ($env:MARVIN_CODECOV_SECRET) {
         $covargs += "-t", "$env:MARVIN_CODECOV_SECRET";
     }
