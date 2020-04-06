@@ -602,13 +602,13 @@ namespace Marvin.Tools.Wcf.SystemTests
         {
             Config config = _hogController.GetConfig("DependentTestModule");
 
-            Entry connectorConfig = config.Root.SubEntries.FirstOrDefault(e => e.Key.Identifier == "SimpleHelloWorldWcfConnector");
+            Entry connectorConfig = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "SimpleHelloWorldWcfConnector");
             Assert.NotNull(connectorConfig, "Can't get config entry 'SimpleHelloWorldWcfConnector'");
 
-            Entry hostConfig = connectorConfig.SubEntries.FirstOrDefault(e => e.Key.Identifier == "ConnectorHost");
+            Entry hostConfig = connectorConfig.SubEntries.FirstOrDefault(e => e.Identifier == "ConnectorHost");
             Assert.NotNull(hostConfig, "Can't get config entry 'SimpleHelloWorldWcfConnector.ConnectorHost'");
 
-            Entry bindingType = hostConfig.SubEntries.FirstOrDefault(e => e.Key.Identifier == "BindingType");
+            Entry bindingType = hostConfig.SubEntries.FirstOrDefault(e => e.Identifier == "BindingType");
             Assert.NotNull(bindingType, "Can't get config entry 'SimpleHelloWorldWcfConnector.ConnectorHost.BindingType'");
 
             if (bindingType.Value.Current != binding.ToString())

@@ -95,7 +95,7 @@ namespace Marvin.Serialization
         private IEnumerable<PropertyInstanceWrapper> EnumerateConfig(Entry model)
         {
             // Fast access cache of the config
-            var cache = model.SubEntries.ToDictionary(e => e.Key.Identifier, e => e);
+            var cache = model.SubEntries.ToDictionary(e => e.Identifier, e => e);
             foreach (var property in _properties)
             {
                 if (cache.ContainsKey(property.Key))

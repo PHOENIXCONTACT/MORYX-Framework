@@ -31,8 +31,8 @@ namespace Marvin.Serialization
                 var keyString = key.ToString();
 
                 var subEntry = EntryConvert.EncodeObject(value, _serialization);
-                subEntry.Key.Name = keyString;
-                subEntry.Key.Identifier = keyString;
+                subEntry.Name = keyString;
+                subEntry.Identifier = keyString;
 
                 entries.Add(subEntry);
             }
@@ -46,37 +46,37 @@ namespace Marvin.Serialization
 
         public object ElementAt(string key)
         {
-            var keyValue = KeyValue(key);
+            var keyValue = EntryValue(key);
             return _dictionary[keyValue];
         }
 
-        public void Added(EntryKey key, object addedValue)
+        public void Added(Entry entry, object addedValue)
         {
-            var keyValue = KeyValue(key.Name);
+            var keyValue = EntryValue(entry.Name);
             _dictionary.Add(keyValue, addedValue);
         }
 
-        public void Updated(EntryKey key, object updatedValue)
+        public void Updated(Entry entry, object updatedValue)
         {
-            Removed(key.Identifier);
-            Added(key, updatedValue);
+            Removed(entry.Identifier);
+            Added(entry, updatedValue);
         }
 
         public void Removed(string key)
         {
-            var keyValue = KeyValue(key);
-            _dictionary.Remove(keyValue);
+            var entryValue = EntryValue(key);
+            _dictionary.Remove(entryValue);
         }
 
         public void Flush()
         {
         }
 
-        private object KeyValue(string key)
+        private object EntryValue(string entry)
         {
-            var keyType = _dictionary.GetType().GenericTypeArguments[0];
-            var keyvalue = EntryConvert.ToObject(keyType, key, _serialization.FormatProvider);
-            return keyvalue;
+            var entryType = _dictionary.GetType().GenericTypeArguments[0];
+            var entryValue = EntryConvert.ToObject(entryType, entry, _serialization.FormatProvider);
+            return entryValue;
         }
     }
 }

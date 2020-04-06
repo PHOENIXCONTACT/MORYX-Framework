@@ -35,10 +35,10 @@ namespace Marvin.Tests
             // Assert
             Assert.IsNotNull(entry);
             Assert.AreEqual(4, entry.SubEntries.Count);
-            Assert.AreEqual(nameof(EditorVisibleMixed.Property1), entry.SubEntries[0].Key.Name);
-            Assert.AreEqual("Property2", entry.SubEntries[1].Key.Name);
-            Assert.AreEqual(nameof(EditorVisibleMixed.Property3), entry.SubEntries[2].Key.Name);
-            Assert.AreEqual(nameof(EditorVisibleMixed.Property5), entry.SubEntries[3].Key.Name);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Property1), entry.SubEntries[0].Name);
+            Assert.AreEqual("Property2", entry.SubEntries[1].Name);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Property3), entry.SubEntries[2].Name);
+            Assert.AreEqual(nameof(EditorVisibleMixed.Property5), entry.SubEntries[3].Name);
         }
 
         [Test(Description = "Retrieve only all visible methods and properties on a class where no EditorVisible attributes are set")]

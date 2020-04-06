@@ -68,11 +68,8 @@ namespace Marvin.Serialization
             // Fill with default if entry is null
             var entry = new Entry
             {
-                Key = new EntryKey
-                {
-                    Identifier = property.Name,
-                    Name = property.GetDisplayName() ?? property.Name
-                },
+                Name = property.GetDisplayName() ?? property.Name,
+                Identifier = property.Name,
                 Description = property.GetDescription(),
                 Value = CreateEntryValue(property, customSerialization),
                 Validation = customSerialization.CreateValidation(property.PropertyType, property)
@@ -160,11 +157,8 @@ namespace Marvin.Serialization
                 var value = type.Prototype.ToString();
                 encoded = new Entry
                 {
-                    Key = new EntryKey
-                    {
-                        Name = type.Key,
-                        Identifier = EntryKey.CreatedIdentifier
-                    },
+                    Name = type.Key,
+                    Identifier = Entry.CreatedIdentifier,
                     Value = new EntryValue
                     {
                         Current = value,
@@ -311,11 +305,8 @@ namespace Marvin.Serialization
         {
             var entry = new Entry
             {
-                Key = new EntryKey
-                {
-                    Name = objectType.GetDisplayName() ?? objectType.Name,
-                    Identifier = objectType.Name
-                },
+                Name = objectType.GetDisplayName() ?? objectType.Name,
+                Identifier = objectType.Name,
                 Value = new EntryValue
                 {
                     Current = objectType.Name,
@@ -362,7 +353,8 @@ namespace Marvin.Serialization
                 Description = method.GetDescription(),
                 Parameters = new Entry
                 {
-                    Key = new EntryKey { Name = "Root", Identifier = "Root" },
+                    Name = "Root", 
+                    Identifier = "Root",
                     Value = new EntryValue { Type = EntryValueType.Class },
                     SubEntries = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToList()
                 }
@@ -429,11 +421,8 @@ namespace Marvin.Serialization
 
             var parameterModel = new Entry
             {
-                Key = new EntryKey
-                {
-                    Name = parameter.GetDisplayName() ?? parameter.Name,
-                    Identifier = parameter.Name
-                },
+                Name = parameter.GetDisplayName() ?? parameter.Name,
+                Identifier = parameter.Name,
                 Description = parameter.GetDescription(),
                 Value = new EntryValue
                 {
@@ -608,7 +597,7 @@ namespace Marvin.Serialization
                 foreach (var key in strategy.Keys())
                 {
                     var item = strategy.ElementAt(key);
-                    var match = rootEntry.SubEntries.Find(se => se.Key.Identifier == key);
+                    var match = rootEntry.SubEntries.Find(se => se.Identifier == key);
                     if (match == null)
                     {
                         strategy.Removed(key);
@@ -623,12 +612,12 @@ namespace Marvin.Serialization
                     {
                         UpdateInstance(item, match, customSerialization);
                     }
-                    strategy.Updated(match.Key, item);
+                    strategy.Updated(match, item);
                 }
             }
 
             // Add new entries to the collection
-            foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Key.Identifier == EntryKey.CreatedIdentifier))
+            foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Identifier == Entry.CreatedIdentifier))
             {
                 object item;
                 // All value types
@@ -643,7 +632,7 @@ namespace Marvin.Serialization
                     item = customSerialization.CreateInstance(memberType, attributeProvider, subEntry);
                     item = UpdateInstance(item, subEntry, customSerialization);
                 }
-                strategy.Added(subEntry.Key, item);
+                strategy.Added(subEntry, item);
             }
 
             // Finalize all operations
@@ -723,7 +712,7 @@ namespace Marvin.Serialization
         private static bool ParametersProvided(ParameterInfo[] parameters, MethodEntry encodedMethod)
         {
             var encodedParameters = encodedMethod.Parameters.SubEntries;
-            return parameters.All(p => encodedParameters.Any(se => se.Key.Identifier == p.Name));
+            return parameters.All(p => encodedParameters.Any(se => se.Identifier == p.Name));
         }
 
         /// <summary>

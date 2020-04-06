@@ -35,8 +35,8 @@ namespace Marvin.Serialization
         public static Entry CreateSub(object item, int index, ICustomSerialization customSerialization)
         {
             var subEntry = EntryConvert.EncodeObject(item, customSerialization);
-            subEntry.Key.Name = GetEntryName(item);
-            subEntry.Key.Identifier = index.ToString("D");
+            subEntry.Name = GetEntryName(item);
+            subEntry.Identifier = index.ToString("D");
 
             return subEntry;
         }

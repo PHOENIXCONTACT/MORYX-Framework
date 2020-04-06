@@ -71,11 +71,8 @@ namespace Marvin.Tests
             var entry = new Entry
             {
                 Description = "Some dummy entry",
-                Key = new EntryKey
-                {
-                    Identifier = id.ToString("D5"),
-                    Name = string.Format("Entry-{0}", id)
-                },
+                Identifier = id.ToString("D5"),
+                Name = string.Format("Entry-{0}", id),
                 Value = new EntryValue
                 {
                     Current = (id*123).ToString("D"),
@@ -98,8 +95,8 @@ namespace Marvin.Tests
             Assert.AreEqual(expected.Description, value.Description);
 
             // Compare key
-            Assert.AreEqual(expected.Key.Identifier, value.Key.Identifier);
-            Assert.AreEqual(expected.Key.Name, expected.Key.Name);
+            Assert.AreEqual(expected.Identifier, value.Identifier);
+            Assert.AreEqual(expected.Name, expected.Name);
 
             // Compare value
             Assert.AreEqual(expected.Value.Current, value.Value.Current);

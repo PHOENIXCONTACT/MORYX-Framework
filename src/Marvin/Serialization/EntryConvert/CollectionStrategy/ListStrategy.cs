@@ -42,14 +42,14 @@ namespace Marvin.Serialization
             return _list[int.Parse(key)];
         }
 
-        public void Added(EntryKey key, object addedValue)
+        public void Added(Entry entry, object addedValue)
         {
             _list.Add(addedValue);
         }
 
-        public void Updated(EntryKey key, object updatedValue)
+        public void Updated(Entry entry, object updatedValue)
         {
-            _list[int.Parse(key.Identifier)] = updatedValue;
+            _list[int.Parse(entry.Identifier)] = updatedValue;
         }
 
         public void Removed(string key)
