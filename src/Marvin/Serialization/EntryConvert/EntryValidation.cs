@@ -10,7 +10,7 @@ namespace Marvin.Serialization
     /// All validation rules of an entry
     /// </summary>
     [DataContract]
-    public partial class EntryValidation : ICloneable
+    public class EntryValidation : ICloneable
     {
         /// <summary>
         /// Minimal lenght of strings or other types
@@ -36,15 +36,26 @@ namespace Marvin.Serialization
         [DataMember]
         public bool IsRequired { get; set; }
 
-        /// <summary>
-        /// Erstellt ein neues Objekt, das eine Kopie der aktuellen Instanz darstellt.
-        /// </summary>
-        /// <returns>
-        /// Ein neues Objekt, das eine Kopie dieser Instanz ist.
-        /// </returns>
+        /// <see cref="ICloneable"/>
         public object Clone()
         {
             return Clone(false);
+        }
+
+        /// <summary>
+        /// Method to create a deep or shallow copy of this object
+        /// </summary>
+        public EntryValidation Clone(bool deep)
+        {
+            // All value types can be simply copied
+            var copy = new EntryValidation
+            {
+                MinLenght = MinLenght, 
+                MaxLenght = MaxLenght, 
+                Regex = Regex, 
+                IsRequired = IsRequired
+            };
+            return copy;
         }
     }
 }

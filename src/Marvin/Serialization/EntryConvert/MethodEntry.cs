@@ -10,7 +10,7 @@ namespace Marvin.Serialization
     /// Model that represents a public method on an object callable from the WCF service and UI
     /// </summary>
     [DataContract]
-    public partial class MethodEntry : ICloneable
+    public class MethodEntry : ICloneable
     {
         /// <summary>
         /// Name of the method
@@ -41,10 +41,39 @@ namespace Marvin.Serialization
         [DataMember]
         public Entry Parameters { get; set; }
 
-        /// <inheritdoc />
+        /// <see cref="ICloneable"/>
         public object Clone()
         {
             return Clone(true);
+        }
+
+        /// <summary>
+        /// Method to create a deep or shallow copy of this object
+        /// </summary>
+        public MethodEntry Clone(bool deep)
+        {
+            // All value types can be simply copied
+            var copy = new MethodEntry
+            {
+                Name = Name, 
+                DisplayName = DisplayName, 
+                Description = Description
+            };
+
+            if (deep)
+            {
+                if (Parameters != null)
+                {
+                    copy.Parameters = Parameters.Clone(deep);
+                }
+            }
+            else
+            {
+                // In a shallow clone only references are copied
+                copy.Parameters = Parameters;
+            }
+
+            return copy;
         }
     }
 }
