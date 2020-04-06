@@ -287,7 +287,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
         Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
 
         $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MARVIN_BUILD_CONFIG /result:$nunitXml $testAssembly"
-        $openCoverAgs += "-log:Debug", "-register:user", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
+        $openCoverAgs += "-log:Debug", "-register:administrator", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
         $openCoverAgs += "-returntargetcode" # We need the nunit return code
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
         
