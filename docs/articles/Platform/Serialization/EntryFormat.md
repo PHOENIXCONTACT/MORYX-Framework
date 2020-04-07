@@ -11,17 +11,13 @@ Serialized entries can be then stored in JSON or send over WCF.
 
 ## Entry
 
-The `Entry` class represents property definition. It consists of `EntryKey Key` and `EntryValue Value`. Both collections `Prototypes` and `Subentries` as well as `EntryValidation Validation` are optional properties. They are only used for some of the possible types of entry types. Entry class can have tree structure where `Entry` instances are located in SubEntries and/or Prototypes.
+The `Entry` class represents property definition. It consists of the properties `Identifier`, `DisplayName` and `EntryValue Value`. `Identifier` is set and used by the serializer to map the entry value to a property or a collection item. Depending on the entry type it is either a property name, collection index or dictionary key. The `DisplayName` is intended for the user to understand the meaning of the entry value. It can be identical with the `Identifier`, but does not have to be and unlike the `Identifier` it is not required to be unique within its context. Both collections `Prototypes` and `Subentries` as well as `EntryValidation Validation` are optional properties. They are only used for some of the possible types of entry types. Entry class can have tree structure where `Entry` instances are located in SubEntries and/or Prototypes.
 
 We can decorate property with attributes:
 
-- `DisplayNameAttribute` when provided then EntryKey _Name_ will be taken from this attribute
+- `DisplayNameAttribute` when provided then _DisplayName_ will be taken from this attribute
 - `DescriptionAttribute` provides general description for Entry
 - `ReadOnlyAttribute` when provided, the `EntryValue.IsReadOnly` will be set to `true`
-
-## EntryKey
-
-The `EntryKey` class is used to display and identify an `Entry`. It has two properties `Identifier` and `Name`. `Identifier` is set and used by the serializer to map the entry value to a property or a collection item. Depending on the entry type it is either a property name, collection index or dictionary key. The `Name` is intended for the user to understand the meaning of the entry value. It can be identical with the `Identifier`, but does not have to be and unlike the `Identifier` it is not required to be unique within its context.
 
 ## EntryValue
 
