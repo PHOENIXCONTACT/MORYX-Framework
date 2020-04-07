@@ -38,7 +38,7 @@ namespace Marvin.Notifications
         {
             _listLock.EnterReadLock();
 
-            var notifications = _published.Where(filter)
+            var notifications = _published.Union(_pendingPubs).Where(filter)
                 .Select(map => map.Notification)
                 .ToArray();
 
