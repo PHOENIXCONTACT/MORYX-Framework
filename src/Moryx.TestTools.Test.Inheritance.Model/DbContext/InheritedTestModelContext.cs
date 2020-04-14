@@ -14,11 +14,11 @@ namespace Moryx.TestTools.Test.Inheritance.Model
         {
         }
 
-        public InheritedTestModelContext(string connectionString, ContextMode mode) : base(connectionString, mode)
+        public InheritedTestModelContext(string connectionString) : base(connectionString)
         {
         }
 
-        public InheritedTestModelContext(DbConnection connection, ContextMode mode) : base(connection, mode)
+        public InheritedTestModelContext(DbConnection connection) : base(connection)
         {
         }
 

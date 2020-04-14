@@ -29,14 +29,15 @@ namespace Moryx.Model.InMemory
         }
 
         /// <inheritdoc />
-        protected override MoryxDbContext CreateContext(Type contextType, ContextMode contextMode)
+        protected override DbContext CreateContext(Type contextType, ContextMode contextMode)
         {
             var connection = string.IsNullOrEmpty(_instanceId)
                 ? Effort.DbConnectionFactory.CreatePersistent(Guid.NewGuid().ToString())
                 : Effort.DbConnectionFactory.CreatePersistent(_instanceId);
 
             // Create instance of context
-            var context =  (MoryxDbContext)Activator.CreateInstance(contextType, connection, contextMode);
+            var context =  (DbContext)Activator.CreateInstance(contextType, connection);
+            context.SetContextMode(contextMode);
 
             // Override initializer of MoryxDbContext: Create database if not exists
             Database.SetInitializer(new CreateDatabaseIfNotExists<TContext>());

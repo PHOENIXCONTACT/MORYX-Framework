@@ -154,15 +154,5 @@ namespace Moryx.TestTools.SystemTest.Clients
         {
             throw new System.NotImplementedException();
         }
-
-        public InvocationResponse ExecuteScript(string targetModel, ExecuteScriptRequest request)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<InvocationResponse> ExecuteScriptAsync(string targetModel, ExecuteScriptRequest request)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

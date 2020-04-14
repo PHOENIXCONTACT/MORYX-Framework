@@ -93,7 +93,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         InvocationResponse CreateDatabase(string targetModel, DatabaseConfigModel config);
-        
+
         /// <summary>
         /// Erases the database given by the model
         /// </summary>
@@ -150,14 +150,5 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         InvocationResponse ExecuteSetup(string targetModel, ExecuteSetupRequest request);
-
-        /// <summary>
-        /// Executed a databasescript for the given model
-        /// </summary>
-        [OperationContract]
-        [WebInvoke(UriTemplate = "models/{targetModel}/script", Method = WebRequestMethods.Http.Post,
-            ResponseFormat = WebMessageFormat.Json,
-            RequestFormat = WebMessageFormat.Json)]
-        InvocationResponse ExecuteScript(string targetModel, ExecuteScriptRequest request);
     }
 }

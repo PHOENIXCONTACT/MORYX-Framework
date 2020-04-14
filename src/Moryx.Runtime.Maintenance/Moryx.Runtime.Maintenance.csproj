@@ -63,7 +63,6 @@
     <Compile Include="Plugins\Common\Wcf\ICommonMaintenance.cs" />
     <Compile Include="Plugins\Common\Wcf\Response\ServerTimeResponse.cs" />
     <Compile Include="Plugins\InvocationResponse.cs" />
-    <Compile Include="Plugins\Databases\Wcf\Request\ExecuteScriptRequest.cs" />
     <Compile Include="Plugins\Databases\Wcf\Request\ExecuteSetupRequest.cs" />
     <Compile Include="Plugins\Databases\Wcf\Request\RestoreDatabaseRequest.cs" />
     <Compile Include="Plugins\Databases\Wcf\Models\BackupModel.cs" />
@@ -72,7 +71,6 @@
     <Compile Include="Plugins\Databases\DatabasePlugin.cs" />
     <Compile Include="Plugins\Databases\Wcf\Models\DataModel.cs" />
     <Compile Include="Plugins\Databases\Wcf\Models\DbMigrationsModel.cs" />
-    <Compile Include="Plugins\Databases\Wcf\Models\ScriptModel.cs" />
     <Compile Include="Plugins\Databases\Wcf\Models\SetupModel.cs" />
     <Compile Include="Plugins\Databases\Wcf\DatabaseMaintenance.cs" />
     <Compile Include="Plugins\Databases\Wcf\IDatabaseMaintenance.cs" />

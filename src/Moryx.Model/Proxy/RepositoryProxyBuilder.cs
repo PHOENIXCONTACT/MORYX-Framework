@@ -32,7 +32,7 @@ namespace Moryx.Model
             {
                 new CreateMethodStrategy(),
                 new FilterMethodStrategy(),
-                new RemoveMethodStrategy(), 
+                new RemoveMethodStrategy()
             };
         }
 
@@ -105,8 +105,8 @@ namespace Moryx.Model
                                                     "but the repository is not derived from ModificationTrackedRepository<T>.");
 
             // Get Methods and matching Strategies
-            var methodStrategyMaps = repoImpl.IsAbstract 
-                ? GetAbstractMethodStartegies(repoImpl) 
+            var methodStrategyMaps = repoImpl.IsAbstract
+                ? GetAbstractMethodStartegies(repoImpl)
                 : GetVirutalMethodStrategies(repoImpl);
 
             // Create TypeBuilder

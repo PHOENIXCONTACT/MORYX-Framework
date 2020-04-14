@@ -19,11 +19,11 @@ namespace Moryx.TestTools.Test.Model
         {
         }
 
-        public AnotherTestModelContext(string connectionString, ContextMode mode) : base(connectionString, mode)
+        public AnotherTestModelContext(string connectionString) : base(connectionString)
         {
         }
 
-        public AnotherTestModelContext(DbConnection connection, ContextMode mode) : base(connection, mode)
+        public AnotherTestModelContext(DbConnection connection) : base(connection)
         {
         }
 
