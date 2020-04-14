@@ -12,54 +12,47 @@ using System.Threading.Tasks;
 namespace Moryx.Model
 {
     /// <summary>
-    /// Unit of work 
+    /// Unit of work
     /// </summary>
-    public sealed class UnitOfWork : IUnitOfWork, IGenericUnitOfWork, IModelDiagnostics
+    public sealed class UnitOfWork : IUnitOfWork, IGenericUnitOfWork, IModelDiagnostics, IDbContextHolder
     {
-        private MoryxDbContext _context;
         private readonly IEnumerable<Type> _repositories;
+
+        /// <inheritdoc />
+        public DbContext DbContext { get; private set; }
 
         /// <inheritdoc />
         public ContextMode Mode
         {
-            get { return _context.CurrentMode; }
-            set { _context.Configure(value); }
+            get => DbContext.GetContextMode();
+            set => DbContext.SetContextMode(value);
         }
 
         /// <summary>
         /// Creates a new instance of <see cref="UnitOfWork"/>
         /// </summary>
-        /// <param name="context">Responsible <see cref="DbContext"/></param>
-        /// <param name="repoBuilders">Current availabe repositories</param>
-        public UnitOfWork(MoryxDbContext context, IEnumerable<Type> repoBuilders)
+        /// <param name="dbContext">Responsible <see cref="System.Data.Entity.DbContext"/></param>
+        /// <param name="repoBuilders">Current available repositories</param>
+        public UnitOfWork(DbContext dbContext, IEnumerable<Type> repoBuilders)
         {
-            _context = context;
+            DbContext = dbContext;
             _repositories = repoBuilders;
         }
 
         /// <inheritdoc />
-        public T GetRepository<T>() where T : class, IRepository
-        {
-            return (T) GetRepository(typeof(T));
-        }
+        public T GetRepository<T>() where T : class, IRepository => (T) GetRepository(typeof(T));
 
         /// <inheritdoc />
-        IRepository IGenericUnitOfWork.GetRepository(Type api)
-        {
-            return GetRepository(api);
-        }
+        IRepository IGenericUnitOfWork.GetRepository(Type api) => GetRepository(api);
 
         /// <inheritdoc />
-        bool IGenericUnitOfWork.HasRepository(Type api)
-        {
-            return _repositories.Any(api.IsAssignableFrom);
-        }
+        bool IGenericUnitOfWork.HasRepository(Type api) => _repositories.Any(api.IsAssignableFrom);
 
         /// <inheritdoc />
         Action<string> IModelDiagnostics.Log
         {
-            get { return _context.Database.Log; }
-            set { _context.Database.Log = value; }
+            get => DbContext.Database.Log;
+            set => DbContext.Database.Log = value;
         }
 
         private IRepository GetRepository(Type api)
@@ -71,8 +64,8 @@ namespace Moryx.Model
             }
 
             var instance = (Repository) Activator.CreateInstance(repoType);
-            instance.Initialize(this, _context);
-            
+            instance.Initialize(this, DbContext);
+
             return instance;
         }
 
@@ -81,7 +74,7 @@ namespace Moryx.Model
         {
             try
             {
-                _context.SaveChanges();
+                DbContext.SaveChanges();
             }
             // Catch for validation error break point
             catch (DbEntityValidationException valEx)
@@ -100,7 +93,7 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        public Task SaveAsync() => 
+        public Task SaveAsync() =>
             SaveAsync(CancellationToken.None);
 
         /// <inheritdoc />
@@ -108,7 +101,7 @@ namespace Moryx.Model
         {
             try
             {
-                await _context.SaveChangesAsync(cancellationToken);
+                await DbContext.SaveChangesAsync(cancellationToken);
             }
             // Catch for validation error break point
             catch (DbEntityValidationException valEx)
@@ -149,11 +142,11 @@ namespace Moryx.Model
 
         private void CloseContext()
         {
-            if (_context == null)
+            if (DbContext == null)
                 return;
 
-            _context.Dispose();
-            _context = null;
+            DbContext.Dispose();
+            DbContext = null;
         }
     }
 }

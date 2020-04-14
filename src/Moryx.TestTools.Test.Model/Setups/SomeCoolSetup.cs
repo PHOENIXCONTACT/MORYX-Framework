@@ -33,7 +33,7 @@ namespace Moryx.TestTools.Test.Model
 
                 lastCar = carEntity;
             }
-            
+
             openContext.Save();
 
             carRepo.Remove(lastCar);

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Migrations.Infrastructure;
@@ -25,7 +24,6 @@ namespace Moryx.Model
         private IConfigManager _configManager;
         private IDbContextFactory _contextFactory;
         private IDictionary<Type, IModelSetup> _setupDict;
-        private IDictionary<Type, IModelScript> _scriptDict;
         private string _configName;
         private DbMigrationsConfiguration _migrationsConfiguration;
         private string[] _migrations;
@@ -69,7 +67,7 @@ namespace Moryx.Model
             // Set TargetModel
             var factoryAttr = unitOfWorkFactory.GetType().GetCustomAttribute<ModelFactoryAttribute>();
             if (factoryAttr == null)
-                throw new InvalidOperationException("Factory has to be attibuted with the: " + nameof(ModelFactoryAttribute));
+                throw new InvalidOperationException("Factory has to be attributed with the: " + nameof(ModelFactoryAttribute));
 
             TargetModel = factoryAttr.TargetModel;
 
@@ -88,16 +86,11 @@ namespace Moryx.Model
             _migrations = GetAvailableMigrations();
 
             // Load ModelSetups TODO: Load internals
-            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(FilterTypeByModelAttribute).ToDictionary(t => t, t => (IModelSetup)null);
-
-            // Load ModelScripts TODO: Load internals
-            _scriptDict = ReflectionTool.GetPublicClasses<IModelScript>(FilterTypeByModelAttribute).ToDictionary(t => t, t => (IModelScript)null);
-        }
-
-        private bool FilterTypeByModelAttribute(Type type)
-        {
-            var scriptAttr = type.GetCustomAttribute<ModelAttribute>();
-            return scriptAttr != null && scriptAttr.TargetModel == TargetModel;
+            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(type =>
+            {
+                var scriptAttr = type.GetCustomAttribute<ModelAttribute>();
+                return scriptAttr != null && scriptAttr.TargetModel == TargetModel;
+            }).ToDictionary(t => t, t => (IModelSetup)null);
         }
 
         /// <inheritdoc />
@@ -155,13 +148,6 @@ namespace Moryx.Model
                 // Create connection to our new database
                 var connection = CreateConnection(config);
                 connection.Open();
-
-                // Execute additional scripts
-                foreach (var script in GetAllScripts().Where(r => r.IsCreationScript))
-                {
-                    var databaseScript = CreateCommand(script.GetSql(), connection);
-                    databaseScript.ExecuteNonQuery();
-                }
 
                 // Creation done -> close connection
                 connection.Close();
@@ -261,12 +247,9 @@ namespace Moryx.Model
 
         /// <inheritdoc />
         public abstract void RestoreDatabase(IDatabaseConfig config, string filePath);
-        
-        /// <inheritdoc />
-        public IEnumerable<IModelSetup> GetAllSetups() => GetOrCreateFromTypeDict(_setupDict);
 
         /// <inheritdoc />
-        public IEnumerable<IModelScript> GetAllScripts() => GetOrCreateFromTypeDict(_scriptDict);
+        public IEnumerable<IModelSetup> GetAllSetups() => GetOrCreateFromTypeDict(_setupDict);
 
         /// <inheritdoc />
         public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
@@ -275,15 +258,6 @@ namespace Moryx.Model
             using (var unitOfWork = ((IContextUnitOfWorkFactory)UnitOfWorkFactory).Create(context))
             {
                 setup.Execute(unitOfWork, setupData);
-            }
-        }
-
-        /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelScript script)
-        {
-            using (var context = _contextFactory.CreateContext(config, ContextMode.AllOn))
-            {
-                context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, script.GetSql());
             }
         }
 
@@ -318,7 +292,7 @@ namespace Moryx.Model
 
             return new DbMigrator(configuration);
         }
-        
+
         /// <summary>
         /// Generally tests the connection to the database
         /// </summary>
@@ -326,7 +300,7 @@ namespace Moryx.Model
         {
             if (!CheckDatabaseConfig(config))
                 return false;
-                
+
             using (var conn = CreateConnection(config, false))
             {
                 try
@@ -399,126 +373,6 @@ namespace Moryx.Model
             return dbMigrator != null
                 ? dbMigrator.GetDatabaseMigrations()
                 : Enumerable.Empty<string>();
-        }
-    }
-
-    /// <summary>
-    /// Null implementation of the <see cref="ModelConfiguratorBase{TConfig}"/>
-    /// </summary>
-    public sealed class NullModelConfigurator : IModelConfigurator
-    {
-        /// <inheritdoc />
-        public string TargetModel => string.Empty;
-
-        /// <inheritdoc />
-        public IDatabaseConfig Config => null;
-
-        /// <inheritdoc />
-        public void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager, IModuleLogger logger)
-        {
-           
-        }
-
-        /// <inheritdoc />
-        public string BuildConnectionString(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public string BuildConnectionString(IDatabaseConfig config, bool includeModel)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void UpdateConfig()
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public TestConnectionResult TestConnection(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public bool CreateDatabase(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public bool RollbackDatabase(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void DeleteDatabase(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void DumpDatabase(IDatabaseConfig config, string targetPath)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void RestoreDatabase(IDatabaseConfig config, string filePath)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModelSetup> GetAllSetups()
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModelScript> GetAllScripts()
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelScript script)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
     }
 }

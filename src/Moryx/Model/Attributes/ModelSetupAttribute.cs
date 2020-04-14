@@ -18,18 +18,4 @@ namespace Moryx.Model
         {
         }
     }
-
-    /// <summary>
-    /// Attribute for IModelSetups to determine their target model
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class ModelScriptAttribute : ModelAttribute
-    {
-        /// <summary>
-        /// Constructor used if the <see cref="IModelScript"/> is only available for the defined model
-        /// </summary>
-        public ModelScriptAttribute(string targetModel) : base(targetModel, typeof(IModelScript))
-        {
-        }
-    }
 }

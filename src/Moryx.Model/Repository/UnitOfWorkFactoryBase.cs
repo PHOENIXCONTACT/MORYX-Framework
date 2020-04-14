@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data.Entity;
 using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -15,9 +15,9 @@ namespace Moryx.Model
     /// <summary>
     /// Base class for unit of work factories with possibility to by configured
     /// </summary>
-    public abstract class UnitOfWorkFactoryBase<TContext, TConfigurator> : IUnitOfWorkFactory, 
+    public abstract class UnitOfWorkFactoryBase<TContext, TConfigurator> : IUnitOfWorkFactory,
         IContextUnitOfWorkFactory, IInitializable, IDbContextFactory, IModelConfiguratorFactory,
-        IParentFactory, IContainerChild<IUnitOfWorkFactory>, ILoggingHost where TContext : MoryxDbContext
+        IParentFactory, IContainerChild<IUnitOfWorkFactory>, ILoggingHost where TContext : DbContext
         where TConfigurator : IModelConfigurator, new()
     {
         #region Dependencies
@@ -42,7 +42,7 @@ namespace Moryx.Model
         /// <inheritdoc />
         IUnitOfWorkFactory IContainerChild<IUnitOfWorkFactory>.Parent
         {
-            get { return _parent; }
+            get => _parent;
             set { /* This cannot be set from outside */ }
         }
 
@@ -55,7 +55,7 @@ namespace Moryx.Model
         string ILoggingHost.Name => "UnitOfWorkFactory";
 
         /// <summary>
-        /// Root logger for the unitOfworkfactory
+        /// Root logger for the unitOfWorkFactory
         /// </summary>
         public IModuleLogger Logger { get; set; }
 
@@ -70,7 +70,7 @@ namespace Moryx.Model
         /// <inheritdoc />
         public void Initialize()
         {
-            // Activate logging (if loggermanagement is available)
+            // Activate logging (if LoggerManagement is available)
             LoggerManagement?.ActivateLogging(this);
 
             // Create configurator
@@ -85,17 +85,17 @@ namespace Moryx.Model
         }
 
         /// <summary>
-        /// Will be called after initializing this instance. 
+        /// Will be called after initializing this instance.
         /// Repositories should be added by <see cref="RegisterRepository{TApi}"/>
         /// </summary>
         protected abstract void Configure();
 
         /// <summary>
-        /// If the parent model is set, 
+        /// If the parent model is set,
         /// </summary>
         private void RegisterAsChild()
         {
-            // Maybe a to do? I have no better idea 
+            // Maybe a to do? I have no better idea
             // The parent model can be a protected virtual property but how to get the target model?
             var modelFactoryAttr = GetType().GetCustomAttribute<ModelFactoryAttribute>();
             if (string.IsNullOrEmpty(modelFactoryAttr?.ParentModel))
@@ -132,12 +132,12 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        IUnitOfWork IContextUnitOfWorkFactory.Create(MoryxDbContext context)
+        IUnitOfWork IContextUnitOfWorkFactory.Create(DbContext context)
         {
             return Create(context);
         }
-        
-        internal IUnitOfWork Create(MoryxDbContext context)
+
+        internal IUnitOfWork Create(DbContext context)
         {
             return new UnitOfWork(context, _repositories);
         }
@@ -153,21 +153,20 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        IModelConfigurator IModelConfiguratorFactory.GetConfigurator()
-        {
-            return _configurator;
-        }
+        IModelConfigurator IModelConfiguratorFactory.GetConfigurator() => _configurator;
 
         /// <inheritdoc />
-        public MoryxDbContext CreateContext(ContextMode contextMode)
+        public DbContext CreateContext(ContextMode contextMode)
         {
             return CreateContext(typeof(TContext), contextMode);
         }
 
         /// <inheritdoc />
-        public MoryxDbContext CreateContext(IDatabaseConfig config, ContextMode contextMode)
+        public DbContext CreateContext(IDatabaseConfig config, ContextMode contextMode)
         {
-            return (MoryxDbContext)Activator.CreateInstance(typeof(TContext), _configurator.BuildConnectionString(config), contextMode);
+            var dbContext = (DbContext)Activator.CreateInstance(typeof(TContext), _configurator.BuildConnectionString(config));
+            dbContext.SetContextMode(contextMode);
+            return dbContext;
         }
 
         /// <inheritdoc />
@@ -186,10 +185,10 @@ namespace Moryx.Model
         }
 
         /// <summary>
-        /// Registers an repository only by the api type. 
+        /// Registers an repository only by the api type.
         /// A proxy class will be generated.
         /// </summary>
-        protected void RegisterRepository<TApi>() 
+        protected void RegisterRepository<TApi>()
             where TApi : IRepository
         {
             RegisterRepository(typeof(TApi));
@@ -217,15 +216,13 @@ namespace Moryx.Model
         }
 
         /// <summary>
-        /// Registers an repository only by the api type. 
+        /// Registers an repository only by the api type.
         /// A proxy class will be generated.
         /// </summary>
         private void RegisterRepository(Type apiType)
         {
             if (_repositories.Contains(apiType))
-            {
                 throw new ArgumentException($"Repository interface already registered: {apiType}");
-            }
 
             _repositories.Add(_proxyBuilder.Build(apiType));
         }
@@ -239,9 +236,7 @@ namespace Moryx.Model
             var impl = noProxy ? implType : _proxyBuilder.Build(apiType, implType);
 
             if (_repositories.Contains(impl))
-            {
                 throw new ArgumentException($"Repository interface already registered: Api {apiType}, implementation {implType}, no proxy: {noProxy}");
-            }
 
             _repositories.Add(impl);
         }
@@ -249,10 +244,13 @@ namespace Moryx.Model
         /// <summary>
         /// Creates an instance of the typed context
         /// </summary>
-        protected virtual MoryxDbContext CreateContext(Type contextType, ContextMode contextMode)
+        protected virtual DbContext CreateContext(Type contextType, ContextMode contextMode)
         {
             var connectionString = _configurator.BuildConnectionString(_configurator.Config);
-            return (MoryxDbContext)Activator.CreateInstance(contextType, connectionString, contextMode);
+            var dbContext = (DbContext)Activator.CreateInstance(contextType, connectionString);
+            dbContext.SetContextMode(contextMode);
+
+            return dbContext;
         }
     }
 
@@ -260,7 +258,7 @@ namespace Moryx.Model
     /// Base class for unit of work factories which cannot be configured
     /// </summary>
     public abstract class UnitOfWorkFactoryBase<TContext> : UnitOfWorkFactoryBase<TContext, NullModelConfigurator>
-        where TContext : MoryxDbContext
+        where TContext : DbContext
     {
 
     }

@@ -118,8 +118,7 @@
       <DependentUpon>201804061554031_RentableHouse.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Scripts\SomeCoolScript.cs" />
-    <Compile Include="Scripts\SomeCoolSetup.cs" />
+    <Compile Include="Setups\SomeCoolSetup.cs" />
     <None Include="app.config" />
     <Compile Include="API\ICarEntityRepository.cs" />
     <Compile Include="API\IWheelEntityRepository.cs" />

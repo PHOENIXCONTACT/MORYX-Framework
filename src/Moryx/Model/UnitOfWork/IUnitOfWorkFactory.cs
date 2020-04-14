@@ -58,7 +58,7 @@ namespace Moryx.Model
     {
         /// <summary>
         /// Don't use any context enhancements - simple database access. This mode is used best for read-only
-        /// operations and LinQ queries. This will not track changes made to entities and does not provide 
+        /// operations and LinQ queries. This will not track changes made to entities and does not provide
         /// deferred loading of entities.
         /// </summary>
         AllOff = ContextModeFlags.AllOff,
@@ -76,7 +76,7 @@ namespace Moryx.Model
         LazyLoading = ContextModeFlags.Proxy | ContextModeFlags.Lazy,
 
         /// <summary>
-        /// Keep track of entities and changes made to them. This works with (Dynamic Change Tracking) proxies. 
+        /// Keep track of entities and changes made to them. This works with (Dynamic Change Tracking) proxies.
         /// This mode is ideal for reading operations split into several minor reads. Start with loading the root entity and load navigation properties on-demand
         /// using the repository Load-method.
         /// </summary>

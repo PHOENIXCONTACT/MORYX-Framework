@@ -15,12 +15,9 @@ namespace Moryx.Model
     /// <summary>
     /// Moryx related implementation of <see cref="T:System.Data.Entity.DbContext" />
     /// </summary>
-    public abstract class MoryxDbContext : DbContext, IContextMode
+    public abstract class MoryxDbContext : DbContext
     {
         private static readonly MethodInfo DbInitializerMethod;
-
-        /// <inheritdoc />
-        public ContextMode CurrentMode { get; private set; }
 
         /// <summary>
         /// Static constructor to load the database initializer method
@@ -45,37 +42,24 @@ namespace Moryx.Model
         /// Constructor for this DbContext using the given connection string.
         /// Used by the Runtime environment
         /// </summary>
-        protected MoryxDbContext(string connectionString, ContextMode mode) : base(connectionString)
+        protected MoryxDbContext(string connectionString) : base(connectionString)
         {
             SetNullDatabaseInitializer();
-            Configure(mode);
         }
 
         /// <summary>
-        /// Constructor for this DbContext using an exisiting connection.
+        /// Constructor for this DbContext using an existing connection.
         /// Used if connection is already defined (e.g. Effort InMemory)
         /// </summary>
-        protected MoryxDbContext(DbConnection connection, ContextMode mode) : base(connection, true)
+        protected MoryxDbContext(DbConnection connection) : base(connection, true)
         {
             SetNullDatabaseInitializer();
-            Configure(mode);
-        }
-
-        /// <inheritdoc />
-        public void Configure(ContextMode mode)
-        {
-            Configuration.ProxyCreationEnabled = mode.HasFlag(ContextMode.ProxyOnly);
-            Configuration.LazyLoadingEnabled = mode.HasFlag(ContextMode.LazyLoading);
-            Configuration.AutoDetectChangesEnabled = mode.HasFlag(ContextMode.ChangeTracking);
-            Configuration.ValidateOnSaveEnabled = true;
-            CurrentMode = mode;
         }
 
         /// <inheritdoc />
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             ConfigureConventions(modelBuilder);
-
             ConfigureProperties(modelBuilder);
         }
 

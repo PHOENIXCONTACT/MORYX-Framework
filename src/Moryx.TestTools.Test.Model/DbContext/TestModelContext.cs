@@ -19,11 +19,11 @@ namespace Moryx.TestTools.Test.Model
         {
         }
 
-        public TestModelContext(string connectionString, ContextMode mode) : base(connectionString, mode)
+        public TestModelContext(string connectionString) : base(connectionString)
         {
         }
 
-        public TestModelContext(DbConnection connection, ContextMode mode) : base(connection, mode)
+        public TestModelContext(DbConnection connection) : base(connection)
         {
         }
 
@@ -34,7 +34,7 @@ namespace Moryx.TestTools.Test.Model
         public virtual DbSet<SportCarEntity> SportCars { get; set; }
 
         public virtual DbSet<JsonEntity> Jsons { get; set; }
-        
+
         public virtual DbSet<HugePocoEntity> HugePocos { get; set; }
 
         public virtual DbSet<HouseEntity> Houses { get; set; }

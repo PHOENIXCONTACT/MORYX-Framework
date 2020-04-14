@@ -13,7 +13,7 @@ namespace Moryx.Model
     public enum TestConnectionResult
     {
         /// <summary>
-        /// Anything that belongs to a non existant or wrong configuration
+        /// Anything that belongs to a non existent or wrong configuration
         /// </summary>
         ConfigurationError,
 
@@ -54,13 +54,13 @@ namespace Moryx.Model
         void Initialize(IUnitOfWorkFactory unitOfWorkFactory, IConfigManager configManager, IModuleLogger logger);
 
         /// <summary>
-        /// Builds the connection string for the database. 
+        /// Builds the connection string for the database.
         /// The model name will be included into the connection string
         /// </summary>
         string BuildConnectionString(IDatabaseConfig config);
 
         /// <summary>
-        /// Builds the connection string for the database. 
+        /// Builds the connection string for the database.
         /// The model name is optional within the connection string
         /// </summary>
         string BuildConnectionString(IDatabaseConfig config, bool includeModel);
@@ -119,7 +119,7 @@ namespace Moryx.Model
 
         /// <summary>
         /// Dump the database und save the backup at the given file path
-        /// This method works asynchronus
+        /// This method works asynchronous
         /// </summary>
         /// <param name="config">Config describing the database target</param>
         /// <param name="targetPath">Path to store backup</param>
@@ -140,23 +140,11 @@ namespace Moryx.Model
         IEnumerable<IModelSetup> GetAllSetups();
 
         /// <summary>
-        /// Get all scripts of this model
-        /// </summary>
-        IEnumerable<IModelScript> GetAllScripts(); 
-
-        /// <summary>
         /// Execute setup for this config
         /// </summary>
         /// <param name="config">Config</param>
         /// <param name="setup">Setup</param>
         /// <param name="setupData"></param>
         void Execute(IDatabaseConfig config, IModelSetup setup, string setupData);
-
-        /// <summary>
-        /// Execute script for this config
-        /// </summary>
-        /// <param name="config"></param>
-        /// <param name="script"></param>
-        void Execute(IDatabaseConfig config, IModelScript script);
     }
 }
