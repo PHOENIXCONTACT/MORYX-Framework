@@ -122,31 +122,28 @@ namespace Moryx.Model
         /// </summary>
         private void ApplyModificationTracking()
         {
-            var modifiedTrackedEntries = from entry in ChangeTracker.Entries()
-                where entry.Entity is IModificationTrackedEntity &&
-                      (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-                select new
-                {
-                    Entry = entry,
-                    Entity = entry.Entity as IModificationTrackedEntity,
-                    entry.State,
-                };
+            var modifiedTrackedEntries = ChangeTracker.Entries()
+                .Where(entry => entry.Entity is IModificationTrackedEntity &&
+                                (entry.State == EntityState.Added || entry.State == EntityState.Modified ||  entry.State == EntityState.Deleted));
 
-            var changeTimestamp = DateTime.UtcNow;
-            foreach (var modified in modifiedTrackedEntries)
+            var timeStamp = DateTime.UtcNow;
+            foreach (var entry in modifiedTrackedEntries)
             {
-                modified.Entity.Updated = changeTimestamp;
+                var entity = (IModificationTrackedEntity) entry.Entity;
 
-                // ReSharper disable once ConvertIfStatementToSwitchStatement
-                if (modified.State == EntityState.Added)
+                // All states gets updated
+                entity.Updated = timeStamp;
+
+                // Added gets created
+                if (entry.State == EntityState.Added)
                 {
-                    modified.Entity.Created = changeTimestamp;
+                    entity.Created = timeStamp;
                 }
-                else if (modified.State == EntityState.Modified)
+                // Deleted gets deleted timeStamp and will not be removed
+                else if (entry.State == EntityState.Deleted)
                 {
-                    if (modified.Entry.CurrentValues[nameof(IModificationTrackedEntity.Deleted)] !=
-                        modified.Entry.OriginalValues[nameof(IModificationTrackedEntity.Deleted)])
-                        modified.Entity.Deleted = changeTimestamp;
+                    entity.Deleted = timeStamp;
+                    entry.State = EntityState.Modified;
                 }
             }
         }

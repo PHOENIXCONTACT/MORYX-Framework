@@ -48,7 +48,7 @@ namespace Moryx.Model
         /// <summary>
         /// Get all entities with this ids
         /// </summary>
-        ICollection<T> GetByKeys(long[] ids); 
+        ICollection<T> GetByKeys(long[] ids);
 
         /// <summary>
         /// Create a new instance of this type and add it to the context
@@ -80,19 +80,8 @@ namespace Moryx.Model
         T Remove(T entity);
 
         /// <summary>
-        /// Remove the entity and specifiy whether to remove permanenent or 
-        /// simply flag it as deleted if possible.
-        /// </summary>
-        T Remove(T entity, bool permanent);
-
-        /// <summary>
-        /// Remove a range of entities from the context
-        /// </summary>
-        IEnumerable<T> RemoveRange(IEnumerable<T> entities);
-
-        /// <summary>
         /// Remove a range of entities permanent
         /// </summary>
-        IEnumerable<T> RemoveRange(IEnumerable<T> entities, bool permanent);
+        IEnumerable<T> RemoveRange(IEnumerable<T> entities);
     }
 }
