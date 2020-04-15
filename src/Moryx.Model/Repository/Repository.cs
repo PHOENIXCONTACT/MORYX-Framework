@@ -18,7 +18,7 @@ namespace Moryx.Model
         public IUnitOfWork UnitOfWork { get; private set; }
 
         /// <summary>
-        /// The database context 
+        /// The database context
         /// </summary>
         protected DbContext Context { get; set; }
 
@@ -54,7 +54,7 @@ namespace Moryx.Model
         public virtual IQueryable<T> Linq => DbSet;
 
         /// <inheritdoc />
-        public virtual T GetByKey(long id) => 
+        public virtual T GetByKey(long id) =>
             DbSet.FirstOrDefault(e => e.Id == id);
 
         /// <inheritdoc />
@@ -62,15 +62,15 @@ namespace Moryx.Model
             DbSet.FirstOrDefaultAsync(e => e.Id == id);
 
         /// <inheritdoc />
-        public ICollection<T> GetAll() => 
+        public ICollection<T> GetAll() =>
             DbSet.ToList();
 
         /// <inheritdoc />
-        public virtual ICollection<T> GetByKeys(long[] ids) => 
+        public virtual ICollection<T> GetByKeys(long[] ids) =>
             DbSet.Where(e => ids.Contains(e.Id)).ToList();
 
         /// <inheritdoc />
-        public T Create() => 
+        public T Create() =>
             Create(true);
 
         /// <inheritdoc />
@@ -84,70 +84,19 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        public T Add(T entityToAdd) => 
+        public T Add(T entityToAdd) =>
             DbSet.Add(entityToAdd);
 
         /// <inheritdoc />
-        public IEnumerable<T> AddRange(IEnumerable<T> entitiesToAdd) => 
+        public IEnumerable<T> AddRange(IEnumerable<T> entitiesToAdd) =>
             DbSet.AddRange(entitiesToAdd);
 
         /// <inheritdoc />
-        public T Remove(T entity) => 
-            Remove(entity, false);
-
-        /// <inheritdoc />
-        public T Remove(T entity, bool permanent) => 
-            entity == null ? null : ExecuteRemove(entity, permanent);
-
-        /// <see cref="IRepository{T}"/>
-        public IEnumerable<T> RemoveRange(IEnumerable<T> entities) => 
-            RemoveRange(entities, false);
-
-        /// <see cref="IRepository{T}"/>
-        public IEnumerable<T> RemoveRange(IEnumerable<T> entities, bool permanent) => 
-            entities == null ? null : ExecuteRemoveRange(entities, permanent);
-
-        /// <summary>
-        /// Remove entity with option of permanent removal.
-        /// </summary>
-        protected virtual T ExecuteRemove(T entity, bool permanent) => 
+        public T Remove(T entity) =>
             DbSet.Remove(entity);
 
-        /// <summary>
-        /// Remove entities with option of permanent removal.
-        /// </summary>
-        protected virtual IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent) =>
-            DbSet.RemoveRange(entities.ToArray());
-    }
-
-    /// <summary>
-    /// Base class for entity framework repositories of modification tracking entities
-    /// </summary>
-    public abstract class ModificationTrackedRepository<T> : Repository<T>
-        where T : class, IModificationTrackedEntity
-    {
-        /// <inheritdoc />
-        protected override T ExecuteRemove(T entity, bool permanent)
-        {
-            if (permanent)
-                return base.ExecuteRemove(entity, true);
-
-            entity.Deleted = DateTime.Now;
-            return entity;
-        }
-
-        /// <inheritdoc />
-        protected override IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent)
-        {
-            if (permanent)
-               return base.ExecuteRemoveRange(entities, true);
-
-            var list = entities.ToArray();
-
-            foreach (var entity in list)
-                entity.Deleted = DateTime.Now;
-
-            return list;
-        }
+        /// <see cref="IRepository{T}"/>
+        public IEnumerable<T> RemoveRange(IEnumerable<T> entities) =>
+             DbSet.RemoveRange(entities.ToArray());
     }
 }

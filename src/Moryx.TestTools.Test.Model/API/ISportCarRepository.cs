@@ -10,7 +10,7 @@ namespace Moryx.TestTools.Test.Model
         SportCarEntity GetSingleBy(string name);
     }
 
-    public class SportCarRepository : ModificationTrackedRepository<SportCarEntity>, ISportCarRepository
+    public class SportCarRepository : Repository<SportCarEntity>, ISportCarRepository
     {
         public virtual SportCarEntity GetSingleBy(string name)
         {

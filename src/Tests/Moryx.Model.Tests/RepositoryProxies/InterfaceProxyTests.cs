@@ -36,24 +36,6 @@ namespace Moryx.Model.Tests
         }
 
         [Test]
-        public void ModificationTrackedRepositoryInterface()
-        {
-            // Act
-            Type proxyType = null;
-            Assert.DoesNotThrow(delegate
-            {
-                proxyType = _proxyBuilder.Build(typeof(IModificationTrackedRepository));
-            });
-
-            // Assert
-            var baseType = proxyType.BaseType;
-            Assert.IsNotNull(baseType);
-
-            var genericBaseType = baseType.GetGenericTypeDefinition();
-            Assert.AreEqual(typeof(ModificationTrackedRepository<>), genericBaseType);
-        }
-
-        [Test]
         public void InterfaceWithoutRepositoryThrows()
         {
             //Act - Assert
@@ -82,7 +64,7 @@ namespace Moryx.Model.Tests
                 _proxyBuilder.Build(typeof(ICreateStringParamRepository));
             });
         }
-        
+
         [Test]
         public void CreateWithValueParameter()
         {

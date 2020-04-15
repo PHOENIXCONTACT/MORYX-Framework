@@ -57,9 +57,7 @@ namespace Moryx.Model
                 typeof(IEntity).IsAssignableFrom(i.GetGenericArguments()[0])).GetGenericArguments()[0];
 
             // Create base type
-            var baseType = !IsModificationTracked(entityType)
-                ? typeof(Repository<>).MakeGenericType(entityType)
-                : typeof(ModificationTrackedRepository<>).MakeGenericType(entityType);
+            var baseType = typeof(Repository<>).MakeGenericType(entityType);
 
             // Get Methods and matching Strategies
             var methodStrategyMaps = GetInterfaceMethodStrategies(repoApi);
@@ -99,10 +97,6 @@ namespace Moryx.Model
                 throw new InvalidOperationException($"{repoImpl.Name} must have the base type {nameof(Repository)}<T>.");
 
             var entityType = baseType.GetGenericArguments()[0];
-
-            if (IsModificationTracked(entityType) && baseType.GetGenericTypeDefinition() != typeof(ModificationTrackedRepository<>))
-                throw new InvalidOperationException($"{entityType.Name} is modification tracked " +
-                                                    "but the repository is not derived from ModificationTrackedRepository<T>.");
 
             // Get Methods and matching Strategies
             var methodStrategyMaps = repoImpl.IsAbstract
@@ -190,11 +184,6 @@ namespace Moryx.Model
             public MethodInfo MethodInfo { get; set; }
 
             public IMethodProxyStrategy Strategy { get; set; }
-        }
-
-        private static bool IsModificationTracked(Type entityType)
-        {
-            return typeof(IModificationTrackedEntity).IsAssignableFrom(entityType);
         }
 
         private static void ValidateRepositoryApi(Type repoApi, bool additionalApis)
