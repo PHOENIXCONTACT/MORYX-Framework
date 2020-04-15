@@ -48,14 +48,14 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.9258, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev009258\lib\netstandard2.0\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.9523, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.3.0.0-dev009523\lib\netstandard2.0\Marvin.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.9258, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.3.0.0-dev009258\lib\net461\Marvin.Model.dll</HintPath>
+    <Reference Include="Marvin.Model, Version=3.0.0.9523, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Model.3.0.0-dev009523\lib\net461\Marvin.Model.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.9258, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.InMemory.3.0.0-dev009258\lib\net461\Marvin.Model.InMemory.dll</HintPath>
+    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.9523, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Model.InMemory.3.0.0-dev009523\lib\net461\Marvin.Model.InMemory.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.13.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
