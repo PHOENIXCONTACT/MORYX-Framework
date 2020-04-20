@@ -107,6 +107,10 @@
     <Compile Include="Plugins\Modules\Serialization\AdvancedEditorBrowsableSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj">
+      <Project>{478DC949-A0B2-46B4-8645-A7DA92589B76}</Project>
+      <Name>Moryx.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
       <Name>Moryx.Tools.Wcf</Name>

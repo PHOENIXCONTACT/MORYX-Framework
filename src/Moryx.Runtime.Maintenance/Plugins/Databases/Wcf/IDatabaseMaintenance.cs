@@ -5,6 +5,7 @@ using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Moryx.Model;
+using Moryx.Model.Configuration;
 using Moryx.Tools.Wcf;
 using Moryx.Web;
 

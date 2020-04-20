@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using CommandLine;
 using Moryx.Container;
-using Moryx.Model;
 using Moryx.Modules;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
@@ -108,9 +107,6 @@ namespace Moryx.Runtime.Kernel
             // Load kernel and core modules
             container.LoadComponents<object>(type => type.GetCustomAttribute<KernelComponentAttribute>() != null);
             container.LoadComponents<IServerModule>(module => module.GetCustomAttribute<ServerModuleAttribute>() != null);
-
-            // Load data models
-            container.LoadComponents<IUnitOfWorkFactory>();
 
             // Load server modules
             container.LoadComponents<IServerModule>();

@@ -88,10 +88,6 @@
       <Project>{9dede968-06eb-4339-8c82-28b418ba1a44}</Project>
       <Name>Moryx.Container</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj">
-      <Project>{a734be85-33dc-4117-bd9c-b5d5b31102e3}</Project>
-      <Name>Moryx.Model.InMemory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Moryx.Model\Moryx.Model.csproj">
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
       <Name>Moryx.Model</Name>

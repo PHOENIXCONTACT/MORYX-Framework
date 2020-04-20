@@ -19,7 +19,7 @@ namespace Moryx.TestModule
     [Plugin(LifeCycle.Singleton)]
     public class JsonTest : IPlugin
     {
-        public IUnitOfWorkFactory TestFactory { get; set; }
+        public IDbContextFactory DbContextFactory { get; set; }
 
         private const int LoopCount = 100;
 
@@ -151,45 +151,48 @@ namespace Moryx.TestModule
             var ids = new List<long>();
 
             // Write time
-            using (var uow = TestFactory.Create(ContextMode.ChangeTracking))
+            var testContext = DbContextFactory.Create<TestModelContext>(ContextMode.ChangeTracking);
+            stopWatch.Start();
+            for (var i = 0; i < LoopCount; i++)
             {
-                stopWatch.Start();
-                for (var i = 0; i < LoopCount; i++)
-                {
-                    ids.Add(WriteLoop(uow, config, jsonSettings));
-                }
-                stopWatch.Stop();
+                ids.Add(WriteLoop(testContext, config, jsonSettings));
             }
+            stopWatch.Stop();
+
             var writeTime = stopWatch.ElapsedMilliseconds;
 
             // Read time
-            using (var uow = TestFactory.Create(ContextMode.AllOff))
+            testContext = DbContextFactory.Create<TestModelContext>(ContextMode.ChangeTracking);
+
+            stopWatch.Restart();
+            foreach (var id in ids)
             {
-                stopWatch.Restart();
-                foreach (var id in ids)
-                {
-                    var result = ReadLoop(uow, id, jsonSettings);
-                }
-                stopWatch.Stop();
+                var result = ReadLoop(testContext, id, jsonSettings);
             }
+            stopWatch.Stop();
+
             var readTime = stopWatch.ElapsedMilliseconds;
 
             return new[] { writeTime, readTime };
         }
 
-        private long WriteLoop(IUnitOfWork uow, ModuleConfig config, JsonSerializerSettings settings)
+        private long WriteLoop(TestModelContext dbContext, ModuleConfig config, JsonSerializerSettings settings)
         {
             var json = JsonConvert.SerializeObject(config, typeof(IConfig), settings);
-            var entity = uow.GetRepository<IJsonEntityRepository>().Create(json);
-            uow.Save();
+
+            var entity = dbContext.Jsons.Create();
+            entity.JsonData = json;
+
+            dbContext.SaveChanges();
             return entity.Id;
         }
 
-        private IConfig ReadLoop(IUnitOfWork uow, long id, JsonSerializerSettings settings)
+        private IConfig ReadLoop(TestModelContext dbContext, long id, JsonSerializerSettings settings)
         {
-            var json = (from e in uow.GetRepository<IJsonEntityRepository>().Linq
+            var json = (from e in dbContext.Jsons
                         where e.Id == id
                         select e.JsonData).FirstOrDefault();
+
             return JsonConvert.DeserializeObject<IConfig>(json, settings);
         }
     }

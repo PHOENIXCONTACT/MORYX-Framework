@@ -84,7 +84,6 @@
     <Compile Include="Logging\LogFilter.cs" />
     <Compile Include="Logging\LoggingConfig.cs" />
     <Compile Include="Logging\ServerLoggerManagement.cs" />
-    <Compile Include="Model\GenericUowFactory.cs" />
     <Compile Include="Modules\BehaviourAccess.cs" />
     <Compile Include="Modules\ComponentContracts\IModuleDependencyManager.cs" />
     <Compile Include="Modules\ComponentContracts\IModuleStarter.cs" />
