@@ -6,7 +6,7 @@ using System;
 namespace Moryx.Model
 {
     /// <summary>
-    /// Defines the default schmea for this database context
+    /// Defines the default schema for this database context
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class DefaultSchemaAttribute : Attribute

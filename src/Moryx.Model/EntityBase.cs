@@ -19,7 +19,7 @@ namespace Moryx.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual long Id
         {
-            get { return _id; }
+            get => _id;
             set
             {
                 _id = value;

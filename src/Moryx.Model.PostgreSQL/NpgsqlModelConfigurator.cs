@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using Moryx.Logging;
+using Moryx.Model.Configuration;
 using Npgsql;
 
 namespace Moryx.Model.PostgreSQL

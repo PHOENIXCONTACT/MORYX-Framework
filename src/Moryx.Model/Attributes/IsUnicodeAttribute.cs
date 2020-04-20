@@ -22,7 +22,6 @@ namespace Moryx.Model
         /// </summary>
         public IsUnicodeAttribute() : this(true)
         {
-            
         }
 
         /// <summary>

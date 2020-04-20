@@ -1,63 +1,61 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Linq;
 using Moryx.Model;
 
 namespace Moryx.TestTools.Test.Model
 {
-    [ModelSetup(TestModelConstants.Namespace)]
-    public class SomeCoolSetup : IModelSetup
+    [ModelSetup(TestModelConstants.Name)]
+    public class SomeCoolSetup : ModelSetupBase<TestModelContext>
     {
-        public int SortOrder => 1;
+        public override int SortOrder => 1;
 
-        public string Name => "Really cool setup";
+        public override string Name => "Really cool setup";
 
-        public string Description => "Creates some cars";
+        public override string Description => "Creates some cars";
 
-        public string SupportedFileRegex => string.Empty;
+        public override string SupportedFileRegex => string.Empty;
 
-        public void Execute(IUnitOfWork openContext, string setupData)
+        public override void Execute(TestModelContext dbContext, string setupData)
         {
-            var carRepo = openContext.GetRepository<ICarEntityRepository>();
-            var wheelRepo = openContext.GetRepository<IWheelEntityRepository>();
+            var carSet = dbContext.Cars;
+            var wheelSet = dbContext.Wheels;
 
             CarEntity lastCar = null;
             for (var i = 0; i < 20; i++)
             {
-                var carEntity = carRepo.Create("Car " + i, i + 1000);
+                var carEntity = carSet.Create();
+                carEntity.Name = "Car " + i;
+                carEntity.Price = i + 100;
 
-                wheelRepo.Create(WheelType.FrontLeft, carEntity);
-                wheelRepo.Create(WheelType.FrontRight, carEntity);
-                wheelRepo.Create(WheelType.RearLeft, carEntity);
-                wheelRepo.Create(WheelType.RearRight, carEntity);
+                void CreateWheel(WheelType wheelType)
+                {
+                    var wheelEntity = wheelSet.Create();
+                    wheelEntity.WheelType = wheelType;
+                    carEntity.Wheels.Add(wheelEntity);
+                }
+
+                CreateWheel(WheelType.FrontLeft);
+                CreateWheel(WheelType.FrontRight);
+                CreateWheel(WheelType.RearLeft);
+                CreateWheel(WheelType.RearRight);
 
                 lastCar = carEntity;
             }
 
-            openContext.Save();
+            dbContext.SaveChanges();
 
-            carRepo.Remove(lastCar);
+            dbContext.Cars.Remove(lastCar);
 
-            openContext.Save();
+            dbContext.SaveChanges();
 
             // All cars with exact name "Car 1"
-            var allNamedCar1 = carRepo.GetAllBy("Car 1");
+            var allNamedCar1 = carSet.Where(c => c.Name == "Car 1");
 
-            var firstContains = carRepo.GetFirstContains("Car");
+            var firstContains = carSet.First(c => c.Name.Contains("Car"));
 
-            var allContains = carRepo.GetAllContains("Car");
-
-            // All cars with exact name "Car 1" and price 1001
-            var allNamedCar1WithPrice1001 = carRepo.GetAllBy("Car 1", 1001);
-
-            var get = carRepo.Get("Car");
-
-            var getAllByName = carRepo.GetAllByName("Car 1");
-
-            var getAllContainsName = carRepo.GetAllContainsName("Car");
-
-            var bynameAndPrice = carRepo.GetAllByNameAndPrice("Car 1", 1001);
-
+            var allContains = carSet.Where(c => c.Name.Contains("Car"));
         }
     }
 }

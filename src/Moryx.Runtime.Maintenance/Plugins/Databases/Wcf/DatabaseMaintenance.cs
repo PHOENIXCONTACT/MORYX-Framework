@@ -5,12 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.ServiceModel;
 using System.Text.RegularExpressions;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
+using Moryx.Model.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 
@@ -24,9 +24,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         public IParallelOperations ParallelOperations { get; set; }
 
-        public IEnumerable<IUnitOfWorkFactory> ModelFactories { get; set; }
+        public IDbContextFactory DbContextFactory { get; set; }
 
-        private IEnumerable<IModelConfigurator> ModelConfigurators => ModelFactories.Cast<IModelConfiguratorFactory>().Select(c => c.GetConfigurator());
+        private IEnumerable<IModelConfigurator> ModelConfigurators => DbContextFactory.Configurators;
 
         /// <summary>
         /// Logger of this component
@@ -48,10 +48,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         public void SetAllConfigs(DatabaseConfigModel config)
         {
-            // Get and stop all db related modules
-            var dbModules = AffectedModules();
-            dbModules.ForEach(ModuleManager.StopModule);
-
             // Overwrite all configs
             BulkOperation(mc =>
             {
@@ -59,9 +55,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 UpdateConfigFromModel(mc.Config, config);
                 mc.UpdateConfig();
             }, "Save config");
-
-            // Restart modules
-            dbModules.ForEach(ModuleManager.StartModule);
         }
 
         public void SetDatabaseConfig(string targetModel, DatabaseConfigModel config)
@@ -70,29 +63,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             if (match == null)
                 return;
 
-            // Stop all services that depend on that model
-            var affectedModules = AffectedModules(targetModel);
-            affectedModules.ForEach(ModuleManager.StopModule);
-
             // Save config and reload all DataModels
             UpdateConfigFromModel(match.Config, config);
             match.UpdateConfig();
 
-            // Start services again
-            affectedModules.ForEach(ModuleManager.StartModule);
-        }
-
-        private List<IServerModule> AffectedModules(string targetModel = null)
-        {
-            var affectedModules = (from module in ModuleManager.AllModules.Where(module => module.State == ServerModuleState.Running)
-                                   let props = module.GetType().GetProperties()
-                                   let facAttr = props.Where(prop => prop.PropertyType == typeof(IUnitOfWorkFactory))
-                                                      .Select(fac => fac.GetCustomAttribute<NamedAttribute>()).ToArray()
-                                   where (targetModel == null && facAttr.Any())
-                                      || (targetModel != null && facAttr.Any(att => att.ComponentName == targetModel))
-                                      || props.Any(prop => prop.PropertyType == typeof(IModelResolver))
-                                   select module).ToList();
-            return affectedModules;
         }
 
         public TestConnectionResponse TestDatabaseConfig(string targetModel, DatabaseConfigModel config)

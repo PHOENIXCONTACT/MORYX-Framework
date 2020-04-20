@@ -31,10 +31,8 @@ namespace Moryx.Container.Tests
         public void GlobalsNotFound()
         {
             var global = _container.Resolve<GlobalComponent>();
-            var model = _container.Resolve<ModelComponent>();
 
             Assert.Null(global, "Global component was registered in local container!");
-            Assert.Null(model, "Global model was registered in local container!");
         }
 
         [Test]
