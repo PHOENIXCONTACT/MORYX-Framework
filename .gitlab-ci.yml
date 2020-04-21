@@ -1,5 +1,4 @@
 stages:
-  - build-maintenance
   - build
   - test
   - documentation
@@ -14,30 +13,6 @@ variables:
 cache:
   paths:
     - packages
-
-BuildMaintenance:
-  image: dockerregistry.europe.phoenixcontact.com/node:9.5
-  tags:
-    - docker
-  stage: build-maintenance
-  cache:
-    paths:
-    - src/Marvin.Runtime.Maintenance.Web.UI/node_modules/
-  script:
-    - bash -x ./Build.sh -p=${MARVIN_BUILDNUMBER}
-    - npm config set registry http://dockerregistry.europe.phoenixcontact.com/repository/pxc-npm-proxy/
-    - npm config set strict-ssl false --global
-    - npm config set https-proxy '${HTTP_PROXY}' --global
-    - npm config set proxy '${HTTP_PROXY}' --global
-    - cd src/Marvin.Runtime.Maintenance.Web.UI
-    - npm run build
-    - mkdir -p ../../artifacts/Maintenance.Web
-    - cp -R dist/* ../../artifacts/Maintenance.Web/
-  artifacts:
-    expire_in: 1 hrs
-    paths:
-      - 'artifacts/Maintenance.Web'
-      - 'src/Marvin.Runtime.Maintenance.Web.UI/dist'
 
 Build: 
   stage: build

@@ -76,10 +76,6 @@
       <Project>{d8344b1f-9db3-4e85-9195-6fffecbf6427}</Project>
       <Name>Marvin.DependentTestModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.Maintenance.Web\Marvin.Runtime.Maintenance.Web.csproj">
-      <Project>{e1227a92-c942-42d3-a35a-d4c4c3574e78}</Project>
-      <Name>Marvin.Runtime.Maintenance.Web</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.WinService\Marvin.Runtime.WinService.csproj">
       <Project>{45bf2368-b7c9-42a1-9587-f3b3eade4a67}</Project>
       <Name>Marvin.Runtime.WinService</Name>
