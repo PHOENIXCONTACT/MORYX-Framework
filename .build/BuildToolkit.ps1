@@ -1,11 +1,11 @@
 # Tool Versions
 $MsBuildVersion = "15.0"; # valid versions are [12.0, 14.0, 15.0, latest] (latest only works >= 15.0)
-$NunitVersion = "3.10.0";
+$NunitVersion = "3.11.1";
 $OpenCoverVersion = "4.7.922";
-$DocFxVersion = "2.40.11";
+$DocFxVersion = "2.52.0";
 $OpenCoverToCoberturaVersion = "0.3.4";
-$ReportGeneratorVersion = "4.2.15";
-$VswhereVersion = "2.7.1";
+$ReportGeneratorVersion = "4.5.6";
+$VswhereVersion = "2.8.4";
 $GitLinkVersion = "3.1.0";
 
 # Folder Pathes
