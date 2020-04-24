@@ -15,7 +15,7 @@ using Marvin.Tools.Wcf;
 namespace Marvin.Products.Management
 {
     /// <summary>
-    /// The main controller of all product modules. 
+    /// The main controller of all product modules.
     /// </summary>
     [ServerModule(ModuleName)]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<IProductManagement>
@@ -42,17 +42,18 @@ namespace Marvin.Products.Management
         protected override void OnInitialize()
         {
             Container.SetInstance(ProductsModel, ProductsConstants.Namespace);
-
             Container.SetInstance(ConfigManager);
 
             // Load all product plugins
             Container.LoadComponents<IProductStorage>();
             Container.LoadComponents<IProductImporter>();
+
             // Load strategies
             Container.LoadComponents<IProductTypeStrategy>();
             Container.LoadComponents<IProductInstanceStrategy>();
             Container.LoadComponents<IProductLinkStrategy>();
             Container.LoadComponents<IProductRecipeStrategy>();
+            Container.LoadComponents<IPropertyMapper>();
         }
 
         /// <summary>
