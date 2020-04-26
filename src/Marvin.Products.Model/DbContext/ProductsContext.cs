@@ -6,7 +6,7 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
 using Marvin.Model;
-using Marvin.Model.Npgsql;
+using Marvin.Model.PostgreSQL;
 
 namespace Marvin.Products.Model
 {

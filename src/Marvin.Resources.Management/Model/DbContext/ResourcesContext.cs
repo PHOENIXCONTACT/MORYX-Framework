@@ -4,7 +4,7 @@
 using System.Data.Common;
 using System.Data.Entity;
 using Marvin.Model;
-using Marvin.Model.Npgsql;
+using Marvin.Model.PostgreSQL;
 
 // ReSharper disable once CheckNamespace
 namespace Marvin.Resources.Model

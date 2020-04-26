@@ -55,26 +55,26 @@
     <Reference Include="CommandLine, Version=2.7.82.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\CommandLineParser.2.7.82\lib\net461\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="Controls4Industry, Version=3.0.0.9179, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Controls4Industry.3.0.0-dev009179\lib\net461\Controls4Industry.dll</HintPath>
+    <Reference Include="Controls4Industry, Version=3.0.0.9359, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Controls4Industry.3.0.0-dev009359\lib\net461\Controls4Industry.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.9523, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev009523\lib\netstandard2.0\Marvin.dll</HintPath>
+    <Reference Include="Marvin, Version=3.0.0.9706, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.3.0.0-dev009706\lib\netstandard2.0\Marvin.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.ClientFramework, Version=3.0.0.9179, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.ClientFramework.3.0.0-dev009179\lib\net461\Marvin.ClientFramework.dll</HintPath>
+    <Reference Include="Marvin.ClientFramework, Version=3.0.0.9359, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.ClientFramework.3.0.0-dev009359\lib\net461\Marvin.ClientFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.ClientFramework.Kernel, Version=3.0.0.9179, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.ClientFramework.Kernel.3.0.0-dev009179\lib\net461\Marvin.ClientFramework.Kernel.dll</HintPath>
+    <Reference Include="Marvin.ClientFramework.Kernel, Version=3.0.0.9359, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.ClientFramework.Kernel.3.0.0-dev009359\lib\net461\Marvin.ClientFramework.Kernel.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Container, Version=3.0.0.9523, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Container.3.0.0-dev009523\lib\netstandard2.0\Marvin.Container.dll</HintPath>
+    <Reference Include="Marvin.Container, Version=3.0.0.9706, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Container.3.0.0-dev009706\lib\netstandard2.0\Marvin.Container.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.9523, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev009523\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
+    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.9706, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev009706\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.9523, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Tools.Wcf.3.0.0-dev009523\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.9706, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Marvin.Tools.Wcf.3.0.0-dev009706\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -84,11 +84,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.ComponentModel.Annotations.4.6.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+      <HintPath>..\..\..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.Reflection.TypeExtensions.4.6.0\lib\net461\System.Reflection.TypeExtensions.dll</HintPath>
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Reflection.TypeExtensions.4.7.0\lib\net461\System.Reflection.TypeExtensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Caliburn.Micro.3.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Marvin.Model;
-using Marvin.Model.Npgsql;
+using Marvin.Model.PostgreSQL;
 
 // ReSharper disable once CheckNamespace
 namespace Marvin.Resources.Model

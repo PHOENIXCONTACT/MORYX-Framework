@@ -4,7 +4,7 @@
 using System.Data.Common;
 using System.Data.Entity;
 using Marvin.Model;
-using Marvin.Model.Npgsql;
+using Marvin.Model.PostgreSQL;
 using Marvin.Products.Model;
 
 namespace Marvin.Products.Samples.Model
@@ -18,12 +18,12 @@ namespace Marvin.Products.Samples.Model
     {
         /// <inheritdoc />
         public WatchProductsContext()
-        { 
+        {
         }
 
         /// <inheritdoc />
         public WatchProductsContext(string connectionString, ContextMode mode) : base(connectionString, mode)
-        {           
+        {
         }
 
         /// <inheritdoc />
