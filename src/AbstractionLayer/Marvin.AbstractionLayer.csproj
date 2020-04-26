@@ -73,6 +73,8 @@
     <Compile Include="Drivers\InOut\IInput.cs" />
     <Compile Include="Drivers\InOut\InputChangedEventArgs.cs" />
     <Compile Include="Drivers\InOut\IOutput.cs" />
+    <Compile Include="Drivers\Message\IMessageCommunication.cs" />
+    <Compile Include="Drivers\Message\IMessageDriver.cs" />
     <Compile Include="Drivers\Scales\IWeightScaleDriver.cs" />
     <Compile Include="Drivers\Scales\WeightResult.cs" />
     <Compile Include="Drivers\InOut\SupportedAccess.cs" />
