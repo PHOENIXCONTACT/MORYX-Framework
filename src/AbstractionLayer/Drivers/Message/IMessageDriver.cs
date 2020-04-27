@@ -8,7 +8,7 @@ namespace Marvin.AbstractionLayer.Drivers.Message
     /// <summary>
     /// Multi-purpose driver that exchanges messages with the device
     /// </summary>
-    public interface IMessageDriver : IDriver, IMessageCommunication, IEnumerable<IMessageCommunication>
+    public interface IMessageDriver : IDriver, IMessageCommunication
     {
         /// <summary>
         /// Access a named sub-channel of the driver
