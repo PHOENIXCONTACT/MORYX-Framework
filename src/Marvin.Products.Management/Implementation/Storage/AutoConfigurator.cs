@@ -184,7 +184,9 @@ namespace Marvin.Products.Management
                     .OrderBy(p => p.Name).ToList();
                 // TODO: Use type wrapper
                 var baseProperties = typeof(TBaseType).GetProperties();
-                foreach (var property in targetType.GetProperties().Where(p => baseProperties.All(bp => bp.Name != p.Name)))
+                foreach (var property in targetType.GetProperties().Where(p => baseProperties.All(bp => bp.Name != p.Name))
+                    .Where(p => !typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))
+                    .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType)))
                 {
                     var propertyTuple = CreateConfig<IPropertyMapper, PropertyMapperConfig>(property.PropertyType);
                     if (propertyTuple == null)
