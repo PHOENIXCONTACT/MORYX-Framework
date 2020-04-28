@@ -11,19 +11,19 @@ using Marvin.Serialization;
 namespace Marvin.Runtime.Maintenance.Plugins.Modules
 {
     /// <inheritdoc />
-    internal class AdvancedEditorVisibleSerialization : PossibleValuesSerialization
+    internal class AdvancedEditorBrowsableSerialization : PossibleValuesSerialization
     {
-        private static readonly EditorVisibleSerialization EditorVisbleFilter = new EditorVisibleSerialization();
+        private static readonly EditorBrowsableSerialization EditorBrowsableFilter = new EditorBrowsableSerialization();
 
         /// <inheritdoc />
-        public AdvancedEditorVisibleSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider) : base(container, emptyPropertyProvider)
+        public AdvancedEditorBrowsableSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider) : base(container, emptyPropertyProvider)
         {
         }
 
         /// <inheritdoc />
         public override IEnumerable<MethodInfo> GetMethods(Type sourceType)
         {
-            return EditorVisbleFilter.GetMethods(sourceType);
+            return EditorBrowsableFilter.GetMethods(sourceType);
         }
     }
 }

@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Serialization;
+using System.ComponentModel;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -10,13 +10,10 @@ namespace Marvin.Tests.Workflows
 {
     internal class ParameterStep : WorkplanStepBase, IParameterHolder
     {
-        /// 
-        public override string Name
-        {
-            get { return "ParameterStep"; }
-        }
-        
-        [EditorVisible]
+        ///
+        public override string Name => "ParameterStep";
+
+        [EditorBrowsable]
         public DummyParameters Parameters { get; set; }
 
         ///
@@ -35,11 +32,8 @@ namespace Marvin.Tests.Workflows
     {
         private readonly DummyParameters _parameters;
 
-        /// 
-        public override string Name
-        {
-            get { return "ParameterConstructorStep"; }
-        }
+        ///
+        public override string Name => "ParameterConstructorStep";
 
         public ParameterConstructorStep(DummyParameters parameters)
         {
@@ -65,10 +59,10 @@ namespace Marvin.Tests.Workflows
 
     internal class DummyParameters
     {
-        [EditorVisible]
+        [EditorBrowsable]
         public int Number { get; set; }
 
-        [EditorVisible]
+        [EditorBrowsable]
         public string Name { get; set; }
     }
 }

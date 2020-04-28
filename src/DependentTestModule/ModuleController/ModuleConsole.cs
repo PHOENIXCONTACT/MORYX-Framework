@@ -23,10 +23,10 @@ namespace Marvin.DependentTestModule
         {
             switch (format)
             {
-                case DescriptionExportFormat.Console: 
+                case DescriptionExportFormat.Console:
                     return ExportConsoleDescription();
 
-                case DescriptionExportFormat.Documentation: 
+                case DescriptionExportFormat.Documentation:
                     return ExportHtmlDescription();
             }
 
@@ -60,7 +60,7 @@ Test module for System tests
             outputStream("The DependentTestModule does not provide any commands!");
         }
 
-        [EditorVisible, Description("Creates a log message for the given log level")]
+        [EditorBrowsable, Description("Creates a log message for the given log level")]
         public void CreateTestLogMessage(LogLevel logLevel)
         {
             switch (logLevel)
