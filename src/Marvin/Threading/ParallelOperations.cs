@@ -2,13 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Marvin.Logging;
-using Marvin.Modules;
-using Marvin.Tools;
 
 namespace Marvin.Threading
 {
@@ -43,10 +39,8 @@ namespace Marvin.Threading
     /// <summary>
     /// Should be moved to toolkit
     /// </summary>
-    public class ParallelOperations : IParallelObservation
+    public class ParallelOperations : IParallelOperations
     {
-        private readonly List<IParallelObserver> _observers = new List<IParallelObserver>();
-
         /// <summary>
         /// All active event decouples
         /// </summary>
@@ -56,18 +50,6 @@ namespace Marvin.Threading
         /// Dependency to report errors to plugin
         /// </summary>
         public IModuleLogger Logger { get; set; }
-
-        /// <inheritdoc />
-        public void Register(IParallelObserver observer)
-        {
-            _observers.Add(observer);
-        }
-
-        /// <inheritdoc />
-        public void Unregister(IParallelObserver observer)
-        {
-            _observers.Remove(observer);
-        }
 
         #region Execute Parallel
         /// <summary>
@@ -99,18 +81,8 @@ namespace Marvin.Threading
         /// </summary>
         public void ExecuteParallel<T>(Action<T> operation, T userState, bool criticalOperation) where T : class
         {
-            foreach (var observer in _observers)
-            {
-                observer.Scheduled(operation, userState);
-            }
-
             ThreadPool.QueueUserWorkItem(state =>
             {
-                foreach (var observer in _observers)
-                {
-                    observer.Executing(operation, state);
-                }
-
                 try
                 {
                     operation((T)state);
@@ -118,11 +90,6 @@ namespace Marvin.Threading
                 catch (Exception ex)
                 {
                     HandleException(ex, operation, criticalOperation);
-                }
-
-                foreach (var observer in _observers)
-                {
-                    observer.Completed(operation, state);
                 }
             }, userState);
         }
@@ -161,19 +128,9 @@ namespace Marvin.Threading
         /// </summary>
         public int ScheduleExecution<T>(Action<T> operation, T userState, int delayMs, int periodMs, bool criticalOperation) where T : class
         {
-            foreach (var observer in _observers)
-            {
-                observer.Scheduled(operation, userState, delayMs, periodMs);
-            }
-
             var id = ++_lastTimerId;
             var timer = new Timer(new NonStackingTimerCallback(state =>
             {
-                foreach (var observer in _observers)
-                {
-                    observer.Executing(operation, state);
-                }
-
                 try
                 {
                     operation((T)state);
@@ -183,11 +140,6 @@ namespace Marvin.Threading
                 catch (Exception ex)
                 {
                     HandleException(ex, operation, criticalOperation);
-                }
-
-                foreach (var observer in _observers)
-                {
-                    observer.Completed(operation, state);
                 }
             }), userState, delayMs, periodMs);
 
