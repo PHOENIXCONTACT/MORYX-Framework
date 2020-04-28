@@ -106,7 +106,7 @@
     <Compile Include="Plugins\Modules\Wcf\Request\SaveConfigRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Plugins\Modules\Wcf\Models\ServerModuleModel.cs" />
-    <Compile Include="Plugins\Modules\Serialization\AdvancedEditorVisibleSerialization.cs" />
+    <Compile Include="Plugins\Modules\Serialization\AdvancedEditorBrowsableSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">

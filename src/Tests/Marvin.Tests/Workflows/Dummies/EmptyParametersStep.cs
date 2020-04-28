@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Serialization;
+using System.ComponentModel;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -21,7 +21,7 @@ namespace Marvin.Tests.Workflows
             get { return "EmptyParameters"; }
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         public EmptyParameters Parameters { get; set; }
 
         ///

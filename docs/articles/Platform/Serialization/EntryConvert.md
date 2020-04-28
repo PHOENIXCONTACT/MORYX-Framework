@@ -181,12 +181,12 @@ EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
 
 In the other sections you have learned that `EntryConvert` is able to serialize and deserialize objects. With the `GetMethods` and `InvokeMethod` features of `EntryConvert` you are able to build your own `RPC (Remote Procedure Call)` service.
 
-To enable the `RPC` features of `EntryConvert` you need to use the [EditorVisibleSerialization](xref:Marvin.Serialization.EditorVisibleSerialization) serializer on `EntryConvert`. Then you add the [EditorVisibleAttribute](xref:Marvin.Serialization.EditorVisibleAttribute) to all private/public methods or properties you want to expose.
+To enable the `RPC` features of `EntryConvert` you need to use the [EditorBrowsableSerialization](xref:Marvin.Serialization.EditorBrowsableSerialization) serializer on `EntryConvert`. Then you add the [EditorBrowsableAttribute](xref:Marvin.Serialization.EditorBrowsableAttribute) to all private/public methods or properties you want to expose.
 
 ````cs
 public class MyLittleRPC
 {
-    [EditorVisible, Description("Does soemthing parameterized")]
+    [EditorBrowsable, Description("Does soemthing parameterized")]
     public bool DoSomething(MyParams parameters)
     {
         return true;
@@ -204,7 +204,7 @@ public MethodEntry[] GetMethods(string moduleName)
 
 private ICustomSerialization CreateSerialization()
 {
-    return new AdvancedEditorVisibleSerialization(Container, ConfigManager);
+    return new AdvancedEditorBrowsableSerialization(Container, ConfigManager);
 }
 ````
 

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.Serialization;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -11,16 +10,16 @@ namespace Marvin.Tests.Workflows
 {
     internal class DefaultValueStep : WorkplanStepBase
     {
-        /// 
+        ///
         public override string Name
         {
             get { return "DefaultValue"; }
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         public int OptionalParameter { get; set; }
 
-        [DefaultValue(10), EditorVisible]
+        [DefaultValue(10), EditorBrowsable]
         public ushort OptionalWithDefault { get; set; }
 
         public DefaultValueStep(int mandatory, ushort mandatoryWithDefault = 2)

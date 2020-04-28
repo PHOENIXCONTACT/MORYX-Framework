@@ -66,10 +66,10 @@ namespace Marvin.TestModule
         {
             switch (format)
             {
-                case DescriptionExportFormat.Console: 
+                case DescriptionExportFormat.Console:
                     return ExportConsoleDescription();
 
-                case DescriptionExportFormat.Documentation: 
+                case DescriptionExportFormat.Documentation:
                     return ExportHtmlDescription();
             }
 
@@ -104,37 +104,37 @@ Test module for System tests
         }
 
 
-        [EditorVisible, Description("Shows the description of this module.")]
+        [EditorBrowsable, Description("Shows the description of this module.")]
         public string ModuleDescription()
         {
             return ExportHtmlDescription();
         }
 
-        [EditorVisible, Description("Returns the string that was sent.")]
+        [EditorBrowsable, Description("Returns the string that was sent.")]
         public string Echo(string message)
         {
             return $"Echo: {message}";
         }
 
-        [EditorVisible, Description("Some short information about the server.")]
+        [EditorBrowsable, Description("Some short information about the server.")]
         public ShortServerInfo ServerInfo()
         {
             return new ShortServerInfo().Fill();
         }
 
-        [EditorVisible, Description("Echos short information about the server.")]
+        [EditorBrowsable, Description("Echos short information about the server.")]
         public ShortServerInfo EchoServerInfo(ShortServerInfo shortServerInfo)
         {
             return shortServerInfo;
         }
 
-        [EditorVisible, Description("Returns the current module config.")]
+        [EditorBrowsable, Description("Returns the current module config.")]
         public ModuleConfig CurrentModuleConfig()
         {
             return Container.Resolve<ModuleConfig>();
         }
 
-        [EditorVisible, Description("Echos a module config.")]
+        [EditorBrowsable, Description("Echos a module config.")]
         public ModuleConfig EchoModuleConfig(ModuleConfig moduleConfig)
         {
             return moduleConfig;

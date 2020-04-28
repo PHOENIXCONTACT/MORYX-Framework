@@ -200,7 +200,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
 
             if (serverModule?.Console != null)
             {
-                methods = EntryConvert.EncodeMethods(serverModule.Console, CreateEditorVisibleSerialization(serverModule)).ToArray();
+                methods = EntryConvert.EncodeMethods(serverModule.Console, CreateEditorBrowsableSerialization(serverModule)).ToArray();
             }
 
             return methods;
@@ -216,7 +216,7 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
                 try
                 {
                     result = EntryConvert.InvokeMethod(serverModule.Console, method,
-                        CreateEditorVisibleSerialization(serverModule));
+                        CreateEditorBrowsableSerialization(serverModule));
                 }
                 catch (Exception e)
                 {
@@ -254,10 +254,10 @@ namespace Marvin.Runtime.Maintenance.Plugins.Modules
         /// <summary>
         /// Create serialization for this module
         /// </summary>
-        private ICustomSerialization CreateEditorVisibleSerialization(IModule module)
+        private ICustomSerialization CreateEditorBrowsableSerialization(IModule module)
         {
             var host = (IContainerHost)module;
-            return new AdvancedEditorVisibleSerialization(host.Container, ConfigManager)
+            return new AdvancedEditorBrowsableSerialization(host.Container, ConfigManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };

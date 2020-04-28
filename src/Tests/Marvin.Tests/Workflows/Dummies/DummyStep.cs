@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
-using Marvin.Serialization;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -16,9 +16,9 @@ namespace Marvin.Tests.Workflows
     {
         private DummyStep()
         {
-            
+
         }
-        
+
         public DummyStep(int outputs)
             : this(outputs, "DummyStep")
         {
@@ -32,10 +32,11 @@ namespace Marvin.Tests.Workflows
 
         [DataMember]
         private readonly string _name;
-        /// 
+
+        ///
         public override string Name => _name;
 
-        [EditorVisible]
+        [EditorBrowsable]
         public int Number { get; set; }
 
         ///
@@ -62,7 +63,7 @@ namespace Marvin.Tests.Workflows
             if (ResultOutput >= 0) // Resume directly
                 PlaceToken(Outputs[ResultOutput], StoredTokens.First());
         }
-        
+
         public override void Resume()
         {
             if (StoredTokens.Any())
