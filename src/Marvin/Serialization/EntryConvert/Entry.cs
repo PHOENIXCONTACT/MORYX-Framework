@@ -85,13 +85,17 @@ namespace Marvin.Serialization
 
         /// <summary>
         /// Use this object as a prototype and create a new instance
-        /// Identifier switches to 
+        /// Identifier switches to
         /// </summary>
-        public Entry Instantiate() => 
-            Clone(true);
+        public Entry Instantiate()
+        {
+            var instance = Clone(true);
+            instance.Identifier = CreatedIdentifier;
+            return instance;
+        }
 
         /// <see cref="ICloneable"/>
-        public object Clone() => 
+        public object Clone() =>
             Clone(true);
 
         /// <summary>
@@ -101,15 +105,15 @@ namespace Marvin.Serialization
         {
             var copy = new Entry
             {
-                DisplayName = DisplayName, 
-                Identifier = Identifier, 
+                DisplayName = DisplayName,
+                Identifier = Identifier,
                 Description = Description
             };
 
             // All value types can be simply copied
             if (deep)
             {
-                // In a deep clone the references are cloned 
+                // In a deep clone the references are cloned
                 if (Value != null)
                 {
                     copy.Value = Value.Clone(true);
@@ -229,7 +233,7 @@ namespace Marvin.Serialization
         }
 
         /// <inheritdoc />
-        public override string ToString() => 
+        public override string ToString() =>
             $"{DisplayName}: {Value.Current}";
     }
 }
