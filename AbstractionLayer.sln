@@ -43,8 +43,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.Interactio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.AbstractionLayer.TestTools", "src\Marvin.AbstractionLayer.TestTools\Marvin.AbstractionLayer.TestTools.csproj", "{1516374C-976F-49FC-A911-29EDC481C657}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.Samples.Model", "src\Marvin.Products.Samples.Model\Marvin.Products.Samples.Model.csproj", "{0289483B-D623-41C1-AE3F-2F0779A472DB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,10 +105,6 @@ Global
 		{1516374C-976F-49FC-A911-29EDC481C657}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1516374C-976F-49FC-A911-29EDC481C657}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1516374C-976F-49FC-A911-29EDC481C657}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0289483B-D623-41C1-AE3F-2F0779A472DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0289483B-D623-41C1-AE3F-2F0779A472DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0289483B-D623-41C1-AE3F-2F0779A472DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0289483B-D623-41C1-AE3F-2F0779A472DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,7 +123,6 @@ Global
 		{88D15860-19C3-4E02-A7F1-2E1EACE87963} = {A33D3A48-37FE-46A3-A0BE-E8D7586B862C}
 		{93650069-26E9-4E0D-A336-9D02F1039346} = {D6D69517-7889-4E08-ABEA-D3E069D08A6B}
 		{583CBD84-DD9F-4834-A89C-1625A05EE15D} = {BA183EBF-FAC1-45AE-9559-09879DB103AC}
-		{0289483B-D623-41C1-AE3F-2F0779A472DB} = {FE34A376-8F97-4D98-8C84-44A0C1AC01E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23463631-1BA0-41B8-ABA3-1E9741037513}

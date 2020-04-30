@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Products;
 
 namespace Marvin.Products.Samples

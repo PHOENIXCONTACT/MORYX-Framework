@@ -5,7 +5,6 @@ using System.ComponentModel;
 using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Products;
 using Marvin.AbstractionLayer.Recipes;
-using Marvin.Serialization;
 
 namespace Marvin.Products.Samples.Recipe
 {
