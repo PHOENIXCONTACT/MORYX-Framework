@@ -43,7 +43,7 @@ namespace Marvin.Resources.Samples
 
         public override object Descriptor { get; }
 
-        [EditorVisible]
+        [EditorBrowsable]
         protected class InstructorDescriptor
         {
             private readonly VisualInstructor _instructor;
@@ -53,7 +53,7 @@ namespace Marvin.Resources.Samples
                 _instructor = instructor;
             }
 
-            [EditorVisible]
+            [EditorBrowsable]
             public string ClientId
             {
                 get { return _instructor.ClientId; }

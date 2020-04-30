@@ -26,11 +26,11 @@ namespace Marvin.Products.Samples.Recipe
         /// <inheritdoc />
         public virtual IProductType Target => Product;
 
-        [EditorVisible]
+        [EditorBrowsable]
         [DisplayName("Cores Installed")]
         public int CoresInstalled { get; set; }
 
-        [EditorVisible]
+        [EditorBrowsable]
         [DisplayName("Case Parameters")]
         public CaseDescription Case { get; set; }
 
@@ -49,12 +49,12 @@ namespace Marvin.Products.Samples.Recipe
 
     public class CaseDescription
     {
-        [EditorVisible]
+        [EditorBrowsable]
         [DisplayName("Color Code")]
         [Description("Numeric code of the color")]
         public int CaseColorCode { get; set; }
 
-        [EditorVisible]
+        [EditorBrowsable]
         [DisplayName("Material")]
         public int CaseMaterial { get; set; }
     }

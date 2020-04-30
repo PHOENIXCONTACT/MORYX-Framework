@@ -18,10 +18,10 @@ namespace Marvin.Resources.Samples
 
         #endregion
 
-        [EditorVisible, DisplayName("Editor Value")]
+        [EditorBrowsable, DisplayName("Editor Value")]
         public int EditorValue { get; set; }
        
-        [EditorVisible, DisplayName("Do Foo")]
+        [EditorBrowsable, DisplayName("Do Foo")]
         public int Foo([Description("Very important parameter")]string bla = "Hallo")
         {
             LastCall = bla.Length;
@@ -30,12 +30,12 @@ namespace Marvin.Resources.Samples
             return LastCall;
         }
 
-        [EditorVisible, Description("Perform a self test of the resource")]
+        [EditorBrowsable, Description("Perform a self test of the resource")]
         public void PerformSelfTest()
         {
         }
 
-        [EditorVisible, Description("Move an axis of the resource")]
+        [EditorBrowsable, Description("Move an axis of the resource")]
         public void Move(Axes axis, AxisPosition position)
         {
         }

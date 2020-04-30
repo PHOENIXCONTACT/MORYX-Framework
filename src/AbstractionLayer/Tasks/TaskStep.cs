@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Marvin.Serialization;
 using Marvin.Workflows;
 using Marvin.Workflows.Transitions;
 using Marvin.Workflows.WorkplanSteps;
@@ -29,7 +29,7 @@ namespace Marvin.AbstractionLayer
         /// <summary>
         /// Parameters of this step
         /// </summary>
-        [DataMember, EditorVisible]
+        [DataMember, EditorBrowsable]
         public TParam Parameters { get; set; }
 
         /// <summary>

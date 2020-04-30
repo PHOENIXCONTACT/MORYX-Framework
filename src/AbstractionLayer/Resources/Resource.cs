@@ -42,7 +42,7 @@ namespace Marvin.AbstractionLayer.Resources
 
         /// <summary>
         /// Descriptor to provide access to this resource. Either the descriptor or 
-        /// its properties and methods need to flagged with <see cref="EditorVisibleAttribute"/> 
+        /// its properties and methods need to flagged with <see cref="EditorBrowsableAttribute"/> 
         /// </summary>
         public virtual object Descriptor => this;
 

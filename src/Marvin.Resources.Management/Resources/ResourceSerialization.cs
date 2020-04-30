@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Marvin.AbstractionLayer.Resources;
@@ -11,6 +12,7 @@ using Marvin.Container;
 using Marvin.Runtime.Configuration;
 using Marvin.Serialization;
 using Marvin.Tools;
+using IContainer = Marvin.Container.IContainer;
 
 namespace Marvin.Resources.Management
 {
@@ -39,16 +41,16 @@ namespace Marvin.Resources.Management
         {
             // Always filter resource references
             var properties = base.GetProperties(sourceType).ToList();
-            var flagged = properties.Where(p => Attribute.IsDefined(p, typeof(EditorVisibleAttribute))).ToList();
+            var flagged = properties.Where(p => Attribute.IsDefined(p, typeof(EditorBrowsableAttribute))).ToList();
 
             // On resources only return flagged types
             if (typeof(Resource).IsAssignableFrom(sourceType))
                 return flagged;
-            
+
             // Otherwise decide based on Attribute usage
-            return Attribute.IsDefined(sourceType, typeof(EditorVisibleAttribute)) || flagged.Count == 0
-                ? properties // Return all properties if the entire type is flagged as EditorVisible or the attribute was not used at all
-                : flagged; // Otherwise filter by EditorVisibleAttribute per property
+            return Attribute.IsDefined(sourceType, typeof(EditorBrowsableAttribute)) || flagged.Count == 0
+                ? properties // Return all properties if the entire type is flagged as EditorBrowsable or the attribute was not used at all
+                : flagged; // Otherwise filter by EditorBrowsableAttribute per property
         }
 
         /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
@@ -119,9 +121,9 @@ namespace Marvin.Resources.Management
         {
             var methods = base.GetMethods(sourceType);
 
-            methods = Attribute.IsDefined(sourceType, typeof(EditorVisibleAttribute)) 
+            methods = Attribute.IsDefined(sourceType, typeof(EditorBrowsableAttribute))
                 ? methods.Where(method => method.DeclaringType != typeof(object)) // Filter methods defined by object
-                : methods.Where(method => Attribute.IsDefined(method, typeof(EditorVisibleAttribute))); // Filter methods carrying the editor visible attribute
+                : methods.Where(method => Attribute.IsDefined(method, typeof(EditorBrowsableAttribute))); // Filter methods carrying the editor visible attribute
 
             return methods;
         }

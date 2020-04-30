@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Products;
 using Marvin.AbstractionLayer.Recipes;
 using Marvin.Container;
@@ -35,7 +34,7 @@ namespace Marvin.Products.Management.Modification
         private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
 
         private static readonly PartialSerialization<ProductType> ProductSerialization = new PartialSerialization<ProductType>();
-        private static readonly EditorVisibleSerialization RecipeSerialization = new EditorVisibleSerialization();
+        private static readonly EditorBrowsableSerialization RecipeSerialization = new EditorBrowsableSerialization();
 
         private readonly List<ProductModel> _productCache = new List<ProductModel>();
 

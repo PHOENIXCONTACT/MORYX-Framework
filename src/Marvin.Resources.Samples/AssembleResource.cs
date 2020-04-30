@@ -33,13 +33,13 @@ namespace Marvin.Resources.Samples
             }
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         public void ChangeNumber(string fooNumber)
         {
             Setup.ChangeNumber(fooNumber);
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         public class AssembleConfig
         {
             public string Name { get; set; }

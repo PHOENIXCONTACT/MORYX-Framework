@@ -4,7 +4,6 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Products;
 using Marvin.AbstractionLayer.Recipes;
 using Marvin.Configuration;
@@ -62,28 +61,28 @@ namespace Marvin.Products.Management
             }
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         [Description("Automatically configure the necessary strategies for a product type.")]
         public string ConfigureType([PossibleTypes(typeof(ProductType))] string productType)
         {
             return Configurator.ConfigureType(productType);
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         [Description("Automatically configure the necessary strategies for a product type.")]
         public string ConfigureInstance([PossibleTypes(typeof(ProductInstance))] string instanceType)
         {
             return Configurator.ConfigureInstance(instanceType);
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         [Description("Automatically configure the necessary strategies for a product type.")]
         public string ConfigureRecipe([PossibleTypes(typeof(IProductRecipe))] string recipeType)
         {
             return Configurator.ConfigureRecipe(recipeType);
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         [Description("Save latest changes to config")]
         public void SaveConfig()
         {
