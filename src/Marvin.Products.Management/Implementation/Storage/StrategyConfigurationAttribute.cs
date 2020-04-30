@@ -25,7 +25,7 @@ namespace Marvin.Products.Management
         /// <summary>
         /// Type supported by this strategy. The auto configuration will try to find the closest match
         /// </summary>
-        public Type[] SupportedTypes { get; }
+        public Type[] SupportedTypes { get; protected set; }
 
         /// <summary>
         /// Flag if the strategy also supports derived types
@@ -33,7 +33,7 @@ namespace Marvin.Products.Management
         public bool DerivedTypes { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="supportedTypes"></param>
         public StrategyConfigurationAttribute(params Type[] supportedTypes)
@@ -41,7 +41,7 @@ namespace Marvin.Products.Management
             SupportedTypes = supportedTypes;
         }
 
-        
+
         public virtual int TypeCompliance(Type targetType)
         {
             // Determine compliance as inheritance distance
@@ -62,26 +62,6 @@ namespace Marvin.Products.Management
 
             // Otherwise it is no match
             return BadCompliance;
-        }
-    }
-
-    /// <summary>
-    /// Attribute for <see cref="IPropertyMapper"/> to define their column requirement
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class PropertyStrategyConfigurationAttribute : StrategyConfigurationAttribute
-    {
-        /// <summary>
-        /// Type of column required by the property mapper
-        /// </summary>
-        public Type ColumnType { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="supportedTypes"></param>
-        public PropertyStrategyConfigurationAttribute(params Type[] supportedTypes) : base(supportedTypes)
-        {
         }
     }
 }

@@ -24,8 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Debug\Marvin.Products.Management.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Marvin.Products.Management.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Marvin.Products.Management.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -72,9 +71,12 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Implementation\Storage\AutoConfigurator.cs" />
+    <Compile Include="Implementation\Storage\FloatStrategyConfigurationAttribute.cs" />
     <Compile Include="Implementation\Storage\InstanceStrategyBase.cs" />
     <Compile Include="Components\IProductInstanceStrategy.cs" />
     <Compile Include="Components\IProductRecipeStrategy.cs" />
+    <Compile Include="Implementation\Storage\IntegerStrategyConfigurationAttribute.cs" />
+    <Compile Include="Implementation\Storage\PropertyStrategyConfigurationAttribute.cs" />
     <Compile Include="Implementation\Storage\RecipeStrategyBase.cs" />
     <Compile Include="Components\IPropertyMappedConfiguration.cs" />
     <Compile Include="Implementation\Storage\StrategyBase.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Implementation\Storage\LinkStrategyBase.cs" />
     <Compile Include="Implementation\Storage\PartSourceStrategy.cs" />
     <Compile Include="Implementation\Storage\StrategyConfigurationAttribute.cs" />
+    <Compile Include="Implementation\Storage\TextStrategyConfigurationAttribute.cs" />
     <Compile Include="Implementation\Storage\TypeStrategyBase.cs" />
     <Compile Include="Implementation\RecipeStorage.cs" />
     <Compile Include="Components\IProductImporterFactory.cs" />
@@ -117,6 +120,10 @@
     <Compile Include="ModuleController\ModuleConfig.cs" />
     <Compile Include="ModuleController\ModuleController.cs" />
     <Compile Include="ModuleController\ModuleConsole.cs" />
+    <Compile Include="Plugins\GenericStrategies\ConversionAccessor.cs" />
+    <Compile Include="Plugins\GenericStrategies\FloatColumnMapper.cs" />
+    <Compile Include="Plugins\GenericStrategies\IntegerColumnMapper.cs" />
+    <Compile Include="Plugins\GenericStrategies\TextColumnMapper.cs" />
     <Compile Include="Plugins\Importers\DefaultImporter.cs" />
     <Compile Include="Plugins\Importers\DefaultImporterConfig.cs" />
     <Compile Include="Plugins\GenericStrategies\AvailableColumnsAttribute.cs" />

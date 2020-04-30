@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections;
-using Marvin.AbstractionLayer;
 using Marvin.Model;
 using Marvin.Products.Model;
 using System.Collections.Generic;
@@ -724,7 +723,7 @@ namespace Marvin.Products.Management
 
         #endregion
 
-        #region Save Article
+        #region Save instances
 
         /// <summary>
         /// Updates the database from the product instance

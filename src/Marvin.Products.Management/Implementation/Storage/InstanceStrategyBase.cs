@@ -1,11 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Linq;
-using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Products;
-using Marvin.Model;
 using Marvin.Products.Model;
 using Marvin.Tools;
 
