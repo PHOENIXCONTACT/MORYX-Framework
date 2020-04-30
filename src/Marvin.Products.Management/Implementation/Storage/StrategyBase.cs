@@ -2,10 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Linq;
-using Marvin.AbstractionLayer;
 using Marvin.Modules;
-using Marvin.Tools;
 
 namespace Marvin.Products.Management
 {
@@ -17,7 +14,7 @@ namespace Marvin.Products.Management
         /// Target type handled by this strategy
         /// </summary>
         public Type TargetType { get; protected set; }
-        
+
         /// <summary>
         /// Configuration of this strategy
         /// </summary>

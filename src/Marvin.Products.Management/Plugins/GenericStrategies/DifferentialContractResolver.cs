@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Marvin.AbstractionLayer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -16,7 +14,7 @@ namespace Marvin.Products.Management
     /// only the relevant properties
     /// </summary>
     internal class DifferentialContractResolver<TReference> : DefaultContractResolver
-        where TReference : class 
+        where TReference : class
     {
         private readonly string[] _ignoredProperties;
 

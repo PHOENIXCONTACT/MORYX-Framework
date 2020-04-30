@@ -14,7 +14,7 @@ namespace Marvin.Resources.Samples
     [ResourceRegistration]
     public class MountingCell : Cell
     {
-        [DataMember, EditorVisible, DefaultValue("Bye bye, WPC!")]
+        [DataMember, EditorBrowsable, DefaultValue("Bye bye, WPC!")]
         public string OutfeedMessage { get; set; }
 
         [ResourceReference(ResourceRelationType.Driver)]
@@ -34,7 +34,7 @@ namespace Marvin.Resources.Samples
             // Handler that also uses the sender
         }
 
-        [EditorVisible]
+        [EditorBrowsable]
         public Dummy CreateDummy(int number, string name)
         {
             return new Dummy

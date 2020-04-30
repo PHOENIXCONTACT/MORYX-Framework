@@ -2,14 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Globalization;
-using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Products;
 using Marvin.Container;
-using Marvin.Model;
 using Marvin.Products.Management;
 using Marvin.Products.Model;
-using Marvin.Tools;
 
 namespace Marvin.Products.Samples
 {
@@ -21,7 +17,7 @@ namespace Marvin.Products.Samples
         public override bool HasChanged(IProductType current, IGenericColumns dbProperties)
         {
             var watch = (WatchType) current;
-            return Math.Abs(watch.Weight - dbProperties.Float1) > 0.01 
+            return Math.Abs(watch.Weight - dbProperties.Float1) > 0.01
                 || Math.Abs(watch.Price - dbProperties.Float2) > 0.01;
         }
 

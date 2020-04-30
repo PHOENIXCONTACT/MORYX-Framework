@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
 using Marvin.Tools.Wcf;
 
 namespace Marvin.Resources.Interaction
@@ -22,7 +22,7 @@ namespace Marvin.Resources.Interaction
         /// <summary>
         /// Host config injected by resource manager
         /// </summary>
-        [DataMember, EditorVisible]
+        [DataMember, EditorBrowsable]
         public HostConfig HostConfig { get; set; }
 
         /// <inheritdoc />

@@ -9,11 +9,11 @@ namespace Marvin.Resources.Samples
 {
     public class RoutingResource : PublicResource
     {
-        [EditorVisible, ResourceTypes(typeof(IWpc))]
+        [EditorBrowsable, ResourceTypes(typeof(IWpc))]
         [Description("Type of wpc for Autocreate")]
         public string WpcType { get; set; }
 
-        [EditorVisible]
+        [EditorBrowsable]
         public void AutoCreateWpc()
         {
             var wpc = (Resource)Graph.Instantiate<IWpc>(WpcType);

@@ -15,7 +15,7 @@ namespace Marvin.Resources.Samples
         [ReferenceOverride(nameof(Children), AutoSave = true)]
         public IReferences<BufferValue> Values { get; set; }
 
-        [EditorVisible, DisplayName("Add Value")]
+        [EditorBrowsable, DisplayName("Add Value")]
         [Description("Add typed value to the buffer")]
         public int AddValue([ResourceTypes(typeof(BufferValue))]string type, string name, string value)
         {
@@ -27,7 +27,7 @@ namespace Marvin.Resources.Samples
             return Values.Count;
         }
 
-        [EditorVisible, DisplayName("Remove Value")]
+        [EditorBrowsable, DisplayName("Remove Value")]
         public int RemoveValue(string name)
         {
             var value = Values.FirstOrDefault(v => v.Name == name);
@@ -41,7 +41,7 @@ namespace Marvin.Resources.Samples
     {
         private string _value;
 
-        [DataMember, EditorVisible]
+        [DataMember, EditorBrowsable]
         public string Value
         {
             get { return _value; }

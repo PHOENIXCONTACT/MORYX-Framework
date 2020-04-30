@@ -49,15 +49,15 @@ namespace Marvin.Resources.Samples.DriverTutorial
     [DisplayName("Example Driver"), Description("An example driver")]
     public class ExampleDriver : Driver, IExampleDriver
     {
-        [DataMember, EditorVisible]
+        [DataMember, EditorBrowsable]
         public string AStringValue { get; set; }
 
-        [DataMember, EditorVisible]
+        [DataMember, EditorBrowsable]
         public int AnIntValue { get; set; }
 
-        public string ANonEditorVisibleMember { get; set; }
+        public string ANonEditorBrowsableMember { get; set; }
 
-        [EditorVisible, DisplayName("Square"), Description("Just multiplies given value with itself")]
+        [EditorBrowsable, DisplayName("Square"), Description("Just multiplies given value with itself")]
         public int Square(int value)
         {
             return value * value;
@@ -70,7 +70,7 @@ The implementation of the `ExampleDriver` derives from the [Driver](xref:Marvin.
 
 ![ResourceUI](images\ExampleDriverResourceUI.png)
 
-The two properties `AStringValue` and `AnIntValue` are shown in the ResourceUI and can be edited by the user. The member `ANonEditorVisibleMember` is invisible for the user and is only used inside the AbstractionLayer.
+The two properties `AStringValue` and `AnIntValue` are shown in the ResourceUI and can be edited by the user. The member `ANonEditorBrowsableMember` is invisible for the user and is only used inside the AbstractionLayer.
 The `Square` function is also visible in the Resource UI. And: It is callable from there.
 
 ## Additional things that are good to know

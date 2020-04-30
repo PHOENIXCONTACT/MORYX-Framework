@@ -1,10 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
 using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Capabilities;
-using Marvin.Serialization;
-using Marvin.Workflows;
 
 namespace Marvin.Products.IntegrationTests
 {
@@ -15,7 +14,7 @@ namespace Marvin.Products.IntegrationTests
 
     public class ParametersB : ParametersBase
     {
-        [EditorVisible]
+        [EditorBrowsable]
         public SubParameter[] Subs { get; set; }
 
         protected override ParametersBase ResolveBinding(IProcess process)

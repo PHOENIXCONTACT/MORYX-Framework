@@ -48,15 +48,15 @@ namespace Marvin.Resources.Samples.DriverTutorial
     [DisplayName("Example Resource"), Description("An example resource")]
     public class ExampleResource : Resource, IExampleResource
     {
-        [DataMember, EditorVisible]
+        [DataMember, EditorBrowsable]
         public string AStringValue { get; set; }
 
-        [DataMember, EditorVisible]
+        [DataMember, EditorBrowsable]
         public int AnIntValue { get; set; }
 
-        public string ANonEditorVisibleMember { get; set; }
+        public string ANonEditorBrowsableMember { get; set; }
 
-        [EditorVisible, DisplayName("Square"), Description("Just multiplies given value with itself")]
+        [EditorBrowsable, DisplayName("Square"), Description("Just multiplies given value with itself")]
         public int Square(int value)
         {
             return value * value;

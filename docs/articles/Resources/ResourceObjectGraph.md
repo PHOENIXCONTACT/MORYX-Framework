@@ -37,7 +37,7 @@ This makes object creation more ﬂexible than a constructor and enables subclas
 ```cs
 public class DynamicTree : Resource
 {
-    [EditorVisible, ResourceTypes(typeof(IBranch ))]
+    [EditorBrowsable, ResourceTypes(typeof(IBranch ))]
     public string BranchType { get; set; }
 
     public void Grow()

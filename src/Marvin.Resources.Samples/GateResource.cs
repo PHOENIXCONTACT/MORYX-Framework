@@ -17,7 +17,7 @@ namespace Marvin.Resources.Samples
 
         public override object Descriptor => new AxisControls(this);
 
-        [EditorVisible]
+        [EditorBrowsable]
         public class AxisControls
         {
             private readonly GateResource _target;

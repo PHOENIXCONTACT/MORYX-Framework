@@ -151,7 +151,7 @@ namespace Marvin.Resources.Management
                          $"- initialize <Name>{Environment.NewLine}");
         }
 
-        [EditorVisible, DisplayName("Initialize Resource"), Description("Calls the configured resource initializer")]
+        [EditorBrowsable, DisplayName("Initialize Resource"), Description("Calls the configured resource initializer")]
         public string CallResourceInitializer([PluginConfigs(typeof(IResourceInitializer), true)] ResourceInitializerConfig[] configs)
         {
             foreach (var config in configs)
