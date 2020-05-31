@@ -1,5 +1,4 @@
 ﻿using Marvin.Threading;
-using Marvin.Workflows.Compiler;
 using Marvin.Workflows.Validation;
 
 namespace Marvin.Workflows
@@ -95,15 +94,6 @@ namespace Marvin.Workflows
         public static ValidationResult Validate(IWorkplan workplan, ValidationAspect aspects)
         {
             return WorkflowValidation.Validate(workplan, aspects);
-        }
-
-        /// <summary>
-        /// Compile a workplan
-        /// </summary>
-        public static CompiledWorkplan<TStep> Compile<TStep>(IWorkplan workplan, IWorkplanContext context, ICompiler<TStep> compiler)
-            where TStep : CompiledTransition
-        {
-            return WorkplanCompiler.Compile(workplan, context, compiler);
         }
     }
 }

@@ -144,34 +144,6 @@ namespace Marvin.Tests.Extensions
 
         #endregion
 
-        #region DIN EN 60062
-
-        [TestCase(1973, 1, ExpectedResult = "D1")]
-        [TestCase(1993, 1, ExpectedResult = "D1")]
-        [TestCase(2013, 1, ExpectedResult = "D1")]
-        [TestCase(2033, 1, ExpectedResult = "D1")]
-        [TestCase(1978, 3, ExpectedResult = "K3")]
-        [TestCase(1998, 3, ExpectedResult = "K3")]
-        [TestCase(2018, 3, ExpectedResult = "K3")]
-        [TestCase(1989, 11, ExpectedResult = "XN")]
-        [TestCase(2009, 11, ExpectedResult = "XN")]
-        [TestCase(2029, 5, ExpectedResult = "X5")]
-        [TestCase(2029, 11, ExpectedResult = "XN")]
-        [TestCase(2029, 10, ExpectedResult = "XO")]
-        [TestCase(2029, 12, ExpectedResult = "XD")]
-        public string Din60062Test(int year, int month)
-        {
-            return new DateTime(year, month, 1).ToDin60062().ToString();
-        }
-
-        [TestCase(1969, 5)]
-        public void Din60062ThrowsInvalidOperationException(int year, int month)
-        {
-            Assert.Throws<InvalidOperationException>(() => new DateTime(year, month, 1).ToDin60062());
-        }
-
-        #endregion
-
         private void AssertEqualDateTime(DateTime a, DateTime b)
         {
             Assert.AreEqual(a.Day, b.Day);
