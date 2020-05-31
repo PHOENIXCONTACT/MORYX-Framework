@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Marvin.Tests.Workflows;
-using Marvin.Workflows.Compiler;
 
 namespace Marvin.Workflows.Benchmark
 {
@@ -20,128 +18,9 @@ namespace Marvin.Workflows.Benchmark
             JITCompiler();
             Console.WriteLine("...done!");
 
-            Console.WriteLine();
-            Console.WriteLine("1. Execute benchmark");
-            Console.WriteLine("2. Demonstrate compiler");
-            Console.Write("Selection: ");
-            var selection = int.Parse(Console.ReadLine());
-
-            Console.WriteLine();
-            switch (selection)
-            {
-                case 1:
-                    ExecuteBenchmark();
-                    break;
-                case 2:
-                    DemonstrateCompiler();
-                    break;
-            }
+            ExecuteBenchmark();
 
             Console.ReadLine();
-        }
-
-        private static void DemonstrateCompiler()
-        {
-            Console.WriteLine("1: Simple plan");
-            Console.WriteLine("2: Split plan");
-            Console.WriteLine("3: Generate workplan");
-            Console.WriteLine("4: Real plan");
-            Console.Write("Selection: ");
-            var selection = int.Parse(Console.ReadLine());
-
-            IWorkplan workplan = null;
-            ICompiler<CompiledDummyTransition> compiler = null;
-            switch (selection)
-            {
-                case 1:
-                    workplan = WorkplanDummy.CreateSub();
-                    break;
-                case 2:
-                    workplan = WorkplanDummy.CreateFull();
-                    break;
-                case 3:
-                    Console.Write("Executed transitions: ");
-                    var transCount = int.Parse(Console.ReadLine());
-                    workplan = GenerateWorkplan(transCount);
-                    break;
-                case 4:
-                    workplan = WorkplanDummy.CreateBig();
-                    compiler = new StationMapCompiler(GenerateStationMap(workplan));
-                    break;
-            }
-
-            Console.Write("Compiling workplan...");
-            var compiled = Workflow.Compile(workplan, new NullContext(), compiler ?? new DummyStepCompiler());
-            Console.WriteLine("done!");
-            Console.WriteLine();
-
-            Console.WriteLine("Steps:");
-            Console.WriteLine("|  Id  |  Outfeed  |  Station  |  Name");
-            Console.WriteLine("|------+-----------+-----------+----------");
-            foreach (var step in compiled.Steps)
-            {
-                Console.WriteLine("|  {0:D2}  |   {1}   |    {2:D2}     |  {3} ",
-                    step.Id, step.IsOutfeed.ToString().PadRight(5), step.Station, step.Name);
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("Decision matrix:");
-            // Write header
-            Console.Write("|   |");
-            foreach (var step in compiled.Steps.Where(s => !s.IsOutfeed))
-            {
-                Console.Write(" {0:D2} |", step.Id);
-            }
-            Console.WriteLine();
-            Console.Write("|---+");
-            foreach (var step in compiled.Steps.Where(s => !s.IsOutfeed))
-            {
-                Console.Write("----+");
-            }
-            Console.WriteLine();
-
-            // Write rows
-            for (int i = 0; i < compiled.DecisionMatrix.GetLength(1); i++)
-            {
-                Console.Write("| {0} |", i);
-                // Rows
-                for (int j = 0; j < compiled.DecisionMatrix.GetLength(0); j++)
-                {
-                    Console.Write(" {0:D2} |", compiled.DecisionMatrix[j, i]);
-                }
-                Console.WriteLine();
-            }
-        }
-
-        private static IDictionary<long, int> GenerateStationMap(IWorkplan workplan)
-        {
-            var dictionary = new Dictionary<long, int>();
-            dictionary[0] = 5;
-
-            foreach (var step in workplan.Steps)
-            {
-                var station = 0;
-                switch (step.Name)
-                {
-                    case "Feed case":
-                        station = 1;
-                        break;
-                    case "Mount":
-                        station = 1;
-                        break;
-                    case "Set pole":
-                        station = 2;
-                        break;
-                    case "Set screw":
-                        station = 3;
-                        break;
-                    case "Remove case":
-                        station = 4;
-                        break;
-                }
-                dictionary[step.Id] = station;
-            }
-            return dictionary;
         }
 
         private static void ExecuteBenchmark()
@@ -162,11 +41,6 @@ namespace Marvin.Workflows.Benchmark
             {
                 new
                 {
-                    message = "Compiling workplan",
-                    operation = new Action(() => Workflow.Compile(workplan, new NullContext(), new DummyStepCompiler()))
-                },
-                new
-                {
                     message = "Creating engine",
                     operation = new Action(() => engine = CreateEngine(workplan))
                 },
@@ -178,6 +52,11 @@ namespace Marvin.Workflows.Benchmark
                         engine.TransitionTriggered += (sender, transition) => { };
                         engine.Start();
                     })
+                },
+                new
+                {
+                    message = "Creating engine",
+                    operation = new Action(() => engine = CreateEngine(workplan))
                 },
                 new
                 {
@@ -212,9 +91,6 @@ namespace Marvin.Workflows.Benchmark
             engine.Completed += (sender, place) => { };
             engine.Start();
             Workflow.Destroy(engine);
-
-            // Compile compiler :-)
-            var compiled = Workflow.Compile(workplan, new NullContext(), new DummyStepCompiler());
         }
 
         private static IWorkplan GenerateWorkplan(int transCount)

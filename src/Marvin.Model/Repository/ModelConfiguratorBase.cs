@@ -377,8 +377,8 @@ namespace Marvin.Model
 
             // There is no suitable method to get model migrations without connection string - lets load them manually
             // https://stackoverflow.com/questions/23996785/get-local-migrations-from-assembly-using-ef-code-first-without-a-connection-stri
-            var migrations = (from type in _migrationsConfiguration.MigrationsAssembly.DefinedTypes.Select(t => t.AsType())
-                              where type.IsSubclassOf(typeof(DbMigration))
+            var migrations = (from type in _migrationsConfiguration.MigrationsAssembly.GetTypes()
+                              where typeof(DbMigration).IsAssignableFrom(type)
                               select (IMigrationMetadata) Activator.CreateInstance(type)).Select(m => m.Id).ToArray();
 
             return migrations;

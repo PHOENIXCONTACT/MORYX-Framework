@@ -4,6 +4,7 @@
 using System;
 using System.Net;
 using System.Threading;
+using Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol;
 using NUnit.Framework;
 
 namespace Marvin.Communication.Sockets.IntegrationTests
@@ -107,6 +108,25 @@ namespace Marvin.Communication.Sockets.IntegrationTests
             Clients[clientIdx].Connection.Stop();
 
             WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Disconnected);
+        }
+
+        [Test]
+        public void SendEmptyMessages()
+        {
+            var server = CreateAndStartServer(IPAddress.Any, TestPort + 1, 1, new TestDelimiterValidator());
+            CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort + 1, -1, 1, new TestDelimiterValidator());
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
+
+            var message = new BinaryMessage(new byte[0]);
+            Clients[0].Connection.Send(message);
+            server.Connection.Send(message);
+
+            // Make sure server does not interpret empty package as disconnect
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
+
+            CloseServer();
+
+            WaitForConnectionState(0, new TimeSpan(0, 0, 0, 1), BinaryConnectionState.AttemptingConnection);
         }
     }
 }

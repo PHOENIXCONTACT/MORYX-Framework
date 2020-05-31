@@ -311,7 +311,9 @@ namespace Marvin.Communication.Sockets.IntegrationTests
             {
                 IpAdress = adress.ToString(),
                 Port = port,
-                RetryWaitMs = connectRetryWaitMs
+                RetryWaitMs = connectRetryWaitMs,
+                MonitoringIntervalMs = 100,
+                MonitoringTimeoutMs = 500
             };
         }
 
@@ -326,7 +328,9 @@ namespace Marvin.Communication.Sockets.IntegrationTests
             return new TcpListenerConfig
             {
                 IpAdress = adress.ToString(),
-                Port = port
+                Port = port,
+                MonitoringIntervalMs = 100,
+                MonitoringTimeoutMs = 500
             };
         }
     }
