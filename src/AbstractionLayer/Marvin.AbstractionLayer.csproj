@@ -192,9 +192,6 @@
     <Compile Include="Recipes\Recipe.cs" />
     <Compile Include="Tasks\ITask.cs" />
     <Compile Include="Tasks\ITaskStep.cs" />
-    <Compile Include="Tasks\SubWorkplanActivity.cs" />
-    <Compile Include="Tasks\SubWorkplanParameters.cs" />
-    <Compile Include="Tasks\SubWorkplanTask.cs" />
     <Compile Include="Tasks\TaskStep.cs" />
     <Compile Include="Tasks\TaskTransition.cs" />
     <Compile Include="Workplan\ProcessContext.cs" />
