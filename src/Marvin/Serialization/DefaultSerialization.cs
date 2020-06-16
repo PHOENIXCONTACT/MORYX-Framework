@@ -265,7 +265,7 @@ namespace Marvin.Serialization
             }
 
             // Create instance for collections of type Dictionary
-            if (collectionType.IsGenericType && typeof(IDictionary<,>).IsAssignableFrom(collectionType.GetGenericTypeDefinition()))
+            if (EntryConvert.IsDictionary(collectionType))
             {
                 // Use dictionary when interface where used
                 if (collectionType.IsInterface)

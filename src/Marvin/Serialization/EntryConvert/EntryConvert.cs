@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Marvin.Tools;
 
 namespace Marvin.Serialization
@@ -28,6 +29,14 @@ namespace Marvin.Serialization
         }
 
         /// <summary>
+        /// Check if the property type represents a dictionary
+        /// </summary>
+        public static bool IsDictionary(Type collectionType)
+        {
+            return collectionType.IsGenericType && typeof(IDictionary<,>).IsAssignableFrom(collectionType.GetGenericTypeDefinition());
+        }
+
+        /// <summary>
         /// Check if the type is either a value type or a string
         /// </summary>
         public static bool ValueOrStringType(Type propertyType)
@@ -41,7 +50,7 @@ namespace Marvin.Serialization
         public static Type ElementType(Type collectionType)
         {
             // If it is a dictionary create a key value pair
-            if (collectionType.GetGenericArguments().Length == 2) // TODO: Better criteria for dictionary
+            if (IsDictionary(collectionType))
                 return collectionType.GenericTypeArguments[1];
 
             // otherwise create the element's type. List<Test> --> Test
@@ -555,7 +564,7 @@ namespace Marvin.Serialization
 
                 }
                 // Update collection from entry
-                else if (value is ICollection && mapped.Entry != null)
+                else if (IsCollection(propertyType) && mapped.Entry != null)
                 {
                     // Pick collection strategy
                     var strategy = CreateStrategy(value, currentValue, propertyType, customSerialization);
@@ -568,9 +577,7 @@ namespace Marvin.Serialization
                 }
                 else
                 {
-                    //TODO: what to do with types which cannot be converted???
-                    //Sample: HashSet<T> is not implementing ICollection (but ICollection<T>)
-                    //Extend UnitTests when fixed.
+                    throw new SerializationException($"Unsupported property {property.Name} on {instance.GetType().Name}!");
                 }
 
                 // Write new value to property
