@@ -103,7 +103,8 @@ namespace Marvin.Communication.Sockets
         /// <inheritdoc />
         public void Stop()
         {
-            //TODO: Distinguish between IDisposable.Dispose() and Stop()
+            lock (_stateLock)
+                _state.Close();
         }
 
         /// <summary>
@@ -111,8 +112,7 @@ namespace Marvin.Communication.Sockets
         /// </summary>
         public void Dispose()
         {
-            lock (_stateLock)
-                _state.Close();
+            Stop();
         }
 
         /// <summary>
