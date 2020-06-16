@@ -13,10 +13,7 @@ namespace Marvin.Runtime.Tests.Modules
         /// <summary>
         /// Unique name for this module within the platform it is designed for
         /// </summary>
-        public override string Name
-        {
-            get { return "DelayedException"; }
-        }
+        public override string Name => "DelayedException";
 
         protected override void OnInitialize()
         {

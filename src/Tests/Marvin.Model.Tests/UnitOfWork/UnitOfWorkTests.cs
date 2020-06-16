@@ -16,7 +16,7 @@ namespace Marvin.Model.Tests
         private InMemoryUnitOfWorkFactory _unitOfWorkFactory;
 
         [SetUp]
-        public void TestSetUp() //TODO: This is a Setup for a test not for a fixture
+        public void Setup()
         {
             _unitOfWorkFactory = new InMemoryUnitOfWorkFactory(Guid.NewGuid().ToString());
             _unitOfWorkFactory.Initialize();

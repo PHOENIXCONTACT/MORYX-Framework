@@ -1,11 +1,12 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Threading;
+using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Kernel;
 using Marvin.Runtime.Modules;
 using Marvin.Runtime.Tests.Mocks;
 using Marvin.Runtime.Tests.Modules;
+using Moq;
 using NUnit.Framework;
 
 namespace Marvin.Runtime.Tests
@@ -14,13 +15,20 @@ namespace Marvin.Runtime.Tests
     public class StateTransitionTest
     {
         private TestModule _moduleUnderTest;
+        private Mock<IRuntimeConfigManager> _configManagerMock;
 
         [SetUp]
-        public void Init()
+        public void Setup()
         {
+            _configManagerMock = new Mock<IRuntimeConfigManager>();
+            _configManagerMock.Setup(c => c.GetConfiguration<TestConfig>()).Returns(new TestConfig
+            {
+                Strategy = new StrategyConfig()
+            });
+
             _moduleUnderTest = new TestModule
             {
-                ConfigManager = new TestConfigManager(),
+                ConfigManager = _configManagerMock.Object,
                 LoggerManagement = new TestLoggerMgmt(),
                 ContainerFactory = new ModuleContainerFactory(),
         };
@@ -121,7 +129,7 @@ namespace Marvin.Runtime.Tests
         {
             var module = new DelayedExceptionModule
             {
-                ConfigManager = new TestConfigManager(),
+                ConfigManager = _configManagerMock.Object,
                 LoggerManagement = new TestLoggerMgmt(),
                 ContainerFactory = new ModuleContainerFactory()
             };
