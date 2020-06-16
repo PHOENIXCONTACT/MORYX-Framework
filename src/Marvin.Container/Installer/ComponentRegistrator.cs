@@ -173,9 +173,6 @@ namespace Marvin.Container
             else
             {
                 // Make sure selector is registered in the container
-                // TODO: Obsolete code, in the future all component selectors shall be registered
-                if (!Container.Kernel.HasComponent(selector))
-                    Container.Register(Component.For(selector).LifestyleTransient());
                 // TODO: Super dirty hack to use interfaces in component selectors
                 var selectorName = selector.IsClass ? selector.FullName : $"{selector.Namespace}.{selector.Name.Substring(1)}";
                 registration.AsFactory(config => config.SelectedWith(selectorName));
