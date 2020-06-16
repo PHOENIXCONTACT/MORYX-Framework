@@ -40,7 +40,7 @@ namespace Marvin.Container
             var name = string.IsNullOrEmpty(regAtt?.Name) ? foundType.FullName : regAtt.Name;
             return !Container.Kernel.HasComponent(name);
         }
-        
+
         public void Register(Type type)
         {
             if (type.IsInterface)
@@ -72,13 +72,13 @@ namespace Marvin.Container
             Register(type, services, regAtt?.Name, regAtt?.LifeStyle ?? LifeCycle.Singleton);
         }
 
-        
+
         public void Register(Type type, Type[] services, string name)
         {
             Register(type, services, name, LifeCycle.Singleton);
         }
 
-        
+
         public void Register(Type type, Type[] services, string name, LifeCycle lifeCycle)
         {
             var registration = BuildRegistration(type, services, name, lifeCycle);
@@ -144,14 +144,14 @@ namespace Marvin.Container
             return atts.Any() ? Dependency.OnComponent(dependencyName, ((NamedAttribute)atts[0]).ComponentName) : null;
         }
 
-        
+
         public void RegisterFactory(Type factoryInterface)
         {
             var facAtt = factoryInterface.GetCustomAttribute<FactoryRegistrationAttribute>();
             RegisterFactory(factoryInterface, facAtt?.Name, facAtt?.Selector);
         }
 
-        
+
         public void RegisterFactory(Type factoryInterface, string name)
         {
             RegisterFactory(factoryInterface, name, null);

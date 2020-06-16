@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Net;
 using System.Reflection;
 
 namespace Marvin.Runtime
@@ -34,7 +33,6 @@ namespace Marvin.Runtime
             {
                 PlatformName = startAssembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "Runtime",
                 PlatformVersion = typeof(RuntimePlatform).Assembly.GetName().Version,
-                // TODO: Is this the right place to get this information
                 ProductName = startAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "MARVIN Application",
                 ProductVersion = new Version(startAssembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "1.0.0"),
                 ProductDescription = startAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "No Description provided!",
