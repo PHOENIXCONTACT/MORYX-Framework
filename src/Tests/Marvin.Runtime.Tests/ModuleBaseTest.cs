@@ -1,10 +1,12 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Marvin.Runtime.Configuration;
 using Marvin.Runtime.Container;
 using Marvin.Runtime.Modules;
 using Marvin.Runtime.Tests.Mocks;
 using Marvin.Runtime.Tests.Modules;
+using Moq;
 using NUnit.Framework;
 
 namespace Marvin.Runtime.Tests
@@ -17,9 +19,17 @@ namespace Marvin.Runtime.Tests
         [SetUp]
         public void Init()
         {
+            var configManagerMock = new Mock<IRuntimeConfigManager>();
+            configManagerMock.Setup(c => c.GetConfiguration<TestConfig>()).Returns(new TestConfig
+            {
+                Strategy = new StrategyConfig { PluginName = "Test" },
+                StrategyName = "Test"
+            });
+
+
             _moduleUnderTest = new TestModule
             {
-                ConfigManager = new TestConfigManager(),
+                ConfigManager = configManagerMock.Object,
                 LoggerManagement = new TestLoggerMgmt()
             };
         }

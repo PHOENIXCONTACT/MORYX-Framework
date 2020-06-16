@@ -47,7 +47,6 @@ namespace Marvin.Serialization
             }
 
             object prototype;
-            // TODO: Maybe we find something better
             if (memberType == typeof(string))
             {
                 prototype = string.Empty;

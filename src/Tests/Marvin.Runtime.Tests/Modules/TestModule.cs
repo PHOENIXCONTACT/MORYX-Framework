@@ -3,7 +3,6 @@
 
 using System;
 using Marvin.Runtime.Modules;
-using Marvin.Threading;
 
 namespace Marvin.Runtime.Tests.Modules
 {
