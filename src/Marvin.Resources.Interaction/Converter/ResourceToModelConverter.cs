@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Serialization;
+using Marvin.Tools;
 
 namespace Marvin.Resources.Interaction.Converter
 {
@@ -238,12 +239,14 @@ namespace Marvin.Resources.Interaction.Converter
         private ReferenceTypeModel ConvertReferenceProperty(PropertyInfo property, IDictionary<string, List<Type>> overrides)
         {
             var referenceAttr = property.GetCustomAttribute<ResourceReferenceAttribute>();
+            var displayName = property.GetDisplayName();
+
             // Create reference model from property information and optional attribute
-            var referenceModel = new ReferenceTypeModel()
+            var referenceModel = new ReferenceTypeModel
             {
                 Name = property.Name,
-                DisplayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? property.Name, //TODO: Platform 3: Replace with GetDisplayName()
-                Description = property.GetCustomAttribute<DescriptionAttribute>()?.Description, //TODO: Platform 3: Replace with GetDescription()
+                DisplayName = !string.IsNullOrEmpty(displayName) ? displayName: property.Name,
+                Description = property.GetDescription(),
                 Role = referenceAttr.Role,
                 RelationType = referenceAttr.RelationType,
                 IsRequired = referenceAttr.IsRequired,

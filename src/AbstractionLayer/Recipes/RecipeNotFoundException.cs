@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Marvin.AbstractionLayer.Properties;
 
 namespace Marvin.AbstractionLayer.Recipes
 {
@@ -15,7 +16,7 @@ namespace Marvin.AbstractionLayer.Recipes
         /// </summary>
         /// <param name="id">Id that was not found in database</param>
         public RecipeNotFoundException(long id)
-            : base($"Recipe with id '{id}' not found")
+            : base(string.Format(Strings.RecipeNotFoundException_Message, id))
         {
         }
     }

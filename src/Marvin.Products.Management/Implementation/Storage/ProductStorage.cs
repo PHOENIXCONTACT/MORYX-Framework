@@ -144,8 +144,7 @@ namespace Marvin.Products.Management
             {
                 var recipeRepo = uow.GetRepository<IProductRecipeEntityRepository>();
                 var recipeEntity = recipeRepo.GetByKey(recipeId);
-
-                return LoadRecipe(uow, recipeEntity);
+                return recipeEntity != null ? LoadRecipe(uow, recipeEntity) : null;
             }
         }
 
@@ -180,7 +179,7 @@ namespace Marvin.Products.Management
             var productRecipe = RecipeConstructors[recipeEntity.Type]();
 
             RecipeStorage.CopyToRecipe(recipeEntity, productRecipe);
-            productRecipe.Product = LoadProduct(uow, productRecipe.Product.Id);
+            productRecipe.Product = LoadType(uow, productRecipe.Product.Id);
 
             RecipeStrategies[recipeEntity.Type].LoadRecipe(recipeEntity, productRecipe);
 
@@ -334,16 +333,14 @@ namespace Marvin.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                return LoadProduct(uow, id);
+                return LoadType(uow, id);
             }
         }
 
-        private IProductType LoadProduct(IUnitOfWork uow, long id)
+        private IProductType LoadType(IUnitOfWork uow, long id)
         {
             var product = uow.GetRepository<IProductTypeEntityRepository>().GetByKey(id);
-            if (product == null)
-                throw new ProductNotFoundException(id);
-            return Transform(uow, product, true);
+            return product != null ? Transform(uow, product, true) : null;
         }
 
         /// <inheritdoc />
@@ -637,7 +634,7 @@ namespace Marvin.Products.Management
             var requiredProducts = entities.Select(e => e.ProductId).Distinct();
             foreach (var productId in requiredProducts)
             {
-                productMap[productId] = LoadProduct(uow, productId);
+                productMap[productId] = LoadType(uow, productId);
             }
 
             // Create product instance using the type and fill properties

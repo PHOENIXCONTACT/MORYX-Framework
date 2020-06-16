@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Marvin.AbstractionLayer.Properties;
 
 namespace Marvin.AbstractionLayer.Drivers.Marking
 {
@@ -13,7 +14,7 @@ namespace Marvin.AbstractionLayer.Drivers.Marking
         /// <summary>
         /// Initializes a new instance of the <see cref="SegmentsNotSupportedException"/> class.
         /// </summary>
-        public SegmentsNotSupportedException() : base("The driver does not support segments")
+        public SegmentsNotSupportedException() : base(Strings.SegmentsNotSupportedException_Message)
         {
 
         }

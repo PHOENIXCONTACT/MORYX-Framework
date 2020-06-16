@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Marvin.AbstractionLayer.Properties;
 
 namespace Marvin.AbstractionLayer.Products
 {
@@ -15,7 +16,7 @@ namespace Marvin.AbstractionLayer.Products
         /// </summary>
         /// <param name="id">Id that was not found</param>
         public ProductNotFoundException(long id)
-            : base($"Product not found for id: {id}")
+            : base(string.Format(Strings.ProductNotFoundException_Message, id))
         {
         }
     }

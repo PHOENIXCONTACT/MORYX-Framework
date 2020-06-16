@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Marvin.AbstractionLayer.Properties;
 
 namespace Marvin.AbstractionLayer.Products
 {
@@ -11,11 +12,6 @@ namespace Marvin.AbstractionLayer.Products
     /// </summary>
     public class IdentityConflictException : Exception
     {
-        // TODO: Localize exception messages
-        private const string IdentityConflictMessage = "The identity has conflicts with existing products and revisions!";
-
-        private  const string InvalidTemplateMessage = "The identity can not be used for duplicates of the template!";
-
         /// <summary>
         /// Indicates that the template is incompatible with the given identity
         /// </summary>
@@ -32,7 +28,8 @@ namespace Marvin.AbstractionLayer.Products
         /// The given template product can not be used to create types of the given identity
         /// </summary>
         /// <param name="invalidTemplate"></param>
-        public IdentityConflictException(bool invalidTemplate) : base(invalidTemplate ? InvalidTemplateMessage : IdentityConflictMessage)
+        public IdentityConflictException(bool invalidTemplate)
+            : base(invalidTemplate ? Strings.IdentityConflictException_InvalidTemplateMessage : Strings.IdentityConflictException_IdentityConflictMessage)
         {
             InvalidTemplate = invalidTemplate;
         }
