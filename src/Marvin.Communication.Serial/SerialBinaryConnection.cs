@@ -76,17 +76,20 @@ namespace Marvin.Communication.Serial
         /// <inheritdoc />
         public void Stop()
         {
-            //TODO: Distinguish between IDisposable.Dispose() and Stop()
-        }
+            if (_serialPort == null)
+                return;
 
-        ///
-        public void Dispose()
-        {
             _serialPort.DataReceived -= OnDataReceived;
             _serialPort.Dispose();
             _serialPort = null;
 
             CurrentState = BinaryConnectionState.Disconnected;
+        }
+
+        ///
+        public void Dispose()
+        {
+            Stop();
         }
 
         ///
