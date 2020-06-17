@@ -93,7 +93,7 @@ namespace Marvin.Runtime.Kernel.Tests
         /// <summary>
         /// Tests the clear cache method
         /// </summary>
-        //ToDo: Thomas has to think about the return value of the copied config (clone of the cache / read from filesystem) --> [Test]
+        [Test]
         public void ClearCacheTest()
         {
             var random = new Random();
@@ -130,18 +130,18 @@ namespace Marvin.Runtime.Kernel.Tests
 
             // check if we got a copy from the cached item
             Assert.AreNotEqual(config, config1, "We do not get a copy of the config, we get the same instance again.");
-            Assert.True(config.IntField == config1.IntField); // ToDo: Thomas has to decide the correct behavior!
+            Assert.AreNotEqual(config.IntField, config1.IntField);
 
             // get a config copy
             config = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
             // and change its value
             config.IntField = random.Next();
             // get a second copy
-            config1 = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
+            config1 = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>();
 
             // check if we got a two different instances
             Assert.AreNotEqual(config, config1, "We do not get a copy of the config, we get the same instance again.");
-            Assert.False(config.IntField == config1.IntField, "Changes on a copied item should not affect to other instances!");
+            Assert.AreNotEqual(config.IntField, config1.IntField, "Changes on a copied item should not affect to other instances!");
         }
 
         /// <summary>
