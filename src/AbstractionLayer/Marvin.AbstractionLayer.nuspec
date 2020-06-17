@@ -11,4 +11,8 @@
     <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
     <description>$description$</description>
   </metadata>
+  <files>
+    <file src="bin\$configuration$\de\$id$.resources.dll" target="lib\net461\de\$id$.resources.dll" />
+    <file src="bin\$configuration$\pl\$id$.resources.dll" target="lib\net461\pl\$id$.resources.dll" />
+  </files>
 </package>

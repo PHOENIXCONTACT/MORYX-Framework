@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using Marvin.AbstractionLayer.Capabilities;
 using Marvin.AbstractionLayer.Resources;
 using Marvin.Container;
 
@@ -36,23 +35,20 @@ namespace Marvin.Resources.Management
         /// </summary>
         private readonly ICollection<IPublicResource> _publicResources = new SynchronizedCollection<IPublicResource>();
 
-        
         public Action<Resource> SaveDelegate { get; set; }
-        public Func<Resource, bool, bool> DestroyDelegate { get; set; }
 
+        public Func<Resource, bool, bool> DestroyDelegate { get; set; }
 
         public ResourceWrapper Add(Resource instance)
         {
             var wrapper = _graph[instance.Id] = new ResourceWrapper(instance);
 
-            var publicResource = instance as IPublicResource;
-            if (publicResource != null)
+            if (instance is IPublicResource publicResource)
                 _publicResources.Add(publicResource);
 
             return wrapper;
         }
 
-        
         public bool Remove(Resource instance)
         {
             if (_graph.Remove(instance.Id))
@@ -77,7 +73,7 @@ namespace Marvin.Resources.Management
         {
             return _graph.Values;
         }
-        
+
         public TResource GetResource<TResource>() where TResource : class, IResource
         {
             return GetResource<TResource>(r => true);

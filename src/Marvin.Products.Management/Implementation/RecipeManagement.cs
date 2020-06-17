@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer;
 using Marvin.AbstractionLayer.Products;
 using Marvin.AbstractionLayer.Recipes;
 using Marvin.Container;
@@ -24,7 +23,11 @@ namespace Marvin.Products.Management
 
         public IProductRecipe Get(long recipeId)
         {
-            return Storage.LoadRecipe(recipeId);
+            var recipe =  Storage.LoadRecipe(recipeId);
+            if (recipe == null)
+                throw new RecipeNotFoundException(recipeId);
+
+            return recipe;
         }
 
         public IReadOnlyList<IProductRecipe> GetAllByProduct(IProductType productType)

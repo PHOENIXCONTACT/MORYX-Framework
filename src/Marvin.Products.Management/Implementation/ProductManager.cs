@@ -59,7 +59,10 @@ namespace Marvin.Products.Management
 
         public IProductType LoadType(long id)
         {
-            return Storage.LoadType(id);
+            var type = Storage.LoadType(id);
+            if (type == null)
+                throw new ProductNotFoundException(id);
+            return type;
         }
 
         public IProductType LoadType(ProductIdentity identity)

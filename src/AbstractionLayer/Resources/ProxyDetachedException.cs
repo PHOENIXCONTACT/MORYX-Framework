@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Marvin.AbstractionLayer.Properties;
 
 namespace Marvin.AbstractionLayer.Resources
 {
@@ -12,9 +13,9 @@ namespace Marvin.AbstractionLayer.Resources
     public class ProxyDetachedException : Exception
     {
         /// <summary>
-        /// Create new instance of the detached excpetion
+        /// Create new instance of the detached exception
         /// </summary>
-        public ProxyDetachedException() : base("The proxy was detached and can no longer be used!")
+        public ProxyDetachedException() : base(Strings.ProxyDetachedException_Message)
         {
         }
     }

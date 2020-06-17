@@ -3,6 +3,7 @@
 
 using System;
 using Marvin.AbstractionLayer.Capabilities;
+using Marvin.AbstractionLayer.Properties;
 
 namespace Marvin.AbstractionLayer.Resources
 {
@@ -23,7 +24,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// </summary>
         /// <param name="requiredCapabilities">The required capabilities.</param>
         public ResourceNotFoundException(ICapabilities requiredCapabilities)
-            : base($"No resource found providing capabilities or too many matches: {requiredCapabilities}")
+            : base(string.Format(Strings.ResourceNotFoundException_ByCapabilities_Message, requiredCapabilities))
         {
         }
 
@@ -32,7 +33,7 @@ namespace Marvin.AbstractionLayer.Resources
         /// </summary>
         /// <param name="id">Id that was not found</param>
         public ResourceNotFoundException(long id)
-            : base($"No resource found with id: {id}")
+            : base(string.Format(Strings.ResourceNotFoundException_ById_Message, id))
         {
         }
     }

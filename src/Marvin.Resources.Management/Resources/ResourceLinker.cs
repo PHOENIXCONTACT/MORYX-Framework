@@ -309,7 +309,6 @@ namespace Marvin.Resources.Management
         {
             var typeLimit = property.PropertyType;
             if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(IReferences<>))
-                // TODO: Replace with type check API on IReferences
                 typeLimit = property.PropertyType.GetGenericArguments()[0];
             return typeLimit.IsInstanceOfType(value);
         }
