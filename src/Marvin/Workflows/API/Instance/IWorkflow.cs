@@ -18,11 +18,11 @@ namespace Marvin.Workflows
         /// <summary>
         /// All places
         /// </summary>
-        IEnumerable<IPlace> Places { get; }
+        IReadOnlyList<IPlace> Places { get; }
 
         /// <summary>
         /// All transitions of the workflow
         /// </summary>
-        IEnumerable<ITransition> Transitions { get; }
+        IReadOnlyList<ITransition> Transitions { get; }
     }
 }
