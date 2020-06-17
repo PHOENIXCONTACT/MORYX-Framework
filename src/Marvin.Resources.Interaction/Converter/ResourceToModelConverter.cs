@@ -116,6 +116,7 @@ namespace Marvin.Resources.Interaction.Converter
         /// </summary>
         protected static IEnumerable<PropertyInfo> GetReferences(IEnumerable<PropertyInfo> properties)
         {
+            // TODO Type wrappers in AL5
             var referenceProperties = (from prop in properties
                                        let propType = prop.PropertyType
                                        // Find all properties referencing a resource or a collection of resources
@@ -131,6 +132,7 @@ namespace Marvin.Resources.Interaction.Converter
         /// </summary>
         private static Dictionary<string, List<Type>> GetReferenceOverrides(IEnumerable<PropertyInfo> properties)
         {
+            // TODO Type wrappers in AL5
             var referenceOverrides = (from prop in properties
                                       let overrideAtt = prop.GetCustomAttribute<ReferenceOverrideAttribute>()
                                       where overrideAtt != null
@@ -149,8 +151,7 @@ namespace Marvin.Resources.Interaction.Converter
             // Create reference model from property information and optional attribute
             var referenceModel = new ResourceReferenceModel
             {
-                Name = property.Name,
-                Targets = new List<ResourceModel>(),
+                Name = property.Name
             };
 
             // We can not set current targets if we do not have any
@@ -159,15 +160,24 @@ namespace Marvin.Resources.Interaction.Converter
                 return referenceModel;
 
             // Convert referenced resource objects and possible instance types
+            // TODO Type wrappers in AL5
             var referenceTargets = (value as IEnumerable<IResource>) ?? new[] { (IResource)value };
             foreach (Resource resource in referenceTargets)
             {
                 // Load references partially UNLESS they are new, unsaved objects
                 var model = ToModel(resource, resource.Id > 0);
+                ConvertReferenceRecursion(resource, model);
                 referenceModel.Targets.Add(model);
             }
 
             return referenceModel;
+        }
+
+        /// <summary>
+        /// Optional recursion for resources during reference conversion
+        /// </summary>
+        protected virtual void ConvertReferenceRecursion(Resource resource, ResourceModel model)
+        {
         }
 
         /// <summary>

@@ -23,6 +23,6 @@ namespace Marvin.Resources.Interaction
         /// Targets of this reference
         /// </summary>
         [DataMember]
-        public List<ResourceModel> Targets { get; set; }
+        public List<ResourceModel> Targets { get; set; } = new List<ResourceModel>();
     }
 }
