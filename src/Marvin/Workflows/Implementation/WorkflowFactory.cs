@@ -33,7 +33,7 @@ namespace Marvin.Workflows
                 transitions.Add(transition);
             }
 
-            return new SimpleWorkflow(workplan, places.Values, transitions);
+            return new SimpleWorkflow(workplan, places.Values.ToList(), transitions);
         }
 
         private static IPlace GetPlace(IConnector connector, IDictionary<long, IPlace> cache)

@@ -14,7 +14,7 @@ namespace Marvin.Workflows
         /// <summary>
         /// Constructor to create workflow from places and transistions
         /// </summary>
-        public SimpleWorkflow(IWorkplan workplan, IEnumerable<IPlace> places, IEnumerable<ITransition> transitions)
+        public SimpleWorkflow(IWorkplan workplan, IReadOnlyList<IPlace> places, IReadOnlyList<ITransition> transitions)
         {
             Workplan = workplan;
             Places = places;
@@ -29,12 +29,12 @@ namespace Marvin.Workflows
         /// <summary>
         /// All places
         /// </summary>
-        public IEnumerable<IPlace> Places { get; }
+        public IReadOnlyList<IPlace> Places { get; }
 
         /// <summary>
         /// All transitions of the workflow
         /// </summary>
-        public IEnumerable<ITransition> Transitions { get; }
+        public IReadOnlyList<ITransition> Transitions { get; }
     }
 
     internal static class WorkflowExtenstions
