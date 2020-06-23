@@ -8,10 +8,5 @@
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <dependencies>
-      <dependency id="Marvin" version="$version$" />
-      <dependency id="Castle.Core" version="3.3.3" />
-      <dependency id="Castle.Windsor" version="3.3.0" />
-    </dependencies>
   </metadata>
 </package>

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using Marvin.Container;
 using Marvin.Modules;
-using Marvin.Tools;
 using Marvin.Runtime.ModuleManagement;
+using Marvin.Tools;
 
 namespace Marvin.Runtime.HeartOfGold
 {

@@ -1,4 +1,5 @@
 ﻿using Marvin.Runtime.Configuration;
+using Marvin.Runtime.HeartOfGold.Runmodes;
 using Marvin.Runtime.ModuleManagement;
 
 namespace Marvin.Runtime.HeartOfGold
@@ -35,11 +36,11 @@ namespace Marvin.Runtime.HeartOfGold
         /// Run environment
         /// </summary>
         /// <returns>0: All fine - 1: Warning - 2: Error</returns>
-        public int Run()
+        public RunModeErrorCode Run()
         {
             var service = new MarvinService(ModuleManager, ConfigManager);
             service.Run();
-            return 0;
+            return RunModeErrorCode.NoError;
         }
     }
 }

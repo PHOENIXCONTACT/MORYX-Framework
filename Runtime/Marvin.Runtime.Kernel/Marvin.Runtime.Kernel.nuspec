@@ -8,11 +8,5 @@
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <dependencies>
-      <dependency id="Marvin" version="$version$" />
-      <dependency id="Marvin.PlatformTools" version="$version$" />
-      <dependency id="Marvin.Container" version="$version$" />
-      <dependency id="Marvin.Runtime" version="$version$" />
-    </dependencies>
   </metadata>
 </package>

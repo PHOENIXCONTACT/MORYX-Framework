@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Marvin.Tools.Wcf.Tests</RootNamespace>
     <AssemblyName>Marvin.Tools.Wcf.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -62,21 +62,6 @@
     <Compile Include="TestWcfClientFactory.cs" />
     <Compile Include="VersionServiceManagerMock.cs" />
     <Compile Include="WcfClientFactoryTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
-      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
-      <Name>Marvin.PlatformTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\TestTools\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
-      <Project>{505DF475-5FF5-47CC-9E3B-BBE16C359F0E}</Project>
-      <Name>Marvin.TestTools.UnitTest</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="OpenCoverFilter.txt" />
@@ -181,6 +166,20 @@
     <WCFMetadataStorage Include="Service References\DatabaseMaintenance\" />
     <WCFMetadataStorage Include="Service References\Logging\" />
     <WCFMetadataStorage Include="Service References\Maintenance\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Toolkit\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
+      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
+      <Name>Marvin.PlatformTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Toolkit\Marvin\Marvin.csproj">
+      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
+      <Name>Marvin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Toolkit\TestTools\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
+      <Project>{505df475-5ff5-47cc-9e3b-bbe16c359f0e}</Project>
+      <Name>Marvin.TestTools.UnitTest</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

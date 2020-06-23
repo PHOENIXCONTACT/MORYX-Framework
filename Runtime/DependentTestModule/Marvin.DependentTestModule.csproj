@@ -35,12 +35,6 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin">
-      <HintPath>..\..\Build\Toolkit\Marvin.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.PlatformTools">
-      <HintPath>..\..\Build\Toolkit\Marvin.PlatformTools.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -68,6 +62,14 @@
     <Compile Include="Facades\DependentTestModuleFacade.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Toolkit\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
+      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
+      <Name>Marvin.PlatformTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Toolkit\Marvin\Marvin.csproj">
+      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
+      <Name>Marvin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
       <Project>{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}</Project>
       <Name>Marvin.Runtime.Base</Name>

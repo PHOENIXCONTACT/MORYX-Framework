@@ -5,9 +5,10 @@ using System.Timers;
 using Marvin.Configuration;
 using Marvin.Model;
 using Marvin.Modules;
-using Marvin.Tools;
+using Marvin.Runtime.HeartOfGold.Runmodes;
 using Marvin.Runtime.ModuleManagement;
 using Marvin.Runtime.ServerModules;
+using Marvin.Tools;
 using Marvin.Tools.Wcf;
 using Timer = System.Timers.Timer;
 
@@ -70,7 +71,7 @@ namespace Marvin.Runtime.HeartOfGold
         /// Prepare the smoke test. Create all databases for the needed modules, count the modules, delete databases after run of tests.
         /// </summary>
         /// <returns>The result of the tests.</returns>
-        public int Run()
+        public RunModeErrorCode Run()
         {
             // Check if all modules were found
             var modulesCount = ModuleManager.AllModules.Count();
@@ -78,7 +79,7 @@ namespace Marvin.Runtime.HeartOfGold
             {
                 // Return error if insufficient number of modules was found
                 Console.WriteLine("Number of modules doesn't match! Expected {0} - found {1}", _expected, modulesCount);
-                return 2;
+                return RunModeErrorCode.Error;
             }
 
             // Create all databases
@@ -121,38 +122,38 @@ namespace Marvin.Runtime.HeartOfGold
             return result;
         }
 
-        private int RunTests()
+        private RunModeErrorCode RunTests()
         {
             // Start all and await result
             var result = RunTestCase(TestStep.StartAll, state => ModuleManager.StartModules());
             if (!result)
-                return 2;
+                return RunModeErrorCode.Error;
 
             // Start manual modules if any
             var manualStart = ManualStartCallbacks();
             result = !manualStart.Any() || RunTestCase(TestStep.StartManuals, manualStart);
             if (!result)
-                return 2;
+                return RunModeErrorCode.Error;
 
             // Only reincarnate all modules for a full test
             if (_fullTest)
             {
                 result = RunTestCase(TestStep.ReincarnateSingle, ModuleManager.AllModules.Select(SingleReincarnate).ToArray());
                 if (!result)
-                    return 2;
+                    return RunModeErrorCode.Error;
             }
 
             // Stop all modules
             result = RunTestCase(TestStep.StopAll, state => ModuleManager.StopModules());
             if (!result)
-                return 2;
+                return RunModeErrorCode.Error;
 
             Console.WriteLine("System passed all tests");
             if (_expected == _modulesCount)
-                return 0;
+                return RunModeErrorCode.NoError;
 
             Console.WriteLine("Found more modules than expected!");
-            return 1;
+            return RunModeErrorCode.Warning;
         }
 
         private WaitCallback[] ManualStartCallbacks()

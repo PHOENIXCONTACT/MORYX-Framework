@@ -1,9 +1,9 @@
-﻿using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.ModuleManagement;
-using System;
+﻿using System;
 using System.Linq;
+using Marvin.Container;
+using Marvin.Runtime.Configuration;
+using Marvin.Runtime.HeartOfGold.Runmodes;
+using Marvin.Runtime.ModuleManagement;
 
 namespace Marvin.Runtime.HeartOfGold
 {
@@ -59,7 +59,7 @@ namespace Marvin.Runtime.HeartOfGold
         /// Sequence of states which should be done in the right order.
         /// </summary>
         /// <returns>0 when all methods run through without error.</returns>
-        public int Run()
+        public RunModeErrorCode Run()
         {
             InitializeLocalContainer();
 
@@ -69,7 +69,7 @@ namespace Marvin.Runtime.HeartOfGold
 
             ShutDown();
 
-            return 0;
+            return RunModeErrorCode.NoError;
         }
 
         /// <summary>
