@@ -5,7 +5,7 @@ uid: Model.ModificationTracking
 
 ## Introduction
 
-Sometimes developers want to keep track about modifications of a row in their table. MaRVIN framework has a built in solution to keep track about creation, update and deletion time. So another implicit feature is that you can mark a row as deleted without to get rid of the row.
+Sometimes developers want to keep track about modifications of a row in their table. MARVIN framework has a built in solution to keep track about creation, update and deletion time. So another implicit feature is that you can mark a row as deleted without to get rid of the row.
 
 To make an entity trackable you just need to derive from [ModificationTrackedEntityBase](Marvin.Model.ModificationTrackedEntityBase).
 

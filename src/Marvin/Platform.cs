@@ -34,7 +34,7 @@ namespace Marvin
         /// </summary>
         public Version ProductVersion { get; protected set; }
         /// <summary>
-        /// Description of the MaRVIN based product
+        /// Description of the MARVIN based product
         /// </summary>
         public string ProductDescription { get; protected set; }
     }

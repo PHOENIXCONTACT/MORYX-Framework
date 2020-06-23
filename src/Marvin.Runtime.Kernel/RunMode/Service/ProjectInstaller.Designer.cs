@@ -38,7 +38,7 @@
             // 
             // MarvinInstaller
             // 
-            this.MarvinInstaller.Description = string.Format("{0} build on MaRVIN Runtime", Platform.Current.ProductName);
+            this.MarvinInstaller.Description = string.Format("{0} build on MARVIN Runtime", Platform.Current.ProductName);
             this.MarvinInstaller.ServiceName = Platform.Current.ProductName;
             this.MarvinInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 

@@ -16,7 +16,7 @@ The previously mentioned connectors and steps share the common interface [IWorkp
 
 **Connectors** are rather plain objects that, besides inherited properties, only declare their [classification](xref:Marvin.Workflows.NodeClassification). The _classification_ distinguishes between _Entry_ and _Exit_ points of the workplan or simple connections between two steps.
 
-**WorkplanSteps** represent actions that are executed within the workflow. The workflow engine, as most of MaRVIN, was created in the context of industrial automation where the steps represent manufacturing steps of a product. Independent from its origin the workflow engine was designed to be domain-indepent. For this purpose users of the workflow engine need to create implementations of `IWorkplanStep` for the actions of their domain.
+**WorkplanSteps** represent actions that are executed within the workflow. The workflow engine, as most of MARVIN, was created in the context of industrial automation where the steps represent manufacturing steps of a product. Independent from its origin the workflow engine was designed to be domain-indepent. For this purpose users of the workflow engine need to create implementations of `IWorkplanStep` for the actions of their domain.
 
 To implement `IWorkplanStep` it is recommended to derive from `WorkplanStepBase`, which already implements most of the interface. Per default this defines a step with one input and one output. Besides the `Name` of the step the most important part to implement is the definition of outputs and creation of an executable `ITransition` from the step. While `IWorkplanStep` instances only represent an action in the workplan object graph, `ITransition` implement the executable code to perform the action. 
 
