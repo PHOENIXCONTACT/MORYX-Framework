@@ -18,11 +18,11 @@ footer{
       <a class="version-link" href="articles/Changelog.md">Changelog</a><span>|</span><a class="bitbucket-link" href="http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MarvinPlatform">View in GitLab</a>
     </div>
     <div class="minitext">
-    The MaRVIN Platform is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
+    The MARVIN Platform is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
     </div>
     <div class="buttons-unit">
       <a href="tutorials/index.md" class="button"><i class="glyphicon glyphicon-send"></i>Getting Started</a>
-      <a href="http://nts-eu-jenk02.europe.phoenixcontact.com:5588/feeds/MaRVIN-CI/Marvin.Runtime.Kernel/" class="button"><i class="glyphicon glyphicon-download"></i>Download Latest</a>
+      <a href="http://packages-swtd.europe.phoenixcontact.com/feeds/MaRVIN-CI" class="button"><i class="glyphicon glyphicon-download"></i>Download Latest</a>
     </div>
   </div>
 </div>

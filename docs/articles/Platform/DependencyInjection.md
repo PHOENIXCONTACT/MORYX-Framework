@@ -3,9 +3,9 @@ uid: DependencyInjection
 ---
 # Dependency Injection
 
-The dependency injection in MaRVIN is basically realized with a Castle Windsor Container. This container is not just used as in the past. It is encapsulated in the class [CastleContainer](xref:Marvin.Container.CastleContainer) to decorate it with some usefull methods. It is also implementing the interface [IContainer](xref:Marvin.Container.IContainer). So it is only necessary to know this interface instead of the concrete Container class. This provides the possibility to change the Container flexible to use for example derived container like the [Global-](xref:Marvin.Container.GlobalContainer) and [LocalContainer](xref:Marvin.Container.LocalContainer) or just to switch from Castle Windsor to a different DI Container.
+The dependency injection in MARVIN is basically realized with a Castle Windsor Container. This container is not just used as in the past. It is encapsulated in the class [CastleContainer](xref:Marvin.Container.CastleContainer) to decorate it with some usefull methods. It is also implementing the interface [IContainer](xref:Marvin.Container.IContainer). So it is only necessary to know this interface instead of the concrete Container class. This provides the possibility to change the Container flexible to use for example derived container like the [Global-](xref:Marvin.Container.GlobalContainer) and [LocalContainer](xref:Marvin.Container.LocalContainer) or just to switch from Castle Windsor to a different DI Container.
 
-MaRVIN Container is more then just inject the first suitable object from the Container. It provides the possibility to choose the object you want to inject from a pool of suitable objects by using [different Component Selectors](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility-interface-based.md) or the possibility to define at your component how you want to register it just by using an [RegistrationAttribute](xref:Marvin.Container.RegistrationAttribute).
+MARVIN Container is more then just inject the first suitable object from the Container. It provides the possibility to choose the object you want to inject from a pool of suitable objects by using [different Component Selectors](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility-interface-based.md) or the possibility to define at your component how you want to register it just by using an [RegistrationAttribute](xref:Marvin.Container.RegistrationAttribute).
 
 ## CastleContainer
 
@@ -358,7 +358,7 @@ public interface IMyFactory
 
 ### No RegistrationAttribute
 
-"Why i get a NullReferenceException?", "Why is my component null?" and "Do you use your own Framework?". This are typical questions from Joe Gunchy. But Joe forgot the [RegistrationAttribute](xref:Marvin.Container.RegistrationAttribute) for his components. Don´t be stupid like Joe. Use [RegistrationAttribute](xref:Marvin.Container.RegistrationAttribute)s so the MaRVIN container knows how to register the components you want.
+"Why i get a NullReferenceException?", "Why is my component null?" and "Do you use your own Framework?". This are typical questions from Joe Gunchy. But Joe forgot the [RegistrationAttribute](xref:Marvin.Container.RegistrationAttribute) for his components. Don´t be stupid like Joe. Use [RegistrationAttribute](xref:Marvin.Container.RegistrationAttribute)s so the MARVIN container knows how to register the components you want.
 
 ### Wrong build path
 
@@ -374,4 +374,4 @@ Joe Gunchy wants to use a Factory for simple plugins. The Plugins can be disting
 
 ### Missing DependencyRegistration
 
-This is Joe Gunchy. He assumed that everything will be registered somehow automatically and will be injected somehow automatically. Most things seems to be magic but it isn´t. So Joe Gunchy is a complete idiot. Don´t be stupid like Joe Gunchy. You need for everything a [RegistrationAttribute](xref:Marvin.Container.RegistrationAttribute) then the MaRVIN Container will collect your stuff and register it how YOU defined it. Then you can use it.
+This is Joe Gunchy. He assumed that everything will be registered somehow automatically and will be injected somehow automatically. Most things seems to be magic but it isn´t. So Joe Gunchy is a complete idiot. Don´t be stupid like Joe Gunchy. You need for everything a [RegistrationAttribute](xref:Marvin.Container.RegistrationAttribute) then the MARVIN Container will collect your stuff and register it how YOU defined it. Then you can use it.

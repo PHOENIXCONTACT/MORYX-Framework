@@ -3,7 +3,7 @@ uid: EntryConvert
 ---
 # Entry Convert
 
-The static class [EntryConvert](xref:Marvin.Serialization.EntryConvert) transforms classes or objects into the MaRVIN [entry format](xref:Marvin.Serialization.Entry) and back. If you are not familiar with this format, please read this section first: [EntryFormat](xref:EntryFormat)
+The static class [EntryConvert](xref:Marvin.Serialization.EntryConvert) transforms classes or objects into the MARVIN [entry format](xref:Marvin.Serialization.Entry) and back. If you are not familiar with this format, please read this section first: [EntryFormat](xref:EntryFormat)
 
 Because the `EntryConvert`-API can be confusing on first sight, we will split it into three sections. Each of these sections is explained in detail and supported with numerous examples.
 

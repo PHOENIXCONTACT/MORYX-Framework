@@ -71,7 +71,7 @@ Every event invocation represents an incremental change that occurred within an 
 previous state of the object its current state can not be determined. Therefore every API that offers events must also provide methods to retrieve the current state
 of the component. For `NotifyPropertyChanged` and `NotifyCollectionChanged` the initial state is the object itself.
 
-Transferring this to MaRVIN facades means that for every event there must be way to retrieve the current state of the module. This decouples the life cycles and allows
+Transferring this to MARVIN facades means that for every event there must be way to retrieve the current state of the module. This decouples the life cycles and allows
 the dependent to be started and stopped at any time without having to worry what he might miss in the process. For example the API for the JobManagement could simply
 be:
 

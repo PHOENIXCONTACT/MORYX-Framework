@@ -5,7 +5,7 @@ uid: EntryFormat
 
 ## Introduction
 
-The MaRVIN entry format enables serialization and deserialization of objects and types. However unlike formats like JSON or XML it includes modification and creation information. This allows modification of custom properties and unknown types in a generic way. It enables serialization of complex types using the recursive `SubEntries` property. Subentries can be either properties of a class or items in a collection. It also supports inheritance and polymorphism. Classes may be created or replaced by derived types based on `Prototypes`.
+The MARVIN entry format enables serialization and deserialization of objects and types. However unlike formats like JSON or XML it includes modification and creation information. This allows modification of custom properties and unknown types in a generic way. It enables serialization of complex types using the recursive `SubEntries` property. Subentries can be either properties of a class or items in a collection. It also supports inheritance and polymorphism. Classes may be created or replaced by derived types based on `Prototypes`.
 
 Serialized entries can be then stored in JSON or send over WCF.
 

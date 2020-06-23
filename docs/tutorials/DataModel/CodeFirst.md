@@ -3,11 +3,11 @@ uid: GettingsStarted.CodeFirst
 ---
 # Code first
 
-This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MaRVIN Platform.
+This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MARVIN Platform.
 
 The database access layer is implemented with help of the [UnitOfWork Repository Pattern](xref:Model.UnitOfWorkPattern). For the further reading it is necessary to have a rough understanding about it.
 
-MaRVIN fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
+MARVIN fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
 
 ## Basics
 
@@ -17,8 +17,8 @@ You have to implement a few basics to get started working with the PostgreSQL da
 |-----------|-------------|
 | [DbContext](https://msdn.microsoft.com/en-us/library/jj729737.aspx) | The primary class that is responsible for interacting with data as objects (often referred to as context). The context class manages the entity objects during run time, which includes populating objects with data from a database, change tracking, and persisting data to the database. |
 | Entities | One entity is one table |
-| Repositories | Helper functions to access a specific table. The MaRVIN framework implements a speciality to make your life easier. You just need to define the interface and the code will be generated at runtime. |
-| UnitOfWorkFactory | Factory for the database within the MaRVIN context |
+| Repositories | Helper functions to access a specific table. The MARVIN framework implements a speciality to make your life easier. You just need to define the interface and the code will be generated at runtime. |
+| UnitOfWorkFactory | Factory for the database within the MARVIN context |
 
 ### A small view on constants
 
@@ -155,9 +155,9 @@ If an entity consists of one or more navigation properties you might want to hav
 
 If you want to take profit about lazy loading setting the right `ContextMode` is only the half way. EntityFramework supports a per navigation property switch for lazy loading support. You need __explicitly__ define the navigation property as __`virtual`__ if you want lazy loading support to be enabled on this.
 
-### MaRVIN specific
+### MARVIN specific
 
-MaRVIN framework uses per default `Dynamic Change Tracking` and lazy loading but it is possbile to override these settings. You are allowed to change settings via [ContextMode](xref:Marvin.Model.ContextMode):
+MARVIN framework uses per default `Dynamic Change Tracking` and lazy loading but it is possbile to override these settings. You are allowed to change settings via [ContextMode](xref:Marvin.Model.ContextMode):
 
 ````cs
 // Example how you can change the default setting via ContextMode on the `UnitOfWorkFactory`
@@ -234,7 +234,7 @@ When EF guys are talking about the *CodeFirst Migrations* approach they mean exa
 
 ### Initial creation of migration configuration
 
-Before we implement the UnitOfWork you can configure your migration. This is an easy step to take because MaRVIN has prepared a few things for you. But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project. After then you need to open your `App.config` and add the following lines:
+Before we implement the UnitOfWork you can configure your migration. This is an easy step to take because MARVIN has prepared a few things for you. But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project. After then you need to open your `App.config` and add the following lines:
 
 ````xml
   <configSections>
@@ -347,7 +347,7 @@ The default strategy the EF is using is the `Table per Hierarchy`.
 
 ### Inheritance example
 
-In MaRVIN's world you may want to extend an existing entity. This chapter describes how you can inherit from an existing context and its entities. We will use `Table per Concrete class` to achieve inheritance. We assume that the inherited data context is part of a new project but the "old" project is referenced to it.
+In MARVIN's world you may want to extend an existing entity. This chapter describes how you can inherit from an existing context and its entities. We will use `Table per Concrete class` to achieve inheritance. We assume that the inherited data context is part of a new project but the "old" project is referenced to it.
 
 Create a new `Model` project and add the following classes to the project:
 

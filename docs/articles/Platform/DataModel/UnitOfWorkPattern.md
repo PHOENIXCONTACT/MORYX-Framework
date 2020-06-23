@@ -3,7 +3,7 @@ uid: Model.UnitOfWorkPattern
 ---
 # UnitOfWork Pattern & Repository Pattern
 
-This document will give you a short view of what unit of work and repositories are about and how them are used in the MaRVIN framework.
+This document will give you a short view of what unit of work and repositories are about and how them are used in the MARVIN framework.
 
 ## UnitOfWork Pattern
 
@@ -13,17 +13,17 @@ The second goal is to abstract the DbContext away. So it is used in an abstract 
 
 ## Repository Pattern
 
-But you cannot implement a UnitOfWork interface ([IUnitOfWork](xref:MaRVIN.Model.IUnitOfWork)) without a corresponding repository pattern because its main goal is to do the operations on the database.
+But you cannot implement a UnitOfWork interface ([IUnitOfWork](xref:Marvin.Model.IUnitOfWork)) without a corresponding repository pattern because its main goal is to do the operations on the database.
 
 If we look back to the old times before Entity Framework, the developer implemented the SQL statements into an IRepository implementation.
 
 Now in times of EF you implement the LINQ expressions into the repository implementation. A very big disadvantage of this approach is that you have to write many boiler plate code to access your data. This leads to typical problems of boiler plate code: It needs to be maintained and may consists of bugs.
 
-## The MaRVIN way
+## The MARVIN way
 
-The MaRVIN framework follows another strategy: You don't need to implement an own UnitOfWork class and the repositories are generated at runtime. So no code needs to be maintained.
+The MARVIN framework follows another strategy: You don't need to implement an own UnitOfWork class and the repositories are generated at runtime. So no code needs to be maintained.
 
-Let's have a look on an example implementation how you define the UnitOfWork and Repository aproach in the MaRVIN framework.
+Let's have a look on an example implementation how you define the UnitOfWork and Repository aproach in the MARVIN framework.
 
 ````cs
 public interface IPersonRepository : IRepository<Person>
