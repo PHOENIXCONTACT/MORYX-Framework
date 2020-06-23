@@ -27,6 +27,5 @@ namespace Marvin.Tools
 
             return entity;
         }
-
     }
 }

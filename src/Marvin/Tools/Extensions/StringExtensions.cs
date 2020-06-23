@@ -22,11 +22,9 @@ namespace Marvin.Tools
             var invalid = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
 
             //Aggregate invalid with the replacement
-            string result = str;
-            foreach (char c in invalid)
-            {
+            var result = str;
+            foreach (var c in invalid)
                 result = result.Replace(c.ToString(CultureInfo.InvariantCulture), replacement);
-            }
 
             return result.Replace(" ", "_");
         }

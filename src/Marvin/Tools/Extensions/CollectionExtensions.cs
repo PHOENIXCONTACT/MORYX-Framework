@@ -10,26 +10,36 @@ namespace Marvin.Tools
     public static class CollectionExtensions
     {
         /// <summary>
-        /// 
+        /// Adds a range of items to the collection
         /// </summary>
         public static void AddRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> items) where TSource : class
         {
             foreach (var item in items)
-            {
                 source.Add(item);
-            }
         }
 
         /// <summary>
-        /// 
+        /// Replaces the first item which mets the given condition
+        /// </summary>
+        public static void ReplaceItem<TSource>(this IList<TSource> list, Func<TSource, bool> match, TSource newItem)
+        {
+            var oldItem = list.FirstOrDefault(match);
+            if (oldItem == null)
+                return;
+
+            var oldIndex = list.IndexOf(oldItem);
+            if (oldIndex != -1)
+                list[oldIndex] = newItem;
+        }
+
+        /// <summary>
+        /// Removes a range of items from the collection
         /// </summary>
         public static void RemoveRange<TSource>(this ICollection<TSource> collection, IEnumerable<TSource> items) where TSource : class
         {
             var itemsArray = new List<TSource>(items).ToArray();
-            for (int i = itemsArray.Length - 1; i >= 0; i--)
-            {
+            for (var i = itemsArray.Length - 1; i >= 0; i--)
                 collection.Remove(itemsArray[i]);
-            }
         }
 
         /// <summary>
@@ -42,19 +52,33 @@ namespace Marvin.Tools
         }
 
         /// <summary>
-        /// Return all entries from the source collection that do not match the filter for any entry in the second collection
+        /// Removes a range of items by the given condition
         /// </summary>
-        public static IEnumerable<TSource> Except<TSource, TCompare>(this IEnumerable<TSource> source, ICollection<TCompare> compare, Func<TSource, TCompare, bool> filter)
+        public static void RemoveBy<TSource>(this IList<TSource> collection, Func<TSource, bool> condition)
         {
-            return source.Where(entry => compare.All(item => !filter(entry, item)));
+            for (var i = collection.Count - 1; i >= 0; i--)
+            {
+                if (condition(collection[i]))
+                    collection.RemoveAt(i);
+            }
         }
 
         /// <summary>
-        /// Return all entries from the source collection that do match the filter for any entry in the second collection
+        /// Shuffles the list 
         /// </summary>
-        public static IEnumerable<TSource> Intersect<TSource, TCompare>(this IEnumerable<TSource> source, ICollection<TCompare> compare, Func<TSource, TCompare, bool> filter)
+        public static void Shuffle<T>(this IList<T> list)
         {
-            return source.Where(entry => compare.Any(item => filter(entry, item)));
+            var rng = new Random();
+
+            var n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                var k = rng.Next(n + 1);
+                var value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
         }
     }
 }

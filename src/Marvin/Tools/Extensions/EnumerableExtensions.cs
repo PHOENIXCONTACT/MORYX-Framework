@@ -13,9 +13,9 @@ namespace Marvin.Tools
         /// <summary>
         /// Converts an IEnumerable to an observable collection
         /// </summary>
-        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> en)
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerable)
         {
-            return en == null ? new ObservableCollection<T>() : new ObservableCollection<T>(en);
+            return enumerable == null ? new ObservableCollection<T>() : new ObservableCollection<T>(enumerable);
         }
 
         /// <summary>
@@ -35,6 +35,22 @@ namespace Marvin.Tools
             {
                 action(item);
             }
+        }
+
+        /// <summary>
+        /// Return all entries from the source collection that do not match the filter for any entry in the second collection
+        /// </summary>
+        public static IEnumerable<TSource> Except<TSource, TCompare>(this IEnumerable<TSource> source, ICollection<TCompare> compare, Func<TSource, TCompare, bool> filter)
+        {
+            return source.Where(entry => compare.All(item => !filter(entry, item)));
+        }
+
+        /// <summary>
+        /// Return all entries from the source collection that do match the filter for any entry in the second collection
+        /// </summary>
+        public static IEnumerable<TSource> Intersect<TSource, TCompare>(this IEnumerable<TSource> source, ICollection<TCompare> compare, Func<TSource, TCompare, bool> filter)
+        {
+            return source.Where(entry => compare.Any(item => filter(entry, item)));
         }
     }
 }
