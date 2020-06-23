@@ -35,16 +35,6 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin">
-      <HintPath>..\..\Build\Toolkit\Marvin.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.PlatformTools">
-      <HintPath>..\..\Build\Toolkit\Marvin.PlatformTools.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.TestTools.Test.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Build\Toolkit\Marvin.TestTools.Test.Model.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -93,6 +83,18 @@
     <Compile Include="Facades\TestModuleFacade.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Toolkit\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
+      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
+      <Name>Marvin.PlatformTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Toolkit\Marvin\Marvin.csproj">
+      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
+      <Name>Marvin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Toolkit\TestTools\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj">
+      <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
+      <Name>Marvin.TestTools.Test.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
       <Project>{12DBB67A-E0A8-413A-8C1B-A4CAE57A9AFB}</Project>
       <Name>Marvin.Runtime.Base</Name>

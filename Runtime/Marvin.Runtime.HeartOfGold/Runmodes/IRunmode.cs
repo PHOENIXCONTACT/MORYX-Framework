@@ -1,4 +1,5 @@
-﻿using Marvin.Runtime.ModuleManagement;
+﻿using Marvin.Runtime.HeartOfGold.Runmodes;
+using Marvin.Runtime.ModuleManagement;
 
 namespace Marvin.Runtime.HeartOfGold
 {
@@ -22,6 +23,6 @@ namespace Marvin.Runtime.HeartOfGold
         /// Run environment
         /// </summary>
         /// <returns>0: All fine - 1: Warning - 2: Error</returns>
-        int Run();
+        RunModeErrorCode Run();
     }
 }

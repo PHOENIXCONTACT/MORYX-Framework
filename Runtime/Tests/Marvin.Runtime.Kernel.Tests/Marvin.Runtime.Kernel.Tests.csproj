@@ -47,12 +47,6 @@
       <HintPath>..\..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin">
-      <HintPath>..\..\..\Build\Toolkit\Marvin.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.PlatformTools">
-      <HintPath>..\..\..\Build\Toolkit\Marvin.PlatformTools.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
@@ -81,6 +75,14 @@
     <Compile Include="ServerLoggerManagementTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Toolkit\Marvin.PlatformTools\Marvin.PlatformTools.csproj">
+      <Project>{3f2a7079-d56b-439c-a980-fa479364edcd}</Project>
+      <Name>Marvin.PlatformTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Toolkit\Marvin\Marvin.csproj">
+      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
+      <Name>Marvin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Marvin.Runtime.Base\Marvin.Runtime.Base.csproj">
       <Project>{12dbb67a-e0a8-413a-8c1b-a4cae57a9afb}</Project>
       <Name>Marvin.Runtime.Base</Name>
