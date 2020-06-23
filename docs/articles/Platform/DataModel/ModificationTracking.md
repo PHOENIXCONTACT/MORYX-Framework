@@ -5,9 +5,9 @@ uid: Model.ModificationTracking
 
 ## Introduction
 
-Sometimes developers want to keep track about modifications of a row in their table. MARVIN framework has a built in solution to keep track about creation, update and deletion time. So another implicit feature is that you can mark a row as deleted without to get rid of the row.
+Sometimes developers want to keep track about modifications of a row in their table. MORYX framework has a built in solution to keep track about creation, update and deletion time. So another implicit feature is that you can mark a row as deleted without to get rid of the row.
 
-To make an entity trackable you just need to derive from [ModificationTrackedEntityBase](Marvin.Model.ModificationTrackedEntityBase).
+To make an entity trackable you just need to derive from [ModificationTrackedEntityBase](Moryx.Model.ModificationTrackedEntityBase).
 
 ````cs
 public class PersonEntity : ModificationTrackedEntityBase
@@ -22,7 +22,7 @@ The example above defines four aditional columns: Id (from `EntityBase`), Create
 - `Updated`: Shows when the row was updated
 - `Deleted`: Is set when the row was deleted.
 
-Now you have to define the repository. Usually you define only a new interface and derive it from [IRepository\<T\>](xref:Marvin.Model.IRepository`1). But if your entity is modification trackable you also need to implement this new interface. The implementation has to derive from [ModificationTrackedRepository\<T\>](xref:Marvin.Model.ModificationTrackedRepository`).
+Now you have to define the repository. Usually you define only a new interface and derive it from [IRepository\<T\>](xref:Moryx.Model.IRepository`1). But if your entity is modification trackable you also need to implement this new interface. The implementation has to derive from [ModificationTrackedRepository\<T\>](xref:Moryx.Model.ModificationTrackedRepository`).
 
 ````cs
 public IPersonRepository : IRepository<Person>

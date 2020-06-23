@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [DataContract]
     public class TestSubPluginConfig : IPluginConfig

@@ -15,7 +15,7 @@
 )
 
 # Extend version number
-$env:MARVIN_BUILDNUMBER = [int]::Parse($env:MARVIN_BUILDNUMBER) + 364;
+$env:MORYX_BUILDNUMBER = [int]::Parse($env:MORYX_BUILDNUMBER) + 364;
 
 # Load Toolkit
 . ".build\BuildToolkit.ps1"
@@ -32,11 +32,11 @@ if ($SetAssemblyVersion) {
 }
 
 if ($Build) {
-    Invoke-Build ".\MarvinPlatform.sln"
+    Invoke-Build ".\MoryxPlatform.sln"
 }
 
 if ($SmokeTests) {
-    $runtimePath = "$RootPath\src\StartProject\bin\$env:MARVIN_BUILD_CONFIG\StartProject.exe";
+    $runtimePath = "$RootPath\src\StartProject\bin\$env:MORYX_BUILD_CONFIG\StartProject.exe";
     Invoke-SmokeTest $runtimePath 3 6000
 }
 

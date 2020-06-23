@@ -3,11 +3,11 @@ uid: GettingsStarted.CodeFirst
 ---
 # Code first
 
-This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MARVIN Platform.
+This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MORYX Platform.
 
 The database access layer is implemented with help of the [UnitOfWork Repository Pattern](xref:Model.UnitOfWorkPattern). For the further reading it is necessary to have a rough understanding about it.
 
-MARVIN fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
+MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
 
 ## Basics
 
@@ -17,8 +17,8 @@ You have to implement a few basics to get started working with the PostgreSQL da
 |-----------|-------------|
 | [DbContext](https://msdn.microsoft.com/en-us/library/jj729737.aspx) | The primary class that is responsible for interacting with data as objects (often referred to as context). The context class manages the entity objects during run time, which includes populating objects with data from a database, change tracking, and persisting data to the database. |
 | Entities | One entity is one table |
-| Repositories | Helper functions to access a specific table. The MARVIN framework implements a speciality to make your life easier. You just need to define the interface and the code will be generated at runtime. |
-| UnitOfWorkFactory | Factory for the database within the MARVIN context |
+| Repositories | Helper functions to access a specific table. The MORYX framework implements a speciality to make your life easier. You just need to define the interface and the code will be generated at runtime. |
+| UnitOfWorkFactory | Factory for the database within the MORYX context |
 
 ### A small view on constants
 
@@ -34,7 +34,7 @@ public class SolarSystemModelConstants
     /// Namespace of the generated code within this model. This can be used for the
     /// ImportAttribute and UseChildAttribute.
     /// </summary>
-    public const string Namespace = "Marvin.TestTools.Test.Model";
+    public const string Namespace = "Moryx.TestTools.Test.Model";
 
     /// <summary>
     /// Schema name for the database context
@@ -45,12 +45,12 @@ public class SolarSystemModelConstants
 
 ## The database DbContext
 
-Create your own database context by deriving from [MarvinDbContext](xref:Marvin.Model.MarvinDbContext) and the three constructor overloads as shown below.
+Create your own database context by deriving from [MoryxDbContext](xref:Moryx.Model.MoryxDbContext) and the three constructor overloads as shown below.
 
 ````cs
 [DbConfigurationType(typeof(NpgsqlConfiguration))]
 [DefaultSchema(SolarSystemModelConstants.Schema)]
-public class SolarSystemContext : MarvinDbContext
+public class SolarSystemContext : MoryxDbContext
 {
     public SolarSystemContext()
     {
@@ -125,7 +125,7 @@ public class Asteroid : ModificationTrackedEntityBase
 }
 ````
 
-Mmh, the entities are either derived from [EntityBase](xref:Marvin.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Marvin.Model.ModificationTrackedEntityBase). Is that necessary? That's pretty much better because the [EntityBase](xref:Marvin.Model.EntityBase) defines an extra property for the `Id`. This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Marvin.Model.ModificationTrackedEntityBase) derives from the base and has three special properties which are monitored by triggers (Created, Updated, Deleted). These trigger will automatically installed inside the database and tables. Further reading [Modification Tracking](xref:Model.ModificationTracking) here.
+Mmh, the entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase). Is that necessary? That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`. This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base and has three special properties which are monitored by triggers (Created, Updated, Deleted). These trigger will automatically installed inside the database and tables. Further reading [Modification Tracking](xref:Model.ModificationTracking) here.
 
 ## Entity loading & change tracking behavior
 
@@ -155,9 +155,9 @@ If an entity consists of one or more navigation properties you might want to hav
 
 If you want to take profit about lazy loading setting the right `ContextMode` is only the half way. EntityFramework supports a per navigation property switch for lazy loading support. You need __explicitly__ define the navigation property as __`virtual`__ if you want lazy loading support to be enabled on this.
 
-### MARVIN specific
+### MORYX specific
 
-MARVIN framework uses per default `Dynamic Change Tracking` and lazy loading but it is possbile to override these settings. You are allowed to change settings via [ContextMode](xref:Marvin.Model.ContextMode):
+MORYX framework uses per default `Dynamic Change Tracking` and lazy loading but it is possbile to override these settings. You are allowed to change settings via [ContextMode](xref:Moryx.Model.ContextMode):
 
 ````cs
 // Example how you can change the default setting via ContextMode on the `UnitOfWorkFactory`
@@ -234,7 +234,7 @@ When EF guys are talking about the *CodeFirst Migrations* approach they mean exa
 
 ### Initial creation of migration configuration
 
-Before we implement the UnitOfWork you can configure your migration. This is an easy step to take because MARVIN has prepared a few things for you. But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project. After then you need to open your `App.config` and add the following lines:
+Before we implement the UnitOfWork you can configure your migration. This is an easy step to take because MORYX has prepared a few things for you. But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project. After then you need to open your `App.config` and add the following lines:
 
 ````xml
   <configSections>
@@ -253,11 +253,11 @@ Now, open the `Package Manager Console` (You may ask 'Really? Why the Package Ma
 
 ````ps
 Enable-Migrations -ContextTypeName SolarSystemContext -EnableAutomaticMigrations `
-    -ProjectName Marvin.TestTools.Test.Model `
+    -ProjectName Moryx.TestTools.Test.Model `
     -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql
 ````
 
-and execute it. This will create a folder named Migrations into the project and a `Configurations.cs` file within. As mentioned before Marvin has already done some work for you.
+and execute it. This will create a folder named Migrations into the project and a `Configurations.cs` file within. As mentioned before Moryx has already done some work for you.
 
 ### Add-Migrations
 
@@ -266,7 +266,7 @@ Now time has come to create the initial migration. You need to ensure that the t
 To start type the following line to the `Package Manager Console`:
 
 ````ps
-Add-Migration -Name InitialCreate -ProjectName Marvin.TestTools.Test.Model `
+Add-Migration -Name InitialCreate -ProjectName Moryx.TestTools.Test.Model `
     -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql
 ````
 
@@ -277,7 +277,7 @@ That's it. The script should have added a new class to the `Migrations` folder o
 The last step to do is to apply the migrations to the database so that your context and its entities are on the same version. Now the last of the three scripts comes into play. the following line to the Package Manager Console:
 
 ````ps
-Update-Database -TargetMigration Version1 -ProjectName Marvin.TestTools.Test.Model `
+Update-Database -TargetMigration Version1 -ProjectName Moryx.TestTools.Test.Model `
     -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql -Verbose
 ````
 
@@ -347,7 +347,7 @@ The default strategy the EF is using is the `Table per Hierarchy`.
 
 ### Inheritance example
 
-In MARVIN's world you may want to extend an existing entity. This chapter describes how you can inherit from an existing context and its entities. We will use `Table per Concrete class` to achieve inheritance. We assume that the inherited data context is part of a new project but the "old" project is referenced to it.
+In MORYX's world you may want to extend an existing entity. This chapter describes how you can inherit from an existing context and its entities. We will use `Table per Concrete class` to achieve inheritance. We assume that the inherited data context is part of a new project but the "old" project is referenced to it.
 
 Create a new `Model` project and add the following classes to the project:
 
@@ -363,7 +363,7 @@ public class TestModelInheritanceConstants
     /// Namespace of the generated code within this model. This can be used for the
     /// ImportAttribute and UseChildAttribute.
     /// </summary>
-    public const string Namespace = "Marvin.TestTools.Test.Model.Inheritance";
+    public const string Namespace = "Moryx.TestTools.Test.Model.Inheritance";
 
     /// <summary>
     /// Schema name for the database context
@@ -384,7 +384,7 @@ public class PlanetOfTheApes : Planet
 The inherited context:
 
 ````cs
-namespace Marvin.TestTools.Test.Model.Inheritance
+namespace Moryx.TestTools.Test.Model.Inheritance
 {
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
     public class SpecializedSolarSystemContext : SolarSystemContext

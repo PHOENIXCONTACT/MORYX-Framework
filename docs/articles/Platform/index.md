@@ -13,8 +13,8 @@ The PlatformToolkit is a stack of components and code shared over several platfo
 
 ## Dependency Injection
 
-The dependency injection in MARVIN is basically depending on a Castle Widsor Container and a MARVIN specific decorator called CastelContainer.
-The CastelContainer will be used for the Component Composition as the DI Container for each level. Please open the following subpage to read more about the dependency injection in MARVIN.
+The dependency injection in MORYX is basically depending on a Castle Widsor Container and a MORYX specific decorator called CastelContainer.
+The CastelContainer will be used for the Component Composition as the DI Container for each level. Please open the following subpage to read more about the dependency injection in MORYX.
 
 - [DependencyInjection](xref:DependencyInjection)
 
@@ -38,7 +38,7 @@ See @subpage platform-logging for full documentation
 
 ## Bindings
 
-The MARVIN platform has its own binding engine that uses binding strings like `"Object.Foo"` to resolve the value of `Foo`
+The MORYX platform has its own binding engine that uses binding strings like `"Object.Foo"` to resolve the value of `Foo`
 for a given source object. Such strings might be embedded into texts using brackets `"Hello {Person.Name}, how are you?"`.
 
 For more details see @subpage bindings.

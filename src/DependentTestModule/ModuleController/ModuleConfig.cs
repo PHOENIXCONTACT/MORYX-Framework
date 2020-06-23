@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Serialization;
 
-namespace Marvin.DependentTestModule
+namespace Moryx.DependentTestModule
 {
     [DataContract]
     public class ModuleConfig : ConfigBase

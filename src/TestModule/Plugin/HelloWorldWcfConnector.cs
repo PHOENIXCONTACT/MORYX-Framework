@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading;
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.Tools.Wcf;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [DependencyRegistration(InstallerMode.All)]
     [Plugin(LifeCycle.Transient, typeof(IHelloWorldWcfConnector), Name = PluginName)]

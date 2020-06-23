@@ -1,6 +1,6 @@
 # Model Diagnostics
 
-The implementation of `IUnitOfWork` also provides an implementation for [IModelDiagnostics](xref:Marvin.Model.IModelDiagnostics). This interface provides diagnostics features for the `DbContext`.
+The implementation of `IUnitOfWork` also provides an implementation for [IModelDiagnostics](xref:Moryx.Model.IModelDiagnostics). This interface provides diagnostics features for the `DbContext`.
 
 ## Logging
 

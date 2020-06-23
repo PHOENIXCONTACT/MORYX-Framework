@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [DataContract]
     public class TestSubPluginConfig2 : TestSubPluginConfig

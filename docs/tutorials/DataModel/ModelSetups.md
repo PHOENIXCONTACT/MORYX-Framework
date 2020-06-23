@@ -12,7 +12,7 @@ As a sample model we will use a small datamodel that could be used to manage a c
 
 ## Hard coded setup
 
-As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassAssembly project with all necessary references. Add the `ModelSetupAttribute` to the class and inherit it from [IModelSetup](xref:Marvin.Model.IModelSetup).
+As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassAssembly project with all necessary references. Add the `ModelSetupAttribute` to the class and inherit it from [IModelSetup](xref:Moryx.Model.IModelSetup).
 
 ````cs
 [ModelSetup(TargetModelNamespace = StaffConstants.Namespace)]

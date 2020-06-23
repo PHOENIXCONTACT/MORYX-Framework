@@ -4,13 +4,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Logging;
-using Marvin.Runtime.Configuration;
-using Marvin.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Logging;
+using Moryx.Runtime.Configuration;
+using Moryx.Serialization;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     public enum ConfigEnumeration
     {

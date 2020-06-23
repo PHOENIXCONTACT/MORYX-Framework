@@ -5,7 +5,7 @@ uid: RunModes
 
 The RunMode interface specifies access to the module manager and two methods. The `ModuleManager` is required to interact with the `ServerModules`. The `Setup`-method is invoked directly after loading the RunMode and before initializing the kernel. This gives RunMode a chance to override some kernel configurations before the components are booted. After initializing the kernel the `Run`-method is invoked. Control over the application is now given to the run mode. Generally RunMode start by invoking Start on the ModuleManager.
 
-[IRunMode](xref:Marvin.Runtime.Kernel.IRunMode)
+[IRunMode](xref:Moryx.Runtime.Kernel.IRunMode)
 
 ## Implementation
 

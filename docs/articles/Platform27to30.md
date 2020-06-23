@@ -22,7 +22,7 @@ You know the days where you have to change the `CopyLocal` to `false` on every s
 
 ## IContainer API
 
-The [IContainer](xref:Marvin.Container.IContainer) API changed. The `IContainer.LoadComponents(directory)` is not available and not supported anymore. Use the `IContainer.LoadComponents()` instead. The platform is not distinguishing anymore between subfolders.
+The [IContainer](xref:Moryx.Container.IContainer) API changed. The `IContainer.LoadComponents(directory)` is not available and not supported anymore. Use the `IContainer.LoadComponents()` instead. The platform is not distinguishing anymore between subfolders.
 
 The `IContainer.SetInstances(obj, obj, obj, ...)` is not available anymore. The method now supports fluent registration:
 
@@ -45,9 +45,9 @@ The common logging framework was updated from 2.1 to 3.4.1. No relevant api chan
 
 ### JSON.NET (Newtonsoft JSON)
 
-The JSON Library was updated to the newest version. With Platform 3 generally you need no Newtonsoft.Json reference anymore. The platform wrappes the json serializer. Have a look to the [Json](xref:Marvin.Serialization.Json) class. The class should provide all needed features for the general development with the platform.
+The JSON Library was updated to the newest version. With Platform 3 generally you need no Newtonsoft.Json reference anymore. The platform wrappes the json serializer. Have a look to the [Json](xref:Moryx.Serialization.Json) class. The class should provide all needed features for the general development with the platform.
 
-The known static class `JsonSettings` is not existing anymore. The new [Json](xref:Marvin.Serialization.Json) class will provide several options. For more details, please read [Json Serialization](xref:Serialization)
+The known static class `JsonSettings` is not existing anymore. The new [Json](xref:Moryx.Serialization.Json) class will provide several options. For more details, please read [Json Serialization](xref:Serialization)
 
 ### NUnit
 
@@ -63,6 +63,6 @@ Some help:
 - TestFixtureTearDownAttribute is obsolete
   - Use `OneTimeTearDownAttribute`
 
-## Nuget instead of Marvin Bundle FileFormat
+## Nuget instead of Moryx Bundle FileFormat
 
 TODO

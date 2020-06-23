@@ -5,7 +5,7 @@ uid: EntryFormat
 
 ## Introduction
 
-The MARVIN entry format enables serialization and deserialization of objects and types. However unlike formats like JSON or XML it includes modification and creation information. This allows modification of custom properties and unknown types in a generic way. It enables serialization of complex types using the recursive `SubEntries` property. Subentries can be either properties of a class or items in a collection. It also supports inheritance and polymorphism. Classes may be created or replaced by derived types based on `Prototypes`.
+The MORYX entry format enables serialization and deserialization of objects and types. However unlike formats like JSON or XML it includes modification and creation information. This allows modification of custom properties and unknown types in a generic way. It enables serialization of complex types using the recursive `SubEntries` property. Subentries can be either properties of a class or items in a collection. It also supports inheritance and polymorphism. Classes may be created or replaced by derived types based on `Prototypes`.
 
 Serialized entries can be then stored in JSON or send over WCF.
 
@@ -21,7 +21,7 @@ We can decorate property with attributes:
 
 ## EntryValue
 
-It holds the value of the `Entry`, its type and necessary modification information like `Possible` values. The type is defined by the [EntryValueType](xref:Marvin.Serialization.EntryValueType) enum. It specifies the common primitives like `Int16`, `Double` or `String` and the two special types `Class` or `Collection`.
+It holds the value of the `Entry`, its type and necessary modification information like `Possible` values. The type is defined by the [EntryValueType](xref:Moryx.Serialization.EntryValueType) enum. It specifies the common primitives like `Int16`, `Double` or `String` and the two special types `Class` or `Collection`.
 
 `EntryValueType.Class` is used either for properties that reference another object, items in a collection or as object prototypes. 
 

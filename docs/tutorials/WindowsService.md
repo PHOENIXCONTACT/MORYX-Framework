@@ -11,7 +11,7 @@ Like explained in the [Runmode](xref:RunModes) section, the Runtime can be run a
 
 If the application shall only be registered as a Windows service without any dependencies the process is really easy.
 * Validate name: Type "mname" into the console and make sure your application is named appropriatly.
-* Set name: If the displayed name does not match your application, e.g. "MarvinRuntime" edit the 'Config\Marvin.Runtime.ProductConfig.mcf' file.
+* Set name: If the displayed name does not match your application, e.g. "MoryxRuntime" edit the 'Config\Moryx.Runtime.ProductConfig.mcf' file.
 * Install: Type install into the console and wait for the process to finish.
 
 # Installation with dependencies
@@ -24,7 +24,7 @@ The file used to read the service dependencies is the Dependencies.txt. Its stru
 # Dependencies file
 # --------------------------
 # This file is used by the windows service installer to determine all runtime dependencies
-# of this Marvin RuntimeCore application.
+# of this Moryx RuntimeCore application.
 postgresql-x64-9.1
 ````
 
@@ -41,7 +41,7 @@ This little HowTo will explain how to create a Dependencies.txt file and how to 
 
 3. Repeat: Repeat the previous steps until your Dependencies.txt contains all of your applications dependencies. 
 
-4. Install service: Now install the Runtime by typing install into the console. Make sure it is not allready installed and that you assigned a meaningful name and version in the 'Config\Marvin.Runtime.ProductConfig.mcf' file. you should now see the following output. 
+4. Install service: Now install the Runtime by typing install into the console. Make sure it is not allready installed and that you assigned a meaningful name and version in the 'Config\Moryx.Runtime.ProductConfig.mcf' file. you should now see the following output. 
 
 ![](images/InstallCommand.png)
 

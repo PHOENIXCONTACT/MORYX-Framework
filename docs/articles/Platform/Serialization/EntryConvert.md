@@ -3,7 +3,7 @@ uid: EntryConvert
 ---
 # Entry Convert
 
-The static class [EntryConvert](xref:Marvin.Serialization.EntryConvert) transforms classes or objects into the MARVIN [entry format](xref:Marvin.Serialization.Entry) and back. If you are not familiar with this format, please read this section first: [EntryFormat](xref:EntryFormat)
+The static class [EntryConvert](xref:Moryx.Serialization.EntryConvert) transforms classes or objects into the MORYX [entry format](xref:Moryx.Serialization.Entry) and back. If you are not familiar with this format, please read this section first: [EntryFormat](xref:EntryFormat)
 
 Because the `EntryConvert`-API can be confusing on first sight, we will split it into three sections. Each of these sections is explained in detail and supported with numerous examples.
 
@@ -143,7 +143,7 @@ public void Deserialize(Entry entry, FileStreamDummy dummy)
 
 ## ICustomSerialization
 
-All public methods of `EntryConvert` have overloads that expect an instance of [ICustomSerialization](xref:Marvin.Serialization.ICustomSerialization) to modify the behavior of the serializer where necessary. The overloads without the parameter use a Singleton instance of `DefaultSerialization`. When implementing a new version of `ICustomSerialization` it is recommended to derive from [DefaultSerialization](xref:Marvin.Serialization.DefaultSerialization) and only override what shall behave differently.
+All public methods of `EntryConvert` have overloads that expect an instance of [ICustomSerialization](xref:Moryx.Serialization.ICustomSerialization) to modify the behavior of the serializer where necessary. The overloads without the parameter use a Singleton instance of `DefaultSerialization`. When implementing a new version of `ICustomSerialization` it is recommended to derive from [DefaultSerialization](xref:Moryx.Serialization.DefaultSerialization) and only override what shall behave differently.
 
 ````cs
 public class FooSerialization : DefaultSerialization
@@ -157,7 +157,7 @@ public class FooSerialization : DefaultSerialization
     public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
     {
         if (memberType.Name == nameof(DerivedFoo.SomeName))
-            return new [] { "Thomas", "Dennis", "Slawa", "Robert", "Marvin", "Michael", "Sascha" };
+            return new [] { "Thomas", "Dennis", "Slawa", "Robert", "Moryx", "Michael", "Sascha" };
 
         return base.PossibleValues(property);
     }
@@ -181,7 +181,7 @@ EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
 
 In the other sections you have learned that `EntryConvert` is able to serialize and deserialize objects. With the `GetMethods` and `InvokeMethod` features of `EntryConvert` you are able to build your own `RPC (Remote Procedure Call)` service.
 
-To enable the `RPC` features of `EntryConvert` you need to use the [EditorBrowsableSerialization](xref:Marvin.Serialization.EditorBrowsableSerialization) serializer on `EntryConvert`. Then you add the [EditorBrowsableAttribute](xref:Marvin.Serialization.EditorBrowsableAttribute) to all private/public methods or properties you want to expose.
+To enable the `RPC` features of `EntryConvert` you need to use the [EditorBrowsableSerialization](xref:Moryx.Serialization.EditorBrowsableSerialization) serializer on `EntryConvert`. Then you add the [EditorBrowsableAttribute](xref:Moryx.Serialization.EditorBrowsableAttribute) to all private/public methods or properties you want to expose.
 
 ````cs
 public class MyLittleRPC

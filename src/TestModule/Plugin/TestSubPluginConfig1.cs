@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [DataContract]
     public class TestSubPluginConfig1 : TestSubPluginConfig

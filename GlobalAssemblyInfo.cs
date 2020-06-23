@@ -3,7 +3,7 @@
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyProduct("MARVIN Platform")]
+[assembly: AssemblyProduct("MORYX Platform")]
 [assembly: AssemblyCompany("PHOENIX CONTACT")]
 [assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT 2020")]
 [assembly: AssemblyTrademark("")]

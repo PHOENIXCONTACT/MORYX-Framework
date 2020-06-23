@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Marvin.BuildTools</id>
+    <id>Moryx.BuildTools</id>
     <version>1.0.0</version>
-    <title>Marvin.BuildTools</title>
-    <authors>MARVIN Team</authors>
-    <owners>MARVIN Team</owners>
+    <title>Moryx.BuildTools</title>
+    <authors>MORYX Team</authors>
+    <owners>MORYX Team</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
-    <description>Build tools used to build MARVIN Runtime projects</description>
+    <description>Build tools used to build MORYX Runtime projects</description>
   </metadata>
 </package>

@@ -4,11 +4,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Serialization;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     public class TestPluginConfig1 : TestPluginConfig
     {

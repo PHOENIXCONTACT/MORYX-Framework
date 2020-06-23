@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.DependentTestModule
+namespace Moryx.DependentTestModule
 {
     [Plugin(LifeCycle.Singleton, typeof(ISimpleHelloWorldWcfSvcMgr), Name = ComponentName)]
     public class SimpleHelloWorldWcfSvcMgr : ISimpleHelloWorldWcfSvcMgr

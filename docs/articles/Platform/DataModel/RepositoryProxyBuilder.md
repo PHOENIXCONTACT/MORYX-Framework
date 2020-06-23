@@ -3,7 +3,7 @@ uid: Model.RepositoryProxyBuilder
 ---
 # Repository Proxy Builder
 
-The [RepositoryProxyBuilder](xref:Marvin.Model.RepositoryProxyBuilder) is the fancy component which is responsible for generating classes for given `Repository`-API's and also existing `abstract` classes.
+The [RepositoryProxyBuilder](xref:Moryx.Model.RepositoryProxyBuilder) is the fancy component which is responsible for generating classes for given `Repository`-API's and also existing `abstract` classes.
 
 The builder provides runtime generated types for predefined APIs for example:
 
@@ -40,7 +40,7 @@ var repoBuilder = new RepositoryProxyBuilder();
 var impl = repoBuilder.Build(typeof(ICarEntityRepository)).
 ````
 
-With this information the builder creates a type with the name `CarEntityRepository_MarvinProxy` for the given `ICarEntityRepository`. It tries to implement all declared methods otherwise it throws an `InvalidOperationException` if something is not possible or not specific enough.
+With this information the builder creates a type with the name `CarEntityRepository_MoryxProxy` for the given `ICarEntityRepository`. It tries to implement all declared methods otherwise it throws an `InvalidOperationException` if something is not possible or not specific enough.
 
 The builder automatically detects that the `CarEntity` is derived from `ModificationTrackedEntityBase` and uses the special `ModificationTrackedRepositoryBase` as base class (further reading here: [ModificationTracking](xref:Model.ModificationTracking))
 
@@ -92,7 +92,7 @@ public interface ICarEntityRepository : IRepository<CarEntity>
 The implementation which is done by the builder will be the following:
 
 ````cs
-public class CarEntityRepository_MarvinProxy : ICarEntityRepository
+public class CarEntityRepository_MoryxProxy : ICarEntityRepository
 {
     public CarEntity Create(string name)
     {

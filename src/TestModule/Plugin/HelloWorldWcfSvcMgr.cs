@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading;
-using Marvin.Container;
-using Marvin.Threading;
-using Marvin.Tools.Wcf;
+using Moryx.Container;
+using Moryx.Threading;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [Plugin(LifeCycle.Singleton, typeof(IHelloWorldWcfSvcMgr), Name = ComponentName)]
     public class HelloWorldWcfSvcMgr : ServiceManager<IHelloWorldWcfService>, IHelloWorldWcfSvcMgr

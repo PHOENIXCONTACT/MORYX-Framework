@@ -2,13 +2,13 @@
 uid: Quickstart
 ---
 
-# Getting Started with MarvinPlatform
+# Getting Started with MoryxPlatform
 
-This Tutorial explains how to setup a "Marvin Runtime Environment".
+This Tutorial explains how to setup a "Moryx Runtime Environment".
 
 # Runtime
-## Setting up the "Marvin Runtime Environment"
-First we will prepare the "Marvin Runtime Environment" for your project.
+## Setting up the "Moryx Runtime Environment"
+First we will prepare the "Moryx Runtime Environment" for your project.
 
 1. Create a project folder "_NameOfYourProject_"
 1. Create a Folder named ".build" inside your project folder
@@ -16,9 +16,9 @@ First we will prepare the "Marvin Runtime Environment" for your project.
 3. Navigate into ".build/ProjectBase/"
 4. Copy the content from ".build/ProjectBase/" to your project folder.
 5. Rename the Solution Files "ProjectName.sln" and "before.ProjectName.sln.targets" to a name of your choice.
-6. Download [RuntimeCore-Full-0.0.*-CI.mab](http://nts-eu-jenk02.europe.phoenixcontact.com:8080/job/MarvinPlatform-CI/) from Jenkins into your local bundle Folder. 
-7. Download [ModelTemplates-0.0.*-CI.mlb](http://nts-eu-jenk02.europe.phoenixcontact.com:8080/job/MarvinPlatform-CI/) from Jenkins into your local bundle Folder.
-8. Download [DataModelWizard-0.0.*-CI.vsix](http://nts-eu-jenk02.europe.phoenixcontact.com:8080/job/MarvinPlatform-CI/) from Jenkins into your local bundle Folder.
+6. Download [RuntimeCore-Full-0.0.*-CI.mab](http://nts-eu-jenk02.europe.phoenixcontact.com:8080/job/MoryxPlatform-CI/) from Jenkins into your local bundle Folder. 
+7. Download [ModelTemplates-0.0.*-CI.mlb](http://nts-eu-jenk02.europe.phoenixcontact.com:8080/job/MoryxPlatform-CI/) from Jenkins into your local bundle Folder.
+8. Download [DataModelWizard-0.0.*-CI.vsix](http://nts-eu-jenk02.europe.phoenixcontact.com:8080/job/MoryxPlatform-CI/) from Jenkins into your local bundle Folder.
 9. Execute ".build/InstallBundles.bat"
 
 After Installation succeeded Your directory should look like this:
@@ -37,9 +37,9 @@ D:\MYPROJECT
 |   |   CstfProcessor.exe
 |   |   DefaultDoxyfile
 |   |   InstallBundles.bat
-|   |   MarvinCommon.targets
-|   |   MarvinInstall.targets
-|   |   MarvinPreBuild.targets
+|   |   MoryxCommon.targets
+|   |   MoryxInstall.targets
+|   |   MoryxPreBuild.targets
 |   |   MSBuild.Community.Tasks.dll
 |   |   MSBuild.Community.Tasks.targets
 |   |   RunDoxygen.bat
@@ -78,9 +78,9 @@ D:\MYPROJECT
 |       \---Model
 |               CreateIndexGenerator.tmpl
 |               DateTriggers.tmpl
-|               Marvin.Repo.tmpl
-|               MarvinDbContext.tmpl
-|               MarvinInheritance.tmpl
+|               Moryx.Repo.tmpl
+|               MoryxDbContext.tmpl
+|               MoryxInheritance.tmpl
 |               UniqueConstraint.tmpl
 +---Models
 +---Modules

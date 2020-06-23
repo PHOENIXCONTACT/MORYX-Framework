@@ -5,10 +5,10 @@ stages:
   - publish
 
 variables:
-  MARVIN_BUILDNUMBER: "$CI_PIPELINE_ID"
-  MARVIN_BRANCH: "$CI_COMMIT_REF_NAME"
-  MARVIN_BUILD_CONFIG: "Release"
-  MARVIN_OPTIMIZE_CODE: "false"
+  MORYX_BUILDNUMBER: "$CI_PIPELINE_ID"
+  MORYX_BRANCH: "$CI_COMMIT_REF_NAME"
+  MORYX_BUILD_CONFIG: "Release"
+  MORYX_OPTIMIZE_CODE: "false"
 
 cache:
   paths:
@@ -25,7 +25,7 @@ Build:
     expire_in: 1 hrs
     paths:
       - 'artifacts/Packages'
-      - 'src/StartProject/bin/$MARVIN_BUILD_CONFIG'
+      - 'src/StartProject/bin/$MORYX_BUILD_CONFIG'
 
 SmokeTests: 
   stage: test
@@ -96,4 +96,4 @@ PublishPackages:
   script: 
     - .\build.ps1 -Publish
   only: 
-    - dev@marvin/MarvinPlatform
+    - dev@moryx/MoryxPlatform

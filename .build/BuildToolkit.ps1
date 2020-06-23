@@ -111,33 +111,33 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     }
 
     # Environment Variable Defaults
-    if (-not $env:MARVIN_BUILDNUMBER) {
-        $env:MARVIN_BUILDNUMBER = 0;
+    if (-not $env:MORYX_BUILDNUMBER) {
+        $env:MORYX_BUILDNUMBER = 0;
     }
 
-    if (-not $env:MARVIN_BUILD_CONFIG) {
-        $env:MARVIN_BUILD_CONFIG = "Debug";
+    if (-not $env:MORYX_BUILD_CONFIG) {
+        $env:MORYX_BUILD_CONFIG = "Debug";
     }
 
-    if (-not $env:MARVIN_BUILD_VERBOSITY) {
-        $env:MARVIN_BUILD_VERBOSITY = "minimal"
+    if (-not $env:MORYX_BUILD_VERBOSITY) {
+        $env:MORYX_BUILD_VERBOSITY = "minimal"
     }
 
-    if (-not $env:MARVIN_NUGET_VERBOSITY) {
-        $env:MARVIN_NUGET_VERBOSITY = "normal"
+    if (-not $env:MORYX_NUGET_VERBOSITY) {
+        $env:MORYX_NUGET_VERBOSITY = "normal"
     }
 
-    if (-not $env:MARVIN_OPTIMIZE_CODE) {
-        $env:MARVIN_OPTIMIZE_CODE = $True;
+    if (-not $env:MORYX_OPTIMIZE_CODE) {
+        $env:MORYX_OPTIMIZE_CODE = $True;
     }
     else {
-        if (-not [bool]::TryParse($env:MARVIN_OPTIMIZE_CODE,  [ref]$env:MARVIN_OPTIMIZE_CODE)) {
-            $env:MARVIN_OPTIMIZE_CODE = $True;
+        if (-not [bool]::TryParse($env:MORYX_OPTIMIZE_CODE,  [ref]$env:MORYX_OPTIMIZE_CODE)) {
+            $env:MORYX_OPTIMIZE_CODE = $True;
         }
     }
 
-    if (-not $env:MARVIN_BRANCH) {
-        $env:MARVIN_BRANCH = "unknown";
+    if (-not $env:MORYX_BRANCH) {
+        $env:MORYX_BRANCH = "unknown";
     }
 
     Set-Version $Version;
@@ -162,9 +162,9 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Variable "GitCli" $global:GitCli;
     Write-Variable "GitLink" $global:GitLink;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
-    Write-Variable "MARVIN_BRANCH" $env:MARVIN_BRANCH;
-    Write-Variable "MARVIN_VERSION" $env:MARVIN_VERSION;
-    Write-Variable "MARVIN_ASSEMBLY_VERSION" $env:MARVIN_ASSEMBLY_VERSION
+    Write-Variable "MORYX_BRANCH" $env:MORYX_BRANCH;
+    Write-Variable "MORYX_VERSION" $env:MORYX_VERSION;
+    Write-Variable "MORYX_ASSEMBLY_VERSION" $env:MORYX_ASSEMBLY_VERSION
 
     # Cleanp
     if ($Cleanup) {
@@ -202,7 +202,7 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
     ForEach ($solution in (Get-ChildItem $RootPath -Filter "*.sln")) {
         Write-Host "Restoring Nuget packages of $solution";
 
-        & $global:NugetCli restore $solution -Verbosity $env:MARVIN_NUGET_VERBOSITY -configfile $NugetConfig;
+        & $global:NugetCli restore $solution -Verbosity $env:MORYX_NUGET_VERBOSITY -configfile $NugetConfig;
         Invoke-ExitCodeCheck $LastExitCode;
     }
 
@@ -211,9 +211,9 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
         $additonalOptions = ",$Options";
     }
 
-    $params = "Configuration=$env:MARVIN_BUILD_CONFIG,Optimize=" + (&{If($env:MARVIN_OPTIMIZE_CODE -eq $True) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
+    $params = "Configuration=$env:MORYX_BUILD_CONFIG,Optimize=" + (&{If($env:MORYX_OPTIMIZE_CODE -eq $True) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
 
-    & $global:MSBuildCli $ProjectFile /p:$params /verbosity:$env:MARVIN_BUILD_VERBOSITY
+    & $global:MSBuildCli $ProjectFile /p:$params /verbosity:$env:MORYX_BUILD_VERBOSITY
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
@@ -237,14 +237,14 @@ function Invoke-Nunit([string]$SearchPath = $RootPath, [string]$SearchFilter = "
 
 	ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
-        $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MARVIN_BUILD_CONFIG, "$projectName.dll");
+        $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MORYX_BUILD_CONFIG, "$projectName.dll");
 		
 		# If assembly does not exists, the project will be build
         if (-not (Test-Path $testAssembly)) {
             Invoke-Build $testProject 
         }
 
-		& $global:NUnitCli $testProject /config:"$env:MARVIN_BUILD_CONFIG"
+		& $global:NUnitCli $testProject /config:"$env:MORYX_BUILD_CONFIG"
 	}	
     
     Invoke-ExitCodeCheck $LastExitCode;
@@ -290,7 +290,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
 
     ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
-        $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MARVIN_BUILD_CONFIG, "$projectName.dll");
+        $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MORYX_BUILD_CONFIG, "$projectName.dll");
 
         Write-Host "OpenCover Test: ${projectName}:";
 
@@ -303,7 +303,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
             Invoke-Build $testProject 
         }
 
-        $includeFilter = "+[Marvin*]*";
+        $includeFilter = "+[Moryx*]*";
         $excludeFilter = "-[*nunit*]* -[*Tests]* -[*Model*]*";
 
         if (Test-Path $FilterFile) {
@@ -330,7 +330,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
 
         Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
 
-        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MARVIN_BUILD_CONFIG /result:$nunitXml $testAssembly"
+        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MORYX_BUILD_CONFIG /result:$nunitXml $testAssembly"
         $openCoverAgs += "-log:Debug", "-register:user", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
         $openCoverAgs += "-returntargetcode" # We need the nunit return code
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
@@ -423,7 +423,7 @@ function Invoke-SourceIndex([string]$RawUrl, [string]$SearchPath = [System.IO.Pa
 
         $csprojXml = [xml](Get-Content $csporj.FullName);
 
-        $outputGroup = $csprojXml.Project.PropertyGroup | Where-Object Condition -Like "*$env:MARVIN_BUILD_CONFIG|AnyCPU*";
+        $outputGroup = $csprojXml.Project.PropertyGroup | Where-Object Condition -Like "*$env:MORYX_BUILD_CONFIG|AnyCPU*";
         $outputPath = $outputGroup.OutputPath;
 
         $assemblyGroup = $csprojXml.Project.PropertyGroup | Where-Object {-not ([string]::IsNullOrEmpty($_.AssemblyName)) }
@@ -452,9 +452,9 @@ function Invoke-Pack($FilePath, [bool]$IsTool = $False, [bool]$IncludeSymbols = 
 
     $packargs = "-outputdirectory", "$NugetPackageArtifacts";
     $packargs += "-includereferencedprojects";
-    $packargs += "-Version", "$env:MARVIN_VERSION";
-    $packargs += "-Prop", "Configuration=$env:MARVIN_BUILD_CONFIG";
-    $packargs += "-Verbosity", "$env:MARVIN_NUGET_VERBOSITY";
+    $packargs += "-Version", "$env:MORYX_VERSION";
+    $packargs += "-Prop", "Configuration=$env:MORYX_BUILD_CONFIG";
+    $packargs += "-Verbosity", "$env:MORYX_NUGET_VERBOSITY";
 
     if ($IncludeSymbols) {
         $packargs += "-Symbols";
@@ -491,7 +491,7 @@ function Invoke-Publish {
     $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
-        & $global:NugetPushCli push $package $env:MARVIN_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity $env:MARVIN_NUGET_VERBOSITY
+        & $global:NugetPushCli push $package $env:MORYX_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity $env:MORYX_NUGET_VERBOSITY
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }
@@ -502,7 +502,7 @@ function Set-Version ([string]$MajorMinorPatch) {
     $version = $MajorMinorPatch;
     $tagRegex = '^v?(\d+\.\d+\.\d+)(-([a-zA-Z]+)\.?(\d*))?$'; # v1.0.0-beta1
 
-    $isVersionTag = $env:MARVIN_BRANCH -match $tagRegex
+    $isVersionTag = $env:MORYX_BRANCH -match $tagRegex
     if ($isVersionTag) {
         Write-Debug "Building commit tagged with a compatable version number"
         
@@ -523,17 +523,17 @@ function Set-Version ([string]$MajorMinorPatch) {
         Write-Debug "Untagged"
 
         # Build number replacement is padded to 6 places
-        $buildNumber = "$env:MARVIN_BUILDNUMBER".Trim().PadLeft(6,"0");
+        $buildNumber = "$env:MORYX_BUILDNUMBER".Trim().PadLeft(6,"0");
 
         # This is a general branch commit
-        $branch = $env:MARVIN_BRANCH
+        $branch = $env:MORYX_BRANCH
         $branch = $branch.Replace("/","").ToLower()
        
         $version = "${version}-${branch}${buildNumber}";
     }
 
-    $env:MARVIN_VERSION = $version;
-    $env:MARVIN_ASSEMBLY_VERSION = $MajorMinorPatch + "." + $env:MARVIN_BUILDNUMBER;
+    $env:MORYX_VERSION = $version;
+    $env:MORYX_ASSEMBLY_VERSION = $MajorMinorPatch + "." + $env:MORYX_BUILDNUMBER;
 }
 
 function Set-AssemblyVersion([string]$InputFile) {
@@ -544,19 +544,19 @@ function Set-AssemblyVersion([string]$InputFile) {
         exit 1;
     }
 
-    Write-Host "Applying assembly info of $($file.FullName) -> $env:MARVIN_ASSEMBLY_VERSION ";
+    Write-Host "Applying assembly info of $($file.FullName) -> $env:MORYX_ASSEMBLY_VERSION ";
    
     $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyVersion = 'AssemblyVersion("' + $env:MARVIN_ASSEMBLY_VERSION + '")';
+    $assemblyVersion = 'AssemblyVersion("' + $env:MORYX_ASSEMBLY_VERSION + '")';
 
     $assemblyFileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyFileVersion = 'AssemblyFileVersion("' + $env:MARVIN_ASSEMBLY_VERSION + '")';
+    $assemblyFileVersion = 'AssemblyFileVersion("' + $env:MORYX_ASSEMBLY_VERSION + '")';
 
     $assemblyInformationalVersionPattern = 'AssemblyInformationalVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $env:MARVIN_VERSION + '")';
+    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $env:MORYX_VERSION + '")';
 
     $assemblyConfigurationPattern = 'AssemblyConfiguration\("\w+"\)';
-    $assemblyConfiguration = 'AssemblyConfiguration("' + $env:MARVIN_BUILD_CONFIG + '")';
+    $assemblyConfiguration = 'AssemblyConfiguration("' + $env:MORYX_BUILD_CONFIG + '")';
     
     $content = (Get-Content $file.FullName) | ForEach-Object  { 
         ForEach-Object {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
@@ -593,10 +593,10 @@ function Set-VsixManifestVersion([string]$VsixManifest) {
     }
     
     [xml]$manifestContent = Get-Content $file
-    $manifestContent.PackageManifest.Metadata.Identity.Version = $env:MARVIN_ASSEMBLY_VERSION
+    $manifestContent.PackageManifest.Metadata.Identity.Version = $env:MORYX_ASSEMBLY_VERSION
     $manifestContent.Save($VsixManifest) 
 
-    Write-Host "Version $env:MARVIN_ASSEMBLY_VERSION applied to $VsixManifest!"
+    Write-Host "Version $env:MORYX_ASSEMBLY_VERSION applied to $VsixManifest!"
 }
 
 function Set-VsTemplateVersion([string]$VsTemplate) {
@@ -610,20 +610,20 @@ function Set-VsTemplateVersion([string]$VsTemplate) {
 
     $versionRegex = "(\d+)\.(\d+)\.(\d+)\.(\d+)"
 
-    $wizardAssemblyStrongName = $templateContent.VSTemplate.WizardExtension.Assembly -replace $versionRegex, $env:MARVIN_ASSEMBLY_VERSION 
+    $wizardAssemblyStrongName = $templateContent.VSTemplate.WizardExtension.Assembly -replace $versionRegex, $env:MORYX_ASSEMBLY_VERSION 
     $templateContent.VSTemplate.WizardExtension.Assembly = $wizardAssemblyStrongName
     $templateContent.Save($vsTemplate)
 
-    Write-Host "Version $env:MARVIN_ASSEMBLY_VERSION applied to $VsTemplate!"
+    Write-Host "Version $env:MORYX_ASSEMBLY_VERSION applied to $VsTemplate!"
 }
 
 function Install-EddieLight([string]$Version, [string]$TargetPath) {
     Write-Step "Installing EddieLight"
 
-    $eddieLightPackage = "Marvin.Runtime.EddieLight";
+    $eddieLightPackage = "Moryx.Runtime.EddieLight";
     $eddieLightSource = [System.IO.Path]::Combine($BuildTools, "$eddieLightPackage.$Version\EddieLight\");
     $heartOfSilver = [System.IO.Path]::Combine($eddieLightSource, "SilverlightApp\HeartOfSilver.xap");
-    $eddieLightPackage = "Marvin.Runtime.EddieLight";
+    $eddieLightPackage = "Moryx.Runtime.EddieLight";
 
     Install-Tool $eddieLightPackage $Version $heartOfSilver;
 

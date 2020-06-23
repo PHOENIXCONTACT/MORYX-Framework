@@ -3,7 +3,7 @@ uid: Bindings
 ---
 # Bindings
 
-The types of the `Marvin.Bindings`-namespace located in _Marvin.PlatformTools_ offer the functionality to dynamically resolve or update properties of objects. An [IBindingResolver](xref:Marvin.Bindings.IBindingResolver) is created by an instance of [IBindingResolverFactory](xref:Marvin.Bindings.IBindingResolverFactory) from a string like `"Branch.Name"`. The resolver will then return the value of `Name` for each `object source` passed into the `Resolve(source)`-method.
+The types of the `Moryx.Bindings`-namespace located in _Moryx.PlatformTools_ offer the functionality to dynamically resolve or update properties of objects. An [IBindingResolver](xref:Moryx.Bindings.IBindingResolver) is created by an instance of [IBindingResolverFactory](xref:Moryx.Bindings.IBindingResolverFactory) from a string like `"Branch.Name"`. The resolver will then return the value of `Name` for each `object source` passed into the `Resolve(source)`-method.
 
 It is also possible to set the value of the property by calling `Update(object, object)` on the resolver created by the factory.
 
@@ -44,15 +44,15 @@ resolver.Update(root, "Marie"); // Value of "root.Branch" = "Marie"
 
 ## IBindingResolver Chain
 
-Implementations of [IBindingResolver](xref:Marvin.Bindings.IBindingResolver) are build as a recursive double-linked list using their extended [IBindingResolverChain](xref:Marvin.Bindings.IBindingResolver) interface. Each link of the chain resolves a fragment of the string using the source object and passes the result to the next link. When updating a value the resolver chain is executed up to the last link and instead of calling `Resolve` on the last link, `Update` is invoked.
+Implementations of [IBindingResolver](xref:Moryx.Bindings.IBindingResolver) are build as a recursive double-linked list using their extended [IBindingResolverChain](xref:Moryx.Bindings.IBindingResolver) interface. Each link of the chain resolves a fragment of the string using the source object and passes the result to the next link. When updating a value the resolver chain is executed up to the last link and instead of calling `Resolve` on the last link, `Update` is invoked.
 
-The chain of resolvers is built by the [IBindingResolverFactory](xref:Marvin.Bindings.IBindingResolverFactory) by parsing the string and creating links token by token. A token is text fragement between two dots or an index like __name__ in `Parameters[name]`. Unlike XAML-binding not all tokens directly represent a property. An implementation of [IBindingResolverFactory](xref:Marvin.Bindings.IBindingResolverFactory) might define special keys or short-cuts.
+The chain of resolvers is built by the [IBindingResolverFactory](xref:Moryx.Bindings.IBindingResolverFactory) by parsing the string and creating links token by token. A token is text fragement between two dots or an index like __name__ in `Parameters[name]`. Unlike XAML-binding not all tokens directly represent a property. An implementation of [IBindingResolverFactory](xref:Moryx.Bindings.IBindingResolverFactory) might define special keys or short-cuts.
 
-The platform provides a base class [BindingResolverBase](xref:Marvin.Bindings.BindingResolverBase) and four standard implementations of [IBindingResolver](xref:Marvin.Bindings.IBindingResolver).
+The platform provides a base class [BindingResolverBase](xref:Moryx.Bindings.BindingResolverBase) and four standard implementations of [IBindingResolver](xref:Moryx.Bindings.IBindingResolver).
 
 ### BindingResolverBase
 
-This base class implements the [IBindingResolverChain](xref:Marvin.Bindings.IBindingResolver) interface and should be used instead of implementing the interface manually. It provides an explicit `Resolve`-method that continues invocation on the recursive chain. If the object is `null` or this was the last link in the chain it returns the current value.
+This base class implements the [IBindingResolverChain](xref:Moryx.Bindings.IBindingResolver) interface and should be used instead of implementing the interface manually. It provides an explicit `Resolve`-method that continues invocation on the recursive chain. If the object is `null` or this was the last link in the chain it returns the current value.
 
 A simple example for a custom resolver could resolve the type of an object.
 
@@ -75,7 +75,7 @@ public class TypeResolver : BindingResolverBase
 
 ### NullResolver
 
-Following the [Null-Object pattern](https://en.wikipedia.org/wiki/Null_Object_pattern) this resolver can be used whenever an instance of [IBindingResolver](xref:Marvin.Bindings.IBindingResolver) is required but no operation should be performed. The [NullResolver](xref:Marvin.Bindings.NullResolver) simply continues the chain by calling proceed with the unmodified source object.
+Following the [Null-Object pattern](https://en.wikipedia.org/wiki/Null_Object_pattern) this resolver can be used whenever an instance of [IBindingResolver](xref:Moryx.Bindings.IBindingResolver) is required but no operation should be performed. The [NullResolver](xref:Moryx.Bindings.NullResolver) simply continues the chain by calling proceed with the unmodified source object.
 
 Example in code:
 
@@ -87,7 +87,7 @@ result = resolver.Resolve("Name"); // Value of result = "Name"
 
 ### ReflectionResolver
 
-By using reflection [this resolver](xref:Marvin.Bindings.ReflectionResolver) tries to load the value of the property from the source object. The name of the property is usually parsed as the text between dots in the binding string. The example at the top creates two reflection resolvers - one for `"Branch"` and one for `"Name"`. Because this resolver uses reflection it is significantly slower than the others and should not be used to resolve values which could be accessed another way. The resolver also supports updating the value as long as the property `CanWrite`.
+By using reflection [this resolver](xref:Moryx.Bindings.ReflectionResolver) tries to load the value of the property from the source object. The name of the property is usually parsed as the text between dots in the binding string. The example at the top creates two reflection resolvers - one for `"Branch"` and one for `"Name"`. Because this resolver uses reflection it is significantly slower than the others and should not be used to resolve values which could be accessed another way. The resolver also supports updating the value as long as the property `CanWrite`.
 
 Example in code:
 
@@ -111,7 +111,7 @@ resolver.Update(foo, "Bob");
 
 ### DelegateResolver
 
-The [delegate resolver](xref:Marvin.Bindings.DelegateResolver) can be used to implement simple custom resolution rules without creating a new implementation of [IBindingResolver](xref:Marvin.Bindings.IBindingResolver). It is created from a delegate `Func<object, object>` and will call it for each call to `Resolve()`. The result of the callback is returned.
+The [delegate resolver](xref:Moryx.Bindings.DelegateResolver) can be used to implement simple custom resolution rules without creating a new implementation of [IBindingResolver](xref:Moryx.Bindings.IBindingResolver). It is created from a delegate `Func<object, object>` and will call it for each call to `Resolve()`. The result of the callback is returned.
 
 Using the DelegateResolver to provide the `GetType()` behavior:
 
@@ -131,7 +131,7 @@ resolver.Update(foo, "Bob");
 
 ### FormatBindingResolver
 
-The [format resolver](xref:Marvin.Bindings.FormatBindingResolver) can create format strings for objects implementing `IFormattable`. It is used by the `TextBindingResolverFactory`, that is explained further down in this documentation.
+The [format resolver](xref:Moryx.Bindings.FormatBindingResolver) can create format strings for objects implementing `IFormattable`. It is used by the `TextBindingResolverFactory`, that is explained further down in this documentation.
 
 An easy example using the resolver to format a string with fixed length:
 
@@ -142,7 +142,7 @@ var result = resolver.Resolve(3); // Value of result = "003"
 
 ### IndexResolver
 
-The [index resolver](xref:Marvin.Bindings.IndexResolver) can extract values from collections and dictionaries. Given an index like `"Thomas"` or `10` it tries to interpret those values either as indexes in `IList` or as the key in a dictionary. Because the index resolver expects a collection as `source` object it usually needs to be preceded by another resolver that resolves the collection itself. This is done be the `BindingResolverFactory` that uses a Regex to combine a `ReflectionResolver` with an `IndexResolver` when it finds a string like `Collection[index]`. It also supports the `Update`-method to set values.
+The [index resolver](xref:Moryx.Bindings.IndexResolver) can extract values from collections and dictionaries. Given an index like `"Thomas"` or `10` it tries to interpret those values either as indexes in `IList` or as the key in a dictionary. Because the index resolver expects a collection as `source` object it usually needs to be preceded by another resolver that resolves the collection itself. This is done be the `BindingResolverFactory` that uses a Regex to combine a `ReflectionResolver` with an `IndexResolver` when it finds a string like `Collection[index]`. It also supports the `Update`-method to set values.
 
 Using it stand-alone looks like this:
 
@@ -163,7 +163,7 @@ resolver.Update(dict, "OtherValue");
 
 ## IBindingResolverFactory
 
-The resolver factory builds a recursive chain of `IBindingResolver` from a string like `"Root.Branch.Name"`. The default and base implementation is [BindingResolverFactory](xref:Marvin.Bindings.BindingResolverFactory). It is similar to the binding-engine in XAML with the addition that it supports collection resolution. Custom resolver factories are built by creating a type derived from `BindingResolverFactory`. Below is an example for a factory that supports loading the objects type. The example explains the two concepts base key and custom resolution rules.
+The resolver factory builds a recursive chain of `IBindingResolver` from a string like `"Root.Branch.Name"`. The default and base implementation is [BindingResolverFactory](xref:Moryx.Bindings.BindingResolverFactory). It is similar to the binding-engine in XAML with the addition that it supports collection resolution. Custom resolver factories are built by creating a type derived from `BindingResolverFactory`. Below is an example for a factory that supports loading the objects type. The example explains the two concepts base key and custom resolution rules.
 
 ````cs
 public class TypeResolverFactory : BindingResolverFactory
@@ -253,9 +253,9 @@ Applying the previous sections to a few examples the factory and resolver chain 
 
 ## Text Bindings
 
-While there might be some use cases of those bindings by themselves, the more common use is to embed them into text. This is done by instances of [ITextBindingResolver](xref:Marvin.Bindings.ITextBindingResolver) created by the [TextBindingResolverFactory](xref:Marvin.Bindings.TextBindingResolverFactory). The text binding resolver factory is static and builds text resolvers using the given [IBindingResolverFactory](xref:Marvin.Bindings.IBindingResolverFactory). This means all custom bindings can be used within text without any additional effort.
+While there might be some use cases of those bindings by themselves, the more common use is to embed them into text. This is done by instances of [ITextBindingResolver](xref:Moryx.Bindings.ITextBindingResolver) created by the [TextBindingResolverFactory](xref:Moryx.Bindings.TextBindingResolverFactory). The text binding resolver factory is static and builds text resolvers using the given [IBindingResolverFactory](xref:Moryx.Bindings.IBindingResolverFactory). This means all custom bindings can be used within text without any additional effort.
 
-The text resolution also supports formatting by appending `":<format>"` to the binding expression. It supports the default formats of the type it is applied to. This features is implemented by appending a [FormatBindingResolver](xref:Marvin.Bindings.FormatBindingResolver) to the end of the chain.
+The text resolution also supports formatting by appending `":<format>"` to the binding expression. It supports the default formats of the type it is applied to. This features is implemented by appending a [FormatBindingResolver](xref:Moryx.Bindings.FormatBindingResolver) to the end of the chain.
 
 Using the previous examples using the text resolvers looks like this.
 

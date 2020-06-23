@@ -1,2 +1,0 @@
-INCLUDE:+[Marvin.Container]*
-EXCLUDE:-[Marvin]* -[*Test*]* -[*]*Config -[*]*Exception -[*]*Attribute

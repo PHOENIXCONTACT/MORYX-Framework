@@ -18,7 +18,7 @@ Creating a facade:
 - Add a class "Facade.cs" to the folder an make it implement "IFacade".
 - Implement "Foo" by returning the sum of a and b
 
-After we defined our facade we want to export it from the server module. All we must do is let our module controller implement the [IFacadeContainer](xref:Marvin.Runtime.Modules.IFacadeContainer´1) interface. Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file:
+After we defined our facade we want to export it from the server module. All we must do is let our module controller implement the [IFacadeContainer](xref:Moryx.Runtime.Modules.IFacadeContainer´1) interface. Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file:
 
 ![Facade export](images/FacadeExport.png)
 
@@ -38,7 +38,7 @@ Steps:
 
 1. Reference the project "Facades.Dependency" and set CopyLocal to false
 2. Add a property of type "IFacade" to the module controller
-3. Decorate it with [RequiredModuleApiAttribute](xref:Marvin.Runtime.ModuleManagement.RequiredModuleApiAttribute)
+3. Decorate it with [RequiredModuleApiAttribute](xref:Moryx.Runtime.ModuleManagement.RequiredModuleApiAttribute)
   3.1 IsStartDependency = true will instruct the module manager to bind the dependent modules life cycle to the dependency ones
   3.2 IsOptional = true will allow this property to be null if no other module exports it. If this remains false the module manager will abort the boot process due to incomplete dependencies.
 
@@ -71,7 +71,7 @@ Every event invocation represents an incremental change that occurred within an 
 previous state of the object its current state can not be determined. Therefore every API that offers events must also provide methods to retrieve the current state
 of the component. For `NotifyPropertyChanged` and `NotifyCollectionChanged` the initial state is the object itself.
 
-Transferring this to MARVIN facades means that for every event there must be way to retrieve the current state of the module. This decouples the life cycles and allows
+Transferring this to MORYX facades means that for every event there must be way to retrieve the current state of the module. This decouples the life cycles and allows
 the dependent to be started and stopped at any time without having to worry what he might miss in the process. For example the API for the JobManagement could simply
 be:
 
@@ -102,7 +102,7 @@ public interface IJobManagement
 
 ## Lifecycle bound facades
 
-Sometimes you need to know when a facade gets `activated` or `deactivated`. It's quite possible to get notified if the activation state of a facade has been changed. Your facade should inherit from [FacadeBase](xref:Marvin.Runtime.Modules.ILifeCycleBoundFacade) or at least from [ILifeCycleBoundFacade](xref:Marvin.Runtime.Modules.FacadeBase):
+Sometimes you need to know when a facade gets `activated` or `deactivated`. It's quite possible to get notified if the activation state of a facade has been changed. Your facade should inherit from [FacadeBase](xref:Moryx.Runtime.Modules.ILifeCycleBoundFacade) or at least from [ILifeCycleBoundFacade](xref:Moryx.Runtime.Modules.FacadeBase):
 
 ````cs
 public class CustomFacade : FacadeBase, ICustomFacade
