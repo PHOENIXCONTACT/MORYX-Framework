@@ -23,7 +23,7 @@ button, a, .btn-primary {
     color: #000000;
 }
 
-.version-link, .bitbucket-link{
+.version-link, .github-link{
   color: rgb(0,82,89);
 }
 
@@ -110,7 +110,7 @@ svg:hover path {
 .buttons-unit-small{
   font-size: 18px;
 }
-.version-link, .bitbucket-link{
+.version-link, .github-link{
   margin: 5px;
 }
 .hero strong {

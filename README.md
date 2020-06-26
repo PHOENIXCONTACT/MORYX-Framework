@@ -1,19 +1,14 @@
 # MORYX Platform
 
-![CI](https://github.com/dbeuchler/MarvinPlatform/workflows/CI/badge.svg)
-[![codecov](https://codecov.io/gh/dbeuchler/MarvinPlatform/branch/dev/graph/badge.svg?token=BZUCXPUNHU)](https://codecov.io/gh/dbeuchler/MarvinPlatform)
+![CI](https://github.com/PHOENIXCONTACT/MORYX-Platform/workflows/CI/badge.svg)
 
-The MORYX Platform is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provide modularity, flexibility and easy configuration with very little effort. It is also the foundation for the Phoenix Contact IoT Framework [MORYX Abstraction Layer](https://git-ctvc.europe.phoenixcontact.com/marvin/AbstractionLayer)
+The MORYX Platform is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provide modularity, flexibility and easy configuration with very little effort. It is also the foundation for the Phoenix Contact IoT Framework [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
 
 **Links**
-- [Package Feed](https://packages-ctvc.europe.phoenixcontact.com/nuget/MaRVIN-CI)
-- [Training Repository](https://git-ctvc.europe.phoenixcontact.com/marvin/trainingrepo)
-- [Application Skeleton](https://git-ctvc.europe.phoenixcontact.com/marvin/ApplicationSkeleton)
-- [MORYX Maintenance](https://git-ctvc.europe.phoenixcontact.com/marvin/maintenanceweb)
-- [MORYX Abstraction Layer](https://git-ctvc.europe.phoenixcontact.com/marvin/AbstractionLayer)
 
 - [Package Feed](https://www.myget.org/feed/Packages/moryx)
-- [Repository Template](https://github.com/PHOENIXCONTACT/MORYX-Template)
+- [Training Repository]()
+- [Application Skeleton]()
 - [MORYX Maintenance](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb)
 - [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
 
@@ -21,7 +16,7 @@ The MORYX Platform is a .NET based framework to quickly build three-tier applica
 
 If you want to start developing with or for MORYX, the easiest way is our [template repository](https://github.com/PHOENIXCONTACT/MORYX-Template). It comes with two empty solutions, the necessary package feeds and preinstalled empty MORYX runtime. Add projects and packages to backend and frontend solutions depending on your specific requirements.
 
-If you wish to contribute to this project, you simply need to clone the repository and open the solution with Visual Studio 2017 or above. The Debug target should be *StartProject*. 
+If you wish to contribute to this project, you simply need to clone the repository and open the solution with Visual Studio 2017 or above. The Debug target should be *StartProject*.
 
 To build and run from the command line you need powershell and msbuild.
 
@@ -49,7 +44,8 @@ Part of the Platform is als the Maintenance Module, which hosts a HTTP REST serv
 Starting with version 3.0 of the platform we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community. Because of these changes the public version is still *Work-in-Progress*, but we will stabilize and release it soon.
 
 But even though this version is still under construction, its in-house predecessor has been used in production for years. Just a few examples of solutions build on MORYX are listed below:
-- [Manufacturing Control System](https://git-ctvc.europe.phoenixcontact.com/marvin/ControlSystem)
+
+- Manufacturing Control System
 - Plasic Mold Tracking
 - Intralogistics
 - Home Automation

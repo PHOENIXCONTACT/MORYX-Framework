@@ -17,6 +17,7 @@ developed. Below the disadvantages of the previous approach are initially listed
 that enables a unified way of data exchange between client and server. Finally the advantages of this concept will be discussed. 
 
 **Disadvantages of the past concept**
+
 * Every client module have to implement the needed ServiceReferences by itself. This leads to code duplication.
 * If a service changes the references must be updated at many different client modules.
 * Every client module must implement its own DTO-ViewModels, which also leads to duplicated code.

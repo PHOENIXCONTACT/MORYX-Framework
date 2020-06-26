@@ -12,9 +12,3 @@
 
 - name: RunModes
   href: RunModes.md
-
-- name: Runtime Advance
-  href: Advance.md
-
-- name: UserManagement
-  href: UserManagement.md

@@ -86,7 +86,7 @@
       "_enableNewTab": true,
       "_enableSearch": true,
       "_gitContribute": {
-        "repo": "http://bitbucket-dev.europe.phoenixcontact.com/projects/MS/repos/marvinplatform",
+        "repo": "https://github.com/PHOENIXCONTACT/MORYX-Platform",
         "branch": "master"
       }
     }

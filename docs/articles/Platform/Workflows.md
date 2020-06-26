@@ -1,8 +1,7 @@
 ---
 uid: Workflows
 ---
-Workflows
-==========
+# Workflows
 
 As part of the _Moryx-package_ the namespace _Moryx.Workflows_ and its static class API entry-point `Workflow` provide a petry-net based implementation of a workflow engine. The namespace and its components can be grouped into workflow creation/representation and execution/monitoring.
 
@@ -21,6 +20,7 @@ The previously mentioned connectors and steps share the common interface [IWorkp
 To implement `IWorkplanStep` it is recommended to derive from `WorkplanStepBase`, which already implements most of the interface. Per default this defines a step with one input and one output. Besides the `Name` of the step the most important part to implement is the definition of outputs and creation of an executable `ITransition` from the step. While `IWorkplanStep` instances only represent an action in the workplan object graph, `ITransition` implement the executable code to perform the action. 
 
 ### Creating a workplan
+
 Workplans can be created from code by creating the object graph or using the [IWorkplanEditing API](xref:Moryx.Workflows.IWorkplanEditing). For the latter there is also bundle for graphical editing of workflows.
 
 Creating workplans from code is shown in the example below. The used `DummyStep` takes output count and name from its constructor, but for most steps these parameters will be determined by the action the step represents and its possible results.
@@ -57,7 +57,7 @@ return workplan;
 
 ## Workflow Execution
 
-For execution the above mentioned _Workplans_ are instantiated to _Workflows_, which can than be executed by an instance of the [workflow engine](xref:Moryx.Workflows.IWorkflowEngine). The internal architecture is based on [the concept of petri-nets](https://en.wikipedia.org/wiki/Petri_net) with its transition and places. The execution is performed by tokens that are moved by transitions from one place to another. 
+For execution the above mentioned _Workplans_ are instantiated to _Workflows_, which can than be executed by an instance of the [workflow engine](xref:Moryx.Workflows.IWorkflowEngine). The internal architecture is based on [the concept of petri-nets](https://en.wikipedia.org/wiki/Petri_net) with its transition and places. The execution is performed by tokens that are moved by transitions from one place to another.
 
 ````cs
 var workplan = MethodThatReturnsWorkplan();
@@ -74,7 +74,7 @@ engine.Start();
 
 Sometimes the result of a workflow execution is foreseeable during execution even though the engine has not completed yet because the workplan defines final steps before the workflow was truly completed. However in order to save time it might make sense to process the expected result without awaiting the engines completion. Path prediction refers to the ability to analyze a workplan and identify paths that lead to only one possible outcome. Once the workflow engine enters that path during execution the result can be predicted **before** the workflow was completed.
 
-In _Moryx.Workflows_ this feature is available in through the [PathPredictor](xref:Moryx.Workflows.IPathPredictor). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that paths an event is published that contains the expected result in the form of a `NodeClassification`. 
+In _Moryx.Workflows_ this feature is available in through the [PathPredictor](xref:Moryx.Workflows.IPathPredictor). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that paths an event is published that contains the expected result in the form of a `NodeClassification`.
 
 ````cs
 var workplan = MethodThatReturnsWorkplan();

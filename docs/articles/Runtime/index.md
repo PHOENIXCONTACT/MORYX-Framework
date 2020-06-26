@@ -1,8 +1,7 @@
 ---
 uid: RuntimeMain
 ---
-Runtime
-========
+# Runtime
 
 The Moryx Runtime is an application framework for the server part of a client-server application. It is based on the concept of modular software development and the service pattern. The frameworks main features are listed below:
 
@@ -22,11 +21,13 @@ The Moryx Runtime defines two levels of components. The top level or main compon
 
 Even though the framework is fully functional without any kind of database at all, it offers support for using multiple datamodels at the same time. These features include, but are not limited to, database creation, configuration and backup.
 
-# Further: 
+## Further
+
 * [RunModes](xref:RunModes)
 * [Advance](xref:Advance)
 
-# Guides:
+## Guides
+
 * [ServerModuleGuide](xref:ServerModuleGuide)
 * [FacadeGuide](xref:FacadeGuide)
 * [ModelSetupGuide](xref:ModelSetupGuide)
@@ -34,10 +35,12 @@ Even though the framework is fully functional without any kind of database at al
 * [DataModelUpdateGuide](xref:DataModelUpdateGuide)
 * [SetupGuide](xref:SetupGuide)
 
-# Provided Modules
+## Provided Modules
+
 * [UserManagement](xref:UserManagement)
 
-# Tools & Templates
+## Tools & Templates
+
 To make working with the Moryx Runtime more efficient, there are a couple of tools and templates that speed up plugin and component development significantly. Listed below are only Moryx specific tools and templates. 3rd party tools and libraries used for Moryx development can be found elsewhere.
 
 DataModel-Template: This template can only be used with an EntityDeveloper DataModel.

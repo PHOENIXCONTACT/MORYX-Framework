@@ -9,6 +9,3 @@
 
 - name: Runtime
   href: Runtime/toc.yml
-
-- name: Upgrade
-  href: Platform27to30.md

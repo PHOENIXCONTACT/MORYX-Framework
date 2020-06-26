@@ -15,10 +15,10 @@ footer{
       <strong>MoryxPlatform</strong>
     </div>
     <div class="buttons-unit-small">
-      <a class="version-link" href="articles/Changelog.md">Changelog</a><span>|</span><a class="bitbucket-link" href="http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MoryxPlatform">View in GitLab</a>
+      </span><a class="github-link" href="https://github.com/PHOENIXCONTACT/MORYX-Platform">View on GitHub</a>
     </div>
     <div class="minitext">
-    The MORYX Platform is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
+      The MORYX Platform is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
     </div>
     <div class="buttons-unit">
       <a href="tutorials/index.md" class="button"><i class="glyphicon glyphicon-send"></i>Getting Started</a>

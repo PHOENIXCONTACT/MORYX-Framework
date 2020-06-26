@@ -40,7 +40,6 @@ protected override void OnInitialize()
 
     // Load plugins
     Container.LoadComponents<IMyPlugin>(); // from AppDomain
-    Container.LoadComponents<IMyPlugin>(Config.PluginDir); // from Directory
 }
 ````
 

@@ -18,6 +18,6 @@ As a prerequisite, you need:
 
 - .NET Build Tools > 2015 (included in Visual Studio 2015)
 
-*Step1.* `git clone ssh://git@gitlab-swtd.europe.phoenixcontact.com:2222/marvinplatform/MoryxPlatform.git` to get the latest code.
+*Step1.* `git clone git@github.com:PHOENIXCONTACT/MORYX-Platform.git` to get the latest code.
 
 *Step2.* Run `.\Build.ps1 -Build` under root folder.
