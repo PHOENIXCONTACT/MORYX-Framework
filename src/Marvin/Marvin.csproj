@@ -61,6 +61,7 @@
     <Compile Include="Collections\DelayQueue\IDelayQueue.cs" />
     <Compile Include="Collections\MergedCollection.cs" />
     <Compile Include="Collections\SortableCollection.cs" />
+    <Compile Include="Collections\StringNumericComparer.cs" />
     <Compile Include="Collections\WeakCollection.cs" />
     <Compile Include="Communication\Attributes\PayloadPositionAttribute.cs" />
     <Compile Include="Communication\BinaryConnectionFactory.cs">

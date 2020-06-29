@@ -55,6 +55,7 @@
     <Compile Include="Bindings\Dummies\SomeImplementation.cs" />
     <Compile Include="Bindings\UpdateValueTest.cs" />
     <Compile Include="Collections\DelayQueueTests.cs" />
+    <Compile Include="Collections\StringNumericComparerTests.cs" />
     <Compile Include="Collections\SortableCollectionTests.cs" />
     <Compile Include="Collections\SortObj.cs" />
     <Compile Include="Configuration\CachedConfigManagerTests.cs" />
