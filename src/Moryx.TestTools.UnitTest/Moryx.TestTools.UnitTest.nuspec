@@ -4,10 +4,11 @@
     <id>$id$</id>
     <version>$version$</version>
     <title>$title$</title>
-    <authors>MORYX Team</authors>
+    <authors>PHOENIXCONTACT</authors>
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
+    <repository type="git" url="https://github.com/PHOENIXCONTACT/MORYX-Platform" />
     <description>$description$</description>
   </metadata>
 </package>
