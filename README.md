@@ -7,8 +7,7 @@ The MORYX Platform is a .NET based framework to quickly build three-tier applica
 **Links**
 
 - [Package Feed](https://www.myget.org/feed/Packages/moryx)
-- [Training Repository]()
-- [Application Skeleton]()
+- [Repository Template](https://github.com/PHOENIXCONTACT/MORYX-Template)
 - [MORYX Maintenance](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb)
 - [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
 
