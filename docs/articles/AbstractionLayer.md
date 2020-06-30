@@ -42,7 +42,7 @@ A [Process](xref:Processes) consists of a series of activities.
 
 ## Products
 
-A [Product](xref:Moryx.AbstractionLayer.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Moryx.AbstractionLayer.ProductRecipe) to provide a basic structure to produce an Article.
+A [Product](xref:Moryx.AbstractionLayer.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Moryx.AbstractionLayer.ProductRecipe) to provide a basic structure to produce an instance.
 
 ## Recipes
 

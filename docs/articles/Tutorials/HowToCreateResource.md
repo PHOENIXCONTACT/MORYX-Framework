@@ -15,7 +15,7 @@ A resource has this basic solution structure which can be extended for your need
 |-ExampleResource.cs
 ````
 
-The interface `IExampleResource` is the main interface for the driver and important for registration within the AbstractionLayer. The implementation of this interface is done with the `ExampleResource` class.
+The interface `IExampleResource` is optional for a resource and probably better located in a shared project between resources and modules. The implementation of this interface is done with the `ExampleResource` class.
 
 ### The interface
 
@@ -65,7 +65,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
 }
 ````
 
-The implementation of the `ExampleResource` derives from the [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) base class. It also implements the `IResource` interface. The next important thing is the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this class as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
+The implementation of the `ExampleResource` derives from the [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) base class. It also implements the `IResource` interface. This is enough to use your resource definition within MORYX. If your resource relies on dependency injection like logging it is important to add the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this class as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
 ## How to use the Resource in a custom module
 

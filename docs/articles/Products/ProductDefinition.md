@@ -16,7 +16,7 @@ In most cases it makes sense to model complex products as compositions of parts 
 
 ## Create Instance
 
-Each product must provide a method to create typed instances of itself. Those instances are represented by classes derived from [Article](xref:Moryx.AbstractionLayer.Article) as described below. To create instances of complex products a recursive approach is used. Each product only creates an instance of itself and fills its parts by creating instances of its parts. Unlike products, instances do not define link objects for references but the link attributes become part of the instance attributes. This makes sense if you think about our previous example of watch needles. While the needle product may be used in different roles in different watches the one concrete needle used to assemble a single watch most definitly has one and only one role.
+Each product must provide a method to create typed instances of itself. Those instances are represented by classes derived from [ProductInstance](xref:Moryx.AbstractionLayer.ProductInstance) as described below. To create instances of complex products a recursive approach is used. Each product only creates an instance of itself and fills its parts by creating instances of its parts. Unlike products, instances do not define link objects for references but the link attributes become part of the instance attributes. This makes sense if you think about our previous example of watch needles. While the needle product may be used in different roles in different watches the one concrete needle used to assemble a single watch most definitly has one and only one role.
 
 ### Sample code
 

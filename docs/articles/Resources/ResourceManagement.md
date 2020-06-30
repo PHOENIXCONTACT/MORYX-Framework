@@ -9,7 +9,7 @@ The new resources management also changes the way other modules interact with re
 // Get by name
 var res = Facade.GetResource<IMyResource>("Some" );
 // Get by capabilities
-res = Facade . GetResource<IMyResource>(new MyCapabilities ());
+res = Facade.GetResource<IMyResource>(new MyCapabilities ());
 // Get all
 var all = Facade.GetAllResources<IMyResource >();
 // Get filtered
