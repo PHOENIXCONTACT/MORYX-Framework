@@ -3,12 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Modules;
-using Marvin.Products.Management.Importers;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Modules;
+using Moryx.Products.Management.Importers;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Management component

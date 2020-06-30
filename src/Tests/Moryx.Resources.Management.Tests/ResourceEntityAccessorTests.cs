@@ -2,15 +2,15 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Model;
-using Marvin.Resources.Model;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Model;
+using Moryx.Resources.Model;
+using Moryx.Serialization;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Marvin.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests
 {
     [TestFixture]
     public class ResourceEntityAccessorTests

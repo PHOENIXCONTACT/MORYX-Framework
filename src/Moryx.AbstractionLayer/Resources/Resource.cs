@@ -3,11 +3,11 @@
 
 using System;
 using System.Runtime.Serialization;
-using Marvin.Logging;
-using Marvin.Modules;
-using Marvin.Serialization;
+using Moryx.Logging;
+using Moryx.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Base class for all resources to reduce boilerplate code

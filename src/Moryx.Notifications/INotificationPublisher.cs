@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Notifications
+namespace Moryx.Notifications
 {
     /// <summary>
     /// Notification publisher facade

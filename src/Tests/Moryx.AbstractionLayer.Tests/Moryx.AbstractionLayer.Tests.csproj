@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\packages\EntityFramework.6.4.0\build\EntityFramework.props" Condition="Exists('..\..\..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" />
   <Import Project="..\..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <Import Project="..\..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.10.1\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{65D88A79-9239-4BF6-AAD3-29E432A9DEDB}</ProjectGuid>
+    <ProjectGuid>{E7BCFD1C-D140-467E-BDFB-C7013DC59171}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Resources.Management.Tests</RootNamespace>
-    <AssemblyName>Marvin.Resources.Management.Tests</AssemblyName>
+    <RootNamespace>Moryx.AbstractionLayer.Tests</RootNamespace>
+    <AssemblyName>Moryx.AbstractionLayer.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -39,44 +38,14 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
-    </Reference>
-    <Reference Include="Effort, Version=2.2.10.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Effort.EF6.2.2.10\lib\net45\Effort.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev010329\lib\netstandard2.0\Marvin.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.3.0.0-dev010329\lib\net461\Marvin.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.InMemory.3.0.0-dev010329\lib\net461\Marvin.Model.InMemory.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Runtime, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Runtime.3.0.0-dev010329\lib\netstandard2.0\Marvin.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev010329\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Tools.Wcf.3.0.0-dev010329\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
-    </Reference>
     <Reference Include="Moq, Version=4.14.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Moq.4.14.1\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Moryx, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.3.0.0-dev.26\lib\netstandard2.0\Moryx.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NMemory, Version=3.0.0.0, Culture=neutral, PublicKeyToken=afc61983f100d280, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NMemory.3.1.1\lib\net45\NMemory.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
@@ -90,42 +59,32 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mocks\DerivedResource.cs" />
-    <Compile Include="Mocks\InterferenceResource.cs" />
-    <Compile Include="Mocks\NonPublicResource.cs" />
-    <Compile Include="Mocks\OtherResource.cs" />
-    <Compile Include="Mocks\ResourceWithImplicitApi.cs" />
-    <Compile Include="Mocks\ReferenceResource.cs" />
-    <Compile Include="Mocks\SimpleResource.cs" />
-    <Compile Include="Model\InMemoryUnitOfWorkFactory.cs" />
-    <Compile Include="ResourceEntityAccessorTests.cs" />
-    <Compile Include="ResourceLinkerTests.cs" />
-    <Compile Include="ResourceManagerTests.cs" />
-    <Compile Include="TypeControllerTests.cs" />
+    <Compile Include="ExpressionConstraintTests.cs" />
+    <Compile Include="ParameterBindingTests.cs" />
+    <Compile Include="ProductConstraintTest.cs" />
+    <Compile Include="ProductIdentitytests.cs" />
+    <Compile Include="ProductTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TracingActivityTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
-      <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
-      <Name>Marvin.AbstractionLayer</Name>
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj">
+      <Project>{841F50C1-DEC0-48D8-92D1-F860450940D8}</Project>
+      <Name>Moryx.AbstractionLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.AbstractionLayer.TestTools\Marvin.AbstractionLayer.TestTools.csproj">
-      <Project>{1516374c-976f-49fc-a911-29edc481c657}</Project>
-      <Name>Marvin.AbstractionLayer.TestTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
-      <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
-      <Name>Marvin.Resources.Management</Name>
+    <ProjectReference Include="..\..\Moryx.Products.Samples\Moryx.Products.Samples.csproj">
+      <Project>{00916431-5038-44b8-8bda-4a1b13636f32}</Project>
+      <Name>Moryx.Products.Samples</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Moryx.AbstractionLayer.Tests.csproj.DotSettings" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +96,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
-    <Error Condition="!Exists('..\..\..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\EntityFramework.6.4.0\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\..\..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\EntityFramework.6.4.0\build\EntityFramework.targets'))" />
   </Target>
-  <Import Project="..\..\..\packages\EntityFramework.6.4.0\build\EntityFramework.targets" Condition="Exists('..\..\..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.AbstractionLayer.Drivers.Message
+namespace Moryx.AbstractionLayer.Drivers.Message
 {
     /// <summary>
     /// Multi-purpose driver that exchanges messages with the device

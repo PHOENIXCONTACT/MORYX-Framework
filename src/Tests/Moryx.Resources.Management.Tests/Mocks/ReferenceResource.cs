@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests
 {
     public interface IReferenceResource : IPublicResource
     {

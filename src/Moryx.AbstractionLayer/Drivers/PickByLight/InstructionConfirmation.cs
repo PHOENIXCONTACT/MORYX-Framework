@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Drivers.PickByLight
+namespace Moryx.AbstractionLayer.Drivers.PickByLight
 {
     /// <summary>
     /// Instruction was confirmed

@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Products.Model;
+using Moryx.Products.Model;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Interface for business object mapping onto an <see cref="IGenericColumns"/> entity

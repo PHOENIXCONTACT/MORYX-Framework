@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Model.InMemory;
-using Marvin.Products.Model;
+using Moryx.Model.InMemory;
+using Moryx.Products.Model;
 
-namespace Marvin.Products.IntegrationTests
+namespace Moryx.Products.IntegrationTests
 {
     public class InMemoryUnitOfWorkFactory : InMemoryUnitOfWorkFactoryBase<ProductsContext>
     {

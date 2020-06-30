@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Container;
-using Marvin.Tools.Wcf;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Container;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Resources.Interaction
+namespace Moryx.Resources.Interaction
 {
     /// <summary>
     /// Default interaction resource which hosts the default web service

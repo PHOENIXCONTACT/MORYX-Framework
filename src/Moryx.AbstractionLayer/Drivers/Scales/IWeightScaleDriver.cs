@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Drivers.Scales
+namespace Moryx.AbstractionLayer.Drivers.Scales
 {
     /// <summary>
     /// Interface for weight scales to request a weight

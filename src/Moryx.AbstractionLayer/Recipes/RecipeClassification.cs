@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Classification of recipes as a BitFlag. Bits 0 -> 30 are free for recipe definitions. Bit 31 indicates a <see cref="Clone"/>.

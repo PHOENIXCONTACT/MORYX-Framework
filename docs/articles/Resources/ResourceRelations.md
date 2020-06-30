@@ -16,7 +16,7 @@ public class ReferenceSample : Resource
 }
 ```
 
-The code example above shows how to declare references to other resources. References to a collection of other resources must be of type [IReferences](xref:Marvin.AbstractionLayer.Resources.IReferences`1). The specialized type is necessary for the resource manager. Collections can optionally be decorated with `AutoSave` = true to enable automatic saving of modifications to the database. While `RaiseResourceChanged` saves the entire resource and all its references, `AutoSave` raises an event that only saves the new state of the collection. The [Resource](xref:Marvin.AbstractionLayer.Resources.Resource) base class declares two relations - `Parent` and `Children`. Both are of relation type ParentChild. The reference to the parent uses the attributes role property to identify the reference as the Source in the relationship and distinguish it from the `Children`.
+The code example above shows how to declare references to other resources. References to a collection of other resources must be of type [IReferences](xref:Moryx.AbstractionLayer.Resources.IReferences`1). The specialized type is necessary for the resource manager. Collections can optionally be decorated with `AutoSave` = true to enable automatic saving of modifications to the database. While `RaiseResourceChanged` saves the entire resource and all its references, `AutoSave` raises an event that only saves the new state of the collection. The [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) base class declares two relations - `Parent` and `Children`. Both are of relation type ParentChild. The reference to the parent uses the attributes role property to identify the reference as the Source in the relationship and distinguish it from the `Children`.
 
 ## Required References
 
@@ -24,7 +24,7 @@ Resources can declare references as `Required` for their functionality as shown 
 
 ## Reference Override
 
-If a resource is derived from a base type that already declares a certain relation type it is possible to override this references resource type by declaring a new property with the [ReferenceOverride](xref:Marvin.AbstractionLayer.Resources.ReferenceOverrideAttribute) attribute. A common use case shown in the example below is to override the `Children` reference declared in the `Resource` base class to limit the type of resources that can be added as children.
+If a resource is derived from a base type that already declares a certain relation type it is possible to override this references resource type by declaring a new property with the [ReferenceOverride](xref:Moryx.AbstractionLayer.Resources.ReferenceOverrideAttribute) attribute. A common use case shown in the example below is to override the `Children` reference declared in the `Resource` base class to limit the type of resources that can be added as children.
 
 ```cs
 public class OverrideSample : Resource

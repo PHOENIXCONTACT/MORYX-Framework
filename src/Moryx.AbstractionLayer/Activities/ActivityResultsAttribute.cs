@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Class to decorate activities to declare the results enum

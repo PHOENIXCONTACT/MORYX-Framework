@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Enum representing the relation between two entities and definition of their life cycle coupling.

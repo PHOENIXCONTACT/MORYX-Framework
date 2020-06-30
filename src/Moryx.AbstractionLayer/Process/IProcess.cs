@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Recipes;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Defines how activities should be loaded from a <see cref="IProcess"/>

@@ -3,11 +3,11 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Products.Management.Importers;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Products.Management.Importers;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Base class for product importers

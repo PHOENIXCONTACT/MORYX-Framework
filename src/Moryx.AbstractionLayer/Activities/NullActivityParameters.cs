@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Class to enforce the null object pattern

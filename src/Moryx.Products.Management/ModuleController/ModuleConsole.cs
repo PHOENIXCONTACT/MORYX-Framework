@@ -4,13 +4,13 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Configuration;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Configuration;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     [ServerModuleConsole]
     internal class ModuleConsole : IServerModuleConsole

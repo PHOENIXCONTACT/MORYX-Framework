@@ -3,11 +3,11 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Modules;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Configuration base for <see cref="IResourceInitializer"/>

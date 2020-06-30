@@ -14,7 +14,7 @@ using Moryx.Modules;
 using Moryx.Resources.Model;
 using Moryx.Tools;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     [Plugin(LifeCycle.Singleton, typeof(IResourceManager))]
     internal class ResourceManager : IResourceManager

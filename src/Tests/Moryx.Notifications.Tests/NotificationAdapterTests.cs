@@ -5,7 +5,7 @@ using System;
 using Moq;
 using NUnit.Framework;
 
-namespace Marvin.Notifications.Tests
+namespace Moryx.Notifications.Tests
 {
     /// <summary>
     /// Unittests for <see cref="NotificationAdapter"/>

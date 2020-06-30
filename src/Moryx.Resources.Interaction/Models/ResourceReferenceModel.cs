@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Interaction
+namespace Moryx.Resources.Interaction
 {
     /// <summary>
     /// DTO that represents the reference of one resource with another

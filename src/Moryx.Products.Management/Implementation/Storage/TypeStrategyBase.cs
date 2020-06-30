@@ -4,14 +4,14 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Identity;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Model;
-using Marvin.Products.Model;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Model;
+using Moryx.Products.Model;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Base class for product strategies

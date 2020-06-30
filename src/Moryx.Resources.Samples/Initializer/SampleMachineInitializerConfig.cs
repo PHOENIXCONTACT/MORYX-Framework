@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Samples.Initializer
+namespace Moryx.Resources.Samples.Initializer
 {
     public class SampleMachineInitializerConfig : ResourceInitializerConfig
     {

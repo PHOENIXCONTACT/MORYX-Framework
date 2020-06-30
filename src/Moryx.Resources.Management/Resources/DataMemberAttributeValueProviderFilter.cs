@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     public class DataMemberAttributeValueProviderFilter : IValueProviderFilter
     {

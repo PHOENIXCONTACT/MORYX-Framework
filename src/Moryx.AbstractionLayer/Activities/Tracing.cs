@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Activity trace information

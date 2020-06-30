@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// References between workplan

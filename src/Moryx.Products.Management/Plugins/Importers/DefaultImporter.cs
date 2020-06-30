@@ -4,14 +4,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.Serialization;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management.Importers
+namespace Moryx.Products.Management.Importers
 {
     [ExpectedConfig(typeof(DefaultImporterConfig))]
     [Plugin(LifeCycle.Transient, typeof(IProductImporter), Name = nameof(DefaultImporter))]

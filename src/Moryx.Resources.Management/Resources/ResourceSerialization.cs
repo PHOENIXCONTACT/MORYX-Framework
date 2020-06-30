@@ -12,9 +12,9 @@ using Moryx.Container;
 using Moryx.Runtime.Configuration;
 using Moryx.Serialization;
 using Moryx.Tools;
-using IContainer = Marvin.Container.IContainer;
+using IContainer = Moryx.Container.IContainer;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Implementation of <see cref="ICustomSerialization"/> for types derived from <see cref="Resource"/>
@@ -53,7 +53,7 @@ namespace Marvin.Resources.Management
                 : flagged; // Otherwise filter by EditorBrowsableAttribute per property
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Create prototypes from possible values
@@ -74,7 +74,7 @@ namespace Marvin.Resources.Management
             return list.ToArray();
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
@@ -88,7 +88,7 @@ namespace Marvin.Resources.Management
             return values?.Distinct().ToArray();
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
         {
             var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
@@ -99,7 +99,7 @@ namespace Marvin.Resources.Management
             return instance;
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
         {
             var value = mappedEntry.Value;

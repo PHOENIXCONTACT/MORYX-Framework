@@ -4,9 +4,9 @@
 using System;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Marvin.ClientFramework.Dialog;
+using Moryx.ClientFramework.Dialog;
 
-namespace Marvin.AbstractionLayer.UI.Tests
+namespace Moryx.AbstractionLayer.UI.Tests
 {
     public class DialogManagerMock : IDialogManager
     {

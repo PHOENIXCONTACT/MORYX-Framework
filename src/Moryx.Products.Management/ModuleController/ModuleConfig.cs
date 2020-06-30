@@ -5,13 +5,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer;
-using Marvin.Configuration;
-using Marvin.Products.Management.Importers;
-using Marvin.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.AbstractionLayer;
+using Moryx.Configuration;
+using Moryx.Products.Management.Importers;
+using Moryx.Serialization;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Configuration of this module

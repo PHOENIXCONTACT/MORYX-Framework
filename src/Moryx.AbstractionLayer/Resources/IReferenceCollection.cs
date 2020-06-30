@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Addition interface for <see cref="IReferences{TResource}"/>

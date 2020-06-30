@@ -7,7 +7,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Model;
 using Moryx.Resources.Model;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Helper class responsible for linking the flat list of resources

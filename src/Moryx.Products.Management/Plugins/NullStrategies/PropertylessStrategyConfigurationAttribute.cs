@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Marvin.Products.Management.NullStrategies
+namespace Moryx.Products.Management.NullStrategies
 {
     /// <summary>
     /// Strategy configuration for types without specialized properties

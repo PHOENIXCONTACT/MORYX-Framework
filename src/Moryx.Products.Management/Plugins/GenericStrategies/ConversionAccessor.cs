@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Base class for all internal accessor wrappers with type conversion

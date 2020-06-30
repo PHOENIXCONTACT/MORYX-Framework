@@ -3,13 +3,13 @@
 
 using System.Data.Entity;
 using System.Linq;
-using Marvin.Model;
-using Marvin.Products.Management;
-using Marvin.Products.Model;
-using Marvin.Workflows;
+using Moryx.Model;
+using Moryx.Products.Management;
+using Moryx.Products.Model;
+using Moryx.Workflows;
 using NUnit.Framework;
 
-namespace Marvin.Products.IntegrationTests
+namespace Moryx.Products.IntegrationTests
 {
     [TestFixture]
     public class RecipeStorageTests

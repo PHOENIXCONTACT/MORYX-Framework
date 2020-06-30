@@ -9,8 +9,8 @@ using Moryx.Resources.Management;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.Resources.Management")]
-[assembly: AssemblyDescription("Marvin Runtime Module: ResourceManager")]
+[assembly: AssemblyTitle("Moryx.Resources.Management")]
+[assembly: AssemblyDescription("Moryx Runtime Module: ResourceManager")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -32,9 +32,9 @@ using Moryx.Resources.Management;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-// Marvin attributes
+// Moryx attributes
 [assembly: Bundle(AbstractionLayerBundle.Name, AbstractionLayerBundle.Version)]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo(ResourceProxyBuilder.AssemblyName)]
-[assembly: InternalsVisibleTo("Marvin.Resources.IntegrationTests")]
-[assembly: InternalsVisibleTo("Marvin.Resources.Management.Tests")]
+[assembly: InternalsVisibleTo("Moryx.Resources.IntegrationTests")]
+[assembly: InternalsVisibleTo("Moryx.Resources.Management.Tests")]

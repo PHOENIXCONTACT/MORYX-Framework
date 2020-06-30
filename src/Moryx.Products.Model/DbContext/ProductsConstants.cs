@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Products.Model
+namespace Moryx.Products.Model
 {
     /// <summary>
     /// String constants defined by the Products database model.
@@ -12,7 +12,7 @@ namespace Marvin.Products.Model
         /// Namespace of the generated code within this model. This can be used for the
         /// ImportAttribute and UseChildAttribute.
         /// </summary>
-        public const string Namespace = "Marvin.Products.Model";
+        public const string Namespace = "Moryx.Products.Model";
 
         /// <summary>
         /// Schema name for the ProductsContext

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Modules;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Major component managing the resource graph

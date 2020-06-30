@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Drivers.Marking
+namespace Moryx.AbstractionLayer.Drivers.Marking
 {
     /// <summary>
     /// Response for different messages which can be used for example by the notification bar like error messages or warnings

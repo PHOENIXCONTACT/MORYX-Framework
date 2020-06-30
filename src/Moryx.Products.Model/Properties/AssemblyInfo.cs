@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Marvin.Modules;
+using Moryx.Modules;
 
-[assembly: AssemblyTitle("Marvin.Products.Model")]
+[assembly: AssemblyTitle("Moryx.Products.Model")]
 [assembly: AssemblyDescription("Model for products")]
 [assembly: AssemblyCulture("")]
 

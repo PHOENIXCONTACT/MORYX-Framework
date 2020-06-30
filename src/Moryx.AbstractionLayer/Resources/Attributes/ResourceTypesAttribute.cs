@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Container;
-using Marvin.Serialization;
+using Moryx.Container;
+using Moryx.Serialization;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Attribute to decorate properties or method parameters of type string and return

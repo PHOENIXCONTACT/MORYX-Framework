@@ -4,10 +4,10 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Samples
+namespace Moryx.Resources.Samples
 {
     [ResourceRegistration]
     public class BufferResource : PublicResource

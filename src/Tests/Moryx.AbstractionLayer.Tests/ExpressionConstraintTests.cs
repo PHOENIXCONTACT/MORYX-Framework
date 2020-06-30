@@ -3,7 +3,7 @@
 
 using NUnit.Framework;
 
-namespace Marvin.AbstractionLayer.Tests
+namespace Moryx.AbstractionLayer.Tests
 {
     [TestFixture]
     public class ExpressionConstraintTests

@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Products.Samples
+namespace Moryx.Products.Samples
 {
     /// <summary>
     /// Role of the referenced <see cref="NeedleType"/> in the <see cref="WatchType"/>

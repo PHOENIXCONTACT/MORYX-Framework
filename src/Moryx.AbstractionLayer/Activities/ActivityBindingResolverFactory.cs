@@ -1,11 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Bindings;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Bindings;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Default factory that can create resolvers based on activities for

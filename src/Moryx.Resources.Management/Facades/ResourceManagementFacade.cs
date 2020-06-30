@@ -7,7 +7,7 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Runtime.Modules;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     internal class ResourceManagementFacade : IResourceManagement, IFacadeControl
     {

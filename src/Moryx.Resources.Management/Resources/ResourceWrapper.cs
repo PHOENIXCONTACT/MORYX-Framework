@@ -5,7 +5,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Modules;
 using Moryx.StateMachines;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     internal sealed class ResourceWrapper : IStateContext
     {

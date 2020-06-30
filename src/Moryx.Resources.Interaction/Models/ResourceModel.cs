@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Interaction
+namespace Moryx.Resources.Interaction
 {
     /// <summary>
     /// Base model used by details view and tree

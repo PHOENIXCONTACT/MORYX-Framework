@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Marvin.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Filter to fetch products from the product management

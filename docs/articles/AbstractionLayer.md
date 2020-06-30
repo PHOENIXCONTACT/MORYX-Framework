@@ -22,7 +22,7 @@ An [Activity](xref:Activities) is the smallest separately executable step of a P
 
 ## Articles
 
-An [Article](xref:Marvin.AbstractionLayer.Article) is the produced instance of a Product.
+An [Article](xref:Moryx.AbstractionLayer.Article) is the produced instance of a Product.
 
 ## Capabilities
 
@@ -34,7 +34,7 @@ An [Article](xref:Marvin.AbstractionLayer.Article) is the produced instance of a
 
 ## Identity
 
-[Identities](xref:Marvin.AbstractionLayer.Identity.IIdentity) are used to represent unique properties like serial numbers and MAC adresses for instances and material number for products. There is also the derived type [ProductIdentity](xref:Marvin.AbstractionLayer.ProductIdentity) that represents a products material number and revision. The static constructor `AsLatestRevision` also lets you refer to the latest revision for a certain material.
+[Identities](xref:Moryx.AbstractionLayer.Identity.IIdentity) are used to represent unique properties like serial numbers and MAC adresses for instances and material number for products. There is also the derived type [ProductIdentity](xref:Moryx.AbstractionLayer.ProductIdentity) that represents a products material number and revision. The static constructor `AsLatestRevision` also lets you refer to the latest revision for a certain material.
 
 ## Process
 
@@ -42,19 +42,19 @@ A [Process](xref:Processes) consists of a series of activities.
 
 ## Products
 
-A [Product](xref:Marvin.AbstractionLayer.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Marvin.AbstractionLayer.ProductRecipe) to provide a basic structure to produce an Article.
+A [Product](xref:Moryx.AbstractionLayer.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Moryx.AbstractionLayer.ProductRecipe) to provide a basic structure to produce an Article.
 
 ## Recipes
 
-A [Recipe](xref:Marvin.AbstractionLayer.Recipe) is the base for all recipes which combines all needed data for a process.
+A [Recipe](xref:Moryx.AbstractionLayer.Recipe) is the base for all recipes which combines all needed data for a process.
 
-A [ProductRecipe](xref:Marvin.AbstractionLayer.ProductRecipe) provides a basic structure to use a product for production cases.
+A [ProductRecipe](xref:Moryx.AbstractionLayer.ProductRecipe) provides a basic structure to use a product for production cases.
 
-A [WorkplanRecipe](xref:Marvin.AbstractionLayer.WorkplanRecipe) provides a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process.
+A [WorkplanRecipe](xref:Moryx.AbstractionLayer.WorkplanRecipe) provides a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process.
 
 ## Resources
 
-The Resources package of the AbstrationLayer contains several basic classes to be used by the [Resources](xref:Marvin.AbstractionLayer.Resources.IResource) and the [ResourceManager](xref:ResourceManagement)
+The Resources package of the AbstrationLayer contains several basic classes to be used by the [Resources](xref:Moryx.AbstractionLayer.Resources.IResource) and the [ResourceManager](xref:ResourceManagement)
 
 ## Tasks
 

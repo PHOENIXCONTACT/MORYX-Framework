@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Serialization;
 
-namespace Marvin.Products.Management.Modification
+namespace Moryx.Products.Management.Modification
 {
     [DataContract(IsReference = true)]
     internal class ProductModel

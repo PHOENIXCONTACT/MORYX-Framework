@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Container;
-using Marvin.Model;
-using Marvin.Products.Model;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Container;
+using Moryx.Model;
+using Moryx.Products.Model;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management.NullStrategies
+namespace Moryx.Products.Management.NullStrategies
 {
     /// <summary>
     /// Simple link strategy without any properties

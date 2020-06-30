@@ -3,14 +3,14 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.Products.Management;
-using Marvin.Products.Management.Importers;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.Products.Management;
+using Moryx.Products.Management.Importers;
 
-namespace Marvin.Products.Samples
+namespace Moryx.Products.Samples
 {
     [ExpectedConfig(typeof(WatchImporterConfig))]
     [Plugin(LifeCycle.Singleton, typeof(IProductImporter), Name = nameof(WatchImporter))]

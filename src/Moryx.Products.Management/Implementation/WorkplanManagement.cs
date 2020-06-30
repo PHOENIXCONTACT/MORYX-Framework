@@ -3,12 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Container;
-using Marvin.Model;
-using Marvin.Products.Model;
-using Marvin.Workflows;
+using Moryx.Container;
+using Moryx.Model;
+using Moryx.Products.Model;
+using Moryx.Workflows;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     [Component(LifeCycle.Singleton, typeof(IWorkplans))]
     internal class WorkplanManagement : IWorkplans

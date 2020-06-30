@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Serialization;
+using Moryx.Serialization;
 
-namespace Marvin.Products.Management.Modification
+namespace Moryx.Products.Management.Modification
 {
     [DataContract(IsReference = true)]
     internal class PartConnector

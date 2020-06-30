@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Marvin.AbstractionLayer;
-using Marvin.Modules;
-using Marvin.Products;
-using Marvin.Products.Management;
+using Moryx.AbstractionLayer;
+using Moryx.Modules;
+using Moryx.Products;
+using Moryx.Products.Management;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.Products.Management")]
-[assembly: AssemblyDescription("Marvin Runtime Module: ProductManagement")]
+[assembly: AssemblyTitle("Moryx.Products.Management")]
+[assembly: AssemblyDescription("Moryx Runtime Module: ProductManagement")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -32,7 +32,7 @@ using Marvin.Products.Management;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-// Marvin attributes
+// Moryx attributes
 [assembly: Bundle(AbstractionLayerBundle.Name, AbstractionLayerBundle.Version)]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: InternalsVisibleTo("Marvin.Products.IntegrationTests")]
+[assembly: InternalsVisibleTo("Moryx.Products.IntegrationTests")]

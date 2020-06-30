@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Temporary recipe which should be replaced by the product management

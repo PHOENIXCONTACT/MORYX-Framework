@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Identity
+namespace Moryx.AbstractionLayer.Identity
 {
     /// <summary>
     /// Base interface for identities (e.g. SerialNumber)

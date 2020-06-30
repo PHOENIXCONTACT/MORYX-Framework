@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Modules;
-using Marvin.Products.Model;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Modules;
+using Moryx.Products.Model;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Interface for plugins that can convert recipes

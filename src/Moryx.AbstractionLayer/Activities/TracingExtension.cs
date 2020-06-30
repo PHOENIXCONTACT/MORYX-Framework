@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Extension to override tracing information

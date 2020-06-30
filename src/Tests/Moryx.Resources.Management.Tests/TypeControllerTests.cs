@@ -4,12 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Container;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Container;
 using Moq;
 using NUnit.Framework;
 
-namespace Marvin.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests
 {
     [TestFixture]
     public class TypeControllerTests

@@ -3,11 +3,11 @@
 
 using System;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Serialization;
 
-namespace Marvin.Products.Management.Modification
+namespace Moryx.Products.Management.Modification
 {
     /// <summary>
     /// DTO representation of a recipe

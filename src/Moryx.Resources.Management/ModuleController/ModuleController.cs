@@ -12,7 +12,7 @@ using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Tools.Wcf;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// The main controller of all resource modules. 

@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Additional attribute for strategy implementation to enable auto configuration

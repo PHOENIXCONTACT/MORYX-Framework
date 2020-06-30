@@ -1,2 +1,2 @@
 INCLUDE:
-EXCLUDE:-[Moq]* -[Marvin]* -[Marvin.Container]* -[Marvin.Runtime]* -[Marvin.TestTools*]* -[Marvin.Runtime.Base]* -[Marvin.ClientFramework]* -[Marvin.ClientFramework.Base]* -[*]*ModuleController -[*]ModuleVersion -[*]*Facade -[*]*Config -[*]*Console -[Marvin.Protocols*]* -[Marvin.Products.Samples]*
+EXCLUDE:-[Moq]* -[Moryx]* -[Moryx.Container]* -[Moryx.Runtime]* -[Moryx.TestTools*]* -[Moryx.Runtime.Base]* -[Moryx.ClientFramework]* -[Moryx.ClientFramework.Base]* -[*]*ModuleController -[*]ModuleVersion -[*]*Facade -[*]*Config -[*]*Console -[Moryx.Protocols*]* -[Moryx.Products.Samples]*

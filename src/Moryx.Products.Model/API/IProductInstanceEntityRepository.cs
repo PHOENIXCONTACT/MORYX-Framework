@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Model;
+using Moryx.Model;
 
-namespace Marvin.Products.Model
+namespace Moryx.Products.Model
 {
     /// <summary>
     /// The public API of the ArticleEntity repository.

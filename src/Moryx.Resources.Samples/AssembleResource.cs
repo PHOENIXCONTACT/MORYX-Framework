@@ -3,10 +3,10 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Samples
+namespace Moryx.Resources.Samples
 {
     [ResourceRegistration]
     [DisplayName("Handarbeitsplatz"), Description("Handarbeitsplatz für manuele Arbeiten.")]

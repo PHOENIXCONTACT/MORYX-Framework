@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Tools.Wcf;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Resources.Interaction
+namespace Moryx.Resources.Interaction
 {
     /// <summary>
     /// Resources that host a WCF service to interact with related resources

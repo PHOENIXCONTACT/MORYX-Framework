@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.AbstractionLayer.Drivers.Marking
+namespace Moryx.AbstractionLayer.Drivers.Marking
 {
     /// <summary>
     /// Holds a lot of possible configurations for the marking process like variables or rotations.

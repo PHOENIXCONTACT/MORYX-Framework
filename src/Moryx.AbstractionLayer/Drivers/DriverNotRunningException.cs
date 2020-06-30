@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Drivers
+namespace Moryx.AbstractionLayer.Drivers
 {
     /// <summary>
     /// Exception for busy drivers. The driver is running but cannot handle requests

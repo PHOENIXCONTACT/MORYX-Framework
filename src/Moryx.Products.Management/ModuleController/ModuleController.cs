@@ -1,18 +1,18 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Container;
-using Marvin.Model;
-using Marvin.Products.Management.Importers;
-using Marvin.Products.Management.Modification;
-using Marvin.Products.Model;
-using Marvin.Runtime.Container;
-using Marvin.Runtime.Modules;
-using Marvin.Tools.Wcf;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Container;
+using Moryx.Model;
+using Moryx.Products.Management.Importers;
+using Moryx.Products.Management.Modification;
+using Moryx.Products.Model;
+using Moryx.Runtime.Container;
+using Moryx.Runtime.Modules;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// The main controller of all product modules.

@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Capabilities;
-using Marvin.AbstractionLayer.Properties;
+using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Properties;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Exception which can be thrown iff a resource was not found

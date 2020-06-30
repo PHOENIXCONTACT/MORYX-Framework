@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Model;
-using Marvin.Products.Model;
-using Marvin.Tools;
-using Marvin.Workflows;
-using Marvin.Workflows.WorkplanSteps;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Model;
+using Moryx.Products.Model;
+using Moryx.Tools;
+using Moryx.Workflows;
+using Moryx.Workflows.WorkplanSteps;
 using Newtonsoft.Json;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Static helper to load recipes and workplans

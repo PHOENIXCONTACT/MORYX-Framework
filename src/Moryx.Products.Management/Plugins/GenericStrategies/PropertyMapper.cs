@@ -3,10 +3,10 @@
 
 using System;
 using System.Reflection;
-using Marvin.Products.Model;
-using Marvin.Tools;
+using Moryx.Products.Model;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Base class for specialized column mappers

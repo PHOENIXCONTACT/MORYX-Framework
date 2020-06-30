@@ -3,14 +3,14 @@ uid: HowToCreateAResource
 ---
 # How to create a resource
 
-This tutorial shows how [Resource](xref:Marvin.AbstractionLayer.Resources.Resource) should be implemented. Look [here](xref:ResourceConcept) if you are not firm with `Resource`. This tutorial describes how a basic `Resource` is created. Other specializations are [Public resources](xref:Marvin.AbstractionLayer.Resources.PublicResource), [Driver resources](xref:DriverResource) or [Interaction resources](xref:InteractionResource).
+This tutorial shows how [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) should be implemented. Look [here](xref:ResourceConcept) if you are not firm with `Resource`. This tutorial describes how a basic `Resource` is created. Other specializations are [Public resources](xref:Moryx.AbstractionLayer.Resources.PublicResource), [Driver resources](xref:DriverResource) or [Interaction resources](xref:InteractionResource).
 
 ## Basic resource files
 
 A resource has this basic solution structure which can be extended for your needs:
 
 ````fs
--Marvin.Resource.ExampleResource
+-Moryx.Resource.ExampleResource
 |-IExampleResource.cs
 |-ExampleResource.cs
 ````
@@ -19,12 +19,12 @@ The interface `IExampleResource` is the main interface for the driver and import
 
 ### The interface
 
-This interface is simply derived from [IResource](xref:Marvin.AbstractionLayer.Resources.IResource). No further definitions are needed.
+This interface is simply derived from [IResource](xref:Moryx.AbstractionLayer.Resources.IResource). No further definitions are needed.
 
 ````cs
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Samples.DriverTutorial
+namespace Moryx.Resources.Samples.DriverTutorial
 {
     public interface IExampleResource : IResource
     {
@@ -39,10 +39,10 @@ Now implement `IExampleResource`:
 ````cs
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Samples.DriverTutorial
+namespace Moryx.Resources.Samples.DriverTutorial
 {
     [ResourceRegistration]
     [DisplayName("Example Resource"), Description("An example resource")]
@@ -65,11 +65,11 @@ namespace Marvin.Resources.Samples.DriverTutorial
 }
 ````
 
-The implementation of the `ExampleResource` derives from the [Resource](xref:Marvin.AbstractionLayer.Resources.Resource) base class. It also implements the `IResource` interface. The next important thing is the [ResourceRegistration attribute](xref:Marvin.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this class as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
+The implementation of the `ExampleResource` derives from the [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) base class. It also implements the `IResource` interface. The next important thing is the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this class as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
 ## How to use the Resource in a custom module
 
-If you want to use the new resource from a custom module, you need to request the resource from the [ResourceManagement](xref:Marvin.AbstractionLayer.Resources.IResourceManagement). Inject the `ResourceManagement` into the `ModuleController` and pass the object to the inner container of your custom module.
+If you want to use the new resource from a custom module, you need to request the resource from the [ResourceManagement](xref:Moryx.AbstractionLayer.Resources.IResourceManagement). Inject the `ResourceManagement` into the `ModuleController` and pass the object to the inner container of your custom module.
 
 ````cs
     [ServerModule(ModuleName)]
@@ -109,7 +109,7 @@ If you want to use the new resource from a custom module, you need to request th
 
 ## CapabilityChanged event
 
-If it is nesessary to react when a capability has changed, is it possible to attach to the [CapabilityChanged](xref:Marvin.AbstractionLayer.Resources.IResourceManagement.CapabilitiesChanged) event:
+If it is nesessary to react when a capability has changed, is it possible to attach to the [CapabilityChanged](xref:Moryx.AbstractionLayer.Resources.IResourceManagement.CapabilitiesChanged) event:
 
 ````cs
 private void ExampleResourceCapabilityChanged(object sender, ICapabilities newCapabilities)

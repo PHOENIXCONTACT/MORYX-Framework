@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Capabilities;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Base class for all <see cref="IActivity"/>

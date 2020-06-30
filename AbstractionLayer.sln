@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartProject", "src\StartPr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{D6D69517-7889-4E08-ABEA-D3E069D08A6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.AbstractionLayer", "src\AbstractionLayer\Marvin.AbstractionLayer.csproj", "{841F50C1-DEC0-48D8-92D1-F860450940D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.AbstractionLayer", "src\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj", "{841F50C1-DEC0-48D8-92D1-F860450940D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{A33D3A48-37FE-46A3-A0BE-E8D7586B862C}"
 EndProject
@@ -15,33 +15,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notifications", "Notifications", "{1487B4B0-C817-40CD-9C74-0E56044E49BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Notifications", "src\Marvin.Notifications\Marvin.Notifications.csproj", "{4FB1BCA9-BD6D-478A-93C5-5CD4DE2A2337}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Notifications", "src\Moryx.Notifications\Moryx.Notifications.csproj", "{4FB1BCA9-BD6D-478A-93C5-5CD4DE2A2337}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.Management", "src\Marvin.Resources.Management\Marvin.Resources.Management.csproj", "{4CA4F6B5-4C26-4B99-8FB9-937971883083}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Management", "src\Moryx.Resources.Management\Moryx.Resources.Management.csproj", "{4CA4F6B5-4C26-4B99-8FB9-937971883083}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C1C2F4BB-FF3F-4239-A20A-15B56B541B4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{FE34A376-8F97-4D98-8C84-44A0C1AC01E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.Management", "src\Marvin.Products.Management\Marvin.Products.Management.csproj", "{650756A0-E077-4632-8DA8-27214B5ACDA4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Management", "src\Moryx.Products.Management\Moryx.Products.Management.csproj", "{650756A0-E077-4632-8DA8-27214B5ACDA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.Model", "src\Marvin.Products.Model\Marvin.Products.Model.csproj", "{99A470C6-1224-4475-937E-E7CA0266205C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Model", "src\Moryx.Products.Model\Moryx.Products.Model.csproj", "{99A470C6-1224-4475-937E-E7CA0266205C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.Samples", "src\Marvin.Products.Samples\Marvin.Products.Samples.csproj", "{00916431-5038-44B8-8BDA-4A1B13636F32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Samples", "src\Moryx.Products.Samples\Moryx.Products.Samples.csproj", "{00916431-5038-44B8-8BDA-4A1B13636F32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.Samples", "src\Marvin.Resources.Samples\Marvin.Resources.Samples.csproj", "{23F6025E-1348-4ABF-A908-C5D360F9D486}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Samples", "src\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj", "{23F6025E-1348-4ABF-A908-C5D360F9D486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.Management.Tests", "src\Tests\Marvin.Resources.Management.Tests\Marvin.Resources.Management.Tests.csproj", "{65D88A79-9239-4BF6-AAD3-29E432A9DEDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Management.Tests", "src\Tests\Moryx.Resources.Management.Tests\Moryx.Resources.Management.Tests.csproj", "{65D88A79-9239-4BF6-AAD3-29E432A9DEDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.AbstractionLayer.Tests", "src\Tests\Marvin.AbstractionLayer.Tests\Marvin.AbstractionLayer.Tests.csproj", "{E7BCFD1C-D140-467E-BDFB-C7013DC59171}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.AbstractionLayer.Tests", "src\Tests\Moryx.AbstractionLayer.Tests\Moryx.AbstractionLayer.Tests.csproj", "{E7BCFD1C-D140-467E-BDFB-C7013DC59171}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Products.IntegrationTests", "src\Tests\Marvin.Products.IntegrationTests\Marvin.Products.IntegrationTests.csproj", "{88D15860-19C3-4E02-A7F1-2E1EACE87963}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.IntegrationTests", "src\Tests\Moryx.Products.IntegrationTests\Moryx.Products.IntegrationTests.csproj", "{88D15860-19C3-4E02-A7F1-2E1EACE87963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Notifications.Tests", "src\Tests\Marvin.Notifications.Tests\Marvin.Notifications.Tests.csproj", "{93650069-26E9-4E0D-A336-9D02F1039346}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Notifications.Tests", "src\Tests\Moryx.Notifications.Tests\Moryx.Notifications.Tests.csproj", "{93650069-26E9-4E0D-A336-9D02F1039346}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.Resources.Interaction", "src\Marvin.Resources.Interaction\Marvin.Resources.Interaction.csproj", "{583CBD84-DD9F-4834-A89C-1625A05EE15D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Interaction", "src\Moryx.Resources.Interaction\Moryx.Resources.Interaction.csproj", "{583CBD84-DD9F-4834-A89C-1625A05EE15D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marvin.AbstractionLayer.TestTools", "src\Marvin.AbstractionLayer.TestTools\Marvin.AbstractionLayer.TestTools.csproj", "{1516374C-976F-49FC-A911-29EDC481C657}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.AbstractionLayer.TestTools", "src\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj", "{1516374C-976F-49FC-A911-29EDC481C657}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

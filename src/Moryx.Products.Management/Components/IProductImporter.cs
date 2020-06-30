@@ -1,11 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Modules;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Modules;
 
-namespace Marvin.Products.Management.Importers
+namespace Moryx.Products.Management.Importers
 {
     /// <summary>
     /// Interface for plugins that can import products from file

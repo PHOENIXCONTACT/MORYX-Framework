@@ -5,7 +5,7 @@ using Moryx.Model;
 using Moryx.Model.PostgreSQL;
 
 // ReSharper disable once CheckNamespace
-namespace Marvin.Resources.Model
+namespace Moryx.Resources.Model
 {
     /// <summary>
     /// Factory to get a unit of work for the resources model

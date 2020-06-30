@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Model;
+using Moryx.Model;
 using System.Collections.Generic;
 
-namespace Marvin.Products.Model
+namespace Moryx.Products.Model
 {
     public class ProductInstanceEntity : EntityBase, IGenericColumns
     {

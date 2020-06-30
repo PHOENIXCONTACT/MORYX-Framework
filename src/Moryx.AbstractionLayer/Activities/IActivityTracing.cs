@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Interface for activity trace information

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Interface for handler classes used to distribute mixed type messages to specialized handler methods

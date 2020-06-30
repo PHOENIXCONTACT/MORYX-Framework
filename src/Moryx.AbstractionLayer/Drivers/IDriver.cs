@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.AbstractionLayer.Drivers
+namespace Moryx.AbstractionLayer.Drivers
 {
     /// <summary>
     /// Interface for all device drivers

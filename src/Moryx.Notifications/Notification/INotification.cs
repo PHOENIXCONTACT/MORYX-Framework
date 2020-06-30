@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Notifications
+namespace Moryx.Notifications
 {
     /// <summary>
     /// Additional notification interface to manipulate the notification properties in managing plugins

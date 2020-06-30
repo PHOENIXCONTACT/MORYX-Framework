@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.AbstractionLayer.Drivers.Axis
+namespace Moryx.AbstractionLayer.Drivers.Axis
 {
     /// <summary>
     /// Response of the marking file setup

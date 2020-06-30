@@ -35,7 +35,7 @@ public class MyResource : Resource
 }
 ```
 
-Because of the IoC approach and C# inability to split object creation and constructor invocation, resource constructors are implemented as methods with the [ResourceConstructor](xref:Marvin.AbstractionLayer.Resources.ResourceConstructorAttribute)-attribute. That way the resource manager can create the instance and wire all framework components and reference properties before invoking the constructor method. This makes it possible for developers to use the full feature set of the `AL` within the constructor.
+Because of the IoC approach and C# inability to split object creation and constructor invocation, resource constructors are implemented as methods with the [ResourceConstructor](xref:Moryx.AbstractionLayer.Resources.ResourceConstructorAttribute)-attribute. That way the resource manager can create the instance and wire all framework components and reference properties before invoking the constructor method. This makes it possible for developers to use the full feature set of the `AL` within the constructor.
 
 ## General Details
 
@@ -98,7 +98,7 @@ A resource has different aspects which are available in seperate `Tabs`. Each as
 
 An aspect will hide itself automatically if it is not relevant. For example: The `PropertiesAspectViewModel` is not *relevant* if the the resource have no properties to configure.
 
-To implement a custom aspect just use the base class [ResourceAspectViewModelBase](Marvin.Resources.UI.Interaction.Aspects.). It provides the `IEditableObject` and the methods `Load` and `Save` to load additional data and save the changes.
+To implement a custom aspect just use the base class [ResourceAspectViewModelBase](Moryx.Resources.UI.Interaction.Aspects.). It provides the `IEditableObject` and the methods `Load` and `Save` to load additional data and save the changes.
 
 ### Properties
 

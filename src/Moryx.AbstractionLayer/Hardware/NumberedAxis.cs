@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Marvin.AbstractionLayer.Hardware
+namespace Moryx.AbstractionLayer.Hardware
 {
     /// <summary>
     /// A system might have more than one axes of the same name

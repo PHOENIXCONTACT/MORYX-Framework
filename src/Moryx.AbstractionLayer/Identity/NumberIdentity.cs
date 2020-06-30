@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Marvin.AbstractionLayer.Identity
+namespace Moryx.AbstractionLayer.Identity
 {
     /// <summary>
     /// Identity for unique numbers like serials or MAC-Addresses

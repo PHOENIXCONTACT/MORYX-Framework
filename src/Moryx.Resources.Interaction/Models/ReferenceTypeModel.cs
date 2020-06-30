@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Interaction
+namespace Moryx.Resources.Interaction
 {
     /// <summary>
     /// Type model for a reference property on a resource type

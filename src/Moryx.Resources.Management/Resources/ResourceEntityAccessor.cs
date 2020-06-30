@@ -11,7 +11,7 @@ using Moryx.Serialization;
 using Moryx.Tools;
 using Newtonsoft.Json;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Dedicated type to load a resources, its sources and targets from the database

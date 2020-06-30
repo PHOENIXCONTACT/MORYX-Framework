@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Base class for all recipes

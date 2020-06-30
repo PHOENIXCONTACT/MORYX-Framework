@@ -3,11 +3,11 @@
 
 using System;
 using System.IO;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
 using static System.IO.File;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Base parameters for a file import

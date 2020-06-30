@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Drivers.InOut
+namespace Moryx.AbstractionLayer.Drivers.InOut
 {
     /// <summary>
     /// Event args for changes to an input

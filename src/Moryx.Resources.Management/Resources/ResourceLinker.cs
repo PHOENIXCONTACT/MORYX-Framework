@@ -13,9 +13,9 @@ using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Resources.Model;
 using Moryx.Tools;
-using static Marvin.Resources.Management.ResourceReferenceTools;
+using static Moryx.Resources.Management.ResourceReferenceTools;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     [Component(LifeCycle.Singleton, typeof(IResourceLinker))]
     internal class ResourceLinker : IResourceLinker

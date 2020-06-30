@@ -3,11 +3,11 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.AbstractionLayer.Hardware;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Hardware;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Samples
+namespace Moryx.Resources.Samples
 {
     public abstract class Cell : PublicResource
     {

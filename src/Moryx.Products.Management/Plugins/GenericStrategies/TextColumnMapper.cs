@@ -3,12 +3,12 @@
 
 using System;
 using System.Reflection;
-using Marvin.Container;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.Container;
+using Moryx.Serialization;
+using Moryx.Tools;
 using Newtonsoft.Json;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Mapper for columns of type <see cref="string"/>

@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Marvin.Runtime.Modules;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Notifications
+namespace Moryx.Notifications
 {
     /// <summary>
     /// Facade implementation which uses the <see cref="INotificationSourceAdapter"/> to

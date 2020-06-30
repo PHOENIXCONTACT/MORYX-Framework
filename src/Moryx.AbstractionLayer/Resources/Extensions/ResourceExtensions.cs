@@ -1,4 +1,4 @@
-﻿namespace Marvin.AbstractionLayer.Resources
+﻿namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Extensions for resources

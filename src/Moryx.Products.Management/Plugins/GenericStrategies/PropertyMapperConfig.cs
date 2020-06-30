@@ -5,11 +5,11 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using Marvin.Configuration;
-using Marvin.Modules;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Configuration how a single property should be stored

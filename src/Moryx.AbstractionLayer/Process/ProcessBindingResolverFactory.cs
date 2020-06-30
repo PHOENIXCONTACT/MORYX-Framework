@@ -3,12 +3,12 @@
 
 using System;
 using System.Text.RegularExpressions;
-using Marvin.AbstractionLayer.Identity;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Bindings;
+using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Bindings;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Default factory that can create resolvers for <see cref="IProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/>

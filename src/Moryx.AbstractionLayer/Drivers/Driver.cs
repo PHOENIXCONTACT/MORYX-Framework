@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.StateMachines;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.StateMachines;
 
-namespace Marvin.AbstractionLayer.Drivers
+namespace Moryx.AbstractionLayer.Drivers
 {
     /// <summary>
     /// Base class for devices to reduce boilerplate code

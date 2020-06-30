@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Workflows;
+using Moryx.Workflows;
 
-namespace Marvin.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Recipe which additional contains a workplan

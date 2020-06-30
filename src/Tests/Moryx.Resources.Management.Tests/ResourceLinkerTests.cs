@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Model;
-using Marvin.Resources.Model;
-using Marvin.TestTools.UnitTest;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Model;
+using Moryx.Resources.Model;
+using Moryx.TestTools.UnitTest;
 using Moq;
 using NUnit.Framework;
 
-namespace Marvin.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests
 {
     [TestFixture]
     public class ResourceLinkerTests

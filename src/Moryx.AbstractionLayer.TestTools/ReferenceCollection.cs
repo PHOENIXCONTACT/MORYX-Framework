@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.AbstractionLayer.TestTools
+namespace Moryx.AbstractionLayer.TestTools
 {
     /// <summary>
     /// Dummy implementation of a resource reference collection

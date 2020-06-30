@@ -3,15 +3,15 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Container;
-using Marvin.Model;
-using Marvin.Modules;
-using Marvin.Products.Model;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Container;
+using Moryx.Model;
+using Moryx.Modules;
+using Moryx.Products.Model;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// 

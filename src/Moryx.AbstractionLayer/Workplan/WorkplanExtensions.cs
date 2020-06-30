@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Marvin.Workflows;
-using Marvin.Workflows.Validation;
+using Moryx.Workflows;
+using Moryx.Workflows.Validation;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Extensions for workplan objects

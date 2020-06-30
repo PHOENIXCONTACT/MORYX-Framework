@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Products.Model;
-using Marvin.Workflows;
+using Moryx.Products.Model;
+using Moryx.Workflows;
 
-namespace Marvin.Products.Management.Modification
+namespace Moryx.Products.Management.Modification
 {
     [DataContract(IsReference = true)]
     internal class WorkplanModel

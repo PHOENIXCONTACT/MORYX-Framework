@@ -7,14 +7,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Container;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Container;
+using Moryx.Serialization;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management.Modification
+namespace Moryx.Products.Management.Modification
 {
     [Plugin(LifeCycle.Transient, typeof(IProductInteraction))]
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerCall, AddressFilterMode = AddressFilterMode.Any)]

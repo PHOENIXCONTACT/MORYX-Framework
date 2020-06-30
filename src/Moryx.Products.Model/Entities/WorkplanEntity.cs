@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Model;
+using Moryx.Model;
 using System.Collections.Generic;
 
-namespace Marvin.Products.Model
+namespace Moryx.Products.Model
 {
     public class WorkplanEntity : ModificationTrackedEntityBase
     {

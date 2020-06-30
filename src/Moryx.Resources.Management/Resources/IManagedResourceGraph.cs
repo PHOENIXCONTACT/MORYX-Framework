@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Additional interface for the resource graph used by <see cref="IResourceManager"/>

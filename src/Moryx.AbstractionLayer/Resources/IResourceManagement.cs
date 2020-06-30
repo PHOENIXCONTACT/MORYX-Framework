@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Capabilities;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Resource management API used to interact with resources on an abstract level

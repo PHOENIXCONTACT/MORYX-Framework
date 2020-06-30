@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Marvin.AbstractionLayer.Capabilities
+namespace Moryx.AbstractionLayer.Capabilities
 {
     /// <summary>
     /// Null object implementation for capabilites to remove null checks.

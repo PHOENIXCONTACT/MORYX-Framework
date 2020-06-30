@@ -1,13 +1,13 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Model;
+using Moryx.Model;
 using System.Collections.Generic;
 
-namespace Marvin.Products.Model
+namespace Moryx.Products.Model
 {
     /// <summary>
-    /// There are no comments for Marvin.Products.Model.ConnectorEntity in the schema.
+    /// There are no comments for Moryx.Products.Model.ConnectorEntity in the schema.
     /// </summary>
     public class ConnectorEntity : EntityBase
     {

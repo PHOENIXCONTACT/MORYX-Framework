@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.Products.IntegrationTest")]
+[assembly: AssemblyTitle("Moryx.Products.IntegrationTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PHOENIX CONTACT GmbH & Co. KG")]
-[assembly: AssemblyProduct("Marvin.Products.IntegrationTest")]
+[assembly: AssemblyProduct("Moryx.Products.IntegrationTest")]
 [assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT GmbH & Co. KG 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

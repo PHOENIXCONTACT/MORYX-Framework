@@ -3,10 +3,10 @@
 
 using System;
 using System.Reflection;
-using Marvin.Container;
-using Marvin.Tools;
+using Moryx.Container;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Mapper for columns of type <see cref="long"/>

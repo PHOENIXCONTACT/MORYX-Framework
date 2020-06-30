@@ -3,11 +3,11 @@ uid: Constraints
 ---
 # Constraints
 
-[Constraints](xref:Marvin.AbstractionLayer.IConstraint) are used to enrich a [ReadyToWork](xref:Marvin.AbstractionLayer.Resources.ReadyToWork) with information which are important before dispatching an [Activity](xref:Marvin.AbstractionLayer.IActivity) to a [Resource](xref:Marvin.Resources.IResource). For that will the [Check()](xref:Marvin.AbstractionLayer.IConstraint.Check) be called which is implemented by several Constraints. The [IConstraintContext](xref:Marvin.AbstractionLayer.IConstraintContext) contains information which will be used to check the constraint. Since it is not possible to return an already dispatched activity is it necessary to be able to not dispatch that activity.
+[Constraints](xref:Moryx.AbstractionLayer.IConstraint) are used to enrich a [ReadyToWork](xref:Moryx.AbstractionLayer.Resources.ReadyToWork) with information which are important before dispatching an [Activity](xref:Moryx.AbstractionLayer.IActivity) to a [Resource](xref:Moryx.Resources.IResource). For that will the [Check()](xref:Moryx.AbstractionLayer.IConstraint.Check) be called which is implemented by several Constraints. The [IConstraintContext](xref:Moryx.AbstractionLayer.IConstraintContext) contains information which will be used to check the constraint. Since it is not possible to return an already dispatched activity is it necessary to be able to not dispatch that activity.
 
 ## ExpressionConstraint
 
-The [ExpressionConstraint](xref:Marvin.AbstractionLayer.ExpressionConstraint) can compare a given value with the one returned by a typed lambda expression. It supports standard `Equals` comparison as well was `LessOrEqual` and `GreaterOrEqual`.
+The [ExpressionConstraint](xref:Moryx.AbstractionLayer.ExpressionConstraint) can compare a given value with the one returned by a typed lambda expression. It supports standard `Equals` comparison as well was `LessOrEqual` and `GreaterOrEqual`.
 
 ````cs
 public class DummyContext : IConstraintContext

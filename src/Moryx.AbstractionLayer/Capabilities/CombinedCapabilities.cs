@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Marvin.AbstractionLayer.Capabilities
+namespace Moryx.AbstractionLayer.Capabilities
 {
     /// <summary>
     /// Defines the capabilities of combined devices like PcWorX devices which contain some kind of logical sub devices.

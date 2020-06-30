@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Container;
-using Marvin.Products.Management;
-using Marvin.Products.Model;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Container;
+using Moryx.Products.Management;
+using Moryx.Products.Model;
 
-namespace Marvin.Products.Samples
+namespace Moryx.Products.Samples
 {
     [StrategyConfiguration(typeof(WatchType), DerivedTypes = false)]
     [Plugin(LifeCycle.Transient, typeof(IProductTypeStrategy), Name = nameof(WatchStrategy))]

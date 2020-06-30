@@ -6,11 +6,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Marvin.Workflows;
-using Marvin.Workflows.Transitions;
-using Marvin.Workflows.WorkplanSteps;
+using Moryx.Workflows;
+using Moryx.Workflows.Transitions;
+using Moryx.Workflows.WorkplanSteps;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Abstract base class of all Tasks

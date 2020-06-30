@@ -7,8 +7,8 @@
     <ProjectGuid>{841F50C1-DEC0-48D8-92D1-F860450940D8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.AbstractionLayer</RootNamespace>
-    <AssemblyName>Marvin.AbstractionLayer</AssemblyName>
+    <RootNamespace>Moryx.AbstractionLayer</RootNamespace>
+    <AssemblyName>Moryx.AbstractionLayer</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Marvin.AbstractionLayer.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Moryx.AbstractionLayer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,11 +30,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Marvin.AbstractionLayer.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Moryx.AbstractionLayer.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Marvin, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev010329\lib\netstandard2.0\Marvin.dll</HintPath>
+    <Reference Include="Moryx, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.3.0.0-dev.26\lib\netstandard2.0\Moryx.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -211,10 +211,11 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Axes.cs</LastGenOutput>
     </None>
+    <None Include="Moryx.AbstractionLayer.csproj.DotSettings" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Marvin.AbstractionLayer.nuspec" />
+    <None Include="Moryx.AbstractionLayer.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Strings.de.resx" />

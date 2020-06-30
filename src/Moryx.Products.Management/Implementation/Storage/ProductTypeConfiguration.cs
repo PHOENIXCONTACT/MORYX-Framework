@@ -3,14 +3,14 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Configuration;
-using Marvin.Modules;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Configuration;
+using Moryx.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Common configuration interface for all strategy configs

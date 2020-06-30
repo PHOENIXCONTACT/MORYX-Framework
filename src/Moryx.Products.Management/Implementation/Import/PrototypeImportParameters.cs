@@ -3,10 +3,10 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Base class for importing a prototype

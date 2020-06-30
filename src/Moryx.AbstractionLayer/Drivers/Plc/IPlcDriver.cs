@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Communication;
+using Moryx.Communication;
 
-namespace Marvin.AbstractionLayer.Drivers.Plc
+namespace Moryx.AbstractionLayer.Drivers.Plc
 {
     /// <summary>
     /// Driver for programmable logic controllers that support object communication

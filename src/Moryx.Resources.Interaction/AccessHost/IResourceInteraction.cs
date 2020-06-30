@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceModel;
-using Marvin.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.Serialization;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Resources.Interaction
+namespace Moryx.Resources.Interaction
 {
     /// <summary>
     /// Interface to provide functions for interaction of resources.

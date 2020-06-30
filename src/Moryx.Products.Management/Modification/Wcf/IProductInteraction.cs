@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceModel;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Serialization;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Products.Management.Modification
+namespace Moryx.Products.Management.Modification
 {
     [ServiceContract]
     [ServiceVersion(ServerVersion = "1.1.2.0", MinClientVersion = "1.1.1.0")]

@@ -22,7 +22,7 @@ For master type **C** and **D** no special details view model are existant so a 
 
 Several base classes were created while implementing this feature.
 
-The [IDetailsFactory](xref:Marvin.AbstractionLayer.UI.IDetailsFactory`1) is a view model factory which creates the special view models defined by the type.
+The [IDetailsFactory](xref:Moryx.AbstractionLayer.UI.IDetailsFactory`1) is a view model factory which creates the special view models defined by the type.
 
 ````cs
 T Create();
@@ -34,11 +34,11 @@ The factory has to be derived in order to register it in the local container of 
 
 ## DetailsComponentSelector
 
-Because of the selection of a component by a type name the [DetailsComponentSelector](xref:Marvin.AbstractionLayer.UI.DetailsComponentSelector´2) has to be derived to define the type of the details base interface. The component selector will automatically initialize the created component with a implementation of [IInteractionController](xref:Marvin.AbstractionLayer.UI.IInteractionController) when the component is implementing the [IDetailsViewModel](xref:Marvin.AbstractionLayer.UI.IDetailsViewModel) interface.
+Because of the selection of a component by a type name the [DetailsComponentSelector](xref:Moryx.AbstractionLayer.UI.DetailsComponentSelector´2) has to be derived to define the type of the details base interface. The component selector will automatically initialize the created component with a implementation of [IInteractionController](xref:Moryx.AbstractionLayer.UI.IInteractionController) when the component is implementing the [IDetailsViewModel](xref:Moryx.AbstractionLayer.UI.IDetailsViewModel) interface.
 
-The base implementation will return a default view model if the requested type is not found. The default type name is defined within a constant class in [DetailsConstants](xref:Marvin.AbstractionLayer.UI.DetailsConstants)
+The base implementation will return a default view model if the requested type is not found. The default type name is defined within a constant class in [DetailsConstants](xref:Moryx.AbstractionLayer.UI.DetailsConstants)
 
-As an example the `ProductDetailsComponentSelector` will define the [IProductDetails](xref:Marvin.Products.UI.IProductDetails) as the interface for the detail components. Additionally the `IProductsController` will be used as controller for initializing the instance.
+As an example the `ProductDetailsComponentSelector` will define the [IProductDetails](xref:Moryx.Products.UI.IProductDetails) as the interface for the detail components. Additionally the `IProductsController` will be used as controller for initializing the instance.
 
 ````cs
 [Plugin(LifeCycle.Singleton)]
@@ -62,7 +62,7 @@ internal interface IProductDetailsFactory : IDetailsFactory<IProductDetails>
 
 ## DetailsRegistrationAttribute
 
-For the registration of the types of view models, the base class for details view models should be used: [DetailsRegistrationAttribute](xref:Marvin.AbstractionLayer.UI.DetailsRegistrationAttribute). The constructor can be overloaded to add the specialized details type:
+For the registration of the types of view models, the base class for details view models should be used: [DetailsRegistrationAttribute](xref:Moryx.AbstractionLayer.UI.DetailsRegistrationAttribute). The constructor can be overloaded to add the specialized details type:
 
 ````cs
 public class ProductDetailsRegistrationAttribute : DetailsRegistrationAttribute

@@ -3,12 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Bindings;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Bindings;
 using NUnit.Framework;
 
-namespace Marvin.AbstractionLayer.Tests
+namespace Moryx.AbstractionLayer.Tests
 {
     [TestFixture]
     public class ParameterBindingTests

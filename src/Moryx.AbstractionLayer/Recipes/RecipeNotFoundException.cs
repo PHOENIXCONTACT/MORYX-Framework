@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Properties;
+using Moryx.AbstractionLayer.Properties;
 
-namespace Marvin.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Exception thrown when a recipe could not be found by its id

@@ -3,7 +3,7 @@ uid: Capabilities
 ---
 # Capabilities
 
-[Capabilities](xref:Marvin.AbstractionLayer.Capabilities.ICapabilities) are basically a self description of a *Resource*. In every `Activity` is defined which capabilities are required and these information will be used to find a matching resource to handle the activity. It is also possible that a resource can have multiple capabilities and to be able to handle multiple activities.
+[Capabilities](xref:Moryx.AbstractionLayer.Capabilities.ICapabilities) are basically a self description of a *Resource*. In every `Activity` is defined which capabilities are required and these information will be used to find a matching resource to handle the activity. It is also possible that a resource can have multiple capabilities and to be able to handle multiple activities.
 
 ## Single Capabilities
 

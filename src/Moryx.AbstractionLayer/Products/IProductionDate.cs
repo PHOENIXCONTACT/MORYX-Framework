@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Interface for product instances with production date

@@ -9,7 +9,7 @@ using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Moryx.Tools;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     [ServerModuleConsole]
     internal class ModuleConsole : IServerModuleConsole

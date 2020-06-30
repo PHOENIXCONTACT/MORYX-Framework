@@ -7,11 +7,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
+using Moryx.Tools;
 
-namespace Marvin.Resources.Interaction.Converter
+namespace Moryx.Resources.Interaction.Converter
 {
     /// <summary>
     /// Converts Resources to ResourceModel

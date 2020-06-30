@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Drivers.Message;
+using Moryx.AbstractionLayer.Drivers.Message;
 
-namespace Marvin.AbstractionLayer.Drivers.Plc
+namespace Moryx.AbstractionLayer.Drivers.Plc
 {
     /// <summary>
     /// Interface for communication with the plc

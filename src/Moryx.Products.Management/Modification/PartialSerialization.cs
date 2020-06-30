@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Serialization;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management.Modification
+namespace Moryx.Products.Management.Modification
 {
     internal class PartialSerialization<T> : DefaultSerialization
         where T : class
@@ -22,7 +22,7 @@ namespace Marvin.Products.Management.Modification
         /// </summary>
         private static readonly string[] FilteredProperties = typeof (T).GetProperties().Select(p => p.Name).ToArray();
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             // Only simple properties not defined in the base
@@ -50,7 +50,7 @@ namespace Marvin.Products.Management.Modification
             return true;
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
         {
             return base.WriteFilter(sourceType, encoded).Where(mapped => mapped.Entry != null);

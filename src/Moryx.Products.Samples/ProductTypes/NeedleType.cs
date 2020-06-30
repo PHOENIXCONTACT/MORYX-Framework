@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Products;
 
-namespace Marvin.Products.Samples
+namespace Moryx.Products.Samples
 {
     [DisplayName("Watch Needle")]
     public class NeedleType : ProductType

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Identity;
 
-namespace Marvin.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Temporary product reference to be replaced by the product management

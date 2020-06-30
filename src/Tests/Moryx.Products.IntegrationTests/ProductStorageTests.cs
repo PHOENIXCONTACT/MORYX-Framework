@@ -4,20 +4,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Products.Management;
-using Marvin.Products.Management.NullStrategies;
-using Marvin.Products.Model;
-using Marvin.Products.Samples;
-using Marvin.Products.Samples.Recipe;
-using Marvin.Tools;
-using Marvin.Workflows;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Products.Management;
+using Moryx.Products.Management.NullStrategies;
+using Moryx.Products.Model;
+using Moryx.Products.Samples;
+using Moryx.Products.Samples.Recipe;
+using Moryx.Tools;
+using Moryx.Workflows;
 using Moq;
 using NUnit.Framework;
 
-namespace Marvin.Products.IntegrationTests
+namespace Moryx.Products.IntegrationTests
 {
     [TestFixture]
     public class ProductStorageTests

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Products.Management.Importers;
+using Moryx.Products.Management.Importers;
 
-namespace Marvin.Products.Samples
+namespace Moryx.Products.Samples
 {
     [DataContract]
     public class WatchImporterConfig : ProductImporterConfig

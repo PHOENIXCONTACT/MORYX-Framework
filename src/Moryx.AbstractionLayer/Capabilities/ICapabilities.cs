@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.AbstractionLayer.Capabilities
+namespace Moryx.AbstractionLayer.Capabilities
 {
     /// <summary>
     /// Common capabilities interface

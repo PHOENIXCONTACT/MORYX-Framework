@@ -1,4 +1,4 @@
-﻿namespace Marvin.AbstractionLayer
+﻿namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Extensions for <see cref="IProcess"/>

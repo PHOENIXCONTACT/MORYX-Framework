@@ -3,12 +3,12 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Drivers.Plc;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Drivers.Plc;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Samples
+namespace Moryx.Resources.Samples
 {
     [Description("Cell to mount product instances on carriers!")]
     [ResourceRegistration]

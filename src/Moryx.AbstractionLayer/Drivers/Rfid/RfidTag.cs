@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Drivers.Rfid
+namespace Moryx.AbstractionLayer.Drivers.Rfid
 {
     /// <summary>
     /// Base class for rfid tag events

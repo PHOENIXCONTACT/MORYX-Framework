@@ -7,8 +7,8 @@
     <ProjectGuid>{1516374C-976F-49FC-A911-29EDC481C657}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.AbstractionLayer.TestTools</RootNamespace>
-    <AssemblyName>Marvin.AbstractionLayer.TestTools</AssemblyName>
+    <RootNamespace>Moryx.AbstractionLayer.TestTools</RootNamespace>
+    <AssemblyName>Moryx.AbstractionLayer.TestTools</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Marvin.AbstractionLayer.TestTools.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Moryx.AbstractionLayer.TestTools.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,7 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Marvin.AbstractionLayer.TestTools.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Moryx.AbstractionLayer.TestTools.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -38,11 +38,11 @@
     <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev010329\lib\netstandard2.0\Marvin.dll</HintPath>
+    <Reference Include="Moryx, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.3.0.0-dev.26\lib\netstandard2.0\Moryx.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev010329\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
+    <Reference Include="Moryx.TestTools.UnitTest, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.TestTools.UnitTest.3.0.0-dev.26\lib\net461\Moryx.TestTools.UnitTest.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -65,14 +65,14 @@
     <Compile Include="Resources\ResourceGraphMock.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj">
       <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
-      <Name>Marvin.AbstractionLayer</Name>
+      <Name>Moryx.AbstractionLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Marvin.AbstractionLayer.TestTools.nuspec" />
+    <None Include="Moryx.AbstractionLayer.TestTools.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

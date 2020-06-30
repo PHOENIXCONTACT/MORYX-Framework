@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-using Marvin.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Products;
 
-namespace Marvin.Products.Samples
+namespace Moryx.Products.Samples
 {
     /// <summary>
     /// Product that represents the package used to ship a watch

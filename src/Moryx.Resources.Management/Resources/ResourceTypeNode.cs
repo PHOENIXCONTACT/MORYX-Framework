@@ -7,7 +7,7 @@ using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Class that represents a single resource type in the type tree

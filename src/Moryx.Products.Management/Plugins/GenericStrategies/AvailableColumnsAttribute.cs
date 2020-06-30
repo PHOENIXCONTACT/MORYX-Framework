@@ -4,12 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Products.Model;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Products.Model;
+using Moryx.Serialization;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Attribute to select the entity column

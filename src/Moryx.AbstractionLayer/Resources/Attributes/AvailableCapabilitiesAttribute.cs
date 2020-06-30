@@ -4,12 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.AbstractionLayer.Capabilities;
-using Marvin.Container;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.AbstractionLayer.Capabilities;
+using Moryx.Container;
+using Moryx.Serialization;
+using Moryx.Tools;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Attribute to configure capabilities in resource configs

@@ -3,9 +3,9 @@
 
 using System;
 using System.Linq;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Simplified plugin registration attribute for resources

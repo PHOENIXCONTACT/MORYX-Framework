@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Workflows;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Workflows;
 
-namespace Marvin.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Merged facade for products and product instances

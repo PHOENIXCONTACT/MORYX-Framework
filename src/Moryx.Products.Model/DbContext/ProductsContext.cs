@@ -5,17 +5,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
-using Marvin.Model;
-using Marvin.Model.PostgreSQL;
+using Moryx.Model;
+using Moryx.Model.PostgreSQL;
 
-namespace Marvin.Products.Model
+namespace Moryx.Products.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
     [DefaultSchema(ProductsConstants.Schema)]
-    public class ProductsContext : MarvinDbContext
+    public class ProductsContext : MoryxDbContext
     {
         /// <inheritdoc />
         public ProductsContext()

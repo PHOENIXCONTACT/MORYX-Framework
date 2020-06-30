@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Workflows;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Workflows;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Context for workplans that execute a process

@@ -3,10 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Interaction.Converter
+namespace Moryx.Resources.Interaction.Converter
 {
     /// <summary>
     /// Converts ResourceModel to Resource

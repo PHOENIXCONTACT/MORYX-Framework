@@ -1,12 +1,12 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Container;
-using Marvin.Products.Model;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Container;
+using Moryx.Products.Model;
 
-namespace Marvin.Products.Management.NullStrategies
+namespace Moryx.Products.Management.NullStrategies
 {
     /// <summary>
     /// Strategiy for product instances that should not be saved to the database

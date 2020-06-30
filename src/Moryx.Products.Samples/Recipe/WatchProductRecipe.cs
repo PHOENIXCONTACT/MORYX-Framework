@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
 
-namespace Marvin.Products.Samples.Recipe
+namespace Moryx.Products.Samples.Recipe
 {
     public class WatchProductRecipe : WorkplanRecipe, IProductRecipe
     {

@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.ServiceModel;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Container;
-using Marvin.Resources.Interaction;
-using Marvin.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Container;
+using Moryx.Resources.Interaction;
+using Moryx.Serialization;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Resources.Samples
+namespace Moryx.Resources.Samples
 {
     public interface IVisualInstructor : IResource
     {

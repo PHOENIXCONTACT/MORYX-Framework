@@ -5,7 +5,7 @@ using System;
 using Moq;
 using NUnit.Framework;
 
-namespace Marvin.AbstractionLayer.Tests
+namespace Moryx.AbstractionLayer.Tests
 {
     [TestFixture]
     public class TracingActivityTest

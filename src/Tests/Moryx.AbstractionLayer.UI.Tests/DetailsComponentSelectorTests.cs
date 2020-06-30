@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Container;
+using Moryx.Container;
 using NUnit.Framework;
 
-namespace Marvin.AbstractionLayer.UI.Tests
+namespace Moryx.AbstractionLayer.UI.Tests
 {
     [TestFixture]
     public class DetailsComponentSelectorTests

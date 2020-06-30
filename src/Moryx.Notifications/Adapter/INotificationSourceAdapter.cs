@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Marvin.Notifications
+namespace Moryx.Notifications
 {
     /// <summary>
     /// Adapter for the <see cref="INotificationSource"/>

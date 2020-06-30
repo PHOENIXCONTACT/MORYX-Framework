@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.AbstractionLayer.Hardware;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Hardware;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Samples
+namespace Moryx.Resources.Samples
 {
     [ResourceRegistration]
     public class GateResource : Cell

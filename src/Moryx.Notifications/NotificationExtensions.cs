@@ -1,6 +1,6 @@
-﻿using Marvin.Container;
+﻿using Moryx.Container;
 
-namespace Marvin.Notifications
+namespace Moryx.Notifications
 {
     /// <summary>
     /// <see cref="IContainer"/> extensions to register and handle notifications

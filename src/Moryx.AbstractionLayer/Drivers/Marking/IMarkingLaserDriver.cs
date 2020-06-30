@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Drivers.Marking
+namespace Moryx.AbstractionLayer.Drivers.Marking
 {
     /// <summary>
     /// Driver interface for laser printing devices

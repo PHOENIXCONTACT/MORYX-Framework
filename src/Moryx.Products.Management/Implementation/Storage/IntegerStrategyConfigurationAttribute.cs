@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class IntegerStrategyConfigurationAttribute : PropertyStrategyConfigurationAttribute

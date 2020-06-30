@@ -10,7 +10,7 @@ using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Resource grap implementation

@@ -3,15 +3,15 @@ uid: Workplans
 ---
 # Workplans
 
-A [Workplan](xref:Marvin.Workflows.IWorkplan) is the definition of the production flow of a product how it should be produced at a machine and which steps must be executed and in which order. Therefore it contains a list of steps and connectors. The diagram is a model on its own. The workflow control model does not contain any information of a diagram.
+A [Workplan](xref:Moryx.Workflows.IWorkplan) is the definition of the production flow of a product how it should be produced at a machine and which steps must be executed and in which order. Therefore it contains a list of steps and connectors. The diagram is a model on its own. The workflow control model does not contain any information of a diagram.
 
 ## Workplan Step
 
-A [workplan step](xref:Marvin.Workflows.IWorkplanStep) is basically the Task which must be implemented in an application to define the needed step in the production. The task will create the corresponding activity during the processing of the workplan.
+A [workplan step](xref:Moryx.Workflows.IWorkplanStep) is basically the Task which must be implemented in an application to define the needed step in the production. The task will create the corresponding activity during the processing of the workplan.
 
 ## Connector
 
-A [connector](xref:Marvin.Workflows.IConnector) is the connection between two steps to define the possible paths from the start of the workplan over the used tasks until an endpoint is reached.
+A [connector](xref:Moryx.Workflows.IConnector) is the connection between two steps to define the possible paths from the start of the workplan over the used tasks until an endpoint is reached.
 
 ## Meta-Model
 
@@ -39,8 +39,8 @@ A [connector](xref:Marvin.Workflows.IConnector) is the connection between two st
 
 !["Petri Net](images/petrinet.png)
 
-Unlike MARVIN Classic, there shall be not one single large workplan but separate small workplans to get from one construction level to the next one.
-In addition to the work plan steps work plans may contains splits and joins to support parallel processing. Therefore there will be not one single token inside the net as in MARVIN Classic but a group of tokens. 
+Unlike MORYX Classic, there shall be not one single large workplan but separate small workplans to get from one construction level to the next one.
+In addition to the work plan steps work plans may contains splits and joins to support parallel processing. Therefore there will be not one single token inside the net as in MORYX Classic but a group of tokens. 
 
 The ProcessController will be changed to get a list of activities instead of a single one. The list may be empty if there is a join still waiting for other tokens. The workflow finishes if the list of activities is null.
 

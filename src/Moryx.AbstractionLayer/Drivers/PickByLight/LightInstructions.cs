@@ -1,4 +1,4 @@
-﻿namespace Marvin.AbstractionLayer.Drivers.PickByLight
+﻿namespace Moryx.AbstractionLayer.Drivers.PickByLight
 {
     /// <summary>
     /// Output structure for a pick by light driver

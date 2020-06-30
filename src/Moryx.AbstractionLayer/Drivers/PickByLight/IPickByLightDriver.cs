@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.AbstractionLayer.Drivers.InOut;
+using Moryx.AbstractionLayer.Drivers.InOut;
 
-namespace Marvin.AbstractionLayer.Drivers.PickByLight
+namespace Moryx.AbstractionLayer.Drivers.PickByLight
 {
     /// <summary>
     /// Interface for the pick by light driver

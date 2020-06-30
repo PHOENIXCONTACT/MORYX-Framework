@@ -3,14 +3,14 @@
 
 using System;
 using System.Linq;
-using Marvin.AbstractionLayer;
-using Marvin.Container;
-using Marvin.Products.Model;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.Container;
+using Moryx.Products.Model;
+using Moryx.Serialization;
+using Moryx.Tools;
 using Newtonsoft.Json;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Reusable component to map business objects onto entities of type

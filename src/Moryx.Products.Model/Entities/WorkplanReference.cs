@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations.Schema;
-using Marvin.Model;
+using Moryx.Model;
 
-namespace Marvin.Products.Model
+namespace Moryx.Products.Model
 {
     public class WorkplanReference : EntityBase
     {

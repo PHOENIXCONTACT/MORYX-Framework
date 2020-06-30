@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Capabilities;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Component that holds the resource graph and maintains references to all nodes

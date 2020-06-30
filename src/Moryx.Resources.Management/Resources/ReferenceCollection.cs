@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Collection that wraps another collection of references

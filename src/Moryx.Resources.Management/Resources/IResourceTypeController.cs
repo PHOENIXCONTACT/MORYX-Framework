@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Modules;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Central component responsible for reading the type tree and building/managing proxies

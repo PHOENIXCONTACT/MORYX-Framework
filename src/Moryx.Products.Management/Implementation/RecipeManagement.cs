@@ -3,12 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Container;
-using Marvin.Model;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Container;
+using Moryx.Model;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     [Component(LifeCycle.Singleton, typeof(IRecipeManagement))]
     internal class RecipeManagement : IRecipeManagement

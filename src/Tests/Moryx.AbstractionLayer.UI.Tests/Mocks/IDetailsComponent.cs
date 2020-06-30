@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.UI.Tests
+namespace Moryx.AbstractionLayer.UI.Tests
 {
     public interface IDetailsComponent : IEditModeViewModel, IDetailsViewModel
     {

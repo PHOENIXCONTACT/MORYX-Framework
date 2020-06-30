@@ -3,10 +3,10 @@
 
 using System;
 using System.Linq;
-using Marvin.Workflows;
-using Marvin.Workflows.Transitions;
+using Moryx.Workflows;
+using Moryx.Workflows.Transitions;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Transition representing a certain task

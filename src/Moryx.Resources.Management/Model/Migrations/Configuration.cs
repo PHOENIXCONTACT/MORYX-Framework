@@ -4,9 +4,9 @@
 using System.Data.Entity.Migrations;
 
 // ReSharper disable once CheckNamespace
-namespace Marvin.Resources.Model.Migrations
+namespace Moryx.Resources.Model.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<Marvin.Resources.Model.ResourcesContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Moryx.Resources.Model.ResourcesContext>
     {
         public Configuration()
         {

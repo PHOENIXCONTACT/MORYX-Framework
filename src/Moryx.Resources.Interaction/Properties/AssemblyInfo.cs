@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Modules;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Modules;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.Resources.Interaction")]
+[assembly: AssemblyTitle("Moryx.Resources.Interaction")]
 [assembly: AssemblyDescription("Provides the default implementation if the resource interaction")]
 [assembly: AssemblyCulture("")]
 

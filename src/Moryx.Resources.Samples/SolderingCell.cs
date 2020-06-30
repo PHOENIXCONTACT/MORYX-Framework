@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Samples
+namespace Moryx.Resources.Samples
 {
     [ResourceRegistration]
     public class SolderingCell : Cell

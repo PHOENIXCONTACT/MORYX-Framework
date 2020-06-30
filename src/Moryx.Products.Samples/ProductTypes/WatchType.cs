@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-using Marvin.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Products;
 
-namespace Marvin.Products.Samples
+namespace Moryx.Products.Samples
 {
     [DisplayName("Watch")]
     public class WatchType : ProductType

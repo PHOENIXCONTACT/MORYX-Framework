@@ -4,11 +4,11 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Marvin.AbstractionLayer.Identity;
-using Marvin.Bindings;
-using Marvin.Workflows;
+using Moryx.AbstractionLayer.Identity;
+using Moryx.Bindings;
+using Moryx.Workflows;
 
-namespace Marvin.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Resolver factory that accepts recipes as input arguments

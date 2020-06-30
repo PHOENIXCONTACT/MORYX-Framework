@@ -7,14 +7,14 @@ using Moryx.Model;
 using Moryx.Model.PostgreSQL;
 
 // ReSharper disable once CheckNamespace
-namespace Marvin.Resources.Model
+namespace Moryx.Resources.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
     [DefaultSchema(ResourcesConstants.Schema)]
-    public class ResourcesContext : MarvinDbContext
+    public class ResourcesContext : MoryxDbContext
     {
         /// <inheritdoc />
         public ResourcesContext()

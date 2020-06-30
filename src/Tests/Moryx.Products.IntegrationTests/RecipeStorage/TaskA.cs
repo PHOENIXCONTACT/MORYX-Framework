@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Capabilities;
 
-namespace Marvin.Products.IntegrationTests
+namespace Moryx.Products.IntegrationTests
 {
     public class TaskA : TaskStep<ActivityA, ParametersA>
     {

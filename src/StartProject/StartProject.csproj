@@ -81,37 +81,34 @@
     <Reference Include="EntityFramework6.Npgsql, Version=6.4.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework6.Npgsql.6.4.1\lib\net461\EntityFramework6.Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev010329\lib\netstandard2.0\Marvin.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Container, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Container.3.0.0-dev010329\lib\netstandard2.0\Marvin.Container.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Model.3.0.0-dev010329\lib\net461\Marvin.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Model.PostgreSQL, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Model.PostgreSQL.3.0.0-dev010329\lib\net461\Marvin.Model.PostgreSQL.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Runtime, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.3.0.0-dev010329\lib\netstandard2.0\Marvin.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Runtime.Kernel, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Kernel.3.0.0-dev010329\lib\net461\Marvin.Runtime.Kernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Runtime.Maintenance, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.3.0.0-dev010329\lib\net461\Marvin.Runtime.Maintenance.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Runtime.Maintenance.Web, Version=3.0.0.9523, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Runtime.Maintenance.Web.3.0.0-dev009523\lib\net461\Marvin.Runtime.Maintenance.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Tools.Wcf.3.0.0-dev010329\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moryx, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.3.0.0-dev.26\lib\netstandard2.0\Moryx.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Container, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Container.3.0.0-dev.26\lib\netstandard2.0\Moryx.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Model, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Model.3.0.0-dev.26\lib\net461\Moryx.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Model.PostgreSQL, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Model.PostgreSQL.3.0.0-dev.26\lib\net461\Moryx.Model.PostgreSQL.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Runtime, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Runtime.3.0.0-dev.26\lib\netstandard2.0\Moryx.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Runtime.Kernel, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Runtime.Kernel.3.0.0-dev.26\lib\net461\Moryx.Runtime.Kernel.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Runtime.Maintenance, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Runtime.Maintenance.3.0.0-dev.26\lib\net461\Moryx.Runtime.Maintenance.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Tools.Wcf, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Tools.Wcf.3.0.0-dev.26\lib\net461\Moryx.Tools.Wcf.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -163,37 +160,37 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj">
       <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
-      <Name>Marvin.AbstractionLayer</Name>
+      <Name>Moryx.AbstractionLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Notifications\Marvin.Notifications.csproj">
+    <ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj">
       <Project>{4fb1bca9-bd6d-478a-93c5-5cd4de2a2337}</Project>
-      <Name>Marvin.Notifications</Name>
+      <Name>Moryx.Notifications</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Products.Management\Marvin.Products.Management.csproj">
+    <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj">
       <Project>{650756a0-e077-4632-8da8-27214b5acda4}</Project>
-      <Name>Marvin.Products.Management</Name>
+      <Name>Moryx.Products.Management</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Products.Model\Marvin.Products.Model.csproj">
+    <ProjectReference Include="..\Moryx.Products.Model\Moryx.Products.Model.csproj">
       <Project>{99a470c6-1224-4475-937e-e7ca0266205c}</Project>
-      <Name>Marvin.Products.Model</Name>
+      <Name>Moryx.Products.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Products.Samples\Marvin.Products.Samples.csproj">
+    <ProjectReference Include="..\Moryx.Products.Samples\Moryx.Products.Samples.csproj">
       <Project>{00916431-5038-44b8-8bda-4a1b13636f32}</Project>
-      <Name>Marvin.Products.Samples</Name>
+      <Name>Moryx.Products.Samples</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Resources.Interaction\Marvin.Resources.Interaction.csproj">
+    <ProjectReference Include="..\Moryx.Resources.Interaction\Moryx.Resources.Interaction.csproj">
       <Project>{583cbd84-dd9f-4834-a89c-1625a05ee15d}</Project>
-      <Name>Marvin.Resources.Interaction</Name>
+      <Name>Moryx.Resources.Interaction</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Resources.Management\Marvin.Resources.Management.csproj">
+    <ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj">
       <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
-      <Name>Marvin.Resources.Management</Name>
+      <Name>Moryx.Resources.Management</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Resources.Samples\Marvin.Resources.Samples.csproj">
+    <ProjectReference Include="..\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj">
       <Project>{23f6025e-1348-4abf-a908-c5d360f9d486}</Project>
-      <Name>Marvin.Resources.Samples</Name>
+      <Name>Moryx.Resources.Samples</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

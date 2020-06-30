@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Class that can construct a new <see cref="ResourceProxy{TTarget}"/> for a given

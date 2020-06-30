@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Logging;
-using Marvin.Modules;
+using Moryx.Logging;
+using Moryx.Modules;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Base class for resource initializers without a custom config

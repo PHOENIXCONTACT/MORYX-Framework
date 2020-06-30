@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Model.InMemory;
+using Moryx.Model.InMemory;
 
 // ReSharper disable once CheckNamespace
-namespace Marvin.Resources.Model
+namespace Moryx.Resources.Model
 {
     /// <summary>
     /// Factory to create in memory databases

@@ -8,8 +8,8 @@
     <ProjectGuid>{47B9DE3F-18D2-4C36-AD35-7EF06A799ED0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.AbstractionLayer.UI.Tests</RootNamespace>
-    <AssemblyName>Marvin.AbstractionLayer.UI.Tests</AssemblyName>
+    <RootNamespace>Moryx.AbstractionLayer.UI.Tests</RootNamespace>
+    <AssemblyName>Moryx.AbstractionLayer.UI.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -55,26 +55,26 @@
     <Reference Include="CommandLine, Version=2.7.82.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\CommandLineParser.2.7.82\lib\net461\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="Controls4Industry, Version=3.0.0.9968, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Controls4Industry.3.0.0-dev009968\lib\net461\Controls4Industry.dll</HintPath>
+    <Reference Include="Controls4Industry, Version=3.0.0.15, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Controls4Industry.3.0.0-dev.15\lib\net461\Controls4Industry.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev010329\lib\netstandard2.0\Marvin.dll</HintPath>
+    <Reference Include="Moryx, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.3.0.0-dev.26\lib\netstandard2.0\Moryx.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.ClientFramework, Version=3.0.0.9968, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.ClientFramework.3.0.0-dev009968\lib\net461\Marvin.ClientFramework.dll</HintPath>
+    <Reference Include="Moryx.ClientFramework, Version=3.0.0.15, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.ClientFramework.3.0.0-dev.15\lib\net461\Moryx.ClientFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.ClientFramework.Kernel, Version=3.0.0.9968, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.ClientFramework.Kernel.3.0.0-dev009968\lib\net461\Marvin.ClientFramework.Kernel.dll</HintPath>
+    <Reference Include="Moryx.ClientFramework.Kernel, Version=3.0.0.15, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.ClientFramework.Kernel.3.0.0-dev.15\lib\net461\Moryx.ClientFramework.Kernel.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Container, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Container.3.0.0-dev010329\lib\netstandard2.0\Marvin.Container.dll</HintPath>
+    <Reference Include="Moryx.Container, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.Container.3.0.0-dev.26\lib\netstandard2.0\Moryx.Container.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.TestTools.UnitTest, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.TestTools.UnitTest.3.0.0-dev010329\lib\net461\Marvin.TestTools.UnitTest.dll</HintPath>
+    <Reference Include="Moryx.TestTools.UnitTest, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.TestTools.UnitTest.3.0.0-dev.26\lib\net461\Moryx.TestTools.UnitTest.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin.Tools.Wcf, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Tools.Wcf.3.0.0-dev010329\lib\net461\Marvin.Tools.Wcf.dll</HintPath>
+    <Reference Include="Moryx.Tools.Wcf, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.Tools.Wcf.3.0.0-dev.26\lib\net461\Moryx.Tools.Wcf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -110,12 +110,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Moryx.AbstractionLayer.UI.Tests.csproj.DotSettings" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AbstractionLayer.UI\Marvin.AbstractionLayer.UI.csproj">
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer.UI\Moryx.AbstractionLayer.UI.csproj">
       <Project>{b9920541-7e0e-4cde-b195-b18589a2bbb1}</Project>
-      <Name>Marvin.AbstractionLayer.UI</Name>
+      <Name>Moryx.AbstractionLayer.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

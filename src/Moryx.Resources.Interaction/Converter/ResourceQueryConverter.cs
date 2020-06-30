@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Interaction.Converter
+namespace Moryx.Resources.Interaction.Converter
 {
     internal class ResourceQueryConverter : ResourceToModelConverter
     {

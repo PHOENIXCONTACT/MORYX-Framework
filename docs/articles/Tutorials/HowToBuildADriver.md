@@ -10,7 +10,7 @@ A driver is the interface between the `ControlSystem` and physical parts of the 
 A driver has this basic solution structure which can be extended for your needs:
 
 ````fs
--Marvin.Driver.ExampleDriver
+-Moryx.Driver.ExampleDriver
 |-IExampleDriver.cs
 |-ExampleDriver.cs
 ````
@@ -19,12 +19,12 @@ The interface `IExampleDriver` is the main interface for the driver and importan
 
 ### The interface
 
-This interface is simply derived from [IDriver](xref:Marvin.AbstractionLayer.Drivers.IDriver). No further definitions are needed.
+This interface is simply derived from [IDriver](xref:Moryx.AbstractionLayer.Drivers.IDriver). No further definitions are needed.
 
 ````cs
-using Marvin.AbstractionLayer.Drivers;
+using Moryx.AbstractionLayer.Drivers;
 
-namespace Marvin.Resources.Samples.DriverTutorial
+namespace Moryx.Resources.Samples.DriverTutorial
 {
     public interface IExampleDriver : IDriver
     {
@@ -39,11 +39,11 @@ Now implement `IDriver`:
 ````cs
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.AbstractionLayer.Drivers;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer.Drivers;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 
-namespace Marvin.Resources.Samples.DriverTutorial
+namespace Moryx.Resources.Samples.DriverTutorial
 {
     [ResourceRegistration]
     [DisplayName("Example Driver"), Description("An example driver")]
@@ -66,7 +66,7 @@ namespace Marvin.Resources.Samples.DriverTutorial
 }
 ````
 
-The implementation of the `ExampleDriver` derives from the [Driver](xref:Marvin.AbstractionLayer.Drivers.Driver) base class. It also implements the `IDriver` interface. The next important thing is the [ResourceRegistration attribute](xref:Marvin.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this driver as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
+The implementation of the `ExampleDriver` derives from the [Driver](xref:Moryx.AbstractionLayer.Drivers.Driver) base class. It also implements the `IDriver` interface. The next important thing is the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this driver as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
 ![ResourceUI](images\ExampleDriverResourceUI.png)
 
@@ -75,13 +75,13 @@ The `Square` function is also visible in the Resource UI. And: It is callable fr
 
 ## Additional things that are good to know
 
-The `ExampleDriver` is just a simple implementation for a driver. As like every [Resource](xref:Marvin.AbstractionLayer.Resources.Resource) you can `Initialize`, `Start`, `Stop` a driver. Also `State machine` support is built in:
+The `ExampleDriver` is just a simple implementation for a driver. As like every [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) you can `Initialize`, `Start`, `Stop` a driver. Also `State machine` support is built in:
 
 ````cs
-using Marvin.AbstractionLayer.Drivers;
-using Marvin.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Drivers;
+using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Samples.DriverTutorial
+namespace Moryx.Resources.Samples.DriverTutorial
 {
     [ResourceRegistration]
     [DisplayName("StateExample Driver"), Description("An example driver that uses the state machine")]

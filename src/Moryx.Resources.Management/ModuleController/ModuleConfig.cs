@@ -8,7 +8,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Configuration of this module

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Attribute for <see cref="IPropertyMapper"/> to define their column requirement

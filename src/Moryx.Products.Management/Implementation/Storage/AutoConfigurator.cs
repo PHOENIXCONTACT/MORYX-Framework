@@ -4,17 +4,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.Products.Model;
-using Marvin.Runtime.Configuration;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.Products.Model;
+using Moryx.Runtime.Configuration;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Component that can automatically configure the strategies 

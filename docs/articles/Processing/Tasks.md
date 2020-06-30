@@ -3,7 +3,7 @@ uid: Tasks
 ---
 # Tasks
 
-[Tasks](xref:Marvin.AbstractionLayer.ITask) are the elements to define a workplan which defines to production flow of a product. Each task has its corresponding activity which will be created from a Task. So the Workplan will be processed step by step and every task will create the corresponding activity which will be handled by a resource.
+[Tasks](xref:Moryx.AbstractionLayer.ITask) are the elements to define a workplan which defines to production flow of a product. Each task has its corresponding activity which will be created from a Task. So the Workplan will be processed step by step and every task will create the corresponding activity which will be handled by a resource.
 
 ## Create a Task
 

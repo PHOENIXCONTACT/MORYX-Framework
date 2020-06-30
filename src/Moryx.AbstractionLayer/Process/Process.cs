@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Marvin.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Recipes;
 
-namespace Marvin.AbstractionLayer
+namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Base implementation of <see cref="IProcess"/>

@@ -3,16 +3,16 @@
 
 using System;
 using System.Linq;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Container;
-using Marvin.Model;
-using Marvin.Modules;
-using Marvin.Products.Model;
-using Marvin.Serialization;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Container;
+using Moryx.Model;
+using Moryx.Modules;
+using Moryx.Products.Model;
+using Moryx.Serialization;
 using Newtonsoft.Json;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Strategy for simple products

@@ -9,7 +9,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Tools;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Class to build resource proxies at runtime. It also contains a cache for types and instances
@@ -94,7 +94,7 @@ namespace Marvin.Resources.Management
             foreach (var type in registeredTypes.Union(ReflectionTool.GetPublicClasses<Resource>()))
             {
                 var buffer = type;
-                // Exclude the different base types from "Marvin.Resources" from the type tree
+                // Exclude the different base types from "Moryx.Resources" from the type tree
                 do
                 {
                     if (buffer.IsGenericType) // Generic base types appear multiple times, use only the generic type

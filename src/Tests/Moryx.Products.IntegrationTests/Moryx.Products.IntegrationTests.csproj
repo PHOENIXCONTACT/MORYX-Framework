@@ -10,8 +10,8 @@
     <ProjectGuid>{88D15860-19C3-4E02-A7F1-2E1EACE87963}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Products.IntegrationTests</RootNamespace>
-    <AssemblyName>Marvin.Products.IntegrationTests</AssemblyName>
+    <RootNamespace>Moryx.Products.IntegrationTests</RootNamespace>
+    <AssemblyName>Moryx.Products.IntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -48,17 +48,17 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.3.0.0-dev010329\lib\netstandard2.0\Marvin.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.3.0.0-dev010329\lib\net461\Marvin.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Model.InMemory, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Marvin.Model.InMemory.3.0.0-dev010329\lib\net461\Marvin.Model.InMemory.dll</HintPath>
-    </Reference>
     <Reference Include="Moq, Version=4.14.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Moq.4.14.1\lib\net45\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.3.0.0-dev.26\lib\netstandard2.0\Moryx.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Model, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.Model.3.0.0-dev.26\lib\net461\Moryx.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Model.InMemory, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moryx.Model.InMemory.3.0.0-dev.26\lib\net461\Moryx.Model.InMemory.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -94,27 +94,28 @@
     <Compile Include="Model\InMemoryUnitOfWorkFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj">
       <Project>{841F50C1-DEC0-48D8-92D1-F860450940D8}</Project>
-      <Name>Marvin.AbstractionLayer</Name>
+      <Name>Moryx.AbstractionLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Products.Management\Marvin.Products.Management.csproj">
+    <ProjectReference Include="..\..\Moryx.Products.Management\Moryx.Products.Management.csproj">
       <Project>{650756a0-e077-4632-8da8-27214b5acda4}</Project>
-      <Name>Marvin.Products.Management</Name>
+      <Name>Moryx.Products.Management</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Products.Model\Marvin.Products.Model.csproj">
+    <ProjectReference Include="..\..\Moryx.Products.Model\Moryx.Products.Model.csproj">
       <Project>{99a470c6-1224-4475-937e-e7ca0266205c}</Project>
-      <Name>Marvin.Products.Model</Name>
+      <Name>Moryx.Products.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Products.Samples\Marvin.Products.Samples.csproj">
+    <ProjectReference Include="..\..\Moryx.Products.Samples\Moryx.Products.Samples.csproj">
       <Project>{00916431-5038-44B8-8BDA-4A1B13636F32}</Project>
-      <Name>Marvin.Products.Samples</Name>
+      <Name>Moryx.Products.Samples</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Moryx.Products.IntegrationTests.csproj.DotSettings" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

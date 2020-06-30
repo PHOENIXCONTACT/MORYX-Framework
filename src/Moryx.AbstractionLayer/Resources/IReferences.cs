@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Interface for reference collections. This is necessary to keep Castle from interfering

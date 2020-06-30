@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.AbstractionLayer.Hardware
+namespace Moryx.AbstractionLayer.Hardware
 {
     /// <summary>
     /// Enum which contains hardware specific axes

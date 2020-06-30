@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Marvin.AbstractionLayer.Products;
-using Marvin.Products.Samples;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Products.Samples;
 using NUnit.Framework;
 
-namespace Marvin.AbstractionLayer.Tests
+namespace Moryx.AbstractionLayer.Tests
 {
     [TestFixture]
     public class ProductTests

@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Config interface for generic strategies

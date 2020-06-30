@@ -6,14 +6,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Container;
-using Marvin.Serialization;
-using Marvin.Tools;
-using Marvin.Workflows;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Container;
+using Moryx.Serialization;
+using Moryx.Tools;
+using Moryx.Workflows;
 
-namespace Marvin.Products.Management.Modification
+namespace Moryx.Products.Management.Modification
 {
     [Component(LifeCycle.Transient, typeof(IProductConverter))]
     internal class ProductConverter : IProductConverter

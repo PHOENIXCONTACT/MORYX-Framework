@@ -4,7 +4,7 @@
 using Moryx.Model;
 
 // ReSharper disable once CheckNamespace
-namespace Marvin.Resources.Model
+namespace Moryx.Resources.Model
 {
     public class ResourceRelation : EntityBase
     {

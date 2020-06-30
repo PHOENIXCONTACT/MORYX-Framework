@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Products.Model;
+using Moryx.Products.Model;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Configuration for <see cref="GenericInstanceStrategy"/>

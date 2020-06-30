@@ -3,18 +3,18 @@
 
 using System;
 using System.Collections;
-using Marvin.Model;
-using Marvin.Products.Model;
+using Moryx.Model;
+using Moryx.Products.Model;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Marvin.AbstractionLayer.Products;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Container;
-using Marvin.Tools;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Container;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Base class for product storage. Contains basic functionality to load and save a product.

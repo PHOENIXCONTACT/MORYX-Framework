@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Products;
 
-namespace Marvin.Products.Samples
+namespace Moryx.Products.Samples
 {
     public class WatchInstance : ProductInstance<WatchType>
     {

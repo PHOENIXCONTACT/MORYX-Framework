@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Interface for <see cref="IProductStrategyConfiguation"/> that contains property mapper configuration

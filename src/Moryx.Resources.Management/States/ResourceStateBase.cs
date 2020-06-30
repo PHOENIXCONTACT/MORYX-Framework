@@ -3,7 +3,7 @@
 
 using Moryx.StateMachines;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Base class for states of the <see cref="ResourceWrapper"/>

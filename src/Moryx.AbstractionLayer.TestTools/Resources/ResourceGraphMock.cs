@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Instrumentation;
-using Marvin.AbstractionLayer.Resources;
-using Marvin.TestTools.UnitTest;
-using Marvin.Tools;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.TestTools.UnitTest;
+using Moryx.Tools;
 
-namespace Marvin.AbstractionLayer.TestTools.Resources
+namespace Moryx.AbstractionLayer.TestTools.Resources
 {
     /// <inheritdoc />
     public class ResourceGraphMock : IResourceGraph

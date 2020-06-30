@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Marvin.Resources.Management
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Hidden interface for <see cref="ResourceProxy{TTarget}"/> to clear

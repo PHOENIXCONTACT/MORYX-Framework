@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Marvin.AbstractionLayer;
-using Marvin.AbstractionLayer.Recipes;
-using Marvin.Products.Model;
-using Marvin.Tools;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Products.Model;
+using Moryx.Tools;
 
-namespace Marvin.Products.Management
+namespace Moryx.Products.Management
 {
     /// <summary>
     /// Non-generic base class for <see cref="IProductInstanceStrategy"/>

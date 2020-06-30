@@ -8,8 +8,8 @@
     <ProjectGuid>{00916431-5038-44B8-8BDA-4A1B13636F32}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Products.Samples</RootNamespace>
-    <AssemblyName>Marvin.Products.Samples</AssemblyName>
+    <RootNamespace>Moryx.Products.Samples</RootNamespace>
+    <AssemblyName>Moryx.Products.Samples</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -48,14 +48,14 @@
     <Reference Include="EntityFramework6.Npgsql, Version=6.4.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework6.Npgsql.6.4.1\lib\net461\EntityFramework6.Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="Marvin, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.3.0.0-dev010329\lib\netstandard2.0\Marvin.dll</HintPath>
-    </Reference>
-    <Reference Include="Marvin.Model, Version=3.0.0.10329, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Marvin.Model.3.0.0-dev010329\lib\net461\Marvin.Model.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.3.0.0-dev.26\lib\netstandard2.0\Moryx.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Model, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Model.3.0.0-dev.26\lib\net461\Moryx.Model.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -115,24 +115,25 @@
     <Compile Include="Strategies\WatchStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AbstractionLayer\Marvin.AbstractionLayer.csproj">
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj">
       <Project>{841F50C1-DEC0-48D8-92D1-F860450940D8}</Project>
-      <Name>Marvin.AbstractionLayer</Name>
+      <Name>Moryx.AbstractionLayer</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Products.Model\Marvin.Products.Model.csproj">
+    <ProjectReference Include="..\Moryx.Products.Model\Moryx.Products.Model.csproj">
       <Project>{99A470C6-1224-4475-937E-E7CA0266205C}</Project>
-      <Name>Marvin.Products.Model</Name>
+      <Name>Moryx.Products.Model</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Products.Management\Marvin.Products.Management.csproj">
+    <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj">
       <Project>{650756A0-E077-4632-8DA8-27214B5ACDA4}</Project>
-      <Name>Marvin.Products.Management</Name>
+      <Name>Moryx.Products.Management</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Moryx.Products.Samples.csproj.DotSettings" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
