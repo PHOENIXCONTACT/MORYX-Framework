@@ -1,0 +1,47 @@
+<p align="center">
+    <img src="docs/Resources/MORYX_logo.svg" alt="MORYX Logo" width="300px" />
+</p>
+
+<p align="center">
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/workflows">
+        <img src="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/workflows/CI/badge.svg" alt="CI">
+    </a>
+    <a href="https://www.myget.org/feed/Packages/moryx">
+        <img src="https://img.shields.io/myget/moryx/v/Moryx.AbstractionLayer" alt="MyGet">
+    </a>
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/blob/dev/LICENSE">
+        <img src="https://img.shields.io/github/license/PHOENIXCONTACT/MORYX-AbstractionLayer" alt="License">
+    </a>
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/pulls">
+        <img src="https://img.shields.io/github/issues-pr/PHOENIXCONTACT/MORYX-AbstractionLayer" alt="GitHub pull requests">
+    </a>
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/issues">
+        <img src="https://img.shields.io/github/issues/PHOENIXCONTACT/MORYX-AbstractionLayer" alt="GitHub issues">
+    </a>
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/graphs/contributors">
+        <img src="https://img.shields.io/github/contributors-anon/PHOENIXCONTACT/MORYX-AbstractionLayer" alt="GitHub contributors">
+    </a>
+</p>
+
+# MORYX AbstractionLayer
+
+The **MORYX AbstractionLayer** is the environment for the digital twins of resources and products. It defines the domain independent [meta model](/docs/articles/AbstractionLayer.md) and enables applications to model their physical system and product portfolio as typed objects. It thereby makes other modules hardware independent by encapsulating details of the underlying structure and devices. [Like the platform](https://github.com/PHOENIXCONTACT/MORYX-Platform#history) version 5.0 of the AbstractionLayer is focused on the open source community and we are still applying the final touches, while the in-house stable version powers a range of different applications.
+
+**Links**
+- [Package Feed](https://www.myget.org/feed/Packages/moryx)
+- [Repository Template](https://github.com/PHOENIXCONTACT/MORYX-Template)
+- [MORYX Platform](https://github.com/PHOENIXCONTACT/MORYX-Platform)
+- [MORYX Maintenance](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb)
+- [MORYX ClientFramework](https://github.com/PHOENIXCONTACT/MORYX-ClientFramework)
+
+## Domain Meta Model
+
+The Abstraction Layer defines the [domain independent model](/docs/articles/AbstractionLayer.md) of assets, products, processes and many more. It is the foundation for compatible models of systems and hardware independence of other modules.
+
+## Resource Management
+
+The [Resource Management](/docs/articles/Resources/ResourceManagement.md) holds the object graph representing the physcial system. It maintains the database entities for the object graph in the background and reconstructs the object graph upon boot. It also provides the API for other modules to interact with resources based on their implemented interfaces and supports resource look-up by various conditions or capabilities.
+
+## Product Management
+
+The [Product Management](/docs/articles/Resources/ResourceManagement.md) holds all product variantes, created instances of those variants and recipes how to create an instance. It provides an API giving access to product types, instances, recipes and workplans.  

@@ -6,7 +6,7 @@ uid: ProductsConcept
 The abstraction layer provides just basic interfaces and classes to handle `products` and `product instances`.
 They are used in derived projects only. The following picture shows the stucture how a product is placed in an application and which components will use it. In the following sections are short descriptions about each part of the product concept.
 
-![Product Concept Structure](images\ProductConcept.png)
+![Product concept structure](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/PHOENIXCONTACT/MORYX-AbstractionLayer/dev/docs/articles/Products/images/product_concept)
 
 ## Product
 
