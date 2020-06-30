@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Runtime.Kernel.Additionals
+namespace Moryx.Runtime.Kernel.Additionals
 {
     /// <summary>
     /// Representation of a character on the screen

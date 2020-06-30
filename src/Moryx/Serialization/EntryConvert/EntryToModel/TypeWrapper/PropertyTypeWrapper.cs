@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Collection of objects around properties including type, config value and attribute

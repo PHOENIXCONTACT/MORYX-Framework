@@ -7,8 +7,8 @@
     <ProjectGuid>{EB039D46-906F-44BF-AC37-B3B3634A4442}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Runtime.Maintenance</RootNamespace>
-    <AssemblyName>Marvin.Runtime.Maintenance</AssemblyName>
+    <RootNamespace>Moryx.Runtime.Maintenance</RootNamespace>
+    <AssemblyName>Moryx.Runtime.Maintenance</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Marvin.Runtime.Maintenance.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Moryx.Runtime.Maintenance.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Marvin.Runtime.Maintenance.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Moryx.Runtime.Maintenance.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -109,22 +109,23 @@
     <Compile Include="Plugins\Modules\Serialization\AdvancedEditorBrowsableSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
+    <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
-      <Name>Marvin.Tools.Wcf</Name>
+      <Name>Moryx.Tools.Wcf</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin\Marvin.csproj">
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
+      <Name>Moryx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime\Marvin.Runtime.csproj">
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj">
       <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>
-      <Name>Marvin.Runtime</Name>
+      <Name>Moryx.Runtime</Name>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Marvin.Runtime.Maintenance.nuspec" />
+    <None Include="Moryx.Runtime.Maintenance.csproj.DotSettings" />
+    <None Include="Moryx.Runtime.Maintenance.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

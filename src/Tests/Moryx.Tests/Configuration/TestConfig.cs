@@ -3,9 +3,9 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Tests.Configuration
+namespace Moryx.Tests.Configuration
 {
     /// <summary>
     /// Default values that must be set by ConfigManager

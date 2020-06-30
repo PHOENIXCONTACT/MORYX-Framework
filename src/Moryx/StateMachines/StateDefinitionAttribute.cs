@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.StateMachines
+namespace Moryx.StateMachines
 {
     /// <summary>
     /// Attribute used for identifing the key of a state

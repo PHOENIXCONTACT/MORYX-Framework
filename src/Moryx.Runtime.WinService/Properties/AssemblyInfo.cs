@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Marvin.Runtime.Kernel;
+using Moryx.Runtime.Kernel;
 
-[assembly: AssemblyTitle("Marvin.Runtime.WinService")]
+[assembly: AssemblyTitle("Moryx.Runtime.WinService")]
 [assembly: AssemblyDescription("Provides runtime mode for running as Windows Service.")]
 [assembly: AssemblyCulture("")]
 

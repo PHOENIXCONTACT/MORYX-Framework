@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <inheritdoc />
     [DataContract]

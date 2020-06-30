@@ -2,7 +2,7 @@
 using System.Collections;
 using System.IO;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Helper class to converts types to enum and vice versa

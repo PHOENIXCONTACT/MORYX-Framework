@@ -1,5 +1,5 @@
 ---
-title: Welcome to MarvinPlatform!
+title: Welcome to MoryxPlatform!
 documentType: index
 ---
 
@@ -12,17 +12,17 @@ footer{
 <div class="hero">
   <div class="wrap">
     <div class="text">
-      <strong>MarvinPlatform</strong>
+      <strong>MoryxPlatform</strong>
     </div>
     <div class="buttons-unit-small">
-      <a class="version-link" href="articles/Changelog.md">Changelog</a><span>|</span><a class="bitbucket-link" href="http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MarvinPlatform">View in GitLab</a>
+      <a class="version-link" href="articles/Changelog.md">Changelog</a><span>|</span><a class="bitbucket-link" href="http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MoryxPlatform">View in GitLab</a>
     </div>
     <div class="minitext">
-    The MARVIN Platform is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
+    The MORYX Platform is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
     </div>
     <div class="buttons-unit">
       <a href="tutorials/index.md" class="button"><i class="glyphicon glyphicon-send"></i>Getting Started</a>
-      <a href="http://packages-swtd.europe.phoenixcontact.com/feeds/MaRVIN-CI" class="button"><i class="glyphicon glyphicon-download"></i>Download Latest</a>
+      <a href="https://www.myget.org/feed/Packages/moryx" class="button"><i class="glyphicon glyphicon-download"></i>Download Latest</a>
     </div>
   </div>
 </div>
@@ -34,7 +34,7 @@ footer{
         <i class="glyphicon glyphicon-cutlery"></i>
         <section>
           <h2>Easy Customization</h2>
-          <p class="lead">MarvinPlatform provides a flexible way to customize with Modules and Plugins</p>
+          <p class="lead">MoryxPlatform provides a flexible way to customize with Modules and Plugins</p>
         </section>
       </div>
     </div>

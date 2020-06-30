@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using Marvin.Logging;
+using Moryx.Logging;
 using NUnit.Framework;
 
-namespace Marvin.Runtime.Kernel.Tests
+namespace Moryx.Runtime.Kernel.Tests
 {
     /// <summary>
     /// Tests for the server logger management

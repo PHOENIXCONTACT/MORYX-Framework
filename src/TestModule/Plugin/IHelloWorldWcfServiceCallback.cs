@@ -3,7 +3,7 @@
 
 using System.ServiceModel;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     public interface IHelloWorldWcfServiceCallback
     {

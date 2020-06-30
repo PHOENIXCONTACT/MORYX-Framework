@@ -4,7 +4,7 @@
 using Castle.MicroKernel;
 using NUnit.Framework;
 
-namespace Marvin.Container.Tests
+namespace Moryx.Container.Tests
 {
     [TestFixture]
     public class RegistratorTest

@@ -4,15 +4,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Runtime.Maintenance.Contracts;
-using Marvin.Runtime.Maintenance.Plugins.Common;
-using Marvin.Runtime.Maintenance.Plugins.Databases;
-using Marvin.Runtime.Maintenance.Plugins.Logging;
-using Marvin.Runtime.Maintenance.Plugins.Modules;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Runtime.Maintenance.Plugins.Common;
+using Moryx.Runtime.Maintenance.Plugins.Databases;
+using Moryx.Runtime.Maintenance.Plugins.Logging;
+using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.Runtime.Maintenance
+namespace Moryx.Runtime.Maintenance
 {
     /// <summary>
     /// Configuration of the maintenance module.

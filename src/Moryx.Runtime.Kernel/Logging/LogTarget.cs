@@ -3,10 +3,10 @@
 
 using System;
 using Common.Logging;
-using Marvin.Logging;
-using LogLevel = Marvin.Logging.LogLevel;
+using Moryx.Logging;
+using LogLevel = Moryx.Logging.LogLevel;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     internal class LogTarget : ILogTarget
     {

@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.Runtime.Kernel.Tests")]
+[assembly: AssemblyTitle("Moryx.Runtime.Kernel.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PHOENIX CONTACT GmbH & Co. KG")]
-[assembly: AssemblyProduct("Marvin.Runtime.Kernel.Tests")]
+[assembly: AssemblyProduct("Moryx.Runtime.Kernel.Tests")]
 [assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT GmbH & Co. KG 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

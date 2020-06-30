@@ -9,14 +9,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Unit of work 
     /// </summary>
     public sealed class UnitOfWork : IUnitOfWork, IGenericUnitOfWork, IModelDiagnostics
     {
-        private MarvinDbContext _context;
+        private MoryxDbContext _context;
         private readonly IEnumerable<Type> _repositories;
 
         /// <inheritdoc />
@@ -31,7 +31,7 @@ namespace Marvin.Model
         /// </summary>
         /// <param name="context">Responsible <see cref="DbContext"/></param>
         /// <param name="repoBuilders">Current availabe repositories</param>
-        public UnitOfWork(MarvinDbContext context, IEnumerable<Type> repoBuilders)
+        public UnitOfWork(MoryxDbContext context, IEnumerable<Type> repoBuilders)
         {
             _context = context;
             _repositories = repoBuilders;

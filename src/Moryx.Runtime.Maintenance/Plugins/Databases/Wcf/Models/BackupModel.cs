@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Databases
+namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
     /// <summary>
     /// Configuration of the backup.

@@ -3,10 +3,10 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Serialization;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     public class TestPluginConfig2 : TestPluginConfig
     {

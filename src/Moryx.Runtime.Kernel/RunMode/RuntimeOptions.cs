@@ -3,7 +3,7 @@
 
 using CommandLine;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Base class for run mode options

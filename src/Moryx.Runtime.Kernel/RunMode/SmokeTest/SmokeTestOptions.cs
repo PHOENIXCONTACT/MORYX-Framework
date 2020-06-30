@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
 
-namespace Marvin.Runtime.Kernel.SmokeTest
+namespace Moryx.Runtime.Kernel.SmokeTest
 {
     /// <summary>
     /// Starts the runtime and executes the smoke tests.

@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     /// <summary>
     /// Model for a server module.

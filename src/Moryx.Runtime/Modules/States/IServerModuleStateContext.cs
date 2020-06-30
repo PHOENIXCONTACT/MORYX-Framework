@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Modules;
-using Marvin.StateMachines;
+using Moryx.Modules;
+using Moryx.StateMachines;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Interface for server module base to access state based transitions

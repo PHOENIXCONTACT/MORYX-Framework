@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Interface of the workflow

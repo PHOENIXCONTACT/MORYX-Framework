@@ -7,9 +7,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     internal interface ILogTargetFactory
     {

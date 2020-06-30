@@ -6,15 +6,15 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.Threading;
-using Marvin.DependentTestModule;
-using Marvin.Runtime.Modules;
-using Marvin.Runtime.SystemTests;
-using Marvin.TestModule;
-using Marvin.TestTools.SystemTest;
+using Moryx.DependentTestModule;
+using Moryx.Runtime.Modules;
+using Moryx.Runtime.SystemTests;
+using Moryx.TestModule;
+using Moryx.TestTools.SystemTest;
 using NUnit.Framework;
-using ModuleController = Marvin.TestModule.ModuleController;
+using ModuleController = Moryx.TestModule.ModuleController;
 
-namespace Marvin.Tools.Wcf.SystemTests
+namespace Moryx.Tools.Wcf.SystemTests
 {
     [TestFixture]
     public class VersionServiceTests : IDisposable

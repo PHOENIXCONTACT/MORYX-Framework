@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     internal class QueueStoppedState : QueueStateBase
     {

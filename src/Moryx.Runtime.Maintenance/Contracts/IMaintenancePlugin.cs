@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Runtime.Maintenance.Contracts
+namespace Moryx.Runtime.Maintenance.Contracts
 {
     /// <summary>
     /// Interface for the maintenance plugin.

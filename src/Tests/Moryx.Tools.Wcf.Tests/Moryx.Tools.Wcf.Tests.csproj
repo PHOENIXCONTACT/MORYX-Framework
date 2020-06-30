@@ -8,8 +8,8 @@
     <ProjectGuid>{A4CA7B7C-5417-4FA9-9E0B-76D4CD4663C9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Tools.Wcf.Tests</RootNamespace>
-    <AssemblyName>Marvin.Tools.Wcf.Tests</AssemblyName>
+    <RootNamespace>Moryx.Tools.Wcf.Tests</RootNamespace>
+    <AssemblyName>Moryx.Tools.Wcf.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -70,11 +70,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Properties\DataSources\Marvin.Serialization.Entry1.datasource" />
-    <None Include="Service References\Logging\Marvin.Tools.Wcf.Tests.Logging.LogMessages.datasource">
+    <None Include="Properties\DataSources\Moryx.Serialization.Entry1.datasource" />
+    <None Include="Service References\Logging\Moryx.Tools.Wcf.Tests.Logging.LogMessages.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\Logging\Marvin.Tools.Wcf.Tests.Logging.PluginLoggerModel.datasource">
+    <None Include="Service References\Logging\Moryx.Tools.Wcf.Tests.Logging.PluginLoggerModel.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\Logging\Reference.svcmap">
@@ -83,10 +83,10 @@
     </None>
     <None Include="Service References\Logging\configuration.svcinfo" />
     <None Include="Service References\Logging\configuration91.svcinfo" />
-    <None Include="Service References\DatabaseMaintenance\Marvin.Tools.Wcf.Tests.DatabaseMaintenance.DataModel.datasource">
+    <None Include="Service References\DatabaseMaintenance\Moryx.Tools.Wcf.Tests.DatabaseMaintenance.DataModel.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\DatabaseMaintenance\Marvin.Tools.Wcf.Tests.DatabaseMaintenance.DumpResult.datasource">
+    <None Include="Service References\DatabaseMaintenance\Moryx.Tools.Wcf.Tests.DatabaseMaintenance.DumpResult.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\DatabaseMaintenance\Reference.svcmap">
@@ -95,7 +95,7 @@
     </None>
     <None Include="Service References\DatabaseMaintenance\configuration.svcinfo" />
     <None Include="Service References\DatabaseMaintenance\configuration91.svcinfo" />
-    <None Include="Properties\DataSources\Marvin.Serialization.Entry.datasource" />
+    <None Include="Properties\DataSources\Moryx.Serialization.Entry.datasource" />
     <None Include="Service References\DatabaseMaintenance\DatabaseMaintenance.wsdl" />
     <None Include="Service References\DatabaseMaintenance\DatabaseMaintenance.xsd">
       <SubType>Designer</SubType>
@@ -122,13 +122,13 @@
     <None Include="Service References\Logging\LogMaintenance3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\Maintenance\Marvin.Tools.Wcf.Tests.Maintenance.Config.datasource">
+    <None Include="Service References\Maintenance\Moryx.Tools.Wcf.Tests.Maintenance.Config.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\Maintenance\Marvin.Tools.Wcf.Tests.Maintenance.DependencyEvaluation.datasource">
+    <None Include="Service References\Maintenance\Moryx.Tools.Wcf.Tests.Maintenance.DependencyEvaluation.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\Maintenance\Marvin.Tools.Wcf.Tests.Maintenance.ServerModuleModel.datasource">
+    <None Include="Service References\Maintenance\Moryx.Tools.Wcf.Tests.Maintenance.ServerModuleModel.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\Maintenance\Reference.svcmap">
@@ -169,17 +169,17 @@
     <WCFMetadataStorage Include="Service References\Maintenance\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
+    <ProjectReference Include="..\..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
-      <Name>Marvin.Tools.Wcf</Name>
+      <Name>Moryx.Tools.Wcf</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
+    <ProjectReference Include="..\..\Moryx\Moryx.csproj">
+      <Project>{7CD728A5-8FDD-4178-9CA4-3CD37512DA24}</Project>
+      <Name>Moryx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
+    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj">
       <Project>{505df475-5ff5-47cc-9e3b-bbe16c359f0e}</Project>
-      <Name>Marvin.TestTools.UnitTest</Name>
+      <Name>Moryx.TestTools.UnitTest</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

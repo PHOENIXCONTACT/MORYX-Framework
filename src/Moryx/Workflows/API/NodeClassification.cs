@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Classification of a connector to increase semantic meaning

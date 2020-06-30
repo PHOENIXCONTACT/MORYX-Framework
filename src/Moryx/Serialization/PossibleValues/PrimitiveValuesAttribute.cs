@@ -3,9 +3,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Attribute to enrich a config file with possible values for a property.

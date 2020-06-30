@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Modules
+namespace Moryx.Modules
 {
     /// <summary>
     /// Attribute to decorate a <see cref="IPlugin"/> to receive a certain config type

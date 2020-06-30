@@ -4,11 +4,11 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Marvin.Model;
-using Marvin.Tools.Wcf;
-using Marvin.Web;
+using Moryx.Model;
+using Moryx.Tools.Wcf;
+using Moryx.Web;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Databases
+namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
     /// <summary>
     /// Service contracts for database operations.

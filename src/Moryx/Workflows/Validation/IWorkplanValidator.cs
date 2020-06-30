@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Workflows.Validation
+namespace Moryx.Workflows.Validation
 {
     /// <summary>
     /// Interface for all validators

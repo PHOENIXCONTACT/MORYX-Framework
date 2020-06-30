@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     public class ListDummy
     {

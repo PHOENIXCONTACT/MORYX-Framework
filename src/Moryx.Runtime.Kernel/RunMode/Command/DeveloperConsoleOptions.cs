@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Option class for the <see cref="DeveloperConsole"/>

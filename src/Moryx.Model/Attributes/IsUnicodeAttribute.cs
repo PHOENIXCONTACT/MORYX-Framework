@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Used to flag a entity property as unicode string

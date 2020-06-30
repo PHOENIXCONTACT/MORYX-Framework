@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Type interface for workplanes. Instances of a workplan are called workflows

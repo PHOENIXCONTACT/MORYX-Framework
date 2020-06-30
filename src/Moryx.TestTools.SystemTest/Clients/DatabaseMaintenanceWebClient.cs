@@ -3,11 +3,11 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Marvin.Model;
-using Marvin.Runtime.Maintenance.Plugins;
-using Marvin.Runtime.Maintenance.Plugins.Databases;
+using Moryx.Model;
+using Moryx.Runtime.Maintenance.Plugins;
+using Moryx.Runtime.Maintenance.Plugins.Databases;
 
-namespace Marvin.TestTools.SystemTest.Clients
+namespace Moryx.TestTools.SystemTest.Clients
 {
     public class DatabaseMaintenanceWebClient : TestWebClientBase, IDatabaseMaintenance
     {

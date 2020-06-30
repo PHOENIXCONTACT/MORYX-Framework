@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Helper class to append additional information 

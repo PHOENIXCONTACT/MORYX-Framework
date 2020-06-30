@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.Runtime.Container
+namespace Moryx.Runtime.Container
 {
     /// <summary>
     /// Base contract for all components hosting their own container

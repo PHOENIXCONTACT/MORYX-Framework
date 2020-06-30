@@ -7,8 +7,8 @@
     <ProjectGuid>{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Runtime.WinService</RootNamespace>
-    <AssemblyName>Marvin.Runtime.WinService</AssemblyName>
+    <RootNamespace>Moryx.Runtime.WinService</RootNamespace>
+    <AssemblyName>Moryx.Runtime.WinService</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Marvin.Runtime.WinService.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Moryx.Runtime.WinService.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Marvin.Runtime.WinService.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Moryx.Runtime.WinService.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=2.7.82.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
@@ -51,21 +51,21 @@
     <Compile Include="WinServiceRunMode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Marvin.Runtime.WinService.nuspec" />
+    <None Include="Moryx.Runtime.WinService.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin.Runtime.Kernel\Marvin.Runtime.Kernel.csproj">
+    <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj">
       <Project>{8ff77f62-43c3-40fe-9dfe-01a53fe8a68e}</Project>
-      <Name>Marvin.Runtime.Kernel</Name>
+      <Name>Moryx.Runtime.Kernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime\Marvin.Runtime.csproj">
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj">
       <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>
-      <Name>Marvin.Runtime</Name>
+      <Name>Moryx.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin\Marvin.csproj">
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
       <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
-      <Name>Marvin</Name>
+      <Name>Moryx</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

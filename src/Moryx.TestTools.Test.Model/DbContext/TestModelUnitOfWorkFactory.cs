@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Model;
-using Marvin.Model.PostgreSQL;
+using Moryx.Model;
+using Moryx.Model.PostgreSQL;
 
-namespace Marvin.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model
 {
     /// <summary>
     /// Used for inherited models

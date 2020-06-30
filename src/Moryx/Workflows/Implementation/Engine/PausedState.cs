@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     internal class PausedState : EngineState
     {

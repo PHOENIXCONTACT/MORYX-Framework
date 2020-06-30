@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.Container;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.Container;
+using Moryx.Serialization;
+using Moryx.Tools;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Base class for config to model transformer
@@ -35,7 +35,7 @@ namespace Marvin.Configuration
             EmptyPropertyProvider = emptyPropertyProvider;
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Create prototypes from possible values
@@ -55,7 +55,7 @@ namespace Marvin.Configuration
             return list.ToArray();
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
@@ -70,7 +70,7 @@ namespace Marvin.Configuration
         }
 
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
@@ -84,7 +84,7 @@ namespace Marvin.Configuration
             return values?.Distinct().ToArray();
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
         {
             var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
@@ -97,7 +97,7 @@ namespace Marvin.Configuration
             return instance;
         }
 
-        /// <see cref="T:Marvin.Serialization.ICustomSerialization"/>
+        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
         {
             var value = mappedEntry.Value;

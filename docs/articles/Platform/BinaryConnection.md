@@ -3,7 +3,7 @@ uid: BinaryConnection
 ---
 # BinaryConnection
 
-Marvin.Communication.Sockets provides two implementations of IBinaryConnection to communicate via TCP/IP as a server or a client.
+Moryx.Communication.Sockets provides two implementations of IBinaryConnection to communicate via TCP/IP as a server or a client.
 
 ## Usage
 

@@ -3,12 +3,12 @@
 
 using System.IO;
 using System.Threading;
-using Marvin.TestTools.SystemTest;
+using Moryx.TestTools.SystemTest;
 using NUnit.Framework;
 using System;
-using Marvin.Runtime.Modules;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.SystemTests
+namespace Moryx.Runtime.SystemTests
 {
     /// <summary>
     /// These tests shall check two aspects: They shall verify the HoG functionality but also wether the HeartOfGoldController is working as expected.
@@ -102,7 +102,7 @@ namespace Marvin.Runtime.SystemTests
 
         [TestCase("Maintenance", ServerModuleState.Running, Description = "Check for Maintanence to start", ExpectedResult = true)]
         [TestCase("Maintenance",  ServerModuleState.Failure, Description = "Check for Maintanence to start", ExpectedResult = false)]
-        //[TestCase("OrderManager", ServerModuleState.Running, Description = "Check for OrderManager to start", ExpectedResult = false, ExpectedException = typeof(MarvinServiceNotFoundException))]
+        //[TestCase("OrderManager", ServerModuleState.Running, Description = "Check for OrderManager to start", ExpectedResult = false, ExpectedException = typeof(MoryxServiceNotFoundException))]
         public bool TestStartWaitStop(string service, ServerModuleState state)
         {
             PrintStartMsg("TestStartWaitStop('{0}', '{1}')", service, state);

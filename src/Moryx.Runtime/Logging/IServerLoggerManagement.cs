@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Runtime
+namespace Moryx.Runtime
 {
     /// <summary>
     /// Server specific logger management

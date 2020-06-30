@@ -1,4 +1,4 @@
-﻿namespace Marvin.Serialization
+﻿namespace Moryx.Serialization
 {
     /// <summary>
     /// Wrapper for property on the object instance

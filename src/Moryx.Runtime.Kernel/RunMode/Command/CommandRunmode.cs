@@ -3,10 +3,10 @@
 
 using System;
 using System.Linq;
-using Marvin.Container;
-using Marvin.Runtime.Configuration;
+using Moryx.Container;
+using Moryx.Runtime.Configuration;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Command run mode. Provides several command functionality.

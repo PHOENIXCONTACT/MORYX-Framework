@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Attribute to ignore assembly component autoloading

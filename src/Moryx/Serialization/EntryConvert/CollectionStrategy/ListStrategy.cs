@@ -4,7 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// List implementation of <see cref="ICollectionStrategy"/>

@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     internal interface IMethodProxyStrategy
     {

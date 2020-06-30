@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Marvin.Workflows.Transitions;
+using Moryx.Workflows.Transitions;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     internal static class WorkflowFactory
     {

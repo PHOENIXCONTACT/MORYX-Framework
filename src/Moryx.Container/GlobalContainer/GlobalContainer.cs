@@ -5,7 +5,7 @@ using System;
 using Castle.Core;
 using Castle.MicroKernel.Registration;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Global runtime container for kernel and module composition

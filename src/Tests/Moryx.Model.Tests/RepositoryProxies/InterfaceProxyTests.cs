@@ -4,7 +4,7 @@
 using System;
 using NUnit.Framework;
 
-namespace Marvin.Model.Tests
+namespace Moryx.Model.Tests
 {
     [TestFixture]
     public class InterfaceProxyTests

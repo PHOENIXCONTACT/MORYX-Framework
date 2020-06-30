@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Logging
+namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {
     internal class RemoteAppender
     {

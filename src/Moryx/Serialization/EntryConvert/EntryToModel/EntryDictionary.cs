@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Collection type for typed representations of config collections

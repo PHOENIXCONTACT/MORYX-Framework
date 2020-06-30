@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Bindings;
+using Moryx.Bindings;
 
-namespace Marvin.Tests.Bindings
+namespace Moryx.Tests.Bindings
 {
     public class SomeComplexClass
     {

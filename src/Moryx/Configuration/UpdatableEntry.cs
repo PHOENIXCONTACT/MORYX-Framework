@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Base class for all configuration entries that support live update

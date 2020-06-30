@@ -4,10 +4,10 @@
 using System;
 using System.ServiceModel;
 using System.Threading;
-using Marvin.Container;
-using Marvin.Tools.Wcf;
+using Moryx.Container;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession, AddressFilterMode = AddressFilterMode.Any, IncludeExceptionDetailInFaults = true)]
     [Plugin(LifeCycle.Singleton, typeof(IHelloWorldWcfService))]

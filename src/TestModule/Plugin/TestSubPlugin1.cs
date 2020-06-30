@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Container;
-using Marvin.Modules;
+using Moryx.Container;
+using Moryx.Modules;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [ExpectedConfig(typeof(TestSubPluginConfig1))]
     [Plugin(LifeCycle.Singleton, typeof(ITestSubPlugin), Name = ComponentName)]

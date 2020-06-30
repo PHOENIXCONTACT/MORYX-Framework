@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.IO;
-using Marvin.TestTools.SystemTest;
+using Moryx.TestTools.SystemTest;
 using NUnit.Framework;
 
-namespace Marvin.Runtime.SystemTests
+namespace Moryx.Runtime.SystemTests
 {
     public class HogHelper
     {

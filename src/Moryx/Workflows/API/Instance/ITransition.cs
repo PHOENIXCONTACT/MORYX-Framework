@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Interface representing a transition

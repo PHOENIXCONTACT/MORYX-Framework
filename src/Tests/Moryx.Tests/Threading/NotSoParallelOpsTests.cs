@@ -4,10 +4,10 @@
 using System;
 using System.Linq;
 using System.Threading;
-using Marvin.TestTools.UnitTest;
+using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Threading
+namespace Moryx.Tests.Threading
 {
     [TestFixture]
     public class NotSoParallelOpsTests

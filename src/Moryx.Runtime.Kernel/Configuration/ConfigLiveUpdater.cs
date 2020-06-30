@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     internal class ConfigLiveUpdater : IConfigLiveUpdate
     {

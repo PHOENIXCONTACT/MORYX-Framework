@@ -11,7 +11,7 @@ using System.ServiceModel.Dispatcher;
 using System.Threading;
 using CultureNotFoundException = System.Globalization.CultureNotFoundException;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Behavior for the endpoint which adds a <see cref="CultureMessageInspector"/>
@@ -83,7 +83,7 @@ namespace Marvin.Tools.Wcf
     internal class CultureMessageInspector : IDispatchMessageInspector, IClientMessageInspector
     {
         private const string HeaderKey = "CurrentUICulture";
-        private const string HeaderNamespace = "Marvin.Tools.Wcf";
+        private const string HeaderNamespace = "Moryx.Tools.Wcf";
 
         /// <inheritdoc />
         object IDispatchMessageInspector.AfterReceiveRequest(ref Message request, IClientChannel channel, InstanceContext instanceContext)

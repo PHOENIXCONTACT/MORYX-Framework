@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Extensions for the <see cref="ICustomAttributeProvider"/>

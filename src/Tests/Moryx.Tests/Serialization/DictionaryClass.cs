@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     class DictionaryClass
     {

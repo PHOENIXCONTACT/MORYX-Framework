@@ -5,13 +5,13 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Linq;
-using Marvin.Logging;
-using Marvin.Modules;
-using Marvin.TestTools.UnitTest;
-using Marvin.Threading;
+using Moryx.Logging;
+using Moryx.Modules;
+using Moryx.TestTools.UnitTest;
+using Moryx.Threading;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Threading
+namespace Moryx.Tests.Threading
 {
     [TestFixture]
     public class ParallelOperationTests

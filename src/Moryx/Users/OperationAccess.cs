@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Users
+namespace Moryx.Users
 {
     /// <summary>
     /// Access rights of the current user for a certain operation

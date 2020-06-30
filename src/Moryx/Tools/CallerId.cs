@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Class und method calling this method.

@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="DataModel" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>Marvin.TestTools.SystemTest.ServiceReferences.DatabaseMaintenanceService.DataModel, Marvin.TestTools.SystemTest.ServiceReferences, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+   <TypeInfo>Moryx.TestTools.SystemTest.ServiceReferences.DatabaseMaintenanceService.DataModel, Moryx.TestTools.SystemTest.ServiceReferences, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

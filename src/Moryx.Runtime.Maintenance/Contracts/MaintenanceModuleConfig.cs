@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Modules;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Modules;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Maintenance.Contracts
+namespace Moryx.Runtime.Maintenance.Contracts
 {
     /// <summary>
     /// Base configuration for a maintenance plugin.

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Simple helper to implement IGrouping

@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Additional facade interface for components that store and provide workplans

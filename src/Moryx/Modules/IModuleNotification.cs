@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using Marvin.Notifications;
+using Moryx.Notifications;
 
-namespace Marvin.Modules
+namespace Moryx.Modules
 {
     /// <summary>
     /// Notification raised by a module. May disappear automatically or has to be acknowledged explicitly

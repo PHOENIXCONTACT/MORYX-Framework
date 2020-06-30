@@ -1,8 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq;
-using Marvin.Communication;
+using Moryx.Communication;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Helper class to build <see cref="MergedSerializer.Generic{T}"/>

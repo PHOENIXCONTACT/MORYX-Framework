@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Model.Tests
+namespace Moryx.Model.Tests
 {
     public interface ICreateValueParamRepository : IRepository<SomeEntity>
     {

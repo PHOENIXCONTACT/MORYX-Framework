@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Modules;
-using Marvin.Notifications;
+using Moryx.Modules;
+using Moryx.Notifications;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     /// <summary>
     /// Model for notifications.

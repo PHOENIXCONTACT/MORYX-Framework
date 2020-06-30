@@ -3,7 +3,7 @@
 
 using System.Text;
 
-namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
+namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
 {
     public class HtmlInterpreter : DelimitedMessageInterpreter
     {

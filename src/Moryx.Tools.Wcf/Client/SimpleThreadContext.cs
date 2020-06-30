@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// The thread context to be used by console applications or Windows services for the <see cref="BaseWcfClientFactory"/>

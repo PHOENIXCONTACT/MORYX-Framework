@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Component created for a certain workplan that can predict the outcome of a single

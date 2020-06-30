@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using NUnit.Framework;
 
-namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
+namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
 {
     [TestFixture]
     public class DelimiterCommunicationSocketTests : CommunicationSocketsTestsBase<BinaryMessage>

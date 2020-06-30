@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// Comparer to order string represented integers as well as mixed strings with trailing numbers using IComparer interface

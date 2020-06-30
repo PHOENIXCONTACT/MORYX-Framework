@@ -3,13 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Container.TestPlugin;
-using Marvin.Container.TestRootPlugin;
-using Marvin.Container.TestTools;
-using Marvin.Tools;
+using Moryx.Container.TestPlugin;
+using Moryx.Container.TestRootPlugin;
+using Moryx.Container.TestTools;
+using Moryx.Tools;
 using NUnit.Framework;
 
-namespace Marvin.Container.Tests
+namespace Moryx.Container.Tests
 {
     [TestFixture]
     public class StrategySelectionTest

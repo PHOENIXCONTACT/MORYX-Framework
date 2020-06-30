@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Notifications
+namespace Moryx.Notifications
 {
     /// <summary>
     /// Different levels to diffentiate the severity of a message

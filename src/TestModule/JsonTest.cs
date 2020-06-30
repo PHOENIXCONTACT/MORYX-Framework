@@ -5,16 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Model;
-using Marvin.Modules;
-using Marvin.TestTools.Test.Model;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Model;
+using Moryx.Modules;
+using Moryx.TestTools.Test.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [Plugin(LifeCycle.Singleton)]
     public class JsonTest : IPlugin

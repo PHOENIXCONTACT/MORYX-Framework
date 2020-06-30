@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// This collection will merge two different <see cref="ObservableCollection{T}"/>

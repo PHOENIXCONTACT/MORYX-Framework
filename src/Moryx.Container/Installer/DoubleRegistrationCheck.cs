@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.MicroKernel;
 
-namespace Marvin.Container.Installer
+namespace Moryx.Container.Installer
 {
     /// <summary>
     /// Class used to check the kernel for an exisiting component registration of this type

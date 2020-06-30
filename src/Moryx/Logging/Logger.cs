@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     internal class Logger : IModuleLogger
     {

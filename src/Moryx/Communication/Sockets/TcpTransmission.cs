@@ -5,10 +5,10 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Marvin.Logging;
-using Marvin.Serialization;
+using Moryx.Logging;
+using Moryx.Serialization;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     internal class TcpTransmission : IBinaryTransmission, IDisposable
     {

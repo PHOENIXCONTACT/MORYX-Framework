@@ -1,15 +1,15 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Container;
-using Marvin.Runtime.Modules;
-using Marvin.Runtime.Tests.Mocks;
-using Marvin.Runtime.Tests.Modules;
+using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Container;
+using Moryx.Runtime.Modules;
+using Moryx.Runtime.Tests.Mocks;
+using Moryx.Runtime.Tests.Modules;
 using Moq;
 using NUnit.Framework;
 
-namespace Marvin.Runtime.Tests
+namespace Moryx.Runtime.Tests
 {
     [TestFixture]
     public class ModuleBaseTest

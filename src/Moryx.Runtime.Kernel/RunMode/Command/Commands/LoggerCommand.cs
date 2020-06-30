@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Container;
-using Marvin.Logging;
+using Moryx.Container;
+using Moryx.Logging;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     internal class ConsoleListener
     {

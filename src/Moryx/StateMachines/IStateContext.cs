@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.StateMachines
+namespace Moryx.StateMachines
 {
     /// <summary>
     /// Represents the context of a state machine including a typed state property

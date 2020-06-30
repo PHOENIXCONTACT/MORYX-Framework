@@ -5,18 +5,18 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Marvin.Runtime.Kernel;
-using Marvin.Runtime.Maintenance.Plugins.Logging;
-using Marvin.Runtime.Maintenance.Plugins.Modules;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
-using Marvin.TestModule;
-using Marvin.TestTools.SystemTest;
-using Marvin.Tools.Wcf;
+using Moryx.Runtime.Kernel;
+using Moryx.Runtime.Maintenance.Plugins.Logging;
+using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
+using Moryx.TestModule;
+using Moryx.TestTools.SystemTest;
+using Moryx.Tools.Wcf;
 using NUnit.Framework;
-using LogLevel = Marvin.Logging.LogLevel;
+using LogLevel = Moryx.Logging.LogLevel;
 
-namespace Marvin.Runtime.SystemTests
+namespace Moryx.Runtime.SystemTests
 {
     /// <summary>
     /// Theses tests shall check the logger functionality

@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Marvin.Runtime
+namespace Moryx.Runtime
 {
     /// <summary>
     /// Platform for all runtime based products
@@ -33,7 +33,7 @@ namespace Marvin.Runtime
             {
                 PlatformName = startAssembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "Runtime",
                 PlatformVersion = typeof(RuntimePlatform).Assembly.GetName().Version,
-                ProductName = startAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "MARVIN Application",
+                ProductName = startAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "MORYX Application",
                 ProductVersion = new Version(startAssembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "1.0.0"),
                 ProductDescription = startAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "No Description provided!",
             };

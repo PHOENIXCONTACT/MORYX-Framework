@@ -3,7 +3,7 @@
 
 using System.Reflection;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Interface for dynamic access to properties

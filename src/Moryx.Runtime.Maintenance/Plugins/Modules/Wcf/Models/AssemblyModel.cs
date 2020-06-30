@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     /// <summary>
     /// Holds importats information about an assembly.

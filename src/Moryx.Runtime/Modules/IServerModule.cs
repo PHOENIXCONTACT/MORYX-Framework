@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Interface for all server modules running within the HeartOfGold application Server.
     /// This interface extends IModule with server specific methods and properties. 
-    /// Server modules are intended to do the "heavy lifting" within Marvin. 
+    /// Server modules are intended to do the "heavy lifting" within Moryx. 
     /// The implement behaviour, business logic and data management of each application. 
     /// They might offer web services to connect clients for user interaction. 
     /// Each server module has its own lifecylce within the Runtime. 

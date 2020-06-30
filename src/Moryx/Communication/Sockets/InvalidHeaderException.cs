@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     internal class InvalidHeaderException : Exception
     {

@@ -8,7 +8,7 @@ using System.Net;
 using System.ServiceModel.Web;
 using System.Web;
 
-namespace Marvin.Tools.Wcf.FileSystem
+namespace Moryx.Tools.Wcf.FileSystem
 {
     public class SimpleStreamingServiceBase
     {

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Responensible for component registration based on information given in <see cref="RegistrationAttribute"/> 

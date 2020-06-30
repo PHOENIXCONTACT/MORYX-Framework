@@ -3,10 +3,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Marvin.Runtime.Maintenance.Plugins;
-using Marvin.Runtime.Maintenance.Plugins.Logging;
+using Moryx.Runtime.Maintenance.Plugins;
+using Moryx.Runtime.Maintenance.Plugins.Logging;
 
-namespace Marvin.TestTools.SystemTest.Clients
+namespace Moryx.TestTools.SystemTest.Clients
 {
     public class LogMaintenanceWebClient :  TestWebClientBase, ILogMaintenance
     {

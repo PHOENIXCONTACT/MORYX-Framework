@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Default implementation of IWorkplan

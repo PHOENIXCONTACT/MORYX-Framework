@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Base implementation of a NetTcp based WCF service plugin

@@ -8,10 +8,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Marvin.Serialization;
+using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     /// <summary>
     /// Unit tests for the static <see cref="EntryConvert"/> class

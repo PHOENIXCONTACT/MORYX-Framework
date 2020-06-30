@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Container.TestTools
+namespace Moryx.Container.TestTools
 {
     public interface IConfiguredComponent : IConfiguredPlugin<ComponentConfig>
     {

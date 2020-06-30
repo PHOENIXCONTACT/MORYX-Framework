@@ -4,12 +4,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Modules;
-using Marvin.StateMachines;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Modules;
+using Moryx.StateMachines;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     /// <summary>
     /// Implementation of <see cref="IBinaryConnection"/> as a server connection

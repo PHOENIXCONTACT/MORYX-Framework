@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Workflows;
-using Marvin.Workflows.WorkplanSteps;
+using Moryx.Workflows;
+using Moryx.Workflows.WorkplanSteps;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     public class WorkplanDummy : Workplan
     {

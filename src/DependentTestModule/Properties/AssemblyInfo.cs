@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Marvin.Modules;
+using Moryx.Modules;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("TestModule")]
-[assembly: AssemblyDescription("Marvin Runtime Plugin: TestModule")]
+[assembly: AssemblyDescription("Moryx Runtime Plugin: TestModule")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -19,6 +19,6 @@ using Marvin.Modules;
 [assembly: Guid("f31704fe-753b-45e8-a7fd-adc4bdbaac24")]
 
 
-// Marvin attributes
-[assembly: Bundle("Marvin.TestModule", "1.0.0.0")]
+// Moryx attributes
+[assembly: Bundle("Moryx.TestModule", "1.0.0.0")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

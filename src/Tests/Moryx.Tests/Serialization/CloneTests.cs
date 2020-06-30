@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Serialization;
+using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     /// <summary>
     /// Unit tests for different clone mechanism

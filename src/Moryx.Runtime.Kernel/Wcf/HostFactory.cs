@@ -1,13 +1,13 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Modules;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Modules;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Factory to create service hosts and provides hosts for the version service.

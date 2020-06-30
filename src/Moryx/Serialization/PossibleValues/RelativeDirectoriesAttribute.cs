@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// <see cref="PossibleValuesAttribute"/> to provide a path relative to the BaseDirectory

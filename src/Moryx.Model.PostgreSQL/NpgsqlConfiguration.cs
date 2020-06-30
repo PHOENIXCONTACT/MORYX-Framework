@@ -4,11 +4,11 @@
 using System.Data.Entity;
 using Npgsql;
 
-namespace Marvin.Model.PostgreSQL
+namespace Moryx.Model.PostgreSQL
 {
     /// <summary>
     /// Registers Npgsql as EntityFramework provider.
-    /// This class has to be referenced by Marvin database models only.
+    /// This class has to be referenced by Moryx database models only.
     /// </summary>
     public class NpgsqlConfiguration : DbConfiguration
     {

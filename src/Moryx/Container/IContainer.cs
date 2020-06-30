@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Interface for all container bootstrapper

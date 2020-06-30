@@ -8,8 +8,8 @@
     <ProjectGuid>{29F12AD7-18DC-4DC3-B97F-BC773AC4C0EB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.TestTools.Test.Model</RootNamespace>
-    <AssemblyName>Marvin.TestTools.Test.Model</AssemblyName>
+    <RootNamespace>Moryx.TestTools.Test.Model</RootNamespace>
+    <AssemblyName>Moryx.TestTools.Test.Model</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -130,29 +130,29 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="API\ISportCarRepository.cs" />
     <Compile Include="DbContext\TestModelUnitOfWorkFactory.cs" />
+    <None Include="Moryx.TestTools.Test.Model.csproj.DotSettings" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin.Model.InMemory\Marvin.Model.InMemory.csproj">
+    <ProjectReference Include="..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj">
       <Project>{a734be85-33dc-4117-bd9c-b5d5b31102e3}</Project>
-      <Name>Marvin.Model.InMemory</Name>
+      <Name>Moryx.Model.InMemory</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Model.PostgreSQL\Marvin.Model.PostgreSQL.csproj">
+    <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj">
       <Project>{70964330-f80e-4e1e-a33b-2021bde37b2f}</Project>
-      <Name>Marvin.Model.PostgreSQL</Name>
+      <Name>Moryx.Model.PostgreSQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Model\Marvin.Model.csproj">
+    <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj">
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
-      <Name>Marvin.Model</Name>
+      <Name>Moryx.Model</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
-      <Private>True</Private>
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
+      <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
+      <Name>Moryx</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     /// <summary>
     /// Log message interface with readonly access

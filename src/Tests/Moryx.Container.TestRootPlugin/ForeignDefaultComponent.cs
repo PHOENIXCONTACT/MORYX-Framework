@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Container.TestTools;
+using Moryx.Container.TestTools;
 
-namespace Marvin.Container.TestRootPlugin
+namespace Moryx.Container.TestRootPlugin
 {
     [Plugin(LifeCycle.Singleton, typeof(IConfiguredComponent), Name = PluginName)]
     public class ForeignDefaultComponent : IConfiguredComponent

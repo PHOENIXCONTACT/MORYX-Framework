@@ -3,10 +3,10 @@
 
 using System;
 using System.IO;
-using Marvin.Serialization;
+using Moryx.Serialization;
 using Newtonsoft.Json;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Basic config manager to be used by platforms to provide typed configuration

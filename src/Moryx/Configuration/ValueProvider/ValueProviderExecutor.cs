@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Applies ValueProvider to a specific instance

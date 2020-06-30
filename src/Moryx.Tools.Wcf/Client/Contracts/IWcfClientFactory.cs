@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Public API of a WcfClientFactory.

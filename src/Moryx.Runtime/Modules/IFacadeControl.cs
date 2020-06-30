@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Interface for all facades used by ServerModuleBase

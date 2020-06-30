@@ -7,9 +7,9 @@ using System.Collections;
 using System.Reflection;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Selector that uses the given config object to determine component name and execute initialize.

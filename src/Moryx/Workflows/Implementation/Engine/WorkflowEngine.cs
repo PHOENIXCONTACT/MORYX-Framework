@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Marvin.StateMachines;
+using Moryx.StateMachines;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     internal class WorkflowEngine : IMonitoredEngine, IStateContext
     {

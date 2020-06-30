@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Threading;
+using Moryx.Threading;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Maps different transition types onto dedicated methods

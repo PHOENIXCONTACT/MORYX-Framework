@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Modules;
+using Moryx.Modules;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Modules
+namespace Moryx.Tests.Modules
 {
     [TestFixture]
     public class PriorityTests

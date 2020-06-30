@@ -3,11 +3,11 @@
 
 using System;
 using System.Threading;
-using Marvin.Runtime.Container;
-using Marvin.Runtime.Modules;
-using Marvin.TestModule;
+using Moryx.Runtime.Container;
+using Moryx.Runtime.Modules;
+using Moryx.TestModule;
 
-namespace Marvin.DependentTestModule
+namespace Moryx.DependentTestModule
 {
     [ServerModule(ModuleName)]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<IDependentTestModule>

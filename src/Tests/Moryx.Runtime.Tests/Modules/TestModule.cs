@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Runtime.Modules;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Tests.Modules
+namespace Moryx.Runtime.Tests.Modules
 {
     internal class TestModule : ServerModuleBase<TestConfig>
     {
@@ -30,7 +30,7 @@ namespace Marvin.Runtime.Tests.Modules
             LastInvoke = InvokedMethod.Initialize;
             switch (CurrentMode)
             {
-                case TestMode.MarvinException:
+                case TestMode.MoryxException:
                     throw new TestException();
                 case TestMode.SystemException:
                     throw new Exception("I am done here!");
@@ -44,7 +44,7 @@ namespace Marvin.Runtime.Tests.Modules
             RetryCount++;
             switch (CurrentMode)
             {
-                case TestMode.MarvinException:
+                case TestMode.MoryxException:
                     throw new TestException();
                 case TestMode.SystemException:
                     throw new Exception("I am done here!");
@@ -56,7 +56,7 @@ namespace Marvin.Runtime.Tests.Modules
             LastInvoke = InvokedMethod.Stop;
             switch (CurrentMode)
             {
-                case TestMode.MarvinException:
+                case TestMode.MoryxException:
                     throw new TestException();
                 case TestMode.SystemException:
                     throw new Exception("I am done here!");

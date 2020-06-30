@@ -3,17 +3,17 @@
 
 using System.Data.Common;
 using System.Data.Entity;
-using Marvin.Model;
-using Marvin.Model.PostgreSQL;
+using Moryx.Model;
+using Moryx.Model.PostgreSQL;
 
-namespace Marvin.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
     [DefaultSchema(TestModelConstants.Schema)]
-    public class TestModelContext : MarvinDbContext
+    public class TestModelContext : MoryxDbContext
     {
         public TestModelContext()
         {

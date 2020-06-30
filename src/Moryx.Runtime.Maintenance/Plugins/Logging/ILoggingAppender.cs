@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Logging;
-using Marvin.Runtime.Maintenance.Contracts;
+using Moryx.Logging;
+using Moryx.Runtime.Maintenance.Contracts;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Logging
+namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {
     internal interface ILoggingAppender : IMaintenancePlugin
     {

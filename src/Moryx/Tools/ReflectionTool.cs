@@ -5,9 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
-using Marvin.Workflows.Transitions;
+using Moryx.Workflows.Transitions;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Tool for common reflection operations

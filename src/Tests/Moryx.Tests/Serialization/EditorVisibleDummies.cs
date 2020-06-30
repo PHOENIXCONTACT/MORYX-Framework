@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.Serialization;
+using Moryx.Serialization;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     public class EditorBrowsableMixed
     {

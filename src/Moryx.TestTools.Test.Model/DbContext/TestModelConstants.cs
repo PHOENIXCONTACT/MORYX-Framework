@@ -1,8 +1,8 @@
-﻿namespace Marvin.TestTools.Test.Model
+﻿namespace Moryx.TestTools.Test.Model
 {
     public static class TestModelConstants
     {
-        public const string Namespace = "Marvin.TestTools.Test.Model";
+        public const string Namespace = "Moryx.TestTools.Test.Model";
 
         public const string Schema = "testModel";
 

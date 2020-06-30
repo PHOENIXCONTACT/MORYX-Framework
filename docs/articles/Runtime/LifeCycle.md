@@ -16,7 +16,7 @@ Inherited from the base class, each server module has the three transitions: `In
 Initialize can be seen as a modules repeatable constructor. During this transition the config is fetched and parsed, plugins and dependencies are registered in the local container and passive component structures can be instantiated. Initialize does not respect the declared dependency order. It is therefor not permitted to access other module APIs. Its 3 phases contain the following operations:
 
 **Pre-Operations:**
-The initialize pre-operations load the modules config and look for container relevant entries like [ModuleStrategy](xref:Marvin.Runtime.Configuration.ModuleStrategyAttribute). In the next step the logging is activated and the local container is build.
+The initialize pre-operations load the modules config and look for container relevant entries like [ModuleStrategy](xref:Moryx.Runtime.Configuration.ModuleStrategyAttribute). In the next step the logging is activated and the local container is build.
 
 | Step | Operations |
 |-------|------------|
@@ -44,7 +44,7 @@ protected override void OnInitialize()
 }
 ````
 
-**Post-Operations:** During registration in the previous phase the container might encounter a number of [SubInitializers](xref:Marvin.Container.ISubInitializer). They can only be executed after all other components were registered. Therefor they are executed in this phase once all user code has completed.
+**Post-Operations:** During registration in the previous phase the container might encounter a number of [SubInitializers](xref:Moryx.Container.ISubInitializer). They can only be executed after all other components were registered. Therefor they are executed in this phase once all user code has completed.
 
 ## Start
 

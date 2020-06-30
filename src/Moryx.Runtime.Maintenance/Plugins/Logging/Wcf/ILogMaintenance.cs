@@ -4,10 +4,10 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Marvin.Tools.Wcf;
-using Marvin.Web;
+using Moryx.Tools.Wcf;
+using Moryx.Web;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Logging
+namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {
     /// <summary>
     /// Service contract for logging features of the maintenance.

@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.Container;
-using Marvin.StateMachines;
+using Moryx.Container;
+using Moryx.StateMachines;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// <see cref="PossibleValuesAttribute"/> to provide possible StateMachine keys

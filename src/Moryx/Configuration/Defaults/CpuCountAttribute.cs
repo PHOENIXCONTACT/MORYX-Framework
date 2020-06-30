@@ -4,7 +4,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Default value attribute which provides the current count of CPU cores

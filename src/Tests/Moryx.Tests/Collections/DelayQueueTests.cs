@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using Marvin.Collections;
-using Marvin.Threading;
+using Moryx.Collections;
+using Moryx.Threading;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Collections
+namespace Moryx.Tests.Collections
 {
     [TestFixture]
     public class DelayQueueTests

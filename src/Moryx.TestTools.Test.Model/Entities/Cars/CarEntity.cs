@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Marvin.Model;
+using Moryx.Model;
 
-namespace Marvin.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model
 {
     [Table(nameof(CarEntity), Schema = TestModelConstants.CarsSchema)]
     public class CarEntity : ModificationTrackedEntityBase

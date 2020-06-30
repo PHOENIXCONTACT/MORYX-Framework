@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Communication.Sockets.IntegrationTests
+namespace Moryx.Communication.Sockets.IntegrationTests
 {
     public class ConnectionBuffer<TMessage> where TMessage : BinaryMessage
     {

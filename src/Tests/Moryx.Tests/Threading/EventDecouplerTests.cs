@@ -5,14 +5,14 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using Marvin.Logging;
-using Marvin.TestTools.UnitTest;
-using Marvin.Threading;
+using Moryx.Logging;
+using Moryx.TestTools.UnitTest;
+using Moryx.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework;
 using NUnit.Framework.Internal.Execution;
 
-namespace Marvin.Tests.Threading
+namespace Moryx.Tests.Threading
 {
     [TestFixture]
     public class EventDecouplerTests

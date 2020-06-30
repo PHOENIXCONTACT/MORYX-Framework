@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Logging;
-using Marvin.Tools.Wcf;
+using Moryx.Logging;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Wcf
+namespace Moryx.Runtime.Wcf
 {
     internal class ConfiguredHostFactory : IConfiguredHostFactory
     {

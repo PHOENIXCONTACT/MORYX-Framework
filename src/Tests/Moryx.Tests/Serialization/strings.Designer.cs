@@ -11,7 +11,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Marvin.Tests.Serialization {
+namespace Moryx.Tests.Serialization {
     using System;
     
     
@@ -42,7 +42,7 @@ namespace Marvin.Tests.Serialization {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Marvin.Tests.Serialization.strings", typeof(strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Moryx.Tests.Serialization.strings", typeof(strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

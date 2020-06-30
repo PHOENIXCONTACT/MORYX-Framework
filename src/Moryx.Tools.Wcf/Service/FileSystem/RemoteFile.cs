@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Marvin.Tools.Wcf.FileSystem
+namespace Moryx.Tools.Wcf.FileSystem
 {
     [DataContract]
     public class RemoteFile

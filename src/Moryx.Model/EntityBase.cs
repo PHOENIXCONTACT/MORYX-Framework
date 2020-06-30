@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Base class for <see cref="IEntity"/>

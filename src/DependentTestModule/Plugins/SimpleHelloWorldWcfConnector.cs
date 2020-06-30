@@ -1,11 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.Tools.Wcf;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.DependentTestModule
+namespace Moryx.DependentTestModule
 {
     [DependencyRegistration(InstallerMode.All, Initializer = typeof(WcfBaseImporterSubInitializer))]
     [Plugin(LifeCycle.Transient, typeof(ISimpleHelloWorldWcfConnector), Name = nameof(SimpleHelloWorldWcfConnector))]

@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Marvin.Model.PostgreSQL
+namespace Moryx.Model.PostgreSQL
 {
     /// <summary>
     /// Database config for the Npgsql databases

@@ -3,11 +3,11 @@
 
 using System;
 using System.Linq;
-using Marvin.Configuration;
-using Marvin.StateMachines;
+using Moryx.Configuration;
+using Moryx.StateMachines;
 using NUnit.Framework;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     [TestFixture]
     public class StateMachineTests

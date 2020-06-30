@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     internal class CreateMethodStrategy : MethodProxyStrategyBase
     {

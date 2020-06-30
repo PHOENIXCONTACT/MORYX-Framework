@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Determines if a config parameter is a local file field

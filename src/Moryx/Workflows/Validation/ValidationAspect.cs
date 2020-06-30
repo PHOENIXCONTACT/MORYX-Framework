@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Workflows.Validation
+namespace Moryx.Workflows.Validation
 {
     /// <summary>
     /// Aspect that should be validated

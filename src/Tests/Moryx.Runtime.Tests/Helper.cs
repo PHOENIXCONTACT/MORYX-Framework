@@ -3,15 +3,15 @@
 
 using System;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Runtime.Configuration;
+using Moryx.Configuration;
+using Moryx.Runtime.Configuration;
 
-namespace Marvin.Runtime.Tests
+namespace Moryx.Runtime.Tests
 {
     public enum TestMode
     {
         BestCase,
-        MarvinException,
+        MoryxException,
         SystemException
     }
 

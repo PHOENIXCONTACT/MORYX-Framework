@@ -4,11 +4,11 @@
 using System;
 using System.IO;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Runtime.Kernel.Tests.Dummys;
+using Moryx.Configuration;
+using Moryx.Runtime.Kernel.Tests.Dummys;
 using NUnit.Framework;
 
-namespace Marvin.Runtime.Kernel.Tests
+namespace Moryx.Runtime.Kernel.Tests
 {
     /// <summary>
     /// Tests for the runtime config manager

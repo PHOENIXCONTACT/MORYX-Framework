@@ -5,9 +5,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// <see cref="IUnitOfWork"/> wrapper which will be used for parent - child relations

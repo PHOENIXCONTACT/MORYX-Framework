@@ -6,17 +6,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Runtime.Kernel;
-using Marvin.Runtime.Maintenance.Plugins.Modules;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
-using Marvin.TestModule;
-using Marvin.TestTools.SystemTest;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Runtime.Kernel;
+using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
+using Moryx.TestModule;
+using Moryx.TestTools.SystemTest;
+using Moryx.Tools.Wcf;
 using NUnit.Framework;
 
-namespace Marvin.Runtime.SystemTests
+namespace Moryx.Runtime.SystemTests
 {
     /// <summary>
     /// These tests shall check two aspects: They shall verify the HoG functionality but also wether the HeartOfGoldController is working as expected.

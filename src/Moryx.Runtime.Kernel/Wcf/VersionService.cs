@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceModel;
-using Marvin.Container;
-using Marvin.Tools.Wcf;
+using Moryx.Container;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     [Plugin(LifeCycle.Transient, typeof(IVersionService))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, IncludeExceptionDetailInFaults = true)]

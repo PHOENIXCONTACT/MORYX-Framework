@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Logging;
+using Moryx.Configuration;
+using Moryx.Logging;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// config for logging.

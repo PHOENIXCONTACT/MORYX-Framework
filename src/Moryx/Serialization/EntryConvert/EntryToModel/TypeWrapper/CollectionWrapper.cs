@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Factory that creates <see cref="CollectionWrapper"/> instances

@@ -10,11 +10,11 @@ using System.Data.Entity.Migrations;
 using System.Data.Entity.Migrations.Infrastructure;
 using System.Linq;
 using System.Reflection;
-using Marvin.Configuration;
-using Marvin.Logging;
-using Marvin.Tools;
+using Moryx.Configuration;
+using Moryx.Logging;
+using Moryx.Tools;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Base class for model configurators

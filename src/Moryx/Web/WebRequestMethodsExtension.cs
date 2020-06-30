@@ -1,4 +1,4 @@
-﻿namespace Marvin.Web
+﻿namespace Moryx.Web
 {
     /// <summary>
     /// Extension class for <see cref="System.Net.WebRequestMethods"/>.

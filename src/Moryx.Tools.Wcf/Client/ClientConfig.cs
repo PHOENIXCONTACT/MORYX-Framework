@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Config for the client 

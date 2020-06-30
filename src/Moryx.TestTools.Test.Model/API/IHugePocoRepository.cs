@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Model;
+using Moryx.Model;
 
-namespace Marvin.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model
 {
     /// <summary>
     /// The public API of the HugePoco repository.

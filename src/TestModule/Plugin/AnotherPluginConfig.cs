@@ -3,11 +3,11 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Modules;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [DataContract]
     public class AnotherPluginConfig : IPluginConfig

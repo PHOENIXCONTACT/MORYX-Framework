@@ -4,11 +4,11 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     /// <summary>
     /// Base service contract for the maintenance module.

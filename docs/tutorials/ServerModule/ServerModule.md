@@ -31,10 +31,10 @@ The ModuleController.cs-File is the key point of your module. Here all the compo
 Now we will look at examples for these points. But first create your your class with the ServerModuleAttribute.cs and the ServerModuleBase.cs.
 For the following properties and attributes reference these files:
 
-* Marvin.dll
-* Marvin.PlatformTools.dll
-* Marvin.Runtime.dll
-* Marvin.Runtime.Base.dll
+* Moryx.dll
+* Moryx.PlatformTools.dll
+* Moryx.Runtime.dll
+* Moryx.Runtime.Base.dll
 
 ~~~~{.cs}
  [ServerModule(ModuleName)]
@@ -242,7 +242,7 @@ in your projects __Pre-build event command line__.
 
 
 ~~~~{.cs}
-namespace Marvin.PlayGround.Execution
+namespace Moryx.PlayGround.Execution
 {
     internal static class ModuleVersion
     {

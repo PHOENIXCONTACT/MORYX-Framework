@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyDescription("Root namespace of the MARVIN ecosystem")]
+[assembly: AssemblyDescription("Root namespace of the MORYX ecosystem")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("dab57c78-aafc-4046-8a03-d45e0f97f6dc")]
 
-[assembly: InternalsVisibleTo("Marvin.Tests")]
+[assembly: InternalsVisibleTo("Moryx.Tests")]

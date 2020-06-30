@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Communication
+namespace Moryx.Communication
 {
     /// <summary>
     /// Interpreter for messages with header

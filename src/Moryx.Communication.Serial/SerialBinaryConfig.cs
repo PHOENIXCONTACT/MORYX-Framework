@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.IO.Ports;
 using System.Runtime.Serialization;
 
-namespace Marvin.Communication.Serial
+namespace Moryx.Communication.Serial
 {
     /// <summary>
     /// Config for binary connections implemented with serial ports

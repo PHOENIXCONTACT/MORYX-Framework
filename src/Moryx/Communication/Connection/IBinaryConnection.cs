@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Communication
+namespace Moryx.Communication
 {
     /// <summary>
     /// Visionary interface for the binary connection

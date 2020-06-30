@@ -5,19 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Modules;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Modules;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Base class for unit of work factories with possibility to by configured
     /// </summary>
     public abstract class UnitOfWorkFactoryBase<TContext, TConfigurator> : IUnitOfWorkFactory, 
         IContextUnitOfWorkFactory, IInitializable, IDbContextFactory, IModelConfiguratorFactory,
-        IParentFactory, IContainerChild<IUnitOfWorkFactory>, ILoggingHost where TContext : MarvinDbContext
+        IParentFactory, IContainerChild<IUnitOfWorkFactory>, ILoggingHost where TContext : MoryxDbContext
         where TConfigurator : IModelConfigurator, new()
     {
         #region Dependencies
@@ -132,12 +132,12 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        IUnitOfWork IContextUnitOfWorkFactory.Create(MarvinDbContext context)
+        IUnitOfWork IContextUnitOfWorkFactory.Create(MoryxDbContext context)
         {
             return Create(context);
         }
         
-        internal IUnitOfWork Create(MarvinDbContext context)
+        internal IUnitOfWork Create(MoryxDbContext context)
         {
             return new UnitOfWork(context, _repositories);
         }
@@ -159,15 +159,15 @@ namespace Marvin.Model
         }
 
         /// <inheritdoc />
-        public MarvinDbContext CreateContext(ContextMode contextMode)
+        public MoryxDbContext CreateContext(ContextMode contextMode)
         {
             return CreateContext(typeof(TContext), contextMode);
         }
 
         /// <inheritdoc />
-        public MarvinDbContext CreateContext(IDatabaseConfig config, ContextMode contextMode)
+        public MoryxDbContext CreateContext(IDatabaseConfig config, ContextMode contextMode)
         {
-            return (MarvinDbContext)Activator.CreateInstance(typeof(TContext), _configurator.BuildConnectionString(config), contextMode);
+            return (MoryxDbContext)Activator.CreateInstance(typeof(TContext), _configurator.BuildConnectionString(config), contextMode);
         }
 
         /// <inheritdoc />
@@ -249,10 +249,10 @@ namespace Marvin.Model
         /// <summary>
         /// Creates an instance of the typed context
         /// </summary>
-        protected virtual MarvinDbContext CreateContext(Type contextType, ContextMode contextMode)
+        protected virtual MoryxDbContext CreateContext(Type contextType, ContextMode contextMode)
         {
             var connectionString = _configurator.BuildConnectionString(_configurator.Config);
-            return (MarvinDbContext)Activator.CreateInstance(contextType, connectionString, contextMode);
+            return (MoryxDbContext)Activator.CreateInstance(contextType, connectionString, contextMode);
         }
     }
 
@@ -260,7 +260,7 @@ namespace Marvin.Model
     /// Base class for unit of work factories which cannot be configured
     /// </summary>
     public abstract class UnitOfWorkFactoryBase<TContext> : UnitOfWorkFactoryBase<TContext, NullModelConfigurator>
-        where TContext : MarvinDbContext
+        where TContext : MoryxDbContext
     {
 
     }

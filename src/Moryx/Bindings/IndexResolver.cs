@@ -4,7 +4,7 @@
 using System;
 using System.Collections;
 
-namespace Marvin.Bindings
+namespace Moryx.Bindings
 {
     /// <summary>
     /// Resolver that can extract values from indexes

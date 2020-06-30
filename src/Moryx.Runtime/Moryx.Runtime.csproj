@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Marvin\Marvin.csproj" />
-    <ProjectReference Include="..\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj" />
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
+    <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj" />
   </ItemGroup>
 
 </Project>

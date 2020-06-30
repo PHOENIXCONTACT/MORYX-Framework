@@ -4,7 +4,7 @@
 using System;
 using System.Threading;
 
-namespace Marvin.Threading
+namespace Moryx.Threading
 {
     /// <summary>
     /// This class can wrap a timer callback in a way to make sure that if the execution 

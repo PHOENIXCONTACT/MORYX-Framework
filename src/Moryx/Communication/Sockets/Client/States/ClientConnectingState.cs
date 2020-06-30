@@ -4,7 +4,7 @@
 using System;
 using System.Net.Sockets;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     internal class ClientConnectingState : ClientStateBase
     {

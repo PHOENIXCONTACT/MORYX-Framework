@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Marvin.Tests.Workflows;
+using Moryx.Tests.Workflows;
 
-namespace Marvin.Workflows.Benchmark
+namespace Moryx.Workflows.Benchmark
 {
     /// TODO: migrate to nunit test
     class Program

@@ -5,11 +5,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Marvin.Configuration;
-using Marvin.Modules;
-using Marvin.Runtime.Configuration;
+using Moryx.Configuration;
+using Moryx.Modules;
+using Moryx.Runtime.Configuration;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     internal class ConfigParser
     {

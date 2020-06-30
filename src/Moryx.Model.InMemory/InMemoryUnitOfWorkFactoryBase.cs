@@ -5,13 +5,13 @@ using System;
 using System.Data.Entity;
 using Effort.Provider;
 
-namespace Marvin.Model.InMemory
+namespace Moryx.Model.InMemory
 {
     /// <summary>
     /// Base implementation of <see cref="IUnitOfWorkFactory"/> for InMemory databases with Effort
     /// </summary>
     public abstract class InMemoryUnitOfWorkFactoryBase<TContext> : UnitOfWorkFactoryBase<TContext>
-        where TContext : MarvinDbContext
+        where TContext : MoryxDbContext
     {
         private readonly string _instanceId;
 
@@ -29,16 +29,16 @@ namespace Marvin.Model.InMemory
         }
 
         /// <inheritdoc />
-        protected override MarvinDbContext CreateContext(Type contextType, ContextMode contextMode)
+        protected override MoryxDbContext CreateContext(Type contextType, ContextMode contextMode)
         {
             var connection = string.IsNullOrEmpty(_instanceId)
                 ? Effort.DbConnectionFactory.CreatePersistent(Guid.NewGuid().ToString())
                 : Effort.DbConnectionFactory.CreatePersistent(_instanceId);
 
             // Create instance of context
-            var context =  (MarvinDbContext)Activator.CreateInstance(contextType, connection, contextMode);
+            var context =  (MoryxDbContext)Activator.CreateInstance(contextType, connection, contextMode);
 
-            // Override initializer of MarvinDbContext: Create database if not exists
+            // Override initializer of MoryxDbContext: Create database if not exists
             Database.SetInitializer(new CreateDatabaseIfNotExists<TContext>());
 
             return context;

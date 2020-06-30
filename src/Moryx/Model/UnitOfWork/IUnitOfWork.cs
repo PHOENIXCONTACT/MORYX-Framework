@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Unit of work for db access with specialized generic apis

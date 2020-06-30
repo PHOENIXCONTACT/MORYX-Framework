@@ -5,11 +5,11 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using Marvin.Tools;
-using Marvin.Workflows;
+using Moryx.Tools;
+using Moryx.Workflows;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     [TestFixture]
     public class PathPredictionTests

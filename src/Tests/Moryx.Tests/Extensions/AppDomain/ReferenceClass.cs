@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Tests.Extensions
+namespace Moryx.Tests.Extensions
 {
     internal class ReferenceClass
     {

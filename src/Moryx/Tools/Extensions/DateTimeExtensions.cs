@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Threading;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// All extensions for the date time class

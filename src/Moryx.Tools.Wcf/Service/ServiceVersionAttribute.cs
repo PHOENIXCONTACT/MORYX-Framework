@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Attribute used to declare a services version for clients to check compliance

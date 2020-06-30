@@ -5,9 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     internal class ServerNotificationCollection : INotificationCollection
     {

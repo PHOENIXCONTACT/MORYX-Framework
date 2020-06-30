@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     /// <summary>
     /// Represens a generic target logger. 

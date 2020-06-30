@@ -3,7 +3,7 @@
 
 using CommandLine;
 
-namespace Marvin.Runtime.Kernel.DbUpdate
+namespace Moryx.Runtime.Kernel.DbUpdate
 {
     /// <summary>
     /// Option class for the <see cref="DbUpdateRunMode"/>

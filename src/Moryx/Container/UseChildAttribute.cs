@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Attribute used to decorate dependencies which are part of larger container and shall be resolved by name 

@@ -4,10 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Marvin.Container;
-using Marvin.Runtime.Modules;
+using Moryx.Container;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Factory to create local containers of <see cref="IServerModule"/>

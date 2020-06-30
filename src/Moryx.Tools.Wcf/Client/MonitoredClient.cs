@@ -6,7 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     internal delegate ClientCredentials GetClientCredentials(ICommunicationObject client);
     internal delegate IClientChannel GetInnerChannel(ICommunicationObject client);

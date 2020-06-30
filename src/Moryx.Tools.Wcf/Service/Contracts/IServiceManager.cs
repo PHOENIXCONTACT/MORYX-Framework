@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Basic interface for web serviuce managers.

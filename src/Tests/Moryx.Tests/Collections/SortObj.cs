@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Collections;
+using Moryx.Collections;
 
-namespace Marvin.Tests.Collections
+namespace Moryx.Tests.Collections
 {
     internal class SortObj : ISortableObject
     {

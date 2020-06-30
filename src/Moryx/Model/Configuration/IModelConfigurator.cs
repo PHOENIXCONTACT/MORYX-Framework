@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Configuration;
-using Marvin.Logging;
+using Moryx.Configuration;
+using Moryx.Logging;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Result enum for function TestConnection

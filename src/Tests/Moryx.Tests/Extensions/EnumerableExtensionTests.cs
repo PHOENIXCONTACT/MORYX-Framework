@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Tools;
+using Moryx.Tools;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Extensions
+namespace Moryx.Tests.Extensions
 {
     [TestFixture]
     public class EnumerableExtensionTests

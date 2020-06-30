@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
-namespace Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol
+namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
 {
     [TestFixture]
     public class DelimiterInterpreterTests

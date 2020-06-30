@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Runtime.Configuration
+namespace Moryx.Runtime.Configuration
 {
     /// <summary>
     /// Attribute used to reference another <see cref="IConfig"/>. Do not decorate the property with data member as it will write a copy of the config to your xml.

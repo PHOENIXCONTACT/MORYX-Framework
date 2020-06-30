@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Mode of the integer steps

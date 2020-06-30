@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin
+namespace Moryx
 {
     /// <inheritdoc />
     /// <summary>

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.TestTools.UnitTest")]
+[assembly: AssemblyTitle("Moryx.TestTools.UnitTest")]
 [assembly: AssemblyDescription("Library with helper classes for UnitTests.")]
 [assembly: AssemblyCulture("")]
 

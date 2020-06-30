@@ -5,11 +5,11 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
-using Marvin.Workflows;
-using Marvin.Workflows.Transitions;
-using Marvin.Workflows.WorkplanSteps;
+using Moryx.Workflows;
+using Moryx.Workflows.Transitions;
+using Moryx.Workflows.WorkplanSteps;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     [DataContract]
     public class DummyStep : WorkplanStepBase

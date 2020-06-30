@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     /// <summary>
     /// Config for TCPListeners

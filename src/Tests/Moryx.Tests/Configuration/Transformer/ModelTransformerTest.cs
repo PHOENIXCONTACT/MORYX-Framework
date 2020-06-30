@@ -4,12 +4,12 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Linq;
-using Marvin.Configuration;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Serialization;
 using NUnit.Framework;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
-namespace Marvin.Tests.Configuration
+namespace Moryx.Tests.Configuration
 {
     /// <summary>
     /// Test for the config to model and model to config transformer

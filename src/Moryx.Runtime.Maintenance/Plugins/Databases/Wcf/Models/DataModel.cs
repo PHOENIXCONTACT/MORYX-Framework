@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Databases
+namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
     /// <summary>
     /// Conatins the data to the target model.

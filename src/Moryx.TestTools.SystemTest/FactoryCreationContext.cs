@@ -4,13 +4,13 @@
 using System;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Marvin.Configuration;
-using Marvin.Model;
-using Marvin.Modules;
-using Marvin.Runtime.Maintenance.Plugins.Databases;
-using DatabaseConfig = Marvin.Model.DatabaseConfig;
+using Moryx.Configuration;
+using Moryx.Model;
+using Moryx.Modules;
+using Moryx.Runtime.Maintenance.Plugins.Databases;
+using DatabaseConfig = Moryx.Model.DatabaseConfig;
 
-namespace Marvin.TestTools.SystemTest
+namespace Moryx.TestTools.SystemTest
 {
     /// <summary>
     /// Creation context for the parent of a merged datamodel

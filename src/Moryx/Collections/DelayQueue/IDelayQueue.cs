@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// Special queue for objects that need to be dequeued with a configured minimum delay.

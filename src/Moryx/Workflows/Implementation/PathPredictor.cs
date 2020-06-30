@@ -5,9 +5,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Implementation of <see cref="IPathPredictor"/>

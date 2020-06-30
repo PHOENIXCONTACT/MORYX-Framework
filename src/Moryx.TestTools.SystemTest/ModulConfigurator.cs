@@ -1,11 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Runtime.Maintenance.Plugins.Modules;
-using Marvin.Serialization;
+using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Marvin.TestTools.SystemTest
+namespace Moryx.TestTools.SystemTest
 {
     /// <summary>
     /// Helper to modify the configutration servermodul

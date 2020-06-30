@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Tools.Wcf.Tests
+namespace Moryx.Tools.Wcf.Tests
 {
     internal class VersionServiceManagerMock : IVersionServiceManager
     {

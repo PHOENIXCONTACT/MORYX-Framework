@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Marvin
+namespace Moryx
 {
     /// <summary>
     /// Extension to the <see cref="DisplayAttribute"/> which supports also classes

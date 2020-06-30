@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// ValueProvider that sets property's value given from a <see cref="DefaultValueAttribute"/>

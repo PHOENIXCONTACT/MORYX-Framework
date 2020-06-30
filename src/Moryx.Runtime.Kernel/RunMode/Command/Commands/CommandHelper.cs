@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Runtime.Modules;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     internal static class CommandHelper
     {

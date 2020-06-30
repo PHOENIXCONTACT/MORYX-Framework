@@ -9,17 +9,17 @@ using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Modules;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Container;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
-using Marvin.Threading;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Modules;
+using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Container;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
+using Moryx.Threading;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     [Plugin(LifeCycle.Singleton, typeof(IModuleMaintenance))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]

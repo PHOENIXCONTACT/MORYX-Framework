@@ -9,7 +9,7 @@ using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     internal class ComponentRegistrator : IComponentRegistrator
     {

@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Interface for all strategies that can read values from 

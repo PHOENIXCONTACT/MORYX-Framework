@@ -3,16 +3,16 @@
 
 using System;
 using System.Linq;
-using Marvin.Logging;
-using Marvin.Model;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Container;
-using Marvin.Runtime.Maintenance.Contracts;
-using Marvin.Runtime.Maintenance.Plugins;
-using Marvin.Runtime.Modules;
-using Marvin.Tools.Wcf.FileSystem;
+using Moryx.Logging;
+using Moryx.Model;
+using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Container;
+using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Runtime.Maintenance.Plugins;
+using Moryx.Runtime.Modules;
+using Moryx.Tools.Wcf.FileSystem;
 
-namespace Marvin.Runtime.Maintenance
+namespace Moryx.Runtime.Maintenance
 {
     /// <summary>
     /// Maintenance module that hosts the plugins.

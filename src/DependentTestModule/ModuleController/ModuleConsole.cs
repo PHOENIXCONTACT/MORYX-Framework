@@ -3,12 +3,12 @@
 
 using System;
 using System.ComponentModel;
-using Marvin.Logging;
-using Marvin.Runtime;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
+using Moryx.Logging;
+using Moryx.Runtime;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.DependentTestModule
+namespace Moryx.DependentTestModule
 {
     [ServerModuleConsole]
     internal class ModuleConsole : IServerModuleConsole

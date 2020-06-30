@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Model;
+using Moryx.Model;
 
-namespace Marvin.Runtime.Kernel.DbUpdate
+namespace Moryx.Runtime.Kernel.DbUpdate
 {
     /// <summary>
     /// RunMode used to update all models

@@ -5,7 +5,7 @@ One possible way to extend the logging mechanism is to attach [Apache Log4Net](h
 
 In this tutorial log4net will be added to an existing project.
 
-1. Add the `Common.Logging.Log4Net208` nuget package to your start project (Attention: The `Common.Logging` dependency of this package must match the version used in `Marvin.Runtime.Kernel`)
+1. Add the `Common.Logging.Log4Net208` nuget package to your start project (Attention: The `Common.Logging` dependency of this package must match the version used in `Moryx.Runtime.Kernel`)
 2. Add a new folder `Config` to you start project
 3. Add a new file to this directory: `log4net.config` with the following content:
     ````xml

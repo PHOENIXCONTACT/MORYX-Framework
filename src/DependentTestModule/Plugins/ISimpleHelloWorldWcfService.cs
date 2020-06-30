@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceModel;
-using Marvin.Tools.Wcf;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.DependentTestModule
+namespace Moryx.DependentTestModule
 {
     [ServiceContract]
     [ServiceVersion(ServerVersion = SimpleHelloWorldWcfService.ServerVersion, MinClientVersion = SimpleHelloWorldWcfService.MinClientVersion)]

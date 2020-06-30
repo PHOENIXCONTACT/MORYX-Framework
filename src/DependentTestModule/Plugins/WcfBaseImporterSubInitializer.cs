@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.DependentTestModule
+namespace Moryx.DependentTestModule
 {
     public class WcfBaseImporterSubInitializer : ISubInitializer
     {

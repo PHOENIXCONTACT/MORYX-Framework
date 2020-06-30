@@ -8,9 +8,9 @@ using System.Reflection;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Class to load component specific windsor Container
@@ -48,7 +48,7 @@ namespace Marvin.Container
             Registrator = registrator;
 
             Container.AddFacility<TypedFactoryFacility>();
-            Container.AddFacility<MarvinFacility>();
+            Container.AddFacility<MoryxFacility>();
 
             // Self registration for framework functionality
             SetInstance<IContainer>(this);

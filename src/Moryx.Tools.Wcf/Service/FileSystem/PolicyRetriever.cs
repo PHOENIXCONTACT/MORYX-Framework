@@ -5,7 +5,7 @@ using System.IO;
 using System.ServiceModel.Web;
 using System.Text;
 
-namespace Marvin.Tools.Wcf.FileSystem
+namespace Moryx.Tools.Wcf.FileSystem
 {
     public class PolicyRetriever : IPolicyRetriever
     {

@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.Logging;
-using Marvin.Runtime.Modules;
+using Moryx.Logging;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     internal class FacadeContainer
     {

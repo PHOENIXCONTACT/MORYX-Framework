@@ -4,9 +4,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using Marvin.Runtime.Modules;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Console for the developer to debug and monitor the HoG while developing.
@@ -202,7 +202,7 @@ namespace Marvin.Runtime.Kernel
         {
             DrawStarLine();
 
-            var title = "MARVIN Runtime " + RuntimePlatform.RuntimeVersion + " Emulator: " + Platform.Current.ProductName;
+            var title = "MORYX Runtime " + RuntimePlatform.RuntimeVersion + " Emulator: " + Platform.Current.ProductName;
             Console.WriteLine("{0," + ((Console.WindowWidth / 2) + title.Length / 2) + "}", title);
             Console.WriteLine();
 

@@ -8,7 +8,7 @@ using System.Net;
 using System.Threading;
 using NUnit.Framework;
 
-namespace Marvin.Communication.Sockets.IntegrationTests
+namespace Moryx.Communication.Sockets.IntegrationTests
 {
     public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : BinaryMessage
     {

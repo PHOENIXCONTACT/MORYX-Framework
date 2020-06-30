@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Serialization;
+using Moryx.Serialization;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     /// <summary>
     /// Contract for a config response

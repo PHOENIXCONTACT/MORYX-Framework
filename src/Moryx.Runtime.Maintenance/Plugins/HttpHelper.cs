@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.ServiceModel.Web;
 
-namespace Marvin.Runtime.Maintenance.Plugins
+namespace Moryx.Runtime.Maintenance.Plugins
 {
     internal static class HttpHelper
     {

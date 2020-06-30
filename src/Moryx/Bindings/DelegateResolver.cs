@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Bindings
+namespace Moryx.Bindings
 {
     /// <summary>
     /// Resolve binding by invoking a given expression

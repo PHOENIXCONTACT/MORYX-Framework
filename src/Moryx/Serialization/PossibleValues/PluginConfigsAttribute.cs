@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.Container;
-using Marvin.Modules;
+using Moryx.Container;
+using Moryx.Modules;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Similar to the <see cref="PluginNameSelectorAttribute"/> this attribute provides a list of component configurations. 

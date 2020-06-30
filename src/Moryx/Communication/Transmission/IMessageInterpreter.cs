@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Communication
+namespace Moryx.Communication
 {
     /// <summary>
     /// Result or processing the byte stream

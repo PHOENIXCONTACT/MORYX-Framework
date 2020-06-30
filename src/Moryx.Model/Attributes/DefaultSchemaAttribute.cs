@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Defines the default schmea for this database context

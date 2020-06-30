@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Runtime.Configuration;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Runtime.Configuration;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Manages the configs of the runtime and its modules.

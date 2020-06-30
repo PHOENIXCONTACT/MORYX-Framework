@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Container;
-using Marvin.Runtime.Modules;
+using Moryx.Container;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Container
+namespace Moryx.Runtime.Container
 {
     /// <summary>
     /// Attribute to register server modules

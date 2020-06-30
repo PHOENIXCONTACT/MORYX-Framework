@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Marvin.Serialization;
-using Marvin.Workflows;
+using Moryx.Serialization;
+using Moryx.Workflows;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     [TestFixture]
     public class SerializationTest

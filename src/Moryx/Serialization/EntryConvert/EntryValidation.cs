@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// All validation rules of an entry

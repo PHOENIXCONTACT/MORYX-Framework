@@ -8,7 +8,7 @@ using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Context;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     internal class ChildContainerSubResolver : ISubDependencyResolver
     {

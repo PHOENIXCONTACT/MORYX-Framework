@@ -3,15 +3,15 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Logging;
-using Marvin.Runtime.Kernel.Tests.Dummys;
-using Marvin.Runtime.Kernel.Tests.ModuleMocks;
-using Marvin.Runtime.Modules;
+using Moryx.Configuration;
+using Moryx.Logging;
+using Moryx.Runtime.Kernel.Tests.Dummys;
+using Moryx.Runtime.Kernel.Tests.ModuleMocks;
+using Moryx.Runtime.Modules;
 using Moq;
 using NUnit.Framework;
 
-namespace Marvin.Runtime.Kernel.Tests
+namespace Moryx.Runtime.Kernel.Tests
 {
     [TestFixture]
     public class ModuleManagerTests

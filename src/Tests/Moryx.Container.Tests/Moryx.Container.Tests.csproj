@@ -17,12 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Marvin.Container\Marvin.Container.csproj" />
-    <ProjectReference Include="..\..\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj" />
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj" />
-    <ProjectReference Include="..\Marvin.Container.TestPlugin\Marvin.Container.TestPlugin.csproj" />
-    <ProjectReference Include="..\Marvin.Container.TestRootPlugin\Marvin.Container.TestRootPlugin.csproj" />
-    <ProjectReference Include="..\Marvin.Container.TestTools\Marvin.Container.TestTools.csproj" />
+    <ProjectReference Include="..\..\Moryx.Container\Moryx.Container.csproj" />
+    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
+    <ProjectReference Include="..\..\Moryx\Moryx.csproj" />
+    <ProjectReference Include="..\Moryx.Container.TestPlugin\Moryx.Container.TestPlugin.csproj" />
+    <ProjectReference Include="..\Moryx.Container.TestRootPlugin\Moryx.Container.TestRootPlugin.csproj" />
+    <ProjectReference Include="..\Moryx.Container.TestTools\Moryx.Container.TestTools.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,9 +7,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Filters methods and properties with <see cref="EditorBrowsableAttribute"/> set.

@@ -5,7 +5,7 @@ using System.Reflection;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Marvin.Container.Tests
+namespace Moryx.Container.Tests
 {
     internal class FakeAutoInstaller : AutoInstaller
     {

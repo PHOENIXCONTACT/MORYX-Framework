@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// DTO for modified data

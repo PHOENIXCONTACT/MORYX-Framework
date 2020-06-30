@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Generic;
 using Castle.Facilities.WcfIntegration;
-using Marvin.Container;
-using Marvin.Tools.Wcf;
+using Moryx.Container;
+using Moryx.Tools.Wcf;
 using Component = Castle.MicroKernel.Registration.Component;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Container for hosting wcf services

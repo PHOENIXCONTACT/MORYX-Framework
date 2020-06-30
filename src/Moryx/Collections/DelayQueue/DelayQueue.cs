@@ -4,10 +4,10 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
-using Marvin.StateMachines;
-using Marvin.Threading;
+using Moryx.StateMachines;
+using Moryx.Threading;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// Special queue for items that need to be dequeued with a configured minimum delay.

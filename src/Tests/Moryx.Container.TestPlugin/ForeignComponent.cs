@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Container.TestTools;
+using Moryx.Container.TestTools;
 
-namespace Marvin.Container.TestPlugin
+namespace Moryx.Container.TestPlugin
 {
     [Plugin(LifeCycle.Singleton, typeof(IConfiguredComponent), Name = PluginName)]
     public class ForeignComponent : IConfiguredComponent

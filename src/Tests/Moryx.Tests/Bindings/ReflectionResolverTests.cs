@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
-using Marvin.Bindings;
+using Moryx.Bindings;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Bindings
+namespace Moryx.Tests.Bindings
 {
     [TestFixture]
     public class ReflectionResolverTests

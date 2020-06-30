@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Notifications;
+using Moryx.Notifications;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     internal class InitializedFailureState : FailureStateBase
     {

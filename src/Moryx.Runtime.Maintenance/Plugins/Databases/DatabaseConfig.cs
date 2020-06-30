@@ -3,12 +3,12 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Runtime.Maintenance.Contracts;
-using Marvin.Serialization;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Serialization;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Databases
+namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
     /// <summary>
     /// Configuration for the database maintenance plugin.

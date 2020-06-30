@@ -4,9 +4,9 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Runtime.Kernel.Tests.Dummys
+namespace Moryx.Runtime.Kernel.Tests.Dummys
 {
     /// <summary>
     /// Testenum
@@ -135,7 +135,7 @@ namespace Marvin.Runtime.Kernel.Tests.Dummys
         public TestConfig1Enum EnumField { get; set; }
 
         /// <summary>
-        /// External raise method invoked by <see cref="T:Marvin.Configuration.IConfigManager" />
+        /// External raise method invoked by <see cref="T:Moryx.Configuration.IConfigManager" />
         /// </summary>
         /// <param name="modifiedProperties">Properties modified</param>
         public void RaiseConfigChanged(params string[] modifiedProperties)

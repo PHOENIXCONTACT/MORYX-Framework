@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Token representing a split execution

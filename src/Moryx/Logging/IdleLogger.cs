@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     /// <summary>
     /// This is used to replace the logger implementation on a plugin while it idles

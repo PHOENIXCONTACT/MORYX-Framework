@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Management;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Common
+namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
     /// <summary>
     /// Extensions to retrieve system information

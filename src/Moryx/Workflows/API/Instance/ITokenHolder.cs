@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Base interface for places and transitions. It declares properties and fields

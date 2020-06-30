@@ -1,11 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Runtime.Kernel.Tests.Dummys;
-using Marvin.Runtime.Kernel.Tests.ModuleMocks.Facade;
-using Marvin.Runtime.Modules;
+using Moryx.Runtime.Kernel.Tests.Dummys;
+using Moryx.Runtime.Kernel.Tests.ModuleMocks.Facade;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel.Tests.ModuleMocks
+namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {
     public class LifeCycleBoundFacadeTestModule : ServerModuleFacadeControllerBase<RuntimeConfigManagerTestConfig2>
     {

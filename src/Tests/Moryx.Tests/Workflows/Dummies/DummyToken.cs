@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Workflows;
+using Moryx.Workflows;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     public class DummyToken : IToken
     {

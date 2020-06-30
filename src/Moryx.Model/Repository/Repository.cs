@@ -7,7 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Base class for entity framework repositories

@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Marvin.Modules;
+using Moryx.Modules;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Marvin.Runtime.Maintenance")]
+[assembly: AssemblyTitle("Moryx.Runtime.Maintenance")]
 [assembly: AssemblyDescription("Core module to maintain the application. It provides config and logging support by default.")]
 [assembly: AssemblyCulture("")]
 
@@ -19,4 +19,4 @@ using Marvin.Modules;
 [assembly: Guid("d01f6c1f-785f-4bea-a90a-b7adc6cd5578")]
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: Bundle("Marvin.Runtime", "3.0.0")]
+[assembly: Bundle("Moryx.Runtime", "3.0.0")]

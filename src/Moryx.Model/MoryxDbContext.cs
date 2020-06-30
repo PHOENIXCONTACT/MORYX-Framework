@@ -10,12 +10,12 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
-    /// Marvin related implementation of <see cref="T:System.Data.Entity.DbContext" />
+    /// Moryx related implementation of <see cref="T:System.Data.Entity.DbContext" />
     /// </summary>
-    public abstract class MarvinDbContext : DbContext, IContextMode
+    public abstract class MoryxDbContext : DbContext, IContextMode
     {
         private static readonly MethodInfo DbInitializerMethod;
 
@@ -25,7 +25,7 @@ namespace Marvin.Model
         /// <summary>
         /// Static constructor to load the database initializer method
         /// </summary>
-        static MarvinDbContext()
+        static MoryxDbContext()
         {
             DbInitializerMethod = (from method in typeof(Database).GetMethods()
                 where method.Name.Equals(nameof(Database.SetInitializer)) &&
@@ -34,10 +34,10 @@ namespace Marvin.Model
         }
 
         /// <summary>
-        /// Constructor for this DbContext. 
+        /// Constructor for this DbContext.
         /// Used by EntityFramework migration tools.
         /// </summary>
-        protected MarvinDbContext()
+        protected MoryxDbContext()
         {
         }
 
@@ -45,7 +45,7 @@ namespace Marvin.Model
         /// Constructor for this DbContext using the given connection string.
         /// Used by the Runtime environment
         /// </summary>
-        protected MarvinDbContext(string connectionString, ContextMode mode) : base(connectionString)
+        protected MoryxDbContext(string connectionString, ContextMode mode) : base(connectionString)
         {
             SetNullDatabaseInitializer();
             Configure(mode);
@@ -55,7 +55,7 @@ namespace Marvin.Model
         /// Constructor for this DbContext using an exisiting connection.
         /// Used if connection is already defined (e.g. Effort InMemory)
         /// </summary>
-        protected MarvinDbContext(DbConnection connection, ContextMode mode) : base(connection, true)
+        protected MoryxDbContext(DbConnection connection, ContextMode mode) : base(connection, true)
         {
             SetNullDatabaseInitializer();
             Configure(mode);

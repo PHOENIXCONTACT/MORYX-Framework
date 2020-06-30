@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
-    /// Client Side Definition of Marvin.Base.Proxies.Wcf.IBaseWebSvc
+    /// Client Side Definition of Moryx.Base.Proxies.Wcf.IBaseWebSvc
     /// inteface service contract.
     /// </summary>
     public interface ITcpServiceReference

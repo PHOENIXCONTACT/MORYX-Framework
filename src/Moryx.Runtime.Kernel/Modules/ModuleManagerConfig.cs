@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Runtime.Modules;
+using Moryx.Configuration;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Configuration for the ModuleManager.

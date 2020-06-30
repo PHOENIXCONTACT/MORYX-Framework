@@ -6,9 +6,9 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
-    internal class MarvinFacility : IFacility
+    internal class MoryxFacility : IFacility
     {
         public void Init(IKernel kernel, IConfiguration facilityConfig)
         {

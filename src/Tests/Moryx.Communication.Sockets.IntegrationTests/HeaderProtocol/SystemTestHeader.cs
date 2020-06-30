@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace Marvin.Communication.Sockets.IntegrationTests
+namespace Moryx.Communication.Sockets.IntegrationTests
 {
     public class SystemTestHeader : IBinaryHeader
     {

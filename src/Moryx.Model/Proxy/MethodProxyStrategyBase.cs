@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     internal abstract class MethodProxyStrategyBase : IMethodProxyStrategy
     {

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Modules
+namespace Moryx.Modules
 {
     /// <summary>
     /// Inizializable component wich can set a priority for the initialization process

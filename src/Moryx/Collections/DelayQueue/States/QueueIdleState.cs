@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// Default state of the queue. Incoming items are dequeued if the delay requirement

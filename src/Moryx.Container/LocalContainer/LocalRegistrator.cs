@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     internal class LocalRegistrator : ComponentRegistrator
     {

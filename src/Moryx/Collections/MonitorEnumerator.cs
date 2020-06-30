@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// Represents a synced enumerator to iterate over a generic collection

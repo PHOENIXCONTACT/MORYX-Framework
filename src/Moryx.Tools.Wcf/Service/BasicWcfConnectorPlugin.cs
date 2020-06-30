@@ -1,11 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.Threading;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.Threading;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Base implementation of a WCF service plugin

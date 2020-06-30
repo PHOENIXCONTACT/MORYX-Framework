@@ -10,10 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Tools;
+using Moryx.Configuration;
+using Moryx.Tools;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Default implementation of serialization

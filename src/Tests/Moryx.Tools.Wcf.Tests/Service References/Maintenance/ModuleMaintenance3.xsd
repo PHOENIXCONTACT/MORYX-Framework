@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" />
-  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Modules" />
+  <xs:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Moryx.Serialization" />
   <xs:complexType name="ArrayOfServerModuleModel">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="ServerModuleModel" nillable="true" type="tns:ServerModuleModel" />
@@ -12,11 +12,11 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="Assembly" nillable="true" type="tns:AssemblyModel" />
       <xs:element minOccurs="0" name="Dependencies" nillable="true" type="tns:ArrayOfServerModuleModel" />
-      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="FailureBehaviour" type="q1:FailureBehaviour" />
-      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="HealthState" type="q2:ServerModuleState" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Modules" minOccurs="0" name="FailureBehaviour" type="q1:FailureBehaviour" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Modules" minOccurs="0" name="HealthState" type="q2:ServerModuleState" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Notifications" nillable="true" type="tns:ArrayOfNotificationModel" />
-      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" minOccurs="0" name="StartBehaviour" type="q3:ModuleStartBehaviour" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Modules" minOccurs="0" name="StartBehaviour" type="q3:ModuleStartBehaviour" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ServerModuleModel" nillable="true" type="tns:ServerModuleModel" />
@@ -62,7 +62,7 @@
   <xs:element name="DependencyEvaluation" nillable="true" type="tns:DependencyEvaluation" />
   <xs:complexType name="Config">
     <xs:sequence>
-      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Serialization" minOccurs="0" name="Entries" nillable="true" type="q4:ArrayOfEntry" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Moryx.Serialization" minOccurs="0" name="Entries" nillable="true" type="q4:ArrayOfEntry" />
       <xs:element minOccurs="0" name="Module" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>

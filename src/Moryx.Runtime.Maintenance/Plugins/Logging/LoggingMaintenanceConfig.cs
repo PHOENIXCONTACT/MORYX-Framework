@@ -3,10 +3,10 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Runtime.Maintenance.Contracts;
-using Marvin.Tools.Wcf;
+using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Logging
+namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {
     /// <summary>
     /// Configuration for the logging of the maintenance.

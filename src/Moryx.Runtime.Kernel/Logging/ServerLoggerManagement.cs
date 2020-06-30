@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Logging;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Logging;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Management for the server logging. Provides mechanics to add and remove listeners for the logging. 

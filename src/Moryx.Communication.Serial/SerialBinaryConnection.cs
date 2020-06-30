@@ -4,11 +4,11 @@
 using System;
 using System.IO.Ports;
 using System.Threading.Tasks;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Modules;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Modules;
 
-namespace Marvin.Communication.Serial
+namespace Moryx.Communication.Serial
 {
     /// <summary>
     /// Implementation of the <see cref="IBinaryConnection"/> interface for

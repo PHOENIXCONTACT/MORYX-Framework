@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Non-generated part of the customSerialization helper

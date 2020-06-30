@@ -3,11 +3,11 @@
 
 using System;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Runtime.Modules;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Runtime.Modules;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Provides a RunMode which is used for system tests.

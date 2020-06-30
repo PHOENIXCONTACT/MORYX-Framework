@@ -3,10 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Configuration;
+using Moryx.Configuration;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider
 {
     [TestFixture]
     public class ValueProviderTests

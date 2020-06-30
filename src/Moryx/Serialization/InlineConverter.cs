@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Bit converter that writes directly to a given byte array

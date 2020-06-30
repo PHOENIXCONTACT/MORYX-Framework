@@ -4,7 +4,7 @@ uid: RuntimeMain
 Runtime
 ========
 
-The Marvin Runtime is an application framework for the server part of a client-server application. It is based on the concept of modular software development and the service pattern. The frameworks main features are listed below:
+The Moryx Runtime is an application framework for the server part of a client-server application. It is based on the concept of modular software development and the service pattern. The frameworks main features are listed below:
 
 [HeartOfGold](xref:HeartOfGold)
 
@@ -16,7 +16,7 @@ The module interface and framework components provide full lifecycle management 
 
 [ComponentComposition](xref:ComponentComposition)
 
-The Marvin Runtime defines two levels of components. The top level or main components include server modules, framework components and datamodels and is composed using a Marvin enhanced CastleWindsor DI-Container. The second level or plugin level is composed using a level 2 optimized Marvin-Castle-Container.
+The Moryx Runtime defines two levels of components. The top level or main components include server modules, framework components and datamodels and is composed using a Moryx enhanced CastleWindsor DI-Container. The second level or plugin level is composed using a level 2 optimized Moryx-Castle-Container.
 
 [DataModels](xref:DataModels)
 
@@ -38,6 +38,6 @@ Even though the framework is fully functional without any kind of database at al
 * [UserManagement](xref:UserManagement)
 
 # Tools & Templates
-To make working with the Marvin Runtime more efficient, there are a couple of tools and templates that speed up plugin and component development significantly. Listed below are only Marvin specific tools and templates. 3rd party tools and libraries used for Marvin development can be found elsewhere.
+To make working with the Moryx Runtime more efficient, there are a couple of tools and templates that speed up plugin and component development significantly. Listed below are only Moryx specific tools and templates. 3rd party tools and libraries used for Moryx development can be found elsewhere.
 
 DataModel-Template: This template can only be used with an EntityDeveloper DataModel.

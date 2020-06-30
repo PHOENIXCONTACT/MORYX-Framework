@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Marvin.Tools;
+using Moryx.Tools;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Extensions
+namespace Moryx.Tests.Extensions
 {
     [TestFixture]
     public class ReflectionToolTests

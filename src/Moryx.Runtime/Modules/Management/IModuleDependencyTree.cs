@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Tree of module dependencies

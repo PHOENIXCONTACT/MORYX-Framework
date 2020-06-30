@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" />
-  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance" />
+  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" />
+  <xs:import schemaLocation="http://localhost/Metadata/DatabaseMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance" />
   <xs:element name="GetDataModels">
     <xs:complexType>
       <xs:sequence />
@@ -10,14 +10,14 @@
   <xs:element name="GetDataModelsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="GetDataModelsResult" nillable="true" type="q1:ArrayOfDataModel" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="GetDataModelsResult" nillable="true" type="q1:ArrayOfDataModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SetAllConfigs">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q2:DatabaseConfigModel" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q2:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -30,7 +30,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q3:DatabaseConfigModel" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q3:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -43,7 +43,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q4:DatabaseConfigModel" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q4:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -70,7 +70,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q5:DatabaseConfigModel" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q5:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -97,7 +97,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q6:DatabaseConfigModel" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q6:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -112,14 +112,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q7:DatabaseConfigModel" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q7:DatabaseConfigModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="DumpDatabaseResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance" minOccurs="0" name="DumpDatabaseResult" nillable="true" type="q8:DumpResult" />
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance" minOccurs="0" name="DumpDatabaseResult" nillable="true" type="q8:DumpResult" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -127,8 +127,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q9:DatabaseConfigModel" />
-        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="backupModel" nillable="true" type="q10:BackupModel" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q9:DatabaseConfigModel" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="backupModel" nillable="true" type="q10:BackupModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -143,8 +143,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q11:DatabaseConfigModel" />
-        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="setup" nillable="true" type="q12:SetupModel" />
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="config" nillable="true" type="q11:DatabaseConfigModel" />
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="setup" nillable="true" type="q12:SetupModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -159,8 +159,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="targetModel" nillable="true" type="xs:string" />
-        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="model" nillable="true" type="q13:DatabaseConfigModel" />
-        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="script" nillable="true" type="q14:ScriptModel" />
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="model" nillable="true" type="q13:DatabaseConfigModel" />
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.DatabaseMaintenance.Wcf" minOccurs="0" name="script" nillable="true" type="q14:ScriptModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

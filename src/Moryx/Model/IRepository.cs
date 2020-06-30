@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Base contract for all repositories defining UnitOfWork property

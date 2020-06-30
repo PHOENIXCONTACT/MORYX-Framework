@@ -7,7 +7,7 @@ using System.Net;
 using System.Threading;
 using NUnit.Framework;
 
-namespace Marvin.Communication.Sockets.IntegrationTests
+namespace Moryx.Communication.Sockets.IntegrationTests
 {
     [TestFixture]
     public class HeaderedCommunicationSocketTests : CommunicationSocketsTestsBase<BinaryMessage<SystemTestHeader>>

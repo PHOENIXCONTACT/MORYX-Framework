@@ -12,7 +12,7 @@ Even with all possible effort it is not possible to make an application immune t
 ````txt
 Unhandled exception occurred:
 System.Exception: Unhandled exception for Bjoern
-   bei DummyService.DummyWithCompPlugin.<OnStart>b__0(Object state) in d:\MarvinRepo\SvcRuntime\DummyService\Plugin\DummyWithComp.cs:Zeile 75.
+   bei DummyService.DummyWithCompPlugin.<OnStart>b__0(Object state) in d:\MoryxRepo\SvcRuntime\DummyService\Plugin\DummyWithComp.cs:Zeile 75.
    bei System.Threading.QueueUserWorkItemCallback.WaitCallback_Context(Object state)
    bei System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
    bei System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)

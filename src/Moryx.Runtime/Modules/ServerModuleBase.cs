@@ -5,17 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Modules;
-using Marvin.Runtime.Container;
-using Marvin.Runtime.Wcf;
-using Marvin.StateMachines;
-using Marvin.Threading;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Modules;
+using Moryx.Runtime.Container;
+using Moryx.Runtime.Wcf;
+using Moryx.StateMachines;
+using Moryx.Threading;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Base class for a server module. Provides all necessary methods to be a server module.

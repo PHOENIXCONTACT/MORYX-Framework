@@ -5,9 +5,9 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Timers;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Base Wcf Connector class.

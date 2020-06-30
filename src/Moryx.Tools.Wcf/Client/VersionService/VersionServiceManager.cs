@@ -3,9 +3,9 @@
 
 using System;
 using System.ServiceModel;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     internal class VersionServiceManager : IVersionServiceManager
     {

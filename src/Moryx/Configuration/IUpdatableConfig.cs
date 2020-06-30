@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Event args passed to the config changed method

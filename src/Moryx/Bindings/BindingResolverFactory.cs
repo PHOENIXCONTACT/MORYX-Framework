@@ -3,7 +3,7 @@
 
 using System.Text.RegularExpressions;
 
-namespace Marvin.Bindings
+namespace Moryx.Bindings
 {
     /// <summary>
     /// Default factory to create resolvers for binding strings

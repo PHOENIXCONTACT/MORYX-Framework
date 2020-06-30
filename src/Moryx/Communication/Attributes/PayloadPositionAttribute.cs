@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Communication
+namespace Moryx.Communication
 {
     /// <summary>
     /// Attribute used to decorate fields of binary payload objects

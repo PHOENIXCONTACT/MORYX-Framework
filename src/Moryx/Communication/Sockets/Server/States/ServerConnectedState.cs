@@ -3,7 +3,7 @@
 
 using System.Threading.Tasks;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     internal class ServerConnectedState: ServerStateBase
     {

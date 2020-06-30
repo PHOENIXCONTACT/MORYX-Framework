@@ -4,9 +4,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Runtime.Tests.Mocks
+namespace Moryx.Runtime.Tests.Mocks
 {
     internal class TestLoggerMgmt : IServerLoggerManagement, IModuleLogger
     {

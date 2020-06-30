@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.TestTools.UnitTest
+namespace Moryx.TestTools.UnitTest
 {
     /// <summary>
     /// Mock for IModuleLogger implementations.

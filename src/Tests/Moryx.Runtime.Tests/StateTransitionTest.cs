@@ -1,15 +1,15 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Kernel;
-using Marvin.Runtime.Modules;
-using Marvin.Runtime.Tests.Mocks;
-using Marvin.Runtime.Tests.Modules;
+using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Kernel;
+using Moryx.Runtime.Modules;
+using Moryx.Runtime.Tests.Mocks;
+using Moryx.Runtime.Tests.Modules;
 using Moq;
 using NUnit.Framework;
 
-namespace Marvin.Runtime.Tests
+namespace Moryx.Runtime.Tests
 {
     [TestFixture]
     public class StateTransitionTest
@@ -82,7 +82,7 @@ namespace Marvin.Runtime.Tests
         [Test]
         public void InitializeFails()
         {
-            _moduleUnderTest.CurrentMode = TestMode.MarvinException;
+            _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             var casted = (IServerModule)_moduleUnderTest;
             Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module not in stopped state!");
 
@@ -98,7 +98,7 @@ namespace Marvin.Runtime.Tests
         {
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
-            _moduleUnderTest.CurrentMode = TestMode.MarvinException;
+            _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             Assert.AreEqual(ServerModuleState.Ready, casted.State, "Module not in ready state!");
 
             // Call initialize
@@ -114,7 +114,7 @@ namespace Marvin.Runtime.Tests
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
             casted.Start();
-            _moduleUnderTest.CurrentMode = TestMode.MarvinException;
+            _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             Assert.AreEqual(ServerModuleState.Running, casted.State, "Module not in running state!");
 
             // Call initialize

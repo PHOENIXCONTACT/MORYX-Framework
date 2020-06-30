@@ -1,4 +1,4 @@
-namespace Marvin.TestTools.Test.Model.Migrations
+namespace Moryx.TestTools.Test.Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

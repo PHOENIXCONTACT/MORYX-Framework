@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Model;
-using Marvin.Model.InMemory;
+using Moryx.Model;
+using Moryx.Model.InMemory;
 
-namespace Marvin.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model
 {
     [ModelFactory(TestModelConstants.Namespace)]
     public class InMemoryUnitOfWorkFactory : InMemoryUnitOfWorkFactoryBase<TestModelContext>

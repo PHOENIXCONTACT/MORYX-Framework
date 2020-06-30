@@ -4,9 +4,9 @@
 using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Marvin.StateMachines;
+using Moryx.StateMachines;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     internal abstract class ClientStateBase : StateBase<TcpClientConnection>
     {

@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     /// <summary>
     /// Class representing a single port listener

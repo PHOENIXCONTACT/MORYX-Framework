@@ -9,8 +9,8 @@
     <ProjectGuid>{BA61840C-9E77-4454-88E2-7CA4E98EE4BD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Model.Tests</RootNamespace>
-    <AssemblyName>Marvin.Model.Tests</AssemblyName>
+    <RootNamespace>Moryx.Model.Tests</RootNamespace>
+    <AssemblyName>Moryx.Model.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -84,25 +84,25 @@
     <Compile Include="UnitOfWork\UnitOfWorkTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Marvin.Container\Marvin.Container.csproj">
-      <Project>{3bc04a3b-24d6-4e33-989d-33366c47dc48}</Project>
-      <Name>Marvin.Container</Name>
+    <ProjectReference Include="..\..\Moryx.Container\Moryx.Container.csproj">
+      <Project>{9dede968-06eb-4339-8c82-28b418ba1a44}</Project>
+      <Name>Moryx.Container</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Model.InMemory\Marvin.Model.InMemory.csproj">
+    <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj">
       <Project>{a734be85-33dc-4117-bd9c-b5d5b31102e3}</Project>
-      <Name>Marvin.Model.InMemory</Name>
+      <Name>Moryx.Model.InMemory</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Model\Marvin.Model.csproj">
+    <ProjectReference Include="..\..\Moryx.Model\Moryx.Model.csproj">
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
-      <Name>Marvin.Model</Name>
+      <Name>Moryx.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
+    <ProjectReference Include="..\..\Moryx\Moryx.csproj">
+      <Project>{7CD728A5-8FDD-4178-9CA4-3CD37512DA24}</Project>
+      <Name>Moryx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj">
+    <ProjectReference Include="..\..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj">
       <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
-      <Name>Marvin.TestTools.Test.Model</Name>
+      <Name>Moryx.TestTools.Test.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Model that represents a public method on an object callable from the WCF service and UI

@@ -3,9 +3,9 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Xml;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Creates Bindings for WCF clients.

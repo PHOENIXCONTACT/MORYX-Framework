@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     /// <summary>
     /// Mapping of ports and protocols to make sure we don't mix protocols on ports

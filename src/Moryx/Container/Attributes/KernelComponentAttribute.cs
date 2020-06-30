@@ -3,9 +3,9 @@
 
 using System;
 using System.Linq;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Register a kernel component

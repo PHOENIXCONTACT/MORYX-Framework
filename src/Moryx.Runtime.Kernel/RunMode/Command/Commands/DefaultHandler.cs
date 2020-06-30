@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Default implementation of a Command handler. Handles all commands which can not be handled specific.

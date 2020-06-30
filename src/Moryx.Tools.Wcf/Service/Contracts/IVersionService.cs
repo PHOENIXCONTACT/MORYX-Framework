@@ -4,7 +4,7 @@
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Version service for handling of endpoints within an application

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Marvin.Bindings
+namespace Moryx.Bindings
 {
     /// <summary>
     /// Create resolve for a specific instruction

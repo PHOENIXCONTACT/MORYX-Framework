@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Settings class for the <see cref="ValueProviderExecutor"/>

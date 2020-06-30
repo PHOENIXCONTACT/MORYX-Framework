@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Registration attribute for data model factories

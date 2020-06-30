@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Modules;
-using Marvin.Runtime.Modules;
+using Moryx.Modules;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel.Tests.ModuleMocks
+namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {
     internal class ModuleBase : IServerModule
     {

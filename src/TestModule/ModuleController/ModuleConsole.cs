@@ -3,12 +3,12 @@
 
 using System;
 using System.ComponentModel;
-using Marvin.Runtime;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
-using IContainer = Marvin.Container.IContainer;
+using Moryx.Runtime;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
+using IContainer = Moryx.Container.IContainer;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     internal class ShortServerInfo
     {

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading.Tasks;
-using Marvin.StateMachines;
+using Moryx.StateMachines;
 
-namespace Marvin.Communication.Sockets
+namespace Moryx.Communication.Sockets
 {
     internal abstract class ServerStateBase : StateBase<TcpListenerConnection>
     {

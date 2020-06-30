@@ -7,8 +7,8 @@
     <ProjectGuid>{05761BAE-8649-470D-9A8A-5C7E9D1A2F3A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Tools.Wcf</RootNamespace>
-    <AssemblyName>Marvin.Tools.Wcf</AssemblyName>
+    <RootNamespace>Moryx.Tools.Wcf</RootNamespace>
+    <AssemblyName>Moryx.Tools.Wcf</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -99,15 +99,16 @@
     <Compile Include="WcfAccelerator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Marvin.Tools.Wcf.nuspec">
+    <None Include="Moryx.Tools.Wcf.csproj.DotSettings" />
+    <None Include="Moryx.Tools.Wcf.nuspec">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
+      <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
+      <Name>Moryx</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

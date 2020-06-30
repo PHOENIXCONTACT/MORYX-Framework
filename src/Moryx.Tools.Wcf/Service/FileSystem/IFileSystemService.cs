@@ -6,7 +6,7 @@ using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace Marvin.Tools.Wcf.FileSystem
+namespace Moryx.Tools.Wcf.FileSystem
 {
     /// <summary>
     /// Service contract for the file system service.

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     internal class LogMessage : ILogMessage
     {

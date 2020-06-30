@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     /// <summary>
     /// Contains detailed information on a serializable exception

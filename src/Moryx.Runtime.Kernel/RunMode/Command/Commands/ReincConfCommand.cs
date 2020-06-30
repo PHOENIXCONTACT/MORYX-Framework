@@ -3,10 +3,10 @@
 
 using System;
 using System.Linq;
-using Marvin.Container;
-using Marvin.Runtime.Modules;
+using Moryx.Container;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     [Registration(LifeCycle.Singleton, typeof(ICommandHandler))]
     internal class ReincConfCommand : ICommandHandler

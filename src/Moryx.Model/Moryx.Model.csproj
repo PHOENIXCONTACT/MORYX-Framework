@@ -8,8 +8,8 @@
     <ProjectGuid>{478DC949-A0B2-46B4-8645-A7DA92589B76}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Model</RootNamespace>
-    <AssemblyName>Marvin.Model</AssemblyName>
+    <RootNamespace>Moryx.Model</RootNamespace>
+    <AssemblyName>Moryx.Model</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -24,7 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Marvin.Model.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Moryx.Model.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Marvin.Model.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Moryx.Model.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -56,13 +56,13 @@
     <Compile Include="Attributes\IsUnicodeAttribute.cs" />
     <Compile Include="DatabaseConfig.cs" />
     <Compile Include="EntityBase.cs" />
+    <Compile Include="MoryxDbContext.cs" />
     <Compile Include="Proxy\IMethodProxyStrategy.cs" />
     <Compile Include="Proxy\ParameterPropertyMap.cs" />
     <Compile Include="Proxy\Strategies\RemoveMethodStrategy.cs" />
     <Compile Include="Repository\IModelDiagnostics.cs" />
     <Compile Include="Repository\ModelConfiguratorBase.cs" />
     <Compile Include="ModificationTrackedEntityBase.cs" />
-    <Compile Include="MarvinDbContext.cs" />
     <Compile Include="Repository\IContextUnitOfWorkFactory.cs" />
     <Compile Include="Repository\IDbContextFactory.cs" />
     <Compile Include="Proxy\Strategies\CreateMethodStrategy.cs" />
@@ -76,14 +76,15 @@
     <Compile Include="Repository\MergedUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin\Marvin.csproj">
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
+      <Name>Moryx</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Marvin.Model.nuspec">
+    <None Include="Moryx.Model.csproj.DotSettings" />
+    <None Include="Moryx.Model.nuspec">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />

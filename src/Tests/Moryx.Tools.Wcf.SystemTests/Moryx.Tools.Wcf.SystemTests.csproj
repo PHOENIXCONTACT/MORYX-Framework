@@ -8,8 +8,8 @@
     <ProjectGuid>{74D4C6FE-2E58-4F31-A915-6CF061C0149B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Tools.Wcf.SystemTests</RootNamespace>
-    <AssemblyName>Marvin.Tools.Wcf.SystemTests</AssemblyName>
+    <RootNamespace>Moryx.Tools.Wcf.SystemTests</RootNamespace>
+    <AssemblyName>Moryx.Tools.Wcf.SystemTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -60,42 +60,42 @@
     <Compile Include="VersionServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Marvin.Runtime.Maintenance\Marvin.Runtime.Maintenance.csproj">
+    <ProjectReference Include="..\..\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj">
       <Project>{EB039D46-906F-44BF-AC37-B3B3634A4442}</Project>
-      <Name>Marvin.Runtime.Maintenance</Name>
+      <Name>Moryx.Runtime.Maintenance</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
+    <ProjectReference Include="..\..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
-      <Name>Marvin.Tools.Wcf</Name>
+      <Name>Moryx.Tools.Wcf</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
+    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj">
       <Project>{505df475-5ff5-47cc-9e3b-bbe16c359f0e}</Project>
-      <Name>Marvin.TestTools.UnitTest</Name>
+      <Name>Moryx.TestTools.UnitTest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.Runtime\Marvin.Runtime.csproj">
+    <ProjectReference Include="..\..\Moryx.Runtime\Moryx.Runtime.csproj">
       <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
-      <Name>Marvin.Runtime</Name>
+      <Name>Moryx.Runtime</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\DependentTestModule\Marvin.DependentTestModule.csproj">
+    <ProjectReference Include="..\..\DependentTestModule\Moryx.DependentTestModule.csproj">
       <Project>{D8344B1F-9DB3-4E85-9195-6FFFECBF6427}</Project>
-      <Name>Marvin.DependentTestModule</Name>
+      <Name>Moryx.DependentTestModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TestModule\Marvin.TestModule.csproj">
+    <ProjectReference Include="..\..\Moryx\Moryx.csproj">
+      <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
+      <Name>Moryx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TestModule\Moryx.TestModule.csproj">
       <Project>{24ED97AD-6D04-4DC0-AFCB-C911EF0AA738}</Project>
-      <Name>Marvin.TestModule</Name>
+      <Name>Moryx.TestModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.TestTools.SystemTest\Marvin.TestTools.SystemTest.csproj">
+    <ProjectReference Include="..\..\Moryx.TestTools.SystemTest\Moryx.TestTools.SystemTest.csproj">
       <Project>{d6dc00c6-9358-4839-84c0-44df018a74dc}</Project>
-      <Name>Marvin.TestTools.SystemTest</Name>
+      <Name>Moryx.TestTools.SystemTest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime.SystemTests\Marvin.Runtime.SystemTests.csproj">
+    <ProjectReference Include="..\Moryx.Runtime.SystemTests\Moryx.Runtime.SystemTests.csproj">
       <Project>{B47E0CB5-A3EC-4ED6-BCBF-9E3BEA6ABF5D}</Project>
-      <Name>Marvin.Runtime.SystemTests</Name>
+      <Name>Moryx.Runtime.SystemTests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

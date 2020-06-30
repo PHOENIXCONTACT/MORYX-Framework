@@ -3,10 +3,10 @@
 
 using System;
 using System.ServiceModel;
-using Marvin.Container;
-using Marvin.Logging;
+using Moryx.Container;
+using Moryx.Logging;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// BaseClass of a WebService without callback

@@ -7,15 +7,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CommandLine;
-using Marvin.Container;
-using Marvin.Model;
-using Marvin.Modules;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Container;
-using Marvin.Runtime.Modules;
-using Marvin.Tools;
+using Moryx.Container;
+using Moryx.Model;
+using Moryx.Modules;
+using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Container;
+using Moryx.Runtime.Modules;
+using Moryx.Tools;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Base kernel loader for the runtime

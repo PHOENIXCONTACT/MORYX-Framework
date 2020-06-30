@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Marvin.Workflows.Validation
+namespace Moryx.Workflows.Validation
 {
     /// <summary>
     /// Engine validation class

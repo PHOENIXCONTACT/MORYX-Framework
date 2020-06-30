@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO.Ports;
 using System.Text;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Communication.Serial
+namespace Moryx.Communication.Serial
 {
     internal static class SerialPortFactory
     {

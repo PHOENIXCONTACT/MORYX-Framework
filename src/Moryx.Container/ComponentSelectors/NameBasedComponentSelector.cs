@@ -4,7 +4,7 @@
 using System.Reflection;
 using Castle.Facilities.TypedFactory;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Component selector for name based selection

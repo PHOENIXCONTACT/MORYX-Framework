@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Marvin.Serialization;
+using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     /// <summary>
     /// Unit tests for the static <see cref="EntryToModelConverter"/> class

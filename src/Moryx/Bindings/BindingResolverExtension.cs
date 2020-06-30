@@ -1,4 +1,4 @@
-namespace Marvin.Bindings
+namespace Moryx.Bindings
 {
     /// <summary>
     /// Extension to double link resolver objects

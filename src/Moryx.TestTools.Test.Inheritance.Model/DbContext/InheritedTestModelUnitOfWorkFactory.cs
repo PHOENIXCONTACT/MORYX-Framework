@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Model;
-using Marvin.TestTools.Test.Model;
+using Moryx.Model;
+using Moryx.TestTools.Test.Model;
 
-namespace Marvin.TestTools.Test.Inheritance.Model
+namespace Moryx.TestTools.Test.Inheritance.Model
 {
     [ModelFactory(InheritedTestModelConstants.Name, TestModelConstants.Namespace)]
     public class InheritedTestModelUnitOfWorkFactory : TestModelUnitOfWorkFactory<InheritedTestModelContext>

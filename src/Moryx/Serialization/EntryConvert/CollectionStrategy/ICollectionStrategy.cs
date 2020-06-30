@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Interface to decouple collection operations from the differences between 

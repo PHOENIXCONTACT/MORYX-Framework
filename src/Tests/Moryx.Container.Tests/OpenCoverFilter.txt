@@ -1,2 +1,2 @@
-INCLUDE:+[Marvin.Container]*
-EXCLUDE:-[Marvin]* -[*Test*]* -[*]*Config -[*]*Exception -[*]*Attribute
+INCLUDE:+[Moryx.Container]*
+EXCLUDE:-[Moryx]* -[*Test*]* -[*]*Config -[*]*Exception -[*]*Attribute

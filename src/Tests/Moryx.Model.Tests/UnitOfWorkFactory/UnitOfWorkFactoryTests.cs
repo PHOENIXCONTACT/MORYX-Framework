@@ -4,10 +4,10 @@
 using System;
 using System.Data.Entity;
 using System.Reflection;
-using Marvin.TestTools.Test.Model;
+using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
 
-namespace Marvin.Model.Tests
+namespace Moryx.Model.Tests
 {
     public class UnitOfWorkFactoryTests
     {

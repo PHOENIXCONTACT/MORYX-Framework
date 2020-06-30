@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Bindings
+namespace Moryx.Bindings
 {
     /// <summary>
     /// Interface for all components that can resolve bindings for a specific source string.

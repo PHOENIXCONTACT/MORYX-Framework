@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Marvin.Runtime.Kernel.Additionals
+namespace Moryx.Runtime.Kernel.Additionals
 {
     /// <summary>
     /// Fragment representing a single beep sound

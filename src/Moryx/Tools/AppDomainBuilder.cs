@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Static platfrom library to compose the app domain

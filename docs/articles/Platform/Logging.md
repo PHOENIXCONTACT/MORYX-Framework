@@ -4,7 +4,7 @@ uid: Logging
 Logging
 =======
 
-Logging is an essential part of every application and framework. Logging within the platform is build on the Common.Logging API and Log4Net implementation. To decouple our executables from those libraries their API was wrapped within components from the [Marvin.Logging](xref:Marvin.Logging) namespace. The wrapper does not only hide the API but provides additional features. In most cases access to the loggers is fullfilled by the responsible DI Container. Level 1 components receive a logger instance by passing themselves to the ActivateLogging-method of the LoggerManagement.
+Logging is an essential part of every application and framework. Logging within the platform is build on the Common.Logging API and Log4Net implementation. To decouple our executables from those libraries their API was wrapped within components from the [Moryx.Logging](xref:Moryx.Logging) namespace. The wrapper does not only hide the API but provides additional features. In most cases access to the loggers is fullfilled by the responsible DI Container. Level 1 components receive a logger instance by passing themselves to the ActivateLogging-method of the LoggerManagement.
 
 ## Features
 Features from log4net:
@@ -17,9 +17,9 @@ Features provided by the wrapper:
 * Level modification: The active log level for a logger (and its children) can be applied during runtime.
 
 ## Usage
-On level 1 components can gain access to the logging by passing themselves to the [ActivateLogging](xref:Marvin.Logging.LoggerManagement#Marvin_Logging_LoggerManagement_ActivateLogging_Marvin_Logging_ILoggingHost_)-method. Inside this method the [LoggerManagement](xref:Marvin.Logging.LoggerManagement) will create a [IModuleLogger](xref:Marvin.Logging.IModuleLogger) instance and set the Logger property of the [ILoggingHost](xref:Marvin.Logging.ILoggingHost) interface that is required by the [ActivateLogging](xref:Marvin.Logging.LoggerManagement)-method. After the call returned using the logger instance is identical to the usage described below.
+On level 1 components can gain access to the logging by passing themselves to the [ActivateLogging](xref:Moryx.Logging.LoggerManagement#Moryx_Logging_LoggerManagement_ActivateLogging_Moryx_Logging_ILoggingHost_)-method. Inside this method the [LoggerManagement](xref:Moryx.Logging.LoggerManagement) will create a [IModuleLogger](xref:Moryx.Logging.IModuleLogger) instance and set the Logger property of the [ILoggingHost](xref:Moryx.Logging.ILoggingHost) interface that is required by the [ActivateLogging](xref:Moryx.Logging.LoggerManagement)-method. After the call returned using the logger instance is identical to the usage described below.
 
-Level 2 components that are created by a DI-Container receive a logger instance by declaring a public property of type [IModuleLogger](xref:Marvin.Logging.IModuleLogger). This property must be decorated with the [UseChildAttribute](xref:Marvin.Container.UseChildAttribute) to tell the container it shall create a class specific clone of the logger. Optionally a name can be give to create a sub-logger in the hierarchy. A name might be used more than once to group collaborating components in the same logger. It is recommended to implement the interface [ILoggingComponent](xref:Marvin.Logging.ILoggingComponent). This gives framework components a chance to use your logger in case of exceptions.
+Level 2 components that are created by a DI-Container receive a logger instance by declaring a public property of type [IModuleLogger](xref:Moryx.Logging.IModuleLogger). This property must be decorated with the [UseChildAttribute](xref:Moryx.Container.UseChildAttribute) to tell the container it shall create a class specific clone of the logger. Optionally a name can be give to create a sub-logger in the hierarchy. A name might be used more than once to group collaborating components in the same logger. It is recommended to implement the interface [ILoggingComponent](xref:Moryx.Logging.ILoggingComponent). This gives framework components a chance to use your logger in case of exceptions.
 
 ````cs
 public class DummyComponent : ILoggingComponent

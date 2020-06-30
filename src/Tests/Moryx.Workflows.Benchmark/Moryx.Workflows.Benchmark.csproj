@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj" />
-    <ProjectReference Include="..\Marvin.Tests\Marvin.Tests.csproj" />
+    <ProjectReference Include="..\..\Moryx\Moryx.csproj" />
+    <ProjectReference Include="..\Moryx.Tests\Moryx.Tests.csproj" />
   </ItemGroup>
 
 </Project>

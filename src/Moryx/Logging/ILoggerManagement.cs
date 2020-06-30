@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     /// <summary>
     /// Framework component managing the life cycle of all loggers and provide diagnostic access to them

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Extensions for the <see cref="IQueryable{T}"/>

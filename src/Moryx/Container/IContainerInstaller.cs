@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Interface for all installers that extend the <see cref="IContainer"/>

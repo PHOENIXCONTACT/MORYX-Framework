@@ -4,13 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Modules;
-using Marvin.Runtime.Modules;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Modules;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Manages all the modules on the server side. 

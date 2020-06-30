@@ -3,10 +3,10 @@
 
 using System.IO;
 using System.Linq;
-using Marvin.Configuration;
+using Moryx.Configuration;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Configuration
+namespace Moryx.Tests.Configuration
 {
     [TestFixture]
     public class ConfigManagerTests
@@ -84,7 +84,7 @@ namespace Marvin.Tests.Configuration
         [Test]
         public void ConfigSelfRepair()
         {
-            const string configName = "Marvin.Tests.Configuration.TestConfig";
+            const string configName = "Moryx.Tests.Configuration.TestConfig";
 
             // Write faulty config to file
             var fileName = Path.Combine(_fullConfigDir, configName + ConfigConstants.FileExtension);

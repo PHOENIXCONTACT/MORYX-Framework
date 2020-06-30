@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Model.InMemory;
-using Marvin.TestTools.Test.Model;
+using Moryx.Model.InMemory;
+using Moryx.TestTools.Test.Model;
 
-namespace Marvin.Model.Tests
+namespace Moryx.Model.Tests
 {
     internal class UnitOfWorkFactoryMock : InMemoryUnitOfWorkFactoryBase<TestModelContext>
     {

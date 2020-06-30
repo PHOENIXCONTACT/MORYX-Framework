@@ -1,11 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.Runtime.Maintenance.Contracts;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.Runtime.Maintenance.Contracts;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Common
+namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
     /// <summary>
     /// Common maintenace plugin.

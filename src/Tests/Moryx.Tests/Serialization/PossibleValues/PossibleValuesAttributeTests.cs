@@ -3,11 +3,11 @@
 
 using System.IO;
 using System.Linq;
-using Marvin.Serialization;
-using Marvin.Tools;
+using Moryx.Serialization;
+using Moryx.Tools;
 using NUnit.Framework;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     [TestFixture]
     public class PossibleValuesAttributeTests

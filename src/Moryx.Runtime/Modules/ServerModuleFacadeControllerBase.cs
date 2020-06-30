@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Runtime.Container;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Runtime.Container;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Base class for the facade contoller.

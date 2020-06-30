@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     /// <summary>
     /// Configuration for the module logger module.

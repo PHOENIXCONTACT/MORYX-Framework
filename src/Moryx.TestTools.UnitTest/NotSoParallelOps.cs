@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Marvin.Threading;
+using Moryx.Threading;
 
-namespace Marvin.TestTools.UnitTest
+namespace Moryx.TestTools.UnitTest
 {
     internal class TimerInfo
     {

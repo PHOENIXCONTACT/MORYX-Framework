@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Marvin.Container;
-using Marvin.Logging;
+using Moryx.Container;
+using Moryx.Logging;
 
-namespace Marvin.Tools.Wcf.FileSystem
+namespace Moryx.Tools.Wcf.FileSystem
 {
     /// <summary>
     /// Handles the web folder to upload and delete files in that folder.

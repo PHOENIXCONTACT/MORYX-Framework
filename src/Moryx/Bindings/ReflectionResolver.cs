@@ -4,7 +4,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Marvin.Bindings
+namespace Moryx.Bindings
 {
     /// <summary>
     /// Resolve binding using reflection

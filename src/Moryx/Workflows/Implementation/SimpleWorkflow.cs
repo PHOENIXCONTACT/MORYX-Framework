@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Simple workflow created from connected places and transitions

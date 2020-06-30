@@ -4,11 +4,11 @@
 using System;
 using System.IO;
 using System.Text;
-using Marvin.Container;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Modules;
+using Moryx.Container;
+using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     [Registration(LifeCycle.Singleton, typeof(ICommandHandler))]
     internal class SetupCommand : ICommandHandler

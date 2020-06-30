@@ -3,7 +3,7 @@
 
 using System.ServiceModel;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Host factory interface for container independency

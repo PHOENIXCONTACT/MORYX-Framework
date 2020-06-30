@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Interface for all entities

@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Runtime.Kernel.Tests.Dummys
+namespace Moryx.Runtime.Kernel.Tests.Dummys
 {
     /// <summary>
     /// Test subconfig

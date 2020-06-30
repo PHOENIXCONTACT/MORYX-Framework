@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Tests.Logging
+namespace Moryx.Tests.Logging
 {
     public class LogTargetMock : ILogTarget
     {

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// String Extension Class for all string extensions in EnMSTreeAffairs

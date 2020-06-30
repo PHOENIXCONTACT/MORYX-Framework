@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Kernel component responsible for module lifecycle access and dependencies

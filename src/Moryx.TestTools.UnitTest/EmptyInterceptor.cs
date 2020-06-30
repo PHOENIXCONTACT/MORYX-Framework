@@ -3,7 +3,7 @@
 
 using Castle.DynamicProxy;
 
-namespace Marvin.TestTools.UnitTest
+namespace Moryx.TestTools.UnitTest
 {
     /// <summary>
     /// Mock to use for castle. With this it is possible to create an emtpy implementation.

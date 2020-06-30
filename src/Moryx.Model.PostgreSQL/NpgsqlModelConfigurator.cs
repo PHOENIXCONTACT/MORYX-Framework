@@ -5,10 +5,10 @@ using System;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
-using Marvin.Logging;
+using Moryx.Logging;
 using Npgsql;
 
-namespace Marvin.Model.PostgreSQL
+namespace Moryx.Model.PostgreSQL
 {
     /// <summary>
     /// Used to configure, create and update data models

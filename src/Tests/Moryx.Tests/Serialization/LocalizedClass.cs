@@ -3,9 +3,9 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Marvin.Tests.Serialization;
+using Moryx.Tests.Serialization;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     [ClassDisplay(Name = nameof(strings.ClassName), ResourceType = typeof(strings))]
     public class LocalizedClass

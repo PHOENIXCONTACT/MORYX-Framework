@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Marvin.Workflows.Transitions
+namespace Moryx.Workflows.Transitions
 {
     /// <summary>
     /// Base class for all transition implementations

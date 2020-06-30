@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Threading
+namespace Moryx.Threading
 {
     /// <summary>
     /// Interface for operations that should be executed parallely without redundant try catch

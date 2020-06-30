@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Interface for database configuration

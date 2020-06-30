@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Console interface to provide developer interaction with a module

@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Marvin.Serialization;
+using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     [TestFixture]
     public class EditorBrowsableSerializationTests

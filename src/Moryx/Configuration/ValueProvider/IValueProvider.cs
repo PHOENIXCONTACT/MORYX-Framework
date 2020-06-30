@@ -3,7 +3,7 @@
 
 using System.Reflection;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Result of a value provider

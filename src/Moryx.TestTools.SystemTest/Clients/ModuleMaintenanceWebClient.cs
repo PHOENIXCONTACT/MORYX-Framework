@@ -3,11 +3,11 @@
 
 using System;
 using System.Threading.Tasks;
-using Marvin.Runtime.Maintenance.Plugins.Modules;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
+using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.TestTools.SystemTest.Clients
+namespace Moryx.TestTools.SystemTest.Clients
 {
     public class ModuleMaintenanceWebClient : TestWebClientBase, IModuleMaintenance
     {

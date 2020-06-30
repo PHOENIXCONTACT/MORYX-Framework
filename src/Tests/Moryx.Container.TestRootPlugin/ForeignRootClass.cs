@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Container.TestTools;
+using Moryx.Container.TestTools;
 
-namespace Marvin.Container.TestRootPlugin
+namespace Moryx.Container.TestRootPlugin
 {
     [DependencyRegistration(InstallerMode.All)]
     [Plugin(LifeCycle.Singleton, typeof(IRootClass), Name = PluginName)]

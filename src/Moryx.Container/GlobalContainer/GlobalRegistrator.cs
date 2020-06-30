@@ -4,9 +4,9 @@
 using System;
 using System.Reflection;
 using Castle.Windsor;
-using Marvin.Model;
+using Moryx.Model;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     internal class GlobalRegistrator : ComponentRegistrator
     {

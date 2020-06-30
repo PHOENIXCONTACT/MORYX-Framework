@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider
 {
     public class NoStringValueProviderFilter : IValueProviderFilter
     {

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     [Plugin(LifeCycle.Singleton, typeof(ICommandHandler))]
     internal class GarbageCommand : ICommandHandler

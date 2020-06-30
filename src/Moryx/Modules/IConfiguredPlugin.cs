@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Modules
+namespace Moryx.Modules
 {
     /// <summary>
     /// This generic interface is intended for all plugins that require a configuration for their initialization to work properly. 

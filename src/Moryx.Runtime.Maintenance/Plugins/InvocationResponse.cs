@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Runtime.Maintenance.Plugins
+namespace Moryx.Runtime.Maintenance.Plugins
 {
     /// <summary>
     /// Default response for simple executions

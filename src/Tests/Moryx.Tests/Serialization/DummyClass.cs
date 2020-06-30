@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Marvin.Tests.Serialization;
+using Moryx.Tests.Serialization;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     public class DummyClass
     {

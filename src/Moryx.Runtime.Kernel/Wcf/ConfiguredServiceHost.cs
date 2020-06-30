@@ -6,10 +6,10 @@ using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
-using Marvin.Logging;
-using Marvin.Tools.Wcf;
+using Moryx.Logging;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     internal class ConfiguredServiceHost : IConfiguredServiceHost
     {

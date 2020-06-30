@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Base class for EntryCollections

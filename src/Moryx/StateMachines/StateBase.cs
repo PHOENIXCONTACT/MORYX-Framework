@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.StateMachines
+namespace Moryx.StateMachines
 {
     /// <summary>
     /// Base class for state machine states

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.TestTools.SystemTest
+namespace Moryx.TestTools.SystemTest
 {
     /// <summary>
     /// Mock of a config manger to use with the unit of work factory

@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Marvin.Workflows;
-using Marvin.Workflows.Validation;
+using Moryx.Workflows;
+using Moryx.Workflows.Validation;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     [TestFixture]
     public class EngineTests

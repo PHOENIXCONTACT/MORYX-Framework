@@ -8,8 +8,8 @@
     <ProjectGuid>{CBF4C42B-488D-44AF-9C60-3CD2C2AA955E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.TestTools.Test.Inheritance.Model</RootNamespace>
-    <AssemblyName>Marvin.TestTools.Test.Inheritance.Model</AssemblyName>
+    <RootNamespace>Moryx.TestTools.Test.Inheritance.Model</RootNamespace>
+    <AssemblyName>Moryx.TestTools.Test.Inheritance.Model</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -59,21 +59,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin.Model.PostgreSQL\Marvin.Model.PostgreSQL.csproj">
+    <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj">
       <Project>{70964330-f80e-4e1e-a33b-2021bde37b2f}</Project>
-      <Name>Marvin.Model.PostgreSQL</Name>
+      <Name>Moryx.Model.PostgreSQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin.Model\Marvin.Model.csproj">
+    <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj">
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
-      <Name>Marvin.Model</Name>
+      <Name>Moryx.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.TestTools.Test.Model\Marvin.TestTools.Test.Model.csproj">
+    <ProjectReference Include="..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj">
       <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
-      <Name>Marvin.TestTools.Test.Model</Name>
+      <Name>Moryx.TestTools.Test.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
+      <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
+      <Name>Moryx</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Moryx.TestTools.Test.Inheritance.Model.csproj.DotSettings" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

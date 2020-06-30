@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Installer for automatic registration

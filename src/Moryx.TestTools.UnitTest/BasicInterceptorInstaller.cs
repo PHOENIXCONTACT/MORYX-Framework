@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Container;
-using Marvin.Logging;
+using Moryx.Container;
+using Moryx.Logging;
 
-namespace Marvin.TestTools.UnitTest
+namespace Moryx.TestTools.UnitTest
 {
     /// <summary>
     /// Installer registering the interceptor

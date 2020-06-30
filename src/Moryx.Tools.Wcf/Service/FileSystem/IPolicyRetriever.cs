@@ -5,7 +5,7 @@ using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace Marvin.Tools.Wcf.FileSystem
+namespace Moryx.Tools.Wcf.FileSystem
 {
     [ServiceContract]
     public interface IPolicyRetriever

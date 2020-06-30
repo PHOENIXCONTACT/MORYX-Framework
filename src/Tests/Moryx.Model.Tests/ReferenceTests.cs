@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.TestTools.Test.Model;
+using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
 
-namespace Marvin.Model.Tests
+namespace Moryx.Model.Tests
 {
     [TestFixture]
     public class ReferenceTests

@@ -3,10 +3,10 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using Marvin.Configuration;
-using Marvin.Runtime.Configuration;
+using Moryx.Configuration;
+using Moryx.Runtime.Configuration;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     internal class SharedConfigProvider : IValueProvider
     {

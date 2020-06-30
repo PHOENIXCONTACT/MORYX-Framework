@@ -7,8 +7,8 @@
     <ProjectGuid>{B72AA993-72E5-4D14-BF5E-C2E0E8CF5186}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Container.TestTools</RootNamespace>
-    <AssemblyName>Marvin.Container.TestTools</AssemblyName>
+    <RootNamespace>Moryx.Container.TestTools</RootNamespace>
+    <AssemblyName>Moryx.Container.TestTools</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -43,9 +43,9 @@
     <Compile Include="RootClassFactoryConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
+    <ProjectReference Include="..\..\Moryx\Moryx.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
+      <Name>Moryx</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

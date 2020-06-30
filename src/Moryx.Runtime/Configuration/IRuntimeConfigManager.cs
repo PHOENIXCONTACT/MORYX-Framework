@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Runtime.Configuration
+namespace Moryx.Runtime.Configuration
 {
     /// <summary>
     /// Extended config manager for the runtime

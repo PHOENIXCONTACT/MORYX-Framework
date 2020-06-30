@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading;
-using Marvin.Container;
-using Marvin.Model;
-using Marvin.Runtime.Container;
-using Marvin.Runtime.Modules;
-using Marvin.TestTools.Test.Model;
+using Moryx.Container;
+using Moryx.Model;
+using Moryx.Runtime.Container;
+using Moryx.Runtime.Modules;
+using Moryx.TestTools.Test.Model;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [ServerModule(ModuleName)]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<ITestModule>

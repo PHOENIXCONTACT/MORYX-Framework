@@ -9,11 +9,11 @@ using System.Reflection;
 using System.Security.Principal;
 using System.ServiceProcess;
 using CommandLine;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Kernel;
-using Marvin.Tools;
+using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Kernel;
+using Moryx.Tools;
 
-namespace Marvin.Runtime.WinService
+namespace Moryx.Runtime.WinService
 {
     /// <summary>
     /// Environment wrapper for the windows service
@@ -70,8 +70,8 @@ namespace Marvin.Runtime.WinService
                 si.ServicesDependedOn = Options.Dependencies.ToArray();
                 si.Description = Platform.Current.ProductDescription;
 
-                //# This must be identical to the MarvinService.ServiceBase name
-                //# set in the constructor of MarvinService.cs
+                //# This must be identical to the MoryxService.ServiceBase name
+                //# set in the constructor of MoryxService.cs
                 si.ServiceName = Platform.Current.ProductName;
 
                 // Install context

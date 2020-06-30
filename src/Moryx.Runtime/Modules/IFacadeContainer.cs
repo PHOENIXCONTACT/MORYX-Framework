@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Interface for all modules offering an API Facade
@@ -13,7 +13,7 @@ namespace Marvin.Runtime.Modules
         /// Facade controlled by this module
         /// </summary>
         /// <remarks>
-        /// The hard-coded name of this property is also used in Marvin.Runtime.Kernel\ModuleManagement\Components\ModuleDependencyManager.cs
+        /// The hard-coded name of this property is also used in Moryx.Runtime.Kernel\ModuleManagement\Components\ModuleDependencyManager.cs
         /// </remarks>
         TFacade Facade { get; }
     }

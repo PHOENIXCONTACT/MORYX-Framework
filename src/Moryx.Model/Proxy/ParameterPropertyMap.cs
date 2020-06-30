@@ -3,7 +3,7 @@
 
 using System.Reflection;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     internal class ParameterPropertyMap
     {

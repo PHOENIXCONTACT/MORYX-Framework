@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Model;
+using Moryx.Model;
 
-namespace Marvin.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model
 {
     public interface IHouseEntityRepository : IRepository<HouseEntity>
     {

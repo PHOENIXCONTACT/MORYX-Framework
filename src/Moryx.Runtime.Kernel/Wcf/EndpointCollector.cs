@@ -4,10 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Container;
-using Marvin.Tools.Wcf;
+using Moryx.Container;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     [Plugin(LifeCycle.Singleton)]
     internal class EndpointCollector

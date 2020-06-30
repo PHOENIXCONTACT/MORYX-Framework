@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Modules
+namespace Moryx.Modules
 {
     /// <summary>
     /// Attribute to flag an assembly as part of a bundle

@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Threading
+namespace Moryx.Threading
 {
     /// <summary>
     /// Describes an impossible exception.

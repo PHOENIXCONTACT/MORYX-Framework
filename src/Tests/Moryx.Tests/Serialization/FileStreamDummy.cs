@@ -3,7 +3,7 @@
 
 using System.IO;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     public class FileStreamDummy
     {

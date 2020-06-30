@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace Marvin.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider
 {
     public class TestConfig3
     {

@@ -7,9 +7,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Common
+namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
     /// <summary>
     /// Wcf service implementations for the common maintenance.

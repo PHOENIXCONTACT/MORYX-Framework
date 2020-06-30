@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Marvin.Configuration;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Serialization;
 
-namespace Marvin.Tests.Configuration
+namespace Moryx.Tests.Configuration
 {
     /// <summary>
     /// Testconfig enum

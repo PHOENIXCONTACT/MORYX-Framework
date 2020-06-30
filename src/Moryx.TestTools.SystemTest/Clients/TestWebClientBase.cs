@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Marvin.TestTools.SystemTest.Clients
+namespace Moryx.TestTools.SystemTest.Clients
 {
     public class TestWebClientBase
     {

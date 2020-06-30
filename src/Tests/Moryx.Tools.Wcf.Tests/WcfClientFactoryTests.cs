@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Marvin.TestTools.UnitTest;
-using Marvin.Tools.Wcf.Tests.Logging;
+using Moryx.TestTools.UnitTest;
+using Moryx.Tools.Wcf.Tests.Logging;
 using NUnit.Framework;
 
-namespace Marvin.Tools.Wcf.Tests
+namespace Moryx.Tools.Wcf.Tests
 {
     [TestFixture]
     public class WcfClientFactoryTests

@@ -3,7 +3,7 @@
 
 using System.Linq;
 
-namespace Marvin.Workflows.Transitions
+namespace Moryx.Workflows.Transitions
 {
     /// <summary>
     /// Special transition that can be used to create optional steps in workplans. If a condition for

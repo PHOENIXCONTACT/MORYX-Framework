@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Container.TestTools;
+using Moryx.Container.TestTools;
 
-namespace Marvin.Container.Tests
+namespace Moryx.Container.Tests
 {
     [Plugin(LifeCycle.Singleton, typeof(IRootClass), Name = PluginName)]
     internal class RootClass : IRootClass

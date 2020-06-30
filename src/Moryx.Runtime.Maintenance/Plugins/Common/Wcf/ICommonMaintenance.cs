@@ -4,9 +4,9 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Marvin.Tools.Wcf;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Common
+namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
     /// <summary>
     /// Service contract for the common maintenance.

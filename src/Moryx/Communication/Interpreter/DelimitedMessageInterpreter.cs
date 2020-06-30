@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 
-namespace Marvin.Communication
+namespace Moryx.Communication
 {
     /// <summary>
     /// Interpreter for messages based on delimiters

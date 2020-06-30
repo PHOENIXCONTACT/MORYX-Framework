@@ -8,8 +8,8 @@
     <ProjectGuid>{FD2AA3C3-F434-4D4F-88C8-3774B48E1D9D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.Communication.Sockets.IntegrationTests</RootNamespace>
-    <AssemblyName>Marvin.Communication.Sockets.IntegrationTests</AssemblyName>
+    <RootNamespace>Moryx.Communication.Sockets.IntegrationTests</RootNamespace>
+    <AssemblyName>Moryx.Communication.Sockets.IntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -58,16 +58,17 @@
     <Compile Include="HeaderProtocol\SystemTestHeaderInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Marvin\Marvin.csproj">
+    <ProjectReference Include="..\..\Moryx\Moryx.csproj">
       <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
+      <Name>Moryx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Marvin.TestTools.UnitTest\Marvin.TestTools.UnitTest.csproj">
+    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj">
       <Project>{505df475-5ff5-47cc-9e3b-bbe16c359f0e}</Project>
-      <Name>Marvin.TestTools.UnitTest</Name>
+      <Name>Moryx.TestTools.UnitTest</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Moryx.Communication.Sockets.IntegrationTests.csproj.DotSettings" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

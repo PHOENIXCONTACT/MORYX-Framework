@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Runtime.Maintenance.Contracts;
-using Marvin.Tools.Wcf;
+using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     [DataContract]
     internal class ModuleMaintenanceConfig : MaintenancePluginConfig

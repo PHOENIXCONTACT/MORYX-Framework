@@ -1,21 +1,21 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.TestTools.Test.Model.Migrations
+namespace Moryx.TestTools.Test.Model.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Marvin.TestTools.Test.Model.TestModelContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Moryx.TestTools.Test.Model.TestModelContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(Marvin.TestTools.Test.Model.TestModelContext context)
+        protected override void Seed(Moryx.TestTools.Test.Model.TestModelContext context)
         {
             //  This method will be called after migrating to the latest version.
 

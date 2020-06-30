@@ -5,11 +5,11 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Threading;
-using Marvin.Serialization;
-using Marvin.Tests.Serialization;
+using Moryx.Serialization;
+using Moryx.Tests.Serialization;
 using NUnit.Framework;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     [TestFixture]
     public class LocalizationSerializationTests

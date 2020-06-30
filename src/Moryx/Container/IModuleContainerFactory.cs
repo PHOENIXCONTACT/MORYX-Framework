@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Marvin.Modules;
+using Moryx.Modules;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Factory create <see cref="IModule"/> specific container

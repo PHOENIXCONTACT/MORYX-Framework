@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Modules
+namespace Moryx.Modules
 {
     /// <summary>
     /// Interface for all plugin configurations

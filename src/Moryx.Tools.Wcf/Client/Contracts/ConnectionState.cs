@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     internal static class StateTransformer
     {

@@ -4,10 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Container;
-using Marvin.Logging;
+using Moryx.Container;
+using Moryx.Logging;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Base class of a WebService Manager

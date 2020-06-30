@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceProcess;
-using Marvin.Runtime.Configuration;
-using Marvin.Runtime.Modules;
+using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Modules;
 
-namespace Marvin.Runtime.WinService
+namespace Moryx.Runtime.WinService
 {
     /// <summary>
     /// Windows service implementation as runtime run mode

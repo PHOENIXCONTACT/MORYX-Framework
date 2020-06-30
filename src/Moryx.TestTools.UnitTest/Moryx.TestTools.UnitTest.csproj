@@ -7,8 +7,8 @@
     <ProjectGuid>{505DF475-5FF5-47CC-9E3B-BBE16C359F0E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.TestTools.UnitTest</RootNamespace>
-    <AssemblyName>Marvin.TestTools.UnitTest</AssemblyName>
+    <RootNamespace>Moryx.TestTools.UnitTest</RootNamespace>
+    <AssemblyName>Moryx.TestTools.UnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Marvin.TestTools.UnitTest.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Moryx.TestTools.UnitTest.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Marvin.TestTools.UnitTest.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Moryx.TestTools.UnitTest.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -56,18 +56,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
-    <None Include="Marvin.TestTools.UnitTest.nuspec">
+    <None Include="Moryx.TestTools.UnitTest.nuspec">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
+      <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
+      <Name>Moryx</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

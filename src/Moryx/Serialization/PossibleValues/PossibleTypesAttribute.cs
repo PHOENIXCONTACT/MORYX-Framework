@@ -4,10 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Container;
-using Marvin.Tools;
+using Moryx.Container;
+using Moryx.Tools;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// <see cref="PossibleValuesAttribute"/> to provide possible types by an array or base type

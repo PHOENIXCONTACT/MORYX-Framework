@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// A collection of weak references to objects.

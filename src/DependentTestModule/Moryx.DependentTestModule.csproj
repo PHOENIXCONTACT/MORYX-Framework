@@ -7,8 +7,8 @@
     <ProjectGuid>{D8344B1F-9DB3-4E85-9195-6FFFECBF6427}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Marvin.DependentTestModule</RootNamespace>
-    <AssemblyName>Marvin.DependentTestModule</AssemblyName>
+    <RootNamespace>Moryx.DependentTestModule</RootNamespace>
+    <AssemblyName>Moryx.DependentTestModule</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -62,26 +62,27 @@
     <Compile Include="Facades\DependentTestModuleFacade.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Marvin.Tools.Wcf\Marvin.Tools.Wcf.csproj">
+    <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
-      <Name>Marvin.Tools.Wcf</Name>
+      <Name>Moryx.Tools.Wcf</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Marvin\Marvin.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Marvin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Marvin.Runtime\Marvin.Runtime.csproj">
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj">
       <Project>{92777E64-9978-40AE-8B90-93ECBBBEFE67}</Project>
-      <Name>Marvin.Runtime</Name>
+      <Name>Moryx.Runtime</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\TestModule\Marvin.TestModule.csproj">
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
+      <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
+      <Name>Moryx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestModule\Moryx.TestModule.csproj">
       <Project>{24ED97AD-6D04-4DC0-AFCB-C911EF0AA738}</Project>
-      <Name>Marvin.TestModule</Name>
+      <Name>Moryx.TestModule</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Moryx.DependentTestModule.csproj.DotSettings" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

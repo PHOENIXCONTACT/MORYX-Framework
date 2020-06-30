@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.ServiceProcess;
 using CommandLine;
 using CommandLine.Text;
-using Marvin.Runtime.Kernel;
+using Moryx.Runtime.Kernel;
 
-namespace Marvin.Runtime.WinService
+namespace Moryx.Runtime.WinService
 {
     /// <summary>
     /// Option class for the <see cref="WinServiceRunMode"/>

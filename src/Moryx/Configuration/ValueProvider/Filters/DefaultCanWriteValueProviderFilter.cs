@@ -3,7 +3,7 @@
 
 using System.Reflection;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// ValueProviderFilter that skips read only properties

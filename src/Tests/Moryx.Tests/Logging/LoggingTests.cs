@@ -3,10 +3,10 @@
 
 using System;
 using System.Linq;
-using Marvin.Logging;
+using Moryx.Logging;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Logging
+namespace Moryx.Tests.Logging
 {
     [TestFixture]
     public class LoggingTests

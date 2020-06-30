@@ -3,11 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Marvin.Workflows;
-using Marvin.Workflows.Transitions;
+using Moryx.Workflows;
+using Moryx.Workflows.Transitions;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     [TestFixture]
     public class TransitionTests

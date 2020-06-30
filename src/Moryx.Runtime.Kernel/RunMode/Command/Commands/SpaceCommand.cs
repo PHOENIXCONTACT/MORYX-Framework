@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Marvin.Container;
-using Marvin.Runtime.Kernel.Additionals;
+using Moryx.Container;
+using Moryx.Runtime.Kernel.Additionals;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     [Registration(LifeCycle.Singleton, typeof(ICommandHandler))]
     internal class SpaceCommand : ICommandHandler

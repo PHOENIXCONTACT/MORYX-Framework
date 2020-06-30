@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Property accessor for fast, dynamic access to properties

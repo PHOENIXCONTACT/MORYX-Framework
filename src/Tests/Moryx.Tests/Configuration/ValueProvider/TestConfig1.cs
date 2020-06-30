@@ -3,9 +3,9 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider
 {
     public class TestConfig1 : ConfigBase
     {

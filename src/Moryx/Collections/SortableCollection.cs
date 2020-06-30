@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// Represents an object which can be sorted whithin a <see cref="ISortableCollection{T}"/>

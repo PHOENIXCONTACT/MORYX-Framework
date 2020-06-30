@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.Logging
+namespace Moryx.Logging
 {
     /// <summary>
     /// Different levels to diffentiate the severity of a message

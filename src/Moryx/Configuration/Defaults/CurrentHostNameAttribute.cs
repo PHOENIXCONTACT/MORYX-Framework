@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Default value attribute which provides the current HostName of this computer

@@ -4,7 +4,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Listener of the <see cref="INotifyPropertyChanged.PropertyChanged"/> event for

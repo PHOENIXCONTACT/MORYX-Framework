@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Threading;
+using Moryx.Threading;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Threading
+namespace Moryx.Tests.Threading
 {
     [TestFixture]
     public class NonStackingTimerCallbackTests

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// Static helper to attach to the unhandled exception event

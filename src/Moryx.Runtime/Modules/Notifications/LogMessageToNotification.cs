@@ -1,8 +1,8 @@
 ﻿using System;
-using Marvin.Logging;
-using Marvin.Notifications;
+using Moryx.Logging;
+using Moryx.Notifications;
 
-namespace Marvin.Runtime.Modules
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Static helper to convert log messages to notifications

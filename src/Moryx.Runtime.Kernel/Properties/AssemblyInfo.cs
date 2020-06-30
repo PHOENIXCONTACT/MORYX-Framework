@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Marvin.Runtime.Kernel;
+using Moryx.Runtime.Kernel;
 
-[assembly: AssemblyTitle("Marvin.Runtime.Kernel")]
+[assembly: AssemblyTitle("Moryx.Runtime.Kernel")]
 [assembly: AssemblyDescription("Main kernel abstraction for the runtime environment.")]
 [assembly: AssemblyCulture("")]
 

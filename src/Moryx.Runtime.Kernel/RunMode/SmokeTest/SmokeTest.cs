@@ -5,15 +5,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Timers;
-using Marvin.Configuration;
-using Marvin.Model;
-using Marvin.Notifications;
-using Marvin.Runtime.Modules;
-using Marvin.Tools;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Model;
+using Moryx.Notifications;
+using Moryx.Runtime.Modules;
+using Moryx.Tools;
+using Moryx.Tools.Wcf;
 using Timer = System.Timers.Timer;
 
-namespace Marvin.Runtime.Kernel.SmokeTest
+namespace Moryx.Runtime.Kernel.SmokeTest
 {
     /// <summary>
     /// Smoke test will start the runtime and try to load the modules, start them and shut them down again.

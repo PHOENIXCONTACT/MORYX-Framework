@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Marvin.Model
+namespace Moryx.Model
 {
     /// <summary>
     /// Repository builder class
@@ -16,7 +16,7 @@ namespace Marvin.Model
     {
         private const string AssemblyName = "DynamicModelRepository";
         private const string DynamicModuleName = "Proxies";
-        private const string ProxySuffixName = "_MarvinProxy";
+        private const string ProxySuffixName = "_MoryxProxy";
 
         private static readonly ModuleBuilder ModuleBuilder;
         private static readonly IMethodProxyStrategy[] MethodStrategies;

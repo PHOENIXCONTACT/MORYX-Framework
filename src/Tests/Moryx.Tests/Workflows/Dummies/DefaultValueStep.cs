@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Marvin.Workflows;
-using Marvin.Workflows.Transitions;
-using Marvin.Workflows.WorkplanSteps;
+using Moryx.Workflows;
+using Moryx.Workflows.Transitions;
+using Moryx.Workflows.WorkplanSteps;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     internal class DefaultValueStep : WorkplanStepBase
     {

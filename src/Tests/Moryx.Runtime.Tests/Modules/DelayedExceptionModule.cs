@@ -3,10 +3,10 @@
 
 using System;
 using System.Threading;
-using Marvin.Runtime.Modules;
-using Marvin.Threading;
+using Moryx.Runtime.Modules;
+using Moryx.Threading;
 
-namespace Marvin.Runtime.Tests.Modules
+namespace Moryx.Runtime.Tests.Modules
 {
     internal class DelayedExceptionModule : ServerModuleBase<TestConfig>
     {

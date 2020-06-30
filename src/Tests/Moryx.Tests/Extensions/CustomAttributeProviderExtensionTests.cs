@@ -5,9 +5,9 @@ using System;
 using NUnit.Framework;
 using System.ComponentModel;
 using System.Reflection;
-using Marvin.Tools;
+using Moryx.Tools;
 
-namespace Marvin.Tests.Extensions
+namespace Moryx.Tests.Extensions
 {
     internal class TestConstants
     {

@@ -4,10 +4,10 @@
 using System;
 using System.Net;
 using System.Threading;
-using Marvin.Communication.Sockets.IntegrationTests.DelimiterProtocol;
+using Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol;
 using NUnit.Framework;
 
-namespace Marvin.Communication.Sockets.IntegrationTests
+namespace Moryx.Communication.Sockets.IntegrationTests
 {
     [TestFixture]
     public class CommunicationSocketsTests : CommunicationSocketsTestsBase<BinaryMessage<SystemTestHeader>>

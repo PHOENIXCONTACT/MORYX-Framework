@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Base implementation of IConfig to reduce redundant code

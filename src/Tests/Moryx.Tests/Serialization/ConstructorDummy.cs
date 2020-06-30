@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     public class ConstructorDummy
     {

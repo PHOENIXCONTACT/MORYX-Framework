@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Dictionary implementation of <see cref="ICollectionStrategy"/>

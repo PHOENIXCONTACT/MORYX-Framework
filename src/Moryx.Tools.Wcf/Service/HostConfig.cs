@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Configuration class used to provide typed wcf config

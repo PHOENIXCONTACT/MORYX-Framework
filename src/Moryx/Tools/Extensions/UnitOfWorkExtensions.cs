@@ -1,6 +1,6 @@
-﻿using Marvin.Model;
+﻿using Moryx.Model;
 
-namespace Marvin.Tools
+namespace Moryx.Tools
 {
     /// <summary>
     /// A collection of static methods to be used with databae repositories.

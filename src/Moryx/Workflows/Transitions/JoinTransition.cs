@@ -3,7 +3,7 @@
 
 using System.Threading;
 
-namespace Marvin.Workflows.Transitions
+namespace Moryx.Workflows.Transitions
 {
     /// <summary>
     /// Transition used to join two or more parallel paths

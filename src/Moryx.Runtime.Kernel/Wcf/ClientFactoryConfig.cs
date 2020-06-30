@@ -3,10 +3,10 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Marvin.Configuration;
-using Marvin.Tools.Wcf;
+using Moryx.Configuration;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Configuration for the wcf client factory.

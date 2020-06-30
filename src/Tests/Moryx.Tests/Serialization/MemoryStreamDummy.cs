@@ -4,7 +4,7 @@
 using System.IO;
 using System.Text;
 
-namespace Marvin.Tests
+namespace Moryx.Tests
 {
     public class MemoryStreamDummy
     {

@@ -35,7 +35,7 @@ public class SubConfig
 }
 ````
 
-The basic structure of the configuration object including the [IConfig](xref:Marvin.Configuration.IConfig) implementation. The dummy properties and subclass can be renamed or deleted once you understand the structure of a configuration.
+The basic structure of the configuration object including the [IConfig](xref:Moryx.Configuration.IConfig) implementation. The dummy properties and subclass can be renamed or deleted once you understand the structure of a configuration.
 
 ## Conventions
 
@@ -62,7 +62,7 @@ In the configuration editor each entry is represented by its property name and v
 
 ## Attributes
 
-To make working with configurations more convinient and support the development of flexible modules for the runtime, the MarvinRuntime does provide three base attributes allthough two of them are closely related. These attributes can be inherited to customize their behaviour or provide application specific behaviour. A couple of commonly used implementations are distributed with the Marvin.RuntimeUtils.ConfigAttributes.dll as part of the full Runtime-package. First the base types will be explained in detail including a guide to customize them. Then all distributed attributes will be briefly explained regarding their behaviour.
+To make working with configurations more convinient and support the development of flexible modules for the runtime, the MoryxRuntime does provide three base attributes allthough two of them are closely related. These attributes can be inherited to customize their behaviour or provide application specific behaviour. A couple of commonly used implementations are distributed with the Moryx.RuntimeUtils.ConfigAttributes.dll as part of the full Runtime-package. First the base types will be explained in detail including a guide to customize them. Then all distributed attributes will be briefly explained regarding their behaviour.
 
 ## Futher supported .NET attributes
 

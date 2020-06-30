@@ -3,10 +3,10 @@
 
 using System.IO;
 using System.Linq;
-using Marvin.Configuration;
+using Moryx.Configuration;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Configuration
+namespace Moryx.Tests.Configuration
 {
     [TestFixture]
     public class CachedConfigManagerTests

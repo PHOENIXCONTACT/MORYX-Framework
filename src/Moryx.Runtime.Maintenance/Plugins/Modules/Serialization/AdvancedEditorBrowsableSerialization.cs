@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Marvin.Configuration;
-using Marvin.Container;
-using Marvin.Serialization;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Serialization;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Modules
+namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     /// <inheritdoc />
     internal class AdvancedEditorBrowsableSerialization : PossibleValuesSerialization

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceModel;
-using Marvin.Tools.Wcf;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.TestModule
+namespace Moryx.TestModule
 {
     [ServiceContract(SessionMode = SessionMode.Required, CallbackContract = typeof(IHelloWorldWcfServiceCallback))]
     [ServiceVersion(ServerVersion = HelloWorldWcfService.ServerVersion, MinClientVersion = HelloWorldWcfService.MinClientVersion)]

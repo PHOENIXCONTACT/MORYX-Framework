@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Runtime.Configuration
+namespace Moryx.Runtime.Configuration
 {
     /// <summary>
     /// Interface for config attributes to declare the are decorating a module strategy

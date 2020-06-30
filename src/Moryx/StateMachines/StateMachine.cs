@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 
-namespace Marvin.StateMachines
+namespace Moryx.StateMachines
 {
     /// <summary>
     /// Class for creating and handling state machines

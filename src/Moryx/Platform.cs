@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin
+namespace Moryx
 {
     /// <summary>
     /// This class provides access to the product this application belongs to and the platform it was build on.
@@ -41,13 +41,13 @@ namespace Marvin
         public Version ProductVersion { get; protected set; }
 
         /// <summary>
-        /// Description of the MARVIN based product
+        /// Description of the MORYX based product
         /// </summary>
         public string ProductDescription { get; protected set; }
     }
 
     /// <summary>
-    /// The different Marvin based platforms
+    /// The different Moryx based platforms
     /// Flags: Server Client Embedded Mobile
     /// </summary>
     [Flags]

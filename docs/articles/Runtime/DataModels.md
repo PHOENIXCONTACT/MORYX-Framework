@@ -29,7 +29,7 @@ Even though we use EntityFramework ^ it is fully hidden underneath generated cla
 Repositories hide the DbSets like the IUnitOfWork hide the DbContext. They wrap all its methods required for creating, modifying and deleting entities. This hiding mechanism is the key to features like model merge or date enhanced entities because we can not only wrap the EF methods but also redirect or manipulate the calls made to them.
 
 ## ModelSetups
-Model setups are the Runtime standard way to import data into your database. A model setup is a class that implements [IModelSetup](xref:Marvin.Model.IModelSetup) and is decorated with [ModelSetupAttribute](xref:Marvin.Model.ModelSetupAttribute). They export a couple of properties displayed to the user and might specify a regex of files it uses as input. Once the setup is executed from the MaintenanceUI the Execute-method is invoked with an open database connection. If the setup specified a file regex the file path is also passed to the setup. It might than read the file and import its content into the relational model.
+Model setups are the Runtime standard way to import data into your database. A model setup is a class that implements [IModelSetup](xref:Moryx.Model.IModelSetup) and is decorated with [ModelSetupAttribute](xref:Moryx.Model.ModelSetupAttribute). They export a couple of properties displayed to the user and might specify a regex of files it uses as input. Once the setup is executed from the MaintenanceUI the Execute-method is invoked with an open database connection. If the setup specified a file regex the file path is also passed to the setup. It might than read the file and import its content into the relational model.
 
 ## Date Enhanced Entities
 
@@ -41,7 +41,7 @@ Data enhanced entities are not supported for MSSQL Databases.
 
 # Context Modes
 
-All database operations are done within an open [IUnitOfWork](xref:Marvin.Model.IUnitOfWork). Such a connection is retrieved by importing the [IUnitOfWorkFactory](xref:Marvin.Model.IUnitOfWorkFactory) of the model and invoking the Create-method on it. By default this creates a context with all EntityFramework-features enabled. An overload of the Create-method accepts the enum [ContextMode](xref:Marvin.Model.ContextMode). This is flags enum that can be combined.
+All database operations are done within an open [IUnitOfWork](xref:Moryx.Model.IUnitOfWork). Such a connection is retrieved by importing the [IUnitOfWorkFactory](xref:Moryx.Model.IUnitOfWorkFactory) of the model and invoking the Create-method on it. By default this creates a context with all EntityFramework-features enabled. An overload of the Create-method accepts the enum [ContextMode](xref:Moryx.Model.ContextMode). This is flags enum that can be combined.
 
 Effect of the flags:
 
@@ -51,7 +51,7 @@ Effect of the flags:
 | LazyLoading | Associations to other entities are automatically resolved the first time get is invoked on the navigation-property. While this does has its advantages in complex transactions keep in mind that it does heavily affect performance. | 
 | Tracking | The context tracks all entities and changes made to them. This is necessary for change events and deferred loading of associations of lazy loading is disabled. |
 
-This flags can be combined in all possible combinations, however some of them are impossible or useless. It is recommended to use the prepared combinations of the [ContextMode](xref:Marvin.Model.ContextMode) enum.
+This flags can be combined in all possible combinations, however some of them are impossible or useless. It is recommended to use the prepared combinations of the [ContextMode](xref:Moryx.Model.ContextMode) enum.
 
 # Query methods
 In general our data models server two purposes - writing and reading data. When it comes to reading data we always specify some sort of criteria and the database responds with matching entries. Runtime enhanced data models come with pre-generated query methods. Those different methods are documented in the following sections.
@@ -84,4 +84,4 @@ ProductEntity GetMatch(string materialNumber, short revision);
 ````
 
 ## Date Enhanced Entities
-Several extionsion methods are provided by the [QueryableExtensions](xref:Marvin.Model.QueryableExtensions) to load entities related to the creation date, deletion date or similar.
+Several extionsion methods are provided by the [QueryableExtensions](xref:Moryx.Model.QueryableExtensions) to load entities related to the creation date, deletion date or similar.

@@ -3,11 +3,11 @@
 
 using System;
 using System.Threading;
-using Marvin.Runtime.Modules;
-using Marvin.TestTools.SystemTest;
+using Moryx.Runtime.Modules;
+using Moryx.TestTools.SystemTest;
 using NUnit.Framework;
 
-namespace Marvin.Runtime.SystemTests
+namespace Moryx.Runtime.SystemTests
 {
     /// <summary>
     /// These tests shall check two aspects: They shall verify the HoG functionality but also wether the HeartOfGoldController is working as expected.

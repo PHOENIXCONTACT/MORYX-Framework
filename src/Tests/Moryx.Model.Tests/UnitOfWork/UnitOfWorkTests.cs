@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Marvin.TestTools.Test.Model;
+using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
 
-namespace Marvin.Model.Tests
+namespace Moryx.Model.Tests
 {
     [TestFixture]
     public class UnitOfWorkTests

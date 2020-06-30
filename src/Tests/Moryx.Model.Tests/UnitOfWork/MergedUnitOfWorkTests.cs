@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.TestTools.Test.Model;
-using Marvin.Tools;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.TestTools.Test.Model;
+using Moryx.Tools;
 using NUnit.Framework;
 
-namespace Marvin.Model.Tests
+namespace Moryx.Model.Tests
 {
     public class MergedUnitOfWorkTests
     {

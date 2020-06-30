@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Marvin.Container.Tests
+namespace Moryx.Container.Tests
 {
     internal class Parent : INamedChildContainer<Child>
     {

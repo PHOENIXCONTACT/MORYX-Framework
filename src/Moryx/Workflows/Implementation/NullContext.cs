@@ -1,4 +1,4 @@
-﻿namespace Marvin.Workflows
+﻿namespace Moryx.Workflows
 {
     /// <summary>
     /// Null object pattern for the workplan context

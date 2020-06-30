@@ -7,11 +7,11 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Logging;
-using Marvin.Threading;
+using Moryx.Configuration;
+using Moryx.Logging;
+using Moryx.Threading;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Abstract base class for WCF client factories.

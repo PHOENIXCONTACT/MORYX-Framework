@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" />
-  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Logging" />
+  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" />
+  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Moryx.Logging" />
   <xs:element name="GetAllPluginLogger">
     <xs:complexType>
       <xs:sequence />
@@ -10,7 +10,7 @@
   <xs:element name="GetAllPluginLoggerResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="GetAllPluginLoggerResult" nillable="true" type="q1:ArrayOfPluginLoggerModel" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="GetAllPluginLoggerResult" nillable="true" type="q1:ArrayOfPluginLoggerModel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -18,7 +18,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Logging" minOccurs="0" name="minLevel" type="q2:LogLevel" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Moryx.Logging" minOccurs="0" name="minLevel" type="q2:LogLevel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -39,7 +39,7 @@
   <xs:element name="GetMessagesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="GetMessagesResult" nillable="true" type="q3:LogMessages" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="GetMessagesResult" nillable="true" type="q3:LogMessages" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -58,8 +58,8 @@
   <xs:element name="SetLogLevel">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="logger" nillable="true" type="q4:PluginLoggerModel" />
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Marvin.Logging" minOccurs="0" name="level" type="q5:LogLevel" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" minOccurs="0" name="logger" nillable="true" type="q4:PluginLoggerModel" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Moryx.Logging" minOccurs="0" name="level" type="q5:LogLevel" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

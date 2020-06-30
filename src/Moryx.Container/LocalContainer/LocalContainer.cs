@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Module internal castle container

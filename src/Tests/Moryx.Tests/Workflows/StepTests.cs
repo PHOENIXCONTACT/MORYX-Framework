@@ -3,12 +3,12 @@
 
 using System;
 using System.Linq;
-using Marvin.Workflows;
-using Marvin.Workflows.Transitions;
-using Marvin.Workflows.WorkplanSteps;
+using Moryx.Workflows;
+using Moryx.Workflows.Transitions;
+using Moryx.Workflows.WorkplanSteps;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Workflows
+namespace Moryx.Tests.Workflows
 {
     [TestFixture]
     public class StepTests

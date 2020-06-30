@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Wrapper to identifiy properties that display the possible values

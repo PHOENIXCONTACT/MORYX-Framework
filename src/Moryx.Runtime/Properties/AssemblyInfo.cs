@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
-[assembly: AssemblyTitle("Marvin.Runtime")]
+[assembly: AssemblyTitle("Moryx.Runtime")]
 [assembly: AssemblyDescription("Contains core interfaces for the runtime environment.")]
 [assembly: AssemblyCulture("")]
 

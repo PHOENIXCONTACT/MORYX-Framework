@@ -4,9 +4,9 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" />
-      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Modules" />
-      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Marvin.Serialization" />
+      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.ModuleMaintenance.Wcf" />
+      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Modules" />
+      <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Moryx.Serialization" />
       <xsd:import schemaLocation="http://localhost/Metadata/ModuleMaintenance?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>

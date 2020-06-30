@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Marvin.Collections;
+using Moryx.Collections;
 using NUnit.Framework;
 
-namespace Marvin.Tests.Collections
+namespace Moryx.Tests.Collections
 {
     [TestFixture]
     public class StringNumericComparerTests

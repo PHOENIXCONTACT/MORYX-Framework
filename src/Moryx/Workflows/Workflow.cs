@@ -1,7 +1,7 @@
-﻿using Marvin.Threading;
-using Marvin.Workflows.Validation;
+﻿using Moryx.Threading;
+using Moryx.Workflows.Validation;
 
-namespace Marvin.Workflows
+namespace Moryx.Workflows
 {
     /// <summary>
     /// Workflow engine API access class with factory methods

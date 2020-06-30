@@ -30,9 +30,9 @@ These services offer fine-grained methods that also offer filtered data.
 
 The service interfaces (service interface, data models) are implemented in a different assembly. The assembly should have the same name as the bundle with the extension which have to be defined. Example Products: 
 
-* Server Bundle: Marvin.Products.dll
-* UI Bundle: Marvin.Products.UI.dll
-* Service Assembly: Marvin.Products.Foo.dll
+* Server Bundle: Moryx.Products.dll
+* UI Bundle: Moryx.Products.UI.dll
+* Service Assembly: Moryx.Products.Foo.dll
 
 The _Service Assembly_ encapsulate the access to the referenced service, on the other hand they offer DTO's for these services. 
 

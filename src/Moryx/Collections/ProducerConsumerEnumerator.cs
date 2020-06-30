@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// Represents a ReaderWriterLockSlim synced enumerator to iterate over a producer-consumer collection

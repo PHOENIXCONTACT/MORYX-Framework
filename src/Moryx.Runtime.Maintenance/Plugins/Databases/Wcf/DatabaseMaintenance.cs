@@ -8,13 +8,13 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.Text.RegularExpressions;
-using Marvin.Container;
-using Marvin.Logging;
-using Marvin.Model;
-using Marvin.Runtime.Modules;
-using Marvin.Threading;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Model;
+using Moryx.Runtime.Modules;
+using Moryx.Threading;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Databases
+namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
     [Plugin(LifeCycle.Singleton, typeof(IDatabaseMaintenance))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]

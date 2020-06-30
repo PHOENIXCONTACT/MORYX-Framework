@@ -3,10 +3,10 @@
 
 using System.Data.Common;
 using System.Data.Entity;
-using Marvin.Model;
-using Marvin.TestTools.Test.Model;
+using Moryx.Model;
+using Moryx.TestTools.Test.Model;
 
-namespace Marvin.TestTools.Test.Inheritance.Model
+namespace Moryx.TestTools.Test.Inheritance.Model
 {
     public class InheritedTestModelContext : TestModelContext
     {

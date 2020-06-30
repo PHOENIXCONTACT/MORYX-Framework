@@ -6,23 +6,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
-using Marvin.DependentTestModule;
-using Marvin.Runtime.Maintenance.Plugins.Modules;
-using Marvin.Runtime.Modules;
-using Marvin.Runtime.SystemTests;
-using Marvin.Tools.Wcf.SystemTests.HelloWorld;
-using Marvin.Tools.Wcf.SystemTests.SimpleHelloWorld;
-using Marvin.Serialization;
-using Marvin.TestModule;
-using Marvin.TestTools.SystemTest;
-using Marvin.TestTools.UnitTest;
+using Moryx.DependentTestModule;
+using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Modules;
+using Moryx.Runtime.SystemTests;
+using Moryx.Tools.Wcf.SystemTests.HelloWorld;
+using Moryx.Tools.Wcf.SystemTests.SimpleHelloWorld;
+using Moryx.Serialization;
+using Moryx.TestModule;
+using Moryx.TestTools.SystemTest;
+using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
-using IHelloWorldWcfService = Marvin.Tools.Wcf.SystemTests.HelloWorld.IHelloWorldWcfService;
-using IHelloWorldWcfServiceCallback = Marvin.Tools.Wcf.SystemTests.HelloWorld.IHelloWorldWcfServiceCallback;
-using ISimpleHelloWorldWcfService = Marvin.Tools.Wcf.SystemTests.SimpleHelloWorld.ISimpleHelloWorldWcfService;
-using ModuleController = Marvin.DependentTestModule.ModuleController;
+using IHelloWorldWcfService = Moryx.Tools.Wcf.SystemTests.HelloWorld.IHelloWorldWcfService;
+using IHelloWorldWcfServiceCallback = Moryx.Tools.Wcf.SystemTests.HelloWorld.IHelloWorldWcfServiceCallback;
+using ISimpleHelloWorldWcfService = Moryx.Tools.Wcf.SystemTests.SimpleHelloWorld.ISimpleHelloWorldWcfService;
+using ModuleController = Moryx.DependentTestModule.ModuleController;
 
-namespace Marvin.Tools.Wcf.SystemTests
+namespace Moryx.Tools.Wcf.SystemTests
 {
     [TestFixture]
     public class ClientFactoryTests : IDisposable

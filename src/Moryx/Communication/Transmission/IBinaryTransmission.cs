@@ -4,7 +4,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Marvin.Communication
+namespace Moryx.Communication
 {
     /// <summary>
     /// Interface for duplex binary transmission

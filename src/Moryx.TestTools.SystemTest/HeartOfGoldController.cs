@@ -9,37 +9,37 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.Threading;
-using Marvin.Configuration;
-using Marvin.Logging;
-using Marvin.Model;
-using Marvin.Runtime.Maintenance.Plugins;
-using Marvin.Runtime.Maintenance.Plugins.Databases;
-using Marvin.Runtime.Maintenance.Plugins.Logging;
-using Marvin.Runtime.Maintenance.Plugins.Modules;
-using Marvin.Runtime.Modules;
-using Marvin.TestTools.SystemTest.Clients;
+using Moryx.Configuration;
+using Moryx.Logging;
+using Moryx.Model;
+using Moryx.Runtime.Maintenance.Plugins;
+using Moryx.Runtime.Maintenance.Plugins.Databases;
+using Moryx.Runtime.Maintenance.Plugins.Logging;
+using Moryx.Runtime.Maintenance.Plugins.Modules;
+using Moryx.Runtime.Modules;
+using Moryx.TestTools.SystemTest.Clients;
 
-namespace Marvin.TestTools.SystemTest
+namespace Moryx.TestTools.SystemTest
 {
     /// <summary>
     /// Exception in case of a not found service
     /// </summary>
-    public class MarvinServiceNotFoundException : Exception
+    public class MoryxServiceNotFoundException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarvinServiceNotFoundException"/> class.
+        /// Initializes a new instance of the <see cref="MoryxServiceNotFoundException"/> class.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        public MarvinServiceNotFoundException(string message) : base(message)
+        public MoryxServiceNotFoundException(string message) : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarvinServiceNotFoundException"/> class.
+        /// Initializes a new instance of the <see cref="MoryxServiceNotFoundException"/> class.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
-        public MarvinServiceNotFoundException(string message, Exception innerException) : base(message, innerException)
+        public MoryxServiceNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }
@@ -217,7 +217,7 @@ namespace Marvin.TestTools.SystemTest
             if (Process != null && !Process.HasExited)
                 throw new InvalidOperationException("HeartOfGold is already running.");
 
-            var wcfConfig = Path.Combine(RuntimeDir, ConfigDir, "Marvin.Tools.Wcf.WcfConfig" + ConfigConstants.FileExtension);
+            var wcfConfig = Path.Combine(RuntimeDir, ConfigDir, "Moryx.Tools.Wcf.WcfConfig" + ConfigConstants.FileExtension);
             if (File.Exists(wcfConfig))
                 File.Delete(wcfConfig);
 
@@ -472,7 +472,7 @@ namespace Marvin.TestTools.SystemTest
                     var module = moduleModels.FirstOrDefault(m => m.Name == service);
 
                     if (module == null)
-                        throw new MarvinServiceNotFoundException($"No service found with name '{service}'!");
+                        throw new MoryxServiceNotFoundException($"No service found with name '{service}'!");
 
                     // Check the state of the plugin
                     if (module.HealthState == state)

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Marvin.Serialization
+namespace Moryx.Serialization
 {
     /// <summary>
     /// Helper class to convert config entry data to view models and vice versa

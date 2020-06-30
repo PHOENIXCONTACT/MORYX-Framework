@@ -3,7 +3,7 @@
 
 using System.Globalization;
 
-namespace Marvin.Tests.Configuration
+namespace Moryx.Tests.Configuration
 {
     public class FaultyConfig
     {

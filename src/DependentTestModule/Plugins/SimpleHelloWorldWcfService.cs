@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceModel;
-using Marvin.Container;
+using Moryx.Container;
 
-namespace Marvin.DependentTestModule
+namespace Moryx.DependentTestModule
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession, AddressFilterMode = AddressFilterMode.Any, IncludeExceptionDetailInFaults = true)]
     [Plugin(LifeCycle.Singleton, typeof(ISimpleHelloWorldWcfService))]

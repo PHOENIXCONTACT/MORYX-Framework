@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Configuration;
+using Moryx.Configuration;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Configuration for the host factory.

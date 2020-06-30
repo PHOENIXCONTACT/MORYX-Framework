@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.Runtime.Kernel.Additionals
+namespace Moryx.Runtime.Kernel.Additionals
 {
     /// <summary>
     /// Determine if a defined stage of commands occured. 

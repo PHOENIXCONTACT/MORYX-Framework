@@ -4,13 +4,13 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Marvin.Container;
-using Marvin.Model;
-using Marvin.Runtime.Maintenance.Contracts;
-using Marvin.Runtime.Modules;
-using Marvin.Serialization;
+using Moryx.Container;
+using Moryx.Model;
+using Moryx.Runtime.Maintenance.Contracts;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 
-namespace Marvin.Runtime.Maintenance
+namespace Moryx.Runtime.Maintenance
 {
     [ServerModuleConsole]
     internal class ModuleConsole : IServerModuleConsole

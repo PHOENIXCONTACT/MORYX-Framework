@@ -4,7 +4,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Marvin.Workflows.WorkplanSteps
+namespace Moryx.Workflows.WorkplanSteps
 {
     /// <summary>
     /// Base class for all steps that are build around another workplan

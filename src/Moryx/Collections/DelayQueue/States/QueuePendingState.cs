@@ -3,7 +3,7 @@
 
 using System.Collections;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     /// <summary>
     /// State when one or more messages await transmition

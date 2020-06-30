@@ -4,10 +4,10 @@
 using System.Linq;
 using System.Net;
 using System.ServiceModel;
-using Marvin.Container;
-using Marvin.Logging;
+using Moryx.Container;
+using Moryx.Logging;
 
-namespace Marvin.Runtime.Maintenance.Plugins.Logging
+namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     [Plugin(LifeCycle.Transient, typeof(ILogMaintenance))]

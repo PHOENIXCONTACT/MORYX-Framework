@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Marvin.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Marvin.Logging" />
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Moryx.Runtime.Maintenance.Plugins.LogMaintenance.Wcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost/Metadata/LogMaintenance?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Moryx.Logging" />
   <xs:complexType name="ArrayOfPluginLoggerModel">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="PluginLoggerModel" nillable="true" type="tns:PluginLoggerModel" />
@@ -9,7 +9,7 @@
   <xs:element name="ArrayOfPluginLoggerModel" nillable="true" type="tns:ArrayOfPluginLoggerModel" />
   <xs:complexType name="PluginLoggerModel">
     <xs:sequence>
-      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Marvin.Logging" minOccurs="0" name="ActiveLevel" type="q1:LogLevel" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Moryx.Logging" minOccurs="0" name="ActiveLevel" type="q1:LogLevel" />
       <xs:element minOccurs="0" name="ChildLogger" nillable="true" type="tns:ArrayOfPluginLoggerModel" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Parent" nillable="true" type="tns:PluginLoggerModel" />
@@ -33,7 +33,7 @@
   <xs:complexType name="LogMessageModel">
     <xs:sequence>
       <xs:element minOccurs="0" name="ClassName" nillable="true" type="xs:string" />
-      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Marvin.Logging" minOccurs="0" name="LogLevel" type="q2:LogLevel" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Moryx.Logging" minOccurs="0" name="LogLevel" type="q2:LogLevel" />
       <xs:element minOccurs="0" name="Logger" nillable="true" type="tns:PluginLoggerModel" />
       <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Timestamp" type="xs:dateTime" />

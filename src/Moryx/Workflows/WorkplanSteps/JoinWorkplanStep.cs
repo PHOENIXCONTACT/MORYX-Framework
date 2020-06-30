@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Marvin.Workflows.Transitions;
+using Moryx.Workflows.Transitions;
 
-namespace Marvin.Workflows.WorkplanSteps
+namespace Moryx.Workflows.WorkplanSteps
 {
     /// <summary>
     /// Workplan step to join multiple inputs

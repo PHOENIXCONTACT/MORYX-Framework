@@ -3,9 +3,9 @@
 
 using System.Collections;
 using System.Diagnostics;
-using Marvin.StateMachines;
+using Moryx.StateMachines;
 
-namespace Marvin.Collections
+namespace Moryx.Collections
 {
     internal interface IDelayQueueContext : IStateContext
     {

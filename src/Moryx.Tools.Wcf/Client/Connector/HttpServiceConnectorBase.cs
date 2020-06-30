@@ -4,7 +4,7 @@
 using System;
 using System.ServiceModel;
 
-namespace Marvin.Tools.Wcf
+namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Base class to connect to an http web service 

@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using Marvin.Logging;
+using Moryx.Logging;
 
-namespace Marvin.Threading
+namespace Moryx.Threading
 {
     /// <summary>
     /// Task queue that utilizes parallel operations and to execute tasks

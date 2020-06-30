@@ -1,7 +1,7 @@
-﻿namespace Marvin.TestTools.Test.Inheritance.Model
+﻿namespace Moryx.TestTools.Test.Inheritance.Model
 {
     public static class InheritedTestModelConstants
     {
-        public const string Name = "Marvin.TestTools.Test.Inheritance.Model";
+        public const string Name = "Moryx.TestTools.Test.Inheritance.Model";
     }
 }

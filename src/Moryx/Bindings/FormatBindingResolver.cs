@@ -4,7 +4,7 @@
 using System;
 using System.Globalization;
 
-namespace Marvin.Bindings
+namespace Moryx.Bindings
 {
     /// <summary>
     /// Binding resolver that converts objects to formatted strings

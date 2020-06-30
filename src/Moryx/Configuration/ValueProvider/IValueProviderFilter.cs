@@ -3,7 +3,7 @@
 
 using System.Reflection;
 
-namespace Marvin.Configuration
+namespace Moryx.Configuration
 {
     /// <summary>
     /// Interface for a value provider filter

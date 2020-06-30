@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Castle.Windsor;
 
-namespace Marvin.Container
+namespace Moryx.Container
 {
     /// <summary>
     /// Creates automatically a new instance of the given assembly.

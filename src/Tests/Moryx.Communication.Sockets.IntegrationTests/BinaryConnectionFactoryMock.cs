@@ -1,10 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Marvin.Logging;
-using Marvin.TestTools.UnitTest;
+using Moryx.Logging;
+using Moryx.TestTools.UnitTest;
 
-namespace Marvin.Communication.Sockets.IntegrationTests
+namespace Moryx.Communication.Sockets.IntegrationTests
 {
     public class BinaryConnectionFactoryMock : IBinaryConnectionFactory
     {

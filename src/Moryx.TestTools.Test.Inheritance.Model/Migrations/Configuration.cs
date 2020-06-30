@@ -1,21 +1,21 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Marvin.TestTools.Test.Inheritance.Model.Migrations
+namespace Moryx.TestTools.Test.Inheritance.Model.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Marvin.TestTools.Test.Inheritance.Model.InheritedTestModelContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Moryx.TestTools.Test.Inheritance.Model.InheritedTestModelContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(Marvin.TestTools.Test.Inheritance.Model.InheritedTestModelContext context)
+        protected override void Seed(Moryx.TestTools.Test.Inheritance.Model.InheritedTestModelContext context)
         {
             //  This method will be called after migrating to the latest version.
 

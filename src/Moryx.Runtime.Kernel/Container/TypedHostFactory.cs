@@ -5,9 +5,9 @@ using System;
 using System.ServiceModel;
 using Castle.Facilities.WcfIntegration;
 using Castle.MicroKernel;
-using Marvin.Tools.Wcf;
+using Moryx.Tools.Wcf;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     internal class TypedHostFactory : DefaultServiceHostFactory, ITypedHostFactory
     {

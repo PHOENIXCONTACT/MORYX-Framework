@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Marvin.Container;
-using Marvin.Modules;
-using Marvin.Notifications;
-using Marvin.Runtime.Modules;
-using Marvin.Tools;
+using Moryx.Container;
+using Moryx.Modules;
+using Moryx.Notifications;
+using Moryx.Runtime.Modules;
+using Moryx.Tools;
 
-namespace Marvin.Runtime.Kernel
+namespace Moryx.Runtime.Kernel
 {
     [Registration(LifeCycle.Singleton, typeof(ICommandHandler))]
     internal class PrintCommand : ICommandHandler
