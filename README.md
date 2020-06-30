@@ -1,6 +1,30 @@
-# MORYX Platform
 
-![CI](https://github.com/PHOENIXCONTACT/MORYX-Platform/workflows/CI/badge.svg)
+<p align="center">
+    <img src="docs/resources/MORYX_logo.svg" alt="MORYX Logo" width="300px" />
+</p>
+
+<p align="center">
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/workflows">
+        <img src="https://github.com/PHOENIXCONTACT/MORYX-Platform/workflows/CI/badge.svg" alt="CI">
+    </a>
+    <a href="https://www.myget.org/feed/Packages/moryx">
+        <img src="https://img.shields.io/myget/moryx/v/Moryx" alt="MyGet">
+    </a>
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/blob/dev/LICENSE">
+        <img src="https://img.shields.io/github/license/PHOENIXCONTACT/MORYX-Platform" alt="License">
+    </a>
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/pulls">
+        <img src="https://img.shields.io/github/issues-pr/PHOENIXCONTACT/MORYX-Platform" alt="GitHub pull requests">
+    </a>
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/issues">
+        <img src="https://img.shields.io/github/issues/PHOENIXCONTACT/MORYX-Platform" alt="GitHub issues">
+    </a>
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/graphs/contributors">
+        <img src="https://img.shields.io/github/contributors-anon/PHOENIXCONTACT/MORYX-Platform" alt="GitHub contributors">
+    </a>
+</p>
+
+# MORYX Platform
 
 The MORYX Platform is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provide modularity, flexibility and easy configuration with very little effort. It is also the foundation for the Phoenix Contact IoT Framework [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
 
@@ -9,6 +33,7 @@ The MORYX Platform is a .NET based framework to quickly build three-tier applica
 - [Package Feed](https://www.myget.org/feed/Packages/moryx)
 - [Repository Template](https://github.com/PHOENIXCONTACT/MORYX-Template)
 - [MORYX Maintenance](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb)
+- [MORYX ClientFramework](https://github.com/PHOENIXCONTACT/MORYX-ClientFramework)
 - [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
 
 ## Getting started
@@ -28,11 +53,15 @@ To build and run from the command line you need powershell and msbuild.
 
 The MORYX Platform is a .NET based framework to quickly build three-tier applications. The core architecture is a modular monolith using the service and facade pattern to isolate and decouple functionality. It uses a 2-level Dependency Injection structure to isolate a modules composition and offer a per-module life-cycle with all instances hidden behind the previously mentioned facades. It also offers a range of tools and components to speed up development, increase stability and drastically reduce bioler plate code. To improve flexibility of modules and applications the platform has built in support for configuration management as well as plugin loading.
 
-<img src="docs/images/arch_level1.png" width="400px"/>
+<p align="center">
+    <img src="docs/images/arch_level1.png" width="400px"/>
+</p>
 
 Each modules composition is constructed by its own DI-container instance. This makes it possible to dispose the container in order to restart the module and reconstruct the composition with a different configuration or to recover from a fatal error. The `ModuleController` and `Facade` instances are preserved through the lifecycle of the application as part of the level 1 composition. The  Components (*always present*) and plugins (*configurable*) are created when a module is started and disposed when the module stops. For each lifecycle the references of the facade are updated.
 
-<img src="docs/images/arch_level2.png" width="400px"/>
+<p align="center">
+    <img src="docs/images/arch_level2.png" width="400px"/>
+</p>
 
 ## Maintenance
 
