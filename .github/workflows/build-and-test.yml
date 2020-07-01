@@ -1,0 +1,86 @@
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+env:
+  MORYX_OPTIMIZE_CODE: "false"
+  MORYX_BUILD_CONFIG: "Release"
+  MORYX_BUILDNUMBER: ${{github.run_number}}
+  MORYX_BRANCH: "dev" #TODO: ${{github.ref}} parse branch name
+  MORYX_CODECOV_SECRET: ${{secrets.CODECOV_TOKEN}}
+  MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
+
+jobs:
+  Build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+    
+    - name: Setup NuGet.exe
+      uses: NuGet/setup-nuget@v1.0.2
+
+    - name: Build
+      shell: pwsh
+      run: ./Build.ps1 -Build
+  Test:
+    needs: [Build]
+    runs-on: windows-latest
+    steps:
+        - uses: actions/checkout@v2
+        
+        - name: Setup MSBuild
+          uses: microsoft/setup-msbuild@v1
+        
+        - name: Setup NuGet.exe
+          uses: NuGet/setup-nuget@v1.0.2
+
+        - name: Execute Unit Tests
+          shell: pwsh
+          run: ./Build.ps1 -UnitTests
+
+        - name: Execute Integration Tests
+          shell: pwsh
+          run: ./Build.ps1 -IntegrationTests
+
+        - name: Cover Report
+          shell: pwsh
+          run: ./Build.ps1 -CoverReport
+
+        - name: Upload test results
+          uses: actions/upload-artifact@v1
+          with:
+            name: test-results
+            path: artifacts/Tests
+  Publish:
+    needs: [Test]
+    if: (github.event_name == 'push')
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+      
+      - name: Setup NuGet.exe
+        uses: NuGet/setup-nuget@v1.0.2
+  
+      - name: Set assembly versions
+        shell: pwsh
+        run: ./Build.ps1 -SetAssemblyVersion
+  
+      - name: Build
+        shell: pwsh
+        run: ./Build.ps1 -Build
+
+      - name: Pack & Publish
+        shell: pwsh
+        run: ./Build.ps1 -Pack -Publish
