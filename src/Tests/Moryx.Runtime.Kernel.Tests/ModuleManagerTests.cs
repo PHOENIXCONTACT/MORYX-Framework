@@ -178,22 +178,22 @@ namespace Moryx.Runtime.Kernel.Tests
             mockModule2.Verify(mock => mock.Start());
         }
 
-        [Test]
-        public void ShouldStartOneModule()
-        {
-            // Argange
-            var mockModule = new Mock<IServerModule>();
+        //[Test]
+        //public void ShouldStartOneModule()
+        //{
+        //    // Argange
+        //    var mockModule = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
-            moduleManager.Initialize();
+        //    var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
+        //    moduleManager.Initialize();
 
-            // Act
-            moduleManager.StartModule(mockModule.Object);
+        //    // Act
+        //    moduleManager.StartModule(mockModule.Object);
 
-            // Assert
-            mockModule.Verify(mock => mock.Initialize(), Times.Exactly(2));
-            mockModule.Verify(mock => mock.Start());
-        }
+        //    // Assert
+        //    mockModule.Verify(mock => mock.Initialize(), Times.Exactly(2));
+        //    mockModule.Verify(mock => mock.Start());
+        //}
 
         [Test]
         public void ShouldStopModulesAndDeregisterFromEvents()
@@ -263,7 +263,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             moduleManager.Initialize();
             moduleManager.StartModules();
-            
+
             while (module.State != ServerModuleState.Running)
             {
                 Thread.Sleep(100);

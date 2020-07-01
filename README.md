@@ -1,7 +1,7 @@
 # MORYX Platform
 
-[![pipeline status](http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MarvinPlatform/badges/master/pipeline.svg)](http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MarvinPlatform/commits/master)
-[![coverage report](http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MarvinPlatform/badges/master/coverage.svg)](http://gitlab-swtd.europe.phoenixcontact.com/marvinplatform/MarvinPlatform/commits/master)
+![CI](https://github.com/dbeuchler/MarvinPlatform/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/dbeuchler/MarvinPlatform/branch/dev/graph/badge.svg?token=BZUCXPUNHU)](https://codecov.io/gh/dbeuchler/MarvinPlatform)
 
 The MORYX Platform is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provide modularity, flexibility and easy configuration with very little effort. It is also the foundation for the Phoenix Contact IoT Framework [MORYX Abstraction Layer](https://git-ctvc.europe.phoenixcontact.com/marvin/AbstractionLayer)
 

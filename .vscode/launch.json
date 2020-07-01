@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Build",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-Build"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "AssemblyVersion",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-SetAssemblyVersion"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "UnitTests",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-UnitTests"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "CoverReport",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-CoverReport"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "SystemTests",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-SystemTests"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Nuget Pack",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-Pack"],
+            "cwd": "${workspaceRoot}"
+        }
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Documentation",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": ["-GenerateDocs"],
+            "cwd": "${workspaceRoot}"
+        }
+    ]
+}
+
