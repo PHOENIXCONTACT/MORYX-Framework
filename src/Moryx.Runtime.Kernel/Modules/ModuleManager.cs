@@ -226,7 +226,7 @@ namespace Moryx.Runtime.Kernel
 
                     // Try to restart if configured
                     if (_failureStrategy.ReincarnateOnFailure(sender) &&
-                        _retryCount[sender] <= _config.MaxRetries)
+                        _retryCount[sender] < _config.MaxRetries)
                     {
                         _retryCount[sender]++;
                         ReincarnateModule(sender);
