@@ -62,7 +62,11 @@ namespace Moryx.Runtime.Kernel
             }
             else
             {
-                ThreadPool.QueueUserWorkItem(ExecuteModuleStart, module);
+                // Don't try to start modules which initialization has been failed
+                if (module.State != ServerModuleState.Failure)
+                {
+                    ThreadPool.QueueUserWorkItem(ExecuteModuleStart, module);
+                }
             }  
         }
 
