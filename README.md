@@ -34,6 +34,18 @@ The **MORYX AbstractionLayer** is the environment for the digital twins of resou
 - [MORYX Maintenance](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb)
 - [MORYX ClientFramework](https://github.com/PHOENIXCONTACT/MORYX-ClientFramework)
 
+## Getting Started
+
+Whether you want to debug and experiment with this repository or build an application based on the Abstraction Layers packages you need to follow a few simple steps to setup each of the modules. For both modules this requires the package *Moryx.Runtime.Maintenance.Web* and its [database configuration](http://localhost/maintenanceweb/#/databases).
+
+**Product Management**:
+1. Create or configure the database for *Moryx.Products.Model*
+2. Configure the storage mapping for your domain objects or use the [auto configuration methods](http://localhost/maintenanceweb/#/modules/ProductManager/console)
+
+**Resource Management**: 
+1. Create or configure the database for *Moryx.Resources.Model*
+2. Execute the `ResourceInteractionInitializer` from [ResourceManager console](http://localhost/maintenanceweb/#/modules/ResourceManager/console) to provide the endpoint for the resource configuration UI.
+
 ## Domain Meta Model
 
 The Abstraction Layer defines the [domain independent model](/docs/articles/AbstractionLayer.md) of assets, products, processes and many more. It is the foundation for compatible models of systems and hardware independence of other modules.
