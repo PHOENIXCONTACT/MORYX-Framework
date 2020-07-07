@@ -106,6 +106,9 @@
     <Reference Include="Moryx.Runtime.Maintenance, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Moryx.Runtime.Maintenance.3.0.0-dev.26\lib\net461\Moryx.Runtime.Maintenance.dll</HintPath>
     </Reference>
+    <Reference Include="Moryx.Runtime.Maintenance.Web, Version=3.0.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Runtime.Maintenance.Web.3.0.0-dev.9\lib\net461\Moryx.Runtime.Maintenance.Web.dll</HintPath>
+    </Reference>
     <Reference Include="Moryx.Tools.Wcf, Version=3.0.0.26, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Moryx.Tools.Wcf.3.0.0-dev.26\lib\net461\Moryx.Tools.Wcf.dll</HintPath>
     </Reference>
