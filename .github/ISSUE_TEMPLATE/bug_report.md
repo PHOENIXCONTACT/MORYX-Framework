@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Environment:**
  - Hardware: [e.g. PLC, EdgePC, etc.]
- - OS: [e.g. iOS]
+ - OS: [e.g. Windows10]
  - Version [e.g. 3.0]
 
 **Additional context**
