@@ -66,8 +66,7 @@ The [Workplan](xref:Workplans) package of the AbstrationLayer contains several h
 
 ## Tutorials
 
-You can find some tutorials here:
+To start using the AbstractionLayer for your own projects you can jump into these tutorials:
 
-* [How to create a Resource](xref:HowToCreateAResource)
-* [How to build a Driver](xref:HowToBuildADriver)
-* [How to use Constraints](xref:HowToUseConstraints)
+* [How to create a Resource](Tutorials/HowToCreateResource.md)
+* [How to build a Driver](Tutorials/HowToBuildADriver.md)

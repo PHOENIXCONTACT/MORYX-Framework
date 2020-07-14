@@ -56,4 +56,11 @@ The [Resource Management](/docs/articles/Resources/ResourceManagement.md) holds 
 
 ## Product Management
 
-The [Product Management](/docs/articles/Products/ProductManagement.md) holds all product variants, created instances of those variants and recipes how to create an instance. It provides an API giving access to product types, instances, recipes and workplans.  
+The [Product Management](/docs/articles/Products/ProductManagement.md) holds all product variants, created instances of those variants and recipes how to create an instance. It provides an API giving access to product types, instances, recipes and workplans.
+
+## Tutorials
+
+To start using the AbstractionLayer for your own projects you can jump into these tutorials:
+
+* [How to create a Resource](/docs/articles/Tutorials/HowToCreateResource.md)
+* [How to build a Driver](/docs/articles/Tutorials/HowToBuildADriver.md)
