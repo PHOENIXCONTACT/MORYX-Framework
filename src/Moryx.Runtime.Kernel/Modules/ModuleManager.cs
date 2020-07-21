@@ -51,10 +51,7 @@ namespace Moryx.Runtime.Kernel
         private IModuleInitializer _moduleInitializer;
         private IModuleStarter _moduleStarter;
         private IModuleStopper _moduleStopper;
-        private IModuleFailureStrategy _failureStrategy;
         private ModuleManagerConfig _config;
-
-        private readonly IDictionary<IServerModule, int> _retryCount = new Dictionary<IServerModule, int>();
 
         #endregion
 
@@ -77,8 +74,6 @@ namespace Moryx.Runtime.Kernel
             _moduleInitializer = new ModuleInitializer(Logger.GetChild(string.Empty, typeof(ModuleInitializer)));
             _moduleStarter = new ModuleStarter(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStarter)), _config);
             _moduleStopper = new ModuleStopper(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStopper)));
-
-            _failureStrategy = new FailureStrategy(_config);
 
             // Link components
             var components = new IModuleManagerComponent[] { _dependencyManager, _moduleStarter, _moduleStopper };
@@ -200,39 +195,6 @@ namespace Moryx.Runtime.Kernel
         private void OnModuleStateChanged(object sender, ModuleStateChangedEventArgs eventArgs)
         {
             ModuleStateChanged?.Invoke(sender, eventArgs);
-            ReincarnateOnFailure((IServerModule)sender, eventArgs.NewState);
-        }
-
-        private void ReincarnateOnFailure(IServerModule sender, ServerModuleState newState)
-        {
-            switch (newState)
-            {
-                case ServerModuleState.Running:
-                    // Module started successfully at least once, so it can be restarted
-                    if (!_retryCount.ContainsKey(sender))
-                        _retryCount[sender] = 0;
-                    break;
-
-                case ServerModuleState.Stopping:
-                    // After stopping retry is pointless until next successful start
-                    if (_retryCount.ContainsKey(sender))
-                        _retryCount.Remove(sender);
-                    break;
-
-                case ServerModuleState.Failure:
-                    // Not started so we can not try to reboot it
-                    if (!_retryCount.ContainsKey(sender))
-                        break;
-
-                    // Try to restart if configured
-                    if (_failureStrategy.ReincarnateOnFailure(sender) &&
-                        _retryCount[sender] < _config.MaxRetries)
-                    {
-                        _retryCount[sender]++;
-                        ReincarnateModule(sender);
-                    }
-                    break;
-            }
         }
     }
 }
