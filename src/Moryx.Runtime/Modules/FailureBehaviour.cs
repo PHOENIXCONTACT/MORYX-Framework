@@ -20,15 +20,5 @@ namespace Moryx.Runtime.Modules
         /// Module is stopped and failure processed by notification components
         /// </summary>
         StopAndNotify = 0x02,
-
-        /// <summary>
-        /// Module is reincarnated
-        /// </summary>
-        Reincarnate = 0x01,
-
-        /// <summary>
-        /// Module is reincarnated and the failure notified
-        /// </summary>
-        ReincarnateAndNotify = 0x03,
     }
 }

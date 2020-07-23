@@ -86,12 +86,10 @@
     <Compile Include="Model\GenericUowFactory.cs" />
     <Compile Include="Modules\BehaviourAccess.cs" />
     <Compile Include="Modules\ComponentContracts\IModuleDependencyManager.cs" />
-    <Compile Include="Modules\ComponentContracts\IModuleFailureStrategy.cs" />
     <Compile Include="Modules\ComponentContracts\IModuleStarter.cs" />
     <Compile Include="Modules\ComponentContracts\IModuleManagerComponent.cs" />
     <Compile Include="Modules\ComponentContracts\IModuleStopper.cs" />
     <Compile Include="Modules\Components\DependencyEvaluation.cs" />
-    <Compile Include="Modules\Components\FailureStrategy.cs" />
     <Compile Include="Modules\ComponentContracts\IModuleInitializer.cs" />
     <Compile Include="Modules\Components\MissingFacadeException.cs" />
     <Compile Include="Modules\Components\ModuleDependencyManager.cs" />

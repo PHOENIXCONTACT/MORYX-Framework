@@ -17,19 +17,6 @@ namespace Moryx.Runtime.Kernel
     public class ModuleManagerConfig : ConfigBase
     {
         /// <summary>
-        /// Set the ms how long a pause should be between the retries.
-        /// </summary>
-        [DataMember]
-        public int RetryAwaitMs { get; set; }
-
-        /// <summary>
-        /// Amount of retries when the reincarnate on failure strategy is used before the module is set to failure.
-        /// </summary>
-        [DataMember]
-        [DefaultValue(3)]
-        public int MaxRetries { get; set; }
-
-        /// <summary>
         /// Restricts the maximum of dependecies the module can have on other modules.
         /// </summary>
         [DataMember]
