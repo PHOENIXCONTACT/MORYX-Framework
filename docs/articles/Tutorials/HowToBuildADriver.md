@@ -3,7 +3,7 @@ uid: HowToBuildADriver
 ---
 # How to build a driver
 
-A driver is the interface between the `ControlSystem` and physical parts of the production environment. This tutorial shows how a driver should be implemented.
+A driver is the interface between other Resources and physical parts of the modelled system. This tutorial shows how a driver should be implemented.
 
 ## Basic driver files
 
@@ -15,7 +15,7 @@ A driver has this basic solution structure which can be extended for your needs:
 |-ExampleDriver.cs
 ````
 
-The interface `IExampleDriver` is the main interface for the driver and important for registration within the AbstractionLayer. The implementation of this interface is done with the `ExampleDriver` class.
+The interface `IExampleDriver` is the API of the driver and important for registration within the AbstractionLayer. For compatibility and reduced dependencies it is based to use an existing driver interface or suggest adding an additional driver interface. 
 
 ### The interface
 
