@@ -5,9 +5,11 @@ uid: ProductsStorage
 
 Section [Product Definition](xref:ProductsDefinition) describes how applications can create their own product structures in form of custom classes. In order to save and load those to and from the database it is also necessary to configure the product storage. The product model defines [`IGenericColumns`](xref:Moryx.Products.Model.IGenericColumns) for all entities that represent business objects, which are usually derived and extended in applications. The product management comes with a range of plugins to store and load user defined product types, instances, partlinks and recipes in these structures. They can be configured through the maintenance web UI or using the modules configure console command. The configure command attempts to automatically map a product type, its part links, properties and instance to database columns using a range of conversion strategies.
 
+Make sure that all your product definitions have properly configured mappings. Refer to the [Generic Strategies Documentation](xref:ProductGenericStrategies) on how to configure the generic strategies for product types, instances, part links and recipes.
+
 ## Product Type Strategy
 
-For each product of the application the storage must provide an [IProductTypeStrategy](xref:Moryx.Products.Management.IProductTypeStrategy). That can be either a custom implementation or the GenericProductStrategy for simple products. The strategy defines different properties and methods that need to be implemented. To avoid redundant code it is recommended to derive all implementations from [TypeStrategyBase](xref:Moryx.Products.Management.TypeStrategyBase).
+For each product of the application the storage must provide an [IProductTypeStrategy](xref:Moryx.Products.Management.IProductTypeStrategy). That can be either a custom implementation or the GenericProductStrategy for most products. The strategy defines different properties and methods that need to be implemented. To avoid redundant code it is recommended to derive all implementations from [TypeStrategyBase](xref:Moryx.Products.Management.TypeStrategyBase).
 
 ### Target Type
 
@@ -15,7 +17,7 @@ The target type property defines the scope of the strategy. It must return the s
 
 ### HasChanged
 
-The storage saves each version of a product as a seperate entity. To avoid duplicates the strategy needs to determine of anything has changed.
+The storage saves each version of a product as a separate entity. To avoid duplicates the strategy needs to determine of anything has changed.
 
 ````cs
 // In class WatchStrategy

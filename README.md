@@ -39,8 +39,8 @@ The **MORYX AbstractionLayer** is the environment for the digital twins of resou
 Whether you want to debug and experiment with this repository or build an application based on the Abstraction Layers packages you need to follow a few simple steps to setup each of the modules. For both modules this requires the package *Moryx.Runtime.Maintenance.Web* and its [database configuration](http://localhost/maintenanceweb/#/databases).
 
 **Product Management**:
-1. Create or configure the database for *Moryx.Products.Model*
-2. Configure the storage mapping for your domain objects or use the [auto configuration methods](http://localhost/maintenanceweb/#/modules/ProductManager/console)
+1. Create or configure the database for *Moryx.Products.Model* using the Maintenance
+2. Configure the [storage mapping](/docs/articles/Products/ProductStorage.md) for your domain objects. This is necessary to store, load and use the objects within MORYX.
 
 **Resource Management**: 
 1. Create or configure the database for *Moryx.Resources.Model*
@@ -52,8 +52,15 @@ The Abstraction Layer defines the [domain independent model](/docs/articles/Abst
 
 ## Resource Management
 
-The [Resource Management](/docs/articles/Resources/ResourceManagement.md) holds the object graph representing the physcial system. It maintains the database entities for the object graph in the background and reconstructs the object graph upon boot. It also provides the API for other modules to interact with resources based on their implemented interfaces and supports resource look-up by various conditions or capabilities.
+The [Resource Management](/docs/articles/Resources/ResourceManagement.md) holds the object graph representing the physical system. It maintains the database entities for the object graph in the background and reconstructs the object graph upon boot. It also provides the API for other modules to interact with resources based on their implemented interfaces and supports resource look-up by various conditions or capabilities.
 
 ## Product Management
 
-The [Product Management](/docs/articles/Resources/ResourceManagement.md) holds all product variantes, created instances of those variants and recipes how to create an instance. It provides an API giving access to product types, instances, recipes and workplans.  
+The [Product Management](/docs/articles/Products/ProductManagement.md) holds all product variants, created instances of those variants and recipes how to create an instance. It provides an API giving access to product types, instances, recipes and workplans.
+
+## Tutorials
+
+To start using the AbstractionLayer for your own projects you can jump into these tutorials:
+
+* [How to create a Resource](/docs/articles/Tutorials/HowToCreateResource.md)
+* [How to build a Driver](/docs/articles/Tutorials/HowToBuildADriver.md)
