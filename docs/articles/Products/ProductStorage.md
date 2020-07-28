@@ -115,7 +115,7 @@ The recommendations for instance storage obviously apply to `SaveInstance` as we
 
 * can be stored in the generic columns
 
-#### Sampe Code
+#### Sample Code
 
 ````cs
 public void SaveInstance(ProductInstance source, IGenericColumns target);

@@ -41,8 +41,8 @@ public class WatchProduct : Product
     {
         return new WatchArticle
         {
-            Watchface = (WatchfaceArticle)Watchface.Instantiate(),
-            Neddles = Needles.Instantiate<NeedleArticle>()
+            Watchface = (WatchfaceInstance)Watchface.Instantiate(),
+            Neddles = Needles.Instantiate<NeedleInstance>()
         };
     }
 }
@@ -71,9 +71,9 @@ public class NeedlePartLink : ProductPartLink<NeedleProduct>
 
     public NeedleRole Role { get; set; }
 
-    public override Article Instantiate()
+    public override ProductInstance Instantiate()
     {
-        var needle = (NeedleArticle) base.Instantiate();
+        var needle = (ProductInstance) base.Instantiate();
         needle.Role = Role;
         return needle;
     }

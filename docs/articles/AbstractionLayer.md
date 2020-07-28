@@ -20,10 +20,6 @@ This article gives you an overview which base classes, storage techniques, proce
 
 An [Activity](xref:Activities) is the smallest separately executable step of a Process.
 
-## Articles
-
-An [Article](xref:Moryx.AbstractionLayer.Article) is the produced instance of a Product.
-
 ## Capabilities
 
 [Capabilities](xref:Capabilities) are used to find a matching *Resource* for an Activity.
@@ -42,15 +38,17 @@ A [Process](xref:Processes) consists of a series of activities.
 
 ## Products
 
-A [Product](xref:Moryx.AbstractionLayer.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Moryx.AbstractionLayer.ProductRecipe) to provide a basic structure to produce an instance.
+A [ProductType](xref:Moryx.AbstractionLayer.Products.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Moryx.AbstractionLayer.Recipes.ProductRecipe) to provide a basic structure to produce a [ProductInstance](xref:Moryx.AbstractionLayer.Products.ProductInstance) 
 
 ## Recipes
 
-A [Recipe](xref:Moryx.AbstractionLayer.Recipe) is the base for all recipes which combines all needed data for a process.
+A [Recipe](xref:Moryx.AbstractionLayer.Recipes.Recipe) is the base for all recipes which combines all needed data for a process.
 
-A [ProductRecipe](xref:Moryx.AbstractionLayer.ProductRecipe) provides a basic structure to use a product for production cases.
+A [ProductRecipe](xref:Moryx.AbstractionLayer.Recipes.ProductRecipe) provides a basic structure to use a product for production cases.
 
-A [WorkplanRecipe](xref:Moryx.AbstractionLayer.WorkplanRecipe) provides a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process.
+A [WorkplanRecipe](xref:Moryx.AbstractionLayer.Recipes.WorkplanRecipe) provides a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process.
+
+A [ProductionRecipe](xref:Moryx.AbstractionLayer.Recipes.ProductionRecipe) is the combination of a `ProductRecipe` and `WorkplanRecipe`.
 
 ## Resources
 
