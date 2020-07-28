@@ -12,10 +12,12 @@ namespace Moryx.AbstractionLayer.Products
         /// Identifier of the new product
         /// </summary>
         string Identifier { get; set; }
+
         /// <summary>
         /// Revision of the new product
         /// </summary>
         short Revision { get; set; }
+
         /// <summary>
         /// Name of the new product
         /// </summary>
