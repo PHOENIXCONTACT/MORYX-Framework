@@ -33,6 +33,7 @@ namespace Moryx.Products.Management
             };
         }
 
+        /// <inheritdoc />
         protected override void Initialize()
         {
             base.Initialize();
@@ -40,7 +41,10 @@ namespace Moryx.Products.Management
             // Default importer is always included -> hence the name DEFAULT
             Importers = new List<ProductImporterConfig>
             {
-                new DefaultImporterConfig()
+                new ProductImporterConfig
+                {
+                    PluginName = nameof(DefaultImporter)
+                }
             };
         }
 

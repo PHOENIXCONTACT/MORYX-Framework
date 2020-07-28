@@ -1,9 +1,6 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Products.Management.Importers;
 
@@ -27,7 +24,7 @@ namespace Moryx.Products.Management
         /// Name of the importer
         /// </summary>
         public string Name => Config.PluginName;
-        
+
         /// <summary>
         /// Get the parameters of this importer
         /// </summary>

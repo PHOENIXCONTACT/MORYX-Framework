@@ -125,7 +125,6 @@
     <Compile Include="Plugins\GenericStrategies\IntegerColumnMapper.cs" />
     <Compile Include="Plugins\GenericStrategies\TextColumnMapper.cs" />
     <Compile Include="Plugins\Importers\DefaultImporter.cs" />
-    <Compile Include="Plugins\Importers\DefaultImporterConfig.cs" />
     <Compile Include="Plugins\GenericStrategies\AvailableColumnsAttribute.cs" />
     <Compile Include="Plugins\GenericStrategies\DifferentialContractResolver.cs" />
     <Compile Include="Plugins\GenericStrategies\GenericEntityMapper.cs" />

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Modules;
@@ -13,10 +13,14 @@ using Moryx.Tools;
 
 namespace Moryx.Products.Management.Importers
 {
-    [ExpectedConfig(typeof(DefaultImporterConfig))]
+    /// <summary>
+    /// Product importer which can create all types of products
+    /// </summary>
+    [ExpectedConfig(typeof(ProductImporterConfig))]
     [Plugin(LifeCycle.Transient, typeof(IProductImporter), Name = nameof(DefaultImporter))]
-    public class DefaultImporter : ProductImporterBase<DefaultImporterConfig, DefaultImporterParameters>
+    public class DefaultImporter : ProductImporterBase<ProductImporterConfig, DefaultImporterParameters>
     {
+        /// <inheritdoc />
         protected override IProductType[] Import(DefaultImporterParameters parameters)
         {
             // TODO: Use type wrapper
@@ -31,8 +35,15 @@ namespace Moryx.Products.Management.Importers
         }
     }
 
+    /// <summary>
+    /// Parameters for the default importer
+    /// </summary>
     public class DefaultImporterParameters : PrototypeParameters
     {
+        /// <summary>
+        /// Product type to import
+        /// </summary>
+        [DisplayName("Product type"), Description("Type of product to import")]
         [Required, PossibleTypes(typeof(ProductType))]
         public string ProductType { get; set; }
     }
