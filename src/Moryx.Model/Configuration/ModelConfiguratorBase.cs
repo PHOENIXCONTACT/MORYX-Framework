@@ -14,7 +14,7 @@ using Moryx.Configuration;
 using Moryx.Logging;
 using Moryx.Tools;
 
-namespace Moryx.Model.Configurator
+namespace Moryx.Model.Configuration
 {
     /// <summary>
     /// Base class for model configurators
@@ -56,10 +56,7 @@ namespace Moryx.Model.Configurator
 
             // Set TargetModel
             var modelAttr = contextType.GetCustomAttribute<ModelAttribute>();
-            if (modelAttr == null)
-                throw new InvalidOperationException("DbContext has to be attributed with the: " + nameof(ModelAttribute));
-
-            TargetModel = modelAttr.Name;
+            TargetModel = modelAttr != null ? modelAttr.Name : contextType.FullName;
 
             // Load Config
             _configName = TargetModel + ".DbConfig";
@@ -76,11 +73,8 @@ namespace Moryx.Model.Configurator
             _migrations = GetAvailableMigrations();
 
             // Load ModelSetups TODO: Load internals
-            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(type =>
-            {
-                var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
-                return setupAttr != null && setupAttr.TargetModel == TargetModel;
-            }).ToDictionary(t => t, t => (IModelSetup)null);
+            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(type => ModelSetupFilter(type, contextType))
+                .ToDictionary(t => t, t => (IModelSetup) null);
         }
 
         /// <inheritdoc />
@@ -281,6 +275,23 @@ namespace Moryx.Model.Configurator
             }
         }
 
+        /// <summary>
+        /// Filters model setups by the context type or target model
+        /// </summary>
+        private bool ModelSetupFilter(Type type, Type contextType)
+        {
+            // Read from attribute
+            var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
+            if (setupAttr != null) return setupAttr.TargetModel == TargetModel;
+
+            // Try to read context type from generic interface
+            var genericContextType = (from iType in type.GetInterfaces()
+                    where iType.IsGenericType && iType.GetGenericTypeDefinition() == typeof(IModelSetup<>)
+                    select iType.GetGenericArguments()[0]).FirstOrDefault();
+
+            return genericContextType == contextType;
+        }
+
         private DbMigrator CreateDbMigrator(IDatabaseConfig config)
         {
             if (_migrationsConfiguration == null)
@@ -354,7 +365,7 @@ namespace Moryx.Model.Configurator
             // https://stackoverflow.com/questions/23996785/get-local-migrations-from-assembly-using-ef-code-first-without-a-connection-stri
             var migrations = (from type in _migrationsConfiguration.MigrationsAssembly.GetTypes()
                               where typeof(DbMigration).IsAssignableFrom(type)
-                              select (IMigrationMetadata) Activator.CreateInstance(type)).Select(m => m.Id).ToArray();
+                              select (IMigrationMetadata)Activator.CreateInstance(type)).Select(m => m.Id).ToArray();
 
             return migrations;
         }

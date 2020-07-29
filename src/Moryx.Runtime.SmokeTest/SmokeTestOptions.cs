@@ -4,8 +4,9 @@
 using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
+using Moryx.Runtime.Kernel;
 
-namespace Moryx.Runtime.Kernel.SmokeTest
+namespace Moryx.Runtime.SmokeTest
 {
     /// <summary>
     /// Starts the runtime and executes the smoke tests.

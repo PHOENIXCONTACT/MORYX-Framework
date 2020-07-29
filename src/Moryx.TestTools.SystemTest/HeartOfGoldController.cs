@@ -11,7 +11,6 @@ using System.ServiceModel;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Logging;
-using Moryx.Model;
 using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Maintenance.Plugins.Databases;
 using Moryx.Runtime.Maintenance.Plugins.Logging;
@@ -791,17 +790,6 @@ namespace Moryx.TestTools.SystemTest
         public void SetConfig(Config config, string moduleName)
         {
             WaitForServiceCall(() => _maintenanceClient.SetConfig(moduleName, new SaveConfigRequest { Config = config, UpdateMode = ConfigUpdateMode.UpdateLiveAndSave }));
-        }
-
-        /// <summary>
-        /// Creates an UnitOfWorkFactory.
-        /// </summary>
-        public static FactoryCreationContext<TFactory> CreateUnitOfWorkFactory<TFactory>(DatabaseConfigModel databaseConfigModel)
-            where TFactory : class, IUnitOfWorkFactory, new()
-        {
-            var creationContext = new FactoryCreationContext<TFactory>();
-            creationContext.SetConfig(databaseConfigModel);
-            return creationContext;
         }
 
         /// <summary>

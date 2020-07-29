@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Data.Entity;
+using Moryx.Model.Configuration;
 
 namespace Moryx.Model
 {

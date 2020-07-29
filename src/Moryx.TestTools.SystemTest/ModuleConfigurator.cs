@@ -10,15 +10,15 @@ namespace Moryx.TestTools.SystemTest
     /// <summary>
     /// Helper to modify the configutration servermodul
     /// </summary>
-    public class ModulConfigurator
+    public class ModuleConfigurator
     {
         private readonly HeartOfGoldController _hogController;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModulConfigurator"/> class.
+        /// Initializes a new instance of the <see cref="ModuleConfigurator"/> class.
         /// </summary>
         /// <param name="hogController">The hog controller.</param>
-        public ModulConfigurator(HeartOfGoldController hogController)
+        public ModuleConfigurator(HeartOfGoldController hogController)
         {
             _hogController = hogController;
         }
@@ -87,13 +87,13 @@ namespace Moryx.TestTools.SystemTest
                             break;
                         }
                     }
-                }                
+                }
             }
-            
+
             // Fail if the config entry wasn't found
             Assert.IsNotNull(foundEntry, "Config entry '{0}' was not found in the 'trunk' servermodul config!", configName);
 
-            // index of the config path 
+            // index of the config path
             index++;
             // step throught the next steps of the configuration.
             return StepThroughEntryModel(foundEntry, configPathSteps, ref index);
@@ -129,8 +129,8 @@ namespace Moryx.TestTools.SystemTest
 
             // Fail if the config entry wasn't found
             Assert.IsNotNull(foundEntry,"Config entry '{0}' was not found in the sub config of '{1}'!", configName, currentConfig);
-            
-            // next index of the config path 
+
+            // next index of the config path
             index++;
             // step throught the next steps of the configuration.
             return StepThroughEntryModel(foundEntry, configPath, ref index);

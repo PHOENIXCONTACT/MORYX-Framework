@@ -51,13 +51,17 @@
     <Compile Include="LifeCycleTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.Model\Moryx.Model.csproj">
+      <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
+      <Name>Moryx.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj">
       <Project>{EB039D46-906F-44BF-AC37-B3B3634A4442}</Project>
       <Name>Moryx.Runtime.Maintenance</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Moryx.TestTools.Test.Inheritance.Model\Moryx.TestTools.Test.Inheritance.Model.csproj">
-      <Project>{cbf4c42b-488d-44af-9c60-3cd2c2aa955e}</Project>
-      <Name>Moryx.TestTools.Test.Inheritance.Model</Name>
+    <ProjectReference Include="..\..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj">
+      <Project>{29f12ad7-18dc-4dc3-b97f-bc773ac4c0eb}</Project>
+      <Name>Moryx.TestTools.Test.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">
       <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moryx.Model;
+using Moryx.Model.Configuration;
 using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Maintenance.Plugins.Databases;
 
