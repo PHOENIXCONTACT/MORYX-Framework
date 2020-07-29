@@ -5,7 +5,7 @@ uid: AbstractionLayer
 
 ## Description
 
-In a industrial production environment and not only there, there are three parts that come to play to describe the production process:
+In an industrial production environment and not only there, there are three parts that come to play to describe the production process:
 
 * Product - A product is something the user wants to produce
 * Resource - A resource describes a part that is needed to produce a product
@@ -14,7 +14,7 @@ In a industrial production environment and not only there, there are three parts
 The AbstractionLayer provides a collection of interfaces, base classes and common implementations for use in such a typical industrial production environment.
 So the AbstractionLayer is the base for Resources (e.g. Drivers, Cells, Stations), product descriptions and process data. It also gives you a base to persist these domain objects to a database.
 
-This article gives you an overview which base classes, storage techniques, process and product description come into play. The following list gives an overview of the needed aspects of the AbstractionLayer:
+This article gives you an overview which base classes, storage techniques, processes and product descriptions come into play. The following list gives an overview of the needed aspects of the AbstractionLayer:
 
 ## Activities
 
