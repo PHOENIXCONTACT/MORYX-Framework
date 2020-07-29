@@ -68,7 +68,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
 
 The implementation of the `ExampleDriver` derives from the [Driver](xref:Moryx.AbstractionLayer.Drivers.Driver) base class. It also implements the `IDriver` interface. The next important thing is the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this driver as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
-![ResourceUI](images\ExampleDriverResourceUI.png)
+![ResourceUI](images/ExampleDriverResourceUI.png)
 
 The two properties `AStringValue` and `AnIntValue` are shown in the ResourceUI and can be edited by the user. The member `ANonEditorBrowsableMember` is invisible for the user and is only used inside the AbstractionLayer.
 The `Square` function is also visible in the Resource UI. And: It is callable from there.
@@ -104,4 +104,4 @@ namespace Moryx.Resources.Samples.DriverTutorial
 
 ## When to use a driver
 
-If you want to communicate with the outside world like a database , a `PhoenixPlc` device, scanner or bar code reader you should implement it as a driver.
+If you want to communicate with the outside world like a database , a PLC, RFID scanner or bar code reader you should implement it as a driver.
