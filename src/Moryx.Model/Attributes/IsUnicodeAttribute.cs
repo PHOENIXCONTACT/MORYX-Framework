@@ -18,7 +18,7 @@ namespace Moryx.Model
 
         /// <summary>
         /// Creates a new instance of the <see cref="IsUnicodeAttribute"/>
-        /// Flags the propery as a unicode string
+        /// Flags the property as a unicode string
         /// </summary>
         public IsUnicodeAttribute() : this(true)
         {

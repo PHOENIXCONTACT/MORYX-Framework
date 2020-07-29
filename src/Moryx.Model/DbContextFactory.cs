@@ -5,6 +5,7 @@ using System.Linq;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
+using Moryx.Model.Configuration;
 using Moryx.Modules;
 using Moryx.Tools;
 

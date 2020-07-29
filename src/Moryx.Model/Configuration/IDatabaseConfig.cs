@@ -11,7 +11,7 @@ namespace Moryx.Model.Configuration
     public interface IDatabaseConfig : IConfig
     {
         /// <summary>
-        /// Databse server
+        /// Database server
         /// </summary>
         string Host { get; set; }
 

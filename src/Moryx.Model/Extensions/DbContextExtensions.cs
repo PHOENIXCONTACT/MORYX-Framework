@@ -1,4 +1,6 @@
+using System;
 using System.Data.Entity;
+using System.Linq;
 
 namespace Moryx.Model
 {
@@ -33,6 +35,36 @@ namespace Moryx.Model
                 mode |= ContextMode.ChangeTracking;
 
             return mode;
+        }
+
+        /// <summary>
+        /// Creates an entity and also adds it to the context
+        /// </summary>
+        public static TEntity CreateAndAdd<TEntity>(this DbSet<TEntity> dbSet) where TEntity : class
+        {
+            var entity = dbSet.Create();
+            dbSet.Add(entity);
+            return entity;
+        }
+
+        /// <summary>
+        /// Get or create an entity for a business object
+        /// </summary>
+        /// <param name="dbSet">An open database set</param>
+        /// <param name="obj">The business object</param>
+        /// <typeparam name="TEntity">The entity type to use</typeparam>
+        public static TEntity GetEntity<TEntity>(this DbSet<TEntity> dbSet, IPersistentObject obj)
+            where TEntity : class, IEntity
+        {
+            var entity = dbSet.FirstOrDefault(e => e.Id == obj.Id);
+            if (entity != null)
+                return entity;
+
+            entity = dbSet.Create();
+            dbSet.Add(entity);
+            EntityIdListener.Listen(entity, obj);
+
+            return entity;
         }
     }
 }

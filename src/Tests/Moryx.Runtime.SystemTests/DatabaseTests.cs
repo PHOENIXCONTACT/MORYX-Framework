@@ -7,7 +7,7 @@ using Moryx.Model;
 using Moryx.Runtime.Maintenance.Plugins.Databases;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.SystemTest;
-using Moryx.TestTools.Test.Inheritance.Model;
+using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.SystemTests
@@ -47,9 +47,9 @@ namespace Moryx.Runtime.SystemTests
             var result = _hogController.WaitForService("Maintenance", ServerModuleState.Running, 10);
             Assert.IsTrue(result, "Service 'Maintenance' did not reach state 'Running'");
 
-            if (_hogController.CheckDatabase(_databaseConfigModel, InheritedTestModelConstants.Name).Result == TestConnectionResult.Success)
+            if (_hogController.CheckDatabase(_databaseConfigModel, TestModelConstants.Name).Result == TestConnectionResult.Success)
             {
-                result = _hogController.DeleteDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+                result = _hogController.DeleteDatabase(_databaseConfigModel, TestModelConstants.Name);
                 Assert.IsTrue(result, "Can't delete database '{0}' in Setup.", _databaseName);
             }
         }
@@ -84,23 +84,23 @@ namespace Moryx.Runtime.SystemTests
         [Test]
         public void CreateDeleteDatabaseTest()
         {
-            var checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+            var checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, TestModelConstants.Name);
 
             Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, checkDatabase.Result, "Database '{0}' seems to exist.", _databaseName);
 
-            var createDatabase = _hogController.CreateDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+            var createDatabase = _hogController.CreateDatabase(_databaseConfigModel, TestModelConstants.Name);
 
             Assert.IsTrue(createDatabase, "Can't create database '{0}'.", _databaseName);
 
-            checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+            checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, TestModelConstants.Name);
             Assert.AreEqual(TestConnectionResult.Success, checkDatabase.Result, "Database '{0}' does not to exist.", _databaseName);
 
-            var deleteDatabase = _hogController.DeleteDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+            var deleteDatabase = _hogController.DeleteDatabase(_databaseConfigModel, TestModelConstants.Name);
 
             Assert.IsTrue(deleteDatabase, "Can't delete database '{0}'.", _databaseName);
 
-            checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
-            
+            checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, TestModelConstants.Name);
+
             Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, checkDatabase.Result, "Database '{0}' seems to still exist.", _databaseName);
         }
     }

@@ -4,7 +4,7 @@ using System.Data.Entity;
 using Moryx.Configuration;
 using Moryx.Logging;
 
-namespace Moryx.Model.Configurator
+namespace Moryx.Model.Configuration
 {
     /// <summary>
     /// Null implementation of the <see cref="ModelConfiguratorBase{TConfig}"/>

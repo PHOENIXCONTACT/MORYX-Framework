@@ -119,7 +119,6 @@
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj">
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
       <Name>Moryx.Model</Name>
-      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Moryx\Moryx.csproj">
       <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>

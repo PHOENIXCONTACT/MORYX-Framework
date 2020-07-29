@@ -69,8 +69,7 @@
     <Compile Include="Clients\ModuleMaintenanceWebClient.cs" />
     <Compile Include="Clients\TestWebClientBase.cs" />
     <Compile Include="ConfigManagerMock.cs" />
-    <Compile Include="ModulConfigurator.cs" />
-    <Compile Include="FactoryCreationContext.cs" />
+    <Compile Include="ModuleConfigurator.cs" />
     <Compile Include="HeartOfGoldController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
