@@ -9,18 +9,15 @@ namespace Moryx.Model
     /// Registration attribute for data model factories
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class ModelAttribute : Attribute
+    public class ModelConfiguratorAttribute : Attribute
     {
-        public string Name { get; }
-
         public Type ConfiguratorType { get; }
 
         /// <summary>
         /// Register this factory using the models namespace
         /// </summary>
-        public ModelAttribute(string modelName, Type configuratorType)
+        public ModelConfiguratorAttribute(Type configuratorType)
         {
-            Name = modelName;
             ConfiguratorType = configuratorType;
         }
     }

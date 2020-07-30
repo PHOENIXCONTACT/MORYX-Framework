@@ -11,45 +11,60 @@ using Moryx.Tools;
 
 namespace Moryx.Model
 {
+    /// <summary>
+    /// Kernel component handling data models and their runtime configurators
+    /// </summary>
     [InitializableKernelComponent(typeof(IDbContextFactory))]
-    public class DbContextFactory : IDbContextFactory, IInitializable
+    public class DbContextFactory : IDbContextFactory, IInitializable, ILoggingHost
     {
         #region Dependencies
 
         public IConfigManager ConfigManager { get; set; }
 
-        public IModuleLogger ModuleLogger { get; set; }
+        public IModuleLogger Logger { get; set; }
+
+        public ILoggerManagement LoggerManagement { get; set; }
 
         #endregion
 
+        string ILoggingHost.Name => nameof(DbContextFactory);
         private ModelWrapper[] _knownModels;
 
         /// <inheritdoc />
-        public IReadOnlyCollection<IModelConfigurator> Configurators =>  _knownModels.Select(km => km.Configurator).ToList();
+        public IReadOnlyCollection<IModelConfigurator> Configurators => _knownModels.Select(km => km.Configurator).ToList();
 
         /// <inheritdoc />
         public void Initialize()
         {
+            LoggerManagement.ActivateLogging(this);
+
             var dbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext), delegate (Type type)
             {
-                var modelAttr = type.GetCustomAttribute<ModelAttribute>();
+                var modelAttr = type.GetCustomAttribute<ModelConfiguratorAttribute>();
                 return modelAttr != null;
             });
 
             _knownModels = dbContextTypes
-                .Select(dbContextType =>
-                    new { DbContextType = dbContextType, ModelAttr = dbContextType.GetCustomAttribute<ModelAttribute>() })
-                .Select(t =>
+                .Select(dbContextType => new
                 {
-                    var wrapper = new ModelWrapper();
-                    wrapper.Name = t.ModelAttr.Name;
-                    wrapper.DbContextType = t.DbContextType;
-                    wrapper.Configurator = (IModelConfigurator)Activator.CreateInstance(t.ModelAttr.ConfiguratorType);
+                    DbContextType = dbContextType,
+                    ModelConfiguratorAttr = dbContextType.GetCustomAttribute<ModelConfiguratorAttribute>()
+                }).Select(t =>
+                {
+                    var wrapper = new ModelWrapper
+                    {
+                        DbContextType = t.DbContextType,
+                        Configurator = (IModelConfigurator) Activator.CreateInstance(t.ModelConfiguratorAttr.ConfiguratorType)
+                    };
                     return wrapper;
                 }).ToArray();
 
             foreach (var wrapper in _knownModels)
-                wrapper.Configurator.Initialize(wrapper.DbContextType, ConfigManager, ModuleLogger);
+            {
+                var configuratorType = wrapper.Configurator.GetType();
+                var logger = Logger.GetChild(configuratorType.Name, configuratorType);
+                wrapper.Configurator.Initialize(wrapper.DbContextType, ConfigManager, logger);
+            }
         }
 
         /// <inheritdoc />
@@ -74,14 +89,12 @@ namespace Moryx.Model
             var configurator = wrapper.Configurator;
 
             return config != null
-                ? (TContext) configurator.CreateContext(config, contextMode)
-                : (TContext) configurator.CreateContext(contextMode);
+                ? (TContext)configurator.CreateContext(config, contextMode)
+                : (TContext)configurator.CreateContext(contextMode);
         }
 
         private class ModelWrapper
         {
-            public string Name { get; set; }
-
             public Type DbContextType { get; set; }
 
             public IModelConfigurator Configurator { get; set; }

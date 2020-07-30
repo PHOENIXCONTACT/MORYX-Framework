@@ -54,8 +54,7 @@
     </Compile>
     <Compile Include="Attributes\DefaultSchemaAttribute.cs" />
     <Compile Include="Attributes\IsUnicodeAttribute.cs" />
-    <Compile Include="Attributes\ModelAttribute.cs" />
-    <Compile Include="Attributes\ModelSetupAttribute.cs" />
+    <Compile Include="Attributes\ModelConfiguratorAttribute.cs" />
     <Compile Include="Configuration\DatabaseUpdate.cs" />
     <Compile Include="Configuration\DatabaseUpdateInformation.cs" />
     <Compile Include="Configuration\DatabaseUpdateSummary.cs" />
