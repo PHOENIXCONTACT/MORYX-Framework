@@ -9,7 +9,6 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Migrations.Infrastructure;
 using System.Linq;
-using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Logging;
 using Moryx.Tools;
@@ -40,10 +39,10 @@ namespace Moryx.Model.Configuration
         protected abstract string ProviderInvariantName { get; }
 
         /// <inheritdoc />
-        public string TargetModel { get; private set; }
+        public IDatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public IDatabaseConfig Config { get; private set; }
+        public string TargetModel { get; private set; }
 
         /// <inheritdoc />
         public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
@@ -55,8 +54,7 @@ namespace Moryx.Model.Configuration
             Logger = logger;
 
             // Set TargetModel
-            var modelAttr = contextType.GetCustomAttribute<ModelAttribute>();
-            TargetModel = modelAttr != null ? modelAttr.Name : contextType.FullName;
+            TargetModel = contextType.Namespace;
 
             // Load Config
             _configName = TargetModel + ".DbConfig";
@@ -64,7 +62,7 @@ namespace Moryx.Model.Configuration
 
             // If database is empty, fill with TargetModel name
             if (string.IsNullOrWhiteSpace(Config.Database))
-                Config.Database = TargetModel;
+                Config.Database = contextType.Name;
 
             // Create migrations configuration
             _migrationsConfiguration = CreateDbMigrationsConfiguration();
@@ -162,7 +160,7 @@ namespace Moryx.Model.Configuration
         /// <summary>
         /// Creates a <see cref="DbConnection"/>
         /// </summary>
-        protected abstract DbConnection CreateConnection(IDatabaseConfig config, bool inlcudeModel);
+        protected abstract DbConnection CreateConnection(IDatabaseConfig config, bool includeModel);
 
         /// <summary>
         /// Creates a <see cref="DbCommand"/>
@@ -280,10 +278,6 @@ namespace Moryx.Model.Configuration
         /// </summary>
         private bool ModelSetupFilter(Type type, Type contextType)
         {
-            // Read from attribute
-            var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
-            if (setupAttr != null) return setupAttr.TargetModel == TargetModel;
-
             // Try to read context type from generic interface
             var genericContextType = (from iType in type.GetInterfaces()
                     where iType.IsGenericType && iType.GetGenericTypeDefinition() == typeof(IModelSetup<>)
