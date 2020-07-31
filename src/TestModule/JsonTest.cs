@@ -181,6 +181,7 @@ namespace Moryx.TestModule
             var json = JsonConvert.SerializeObject(config, typeof(IConfig), settings);
 
             var entity = dbContext.Jsons.Create();
+            dbContext.Jsons.Add(entity);
             entity.JsonData = json;
 
             dbContext.SaveChanges();
