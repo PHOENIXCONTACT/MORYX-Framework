@@ -124,15 +124,12 @@ namespace Moryx.Model
         {
             var modifiedTrackedEntries = ChangeTracker.Entries()
                 .Where(entry => entry.Entity is IModificationTrackedEntity &&
-                                (entry.State == EntityState.Added || entry.State == EntityState.Modified ||  entry.State == EntityState.Deleted));
+                                (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.State == EntityState.Deleted));
 
             var timeStamp = DateTime.UtcNow;
             foreach (var entry in modifiedTrackedEntries)
             {
-                var entity = (IModificationTrackedEntity) entry.Entity;
-
-                // All states gets updated
-                entity.Updated = timeStamp;
+                var entity = (IModificationTrackedEntity)entry.Entity;
 
                 // Added gets created
                 if (entry.State == EntityState.Added)
@@ -142,9 +139,15 @@ namespace Moryx.Model
                 // Deleted gets deleted timeStamp and will not be removed
                 else if (entry.State == EntityState.Deleted)
                 {
+                    // Important: Re attach to context, then edit properties
+                    Set(entity.GetType()).Attach(entity);
+
                     entity.Deleted = timeStamp;
                     entry.State = EntityState.Modified;
                 }
+
+                // All states gets updated
+                entity.Updated = timeStamp;
             }
         }
 

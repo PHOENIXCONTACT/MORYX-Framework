@@ -6,11 +6,11 @@ using Moryx.Model;
 
 namespace Moryx.TestTools.Test.Model
 {
-    public class SomeCoolSetup : ModelSetupBase<TestModelContext>
+    public class AnySetup : ModelSetupBase<TestModelContext>
     {
         public override int SortOrder => 1;
 
-        public override string Name => "Really cool setup";
+        public override string Name => "Any setup";
 
         public override string Description => "Creates some cars";
 
@@ -22,7 +22,7 @@ namespace Moryx.TestTools.Test.Model
             var wheelSet = dbContext.Wheels;
 
             CarEntity lastCar = null;
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 1; i++)
             {
                 var carEntity = carSet.Create();
                 carEntity.Name = "Car " + i;
@@ -39,6 +39,8 @@ namespace Moryx.TestTools.Test.Model
                 CreateWheel(WheelType.FrontRight);
                 CreateWheel(WheelType.RearLeft);
                 CreateWheel(WheelType.RearRight);
+
+                carSet.Add(carEntity);
 
                 lastCar = carEntity;
             }

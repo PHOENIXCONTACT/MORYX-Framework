@@ -99,7 +99,7 @@
     <Compile Include="Entities\HouseEntity.cs" />
     <Compile Include="Entities\HugePocoEntity.cs" />
     <Compile Include="Entities\JsonEntity.cs" />
-    <Compile Include="Setups\SomeCoolSetup.cs" />
+    <Compile Include="Setups\AnySetup.cs" />
     <None Include="app.config" />
     <Compile Include="Entities\SportCarEntity.cs" />
     <Compile Include="TestModelContext.cs" />
