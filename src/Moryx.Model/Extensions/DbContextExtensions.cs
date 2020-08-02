@@ -53,7 +53,7 @@ namespace Moryx.Model
         /// <param name="dbSet">An open database set</param>
         /// <param name="obj">The business object</param>
         /// <typeparam name="TEntity">The entity type to use</typeparam>
-        public static TEntity GetEntity<TEntity>(this DbSet<TEntity> dbSet, IPersistentObject obj)
+        public static TEntity GetOrCreate<TEntity>(this DbSet<TEntity> dbSet, IPersistentObject obj)
             where TEntity : class, IEntity
         {
             var entity = dbSet.FirstOrDefault(e => e.Id == obj.Id);
@@ -64,6 +64,16 @@ namespace Moryx.Model
             dbSet.Add(entity);
             EntityIdListener.Listen(entity, obj);
 
+            return entity;
+        }
+
+        /// <summary>
+        /// Sets the Deleted property on <see cref="IModificationTrackedEntity"/> entities. Will not remove the entity from database.
+        /// </summary>
+        public static TEntity RemoveTracked<TEntity>(this DbSet<TEntity> dbSet, TEntity entity)
+            where TEntity : class, IModificationTrackedEntity
+        {
+            entity.Deleted = DateTime.Now;
             return entity;
         }
     }
