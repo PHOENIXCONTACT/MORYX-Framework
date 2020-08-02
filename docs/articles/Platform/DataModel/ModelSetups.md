@@ -3,7 +3,7 @@ uid: Model.ModelSetups
 ---
 # Model Setup Guide
 
-In many projects including Moryx it is common to trade database dumps like black market goods. Importing files into the database is another quite common request for all sorts of projects. Therefor one of the first features of the Runtime was to provide setups associated with a model that can either create database entries hard coded for a certain application or import data from a file by specifying a file name regex. The idea was to provide a common interface for all this tasks and a simple UI on the maintenance to make this process as easy as possible.
+In many projects including MORYX it is common to trade database dumps like black market goods. Importing files into the database is another quite common request for all sorts of projects. Therefor one of the first features of the Runtime was to provide setups associated with a model that can either create database entries hard coded for a certain application or import data from a file by specifying a file name regex. The idea was to provide a common interface for all this tasks and a simple UI on the maintenance to make this process as easy as possible.
 
 ## Setup types
 

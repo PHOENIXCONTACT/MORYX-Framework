@@ -12,11 +12,10 @@ As a sample model we will use a small datamodel that could be used to manage a c
 
 ## Hard coded setup
 
-As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassAssembly project with all necessary references. Add the `ModelSetupAttribute` to the class and inherit it from [IModelSetup](xref:Moryx.Model.IModelSetup).
+As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassAssembly project with all necessary references. Inherit it from [IModelSetup](xref:Moryx.Model.IModelSetup).
 
 ````cs
-[ModelSetup(TargetModelNamespace = StaffConstants.Namespace)]
-public class HardCodedSetup : IModelSetup
+public class HardCodedSetup : ModelSetupBase<EmployeeContext>
 {
     public int SortOrder => 1;
     public string Name => "Sample";
@@ -28,7 +27,7 @@ public class HardCodedSetup : IModelSetup
 
 ### Hard coded infrastructure
 
-First we have to take care of the attribute and read only properties required by the Runtime. They are necessary for the framework to find, match and map the setups correctly:
+First we have to take care of the properties required by the Runtime. They are necessary for the framework to find, match and map the setups correctly:
 
 | Property | Description |
 |----------|-------------|
@@ -40,8 +39,7 @@ First we have to take care of the attribute and read only properties required by
 You should end up with something like this:
 
 ````cs
-[ModelSetup(TargetModelNamespace = StaffConstants.Namespace)]
-public class HardCodedSetup : IModelSetup
+public class HardCodedSetup : ModelSetupBase<EmployeeContext>
 {
     public int SortOrder => 1;
     public string Name => "Hardcoded setup";
@@ -51,33 +49,13 @@ public class HardCodedSetup : IModelSetup
 }
 ````
 
-### Repositories
-
-If you are familiar with the database API you may skip this section. Even though projects build on the Platform use the EntityFramework as ORM it is wrapped in interfaces. The `IUnitOfWork` wraps the `DbContext` and transaction while `IRepository` implementations wrap the `DbSets` and provide most of the common database access and modification methods. It is usually good design to move all repository declarations to the top of the method. That way you do not mix operations with boiler plate and colleagues can spot all accessed tables easily. In our example we will use both repositories - those for Employee and Address. Further reading [UnitOfWork Pattern](xref:Model.UnitOfWorkPattern).
-
 ### Hard coded entity creation
 
-In our setup we will create a supervisor and two subordinates together with their address (which is obviously fictional). For entity creation we will use the generated Create-overload that accepts all non-nullable properties. This way we make sure to not forget any mandatory properties.
+When the setup gets executed, the MORYX will create a context and povides it within the `Execute` method. Here everything can be done for setting up the database:
 
 ````cs
-public void Execute(IUnitOfWork openContext, string setupData)
+public void Execute(EmployeeContext openContext, string setupData)
 {
-    var employeeRepo = openContext.GetRepository<IEmployeeRepository>();
-    var addressRepo = openContext.GetRepository<IAddressRepository>();
-
-    // Create the one and only boss
-    var andreas = employeeRepo.Create("Kathrin", "Cole", new DateTime(1980, 7, 10));
-    andreas.Addresses.Add(addressRepo.Create("Bossway", 1, 12345, "NRW"));
-
-    var thomas = employeeRepo.Create("Claudia", "Bach", new DateTime(1991, 4, 21));
-    thomas.Addresses.Add(addressRepo.Create("Highway to perfection", 42, 42007, "NRW"));
-    thomas.Supervisor = andreas;
-
-    var dennis = employeeRepo.Create("Lea", "Adler", new DateTime(1992, 02, 21));
-    dennis.Addresses.Add(addressRepo.Create("Pretty drive", 7, 32816, "NRW");
-    dennis.Supervisor = andreas;
-
-    openContext.Save();
 }
 ````
 
@@ -110,9 +88,6 @@ A setup parsing the file and creating the entity might look likes this:
 ````cs
 public void Execute(IUnitOfWork openContext, string setupData)
 {
-    var employeeRepo = openContext.GetRepository<IEmployeeRepository>();
-    var addressRepo = openContext.GetRepository<IAddressRepository>();
-
     var index = 0;
     var lines = File.ReadAllLines(setupData);
 
@@ -136,9 +111,18 @@ public void Execute(IUnitOfWork openContext, string setupData)
         supervisor = lines[index].Split(' ');
 
     // Create entity
-    var employee = employeeRepo.Create(name[0], name[1], birthDay);
-    employee.Addresses.Add(addressRepo.Create(street, number, zip, state));
-    employee.Supervisor = employeeRepo.GetMatch(supervisor[0], supervisor[1]);
+    var employee = openContext.Employees.Create();
+    employee.FirstName = name[0];
+    employee.LastName = name[1];
+    employee.DateOfBirth = birthDay
+
+    var address = openContext.Adresses.Create();
+    address.Street = street;
+    address.Number = number;
+    address.ZipCode = zip;
+    address.State = state;
+
+    employee.Addresses.Add(address);
 
     openContext.Save();
 }
