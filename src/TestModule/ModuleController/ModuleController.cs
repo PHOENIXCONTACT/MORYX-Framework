@@ -23,7 +23,7 @@ namespace Moryx.TestModule
         /// <summary>
         /// Db context factory for data models
         /// </summary>
-        public IDbContextFactory DbContextFactory { get; set; }
+        public IDbContextManager DbContextManager { get; set; }
 
         private IHelloWorldWcfConnector _connector;
 
@@ -34,7 +34,8 @@ namespace Moryx.TestModule
         /// </summary>
         protected override void OnInitialize()
         {
-            Container.SetInstance(DbContextFactory);
+            Container.ActivateDbContexts(DbContextManager);
+
             Container.LoadComponents<IHelloWorldWcfConnector>();
         }
 

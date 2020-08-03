@@ -17,9 +17,9 @@ Now in times of EF you implement the LINQ expressions into the repository implem
 
 ## The MORYX way
 
-The MORYX framework follows another strategy: You don't need to implement an own UnitOfWork class becuase it is the DbContext and the repositories are generated at runtime. So no code needs to be maintained.
+The MORYX framework follows another strategy: You don't need to implement an own UnitOfWork class becuase it is the DbContext and the repositories are generated at runtime. So no code needs to be maintained. Also have a look at the [repository proxy builder](RepositoryProxyBuilder.md)
 
-Let's have a look on an example implementation how you define the UnitOfWork and Repository aproach in the MORYX framework.
+Let's have a look at an example implementation how you define the UnitOfWork and Repository approach in the MORYX framework.
 
 ````cs
 public interface IPersonEntityRepository : IRepository<PersonEntity>
@@ -34,24 +34,28 @@ And here is how you use it.
 // Note that this is just an example to show which calls you have to make
 // to work with your database.
 
+// Injected
+public IContextFactory<PersonContext> ContextFactory { get; set; }
+
 public void WriteSomethingToDB()
 {
-    var context = DbContextFactory.Create<PersonContext>();
+    using (var context = ContextFactory.Create())
+    {
+        // Get the repository you want to work with
+        var personRepo = ContextFactory.GetRepository<IPersonEntityRepository>(context);
 
-    // Get the repository you want to work with
-    var personRepo = context.GetRepository<IPersonEntityRepository>();
+        // Get all persons
+        var persons = personRepo.GetAll();
 
-    // Get all persons
-    var persons = personRepo.GetAll();
+        // Create a person
+        var newPerson = personRepo.Create();
 
-    // Create a person
-    var newPerson = houseRepository.Create();
+        // Change it
+        newPerson.Name = "Spock";
 
-    // Change it
-    newPerson.Name = "Spock";
-
-    // save it
-    context.SaveChanges();
+        // save it
+        context.SaveChanges();
+    }
 }
 ````
 

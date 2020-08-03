@@ -36,7 +36,7 @@ namespace Moryx.Runtime.Maintenance
         /// <summary>
         /// Model configurators. Injected by castle.
         /// </summary>
-        public IDbContextFactory DbContextFactory { get; set; }
+        public IDbContextManager DbContextManager { get; set; }
 
         /// <summary>
         /// runtime config manager. Injected by castle.
@@ -68,7 +68,7 @@ namespace Moryx.Runtime.Maintenance
                 .SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
                 .SetInstance((IServerLoggerManagement)LoggerManagement);
 
-            Container.SetInstance(DbContextFactory);
+            Container.SetInstance(DbContextManager);
 
             Container.LoadComponents<IMaintenancePlugin>();
         }

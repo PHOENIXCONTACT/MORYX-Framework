@@ -13,7 +13,7 @@ namespace Moryx.Runtime.DbUpdate
     [RunMode(typeof(DbUpdateOptions))]
     public class DbUpdateRunMode : RunModeBase<DbUpdateOptions>
     {
-        public IDbContextFactory DbContextFactory { get; set; }
+        public IDbContextManager DbContextManager { get; set; }
 
         /// <summary>
         /// Run environment
@@ -22,7 +22,7 @@ namespace Moryx.Runtime.DbUpdate
         public override RuntimeErrorCode Run()
         {
             Console.WriteLine("Updating databases...");
-            foreach (var configurator in DbContextFactory.Configurators)
+            foreach (var configurator in DbContextManager.Configurators)
             {
                 try
                 {
