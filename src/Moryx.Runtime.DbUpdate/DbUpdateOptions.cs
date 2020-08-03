@@ -2,8 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using CommandLine;
+using Moryx.Runtime.Kernel;
 
-namespace Moryx.Runtime.Kernel.DbUpdate
+namespace Moryx.Runtime.DbUpdate
 {
     /// <summary>
     /// Option class for the <see cref="DbUpdateRunMode"/>
