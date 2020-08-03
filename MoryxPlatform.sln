@@ -85,6 +85,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.SmokeTest", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model.InMemory", "src\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj", "{21C94DE5-A774-4474-8C31-DB483D49710E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.DbUpdate", "src\Moryx.Runtime.DbUpdate\Moryx.Runtime.DbUpdate.csproj", "{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -642,6 +644,24 @@ Global
 		{21C94DE5-A774-4474-8C31-DB483D49710E}.Release|x64.Build.0 = Release|Any CPU
 		{21C94DE5-A774-4474-8C31-DB483D49710E}.Release|x86.ActiveCfg = Release|Any CPU
 		{21C94DE5-A774-4474-8C31-DB483D49710E}.Release|x86.Build.0 = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Debug|x64.Build.0 = Debug|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Debug|x86.Build.0 = Debug|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release(x86)|x86.Build.0 = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release|x64.ActiveCfg = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release|x64.Build.0 = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release|x86.ActiveCfg = Release|Any CPU
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -678,10 +698,11 @@ Global
 		{45BF2368-B7C9-42A1-9587-F3B3EADE4A67} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 		{F297C67F-AA7C-4687-912E-5970022165F9} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 		{21C94DE5-A774-4474-8C31-DB483D49710E} = {74112169-6672-4907-A187-F055111940A9}
+		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
-		RESX_ShowErrorsInErrorList = True
 		RESX_TaskErrorCategory = Message
+		RESX_ShowErrorsInErrorList = True
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 	EndGlobalSection
 EndGlobal

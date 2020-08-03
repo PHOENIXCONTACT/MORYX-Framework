@@ -80,6 +80,14 @@
       <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
       <Name>Moryx.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Moryx.Runtime.DbUpdate\Moryx.Runtime.DbUpdate.csproj">
+      <Project>{5a9edbd2-fffe-4b87-9139-3d6c9265758a}</Project>
+      <Name>Moryx.Runtime.DbUpdate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moryx.Runtime.SmokeTest\Moryx.Runtime.SmokeTest.csproj">
+      <Project>{f297c67f-aa7c-4687-912e-5970022165f9}</Project>
+      <Name>Moryx.Runtime.SmokeTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Moryx.Runtime.WinService\Moryx.Runtime.WinService.csproj">
       <Project>{45bf2368-b7c9-42a1-9587-f3b3eade4a67}</Project>
       <Name>Moryx.Runtime.WinService</Name>

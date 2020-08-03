@@ -132,8 +132,6 @@
     <Compile Include="RunMode\RuntimeErrorCode.cs" />
     <Compile Include="RunMode\RuntimeOptions.cs" />
     <Compile Include="RunMode\RunModeBase.cs" />
-    <Compile Include="RunMode\DbUpdate\DbUpdateOptions.cs" />
-    <Compile Include="RunMode\DbUpdate\DbUpdateRunMode.cs" />
     <Compile Include="Wcf\BindingFactories.cs" />
     <Compile Include="Wcf\ClientFactory.cs" />
     <Compile Include="Wcf\ClientFactoryConfig.cs" />
