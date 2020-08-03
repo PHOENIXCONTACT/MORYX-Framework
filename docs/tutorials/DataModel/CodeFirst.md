@@ -133,12 +133,32 @@ If you want to take profit about lazy loading setting the right `ContextMode` is
 
 ### MORYX specific
 
+To use the context within a MORYX module, you must declare a dependency on `IDbContextManager` and register it together with the context specific factory in your local container. Afterwards you can use injection for context specifics factories anywhere in the module
+
+````cs
+public IDbContextManager DbContextManager { get; set; }
+
+protected override void OnInitialize()
+{
+    Container.ActivateDbContexts(DbContextManager);
+
+    // ..
+
+
+// Somewhere within the modules composition
+public class MyComponent : IMyComponent
+{
+    // Injected
+    public IContextFactory<SolarSystemContext> SolarContextFactory { get; set; }
+}
+````
+
 MORYX framework uses per default `Dynamic Change Tracking` and lazy loading but it is possbile to override these settings. You are allowed to change settings via [ContextMode](xref:Moryx.Model.ContextMode):
 
 ````cs
 // Example how you can change the default setting via ContextMode on the `UnitOfWorkFactory`
 // This call enables `Dynamic Change Tracking` only feature
-var context = DbContextFactory.Create<SolarSystemContext>(ContextMode.Tracking);
+var context = SolarContextFactory.Create(ContextMode.Tracking);
 
 // or later with
 context.SetContextMode(ContextMode.Tracking);
@@ -146,11 +166,11 @@ context.SetContextMode(ContextMode.Tracking);
 
 ## UnitOfWork Repository Pattern
 
-MORYX brings out of the box extensions on the `DbContext` to provide the [UnitOfWork Repository Pattern](xref:Model.UnitOfWorkPattern). For the further reading it is necessary to have a rough understanding about it.
+MORYX brings out of the box extensions on the `DbContext` to provide the [UnitOfWork Repository Pattern](../../articles/Platform/DataModel/UnitOfWorkPattern.md). For the further reading it is necessary to have a rough understanding about it.
 
 ### Repositories
 
-After that we need do define the repository interfaces.
+First let's define a repository API
 
 ````cs
 public interface IPlanetRepository : IRepository<Planet>
@@ -192,7 +212,7 @@ public interface IAsteroidRepository : IRepository<Asteroid>
 }
 ````
 
-If you got scared that you have to implement all these functions you are lucky they will be implemented automatically. So you only have to define the interfaces. If you want to know more about the automatic repository instantiation please have a look onto [Repository Proxy Builder](xref:Model.RepositoryProxyBuilder) page. The example functions defined above are also not necessary. Add just functions you really need.
+If you got scared that you have to implement all these functions you are lucky they will be implemented automatically. So you only have to define the interfaces. If you want to know more about the automatic repository instantiation please have a look onto [Repository Proxy Builder](../../articles/Platform/DataModel/RepositoryProxyBuilder.md) page. The example functions defined above are also not necessary. Add just functions you really need.
 
 But if you need a more specialized implementation of a repository you can either use a mixture of repository proxies and self implemented repository or your own repository implementation.
 

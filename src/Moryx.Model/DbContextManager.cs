@@ -14,8 +14,8 @@ namespace Moryx.Model
     /// <summary>
     /// Kernel component handling data models and their runtime configurators
     /// </summary>
-    [InitializableKernelComponent(typeof(IDbContextFactory))]
-    public class DbContextFactory : IDbContextFactory, IInitializable, ILoggingHost
+    [InitializableKernelComponent(typeof(IDbContextManager))]
+    public class DbContextManager : IDbContextManager, IInitializable, ILoggingHost
     {
         #region Dependencies
 
@@ -27,7 +27,7 @@ namespace Moryx.Model
 
         #endregion
 
-        string ILoggingHost.Name => nameof(DbContextFactory);
+        string ILoggingHost.Name => nameof(DbContextManager);
         private ModelWrapper[] _knownModels;
 
         /// <inheritdoc />

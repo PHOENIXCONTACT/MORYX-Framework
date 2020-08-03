@@ -19,7 +19,7 @@ namespace Moryx.TestModule
     [Plugin(LifeCycle.Singleton)]
     public class JsonTest : IPlugin
     {
-        public IDbContextFactory DbContextFactory { get; set; }
+        public IContextFactory<TestModelContext> ContextFactory { get; set; }
 
         private const int LoopCount = 100;
 
@@ -150,28 +150,35 @@ namespace Moryx.TestModule
             var stopWatch = new Stopwatch();
             var ids = new List<long>();
 
-            // Write time
-            var testContext = DbContextFactory.Create<TestModelContext>(ContextMode.ChangeTracking);
-            stopWatch.Start();
-            for (var i = 0; i < LoopCount; i++)
-            {
-                ids.Add(WriteLoop(testContext, config, jsonSettings));
-            }
-            stopWatch.Stop();
+            long writeTime, readTime = 0;
 
-            var writeTime = stopWatch.ElapsedMilliseconds;
+            // Write time
+            using (var testContext = ContextFactory.Create(ContextMode.ChangeTracking))
+            {
+                stopWatch.Start();
+                for (var i = 0; i < LoopCount; i++)
+                {
+                    ids.Add(WriteLoop(testContext, config, jsonSettings));
+                }
+
+                stopWatch.Stop();
+
+                writeTime = stopWatch.ElapsedMilliseconds;
+            }
 
             // Read time
-            testContext = DbContextFactory.Create<TestModelContext>(ContextMode.ChangeTracking);
-
-            stopWatch.Restart();
-            foreach (var id in ids)
+            using (var testContext = ContextFactory.Create(ContextMode.ChangeTracking))
             {
-                var result = ReadLoop(testContext, id, jsonSettings);
-            }
-            stopWatch.Stop();
+                stopWatch.Restart();
+                foreach (var id in ids)
+                {
+                    var result = ReadLoop(testContext, id, jsonSettings);
+                }
 
-            var readTime = stopWatch.ElapsedMilliseconds;
+                stopWatch.Stop();
+
+                readTime = stopWatch.ElapsedMilliseconds;
+            }
 
             return new[] { writeTime, readTime };
         }

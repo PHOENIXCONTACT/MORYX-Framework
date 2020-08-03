@@ -7,7 +7,10 @@ using Moryx.Model.Configuration;
 
 namespace Moryx.Model
 {
-    public interface IDbContextFactory
+    /// <summary>
+    /// Global context management
+    /// </summary>
+    public interface IDbContextManager
     {
         IReadOnlyCollection<IModelConfigurator> Configurators { get; }
 

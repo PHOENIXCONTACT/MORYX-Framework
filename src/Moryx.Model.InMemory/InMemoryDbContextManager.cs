@@ -6,19 +6,19 @@ using Moryx.Model.Configuration;
 namespace Moryx.Model.InMemory
 {
     /// <summary>
-    /// In memory implementation of the <see cref="IDbContextFactory"/>
+    /// In memory implementation of the <see cref="IDbContextManager"/>
     /// </summary>
-    public class InMemoryDbContextFactory : IDbContextFactory
+    public class InMemoryDbContextManager : IDbContextManager
     {
         private readonly string _instanceId;
 
         public IReadOnlyCollection<IModelConfigurator> Configurators => Array.Empty<IModelConfigurator>();
 
-        public InMemoryDbContextFactory() : this(string.Empty)
+        public InMemoryDbContextManager() : this(string.Empty)
         {
         }
 
-        public InMemoryDbContextFactory(string instanceId)
+        public InMemoryDbContextManager(string instanceId)
         {
             _instanceId = instanceId;
         }

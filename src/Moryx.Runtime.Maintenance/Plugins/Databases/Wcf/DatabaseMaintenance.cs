@@ -24,9 +24,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         public IParallelOperations ParallelOperations { get; set; }
 
-        public IDbContextFactory DbContextFactory { get; set; }
+        public IDbContextManager DbContextManager { get; set; }
 
-        private IEnumerable<IModelConfigurator> ModelConfigurators => DbContextFactory.Configurators;
+        private IEnumerable<IModelConfigurator> ModelConfigurators => DbContextManager.Configurators;
 
         /// <summary>
         /// Logger of this component

@@ -16,7 +16,7 @@ namespace Moryx.Model.Tests
         {
             // Arrange
             const string carName = "BMW 320d F31 - Mineral Gray";
-            var inMemoryFactory = new InMemoryDbContextFactory(Guid.NewGuid().ToString());
+            var inMemoryFactory = new InMemoryDbContextManager(Guid.NewGuid().ToString());
 
             // Act
             var context = inMemoryFactory.Create<TestModelContext>();

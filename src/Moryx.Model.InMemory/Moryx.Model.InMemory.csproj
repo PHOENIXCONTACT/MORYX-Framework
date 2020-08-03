@@ -60,7 +60,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="InMemoryDbContextFactory.cs" />
+    <Compile Include="InMemoryDbContextManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

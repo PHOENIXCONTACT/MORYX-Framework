@@ -30,7 +30,7 @@ namespace Moryx.Runtime.SmokeTest
         /// <summary>
         /// Factory to create and manage data models
         /// </summary>
-        public IDbContextFactory DbContextFactory { get; set; }
+        public IDbContextManager DbContextManager { get; set; }
 
         #region Fields
 
@@ -89,7 +89,7 @@ namespace Moryx.Runtime.SmokeTest
             }
 
             // Load model configurators
-            var modelConfigurators = DbContextFactory.Configurators;
+            var modelConfigurators = DbContextManager.Configurators;
 
             // Create all databases
             foreach (var modelConfigurator in modelConfigurators)
