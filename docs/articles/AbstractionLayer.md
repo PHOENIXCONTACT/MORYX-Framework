@@ -7,8 +7,8 @@ uid: AbstractionLayer
 
 In an industrial production environment and not only there, there are three parts that come to play to describe the production process:
 
-* Product - A product is something the user wants to produce
-* Resource - A resource describes a part that is needed to produce a product
+* [Product](Products/Concept.md) - A product is something the user wants to produce
+* [Resource](Resources/Overview.md) - A resource describes a part that is needed to produce a product
 * Processing - The way how the product is produced with a set of resources
 
 The AbstractionLayer provides a collection of interfaces, base classes and common implementations for use in such a typical industrial production environment.
@@ -18,15 +18,17 @@ This article gives you an overview which base classes, storage techniques, proce
 
 ## Activities
 
-An [Activity](xref:Activities) is the smallest separately executable step of a Process.
+An [Activity](Processing/Activities.md) is the smallest separately executable step of a Process.
 
 ## Capabilities
 
-[Capabilities](xref:Capabilities) are used to find a matching *Resource* for an Activity.
+[Capabilities](Processing/Capabilities.md) are used to find a matching *Resource* for an Activity.
 
 ## Constraints
 
-[Constraints](xref:Constraints) may be used when calling a ReadyToWork to be able to restrict the possible activities which could be dispatched to the resource which has called the ReadyToWork.
+[Constraints](Processing/Constraints.md) have a similar impact on the mapping between activities and resources. 
+In contrast to the capabilities, constraints aren't sets of provided and required abilities, but boolean conditions that might restrict the possibility to execute an activity on a resource.
+The constraint is also not based on an inherent property of the activity or resource but arises from the current context in the system.
 
 ## Identity
 
@@ -34,11 +36,12 @@ An [Activity](xref:Activities) is the smallest separately executable step of a P
 
 ## Process
 
-A [Process](xref:Processes) consists of a series of activities.
+A [Process](Processing/Processes.md) consists of a series of activities.
 
 ## Products
 
-A [ProductType](xref:Moryx.AbstractionLayer.Products.IProduct) or better a *product description* is used by a [ProductRecipes](xref:Moryx.AbstractionLayer.Recipes.ProductRecipe) to provide a basic structure to produce a [ProductInstance](xref:Moryx.AbstractionLayer.Products.ProductInstance) 
+A [ProductType](xref:Moryx.AbstractionLayer.Products.IProductType) or better a *product description* is used by a [ProductRecipe](xref:Moryx.AbstractionLayer.Recipes.
+ProductRecipe) to provide a basic structure to produce a [ProductInstance](xref:Moryx.AbstractionLayer.Products.ProductInstance) 
 
 ## Recipes
 
@@ -52,15 +55,15 @@ A [ProductionRecipe](xref:Moryx.AbstractionLayer.Recipes.ProductionRecipe) is th
 
 ## Resources
 
-The Resources package of the AbstrationLayer contains several basic classes to be used by the [Resources](xref:Moryx.AbstractionLayer.Resources.IResource) and the [ResourceManager](xref:ResourceManagement)
+The Resources package of the AbstrationLayer contains several basic classes to be used by the [Resources](xref:Moryx.AbstractionLayer.Resources.IResource) and the [ResourceManager](Resources/ResourceManagement.md)
 
 ## Tasks
 
-[Tasks](xref:Tasks) are used within a Workplan to define the Activity for each step.
+[Tasks](Processing/Tasks.md) are used within a Workplan to define the Activity for each step.
 
 ## Workplan
 
-The [Workplan](xref:Workplans) package of the AbstrationLayer contains several helper classes to be used by the Workflow package.
+The [Workplan](Processing/Workplans.md) package of the AbstrationLayer contains several helper classes to be used by the Workflow package.
 
 ## Tutorials
 
