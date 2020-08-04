@@ -6,15 +6,18 @@ using System;
 namespace Moryx.Model
 {
     /// <summary>
-    /// Registration attribute for data model factories
+    /// Registration attribute for data model configurators
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class ModelConfiguratorAttribute : Attribute
     {
+        /// <summary>
+        /// Configurator used for the context
+        /// </summary>
         public Type ConfiguratorType { get; }
 
         /// <summary>
-        /// Register this factory using the models namespace
+        /// Creates a new instance of <see cref="ModelConfiguratorAttribute"/>
         /// </summary>
         public ModelConfiguratorAttribute(Type configuratorType)
         {
