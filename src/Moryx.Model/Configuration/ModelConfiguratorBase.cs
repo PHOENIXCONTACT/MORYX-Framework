@@ -54,7 +54,7 @@ namespace Moryx.Model.Configuration
             Logger = logger;
 
             // Set TargetModel
-            TargetModel = contextType.Namespace;
+            TargetModel = contextType.FullName;
 
             // Load Config
             _configName = TargetModel + ".DbConfig";
@@ -71,8 +71,12 @@ namespace Moryx.Model.Configuration
             _migrations = GetAvailableMigrations();
 
             // Load ModelSetups TODO: Load internals
-            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(type => ModelSetupFilter(type, contextType))
-                .ToDictionary(t => t, t => (IModelSetup) null);
+            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(delegate(Type type)
+            {
+                // Try to read context from attribute
+                var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
+                return setupAttr != null && setupAttr.TargetContext == _contextType;
+            }).ToDictionary(t => t, t => (IModelSetup) null);
         }
 
         /// <inheritdoc />
@@ -271,19 +275,6 @@ namespace Moryx.Model.Configuration
                     yield return dict[type];
                 }
             }
-        }
-
-        /// <summary>
-        /// Filters model setups by the context type or target model
-        /// </summary>
-        private bool ModelSetupFilter(Type type, Type contextType)
-        {
-            // Try to read context type from generic interface
-            var genericContextType = (from iType in type.GetInterfaces()
-                    where iType.IsGenericType && iType.GetGenericTypeDefinition() == typeof(IModelSetup<>)
-                    select iType.GetGenericArguments()[0]).FirstOrDefault();
-
-            return genericContextType == contextType;
         }
 
         private DbMigrator CreateDbMigrator(IDatabaseConfig config)
