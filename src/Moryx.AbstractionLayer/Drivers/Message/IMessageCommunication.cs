@@ -9,12 +9,12 @@ namespace Moryx.AbstractionLayer.Drivers.Message
     /// <summary>
     /// Interface for message based communication
     /// </summary>
-    public interface IMessageCommunication
+    public interface IMessageCommunication<TMessage>
     {
         /// <summary>
         /// Reference to the underlying driver of this communication
         /// </summary>
-        IMessageDriver Driver { get; }
+        IMessageDriver<TMessage> Driver { get; }
 
         /// <summary>
         /// Identifier of this channel
@@ -24,11 +24,11 @@ namespace Moryx.AbstractionLayer.Drivers.Message
         /// <summary>
         /// Send message through the driver
         /// </summary>
-        void Send(object message);
+        void Send(TMessage message);
 
         /// <summary>
         /// Event raised when the driver receives a message
         /// </summary>
-        event EventHandler<object> Received;
+        event EventHandler<TMessage> Received;
     }
 }

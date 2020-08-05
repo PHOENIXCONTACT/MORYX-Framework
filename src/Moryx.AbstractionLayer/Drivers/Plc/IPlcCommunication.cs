@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Drivers.Plc
     /// <summary>
     /// Interface for communication with the plc
     /// </summary>
-    public interface IPlcCommunication : IMessageCommunication
+    public interface IPlcCommunication : IMessageCommunication<object>
     {
         /// <summary>
         /// Send object to the PLC and await a transmission confirmation
