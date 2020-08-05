@@ -8,11 +8,11 @@ namespace Moryx.AbstractionLayer.Drivers.Message
     /// <summary>
     /// Multi-purpose driver that exchanges messages with the device
     /// </summary>
-    public interface IMessageDriver : IDriver, IMessageCommunication
+    public interface IMessageDriver<TMessage> : IDriver, IMessageCommunication<TMessage>
     {
         /// <summary>
         /// Access a named sub-channel of the driver
         /// </summary>
-        IMessageCommunication this[string identifier] { get; }
+        IMessageCommunication<TMessage> this[string identifier] { get; }
     }
 }
