@@ -3,10 +3,9 @@
 
 using Moryx.Model.Repositories;
 
-namespace Moryx.Model.Tests
+namespace Moryx.TestTools.Test.Model
 {
-    public interface ICreateUnknownPropertyRepository : IRepository<SomeEntity>
+    public interface IAnotherEntityRepository : IRepository<AnotherEntity>
     {
-        SomeEntity Create(string unknown);
     }
 }

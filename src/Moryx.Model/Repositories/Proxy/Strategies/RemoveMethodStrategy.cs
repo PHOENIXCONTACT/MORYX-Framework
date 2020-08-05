@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Moryx.Model
+namespace Moryx.Model.Repositories.Proxy
 {
     internal class RemoveMethodStrategy : MethodProxyStrategyBase
     {

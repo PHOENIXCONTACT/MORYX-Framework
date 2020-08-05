@@ -46,6 +46,9 @@ namespace Moryx.Model
         /// </summary>
         IDatabaseConfig Config { get; }
 
+        /// <summary>
+        /// Target model name
+        /// </summary>
         string TargetModel { get; }
 
         /// <summary>
@@ -53,8 +56,14 @@ namespace Moryx.Model
         /// </summary>
         void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger);
 
+        /// <summary>
+        /// Creates a context based on a config and the context mode
+        /// </summary>
         DbContext CreateContext(IDatabaseConfig config, ContextMode mode);
 
+        /// <summary>
+        /// Creates a context based on the context mode with internal configuration
+        /// </summary>
         DbContext CreateContext(ContextMode mode);
 
         /// <summary>

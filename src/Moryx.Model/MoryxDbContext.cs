@@ -20,6 +20,11 @@ namespace Moryx.Model
         private static readonly MethodInfo DbInitializerMethod;
 
         /// <summary>
+        /// Indicator if modification tracking should be done automatically
+        /// </summary>
+        public bool EnableModificationTracking { get; set; } = true;
+
+        /// <summary>
         /// Static constructor to load the database initializer method
         /// </summary>
         static MoryxDbContext()
@@ -137,6 +142,10 @@ namespace Moryx.Model
 
                 // All states gets updated
                 entity.Updated = timeStamp;
+
+                // Override deleted date of entity to sync between updated and deleted
+                if (entry.OriginalValues[nameof(IModificationTrackedEntity.Deleted)] == null && entity.Deleted != null)
+                    entity.Deleted = timeStamp;
             }
         }
 

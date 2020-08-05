@@ -14,7 +14,8 @@ You have to implement a few basics to get started working with the PostgreSQL da
 | [DbContext](https://msdn.microsoft.com/en-us/library/jj729737.aspx) | The primary class that is responsible for interacting with data as objects (often referred to as context). The context class manages the entity objects during run time, which includes populating objects with data from a database, change tracking, and persisting data to the database. |
 | Entities | One entity is one table |
 | Repositories | Helper functions to access a specific table. The MORYX framework implements a speciality to make your life easier. You just need to define the interface and the code will be generated at runtime. |
-| UnitOfWorkFactory | Factory for the database within the MORYX context |
+
+More extended, additional repositories can be created for the [UnitOfWork Repository Pattern](../../articles/Platform/DataModel/UnitOfWorkPattern.md).
 
 ## The database DbContext
 
@@ -57,8 +58,7 @@ public class SolarSystemContext : MoryxDbContext
 }
 ````
 
-Please note the [ModelConfiguratorAttribute](xref:Moryx.Model.ModelConfiguratorAttribute) which is used by the [IDbContextFactory](xref:Moryx.Model.IDbContextFactory) to create a configuration for the context.
-The `NpgsqlModelConfigurator` is using `Npgsql` for PostgreSQL databases.
+Please note the [ModelConfiguratorAttribute](xref:Moryx.Model.ModelConfiguratorAttribute) which is used by the MORYX to create a configuration for the context. For now, the `NpgsqlModelConfigurator` is using `Npgsql` for PostgreSQL databases.
 
 ## Entities
 
@@ -101,7 +101,7 @@ public class Asteroid : ModificationTrackedEntityBase
 }
 ````
 
-The entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase). Is that necessary? That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`. This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base and has three special properties which are monitored by triggers (Created, Updated, Deleted). These trigger will automatically installed inside the database and tables. Further reading [Modification Tracking](xref:Model.ModificationTracking) here.
+The entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase). Is that necessary? That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`. This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base and has three special properties which are monitored by triggers (Created, Updated, Deleted) whcih are automatically applied to the entitiy. Further reading [Modification Tracking](../../articles/Platform/DataModel/ModificationTracking.md) here.
 
 ## Entity loading & change tracking behavior
 
@@ -136,6 +136,8 @@ If you want to take profit about lazy loading setting the right `ContextMode` is
 To use the context within a MORYX module, you must declare a dependency on `IDbContextManager` and register it together with the context specific factory in your local container. Afterwards you can use injection for context specifics factories anywhere in the module
 
 ````cs
+// ModuleController.cs
+
 public IDbContextManager DbContextManager { get; set; }
 
 protected override void OnInitialize()
@@ -156,12 +158,13 @@ public class MyComponent : IMyComponent
 MORYX framework uses per default `Dynamic Change Tracking` and lazy loading but it is possbile to override these settings. You are allowed to change settings via [ContextMode](xref:Moryx.Model.ContextMode):
 
 ````cs
-// Example how you can change the default setting via ContextMode on the `UnitOfWorkFactory`
+// Example how you can change the default setting via ContextMode on the context
 // This call enables `Dynamic Change Tracking` only feature
-var context = SolarContextFactory.Create(ContextMode.Tracking);
-
-// or later with
-context.SetContextMode(ContextMode.Tracking);
+using (var context = SolarContextFactory.Create(ContextMode.Tracking))
+{
+    // or later with
+    context.SetContextMode(ContextMode.Tracking);
+}
 ````
 
 ## UnitOfWork Repository Pattern
@@ -170,7 +173,7 @@ MORYX brings out of the box extensions on the `DbContext` to provide the [UnitOf
 
 ### Repositories
 
-First let's define a repository API
+First let's define a repository API (same assembly as the context is defined)
 
 ````cs
 public interface IPlanetRepository : IRepository<Planet>
@@ -215,6 +218,33 @@ public interface IAsteroidRepository : IRepository<Asteroid>
 If you got scared that you have to implement all these functions you are lucky they will be implemented automatically. So you only have to define the interfaces. If you want to know more about the automatic repository instantiation please have a look onto [Repository Proxy Builder](../../articles/Platform/DataModel/RepositoryProxyBuilder.md) page. The example functions defined above are also not necessary. Add just functions you really need.
 
 But if you need a more specialized implementation of a repository you can either use a mixture of repository proxies and self implemented repository or your own repository implementation.
+
+To use the unit of work pattern, another factory is also registered to the local container of the module `IUnitOfWorkFactory` and this can also be injected per context:
+
+````cs
+// Somewhere within the modules composition
+public class MyComponent : IMyComponent
+{
+    // Injected
+    public IUnitOfWorkFactory<SolarSystemContext> UnitOfWorkFactory { get; set; }
+}
+````
+
+The repository can be used be creating an unit of work by the factory and resolve the repository
+
+````cs
+using (var uow = UnitOfWokFactory.Create())
+{
+    var planetRepo = uow.GetRepository<IPlanetRepository>();
+    var planetEntity = planetRepo.Create();
+
+    //[...]
+
+    uow.SaveChanges();
+}
+````
+
+You must not implement your repository interface, this is completly done by the [Repository Proxy Builder](../../articles/Platform/DataModel/RepositoryProxyBuilder.md).
 
 ## Database Migration
 

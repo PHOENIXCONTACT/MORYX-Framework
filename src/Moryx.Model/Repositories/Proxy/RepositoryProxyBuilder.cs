@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Moryx.Model
+namespace Moryx.Model.Repositories.Proxy
 {
     /// <summary>
     /// Repository builder class
@@ -96,7 +96,7 @@ namespace Moryx.Model
             // Select base type
             var baseType = repoImpl.BaseType;
             if (baseType == null || baseType.GetGenericArguments().Length != 1)
-                throw new InvalidOperationException($"{repoImpl.Name} must have the base type Repository<T>.");
+                throw new InvalidOperationException($"{repoImpl.Name} must have the base type {nameof(Repository)}<T>.");
 
             var entityType = baseType.GetGenericArguments()[0];
 
@@ -164,13 +164,13 @@ namespace Moryx.Model
             // Virtual methods will be implemented
             var methods = repoImpl.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(m => m.IsVirtual);
             var methodStrategyMaps = (from methodInfo in methods
-                let strategy = MethodStrategies.SingleOrDefault(s => s.CanImplement(methodInfo))
-                where strategy != null // Methods which cannot be implemented can be ignored
-                select new MethodStrategyMap
-                {
-                    MethodInfo = methodInfo,
-                    Strategy = strategy
-                }).ToArray();
+                                      let strategy = MethodStrategies.SingleOrDefault(s => s.CanImplement(methodInfo))
+                                      where strategy != null // Methods which cannot be implemented can be ignored
+                                      select new MethodStrategyMap
+                                      {
+                                          MethodInfo = methodInfo,
+                                          Strategy = strategy
+                                      }).ToArray();
 
             return methodStrategyMaps;
         }
@@ -211,7 +211,7 @@ namespace Moryx.Model
             }
             else if (repoInterfaces.Length != 2 || repoInterfaces.First().GetGenericTypeDefinition() != typeof(IRepository<>))
             {
-                 throw new InvalidOperationException($"'{repoApi.Name}' API does not inherit from IRepository<T>");
+                throw new InvalidOperationException($"'{repoApi.Name}' API does not inherit from IRepository<T>");
             }
         }
     }

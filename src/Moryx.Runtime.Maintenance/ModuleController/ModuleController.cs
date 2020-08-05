@@ -89,7 +89,7 @@ namespace Moryx.Runtime.Maintenance
                 var baseType = unconfiguredPlugin.GetType().BaseType;
                 if (baseType == null || !typeof(MaintenancePluginBase<,>).IsAssignableFrom(baseType.GetGenericTypeDefinition()))
                     throw new ArgumentException("MaintenancePlugins should be of type MaintenancePluginBase");
-                
+
                 var configType = baseType.GetGenericArguments()[0];
 
                 var pluginConfig = (MaintenancePluginConfig)Activator.CreateInstance(configType);

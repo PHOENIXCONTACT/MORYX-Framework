@@ -9,6 +9,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.TestTools.Test.Model;
 using Newtonsoft.Json;
@@ -19,7 +20,7 @@ namespace Moryx.TestModule
     [Plugin(LifeCycle.Singleton)]
     public class JsonTest : IPlugin
     {
-        public IContextFactory<TestModelContext> ContextFactory { get; set; }
+        public IUnitOfWorkFactory<TestModelContext> TestFactory { get; set; }
 
         private const int LoopCount = 100;
 
@@ -150,57 +151,46 @@ namespace Moryx.TestModule
             var stopWatch = new Stopwatch();
             var ids = new List<long>();
 
-            long writeTime, readTime = 0;
-
             // Write time
-            using (var testContext = ContextFactory.Create(ContextMode.ChangeTracking))
+            using (var uow = TestFactory.Create(ContextMode.ChangeTracking))
             {
                 stopWatch.Start();
                 for (var i = 0; i < LoopCount; i++)
                 {
-                    ids.Add(WriteLoop(testContext, config, jsonSettings));
+                    ids.Add(WriteLoop(uow, config, jsonSettings));
                 }
-
                 stopWatch.Stop();
-
-                writeTime = stopWatch.ElapsedMilliseconds;
             }
+            var writeTime = stopWatch.ElapsedMilliseconds;
 
             // Read time
-            using (var testContext = ContextFactory.Create(ContextMode.ChangeTracking))
+            using (var uow = TestFactory.Create(ContextMode.AllOff))
             {
                 stopWatch.Restart();
                 foreach (var id in ids)
                 {
-                    var result = ReadLoop(testContext, id, jsonSettings);
+                    var result = ReadLoop(uow, id, jsonSettings);
                 }
-
                 stopWatch.Stop();
-
-                readTime = stopWatch.ElapsedMilliseconds;
             }
+            var readTime = stopWatch.ElapsedMilliseconds;
 
             return new[] { writeTime, readTime };
         }
 
-        private long WriteLoop(TestModelContext dbContext, ModuleConfig config, JsonSerializerSettings settings)
+        private long WriteLoop(IUnitOfWork uow, ModuleConfig config, JsonSerializerSettings settings)
         {
             var json = JsonConvert.SerializeObject(config, typeof(IConfig), settings);
-
-            var entity = dbContext.Jsons.Create();
-            dbContext.Jsons.Add(entity);
-            entity.JsonData = json;
-
-            dbContext.SaveChanges();
+            var entity = uow.GetRepository<IJsonEntityRepository>().Create(json);
+            uow.SaveChanges();
             return entity.Id;
         }
 
-        private IConfig ReadLoop(TestModelContext dbContext, long id, JsonSerializerSettings settings)
+        private IConfig ReadLoop(IUnitOfWork uow, long id, JsonSerializerSettings settings)
         {
-            var json = (from e in dbContext.Jsons
+            var json = (from e in uow.GetRepository<IJsonEntityRepository>().Linq
                         where e.Id == id
                         select e.JsonData).FirstOrDefault();
-
             return JsonConvert.DeserializeObject<IConfig>(json, settings);
         }
     }

@@ -12,15 +12,16 @@ As a sample model we will use a small datamodel that could be used to manage a c
 
 ## Hard coded setup
 
-As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassAssembly project with all necessary references. Inherit it from [IModelSetup](xref:Moryx.Model.IModelSetup).
+As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassAssembly project with all necessary references. Inherit it from [ModelSetupBase](xref:Moryx.Model.ModelSetupBase) and add the [ModelSetupAttribute](xref:Moryx.Model.ModelSetupAttribute).
 
 ````cs
+[ModelSetup(typeof(EmployeeContext))]
 public class HardCodedSetup : ModelSetupBase<EmployeeContext>
 {
-    public int SortOrder => 1;
-    public string Name => "Sample";
-    public string Description => "Sample Description";
-    public string SupportedFileRegex => string.Empty;
+    public override int SortOrder => 1;
+    public override string Name => "Sample";
+    public override string Description => "Sample Description";
+    public override string SupportedFileRegex => string.Empty;
     [...]
 }
 ````
@@ -36,22 +37,9 @@ First we have to take care of the properties required by the Runtime. They are n
 | Description | Short description to indicate what this setup will do and wich data is created. |
 | SupportedFileRegex | The regex for files we can import. Since this setup is hard coded leave it empty. |
 
-You should end up with something like this:
-
-````cs
-public class HardCodedSetup : ModelSetupBase<EmployeeContext>
-{
-    public int SortOrder => 1;
-    public string Name => "Hardcoded setup";
-    public string Description => "This setup will create Thomas and Dennis";
-    public string SupportedFileRegex => string.Empty;
-    [...]
-}
-````
-
 ### Hard coded entity creation
 
-When the setup gets executed, the MORYX will create a context and povides it within the `Execute` method. Here everything can be done for setting up the database:
+When the setup gets executed, MORYX will create a context and povides it within the `Execute` method. Here everything can be done for setting up the database:
 
 ````cs
 public void Execute(EmployeeContext openContext, string setupData)
@@ -86,7 +74,7 @@ Kathrin Cole
 A setup parsing the file and creating the entity might look likes this:
 
 ````cs
-public void Execute(IUnitOfWork openContext, string setupData)
+public void Execute(EmployeeContext openContext, string setupData)
 {
     var index = 0;
     var lines = File.ReadAllLines(setupData);
@@ -124,6 +112,6 @@ public void Execute(IUnitOfWork openContext, string setupData)
 
     employee.Addresses.Add(address);
 
-    openContext.Save();
+    openContext.SaveChanges();
 }
 ````

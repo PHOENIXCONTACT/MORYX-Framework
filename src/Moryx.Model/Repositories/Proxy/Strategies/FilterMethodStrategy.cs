@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
-namespace Moryx.Model
+namespace Moryx.Model.Repositories.Proxy
 {
     internal class FilterMethodStrategy : MethodProxyStrategyBase
     {
@@ -96,7 +96,7 @@ namespace Moryx.Model
 
                 //TODO: write better
                 // Expression.Constant uses object as argument. ValueTypes have to be boxed
-                if (paramProp.Parameter.ParameterType.IsValueType) 
+                if (paramProp.Parameter.ParameterType.IsValueType)
                 {
                     generator.Emit(OpCodes.Box, paramProp.Parameter.ParameterType); // Stack: IndexExpression, (ref)arg[index]
                 }
@@ -177,7 +177,7 @@ namespace Moryx.Model
                 generator.Emit(OpCodes.Call, whereMethod); //Stack: IQueryable<Entity>
                 generator.Emit(OpCodes.Call, toListMethod); //Stack: List<Entity>
             }
-            else 
+            else
             {
                 // Call filter method on Queryable
                 var filterMethod = FilterMethods[methodFilter.Filter].MakeGenericMethod(targetType);
@@ -230,7 +230,7 @@ namespace Moryx.Model
 
             return filterMap;
         }
-        
+
         private enum Filter
         {
             First,
@@ -289,7 +289,7 @@ namespace Moryx.Model
             var typeType = typeof(Type);
             var expressionType = typeof(Expression);
             var expressionMethods = expressionType.GetMethods();
-            
+
             // GetType
             _typeGetTypeHandleMethod = typeType.GetMethod(nameof(Type.GetTypeFromHandle));
 

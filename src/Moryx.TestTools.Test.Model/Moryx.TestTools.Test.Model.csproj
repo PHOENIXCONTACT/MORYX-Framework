@@ -95,6 +95,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IAnotherEntityRepository.cs" />
+    <Compile Include="API\ICarEntityRepository.cs" />
+    <Compile Include="API\IHouseEntityRepository.cs" />
+    <Compile Include="API\IHugePocoRepository.cs" />
+    <Compile Include="API\IJsonEntityRepository.cs" />
+    <Compile Include="API\ISportCarRepository.cs" />
+    <Compile Include="API\IWheelEntityRepository.cs" />
     <Compile Include="Entities\AnotherEntity.cs" />
     <Compile Include="Entities\HouseEntity.cs" />
     <Compile Include="Entities\HugePocoEntity.cs" />

@@ -55,6 +55,7 @@
     <Compile Include="Attributes\DefaultSchemaAttribute.cs" />
     <Compile Include="Attributes\IsUnicodeAttribute.cs" />
     <Compile Include="Attributes\ModelConfiguratorAttribute.cs" />
+    <Compile Include="Attributes\ModelSetupAttribute.cs" />
     <Compile Include="Configuration\DatabaseUpdate.cs" />
     <Compile Include="Configuration\DatabaseUpdateInformation.cs" />
     <Compile Include="Configuration\DatabaseUpdateSummary.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="EntityBase.cs" />
     <Compile Include="EntityIdListener.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Extensions\DbSetExtensions.cs" />
     <Compile Include="Extensions\QueryableExtensions.cs" />
     <Compile Include="IContextFactory.cs" />
     <Compile Include="IEntity.cs" />
@@ -75,12 +77,14 @@
     <Compile Include="IModelSetup.cs" />
     <Compile Include="DbContextManager.cs" />
     <Compile Include="Configuration\ModelConfiguratorBase.cs" />
+    <Compile Include="Repositories\IUnitOfWorkFactory.cs" />
     <Compile Include="ModificationTrackedEntityBase.cs" />
     <Compile Include="MoryxDbContext.cs" />
     <Compile Include="IDbContextManager.cs" />
     <Compile Include="Configuration\NullModelConfigurator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\IUnitOfWork.cs" />
     <Compile Include="Repositories\Proxy\IMethodProxyStrategy.cs" />
     <Compile Include="Repositories\Proxy\MethodProxyStrategyBase.cs" />
     <Compile Include="Repositories\Proxy\ParameterPropertyMap.cs" />
@@ -89,6 +93,9 @@
     <Compile Include="Repositories\Proxy\Strategies\FilterMethodStrategy.cs" />
     <Compile Include="Repositories\Proxy\Strategies\RemoveMethodStrategy.cs" />
     <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Repositories\UnitOfWork.cs" />
+    <Compile Include="Extensions\UnitOfWorkExtensions.cs" />
+    <Compile Include="Repositories\UnitOfWorkFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj">

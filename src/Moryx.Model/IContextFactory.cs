@@ -1,12 +1,15 @@
-﻿using System.Data.Entity;
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Data.Entity;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
 {
     /// <summary>
-    /// Dedicated factory for a context
+    /// Dedicated factory for a database context
     /// </summary>
-    public interface IContextFactory<TContext>
+    public interface IContextFactory<out TContext>
         where TContext : DbContext
     {
         /// <summary>
@@ -28,20 +31,5 @@ namespace Moryx.Model
         /// Create context using given mode and alternative config
         /// </summary>
         TContext Create(IDatabaseConfig config, ContextMode contextMode);
-
-        /// <summary>
-        /// Get repository for this context
-        /// </summary>
-        TRepository GetRepository<TRepository>(TContext context);
-
-        /// <summary>
-        /// Get repository for this context
-        /// </summary>
-        TRepository GetRepository<TRepository, TImplementation>(TContext context);
-
-        /// <summary>
-        /// Get repository for this context
-        /// </summary>
-        TRepository GetRepository<TRepository, TImplementation>(TContext context, bool noProxy);
     }
 }

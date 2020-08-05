@@ -35,14 +35,14 @@ And here is how you use it.
 // to work with your database.
 
 // Injected
-public IContextFactory<PersonContext> ContextFactory { get; set; }
+public IUnitOfWorkFactory<PersonContext> UnitOfWorkFactory { get; set; }
 
 public void WriteSomethingToDB()
 {
-    using (var context = ContextFactory.Create())
+    using (var uow = UnitOfWorkFactory.Create())
     {
         // Get the repository you want to work with
-        var personRepo = ContextFactory.GetRepository<IPersonEntityRepository>(context);
+        var personRepo = uow.GetRepository<IPersonEntityRepository>();
 
         // Get all persons
         var persons = personRepo.GetAll();

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -40,7 +43,7 @@ namespace Moryx.Model
         /// <typeparam name="TSource">The type of the source.</typeparam>
         /// <param name="query">The current query.</param>
         /// <returns>Deleted items</returns>
-        public static IQueryable<TSource> Deleted<TSource>(this IQueryable<TSource> query) 
+        public static IQueryable<TSource> Deleted<TSource>(this IQueryable<TSource> query)
             where TSource : class, IModificationTrackedEntity
         {
             return query.Where(element => element.Deleted != null);
@@ -117,14 +120,27 @@ namespace Moryx.Model
         /// Queries all items with the given keys.
         /// Keys which cannot be found will be ignored!
         /// </summary>
-        /// <typeparam name="TSource">The type of the source.</typeparam>
+        /// <typeparam name="TEntity">The type of the source.</typeparam>
         /// <param name="query">The current query.</param>
         /// <param name="keys">The keys to find</param>
         /// <returns>Filtered query</returns>
-        public static IQueryable<TSource> ByKeys<TSource>(this IQueryable<TSource> query, long[] keys)
-            where TSource : class, IEntity
+        public static IQueryable<TEntity> ByKeys<TEntity>(this IQueryable<TEntity> query, long[] keys)
+            where TEntity : class, IEntity
         {
             return query.Where(e => keys.Contains(e.Id));
+        }
+
+        /// <summary>
+        /// Queries a single entity with the given key
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the source.</typeparam>
+        /// <param name="query">The current query.</param>
+        /// <param name="key">The key to find</param>
+        /// <returns>Filtered query</returns>
+        public static TEntity GetByKey<TEntity>(this IQueryable<TEntity> query, long key)
+            where TEntity : class, IEntity
+        {
+            return query.FirstOrDefault(e => e.Id == key);
         }
     }
 }

@@ -3,7 +3,7 @@
 
 using System.Reflection;
 
-namespace Moryx.Model
+namespace Moryx.Model.Repositories.Proxy
 {
     internal class ParameterPropertyMap
     {
