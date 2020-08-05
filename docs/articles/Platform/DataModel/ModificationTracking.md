@@ -5,7 +5,7 @@ uid: Model.ModificationTracking
 
 ## Introduction
 
-Sometimes developers want to keep track about modifications of a row in their table. MORYX framework has a built in solution to keep track about creation, update and deletion time. So another implicit feature is that you can mark a row as deleted without to get rid of the row by using the `DbSet.RemoveTracked(entity)`-extension.
+Sometimes developers want to keep track about modifications of a row in their table. MORYX framework has a built in solution to keep track about creation, update and deletion time.
 
 To make an entity trackable you just need to derive from [IModificationTrackedEntity](xref:Moryx.Model.IModificationTrackedEntity) or the corresponding base class [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase).
 
@@ -22,7 +22,7 @@ The example above defines four aditional columns: Id (from `EntityBase`), Create
 - `Updated`: Shows when the row was updated
 - `Deleted`: Is set when the row was deleted.
 
-The example above shows the minimum working implementation.
+`Created` and `Updated` are automatically set by the db context base class [MoryxDbContext](xref:Moryx.Model.MoryxDbContext) whenever the entity was modified. Your context must derive from it. The `Deleted` flag is only automatically set, if the [UnitOfWork with Repositories](UnitOfWorkPattern.md) is used, otherwise if plain EntityFramework, the `DbSet`-extension `RemoveSoft` is the way to set the flag. The `RemoveSoft` extension only sets the `Deleted`-property on the entity to the current datetime. To synchronize the DateTimes, the `MoryxDbContext` will modify the `Deleted`-property again to match with the `Updated`-property.
 
 ## Migrations
 
@@ -30,4 +30,4 @@ You do not need to treat modified trackable entities in another way. It will wor
 
 ## A last word
 
-If you are interessted how the modified trackable mechanism is implemented you'll find some deeper information in [Code First](xref:GettingsStarted.CodeFirst) article.
+If you are interessted how the modified trackable mechanism is implemented you'll find some deeper information in [Code First](xref:GettingsStarted.CodeFirst) article or the [EntityFramework Tutorial](https://www.entityframeworktutorial.net/faq/set-created-and-modified-date-in-efcore.aspx)

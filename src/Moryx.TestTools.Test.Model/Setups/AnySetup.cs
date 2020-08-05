@@ -6,6 +6,7 @@ using Moryx.Model;
 
 namespace Moryx.TestTools.Test.Model
 {
+    [ModelSetup(typeof(TestModelContext))]
     public class AnySetup : ModelSetupBase<TestModelContext>
     {
         public override int SortOrder => 1;

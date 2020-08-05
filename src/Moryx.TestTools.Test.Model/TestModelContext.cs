@@ -8,11 +8,6 @@ using Moryx.Model.PostgreSQL;
 
 namespace Moryx.TestTools.Test.Model
 {
-    public static class TestModelConstants
-    {
-        public const string Name = "Moryx.TestTools.Test.Model";
-    }
-
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Moryx.Model
+namespace Moryx.Model.Repositories.Proxy
 {
     internal abstract class MethodProxyStrategyBase : IMethodProxyStrategy
     {

@@ -4,8 +4,10 @@
 using System.ComponentModel;
 using System.Threading;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
+using Moryx.TestTools.Test.Model;
 
 namespace Moryx.TestModule
 {

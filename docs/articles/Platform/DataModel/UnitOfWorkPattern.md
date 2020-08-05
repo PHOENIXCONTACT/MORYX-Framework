@@ -17,7 +17,7 @@ Now in times of EF you implement the LINQ expressions into the repository implem
 
 ## The MORYX way
 
-The MORYX framework follows another strategy: You don't need to implement an own UnitOfWork class becuase it is the DbContext and the repositories are generated at runtime. So no code needs to be maintained. Also have a look at the [repository proxy builder](RepositoryProxyBuilder.md)
+The MORYX framework follows another strategy: You don't need to implement an own UnitOfWork class because MORYX has a generic one for your DbContext and the repositories are generated at runtime. So no code needs to be maintained. Also have a look at the [repository proxy builder](RepositoryProxyBuilder.md)
 
 Let's have a look at an example implementation how you define the UnitOfWork and Repository approach in the MORYX framework.
 
@@ -35,14 +35,14 @@ And here is how you use it.
 // to work with your database.
 
 // Injected
-public IContextFactory<PersonContext> ContextFactory { get; set; }
+public IUnitOfWorkFactory<PersonContext> UnitOfWorkFactory { get; set; }
 
 public void WriteSomethingToDB()
 {
-    using (var context = ContextFactory.Create())
+    using (var uow = UnitOfWorkFactory.Create())
     {
         // Get the repository you want to work with
-        var personRepo = ContextFactory.GetRepository<IPersonEntityRepository>(context);
+        var personRepo = uow.GetRepository<IPersonEntityRepository>();
 
         // Get all persons
         var persons = personRepo.GetAll();
@@ -54,7 +54,7 @@ public void WriteSomethingToDB()
         newPerson.Name = "Spock";
 
         // save it
-        context.SaveChanges();
+        uow.SaveChanges();
     }
 }
 ````

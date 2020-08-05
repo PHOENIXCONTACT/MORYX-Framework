@@ -8,14 +8,14 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
-namespace Moryx.Model
+namespace Moryx.Model.Repositories.Proxy
 {
     internal class CreateMethodStrategy : MethodProxyStrategyBase
     {
         //TODO: Collection Properties
 
         private static readonly Regex CreateRegex = new Regex(@"(?:Create)$");
-        
+
         public override bool CanImplement(MethodInfo methodInfo)
         {
             var match = CreateRegex.Match(methodInfo.Name);

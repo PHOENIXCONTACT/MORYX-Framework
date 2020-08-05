@@ -26,7 +26,7 @@ namespace Moryx.Model
         string Description { get; }
 
         /// <summary>
-        /// Filetype supported by this setup
+        /// FileType supported by this setup
         /// </summary>
         string SupportedFileRegex { get; }
 

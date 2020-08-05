@@ -7,17 +7,35 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Moryx.Model
+namespace Moryx.Model.Repositories
 {
-    public interface IInitializableRepository : IRepository
+    /// <summary>
+    /// Base class for entity framework repositories
+    /// </summary>
+    public abstract class Repository : IRepository
     {
-        void Initialize(DbContext dbContext);
+        /// <inheritdoc />
+        public IUnitOfWork UnitOfWork { get; private set; }
+
+        /// <summary>
+        /// The database context
+        /// </summary>
+        protected DbContext Context { get; set; }
+
+        /// <summary>
+        /// Initializes this repository with the responsible unit of work and the database context
+        /// </summary>
+        public virtual void Initialize(IUnitOfWork uow, DbContext context)
+        {
+            UnitOfWork = uow;
+            Context = context;
+        }
     }
 
     /// <summary>
     /// Base class for entity framework repositories
     /// </summary>
-    public abstract class Repository<T> : IRepository<T>, IInitializableRepository
+    public abstract class Repository<T> : Repository, IRepository<T>
         where T : class, IEntity
     {
         /// <summary>
@@ -26,8 +44,9 @@ namespace Moryx.Model
         protected DbSet<T> DbSet { get; set; }
 
         /// <inheritdoc />
-        public void Initialize(DbContext context)
+        public override void Initialize(IUnitOfWork uow, DbContext context)
         {
+            base.Initialize(uow, context);
             DbSet = context.Set<T>();
         }
 
@@ -39,7 +58,7 @@ namespace Moryx.Model
             DbSet.FirstOrDefault(e => e.Id == id);
 
         /// <inheritdoc />
-        public virtual Task<T> GetByKeyAsnyc(long id) =>
+        public virtual Task<T> GetByKeyAsync(long id) =>
             DbSet.FirstOrDefaultAsync(e => e.Id == id);
 
         /// <inheritdoc />
@@ -110,23 +129,19 @@ namespace Moryx.Model
         /// <inheritdoc />
         protected override T ExecuteRemove(T entity, bool permanent)
         {
-            if (permanent)
-                return base.ExecuteRemove(entity, true);
-
-            entity.Deleted = DateTime.Now;
-            return entity;
+            return permanent ? base.ExecuteRemove(entity, true) : DbSet.RemoveSoft(entity);
         }
 
         /// <inheritdoc />
         protected override IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent)
         {
             if (permanent)
-               return base.ExecuteRemoveRange(entities, true);
+                return base.ExecuteRemoveRange(entities, true);
 
             var list = entities.ToArray();
 
             foreach (var entity in list)
-                entity.Deleted = DateTime.Now;
+                DbSet.RemoveSoft(entity);
 
             return list;
         }

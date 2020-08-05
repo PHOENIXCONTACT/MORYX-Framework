@@ -5,13 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Moryx.Model
+namespace Moryx.Model.Repositories
 {
     /// <summary>
     /// Base contract for all repositories defining UnitOfWork property
     /// </summary>
     public interface IRepository
     {
+        /// <summary>
+        /// Unit of work this repository controls access to
+        /// </summary>
+        IUnitOfWork UnitOfWork { get; }
     }
 
     /// <summary>
@@ -31,9 +35,9 @@ namespace Moryx.Model
         T GetByKey(long id);
 
         /// <summary>
-        /// Gets the entity with this key asynchrounous
+        /// Gets the entity with this key asynchronous
         /// </summary>
-        Task<T> GetByKeyAsnyc(long id);
+        Task<T> GetByKeyAsync(long id);
 
         /// <summary>
         /// Get all entities from the database
@@ -76,7 +80,7 @@ namespace Moryx.Model
         T Remove(T entity);
 
         /// <summary>
-        /// Remove the entity and specifiy whether to remove permanenent or
+        /// Remove the entity and specifiy whether to remove permanent or
         /// simply flag it as deleted if possible.
         /// </summary>
         T Remove(T entity, bool permanent);
