@@ -13,19 +13,18 @@ namespace Moryx.Model
         /// <summary>
         /// Get or create an entity for a business object
         /// </summary>
-        /// <param name="openContext">An open database context</param>
+        /// <param name="unitOfWork">An open database unit of work</param>
         /// <param name="obj">The business object</param>
         /// <typeparam name="TEntity">The entity type to use</typeparam>
-        public static TEntity GetEntity<TEntity>(this IUnitOfWork openContext, IPersistentObject obj)
+        public static TEntity GetEntity<TEntity>(this IUnitOfWork unitOfWork, IPersistentObject obj)
             where TEntity : class, IEntity
         {
-            var dbSet = openContext.DbContext.Set<TEntity>();
-            var entity = dbSet.GetByKey(obj.Id);
+            var repository = unitOfWork.GetRepository<IRepository<TEntity>>();
+            var entity = repository.GetByKey(obj.Id);
 
             if (entity == null)
             {
-                entity = dbSet.Create();
-                dbSet.Add(entity);
+                entity = repository.Create();
                 EntityIdListener.Listen(entity, obj);
             }
 
