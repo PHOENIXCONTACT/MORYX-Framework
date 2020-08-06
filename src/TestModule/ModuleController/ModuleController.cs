@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
 using System.Threading;
 using Moryx.Container;
 using Moryx.Model;
@@ -11,6 +12,7 @@ using Moryx.TestTools.Test.Model;
 namespace Moryx.TestModule
 {
     [ServerModule(ModuleName)]
+    [Description("Test module for System tests")]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<ITestModule>
     {
         public const string ModuleName = "TestModule";

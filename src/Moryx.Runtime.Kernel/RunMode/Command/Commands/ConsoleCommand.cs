@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Moryx.Container;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel
 {
@@ -14,7 +15,7 @@ namespace Moryx.Runtime.Kernel
         public IModuleManager ModuleManager { get; set; }
 
         /// <summary>
-        /// Check if this 
+        /// Check if this
         /// </summary>
         public bool CanHandle(string command)
         {
@@ -57,13 +58,13 @@ namespace Moryx.Runtime.Kernel
             var console = module.Console;
 
             if (fullCommand[0] == "man")
-                Console.Write(console.ExportDescription(DescriptionExportFormat.Console));
+                Console.WriteLine(module.GetType().GetDescription());
             else
                 console.ExecuteCommand(fullCommand.Skip(2).ToArray(), Console.WriteLine);
         }
 
         /// <summary>
-        /// Opens the module specific console 
+        /// Opens the module specific console
         /// </summary>
         /// <param name="module">The module.</param>
         private void ModuleSpecificConsole(IServerModule module)
@@ -82,7 +83,7 @@ namespace Moryx.Runtime.Kernel
                 switch (command)
                 {
                     case "help":
-                        Console.WriteLine(console.ExportDescription(DescriptionExportFormat.Console));
+                        Console.WriteLine(module.GetType().GetDescription());
                         break;
                     case "quit":
                     case "bye":
