@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Data.Common;
 using System.Data.Entity;
 using Moryx.Model;
@@ -12,8 +13,8 @@ namespace Moryx.Resources.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
+    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
-    [DefaultSchema(ResourcesConstants.Schema)]
     public class ResourcesContext : MoryxDbContext
     {
         /// <inheritdoc />
@@ -22,12 +23,12 @@ namespace Moryx.Resources.Model
         }
 
         /// <inheritdoc />
-        public ResourcesContext(string connectionString, ContextMode mode) : base(connectionString, mode)
+        public ResourcesContext(string connectionString) : base(connectionString)
         {
         }
 
         /// <inheritdoc />
-        public ResourcesContext(DbConnection connection, ContextMode mode) : base(connection, mode)
+        public ResourcesContext(DbConnection connection) : base(connection)
         {
         }
 

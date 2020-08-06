@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Moryx.Products.Model
 {
-    public class StepEntity : ModificationTrackedEntityBase
+    public class StepEntity : EntityBase
     {
         public virtual long StepId { get; set; }
 

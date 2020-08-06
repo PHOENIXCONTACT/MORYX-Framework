@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moryx.Container;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Products.Model;
 using Moryx.Workflows;
 
@@ -15,7 +16,7 @@ namespace Moryx.Products.Management
     {
         #region Dependencies
 
-        public IUnitOfWorkFactory ModelFactory { get; set; }
+        public IUnitOfWorkFactory<ProductsContext> ModelFactory { get; set; }
 
         #endregion
 
@@ -50,7 +51,7 @@ namespace Moryx.Products.Management
             {
                 var entity = RecipeStorage.SaveWorkplan(uow, workplan);
 
-                uow.Save();
+                uow.SaveChanges();
 
                 return entity.Id;
             }
@@ -65,7 +66,7 @@ namespace Moryx.Products.Management
                 if (workplan == null)
                     return; // TODO: Any feedback?
                 repo.Remove(workplan);
-                uow.Save();
+                uow.SaveChanges();
 
             }
         }

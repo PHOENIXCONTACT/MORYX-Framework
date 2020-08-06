@@ -1,13 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Container;
 using Moryx.Model;
 using Moryx.Products.Management.Importers;
 using Moryx.Products.Management.Modification;
-using Moryx.Products.Model;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Tools.Wcf;
@@ -29,8 +26,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Generic component to access every data model
         /// </summary>
-        [Named(ProductsConstants.Namespace)]
-        public IUnitOfWorkFactory ProductsModel { get; set; }
+        public IDbContextManager DbContextManager { get; set; }
 
         private IConfiguredServiceHost _host;
 
@@ -41,7 +37,7 @@ namespace Moryx.Products.Management
         /// </summary>
         protected override void OnInitialize()
         {
-            Container.SetInstance(ProductsModel, ProductsConstants.Namespace);
+            Container.ActivateDbContexts(DbContextManager);
             Container.SetInstance(ConfigManager);
 
             // Load all product plugins

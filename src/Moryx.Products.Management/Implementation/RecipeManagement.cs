@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
-using Moryx.Model;
+using Moryx.Model.Repositories;
+using Moryx.Products.Model;
 
 namespace Moryx.Products.Management
 {
@@ -17,7 +18,7 @@ namespace Moryx.Products.Management
 
         public IProductStorage Storage { get; set; }
 
-        public IUnitOfWorkFactory UowFactory { get; set; }
+        public IUnitOfWorkFactory<ProductsContext> UowFactory { get; set; }
 
         #endregion
 

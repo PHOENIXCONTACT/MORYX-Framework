@@ -13,8 +13,8 @@ namespace Moryx.Products.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
+    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
     [DbConfigurationType(typeof(NpgsqlConfiguration))]
-    [DefaultSchema(ProductsConstants.Schema)]
     public class ProductsContext : MoryxDbContext
     {
         /// <inheritdoc />
@@ -23,22 +23,22 @@ namespace Moryx.Products.Model
         }
 
         /// <inheritdoc />
-        public ProductsContext(string connectionString, ContextMode mode) : base(connectionString, mode)
+        public ProductsContext(string connectionString) : base(connectionString)
         {
         }
 
         /// <inheritdoc />
-        public ProductsContext(DbConnection connection, ContextMode mode) : base(connection, mode)
+        public ProductsContext(DbConnection connection) : base(connection)
         {
         }
 
         public virtual DbSet<ProductTypeEntity> ProductEntities { get; set; }
 
-        public virtual DbSet<PartLink> PartLinks { get; set; }
+        public virtual DbSet<PartLink> PartLinkEntities { get; set; }
 
         public virtual DbSet<ProductRecipeEntity> ProductRecipeEntities { get; set; }
 
-        public virtual DbSet<ProductProperties> ProductProperties { get; set; }
+        public virtual DbSet<ProductProperties> ProductPropertiesEntities { get; set; }
 
         public virtual DbSet<ProductFileEntity> ProductFiles { get; set; }
 
@@ -46,13 +46,13 @@ namespace Moryx.Products.Model
 
         public virtual DbSet<WorkplanEntity> WorkplanEntities { get; set; }
 
-        public virtual DbSet<WorkplanReference> WorkplanReferences { get; set; }
+        public virtual DbSet<WorkplanReference> WorkplanReferenceEntities { get; set; }
 
         public virtual DbSet<StepEntity> StepEntities { get; set; }
 
         public virtual DbSet<ConnectorEntity> ConnectorEntities { get; set; }
 
-        public virtual DbSet<ConnectorReference> ConnectorReferences { get; set; }
+        public virtual DbSet<ConnectorReference> ConnectorReferenceEntities { get; set; }
 
         public virtual DbSet<OutputDescriptionEntity> OutputDescriptionEntities { get; set; }
 

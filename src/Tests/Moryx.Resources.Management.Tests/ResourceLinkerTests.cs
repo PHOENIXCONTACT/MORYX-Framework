@@ -10,6 +10,7 @@ using Moryx.Model;
 using Moryx.Resources.Model;
 using Moryx.TestTools.UnitTest;
 using Moq;
+using Moryx.Model.Repositories;
 using NUnit.Framework;
 
 namespace Moryx.Resources.Management.Tests

@@ -15,6 +15,8 @@ using Moryx.Products.Samples.Recipe;
 using Moryx.Tools;
 using Moryx.Workflows;
 using Moq;
+using Moryx.Model.InMemory;
+using Moryx.Model.Repositories;
 using NUnit.Framework;
 
 namespace Moryx.Products.IntegrationTests
@@ -24,7 +26,7 @@ namespace Moryx.Products.IntegrationTests
     {
         private long _workplanId;
 
-        private InMemoryUnitOfWorkFactory _factory;
+        private IUnitOfWorkFactory<ProductsContext> _factory;
 
         private const string WatchMaterial = "87654";
 
@@ -40,9 +42,8 @@ namespace Moryx.Products.IntegrationTests
 
             Effort.Provider.EffortProviderConfiguration.RegisterProvider();
 
-            // prepare inmemory resource db
-            _factory = new InMemoryUnitOfWorkFactory("ProductStorageTest");
-            _factory.Initialize();
+            // prepare inmemory products db
+            _factory = new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("ProductStorageTest"));
 
             // prepare empty workplan
             var workplan = new Workplan { Name = "TestWorkplan" };
@@ -51,7 +52,7 @@ namespace Moryx.Products.IntegrationTests
             using (var uow = _factory.Create())
             {
                 var entity = RecipeStorage.SaveWorkplan(uow, workplan);
-                uow.Save();
+                uow.SaveChanges();
                 _workplanId = entity.Id;
             }
         }

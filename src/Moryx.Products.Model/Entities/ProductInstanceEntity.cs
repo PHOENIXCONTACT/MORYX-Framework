@@ -12,17 +12,17 @@ namespace Moryx.Products.Model
         public virtual long State { get; set; }
 
         public virtual long ProductId { get; set; }
-    
+
         public virtual long? ParentId { get; set; }
-    
+
         public virtual long? PartLinkId { get; set; }
 
         public virtual ProductTypeEntity Product { get; set; }
-    
+
         public virtual ICollection<ProductInstanceEntity> Parts { get; set; }
 
         public virtual ProductInstanceEntity Parent { get; set; }
-    
+
         public virtual PartLink PartLink { get; set; }
 
         public virtual long Integer1 { get; set; }

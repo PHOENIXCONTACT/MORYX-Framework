@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
+using Moryx.Model.Repositories;
 using Moryx.Tools;
 
 namespace Moryx.Products.Management
@@ -63,7 +64,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Override with your merge factory
         /// </summary>
-        public IUnitOfWorkFactory Factory { get; set; }
+        public IUnitOfWorkFactory<ProductsContext> Factory { get; set; }
 
         /// <summary>
         /// Factory to create <see cref="IProductTypeStrategy"/>
@@ -192,7 +193,7 @@ namespace Moryx.Products.Management
             using (var uow = Factory.Create())
             {
                 SaveRecipe(uow, recipe);
-                uow.Save();
+                uow.SaveChanges();
                 return recipe.Id;
             }
         }
@@ -232,7 +233,7 @@ namespace Moryx.Products.Management
                               select dbRecipe;
                 recipeRepo.RemoveRange(deleted);
 
-                uow.Save();
+                uow.SaveChanges();
             }
         }
 
@@ -462,7 +463,7 @@ namespace Moryx.Products.Management
             {
                 var entity = SaveProduct(uow, modifiedInstance);
 
-                uow.Save();
+                uow.SaveChanges();
 
                 return entity.Id;
             }
@@ -736,7 +737,7 @@ namespace Moryx.Products.Management
                 }
 
                 // Save transaction
-                uow.Save();
+                uow.SaveChanges();
             }
         }
 

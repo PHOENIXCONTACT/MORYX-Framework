@@ -10,6 +10,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.Resources.Model;
 using Moryx.Tools;
@@ -39,7 +40,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Access to the database
         /// </summary>
-        public IUnitOfWorkFactory UowFactory { get; set; }
+        public IUnitOfWorkFactory<ResourcesContext> UowFactory { get; set; }
 
         /// <summary>
         /// Logger for the ResourceManager
@@ -311,7 +312,7 @@ namespace Moryx.Resources.Management
 
                     try
                     {
-                        uow.Save();
+                        uow.SaveChanges();
                     }
                     catch (Exception ex)
                     {
@@ -341,7 +342,7 @@ namespace Moryx.Resources.Management
 
                     try
                     {
-                        uow.Save();
+                        uow.SaveChanges();
                     }
                     catch (Exception ex)
                     {
@@ -365,7 +366,7 @@ namespace Moryx.Resources.Management
             using (var uow = UowFactory.Create())
             {
                 ResourceLinker.SaveRoots(uow, roots);
-                uow.Save();
+                uow.SaveChanges();
             }
         }
 
@@ -398,7 +399,7 @@ namespace Moryx.Resources.Management
 
                 resourceRepository.Remove(entity, permanent);
 
-                uow.Save();
+                uow.SaveChanges();
             }
 
             // Unregister from all events to avoid memory leaks

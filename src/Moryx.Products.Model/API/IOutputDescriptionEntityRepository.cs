@@ -1,8 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Model;
-using Moryx.Workflows;
+using Moryx.Model.Repositories;
 
 namespace Moryx.Products.Model
 {
@@ -14,6 +13,6 @@ namespace Moryx.Products.Model
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        OutputDescriptionEntity Create(int index, int outputType, long mappingValue); 
+        OutputDescriptionEntity Create(int index, int outputType, long mappingValue);
     }
 }

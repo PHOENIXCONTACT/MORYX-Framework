@@ -6,6 +6,7 @@ using System.Linq;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Resources.Model;
 using Moryx.Serialization;
 using Moryx.Tools;

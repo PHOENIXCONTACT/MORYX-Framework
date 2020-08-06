@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Resources.Model;
 
 namespace Moryx.Resources.Management
