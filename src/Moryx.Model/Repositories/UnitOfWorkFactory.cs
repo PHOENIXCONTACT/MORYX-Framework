@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using Moryx.Model.Configuration;
 using Moryx.Model.Repositories.Proxy;
+using Moryx.Tools;
 
 namespace Moryx.Model.Repositories
 {
@@ -20,7 +21,7 @@ namespace Moryx.Model.Repositories
         private IDbContextManager _manager;
 
         private readonly RepositoryProxyBuilder _proxyBuilder = new RepositoryProxyBuilder();
-        private readonly IList<Type> _repositories = new List<Type>();
+        private readonly IDictionary<Type, Func<Repository>> _repositories = new Dictionary<Type, Func<Repository>>();
 
         /// <summary>
         /// Creates a new instance of <see cref="UnitOfWorkFactory{TContext}"/>
@@ -64,23 +65,28 @@ namespace Moryx.Model.Repositories
             var types = typeof(TContext).Assembly.GetTypes();
 
             var repoApis = from type in types
-                let repoApi = type.GetInterfaces().FirstOrDefault(i => i.GetGenericArguments().Length == 1 && typeof(IRepository<>) == i.GetGenericTypeDefinition())
-                where type.IsInterface && repoApi != null
-                select type;
+                let genericApi = type.GetInterfaces().FirstOrDefault(i => i.GetGenericArguments().Length == 1 && typeof(IRepository<>) == i.GetGenericTypeDefinition())
+                where type.IsInterface && genericApi != null
+                select new { RepoApi = type, GenericApi = genericApi};
 
-            foreach (var repoApi in repoApis)
+            foreach (var apiPair in repoApis)
             {
-                var implementations = types.Where(t => t.IsClass && repoApi.IsAssignableFrom(t)).ToList();
+                Type repoProxy;
+                // Find implementations for the RepoAPI, which will also fit the generic API because of the inheritance
+                var implementations = types.Where(t => t.IsClass && apiPair.RepoApi.IsAssignableFrom(t)).ToList();
                 if (implementations.Count == 0)
                 {
-                    var apiImpl = _proxyBuilder.Build(repoApi);
-                    _repositories.Add(apiImpl);
-                    continue;
+                    repoProxy = _proxyBuilder.Build(apiPair.RepoApi);
+                }
+                else
+                {
+                    var selectedImpl = implementations.First();
+                    repoProxy = _proxyBuilder.Build(apiPair.RepoApi, selectedImpl);
                 }
 
-                var selectedImpl = implementations.First();
-                var typeImpl = _proxyBuilder.Build(repoApi, selectedImpl);
-                _repositories.Add(typeImpl);
+                var constructorDelegate = ReflectionTool.ConstructorDelegate<Repository>(repoProxy);
+                // Register constructor for both interfaces
+                _repositories[apiPair.RepoApi] = _repositories[apiPair.GenericApi] = constructorDelegate;
             }
         }
     }

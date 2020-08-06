@@ -16,7 +16,7 @@ namespace Moryx.Model.Repositories
     /// </summary>
     public sealed class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContext
     {
-        private readonly IEnumerable<Type> _repositories;
+        private readonly IDictionary<Type, Func<Repository>> _repositories;
 
         /// <inheritdoc />
         public TContext DbContext { get; }
@@ -36,7 +36,7 @@ namespace Moryx.Model.Repositories
         /// </summary>
         /// <param name="dbContext">Responsible <see cref="System.Data.Entity.DbContext"/></param>
         /// <param name="repositories">Current available repositories</param>
-        public UnitOfWork(TContext dbContext, IEnumerable<Type> repositories)
+        public UnitOfWork(TContext dbContext, IDictionary<Type, Func<Repository>> repositories)
         {
             DbContext = dbContext;
             _repositories = repositories;
@@ -50,13 +50,12 @@ namespace Moryx.Model.Repositories
 
         private IRepository GetRepository(Type api)
         {
-            var repoType = _repositories.SingleOrDefault(api.IsAssignableFrom);
-            if (repoType == null)
+            if(!_repositories.ContainsKey(api))
             {
                 throw new NotSupportedException($"Api {api} was not found.");
             }
 
-            var instance = (Repository) Activator.CreateInstance(repoType);
+            var instance =  _repositories[api]();
             instance.Initialize(this, DbContext);
 
             return instance;
