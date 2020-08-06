@@ -15,12 +15,14 @@ namespace Moryx.Model
     /// <summary>
     /// Moryx related implementation of <see cref="T:System.Data.Entity.DbContext" />
     /// </summary>
-    public abstract class MoryxDbContext : DbContext, IContextMode
+    public abstract class MoryxDbContext : DbContext
     {
         private static readonly MethodInfo DbInitializerMethod;
 
-        /// <inheritdoc />
-        public ContextMode CurrentMode { get; private set; }
+        /// <summary>
+        /// Indicator if modification tracking should be done automatically
+        /// </summary>
+        public bool EnableModificationTracking { get; set; } = true;
 
         /// <summary>
         /// Static constructor to load the database initializer method
@@ -45,37 +47,24 @@ namespace Moryx.Model
         /// Constructor for this DbContext using the given connection string.
         /// Used by the Runtime environment
         /// </summary>
-        protected MoryxDbContext(string connectionString, ContextMode mode) : base(connectionString)
+        protected MoryxDbContext(string connectionString) : base(connectionString)
         {
             SetNullDatabaseInitializer();
-            Configure(mode);
         }
 
         /// <summary>
-        /// Constructor for this DbContext using an exisiting connection.
+        /// Constructor for this DbContext using an existing connection.
         /// Used if connection is already defined (e.g. Effort InMemory)
         /// </summary>
-        protected MoryxDbContext(DbConnection connection, ContextMode mode) : base(connection, true)
+        protected MoryxDbContext(DbConnection connection) : base(connection, true)
         {
             SetNullDatabaseInitializer();
-            Configure(mode);
-        }
-
-        /// <inheritdoc />
-        public void Configure(ContextMode mode)
-        {
-            Configuration.ProxyCreationEnabled = mode.HasFlag(ContextMode.ProxyOnly);
-            Configuration.LazyLoadingEnabled = mode.HasFlag(ContextMode.LazyLoading);
-            Configuration.AutoDetectChangesEnabled = mode.HasFlag(ContextMode.ChangeTracking);
-            Configuration.ValidateOnSaveEnabled = true;
-            CurrentMode = mode;
         }
 
         /// <inheritdoc />
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             ConfigureConventions(modelBuilder);
-
             ConfigureProperties(modelBuilder);
         }
 
@@ -138,32 +127,25 @@ namespace Moryx.Model
         /// </summary>
         private void ApplyModificationTracking()
         {
-            var modifiedTrackedEntries = from entry in ChangeTracker.Entries()
-                where entry.Entity is IModificationTrackedEntity &&
-                      (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-                select new
-                {
-                    Entry = entry,
-                    Entity = entry.Entity as IModificationTrackedEntity,
-                    entry.State,
-                };
+            var modifiedTrackedEntries = ChangeTracker.Entries()
+                .Where(entry => entry.Entity is IModificationTrackedEntity &&
+                                (entry.State == EntityState.Added || entry.State == EntityState.Modified));
 
-            var changeTimestamp = DateTime.UtcNow;
-            foreach (var modified in modifiedTrackedEntries)
+            var timeStamp = DateTime.UtcNow;
+            foreach (var entry in modifiedTrackedEntries)
             {
-                modified.Entity.Updated = changeTimestamp;
+                var entity = (IModificationTrackedEntity)entry.Entity;
 
-                // ReSharper disable once ConvertIfStatementToSwitchStatement
-                if (modified.State == EntityState.Added)
-                {
-                    modified.Entity.Created = changeTimestamp;
-                }
-                else if (modified.State == EntityState.Modified)
-                {
-                    if (modified.Entry.CurrentValues[nameof(IModificationTrackedEntity.Deleted)] !=
-                        modified.Entry.OriginalValues[nameof(IModificationTrackedEntity.Deleted)])
-                        modified.Entity.Deleted = changeTimestamp;
-                }
+                // Added gets created
+                if (entry.State == EntityState.Added)
+                    entity.Created = timeStamp;
+
+                // All states gets updated
+                entity.Updated = timeStamp;
+
+                // Override deleted date of entity to sync between updated and deleted
+                if (entry.State == EntityState.Modified && entry.OriginalValues[nameof(IModificationTrackedEntity.Deleted)] == null && entity.Deleted != null)
+                    entity.Deleted = timeStamp;
             }
         }
 

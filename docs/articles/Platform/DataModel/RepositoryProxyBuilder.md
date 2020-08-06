@@ -42,7 +42,7 @@ var impl = repoBuilder.Build(typeof(ICarEntityRepository)).
 
 With this information the builder creates a type with the name `CarEntityRepository_MoryxProxy` for the given `ICarEntityRepository`. It tries to implement all declared methods otherwise it throws an `InvalidOperationException` if something is not possible or not specific enough.
 
-The builder automatically detects that the `CarEntity` is derived from `ModificationTrackedEntityBase` and uses the special `ModificationTrackedRepositoryBase` as base class (further reading here: [ModificationTracking](xref:Model.ModificationTracking))
+The builder automatically detects that the `CarEntity` is derived from `ModificationTrackedEntityBase` and uses the special `ModificationTrackedRepositoryBase` as base class (further reading here: [ModificationTracking](ModificationTracking.md))
 
 ## Type by abstract class
 

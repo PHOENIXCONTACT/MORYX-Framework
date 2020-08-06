@@ -5,12 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.ServiceModel;
 using System.Text.RegularExpressions;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
+using Moryx.Model.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 
@@ -24,9 +24,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         public IParallelOperations ParallelOperations { get; set; }
 
-        public IEnumerable<IUnitOfWorkFactory> ModelFactories { get; set; }
+        public IDbContextManager DbContextManager { get; set; }
 
-        private IEnumerable<IModelConfigurator> ModelConfigurators => ModelFactories.Cast<IModelConfiguratorFactory>().Select(c => c.GetConfigurator());
+        private IEnumerable<IModelConfigurator> ModelConfigurators => DbContextManager.Configurators;
 
         /// <summary>
         /// Logger of this component
@@ -48,10 +48,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         public void SetAllConfigs(DatabaseConfigModel config)
         {
-            // Get and stop all db related modules
-            var dbModules = AffectedModules();
-            dbModules.ForEach(ModuleManager.StopModule);
-
             // Overwrite all configs
             BulkOperation(mc =>
             {
@@ -59,9 +55,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 UpdateConfigFromModel(mc.Config, config);
                 mc.UpdateConfig();
             }, "Save config");
-
-            // Restart modules
-            dbModules.ForEach(ModuleManager.StartModule);
         }
 
         public void SetDatabaseConfig(string targetModel, DatabaseConfigModel config)
@@ -70,29 +63,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             if (match == null)
                 return;
 
-            // Stop all services that depend on that model
-            var affectedModules = AffectedModules(targetModel);
-            affectedModules.ForEach(ModuleManager.StopModule);
-
             // Save config and reload all DataModels
             UpdateConfigFromModel(match.Config, config);
             match.UpdateConfig();
 
-            // Start services again
-            affectedModules.ForEach(ModuleManager.StartModule);
-        }
-
-        private List<IServerModule> AffectedModules(string targetModel = null)
-        {
-            var affectedModules = (from module in ModuleManager.AllModules.Where(module => module.State == ServerModuleState.Running)
-                                   let props = module.GetType().GetProperties()
-                                   let facAtts = props.Where(prop => prop.PropertyType == typeof(IUnitOfWorkFactory))
-                                                      .Select(fac => fac.GetCustomAttribute<NamedAttribute>()).ToArray()
-                                   where (targetModel == null && facAtts.Any())
-                                      || (targetModel != null && facAtts.Any(att => att.ComponentName == targetModel))
-                                      || props.Any(prop => prop.PropertyType == typeof(IModelResolver))
-                                   select module).ToList();
-            return affectedModules;
         }
 
         public TestConnectionResponse TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
@@ -219,11 +193,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             var targetSetup = targetConfigurator.GetAllSetups().FirstOrDefault(item => item.GetType().FullName == request.Setup.Fullname);
             if (targetSetup == null)
                 return new InvocationResponse("No matching setup found");
-            
+
             // Provide logger for model
             // ReSharper disable once SuspiciousTypeConversion.Global
-            var loggingComponent = targetSetup as ILoggingComponent;
-            if (loggingComponent != null)
+            if (targetSetup is ILoggingComponent loggingComponent)
                 loggingComponent.Logger = Logger.GetChild("Setup", loggingComponent.GetType());
 
             try
@@ -234,29 +207,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Warning, ex, "Database setup execution failed!");
-                return new InvocationResponse(ex);
-            }
-        }
-
-        public InvocationResponse ExecuteScript(string targetModel, ExecuteScriptRequest request)
-        {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
-            if (targetConfigurator == null)
-                return new InvocationResponse("No configurator found");
-
-            var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            var targetScript = targetConfigurator.GetAllScripts().FirstOrDefault(item => item.Name == request.Script.Name);
-            if (targetScript == null)
-                return new InvocationResponse("No matching script found");
-
-            try
-            {
-                targetConfigurator.Execute(config, targetScript);
-                return new InvocationResponse();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(LogLevel.Warning, ex, "Database script execution failed!");
                 return new InvocationResponse(ex);
             }
         }
@@ -301,7 +251,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 },
                 Setups = GetAllSetups(configurator),
                 Backups = GetAllBackups(configurator),
-                Scripts = GetAllScripts(configurator),
                 AvailableMigrations = GetAvailableUpdates(dbConfig, configurator),
                 AppliedMigrations = GetInstalledUpdates(dbConfig, configurator)
             };
@@ -350,17 +299,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 };
 
             return backups.ToArray();
-        }
-
-        private static ScriptModel[] GetAllScripts(IModelConfigurator configurator)
-        {
-            var scripts = configurator.GetAllScripts().ToList();
-
-            return scripts.Select(s => new ScriptModel
-            {
-                Name = s.Name,
-                IsCreationScript = s.IsCreationScript
-            }).ToArray();
         }
 
         private static DbMigrationsModel[] GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)

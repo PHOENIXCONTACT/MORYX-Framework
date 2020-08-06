@@ -3,8 +3,6 @@
 
 using System;
 using System.Reflection;
-using Castle.Windsor;
-using Moryx.Model;
 
 namespace Moryx.Container
 {
@@ -16,7 +14,7 @@ namespace Moryx.Container
         public override bool ShallInstall(Type foundType)
         {
             var regAtt = foundType.GetCustomAttribute<RegistrationAttribute>();
-            return (regAtt is GlobalComponentAttribute || regAtt is ModelAttribute) && NotRegisteredYet(foundType, regAtt);
+            return (regAtt is GlobalComponentAttribute) && NotRegisteredYet(foundType, regAtt);
         }
     }
 }

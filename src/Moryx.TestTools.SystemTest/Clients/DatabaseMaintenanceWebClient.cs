@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moryx.Model;
+using Moryx.Model.Configuration;
 using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Maintenance.Plugins.Databases;
 
@@ -151,16 +152,6 @@ namespace Moryx.TestTools.SystemTest.Clients
         }
 
         public Task<InvocationResponse> ExecuteSetupAsync(string targetModel, ExecuteSetupRequest request)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public InvocationResponse ExecuteScript(string targetModel, ExecuteScriptRequest request)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<InvocationResponse> ExecuteScriptAsync(string targetModel, ExecuteScriptRequest request)
         {
             throw new System.NotImplementedException();
         }

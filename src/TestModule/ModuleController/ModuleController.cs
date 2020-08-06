@@ -3,8 +3,8 @@
 
 using System.ComponentModel;
 using System.Threading;
-using Moryx.Container;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.Test.Model;
@@ -22,8 +22,10 @@ namespace Moryx.TestModule
         /// </summary>
         public override string Name => ModuleName;
 
-        [Named(TestModelConstants.Namespace)]
-        public IUnitOfWorkFactory TestFactory { get; set; }
+        /// <summary>
+        /// Db context factory for data models
+        /// </summary>
+        public IDbContextManager DbContextManager { get; set; }
 
         private IHelloWorldWcfConnector _connector;
 
@@ -34,6 +36,8 @@ namespace Moryx.TestModule
         /// </summary>
         protected override void OnInitialize()
         {
+            Container.ActivateDbContexts(DbContextManager);
+
             Container.LoadComponents<IHelloWorldWcfConnector>();
         }
 

@@ -36,12 +36,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         public BackupModel[] Backups { get; set; }
 
         /// <summary>
-        /// An amount of scripts for this model.
-        /// </summary>
-        [DataMember]
-        public ScriptModel[] Scripts { get; set; }
-
-        /// <summary>
         /// Available migrations for this context
         /// </summary>
         [DataMember]

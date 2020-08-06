@@ -3,11 +3,7 @@ uid: GettingsStarted.CodeFirst
 ---
 # Code first
 
-This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MORYX Platform.
-
-The database access layer is implemented with help of the [UnitOfWork Repository Pattern](xref:Model.UnitOfWorkPattern). For the further reading it is necessary to have a rough understanding about it.
-
-MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
+This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MORYX Platform. MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
 
 ## Basics
 
@@ -18,38 +14,16 @@ You have to implement a few basics to get started working with the PostgreSQL da
 | [DbContext](https://msdn.microsoft.com/en-us/library/jj729737.aspx) | The primary class that is responsible for interacting with data as objects (often referred to as context). The context class manages the entity objects during run time, which includes populating objects with data from a database, change tracking, and persisting data to the database. |
 | Entities | One entity is one table |
 | Repositories | Helper functions to access a specific table. The MORYX framework implements a speciality to make your life easier. You just need to define the interface and the code will be generated at runtime. |
-| UnitOfWorkFactory | Factory for the database within the MORYX context |
 
-### A small view on constants
-
-Constants are good practice if you want to make you life easier. You have one single source of truth which you can refactor much easier.
-
-````cs
-/// <summary>
-/// String constants defined by the Products database model.
-/// </summary>
-public class SolarSystemModelConstants
-{
-    /// <summary>
-    /// Namespace of the generated code within this model. This can be used for the
-    /// ImportAttribute and UseChildAttribute.
-    /// </summary>
-    public const string Namespace = "Moryx.TestTools.Test.Model";
-
-    /// <summary>
-    /// Schema name for the database context
-    /// </summary>
-    public const string Schema = "testModel";
-}
-````
+More extended, additional repositories can be created for the [UnitOfWork Repository Pattern](../../articles/Platform/DataModel/UnitOfWorkPattern.md).
 
 ## The database DbContext
 
-Create your own database context by deriving from [MoryxDbContext](xref:Moryx.Model.MoryxDbContext) and the three constructor overloads as shown below.
+Create your own database context by deriving from `DbContext` or for more comfortability from [MoryxDbContext](xref:Moryx.Model.MoryxDbContext) and the three constructor overloads as shown below.
 
 ````cs
+[ModelConfigurator(typeof(NpgsqlModelConfigurator))]
 [DbConfigurationType(typeof(NpgsqlConfiguration))]
-[DefaultSchema(SolarSystemModelConstants.Schema)]
 public class SolarSystemContext : MoryxDbContext
 {
     public SolarSystemContext()
@@ -60,11 +34,13 @@ public class SolarSystemContext : MoryxDbContext
     public SolarSystemContext(string connectionString, ContextMode mode)
         : base(connectionString, mode)
     {
+        // Used by MORYX internals
     }
 
     public SolarSystemContext(DbConnection connection, ContextMode mode)
         : base(connection, mode)
     {
+        // Optional: If Moryx.InMemory is used for testing
     }
 
     public virtual DbSet<Planet> Planets { get; set; }
@@ -82,7 +58,7 @@ public class SolarSystemContext : MoryxDbContext
 }
 ````
 
-Please note that we follow the policy to place tables of a context into to a different schema when possible. Please use the global `DefaultSchemaAttribute` on the context.
+Please note the [ModelConfiguratorAttribute](xref:Moryx.Model.ModelConfiguratorAttribute) which is used by the MORYX to create a configuration for the context. For now, the `NpgsqlModelConfigurator` is using `Npgsql` for PostgreSQL databases.
 
 ## Entities
 
@@ -125,7 +101,7 @@ public class Asteroid : ModificationTrackedEntityBase
 }
 ````
 
-Mmh, the entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase). Is that necessary? That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`. This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base and has three special properties which are monitored by triggers (Created, Updated, Deleted). These trigger will automatically installed inside the database and tables. Further reading [Modification Tracking](xref:Model.ModificationTracking) here.
+The entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase). Is that necessary? That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`. This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base and has three special properties which are monitored by triggers (Created, Updated, Deleted) whcih are automatically applied to the entitiy. Further reading [Modification Tracking](../../articles/Platform/DataModel/ModificationTracking.md) here.
 
 ## Entity loading & change tracking behavior
 
@@ -157,20 +133,47 @@ If you want to take profit about lazy loading setting the right `ContextMode` is
 
 ### MORYX specific
 
+To use the context within a MORYX module, you must declare a dependency on `IDbContextManager` and register it together with the context specific factory in your local container. Afterwards you can use injection for context specifics factories anywhere in the module
+
+````cs
+// ModuleController.cs
+
+public IDbContextManager DbContextManager { get; set; }
+
+protected override void OnInitialize()
+{
+    Container.ActivateDbContexts(DbContextManager);
+
+    // ..
+
+
+// Somewhere within the modules composition
+public class MyComponent : IMyComponent
+{
+    // Injected
+    public IContextFactory<SolarSystemContext> SolarContextFactory { get; set; }
+}
+````
+
 MORYX framework uses per default `Dynamic Change Tracking` and lazy loading but it is possbile to override these settings. You are allowed to change settings via [ContextMode](xref:Moryx.Model.ContextMode):
 
 ````cs
-// Example how you can change the default setting via ContextMode on the `UnitOfWorkFactory`
+// Example how you can change the default setting via ContextMode on the context
 // This call enables `Dynamic Change Tracking` only feature
-var uow = uowFactory.Create(ContextMode.Tracking);
-
-// or later with
-uow.Mode = ContextMode.Tracking;
+using (var context = SolarContextFactory.Create(ContextMode.Tracking))
+{
+    // or later with
+    context.SetContextMode(ContextMode.Tracking);
+}
 ````
 
-## Repositories
+## UnitOfWork Repository Pattern
 
-After that we need do define the repository interfaces.
+MORYX brings out of the box extensions on the `DbContext` to provide the [UnitOfWork Repository Pattern](../../articles/Platform/DataModel/UnitOfWorkPattern.md). For the further reading it is necessary to have a rough understanding about it.
+
+### Repositories
+
+First let's define a repository API (same assembly as the context is defined)
 
 ````cs
 public interface IPlanetRepository : IRepository<Planet>
@@ -212,9 +215,36 @@ public interface IAsteroidRepository : IRepository<Asteroid>
 }
 ````
 
-If you got scared that you have to implement all these functions you are lucky they will be implemented automatically. So you only have to define the interfaces. If you want to know more about the automatic repository instantiation please have a look onto [Repository Proxy Builder](xref:Model.RepositoryProxyBuilder) page. The example functions defined above are also not necessary. Add just functions you really need.
+If you got scared that you have to implement all these functions you are lucky they will be implemented automatically. So you only have to define the interfaces. If you want to know more about the automatic repository instantiation please have a look onto [Repository Proxy Builder](../../articles/Platform/DataModel/RepositoryProxyBuilder.md) page. The example functions defined above are also not necessary. Add just functions you really need.
 
 But if you need a more specialized implementation of a repository you can either use a mixture of repository proxies and self implemented repository or your own repository implementation.
+
+To use the unit of work pattern, another factory is also registered to the local container of the module `IUnitOfWorkFactory` and this can also be injected per context:
+
+````cs
+// Somewhere within the modules composition
+public class MyComponent : IMyComponent
+{
+    // Injected
+    public IUnitOfWorkFactory<SolarSystemContext> UnitOfWorkFactory { get; set; }
+}
+````
+
+The repository can be used be creating an unit of work by the factory and resolve the repository
+
+````cs
+using (var uow = UnitOfWokFactory.Create())
+{
+    var planetRepo = uow.GetRepository<IPlanetRepository>();
+    var planetEntity = planetRepo.Create();
+
+    //[...]
+
+    uow.SaveChanges();
+}
+````
+
+You must not implement your repository interface, this is completly done by the [Repository Proxy Builder](../../articles/Platform/DataModel/RepositoryProxyBuilder.md).
 
 ## Database Migration
 
@@ -287,43 +317,13 @@ The database should now have been updated. Have a look.
 
 When you have changed your entities or your context while development you only need to call the `Add-Migration` script once more. You have to consider two things: First ensure that your database is on the latest migration. Second change the `Name` parameter of the script to a speaking version name.
 
-## The UnitOfWorkFactory
-
-Lastly we need to implement the corresponding `UnitOfWorkFactory`. The base implementation comes with a set of predefined functions to manipulate your data. So you only need to register your repositories and the migration configuration.
-
-````cs
-[ModelFactory(SolarSystemModelConstants.Namespace)]
-public class SolarSystemModelUnitOfWorkFactory : UnitOfWorkFactoryBase<SolarSystemContext, NpgsqlModelConfigurator>
-{
-    protected override void Configure()
-    {
-        RegisterRepository<IPlanetRepository>();
-        RegisterRepository<ISatelliteRepository>();
-        RegisterRepository<IAsteroidRepository>();
-    }
-}
-````
-
-Are we done now? No, but you have just implemented the basic data entities and the repository to access the data.
-
 ## Accessing your data
 
-But how to access the data? The next snippet shows an example call of the unit of work. Note that usually a `UnitOfWorkFactory` is injected and the mock is not necessary.
+But how to access the data? The next snippet shows an example call of the database. Note that usually a `DbContextFactory` is injected.
 
 ````cs
-// Create a Mock to inject the correct database config
-var configManagerMock = new Mock<IConfigManager>();
-configManagerMock.Setup(c => c.GetConfiguration<NpgsqDatabaseConfig>(It.IsAny<string>())).Returns(dbConfig);
-
-// instantiate & initialize the unit of work factory (all proxies will be generated)
-var uowFactory = new SolarSystemModelUnitOfWorkFactory { ConfigManager = configManagerMock.Object };
-uowFactory.Initialize();
-
-// create an instance
-var uow = uowFactory.Create();
-
-// retrieve your repository
-var houseRepository = uow.GetRepository<IPlanetRepository>();
+var context = DbContextFactory.Create<SolarSystemContext>();
+var planets = context.Planets;
 ````
 
 ## Schema support
@@ -344,145 +344,6 @@ The Entity Framework supports three inheritance strategies (an overview can be f
 | Table per Concrete class (TPC) | This approach suggests one table for one concrete class, but not for the abstract class. So, if you inherit the abstract class in multiple concrete classes, then the properties of the abstract class will be part of each table of the concrete class. |
 
 The default strategy the EF is using is the `Table per Hierarchy`.
-
-### Inheritance example
-
-In MORYX's world you may want to extend an existing entity. This chapter describes how you can inherit from an existing context and its entities. We will use `Table per Concrete class` to achieve inheritance. We assume that the inherited data context is part of a new project but the "old" project is referenced to it.
-
-Create a new `Model` project and add the following classes to the project:
-
-An yes, create also a new class for constant values:
-
-````cs
-/// <summary>
-/// String constants defined by the Products database model.
-/// </summary>
-public class TestModelInheritanceConstants
-{
-    /// <summary>
-    /// Namespace of the generated code within this model. This can be used for the
-    /// ImportAttribute and UseChildAttribute.
-    /// </summary>
-    public const string Namespace = "Moryx.TestTools.Test.Model.Inheritance";
-
-    /// <summary>
-    /// Schema name for the database context
-    /// </summary>
-    public const string SchemaName = "public";
-}
-````
-
-The inherited entity:
-
-````cs
-public class PlanetOfTheApes : Planet
-{
-    public virtual int ApeCount { get; set; }
-}
-````
-
-The inherited context:
-
-````cs
-namespace Moryx.TestTools.Test.Model.Inheritance
-{
-    [DbConfigurationType(typeof(NpgsqlConfiguration))]
-    public class SpecializedSolarSystemContext : SolarSystemContext
-    {
-        public SpecializedSolarSystemContext()
-        {
-            // Important: Migration functions needing a parameterless constructor
-        }
-
-        public SpecializedSolarSystemContext(string connectionString, ContextMode mode) : base(connectionString, mode)
-        {
-        }
-
-        public virtual DbSet<PlanetOfTheApes> Planets { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<PlanetOfTheApes>()
-                .ToTable(nameof(PlanetOfTheApes));
-        }
-    }
-}
-````
-
-A new migration configuration (Note: you always have to create a new migration configuration in every model project. This is a restriction by the EF.):
-
-````cs
-internal sealed class Configuration : DbMigrationConfiguration<SpecializedSolarSystemContext>
-{
-}
-````
-
-A new repository:
-
-````cs
-public interface IPlanetOfApesPlanetRepository : IRepository<PlanetOfTheApes>
-{
-}
-````
-
-And last but not least a `UnitOfWorkFactory`:
-
-But before we can add the specialized UnitOfWorkFactory you have to change the SolarSystemContextUnitOfWorkFactory:
-
-````cs
-public abstract class SolarSystemModelUnitOfWorkFactory<TContext> : NpgsqlUnitOfWorkFactoryBase<<TContext>>
-{
-    protected override void Configure()
-    {
-        RegisterRepository<IPlanetRepository>();
-        RegisterRepository<ISatelliteRepository>();
-        RegisterRepository<IAsteroidRepository>();
-    }
-}
-
-[ModelFactory(TestModelInheritanceConstants.Namespace.Namespace)]
-public class SolarSystemModelUnitOfWorkFactory : SolarSystemModelUnitOfWorkFactory<SolarSystemContext>
-{
-    protected override DbMigrationsConfiguration<ProductsContext> MigrationConfiguration => new Migrations.Configuration();
-}
-````
-
-And now the specialized one.
-
-````cs
-[ModelFactory(TestModelInheritanceConstants.Namespace, TestModelConstants.Namespace)]
-public class SpecializedSolarSystemContextUnitOfWorkFactory : SolarSystemContextUnitOfWorkFactory<SpecializedSolarSystemContext>
-{
-    protected override DbMigrationsConfiguration<ProductsContext> MigrationConfiguration => new Migrations.Configuration();
-
-    protected override void Configure()
-    {
-        RegisterRepository<IPlanetOfApesPlanetRepository>();
-    }
-}
-````
-
-That's all. Now you can use all migration stuff to create migrations.
-
-## A word about the `ModelFactory`
-
-You might wonder about the extended `ModelFactory` call. It's used to create a hierarchy inside the `UnitOfWorkFactory` and to get the right factory when a `IUnitofWorkFactory` gets injected.
-
-So if you want to get a derived factory injected you have to add the `UseChild` attribute to your class:
-
-````cs
-public class MyPlanetObserver
-{
-    ...
-
-    [UseChild(TestModelInheritanceConstants.Namespace)]
-    public IUnitOfWorkFactory PlanetOfTheApesFactory { get; set; }
-
-    ...
-}
-````
 
 ## Freqeuently asked questions
 

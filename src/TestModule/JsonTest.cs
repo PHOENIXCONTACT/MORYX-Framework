@@ -9,6 +9,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.TestTools.Test.Model;
 using Newtonsoft.Json;
@@ -19,7 +20,7 @@ namespace Moryx.TestModule
     [Plugin(LifeCycle.Singleton)]
     public class JsonTest : IPlugin
     {
-        public IUnitOfWorkFactory TestFactory { get; set; }
+        public IUnitOfWorkFactory<TestModelContext> TestFactory { get; set; }
 
         private const int LoopCount = 100;
 
@@ -181,7 +182,7 @@ namespace Moryx.TestModule
         {
             var json = JsonConvert.SerializeObject(config, typeof(IConfig), settings);
             var entity = uow.GetRepository<IJsonEntityRepository>().Create(json);
-            uow.Save();
+            uow.SaveChanges();
             return entity.Id;
         }
 

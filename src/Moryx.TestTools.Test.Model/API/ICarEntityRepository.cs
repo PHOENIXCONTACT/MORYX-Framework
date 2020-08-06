@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Moryx.Model;
+using Moryx.Model.Repositories;
 
 namespace Moryx.TestTools.Test.Model
 {
@@ -20,7 +20,7 @@ namespace Moryx.TestTools.Test.Model
         ICollection<CarEntity> GetAllBy(string name, int price);
 
         ICollection<CarEntity> GetAllContains(string name);
-        ICollection<CarEntity> GetAllContains(string name, int price); 
+        ICollection<CarEntity> GetAllContains(string name, int price);
 
         CarEntity GetSingleBy(string name);
         CarEntity GetSingleContains(string name);

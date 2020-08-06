@@ -6,7 +6,7 @@ using System;
 namespace Moryx.Model
 {
     /// <summary>
-    /// Base class for <see cref="IModificationTrackedEntity"/>. 
+    /// Base class for <see cref="IModificationTrackedEntity"/>.
     /// Created, Updated and Deleted columns will be added.
     /// </summary>
     public abstract class ModificationTrackedEntityBase : EntityBase, IModificationTrackedEntity

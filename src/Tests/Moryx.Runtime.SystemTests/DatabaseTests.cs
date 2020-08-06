@@ -7,7 +7,7 @@ using Moryx.Model;
 using Moryx.Runtime.Maintenance.Plugins.Databases;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.SystemTest;
-using Moryx.TestTools.Test.Inheritance.Model;
+using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.SystemTests
@@ -21,6 +21,7 @@ namespace Moryx.Runtime.SystemTests
         private HeartOfGoldController _hogController;
         private string _databaseName;
         private DatabaseConfigModel _databaseConfigModel;
+        private string _targetModel;
 
         [SetUp]
         public void Setup()
@@ -35,6 +36,8 @@ namespace Moryx.Runtime.SystemTests
                 ExecutionTimeout = 60
             };
 
+            _targetModel = typeof(TestModelContext).FullName;
+
             Console.WriteLine("Starting HeartOfGold");
 
             var started = _hogController.StartHeartOfGold();
@@ -47,9 +50,9 @@ namespace Moryx.Runtime.SystemTests
             var result = _hogController.WaitForService("Maintenance", ServerModuleState.Running, 10);
             Assert.IsTrue(result, "Service 'Maintenance' did not reach state 'Running'");
 
-            if (_hogController.CheckDatabase(_databaseConfigModel, InheritedTestModelConstants.Name).Result == TestConnectionResult.Success)
+            if (_hogController.CheckDatabase(_databaseConfigModel, _targetModel).Result == TestConnectionResult.Success)
             {
-                result = _hogController.DeleteDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+                result = _hogController.DeleteDatabase(_databaseConfigModel, _targetModel);
                 Assert.IsTrue(result, "Can't delete database '{0}' in Setup.", _databaseName);
             }
         }
@@ -84,23 +87,23 @@ namespace Moryx.Runtime.SystemTests
         [Test]
         public void CreateDeleteDatabaseTest()
         {
-            var checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+            var checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, _targetModel);
 
             Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, checkDatabase.Result, "Database '{0}' seems to exist.", _databaseName);
 
-            var createDatabase = _hogController.CreateDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+            var createDatabase = _hogController.CreateDatabase(_databaseConfigModel, _targetModel);
 
             Assert.IsTrue(createDatabase, "Can't create database '{0}'.", _databaseName);
 
-            checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+            checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, _targetModel);
             Assert.AreEqual(TestConnectionResult.Success, checkDatabase.Result, "Database '{0}' does not to exist.", _databaseName);
 
-            var deleteDatabase = _hogController.DeleteDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
+            var deleteDatabase = _hogController.DeleteDatabase(_databaseConfigModel, _targetModel);
 
             Assert.IsTrue(deleteDatabase, "Can't delete database '{0}'.", _databaseName);
 
-            checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, InheritedTestModelConstants.Name);
-            
+            checkDatabase = _hogController.CheckDatabase(_databaseConfigModel, _targetModel);
+
             Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, checkDatabase.Result, "Database '{0}' seems to still exist.", _databaseName);
         }
     }

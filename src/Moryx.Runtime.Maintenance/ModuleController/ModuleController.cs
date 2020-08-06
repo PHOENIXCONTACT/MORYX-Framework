@@ -36,7 +36,7 @@ namespace Moryx.Runtime.Maintenance
         /// <summary>
         /// Model configurators. Injected by castle.
         /// </summary>
-        public IUnitOfWorkFactory[] UnitOfWorkFactories { get; set; }
+        public IDbContextManager DbContextManager { get; set; }
 
         /// <summary>
         /// runtime config manager. Injected by castle.
@@ -68,9 +68,7 @@ namespace Moryx.Runtime.Maintenance
                 .SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
                 .SetInstance((IServerLoggerManagement)LoggerManagement);
 
-            // Register all unit of work factories
-            foreach (var factory in UnitOfWorkFactories)
-                Container.SetInstance(factory);
+            Container.SetInstance(DbContextManager);
 
             Container.LoadComponents<IMaintenancePlugin>();
         }

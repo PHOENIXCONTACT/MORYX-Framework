@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.Model.Repositories;
+using Moryx.Model.Repositories.Proxy;
 using NUnit.Framework;
 
 namespace Moryx.Model.Tests
@@ -36,24 +38,6 @@ namespace Moryx.Model.Tests
         }
 
         [Test]
-        public void ModificationTrackedRepositoryInterface()
-        {
-            // Act
-            Type proxyType = null;
-            Assert.DoesNotThrow(delegate
-            {
-                proxyType = _proxyBuilder.Build(typeof(IModificationTrackedRepository));
-            });
-
-            // Assert
-            var baseType = proxyType.BaseType;
-            Assert.IsNotNull(baseType);
-
-            var genericBaseType = baseType.GetGenericTypeDefinition();
-            Assert.AreEqual(typeof(ModificationTrackedRepository<>), genericBaseType);
-        }
-
-        [Test]
         public void InterfaceWithoutRepositoryThrows()
         {
             //Act - Assert
@@ -82,7 +66,7 @@ namespace Moryx.Model.Tests
                 _proxyBuilder.Build(typeof(ICreateStringParamRepository));
             });
         }
-        
+
         [Test]
         public void CreateWithValueParameter()
         {
@@ -125,6 +109,20 @@ namespace Moryx.Model.Tests
 
             var genericBaseType = baseType.GetGenericTypeDefinition();
             Assert.AreEqual(typeof(Repository<>), genericBaseType);
+        }
+
+        [Test]
+        public void CreateModificationTracked()
+        {
+            // Act
+            var proxyType = _proxyBuilder.Build(typeof(IModificationTrackedRepository));
+
+            // Assert
+            var baseType = proxyType.BaseType;
+            Assert.IsNotNull(baseType);
+
+            var genericBaseType = baseType.GetGenericTypeDefinition();
+            Assert.AreEqual(typeof(ModificationTrackedRepository<>), genericBaseType);
         }
 
         [Test]

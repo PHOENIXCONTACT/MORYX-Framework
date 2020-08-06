@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using Moryx.Model;
+using Moryx.Model.Repositories;
 
 namespace Moryx.TestTools.Test.Model
 {

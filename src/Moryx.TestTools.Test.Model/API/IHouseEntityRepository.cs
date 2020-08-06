@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Moryx.Model;
+using Moryx.Model.Repositories;
 
 namespace Moryx.TestTools.Test.Model
 {
@@ -12,7 +12,7 @@ namespace Moryx.TestTools.Test.Model
         ICollection<HouseEntity> GetMethLabratories();
     }
 
-    public class HouseEntityRepository : ModificationTrackedRepository<HouseEntity>, IHouseEntityRepository
+    public class HouseEntityRepository : Repository<HouseEntity>, IHouseEntityRepository
     {
         public virtual ICollection<HouseEntity> GetMethLabratories()
         {
