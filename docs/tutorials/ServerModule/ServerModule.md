@@ -36,6 +36,7 @@ For the following properties and attributes reference these files:
 
 ````cs
 [ServerModule(ModuleName)]
+[Description("Example description")]
 public class ModuleController : ServerModuleBase<ModuleConfig>
 {
     internal const string ModuleName = "ExampleName";
@@ -161,34 +162,6 @@ The module console provides a command line interface to interact with the server
 [ServerModuleConsole]
 internal class ModuleConsole : IServerModuleConsole
 {
-    public string ExportDescription(DescriptionExportFormat format)
-    {
-        switch (format)
-        {
-            case DescriptionExportFormat.Console:
-                return ExportConsoleDescription();
-            case DescriptionExportFormat.Documentation:
-                return ExportHtmlDescription();
-        }
-        return string.Empty;
-    }
-
-    // Export your description for the developer console here
-    // This should represent the current state
-    private string ExportConsoleDescription()
-    {
-        var manPage = @"Little module for little test";
-        return manPage;
-    }
-
-    // Export your description for the supervisor or maintenance
-    // This should be a static explanation of the plugin
-    private string ExportHtmlDescription()
-    {
-        var manPage = @"Little module for little test";
-        return manPage;
-    }
-
     public void ExecuteCommand(string[] args, Action<string> outputStream)
     {
         if (!args.Any())

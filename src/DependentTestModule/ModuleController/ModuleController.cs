@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+using System.ComponentModel;
 using System.Threading;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
@@ -10,6 +10,7 @@ using Moryx.TestModule;
 namespace Moryx.DependentTestModule
 {
     [ServerModule(ModuleName)]
+    [Description("Test module for System tests")]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<IDependentTestModule>
     {
         public const string ModuleName = "DependentTestModule";

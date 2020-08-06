@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using Moryx.Logging;
 using Moryx.Model;
@@ -18,6 +19,8 @@ namespace Moryx.Runtime.Maintenance
     /// Maintenance module that hosts the plugins.
     /// </summary>
     [ServerModule(ModuleName)]
+    [Description("Core module to maintain the application. It provides config, database and logging support by default. " +
+                 "Additional plugins can be included as well as other extensions implementing IMaintenanceModule")]
     public class ModuleController : ServerModuleBase<ModuleConfig>, IPlatformModule
     {
         internal const string ModuleName = "Maintenance";
@@ -91,7 +94,7 @@ namespace Moryx.Runtime.Maintenance
                 var baseType = unconfiguredPlugin.GetType().BaseType;
                 if (baseType == null || !typeof(MaintenancePluginBase<,>).IsAssignableFrom(baseType.GetGenericTypeDefinition()))
                     throw new ArgumentException("MaintenancePlugins should be of type MaintenancePluginBase");
-                
+
                 var configType = baseType.GetGenericArguments()[0];
 
                 var pluginConfig = (MaintenancePluginConfig)Activator.CreateInstance(configType);
