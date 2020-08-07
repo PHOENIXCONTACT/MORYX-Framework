@@ -10,6 +10,8 @@ using Moryx.Model;
 using Moryx.Resources.Model;
 using Moryx.TestTools.UnitTest;
 using Moq;
+using Moryx.Model.InMemory;
+using Moryx.Model.Repositories;
 using NUnit.Framework;
 
 namespace Moryx.Resources.Management.Tests
@@ -17,7 +19,7 @@ namespace Moryx.Resources.Management.Tests
     [TestFixture]
     public class ResourceManagerTests
     {
-        private IUnitOfWorkFactory _modelFactory;
+        private IUnitOfWorkFactory<ResourcesContext> _modelFactory;
         private Mock<IResourceTypeController> _typeControllerMock;
         private Mock<IResourceLinker> _linkerMock;
         private ResourceMock _resourceMock;
@@ -36,9 +38,7 @@ namespace Moryx.Resources.Management.Tests
                 References = new ReferenceCollectionMock<IResource>()
             };
 
-            var modelFactory = new InMemoryUnitOfWorkFactory(Guid.NewGuid().ToString());
-            modelFactory.Initialize();
-            _modelFactory = modelFactory;
+            _modelFactory = new UnitOfWorkFactory<ResourcesContext>(new InMemoryDbContextManager(Guid.NewGuid().ToString()));
 
             _typeControllerMock = new Mock<IResourceTypeController>();
 
@@ -73,7 +73,7 @@ namespace Moryx.Resources.Management.Tests
             {
                 var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
                 resourceRepo.Create(DatabaseResourceName, typeof(ResourceMock).ResourceType());
-                uow.Save();
+                uow.SaveChanges();
             }
         }
 

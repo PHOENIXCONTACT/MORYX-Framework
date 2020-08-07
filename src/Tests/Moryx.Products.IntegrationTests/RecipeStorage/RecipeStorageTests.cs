@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Data.Entity;
 using System.Linq;
-using Moryx.Model;
+using Moryx.Model.InMemory;
+using Moryx.Model.Repositories;
 using Moryx.Products.Management;
 using Moryx.Products.Model;
 using Moryx.Workflows;
@@ -14,16 +14,12 @@ namespace Moryx.Products.IntegrationTests
     [TestFixture]
     public class RecipeStorageTests
     {
-        private InMemoryUnitOfWorkFactory _factory;
+        private IUnitOfWorkFactory<ProductsContext> _factory;
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            Effort.Provider.EffortProviderConfiguration.RegisterProvider();
-
-            // prepare in-memory resource db
-            _factory = new InMemoryUnitOfWorkFactory("RecipeStorageTests");
-            _factory.Initialize();
+            _factory = new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("RecipeStorageTests"));
         }
 
         [Test]
@@ -38,7 +34,7 @@ namespace Moryx.Products.IntegrationTests
             using (var uow = _factory.Create())
             {
                 entity = RecipeStorage.SaveWorkplan(uow, workplan);
-                uow.Save();
+                uow.SaveChanges();
                 loaded = RecipeStorage.LoadWorkplan(uow, entity.Id);
             }
 

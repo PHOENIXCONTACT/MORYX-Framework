@@ -7,6 +7,7 @@ using Moryx.Model;
 using Moryx.Resources.Model;
 using Moryx.Serialization;
 using Moq;
+using Moryx.Model.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
 

@@ -15,11 +15,11 @@ using Moryx.Tools.Wcf;
 namespace Moryx.Resources.Management
 {
     /// <summary>
-    /// The main controller of all resource modules. 
+    /// The main controller of all resource modules.
     /// </summary>
     [ServerModule(ModuleName)]
-    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, 
-        IFacadeContainer<IResourceManagement>, 
+    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>,
+        IFacadeContainer<IResourceManagement>,
         IFacadeContainer<INotificationSource>
     {
         internal const string ModuleName = "ResourceManager";
@@ -29,9 +29,10 @@ namespace Moryx.Resources.Management
         /// </summary>
         public override string Name => ModuleName;
 
-        /// <summary>Injected property</summary>
-        [Named(ResourcesConstants.Namespace)]
-        public IUnitOfWorkFactory ResourceModel { get; set; }
+        /// <summary>
+        /// Generic component to access every data model
+        /// </summary>
+        public IDbContextManager DbContextManager { get; set; }
 
         /// <summary>Injected property</summary>
         public IWcfClientFactory WcfClientFactory { get; set; }
@@ -48,7 +49,8 @@ namespace Moryx.Resources.Management
         {
             // Register imports
             Container.RegisterNotifications();
-            Container.SetInstance(ResourceModel).SetInstance(WcfClientFactory).SetInstance(ConfManager);
+            Container.ActivateDbContexts(DbContextManager);
+            Container.SetInstance(WcfClientFactory).SetInstance(ConfManager);
 
             // Register for communication
             Container.Register<IBinaryConnectionFactory>();
@@ -89,7 +91,7 @@ namespace Moryx.Resources.Management
             // Tear down facades
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_resourceManagementFacade);
-            
+
             var resourceManager = Container.Resolve<IResourceManager>();
             resourceManager.Stop();
         }

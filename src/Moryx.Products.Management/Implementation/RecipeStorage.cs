@@ -5,6 +5,7 @@ using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Products.Model;
 using Moryx.Tools;
 using Moryx.Workflows;
@@ -252,7 +253,7 @@ namespace Moryx.Products.Management
             {
                 descriptionRepo.RemoveRange(removedStep.OutputDescriptions);
                 referenceRepo.RemoveRange(removedStep.Connectors);
-                stepRepo.Remove(removedStep, true);
+                stepRepo.Remove(removedStep);
             }
 
             var stepEntities = new Dictionary<long, StepEntity>();

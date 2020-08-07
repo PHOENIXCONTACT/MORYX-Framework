@@ -11,6 +11,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Resources.Model;
 using Moryx.Tools;
 using static Moryx.Resources.Management.ResourceReferenceTools;

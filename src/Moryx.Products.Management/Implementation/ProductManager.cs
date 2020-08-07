@@ -9,6 +9,7 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Products.Management.Importers;
 using Moryx.Products.Model;
 using Moryx.Tools;
@@ -22,7 +23,7 @@ namespace Moryx.Products.Management
 
         public IProductStorage Storage { get; set; }
 
-        public IUnitOfWorkFactory Factory { get; set; }
+        public IUnitOfWorkFactory<ProductsContext> Factory { get; set; }
 
         public IProductImporterFactory ImportFactory { get; set; }
 
@@ -157,7 +158,7 @@ namespace Moryx.Products.Management
 
                 // No products affected, so we can remove the product
                 productRepo.Remove(queryResult.entity);
-                uow.Save();
+                uow.SaveChanges();
 
                 return true;
             }

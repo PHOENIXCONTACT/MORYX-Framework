@@ -17,17 +17,17 @@ namespace Moryx.Resources.Management
         #region Dependencies
 
         /// <summary>
-        /// Factory to create the resource initializers
+        /// Factory to create the resource initializer
         /// </summary>
         public IResourceInitializerFactory InitializerFactory { get; set; }
 
         /// <summary>
-        /// Config to load all configured initializers
+        /// Config to load all configured initializer
         /// </summary>
         public ModuleConfig ModuleConfig { get; set; }
 
         /// <summary>
-        /// Resource manager to execute initializers
+        /// Resource manager to execute initializer
         /// </summary>
         public IResourceManager ResourceManager { get; set; }
 
@@ -39,19 +39,10 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        public string ExportDescription(DescriptionExportFormat format)
-        {
-            return $"{Environment.NewLine}Possible ResourceManager commands: {Environment.NewLine}" +
-                   $"- initialize {Environment.NewLine}";
-        }
-
         public void ExecuteCommand(string[] args, Action<string> outputStream)
         {
             if (args.Length <= 0)
-            {
-                outputStream(ExportDescription(DescriptionExportFormat.Console));
                 return;
-            }
 
             switch (args[0].ToLower())
             {

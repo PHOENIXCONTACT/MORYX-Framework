@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Model;
+using Moryx.Model.Repositories;
 
 namespace Moryx.Products.Model
 {
@@ -13,6 +13,6 @@ namespace Moryx.Products.Model
         /// <summary>
         /// Create a new <see cref="ProductFileEntity"/>
         /// </summary>
-        ProductFileEntity Create(string fileName, string mimeType);
+        ProductFileEntity Create(string name, string mimeType);
     }
 }
