@@ -18,7 +18,7 @@ namespace Moryx.Model.Repositories
         /// <summary>
         /// Manager that does the real work
         /// </summary>
-        private IDbContextManager _manager;
+        private readonly IDbContextManager _manager;
 
         private readonly RepositoryProxyBuilder _proxyBuilder = new RepositoryProxyBuilder();
         private readonly IDictionary<Type, Func<Repository>> _repositories = new Dictionary<Type, Func<Repository>>();
