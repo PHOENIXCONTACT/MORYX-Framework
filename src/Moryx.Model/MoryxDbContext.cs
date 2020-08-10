@@ -20,11 +20,6 @@ namespace Moryx.Model
         private static readonly MethodInfo DbInitializerMethod;
 
         /// <summary>
-        /// Indicator if modification tracking should be done automatically
-        /// </summary>
-        public bool EnableModificationTracking { get; set; } = true;
-
-        /// <summary>
         /// Static constructor to load the database initializer method
         /// </summary>
         static MoryxDbContext()
@@ -154,7 +149,7 @@ namespace Moryx.Model
         /// </summary>
         private void SetNullDatabaseInitializer()
         {
-            // Because of the limited entity framdework API, we have to call the Database initializer by reflection
+            // Because of the limited entity framework API, we have to call the Database initializer by reflection
             // Database.SetInitializer(new NullDatabaseInitializer<CustomContext>());
             var contextType = GetType();
             var initializerMethod = DbInitializerMethod.MakeGenericMethod(contextType);

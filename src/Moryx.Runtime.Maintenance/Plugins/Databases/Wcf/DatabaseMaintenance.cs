@@ -11,8 +11,6 @@ using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Model.Configuration;
-using Moryx.Runtime.Modules;
-using Moryx.Threading;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
