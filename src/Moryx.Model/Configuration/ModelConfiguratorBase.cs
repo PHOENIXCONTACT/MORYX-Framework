@@ -11,7 +11,6 @@ using System.Data.Entity.Migrations.Infrastructure;
 using System.Linq;
 using Moryx.Configuration;
 using Moryx.Logging;
-using Moryx.Tools;
 
 namespace Moryx.Model.Configuration
 {
@@ -22,11 +21,9 @@ namespace Moryx.Model.Configuration
         where TConfig : class, IDatabaseConfig, new()
     {
         private IConfigManager _configManager;
-        private IDictionary<Type, IModelSetup> _setupDict;
         private string _configName;
         private DbMigrationsConfiguration _migrationsConfiguration;
         private string[] _migrations;
-        private Type _contextType;
 
         /// <summary>
         /// Logger for this model configurator
@@ -42,12 +39,15 @@ namespace Moryx.Model.Configuration
         public IDatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
+        public Type ContextType { get; private set; }
+
+        /// <inheritdoc />
         public string TargetModel { get; private set; }
 
         /// <inheritdoc />
         public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
         {
-            _contextType = contextType;
+            ContextType = contextType;
             _configManager = configManager;
 
             // Add logger
@@ -69,14 +69,6 @@ namespace Moryx.Model.Configuration
 
             // Load local migrations
             _migrations = GetAvailableMigrations();
-
-            // Load ModelSetups TODO: Load internals
-            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(delegate(Type type)
-            {
-                // Try to read context from attribute
-                var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
-                return setupAttr != null && setupAttr.TargetContext == _contextType;
-            }).ToDictionary(t => t, t => (IModelSetup) null);
         }
 
         /// <inheritdoc />
@@ -88,7 +80,7 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public DbContext CreateContext(IDatabaseConfig config, ContextMode mode)
         {
-            var context = (DbContext)Activator.CreateInstance(_contextType, BuildConnectionString(config));
+            var context = (DbContext)Activator.CreateInstance(ContextType, BuildConnectionString(config));
             context.SetContextMode(mode);
             return context;
         }
@@ -248,35 +240,6 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public abstract void RestoreDatabase(IDatabaseConfig config, string filePath);
 
-        /// <inheritdoc />
-        public IEnumerable<IModelSetup> GetAllSetups() => GetOrCreateFromTypeDict(_setupDict);
-
-        /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
-        {
-            var context = CreateContext(config, ContextMode.AllOn);
-            setup.Execute(context, setupData);
-        }
-
-        /// <summary>
-        /// Creates the instance from the given IDictionary{Type, object}
-        /// </summary>
-        private static IEnumerable<T> GetOrCreateFromTypeDict<T>(IDictionary<Type, T> dict)
-        {
-            foreach (var type in dict.Keys.ToArray())
-            {
-                if (dict[type] == null)
-                {
-                    dict[type] = (T)Activator.CreateInstance(type);
-                    yield return dict[type];
-                }
-                else
-                {
-                    yield return dict[type];
-                }
-            }
-        }
-
         private DbMigrator CreateDbMigrator(IDatabaseConfig config)
         {
             if (_migrationsConfiguration == null)
@@ -328,7 +291,7 @@ namespace Moryx.Model.Configuration
         /// </summary>
         private DbMigrationsConfiguration CreateDbMigrationsConfiguration()
         {
-            var configuration = _contextType.Assembly.DefinedTypes
+            var configuration = ContextType.Assembly.DefinedTypes
                 .FirstOrDefault(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
 
             if (configuration == null)

@@ -77,6 +77,8 @@
     <Compile Include="IModelSetup.cs" />
     <Compile Include="DbContextManager.cs" />
     <Compile Include="Configuration\ModelConfiguratorBase.cs" />
+    <Compile Include="IModelSetupExecutor.cs" />
+    <Compile Include="ModelSetupExecutor.cs" />
     <Compile Include="Repositories\IUnitOfWorkFactory.cs" />
     <Compile Include="ModificationTrackedEntityBase.cs" />
     <Compile Include="MoryxDbContext.cs" />

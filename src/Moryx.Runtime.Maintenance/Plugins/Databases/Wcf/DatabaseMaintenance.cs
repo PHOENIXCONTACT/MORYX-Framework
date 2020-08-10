@@ -20,21 +20,31 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     internal class DatabaseMaintenance : IDatabaseMaintenance
     {
-        public IModuleManager ModuleManager { get; set; }
+        #region Dependencies
 
-        public IParallelOperations ParallelOperations { get; set; }
-
+        /// <summary>
+        /// Global component for database contexts
+        /// </summary>
         public IDbContextManager DbContextManager { get; set; }
-
-        private IEnumerable<IModelConfigurator> ModelConfigurators => DbContextManager.Configurators;
 
         /// <summary>
         /// Logger of this component
         /// </summary>
-        [UseChild("ModelMaintenance")]
+        [UseChild("DatabaseMaintenance")]
         public IModuleLogger Logger { get; set; }
 
+        /// <summary>
+        /// Configuration for the database plugin
+        /// </summary>
         public DatabaseConfig Config { get; set; }
+
+        #endregion
+
+        #region Fields and Properties
+
+        private IEnumerable<IModelConfigurator> ModelConfigurators => DbContextManager.Configurators;
+
+        #endregion
 
         public DataModel[] GetAll()
         {
@@ -190,7 +200,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
             // Update config copy from model
             var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            var targetSetup = targetConfigurator.GetAllSetups().FirstOrDefault(item => item.GetType().FullName == request.Setup.Fullname);
+
+            var setupExecutor = CreateModelSetupExecutor(targetConfigurator);
+
+            var targetSetup = setupExecutor.GetAllSetups().FirstOrDefault(s => s.GetType().FullName == request.Setup.Fullname);
             if (targetSetup == null)
                 return new InvocationResponse("No matching setup found");
 
@@ -201,7 +214,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
             try
             {
-                targetConfigurator.Execute(config, targetSetup, request.Setup.SetupData);
+                setupExecutor.Execute(config, targetSetup, request.Setup.SetupData);
                 return new InvocationResponse();
             }
             catch (Exception ex)
@@ -209,6 +222,12 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 Logger.LogException(LogLevel.Warning, ex, "Database setup execution failed!");
                 return new InvocationResponse(ex);
             }
+        }
+
+        private IModelSetupExecutor CreateModelSetupExecutor(IModelConfigurator targetConfigurator)
+        {
+            var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(targetConfigurator.ContextType);
+            return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, DbContextManager);
         }
 
         private SetupModel ConvertSetup(IModelSetup setup)
@@ -259,7 +278,8 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         private SetupModel[] GetAllSetups(IModelConfigurator configurator)
         {
-            var allSetups = configurator.GetAllSetups().ToList();
+            var setupExecutor = CreateModelSetupExecutor(configurator);
+            var allSetups = setupExecutor.GetAllSetups();
             var setups = allSetups.Where(setup => string.IsNullOrEmpty(setup.SupportedFileRegex))
                                   .Select(ConvertSetup).OrderBy(setup => setup.SortOrder).ToList();
             string[] files;

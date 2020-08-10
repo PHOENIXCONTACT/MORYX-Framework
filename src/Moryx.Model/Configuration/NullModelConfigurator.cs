@@ -18,12 +18,15 @@ namespace Moryx.Model.Configuration
         public IDatabaseConfig Config => null;
 
         /// <inheritdoc />
+        public Type ContextType { get; private set; }
+
+        /// <inheritdoc />
         public string TargetModel => string.Empty;
 
         /// <inheritdoc />
         public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
         {
-
+            ContextType = contextType;
         }
 
         /// <inheritdoc />

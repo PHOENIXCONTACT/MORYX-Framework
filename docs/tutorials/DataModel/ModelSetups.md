@@ -16,12 +16,12 @@ As a first example we will start by creating some key employees hard coded. It w
 
 ````cs
 [ModelSetup(typeof(EmployeeContext))]
-public class HardCodedSetup : ModelSetupBase<EmployeeContext>
+public class HardCodedSetup : IModelSetup
 {
-    public override int SortOrder => 1;
-    public override string Name => "Sample";
-    public override string Description => "Sample Description";
-    public override string SupportedFileRegex => string.Empty;
+    public int SortOrder => 1;
+    public string Name => "Sample";
+    public string Description => "Sample Description";
+    public string SupportedFileRegex => string.Empty;
     [...]
 }
 ````
@@ -39,10 +39,10 @@ First we have to take care of the properties required by the Runtime. They are n
 
 ### Hard coded entity creation
 
-When the setup gets executed, MORYX will create a context and povides it within the `Execute` method. Here everything can be done for setting up the database:
+When the setup gets executed, MORYX will create a `IUnitOfWork` and povides it within the `Execute` method. Here everything can be done for setting up the database:
 
 ````cs
-public void Execute(EmployeeContext openContext, string setupData)
+public void Execute(IUnitOfWork openContext, string setupData)
 {
 }
 ````
@@ -74,8 +74,11 @@ Kathrin Cole
 A setup parsing the file and creating the entity might look likes this:
 
 ````cs
-public void Execute(EmployeeContext openContext, string setupData)
+public void Execute(IUnitOfWork openContext, string setupData)
 {
+    var employeeRepo = openContext.GetRepository<IEmployeeRepository>();
+    var addressRepo = openContext.GetRepository<IAddressRepository>();
+
     var index = 0;
     var lines = File.ReadAllLines(setupData);
 
@@ -99,19 +102,10 @@ public void Execute(EmployeeContext openContext, string setupData)
         supervisor = lines[index].Split(' ');
 
     // Create entity
-    var employee = openContext.Employees.Create();
-    employee.FirstName = name[0];
-    employee.LastName = name[1];
-    employee.DateOfBirth = birthDay
+    var employee = employeeRepo.Create(name[0], name[1], birthDay);
+    employee.Addresses.Add(addressRepo.Create(street, number, zip, state));
+    employee.Supervisor = employeeRepo.GetMatch(supervisor[0], supervisor[1]);
 
-    var address = openContext.Adresses.Create();
-    address.Street = street;
-    address.Number = number;
-    address.ZipCode = zip;
-    address.State = state;
-
-    employee.Addresses.Add(address);
-
-    openContext.SaveChanges();
+    openContext.Save();
 }
 ````

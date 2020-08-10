@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Data.Entity;
+using Moryx.Model.Repositories;
 
 namespace Moryx.Model
 {
@@ -33,48 +33,8 @@ namespace Moryx.Model
         /// <summary>
         /// Execute setup in this context
         /// </summary>
-        /// <param name="dbContext">Context for db access</param>
+        /// <param name="openContext">Context for db access</param>
         /// <param name="setupData">Any data for the setup, excel or sql etc</param>
-        void Execute(DbContext dbContext, string setupData);
-    }
-
-    /// <summary>
-    /// Setup to initialize a database
-    /// </summary>
-    public interface IModelSetup<in TContext> : IModelSetup where TContext : DbContext
-    {
-        /// <summary>
-        /// Execute setup in this context
-        /// </summary>
-        /// <param name="dbContext">Context for db access</param>
-        /// <param name="setupData">Any data for the setup, excel or sql etc</param>
-        void Execute(TContext dbContext, string setupData);
-    }
-
-    /// <summary>
-    /// Base class for model setups
-    /// </summary>
-    public abstract class ModelSetupBase<TContext> : IModelSetup<TContext> where TContext : DbContext
-    {
-        /// <inheritdoc />
-        public abstract int SortOrder { get; }
-
-        /// <inheritdoc />
-        public abstract string Name { get; }
-
-        /// <inheritdoc />
-        public abstract string Description { get; }
-
-        /// <inheritdoc />
-        public abstract string SupportedFileRegex { get; }
-
-        /// <inheritdoc />
-        public void Execute(DbContext dbContext, string setupData)
-        {
-            Execute((TContext) dbContext, setupData);
-        }
-
-        /// <inheritdoc />
-        public abstract void Execute(TContext dbContext, string setupData);
+        void Execute(IUnitOfWork openContext, string setupData);
     }
 }
