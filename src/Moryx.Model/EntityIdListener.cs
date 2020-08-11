@@ -25,7 +25,7 @@ namespace Moryx.Model
         /// </summary>
         public static void Listen(IEntity entity, IPersistentObject target)
         {
-            Listen(entity, new PersistenListener(target));
+            Listen(entity, new PersistentListener(target));
         }
 
         /// <summary>
@@ -79,11 +79,11 @@ namespace Moryx.Model
             }
         }
 
-        private class PersistenListener : EntityIdListener
+        private class PersistentListener : EntityIdListener
         {
             private readonly IPersistentObject _target;
 
-            public PersistenListener(IPersistentObject target)
+            public PersistentListener(IPersistentObject target)
             {
                 _target = target;
             }

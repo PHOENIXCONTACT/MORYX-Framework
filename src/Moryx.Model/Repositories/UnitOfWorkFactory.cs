@@ -20,8 +20,18 @@ namespace Moryx.Model.Repositories
         /// </summary>
         private readonly IDbContextManager _manager;
 
-        private readonly RepositoryProxyBuilder _proxyBuilder = new RepositoryProxyBuilder();
-        private readonly IDictionary<Type, Func<Repository>> _repositories = new Dictionary<Type, Func<Repository>>();
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly RepositoryProxyBuilder ProxyBuilder = new RepositoryProxyBuilder();
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly IDictionary<Type, Func<Repository>> Repositories = new Dictionary<Type, Func<Repository>>();
+
+        /// <summary>
+        /// Static constructor to register repositories once a time per typed context
+        /// </summary>
+        static UnitOfWorkFactory()
+        {
+            RegisterRepositories();
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="UnitOfWorkFactory{TContext}"/>
@@ -29,38 +39,37 @@ namespace Moryx.Model.Repositories
         public UnitOfWorkFactory(IDbContextManager dbContextManager)
         {
             _manager = dbContextManager;
-            RegisterRepositories();
         }
 
         /// <inheritdoc />
         public IUnitOfWork<TContext> Create()
         {
             var context = _manager.Create<TContext>();
-            return new UnitOfWork<TContext>(context, _repositories);
+            return new UnitOfWork<TContext>(context, Repositories);
         }
 
         /// <inheritdoc />
         public IUnitOfWork<TContext> Create(IDatabaseConfig config)
         {
             var context = _manager.Create<TContext>(config);
-            return new UnitOfWork<TContext>(context, _repositories);
+            return new UnitOfWork<TContext>(context, Repositories);
         }
 
         /// <inheritdoc />
         public IUnitOfWork<TContext> Create(ContextMode contextMode)
         {
             var context = _manager.Create<TContext>(contextMode);
-            return new UnitOfWork<TContext>(context, _repositories);
+            return new UnitOfWork<TContext>(context, Repositories);
         }
 
         /// <inheritdoc />
         public IUnitOfWork<TContext> Create(IDatabaseConfig config, ContextMode contextMode)
         {
             var context = _manager.Create<TContext>(config, contextMode);
-            return new UnitOfWork<TContext>(context, _repositories);
+            return new UnitOfWork<TContext>(context, Repositories);
         }
 
-        private void RegisterRepositories()
+        private static void RegisterRepositories()
         {
             var types = typeof(TContext).Assembly.GetTypes();
 
@@ -76,17 +85,17 @@ namespace Moryx.Model.Repositories
                 var implementations = types.Where(t => t.IsClass && apiPair.RepoApi.IsAssignableFrom(t)).ToList();
                 if (implementations.Count == 0)
                 {
-                    repoProxy = _proxyBuilder.Build(apiPair.RepoApi);
+                    repoProxy = ProxyBuilder.Build(apiPair.RepoApi);
                 }
                 else
                 {
                     var selectedImpl = implementations.First();
-                    repoProxy = _proxyBuilder.Build(apiPair.RepoApi, selectedImpl);
+                    repoProxy = ProxyBuilder.Build(apiPair.RepoApi, selectedImpl);
                 }
 
                 var constructorDelegate = ReflectionTool.ConstructorDelegate<Repository>(repoProxy);
                 // Register constructor for both interfaces
-                _repositories[apiPair.RepoApi] = _repositories[apiPair.GenericApi] = constructorDelegate;
+                Repositories[apiPair.RepoApi] = Repositories[apiPair.GenericApi] = constructorDelegate;
             }
         }
     }

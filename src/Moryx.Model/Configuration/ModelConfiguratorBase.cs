@@ -11,7 +11,6 @@ using System.Data.Entity.Migrations.Infrastructure;
 using System.Linq;
 using Moryx.Configuration;
 using Moryx.Logging;
-using Moryx.Tools;
 
 namespace Moryx.Model.Configuration
 {
@@ -22,7 +21,6 @@ namespace Moryx.Model.Configuration
         where TConfig : class, IDatabaseConfig, new()
     {
         private IConfigManager _configManager;
-        private IDictionary<Type, IModelSetup> _setupDict;
         private string _configName;
         private DbMigrationsConfiguration _migrationsConfiguration;
         private string[] _migrations;
@@ -42,9 +40,6 @@ namespace Moryx.Model.Configuration
         public IDatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public string TargetModel { get; private set; }
-
-        /// <inheritdoc />
         public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
         {
             _contextType = contextType;
@@ -53,11 +48,8 @@ namespace Moryx.Model.Configuration
             // Add logger
             Logger = logger;
 
-            // Set TargetModel
-            TargetModel = contextType.FullName;
-
             // Load Config
-            _configName = TargetModel + ".DbConfig";
+            _configName = contextType.FullName + ".DbConfig";
             Config = _configManager.GetConfiguration<TConfig>(_configName);
 
             // If database is empty, fill with TargetModel name
@@ -69,14 +61,6 @@ namespace Moryx.Model.Configuration
 
             // Load local migrations
             _migrations = GetAvailableMigrations();
-
-            // Load ModelSetups TODO: Load internals
-            _setupDict = ReflectionTool.GetPublicClasses<IModelSetup>(delegate(Type type)
-            {
-                // Try to read context from attribute
-                var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
-                return setupAttr != null && setupAttr.TargetContext == _contextType;
-            }).ToDictionary(t => t, t => (IModelSetup) null);
         }
 
         /// <inheritdoc />
@@ -247,35 +231,6 @@ namespace Moryx.Model.Configuration
 
         /// <inheritdoc />
         public abstract void RestoreDatabase(IDatabaseConfig config, string filePath);
-
-        /// <inheritdoc />
-        public IEnumerable<IModelSetup> GetAllSetups() => GetOrCreateFromTypeDict(_setupDict);
-
-        /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
-        {
-            var context = CreateContext(config, ContextMode.AllOn);
-            setup.Execute(context, setupData);
-        }
-
-        /// <summary>
-        /// Creates the instance from the given IDictionary{Type, object}
-        /// </summary>
-        private static IEnumerable<T> GetOrCreateFromTypeDict<T>(IDictionary<Type, T> dict)
-        {
-            foreach (var type in dict.Keys.ToArray())
-            {
-                if (dict[type] == null)
-                {
-                    dict[type] = (T)Activator.CreateInstance(type);
-                    yield return dict[type];
-                }
-                else
-                {
-                    yield return dict[type];
-                }
-            }
-        }
 
         private DbMigrator CreateDbMigrator(IDatabaseConfig config)
         {

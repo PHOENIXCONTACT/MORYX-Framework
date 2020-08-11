@@ -11,19 +11,40 @@ namespace Moryx.Model.InMemory
     /// <summary>
     /// In memory implementation of the <see cref="IDbContextManager"/>
     /// </summary>
-    public class InMemoryDbContextManager : IDbContextManager
+    public sealed class InMemoryDbContextManager : IDbContextManager
     {
         private readonly string _instanceId;
-
-        public IReadOnlyCollection<IModelConfigurator> Configurators => Array.Empty<IModelConfigurator>();
-
+        
+        /// <summary>
+        /// Creates a new instance of the <see cref="InMemoryDbContextManager"/>.
+        /// A memory persistent factory will be created without any instance id.
+        /// </summary>
         public InMemoryDbContextManager() : this(string.Empty)
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="InMemoryDbContextManager"/>.
+        /// A memory persistent factory will be created with the given instance id.
+        /// </summary>
         public InMemoryDbContextManager(string instanceId)
         {
             _instanceId = instanceId;
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyCollection<Type> Contexts => Array.Empty<Type>();
+
+        /// <inheritdoc />
+        public IModelConfigurator GetConfigurator(Type contextType)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public IModelSetupExecutor GetSetupExecutor(Type contextType)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />

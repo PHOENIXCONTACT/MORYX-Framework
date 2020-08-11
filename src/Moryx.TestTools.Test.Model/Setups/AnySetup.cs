@@ -3,35 +3,36 @@
 
 using System.Linq;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 
 namespace Moryx.TestTools.Test.Model
 {
     [ModelSetup(typeof(TestModelContext))]
-    public class AnySetup : ModelSetupBase<TestModelContext>
+    public class AnySetup : IModelSetup
     {
-        public override int SortOrder => 1;
+        public int SortOrder => 1;
 
-        public override string Name => "Any setup";
+        public string Name => "Some setup";
 
-        public override string Description => "Creates some cars";
+        public string Description => "Creates some cars";
 
-        public override string SupportedFileRegex => string.Empty;
+        public string SupportedFileRegex => string.Empty;
 
-        public override void Execute(TestModelContext dbContext, string setupData)
+        public void Execute(IUnitOfWork openContext, string setupData)
         {
-            var carSet = dbContext.Cars;
-            var wheelSet = dbContext.Wheels;
+            var carRepo = openContext.GetRepository<ICarEntityRepository>();
+            var wheelRepo = openContext.GetRepository<IWheelEntityRepository>();
 
             CarEntity lastCar = null;
             for (var i = 0; i < 1; i++)
             {
-                var carEntity = carSet.Create();
+                var carEntity = carRepo.Create();
                 carEntity.Name = "Car " + i;
                 carEntity.Price = i + 100;
 
                 void CreateWheel(WheelType wheelType)
                 {
-                    var wheelEntity = wheelSet.Create();
+                    var wheelEntity = wheelRepo.Create();
                     wheelEntity.WheelType = wheelType;
                     carEntity.Wheels.Add(wheelEntity);
                 }
@@ -41,23 +42,21 @@ namespace Moryx.TestTools.Test.Model
                 CreateWheel(WheelType.RearLeft);
                 CreateWheel(WheelType.RearRight);
 
-                carSet.Add(carEntity);
-
                 lastCar = carEntity;
             }
 
-            dbContext.SaveChanges();
+            openContext.SaveChanges();
 
-            dbContext.Cars.Remove(lastCar);
+            carRepo.Remove(lastCar);
 
-            dbContext.SaveChanges();
+            openContext.SaveChanges();
 
             // All cars with exact name "Car 1"
-            var allNamedCar1 = carSet.Where(c => c.Name == "Car 1");
+            var allNamedCar1 = carRepo.Linq.Where(c => c.Name == "Car 1");
 
-            var firstContains = carSet.First(c => c.Name.Contains("Car"));
+            var firstContains = carRepo.Linq.First(c => c.Name.Contains("Car"));
 
-            var allContains = carSet.Where(c => c.Name.Contains("Car"));
+            var allContains = carRepo.Linq.Where(c => c.Name.Contains("Car"));
         }
     }
 }

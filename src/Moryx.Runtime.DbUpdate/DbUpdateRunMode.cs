@@ -22,19 +22,20 @@ namespace Moryx.Runtime.DbUpdate
         public override RuntimeErrorCode Run()
         {
             Console.WriteLine("Updating databases...");
-            foreach (var configurator in DbContextManager.Configurators)
+            foreach (var contextType in DbContextManager.Contexts)
             {
+                var configurator = DbContextManager.GetConfigurator(contextType);
                 try
                 {
                     var summary = configurator.MigrateDatabase(configurator.Config);
                     if (!summary.WasUpdated)
                     {
-                        Console.WriteLine("No updates for {0}", configurator.TargetModel);
+                        Console.WriteLine("No updates for {0}", contextType.FullName);
                         continue;
                     }
 
                     // Display update summary
-                    Console.WriteLine("Update summary for {0}:", configurator.TargetModel);
+                    Console.WriteLine("Update summary for {0}:", contextType.FullName);
                     foreach (var update in summary.ExecutedUpdates)
                     {
                         Console.WriteLine("{0}->{1}: {2}", update.From, update.To, update.Description);
@@ -42,7 +43,7 @@ namespace Moryx.Runtime.DbUpdate
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Update for {0} failed with exception:\n  {1}", configurator.TargetModel, ex.Message);
+                    Console.WriteLine("Update for {0} failed with exception:\n  {1}", contextType.FullName, ex.Message);
                 }
             }
             Console.WriteLine("Update complete");

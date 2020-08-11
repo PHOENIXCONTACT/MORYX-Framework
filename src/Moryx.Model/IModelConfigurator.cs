@@ -47,11 +47,6 @@ namespace Moryx.Model
         IDatabaseConfig Config { get; }
 
         /// <summary>
-        /// Target model name
-        /// </summary>
-        string TargetModel { get; }
-
-        /// <summary>
         /// Initializes the model configurator
         /// </summary>
         void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger);
@@ -145,19 +140,5 @@ namespace Moryx.Model
         /// <param name="config">Config to use</param>
         /// <param name="filePath">Filepath of dump</param>
         void RestoreDatabase(IDatabaseConfig config, string filePath);
-
-        /// <summary>
-        /// Get all setups for this model
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<IModelSetup> GetAllSetups();
-
-        /// <summary>
-        /// Execute setup for this config
-        /// </summary>
-        /// <param name="config">Config</param>
-        /// <param name="setup">Setup</param>
-        /// <param name="setupData"></param>
-        void Execute(IDatabaseConfig config, IModelSetup setup, string setupData);
     }
 }

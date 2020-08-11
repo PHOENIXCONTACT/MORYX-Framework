@@ -89,20 +89,20 @@ namespace Moryx.Runtime.SmokeTest
             }
 
             // Load model configurators
-            var modelConfigurators = DbContextManager.Configurators;
-
+            var contexts = DbContextManager.Contexts;
             // Create all databases
-            foreach (var modelConfigurator in modelConfigurators)
+            foreach (var contextType in contexts)
             {
+                var configurator = DbContextManager.GetConfigurator(contextType);
                 try
                 {
                     // Add database config prefix
-                    modelConfigurator.Config.Database = $"smokeTest-{modelConfigurator.TargetModel}";
-                    modelConfigurator.CreateDatabase(modelConfigurator.Config);
+                    configurator.Config.Database = $"smokeTest-{contextType.FullName}";
+                    configurator.CreateDatabase(configurator.Config);
                 }
                 catch
                 {
-                    Console.WriteLine("Failed to create data model {0}", modelConfigurator.TargetModel);
+                    Console.WriteLine("Failed to create data model {0}", contextType.FullName);
                 }
             }
 
@@ -118,15 +118,16 @@ namespace Moryx.Runtime.SmokeTest
             var result = RunTests();
 
             // Delete all databases
-            foreach (var modelConfigurator in modelConfigurators)
+            foreach (var context in contexts)
             {
+                var modelConfigurator = DbContextManager.GetConfigurator(context);
                 try
                 {
                     modelConfigurator.DeleteDatabase(modelConfigurator.Config);
                 }
                 catch
                 {
-                    Console.WriteLine("Failed to delete data model {0}", modelConfigurator.TargetModel);
+                    Console.WriteLine("Failed to delete data model {0}", context.FullName);
                 }
             }
 
