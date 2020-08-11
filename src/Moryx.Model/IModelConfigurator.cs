@@ -47,16 +47,6 @@ namespace Moryx.Model
         IDatabaseConfig Config { get; }
 
         /// <summary>
-        /// Type of the context
-        /// </summary>
-        Type ContextType { get; }
-
-        /// <summary>
-        /// Target model name
-        /// </summary>
-        string TargetModel { get; }
-
-        /// <summary>
         /// Initializes the model configurator
         /// </summary>
         void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger);

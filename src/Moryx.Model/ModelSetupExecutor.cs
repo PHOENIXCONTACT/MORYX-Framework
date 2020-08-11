@@ -12,7 +12,7 @@ using Moryx.Tools;
 namespace Moryx.Model
 {
     /// <inheritdoc />
-    public class ModelSetupExecutor<TContext> : IModelSetupExecutor
+    internal class ModelSetupExecutor<TContext> : IModelSetupExecutor
         where TContext : DbContext
     {
         private readonly IDbContextManager _dbContextManager;

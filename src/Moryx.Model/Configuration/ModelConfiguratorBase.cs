@@ -24,6 +24,7 @@ namespace Moryx.Model.Configuration
         private string _configName;
         private DbMigrationsConfiguration _migrationsConfiguration;
         private string[] _migrations;
+        private Type _contextType;
 
         /// <summary>
         /// Logger for this model configurator
@@ -39,25 +40,16 @@ namespace Moryx.Model.Configuration
         public IDatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public Type ContextType { get; private set; }
-
-        /// <inheritdoc />
-        public string TargetModel { get; private set; }
-
-        /// <inheritdoc />
         public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
         {
-            ContextType = contextType;
+            _contextType = contextType;
             _configManager = configManager;
 
             // Add logger
             Logger = logger;
 
-            // Set TargetModel
-            TargetModel = contextType.FullName;
-
             // Load Config
-            _configName = TargetModel + ".DbConfig";
+            _configName = contextType.FullName + ".DbConfig";
             Config = _configManager.GetConfiguration<TConfig>(_configName);
 
             // If database is empty, fill with TargetModel name
@@ -80,7 +72,7 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public DbContext CreateContext(IDatabaseConfig config, ContextMode mode)
         {
-            var context = (DbContext)Activator.CreateInstance(ContextType, BuildConnectionString(config));
+            var context = (DbContext)Activator.CreateInstance(_contextType, BuildConnectionString(config));
             context.SetContextMode(mode);
             return context;
         }
@@ -291,7 +283,7 @@ namespace Moryx.Model.Configuration
         /// </summary>
         private DbMigrationsConfiguration CreateDbMigrationsConfiguration()
         {
-            var configuration = ContextType.Assembly.DefinedTypes
+            var configuration = _contextType.Assembly.DefinedTypes
                 .FirstOrDefault(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
 
             if (configuration == null)

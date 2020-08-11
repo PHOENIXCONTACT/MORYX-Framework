@@ -32,10 +32,7 @@ namespace Moryx.Model
 
         string ILoggingHost.Name => nameof(DbContextManager);
         private ModelWrapper[] _knownModels;
-
-        /// <inheritdoc />
-        public IReadOnlyCollection<IModelConfigurator> Configurators => _knownModels.Select(km => km.Configurator).ToList();
-
+        
         /// <inheritdoc />
         public void Initialize()
         {
@@ -68,6 +65,19 @@ namespace Moryx.Model
                 var logger = Logger.GetChild(configuratorType.Name, configuratorType);
                 wrapper.Configurator.Initialize(wrapper.DbContextType, ConfigManager, logger);
             }
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyCollection<Type> Contexts => _knownModels.Select(km => km.DbContextType).ToArray();
+
+        /// <inheritdoc />
+        public IModelConfigurator GetConfigurator(Type contextType) => _knownModels.First(km => km.DbContextType == contextType).Configurator;
+
+        /// <inheritdoc />
+        public IModelSetupExecutor GetSetupExecutor(Type contextType)
+        {
+            var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(contextType);
+            return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, this);
         }
 
         /// <inheritdoc />

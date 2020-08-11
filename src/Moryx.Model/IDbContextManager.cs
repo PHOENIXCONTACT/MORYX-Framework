@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using Moryx.Model.Configuration;
@@ -13,9 +14,19 @@ namespace Moryx.Model
     public interface IDbContextManager
     {
         /// <summary>
-        /// Per database context model configurator
+        /// Found DbContext types
         /// </summary>
-        IReadOnlyCollection<IModelConfigurator> Configurators { get; }
+        IReadOnlyCollection<Type> Contexts { get; }
+
+        /// <summary>
+        /// Get configurator for the given context type
+        /// </summary>
+        IModelConfigurator GetConfigurator(Type contextType);
+        
+        /// <summary>
+        /// Get setup executor for a model
+        /// </summary>
+        IModelSetupExecutor GetSetupExecutor(Type contextType);
 
         /// <summary>
         /// Creates a database context with the default configuration
