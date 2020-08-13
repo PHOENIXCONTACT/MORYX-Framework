@@ -244,8 +244,9 @@ namespace Moryx.Container
 
         public void Extend<TExtension>() where TExtension : new()
         {
-            if (!typeof(IFacility).IsAssignableFrom(typeof(TExtension)))
-                throw new InvalidOperationException();
+            var facilityType = typeof(IFacility);
+            if (!facilityType.IsAssignableFrom(typeof(TExtension)))
+                throw new InvalidOperationException("The underlying container only supports " + facilityType.FullName + "!");
 
             var facility = (IFacility)new TExtension();
             Container.AddFacility(facility);

@@ -16,8 +16,8 @@ namespace Moryx.Runtime.Maintenance.Databases
         /// <summary>
         /// For this data model unique setup id
         /// </summary>
-        public int SortOrder { get; set; } 
-   
+        public int SortOrder { get; set; }
+
         /// <summary>
         /// Display name of this setup.
         /// </summary>
@@ -29,7 +29,7 @@ namespace Moryx.Runtime.Maintenance.Databases
         public string Description { get; set; }
 
         /// <summary>
-        /// Filetype supported by this setup
+        /// FileType supported by this setup
         /// </summary>
         public string SupportedFileRegex { get; set; }
 

@@ -4,11 +4,9 @@
 using System.ComponentModel;
 using System.Threading;
 using Moryx.Model;
-using Moryx.Model.Repositories;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Wcf;
-using Moryx.TestTools.Test.Model;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.TestModule
@@ -21,8 +19,10 @@ namespace Moryx.TestModule
 
         #region Dependencies
 
-        [Named(TestModelConstants.Namespace)]
-        public IUnitOfWorkFactory TestFactory { get; set; }
+        /// <summary>
+        /// Db context factory for data models
+        /// </summary>
+        public IDbContextManager DbContextManager { get; set; }
 
         /// <summary>
         /// Host factory to create wcf services

@@ -4,7 +4,7 @@
 namespace Moryx.Runtime.Maintenance.Databases
 {
     /// <summary>
-    /// Request to restore a database 
+    /// Request to restore a database
     /// </summary>
     public class RestoreDatabaseRequest
     {

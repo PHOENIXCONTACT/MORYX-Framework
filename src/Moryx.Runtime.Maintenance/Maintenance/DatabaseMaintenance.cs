@@ -2,18 +2,16 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
+using Moryx.Model.Configuration;
 using Moryx.Runtime.Maintenance.Contracts;
 using Moryx.Runtime.Maintenance.Databases;
 using Moryx.Runtime.Modules;
-using Moryx.Threading;
 using Nancy;
 using Nancy.ModelBinding;
 
@@ -24,20 +22,22 @@ namespace Moryx.Runtime.Maintenance
     {
         #region Dependencies
 
-        [UseChild("ModelMaintenance")]
+        /// <summary>
+        /// Global component for database contexts
+        /// </summary>
+        public IDbContextManager DbContextManager { get; set; }
+
+        /// <summary>
+        /// Logger of this component
+        /// </summary>
+        [UseChild("DatabaseMaintenance")]
         public IModuleLogger Logger { get; set; }
 
         public ModuleConfig ModuleConfig { get; set; }
 
         public IModuleManager ModuleManager { get; set; }
 
-        public IParallelOperations ParallelOperations { get; set; }
-
-        public IEnumerable<IUnitOfWorkFactory> ModelFactories { get; set; }
-
         #endregion
-
-        private IEnumerable<IModelConfigurator> ModelConfigurators => ModelFactories.Cast<IModelConfiguratorFactory>().Select(c => c.GetConfigurator());
 
         public DatabaseMaintenance() : base("models")
         {
@@ -135,32 +135,20 @@ namespace Moryx.Runtime.Maintenance
                 var response = ExecuteSetup(targetModel, setupReq);
                 return Response.AsJson(response);
             });
-
-            Post("{targetModel}/scripts", delegate (dynamic args)
-            {
-                var targetModel = (string)args.targetModel;
-                var setupReq = this.Bind<ExecuteScriptRequest>();
-                var response = ExecuteScript(targetModel, setupReq);
-                return Response.AsJson(response);
-            });
         }
 
-        private DataModel[] GetAll()
+        public DataModel[] GetAll()
         {
-            return ModelConfigurators.Select(Convert).ToArray();
+            return DbContextManager.Contexts.Select(Convert).ToArray();
         }
 
-        private DataModel GetModel(string targetModel)
+        public DataModel GetModel(string targetModel)
         {
-            return Convert(ModelConfigurators.FirstOrDefault(m => m.TargetModel == targetModel));
+            return Convert(DbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel));
         }
 
-        private void SetAllConfigs(DatabaseConfigModel config)
+        public void SetAllConfigs(DatabaseConfigModel config)
         {
-            // Get and stop all db related modules
-            var dbModules = AffectedModules();
-            dbModules.ForEach(ModuleManager.StopModule);
-
             // Overwrite all configs
             BulkOperation(mc =>
             {
@@ -168,40 +156,17 @@ namespace Moryx.Runtime.Maintenance
                 UpdateConfigFromModel(mc.Config, config);
                 mc.UpdateConfig();
             }, "Save config");
-
-            // Restart modules
-            dbModules.ForEach(ModuleManager.StartModule);
         }
 
-        private void SetDatabaseConfig(string targetModel, DatabaseConfigModel config)
+        public void SetDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var match = GetTargetConfigurator(targetModel);
             if (match == null)
                 return;
 
-            // Stop all services that depend on that model
-            var affectedModules = AffectedModules(targetModel);
-            affectedModules.ForEach(ModuleManager.StopModule);
-
             // Save config and reload all DataModels
             UpdateConfigFromModel(match.Config, config);
             match.UpdateConfig();
-
-            // Start services again
-            affectedModules.ForEach(ModuleManager.StartModule);
-        }
-
-        private List<IServerModule> AffectedModules(string targetModel = null)
-        {
-            var affectedModules = (from module in ModuleManager.AllModules.Where(module => module.State == ServerModuleState.Running)
-                                   let props = module.GetType().GetProperties()
-                                   let facAtts = props.Where(prop => prop.PropertyType == typeof(IUnitOfWorkFactory))
-                                                      .Select(fac => fac.GetCustomAttribute<NamedAttribute>()).ToArray()
-                                   where (targetModel == null && facAtts.Any())
-                                      || (targetModel != null && facAtts.Any(att => att.ComponentName == targetModel))
-                                      || props.Any(prop => prop.PropertyType == typeof(IModelResolver))
-                                   select module).ToList();
-            return affectedModules;
         }
 
         private TestConnectionResponse TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
@@ -317,15 +282,19 @@ namespace Moryx.Runtime.Maintenance
             return rollbackResult ? new InvocationResponse() : new InvocationResponse("Error while rollback!");
         }
 
-        private InvocationResponse ExecuteSetup(string targetModel, ExecuteSetupRequest request)
+        public InvocationResponse ExecuteSetup(string targetModel, ExecuteSetupRequest request)
         {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
+            var contextType = DbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
+            var targetConfigurator = DbContextManager.GetConfigurator(contextType);
             if (targetConfigurator == null)
                 return new InvocationResponse("No configurator found");
 
             // Update config copy from model
             var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            var targetSetup = targetConfigurator.GetAllSetups().FirstOrDefault(item => item.GetType().FullName == request.Setup.Fullname);
+
+            var setupExecutor = DbContextManager.GetSetupExecutor(contextType);
+
+            var targetSetup = setupExecutor.GetAllSetups().FirstOrDefault(s => s.GetType().FullName == request.Setup.Fullname);
             if (targetSetup == null)
                 return new InvocationResponse("No matching setup found");
 
@@ -336,35 +305,12 @@ namespace Moryx.Runtime.Maintenance
 
             try
             {
-                targetConfigurator.Execute(config, targetSetup, request.Setup.SetupData);
+                setupExecutor.Execute(config, targetSetup, request.Setup.SetupData);
                 return new InvocationResponse();
             }
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Warning, ex, "Database setup execution failed!");
-                return new InvocationResponse(ex);
-            }
-        }
-
-        private InvocationResponse ExecuteScript(string targetModel, ExecuteScriptRequest request)
-        {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
-            if (targetConfigurator == null)
-                return new InvocationResponse("No configurator found");
-
-            var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            var targetScript = targetConfigurator.GetAllScripts().FirstOrDefault(item => item.Name == request.Script.Name);
-            if (targetScript == null)
-                return new InvocationResponse("No matching script found");
-
-            try
-            {
-                targetConfigurator.Execute(config, targetScript);
-                return new InvocationResponse();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(LogLevel.Warning, ex, "Database script execution failed!");
                 return new InvocationResponse(ex);
             }
         }
@@ -384,12 +330,13 @@ namespace Moryx.Runtime.Maintenance
 
         private IModelConfigurator GetTargetConfigurator(string model)
         {
-            var match = ModelConfigurators.FirstOrDefault(configurator => configurator.TargetModel == model);
-            return match;
+            var context = DbContextManager.Contexts.First(c => TargetModelName(c) == model);
+            return DbContextManager.GetConfigurator(context);
         }
 
-        private DataModel Convert(IModelConfigurator configurator)
+        private DataModel Convert(Type contextType)
         {
+            var configurator = DbContextManager.GetConfigurator(contextType);
             if (configurator?.Config == null)
             {
                 return null;
@@ -398,7 +345,7 @@ namespace Moryx.Runtime.Maintenance
             var dbConfig = configurator.Config;
             var model = new DataModel
             {
-                TargetModel = configurator.TargetModel,
+                TargetModel = TargetModelName(contextType),
                 Config = new DatabaseConfigModel
                 {
                     Server = dbConfig.Host,
@@ -407,18 +354,18 @@ namespace Moryx.Runtime.Maintenance
                     User = dbConfig.Username,
                     Password = dbConfig.Password
                 },
-                Setups = GetAllSetups(configurator),
-                Backups = GetAllBackups(configurator),
-                Scripts = GetAllScripts(configurator),
+                Setups = GetAllSetups(contextType),
+                Backups = GetAllBackups(contextType),
                 AvailableMigrations = GetAvailableUpdates(dbConfig, configurator),
                 AppliedMigrations = GetInstalledUpdates(dbConfig, configurator)
             };
             return model;
         }
 
-        private SetupModel[] GetAllSetups(IModelConfigurator configurator)
+        private SetupModel[] GetAllSetups(Type contextType)
         {
-            var allSetups = configurator.GetAllSetups().ToList();
+            var setupExecutor = DbContextManager.GetSetupExecutor(contextType);
+            var allSetups = setupExecutor.GetAllSetups();
             var setups = allSetups.Where(setup => string.IsNullOrEmpty(setup.SupportedFileRegex))
                                   .Select(ConvertSetup).OrderBy(setup => setup.SortOrder).ToList();
             string[] files;
@@ -436,9 +383,9 @@ namespace Moryx.Runtime.Maintenance
             return setups.OrderBy(setup => setup.SortOrder).ToArray();
         }
 
-        private BackupModel[] GetAllBackups(IModelConfigurator configurator)
+        private BackupModel[] GetAllBackups(Type contextType)
         {
-            var targetModel = configurator.TargetModel;
+            var targetModel = TargetModelName(contextType);
 
             if (!Directory.Exists(ModuleConfig.SetupDataDir))
             {
@@ -453,22 +400,11 @@ namespace Moryx.Runtime.Maintenance
                 select new BackupModel
                 {
                     FileName = fileName,
-                    Size = (int) fileInfo.Length / 1024,
+                    Size = (int)fileInfo.Length / 1024,
                     CreationDate = fileInfo.CreationTime
                 };
 
             return backups.ToArray();
-        }
-
-        private static ScriptModel[] GetAllScripts(IModelConfigurator configurator)
-        {
-            var scripts = configurator.GetAllScripts().ToList();
-
-            return scripts.Select(s => new ScriptModel
-            {
-                Name = s.Name,
-                IsCreationScript = s.IsCreationScript
-            }).ToArray();
         }
 
         private static DbMigrationsModel[] GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
@@ -499,19 +435,22 @@ namespace Moryx.Runtime.Maintenance
             return dbConfig;
         }
 
+        private static string TargetModelName(Type contextType) => contextType.FullName;
+
         private string BulkOperation(Action<IModelConfigurator> operation, string operationName)
         {
             var result = string.Empty;
-            foreach (var configurator in ModelConfigurators)
+            foreach (var contextType in DbContextManager.Contexts)
             {
+                var configurator = DbContextManager.GetConfigurator(contextType);
                 try
                 {
                     operation(configurator);
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogException(LogLevel.Warning, ex, "{0} of {1} failed!", operationName, configurator.TargetModel);
-                    result += $"{operationName} of {configurator.TargetModel} failed!\n";
+                    Logger.LogException(LogLevel.Warning, ex, "{0} of {1} failed!", operationName, TargetModelName(contextType));
+                    result += $"{operationName} of {TargetModelName(contextType)} failed!\n";
                 }
             }
             return result;

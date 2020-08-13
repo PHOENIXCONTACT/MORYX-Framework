@@ -9,7 +9,7 @@ namespace Moryx.Runtime.Maintenance.Databases
     public class DatabaseConfigModel
     {
         /// <summary>
-        /// Databse server
+        /// Database server
         /// </summary>
         public string Server { get; set; }
 

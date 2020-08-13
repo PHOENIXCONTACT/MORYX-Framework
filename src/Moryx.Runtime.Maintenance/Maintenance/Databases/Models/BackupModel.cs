@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Maintenance.Databases
         /// Name of the backup file.
         /// </summary>
         public string FileName { get; set; }
-   
+
         /// <summary>
         /// Size of the current backup file.
         /// </summary>
