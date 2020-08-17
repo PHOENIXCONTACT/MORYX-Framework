@@ -13,8 +13,8 @@
     <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/blob/dev/LICENSE">
         <img src="https://img.shields.io/github/license/PHOENIXCONTACT/MORYX-Platform" alt="License">
     </a>
-    <a href="https://gitter.im/MORYX-Industry/Framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">
-        <img src="https://badges.gitter.im/MORYX-Industry/Framework.svg" alt="Gitter">
+    <a href="https://gitter.im/PHOENIXCONTACT/MORYX?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">
+        <img src="https://badges.gitter.im/PHOENIXCONTACT/MORYX.svg" alt="Gitter">
     </a>
     <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/pulls">
         <img src="https://img.shields.io/github/issues-pr/PHOENIXCONTACT/MORYX-Platform" alt="GitHub pull requests">
