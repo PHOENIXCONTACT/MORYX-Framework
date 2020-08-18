@@ -80,6 +80,10 @@
       <Project>{d8344b1f-9db3-4e85-9195-6fffecbf6427}</Project>
       <Name>Moryx.DependentTestModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj">
+      <Project>{eb039d46-906f-44bf-ac37-b3b3634a4442}</Project>
+      <Name>Moryx.Runtime.Maintenance</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj">
       <Project>{1ce2d3b1-de76-4a59-b3cb-76f120624c11}</Project>
       <Name>Moryx.Runtime.Wcf</Name>
@@ -107,10 +111,6 @@
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj">
       <Project>{8ff77f62-43c3-40fe-9dfe-01a53fe8a68e}</Project>
       <Name>Moryx.Runtime.Kernel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj">
-      <Project>{eb039d46-906f-44bf-ac37-b3b3634a4442}</Project>
-      <Name>Moryx.Runtime.Maintenance</Name>
     </ProjectReference>
     <ProjectReference Include="..\Moryx\Moryx.csproj">
       <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>

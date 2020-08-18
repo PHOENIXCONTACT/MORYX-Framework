@@ -4,8 +4,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moryx.Model.Configuration;
-using Moryx.Runtime.Maintenance.Contracts;
-using Moryx.Runtime.Maintenance.Databases;
+using Moryx.Runtime.Maintenance.Plugins;
+using Moryx.Runtime.Maintenance.Plugins.Databases;
 
 namespace Moryx.TestTools.SystemTest.Clients
 {

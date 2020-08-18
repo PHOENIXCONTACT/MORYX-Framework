@@ -1,10 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Threading.Tasks;
-using Moryx.Runtime.Maintenance.Contracts;
-using Moryx.Runtime.Maintenance.Logging;
+using Moryx.Runtime.Maintenance.Plugins;
+using Moryx.Runtime.Maintenance.Plugins.Logging;
 
 namespace Moryx.TestTools.SystemTest.Clients
 {

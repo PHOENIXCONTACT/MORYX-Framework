@@ -139,6 +139,9 @@ namespace Moryx.Container
 
         #region Extensions
 
+        /// <summary>
+        /// 
+        /// </summary>
         void Extend<TExtension>() where TExtension : new();
 
         #endregion

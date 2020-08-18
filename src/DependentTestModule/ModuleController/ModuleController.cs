@@ -37,7 +37,7 @@ namespace Moryx.DependentTestModule
         /// </summary>
         protected override void OnInitialize()
         {
-            Container.RegisterWcf(WcfHostFactory, Logger);
+            Container.RegisterWcf(WcfHostFactory);
             Container.LoadComponents<ISimpleHelloWorldWcfConnector>();
         }
 

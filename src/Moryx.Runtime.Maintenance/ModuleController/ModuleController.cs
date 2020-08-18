@@ -9,9 +9,10 @@ using Moryx.Model;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Maintenance.Contracts;
-using Moryx.Runtime.Maintenance.Logging;
 using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Modules;
+using Moryx.Runtime.Wcf;
+using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance
 {
@@ -43,6 +44,20 @@ namespace Moryx.Runtime.Maintenance
         /// </summary>
         public IRuntimeConfigManager RuntimeConfigManager { get; set; }
 
+        /// <summary>
+        /// Factory to create wcf hosts
+        /// </summary>
+        public IWcfHostFactory WcfHostFactory { get; set; }
+
+        /// <summary>
+        /// Set the module manager. Not injected by castle.
+        /// </summary>
+        /// <param name="moduleManager">the module manager.</param>
+        public void SetModuleManager(IModuleManager moduleManager)
+        {
+            _moduleManager = moduleManager;
+        }
+
         #endregion
 
         /// <summary>
@@ -50,22 +65,26 @@ namespace Moryx.Runtime.Maintenance
         /// </summary>
         public override string Name => ModuleName;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Called when [initialize].
+        /// </summary>
         protected override void OnInitialize()
         {
-            Container.SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
-                .SetInstance(LoggerManagement);
+            Container.RegisterWcf(WcfHostFactory)
+                .SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
+                .SetInstance((IServerLoggerManagement)LoggerManagement);
 
             Container.SetInstance(DbContextManager);
 
             Container.LoadComponents<IMaintenancePlugin>();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Called when [start].
+        /// </summary>
+        /// <exception cref="System.Exception">Failed to start module  + moduleConfig.PluginName</exception>
         protected override void OnStart()
         {
-            Container.Resolve<ILoggingAppender>().Start();
-
             var pluginFac = Container.Resolve<IMaintenancePluginFactory>();
             var plugins = Container.ResolveAll<IMaintenancePlugin>().ToList();
 
@@ -77,7 +96,7 @@ namespace Moryx.Runtime.Maintenance
             foreach (var unconfiguredPlugin in unconfiguredPlugins)
             {
                 var baseType = unconfiguredPlugin.GetType().BaseType;
-                if (baseType == null || !typeof(MaintenancePluginBase<>).IsAssignableFrom(baseType.GetGenericTypeDefinition()))
+                if (baseType == null || !typeof(MaintenancePluginBase<,>).IsAssignableFrom(baseType.GetGenericTypeDefinition()))
                     throw new ArgumentException("MaintenancePlugins should be of type MaintenancePluginBase");
 
                 var configType = baseType.GetGenericArguments()[0];
@@ -105,17 +124,12 @@ namespace Moryx.Runtime.Maintenance
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Called when [stop].
+        /// </summary>
         protected override void OnStop()
         {
-            Container.Resolve<ILoggingAppender>().Stop();
 
-        }
-
-        /// <inheritdoc />
-        void IPlatformModule.SetModuleManager(IModuleManager moduleManager)
-        {
-            _moduleManager = moduleManager;
         }
     }
 }

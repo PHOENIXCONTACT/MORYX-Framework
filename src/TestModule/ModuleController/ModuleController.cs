@@ -42,7 +42,7 @@ namespace Moryx.TestModule
         /// <inheritdoc />
         protected override void OnInitialize()
         {
-            Container.RegisterWcf(WcfHostFactory, Logger);
+            Container.RegisterWcf(WcfHostFactory);
             Container.ActivateDbContexts(DbContextManager);
 
             Container.LoadComponents<IHelloWorldWcfConnector>();

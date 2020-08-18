@@ -13,11 +13,12 @@ namespace Moryx.Runtime.Wcf
         /// <summary>
         /// Register wcf to the local module container
         /// </summary>
-        public static void RegisterWcf(this IContainer container,
-            IWcfHostFactory wcfHostFactory, IModuleLogger logger)
+        public static IContainer RegisterWcf(this IContainer container,
+            IWcfHostFactory wcfHostFactory)
         {
             container.Extend<WcfFacility>();
             container.Register<ITypedHostFactory, TypedHostFactory>();
+            var logger = container.Resolve<IModuleLogger>();
             var typedFactory = container.Resolve<ITypedHostFactory>();
 
             container.SetInstance((IConfiguredHostFactory)new ConfiguredHostFactory(wcfHostFactory)
@@ -25,6 +26,7 @@ namespace Moryx.Runtime.Wcf
                 Factory = typedFactory,
                 Logger = logger
             });
+            return container;
         }
     }
 }
