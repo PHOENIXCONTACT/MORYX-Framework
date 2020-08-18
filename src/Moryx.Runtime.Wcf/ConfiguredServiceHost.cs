@@ -64,7 +64,7 @@ namespace Moryx.Runtime.Wcf
             // Create service host
             _service = _factory.CreateServiceHost<T>();
             _type = typeof (T);
-            _endpointVersion = CustomAttributeExtensions.GetCustomAttribute<ServiceVersionAttribute>(_type);
+            _endpointVersion = _type.GetCustomAttribute<ServiceVersionAttribute>();
 
             // Configure host
             _service.CloseTimeout = TimeSpan.Zero;

@@ -14,11 +14,12 @@ namespace Moryx.Model
         /// <summary>
         /// Register <see cref="IDbContextManager"/> and <see cref="IContextFactory{TContext}"/>
         /// </summary>
-        public static void ActivateDbContexts(this IContainer container, IDbContextManager contextManager)
+        public static IContainer ActivateDbContexts(this IContainer container, IDbContextManager contextManager)
         {
             container.SetInstance(contextManager);
-
             container.ExecuteInstaller(new ContextFactoryInstaller());
+
+            return container;
         }
 
         private class ContextFactoryInstaller : IContainerInstaller

@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
-    <ProjectReference Include="..\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

@@ -4,9 +4,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+[assembly: AssemblyTitle("Moryx.Runtime.Kernel.Tests")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCopyright("Copyright © PHOENIX CONTACT GmbH & Co. KG 2020")]
-[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

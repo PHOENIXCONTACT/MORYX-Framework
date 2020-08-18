@@ -4,7 +4,7 @@
 using System;
 using System.Threading;
 using Moryx.Model;
-using Moryx.Runtime.Maintenance.Databases;
+using Moryx.Runtime.Maintenance.Plugins.Databases;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.SystemTest;
 using Moryx.TestTools.Test.Model;

@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj">
-      <Project>{EB039D46-906F-44BF-AC37-B3B3634A4442}</Project>
+      <Project>{eb039d46-906f-44bf-ac37-b3b3634a4442}</Project>
       <Name>Moryx.Runtime.Maintenance</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">

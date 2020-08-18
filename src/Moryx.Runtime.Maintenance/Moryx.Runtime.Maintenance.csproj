@@ -1,30 +1,150 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB039D46-906F-44BF-AC37-B3B3634A4442}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Moryx.Runtime.Maintenance</RootNamespace>
+    <AssemblyName>Moryx.Runtime.Maintenance</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Moryx.Runtime.Maintenance.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Moryx.Runtime.Maintenance.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Owin" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
-    <PackageReference Include="Nancy" Version="2.0.0" />
-    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Plugins\Common\HostHelper.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\ApplicationInformationResponse.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\ApplicationLoadResponse.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\HostInformationResponse.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\SystemLoadResponse.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Response\TestConnectionResponse.cs" />
+    <Compile Include="Plugins\HttpHelper.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Response\AddAppenderResponse.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Request\AddAppenderRequest.cs" />
+    <Compile Include="Plugins\MaintenancePluginBase.cs" />
+    <Compile Include="Plugins\Common\CommonMaintenanceConfig.cs" />
+    <Compile Include="Plugins\Common\CommonMaintenancePlugin.cs" />
+    <Compile Include="Plugins\Common\Wcf\CommonMaintenance.cs" />
+    <Compile Include="Plugins\Common\Wcf\ICommonMaintenance.cs" />
+    <Compile Include="Plugins\Common\Wcf\Response\ServerTimeResponse.cs" />
+    <Compile Include="Plugins\InvocationResponse.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Request\ExecuteSetupRequest.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Request\RestoreDatabaseRequest.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\BackupModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\DatabaseConfigModel.cs" />
+    <Compile Include="Plugins\Databases\DatabaseConfig.cs" />
+    <Compile Include="Plugins\Databases\DatabasePlugin.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\DataModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\DbMigrationsModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\Models\SetupModel.cs" />
+    <Compile Include="Plugins\Databases\Wcf\DatabaseMaintenance.cs" />
+    <Compile Include="Plugins\Databases\Wcf\IDatabaseMaintenance.cs" />
+    <Compile Include="Plugins\Logging\ILoggingAppender.cs" />
+    <Compile Include="Plugins\Logging\LoggingAppenderPlugin.cs" />
+    <Compile Include="Plugins\Logging\LoggingMaintenanceConfig.cs" />
+    <Compile Include="Plugins\Logging\RemoteAppender.cs" />
+    <Compile Include="Plugins\Logging\Wcf\ILogMaintenance.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Models\LogMessageModel.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Models\LoggerModel.cs" />
+    <Compile Include="Plugins\Logging\Wcf\LogMaintenance.cs" />
+    <Compile Include="ModuleController\ModuleConsole.cs" />
+    <Compile Include="ModuleController\ModuleController.cs" />
+    <Compile Include="Plugins\Logging\Wcf\Request\SetLogLevelRequest.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\AssemblyModel.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\Config.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\ConfigUpdateMode.cs" />
+    <Compile Include="ModuleController\ModuleConfig.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\DependencyEvaluation.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\ModuleNotificationType.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\ModuleServerModuleState.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\NotificationModel.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\SerializableException.cs" />
+    <Compile Include="Contracts\IMaintenancePlugin.cs" />
+    <Compile Include="Contracts\IMaintenancePluginFactory.cs" />
+    <Compile Include="Contracts\MaintenanceModuleConfig.cs" />
+    <Compile Include="Plugins\Modules\ModuleMaintenanceConfig.cs" />
+    <Compile Include="Plugins\Modules\ModuleMaintenancePlugin.cs" />
+    <Compile Include="Plugins\Modules\Wcf\IModuleMaintenance.cs" />
+    <Compile Include="Plugins\Modules\Wcf\ModuleMaintenance.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Request\SaveConfigRequest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Plugins\Modules\Wcf\Models\ServerModuleModel.cs" />
+    <Compile Include="Plugins\Modules\Serialization\AdvancedEditorBrowsableSerialization.cs" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
-    <ProjectReference Include="..\Moryx\Moryx.csproj" />
-    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
+    <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj">
+      <Project>{478DC949-A0B2-46B4-8645-A7DA92589B76}</Project>
+      <Name>Moryx.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj">
+      <Project>{1ce2d3b1-de76-4a59-b3cb-76f120624c11}</Project>
+      <Name>Moryx.Runtime.Wcf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj">
+      <Project>{05761bae-8649-470d-9a8a-5c7e9d1a2f3a}</Project>
+      <Name>Moryx.Tools.Wcf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moryx\Moryx.csproj">
+      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
+      <Name>Moryx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj">
+      <Project>{92777e64-9978-40ae-8b90-93ecbbbefe67}</Project>
+      <Name>Moryx.Runtime</Name>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="Moryx.Runtime.Maintenance.csproj.DotSettings" />
+    <None Include="Moryx.Runtime.Maintenance.nuspec" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

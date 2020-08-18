@@ -7,12 +7,10 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using Moryx.DependentTestModule;
-using Moryx.Runtime.Maintenance.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.SystemTests;
 using Moryx.Tools.Wcf.SystemTests.HelloWorld;
 using Moryx.Tools.Wcf.SystemTests.SimpleHelloWorld;
-using Moryx.Serialization;
 using Moryx.TestModule;
 using Moryx.TestTools.SystemTest;
 using Moryx.TestTools.UnitTest;
@@ -600,15 +598,15 @@ namespace Moryx.Tools.Wcf.SystemTests
 
         private void SetBindingType(BindingType binding)
         {
-            Config config = _hogController.GetConfig("DependentTestModule");
+            var config = _hogController.GetConfig("DependentTestModule");
 
-            Entry connectorConfig = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "SimpleHelloWorldWcfConnector");
+            var connectorConfig = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "SimpleHelloWorldWcfConnector");
             Assert.NotNull(connectorConfig, "Can't get config entry 'SimpleHelloWorldWcfConnector'");
 
-            Entry hostConfig = connectorConfig.SubEntries.FirstOrDefault(e => e.Identifier == "ConnectorHost");
+            var hostConfig = connectorConfig.SubEntries.FirstOrDefault(e => e.Identifier == "ConnectorHost");
             Assert.NotNull(hostConfig, "Can't get config entry 'SimpleHelloWorldWcfConnector.ConnectorHost'");
 
-            Entry bindingType = hostConfig.SubEntries.FirstOrDefault(e => e.Identifier == "BindingType");
+            var bindingType = hostConfig.SubEntries.FirstOrDefault(e => e.Identifier == "BindingType");
             Assert.NotNull(bindingType, "Can't get config entry 'SimpleHelloWorldWcfConnector.ConnectorHost.BindingType'");
 
             if (bindingType.Value.Current != binding.ToString())
@@ -618,7 +616,7 @@ namespace Moryx.Tools.Wcf.SystemTests
                 _hogController.SetConfig(config, "DependentTestModule");
 
                 _hogController.StopService("DependentTestModule");
-                bool result = _hogController.WaitForService("DependentTestModule", ServerModuleState.Stopped, 5);
+                var result = _hogController.WaitForService("DependentTestModule", ServerModuleState.Stopped, 5);
                 Assert.IsTrue(result, "Service '{0}' did not reach state 'Stopped'", "DependentTestModule");
 
                 _hogController.StartService("DependentTestModule");
@@ -632,17 +630,12 @@ namespace Moryx.Tools.Wcf.SystemTests
             Connect(mode, _netTcpCallback);
         }
 
-        private void Connect(ConnectionMode mode, IHelloWorldWcfServiceCallback netTcpCallback)
-        {
-            Connect(mode, netTcpCallback, SimpleHelloWorldWcfService.MinClientVersion, SimpleHelloWorldWcfService.ServerVersion);
-        }
-
         private void Connect(ConnectionMode mode, string clientVersion, string minServerVersion)
         {
             Connect(mode, _netTcpCallback, clientVersion, minServerVersion);
         }
 
-        private void Connect(ConnectionMode mode, IHelloWorldWcfServiceCallback netTcpCallback, string clientVersion, string minServerVersion)
+        private void Connect(ConnectionMode mode, IHelloWorldWcfServiceCallback netTcpCallback, string clientVersion = SimpleHelloWorldWcfService.MinClientVersion, string minServerVersion = SimpleHelloWorldWcfService.ServerVersion)
         {
             switch (mode)
             {
