@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using Moryx.Communication;
 
 namespace Moryx.AbstractionLayer.Drivers.Plc
@@ -8,6 +9,7 @@ namespace Moryx.AbstractionLayer.Drivers.Plc
     /// <summary>
     /// Driver for programmable logic controllers that support object communication
     /// </summary>
+    [Obsolete("This will be removed soon, use IMessageDriver instead")]
     public interface IPlcDriver : IDriver, IPlcCommunication
     {
         /// <summary>
@@ -26,6 +28,7 @@ namespace Moryx.AbstractionLayer.Drivers.Plc
     /// Extension of the <see cref="IPlcDriver"/> interface that allows changing serializer
     /// </summary>
     /// <typeparam name="THeader"></typeparam>
+    [Obsolete("This will be removed soon, use IMessageDriver instead")]
     public interface IPlcDriver<THeader> : IPlcDriver
         where THeader : IBinaryHeader, new()
     {
