@@ -3,7 +3,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer.Drivers.Plc;
 
 namespace Moryx.AbstractionLayer.Drivers.Message
 {

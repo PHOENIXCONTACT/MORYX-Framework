@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Drivers.Plc;
+using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
@@ -18,7 +18,7 @@ namespace Moryx.Resources.Samples
         public string OutfeedMessage { get; set; }
 
         [ResourceReference(ResourceRelationType.Driver)]
-        public IPlcDriver Driver { get; set; }
+        public IMessageDriver<object> Driver { get; set; }
 
         protected override void OnInitialize()
         {

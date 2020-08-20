@@ -100,9 +100,6 @@
     <Compile Include="Drivers\Marking\MarkingResponse.cs" />
     <Compile Include="Drivers\Marking\NotificationResponse.cs" />
     <Compile Include="Drivers\Marking\SegmentsNotSupportedException.cs" />
-    <Compile Include="Drivers\Plc\IPlcCommunication.cs" />
-    <Compile Include="Drivers\Plc\IPlcDriver.cs" />
-    <Compile Include="Drivers\Plc\PlcTransmissionResult.cs" />
     <Compile Include="Drivers\Rfid\IRfidDriver.cs" />
     <Compile Include="Drivers\Rfid\RfidDirection.cs" />
     <Compile Include="Drivers\Rfid\RfidTag.cs" />
