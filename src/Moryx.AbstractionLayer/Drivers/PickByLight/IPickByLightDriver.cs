@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Drivers.PickByLight
     /// <summary>
     /// Interface for the pick by light driver
     /// </summary>
-    public interface IPickByLightDriver : IInOutDriver<int, LightInstructions>
+    public interface IPickByLightDriver : IDriver
     {
         /// <summary>
         /// Activate instruction for this address

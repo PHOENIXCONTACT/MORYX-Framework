@@ -73,7 +73,8 @@
     <Compile Include="Drivers\InOut\IInput.cs" />
     <Compile Include="Drivers\InOut\InputChangedEventArgs.cs" />
     <Compile Include="Drivers\InOut\IOutput.cs" />
-    <Compile Include="Drivers\Message\IMessageCommunication.cs" />
+    <Compile Include="Drivers\Message\IIdentifierMessage.cs" />
+    <Compile Include="Drivers\Message\IMessageChannel.cs" />
     <Compile Include="Drivers\Message\IMessageDriver.cs" />
     <Compile Include="Drivers\Scales\IWeightScaleDriver.cs" />
     <Compile Include="Drivers\Scales\WeightResult.cs" />
@@ -99,9 +100,6 @@
     <Compile Include="Drivers\Marking\MarkingResponse.cs" />
     <Compile Include="Drivers\Marking\NotificationResponse.cs" />
     <Compile Include="Drivers\Marking\SegmentsNotSupportedException.cs" />
-    <Compile Include="Drivers\Plc\IPlcCommunication.cs" />
-    <Compile Include="Drivers\Plc\IPlcDriver.cs" />
-    <Compile Include="Drivers\Plc\PlcTransmissionResult.cs" />
     <Compile Include="Drivers\Rfid\IRfidDriver.cs" />
     <Compile Include="Drivers\Rfid\RfidDirection.cs" />
     <Compile Include="Drivers\Rfid\RfidTag.cs" />

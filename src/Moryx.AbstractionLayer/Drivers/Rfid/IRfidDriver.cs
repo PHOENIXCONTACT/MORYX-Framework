@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.AbstractionLayer.Drivers.InOut;
 
 namespace Moryx.AbstractionLayer.Drivers.Rfid
 {
     /// <summary>
-    /// Driver API of the sich driver
+    /// Driver API of the RFID driver
     /// </summary>
     public interface IRfidDriver : IDriver
     {
