@@ -3,9 +3,9 @@
 
 using System;
 using System.Threading;
+using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Runtime.Modules;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Kernel
 {
@@ -33,9 +33,9 @@ namespace Moryx.Runtime.Kernel
             base.Setup(args);
 
             // Override configs port value
-            var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);
-            wcfConfig.HttpPort += Options.PortIncrement;
-            wcfConfig.NetTcpPort += Options.PortIncrement;
+            var portConfig = ConfigManager.GetConfiguration<PortConfig>(false);
+            portConfig.HttpPort += Options.PortIncrement;
+            portConfig.NetTcpPort += Options.PortIncrement;
         }
 
         /// <summary>

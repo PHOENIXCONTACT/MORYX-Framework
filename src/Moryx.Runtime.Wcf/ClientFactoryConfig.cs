@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Tools.Wcf;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Wcf
 {
     /// <summary>
     /// Configuration for the wcf client factory.
@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Kernel
     public class ClientFactoryConfig : ConfigBase, IWcfClientFactoryConfig
     {
         /// <summary>
-        /// Config entry for the host adress.
+        /// Config entry for the host address.
         /// </summary>
         [DataMember]
         [DefaultValue("localhost")]

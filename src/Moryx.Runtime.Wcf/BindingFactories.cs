@@ -1,8 +1,11 @@
-﻿using System;
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Wcf
 {
     /// <summary>
     /// Static factory to do the Wcf bindings.
@@ -14,9 +17,9 @@ namespace Moryx.Runtime.Kernel
         /// Most parts are set to nearly int max, timeouts are set to 5 min.
         /// Encoding is Text and TransferMode is bufferd.
         /// </summary>
-        /// <param name="requiresAuthentification">Is authentification required?</param>
+        /// <param name="requiresAuthentication">Is authentication required?</param>
         /// <returns>The new created binding.</returns>
-        public static Binding CreateBasicHttpBinding(bool requiresAuthentification)
+        public static Binding CreateBasicHttpBinding(bool requiresAuthentication)
         {
             var basicHttpBinding = new BasicHttpBinding
             {
@@ -40,7 +43,7 @@ namespace Moryx.Runtime.Kernel
             };
 
 
-            if (requiresAuthentification)
+            if (requiresAuthentication)
             {
                 basicHttpBinding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
                 basicHttpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Ntlm;
@@ -85,9 +88,9 @@ namespace Moryx.Runtime.Kernel
         /// Creates a new net tcp binding with our default configuration.
         /// Most values are set to nearly int max, timeouts are set to 5 min.
         /// </summary>
-        /// <param name="requiresAuthentification">Is authentification required?</param>
+        /// <param name="requiresAuthentication">Is authentication required?</param>
         /// <returns>A new net tcp binding.</returns>
-        public static Binding CreateNetTcpBinding(bool requiresAuthentification)
+        public static Binding CreateNetTcpBinding(bool requiresAuthentication)
         {
             var binding = new NetTcpBinding
             {
@@ -106,7 +109,7 @@ namespace Moryx.Runtime.Kernel
                 },
                 Security =
                 {
-                    Mode = requiresAuthentification ? SecurityMode.Transport : SecurityMode.None
+                    Mode = requiresAuthentication ? SecurityMode.Transport : SecurityMode.None
                 }
             };
 

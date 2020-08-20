@@ -3,7 +3,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Xml;
-using Moryx.Configuration;
+using Moryx.Communication;
 
 namespace Moryx.Tools.Wcf
 {
@@ -56,7 +56,7 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Creates a default BasicHttp binding including proxy configuration as configured for this factory.
         /// </summary>
-        /// <param name="requiresAuthentication">If <c>true</c>, set the security mode to <c>BasicHttpSecurityMode.TransportCredentialOnly</c>, 
+        /// <param name="requiresAuthentication">If <c>true</c>, set the security mode to <c>BasicHttpSecurityMode.TransportCredentialOnly</c>,
         ///     otherwise <c>BasicHttpSecurityMode.None</c> will be used.</param>
         /// <param name="proxyConfig">An optional proxy configuration.</param>
         /// <returns>The binding</returns>

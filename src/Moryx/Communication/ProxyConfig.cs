@@ -1,10 +1,7 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
-// Licensed under the Apache License, Version 2.0
-
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Communication
 {
     /// <summary>
     /// Configuration for the Proxy.
@@ -25,7 +22,7 @@ namespace Moryx.Runtime.Kernel
         public bool UseDefaultWebProxy { get; set; }
 
         /// <summary>
-        /// Config entry for the proxy adress.
+        /// Config entry for the proxy address.
         /// </summary>
         [DataMember]
         public string Address { get; set; }

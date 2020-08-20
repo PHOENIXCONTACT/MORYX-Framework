@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Moryx.Configuration;
+using Moryx.Communication;
 
 namespace Moryx.Tools.Wcf
 {
     internal interface IVersionServiceManager : IDisposable
     {
         /// <summary>
-        /// Checks if the service manager is allready initialized
+        /// Checks if the service manager is already initialized
         /// </summary>
         bool IsInitialized { get; }
 

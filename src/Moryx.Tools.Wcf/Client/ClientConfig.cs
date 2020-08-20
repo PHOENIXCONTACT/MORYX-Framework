@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Moryx.Tools.Wcf
 {
     /// <summary>
-    /// Config for the client 
+    /// Config for the client
     /// </summary>
     [DataContract]
     public class ClientVersionConfig : IClientVersionConfig

@@ -7,7 +7,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Threading;
-using Moryx.Configuration;
+using Moryx.Communication;
 using Moryx.Logging;
 using Moryx.Threading;
 
@@ -64,7 +64,7 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         /// <param name="factoryConfig">The configuration of this factory.</param>
         /// <param name="proxyConfig">An optional proxy configuration.</param>
-        /// <param name="threadContext">For WPF applications, an instance of WpfThreadContext should be passed here. 
+        /// <param name="threadContext">For WPF applications, an instance of WpfThreadContext should be passed here.
         /// For console applications or Windows services an instance of SimpleThreadContext should be used instead.</param>
         protected void Initialize(IWcfClientFactoryConfig factoryConfig, IProxyConfig proxyConfig, IThreadContext threadContext)
         {
@@ -212,7 +212,7 @@ namespace Moryx.Tools.Wcf
 
         #endregion
 
-        /// 
+        ///
         public void Destroy(long clientId)
         {
             var client = GetMonitoredClients(c => c.ClientInfo.Id == clientId).FirstOrDefault();
@@ -239,7 +239,7 @@ namespace Moryx.Tools.Wcf
         #endregion
 
         /// <summary>
-        /// Adds a new client to the monitoring quene. 
+        /// Adds a new client to the monitoring quene.
         /// </summary>
         private long AddClientToMonitor<T, TK>(IClientVersionConfig config, object callbackService, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
@@ -310,7 +310,7 @@ namespace Moryx.Tools.Wcf
             RaiseClientInfoChanged(request.ClientInfo);
 
             return request.ClientInfo.Id;
-        }        
+        }
 
         private void ConnectOfflineClients()
         {
@@ -446,7 +446,7 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Recieves the version without a given configuration. The configuration will be loaded from 
+        /// Recieves the version without a given configuration. The configuration will be loaded from
         /// the version service
         /// </summary>
         private void RecieveVersionWithoutConfig(MonitoredClient client)
@@ -487,7 +487,7 @@ namespace Moryx.Tools.Wcf
             SetClientInfoState(client.ClientInfo, newState);
 
             // Only report state changes if the state has changed
-            if (newState == oldState) 
+            if (newState == oldState)
                 return;
 
             if ((oldState == InternalConnectionState.New && newState == InternalConnectionState.FailedTry)
@@ -517,7 +517,7 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Invokes the creation of the client. Will instanciate the client object and raises the 
+        /// Invokes the creation of the client. Will instanciate the client object and raises the
         /// success event.
         /// </summary>
         /// <param name="client">The client.</param>
@@ -636,7 +636,7 @@ namespace Moryx.Tools.Wcf
         #region Helper methods
 
         /// <summary>
-        /// Savely will recieve the monitored clients from the current list. 
+        /// Savely will recieve the monitored clients from the current list.
         /// Locks the monitored list and returns the clients
         /// </summary>
         private IEnumerable<MonitoredClient> GetMonitoredClients(Func<MonitoredClient, bool> expression = null)
@@ -661,14 +661,14 @@ namespace Moryx.Tools.Wcf
             var monitoredClientConfig = monitoredClient.Config;
             var bindingType = serviceConfiguration?.BindingType ?? monitoredClientConfig.BindingType;
 
-            var requiresAuthentication = (serviceConfiguration != null && serviceConfiguration.RequiresAuthentification)
+            var requiresAuthentication = (serviceConfiguration != null && serviceConfiguration.RequiresAuthentication)
                                          || (monitoredClientConfig != null && monitoredClientConfig.RequiresAuthentification);
 
             // Add callback context if the service is an net.tcp service
             if (bindingType == BindingType.NetTcp && monitoredClient.CallbackService != null)
             {
                 monitoredClient.CallbackContext = new InstanceContext(monitoredClient.CallbackService);
-                
+
                 clientParams.Add(monitoredClient.CallbackContext);
 
                 // Called if the callback context was closed
@@ -758,7 +758,7 @@ namespace Moryx.Tools.Wcf
 
             lock (client)
             {
-                if (client.Instance == null) 
+                if (client.Instance == null)
                     return;
 
                 try

@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Moryx.Communication;
 using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Maintenance.Plugins.Logging;
 using Moryx.Runtime.Maintenance.Plugins.Modules;
@@ -12,7 +13,6 @@ using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Moryx.TestModule;
 using Moryx.TestTools.SystemTest;
-using Moryx.Tools.Wcf;
 using NUnit.Framework;
 using LogLevel = Moryx.Logging.LogLevel;
 
@@ -59,7 +59,7 @@ namespace Moryx.Runtime.SystemTests
 
             ModuleConfig config = new ModuleConfig
             {
-                Config = new WcfConfig(),
+                Config = new PortConfig(),
 
                 SleepTime = ServerSleepTime,
                 LogLevel = LogLevel.Info

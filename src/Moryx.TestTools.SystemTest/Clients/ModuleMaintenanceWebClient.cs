@@ -9,7 +9,7 @@ using Moryx.Serialization;
 
 namespace Moryx.TestTools.SystemTest.Clients
 {
-    public class ModuleMaintenanceWebClient : TestWebClientBase, IModuleMaintenance
+    public class ModuleMaintenanceWebClient : TestWebClientBase
     {
         public ModuleMaintenanceWebClient(int port) : base($"http://localhost:{port}/ModuleMaintenance/")
         {
@@ -20,9 +20,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return Get<DependencyEvaluation>("dependencyEvaluation");
         }
 
-        public async Task<DependencyEvaluation> GetDependencyEvaluationAsync()
+        public Task<DependencyEvaluation> GetDependencyEvaluationAsync()
         {
-            return await GetAsync<DependencyEvaluation>("dependencyEvaluation");
+            return GetAsync<DependencyEvaluation>("dependencyEvaluation");
         }
 
         public ServerModuleModel[] GetAll()
@@ -40,9 +40,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return Get<ServerModuleState>($"modules/{moduleName}/healthstate");
         }
 
-        public async Task<ServerModuleState> HealthStateAsync(string moduleName)
+        public Task<ServerModuleState> HealthStateAsync(string moduleName)
         {
-            return await GetAsync<ServerModuleState>($"modules/{moduleName}/healthstate");
+            return GetAsync<ServerModuleState>($"modules/{moduleName}/healthstate");
         }
 
         public NotificationModel[] Notifications(string moduleName)
@@ -50,9 +50,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return Get<NotificationModel[]>($"modules/{moduleName}/notifications");
         }
 
-        public async Task<NotificationModel[]> NotificationsAsync(string moduleName)
+        public Task<NotificationModel[]> NotificationsAsync(string moduleName)
         {
-            return await GetAsync<NotificationModel[]>($"modules/{moduleName}/notifications");
+            return GetAsync<NotificationModel[]>($"modules/{moduleName}/notifications");
         }
 
         public void Start(string moduleName)
@@ -60,9 +60,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             PostAsJson($"modules/{moduleName}/start", null);
         }
 
-        public async Task StartAsync(string moduleName)
+        public  Task StartAsync(string moduleName)
         {
-            await PostAsJsonAsync($"modules/{moduleName}/start", null);
+            return PostAsJsonAsync($"modules/{moduleName}/start", null);
         }
 
         public void Stop(string moduleName)
@@ -70,9 +70,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             PostAsJson($"modules/{moduleName}/stop", null);
         }
 
-        public async Task StopAsync(string moduleName)
+        public Task StopAsync(string moduleName)
         {
-            await PostAsJsonAsync($"modules/{moduleName}/stop", null);
+            return PostAsJsonAsync($"modules/{moduleName}/stop", null);
         }
 
         public void Reincarnate(string moduleName)
@@ -80,9 +80,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             PostAsJson($"modules/{moduleName}/reincarnate", null);
         }
 
-        public async Task ReincarnateAsync(string moduleName)
+        public Task ReincarnateAsync(string moduleName)
         {
-            await PostAsJsonAsync($"modules/{moduleName}/reincarnate", null);
+            return PostAsJsonAsync($"modules/{moduleName}/reincarnate", null);
         }
 
         public void Update(string moduleName, ServerModuleModel module)
@@ -90,9 +90,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             PostAsJson($"modules/{moduleName}", module);
         }
 
-        public async Task UpdateAsync(string moduleName, ServerModuleModel module)
+        public Task UpdateAsync(string moduleName, ServerModuleModel module)
         {
-            await PostAsJsonAsync($"modules/{moduleName}", module);
+            return PostAsJsonAsync($"modules/{moduleName}", module);
         }
 
         public void ConfirmWarning(string moduleName)
@@ -110,9 +110,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return Get<Config>($"modules/{moduleName}/config");
         }
 
-        public async Task<Config> GetConfigAsync(string moduleName)
+        public Task<Config> GetConfigAsync(string moduleName)
         {
-            return await GetAsync<Config>($"modules/{moduleName}/config");
+            return GetAsync<Config>($"modules/{moduleName}/config");
         }
 
         public void SetConfig(string moduleName, SaveConfigRequest request)
@@ -120,9 +120,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             PostAsJson($"modules/{moduleName}/config", request);
         }
 
-        public async Task SetConfigAsync(string moduleName, SaveConfigRequest request)
+        public Task SetConfigAsync(string moduleName, SaveConfigRequest request)
         {
-            await PostAsJsonAsync($"modules/{moduleName}/config", request);
+            return PostAsJsonAsync($"modules/{moduleName}/config", request);
         }
 
         public MethodEntry[] GetMethods(string moduleName)

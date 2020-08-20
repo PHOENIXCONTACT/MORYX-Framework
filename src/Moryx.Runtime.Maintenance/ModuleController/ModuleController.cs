@@ -11,7 +11,8 @@ using Moryx.Runtime.Container;
 using Moryx.Runtime.Maintenance.Contracts;
 using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Modules;
-using Moryx.Tools.Wcf.FileSystem;
+using Moryx.Runtime.Wcf;
+using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance
 {
@@ -44,6 +45,11 @@ namespace Moryx.Runtime.Maintenance
         public IRuntimeConfigManager RuntimeConfigManager { get; set; }
 
         /// <summary>
+        /// Factory to create wcf hosts
+        /// </summary>
+        public IWcfHostFactory WcfHostFactory { get; set; }
+
+        /// <summary>
         /// Set the module manager. Not injected by castle.
         /// </summary>
         /// <param name="moduleManager">the module manager.</param>
@@ -64,7 +70,7 @@ namespace Moryx.Runtime.Maintenance
         /// </summary>
         protected override void OnInitialize()
         {
-            Container.Register<IPolicyRetriever, PolicyRetriever>()
+            Container.RegisterWcf(WcfHostFactory)
                 .SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
                 .SetInstance((IServerLoggerManagement)LoggerManagement);
 

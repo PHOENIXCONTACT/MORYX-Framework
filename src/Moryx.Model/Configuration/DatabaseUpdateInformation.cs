@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.Model.Configuration
@@ -14,7 +14,7 @@ namespace Moryx.Model.Configuration
         public string Name { get; set; }
 
         /// <summary>
-        /// Inidicates if the update is installed
+        /// Indicates if the update is installed
         /// </summary>
         public bool IsApplied { get; set; }
     }

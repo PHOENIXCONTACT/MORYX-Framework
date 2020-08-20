@@ -10,10 +10,8 @@ using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Runtime.Container;
-using Moryx.Runtime.Wcf;
 using Moryx.StateMachines;
 using Moryx.Threading;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Modules
 {
@@ -97,9 +95,6 @@ namespace Moryx.Runtime.Modules
                 .Register<IParallelOperations, ParallelOperations>()
                 // Register instances for this cycle
                 .SetInstance(Config).SetInstance(Logger);
-
-            // Activate WCF
-            EnableWcf(HostFactory);
 
             OnInitialize();
 
@@ -185,24 +180,6 @@ namespace Moryx.Runtime.Modules
         /// Configuration used for the container
         /// </summary>
         public IDictionary<Type, string> Strategies { get; } = new Dictionary<Type, string>();
-
-        /// <summary>
-        /// Wcf host factory to open wcf services
-        /// </summary>
-        public IWcfHostFactory HostFactory { get; set; }
-
-        /// <summary>
-        /// Enable wcf for this module
-        /// </summary>
-        private void EnableWcf(IWcfHostFactory hostFactory)
-        {
-            var typedFactory = Container.Resolve<ITypedHostFactory>();
-            Container.SetInstance((IConfiguredHostFactory)new ConfiguredHostFactory(hostFactory)
-            {
-                Factory = typedFactory,
-                Logger = Logger
-            });
-        }
 
         #endregion
 

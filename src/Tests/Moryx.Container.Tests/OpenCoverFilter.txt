@@ -1,2 +1,0 @@
-INCLUDE:+[Moryx.Container]*
-EXCLUDE:-[Moryx]* -[*Test*]* -[*]*Config -[*]*Exception -[*]*Attribute

@@ -136,5 +136,14 @@ namespace Moryx.Container
         IContainer SetInstance<T>(T instance, string name) where T : class;
 
         #endregion
+
+        #region Extensions
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void Extend<TExtension>() where TExtension : new();
+
+        #endregion
     }
 }

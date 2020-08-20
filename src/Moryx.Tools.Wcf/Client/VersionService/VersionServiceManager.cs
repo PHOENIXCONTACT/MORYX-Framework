@@ -3,6 +3,7 @@
 
 using System;
 using System.ServiceModel;
+using Moryx.Communication;
 using Moryx.Configuration;
 
 namespace Moryx.Tools.Wcf
@@ -86,7 +87,7 @@ namespace Moryx.Tools.Wcf
             return minServerVersion <= serverVersion && serverSupport;
         }
 
-        /// 
+        ///
         public bool Match(WcfClientInfo clientInfo, ServiceConfiguration sericeConfiguration)
         {
             var minServerVersion = Version.Parse(clientInfo.MinServerVersion);
@@ -110,9 +111,7 @@ namespace Moryx.Tools.Wcf
             }
             else if (!string.IsNullOrEmpty(proxyConfig.Address) && proxyConfig.Port != 0)
             {
-                string proxyUrl = string.Format("http://{0}:{1}", proxyConfig.Address, proxyConfig.Port);
-
-                binding.ProxyAddress = new Uri(proxyUrl);
+                binding.ProxyAddress = new Uri($"http://{proxyConfig.Address}:{proxyConfig.Port}");
             }
         }
     }

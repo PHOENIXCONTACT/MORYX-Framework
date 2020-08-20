@@ -1,7 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Configuration
+namespace Moryx.Communication
 {
     /// <summary>
     /// Proxy configuration to be used by WCF clients with BasicHTTP binding.
@@ -14,7 +14,7 @@ namespace Moryx.Configuration
         bool EnableProxy { get; }
 
         /// <summary>
-        /// <c>True</c>, if the default proxy configuration of the machine shall be used. 
+        /// <c>True</c>, if the default proxy configuration of the machine shall be used.
         /// The <see cref="Address"/> and <see cref="Port"/> properties are ignored then.
         /// </summary>
         bool UseDefaultWebProxy { get; }

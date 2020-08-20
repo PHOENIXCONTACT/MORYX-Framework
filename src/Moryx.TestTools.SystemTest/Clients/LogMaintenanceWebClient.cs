@@ -1,14 +1,13 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Threading.Tasks;
 using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Maintenance.Plugins.Logging;
 
 namespace Moryx.TestTools.SystemTest.Clients
 {
-    public class LogMaintenanceWebClient :  TestWebClientBase, ILogMaintenance
+    public class LogMaintenanceWebClient : TestWebClientBase
     {
         public LogMaintenanceWebClient(int port) : base($"http://localhost:{port}/LogMaintenance/")
         {

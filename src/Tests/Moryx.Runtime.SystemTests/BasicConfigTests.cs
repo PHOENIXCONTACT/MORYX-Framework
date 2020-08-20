@@ -6,20 +6,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Runtime.Kernel;
-using Moryx.Runtime.Maintenance.Plugins.Modules;
 using Moryx.Runtime.Modules;
-using Moryx.Serialization;
 using Moryx.TestModule;
 using Moryx.TestTools.SystemTest;
-using Moryx.Tools.Wcf;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.SystemTests
 {
     /// <summary>
-    /// These tests shall check two aspects: They shall verify the HoG functionality but also wether the HeartOfGoldController is working as expected.
+    /// These tests shall check two aspects: They shall verify the HoG functionality but also weather the HeartOfGoldController is working as expected.
     /// </summary>
     [TestFixture]
     public class BasicConfigTests : IDisposable
@@ -62,7 +60,7 @@ namespace Moryx.Runtime.SystemTests
             {
                 SleepTime = 0,
 
-                Config = new WcfConfig(),
+                Config = new PortConfig(),
 
                 IntegerValue = OrgIntegerValue,
                 DoubleValue = OrgDoubleValue,
@@ -147,16 +145,16 @@ namespace Moryx.Runtime.SystemTests
         public void BasicConfigTest()
         {
             var moduleName = "TestModule";
-            Config config = _hogController.GetConfig(moduleName);
+            var config = _hogController.GetConfig(moduleName);
 
-            Entry integerEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "IntegerValue");
-            Entry doubleEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "DoubleValue");
-            Entry stringEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "StringValue");
-            Entry longEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "LongValue");
-            Entry boolEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "BoolValue");
-            Entry enumEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "EnumValue");
-            Entry testPluginEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "TestPlugin");
-            Entry pluginsEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "Plugins");
+            var integerEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "IntegerValue");
+            var doubleEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "DoubleValue");
+            var stringEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "StringValue");
+            var longEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "LongValue");
+            var boolEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "BoolValue");
+            var enumEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "EnumValue");
+            var testPluginEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "TestPlugin");
+            var pluginsEntry = config.Root.SubEntries.FirstOrDefault(e => e.Identifier == "Plugins");
 
             Assert.IsNotNull(integerEntry, "Can't get property 'IntegerValue' from config.");
             Assert.IsNotNull(doubleEntry, "Can't get property 'DoubleValue' from config.");
@@ -169,29 +167,29 @@ namespace Moryx.Runtime.SystemTests
 
             Assert.AreEqual(2, pluginsEntry.SubEntries.Count, "Number of 'Plugins' does not match.");
 
-            Entry pluginEntry0 = pluginsEntry.SubEntries[0];
-            Entry pluginEntry1 = pluginsEntry.SubEntries[1];
+            var pluginEntry0 = pluginsEntry.SubEntries[0];
+            var pluginEntry1 = pluginsEntry.SubEntries[1];
 
-            Entry pluginIntegerEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
-            Entry pluginDoubleEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
-            Entry pluginStringEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
-            Entry pluginLongEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
-            Entry pluginBoolEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
-            Entry pluginEnumEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
+            var pluginIntegerEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
+            var pluginDoubleEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
+            var pluginStringEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
+            var pluginLongEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
+            var pluginBoolEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
+            var pluginEnumEntry = testPluginEntry.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
 
-            Entry plugin0IntegerEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
-            Entry plugin0DoubleEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
-            Entry plugin0StringEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
-            Entry plugin0LongEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
-            Entry plugin0BoolEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
-            Entry plugin0EnumEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
+            var plugin0IntegerEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
+            var plugin0DoubleEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
+            var plugin0StringEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
+            var plugin0LongEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
+            var plugin0BoolEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
+            var plugin0EnumEntry = pluginEntry0.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
 
-            Entry plugin1IntegerEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
-            Entry plugin1DoubleEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
-            Entry plugin1StringEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
-            Entry plugin1LongEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
-            Entry plugin1BoolEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
-            Entry plugin1EnumEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
+            var plugin1IntegerEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginIntegerValue");
+            var plugin1DoubleEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginDoubleValue");
+            var plugin1StringEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginStringValue");
+            var plugin1LongEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginLongValue");
+            var plugin1BoolEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginBoolValue");
+            var plugin1EnumEntry = pluginEntry1.SubEntries.FirstOrDefault(e => e.Identifier == "PluginEnumValue");
 
             Assert.IsNotNull(pluginIntegerEntry, "Can't get property 'PluginIntegerValue' from config.");
             Assert.IsNotNull(pluginDoubleEntry, "Can't get property 'PluginDoubleValue' from config.");
@@ -276,7 +274,7 @@ namespace Moryx.Runtime.SystemTests
 
             Thread.Sleep(1000);
 
-            ModuleConfig testConfig = _configManager.GetConfiguration<ModuleConfig>(true);
+            var testConfig = _configManager.GetConfiguration<ModuleConfig>(true);
 
             Assert.AreEqual(NewIntegerValue, testConfig.IntegerValue, "Property 'IntegerValue' from loaded file contains unexpected value.");
             Assert.AreEqual(NewDoubleValue, testConfig.DoubleValue, "Property 'DoubleValue' from loaded file contains unexpected value.");
@@ -285,7 +283,7 @@ namespace Moryx.Runtime.SystemTests
             Assert.AreEqual(NewBoolValue, testConfig.BoolValue, "Property 'BoolValue' from loaded file contains unexpected value.");
             Assert.AreEqual(NewEnumValue, testConfig.EnumValue, "Property 'EnumValue' from loaded file contains unexpected value.");
 
-            TestPluginConfig testPlugin = testConfig.TestPlugin;
+            var testPlugin = testConfig.TestPlugin;
 
             Assert.IsNotNull(testPlugin, "Property 'TestPlugin' from loaded file is null.");
 
@@ -298,8 +296,8 @@ namespace Moryx.Runtime.SystemTests
 
             Assert.AreEqual(2, testConfig.Plugins.Count, "Number of 'Plugins' from loaded file does not match.");
 
-            TestPluginConfig plugin0 = testConfig.Plugins[0];
-            TestPluginConfig plugin1 = testConfig.Plugins[1];
+            var plugin0 = testConfig.Plugins[0];
+            var plugin1 = testConfig.Plugins[1];
 
             Assert.AreEqual(NewIntegerValue * 20, plugin0.PluginIntegerValue, "Property 'plugin0.PluginIntegerValue' from loaded file contains unexpected value.");
             Assert.AreEqual(NewDoubleValue * 20, plugin0.PluginDoubleValue, "Property 'plugin0.PluginDoubleValue' from loaded file contains unexpected value.");

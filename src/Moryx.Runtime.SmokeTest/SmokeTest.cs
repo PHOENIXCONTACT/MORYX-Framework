@@ -5,13 +5,13 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Timers;
+using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Model;
 using Moryx.Notifications;
 using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
-using Moryx.Tools.Wcf;
 using Timer = System.Timers.Timer;
 
 namespace Moryx.Runtime.SmokeTest
@@ -63,9 +63,9 @@ namespace Moryx.Runtime.SmokeTest
             _fullTest = Options.FullTest;
 
             // Override configs port value
-            var wcfConfig = ConfigManager.GetConfiguration<WcfConfig>(false);
-            wcfConfig.HttpPort += Options.PortIncrement;
-            wcfConfig.NetTcpPort += Options.PortIncrement;
+            var portConfig = ConfigManager.GetConfiguration<PortConfig>(false);
+            portConfig.HttpPort += Options.PortIncrement;
+            portConfig.NetTcpPort += Options.PortIncrement;
 
             _noChangeTimer = new Timer(Options.NoChangeInterval);
             _noChangeTimer.Elapsed += OperationTimedOut;

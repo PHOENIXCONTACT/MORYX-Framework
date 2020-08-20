@@ -2,17 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceModel;
-using Moryx.Container;
 using Moryx.Tools.Wcf;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Wcf
 {
-    [Plugin(LifeCycle.Transient, typeof(IVersionService))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, IncludeExceptionDetailInFaults = true)]
     internal class VersionService : IVersionService
     {
-        // Injected by Castle
-        public EndpointCollector Collector { get; set; }
+        public IEndpointCollector Collector { get; set; }
 
         public bool ClientSupported(string service, string clientVersion)
         {
