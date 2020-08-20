@@ -32,7 +32,7 @@ namespace Moryx.Tests.Extensions
         [System.ComponentModel.Description("Tests if the GetDisplayName extension returns the correct display name")]
         [TestCase(typeof(ClassDisplayAttributeDummy))]
         [TestCase(typeof(DotnetAttributesDummy))]
-        public void ClassDisplayAttribute(Type target)
+        public void GetDisplayNameFromAttribute(Type target)
         {
             // Act
             var displayName = target.GetDisplayName();
@@ -44,7 +44,7 @@ namespace Moryx.Tests.Extensions
         [System.ComponentModel.Description("Tests if the GetDescription extension returns the correct description")]
         [TestCase(typeof(ClassDisplayAttributeDummy))]
         [TestCase(typeof(DotnetAttributesDummy))]
-        public void ClassDescriptionAttrbute(Type target)
+        public void GetDescriptionFromAttribute(Type target)
         {
             // Act
             var description = target.GetDescription();

@@ -359,7 +359,6 @@ namespace Moryx.Tests
                     // change "Value"
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
-                    newInstance.Identifier = "Some initial identifier";
 
                     colEntry.SubEntries.Add(newInstance);
                 }
@@ -371,7 +370,6 @@ namespace Moryx.Tests
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString();
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
-                    newInstance.Identifier = "Some initial identifier";
                     colEntry.SubEntries.Add(newInstance);
                 }
             }
@@ -538,7 +536,6 @@ namespace Moryx.Tests
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = j.ToString("F2", defaultSerialization.FormatProvider);
                     newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[1];
-                    newInstance.Identifier = "Some initial identifier";
                     colEntry.SubEntries.Add(newInstance);
                 }
 
