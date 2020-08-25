@@ -493,7 +493,7 @@ namespace Moryx.TestTools.SystemTest
         /// Get all ModuleLogger from the HoG.
         /// </summary>
         /// <returns>Array of all PluginLogger which could be fetched.</returns>
-        public LoggerModel[] GetAllPluginLogger()
+        public LoggerModel[] GetAllLoggers()
         {
             return WaitForServiceCall(() => _loggingClient.GetAllLoggers());
         }

@@ -18,9 +18,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return Get<LoggerModel[]>("loggers");
         }
 
-        public async Task<LoggerModel[]> GetAllLoggersAsync()
+        public Task<LoggerModel[]> GetAllLoggersAsync()
         {
-            return await GetAsync<LoggerModel[]>("loggers");
+            return GetAsync<LoggerModel[]>("loggers");
         }
 
         public InvocationResponse SetLogLevel(string loggerName, SetLogLevelRequest setLogLevelRequest)
@@ -28,9 +28,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return PostAsJson<InvocationResponse>($"loggers/{loggerName}/loglevel", setLogLevelRequest);
         }
 
-        public async Task<InvocationResponse> SetLogLevelAsync(string loggerName, SetLogLevelRequest setLogLevelRequest)
+        public Task<InvocationResponse> SetLogLevelAsync(string loggerName, SetLogLevelRequest setLogLevelRequest)
         {
-            return await PostAsJsonAsync<InvocationResponse>($"loggers/{loggerName}/loglevel", setLogLevelRequest);
+            return PostAsJsonAsync<InvocationResponse>($"loggers/{loggerName}/loglevel", setLogLevelRequest);
         }
 
         public AddAppenderResponse AddAppender(AddAppenderRequest request)
@@ -38,9 +38,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return PutAsJson<AddAppenderResponse>("appender", request);
         }
 
-        public async Task<AddAppenderResponse> AddAppenderAsync(AddAppenderRequest request)
+        public Task<AddAppenderResponse> AddAppenderAsync(AddAppenderRequest request)
         {
-            return await PutAsJsonAsync<AddAppenderResponse>("appender", request);
+            return PutAsJsonAsync<AddAppenderResponse>("appender", request);
         }
 
         public InvocationResponse RemoveAppender(string appenderId)
@@ -48,9 +48,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return DeleteAsJson<InvocationResponse>($"appender/{appenderId}", null);
         }
 
-        public async Task<InvocationResponse> RemoveAppenderAsync(string appenderId)
+        public Task<InvocationResponse> RemoveAppenderAsync(string appenderId)
         {
-            return await DeleteAsJsonAsync<InvocationResponse>($"appender/{appenderId}", null);
+            return DeleteAsJsonAsync<InvocationResponse>($"appender/{appenderId}", null);
         }
 
         public LogMessageModel[] GetMessages(string appenderId)
@@ -58,9 +58,9 @@ namespace Moryx.TestTools.SystemTest.Clients
             return Get<LogMessageModel[]>($"appender/{appenderId}");
         }
 
-        public async Task<LogMessageModel[]> GetMessagesAsync(string appenderId)
+        public Task<LogMessageModel[]> GetMessagesAsync(string appenderId)
         {
-            return await GetAsync<LogMessageModel[]>($"appender/{appenderId}");
+            return GetAsync<LogMessageModel[]>($"appender/{appenderId}");
         }
     }
 }

@@ -57,14 +57,14 @@ namespace Moryx.TestTools.SystemTest.Clients
             SendAsJson(endpoint, HttpMethod.Post.Method, payload);
         }
 
-        public async Task<T> PostAsJsonAsync<T>(string endpoint, object payload)
+        public Task<T> PostAsJsonAsync<T>(string endpoint, object payload)
         {
-            return await SendAsJsonAsync<T>(endpoint, HttpMethod.Post.Method, payload);
+            return SendAsJsonAsync<T>(endpoint, HttpMethod.Post.Method, payload);
         }
 
-        public async Task PostAsJsonAsync(string endpoint, object payload)
+        public Task PostAsJsonAsync(string endpoint, object payload)
         {
-            await SendAsJsonAsync(endpoint, HttpMethod.Post.Method, payload);
+            return SendAsJsonAsync(endpoint, HttpMethod.Post.Method, payload);
         }
 
         public T PutAsJson<T>(string endpoint, object payload)
@@ -77,14 +77,14 @@ namespace Moryx.TestTools.SystemTest.Clients
             SendAsJson(endpoint, HttpMethod.Put.Method, payload);
         }
 
-        public async Task<T> PutAsJsonAsync<T>(string endpoint, object payload)
+        public Task<T> PutAsJsonAsync<T>(string endpoint, object payload)
         {
-            return await SendAsJsonAsync<T>(endpoint, HttpMethod.Put.Method, payload);
+            return SendAsJsonAsync<T>(endpoint, HttpMethod.Put.Method, payload);
         }
 
-        public async Task PutAsJsonAsync(string endpoint, object payload)
+        public Task PutAsJsonAsync(string endpoint, object payload)
         {
-            await SendAsJsonAsync(endpoint, HttpMethod.Put.Method, payload);
+            return SendAsJsonAsync(endpoint, HttpMethod.Put.Method, payload);
         }
 
         public T DeleteAsJson<T>(string endpoint, object payload)
@@ -96,15 +96,15 @@ namespace Moryx.TestTools.SystemTest.Clients
         {
             SendAsJson(endpoint, HttpMethod.Delete.Method, payload);
         }
-        
-        public async Task<T> DeleteAsJsonAsync<T>(string endpoint, object payload)
+
+        public Task<T> DeleteAsJsonAsync<T>(string endpoint, object payload)
         {
-            return await SendAsJsonAsync<T>(endpoint, HttpMethod.Delete.Method, payload);
+            return SendAsJsonAsync<T>(endpoint, HttpMethod.Delete.Method, payload);
         }
 
-        public async Task DeleteAsJsonAsync(string endpoint, object payload)
+        public Task DeleteAsJsonAsync(string endpoint, object payload)
         {
-            await SendAsJsonAsync(endpoint, HttpMethod.Delete.Method, payload);
+            return SendAsJsonAsync(endpoint, HttpMethod.Delete.Method, payload);
         }
 
         private T SendAsJson<T>(string endpoint, string method, object payload)
@@ -125,7 +125,8 @@ namespace Moryx.TestTools.SystemTest.Clients
                 if (payload != null)
                     wc.Headers[HttpRequestHeader.ContentType] = "application/json";
 
-                wc.UploadString($"{_baseUrl}{endpoint}", method, SerializePayload(payload));
+                var payloadJson = SerializePayload(payload);
+                wc.UploadString($"{_baseUrl}{endpoint}", method, payloadJson);
             }
         }
 
