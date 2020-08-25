@@ -40,7 +40,7 @@ namespace Moryx.Runtime.SystemTests
 
             Console.WriteLine("Starting HeartOfGold");
 
-            var started = _hogController.StartHeartOfGold();
+            var started = _hogController.StartApplication();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
             Assert.IsFalse(_hogController.Process.HasExited, "HeartOfGold has exited unexpectedly.");

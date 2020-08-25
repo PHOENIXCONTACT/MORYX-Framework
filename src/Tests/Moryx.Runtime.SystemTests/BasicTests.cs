@@ -70,7 +70,7 @@ namespace Moryx.Runtime.SystemTests
         {
             PrintStartMsg("TestStartStop");
 
-            bool started = _hogController.StartHeartOfGold();
+            bool started = _hogController.StartApplication();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
             Assert.IsFalse(_hogController.Process.HasExited, "HeartOfGold has exited unexpectedly.");
@@ -90,7 +90,7 @@ namespace Moryx.Runtime.SystemTests
             PrintStartMsg("TestStartTimeout");
 
             _hogController.ExecutionTimeout = 5;
-            bool started = _hogController.StartHeartOfGold();
+            bool started = _hogController.StartApplication();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
             Assert.IsFalse(_hogController.Process.HasExited, "HeartOfGold has exited unexpectedly.");
@@ -107,7 +107,7 @@ namespace Moryx.Runtime.SystemTests
         {
             PrintStartMsg("TestStartWaitStop('{0}', '{1}')", service, state);
 
-            bool started = _hogController.StartHeartOfGold();
+            bool started = _hogController.StartApplication();
             _hogController.CreateClients();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
@@ -129,7 +129,7 @@ namespace Moryx.Runtime.SystemTests
         {
             PrintStartMsg("TestStartKill");
 
-            bool started = _hogController.StartHeartOfGold();
+            bool started = _hogController.StartApplication();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
             Assert.IsFalse(_hogController.Process.HasExited, "HeartOfGold has exited unexpectedly.");

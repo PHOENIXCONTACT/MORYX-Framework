@@ -27,7 +27,7 @@ namespace Moryx.Runtime.SystemTests
         /// </summary>
         public bool StartHeartOfGold(string service)
         {
-            if (HogController.StartHeartOfGold())
+            if (HogController.StartApplication())
             {
                 return HogController.WaitForService(service);
             }

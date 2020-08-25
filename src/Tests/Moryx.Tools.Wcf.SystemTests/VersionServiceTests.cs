@@ -34,7 +34,7 @@ namespace Moryx.Tools.Wcf.SystemTests
 
             Console.WriteLine("Starting HeartOfGold");
 
-            var started = _hogController.StartHeartOfGold();
+            var started = _hogController.StartApplication();
             _hogController.CreateClients();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
