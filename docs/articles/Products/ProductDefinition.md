@@ -25,10 +25,8 @@ The level 1 definition for a watch, its watchface and needles is shown below. Th
 **The watch itself:**
 
 ````cs
-public class WatchProduct : Product
+public class WatchProduct : ProductType
 {
-    public override string Type => nameof(WatchProduct);
-
     // Watch attributes
     public double Price { get; set; }
     public double Weight { get; set; }
@@ -37,9 +35,9 @@ public class WatchProduct : Product
     public ProductPartLink<WatchfaceProduct> Watchface { get; set; }
     public List<NeedlePartLink> Needles { get; set; }
 
-    protected override Article Instantiate()
+    protected override ProdectInstance Instantiate()
     {
-        return new WatchArticle
+        return new WatchInstance
         {
             Watchface = (WatchfaceInstance)Watchface.Instantiate(),
             Neddles = Needles.Instantiate<NeedleInstance>()
