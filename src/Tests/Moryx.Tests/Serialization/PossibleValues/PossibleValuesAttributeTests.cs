@@ -24,11 +24,13 @@ namespace Moryx.Tests
         {
             // Arrange
             var attrWithBase = new PossibleTypesAttribute(typeof(SomeBase));
-            var attrWithArray = new PossibleTypesAttribute(new[] {typeof(SomeImpl) });
+            var attrWithArray = new PossibleTypesAttribute(new[] { typeof(SomeImpl) });
+            var attrWithFull = new PossibleTypesAttribute(typeof(SomeBase)) { UseFullname = true };
 
             // Act
             var valuesFromBase = attrWithBase.GetValues(null).ToArray();
             var valuesFromArray = attrWithArray.GetValues(null).ToArray();
+            var valuesWithFull = attrWithFull.GetValues(null).ToArray();
 
             // Assert
             // Check values from base type
@@ -39,6 +41,11 @@ namespace Moryx.Tests
             // Check values from array types
             Assert.AreEqual(1, valuesFromArray.Length);
             Assert.AreEqual(nameof(SomeImpl), valuesFromArray[0]);
+
+            // Check values from base type with full name
+            Assert.AreEqual(2, valuesWithFull.Length);
+            Assert.AreEqual(typeof(SomeBase).FullName, valuesWithFull[0]);
+            Assert.AreEqual(typeof(SomeImpl).FullName, valuesWithFull[1]);
         }
 
         [Test(Description = "Uses the " + nameof(StateMachineKeysAttribute) + " to read possible state keys from the given state machine type.")]
