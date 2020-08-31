@@ -17,6 +17,11 @@ namespace Moryx.Serialization
         private readonly Type[] _types;
 
         /// <summary>
+        /// Flag if types should be returned including namespace
+        /// </summary>
+        public bool UseFullname { get; set; }
+
+        /// <summary>
         /// Creates an new instance of <see cref="PossibleTypesAttribute"/>
         /// Searches for all public implementations of the given base types.
         /// </summary>
@@ -35,15 +40,15 @@ namespace Moryx.Serialization
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> GetValues(IContainer container)
-        {
-            return _types.Select(t => t.Name);
-        }
-
-        /// <inheritdoc />
         public override bool OverridesConversion => false;
 
         /// <inheritdoc />
         public override bool UpdateFromPredecessor => false;
+
+        /// <inheritdoc />
+        public override IEnumerable<string> GetValues(IContainer container)
+        {
+            return _types.Select(t => UseFullname ? t.FullName : t.Name);
+        }
     }
 }
