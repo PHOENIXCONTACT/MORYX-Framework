@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Model;
@@ -26,13 +27,18 @@ namespace Moryx.Products.Management
         bool SkipInstances { get; }
 
         /// <summary>
+        /// Transform a product class selector to a database compatible expression
+        /// </summary>
+        Expression<Func<IGenericColumns, bool>> TransformSelector<TInstance>(Expression<Func<TInstance, bool>> selector);
+
+        /// <summary>
         /// Save instance to database
         /// </summary>
-        void SaveInstance(ProductInstance source, IGenericColumns target);
+        void SaveInstance(IProductInstance source, IGenericColumns target);
 
         /// <summary>
         /// Load additional instance properties from entity and write them to the business object
         /// </summary>
-        void LoadInstance(IGenericColumns source, ProductInstance target);
+        void LoadInstance(IGenericColumns source, IProductInstance target);
     }
 }

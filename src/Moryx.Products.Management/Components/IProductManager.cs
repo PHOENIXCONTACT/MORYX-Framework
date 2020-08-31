@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
 using Moryx.Products.Management.Importers;
@@ -73,28 +75,23 @@ namespace Moryx.Products.Management
         /// <param name="productType">Product to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
-        ProductInstance CreateInstance(IProductType productType, bool save);
-
-        /// <summary>
-        /// Get an instance with the given id.
-        /// </summary>
-        /// <param name="id">The id for the instance which should be searched for.</param>
-        /// <returns>The instance with the id when it exists.</returns>
-        ProductInstance GetInstance(long id);
-
-        /// <summary>
-        /// Gets a list of instances by a given state
-        /// </summary>
-        IEnumerable<ProductInstance> GetInstances(ProductInstanceState state);
-
-        /// <summary>
-        /// Load instances using combined bit flags
-        /// </summary>
-        IEnumerable<ProductInstance> GetInstances(int state);
+        IProductInstance CreateInstance(IProductType productType, bool save);
 
         /// <summary>
         /// Updates the database from the instance
         /// </summary>
-        void SaveInstances(params ProductInstance[] productInstances);
+        void SaveInstances(params IProductInstance[] productInstances);
+
+        /// <summary>
+        /// Get instances with the given ids.
+        /// </summary>
+        /// <param name="ids">The IDs of instances that should be loaded</param>
+        /// <returns>The instance with the id when it exists.</returns>
+        IReadOnlyList<IProductInstance> GetInstances(params long[] ids);
+
+        /// <summary>
+        /// Get all instances that match a certain expression
+        /// </summary>
+        IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
     }
 }

@@ -3,12 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.Products.Samples
 {
-    public class WatchInstance : ProductInstance<WatchType>
+    public class WatchInstance : ProductInstance<WatchType>, IIdentifiableObject
     {
+        public IIdentity Identity { get; set; }
+
         public bool TimeSet { get; set; }
 
         public DateTime DeliveryDate { get; set; }

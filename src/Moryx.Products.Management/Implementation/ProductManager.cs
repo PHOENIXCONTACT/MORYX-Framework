@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -164,7 +166,7 @@ namespace Moryx.Products.Management
             }
         }
 
-        public ProductInstance CreateInstance(IProductType productType, bool save)
+        public IProductInstance CreateInstance(IProductType productType, bool save)
         {
             var instance = productType.CreateInstance();
             if (save)
@@ -172,24 +174,19 @@ namespace Moryx.Products.Management
             return instance;
         }
 
-        public void SaveInstances(params ProductInstance[] productInstances)
+        public void SaveInstances(params IProductInstance[] productInstances)
         {
             Storage.SaveInstances(productInstances);
         }
 
-        public ProductInstance GetInstance(long id)
+        public IReadOnlyList<IProductInstance> GetInstances(long[] ids)
         {
-            return Storage.LoadInstance(id);
+            return Storage.LoadInstances(ids);
         }
 
-        public IEnumerable<ProductInstance> GetInstances(ProductInstanceState state)
+        public IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
-            return Storage.LoadInstances((int)state);
-        }
-
-        public IEnumerable<ProductInstance> GetInstances(int state)
-        {
-            return Storage.LoadInstances(state);
+            return Storage.LoadInstances(selector);
         }
 
         private void RaiseProductChanged(IProductType productType)

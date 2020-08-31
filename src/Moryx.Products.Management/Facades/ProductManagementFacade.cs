@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Runtime.Modules;
@@ -128,7 +130,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
             var wp = Workplans.LoadWorkplan(workplanId);
-            if(wp == null)
+            if (wp == null)
                 throw new KeyNotFoundException($"No workplan with id '{workplanId}' found!");
             return wp;
         }
@@ -151,46 +153,79 @@ namespace Moryx.Products.Management
             return Workplans.SaveWorkplan(workplan);
         }
 
-        public ProductInstance CreateInstance(IProductType productType)
+        public IProductInstance CreateInstance(IProductType productType)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, false);
         }
 
-        public ProductInstance CreateInstance(IProductType productType, bool save)
+        public IProductInstance CreateInstance(IProductType productType, bool save)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, save);
         }
 
-        public ProductInstance GetInstance(long id)
+        public IProductInstance GetInstance(long id)
         {
             ValidateHealthState();
-            return ProductManager.GetInstance(id);
+            return ProductManager.GetInstances(id).SingleOrDefault();
         }
 
-        public void SaveInstance(ProductInstance productInstance)
+        public IProductInstance GetInstance(IIdentity identity)
+        {
+            ValidateHealthState();
+
+            if (identity == null)
+                throw new ArgumentNullException(nameof(identity));
+
+            var instance = ProductManager
+                .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity))
+                .SingleOrDefault();
+            return (ProductInstance) instance;
+        }
+
+        public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
+            where TInstance : IProductInstance
+        {
+            ValidateHealthState();
+
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return ProductManager.GetInstances(selector).SingleOrDefault();
+        }
+
+        public void SaveInstance(IProductInstance productInstance)
         {
             ValidateHealthState();
             ProductManager.SaveInstances(productInstance);
         }
 
-        public void SaveInstances(ProductInstance[] productInstance)
+        public void SaveInstances(IProductInstance[] productInstance)
         {
             ValidateHealthState();
             ProductManager.SaveInstances(productInstance);
         }
 
-        public IEnumerable<ProductInstance> GetInstances(ProductInstanceState state)
+        public IReadOnlyList<IProductInstance> GetInstances(long[] ids)
         {
             ValidateHealthState();
-            return ProductManager.GetInstances(state);
+
+            if(ids == null)
+                throw new ArgumentNullException(nameof(ids));
+
+            return ProductManager.GetInstances(ids);
         }
 
-        public IEnumerable<ProductInstance> GetInstances(int state)
+        public IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector) 
+            where TInstance : IProductInstance
         {
             ValidateHealthState();
-            return ProductManager.GetInstances(state);
+            
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return ProductManager.GetInstances(selector);
         }
 
         private static void ValidateRecipe(IProductRecipe recipe)

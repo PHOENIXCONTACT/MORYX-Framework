@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer;
 using Moryx.Container;
 using Moryx.Products.Model;
@@ -53,6 +54,11 @@ namespace Moryx.Products.Management
             // Compare JSON and mappers to entity
             var json = JsonConvert.SerializeObject(instance, _jsonSettings);
             return JsonAccessor.ReadProperty(storage) != json || _configuredMappers.Any(m => m.HasChanged(storage, instance));
+        }
+
+        public Expression<Func<IGenericColumns, bool>> TransformSelector<T>(Expression<Func<T, bool>> selector)
+        {
+            return null;
         }
 
         public void ReadValue(IGenericColumns source, object target)

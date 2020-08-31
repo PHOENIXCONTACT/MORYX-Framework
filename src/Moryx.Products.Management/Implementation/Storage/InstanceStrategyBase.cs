@@ -1,7 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Products.Model;
 using Moryx.Tools;
@@ -53,6 +55,7 @@ namespace Moryx.Products.Management
             SkipInstances = skipArticles;
         }
 
+        /// <inheritdoc />
         public override void Initialize(ProductInstanceConfiguration config)
         {
             base.Initialize(config);
@@ -61,9 +64,12 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public abstract void SaveInstance(ProductInstance source, IGenericColumns target);
+        public abstract Expression<Func<IGenericColumns, bool>> TransformSelector<TInstance>(Expression<Func<TInstance, bool>> selector);
 
         /// <inheritdoc />
-        public abstract void LoadInstance(IGenericColumns source, ProductInstance target);
+        public abstract void SaveInstance(IProductInstance source, IGenericColumns target);
+
+        /// <inheritdoc />
+        public abstract void LoadInstance(IGenericColumns source, IProductInstance target);
     }
 }

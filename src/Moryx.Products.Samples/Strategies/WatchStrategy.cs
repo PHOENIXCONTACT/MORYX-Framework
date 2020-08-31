@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Products.Management;
@@ -42,8 +43,13 @@ namespace Moryx.Products.Samples
     [Plugin(LifeCycle.Transient, typeof(IProductInstanceStrategy), Name = nameof(WatchInstanceStrategy))]
     public class WatchInstanceStrategy : InstanceStrategyBase
     {
+        public override Expression<Func<IGenericColumns, bool>> TransformSelector<TInstance>(Expression<Func<TInstance, bool>> selector)
+        {
+            return c => c.Integer2 == 1;
+        }
+
         /// <inheritdoc />
-        public override void SaveInstance(ProductInstance source, IGenericColumns target)
+        public override void SaveInstance(IProductInstance source, IGenericColumns target)
         {
             var watch = (WatchInstance) source;
             target.Integer1 = watch.TimeSet ? 1 : 0;
@@ -51,7 +57,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override void LoadInstance(IGenericColumns source, ProductInstance target)
+        public override void LoadInstance(IGenericColumns source, IProductInstance target)
         {
             var watch = (WatchInstance) target;
             watch.TimeSet = source.Integer1 == 1;

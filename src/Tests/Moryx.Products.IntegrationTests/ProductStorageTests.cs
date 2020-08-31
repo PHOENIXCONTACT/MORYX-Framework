@@ -661,7 +661,9 @@ namespace Moryx.Products.IntegrationTests
             }
 
             // Act
-            var watchCopy = (WatchInstance)_storage.LoadInstance(instance.Id);
+            var watchCopy = (WatchInstance)_storage.LoadInstances(instance.Id)[0];
+            var identity = new ProductIdentity("123", 1);
+            var byDate = _storage.LoadInstances<WatchInstance>(w => identity.Equals(w.Identity));
 
             // Assert
             Assert.NotNull(watchCopy);

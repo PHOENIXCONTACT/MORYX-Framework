@@ -8,7 +8,9 @@ using Moryx.Products.Model;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -594,32 +596,37 @@ namespace Moryx.Products.Management
         #endregion
 
         #region Get instances
-
-        /// <summary>
-        /// Get an instance with the given id.
-        /// </summary>
-        /// <param name="id">The id for the instance which should be searched for.</param>
-        /// <returns>The instance with the id when it exists.</returns>
-        public ProductInstance LoadInstance(long id)
+        
+        public IReadOnlyList<IProductInstance> LoadInstances(params long[] id)
         {
             using (var uow = Factory.Create())
             {
                 var repo = uow.GetRepository<IProductInstanceEntityRepository>();
-                var entity = repo.GetByKey(id);
-                return TransformArticles(uow, new[] { entity })[0];
+                var entities = repo.GetByKeys(id);
+                return TransformArticles(uow, entities);
             }
         }
 
-        /// <summary>
-        /// Gets a list of instances by a given state
-        /// </summary>
-        public IEnumerable<ProductInstance> LoadInstances(int state)
+        public IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
             using (var uow = Factory.Create())
             {
                 var repo = uow.GetRepository<IProductInstanceEntityRepository>();
-                var entities = repo.Linq.Where(a => (a.State & state) > 0).ToList();
-                return TransformArticles(uow, entities);
+
+                var entities = new List<ProductInstanceEntity>();
+                var matchingStrategies = InstanceStrategies.Values
+                    .Where(i => typeof(TInstance).IsAssignableFrom(i.TargetType));
+                foreach (var instanceStrategy in matchingStrategies)
+                {
+                    var queryFilter = instanceStrategy.TransformSelector(selector);
+                    entities.AddRange(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>());
+                }
+
+                var instances = TransformArticles(uow, entities).Cast<TInstance>();
+                // Final check against compiled expression
+                var compiledSelector = selector.Compile();
+                // Only return matches against compiled expression
+                return instances.Where(compiledSelector.Invoke).ToArray();
             }
         }
 
@@ -667,7 +674,7 @@ namespace Moryx.Products.Management
             if (strategy.SkipInstances)
                 return;
 
-            // Transfrom entity to instance
+            // Transform entity to instance
             strategy.LoadInstance(entity, productInstance);
 
             // Group all parts of the instance by the property they belong to
@@ -726,7 +733,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        public void SaveInstances(ProductInstance[] productInstances)
+        public void SaveInstances(IProductInstance[] productInstances)
         {
             using (var uow = Factory.Create())
             {
@@ -747,7 +754,7 @@ namespace Moryx.Products.Management
         /// <param name="uow">An open unit of work</param>
         /// <param name="productInstance">The instance to save</param>
         /// <returns>The instance entity.</returns>
-        private ProductInstanceEntity SaveInstance(IUnitOfWork uow, ProductInstance productInstance)
+        private ProductInstanceEntity SaveInstance(IUnitOfWork uow, IProductInstance productInstance)
         {
             // Check if this type is persisted
             var strategy = InstanceStrategies[productInstance.GetType().Name];
