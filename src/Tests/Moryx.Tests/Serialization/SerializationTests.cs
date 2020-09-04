@@ -316,6 +316,24 @@ namespace Moryx.Tests
         }
 
         [Test]
+        public void EncodeCollection()
+        {
+            // Arrange
+            var values = new string[]{"Hello", "World"};
+
+            // Act
+            var encoded = EntryConvert.EncodeObject(values);
+
+            // Assert
+            Assert.NotNull(encoded);
+            Assert.AreEqual(EntryValueType.Collection, encoded.Value.Type);
+            Assert.AreEqual(2, encoded.SubEntries.Count);
+            var se = encoded.SubEntries;
+            Assert.AreEqual(values[0], se[0].Value.Current);
+            Assert.AreEqual(values[1], se[1].Value.Current);
+        }
+
+        [Test]
         public void SurviveGetterException()
         {
             // Arrange
