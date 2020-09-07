@@ -33,7 +33,11 @@ namespace Moryx.Serialization
         /// </summary>
         public static bool IsDictionary(Type collectionType)
         {
-            return collectionType.IsGenericType && typeof(IDictionary<,>).IsAssignableFrom(collectionType.GetGenericTypeDefinition());
+            if (typeof(IDictionary).IsAssignableFrom(collectionType))
+                return true;
+
+            return collectionType.IsGenericType
+                   && collectionType.GetGenericTypeDefinition() == typeof(IDictionary<,>);
         }
 
         /// <summary>
