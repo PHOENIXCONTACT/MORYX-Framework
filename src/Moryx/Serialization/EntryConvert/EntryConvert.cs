@@ -241,12 +241,27 @@ namespace Moryx.Serialization
 
             var converted = CreateFromType(instanceType, customSerialization);
 
+            // Value or string are easily value encoded
             if (isValueType)
             {
                 converted.Value.Current = ConvertToString(instance, customSerialization.FormatProvider);
                 return converted;
             }
 
+            // Collections are encoded as a root entry with subentries
+            if (converted.Value.Type == EntryValueType.Collection)
+            {
+                var possibleElementValues = customSerialization.PossibleElementValues(instanceType, instanceType);
+                var strategy = CreateStrategy(instance, instance, instanceType, customSerialization);
+                foreach (var entry in strategy.Serialize())
+                {
+                    entry.Value.Possible = possibleElementValues;
+                    converted.SubEntries.Add(entry);
+                }
+                return converted;
+            }
+
+            // Classes are encoded per-property recursively
             var filtered = customSerialization.GetProperties(instance.GetType());
             foreach (var property in filtered)
             {
@@ -268,8 +283,7 @@ namespace Moryx.Serialization
                 {
                     case EntryValueType.Collection:
                         // Get collection and iterate if it has entries
-                        var enumurable = value as IEnumerable;
-                        if (enumurable == null)
+                        if (value == null)
                             break;
 
                         var possibleElementValues = customSerialization.PossibleElementValues(property.PropertyType, property);
