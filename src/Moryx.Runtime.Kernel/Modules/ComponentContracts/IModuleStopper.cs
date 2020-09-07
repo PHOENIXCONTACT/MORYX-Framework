@@ -5,7 +5,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel
 {
-    internal interface IModuleStopper : IModuleManagerComponent
+    internal interface IModuleStopper
     {
         /// <summary>
         /// Stop this plugin and all required dependencies

@@ -33,7 +33,7 @@ namespace Moryx.Runtime.Kernel
         /// <inheritdoc />
         public void StartAll()
         {
-            foreach (var module in AllModules())
+            foreach (var module in AllModules)
             {
                 module.Initialize();
             }

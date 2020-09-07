@@ -1,16 +1,17 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Generic;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel
 {
-    internal interface IModuleDependencyManager : IModuleManagerComponent
+    internal interface IModuleDependencyManager
     {
         /// <summary>
         /// Build and fill the dependency tree
         /// </summary>
-        void BuildDependencyTree();
+        IReadOnlyList<IServerModule> BuildDependencyTree(IReadOnlyList<IServerModule> allModules);
 
         /// <summary>
         /// Get the full dependency tree

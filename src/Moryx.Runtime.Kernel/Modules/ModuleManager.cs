@@ -26,7 +26,7 @@ namespace Moryx.Runtime.Kernel
         public IModuleLogger Logger { get; set; }
 
         /// <summary>
-        /// Get/set the list of server modules. Injected by castle.
+        /// Get/set the list of all server modules. Injected by castle.
         /// </summary>
         public IServerModule[] ServerModules { get; set; }
 
@@ -48,7 +48,7 @@ namespace Moryx.Runtime.Kernel
         public string Name => "Kernel";
 
         private IModuleDependencyManager _dependencyManager;
-        private IModuleInitializer _moduleInitializer;
+
         private IModuleStarter _moduleStarter;
         private IModuleStopper _moduleStopper;
         private ModuleManagerConfig _config;
@@ -62,41 +62,40 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public void Initialize()
         {
-            // Create cross component objects
-            var waitingServices = new Dictionary<IServerModule, ICollection<IServerModule>>();
-            var allModules = new Func<IEnumerable<IServerModule>>(() => AllModules);
-
             // Create components
             LoggerManagement.ActivateLogging(this);
             _config = ConfigManager.GetConfiguration<ModuleManagerConfig>();
+
+            // Create dependency manager and build tree of available modules
             _dependencyManager = new ModuleDependencyManager(Logger.GetChild(string.Empty, typeof(ModuleDependencyManager)));
+            var availableModules = _dependencyManager.BuildDependencyTree(ServerModules);
 
-            _moduleInitializer = new ModuleInitializer(Logger.GetChild(string.Empty, typeof(ModuleInitializer)));
-            _moduleStarter = new ModuleStarter(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStarter)), _config);
-            _moduleStopper = new ModuleStopper(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStopper)));
-
-            // Link components
-            var components = new IModuleManagerComponent[] { _dependencyManager, _moduleStarter, _moduleStopper };
-            foreach (var component in components)
+            // Create dedicated components for stopping and starting
+            var waitingModules = new Dictionary<IServerModule, ICollection<IServerModule>>();
+            _moduleStarter = new ModuleStarter(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStarter)), _config)
             {
-                component.AllModules = allModules;
-                component.WaitingModules = waitingServices;
-            }
-
-            // Build dependency tree
-            _dependencyManager.BuildDependencyTree();
+                AllModules = availableModules,
+                WaitingModules = waitingModules
+            };
+            _moduleStopper = new ModuleStopper(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStopper)))
+            {
+                AllModules = availableModules,
+                WaitingModules = waitingModules
+            };
 
             // Link framework modules
-            foreach (var platformModule in ServerModules.OfType<IPlatformModule>())
+            foreach (var platformModule in availableModules.OfType<IPlatformModule>())
             {
                 platformModule.SetModuleManager(this);
             }
 
             // Observe state changed events of modules
-            foreach (var module in AllModules)
+            foreach (var module in availableModules)
             {
                 module.StateChanged += OnModuleStateChanged;
             }
+
+            AllModules = availableModules;
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace Moryx.Runtime.Kernel
         /// <param name="module"></param>
         public void InitializeModule(IServerModule module)
         {
-            _moduleInitializer.Initialize(module);
+            module.Initialize();
         }
 
         /// <summary>
@@ -158,7 +157,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// All modules
         /// </summary>
-        public IEnumerable<IServerModule> AllModules => ServerModules;
+        public IEnumerable<IServerModule> AllModules { get; private set; }
 
         /// <summary>
         /// Inform the listeners about module state changes. 

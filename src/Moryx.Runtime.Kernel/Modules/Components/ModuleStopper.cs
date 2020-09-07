@@ -53,7 +53,7 @@ namespace Moryx.Runtime.Kernel
         public void StopAll()
         {
             // Detemine all leaves of the dependency tree
-            foreach (var plugin in AllModules())
+            foreach (var plugin in AllModules)
             {
                 Stop(plugin);
             }

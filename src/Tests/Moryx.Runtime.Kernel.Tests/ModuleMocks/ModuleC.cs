@@ -7,7 +7,13 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {
     internal class ModuleC : ModuleBase
     {
-        [RequiredModuleApi]
+        [RequiredModuleApi(IsStartDependency = true)]
         public IFacadeB[] Facades { get; set; }
+    }
+
+    internal class ModuleCSingle : ModuleBase
+    {
+        [RequiredModuleApi(IsStartDependency = true)]
+        public IFacadeB Facades { get; set; }
     }
 }
