@@ -25,6 +25,9 @@ namespace Moryx.Runtime.Kernel
         /// <param name="module"></param>
         public void Stop(IServerModule module)
         {
+            if(!AvailableModules.Contains(module))
+                return;
+
             // First we have to find all running modules that depend on this service
             var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependends.Select(item => item.RepresentedModule);
             // Now we will stop all of them recursivly
@@ -53,7 +56,7 @@ namespace Moryx.Runtime.Kernel
         public void StopAll()
         {
             // Detemine all leaves of the dependency tree
-            foreach (var plugin in AllModules)
+            foreach (var plugin in AvailableModules)
             {
                 Stop(plugin);
             }

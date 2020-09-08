@@ -24,22 +24,35 @@ namespace Moryx.Runtime.Kernel
         }
 
         /// <inheritdoc />
+        public void Initialize(IServerModule module)
+        {
+            if (!AvailableModules.Contains(module))
+                return; // Module not executable
+
+            module.Initialize();
+        }
+
+        /// <inheritdoc />
         public void Start(IServerModule module)
         {
+            if(!AvailableModules.Contains(module))
+                return; // Module not executable
+
             module.Initialize();
+
             StartModule(module);   
         }
 
         /// <inheritdoc />
         public void StartAll()
         {
-            foreach (var module in AllModules)
+            foreach (var module in AvailableModules)
             {
                 module.Initialize();
             }
 
             // Find root server modules and convert all others to waiting services
-            var depTree = _dependencyManager.GetDependencyEvalutaion().FullTree;
+            var depTree = _dependencyManager.GetDependencyTree();
             foreach (var root in depTree.RootModules.Where(ShouldBeStarted))
             {
                 ConvertBranch(root);

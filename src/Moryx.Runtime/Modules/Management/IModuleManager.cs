@@ -66,7 +66,7 @@ namespace Moryx.Runtime.Modules
         /// Get the full dependency tree
         /// </summary>
         /// <returns></returns>
-        IDependencyEvaluation DependencyEvaluation { get; }
+        IModuleDependencyTree DependencyTree { get; }
 
         /// <summary>
         /// Get or set a services behaviour using 

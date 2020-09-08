@@ -11,12 +11,6 @@ using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel
 {
-    internal class FacadeContainer
-    {
-        public object Instance { get; set; }
-        public IServerModule ManagingModule { get; set; }
-    }
-
     internal class ImportingProperty
     {
         public bool Missing { get; set; }
@@ -30,10 +24,10 @@ namespace Moryx.Runtime.Kernel
     {
         private readonly IModuleLogger _logger;
 
-        private DependencyEvaluation _dependencyEvaluation;
+        private PluginDependencyTree _dependencyTree;
 
         /// <summary>
-        /// Cache of allready transformed branches
+        /// Cache of already transformed branches
         /// </summary>
         private readonly IDictionary<IServerModule, IModuleDependency> _cache = new Dictionary<IServerModule, IModuleDependency>();
 
@@ -46,9 +40,9 @@ namespace Moryx.Runtime.Kernel
         /// Get the full dependency tree
         /// </summary>
         /// <returns></returns>
-        public IDependencyEvaluation GetDependencyEvalutaion()
+        public IModuleDependencyTree GetDependencyTree()
         {
-            return _dependencyEvaluation;
+            return _dependencyTree;
         }
 
         /// <summary>
@@ -67,8 +61,8 @@ namespace Moryx.Runtime.Kernel
             
             // Build dependency tree from available modules
             var dependencyBranches = Convert(availableModules, facadeProviders);
-            var tree = new PluginDependencyTree(dependencyBranches.Where(c => c.Dependencies.Count == 0));
-            _dependencyEvaluation = ValidateDependencyTree(tree);
+            _dependencyTree = new PluginDependencyTree(dependencyBranches.Where(c => c.Dependencies.Count == 0)
+                .ToArray());
 
             // Only return modules that could be propery integrated in the dependency tree
             return dependencyBranches.Select(db => db.RepresentedModule).ToList();
@@ -231,43 +225,6 @@ namespace Moryx.Runtime.Kernel
                                        select new ImportingProperty { Property = prop, Attribute = att };
             return dependencyAttributes.ToList();
         }
-        #endregion
-
-        #region Validate dependency tree
-
-        private DependencyEvaluation ValidateDependencyTree(IModuleDependencyTree tree)
-        {
-            var eval = new DependencyEvaluation { FullTree = tree };
-            // Skip eval for empty list
-            if (tree.RootModules.Any())
-            {
-                eval.RootModules = tree.RootModules.Count();
-                eval.MaxDepth = tree.RootModules.Max(branch => CalculateTreeDepth(1, branch));
-                eval.MaxDependencies = _cache.Values.Max(item => item.Dependencies.Count());
-                eval.MaxDependends = _cache.Values.Max(item => item.Dependends.Count());
-            }
-
-            // For each element try to find it as a dependency of its dependencies
-            foreach (var dependency in _cache.Values.Where(item => FindInDependencies(item, item)))
-            {
-                _logger.Log(LogLevel.Fatal, "Plugin dependency tree is not recursion free! Cause: {0}", dependency.RepresentedModule.Name);
-            }
-
-            return eval;
-        }
-
-        private int CalculateTreeDepth(int currentLevel, IModuleDependency branch)
-        {
-            var childLevel = currentLevel + 1;
-            return branch.Dependends.Any() ? branch.Dependends.Max(dependency => CalculateTreeDepth(childLevel, dependency)) : currentLevel;
-        }
-
-        private bool FindInDependencies(IModuleDependency needle, IModuleDependency haystack)
-        {
-            return haystack.Dependencies.Any(dependency => dependency == needle
-                                                        || FindInDependencies(needle, dependency));
-        }
-
         #endregion
     }
 }

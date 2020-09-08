@@ -74,12 +74,12 @@ namespace Moryx.Runtime.Kernel
             var waitingModules = new Dictionary<IServerModule, ICollection<IServerModule>>();
             _moduleStarter = new ModuleStarter(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStarter)), _config)
             {
-                AllModules = availableModules,
+                AvailableModules = availableModules,
                 WaitingModules = waitingModules
             };
             _moduleStopper = new ModuleStopper(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStopper)))
             {
-                AllModules = availableModules,
+                AvailableModules = availableModules,
                 WaitingModules = waitingModules
             };
 
@@ -95,7 +95,7 @@ namespace Moryx.Runtime.Kernel
                 module.StateChanged += OnModuleStateChanged;
             }
 
-            AllModules = availableModules;
+            AllModules = ServerModules;
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Moryx.Runtime.Kernel
         /// <param name="module"></param>
         public void InitializeModule(IServerModule module)
         {
-            module.Initialize();
+            _moduleStarter.Initialize(module);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Moryx.Runtime.Kernel
         }
 
         /// <summary>
-        /// Restart the module and all of its dependecies
+        /// Restart the module and all of its dependencies
         /// </summary>
         /// <param name="module"></param>
         public void ReincarnateModule(IServerModule module)
@@ -168,17 +168,18 @@ namespace Moryx.Runtime.Kernel
         /// Get the start dependencies of the given module.
         /// </summary>
         /// <param name="service">The server module for which the dependencies should be fetched.</param>
-        /// <returns>An amount of start dependecies for the requested module.</returns>
+        /// <returns>An amount of start dependencies for the requested module.</returns>
         public IEnumerable<IServerModule> StartDependencies(IServerModule service)
         {
-            return _dependencyManager.GetDependencyBranch(service).Dependencies.Select(item => item.RepresentedModule).ToArray();
+            return _dependencyManager.GetDependencyBranch(service)?.Dependencies.Select(item => item.RepresentedModule) 
+                   ?? Enumerable.Empty<IServerModule>();
         }
 
         /// <summary>
         /// Get the full dependency tree
         /// </summary>
         /// <returns></returns>
-        public IDependencyEvaluation DependencyEvaluation => _dependencyManager.GetDependencyEvalutaion();
+        public IModuleDependencyTree DependencyTree => _dependencyManager.GetDependencyTree();
 
         /// <summary>
         /// Get or set a services behaviour using 

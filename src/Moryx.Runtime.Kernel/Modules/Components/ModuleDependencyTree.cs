@@ -8,12 +8,12 @@ namespace Moryx.Runtime.Kernel
 {
     internal class PluginDependencyTree : IModuleDependencyTree
     {
-        public PluginDependencyTree(IEnumerable<IModuleDependency> roots)
+        public PluginDependencyTree(IReadOnlyList<IModuleDependency> roots)
         {
             RootModules = roots;
         }
 
-        public IEnumerable<IModuleDependency> RootModules { get; private set; }
+        public IReadOnlyList<IModuleDependency> RootModules { get; }
     }
 
     internal class ModuleDependencyBranch : IModuleDependency
@@ -32,7 +32,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// All modules this module depends on
         /// </summary>
-        IEnumerable<IModuleDependency> IModuleDependency.Dependencies => Dependencies;
+        IReadOnlyList<IModuleDependency> IModuleDependency.Dependencies => Dependencies;
 
         /// <summary>
         /// All modules that depend on this module
@@ -41,7 +41,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// All modules that depend on this module
         /// </summary>
-        IEnumerable<IModuleDependency> IModuleDependency.Dependends => Dependends;
+        IReadOnlyList<IModuleDependency> IModuleDependency.Dependends => Dependends;
     }
 }
 

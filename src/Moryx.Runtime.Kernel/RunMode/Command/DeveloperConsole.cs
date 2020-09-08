@@ -2,9 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel
 {
@@ -35,6 +37,10 @@ namespace Moryx.Runtime.Kernel
 
             // Welcome message and start
             DrawTitle();
+
+            // Check if any modules could not be started
+            UnavailableModules();
+
             base.Boot();
         }
 
@@ -106,6 +112,24 @@ namespace Moryx.Runtime.Kernel
                 CommandHelper.PrintState(eventArgs.NewState, true);
                 WriteBashPostString();
             }
+        }
+        
+        private void UnavailableModules()
+        {
+            var availableModules = ModuleManager.DependencyTree.RootModules
+                .Flatten(md => md.Dependends).Select(md => md.RepresentedModule).ToList();
+            var unavailable = ModuleManager.AllModules.Except(availableModules).ToList();
+            if(!unavailable.Any())
+                return;
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Excluded modules due to missing dependencies. Check the log for more details!");
+            Console.ResetColor();
+            foreach (var module in unavailable)
+            {
+                Console.WriteLine($"  - {module.Name}");
+            }
+            Console.WriteLine();
         }
 
         private void PrintGeneralHelp()

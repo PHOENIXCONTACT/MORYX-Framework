@@ -11,6 +11,7 @@ using Moryx.Runtime.Kernel.Tests.Dummys;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks;
 using Moryx.Runtime.Modules;
 using Moq;
+using Moryx.Tools;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.Kernel.Tests
@@ -154,7 +155,10 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.Initialize();
 
             // Assert
-            Assert.AreEqual(2, moduleManager.AllModules.Count());
+            Assert.AreEqual(4, moduleManager.AllModules.Count());
+            var available = moduleManager.DependencyTree.RootModules
+                .Flatten(md => md.Dependends).ToList();
+            Assert.AreEqual(2, available.Count);
         }
 
         [Test]
@@ -172,7 +176,10 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.Initialize();
 
             // Assert
-            Assert.AreEqual(1, moduleManager.AllModules.Count());
+            Assert.AreEqual(3, moduleManager.AllModules.Count());
+            var available = moduleManager.DependencyTree.RootModules
+                .Flatten(md => md.Dependends).ToList();
+            Assert.AreEqual(1, available.Count);
         }
 
         [Test]

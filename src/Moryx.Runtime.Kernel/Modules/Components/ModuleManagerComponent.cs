@@ -12,7 +12,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Delegate to get a copy of the module list
         /// </summary>
-        public IReadOnlyList<IServerModule> AllModules { get; set; }
+        public IReadOnlyList<IServerModule> AvailableModules { get; set; }
 
         /// <summary>
         /// Global dictionary of modules awaiting the start of other modules

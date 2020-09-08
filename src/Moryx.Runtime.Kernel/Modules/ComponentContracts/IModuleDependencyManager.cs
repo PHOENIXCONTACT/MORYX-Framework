@@ -17,7 +17,7 @@ namespace Moryx.Runtime.Kernel
         /// Get the full dependency tree
         /// </summary>
         /// <returns></returns>
-        IDependencyEvaluation GetDependencyEvalutaion();
+        IModuleDependencyTree GetDependencyTree();
 
         /// <summary>
         /// Get all start dependencies of this plugin

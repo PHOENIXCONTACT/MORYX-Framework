@@ -99,7 +99,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
 
         public DependencyEvaluation GetDependencyEvaluation()
         {
-            return new DependencyEvaluation(ModuleManager.DependencyEvaluation);
+            return new DependencyEvaluation(ModuleManager.DependencyTree);
         }
 
         public void Start(string moduleName)
