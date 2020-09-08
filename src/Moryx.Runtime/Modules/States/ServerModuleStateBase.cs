@@ -7,11 +7,10 @@ namespace Moryx.Runtime.Modules
 {
     internal abstract class ServerModuleStateBase : StateBase<IServerModuleStateContext>
     {
-        public ServerModuleState Classification { get; }
+        public abstract ServerModuleState Classification { get; }
 
-        protected ServerModuleStateBase(IServerModuleStateContext context, StateMap stateMap, ServerModuleState classification) : base(context, stateMap)
+        protected ServerModuleStateBase(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap)
         {
-            Classification = classification;
         }
 
         public virtual void Initialize()

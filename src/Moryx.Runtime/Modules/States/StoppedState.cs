@@ -5,8 +5,10 @@ namespace Moryx.Runtime.Modules
 {
     internal class StoppedState : ServerModuleStateBase
     {
+        public override ServerModuleState Classification => ServerModuleState.Stopped;
+
         public StoppedState(IServerModuleStateContext context, StateMap stateMap) 
-            : base(context, stateMap, ServerModuleState.Stopped)
+            : base(context, stateMap)
         {
         }
 
@@ -17,7 +19,7 @@ namespace Moryx.Runtime.Modules
 
         public override void Stop()
         {
-            // Stop again doent matter
+            // Stop again does not matter
         }
     }
 }
