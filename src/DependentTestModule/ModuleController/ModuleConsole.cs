@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using Moryx.Logging;
 using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 
 namespace Moryx.DependentTestModule
 {
@@ -22,7 +23,7 @@ namespace Moryx.DependentTestModule
             outputStream("The DependentTestModule does not provide any commands!");
         }
 
-        [EditorBrowsable, Description("Creates a log message for the given log level")]
+        [EntrySerialize, Description("Creates a log message for the given log level")]
         public void CreateTestLogMessage(LogLevel logLevel)
         {
             switch (logLevel)
