@@ -129,7 +129,15 @@ namespace Moryx.Products.IntegrationTests
                     new GenericInstanceConfiguration
                     {
                         TargetType = nameof(WatchfaceInstance),
-                        PropertyConfigs = new List<PropertyMapperConfig>(),
+                        PropertyConfigs = new List<PropertyMapperConfig>
+                        {
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(WatchfaceInstance.Identifier),
+                                Column = nameof(IGenericColumns.Text1),
+                                PluginName = nameof(TextColumnMapper)
+                            }
+                        },
                         JsonColumn = nameof(IGenericColumns.Text8)
                     },
                     new ProductInstanceConfiguration()
@@ -660,6 +668,7 @@ namespace Moryx.Products.IntegrationTests
             Assert.AreEqual(instance.DeliveryDate, watchCopy.DeliveryDate);
             Assert.AreEqual(instance.TimeSet, watchCopy.TimeSet);
             Assert.NotNull(instance.Watchface);
+            Assert.AreEqual(instance.Watchface.Identifier, watchCopy.Watchface.Identifier, "Guid does not match");
             Assert.NotNull(instance.Needles);
             Assert.AreEqual(3, instance.Needles.Count);
         }

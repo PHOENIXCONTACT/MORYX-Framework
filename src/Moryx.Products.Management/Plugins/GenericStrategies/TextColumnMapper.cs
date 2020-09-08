@@ -25,6 +25,9 @@ namespace Moryx.Products.Management
         protected override IPropertyAccessor<object, string> CreatePropertyAccessor(PropertyInfo objectProp)
         {
             // Convert return value to string
+            if (objectProp.PropertyType == typeof(Guid))
+                return new GuidAccessor(objectProp);
+
             if (objectProp.PropertyType.IsClass && objectProp.PropertyType != typeof(string))
                 return new JsonAccessor(objectProp);
 
@@ -32,7 +35,29 @@ namespace Moryx.Products.Management
         }
 
         /// <summary>
-        /// Accessor decorator to convert objects to enum and back
+        /// Accessor decorator to convert GUID to string and back
+        /// </summary>
+        private class GuidAccessor : ConversionAccessor<string, Guid>
+        {
+            public GuidAccessor(PropertyInfo property) : base(property)
+            {
+            }
+
+            public override string ReadProperty(object instance)
+            {
+                var value = Target.ReadProperty(instance);
+                return value.ToString();
+            }
+
+            public override void WriteProperty(object instance, string value)
+            {
+                var guid = Guid.Parse(value);
+                Target.WriteProperty(instance, guid);
+            }
+        }
+
+        /// <summary>
+        /// Accessor decorator to convert objects to JSON and back
         /// </summary>
         private class JsonAccessor : ConversionAccessor<string, object>
         {
