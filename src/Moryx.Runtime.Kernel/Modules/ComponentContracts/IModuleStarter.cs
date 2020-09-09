@@ -8,8 +8,13 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Component handling the start of modules
     /// </summary>
-    internal interface IModuleStarter : IModuleManagerComponent
+    internal interface IModuleStarter
     {
+        /// <summary>
+        /// Call initialize on the module
+        /// </summary>
+        void Initialize(IServerModule module);
+
         /// <summary>
         /// Starts a module and all dependencies if necessary
         /// </summary>

@@ -8,30 +8,40 @@ namespace Moryx.Runtime.Kernel
 {
     internal class PluginDependencyTree : IModuleDependencyTree
     {
-        public PluginDependencyTree(IEnumerable<IModuleDependency> roots)
+        public PluginDependencyTree(IReadOnlyList<IModuleDependency> roots)
         {
             RootModules = roots;
         }
 
-        public IEnumerable<IModuleDependency> RootModules { get; private set; }
+        public IReadOnlyList<IModuleDependency> RootModules { get; }
     }
 
-    internal class PluginDependencyBranch : IModuleDependency
+    internal class ModuleDependencyBranch : IModuleDependency
     {
+        public ModuleDependencyBranch(IServerModule representedModule)
+        {
+            RepresentedModule = representedModule;
+        }
+
         /// <summary>
         /// Plugin represented by this entry in the dependency tree
         /// </summary>
-        public IServerModule RepresentedModule { get; set; }
+        public IServerModule RepresentedModule { get; }
 
+        public List<IModuleDependency> Dependencies { get; set; } = new List<IModuleDependency>();
         /// <summary>
         /// All modules this module depends on
         /// </summary>
-        public IEnumerable<IModuleDependency> Dependencies { get; set; }
+        IReadOnlyList<IModuleDependency> IModuleDependency.Dependencies => Dependencies;
 
         /// <summary>
         /// All modules that depend on this module
         /// </summary>
-        public IEnumerable<IModuleDependency> Dependends { get; set; }
+        public List<IModuleDependency> Dependends { get; set; } = new List<IModuleDependency>();
+        /// <summary>
+        /// All modules that depend on this module
+        /// </summary>
+        IReadOnlyList<IModuleDependency> IModuleDependency.Dependends => Dependends;
     }
 }
 

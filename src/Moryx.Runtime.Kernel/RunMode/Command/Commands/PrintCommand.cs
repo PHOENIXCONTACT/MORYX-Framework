@@ -54,7 +54,7 @@ namespace Moryx.Runtime.Kernel
         {
             var versionAttribute = module.GetType().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
 
-            Console.Write("Module: " + module.Name);
+            Console.Write("    " + module.Name.PadRight(30));
 
             var warningCount = module.Notifications.Count(n => n.Severity == Severity.Warning);
             var errorCount = module.Notifications.Count(n => n.Severity >= Severity.Error);
@@ -67,8 +67,9 @@ namespace Moryx.Runtime.Kernel
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(errorCount);
             Console.ResetColor();
-            Console.Write(")".PadRight(20));
+            Console.Write(")"); 
 
+            Console.CursorLeft = 50;
             CommandHelper.PrintState(module.State, false, 17);
             Console.WriteLine("Version: " + (versionAttribute == null ? "N/A" : versionAttribute.Version));
 
@@ -81,12 +82,13 @@ namespace Moryx.Runtime.Kernel
                 switch (printOption)
                 {
                     case "-e":
-                        var predicate = new Func<IModuleNotification, bool>(n => n.Severity >= Severity.Error || n.Severity == Severity.Warning);
-                        if (!module.Notifications.Any(predicate))
+                        var relevantNotifications = module.Notifications
+                            .Where(n => n.Severity >= Severity.Warning)
+                            .OrderBy(n => n.Timestamp).ToArray();
+                        if (!relevantNotifications.Any())
                             break;
-                        Console.WriteLine("Notifications for " + module.Name + ":");
 
-                        var relevantNotifications = module.Notifications.Where(predicate).OrderBy(n => n.Timestamp);
+                        Console.WriteLine("Notifications for " + module.Name + ":");
                         foreach (var notification in relevantNotifications)
                             PrintNotification(notification);
                         break;
@@ -105,7 +107,7 @@ namespace Moryx.Runtime.Kernel
         }
 
         /// <summary>
-        /// Prints a module notiication to the console
+        /// Prints a module notification to the console
         /// </summary>
         private static void PrintNotification(IModuleNotification notification)
         {

@@ -7,17 +7,17 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel
 {
-    internal abstract class ModuleManagerComponent : IModuleManagerComponent
+    internal abstract class ModuleManagerComponent
     {
+        /// <summary>
+        /// Delegate to get a copy of the module list
+        /// </summary>
+        public IReadOnlyList<IServerModule> AvailableModules { get; set; }
+
         /// <summary>
         /// Global dictionary of modules awaiting the start of other modules
         /// </summary>
         public IDictionary<IServerModule, ICollection<IServerModule>> WaitingModules { get; set; }
-
-        /// <summary>
-        /// Delegate to get a copy of the module list
-        /// </summary>
-        public Func<IEnumerable<IServerModule>> AllModules { get; set; }
 
         protected void AddWaitingService(IServerModule dependency, IServerModule dependend)
         {

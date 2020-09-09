@@ -5,8 +5,10 @@ namespace Moryx.Runtime.Modules
 {
     internal class ReadyState : ServerModuleStateBase
     {
+        public override ServerModuleState Classification => ServerModuleState.Ready;
+
         public ReadyState(IServerModuleStateContext context, StateMap stateMap) 
-            : base(context, stateMap, ServerModuleState.Ready)
+            : base(context, stateMap)
         {
         }
 

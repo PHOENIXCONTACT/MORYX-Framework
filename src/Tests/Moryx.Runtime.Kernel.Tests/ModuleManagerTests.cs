@@ -1,7 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Logging;
@@ -9,6 +11,7 @@ using Moryx.Runtime.Kernel.Tests.Dummys;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks;
 using Moryx.Runtime.Modules;
 using Moq;
+using Moryx.Tools;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.Kernel.Tests
@@ -30,6 +33,7 @@ namespace Moryx.Runtime.Kernel.Tests
 
             _mockLoggerManagement = new Mock<IServerLoggerManagement>();
             _mockLogger = new Mock<IModuleLogger>();
+            _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);
             _mockLoggerManagement.Setup(mock => mock.ActivateLogging(It.IsAny<ILoggingHost>()))
                 .Callback((ILoggingHost par) => par.Logger = _mockLogger.Object);
         }
@@ -133,6 +137,49 @@ namespace Moryx.Runtime.Kernel.Tests
 
             // Assert
             Assert.NotNull(depend.Dependency, "Facade not injected correctly");
+        }
+
+        [Test]
+        public void ShouldExcludeMissingFacadeAndItsDependends()
+        {
+            // Arrange
+            var moduleManager = CreateObjectUnderTest(new IServerModule[]
+            {
+                new ModuleB1(),
+                new ModuleCSingle(), 
+                new ModuleADependend(),
+                new ModuleADependendTransient()
+            });
+
+            // Act
+            moduleManager.Initialize();
+
+            // Assert
+            Assert.AreEqual(4, moduleManager.AllModules.Count());
+            var available = moduleManager.DependencyTree.RootModules
+                .Flatten(md => md.Dependends).ToList();
+            Assert.AreEqual(2, available.Count);
+        }
+
+        [Test]
+        public void ShouldExcludeWhenInCollection()
+        {
+            // Arrange
+            var moduleManager = CreateObjectUnderTest(new IServerModule[]
+            {
+                new ModuleB1(),
+                new ModuleBUsingA(),
+                new ModuleC()
+            });
+
+            // Act
+            moduleManager.Initialize();
+
+            // Assert
+            Assert.AreEqual(3, moduleManager.AllModules.Count());
+            var available = moduleManager.DependencyTree.RootModules
+                .Flatten(md => md.Dependends).ToList();
+            Assert.AreEqual(1, available.Count);
         }
 
         [Test]

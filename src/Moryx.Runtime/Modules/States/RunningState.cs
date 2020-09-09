@@ -7,7 +7,9 @@ namespace Moryx.Runtime.Modules
 {
     internal class RunningState : ServerModuleStateBase
     {
-        public RunningState(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap, ServerModuleState.Running)
+        public override ServerModuleState Classification => ServerModuleState.Running;
+
+        public RunningState(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap)
         {
         }
 
