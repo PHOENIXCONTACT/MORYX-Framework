@@ -24,7 +24,7 @@ namespace Moryx.Tests
 
             // Act
             var serverEntry = EntryConvert.EncodeObject(dummyClass, new DefaultSerialization { FormatProvider = new CultureInfo("en-us") });
-            
+
             var clientConverter = EntryToModelConverter.Create<EntryModelDummyClient>(new CultureInfo("en-us"));
             clientConverter.FromModel(serverEntry, dummyClassClient);
 

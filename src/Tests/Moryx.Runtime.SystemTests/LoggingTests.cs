@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace Moryx.Runtime.SystemTests
     [TestFixture]
     public class LoggingTests : IDisposable
     {
-        private const int WaitTime = 3000;
+        private const int WaitTime = 10000;
         private const int ServerSleepTime = 100;
         private const int ClientSleepTime = 100;
 
@@ -34,7 +35,7 @@ namespace Moryx.Runtime.SystemTests
         private readonly ManualResetEvent _logMessageReceived = new ManualResetEvent(false);
         private LogLevel _receivedLevel;
         private string _receivedMessage;
-        private LoggerModel[] _pluginLogger;
+        private LoggerModel[] _loggers;
         private LoggerModel _testModuleLogger;
 
         [OneTimeSetUp]
@@ -69,7 +70,7 @@ namespace Moryx.Runtime.SystemTests
 
             Console.WriteLine("Starting HeartOfGold");
 
-            bool started = _hogController.StartHeartOfGold();
+            bool started = _hogController.StartApplication();
             _hogController.CreateClients();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
@@ -78,9 +79,9 @@ namespace Moryx.Runtime.SystemTests
             bool result = _hogController.WaitForService("TestModule", ServerModuleState.Running, 10);
             Assert.IsTrue(result, "Service 'TestModule' did not reach state 'Running'");
 
-            _pluginLogger = _hogController.GetAllPluginLogger();
+            _loggers = _hogController.GetAllLoggers();
 
-            _testModuleLogger = _pluginLogger.FirstOrDefault(l => l.Name == "TestModule");
+            _testModuleLogger = _loggers.FirstOrDefault(l => l.Name == "TestModule");
             Assert.NotNull(_testModuleLogger, "Can't get logger configuration for TestModule");
         }
 
@@ -135,9 +136,9 @@ namespace Moryx.Runtime.SystemTests
 
             Thread.Sleep(ClientSleepTime);
 
-            _pluginLogger = _hogController.GetAllPluginLogger();
+            _loggers = _hogController.GetAllLoggers();
 
-            _testModuleLogger = _pluginLogger.FirstOrDefault(l => l.Name == "TestModule");
+            _testModuleLogger = _loggers.FirstOrDefault(l => l.Name == "TestModule");
             Assert.NotNull(_testModuleLogger, "Can't get logger configuration for TestModule");
             // ReSharper disable once PossibleNullReferenceException
             Assert.AreEqual(loggerLevel, _testModuleLogger.ActiveLevel, "Can't set logger configuration for TestModule");
@@ -181,6 +182,5 @@ namespace Moryx.Runtime.SystemTests
                 _logMessageReceived.Set();
             }
         }
-
     }
 }

@@ -105,7 +105,7 @@ namespace Moryx.Runtime.SystemTests
 
             Console.WriteLine("Starting HeartOfGold");
 
-            bool started = _hogController.StartHeartOfGold();
+            bool started = _hogController.StartApplication();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");
             Assert.IsFalse(_hogController.Process.HasExited, "HeartOfGold has exited unexpectedly.");

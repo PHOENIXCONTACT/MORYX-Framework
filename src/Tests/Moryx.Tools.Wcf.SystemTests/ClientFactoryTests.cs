@@ -76,10 +76,10 @@ namespace Moryx.Tools.Wcf.SystemTests
 
             Console.WriteLine("Starting HeartOfGold");
 
-            bool started = _hogController.StartHeartOfGold();
+            bool started = _hogController.StartApplication();
             _hogController.CreateClients();
 
-            Assert.IsTrue(started, "Can't start HeartOfGold.");
+            Assert.IsTrue(started, "Can't start application.");
             Assert.IsFalse(_hogController.Process.HasExited, "HeartOfGold has exited unexpectedly.");
 
             bool result = _hogController.WaitForService(ModuleController.ModuleName, ServerModuleState.Running, 10);

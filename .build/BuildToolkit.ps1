@@ -4,7 +4,6 @@ $OpenCoverVersion = "4.7.922";
 $DocFxVersion = "2.52.0";
 $CodecovVersion = "1.10.0";
 $ReportGeneratorVersion = "4.5.6";
-$GitLinkVersion = "3.1.0";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
@@ -31,9 +30,9 @@ $NugetPackageTarget = "https://www.myget.org/F/moryx/api/v2/package";
 
 # Define Tools
 $global:MSBuildCli = "msbuild.exe";
+$global:DotNetCli = "dotnet.exe";
 $global:NugetCli = "nuget.exe";
 $global:GitCli = "";
-$global:GitLink = "$BuildTools\GitLink.$GitLinkVersion\build\GitLink.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:CodecovCli = "$BuildTools\Codecov.$CodecovVersion\tools\codecov.exe";
@@ -83,6 +82,10 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         $env:MORYX_BUILD_VERBOSITY = "minimal"
     }
 
+    if (-not $env:MORYX_TEST_VERBOSITY) {
+        $env:MORYX_TEST_VERBOSITY = "normal"
+    }
+
     if (-not $env:MORYX_NUGET_VERBOSITY) {
         $env:MORYX_NUGET_VERBOSITY = "normal"
     }
@@ -116,15 +119,15 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
     Write-Variable "DocFxCli" $global:DocFxCli;
     Write-Variable "GitCli" $global:GitCli;
-    Write-Variable "GitLink" $global:GitLink;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
     Write-Variable "MORYX_BRANCH" $env:MORYX_BRANCH;
     Write-Variable "MORYX_VERSION" $env:MORYX_VERSION;
     Write-Variable "MORYX_ASSEMBLY_VERSION" $env:MORYX_ASSEMBLY_VERSION;
+    Write-Variable "MORYX_OPTIMIZE_CODE" $env:MORYX_OPTIMIZE_CODE;
     Write-Variable "MORYX_BUILDNUMBER" $env:MORYX_BUILDNUMBER;
     Write-Variable "MORYX_BUILD_CONFIG" $env:MORYX_BUILD_CONFIG;
     Write-Variable "MORYX_BUILD_VERBOSITY" $env:MORYX_BUILD_VERBOSITY;
-    Write-Variable "MORYX_OPTIMIZE_CODE" $env:MORYX_OPTIMIZE_CODE;
+    Write-Variable "MORYX_TEST_VERBOSITY" $env:MORYX_TEST_VERBOSITY;
     Write-Variable "MORYX_NUGET_VERBOSITY" $env:MORYX_NUGET_VERBOSITY;
 
     # Cleanp
@@ -244,52 +247,60 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     CreateFolderIfNotExists $OpenCoverReportsDir;
     CreateFolderIfNotExists $NunitReportsDir;
 
+    $includeFilter = "+[Moryx*]*";
+    $excludeFilter = "-[*nunit*]* -[*Tests]* -[*Model*]*";
+
+    if (Test-Path $FilterFile) {
+        $ignoreContent = Get-Content $FilterFile;
+
+        foreach ($line in $ignoreContent) {
+            $parts = $line.Split(":");
+            if ($parts.Count -lt 2) {
+                continue
+            }
+
+            $filterType = $parts[0];
+            $filterValue = $parts[1];
+
+            if ($filterType.StartsWith("INCLUDE")) {
+                $includeFilter += " $filterValue";
+            }
+            
+            if ($filterType.StartsWith("EXCLUDE")) {
+                $excludeFilter += " $filterValue";
+            }
+        }
+
+        Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
+    } 
+
     ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
         $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MORYX_BUILD_CONFIG, "$projectName.dll");
+        $isNetCore = Get-CsprojIsNetCore($testProject);
 
         Write-Host "OpenCover Test: ${projectName}:";
 
         $nunitXml = ($NunitReportsDir + "\$projectName.TestResult.xml");
         $openCoverXml = ($OpenCoverReportsDir + "\$projectName.OpenCover.xml");
 
-        # If assembly does not exists, the project will be build
-        if (-not (Test-Path $testAssembly)) {
-            Invoke-Build $testProject 
+        if ($isNetCore) {
+            $targetArgs = '"test -v ' + $env:MORYX_TEST_VERBOSITY + ' -c ' + $env:MORYX_BUILD_CONFIG + ' ' + $testProject + '"';
+            $openCoverAgs = "-target:$global:DotNetCli", "-targetargs:$targetArgs"
+        }
+        else {
+            # If assembly does not exists, the project will be build
+            if (-not (Test-Path $testAssembly)) {
+                Invoke-Build $testProject 
+            }
+
+            $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MORYX_BUILD_CONFIG /result:$nunitXml $testAssembly"
         }
 
-        $includeFilter = "+[Moryx*]*";
-        $excludeFilter = "-[*nunit*]* -[*Tests]* -[*Model*]*";
-
-        if (Test-Path $FilterFile) {
-            $ignoreContent = Get-Content $FilterFile;
-
-            foreach ($line in $ignoreContent) {
-                $parts = $line.Split(":");
-                if ($parts.Count -lt 2) {
-                    continue
-                }
-
-                $filterType = $parts[0];
-                $filterValue = $parts[1];
-
-                if ($filterType.StartsWith("INCLUDE")) {
-                    $includeFilter += " $filterValue";
-                }
-                
-                if ($filterType.StartsWith("EXCLUDE")) {
-                    $excludeFilter += " $filterValue";
-                }
-            }
-        } 
-
-        Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
-
-        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MORYX_BUILD_CONFIG /result:$nunitXml $testAssembly"
-        $openCoverAgs += "-log:Debug", "-register:administrator", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
+        $openCoverAgs += "-log:Debug", "-register:user", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops";
         $openCoverAgs += "-returntargetcode" # We need the nunit return code
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
-        
+
         & $global:OpenCoverCli $openCoverAgs
         
         $exitCode = [int]::Parse($LastExitCode);
@@ -313,6 +324,20 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
 
         Invoke-ExitCodeCheck $LastExitCode;
     }
+}
+
+function Get-CsprojIsNetCore($csprojFile) {
+    [xml]$csprojContent = Get-Content $csprojFile.FullName
+    $sdkProject = $csprojContent.Project.Sdk;
+    if ($null -ne $sdkProject) {
+        # Read Target Framework
+        $targetFramework = $csprojContent.Project.PropertyGroup.TargetFramework;
+        if ($targetFramework -Match "netcoreapp") {
+            # NETCore
+            return $true;
+        }
+    }
+    return $false;
 }
 
 function Invoke-CoverReport {
@@ -373,48 +398,6 @@ function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "
 
     CreateFolderIfNotExists $DocumentationArtifcacts;
     CopyAndReplaceFolder $docFxDest "$DocumentationArtifcacts\DocFx";
-}
-
-function Invoke-SourceIndex([string]$RawUrl, [string]$SearchPath = [System.IO.Path]::Combine($PSScriptRoot, "..\")) {
-    Write-Step "Indexing SourceCode and patching PDBs to $RawUrl"
-
-    if (-not (Test-Path $global:GitLink)) {
-        Install-Tool "GitLink" $GitLinkVersion $global:GitLink;
-    }
-
-    $sourceLink = "$RawUrl/{revision}/{filename}";
-
-    Write-Host "SearchPath for Projects: $SearchPath";
-    $csprojs = Get-Childitem $SearchPath -recurse | Where-Object {$_.extension -eq ".csproj"}
-
-    foreach ($csporj in $csprojs) {
-        Write-Host;
-        Write-Host "Reading csproj: $($csporj.Name)"; 
-
-        $csprojXml = [xml](Get-Content $csporj.FullName);
-
-        $outputGroup = $csprojXml.Project.PropertyGroup | Where-Object Condition -Like "*$env:MORYX_BUILD_CONFIG|AnyCPU*";
-        $outputPath = $outputGroup.OutputPath;
-
-        $assemblyGroup = $csprojXml.Project.PropertyGroup | Where-Object {-not ([string]::IsNullOrEmpty($_.AssemblyName)) }
-        $assemblyName = $assemblyGroup.AssemblyName;
-
-        $pdbFileName = $($assemblyName + ".pdb");
-        $projectPdbPath = [System.IO.Path]::Combine($outputPath, $pdbFileName);
-        $pdbPath = [System.IO.Path]::Combine($csporj.DirectoryName, $projectPdbPath);
-
-        Write-Host "PDB path of assembly for $($csporj.Name) is: $projectPdbPath"
-
-        if (-not (Test-Path $pdbPath)) {
-            Write-Host "PDB was not found. Project will be ignored!"
-            continue;
-        }
-
-        $args = "-u", "$sourceLink";
-        $args += $pdbPath
-
-        & $global:GitLink $args
-    }
 }
 
 function Invoke-Pack($FilePath, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {

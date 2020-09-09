@@ -29,7 +29,7 @@ namespace Moryx.Runtime.SystemTests
 
             Console.WriteLine("Starting HeartOfGold");
 
-            bool started = _hogController.StartHeartOfGold();
+            bool started = _hogController.StartApplication();
             _hogController.CreateClients();
 
             Assert.IsTrue(started, "Can't start HeartOfGold.");

@@ -185,9 +185,9 @@ namespace Moryx.TestTools.SystemTest
         /// Starts the HeartOfGold executable.
         /// </summary>
         /// <returns><c>true</c> if start succeeds, <c>false</c> if not</returns>
-        public bool StartHeartOfGold()
+        public bool StartApplication()
         {
-            return StartHeartOfGold(ApplicationExeName);
+            return StartApplication(ApplicationExeName);
         }
 
         /// <summary>
@@ -196,25 +196,25 @@ namespace Moryx.TestTools.SystemTest
         /// <param name="exeName">Name of the executable.</param>
         /// <returns><c>true</c> if start succeeds, <c>false</c> if not</returns>
         /// <exception cref="System.InvalidOperationException">
-        /// Can't start HeartOfGold without RuntimeDir.
+        /// Can't start application without RuntimeDir.
         /// or
-        /// Can't start HeartOfGold without ConfigDir.
+        /// Can't start application without ConfigDir.
         /// or
         /// HeartOfGold is already running.
         /// </exception>
-        private bool StartHeartOfGold(string exeName)
+        private bool StartApplication(string exeName)
         {
             // check the runtime directory
             if (RuntimeDir == null)
-                throw new InvalidOperationException("Can't start HeartOfGold without RuntimeDir.");
+                throw new InvalidOperationException($"Can't start {ApplicationExeName} without RuntimeDir.");
 
             // check the config directory
             if (ConfigDir == null)
-                throw new InvalidOperationException("Can't start HeartOfGold without ConfigDir.");
+                throw new InvalidOperationException($"Can't start {ApplicationExeName} without ConfigDir.");
 
             // check that the process is not already running
             if (Process != null && !Process.HasExited)
-                throw new InvalidOperationException("HeartOfGold is already running.");
+                throw new InvalidOperationException($"{ApplicationExeName} is already running.");
 
             var wcfConfig = Path.Combine(RuntimeDir, ConfigDir, "Moryx.Tools.Wcf.WcfConfig" + ConfigConstants.FileExtension);
             if (File.Exists(wcfConfig))
@@ -493,7 +493,7 @@ namespace Moryx.TestTools.SystemTest
         /// Get all ModuleLogger from the HoG.
         /// </summary>
         /// <returns>Array of all PluginLogger which could be fetched.</returns>
-        public LoggerModel[] GetAllPluginLogger()
+        public LoggerModel[] GetAllLoggers()
         {
             return WaitForServiceCall(() => _loggingClient.GetAllLoggers());
         }
