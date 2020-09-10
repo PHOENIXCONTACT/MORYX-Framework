@@ -7,6 +7,7 @@ using Moryx.Products.Management.Importers;
 using Moryx.Products.Management.Modification;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
+using Moryx.Runtime.Wcf;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.Products.Management
@@ -28,6 +29,11 @@ namespace Moryx.Products.Management
         /// </summary>
         public IDbContextManager DbContextManager { get; set; }
 
+        /// <summary>
+        /// Host factory to create wcf hosts
+        /// </summary>
+        public IWcfHostFactory WcfHostFactory { get; set; }
+
         private IConfiguredServiceHost _host;
 
         #region State transition
@@ -37,7 +43,11 @@ namespace Moryx.Products.Management
         /// </summary>
         protected override void OnInitialize()
         {
+            // Extend container
+            Container.RegisterWcf(WcfHostFactory);
             Container.ActivateDbContexts(DbContextManager);
+
+            // Register imports
             Container.SetInstance(ConfigManager);
 
             // Load all product plugins

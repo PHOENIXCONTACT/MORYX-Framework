@@ -10,6 +10,7 @@ using Moryx.Resources.Model;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
+using Moryx.Runtime.Wcf;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.Resources.Management
@@ -37,6 +38,11 @@ namespace Moryx.Resources.Management
         /// <summary>Injected property</summary>
         public IWcfClientFactory WcfClientFactory { get; set; }
 
+        /// <summary>
+        /// Host factory to create wcf hosts
+        /// </summary>
+        public IWcfHostFactory WcfHostFactory { get; set; }
+
         /// <summary>Injected property</summary>
         public IRuntimeConfigManager ConfManager { get; set; }
 
@@ -47,9 +53,12 @@ namespace Moryx.Resources.Management
         /// </summary>
         protected override void OnInitialize()
         {
-            // Register imports
+            // Extend container
             Container.RegisterNotifications();
+            Container.RegisterWcf(WcfHostFactory);
             Container.ActivateDbContexts(DbContextManager);
+
+            // Register imports
             Container.SetInstance(WcfClientFactory).SetInstance(ConfManager);
 
             // Register for communication
