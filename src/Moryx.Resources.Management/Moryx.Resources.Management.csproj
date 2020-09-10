@@ -37,6 +37,15 @@
     <DocumentationFile>bin\Release\Moryx.Resources.Management.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Core.4.4.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.WcfIntegrationFacility.5.0.1\lib\net45\Castle.Facilities.WcfIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -49,20 +58,26 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Moryx, Version=3.0.0.80, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moryx.3.0.0-dev.80\lib\netstandard2.0\Moryx.dll</HintPath>
+    <Reference Include="Moryx, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.3.0.0-dev.105\lib\netstandard2.0\Moryx.dll</HintPath>
     </Reference>
-    <Reference Include="Moryx.Model, Version=3.0.0.80, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moryx.Model.3.0.0-dev.80\lib\net461\Moryx.Model.dll</HintPath>
+    <Reference Include="Moryx.Container, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Container.3.0.0-dev.105\lib\netstandard2.0\Moryx.Container.dll</HintPath>
     </Reference>
-    <Reference Include="Moryx.Model.PostgreSQL, Version=3.0.0.80, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moryx.Model.PostgreSQL.3.0.0-dev.80\lib\net461\Moryx.Model.PostgreSQL.dll</HintPath>
+    <Reference Include="Moryx.Model, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Model.3.0.0-dev.105\lib\net461\Moryx.Model.dll</HintPath>
     </Reference>
-    <Reference Include="Moryx.Runtime, Version=3.0.0.80, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moryx.Runtime.3.0.0-dev.80\lib\netstandard2.0\Moryx.Runtime.dll</HintPath>
+    <Reference Include="Moryx.Model.PostgreSQL, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Model.PostgreSQL.3.0.0-dev.105\lib\net461\Moryx.Model.PostgreSQL.dll</HintPath>
     </Reference>
-    <Reference Include="Moryx.Tools.Wcf, Version=3.0.0.80, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moryx.Tools.Wcf.3.0.0-dev.80\lib\net461\Moryx.Tools.Wcf.dll</HintPath>
+    <Reference Include="Moryx.Runtime, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Runtime.3.0.0-dev.105\lib\netstandard2.0\Moryx.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Runtime.Wcf, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Runtime.Wcf.3.0.0-dev.105\lib\net461\Moryx.Runtime.Wcf.dll</HintPath>
+    </Reference>
+    <Reference Include="Moryx.Tools.Wcf, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moryx.Tools.Wcf.3.0.0-dev.105\lib\net461\Moryx.Tools.Wcf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -78,8 +93,11 @@
       <HintPath>..\..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -89,8 +107,12 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Discovery" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Text.Encodings.Web, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.Encodings.Web.4.7.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -104,6 +126,7 @@
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
