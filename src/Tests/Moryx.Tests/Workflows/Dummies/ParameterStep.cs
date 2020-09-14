@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using Moryx.Serialization;
 using Moryx.Workflows;
 using Moryx.Workflows.Transitions;
 using Moryx.Workflows.WorkplanSteps;
@@ -13,7 +14,7 @@ namespace Moryx.Tests.Workflows
         ///
         public override string Name => "ParameterStep";
 
-        [EditorBrowsable]
+        [EntrySerialize]
         public DummyParameters Parameters { get; set; }
 
         ///
@@ -59,10 +60,10 @@ namespace Moryx.Tests.Workflows
 
     internal class DummyParameters
     {
-        [EditorBrowsable]
+        [EntrySerialize]
         public int Number { get; set; }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         public string Name { get; set; }
     }
 }

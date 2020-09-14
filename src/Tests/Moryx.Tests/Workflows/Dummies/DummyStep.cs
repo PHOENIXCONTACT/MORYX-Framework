@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using Moryx.Serialization;
 using Moryx.Workflows;
 using Moryx.Workflows.Transitions;
 using Moryx.Workflows.WorkplanSteps;
@@ -36,7 +37,7 @@ namespace Moryx.Tests.Workflows
         ///
         public override string Name => _name;
 
-        [EditorBrowsable]
+        [EntrySerialize]
         public int Number { get; set; }
 
         ///

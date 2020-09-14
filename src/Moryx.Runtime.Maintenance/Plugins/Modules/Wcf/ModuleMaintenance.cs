@@ -200,7 +200,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
 
             if (serverModule?.Console != null)
             {
-                methods = EntryConvert.EncodeMethods(serverModule.Console, CreateEditorBrowsableSerialization(serverModule)).ToArray();
+                methods = EntryConvert.EncodeMethods(serverModule.Console, CreateEditorSerializeSerialization(serverModule)).ToArray();
             }
 
             return methods;
@@ -216,7 +216,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
                 try
                 {
                     result = EntryConvert.InvokeMethod(serverModule.Console, method,
-                        CreateEditorBrowsableSerialization(serverModule));
+                        CreateEditorSerializeSerialization(serverModule));
                 }
                 catch (Exception e)
                 {
@@ -254,10 +254,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// <summary>
         /// Create serialization for this module
         /// </summary>
-        private ICustomSerialization CreateEditorBrowsableSerialization(IModule module)
+        private ICustomSerialization CreateEditorSerializeSerialization(IModule module)
         {
             var host = (IContainerHost)module;
-            return new AdvancedEditorBrowsableSerialization(host.Container, ConfigManager)
+            return new AdvancedEntrySerializeSerialization(host.Container, ConfigManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };

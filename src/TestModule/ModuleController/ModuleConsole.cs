@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel;
 using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 using IContainer = Moryx.Container.IContainer;
 
 namespace Moryx.TestModule
@@ -65,31 +66,31 @@ namespace Moryx.TestModule
             outputStream("The TestModule does not provide any commands!");
         }
 
-        [EditorBrowsable, Description("Returns the string that was sent.")]
+        [EntrySerialize, Description("Returns the string that was sent.")]
         public string Echo(string message)
         {
             return $"Echo: {message}";
         }
 
-        [EditorBrowsable, Description("Some short information about the server.")]
+        [EntrySerialize, Description("Some short information about the server.")]
         public ShortServerInfo ServerInfo()
         {
             return new ShortServerInfo().Fill();
         }
 
-        [EditorBrowsable, Description("Echos short information about the server.")]
+        [EntrySerialize, Description("Echos short information about the server.")]
         public ShortServerInfo EchoServerInfo(ShortServerInfo shortServerInfo)
         {
             return shortServerInfo;
         }
 
-        [EditorBrowsable, Description("Returns the current module config.")]
+        [EntrySerialize, Description("Returns the current module config.")]
         public ModuleConfig CurrentModuleConfig()
         {
             return Container.Resolve<ModuleConfig>();
         }
 
-        [EditorBrowsable, Description("Echos a module config.")]
+        [EntrySerialize, Description("Echos a module config.")]
         public ModuleConfig EchoModuleConfig(ModuleConfig moduleConfig)
         {
             return moduleConfig;

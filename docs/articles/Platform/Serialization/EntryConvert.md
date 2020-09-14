@@ -177,16 +177,32 @@ dto.Properties[0].Value.Current = "Michael";
 EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
 ````
 
-## Serialize Methods
+## EntrySerialize Attribute
+
+The [EntrySerializeAttribute](xref:Moryx.Serialization.EntrySerializeAttribute) will be handled by the [EntrySerializeSerialization](xref:Moryx.Serialization.EntrySerializeSerialization) which is a custom implementation of the [ICustomSerialization](xref:Moryx.Serialization.ICustomSerialization). This serialization evaluates the attribute with some defined rules depending on the serialized type:
+
+### Serialize Properties
+
+Properties are serialized by the following rulues by default:
+
+| Class | Properties | Result |
+|-------|------------|--------|
+| Always | not relevant | All except "Never" |
+| Never | not relevant | Only "Always" |
+| Not defined | No "Always", No "Never" | All |
+| Not defined | Some "Always", No/Some "Never" | Only "Always" |
+| Not defined | No "Always", Some "Never" | All except "Never" |
+
+### Serialize Methods
 
 In the other sections you have learned that `EntryConvert` is able to serialize and deserialize objects. With the `GetMethods` and `InvokeMethod` features of `EntryConvert` you are able to build your own `RPC (Remote Procedure Call)` service.
 
-To enable the `RPC` features of `EntryConvert` you need to use the [EditorBrowsableSerialization](xref:Moryx.Serialization.EditorBrowsableSerialization) serializer on `EntryConvert`. Then you add the [EditorBrowsableAttribute](xref:Moryx.Serialization.EditorBrowsableAttribute) to all private/public methods or properties you want to expose.
+To enable the `RPC` features of `EntryConvert` you need to use the [EntrySerializeSerialization](xref:Moryx.Serialization.EntrySerializeSerialization) serializer on `EntryConvert`. Then you add the [EntrySerializeAttribute](xref:Moryx.Serialization.EntrySerializeAttribute) to all private/public methods or properties you want to expose. The serialization only serializes methods with the attribute defined.
 
 ````cs
 public class MyLittleRPC
 {
-    [EditorBrowsable, Description("Does soemthing parameterized")]
+    [EntrySerialize, Description("Does soemthing parameterized")]
     public bool DoSomething(MyParams parameters)
     {
         return true;
@@ -199,23 +215,21 @@ The serialization will be done by the method ``
 ````cs
 public MethodEntry[] GetMethods(string moduleName)
 {
-    return EntryConvert.EncodeMethods(MyLittleRPC, CreateSerialization()).ToArray();
-}
-
-private ICustomSerialization CreateSerialization()
-{
-    return new AdvancedEditorBrowsableSerialization(Container, ConfigManager);
+    return EntryConvert.EncodeMethods(MyLittleRPC, new EntrySerializeSerialization()).ToArray();
 }
 ````
 
-## Invoke Methods
+**Invoke Methods**
 
 The following code allows you to expose and invoke you `RPC` methods or properties.
 
 ````cs
 public Entry InvokeMethod(MethodEntry method)
 {
-    var result = EntryConvert.InvokeMethod(MyLittleRPC, method, CreateSerialization());
-    return result;
+    return EntryConvert.InvokeMethod(MyLittleRPC, method, new EntrySerializeSerialization());
 }
 ````
+
+### Serialize Constructors
+
+In the previous sections, it was described that `EntryConvert` can also serialize constructors. The [EntrySerializeSerialization](xref:Moryx.Serialization.EntrySerializeSerialization) only serializes constructos like methods with the [EntrySerializeAttribute](xref:Moryx.Serialization.EntrySerializeAttribute) defined.
