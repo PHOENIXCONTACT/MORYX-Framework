@@ -13,16 +13,16 @@ namespace Moryx.Serialization
     public class EntryValidation : ICloneable
     {
         /// <summary>
-        /// Minimal lenght of strings or other types
+        /// Minimum value or minimal length of strings
         /// </summary>
         [DataMember]
-        public int MinLenght { get; set; }
+        public double Minimum { get; set; }
 
         /// <summary>
-        /// Maximal lenght of strings or other types
+        /// Maximum value or maximal length of strings
         /// </summary>
         [DataMember]
-        public int MaxLenght { get; set; }
+        public double Maximum { get; set; }
 
         /// <summary>
         /// Regex pattern for this entry
@@ -50,8 +50,8 @@ namespace Moryx.Serialization
             // All value types can be simply copied
             var copy = new EntryValidation
             {
-                MinLenght = MinLenght, 
-                MaxLenght = MaxLenght, 
+                Minimum = Minimum, 
+                Maximum = Maximum, 
                 Regex = Regex, 
                 IsRequired = IsRequired
             };

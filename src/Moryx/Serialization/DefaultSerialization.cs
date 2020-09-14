@@ -93,17 +93,25 @@ namespace Moryx.Serialization
             // Iterate over attributes reading all validation rules
             foreach (var attribute in validationAttributes)
             {
-                if (attribute is MinLengthAttribute)
-                    validation.MinLenght = ((MinLengthAttribute)attribute).Length;
-                else if (attribute is MaxLengthAttribute)
-                    validation.MaxLenght = ((MaxLengthAttribute)attribute).Length;
-                else if (attribute is RegularExpressionAttribute)
-                    validation.Regex = ((RegularExpressionAttribute)attribute).Pattern;
-                else if (attribute is StringLengthAttribute)
+                if (attribute is MinLengthAttribute minAttribute)
                 {
-                    var strLength = (StringLengthAttribute)attribute;
-                    validation.MinLenght = strLength.MinimumLength;
-                    validation.MaxLenght = strLength.MaximumLength;
+                    validation.Minimum = minAttribute.Length;
+                }
+                else if (attribute is MaxLengthAttribute maxAttribute)
+                {
+                    validation.Maximum = maxAttribute.Length;
+                }
+                else if (attribute is RangeAttribute rangeAttribute)
+                {
+                    validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum);
+                    validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum);
+                }
+                else if (attribute is RegularExpressionAttribute regexAttribute)
+                    validation.Regex = regexAttribute.Pattern;
+                else if (attribute is StringLengthAttribute strLength)
+                {
+                    validation.Minimum = strLength.MinimumLength;
+                    validation.Maximum = strLength.MaximumLength;
                 }
                 else if (attribute is RequiredAttribute)
                     validation.IsRequired = true;
