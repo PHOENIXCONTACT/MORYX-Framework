@@ -7,6 +7,14 @@
         {
             "type": "PowerShell",
             "request": "launch",
+            "name": "Initialize",
+            "script": "${workspaceRoot}\\Build.ps1",
+            "args": [""],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
             "name": "Build",
             "script": "${workspaceRoot}\\Build.ps1",
             "args": ["-Build"],
