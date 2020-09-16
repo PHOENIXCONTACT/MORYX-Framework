@@ -1,4 +1,3 @@
-
 <p align="center">
     <img src="docs/resources/MORYX_logo.svg" alt="MORYX Logo" width="300px" />
 </p>
@@ -10,6 +9,7 @@
     <a href="https://www.myget.org/feed/Packages/moryx">
         <img src="https://img.shields.io/myget/moryx/v/Moryx" alt="MyGet">
     </a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2FPHOENIXCONTACT%2FMORYX-Platform?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FPHOENIXCONTACT%2FMORYX-Platform.svg?type=shield"/></a>
     <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/blob/dev/LICENSE">
         <img src="https://img.shields.io/github/license/PHOENIXCONTACT/MORYX-Platform" alt="License">
     </a>
@@ -26,6 +26,9 @@
         <img src="https://img.shields.io/github/contributors-anon/PHOENIXCONTACT/MORYX-Platform" alt="GitHub contributors">
     </a>
 </p>
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FPHOENIXCONTACT%2FMORYX-Platform.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FPHOENIXCONTACT%2FMORYX-Platform?ref=badge_large)
 
 # MORYX Platform
 
