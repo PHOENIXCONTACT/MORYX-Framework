@@ -312,7 +312,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
             $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MORYX_BUILD_CONFIG /result:$nunitXml $testAssembly"
         }
 
-        $openCoverAgs += "-log:Debug", "-register:user", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops";
+        $openCoverAgs += "-log:Debug", "-register:administrator", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops";
         $openCoverAgs += "-returntargetcode" # We need the nunit return code
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
 
@@ -336,8 +336,6 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
             Write-Host "Nunit exited with $errorText for $projectName";
             Invoke-ExitCodeCheck $exitCode;
         }
-
-        Invoke-ExitCodeCheck $LastExitCode;
     }
 }
 
