@@ -1,9 +1,8 @@
 # Tool Versions
 $NunitVersion = "3.11.1";
 $OpenCoverVersion = "4.7.922";
-$DocFxVersion = "2.52.0";
-$CodecovVersion = "1.10.0";
-$ReportGeneratorVersion = "4.5.6";
+$DocFxVersion = "2.56.2";
+$ReportGeneratorVersion = "4.6.7";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
@@ -23,7 +22,6 @@ $OpenCoverReportsDir = "$ArtifactsDir\Tests"
 # Nuget
 $NugetConfig = "$RootPath\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
-$NugetPackageTarget = "https://www.myget.org/F/moryx/api/v2/package";
 
 # Load partial scripts
 . "$PSScriptRoot\Output.ps1";
@@ -35,9 +33,14 @@ $global:NugetCli = "nuget.exe";
 $global:GitCli = "";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
-$global:CodecovCli = "$BuildTools\Codecov.$CodecovVersion\tools\codecov.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\net47\ReportGenerator.exe";
 $global:DocFxCli = "$BuildTools\docfx.console.$DocFxVersion\tools\docfx.exe";
+
+# Global Variables
+$global:AssemblyVersion = "";
+$global:AssemblyFileVersion = "";
+$global:AssemblyInformationalVersion = ""
+$global:PackageVersion = "";
 
 # Git
 $global:GitCommitHash = "";
@@ -56,13 +59,13 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     $gitCommand = (Get-Command "git.exe" -ErrorAction SilentlyContinue);
     if ($null -eq $gitCommand)  { 
         Write-Host "Unable to find git.exe in your PATH. Download from https://git-scm.com";
-        Invoke-ExitCodeCheck 1;
+        exit 1;
     }
 
     $global:GitCli = $gitCommand.Path;
 
     # Load Hash
-    $global:GitCommitHash = (& $global:GitCli rev-parse --short HEAD);
+    $global:GitCommitHash = (& $global:GitCli rev-parse HEAD);
     Invoke-ExitCodeCheck $LastExitCode;
 
     # Initialize Folders
@@ -99,36 +102,48 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         }
     }
 
-    if (-not $env:MORYX_BRANCH) {
-        $env:MORYX_BRANCH = "unknown";
+    if (-not $env:MORYX_GIT_REF) {
+        $env:MORYX_GIT_REF = "unknown";
     }
+
+    if (-not $env:MORYX_PACKAGE_TARGET) {
+        $env:MORYX_PACKAGE_TARGET = "";
+    }
+
+    $global:AssemblyVersion = $Version;
+    $global:AssemblyFileVersion = $Version;
+    $global:AssemblyInformationalVersion = $Version;
+    $global:PackageVersion = $Version;
 
     Set-Version $Version;
 
     # Printing Variables
     Write-Step "Printing global variables"
     Write-Variable "RootPath" $RootPath;
-    Write-Variable "Version" $Version;
     Write-Variable "DocumentationDir" $DocumentationDir;
     Write-Variable "NunitReportsDir" $NunitReportsDir;
 
     Write-Step "Printing global scope"
+    Write-Variable "AssemblyVersion" $global:AssemblyVersion;
+    Write-Variable "AssemblyFileVersion" $global:AssemblyFileVersion;
+    Write-Variable "AssemblyInformationalVersion" $global:AssemblyInformationalVersion;
+    Write-Variable "PackageVersion" $global:PackageVersion;
     Write-Variable "OpenCoverCli" $global:OpenCoverCli;
     Write-Variable "NUnitCli" $global:NUnitCli;
-    Write-Variable "CodecovCli" $global:OpenCoverCli;
     Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
     Write-Variable "DocFxCli" $global:DocFxCli;
     Write-Variable "GitCli" $global:GitCli;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
-    Write-Variable "MORYX_BRANCH" $env:MORYX_BRANCH;
-    Write-Variable "MORYX_VERSION" $env:MORYX_VERSION;
-    Write-Variable "MORYX_ASSEMBLY_VERSION" $env:MORYX_ASSEMBLY_VERSION;
+
+    Write-Step "Printing environment variables"
+    Write-Variable "MORYX_GIT_REF" $env:MORYX_GIT_REF;
     Write-Variable "MORYX_OPTIMIZE_CODE" $env:MORYX_OPTIMIZE_CODE;
     Write-Variable "MORYX_BUILDNUMBER" $env:MORYX_BUILDNUMBER;
     Write-Variable "MORYX_BUILD_CONFIG" $env:MORYX_BUILD_CONFIG;
     Write-Variable "MORYX_BUILD_VERBOSITY" $env:MORYX_BUILD_VERBOSITY;
     Write-Variable "MORYX_TEST_VERBOSITY" $env:MORYX_TEST_VERBOSITY;
     Write-Variable "MORYX_NUGET_VERBOSITY" $env:MORYX_NUGET_VERBOSITY;
+    Write-Variable "MORYX_PACKAGE_TARGET" $env:MORYX_PACKAGE_TARGET;
 
     # Cleanp
     if ($Cleanup) {
@@ -361,22 +376,6 @@ function Invoke-CoverReport {
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-CodecovUpload {
-    Write-Step "Uploading cover reports to codecov. Searching for OpenCover.xml files in $OpenCoverReportsDir."
-
-    if (-not (Test-Path $global:CodecovCli)) {
-        Install-Tool "Codecov" $CodecovVersion $global:CodecovCli;
-    }
-
-    $covargs = "-f", "$OpenCoverReportsDir\*.OpenCover.xml";
-    if ($env:MORYX_CODECOV_SECRET) {
-        $covargs += "-t", "$env:MORYX_CODECOV_SECRET";
-    }
-
-    & $global:CodecovCli @covargs;
-    #Invoke-ExitCodeCheck $LastExitCode;
-}
-
 function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "docfx.json")) {
     Write-Step "Generating documentation using DocFx"
 
@@ -405,7 +404,7 @@ function Invoke-Pack($FilePath, [bool]$IsTool = $False, [bool]$IncludeSymbols = 
 
     $packargs = "-outputdirectory", "$NugetPackageArtifacts";
     $packargs += "-includereferencedprojects";
-    $packargs += "-Version", "$env:MORYX_VERSION";
+    $packargs += "-Version", "$global:PackageVersion";
     $packargs += "-Prop", "Configuration=$env:MORYX_BUILD_CONFIG";
     $packargs += "-Verbosity", "$env:MORYX_NUGET_VERBOSITY";
 
@@ -440,26 +439,69 @@ function Invoke-PackAll([switch]$Symbols = $False) {
 }
 
 function Invoke-Publish {
-    Write-Host "Pushing packages from $NugetPackageArtifacts to $NugetPackageTarget"
+    Write-Host "Pushing packages from $NugetPackageArtifacts to $env:MORYX_PACKAGE_TARGET"
+    
+    if ([string]::IsNullOrEmpty($env:MORYX_PACKAGE_TARGET)) {
+        Write-Host "There is no package target given. Set the environment varialble MORYX_PACKAGE_TARGET to publish packages.";
+        Invoke-ExitCodeCheck 1;
+    }
+
     $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
-        & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity $env:MORYX_NUGET_VERBOSITY
+        & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET -Verbosity $env:MORYX_NUGET_VERBOSITY
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }
 
 function Set-Version ([string]$MajorMinorPatch) {
     Write-Host "Setting environment version to $MajorMinorPatch";
-    $version = $MajorMinorPatch;
 
-    $branch = $env:MORYX_BRANCH
-    $branch = $branch.Replace("/","").ToLower()
-    
-    $version = "$version-$branch.$env:MORYX_BUILDNUMBER";
+    $semVer2Regex = "^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$";
 
-    $env:MORYX_VERSION = $version;
-    $env:MORYX_ASSEMBLY_VERSION = $MajorMinorPatch + "." + $env:MORYX_BUILDNUMBER;
+    $ref = $env:MORYX_GIT_REF;
+    if ($ref -like "refs/tags/v*") {
+        # Its a version tag
+        $version = $ref.Replace("refs/tags/v","")
+    }
+
+    if ($ref -like "refs/heads/*") {
+        # Its a branch
+        $refName = $ref.Replace("refs/heads/","");
+        $refName = $refName.Replace("/","").ToLower();
+
+        $version = "$MajorMinorPatch-$refName.$env:MORYX_BUILDNUMBER";
+    }
+
+    # Match semVer2 regex
+    $regexMatch = [regex]::Match($version, $semVer2Regex);
+
+    if (-not $regexMatch.Success) {
+        Write-Host "Could not parse version: $ref";
+        Invoke-ExitCodeCheck 1;
+    }
+
+    # Extract groups
+    $matchgroups = $regexMatch.captures.groups;
+    $majorGroup = $matchgroups[1];
+    $minorGroup = $matchgroups[2];
+    $patchGroup = $matchgroups[3];
+    $preReleaseGroup = $matchgroups[4];
+
+    # Compose Major.Minor.Patch
+    $mmp = $majorGroup.Value + "." + $minorGroup.Value + "." + $patchGroup.Value;
+
+    # Check if it is a pre release
+    $global:AssemblyVersion = $majorGroup.Value + ".0.0.0" # 3.0.0.0
+    $global:AssemblyFileVersion = $mmp + "." + $env:MORYX_BUILDNUMBER; # 3.1.2.42
+
+    if ($preReleaseGroup.Success) {
+        $global:AssemblyInformationalVersion = $mmp + "-" + $preReleaseGroup.Value + "+" + $global:GitCommitHash; # 3.1.2-beta.1+d95a996ed5ba14a1421dafeb844a56ab08211ead
+        $global:PackageVersion = $mmp + "-" + $preReleaseGroup.Value;
+    } else {
+        $global:AssemblyInformationalVersion = $mmp + "+" + $global:GitCommitHash; # 3.1.2+d95a996ed5ba14a1421dafeb844a56ab08211ead
+        $global:PackageVersion = $mmp;
+    }
 }
 
 function Set-AssemblyVersion([string]$InputFile) {
@@ -470,16 +512,16 @@ function Set-AssemblyVersion([string]$InputFile) {
         exit 1;
     }
 
-    Write-Host "Applying assembly info of $($file.FullName) -> $env:MORYX_ASSEMBLY_VERSION ";
+    Write-Host "Applying assembly info of $($file.FullName) -> $global:AssemblyVersion ";
    
     $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyVersion = 'AssemblyVersion("' + $env:MORYX_ASSEMBLY_VERSION + '")';
+    $assemblyVersion = 'AssemblyVersion("' + $global:AssemblyVersion + '")';
 
     $assemblyFileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyFileVersion = 'AssemblyFileVersion("' + $env:MORYX_ASSEMBLY_VERSION + '")';
+    $assemblyFileVersion = 'AssemblyFileVersion("' + $global:AssemblyFileVersion + '")';
 
     $assemblyInformationalVersionPattern = 'AssemblyInformationalVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $env:MORYX_VERSION + '")';
+    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $global:AssemblyInformationalVersion + '")';
 
     $assemblyConfigurationPattern = 'AssemblyConfiguration\("\w+"\)';
     $assemblyConfiguration = 'AssemblyConfiguration("' + $env:MORYX_BUILD_CONFIG + '")';
@@ -495,7 +537,7 @@ function Set-AssemblyVersion([string]$InputFile) {
 }
 
 function Set-AssemblyVersions([string[]]$Ignored = $(), [string]$SearchPath = $RootPath) {
-    $Ignored = $Ignored + "\\.build\\" + "\\.buildtools\\" + "\\Tests\\" + "\\IntegrationTests\\" + "\\SystemTests\\";
+    $Ignored = $Ignored + "\\.build\\" + "\\Tests\\" + "\\IntegrationTests\\" + "\\SystemTests\\";
 
     $assemblyInfos = Get-ChildItem -Path $RootPath -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
         $fullName = $_.FullName;
@@ -519,10 +561,10 @@ function Set-VsixManifestVersion([string]$VsixManifest) {
     }
     
     [xml]$manifestContent = Get-Content $file
-    $manifestContent.PackageManifest.Metadata.Identity.Version = $env:MORYX_ASSEMBLY_VERSION
+    $manifestContent.PackageManifest.Metadata.Identity.Version = $global:AssemblyVersion
     $manifestContent.Save($VsixManifest) 
 
-    Write-Host "Version $env:MORYX_ASSEMBLY_VERSION applied to $VsixManifest!"
+    Write-Host "Version $global:AssemblyVersion applied to $VsixManifest!"
 }
 
 function Set-VsTemplateVersion([string]$VsTemplate) {
@@ -536,11 +578,11 @@ function Set-VsTemplateVersion([string]$VsTemplate) {
 
     $versionRegex = "(\d+)\.(\d+)\.(\d+)\.(\d+)"
 
-    $wizardAssemblyStrongName = $templateContent.VSTemplate.WizardExtension.Assembly -replace $versionRegex, $env:MORYX_ASSEMBLY_VERSION 
+    $wizardAssemblyStrongName = $templateContent.VSTemplate.WizardExtension.Assembly -replace $versionRegex, $global:AssemblyVersion 
     $templateContent.VSTemplate.WizardExtension.Assembly = $wizardAssemblyStrongName
     $templateContent.Save($vsTemplate)
 
-    Write-Host "Version $env:MORYX_ASSEMBLY_VERSION applied to $VsTemplate!"
+    Write-Host "Version $global:AssemblyVersion applied to $VsTemplate!"
 }
 
 function CreateFolderIfNotExists([string]$Folder) {
