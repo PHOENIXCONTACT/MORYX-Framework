@@ -102,10 +102,6 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         }
     }
 
-    if (-not $env:MORYX_GIT_REF) {
-        $env:MORYX_GIT_REF = "unknown";
-    }
-
     if (-not $env:MORYX_PACKAGE_TARGET) {
         $env:MORYX_PACKAGE_TARGET = "";
     }
@@ -136,7 +132,6 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Variable "GitCommitHash" $global:GitCommitHash;
 
     Write-Step "Printing environment variables"
-    Write-Variable "MORYX_GIT_REF" $env:MORYX_GIT_REF;
     Write-Variable "MORYX_OPTIMIZE_CODE" $env:MORYX_OPTIMIZE_CODE;
     Write-Variable "MORYX_BUILDNUMBER" $env:MORYX_BUILDNUMBER;
     Write-Variable "MORYX_BUILD_CONFIG" $env:MORYX_BUILD_CONFIG;
@@ -174,6 +169,7 @@ function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExe
         Write-Host "$PackageName ($Version) already exists. Do not need to install."
     }
 }
+
 function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
     Write-Step "Building $ProjectFile"
 
@@ -453,29 +449,16 @@ function Invoke-Publish {
 }
 
 function Set-Version ([string]$MajorMinorPatch) {
-    Write-Host "Setting environment version to $MajorMinorPatch";
-
     $semVer2Regex = "^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$";
-
-    $ref = $env:MORYX_GIT_REF;
-    if ($ref -like "refs/tags/v*") {
-        # Its a version tag
-        $version = $ref.Replace("refs/tags/v","")
-    }
-
-    if ($ref -like "refs/heads/*") {
-        # Its a branch
-        $refName = $ref.Replace("refs/heads/","");
-        $refName = $refName.Replace("/","").ToLower();
-
-        $version = "$MajorMinorPatch-$refName.$env:MORYX_BUILDNUMBER";
-    }
+    
+    $version = Read-VersionFromRef($MajorMinorPatch);
+    Write-Host "Setting environment version to $version";
 
     # Match semVer2 regex
     $regexMatch = [regex]::Match($version, $semVer2Regex);
 
     if (-not $regexMatch.Success) {
-        Write-Host "Could not parse version: $ref";
+        Write-Host "Could not parse version: $version";
         Invoke-ExitCodeCheck 1;
     }
 
@@ -500,6 +483,66 @@ function Set-Version ([string]$MajorMinorPatch) {
         $global:AssemblyInformationalVersion = $mmp + "+" + $global:GitCommitHash; # 3.1.2+d95a996ed5ba14a1421dafeb844a56ab08211ead
         $global:PackageVersion = $mmp;
     }
+}
+
+function Read-VersionFromRef([string]$MajorMinorPatch) {
+    function preReleaseVersion ([string] $name)
+    {
+        $name = $name.Replace("/","").ToLower();
+        return "$MajorMinorPatch-$name.$env:MORYX_BUILDNUMBER";;
+    }
+
+    $ref = "";
+    if ($env:GITLAB_CI) { # GitLab CI/CD
+        Write-Host "Reading version from 'GitLab CI/CD'";
+        $ref = $env:CI_COMMIT_REF_NAME; # The branch or tag name for which project is built
+
+        if ($env:CI_COMMIT_TAG) { # The commit tag name. Present only when building tags.
+            if ($env:CI_COMMIT_TAG -like "v*") {
+                # Its a version tag
+                $version = $ref.substring(1) ;
+            }
+            else {
+                # Just a tag
+                $version = preReleaseVersion($ref);
+            }
+        }
+        else {
+            $version = preReleaseVersion($ref);
+        }
+
+    }
+    elseif ($env:GITHUB_WORKFLOW) { # GitHub Workflow
+        Write-Host "Reading version from 'GitHub Workflow'";
+        $ref = $env:GITHUB_REF;
+
+        if ($ref.StartsWith("refs/tags/")) {
+            if ($ref.StartsWith("refs/tags/v")) {
+                # Its a version tag
+                $version = $ref.Replace("refs/tags/v","")
+            } 
+            else {
+                # Just a tag
+                $name = $ref.Replace("refs/tags/","");
+                $version = = preReleaseVersion($name);
+            }
+        }
+        elseif ($ref.StartsWith("refs/heads/*")) {
+            # Its a branch
+            $name = $ref.Replace("refs/heads/","");
+            $version = preReleaseVersion($name);
+        } 
+        else {
+            $version = preReleaseVersion($ref);
+        }
+    }
+    else { # Local build
+        Write-Host "Reading version from 'local'";
+        $ref = (& $global:GitCli rev-parse --abbrev-ref HEAD);
+        $version = preReleaseVersion($ref);
+    }
+
+    return $version;
 }
 
 function Set-AssemblyVersion([string]$InputFile) {
