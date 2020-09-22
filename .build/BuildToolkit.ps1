@@ -493,26 +493,7 @@ function Read-VersionFromRef([string]$MajorMinorPatch) {
     }
 
     $ref = "";
-    if ($env:GITLAB_CI) { # GitLab CI/CD
-        Write-Host "Reading version from 'GitLab CI/CD'";
-        $ref = $env:CI_COMMIT_REF_NAME; # The branch or tag name for which project is built
-
-        if ($env:CI_COMMIT_TAG) { # The commit tag name. Present only when building tags.
-            if ($env:CI_COMMIT_TAG -like "v*") {
-                # Its a version tag
-                $version = $ref.substring(1) ;
-            }
-            else {
-                # Just a tag
-                $version = preReleaseVersion($ref);
-            }
-        }
-        else {
-            $version = preReleaseVersion($ref);
-        }
-
-    }
-    elseif ($env:GITHUB_WORKFLOW) { # GitHub Workflow
+    if ($env:GITHUB_WORKFLOW) { # GitHub Workflow
         Write-Host "Reading version from 'GitHub Workflow'";
         $ref = $env:GITHUB_REF;
 
@@ -527,7 +508,7 @@ function Read-VersionFromRef([string]$MajorMinorPatch) {
                 $version = = preReleaseVersion($name);
             }
         }
-        elseif ($ref.StartsWith("refs/heads/*")) {
+        elseif ($ref.StartsWith("refs/heads/")) {
             # Its a branch
             $name = $ref.Replace("refs/heads/","");
             $version = preReleaseVersion($name);
