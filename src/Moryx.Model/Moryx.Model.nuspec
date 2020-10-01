@@ -11,5 +11,8 @@
     <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
     <repository type="git" url="https://github.com/PHOENIXCONTACT/MORYX-Platform" />
     <description>$description$</description>
+    <dependencies>
+      <dependency id="EntityFramework" version="6.4" />
+    </dependencies>
   </metadata>
 </package>

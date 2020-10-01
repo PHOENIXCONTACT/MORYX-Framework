@@ -10,5 +10,8 @@
     <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
     <repository type="git" url="https://github.com/PHOENIXCONTACT/MORYX-Platform" />
     <description>$description$</description>
+    <dependencies>
+      <dependency id="Castle.Windsor" version="5.0" />
+    </dependencies>
   </metadata>
 </package>

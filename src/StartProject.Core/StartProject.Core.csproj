@@ -10,15 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="app.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Update="Config\log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
 

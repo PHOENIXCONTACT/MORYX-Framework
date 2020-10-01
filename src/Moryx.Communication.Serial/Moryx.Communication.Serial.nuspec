@@ -12,7 +12,7 @@
     <repository type="git" url="https://github.com/PHOENIXCONTACT/MORYX-Platform" />
     <description>$description$</description>
     <dependencies>
-      <dependency id="System.IO.Ports" version="4.5.0" />
+      <dependency id="System.IO.Ports" version="4.5" />
     </dependencies>
   </metadata>
 </package>

@@ -11,5 +11,9 @@
     <iconUrl>https://www.phoenixcontact.com/favicon.ico</iconUrl>
     <repository type="git" url="https://github.com/PHOENIXCONTACT/MORYX-Platform" />
     <description>$description$</description>
+    <dependencies>
+      <dependency id="CommandLineParser" version="2.8" />
+      <dependency id="Common.Logging" version="3.4.1" />
+    </dependencies>
   </metadata>
 </package>

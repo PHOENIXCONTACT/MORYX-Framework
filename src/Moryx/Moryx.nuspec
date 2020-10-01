@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
@@ -12,8 +12,8 @@
     <repository type="git" url="https://github.com/PHOENIXCONTACT/MORYX-Platform" />
     <description>$description$</description>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="12.0.2" />
-      <dependency id="System.ComponentModel.Annotations" version="4.5.0" />
+      <dependency id="Newtonsoft.Json" version="12.0" />
+      <dependency id="System.ComponentModel.Annotations" version="4.5" />
     </dependencies>
   </metadata>
 </package>
