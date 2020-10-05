@@ -65,7 +65,12 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Event raised when a resource was added at runtime
         /// </summary>
-        event EventHandler<IPublicResource> ResourceAdded; 
+        event EventHandler<IPublicResource> ResourceAdded;
+
+        /// <summary>
+        /// Event raised when a resource was removed at runtime
+        /// </summary>
+        event EventHandler<IPublicResource> ResourceRemoved;
 
         /// <summary>
         /// Raised when the capabilities have changed.

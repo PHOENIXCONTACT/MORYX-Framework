@@ -29,6 +29,7 @@ namespace Moryx.Resources.Management
         {
             Manager.ResourceAdded += OnResourceAdded;
             Manager.CapabilitiesChanged += OnCapabilitiesChanged;
+            Manager.ResourceRemoved += OnResourceRemoved;
         }
 
         /// <seealso cref="IFacadeControl"/>
@@ -36,6 +37,7 @@ namespace Moryx.Resources.Management
         {
             Manager.ResourceAdded -= OnResourceAdded;
             Manager.CapabilitiesChanged -= OnCapabilitiesChanged;
+            Manager.ResourceRemoved -= OnResourceRemoved;
         }
 
 
@@ -47,6 +49,11 @@ namespace Moryx.Resources.Management
         private void OnResourceAdded(object sender, IPublicResource publicResource)
         {
             ResourceAdded?.Invoke(this, publicResource.Proxify(TypeController));
+        }
+
+        private void OnResourceRemoved(object sender, IPublicResource publicResource)
+        {
+            ResourceRemoved?.Invoke(this, publicResource.Proxify(TypeController));
         }
 
         public TResource GetResource<TResource>() where TResource : class, IPublicResource
@@ -105,6 +112,9 @@ namespace Moryx.Resources.Management
 
         /// <inheritdoc />
         public event EventHandler<IPublicResource> ResourceAdded;
+
+        /// <inheritdoc />
+        public event EventHandler<IPublicResource> ResourceRemoved;
 
         /// <inheritdoc />
         public event EventHandler<ICapabilities> CapabilitiesChanged;

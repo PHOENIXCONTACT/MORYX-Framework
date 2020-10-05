@@ -377,6 +377,11 @@ namespace Moryx.Resources.Management
             var instance = (Resource)resource;
             ((IPlugin)resource).Stop();
 
+            // Notify listeners about the removal of the resource
+            var publicResource = instance as IPublicResource;
+            if (publicResource != null)
+                RaiseResourceRemoved(publicResource);
+
             // Load entity and relations to disconnect resource and remove from database
             using (var uow = UowFactory.Create())
             {
@@ -422,6 +427,12 @@ namespace Moryx.Resources.Management
             ResourceAdded?.Invoke(this, newResource);
         }
         public event EventHandler<IPublicResource> ResourceAdded;
+
+        private void RaiseResourceRemoved(IPublicResource newResource)
+        {
+            ResourceRemoved?.Invoke(this, newResource);
+        }
+        public event EventHandler<IPublicResource> ResourceRemoved;
 
         ///
         public event EventHandler<ICapabilities> CapabilitiesChanged;
