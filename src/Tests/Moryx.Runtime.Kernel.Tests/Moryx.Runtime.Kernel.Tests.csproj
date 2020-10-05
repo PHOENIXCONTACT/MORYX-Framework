@@ -3,10 +3,8 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <ApplicationIcon />
     <StartupObject />
     <DebugType>full</DebugType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,4 +19,5 @@
     <ProjectReference Include="..\..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
     <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
   </ItemGroup>
+
 </Project>
