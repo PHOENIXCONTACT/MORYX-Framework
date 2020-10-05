@@ -1,5 +1,4 @@
 ﻿using Moryx.Runtime.Kernel;
-using Moryx.Runtime.Wcf;
 
 namespace StartProject
 {

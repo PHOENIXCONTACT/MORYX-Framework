@@ -1,95 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\.build\Common.props"></Import>
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{29F12AD7-18DC-4DC3-B97F-BC773AC4C0EB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Moryx.TestTools.Test.Model</RootNamespace>
-    <AssemblyName>Moryx.TestTools.Test.Model</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFrameworks>netstandard2.1;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="API\IAnotherEntityRepository.cs" />
-    <Compile Include="API\ICarEntityRepository.cs" />
-    <Compile Include="API\IHouseEntityRepository.cs" />
-    <Compile Include="API\IHugePocoRepository.cs" />
-    <Compile Include="API\IJsonEntityRepository.cs" />
-    <Compile Include="API\ISportCarRepository.cs" />
-    <Compile Include="API\IWheelEntityRepository.cs" />
-    <Compile Include="Entities\AnotherEntity.cs" />
-    <Compile Include="Entities\HouseEntity.cs" />
-    <Compile Include="Entities\HugePocoEntity.cs" />
-    <Compile Include="Entities\JsonEntity.cs" />
-    <Compile Include="Setups\AnySetup.cs" />
-    <None Include="app.config" />
-    <Compile Include="Entities\SportCarEntity.cs" />
-    <Compile Include="TestModelContext.cs" />
-    <Compile Include="Entities\CarEntity.cs" />
-    <Compile Include="Entities\WheelEntity.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="README.md" />
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
+    <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
+    <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj">
-      <Project>{70964330-f80e-4e1e-a33b-2021bde37b2f}</Project>
-      <Name>Moryx.Model.PostgreSQL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj">
-      <Project>{478dc949-a0b2-46b4-8645-a7da92589b76}</Project>
-      <Name>Moryx.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Moryx\Moryx.csproj">
-      <Project>{7cd728a5-8fdd-4178-9ca4-3cd37512da24}</Project>
-      <Name>Moryx</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="EntityFramework">
-      <Version>6.4.4</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

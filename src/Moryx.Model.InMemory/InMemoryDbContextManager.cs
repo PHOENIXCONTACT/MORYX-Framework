@@ -33,8 +33,11 @@ namespace Moryx.Model.InMemory
         }
 
         /// <inheritdoc />
+#if HAVE_ARRAY_EMPTY
         public IReadOnlyCollection<Type> Contexts => Array.Empty<Type>();
-
+#else
+        public IReadOnlyCollection<Type> Contexts => new Type[0];
+#endif
         /// <inheritdoc />
         public IModelConfigurator GetConfigurator(Type contextType)
         {

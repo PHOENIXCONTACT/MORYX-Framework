@@ -1,121 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\.build\Common.props"></Import>
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{478DC949-A0B2-46B4-8645-A7DA92589B76}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Moryx.Model</RootNamespace>
-    <AssemblyName>Moryx.Model</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFrameworks>netstandard2.1;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Extended model functionality.</Description>
+    <CreatePackage>true</CreatePackage>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Moryx.Model.xml</DocumentationFile>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+    <DefineConstants>HAVE_APPDOMAIN_DEFINEDYNAMICASSEMBLY</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Moryx.Model.xml</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Serialization" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Attributes\DefaultSchemaAttribute.cs" />
-    <Compile Include="Attributes\IsUnicodeAttribute.cs" />
-    <Compile Include="Attributes\ModelConfiguratorAttribute.cs" />
-    <Compile Include="Attributes\ModelSetupAttribute.cs" />
-    <Compile Include="Configuration\DatabaseUpdate.cs" />
-    <Compile Include="Configuration\DatabaseUpdateInformation.cs" />
-    <Compile Include="Configuration\DatabaseUpdateSummary.cs" />
-    <Compile Include="Configuration\IDatabaseConfig.cs" />
-    <Compile Include="Configuration\IDatabaseUpdate.cs" />
-    <Compile Include="ContextFactory.cs" />
-    <Compile Include="ContextMode.cs" />
-    <Compile Include="DatabaseConfig.cs" />
-    <Compile Include="DataModification.cs" />
-    <Compile Include="DbContextContainerExtension.cs" />
-    <Compile Include="EntityBase.cs" />
-    <Compile Include="EntityIdListener.cs" />
-    <Compile Include="Extensions\DbContextExtensions.cs" />
-    <Compile Include="Extensions\DbSetExtensions.cs" />
-    <Compile Include="Extensions\QueryableExtensions.cs" />
-    <Compile Include="IContextFactory.cs" />
-    <Compile Include="IEntity.cs" />
-    <Compile Include="IModelConfigurator.cs" />
-    <Compile Include="IModelSetup.cs" />
-    <Compile Include="DbContextManager.cs" />
-    <Compile Include="Configuration\ModelConfiguratorBase.cs" />
-    <Compile Include="IModelSetupExecutor.cs" />
-    <Compile Include="ModelSetupExecutor.cs" />
-    <Compile Include="Repositories\IUnitOfWorkFactory.cs" />
-    <Compile Include="ModificationTrackedEntityBase.cs" />
-    <Compile Include="MoryxDbContext.cs" />
-    <Compile Include="IDbContextManager.cs" />
-    <Compile Include="Configuration\NullModelConfigurator.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\IUnitOfWork.cs" />
-    <Compile Include="Repositories\Proxy\IMethodProxyStrategy.cs" />
-    <Compile Include="Repositories\Proxy\MethodProxyStrategyBase.cs" />
-    <Compile Include="Repositories\Proxy\ParameterPropertyMap.cs" />
-    <Compile Include="Repositories\Proxy\RepositoryProxyBuilder.cs" />
-    <Compile Include="Repositories\Proxy\Strategies\CreateMethodStrategy.cs" />
-    <Compile Include="Repositories\Proxy\Strategies\FilterMethodStrategy.cs" />
-    <Compile Include="Repositories\Proxy\Strategies\RemoveMethodStrategy.cs" />
-    <Compile Include="Repositories\Repository.cs" />
-    <Compile Include="Repositories\UnitOfWork.cs" />
-    <Compile Include="Extensions\UnitOfWorkExtensions.cs" />
-    <Compile Include="Repositories\UnitOfWorkFactory.cs" />
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Moryx\Moryx.csproj">
-      <Project>{437a03f2-1a35-41e1-a065-00debdda6e79}</Project>
-      <Name>Moryx</Name>
-    </ProjectReference>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
+		<Reference Include="System.ComponentModel.DataAnnotations" />
+	</ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Moryx.Model.csproj.DotSettings" />
-    <None Include="Moryx.Model.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="EntityFramework">
-      <Version>6.4.4</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

@@ -1,12 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\..\.build\Common.props"></Import>
+
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <Description></Description>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Container.TestTools\Moryx.Container.TestTools.csproj" />
   </ItemGroup>
+
 </Project>
