@@ -79,7 +79,7 @@ namespace Moryx.Tests.Threading
             Assert.AreEqual(!critical, _logger.Messages.Any(m => m.Level == LogLevel.Error), "Warning received");
         }
 
-        
+
         [Test]
         public void ScheduleExecutionWithStop()
         {
@@ -185,7 +185,7 @@ namespace Moryx.Tests.Threading
             StateObject state = new StateObject();
 
             _threadFactory.ScheduleExecution(ExceptionCallback, state, 10, Timeout.Infinite, critical);
-           
+
             AwaitLogMessage();
 
             Assert.AreEqual(critical, _logger.Messages.Any(m => m.Level == LogLevel.Fatal), "Failure received");

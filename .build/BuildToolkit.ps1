@@ -244,7 +244,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     Write-Step "Starting cover tests from $SearchPath with filter $FilterFile."
     
     if (-not (Test-Path $SearchPath)) {
-        Write-Host "$SearchPath does not exists, ignoring!";
+        Write-Host-Warning "$SearchPath does not exists, ignoring!";
         return;
     }
 
@@ -336,7 +336,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
                 $errorText = "FAILED_TESTS ($exitCode)";
             }
 
-            Write-Host "Nunit exited with $errorText for $projectName";
+            Write-Host-Error "Nunit exited with $errorText for $projectName";
             Invoke-ExitCodeCheck $exitCode;
         }
     }
@@ -409,13 +409,16 @@ function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "
     CopyAndReplaceFolder $docFxDest "$DocumentationArtifcacts\DocFx";
 }
 
-function Invoke-PackSdkProject($ProjectPath, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
+function Invoke-PackSdkProject($CsprojFile, [bool]$IncludeSymbols = $False) {
+    Write-Host "Try to pack .NET SDK project: $($CsprojFile.Name) ...";
+
     # Check if the project should be packed
-    $csprojFullName = $csprojFile.FullName;
+    $csprojFullName = $CsprojFile.FullName;
     [xml]$csprojContent = Get-Content $csprojFullName
     $createPackage = $csprojContent.Project.PropertyGroup.CreatePackage;
 ;
     if ($null -eq $createPackage -or "false" -eq $createPackage) {
+        Write-Host-Warning "... csproj not flagged with <CreatePackage>true</CreatePackage>: $($CsprojFile.Name)";
         return;
     }
 
@@ -433,11 +436,13 @@ function Invoke-PackSdkProject($ProjectPath, [bool]$IsTool = $False, [bool]$Incl
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-PackFrameworkProject($ProjectPath, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
+function Invoke-PackFrameworkProject($CsprojFile, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
+    Write-Host "Try to pack .NET Framework project: $CsprojFile.Name ...";
 
     # Check if there is a matching nuspec for the proj
-    $nuspecPath = [IO.Path]::ChangeExtension($ProjectPath, "nuspec")
+    $nuspecPath = [IO.Path]::ChangeExtension($CsprojFile.FullName, "nuspec")
     if(-not (Test-Path $nuspecPath)) {
+        Write-Host-Warning "Nuspec for project not found: $CsprojFile.Name";
         return;
     }
 
@@ -464,7 +469,7 @@ function Invoke-Pack($ProjectPath, [bool]$IsTool = $False, [bool]$IncludeSymbols
     CreateFolderIfNotExists $NugetPackageArtifacts;
 
     if (Get-CsprojIsSdkProject($ProjectPath)) {
-        Invoke-PackSdkProject $ProjectPath $IsTool $IncludeSymbols;
+        Invoke-PackSdkProject $ProjectPath $IncludeSymbols;
     }
     else {
         Invoke-PackFrameworkProject $ProjectPath $IsTool $IncludeSymbols;
@@ -483,7 +488,7 @@ function Invoke-Publish {
     Write-Host "Pushing packages from $NugetPackageArtifacts to $env:MORYX_PACKAGE_TARGET"
     
     if ([string]::IsNullOrEmpty($env:MORYX_PACKAGE_TARGET)) {
-        Write-Host "There is no package target given. Set the environment varialble MORYX_PACKAGE_TARGET to publish packages.";
+        Write-Host-Error "There is no package target given. Set the environment varialble MORYX_PACKAGE_TARGET to publish packages.";
         Invoke-ExitCodeCheck 1;
     }
 

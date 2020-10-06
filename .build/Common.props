@@ -24,7 +24,6 @@
     <RepositoryUrl>https://github.com/PHOENIXCONTACT/MORYX-Platform</RepositoryUrl>
 
     <PackageIcon>moryx-logo.png</PackageIcon>
-    <PackageIconUrl>https://www.phoenixcontact.com/favicon.ico</PackageIconUrl>
     <PackageProjectUrl>https://moryx-industry.net/</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>

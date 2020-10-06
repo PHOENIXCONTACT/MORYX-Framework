@@ -62,7 +62,8 @@ jobs:
         - name: Codecov
           uses: codecov/codecov-action@v1
           with:
-            files: './artifacts/Tests/*.OpenCover.xml'
+            files: ./artifacts/Tests/Moryx.Container.Tests.OpenCover.xml,./artifacts/Tests/Moryx.Model.Tests.OpenCover.xml,./artifacts/Tests/Moryx.Runtime.Kernel.Tests.OpenCover.xml,./artifacts/Tests/Moryx.Runtime.Tests.OpenCover.xml,./artifacts/Tests/Moryx.Tests.OpenCover.xml,./artifacts/Tests/Moryx.Tools.Wcf.Tests.OpenCover.xml,./artifacts/Tests/Moryx.Communication.Sockets.IntegrationTests.OpenCover
+
   Publish:
     needs: [Test]
     if: ${{ github.event_name == 'push' }}

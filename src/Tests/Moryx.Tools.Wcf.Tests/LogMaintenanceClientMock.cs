@@ -10,7 +10,7 @@ namespace Moryx.Tools.Wcf.Tests
     public class LogMaintenanceClientMock : LogMaintenanceClient
     {
 
-        public LogMaintenanceClientMock(Binding binding, EndpointAddress remoteAddress) :
+        public LogMaintenanceClientMock(Binding binding, EndpointAddress remoteAddress):
                 base(binding, remoteAddress) {
         }
 
