@@ -62,7 +62,8 @@ jobs:
         - name: Codecov
           uses: codecov/codecov-action@v1
           with:
-            files: './artifacts/Tests/*.OpenCover.xml'
+            files: '*.OpenCover.xml'
+
   Publish:
     needs: [Test]
     if: ${{ github.event_name == 'push' }}
@@ -75,10 +76,6 @@ jobs:
       
       - name: Setup NuGet.exe
         uses: NuGet/setup-nuget@v1.0.2
-  
-      - name: Set assembly versions
-        shell: pwsh
-        run: ./Build.ps1 -SetAssemblyVersion
   
       - name: Build
         shell: pwsh

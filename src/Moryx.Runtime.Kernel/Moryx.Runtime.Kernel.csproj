@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\.build\Common.props"></Import>
+
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Main kernel abstraction for the runtime environment</Description>
+    <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Castle.Windsor" Version="5.0.1" />
     <PackageReference Include="Common.Logging" Version="3.4.1" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
@@ -20,5 +19,4 @@
     <ProjectReference Include="..\Moryx.Container\Moryx.Container.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
   </ItemGroup>
-
 </Project>

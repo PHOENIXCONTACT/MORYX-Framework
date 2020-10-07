@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Core", "src\StartProject.Core\StartProject.Core.csproj", "{DE77822B-592E-4192-97F7-EC9ADDAFEAE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartProject", "src\StartProject\StartProject.csproj", "{8441A356-C5A8-41B4-B7EE-D0411664D8AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject", "src\StartProject\StartProject.csproj", "{8441A356-C5A8-41B4-B7EE-D0411664D8AA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime", "src\Moryx.Runtime\Moryx.Runtime.csproj", "{92777E64-9978-40AE-8B90-93ECBBBEFE67}"
 EndProject
@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kernel.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.SystemTests", "src\Tests\Moryx.Runtime.SystemTests\Moryx.Runtime.SystemTests.csproj", "{B47E0CB5-A3EC-4ED6-BCBF-9E3BEA6ABF5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.DependentTestModule", "src\DependentTestModule\Moryx.DependentTestModule.csproj", "{D8344B1F-9DB3-4E85-9195-6FFFECBF6427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.DependentTestModule", "src\DependentTestModule\Moryx.DependentTestModule.csproj", "{D8344B1F-9DB3-4E85-9195-6FFFECBF6427}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.TestModule", "src\TestModule\Moryx.TestModule.csproj", "{24ED97AD-6D04-4DC0-AFCB-C911EF0AA738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestModule", "src\TestModule\Moryx.TestModule.csproj", "{24ED97AD-6D04-4DC0-AFCB-C911EF0AA738}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Tools.Wcf.SystemTests", "src\Tests\Moryx.Tools.Wcf.SystemTests\Moryx.Tools.Wcf.SystemTests.csproj", "{74D4C6FE-2E58-4F31-A915-6CF061C0149B}"
 EndProject
@@ -31,41 +31,41 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestTools", "TestTools", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestTools.UnitTest", "src\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj", "{505DF475-5FF5-47CC-9E3B-BBE16C359F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Container.TestPlugin", "src\Tests\Moryx.Container.TestPlugin\Moryx.Container.TestPlugin.csproj", "{DD4163B4-1696-4554-961E-DE2A3EB21ECE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Container.TestPlugin", "src\Tests\Moryx.Container.TestPlugin\Moryx.Container.TestPlugin.csproj", "{DD4163B4-1696-4554-961E-DE2A3EB21ECE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Container.TestRootPlugin", "src\Tests\Moryx.Container.TestRootPlugin\Moryx.Container.TestRootPlugin.csproj", "{7615C9F0-91F1-4E05-A424-6D083B8958C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Container.TestRootPlugin", "src\Tests\Moryx.Container.TestRootPlugin\Moryx.Container.TestRootPlugin.csproj", "{7615C9F0-91F1-4E05-A424-6D083B8958C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{DAE7DCE8-AB9B-46A8-808D-6C6C0AAB75A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model", "src\Moryx.Model\Moryx.Model.csproj", "{478DC949-A0B2-46B4-8645-A7DA92589B76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Model", "src\Moryx.Model\Moryx.Model.csproj", "{478DC949-A0B2-46B4-8645-A7DA92589B76}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Communication.Sockets.IntegrationTests", "src\Tests\Moryx.Communication.Sockets.IntegrationTests\Moryx.Communication.Sockets.IntegrationTests.csproj", "{FD2AA3C3-F434-4D4F-88C8-3774B48E1D9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Communication.Sockets.IntegrationTests", "src\Tests\Moryx.Communication.Sockets.IntegrationTests\Moryx.Communication.Sockets.IntegrationTests.csproj", "{FD2AA3C3-F434-4D4F-88C8-3774B48E1D9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Container.TestTools", "src\Tests\Moryx.Container.TestTools\Moryx.Container.TestTools.csproj", "{B72AA993-72E5-4D14-BF5E-C2E0E8CF5186}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Container.TestTools", "src\Tests\Moryx.Container.TestTools\Moryx.Container.TestTools.csproj", "{B72AA993-72E5-4D14-BF5E-C2E0E8CF5186}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{0A466330-6ED6-4861-9C94-31B1949CDDB9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Tools.Wcf.Tests", "src\Tests\Moryx.Tools.Wcf.Tests\Moryx.Tools.Wcf.Tests.csproj", "{A4CA7B7C-5417-4FA9-9E0B-76D4CD4663C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.TestTools.SystemTest", "src\Moryx.TestTools.SystemTest\Moryx.TestTools.SystemTest.csproj", "{D6DC00C6-9358-4839-84C0-44DF018A74DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestTools.SystemTest", "src\Moryx.TestTools.SystemTest\Moryx.TestTools.SystemTest.csproj", "{D6DC00C6-9358-4839-84C0-44DF018A74DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Tools.Wcf", "src\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj", "{05761BAE-8649-470D-9A8A-5C7E9D1A2F3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Tools.Wcf", "src\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj", "{05761BAE-8649-470D-9A8A-5C7E9D1A2F3A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ManualTests", "ManualTests", "{A9C375AE-201D-46CE-9282-387026C0B2F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DE7526FF-6D25-4643-9AA3-C24253901C8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.Tests", "src\Tests\Moryx.Runtime.Tests\Moryx.Runtime.Tests.csproj", "{7448728C-9965-4874-A2E9-7BAB37E42963}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Tests", "src\Tests\Moryx.Runtime.Tests\Moryx.Runtime.Tests.csproj", "{7448728C-9965-4874-A2E9-7BAB37E42963}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model.Tests", "src\Tests\Moryx.Model.Tests\Moryx.Model.Tests.csproj", "{BA61840C-9E77-4454-88E2-7CA4E98EE4BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{74112169-6672-4907-A187-F055111940A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model.PostgreSQL", "src\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj", "{70964330-F80E-4E1E-A33B-2021BDE37B2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Model.PostgreSQL", "src\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj", "{70964330-F80E-4E1E-A33B-2021BDE37B2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.TestTools.Test.Model", "src\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj", "{29F12AD7-18DC-4DC3-B97F-BC773AC4C0EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestTools.Test.Model", "src\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj", "{29F12AD7-18DC-4DC3-B97F-BC773AC4C0EB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx", "src\Moryx\Moryx.csproj", "{7CD728A5-8FDD-4178-9CA4-3CD37512DA24}"
 EndProject
@@ -79,17 +79,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Workflows.Benchmark",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Communication.Serial", "src\Moryx.Communication.Serial\Moryx.Communication.Serial.csproj", "{8C6AF3D0-23C5-4EAD-8831-3EC36BBA01DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.WinService", "src\Moryx.Runtime.WinService\Moryx.Runtime.WinService.csproj", "{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.WinService", "src\Moryx.Runtime.WinService\Moryx.Runtime.WinService.csproj", "{45BF2368-B7C9-42A1-9587-F3B3EADE4A67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.Wcf", "src\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj", "{1CE2D3B1-DE76-4A59-B3CB-76F120624C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Wcf", "src\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj", "{1CE2D3B1-DE76-4A59-B3CB-76F120624C11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.SmokeTest", "src\Moryx.Runtime.SmokeTest\Moryx.Runtime.SmokeTest.csproj", "{F297C67F-AA7C-4687-912E-5970022165F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.SmokeTest", "src\Moryx.Runtime.SmokeTest\Moryx.Runtime.SmokeTest.csproj", "{F297C67F-AA7C-4687-912E-5970022165F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model.InMemory", "src\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj", "{21C94DE5-A774-4474-8C31-DB483D49710E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Model.InMemory", "src\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj", "{21C94DE5-A774-4474-8C31-DB483D49710E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.DbUpdate", "src\Moryx.Runtime.DbUpdate\Moryx.Runtime.DbUpdate.csproj", "{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.DbUpdate", "src\Moryx.Runtime.DbUpdate\Moryx.Runtime.DbUpdate.csproj", "{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.Maintenance", "src\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj", "{EB039D46-906F-44BF-AC37-B3B3634A4442}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Maintenance", "src\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj", "{EB039D46-906F-44BF-AC37-B3B3634A4442}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -743,8 +743,8 @@ Global
 		{EB039D46-906F-44BF-AC37-B3B3634A4442} = {DE7526FF-6D25-4643-9AA3-C24253901C8C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_TaskErrorCategory = Message
-		RESX_ShowErrorsInErrorList = True
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
+		RESX_ShowErrorsInErrorList = True
+		RESX_TaskErrorCategory = Message
 	EndGlobalSection
 EndGlobal

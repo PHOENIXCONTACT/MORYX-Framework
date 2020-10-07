@@ -59,7 +59,7 @@
             "script": "${workspaceRoot}\\Build.ps1",
             "args": ["-Pack"],
             "cwd": "${workspaceRoot}"
-        }
+        },
         {
             "type": "PowerShell",
             "request": "launch",

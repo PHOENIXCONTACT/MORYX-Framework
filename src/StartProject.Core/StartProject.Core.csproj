@@ -6,20 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Moryx.Runtime.DbUpdate\Moryx.Runtime.DbUpdate.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="app.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Update="Config\log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

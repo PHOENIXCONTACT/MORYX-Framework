@@ -1,28 +1,16 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ServiceModel;
+using System.ServiceModel.Channels;
 using Moryx.Tools.Wcf.Tests.Logging;
 
 namespace Moryx.Tools.Wcf.Tests
 {
     public class LogMaintenanceClientMock : LogMaintenanceClient
     {
-        public LogMaintenanceClientMock() {
-        }
 
-        public LogMaintenanceClientMock(string endpointConfigurationName) :
-                base(endpointConfigurationName) {
-        }
-
-        public LogMaintenanceClientMock(string endpointConfigurationName, string remoteAddress) :
-                base(endpointConfigurationName, remoteAddress) {
-        }
-
-        public LogMaintenanceClientMock(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) :
-                base(endpointConfigurationName, remoteAddress) {
-        }
-
-        public LogMaintenanceClientMock(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) :
+        public LogMaintenanceClientMock(Binding binding, EndpointAddress remoteAddress):
                 base(binding, remoteAddress) {
         }
 
