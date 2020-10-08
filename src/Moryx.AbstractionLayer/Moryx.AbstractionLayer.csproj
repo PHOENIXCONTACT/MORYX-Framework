@@ -1,238 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\.build\Common.props"></Import>
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{841F50C1-DEC0-48D8-92D1-F860450940D8}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Moryx.AbstractionLayer</RootNamespace>
-    <AssemblyName>Moryx.AbstractionLayer</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>AbstractionLayer</Description>
+    <CreatePackage>true</CreatePackage>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Moryx.AbstractionLayer.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Moryx.AbstractionLayer.XML</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Moryx, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moryx.3.0.0-dev.105\lib\netstandard2.0\Moryx.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
+    <PackageReference Include="Moryx" Version="3.0.0-dev.138" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Activities\Activity.cs" />
-    <Compile Include="Activities\ActivityResultsAttribute.cs" />
-    <Compile Include="Activities\IActivityProgress.cs" />
-    <Compile Include="Activities\NullActivityParameters.cs" />
-    <Compile Include="Activities\OutputTypeAttribute.cs" />
-    <Compile Include="Activities\ParametersBase.cs" />
-    <Compile Include="Activities\ProcessRequirement.cs" />
-    <Compile Include="Activities\ActivityResult.cs" />
-    <Compile Include="Activities\DefaultActivityResult.cs" />
-    <Compile Include="Activities\IParameters.cs" />
-    <Compile Include="Activities\IActivityTracing.cs" />
-    <Compile Include="Activities\Tracing.cs" />
-    <Compile Include="Activities\TracingExtension.cs" />
-    <Compile Include="Capabilities\NullCapabilities.cs" />
-    <Compile Include="Drivers\InOut\IInOutDriver.cs" />
-    <Compile Include="Drivers\Driver.cs" />
-    <Compile Include="Drivers\DriverNotRunningException.cs" />
-    <Compile Include="Drivers\Axis\IAxesController.cs" />
-    <Compile Include="Drivers\DriverState.cs" />
-    <Compile Include="Drivers\InOut\IInput.cs" />
-    <Compile Include="Drivers\InOut\InputChangedEventArgs.cs" />
-    <Compile Include="Drivers\InOut\IOutput.cs" />
-    <Compile Include="Drivers\Message\IIdentifierMessage.cs" />
-    <Compile Include="Drivers\Message\IMessageChannel.cs" />
-    <Compile Include="Drivers\Message\IMessageDriver.cs" />
-    <Compile Include="Drivers\Scales\IWeightScaleDriver.cs" />
-    <Compile Include="Drivers\Scales\WeightResult.cs" />
-    <Compile Include="Drivers\InOut\SupportedAccess.cs" />
-    <Compile Include="Drivers\Marking\MarkingConfiguration.cs" />
-    <Compile Include="Drivers\PickByLight\InstructionConfirmation.cs" />
-    <Compile Include="Drivers\PickByLight\IPickByLightDriver.cs" />
-    <Compile Include="Drivers\PickByLight\LightInstructions.cs" />
-    <Compile Include="Hardware\Axes.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="Properties\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
-      <DependentUpon>Axes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Hardware\AxisPosition.cs" />
-    <Compile Include="Hardware\NumberedAxis.cs" />
-    <Compile Include="Drivers\IDriver.cs" />
-    <Compile Include="Drivers\IDriverState.cs" />
-    <Compile Include="Drivers\Axis\AxisMovementResponse.cs" />
-    <Compile Include="Drivers\Marking\IMarkingLaserDriver.cs" />
-    <Compile Include="Drivers\Marking\IMarkingLaserState.cs" />
-    <Compile Include="Drivers\Marking\MarkingFile.cs" />
-    <Compile Include="Drivers\Marking\MarkingFIleResponse.cs" />
-    <Compile Include="Drivers\Marking\MarkingResponse.cs" />
-    <Compile Include="Drivers\Marking\NotificationResponse.cs" />
-    <Compile Include="Drivers\Marking\SegmentsNotSupportedException.cs" />
-    <Compile Include="Drivers\Rfid\IRfidDriver.cs" />
-    <Compile Include="Drivers\Rfid\RfidDirection.cs" />
-    <Compile Include="Drivers\Rfid\RfidTag.cs" />
-    <Compile Include="Drivers\Scanner\IScannerDriver.cs" />
-    <Compile Include="Drivers\StateClassification.cs" />
-    <Compile Include="Drivers\TransmissionResult.cs" />
-    <Compile Include="Constraints\ExpressionConstraint.cs" />
-    <Compile Include="Constraints\IConstraint.cs" />
-    <Compile Include="Constraints\IConstraintContext.cs" />
-    <Compile Include="Constraints\NullConstraint.cs" />
-    <Compile Include="HandlerMap\HandlerMap.cs" />
-    <Compile Include="HandlerMap\IHandlerMap.cs" />
-    <Compile Include="Identity\BatchIdentity.cs" />
-    <Compile Include="Identity\IIdentifiableObject.cs" />
-    <Compile Include="Activities\ActivityBindingResolverFactory.cs" />
-    <Compile Include="Process\ProcessBindingResolverFactory.cs" />
-    <Compile Include="Process\ProcessExtensions.cs" />
-    <Compile Include="AbstractionLayerBundle.cs" />
-    <Compile Include="Products\IProductionDate.cs" />
-    <Compile Include="Recipes\IProductionRecipe.cs" />
-    <Compile Include="Recipes\ProductionRecipe.cs" />
-    <Compile Include="Recipes\RecipeBindingResolverFactory.cs" />
-    <Compile Include="Products\IdentityConflictException.cs" />
-    <Compile Include="Products\Import\IFileImportParameters.cs" />
-    <Compile Include="Products\Import\IImportParameters.cs" />
-    <Compile Include="Products\Import\IPrototypeParameters.cs" />
-    <Compile Include="Products\IProductManagement.cs" />
-    <Compile Include="Products\ProductFile.cs" />
-    <Compile Include="Products\ProductNotFoundException.cs" />
-    <Compile Include="Products\ProductQuery.cs" />
-    <Compile Include="Products\ProductState.cs" />
-    <Compile Include="Products\ProductReference.cs" />
-    <Compile Include="Recipes\RecipeNotFoundException.cs" />
-    <Compile Include="Recipes\IProductRecipe.cs" />
-    <Compile Include="Recipes\IRecipe.cs" />
-    <Compile Include="Recipes\IWorkplanRecipe.cs" />
-    <Compile Include="Recipes\RecipeClassification.cs" />
-    <Compile Include="Recipes\RecipeReference.cs" />
-    <Compile Include="Recipes\RecipeState.cs" />
-    <Compile Include="Recipes\WorkplanRecipe.cs" />
-    <Compile Include="Resources\Attributes\AvailableCapabilitiesAttribute.cs" />
-    <Compile Include="Resources\Attributes\ReferenceOverrideAttribute.cs" />
-    <Compile Include="Resources\Attributes\ResourceAvailableAsAttribute.cs" />
-    <Compile Include="Resources\Attributes\ResourceConstructorAttribute.cs" />
-    <Compile Include="Resources\Attributes\ResourceReferenceAttribute.cs" />
-    <Compile Include="Resources\Attributes\ResourceReferenceRole.cs" />
-    <Compile Include="Resources\Attributes\ResourceRegistrationAttribute.cs" />
-    <Compile Include="Resources\Attributes\ResourceTypesAttribute.cs" />
-    <Compile Include="Resources\Initializer\IResourceInitializer.cs" />
-    <Compile Include="Resources\Initializer\ResourceInitializerAttribute.cs" />
-    <Compile Include="Resources\Initializer\ResourceInitializerBase.cs" />
-    <Compile Include="Resources\Initializer\ResourceInitializerConfig.cs" />
-    <Compile Include="Resources\IPublicResource.cs" />
-    <Compile Include="Resources\IReferenceCollection.cs" />
-    <Compile Include="Resources\IReferences.cs" />
-    <Compile Include="Resources\IResource.cs" />
-    <Compile Include="Resources\IResourceGraph.cs" />
-    <Compile Include="Resources\IResourceManagement.cs" />
-    <Compile Include="Resources\IResourceTypeNode.cs" />
-    <Compile Include="Resources\IResourceTypeTree.cs" />
-    <Compile Include="Resources\ProxyDetachedException.cs" />
-    <Compile Include="Resources\PublicResource.cs" />
-    <Compile Include="Resources\Resource.cs" />
-    <Compile Include="Resources\Extensions\ResourceExtensions.cs" />
-    <Compile Include="Resources\ResourceNotFoundException.cs" />
-    <Compile Include="Resources\ResourceRelationType.cs" />
-    <Compile Include="Resources\ResourceBindingResolverFactory.cs" />
-    <Compile Include="Activities\IActivity.cs" />
-    <Compile Include="Products\ProductInstance.cs" />
-    <Compile Include="Products\ProductInstanceState.cs" />
-    <Compile Include="Identity\IIdentity.cs" />
-    <Compile Include="Identity\NumberIdentity.cs" />
-    <Compile Include="Process\IProcess.cs" />
-    <Compile Include="Process\ProcessRecipeLink.cs" />
-    <Compile Include="Process\Process.cs" />
-    <Compile Include="Capabilities\CombinedCapabilities.cs" />
-    <Compile Include="Capabilities\ICapabilities.cs" />
-    <Compile Include="Capabilities\ConcreteCapabilities.cs" />
-    <Compile Include="Process\ProductionProcess.cs" />
-    <Compile Include="Products\IProductType.cs" />
-    <Compile Include="Products\IProductPartLink.cs" />
-    <Compile Include="Products\ProductType.cs" />
-    <Compile Include="Products\ProductIdentity.cs" />
-    <Compile Include="Products\ProductPartLink.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Recipes\IRecipeProvider.cs" />
-    <Compile Include="Recipes\ProductRecipe.cs" />
-    <Compile Include="Recipes\Recipe.cs" />
-    <Compile Include="Properties\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="Tasks\ITask.cs" />
-    <Compile Include="Tasks\ITaskStep.cs" />
-    <Compile Include="Tasks\TaskStep.cs" />
-    <Compile Include="Tasks\TaskTransition.cs" />
-    <Compile Include="Workplan\ProcessContext.cs" />
-    <Compile Include="Workplan\WorkplanExtensions.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Hardware\Axes.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Axes.cs</LastGenOutput>
-    </None>
-    <None Include="Moryx.AbstractionLayer.csproj.DotSettings" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Moryx.AbstractionLayer.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Strings.de.resx" />
-    <EmbeddedResource Include="Properties\Strings.pl.resx" />
-    <EmbeddedResource Include="Properties\Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+    <EmbeddedResource Update="Properties\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
