@@ -5,6 +5,7 @@ using System.ComponentModel;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.Serialization;
 
 namespace Moryx.Products.Samples.Recipe
 {
@@ -25,11 +26,11 @@ namespace Moryx.Products.Samples.Recipe
         /// <inheritdoc />
         public virtual IProductType Target => Product;
 
-        [EditorBrowsable]
+        [EntrySerialize]
         [DisplayName("Cores Installed")]
         public int CoresInstalled { get; set; }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         [DisplayName("Case Parameters")]
         public CaseDescription Case { get; set; }
 
@@ -48,12 +49,12 @@ namespace Moryx.Products.Samples.Recipe
 
     public class CaseDescription
     {
-        [EditorBrowsable]
+        [EntrySerialize]
         [DisplayName("Color Code")]
         [Description("Numeric code of the color")]
         public int CaseColorCode { get; set; }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         [DisplayName("Material")]
         public int CaseMaterial { get; set; }
     }

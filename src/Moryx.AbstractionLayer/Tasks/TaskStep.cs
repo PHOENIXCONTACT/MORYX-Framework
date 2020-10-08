@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Moryx.Serialization;
 using Moryx.Workflows;
 using Moryx.Workflows.Transitions;
 using Moryx.Workflows.WorkplanSteps;
@@ -29,7 +29,7 @@ namespace Moryx.AbstractionLayer
         /// <summary>
         /// Parameters of this step
         /// </summary>
-        [DataMember, EditorBrowsable]
+        [DataMember, EntrySerialize]
         public TParam Parameters { get; set; }
 
         /// <summary>

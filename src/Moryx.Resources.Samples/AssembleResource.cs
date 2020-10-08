@@ -33,20 +33,20 @@ namespace Moryx.Resources.Samples
             }
         }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         public void ChangeNumber(string fooNumber)
         {
             Setup.ChangeNumber(fooNumber);
         }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         public class AssembleConfig
         {
             public string Name { get; set; }
 
             public int Number { get; set; }
         }
-        
+
     }
 
     [Description("Some cool assemble foo")]

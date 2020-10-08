@@ -11,7 +11,7 @@ namespace Moryx.Resources.Samples
     [ResourceRegistration]
     public class Machine : Resource
     {
-        [DataMember, EditorBrowsable]
+        [DataMember, EntrySerialize]
         public string CurrentState { get; set; }
     }
 }

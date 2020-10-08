@@ -18,10 +18,10 @@ namespace Moryx.Resources.Samples
 
         #endregion
 
-        [EditorBrowsable, DisplayName("Editor Value")]
+        [EntrySerialize, DisplayName("Editor Value")]
         public int EditorValue { get; set; }
-       
-        [EditorBrowsable, DisplayName("Do Foo")]
+
+        [EntrySerialize, DisplayName("Do Foo")]
         public int Foo([Description("Very important parameter")]string bla = "Hallo")
         {
             LastCall = bla.Length;
@@ -30,12 +30,12 @@ namespace Moryx.Resources.Samples
             return LastCall;
         }
 
-        [EditorBrowsable, Description("Perform a self test of the resource")]
+        [EntrySerialize, Description("Perform a self test of the resource")]
         public void PerformSelfTest()
         {
         }
 
-        [EditorBrowsable, Description("Move an axis of the resource")]
+        [EntrySerialize, Description("Move an axis of the resource")]
         public void Move(Axes axis, AxisPosition position)
         {
         }

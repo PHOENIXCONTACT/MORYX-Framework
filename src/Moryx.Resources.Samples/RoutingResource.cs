@@ -9,11 +9,11 @@ namespace Moryx.Resources.Samples
 {
     public class RoutingResource : PublicResource
     {
-        [EditorBrowsable, ResourceTypes(typeof(IWpc))]
+        [EntrySerialize, ResourceTypes(typeof(IWpc))]
         [Description("Type of wpc for Autocreate")]
         public string WpcType { get; set; }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         public void AutoCreateWpc()
         {
             var wpc = (Resource)Graph.Instantiate<IWpc>(WpcType);

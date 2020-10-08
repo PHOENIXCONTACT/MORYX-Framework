@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Capabilities;
+using Moryx.Serialization;
 
 namespace Moryx.Products.IntegrationTests
 {
@@ -14,7 +14,7 @@ namespace Moryx.Products.IntegrationTests
 
     public class ParametersA : ParametersBase
     {
-        [EditorBrowsable]
+        [EntrySerialize]
         public int Foo { get; set; }
 
         protected override ParametersBase ResolveBinding(IProcess process)

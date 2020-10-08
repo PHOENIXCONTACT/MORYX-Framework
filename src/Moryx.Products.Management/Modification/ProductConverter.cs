@@ -34,7 +34,7 @@ namespace Moryx.Products.Management.Modification
         private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
 
         private static readonly PartialSerialization<ProductType> ProductSerialization = new PartialSerialization<ProductType>();
-        private static readonly EditorBrowsableSerialization RecipeSerialization = new EditorBrowsableSerialization();
+        private static readonly EntrySerializeSerialization RecipeSerialization = new EntrySerializeSerialization();
 
         private readonly List<ProductModel> _productCache = new List<ProductModel>();
 

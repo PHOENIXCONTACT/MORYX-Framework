@@ -14,7 +14,7 @@ namespace Moryx.Resources.Samples
     [ResourceRegistration]
     public class MountingCell : Cell
     {
-        [DataMember, EditorBrowsable, DefaultValue("Bye bye, WPC!")]
+        [DataMember, EntrySerialize, DefaultValue("Bye bye, WPC!")]
         public string OutfeedMessage { get; set; }
 
         [ResourceReference(ResourceRelationType.Driver)]
@@ -34,7 +34,7 @@ namespace Moryx.Resources.Samples
             // Handler that also uses the sender
         }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         public Dummy CreateDummy(int number, string name)
         {
             return new Dummy

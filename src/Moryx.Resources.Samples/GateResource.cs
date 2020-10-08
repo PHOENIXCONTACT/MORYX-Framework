@@ -17,7 +17,7 @@ namespace Moryx.Resources.Samples
 
         public override object Descriptor => new AxisControls(this);
 
-        [EditorBrowsable]
+        [EntrySerialize]
         public class AxisControls
         {
             private readonly GateResource _target;
