@@ -1,5 +1,4 @@
 ﻿param (
-    [switch]$SetAssemblyVersion,
     [switch]$Build,
 
     [switch]$SmokeTests,
@@ -22,10 +21,6 @@ $MsBuildVersion = "latest";
 
 # Initialize Toolkit
 Invoke-Initialize -Version (Get-Content "VERSION");
-
-if ($SetAssemblyVersion) {
-    Set-AssemblyVersions
-}
 
 if ($Build) {
     Invoke-Build ".\AbstractionLayer.sln"
