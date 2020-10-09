@@ -3,7 +3,7 @@
   <Import Project="..\..\.build\Common.props"></Import>
 
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Runtime RunMode for executing smoke tests.</Description>
     <CreatePackage>true</CreatePackage>
@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
-    <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
