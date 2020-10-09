@@ -55,10 +55,6 @@ jobs:
           shell: pwsh
           run: ./Build.ps1 -IntegrationTests
 
-        - name: Cover Report
-          shell: pwsh
-          run: ./Build.ps1 -CoverReport
-
         - name: Codecov
           uses: codecov/codecov-action@v1
           with:

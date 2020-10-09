@@ -440,7 +440,8 @@ function Invoke-PackFrameworkProject($CsprojFile, [bool]$IsTool = $False, [bool]
     Write-Host "Try to pack .NET Framework project: $CsprojFile.Name ...";
 
     # Check if there is a matching nuspec for the proj
-    $nuspecPath = [IO.Path]::ChangeExtension($CsprojFile.FullName, "nuspec")
+    $csprojFullName = $CsprojFile.FullName;
+    $nuspecPath = [IO.Path]::ChangeExtension($csprojFullName, "nuspec")
     if(-not (Test-Path $nuspecPath)) {
         Write-Host-Warning "Nuspec for project not found: $CsprojFile.Name";
         return;
@@ -461,7 +462,7 @@ function Invoke-PackFrameworkProject($CsprojFile, [bool]$IsTool = $False, [bool]
     }
 
     # Call nuget with default arguments plus optional
-    & $global:NugetCli pack "$nuspecPath" @packargs
+    & $global:NugetCli pack "$csprojFullName" @packargs
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
