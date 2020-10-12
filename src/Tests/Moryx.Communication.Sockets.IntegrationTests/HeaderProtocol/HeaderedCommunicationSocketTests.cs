@@ -115,12 +115,16 @@ namespace Moryx.Communication.Sockets.IntegrationTests
 
             // Act
             //Send messages from the clients to the server
-            SendMessages(numberOfClients, 1, 25000000, Clients, "ClientIdx");
+            var clientEvents = SendMessages(numberOfClients, 1, 25000000, Clients, "ClientIdx");
 
             //Send messages from the server to clients
-            SendMessages(numberOfClients, 1, 25000000, ServerConnections, "_serverConnection");
+            var serverEvents = SendMessages(numberOfClients, 1, 25000000, ServerConnections, "_serverConnection");
 
-            Thread.Sleep(new TimeSpan(0, 0, 0, 2));
+            // Wait for each thread to initiate sending
+            WaitHandle.WaitAll(clientEvents);
+            WaitHandle.WaitAll(serverEvents);
+
+            // Close connections
             if (shutdowntype == ShutdownType.ShutdownClient)
             {
                 CloseClients();

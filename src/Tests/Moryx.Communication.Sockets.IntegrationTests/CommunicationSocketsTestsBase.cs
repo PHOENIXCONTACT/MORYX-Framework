@@ -209,24 +209,31 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         /// <param name="payloadMultiplier">Payload multiplier</param>
         /// <param name="connectionList">Connections to count received messages on</param>
         /// <param name="consoleText">Text that is written to console before sending payload</param>
-        protected void SendMessages(int numberOfClients, int numberOfMessages, int payloadMultiplier, List<ConnectionBuffer<TMessage>> connectionList, string consoleText)
+        protected WaitHandle[] SendMessages(int numberOfClients, int numberOfMessages, int payloadMultiplier, List<ConnectionBuffer<TMessage>> connectionList, string consoleText)
         {
+            var resetEvents = new WaitHandle[numberOfClients * numberOfMessages];
             for (var i = 0; i < numberOfClients; i++)
             {
                 for (var j = 0; j < numberOfMessages; j++)
                 {
                     var i1 = i;
                     var j1 = j;
+                    var resetEvent = new ManualResetEvent(false);
                     ThreadPool.QueueUserWorkItem(obj =>
                     {
+                        var sync = (ManualResetEvent) obj;
                         var pl = CreatePayload(payloadMultiplier, BitConverter.GetBytes(i1));
                         Console.WriteLine(">>>{4:HH:mm:ss,ffff}-Sending Message for {0}: {1}, Message: {2}, MessageLength: {3}",
                             consoleText, i1, j1, pl.Length, DateTime.Now);
 
                         connectionList[i1].Connection.Send(CreateMessage(i1, pl));
-                    });
+                        sync.Set();
+                    }, resetEvent);
+                    resetEvents[i * numberOfMessages + j] = resetEvent;
                 }
             }
+
+            return resetEvents;
         }
 
         /// <summary>
