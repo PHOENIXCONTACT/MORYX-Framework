@@ -15,6 +15,7 @@ using Moryx.Products.Samples.Recipe;
 using Moryx.Tools;
 using Moryx.Workflows;
 using Moq;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using NUnit.Framework;
@@ -108,7 +109,6 @@ namespace Moryx.Products.IntegrationTests
                     new GenericInstanceConfiguration
                     {
                         TargetType = nameof(WatchInstance),
-                        PluginName = nameof(WatchStrategy),
                         JsonColumn = nameof(IGenericColumns.Text8),
                         PropertyConfigs = new List<PropertyMapperConfig>
                         {
@@ -123,6 +123,12 @@ namespace Moryx.Products.IntegrationTests
                                 PropertyName = nameof(WatchInstance.TimeSet),
                                 Column = nameof(IGenericColumns.Integer2),
                                 PluginName = nameof(IntegerColumnMapper)
+                            },
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(WatchInstance.Identity),
+                                Column = nameof(IGenericColumns.Text1),
+                                PluginName = nameof(TextColumnMapper)
                             }
                         }
                     },
@@ -643,6 +649,7 @@ namespace Moryx.Products.IntegrationTests
             var instance = (WatchInstance)watch.CreateInstance();
             instance.TimeSet = true;
             instance.DeliveryDate = DateTime.Now;
+            instance.Identity = new BatchIdentity("12345");
             _storage.SaveInstances(new[] { instance });
 
             // Assert
@@ -662,8 +669,10 @@ namespace Moryx.Products.IntegrationTests
 
             // Act
             var watchCopy = (WatchInstance)_storage.LoadInstances(instance.Id)[0];
-            var identity = new ProductIdentity("123", 1);
-            var byDate = _storage.LoadInstances<WatchInstance>(w => identity.Equals(w.Identity));
+            var identity = instance.Identity;
+            var byIdentity = _storage.LoadInstances<WatchInstance>(w => identity.Equals(w.Identity));
+            var byDateTime = _storage.LoadInstances<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
+            var byBool = _storage.LoadInstances<WatchInstance>(i => i.TimeSet);
 
             // Assert
             Assert.NotNull(watchCopy);
@@ -673,6 +682,10 @@ namespace Moryx.Products.IntegrationTests
             Assert.AreEqual(instance.Watchface.Identifier, watchCopy.Watchface.Identifier, "Guid does not match");
             Assert.NotNull(instance.Needles);
             Assert.AreEqual(3, instance.Needles.Count);
+
+            Assert.LessOrEqual(1, byIdentity.Count);
+            Assert.LessOrEqual(1, byDateTime.Count);
+            Assert.LessOrEqual(1, byBool.Count);
         }
     }
 }

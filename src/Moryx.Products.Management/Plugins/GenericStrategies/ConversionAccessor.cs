@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Reflection;
 using Moryx.Tools;
 
@@ -9,7 +10,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Base class for all internal accessor wrappers with type conversion
     /// </summary>
-    internal abstract class ConversionAccessor<TColumn, TProperty> : IPropertyAccessor<object, TColumn>
+    internal class ConversionAccessor<TColumn, TProperty> : IPropertyAccessor<object, TColumn>
     {
         protected IPropertyAccessor<object, TProperty> Target { get; }
 
@@ -17,13 +18,27 @@ namespace Moryx.Products.Management
 
         public PropertyInfo Property => Target.Property;
 
-        protected ConversionAccessor(PropertyInfo property)
+        public Func<TProperty, TColumn> ToColumn { get; }
+
+        public Func<TColumn, TProperty> ToProperty { get; }
+
+        public ConversionAccessor(PropertyInfo property, Func<TProperty, TColumn> toColumn, Func<TColumn, TProperty> toProperty)
         {
+            ToColumn = toColumn;
+            ToProperty = toProperty;
             Target = ReflectionTool.PropertyAccessor<object, TProperty>(property);
         }
 
-        public abstract TColumn ReadProperty(object instance);
+        public TColumn ReadProperty(object instance)
+        {
+            var value = Target.ReadProperty(instance);
+            return ToColumn(value);
+        }
 
-        public abstract void WriteProperty(object instance, TColumn value);
+        public void WriteProperty(object instance, TColumn value)
+        {
+            var converted = ToProperty(value);
+            Target.WriteProperty(instance, converted);
+        }
     }
 }

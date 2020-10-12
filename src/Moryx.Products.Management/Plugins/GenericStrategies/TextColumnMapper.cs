@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using Moryx.Container;
 using Moryx.Serialization;
@@ -24,58 +25,29 @@ namespace Moryx.Products.Management
 
         protected override IPropertyAccessor<object, string> CreatePropertyAccessor(PropertyInfo objectProp)
         {
+            var propType = objectProp.PropertyType;
             // Convert return value to string
-            if (objectProp.PropertyType == typeof(Guid))
-                return new GuidAccessor(objectProp);
+            if (propType == typeof(Guid))
+                return new ConversionAccessor<string, Guid>(objectProp, g => g.ToString(), Guid.Parse);
 
-            if (objectProp.PropertyType.IsClass && objectProp.PropertyType != typeof(string))
-                return new JsonAccessor(objectProp);
+            if ((propType.IsClass | propType.IsInterface) && propType != typeof(string))
+                return new ConversionAccessor<string, object>(objectProp,
+                    o => JsonConvert.SerializeObject(o, Property.PropertyType, JsonSettings.Minimal),
+                    s => JsonConvert.DeserializeObject(s, Property.PropertyType, JsonSettings.Minimal));
 
             return base.CreatePropertyAccessor(objectProp);
         }
 
-        /// <summary>
-        /// Accessor decorator to convert GUID to string and back
-        /// </summary>
-        private class GuidAccessor : ConversionAccessor<string, Guid>
+        protected override object ToExpressionValue(object value)
         {
-            public GuidAccessor(PropertyInfo property) : base(property)
-            {
-            }
+            var propType = Property.PropertyType;
+            if (propType == typeof(Guid))
+                return ((Guid)value).ToString();
 
-            public override string ReadProperty(object instance)
-            {
-                var value = Target.ReadProperty(instance);
-                return value.ToString();
-            }
+            if ((propType.IsClass | propType.IsInterface) && propType != typeof(string))
+                return JsonConvert.SerializeObject(value, Property.PropertyType, JsonSettings.Minimal);
 
-            public override void WriteProperty(object instance, string value)
-            {
-                var guid = Guid.Parse(value);
-                Target.WriteProperty(instance, guid);
-            }
-        }
-
-        /// <summary>
-        /// Accessor decorator to convert objects to JSON and back
-        /// </summary>
-        private class JsonAccessor : ConversionAccessor<string, object>
-        {
-            public JsonAccessor(PropertyInfo property) : base(property)
-            {
-            }
-
-            public override string ReadProperty(object instance)
-            {
-                var value = Target.ReadProperty(instance);
-                return JsonConvert.SerializeObject(value, Target.Property.PropertyType, JsonSettings.Minimal);
-            }
-
-            public override void WriteProperty(object instance, string value)
-            {
-                var deserialized = JsonConvert.DeserializeObject(value, Target.Property.PropertyType);
-                Target.WriteProperty(instance, deserialized);
-            }
+            return base.ToExpressionValue(value);
         }
     }
 }

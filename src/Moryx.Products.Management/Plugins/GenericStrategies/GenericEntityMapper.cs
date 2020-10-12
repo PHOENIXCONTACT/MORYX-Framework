@@ -4,7 +4,9 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.Container;
 using Moryx.Products.Model;
 using Moryx.Serialization;
@@ -58,7 +60,70 @@ namespace Moryx.Products.Management
 
         public Expression<Func<IGenericColumns, bool>> TransformSelector<T>(Expression<Func<T, bool>> selector)
         {
-            return null;
+            var body = selector.Body;
+            // Extract the property targeted by the expression
+            switch (body)
+            {
+                case MemberExpression memEx:
+                    // For single member expression assume 
+                    return Convert(memEx.Member.Name, ExpressionType.Equal, true);
+                case BinaryExpression binary:
+                    object value;
+                    if (binary.Left is MemberExpression bLeft && bLeft.Expression is ParameterExpression)
+                    {
+                        value = ExtractExpressionValue(binary.Right);
+                        return Convert(bLeft.Member.Name, binary.NodeType, value);
+                    }
+                    if (binary.Right is MemberExpression bRight && bRight.Expression is ParameterExpression)
+                    {
+                        value = ExtractExpressionValue(binary.Left);
+                        return Convert(bRight.Member.Name, binary.NodeType, value);
+                    }
+                    break;
+                case MethodCallExpression call:
+                    // For now only implement identity check
+                    var method = call.Method;
+                    if (method.Name == nameof(Equals))
+                    {
+                        object callValue;
+                        if (call.Object is MemberExpression callMemEx && callMemEx.Expression is ConstantExpression)
+                        {
+                            callValue = ExtractExpressionValue(call.Object);
+                            return Convert(((MemberExpression)call.Arguments.First()).Member.Name, ExpressionType.Equal, callValue);
+                        }
+                        
+                        callValue = ExtractExpressionValue(call.Arguments.First());
+                        return Convert(((MemberExpression)call.Object).Member.Name, ExpressionType.Equal, callValue);
+                    }
+                    break;
+            }
+            throw new NotSupportedException("Expression type not supported yet");
+        }
+
+        private static object ExtractExpressionValue(Expression expression)
+        {
+            if (expression is ConstantExpression constEx)
+                return constEx.Value;
+
+            if (expression is MemberExpression memEx)
+            {
+                var container = (memEx.Expression as ConstantExpression)?.Value;
+                if (memEx.Member is FieldInfo field)
+                    return field.GetValue(container);
+                if (memEx.Member is PropertyInfo prop)
+                    return prop.GetValue(container);
+            }
+
+            throw new NotSupportedException("Expression type not supported yet");
+        }
+
+        private Expression<Func<IGenericColumns, bool>> Convert(string memberName, ExpressionType type, object value)
+        {
+            var mapper = _configuredMappers.FirstOrDefault(cm => cm.Property.Name == memberName);
+
+            var columnParam = Expression.Parameter(typeof(IGenericColumns));
+            var body = mapper.ToColumnExpression(columnParam, type, value);
+            return Expression.Lambda(body, columnParam) as Expression<Func<IGenericColumns, bool>>;
         }
 
         public void ReadValue(IGenericColumns source, object target)

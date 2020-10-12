@@ -622,7 +622,7 @@ namespace Moryx.Products.Management
                     entities.AddRange(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>());
                 }
 
-                var instances = TransformArticles(uow, entities).Cast<TInstance>();
+                var instances = TransformArticles(uow, entities).OfType<TInstance>().ToArray();
                 // Final check against compiled expression
                 var compiledSelector = selector.Compile();
                 // Only return matches against compiled expression
