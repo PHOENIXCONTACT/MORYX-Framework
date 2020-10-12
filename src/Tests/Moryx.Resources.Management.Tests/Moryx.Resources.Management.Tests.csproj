@@ -1,152 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
-  <Import Project="..\..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
-  <Import Project="..\..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.10.1\build\NUnit.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{65D88A79-9239-4BF6-AAD3-29E432A9DEDB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Moryx.Resources.Management.Tests</RootNamespace>
-    <AssemblyName>Moryx.Resources.Management.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <TargetFramework>net45</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Castle.Core.4.4.1\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
-    </Reference>
-    <Reference Include="Effort, Version=2.2.10.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Effort.EF6.2.2.10\lib\net45\Effort.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq, Version=4.14.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moq.4.14.5\lib\net45\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="Moryx, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moryx.3.0.0-dev.105\lib\netstandard2.0\Moryx.dll</HintPath>
-    </Reference>
-    <Reference Include="Moryx.Model, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moryx.Model.3.0.0-dev.105\lib\net461\Moryx.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="Moryx.Model.InMemory, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moryx.Model.InMemory.3.0.0-dev.105\lib\net461\Moryx.Model.InMemory.dll</HintPath>
-    </Reference>
-    <Reference Include="Moryx.Runtime, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moryx.Runtime.3.0.0-dev.105\lib\netstandard2.0\Moryx.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Moryx.TestTools.UnitTest, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moryx.TestTools.UnitTest.3.0.0-dev.105\lib\netstandard2.0\Moryx.TestTools.UnitTest.dll</HintPath>
-    </Reference>
-    <Reference Include="Moryx.Tools.Wcf, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Moryx.Tools.Wcf.3.0.0-dev.105\lib\net461\Moryx.Tools.Wcf.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NMemory, Version=3.0.0.0, Culture=neutral, PublicKeyToken=afc61983f100d280, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NMemory.3.1.1\lib\net45\NMemory.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Moq" Version="4.14.6" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="Moryx.Model.InMemory" Version="3.0.0-dev.138" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Mocks\DerivedResource.cs" />
-    <Compile Include="Mocks\InterferenceResource.cs" />
-    <Compile Include="Mocks\NonPublicResource.cs" />
-    <Compile Include="Mocks\OtherResource.cs" />
-    <Compile Include="Mocks\ResourceWithImplicitApi.cs" />
-    <Compile Include="Mocks\ReferenceResource.cs" />
-    <Compile Include="Mocks\SimpleResource.cs" />
-    <Compile Include="ResourceEntityAccessorTests.cs" />
-    <Compile Include="ResourceLinkerTests.cs" />
-    <Compile Include="ResourceManagerTests.cs" />
-    <Compile Include="TypeControllerTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
+    <ProjectReference Include="..\..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj">
-      <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
-      <Name>Moryx.AbstractionLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj">
-      <Project>{1516374c-976f-49fc-a911-29edc481c657}</Project>
-      <Name>Moryx.AbstractionLayer.TestTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Moryx.Resources.Management\Moryx.Resources.Management.csproj">
-      <Project>{4ca4f6b5-4c26-4b99-8fb9-937971883083}</Project>
-      <Name>Moryx.Resources.Management</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Moryx.Resources.Management.Tests.csproj.DotSettings" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
-    <Error Condition="!Exists('..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
-  </Target>
-  <Import Project="..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

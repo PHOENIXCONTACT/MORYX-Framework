@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Serialization;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.Resources.Interaction
@@ -22,7 +22,7 @@ namespace Moryx.Resources.Interaction
         /// <summary>
         /// Host config injected by resource manager
         /// </summary>
-        [DataMember, EditorBrowsable]
+        [DataMember, EntrySerialize]
         public HostConfig HostConfig { get; set; }
 
         /// <inheritdoc />

@@ -1,10 +1,8 @@
 # Tool Versions
 $NunitVersion = "3.11.1";
 $OpenCoverVersion = "4.7.922";
-$DocFxVersion = "2.52.0";
-$CodecovVersion = "1.10.0";
-$ReportGeneratorVersion = "4.5.6";
-$GitLinkVersion = "3.1.0";
+$DocFxVersion = "2.56.2";
+$ReportGeneratorVersion = "4.6.7";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
@@ -24,19 +22,17 @@ $OpenCoverReportsDir = "$ArtifactsDir\Tests"
 # Nuget
 $NugetConfig = "$RootPath\NuGet.Config";
 $NugetPackageArtifacts = "$ArtifactsDir\Packages";
-$NugetPackageTarget = "https://www.myget.org/F/moryx/api/v2/package";
 
 # Load partial scripts
 . "$PSScriptRoot\Output.ps1";
 
 # Define Tools
 $global:MSBuildCli = "msbuild.exe";
+$global:DotNetCli = "dotnet.exe";
 $global:NugetCli = "nuget.exe";
 $global:GitCli = "";
-$global:GitLink = "$BuildTools\GitLink.$GitLinkVersion\build\GitLink.exe";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
-$global:CodecovCli = "$BuildTools\Codecov.$CodecovVersion\tools\codecov.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\net47\ReportGenerator.exe";
 $global:DocFxCli = "$BuildTools\docfx.console.$DocFxVersion\tools\docfx.exe";
 
@@ -57,13 +53,13 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     $gitCommand = (Get-Command "git.exe" -ErrorAction SilentlyContinue);
     if ($null -eq $gitCommand)  { 
         Write-Host "Unable to find git.exe in your PATH. Download from https://git-scm.com";
-        Invoke-ExitCodeCheck 1;
+        exit 1;
     }
 
     $global:GitCli = $gitCommand.Path;
 
     # Load Hash
-    $global:GitCommitHash = (& $global:GitCli rev-parse --short HEAD);
+    $global:GitCommitHash = (& $global:GitCli rev-parse HEAD);
     Invoke-ExitCodeCheck $LastExitCode;
 
     # Initialize Folders
@@ -83,6 +79,10 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         $env:MORYX_BUILD_VERBOSITY = "minimal"
     }
 
+    if (-not $env:MORYX_TEST_VERBOSITY) {
+        $env:MORYX_TEST_VERBOSITY = "normal"
+    }
+
     if (-not $env:MORYX_NUGET_VERBOSITY) {
         $env:MORYX_NUGET_VERBOSITY = "normal"
     }
@@ -96,36 +96,56 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         }
     }
 
-    if (-not $env:MORYX_BRANCH) {
-        $env:MORYX_BRANCH = "unknown";
+    if (-not $env:MORYX_PACKAGE_TARGET) {
+        $env:MORYX_PACKAGE_TARGET = "";
     }
 
+    if (-not $env:MORYX_ASSEMBLY_VERSION) {
+        $env:MORYX_ASSEMBLY_VERSION = $Version;
+    }
+
+    if (-not $env:MORYX_FILE_VERSION) {
+        $env:MORYX_FILE_VERSION = $Version;
+    }
+
+    if (-not $env:MORYX_INFORMATIONAL_VERSION) {
+        $env:MORYX_INFORMATIONAL_VERSION = $Version;
+    }
+
+    if (-not $env:MORYX_PACKAGE_VERSION) {
+        $env:MORYX_PACKAGE_VERSION = $Version;
+    }
+    
     Set-Version $Version;
 
     # Printing Variables
     Write-Step "Printing global variables"
     Write-Variable "RootPath" $RootPath;
-    Write-Variable "Version" $Version;
     Write-Variable "DocumentationDir" $DocumentationDir;
     Write-Variable "NunitReportsDir" $NunitReportsDir;
 
     Write-Step "Printing global scope"
     Write-Variable "OpenCoverCli" $global:OpenCoverCli;
     Write-Variable "NUnitCli" $global:NUnitCli;
-    Write-Variable "CodecovCli" $global:OpenCoverCli;
     Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
     Write-Variable "DocFxCli" $global:DocFxCli;
     Write-Variable "GitCli" $global:GitCli;
-    Write-Variable "GitLink" $global:GitLink;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
-    Write-Variable "MORYX_BRANCH" $env:MORYX_BRANCH;
-    Write-Variable "MORYX_VERSION" $env:MORYX_VERSION;
-    Write-Variable "MORYX_ASSEMBLY_VERSION" $env:MORYX_ASSEMBLY_VERSION;
+
+    Write-Step "Printing environment variables"
+    Write-Variable "MORYX_OPTIMIZE_CODE" $env:MORYX_OPTIMIZE_CODE;
     Write-Variable "MORYX_BUILDNUMBER" $env:MORYX_BUILDNUMBER;
     Write-Variable "MORYX_BUILD_CONFIG" $env:MORYX_BUILD_CONFIG;
     Write-Variable "MORYX_BUILD_VERBOSITY" $env:MORYX_BUILD_VERBOSITY;
-    Write-Variable "MORYX_OPTIMIZE_CODE" $env:MORYX_OPTIMIZE_CODE;
+    Write-Variable "MORYX_TEST_VERBOSITY" $env:MORYX_TEST_VERBOSITY;
     Write-Variable "MORYX_NUGET_VERBOSITY" $env:MORYX_NUGET_VERBOSITY;
+    Write-Variable "MORYX_PACKAGE_TARGET" $env:MORYX_PACKAGE_TARGET;
+
+    Write-Variable "MORYX_ASSEMBLY_VERSION" $env:MORYX_ASSEMBLY_VERSION;
+    Write-Variable "MORYX_FILE_VERSION" $env:MORYX_FILE_VERSION;
+    Write-Variable "MORYX_INFORMATIONAL_VERSION" $env:MORYX_INFORMATIONAL_VERSION;
+    Write-Variable "MORYX_PACKAGE_VERSION" $env:MORYX_PACKAGE_VERSION;
+
 
     # Cleanp
     if ($Cleanup) {
@@ -156,6 +176,7 @@ function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExe
         Write-Host "$PackageName ($Version) already exists. Do not need to install."
     }
 }
+
 function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
     Write-Step "Building $ProjectFile"
 
@@ -223,7 +244,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     Write-Step "Starting cover tests from $SearchPath with filter $FilterFile."
     
     if (-not (Test-Path $SearchPath)) {
-        Write-Host "$SearchPath does not exists, ignoring!";
+        Write-Host-Warning "$SearchPath does not exists, ignoring!";
         return;
     }
 
@@ -244,52 +265,60 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     CreateFolderIfNotExists $OpenCoverReportsDir;
     CreateFolderIfNotExists $NunitReportsDir;
 
+    $includeFilter = "+[Moryx*]*";
+    $excludeFilter = "-[*nunit*]* -[*Tests]* -[*Model*]*";
+
+    if (Test-Path $FilterFile) {
+        $ignoreContent = Get-Content $FilterFile;
+
+        foreach ($line in $ignoreContent) {
+            $parts = $line.Split(":");
+            if ($parts.Count -lt 2) {
+                continue
+            }
+
+            $filterType = $parts[0];
+            $filterValue = $parts[1];
+
+            if ($filterType.StartsWith("INCLUDE")) {
+                $includeFilter += " $filterValue";
+            }
+            
+            if ($filterType.StartsWith("EXCLUDE")) {
+                $excludeFilter += " $filterValue";
+            }
+        }
+
+        Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
+    } 
+
     ForEach($testProject in $testProjects ) { 
         $projectName = ([System.IO.Path]::GetFileNameWithoutExtension($testProject.Name));
         $testAssembly = [System.IO.Path]::Combine($testProject.DirectoryName, "bin", $env:MORYX_BUILD_CONFIG, "$projectName.dll");
+        $isNetCore = Get-CsprojIsNetCore($testProject);
 
         Write-Host "OpenCover Test: ${projectName}:";
 
         $nunitXml = ($NunitReportsDir + "\$projectName.TestResult.xml");
         $openCoverXml = ($OpenCoverReportsDir + "\$projectName.OpenCover.xml");
 
-        # If assembly does not exists, the project will be build
-        if (-not (Test-Path $testAssembly)) {
-            Invoke-Build $testProject 
+        if ($isNetCore) {
+            $targetArgs = '"test -v ' + $env:MORYX_TEST_VERBOSITY + ' -c ' + $env:MORYX_BUILD_CONFIG + ' ' + $testProject + '"';
+            $openCoverAgs = "-target:$global:DotNetCli", "-targetargs:$targetArgs"
+        }
+        else {
+            # If assembly does not exists, the project will be build
+            if (-not (Test-Path $testAssembly)) {
+                Invoke-Build $testProject 
+            }
+
+            $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MORYX_BUILD_CONFIG /result:$nunitXml $testAssembly"
         }
 
-        $includeFilter = "+[Moryx*]*";
-        $excludeFilter = "-[*nunit*]* -[*Tests]* -[*Model*]*";
-
-        if (Test-Path $FilterFile) {
-            $ignoreContent = Get-Content $FilterFile;
-
-            foreach ($line in $ignoreContent) {
-                $parts = $line.Split(":");
-                if ($parts.Count -lt 2) {
-                    continue
-                }
-
-                $filterType = $parts[0];
-                $filterValue = $parts[1];
-
-                if ($filterType.StartsWith("INCLUDE")) {
-                    $includeFilter += " $filterValue";
-                }
-                
-                if ($filterType.StartsWith("EXCLUDE")) {
-                    $excludeFilter += " $filterValue";
-                }
-            }
-        } 
-
-        Write-Host "Active Filter: `r`n Include: $includeFilter `r`n Exclude: $excludeFilter";
-
-        $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MORYX_BUILD_CONFIG /result:$nunitXml $testAssembly"
-        $openCoverAgs += "-log:Debug", "-register:administrator", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops", "-excludebyattribute:*OpenCoverIgnore*";
+        $openCoverAgs += "-log:Debug", "-register:administrator", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops";
         $openCoverAgs += "-returntargetcode" # We need the nunit return code
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
-        
+
         & $global:OpenCoverCli $openCoverAgs
         
         $exitCode = [int]::Parse($LastExitCode);
@@ -307,12 +336,33 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
                 $errorText = "FAILED_TESTS ($exitCode)";
             }
 
-            Write-Host "Nunit exited with $errorText for $projectName";
+            Write-Host-Error "Nunit exited with $errorText for $projectName";
             Invoke-ExitCodeCheck $exitCode;
         }
-
-        Invoke-ExitCodeCheck $LastExitCode;
     }
+}
+
+function Get-CsprojIsNetCore($csprojFile) {
+    [xml]$csprojContent = Get-Content $csprojFile.FullName
+    $sdkProject = $csprojContent.Project.Sdk;
+    if ($null -ne $sdkProject) {
+        # Read Target Framework
+        $targetFramework = $csprojContent.Project.PropertyGroup.TargetFramework;
+        if ($targetFramework -Match "netcoreapp") {
+            # NETCore
+            return $true;
+        }
+    }
+    return $false;
+}
+
+function Get-CsprojIsSdkProject($csprojFile) {
+    [xml]$csprojContent = Get-Content $csprojFile.FullName
+    $sdkProject = $csprojContent.Project.Sdk;
+    if ($null -ne $sdkProject) {
+        return $true;
+    }
+    return $false;
 }
 
 function Invoke-CoverReport {
@@ -334,22 +384,6 @@ function Invoke-CoverReport {
 
     & $global:ReportGeneratorCli -reports:"$asArgument" -targetDir:"$DocumentationArtifcacts/OpenCover"
     Invoke-ExitCodeCheck $LastExitCode;
-}
-
-function Invoke-CodecovUpload {
-    Write-Step "Uploading cover reports to codecov. Searching for OpenCover.xml files in $OpenCoverReportsDir."
-
-    if (-not (Test-Path $global:CodecovCli)) {
-        Install-Tool "Codecov" $CodecovVersion $global:CodecovCli;
-    }
-
-    $covargs = "-f", "$OpenCoverReportsDir\*.OpenCover.xml";
-    if ($env:MORYX_CODECOV_SECRET) {
-        $covargs += "-t", "$env:MORYX_CODECOV_SECRET";
-    }
-
-    & $global:CodecovCli @covargs;
-    #Invoke-ExitCodeCheck $LastExitCode;
 }
 
 function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "docfx.json")) {
@@ -375,54 +409,47 @@ function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "
     CopyAndReplaceFolder $docFxDest "$DocumentationArtifcacts\DocFx";
 }
 
-function Invoke-SourceIndex([string]$RawUrl, [string]$SearchPath = [System.IO.Path]::Combine($PSScriptRoot, "..\")) {
-    Write-Step "Indexing SourceCode and patching PDBs to $RawUrl"
+function Invoke-PackSdkProject($CsprojFile, [bool]$IncludeSymbols = $False) {
+    Write-Host "Try to pack .NET SDK project: $($CsprojFile.Name) ...";
 
-    if (-not (Test-Path $global:GitLink)) {
-        Install-Tool "GitLink" $GitLinkVersion $global:GitLink;
+    # Check if the project should be packed
+    $csprojFullName = $CsprojFile.FullName;
+    [xml]$csprojContent = Get-Content $csprojFullName
+    $createPackage = $csprojContent.Project.PropertyGroup.CreatePackage;
+;
+    if ($null -eq $createPackage -or "false" -eq $createPackage) {
+        Write-Host-Warning "... csproj not flagged with <CreatePackage>true</CreatePackage>: $($CsprojFile.Name)";
+        return;
     }
 
-    $sourceLink = "$RawUrl/{revision}/{filename}";
+    $packargs = "--output", "$NugetPackageArtifacts";
+    $packargs += "--configuration", "$env:MORYX_BUILD_CONFIG";
+    $packargs += "--verbosity", "$env:MORYX_NUGET_VERBOSITY";
+    $packargs += "--no-build";
 
-    Write-Host "SearchPath for Projects: $SearchPath";
-    $csprojs = Get-Childitem $SearchPath -recurse | Where-Object {$_.extension -eq ".csproj"}
 
-    foreach ($csporj in $csprojs) {
-        Write-Host;
-        Write-Host "Reading csproj: $($csporj.Name)"; 
-
-        $csprojXml = [xml](Get-Content $csporj.FullName);
-
-        $outputGroup = $csprojXml.Project.PropertyGroup | Where-Object Condition -Like "*$env:MORYX_BUILD_CONFIG|AnyCPU*";
-        $outputPath = $outputGroup.OutputPath;
-
-        $assemblyGroup = $csprojXml.Project.PropertyGroup | Where-Object {-not ([string]::IsNullOrEmpty($_.AssemblyName)) }
-        $assemblyName = $assemblyGroup.AssemblyName;
-
-        $pdbFileName = $($assemblyName + ".pdb");
-        $projectPdbPath = [System.IO.Path]::Combine($outputPath, $pdbFileName);
-        $pdbPath = [System.IO.Path]::Combine($csporj.DirectoryName, $projectPdbPath);
-
-        Write-Host "PDB path of assembly for $($csporj.Name) is: $projectPdbPath"
-
-        if (-not (Test-Path $pdbPath)) {
-            Write-Host "PDB was not found. Project will be ignored!"
-            continue;
-        }
-
-        $args = "-u", "$sourceLink";
-        $args += $pdbPath
-
-        & $global:GitLink $args
+    if ($IncludeSymbols) {
+        $packargs += "--include-symbols";
     }
+
+    & $global:DotNetCli pack "$csprojFullName" @packargs
+    Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-Pack($FilePath, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
-    CreateFolderIfNotExists $NugetPackageArtifacts;
+function Invoke-PackFrameworkProject($CsprojFile, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
+    Write-Host "Try to pack .NET Framework project: $CsprojFile.Name ...";
+
+    # Check if there is a matching nuspec for the proj
+    $csprojFullName = $CsprojFile.FullName;
+    $nuspecPath = [IO.Path]::ChangeExtension($csprojFullName, "nuspec")
+    if(-not (Test-Path $nuspecPath)) {
+        Write-Host-Warning "Nuspec for project not found: $CsprojFile.Name";
+        return;
+    }
 
     $packargs = "-outputdirectory", "$NugetPackageArtifacts";
     $packargs += "-includereferencedprojects";
-    $packargs += "-Version", "$env:MORYX_VERSION";
+    $packargs += "-Version", "$env:MORYX_PACKAGE_VERSION";
     $packargs += "-Prop", "Configuration=$env:MORYX_BUILD_CONFIG";
     $packargs += "-Verbosity", "$env:MORYX_NUGET_VERBOSITY";
 
@@ -435,48 +462,121 @@ function Invoke-Pack($FilePath, [bool]$IsTool = $False, [bool]$IncludeSymbols = 
     }
 
     # Call nuget with default arguments plus optional
-    & $global:NugetCli pack "$FilePath" @packargs
+    & $global:NugetCli pack "$csprojFullName" @packargs
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-PackAll([switch]$Symbols = $False) {
-    Write-Host "Looking for .nuspec files..."
-    # Look for nuspec in this directory
-    foreach ($nuspecFile in Get-ChildItem $RootPath -Recurse -Filter *.nuspec) {
-        $nuspecPath = $nuspecFile.FullName
-        Write-Host "Packing $nuspecPath" -ForegroundColor Green
+function Invoke-Pack($ProjectPath, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
+    CreateFolderIfNotExists $NugetPackageArtifacts;
 
-        # Check if there is a matching proj for the nuspec
-        $projectPath = [IO.Path]::ChangeExtension($nuspecPath, "csproj")
-        if(Test-Path $projectPath) {
-            Invoke-Pack -FilePath $projectPath -IncludeSymbols $Symbols
-        } else {
-            Invoke-Pack -FilePath $nuspecPath -IncludeSymbols $Symbols
-        }
+    if (Get-CsprojIsSdkProject($ProjectPath)) {
+        Invoke-PackSdkProject $ProjectPath $IncludeSymbols;
+    }
+    else {
+        Invoke-PackFrameworkProject $ProjectPath $IsTool $IncludeSymbols;
+    }
+}
+
+function Invoke-PackAll([switch]$Symbols = $False) {
+    Write-Host "Looking for .csproj files..."
+    # Look for csproj in this directory
+    foreach ($csprojFile in Get-ChildItem $RootPath -Recurse -Filter *.csproj) {
+        Invoke-Pack -ProjectPath $csprojFile -IncludeSymbols $Symbols
     }
 }
 
 function Invoke-Publish {
-    Write-Host "Pushing packages from $NugetPackageArtifacts to $NugetPackageTarget"
+    Write-Host "Pushing packages from $NugetPackageArtifacts to $env:MORYX_PACKAGE_TARGET"
+    
+    if ([string]::IsNullOrEmpty($env:MORYX_PACKAGE_TARGET)) {
+        Write-Host-Error "There is no package target given. Set the environment varialble MORYX_PACKAGE_TARGET to publish packages.";
+        Invoke-ExitCodeCheck 1;
+    }
+
     $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
 
     foreach ($package in $packages) {
-        & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $NugetPackageTarget -Verbosity $env:MORYX_NUGET_VERBOSITY
+        & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET -Verbosity $env:MORYX_NUGET_VERBOSITY
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }
 
 function Set-Version ([string]$MajorMinorPatch) {
-    Write-Host "Setting environment version to $MajorMinorPatch";
-    $version = $MajorMinorPatch;
-
-    $branch = $env:MORYX_BRANCH
-    $branch = $branch.Replace("/","").ToLower()
+    $semVer2Regex = "^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$";
     
-    $version = "$version-$branch.$env:MORYX_BUILDNUMBER";
+    $version = Read-VersionFromRef($MajorMinorPatch);
+    Write-Host "Setting environment version to $version";
 
-    $env:MORYX_VERSION = $version;
-    $env:MORYX_ASSEMBLY_VERSION = $MajorMinorPatch + "." + $env:MORYX_BUILDNUMBER;
+    # Match semVer2 regex
+    $regexMatch = [regex]::Match($version, $semVer2Regex);
+
+    if (-not $regexMatch.Success) {
+        Write-Host "Could not parse version: $version";
+        Invoke-ExitCodeCheck 1;
+    }
+
+    # Extract groups
+    $matchgroups = $regexMatch.captures.groups;
+    $majorGroup = $matchgroups[1];
+    $minorGroup = $matchgroups[2];
+    $patchGroup = $matchgroups[3];
+    $preReleaseGroup = $matchgroups[4];
+
+    # Compose Major.Minor.Patch
+    $mmp = $majorGroup.Value + "." + $minorGroup.Value + "." + $patchGroup.Value;
+
+    # Check if it is a pre release
+    $env:MORYX_ASSEMBLY_VERSION = $majorGroup.Value + ".0.0.0" # 3.0.0.0
+    $env:MORYX_FILE_VERSION = $mmp + "." + $env:MORYX_BUILDNUMBER; # 3.1.2.42
+
+    if ($preReleaseGroup.Success) {
+        $env:MORYX_INFORMATIONAL_VERSION = $mmp + "-" + $preReleaseGroup.Value + "+" + $global:GitCommitHash; # 3.1.2-beta.1+d95a996ed5ba14a1421dafeb844a56ab08211ead
+        $env:MORYX_PACKAGE_VERSION = $mmp + "-" + $preReleaseGroup.Value;
+    } else {
+        $env:MORYX_INFORMATIONAL_VERSION = $mmp + "+" + $global:GitCommitHash; # 3.1.2+d95a996ed5ba14a1421dafeb844a56ab08211ead
+        $env:MORYX_PACKAGE_VERSION = $mmp;
+    }
+}
+
+function Read-VersionFromRef([string]$MajorMinorPatch) {
+    function preReleaseVersion ([string] $name)
+    {
+        $name = $name.Replace("/","").ToLower();
+        return "$MajorMinorPatch-$name.$env:MORYX_BUILDNUMBER";;
+    }
+
+    $ref = "";
+    if ($env:GITHUB_WORKFLOW) { # GitHub Workflow
+        Write-Host "Reading version from 'GitHub Workflow'";
+        $ref = $env:GITHUB_REF;
+
+        if ($ref.StartsWith("refs/tags/")) {
+            if ($ref.StartsWith("refs/tags/v")) {
+                # Its a version tag
+                $version = $ref.Replace("refs/tags/v","")
+            } 
+            else {
+                # Just a tag
+                $name = $ref.Replace("refs/tags/","");
+                $version = = preReleaseVersion($name);
+            }
+        }
+        elseif ($ref.StartsWith("refs/heads/")) {
+            # Its a branch
+            $name = $ref.Replace("refs/heads/","");
+            $version = preReleaseVersion($name);
+        } 
+        else {
+            $version = preReleaseVersion($ref);
+        }
+    }
+    else { # Local build
+        Write-Host "Reading version from 'local'";
+        $ref = (& $global:GitCli rev-parse --abbrev-ref HEAD);
+        $version = preReleaseVersion($ref);
+    }
+
+    return $version;
 }
 
 function Set-AssemblyVersion([string]$InputFile) {
@@ -487,16 +587,16 @@ function Set-AssemblyVersion([string]$InputFile) {
         exit 1;
     }
 
-    Write-Host "Applying assembly info of $($file.FullName) -> $env:MORYX_ASSEMBLY_VERSION ";
+    Write-Host "Applying assembly info of $($file.FullName) ->  $env:MORYX_ASSEMBLY_VERSION ";
    
     $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyVersion = 'AssemblyVersion("' + $env:MORYX_ASSEMBLY_VERSION + '")';
+    $assemblyVersion = 'AssemblyVersion("' +  $env:MORYX_ASSEMBLY_VERSION + '")';
 
     $assemblyFileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyFileVersion = 'AssemblyFileVersion("' + $env:MORYX_ASSEMBLY_VERSION + '")';
+    $assemblyFileVersion = 'AssemblyFileVersion("' +  $env:MORYX_FILE_VERSION + '")';
 
     $assemblyInformationalVersionPattern = 'AssemblyInformationalVersion\("[0-9]+(\.([0-9]+)){3}"\)';
-    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $env:MORYX_VERSION + '")';
+    $assemblyInformationalVersion = 'AssemblyInformationalVersion("' + $env:MORYX_INFORMATIONAL_VERSION + '")';
 
     $assemblyConfigurationPattern = 'AssemblyConfiguration\("\w+"\)';
     $assemblyConfiguration = 'AssemblyConfiguration("' + $env:MORYX_BUILD_CONFIG + '")';
@@ -512,7 +612,7 @@ function Set-AssemblyVersion([string]$InputFile) {
 }
 
 function Set-AssemblyVersions([string[]]$Ignored = $(), [string]$SearchPath = $RootPath) {
-    $Ignored = $Ignored + "\\.build\\" + "\\.buildtools\\" + "\\Tests\\" + "\\IntegrationTests\\" + "\\SystemTests\\";
+    $Ignored = $Ignored + "\\.build\\" + "\\Tests\\" + "\\IntegrationTests\\" + "\\SystemTests\\";
 
     $assemblyInfos = Get-ChildItem -Path $RootPath -include "*AssemblyInfo.cs" -Recurse | Where-Object { 
         $fullName = $_.FullName;
@@ -557,7 +657,7 @@ function Set-VsTemplateVersion([string]$VsTemplate) {
     $templateContent.VSTemplate.WizardExtension.Assembly = $wizardAssemblyStrongName
     $templateContent.Save($vsTemplate)
 
-    Write-Host "Version $env:MORYX_ASSEMBLY_VERSION applied to $VsTemplate!"
+    Write-Host "Version$env:MORYX_ASSEMBLY_VERSION applied to $VsTemplate!"
 }
 
 function CreateFolderIfNotExists([string]$Folder) {

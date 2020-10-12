@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Management.Instrumentation;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.TestTools.UnitTest;
 using Moryx.Tools;
@@ -66,7 +65,7 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
             var instance = Activator.CreateInstance(_typeMap[type]) as Resource;
             if (instance == null)
             {
-                throw new InstanceNotFoundException($"Cannot instantiate {type}");
+                throw new InvalidOperationException($"Cannot instantiate {type}");
             }
 
             SetReferenceCollections(instance);

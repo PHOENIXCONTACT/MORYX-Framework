@@ -142,7 +142,7 @@ namespace Moryx.Resources.Management
                          $"- initialize <Name>{Environment.NewLine}");
         }
 
-        [EditorBrowsable, DisplayName("Initialize Resource"), Description("Calls the configured resource initializer")]
+        [EntrySerialize, DisplayName("Initialize Resource"), Description("Calls the configured resource initializer")]
         public string CallResourceInitializer([PluginConfigs(typeof(IResourceInitializer), true)] ResourceInitializerConfig[] configs)
         {
             foreach (var config in configs)

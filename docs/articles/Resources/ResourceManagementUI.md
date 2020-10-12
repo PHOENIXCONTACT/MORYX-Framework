@@ -58,9 +58,9 @@ Some information is build on the platforms `Entry` format.
 The `EntryFormat` is an enhanced, recursive key-value structure. 
 It is designed to serialize types or objects and edit or instantiate them on the client, without knowledge of the concrete type. 
 It is an important tool of the platform to easily add resources or other plugins on the server without the need for a new web-service or specialized UI. 
-Developers can decide which properties should be visible by decorating them with the `EditorBrowsable` attribute. 
-In many cases properties will be decorated with `DataMember` and `EditorBrowsable` to save modiﬁed values, but splitting them allows for special cases. 
-Using only `DataMember` lets developers save values without giving the user access and using only `EditorBrowsable` lets users edit runtime values that should not be saved.
+Developers can decide which properties should be visible by decorating them with the `EntrySerialize` attribute.
+In many cases properties will be decorated with `DataMember` and `EntrySerialize` to save modiﬁed values, but splitting them allows for special cases.
+Using only `DataMember` lets developers save values without giving the user access and using only `EntrySerialize` lets users edit runtime values that should not be saved.
 
 The default version of the details view with its [Aspect](ResourceManagementUI.md#Aspects) is sufficient for many resources and helps developers to get started quickly. 
 If this default does not match your requirements, it can be easily replaced with a custom UI.
@@ -70,7 +70,7 @@ To implement and register a custom view, a class has to derive from the [Resourc
 // On the server
 public class Custom : Resource
 {
-    [EditorBrowsable]
+    [EntrySerialize]
     public SomeEnum EnumValue { get; set; }
 }
 
@@ -155,7 +155,7 @@ A multi-reference can be linked to more then one resources.
 ### Methods
 
 To interact with a resource, it is possible to provide an additional web-service. 
-An alternative is to decorate a method with the `EditorBrowsable` property. 
+An alternative is to decorate a method with the `EntrySerialize` property.
 This will automatically lead to an entry in the method aspect. 
 After selecting a method, it is possible to enter values and inspect the returned value after invoking the method. 
 Like the details view this feature uses the platforms `Entry` format and editor to serialize, transmit and visualize the methods parameters. 

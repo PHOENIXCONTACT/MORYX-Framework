@@ -1,5 +1,4 @@
 ﻿param (
-    [switch]$SetAssemblyVersion,
     [switch]$Build,
 
     [switch]$SmokeTests,
@@ -23,17 +22,13 @@ $MsBuildVersion = "latest";
 # Initialize Toolkit
 Invoke-Initialize -Version (Get-Content "VERSION");
 
-if ($SetAssemblyVersion) {
-    Set-AssemblyVersions
-}
-
 if ($Build) {
     Invoke-Build ".\AbstractionLayer.sln"
     Invoke-Build ".\AbstractionLayer.UI.sln"
 }
 
 if ($SmokeTests) {
-    $runtimePath = "$RootPath\src\StartProject\bin\$env:MORYX_BUILD_CONFIG\StartProject.exe";
+    $runtimePath = "$RootPath\src\StartProject\bin\$env:MORYX_BUILD_CONFIG\net45\StartProject.exe";
     Invoke-SmokeTest $runtimePath 4 6000
 }
 

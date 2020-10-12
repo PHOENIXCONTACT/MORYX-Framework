@@ -4,4 +4,5 @@
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=FDC70670E122DE43A211C8FE4BD58287/RelativePath/@EntryValue">..\.build\Global.DotSettings</s:String>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=FDC70670E122DE43A211C8FE4BD58287/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileFDC70670E122DE43A211C8FE4BD58287/@KeyIndexDefined">True</s:Boolean>
-	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileFDC70670E122DE43A211C8FE4BD58287/RelativePriority/@EntryValue">1</s:Double></wpf:ResourceDictionary>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileFDC70670E122DE43A211C8FE4BD58287/RelativePriority/@EntryValue">1</s:Double>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Moryx/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

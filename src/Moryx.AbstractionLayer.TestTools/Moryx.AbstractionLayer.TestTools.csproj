@@ -1,87 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\.build\Common.props"></Import>
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1516374C-976F-49FC-A911-29EDC481C657}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Moryx.AbstractionLayer.TestTools</RootNamespace>
-    <AssemblyName>Moryx.AbstractionLayer.TestTools</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Additional AbstractionLayer implementations for Tests</Description>
+    <CreatePackage>true</CreatePackage>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Moryx.AbstractionLayer.TestTools.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Moryx.AbstractionLayer.TestTools.XML</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.4.4.1\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
-    </Reference>
-    <Reference Include="Moryx, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moryx.3.0.0-dev.105\lib\netstandard2.0\Moryx.dll</HintPath>
-    </Reference>
-    <Reference Include="Moryx.TestTools.UnitTest, Version=3.0.0.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moryx.TestTools.UnitTest.3.0.0-dev.105\lib\netstandard2.0\Moryx.TestTools.UnitTest.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="DummyProductInstance.cs" />
-    <Compile Include="DummyProductType.cs" />
-    <Compile Include="ReferenceCollection.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\ResourceGraphMock.cs" />
+    <PackageReference Include="Moryx.TestTools.UnitTest" Version="3.0.0-dev.138" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj">
-      <Project>{841f50c1-dec0-48d8-92d1-f860450940d8}</Project>
-      <Name>Moryx.AbstractionLayer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Moryx.AbstractionLayer.TestTools.nuspec" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

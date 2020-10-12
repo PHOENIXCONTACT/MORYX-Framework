@@ -35,28 +35,28 @@ namespace Moryx.Products.Management
             }
         }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         [Description("Automatically configure the necessary strategies for a product type.")]
         public string ConfigureType([PossibleTypes(typeof(ProductType))] string productType)
         {
             return Configurator.ConfigureType(productType);
         }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         [Description("Automatically configure the necessary strategies for a product type.")]
         public string ConfigureInstance([PossibleTypes(typeof(ProductInstance))] string instanceType)
         {
             return Configurator.ConfigureInstance(instanceType);
         }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         [Description("Automatically configure the necessary strategies for a product type.")]
         public string ConfigureRecipe([PossibleTypes(typeof(IProductRecipe))] string recipeType)
         {
             return Configurator.ConfigureRecipe(recipeType);
         }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         [Description("Save latest changes to config")]
         public void SaveConfig()
         {

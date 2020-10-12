@@ -43,7 +43,7 @@ namespace Moryx.Resources.Samples
 
         public override object Descriptor { get; }
 
-        [EditorBrowsable]
+        [EntrySerialize]
         protected class InstructorDescriptor
         {
             private readonly VisualInstructor _instructor;
@@ -53,7 +53,7 @@ namespace Moryx.Resources.Samples
                 _instructor = instructor;
             }
 
-            [EditorBrowsable]
+            [EntrySerialize]
             public string ClientId
             {
                 get { return _instructor.ClientId; }
@@ -76,7 +76,7 @@ namespace Moryx.Resources.Samples
     [ResourceRegistration]
     public class AwesomeInstructor : VisualInstructor
     {
-        
+
     }
 
     [DependencyRegistration(typeof(IInteractionService))]

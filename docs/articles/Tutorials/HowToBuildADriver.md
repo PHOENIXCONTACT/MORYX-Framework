@@ -15,7 +15,7 @@ A driver has this basic solution structure which can be extended for your needs:
 |-ExampleDriver.cs
 ````
 
-The interface `IExampleDriver` is the API of the driver and important for registration within the AbstractionLayer. For compatibility and reduced dependencies it is based to use an existing driver interface or suggest adding an additional driver interface. 
+The interface `IExampleDriver` is the API of the driver and important for registration within the AbstractionLayer. For compatibility and reduced dependencies it is based to use an existing driver interface or suggest adding an additional driver interface.
 
 ### The interface
 
@@ -49,15 +49,15 @@ namespace Moryx.Resources.Samples.DriverTutorial
     [DisplayName("Example Driver"), Description("An example driver")]
     public class ExampleDriver : Driver, IExampleDriver
     {
-        [DataMember, EditorBrowsable]
+        [DataMember, EntrySerialize]
         public string AStringValue { get; set; }
 
-        [DataMember, EditorBrowsable]
+        [DataMember, EntrySerialize]
         public int AnIntValue { get; set; }
 
-        public string ANonEditorBrowsableMember { get; set; }
+        public string ANonEntrySerializeMember { get; set; }
 
-        [EditorBrowsable, DisplayName("Square"), Description("Just multiplies given value with itself")]
+        [EntrySerialize, DisplayName("Square"), Description("Just multiplies given value with itself")]
         public int Square(int value)
         {
             return value * value;
@@ -70,7 +70,7 @@ The implementation of the `ExampleDriver` derives from the [Driver](xref:Moryx.A
 
 ![ResourceUI](images/ExampleDriverResourceUI.png)
 
-The two properties `AStringValue` and `AnIntValue` are shown in the ResourceUI and can be edited by the user. The member `ANonEditorBrowsableMember` is invisible for the user and is only used inside the AbstractionLayer.
+The two properties `AStringValue` and `AnIntValue` are shown in the ResourceUI and can be edited by the user. The member `ANonEntrySerializeMember` is invisible for the user and is only used inside the AbstractionLayer.
 The `Square` function is also visible in the Resource UI. And: It is callable from there.
 
 ## Additional things that are good to know
@@ -89,7 +89,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
     {
         ...
 
-        /// <seealso cref="IDriver"/> 
+        /// <seealso cref="IDriver"/>
         public override void Initialize()
         {
             base.Initialize();

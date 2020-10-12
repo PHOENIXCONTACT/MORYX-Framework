@@ -4,9 +4,9 @@ namespace StartProject
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            new HeartOfGold(args).Run();
+            return (int)new HeartOfGold(args).Run();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Moryx.Resources.Samples
         [ReferenceOverride(nameof(Children), AutoSave = true)]
         public IReferences<BufferValue> Values { get; set; }
 
-        [EditorBrowsable, DisplayName("Add Value")]
+        [EntrySerialize, DisplayName("Add Value")]
         [Description("Add typed value to the buffer")]
         public int AddValue([ResourceTypes(typeof(BufferValue))]string type, string name, string value)
         {
@@ -27,7 +27,7 @@ namespace Moryx.Resources.Samples
             return Values.Count;
         }
 
-        [EditorBrowsable, DisplayName("Remove Value")]
+        [EntrySerialize, DisplayName("Remove Value")]
         public int RemoveValue(string name)
         {
             var value = Values.FirstOrDefault(v => v.Name == name);
@@ -36,12 +36,12 @@ namespace Moryx.Resources.Samples
             return Values.Count;
         }
     }
-    
+
     public class BufferValue : Resource
     {
         private string _value;
 
-        [DataMember, EditorBrowsable]
+        [DataMember, EntrySerialize]
         public string Value
         {
             get { return _value; }

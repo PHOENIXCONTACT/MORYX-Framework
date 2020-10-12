@@ -12,17 +12,17 @@ namespace Moryx.AbstractionLayer.UI.Tests
     {
         public void ShowDialog<T>(T dialogViewModel) where T : IScreen
         {
-            
+
         }
 
         public Task ShowDialogAsync<T>(T dialogViewModel) where T : IScreen
         {
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
 
         public void ShowDialog<T>(T dialogViewModel, Action<T> callback) where T : IScreen
         {
-            
+
         }
 
         public Task<MessageBoxOptions> ShowMessageBoxAsync(string message, string title, MessageBoxOptions options, MessageBoxImage image)
@@ -32,27 +32,27 @@ namespace Moryx.AbstractionLayer.UI.Tests
 
         public void ShowMessageBox(string message, string title, MessageBoxOptions options, MessageBoxImage image, Action<IMessageBox> callback)
         {
-            
+
         }
 
         public void ShowMessageBox(string message, string title, MessageBoxOptions options, MessageBoxImage image)
         {
-            
+
         }
 
         public Task ShowMessageBoxAsync(string message, string title)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
 
         public void ShowMessageBox(string message, string title, Action<IMessageBox> callback)
         {
-            
+
         }
 
         public void ShowMessageBox(string message, string title)
         {
-            
+
         }
     }
 }
