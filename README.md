@@ -9,8 +9,8 @@
     <a href="https://www.myget.org/feed/Packages/moryx">
         <img src="https://img.shields.io/myget/moryx/v/Moryx.AbstractionLayer" alt="MyGet">
     </a>
-    <a href="https://codecov.io/gh/PHOENIXCONTACT/MORYX-AbstractionLyer/coverage.svg?branch=dev">
-        <img alt="Coverage" src="https://codecov.io/gh/PHOENIXCONTACT/MORYX-AbstractionLyer/coverage.svg?branch=dev" />
+    <a href="https://codecov.io/gh/PHOENIXCONTACT/MORYX-AbstractionLayer/branch/dev">
+        <img alt="Coverage" src="https://codecov.io/gh/PHOENIXCONTACT/MORYX-AbstractionLayer/coverage.svg?branch=dev" />
     </a>
     <a href="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/blob/dev/LICENSE">
         <img src="https://img.shields.io/github/license/PHOENIXCONTACT/MORYX-AbstractionLayer" alt="License">
