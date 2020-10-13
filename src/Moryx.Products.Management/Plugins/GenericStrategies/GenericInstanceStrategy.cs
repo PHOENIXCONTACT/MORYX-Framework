@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
@@ -34,12 +35,17 @@ namespace Moryx.Products.Management
             EntityMapper.Initialize(TargetType, Config);
         }
 
-        public override void SaveInstance(ProductInstance source, IGenericColumns target)
+        public override Expression<Func<IGenericColumns, bool>> TransformSelector<TInstance>(Expression<Func<TInstance, bool>> selector)
+        {
+            return EntityMapper.TransformSelector(selector);
+        }
+
+        public override void SaveInstance(IProductInstance source, IGenericColumns target)
         {
             EntityMapper.WriteValue(source, target);
         }
 
-        public override void LoadInstance(IGenericColumns source, ProductInstance target)
+        public override void LoadInstance(IGenericColumns source, IProductInstance target)
         {
             EntityMapper.ReadValue(source, target);
         }

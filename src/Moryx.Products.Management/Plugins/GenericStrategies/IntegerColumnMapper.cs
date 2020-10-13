@@ -3,6 +3,7 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Moryx.Container;
 using Moryx.Tools;
 
@@ -15,6 +16,8 @@ namespace Moryx.Products.Management
     [Component(LifeCycle.Transient, typeof(IPropertyMapper), Name = nameof(IntegerColumnMapper))]
     internal class IntegerColumnMapper : ColumnMapper<long>
     {
+        private Type _enumType;
+
         public IntegerColumnMapper(Type targetType) : base(targetType)
         {
 
@@ -23,80 +26,43 @@ namespace Moryx.Products.Management
         protected override IPropertyAccessor<object, long> CreatePropertyAccessor(PropertyInfo objectProp)
         {
             if (objectProp.PropertyType.IsEnum)
-                return new EnumAccessor(objectProp);
+            {
+                _enumType = Enum.GetUnderlyingType(objectProp.PropertyType);
+                return new ConversionAccessor<long,object>(objectProp, ReadEnum, WriteEnum);
+            }
 
             if (objectProp.PropertyType == typeof(DateTime))
-                return new DateTimeAccessor(objectProp);
+                return new ConversionAccessor<long,DateTime>(objectProp, dt => dt.Ticks, DateTime.FromBinary);
 
             if(objectProp.PropertyType == typeof(bool))
-                return new BoolAccessor(objectProp);
+                return new ConversionAccessor<long,bool>(objectProp, v => v ? 1 : 0, l => l > 0);
 
             return base.CreatePropertyAccessor(objectProp);
         }
 
-        /// <summary>
-        /// Accessor decorator performing enum conversion
-        /// </summary>
-        private class EnumAccessor : ConversionAccessor<long, object>
+        protected override object ToExpressionValue(object value)
         {
-            private readonly Type _underlyingType;
+            if (Property.PropertyType.IsEnum)
+                return ReadEnum(value);
 
-            public EnumAccessor(PropertyInfo property) : base(property)
-            {
-                _underlyingType = Enum.GetUnderlyingType(property.PropertyType);
-            }
+            if (Property.PropertyType == typeof(DateTime))
+                return ((DateTime)value).Ticks;
 
-            public override long ReadProperty(object instance)
-            {
-                var value = Target.ReadProperty(instance);
-                var underlyingValue = Convert.ChangeType(value, _underlyingType);
-                return (long)Convert.ChangeType(underlyingValue, TypeCode.Int64);
-            }
+            if (Property.PropertyType == typeof(bool))
+                return (bool)value ? 1L : 0L;
 
-            public override void WriteProperty(object instance, long value)
-            {
-                var underlyingValue = Convert.ChangeType(value, _underlyingType);
-                var enumValue = Enum.ToObject(Target.Property.PropertyType, underlyingValue);
-                Target.WriteProperty(instance, enumValue);
-            }
+            return base.ToExpressionValue(value);
         }
 
-        /// <summary>
-        /// Accessor decorator performing DateTime conversion
-        /// </summary>
-        private class DateTimeAccessor : ConversionAccessor<long, DateTime>
+        private long ReadEnum(object value)
         {
-            public DateTimeAccessor(PropertyInfo property) : base(property)
-            {
-            }
-
-            public override long ReadProperty(object instance)
-            {
-                return Target.ReadProperty(instance).Ticks;
-            }
-
-            public override void WriteProperty(object instance, long value)
-            {
-                Target.WriteProperty(instance, DateTime.FromBinary(value));
-            }
+            var underlyingValue = Convert.ChangeType(value, _enumType);
+            return (long)Convert.ChangeType(underlyingValue, TypeCode.Int64);
         }
-
-        private class BoolAccessor : ConversionAccessor<long, bool>
+        private object WriteEnum(long value)
         {
-            public BoolAccessor(PropertyInfo property) : base(property)
-            {
-            }
-
-            public override long ReadProperty(object instance)
-            {
-                var value = Target.ReadProperty(instance);
-                return value ? 1 : 0;
-            }
-
-            public override void WriteProperty(object instance, long value)
-            {
-                Target.WriteProperty(instance, value > 0);
-            }
+            var underlyingValue = Convert.ChangeType(value, _enumType);
+            return Enum.ToObject(Property.PropertyType, underlyingValue);
         }
     }
 }

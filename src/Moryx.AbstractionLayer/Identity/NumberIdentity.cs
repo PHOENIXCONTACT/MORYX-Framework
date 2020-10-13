@@ -35,7 +35,9 @@ namespace Moryx.AbstractionLayer.Identity
         [DataMember]
         public string Identifier { get; protected set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Field for enum values to distinguish between different values
+        /// </summary>
         [DataMember]
         public int NumberType { get; protected set; }
 

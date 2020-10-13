@@ -16,9 +16,9 @@ namespace Moryx.AbstractionLayer.Identity
         /// <summary>
         /// Creates a new batch identity with the given batch identifier
         /// </summary>
-        public BatchIdentity(string batch)
+        public BatchIdentity(string identifier)
         {
-            Identifier = batch;
+            Identifier = identifier;
         }
 
         /// <inheritdoc />

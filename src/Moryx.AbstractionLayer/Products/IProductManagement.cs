@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Workflows;
 
@@ -67,43 +69,57 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Create an product instance of given product
         /// </summary>
-        /// <param name="productType">Product to instanciate</param>
+        /// <param name="productType">Product to instantiate</param>
         /// <returns>Unsaved instance</returns>
-        ProductInstance CreateInstance(IProductType productType);
+        IProductInstance CreateInstance(IProductType productType);
 
         /// <summary>
         /// Create an product instance of given product
         /// </summary>
-        /// <param name="productType">Product type to instanciate</param>
+        /// <param name="productType">Product type to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
-        ProductInstance CreateInstance(IProductType productType, bool save);
+        IProductInstance CreateInstance(IProductType productType, bool save);
 
         /// <summary>
         /// Get an product instance with the given id.
         /// </summary>
         /// <param name="id">The id for the product instance which should be searched for.</param>
         /// <returns>The product instance with the id when it exists.</returns>
-        ProductInstance GetInstance(long id);
+        IProductInstance GetInstance(long id);
+
+        /// <summary>
+        /// Get an instance with this identity
+        /// </summary>
+        IProductInstance GetInstance(IIdentity identity);
+
+        /// <summary>
+        /// Get only instances that match a certain condition, similar to SingleOrDefault
+        /// </summary>
+        TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
+            where TInstance : IProductInstance;
 
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        void SaveInstance(ProductInstance productInstance);
+        void SaveInstance(IProductInstance productInstance);
 
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        void SaveInstances(ProductInstance[] productInstances);
+        void SaveInstances(IProductInstance[] productInstances);
 
         /// <summary>
-        /// Gets a list of product instances by a given state
+        /// Get instances with the given ids.
         /// </summary>
-        IEnumerable<ProductInstance> GetInstances(ProductInstanceState state);
+        /// <param name="ids">The IDs of instances that should be loaded</param>
+        /// <returns>The instance with the id when it exists.</returns>
+        IReadOnlyList<IProductInstance> GetInstances(long[] ids);
 
         /// <summary>
-        /// Load product instances using combined bit flags
+        /// Get all instances that match a certain 
         /// </summary>
-        IEnumerable<ProductInstance> GetInstances(int combinedState);
+        IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
+            where TInstance : IProductInstance;
     }
 }

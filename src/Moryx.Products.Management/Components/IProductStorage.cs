@@ -1,7 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Model.Repositories;
@@ -31,31 +34,25 @@ namespace Moryx.Products.Management
         IProductType LoadType(ProductIdentity identity);
 
         /// <summary>
-        /// Transform a given a type entity
-        /// </summary>
-        IProductType TransformType(IUnitOfWork context, ProductTypeEntity typeEntity, bool full);
-
-        /// <summary>
         /// Save a type to the storage
         /// </summary>
         long SaveType(IProductType modifiedInstance);
 
         /// <summary>
-        /// Get an instance with the given id.
+        /// Get instances by id
         /// </summary>
-        /// <param name="id">The id for the instance which should be searched for.</param>
         /// <returns>The instance with the id when it exists.</returns>
-        ProductInstance LoadInstance(long id);
+        IReadOnlyList<IProductInstance> LoadInstances(params long[] id);
 
         /// <summary>
-        /// Load instances using combined bit flags
+        /// Load instances using filter expression
         /// </summary>
-        IEnumerable<ProductInstance> LoadInstances(int state);
+        IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
 
         /// <summary>
         /// Updates the database from the instance
         /// </summary>
-        void SaveInstances(ProductInstance[] productInstance);
+        void SaveInstances(IProductInstance[] productInstance);
 
         /// <summary>
         /// Loads a recipe from the storage

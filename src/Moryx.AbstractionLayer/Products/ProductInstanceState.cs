@@ -11,31 +11,26 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Initial state
         /// </summary>
-        Initial = 0,
+        Unset,
 
         /// <summary>
         /// The instance is currently in production
         /// </summary>
-        InProduction = 1,
+        InProduction,
 
         /// <summary>
         /// The production on this instance was paused
         /// </summary>
-        Paused = 2,
+        Paused,
 
         /// <summary>
         /// The production process succeeded.
         /// </summary>
-        Success = 3,
+        Success,
 
         /// <summary>
         /// The production process failed.
         /// </summary>
-        Failure = 4,
-
-        /// <summary>
-        /// State of part is inherited from the parent instance
-        /// </summary>
-        Inherited = 5
+        Failure
     }
 }
