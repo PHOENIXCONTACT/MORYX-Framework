@@ -53,7 +53,7 @@ namespace Moryx.Collections
         /// <summary>
         /// Used in state machine to manage pending items of this queue
         /// </summary>
-        Queue IDelayQueueContext.PendingItems { get; set; }
+        Queue IDelayQueueContext.PendingItems { get; } = new Queue();
 
         /// <summary>
         /// Create a new instance of the <see cref="DelayQueue{TMessage}"/>
@@ -102,15 +102,10 @@ namespace Moryx.Collections
         /// </summary>
         void IDelayQueueContext.ExecuteDequeue(object item)
         {
-            ExecuteDequeue((T) item);
-        }
-
-        private void ExecuteDequeue(T item)
-        {
             lock (_stateLock)
             {
                 var handler = Dequeued;
-                handler?.Invoke(this, item);
+                handler?.Invoke(this, (T)item);
 
                 _state.MessageSent(item);
             }
@@ -121,12 +116,7 @@ namespace Moryx.Collections
         /// </summary>
         void IDelayQueueContext.ExecuteDequeueParallel(object item)
         {
-            ExecuteDequeueParallel((T) item);
-        }
-
-        private void ExecuteDequeueParallel(T obj)
-        {
-            _parallelOperations.ExecuteParallel(ExecuteDequeue, obj);
+            _parallelOperations.ExecuteParallel(DelayedExecute, item);
         }
 
         /// <summary>
@@ -134,19 +124,14 @@ namespace Moryx.Collections
         /// </summary>
         void IDelayQueueContext.DequeueDelayed(object next, int queueDelay)
         {
-            DequeueDelayed((T) next, queueDelay);
-        }
-
-        private void DequeueDelayed(T obj, int delay)
-        {
-            _parallelOperations.ScheduleExecution(DelayedExecute, obj, delay, -1);
+            _parallelOperations.ScheduleExecution(DelayedExecute, next, queueDelay, -1);
         }
 
         /// <summary>
         /// Callback for <see cref="IParallelOperations"/> that locks access to
         /// the send method.
         /// </summary>
-        private void DelayedExecute(T obj)
+        private void DelayedExecute(object obj)
         {
             // ReSharper disable once InconsistentlySynchronizedField
             // Will be only called by other thread
