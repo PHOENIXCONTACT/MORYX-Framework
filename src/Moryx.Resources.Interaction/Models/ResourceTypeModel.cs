@@ -9,7 +9,7 @@ namespace Moryx.Resources.Interaction
     /// <summary>
     /// Type item for the tree
     /// </summary>
-    [DataContract(IsReference = true)]
+    [DataContract]
     public class ResourceTypeModel
     {
         /// <summary>
@@ -52,7 +52,7 @@ namespace Moryx.Resources.Interaction
         /// Back reference to the base type
         /// </summary>
         [DataMember]
-        public ResourceTypeModel BaseType { get; set; }
+        public string BaseType { get; set; }
 
         /// <summary>
         /// Types derived from this type

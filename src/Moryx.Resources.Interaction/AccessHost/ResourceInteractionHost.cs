@@ -23,7 +23,7 @@ namespace Moryx.Resources.Interaction
         {
             HostConfig = new HostConfig
             {
-                Endpoint = "ResourceInteraction",
+                Endpoint = "resources",
                 BindingType = ServiceBindingType.WebHttp,
                 MetadataEnabled = true
             };

@@ -16,7 +16,7 @@ namespace Moryx.Resources.Interaction.Converter
         /// <summary>
         /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private readonly Dictionary<ResourceModel, Resource> _resourceCache = new Dictionary<ResourceModel, Resource>();
+        private readonly Dictionary<long, Resource> _resourceCache = new Dictionary<long, Resource>();
 
         private readonly IResourceGraph _resourceGraph;
         private readonly ICustomSerialization _serialization;
@@ -38,8 +38,8 @@ namespace Moryx.Resources.Interaction.Converter
         public Resource FromModel(ResourceModel model, HashSet<Resource> resourcesToSave, Resource resource = null)
         {
             // Break recursion if we converted this instance already
-            if (_resourceCache.ContainsKey(model))
-                return _resourceCache[model];
+            if (_resourceCache.ContainsKey(model.ReferenceId))
+                return _resourceCache[model.ReferenceId];
 
             // Only fetch resource object if it was not given
             if (resource == null)
@@ -48,7 +48,7 @@ namespace Moryx.Resources.Interaction.Converter
                 resource = model.Id == 0
                     ? _resourceGraph.Instantiate(model.Type)
                     : _resourceGraph.Get(model.Id);
-                _resourceCache[model] = resource;
+                _resourceCache[model.ReferenceId] = resource;
             }
 
             // Add to list if object was created or modified

@@ -10,7 +10,7 @@ namespace Moryx.Resources.Interaction
     /// <summary>
     /// DTO that represents the reference of one resource with another
     /// </summary>
-    [DataContract(IsReference = true)]
+    [DataContract]
     public class ResourceReferenceModel
     {
         /// <summary>

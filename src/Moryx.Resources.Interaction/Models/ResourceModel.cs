@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security.Policy;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
@@ -13,7 +14,7 @@ namespace Moryx.Resources.Interaction
     /// <summary>
     /// Base model used by details view and tree
     /// </summary>
-    [DataContract(IsReference = true)]
+    [DataContract]
     public class ResourceModel
     {
         /// <summary>
@@ -21,6 +22,12 @@ namespace Moryx.Resources.Interaction
         /// </summary>
         [DataMember]
         public long Id { get; set; }
+
+        /// <summary>
+        /// Reference id in case of recursion in the returned model
+        /// </summary>
+        [DataMember]
+        public long ReferenceId { get; set; }
 
         /// <summary>
         /// Name of the resource.
