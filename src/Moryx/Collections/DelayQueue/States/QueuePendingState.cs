@@ -23,10 +23,6 @@ namespace Moryx.Collections
 
         public override void Enqueue(object item)
         {
-            // Create queue on demand only if a third message appears within the time slice
-            if(Context.PendingItems == null)
-                Context.PendingItems = new Queue();
-
             Context.PendingItems.Enqueue(item);
         }
 
@@ -37,7 +33,7 @@ namespace Moryx.Collections
 
         public override void MessageSent(object item)
         {
-            if (Context.PendingItems == null || Context.PendingItems.Count == 0)
+            if (Context.PendingItems.Count == 0)
             {
                 NextState(QueueIdleState);
 

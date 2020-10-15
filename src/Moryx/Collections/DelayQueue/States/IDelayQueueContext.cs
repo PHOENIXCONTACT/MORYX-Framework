@@ -13,7 +13,7 @@ namespace Moryx.Collections
 
         int QueueDelay { get; }
 
-        Queue PendingItems { get; set; }
+        Queue PendingItems { get; }
 
         void ExecuteDequeue(object item);
 
