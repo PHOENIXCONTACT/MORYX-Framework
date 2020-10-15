@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System.ServiceModel;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Tools.Wcf;
@@ -23,8 +24,8 @@ namespace Moryx.Resources.Interaction
             HostConfig = new HostConfig
             {
                 Endpoint = "ResourceInteraction",
-                BindingType = ServiceBindingType.BasicHttp,
-                MetadataEnabled = true,
+                BindingType = ServiceBindingType.WebHttp,
+                MetadataEnabled = true
             };
         }
     }

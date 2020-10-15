@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -36,11 +37,27 @@ namespace Moryx.Resources.Interaction
 
         #endregion
 
+        public string Test()
+        {
+            return "TestMethod";
+        }
+
         /// <inheritdoc />
         public ResourceTypeModel GetTypeTree()
         {
-            var converter = new ResourceToModelConverter(TypeTree, Serialization);
-            return converter.ConvertType(TypeTree.RootType);
+            ResourceTypeModel result = null;
+
+            try
+            {
+                var converter = new ResourceToModelConverter(TypeTree, Serialization);
+                result = converter.ConvertType(TypeTree.RootType);
+            }
+            catch (Exception e)
+            {
+                
+            }
+
+            return result;
         }
 
         /// <inheritdoc />
@@ -61,20 +78,20 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
-        public Entry InvokeMethod(long id, MethodEntry methodModel)
+        public Entry InvokeMethod(InvokeMethod invokeMethod)
         {
-            var resource = Graph.Get(id);
-            return EntryConvert.InvokeMethod(resource, methodModel, Serialization);
+            var resource = Graph.Get(invokeMethod.Id);
+            return EntryConvert.InvokeMethod(resource, invokeMethod.MethodModel, Serialization);
         }
 
         /// <inheritdoc />
-        public ResourceModel Create(string resourceType, MethodEntry constructor = null)
+        public ResourceModel Create(CreateResource createResource)
         {
             var converter = new ResourceToModelConverter(TypeTree, Serialization);
 
-            var resource = Graph.Instantiate(resourceType);
-            if (constructor != null)
-                EntryConvert.InvokeMethod(resource, constructor, Serialization);
+            var resource = Graph.Instantiate(createResource.ResourceType);
+            if (createResource.Constructor != null)
+                EntryConvert.InvokeMethod(resource, createResource.Constructor, Serialization);
 
             var model = converter.GetDetails(resource);
             model.Methods = new MethodEntry[0]; // Reset methods because the can not be invoked on new objects
