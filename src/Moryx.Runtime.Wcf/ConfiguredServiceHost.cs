@@ -133,7 +133,7 @@ namespace Moryx.Runtime.Wcf
             if (config.BindingType == ServiceBindingType.WebHttp)
             {
                 endpoint.Behaviors.Add(new WebHttpBehavior());
-                endpoint.Behaviors.Add(new CustomContractBehaviorAttribute());
+                endpoint.Behaviors.Add(new CorsBehaviorAttribute());
             }
 
             if (config.MetadataEnabled)
