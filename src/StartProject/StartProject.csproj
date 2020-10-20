@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moryx.Runtime.Maintenance" Version="3.0.0-dev.138" />
-    <PackageReference Include="Moryx.Runtime.Maintenance.Web" Version="3.0.0-dev.37" />
-    <PackageReference Include="Moryx.Runtime.Kernel" Version="3.0.0-dev.138" />
+    <PackageReference Include="Moryx.Runtime.Maintenance" Version="3.0.0-dev.153" />
+    <PackageReference Include="Moryx.Runtime.Maintenance.Web" Version="3.0.0-dev.39" />
+    <PackageReference Include="Moryx.Runtime.Kernel" Version="3.0.0-dev.153" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
 
