@@ -17,10 +17,5 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// Version of the assembly.
         /// </summary>
         public string Version { get; set; }
-
-        /// <summary>
-        /// Name of the bundle where the assembly belongs to.
-        /// </summary>
-        public string Bundle { get; set; }
     }
 }

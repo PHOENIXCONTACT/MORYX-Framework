@@ -19,4 +19,5 @@
     <ProjectReference Include="..\Moryx.Container\Moryx.Container.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
   </ItemGroup>
+
 </Project>

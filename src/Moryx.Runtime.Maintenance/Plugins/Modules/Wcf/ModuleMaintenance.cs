@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading;
@@ -289,12 +288,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         {
             var assembly = service.GetType().Assembly;
             var assemblyName = assembly.GetName();
-            var bundleAtt = assembly.GetCustomAttribute<BundleAttribute>();
             var model = new AssemblyModel
             {
                 Name = assemblyName.Name + ".dll",
                 Version = assemblyName.Version.ToString(),
-                Bundle = bundleAtt == null ? "Unknown" : bundleAtt.Bundle
             };
             return model;
         }
