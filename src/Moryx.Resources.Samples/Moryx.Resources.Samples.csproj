@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Moryx.Resources.Interaction\Moryx.Resources.Interaction.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Moryx" Version="3.0.0-dev.138" />
-  </ItemGroup>
-
 </Project>

@@ -4,7 +4,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Moryx.Modules;
-using Moryx.Products.Model;
 
 namespace Moryx.Products.Management
 {
