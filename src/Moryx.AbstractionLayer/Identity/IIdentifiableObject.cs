@@ -11,6 +11,6 @@ namespace Moryx.AbstractionLayer.Identity
         /// <summary>
         /// Identity of this product
         /// </summary>
-        IIdentity Identity { get; }
+        IIdentity Identity { get; set; }
     }
 }
