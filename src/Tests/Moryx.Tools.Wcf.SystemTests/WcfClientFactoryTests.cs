@@ -68,8 +68,8 @@ namespace Moryx.Tools.Wcf.Tests
             _clientInfoEvent.Reset();
 
             _versionServiceManager.EnableVersionService = true;
-            _versionServiceManager.MinClientVersion = "2.0.0.0";
-            _versionServiceManager.ServerVersion = "1.0.0.0";
+            _versionServiceManager.ServerVersion = "2.0.0";
+            _versionServiceManager.Endpoint = "LogMaintenance";
 
             _wcfClientFactory = new TestWcfClientFactory
             {
@@ -143,7 +143,7 @@ namespace Moryx.Tools.Wcf.Tests
         [TestCase(ConnectionMode.Legacy)]
         public void TestClientInfo(ConnectionMode mode)
         {
-            CreateLogClient(mode, "2.0.0.0", "1.0.0.0");
+            CreateLogClient(mode, "2.0.0.0");
 
             _connectedEvent.Wait(MediumWait);
 
@@ -153,7 +153,7 @@ namespace Moryx.Tools.Wcf.Tests
             var info0 = _receivedClientInfos.First(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.New);
 
             Assert.AreEqual("2.0.0.0", info0.ClientVersion, "ClientVersion before connect");
-            Assert.AreEqual("1.0.0.0", info0.MinServerVersion, "MinServerVersion before connect");
+            Assert.AreEqual("2.0.0", info0.MinServerVersion, "MinServerVersion before connect");
             Assert.AreEqual("Unknown", info0.MinClientVersion, "ClientVersion before connect");
             Assert.AreEqual("Unknown", info0.ServerVersion, "ServerVersion before connect");
             Assert.AreEqual("ILogMaintenance", info0.Service, "Service name before connect");
@@ -164,8 +164,8 @@ namespace Moryx.Tools.Wcf.Tests
             var info1 = _receivedClientInfos.First(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.Success);
 
             Assert.AreEqual("2.0.0.0", info1.ClientVersion, "ClientVersion after connect");
-            Assert.AreEqual("1.0.0.0", info1.MinServerVersion, "MinServerVersion after connect");
-            Assert.AreEqual(mode == ConnectionMode.New ? _versionServiceManager.MinClientVersion : "Unknown", info1.MinClientVersion, "ClientVersion after connect");
+            Assert.AreEqual("2.0.0", info1.MinServerVersion, "MinServerVersion after connect");
+            Assert.AreEqual("2.0.0", info1.MinClientVersion, "MinClientVersion after connect");
             Assert.AreEqual(_versionServiceManager.ServerVersion, info1.ServerVersion, "ServerVersion after connect");
             Assert.AreEqual("ILogMaintenance", info1.Service, "Service name after connect");
             Assert.AreEqual(mode == ConnectionMode.New ? _versionServiceManager.ServiceUrl : "http://localhost/LogMaintenance", info1.Uri, "Uri after connect");
@@ -174,54 +174,10 @@ namespace Moryx.Tools.Wcf.Tests
 
         }
 
-        [TestCase("2.0.0.0", "1.0.0.0")]
-        public void CreateNewClientGood(string clientVersion, string minServerVersion)
+        [TestCase("2.0.0.0")]
+        public void CreateNewClientGood(string clientVersion)
         {
-            CreateNewLogClient(clientVersion, minServerVersion);
-
-            _connectedEvent.Wait(MediumWait);
-            _allClientsConnectedEvent.Wait(ShortWait);
-
-            Assert.IsTrue(_connectedEvent.IsSet, "Not connected.");
-            Assert.IsTrue(_allClientsConnectedEvent.IsSet, "Not all connected.");
-            Assert.AreEqual(3, _receivedClientInfos.Count);
-
-            Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.New && i.Tries == 0), "Received initial {0} client info event", LogMaintenanceServiceName);
-            Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.New && i.Tries == 1), "Received intermediate {0} client info event", LogMaintenanceServiceName);
-            Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.Success && i.Tries == 1), "Received final {0} client info event", LogMaintenanceServiceName);
-        }
-
-        [TestCase(null, null)]
-        [TestCase(null, "2.0.0.0")]
-        [TestCase("1.0.0.0", null)]
-        public void CreateNewClientThrowsException(string clientVersion, string minServerVersion)
-        {
-            Assert.Throws<ArgumentNullException>(delegate
-            {
-                CreateNewLogClient(clientVersion, minServerVersion);
-            });
-        }
-
-        [TestCase(false, null, 1024)]
-        [TestCase(false, "ModuleMaintenance", 0)]
-        [TestCase(false, "ModuleMaintenance", 65536)]
-        public void CreateLegacyClientThrowsArgumentException(bool configNull, string endpoint, int port)
-        {
-            var config = CreateLegacyConfig(configNull, endpoint, port);
-
-            Assert.Throws<ArgumentException>(delegate
-            {
-                _wcfClientFactory.Create<LogMaintenanceClientMock, ILogMaintenance>(config, LogMaintenanceCallback);
-            });
-        }
-
-        [TestCase(false, "ModuleMaintenance", 1)]
-        [TestCase(false, "ModuleMaintenance", 65535)]
-        public void CreateLegacyClient(bool configNull, string endpoint, int port)
-        {
-            var config = CreateLegacyConfig(configNull, endpoint, port);
-
-            _wcfClientFactory.Create<LogMaintenanceClientMock, ILogMaintenance>(config, LogMaintenanceCallback);
+            CreateNewLogClient(clientVersion);
 
             _connectedEvent.Wait(MediumWait);
             _allClientsConnectedEvent.Wait(ShortWait);
@@ -241,12 +197,12 @@ namespace Moryx.Tools.Wcf.Tests
                 ? null
                 : new ClientConfig
                 {
-                    BindingType = BindingType.BasicHttp,
+                    BindingType = ServiceBindingType.BasicHttp,
                     Endpoint = endpoint,
                     Host = "localhost",
                     Port = port,
                     ClientVersion = "2.0.0.0",
-                    MinServerVersion = "1.0.0.0"
+                    CheckVersion = true
                 };
         }
 
@@ -255,7 +211,7 @@ namespace Moryx.Tools.Wcf.Tests
         {
             var clientConfig = new ClientConfig
             {
-                BindingType = BindingType.BasicHttp,
+                BindingType = ServiceBindingType.BasicHttp,
                 Endpoint = "LogMaintenance",
                 Host = "localhost",
                 Port = 80,
@@ -283,7 +239,7 @@ namespace Moryx.Tools.Wcf.Tests
         {
             _versionServiceManager.EnableVersionService = false;
 
-            CreateLogClient(mode, "2.0.0.0", "1.0.0.0");
+            CreateLogClient(mode, "2.0.0.0");
 
             _connectedEvent.Wait(MediumWait);
             _allClientsConnectedEvent.Wait(ShortWait);
@@ -322,7 +278,7 @@ namespace Moryx.Tools.Wcf.Tests
         {
             _versionServiceManager.EnableVersionService = enableConnection;
 
-            long clientId = CreateLogClient(mode, "2.0.0.0", "1.0.0.0");
+            long clientId = CreateLogClient(mode, "2.0.0.0");
 
             _connectedEvent.Wait(MediumWait);
             _allClientsConnectedEvent.Wait(ShortWait);
@@ -363,15 +319,13 @@ namespace Moryx.Tools.Wcf.Tests
             Assert.Throws<InvalidOperationException>(() => _wcfClientFactory.Destroy(-1));
         }
 
-        [TestCase(ConnectionMode.New, "1.0.0.0", "2.0.0.0")]
-        [TestCase(ConnectionMode.New, "1.0.0.0", "3.0.0.0")]
-        [TestCase(ConnectionMode.New, "2.0.0.0", "3.0.0.0")]
-        [TestCase(ConnectionMode.Legacy, "1.0.0.0", "2.0.0.0")]
-        [TestCase(ConnectionMode.Legacy, "1.0.0.0", "3.0.0.0")]
-        [TestCase(ConnectionMode.Legacy, "2.0.0.0", "3.0.0.0")]
+        [TestCase(ConnectionMode.New, "1.6.0.0", "2.0.0.0")]
+        [TestCase(ConnectionMode.New, "2.3.0.0", "2.0.0.0")]
+        [TestCase(ConnectionMode.Legacy, "1.8.0.0", "1.6.0.0")]
+        [TestCase(ConnectionMode.Legacy, "3.0.0.0", "2.4.0.0")]
         public void TestVersionMismatch(ConnectionMode mode, string clientVersion, string serverVersion)
         {
-            CreateLogClient(mode, clientVersion, serverVersion);
+            CreateLogClient(mode, clientVersion);
 
             _connectedEvent.Wait(MediumWait);
             _allClientsConnectedEvent.Wait(ShortWait);
@@ -391,8 +345,7 @@ namespace Moryx.Tools.Wcf.Tests
                 Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.VersionMissmatch && i.Tries == 3), "Received third LogMaintenanceServiceName client info event");
             }
 
-            _versionServiceManager.MinClientVersion = "1.0.0.0";
-            _versionServiceManager.ServerVersion = "3.0.0.0";
+            _versionServiceManager.ServerVersion = clientVersion;
 
             _connectedEvent.Wait(MediumWait);
             _allClientsConnectedEvent.Wait(ShortWait);
@@ -403,15 +356,15 @@ namespace Moryx.Tools.Wcf.Tests
             Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.Success && i.Tries == 1), "Received final {0} client info event", LogMaintenanceServiceName);
         }
 
-        private long CreateLogClient(ConnectionMode mode, string clientVersion, string minServerVersion)
+        private long CreateLogClient(ConnectionMode mode, string clientVersion)
         {
             switch (mode)
             {
                 case ConnectionMode.New:
-                    return CreateNewLogClient(clientVersion, minServerVersion);
+                    return CreateNewLogClient(clientVersion);
 
                 case ConnectionMode.Legacy:
-                    return CreateLegacyLogClient(clientVersion, minServerVersion);
+                    return CreateLegacyLogClient(clientVersion);
 
                 default:
                     Assert.Fail("Unknonw connection mode '{0}'", mode);
@@ -421,21 +374,21 @@ namespace Moryx.Tools.Wcf.Tests
             return 0;
         }
 
-        private long CreateNewLogClient(string clientVersion, string minServerVersion)
+        private long CreateNewLogClient(string clientVersion)
         {
-            return _wcfClientFactory.Create<LogMaintenanceClientMock, ILogMaintenance>(clientVersion, minServerVersion, LogMaintenanceCallback);
+            return _wcfClientFactory.Create<LogMaintenanceClientMock, ILogMaintenance>(clientVersion, LogMaintenanceCallback);
         }
 
-        private long CreateLegacyLogClient(string clientVersion, string minServerVersion)
+        private long CreateLegacyLogClient(string clientVersion)
         {
             ClientConfig clientConfig = new ClientConfig
             {
-                BindingType = BindingType.BasicHttp,
+                BindingType = ServiceBindingType.BasicHttp,
                 Endpoint = "LogMaintenance",
                 Host = "localhost",
                 Port = 80,
                 ClientVersion = clientVersion,
-                MinServerVersion = minServerVersion
+                CheckVersion = true
             };
 
             return _wcfClientFactory.Create<LogMaintenanceClientMock, ILogMaintenance>(clientConfig, LogMaintenanceCallback);

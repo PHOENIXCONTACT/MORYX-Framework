@@ -10,8 +10,8 @@ namespace Moryx.DependentTestModule
     [Plugin(LifeCycle.Singleton, typeof(ISimpleHelloWorldWcfService))]
     public class SimpleHelloWorldWcfService : ISimpleHelloWorldWcfService
     {
-        public const string ServerVersion = "1.2.3.4";
-        public const string MinClientVersion = "4.3.2.1";
+        public const string ServerVersion = "1.2.0";
+
         public const string ServiceName = "SimpleHelloWorldWcfService";
 
         /// <summary>

@@ -13,8 +13,8 @@ namespace Moryx.TestModule
     [Plugin(LifeCycle.Singleton, typeof(IHelloWorldWcfService))]
     public class HelloWorldWcfService : SessionService<IHelloWorldWcfServiceCallback, IHelloWorldWcfSvcMgr>, IHelloWorldWcfService
     {
-        public const string ServerVersion = "4.7.1.1";
-        public const string MinClientVersion = "4.2.0.0";
+        public const string ServerVersion = "4.7.1";
+
         public const string ServiceName = "HelloWorldWcfService";
 
         public string Hello(string name)

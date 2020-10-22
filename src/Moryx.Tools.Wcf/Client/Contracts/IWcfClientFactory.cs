@@ -52,7 +52,7 @@ namespace Moryx.Tools.Wcf
         /// <param name="config">The client's configuration</param>
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <returns>A unique ID identifying this client</returns>
-        long Create<T, TK>(IClientConfig config, Action<ConnectionState, T> callback)
+        long Create<T, TK>(ClientConfig config, Action<ConnectionState, T> callback)
             where T : ClientBase<TK> 
             where TK : class;
 
@@ -65,7 +65,7 @@ namespace Moryx.Tools.Wcf
         /// <param name="callbackService">For NetTcp clients a callback object for WCF callback can be passed here. For BasicHttp clients, this argument is ignored.</param>
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <returns>A unique ID identifying this client</returns>
-        long Create<T, TK>(IClientConfig config, object callbackService, Action<ConnectionState, T> callback)
+        long Create<T, TK>(ClientConfig config, object callbackService, Action<ConnectionState, T> callback)
             where T : ClientBase<TK>
             where TK : class;
 
@@ -78,7 +78,7 @@ namespace Moryx.Tools.Wcf
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <param name="binding">The binding to be used for the new client.</param>
         /// <returns>A unique ID identifying this client</returns>
-        long Create<T, TK>(IClientConfig config, Action<ConnectionState, T> callback, Binding binding)
+        long Create<T, TK>(ClientConfig config, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
             where TK : class;
 
@@ -92,7 +92,7 @@ namespace Moryx.Tools.Wcf
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <param name="binding">The binding to be used for the new client.</param>
         /// <returns>A unique ID identifying this client</returns>
-        long Create<T, TK>(IClientConfig config, object callbackService, Action<ConnectionState, T> callback, Binding binding)
+        long Create<T, TK>(ClientConfig config, object callbackService, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
             where TK : class;
 
@@ -102,10 +102,9 @@ namespace Moryx.Tools.Wcf
         /// <typeparam name="T">The client implementation provided by the WCF service reference.</typeparam>
         /// <typeparam name="TK">The client interface provided by the WCF service reference.</typeparam>
         /// <param name="clientVersion">The version of the client a dotted quad (eg. 1.0.0.0)</param>
-        /// <param name="minServerVersion">The minimum version of the service this client can work with as a dotted quad (eg. 1.0.0.0)</param>
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <returns>A unique ID identifying this client</returns>
-        long Create<T, TK>(string clientVersion, string minServerVersion, Action<ConnectionState, T> callback)
+        long Create<T, TK>(string clientVersion, Action<ConnectionState, T> callback)
             where T : ClientBase<TK>
             where TK : class;
 
@@ -115,11 +114,10 @@ namespace Moryx.Tools.Wcf
         /// <typeparam name="T">The client implementation provided by the WCF service reference.</typeparam>
         /// <typeparam name="TK">The client interface provided by the WCF service reference.</typeparam>
         /// <param name="clientVersion">The version of the client a dotted quad (eg. 1.0.0.0)</param>
-        /// <param name="minServerVersion">The minimum version of the service this client can work with as a dotted quad (eg. 1.0.0.0)</param>
         /// <param name="callbackService">For NetTcp clients a callback object for WCF callback can be passed here. For BasicHttp clients, this argument is ignored.</param>
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <returns>A unique ID identifying this client</returns>
-        long Create<T, TK>(string clientVersion, string minServerVersion, object callbackService, Action<ConnectionState, T> callback)
+        long Create<T, TK>(string clientVersion, object callbackService, Action<ConnectionState, T> callback)
             where T : ClientBase<TK>
             where TK : class;
 
@@ -129,11 +127,10 @@ namespace Moryx.Tools.Wcf
         /// <typeparam name="T">The client implementation provided by the WCF service reference.</typeparam>
         /// <typeparam name="TK">The client interface provided by the WCF service reference.</typeparam>
         /// <param name="clientVersion">The version of the client a dotted quad (eg. 1.0.0.0)</param>
-        /// <param name="minServerVersion">The minimum version of the service this client can work with as a dotted quad (eg. 1.0.0.0)</param>
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <param name="binding">The binding to be used for the new client.</param>
         /// <returns>A unique ID identifying this client</returns>
-        long Create<T, TK>(string clientVersion, string minServerVersion, Action<ConnectionState, T> callback, Binding binding)
+        long Create<T, TK>(string clientVersion, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
             where TK : class;
 
@@ -143,12 +140,11 @@ namespace Moryx.Tools.Wcf
         /// <typeparam name="T">The client implementation provided by the WCF service reference.</typeparam>
         /// <typeparam name="TK">The client interface provided by the WCF service reference.</typeparam>
         /// <param name="clientVersion">The version of the client a dotted quad (eg. 1.0.0.0)</param>
-        /// <param name="minServerVersion">The minimum version of the service this client can work with as a dotted quad (eg. 1.0.0.0)</param>
         /// <param name="callbackService">For NetTcp clients a callback object for WCF callback can be passed here. For BasicHttp clients, this argument is ignored.</param>
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <param name="binding">The binding to be used for the new client.</param>
         /// <returns>A unique ID identifying this client</returns>
-        long Create<T, TK>(string clientVersion, string minServerVersion, object callbackService, Action<ConnectionState, T> callback, Binding binding)
+        long Create<T, TK>(string clientVersion, object callbackService, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
             where TK : class;
 

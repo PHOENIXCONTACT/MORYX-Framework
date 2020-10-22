@@ -19,13 +19,13 @@ namespace Moryx.Tools.Wcf
         /// <param name="requiresAuthentication">if set to <c>true</c> [requires authentication].</param>
         /// <param name="proxyConfig">The proxy configuration.</param>
         /// <returns></returns>
-        internal static Binding CreateDefault(BindingType type, bool requiresAuthentication, IProxyConfig proxyConfig)
+        internal static Binding CreateDefault(ServiceBindingType type, bool requiresAuthentication, IProxyConfig proxyConfig)
         {
             switch (type)
             {
-                case BindingType.NetTcp:
+                case ServiceBindingType.NetTcp:
                     return CreateDefaultNetTcpBinding();
-                case BindingType.BasicHttp:
+                case ServiceBindingType.BasicHttp:
                     return CreateDefaultBasicHttpBinding(requiresAuthentication, proxyConfig);
                 default:
                     return null;

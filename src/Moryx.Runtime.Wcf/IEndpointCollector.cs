@@ -8,21 +8,10 @@ namespace Moryx.Runtime.Wcf
 {
     internal interface IEndpointCollector
     {
-        void AddEndpoint(string endpoint, ServiceVersionAttribute endpointVersion);
+        Endpoint[] AllEndpoints { get; }
 
-        void AddService(Type service, ServiceBindingType binding, string serviceUrl, ServiceVersionAttribute version,
-            bool requiresAuthentication);
+        void AddEndpoint(string address, Endpoint endpoint);
 
-        void RemoveEndpoint(string endpoint);
-
-        void RemoveService(Type service);
-
-        bool ClientSupported(string service, string clientVersion);
-
-        string GetServerVersion(string endpoint);
-
-        ServiceConfig GetServiceConfiguration(string service);
-
-        ServiceEndpoint[] AllEndpoints();
+        void RemoveEndpoint(string address);
     }
 }

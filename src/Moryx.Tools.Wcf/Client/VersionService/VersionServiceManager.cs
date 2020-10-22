@@ -2,21 +2,26 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using Moryx.Communication;
 using Moryx.Configuration;
+using Newtonsoft.Json;
 
 namespace Moryx.Tools.Wcf
 {
     internal class VersionServiceManager : IVersionServiceManager
     {
-        private const string ServiceName = "ServiceVersions";
+        private const string ServiceName = "endpoints";
 
         #region Fields and Properties
 
         public bool IsInitialized { get; private set; }
 
-        private IVersionService _versionService;
+        private HttpClient _client;
 
         #endregion
 
@@ -26,23 +31,23 @@ namespace Moryx.Tools.Wcf
             if (IsInitialized)
                 return;
 
-            // Create version service
-            var binding = new BasicHttpBinding
+            // Create HttpClient
+            if (proxyConfig?.EnableProxy == true && !proxyConfig.UseDefaultWebProxy)
             {
-                SendTimeout = new TimeSpan(0, 0, 2),
-                OpenTimeout = new TimeSpan(0, 0, 2)
-            };
+                var proxy = new WebProxy
+                {
+                    Address = new Uri($"http://{proxyConfig.Address}:{proxyConfig.Port}"),
+                    BypassProxyOnLocal = false,
+                    UseDefaultCredentials = true
+                };
 
-            //Set proxy
-            SetProxyOnBinding(proxyConfig, binding);
-
-            var url = $@"http://{host}:{port}/{ServiceName}";
-            var endpoint = new EndpointAddress(url);
-
-            var channelFactory = new ChannelFactory<IVersionService>(binding);
-            channelFactory.Endpoint.Behaviors.Add(new CultureBehavior());
-
-            _versionService = channelFactory.CreateChannel(endpoint);
+                _client = new HttpClient(new HttpClientHandler { Proxy = proxy });
+            }
+            else
+            {
+                _client = new HttpClient();
+            }
+            _client.BaseAddress = new Uri($"http://{host}:{port}/{ServiceName}/");
 
             IsInitialized = true;
         }
@@ -53,65 +58,35 @@ namespace Moryx.Tools.Wcf
             if (!IsInitialized)
                 return;
 
-            _versionService = null;
+            _client.Dispose();
+            _client = null;
             IsInitialized = false;
         }
 
-        ///
-        public bool CheckClientSupport(string service, string clientVersion)
+        public Endpoint[] ActiveEndpoints()
         {
-            return _versionService.ClientSupported(service, clientVersion);
-        }
-
-        ///
-        public string GetServerVersion(string endpoint)
-        {
-            return _versionService.GetServerVersion(endpoint);
-        }
-
-        ///
-        public ServiceConfiguration GetServiceConfiguration(string service)
-        {
-            var serviceConfig = _versionService.GetServiceConfiguration(service);
-            return serviceConfig == null ? null : new ServiceConfiguration(serviceConfig);
-        }
-
-        ///
-        public bool Match(IClientConfig config, string version)
-        {
-            var minServerVersion = Version.Parse(config.MinServerVersion);
-            var serverVersion = Version.Parse(version);
-
-            var serverSupport = CheckClientSupport(config.Endpoint, config.ClientVersion);
-
-            return minServerVersion <= serverVersion && serverSupport;
-        }
-
-        ///
-        public bool Match(WcfClientInfo clientInfo, ServiceConfiguration sericeConfiguration)
-        {
-            var minServerVersion = Version.Parse(clientInfo.MinServerVersion);
-            var serverVersion = Version.Parse(sericeConfiguration.ServerVersion);
-
-            var minClientVersion = Version.Parse(sericeConfiguration.MinClientVersion);
-            var clientVersion = Version.Parse(clientInfo.ClientVersion);
-
-            return minServerVersion <= serverVersion && minClientVersion <= clientVersion;
-        }
-
-        ///
-        private static void SetProxyOnBinding(IProxyConfig proxyConfig, BasicHttpBinding binding)
-        {
-            if (proxyConfig == null || !proxyConfig.EnableProxy)
-                return;
-
-            if (proxyConfig.UseDefaultWebProxy)
+            try
             {
-                binding.UseDefaultWebProxy = true;
+                var response = _client.GetStringAsync("").Result;
+                return JsonConvert.DeserializeObject<Endpoint[]>(response);
             }
-            else if (!string.IsNullOrEmpty(proxyConfig.Address) && proxyConfig.Port != 0)
+            catch (Exception e)
             {
-                binding.ProxyAddress = new Uri($"http://{proxyConfig.Address}:{proxyConfig.Port}");
+                return null;
+            }
+        }
+
+
+        public Endpoint[] ServiceEndpoints(string service)
+        {
+            try
+            {
+                var response = _client.GetStringAsync($"service/{service}").Result;
+                return JsonConvert.DeserializeObject<Endpoint[]>(response);
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
     }

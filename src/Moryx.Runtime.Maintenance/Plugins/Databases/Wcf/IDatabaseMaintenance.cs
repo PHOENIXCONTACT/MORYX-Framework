@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
     /// Service contracts for database operations.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion(ServerVersion = "1.0.0.0", MinClientVersion = "1.0.0.0")]
+    [ServiceVersion("3.0.0.0")]
     public interface IDatabaseMaintenance
     {
         /// <summary>

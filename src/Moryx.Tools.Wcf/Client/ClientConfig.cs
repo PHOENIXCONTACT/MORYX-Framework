@@ -6,46 +6,22 @@ using System.Runtime.Serialization;
 namespace Moryx.Tools.Wcf
 {
     /// <summary>
-    /// Config for the client
+    /// Configuration of a WCF client.
     /// </summary>
     [DataContract]
-    public class ClientVersionConfig : IClientVersionConfig
+    public class ClientConfig
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ClientVersionConfig"/> class.
-        /// </summary>
-        public ClientVersionConfig()
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ClientVersionConfig"/> class.
-        /// </summary>
-        public ClientVersionConfig(string clientVersion, string minServerVersion)
-        {
-            ClientVersion = clientVersion;
-            MinServerVersion = minServerVersion;
-        }
-
         ///
         [DataMember]
         public string ClientVersion { get; set; }
 
         ///
         [DataMember]
-        public string MinServerVersion { get; set; }
-    }
+        public bool CheckVersion { get; set; }
 
-    /// <summary>
-    /// Configuration of a WCF client.
-    /// </summary>
-    [DataContract]
-    public class ClientConfig : ClientVersionConfig, IClientConfig
-    {
         ///
         [DataMember]
-        public BindingType BindingType { get; set; }
+        public ServiceBindingType BindingType { get; set; }
 
         ///
         [DataMember]

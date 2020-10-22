@@ -7,7 +7,7 @@ using Moryx.Tools.Wcf;
 namespace Moryx.DependentTestModule
 {
     [ServiceContract]
-    [ServiceVersion(ServerVersion = SimpleHelloWorldWcfService.ServerVersion, MinClientVersion = SimpleHelloWorldWcfService.MinClientVersion)]
+    [ServiceVersion(SimpleHelloWorldWcfService.ServerVersion)]
     public interface ISimpleHelloWorldWcfService
     {
         [OperationContract(IsOneWay = false)]

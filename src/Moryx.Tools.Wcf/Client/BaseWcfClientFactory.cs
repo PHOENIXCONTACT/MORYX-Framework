@@ -126,7 +126,7 @@ namespace Moryx.Tools.Wcf
         #region Create with Config
 
         ///
-        public long Create<T, TK>(IClientConfig config, Action<ConnectionState, T> callback)
+        public long Create<T, TK>(ClientConfig config, Action<ConnectionState, T> callback)
             where T : ClientBase<TK>
             where TK : class
         {
@@ -134,7 +134,7 @@ namespace Moryx.Tools.Wcf
         }
 
         ///
-        public long Create<T, TK>(IClientConfig config, object callbackService, Action<ConnectionState, T> callback)
+        public long Create<T, TK>(ClientConfig config, object callbackService, Action<ConnectionState, T> callback)
             where T : ClientBase<TK>
             where TK : class
         {
@@ -142,7 +142,7 @@ namespace Moryx.Tools.Wcf
         }
 
         ///
-        public long Create<T, TK>(IClientConfig config, Action<ConnectionState, T> callback, Binding binding)
+        public long Create<T, TK>(ClientConfig config, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
             where TK : class
         {
@@ -150,7 +150,7 @@ namespace Moryx.Tools.Wcf
         }
 
         ///
-        public long Create<T, TK>(IClientConfig config, object callbackService, Action<ConnectionState, T> callback, Binding binding)
+        public long Create<T, TK>(ClientConfig config, object callbackService, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
             where TK : class
         {
@@ -163,7 +163,7 @@ namespace Moryx.Tools.Wcf
             if (config.Port <= 0 || config.Port >= 65536)
                 throw new ArgumentException($"Invalid port number {config.Port}.", nameof(config));
 
-            return AddClientToMonitor<T, TK>(config, callbackService, callback, binding);
+            return AddClientToMonitor<T, TK>(config.ClientVersion, callbackService, callback, binding, config);
         }
 
         #endregion
@@ -171,43 +171,38 @@ namespace Moryx.Tools.Wcf
         #region Create without config
 
         ///
-        public long Create<T, TK>(string clientVersion, string minServerVersion, Action<ConnectionState, T> callback)
+        public long Create<T, TK>(string clientVersion, Action<ConnectionState, T> callback)
             where T : ClientBase<TK>
             where TK : class
         {
-            return Create<T, TK>(clientVersion, minServerVersion, null, callback);
+            return Create<T, TK>(clientVersion, null, callback);
         }
 
         ///
-        public long Create<T, TK>(string clientVersion, string minServerVersion, object callbackService, Action<ConnectionState, T> callback)
+        public long Create<T, TK>(string clientVersion, object callbackService, Action<ConnectionState, T> callback)
             where T : ClientBase<TK>
             where TK : class
         {
-            return Create<T, TK>(clientVersion, minServerVersion, callbackService, callback, null);
+            return Create<T, TK>(clientVersion, callbackService, callback, null);
         }
 
         ///
-        public long Create<T, TK>(string clientVersion, string minServerVersion, Action<ConnectionState, T> callback, Binding binding)
+        public long Create<T, TK>(string clientVersion, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
             where TK : class
         {
-            return Create<T, TK>(clientVersion, minServerVersion, null, callback, binding);
+            return Create<T, TK>(clientVersion, null, callback, binding);
         }
 
         ///
-        public long Create<T, TK>(string clientVersion, string minServerVersion, object callbackService, Action<ConnectionState, T> callback, Binding binding)
+        public long Create<T, TK>(string clientVersion, object callbackService, Action<ConnectionState, T> callback, Binding binding)
             where T : ClientBase<TK>
             where TK : class
         {
             if (string.IsNullOrEmpty(clientVersion))
                 throw new ArgumentNullException(nameof(clientVersion));
 
-            if (string.IsNullOrEmpty(minServerVersion))
-                throw new ArgumentNullException(nameof(minServerVersion));
-
-            var clientConfig = new ClientVersionConfig(clientVersion, minServerVersion);
-
-            return AddClientToMonitor<T, TK>(clientConfig, callbackService, callback, binding);
+            return AddClientToMonitor<T, TK>(clientVersion, callbackService, callback, binding);
         }
 
         #endregion
@@ -241,7 +236,7 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Adds a new client to the monitoring quene.
         /// </summary>
-        private long AddClientToMonitor<T, TK>(IClientVersionConfig config, object callbackService, Action<ConnectionState, T> callback, Binding binding)
+        private long AddClientToMonitor<T, TK>(string clientVersion, object callbackService, Action<ConnectionState, T> callback, Binding binding, ClientConfig config = null)
             where T : ClientBase<TK>
             where TK : class
         {
@@ -260,7 +255,7 @@ namespace Moryx.Tools.Wcf
                 ClientType = clientType,
                 ServiceName = serviceName,
                 CallbackService = callbackService,
-                ClientInfo = new WcfClientInfo(CreateClientId(), serviceName, config),
+                ClientInfo = new WcfClientInfo(CreateClientId(), serviceName, clientVersion),
             };
 
             //Wraps the client callback in safe delegate to avoid invoke exceptions
@@ -285,21 +280,13 @@ namespace Moryx.Tools.Wcf
             //Set delegate to add additional endpoint behaviors
             request.AddEndpointBehavior = (client, behavior) => ((T) client).Endpoint.Behaviors.Add(behavior);
 
-            if (string.IsNullOrEmpty(config.MinServerVersion))
-            {
-                Logger.Log(LogLevel.Info, "Creating WCF client {0} for '{1}' without version check", request.ClientInfo.Id, serviceName);
-            }
-            else
-            {
-                Logger.Log(LogLevel.Info, "Creating WCF client {0} for '{1}', client version {2}, min. service version {3}",
-                    request.ClientInfo.Id, serviceName, config.ClientVersion, config.MinServerVersion);
-            }
+            Logger.Log(LogLevel.Info, "Creating WCF client {0} for '{1}', client version {2}, min. service version {3}",
+                request.ClientInfo.Id, serviceName, clientVersion, request.ClientInfo.MinServerVersion);
 
-            var clientConfig = config as IClientConfig;
-            if (clientConfig != null)
+            if (config != null)
             {
-                request.Config = clientConfig;
-                request.ClientInfo.Uri = CreateEndpointAddress(request.ServiceConfiguration, request.Config).Uri.ToString();
+                request.Config = config;
+                request.ClientInfo.Uri = CreateEndpointAddress(request.Endpoint, request.Config).Uri.ToString();
             }
 
             lock (_monitoredClients)
@@ -317,7 +304,7 @@ namespace Moryx.Tools.Wcf
             var clients = GetMonitoredClients(CheckIsClientOffline);
             foreach (var client in clients)
             {
-                RecieveVersion(client);
+                ReceiveVersion(client);
             }
         }
 
@@ -392,17 +379,17 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Matches the version of the given client and writes it to the client info.
         /// </summary>
-        private void RecieveVersion(MonitoredClient client)
+        private void ReceiveVersion(MonitoredClient client)
         {
             try
             {
                 if (client.Config != null)
                 {
-                    RecievieVersionWithConfig(client);
+                    ReceiveVersionWithConfig(client);
                 }
                 else
                 {
-                    RecieveVersionWithoutConfig(client);
+                    ReceiveVersionWithoutConfig(client);
                 }
             }
             catch (Exception e)
@@ -412,11 +399,11 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Recievies the version of the client from the versionservice by a given config
+        /// Receives the version of the client from the version service by a given config
         /// </summary>
-        private void RecievieVersionWithConfig(MonitoredClient client)
+        private void ReceiveVersionWithConfig(MonitoredClient client)
         {
-            if (string.IsNullOrEmpty(client.Config.MinServerVersion))
+            if (!client.Config.CheckVersion)
             {
                 // Don't do any version check.
                 HandleConnectionState(client, InternalConnectionState.VersionMatch);
@@ -425,23 +412,34 @@ namespace Moryx.Tools.Wcf
             {
                 Logger.Log(LogLevel.Debug, "Trying to get version info for service '{0}'", client.ServiceName);
 
-                var version = VersionService.GetServerVersion(client.Config.Endpoint);
-                if (string.IsNullOrEmpty(version))
+                // Get all endpoints for this service
+                var endpoints = VersionService.ServiceEndpoints(client.ServiceName);
+                if (endpoints == null)
                 {
-                    HandleConnectionFailure(client, "Empty answer.");
+                    HandleConnectionFailure(client, "Endpoint service not available");
+                    return;
+                }
+
+                // Select endpoint by path for config
+                var endpoint = endpoints.FirstOrDefault(e => e.Path == client.Config.Endpoint);
+                if (endpoint == null)
+                {
+                    HandleConnectionFailure(client, "Endpoint not found on server");
                     return;
                 }
 
                 // Finally reached the server
-                Logger.Log(LogLevel.Debug, "Got version '{0}' info for service '{1}'", version, client.ServiceName);
+                Logger.Log(LogLevel.Debug, "Got version '{0}' for service '{1}'", endpoint.Version, client.ServiceName);
+                var clientVersion = Version.Parse(client.Config.ClientVersion);
+                var serverVersion = Version.Parse(endpoint.Version);
+                client.ClientInfo.ServerVersion = endpoint.Version;
+                client.ClientInfo.MinClientVersion = $"{serverVersion.Major}.0.0";
 
-                client.ClientInfo.ServerVersion = version;
-
-                var versionMatch = VersionService.Match(client.Config, version)
-                    ? InternalConnectionState.VersionMatch
-                    : InternalConnectionState.VersionMissmatch;
-
-                HandleConnectionState(client, versionMatch);
+                // Compare version
+                if (endpoint.Binding == client.Config.BindingType && serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion)
+                    HandleConnectionState(client, InternalConnectionState.VersionMatch);
+                else
+                    HandleConnectionState(client, InternalConnectionState.VersionMissmatch);
             }
         }
 
@@ -449,31 +447,41 @@ namespace Moryx.Tools.Wcf
         /// Recieves the version without a given configuration. The configuration will be loaded from
         /// the version service
         /// </summary>
-        private void RecieveVersionWithoutConfig(MonitoredClient client)
+        private void ReceiveVersionWithoutConfig(MonitoredClient client)
         {
             Logger.Log(LogLevel.Debug, "Trying to get service configuration for service '{0}'", client.ServiceName);
 
-            client.ServiceConfiguration = VersionService.GetServiceConfiguration(client.ServiceName);
-
-            if (client.ServiceConfiguration == null)
+            // Get all endpoints for this service
+            var endpoints = VersionService.ServiceEndpoints(client.ServiceName);
+            if (endpoints == null || endpoints.Length == 0)
             {
-                HandleConnectionFailure(client, "Empty answer.");
+                HandleConnectionFailure(client, "Endpoint service or endpoint not available");
+                return;
+            }
 
+            // Select endpoint by matching version
+            var clientVersion = Version.Parse(client.ClientInfo.ClientVersion);
+            var endpoint = endpoints
+                .Where(e =>
+                {
+                    var serverVersion = Version.Parse(e.Version);
+                    // The client factory can not connect WebHttp
+                    return e.Binding > ServiceBindingType.WebHttp && serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion;
+                }).OrderByDescending(e => e.Version).FirstOrDefault();
+            if (endpoint == null)
+            {
+                HandleConnectionState(client, InternalConnectionState.VersionMissmatch);
                 return;
             }
 
             // Finally reached the server
+            client.Endpoint = endpoint;
             Logger.Log(LogLevel.Debug, "Got service configuration for service '{0}'", client.ServiceName);
+            client.ClientInfo.ServerVersion = client.Endpoint.Version;
+            client.ClientInfo.MinClientVersion = $"{Version.Parse(client.Endpoint.Version).Major}.0.0";
+            client.ClientInfo.Uri = endpoint.Address;
 
-            client.ClientInfo.ServerVersion = client.ServiceConfiguration.ServerVersion;
-            client.ClientInfo.MinClientVersion = client.ServiceConfiguration.MinClientVersion;
-            client.ClientInfo.Uri = client.ServiceConfiguration.ServiceUrl;
-
-            var versionMatch = VersionService.Match(client.ClientInfo, client.ServiceConfiguration)
-                    ? InternalConnectionState.VersionMatch
-                    : InternalConnectionState.VersionMissmatch;
-
-            HandleConnectionState(client, versionMatch);
+            HandleConnectionState(client, InternalConnectionState.VersionMatch);
         }
 
         /// <summary>
@@ -544,11 +552,11 @@ namespace Moryx.Tools.Wcf
             }
             catch (CommunicationException e)
             {
-                Logger.LogException(LogLevel.Error, e, "Can't open connection to {0}");
+                Logger.LogException(LogLevel.Error, e, "Can't open connection to {0}", client.ServiceName);
             }
             catch (TimeoutException e)
             {
-                Logger.LogException(LogLevel.Error, e, "Can't open connection to {0}");
+                Logger.LogException(LogLevel.Error, e, "Can't open connection to {0}", client.ServiceName);
             }
             catch (Exception e)
             {
@@ -657,16 +665,19 @@ namespace Moryx.Tools.Wcf
         {
             var clientParams = new List<object>();
 
-            var serviceConfiguration = monitoredClient.ServiceConfiguration;
+            var serviceConfiguration = monitoredClient.Endpoint;
             var monitoredClientConfig = monitoredClient.Config;
-            var bindingType = serviceConfiguration?.BindingType ?? monitoredClientConfig.BindingType;
 
             var requiresAuthentication = (serviceConfiguration != null && serviceConfiguration.RequiresAuthentication)
                                          || (monitoredClientConfig != null && monitoredClientConfig.RequiresAuthentification);
 
             // Add callback context if the service is an net.tcp service
-            if (bindingType == BindingType.NetTcp && monitoredClient.CallbackService != null)
+            var bindingType = serviceConfiguration?.Binding ?? monitoredClientConfig?.BindingType ?? ServiceBindingType.BasicHttp;
+            if (bindingType == ServiceBindingType.NetTcp && monitoredClient.CallbackService != null)
             {
+                if (monitoredClient.ClientType.GetConstructor(new[] {typeof(InstanceContext), typeof(Binding), typeof(EndpointAddress)}) == null)
+                    throw new NotSupportedException("Generated client does not support custom callback. Use base class instead?");
+
                 monitoredClient.CallbackContext = new InstanceContext(monitoredClient.CallbackService);
 
                 clientParams.Add(monitoredClient.CallbackContext);
@@ -728,13 +739,13 @@ namespace Moryx.Tools.Wcf
         /// Creates the endpoint address out of the service configuration.
         /// If the service configuration is set to null, the endpoint will be created with the service url
         /// </summary>
-        private EndpointAddress CreateEndpointAddress(ServiceConfiguration serviceConfig, IClientConfig clientConfig)
+        private EndpointAddress CreateEndpointAddress(Endpoint serviceConfig, ClientConfig clientConfig)
         {
             if (serviceConfig != null)
-                return new EndpointAddress(serviceConfig.ServiceUrl);
+                return new EndpointAddress(serviceConfig.Address);
 
             //Set binding type for the uri
-            var bindingType = clientConfig.BindingType == BindingType.NetTcp ? "net.tcp" : "http";
+            var bindingType = clientConfig.BindingType == ServiceBindingType.NetTcp ? "net.tcp" : "http";
 
             //Set host. Use host from configuration, and if not set, than use host from factory config
             var host = string.IsNullOrEmpty(clientConfig.Host) ? _factoryConfig.Host : clientConfig.Host;

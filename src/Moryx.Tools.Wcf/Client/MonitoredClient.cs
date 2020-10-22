@@ -14,9 +14,9 @@ namespace Moryx.Tools.Wcf
 
     internal class MonitoredClient
     {
-        public IClientConfig Config { get; set; }
+        public ClientConfig Config { get; set; }
 
-        public ServiceConfiguration ServiceConfiguration { get; set; }
+        public Endpoint Endpoint { get; set; }
 
         public Binding Binding { get; set; }
 

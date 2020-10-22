@@ -12,13 +12,17 @@ namespace Moryx.Tools.Wcf
     public class ServiceVersionAttribute : Attribute
     {
         /// <summary>
-        /// Version of the server
+        /// Set version of the service
         /// </summary>
-        public string ServerVersion { get; set; } = "1.0.0.0";
+        /// <param name="version"></param>
+        public ServiceVersionAttribute(string version)
+        {
+            Version = version;
+        }
 
         /// <summary>
-        /// Min required version of the server
+        /// Version of the server
         /// </summary>
-        public string MinClientVersion { get; set; } = "1.0.0.0";
+        public string Version { get; }
     }
 }

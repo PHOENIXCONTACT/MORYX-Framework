@@ -16,7 +16,7 @@ namespace Moryx.Runtime.SystemTests
 #endif
         public HeartOfGoldController HogController { get; set; }
 
-        public static string RuntimeDir => TestContext.CurrentContext.TestDirectory + @"\..\..\..\..\StartProject\bin\" + Configuration;
+        public static string RuntimeDir => TestContext.CurrentContext.TestDirectory + @"\..\..\..\..\StartProject\bin\" + Configuration + @"\net45";
 
         public static string ConfigDirParam => Path.Combine("Config", "SystemTests");
 

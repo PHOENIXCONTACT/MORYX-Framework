@@ -13,7 +13,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
     /// Service contract for logging features of the maintenance.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion(ServerVersion = "1.0.1.0", MinClientVersion = "1.0.1.0")]
+    [ServiceVersion("3.0.0")]
     public interface ILogMaintenance
     {
         /// <summary>

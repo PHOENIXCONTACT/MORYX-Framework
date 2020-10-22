@@ -1,6 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+using System.Linq;
 using System.ServiceModel;
 using Moryx.Tools.Wcf;
 
@@ -11,24 +13,27 @@ namespace Moryx.Runtime.Wcf
     {
         public IEndpointCollector Collector { get; set; }
 
-        public bool ClientSupported(string service, string clientVersion)
+        public Endpoint[] AllEndpoints()
         {
-            return Collector.ClientSupported(service, clientVersion);
+            return Collector.AllEndpoints;
         }
 
-        public string GetServerVersion(string endpoint)
+        public Endpoint[] FilteredEndpoints(string service)
         {
-            return Collector.GetServerVersion(endpoint);
+            return Collector.AllEndpoints
+                .Where(e => e.Service == service).ToArray();
         }
 
-        public ServiceEndpoint[] ActiveEndpoints()
+        public Endpoint[] FilterByBinding(string binding)
         {
-            return Collector.AllEndpoints();
+            return Collector.AllEndpoints
+                .Where(e => e.Binding.ToString("G") == binding).ToArray();
         }
 
-        public ServiceConfig GetServiceConfiguration(string service)
+        public Endpoint GetEndpointConfig(string endpoint)
         {
-            return Collector.GetServiceConfiguration(service);
+            return Collector.AllEndpoints
+                .FirstOrDefault(e => e.Path == endpoint);
         }
     }
 }

@@ -1,6 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+
 namespace Moryx.Tools.Wcf
 {
     /// <summary>
@@ -17,12 +19,16 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Initializes a new instance of the <see cref="WcfClientInfo"/> class.
         /// </summary>
-        internal WcfClientInfo(long id, string service, IClientVersionConfig clientConfig)
+        internal WcfClientInfo(long id, string service, string clientVersion)
         {
             Id = id;
             Service = service;
-            ClientVersion = clientConfig.ClientVersion;
-            MinServerVersion = clientConfig.MinServerVersion;
+            ClientVersion = clientVersion;
+            if (!string.IsNullOrEmpty(clientVersion))
+            {
+                var asVersion = Version.Parse(ClientVersion);
+                MinServerVersion = $"{asVersion.Major}.{asVersion.Minor}.0";
+            }
 
             ServerVersion = Unknown;
             MinClientVersion = Unknown;
@@ -49,12 +55,12 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// The client's version.
         /// </summary>
-        public string ClientVersion { get; private set; }
+        public string ClientVersion { get; }
 
         /// <summary>
         /// The minimum version of the service the client needs to operate with.
         /// </summary>
-        public string MinServerVersion { get; private set; }
+        public string MinServerVersion { get; }
 
         /// <summary>
         /// The service's version as retrieved from the server.
