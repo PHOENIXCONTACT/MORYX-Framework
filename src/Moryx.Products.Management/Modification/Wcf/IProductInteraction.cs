@@ -5,21 +5,20 @@ using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Products.Management.Modification.Model;
 using Moryx.Serialization;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.Products.Management.Modification
 {
     [ServiceContract]
-    [ServiceVersion("1.1.2.0")]
+    [ServiceVersion("5.0.0")]
     internal interface IProductInteraction
     {
         /// <summary>
         /// Customization of the application, e.g. RecipeCreation, Importers, ....
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/customization", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "customization", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ProductCustomization GetCustomization();
@@ -28,7 +27,7 @@ namespace Moryx.Products.Management.Modification
         /// Gets all products by filter
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "query", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ProductModel[] GetProducts(ProductQuery query);
@@ -37,7 +36,7 @@ namespace Moryx.Products.Management.Modification
         /// Create a new instance of the given type
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/create", Method = WebRequestMethods.Http.Put,
+        [WebInvoke(UriTemplate = "construct/{type}", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ProductModel CreateProduct(string type);
@@ -46,79 +45,79 @@ namespace Moryx.Products.Management.Modification
         /// Get details of a product
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/details?id={id}", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "product/{id}", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        ProductModel GetProductDetails(long id);
+        ProductModel GetProductDetails(string id);
 
         /// <summary>
         /// Save changes to a product
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/save", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "product/{id}", Method = WebRequestMethods.Http.Put,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        ProductModel SaveProduct(ProductModel instance);
+        ProductModel SaveProduct(string id, ProductModel instance);
 
         /// <summary>
         /// Create a new revision or copy of the product
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/duplicate?sourceId={sourceId}&identifier={identifier}&revisionNo={revisionNo}", Method = WebRequestMethods.Http.Put,
+        [WebInvoke(UriTemplate = "product/{sourceId}/duplicate", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        DuplicateProductResponse DuplicateProduct(long sourceId, string identifier, short revisionNo);
+        DuplicateProductResponse DuplicateProduct(string sourceId, ProductModel model);
 
         /// <summary>
         /// Try to delete a product
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products?id={id}", Method = "DELETE",
+        [WebInvoke(UriTemplate = "product/{id}", Method = "DELETE",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        bool DeleteProduct(long id);
+        bool DeleteProduct(string id);
 
         /// <summary>
         /// Import new products
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/import", Method = WebRequestMethods.Http.Put,
+        [WebInvoke(UriTemplate = "import/{importer}", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        ProductModel ImportProduct(ImportProductRequest importProductRequest);
+        ProductModel ImportProduct(string importer, Entry importParameters);
 
         /// <summary>
         /// Update import parameters based on their current content
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/updateParameters", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "import/{importer}/parameters", Method = WebRequestMethods.Http.Put,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        Entry UpdateParameters(UpdateParametersRequest updateParametersRequest);
+        Entry UpdateParameters(string importer, Entry importParameters);
 
         /// <summary>
         /// Get the recipe with this id
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/recipe?recipeId={recipeId}", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "recipe/{recipeId}", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        RecipeModel GetRecipe(long recipeId);
+        RecipeModel GetRecipe(string recipeId);
 
         /// <summary>
         /// Get all recipes for the given product
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/recipes?productId={productId}", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "recipes?product={productId}", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        RecipeModel[] GetRecipes(long productId);
+        RecipeModel[] GetRecipes(string productId);
 
         /// <summary>
         /// Create a new recipe
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/recipe/create?recipeType={recipeType}", Method = WebRequestMethods.Http.Put,
+        [WebInvoke(UriTemplate = "recipe/construct/{recipeType}", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         RecipeModel CreateRecipe(string recipeType);
@@ -127,17 +126,26 @@ namespace Moryx.Products.Management.Modification
         /// Saves a recipe
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/recipe/save", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "recipe", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        RecipeModel SaveRecipe(SaveRecipeRequest saveRecipeRequest);
+        RecipeModel SaveRecipe(RecipeModel recipe);
+
+        /// <summary>
+        /// Saves a recipe
+        /// </summary>
+        [OperationContract]
+        [WebInvoke(UriTemplate = "recipe/{id}", Method = WebRequestMethods.Http.Put,
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
+        RecipeModel UpdateRecipe(string id, RecipeModel recipe);
 
         /// <summary>
         /// Get all workplans
         /// </summary>
         /// <returns></returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/workplans", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "workplans", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         WorkplanModel[] GetWorkplans();
@@ -146,7 +154,7 @@ namespace Moryx.Products.Management.Modification
         /// Provider name
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "products/recipe/providername", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "recipe/provider", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         string GetRecipeProviderName();

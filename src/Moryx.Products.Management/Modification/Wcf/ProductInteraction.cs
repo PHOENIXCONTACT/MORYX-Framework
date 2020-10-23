@@ -5,11 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
-using System.ServiceModel.Web;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
-using Moryx.Products.Management.Modification.Model;
 using Moryx.Serialization;
 using Moryx.Tools;
 
@@ -31,8 +29,6 @@ namespace Moryx.Products.Management.Modification
 
         public ProductCustomization GetCustomization()
         {
-            AddCors();
-
             return new ProductCustomization
             {
                 ProductTypes = ReflectionTool.GetPublicClasses<ProductType>(new IsConfiguredFilter(Config.TypeStrategies).IsConfigured)
@@ -75,11 +71,9 @@ namespace Moryx.Products.Management.Modification
         private static Entry ConvertParameters(IImportParameters parametersObject) =>
             EntryConvert.EncodeObject(parametersObject, new PartialSerialization<IImportParameters>());
 
-        public Entry UpdateParameters(UpdateParametersRequest updateParametersRequest)
+        public Entry UpdateParameters(string importer, Entry importParameters)
         {
-            AddCors();
-
-            var parameters = ConvertParametersBack(updateParametersRequest.Importer, updateParametersRequest.CurrentParameters, true);
+            var parameters = ConvertParametersBack(importer, importParameters, true);
             return ConvertParameters(parameters);
         }
 
@@ -94,93 +88,79 @@ namespace Moryx.Products.Management.Modification
 
         public ProductModel[] GetProducts(ProductQuery query)
         {
-            AddCors();
-
             return UseConverter(c => c.GetTypes(query));
         }
 
         public ProductModel CreateProduct(string type)
         {
-            AddCors();
-
             return UseConverter(c => c.Create(type));
         }
 
-        public ProductModel GetProductDetails(long id)
+        public ProductModel GetProductDetails(string idString)
         {
-            AddCors();
-
+            var id = long.Parse(idString);
             return UseConverter(c => c.GetProduct(id));
         }
 
-        public ProductModel SaveProduct(ProductModel instance)
+        public ProductModel SaveProduct(string idString, ProductModel instance)
         {
-            AddCors();
-
+            instance.Id = long.Parse(idString);
             return UseConverter(c => c.Save(instance));
         }
 
-        public DuplicateProductResponse DuplicateProduct(long sourceId, string identifier, short revisionNo)
+        public DuplicateProductResponse DuplicateProduct(string idString, ProductModel product)
         {
-            AddCors();
-
-            return UseConverter(c => c.Duplicate(sourceId, identifier, revisionNo));
+            var sourceId = long.Parse(idString);
+            return UseConverter(c => c.Duplicate(sourceId, product.Identifier, product.Revision));
         }
 
-        public ProductModel ImportProduct(ImportProductRequest importProductRequest)
+        public ProductModel ImportProduct(string importer, Entry importParameters)
         {
-            AddCors();
-
-            var parameters = ConvertParametersBack(importProductRequest.ImporterName, importProductRequest.ParametersModel);
-            return UseConverter(c => c.ImportProduct(importProductRequest.ImporterName, parameters));
+            var parameters = ConvertParametersBack(importer, importParameters);
+            return UseConverter(c => c.ImportProduct(importer, parameters));
         }
 
-        public bool DeleteProduct(long id)
+        public bool DeleteProduct(string idString)
         {
-            AddCors();
-
+            var id = long.Parse(idString);
             return UseConverter(c => c.DeleteProduct(id));
         }
 
         public string GetRecipeProviderName()
         {
-            AddCors();
-
             return ModuleController.ModuleName;
         }
 
-        public RecipeModel GetRecipe(long recipeId)
+        public RecipeModel GetRecipe(string idString)
         {
-            AddCors();
-
+            var recipeId = long.Parse(idString);
             return UseConverter(c => c.GetRecipe(recipeId));
         }
 
-        public RecipeModel[] GetRecipes(long productId)
+        public RecipeModel[] GetRecipes(string idString)
         {
-            AddCors();
-
+            var productId = long.Parse(idString);
             return UseConverter(c => c.GetRecipes(productId));
         }
 
         public RecipeModel CreateRecipe(string recipeType)
         {
-            AddCors();
-
             return UseConverter(c => c.CreateRecipe(recipeType));
         }
 
-        public RecipeModel SaveRecipe(SaveRecipeRequest saveRecipeRequest)
+        public RecipeModel SaveRecipe(RecipeModel recipe)
         {
-            AddCors();
+            return UseConverter(c => c.SaveRecipe(recipe));
+        }
 
-            return UseConverter(c => c.SaveRecipe(saveRecipeRequest.Recipe));
+        public RecipeModel UpdateRecipe(string idString, RecipeModel recipe)
+        {
+            recipe.Id = long.Parse(idString);
+            return UseConverter(c => c.SaveRecipe(recipe));
         }
 
         public WorkplanModel[] GetWorkplans()
         {
-            AddCors();
-
             return UseConverter(c => c.GetWorkplans());
         }
 
@@ -190,11 +170,6 @@ namespace Moryx.Products.Management.Modification
             var converted = call(converter);
             ConverterFactory.Destroy(converter);
             return converted;
-        }
-
-        private void AddCors()
-        {
-            WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Allow-Origin", "*");
         }
     }
 }
