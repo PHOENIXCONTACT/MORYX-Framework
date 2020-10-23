@@ -13,13 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kernel", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kernel.Tests", "src\Tests\Moryx.Runtime.Kernel.Tests\Moryx.Runtime.Kernel.Tests.csproj", "{0F2C9C4B-E9B7-43DD-9B25-72402E583D90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Runtime.SystemTests", "src\Tests\Moryx.Runtime.SystemTests\Moryx.Runtime.SystemTests.csproj", "{B47E0CB5-A3EC-4ED6-BCBF-9E3BEA6ABF5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.SystemTests", "src\Tests\Moryx.Runtime.SystemTests\Moryx.Runtime.SystemTests.csproj", "{B47E0CB5-A3EC-4ED6-BCBF-9E3BEA6ABF5D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.DependentTestModule", "src\DependentTestModule\Moryx.DependentTestModule.csproj", "{D8344B1F-9DB3-4E85-9195-6FFFECBF6427}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestModule", "src\TestModule\Moryx.TestModule.csproj", "{24ED97AD-6D04-4DC0-AFCB-C911EF0AA738}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Tools.Wcf.SystemTests", "src\Tests\Moryx.Tools.Wcf.SystemTests\Moryx.Tools.Wcf.SystemTests.csproj", "{74D4C6FE-2E58-4F31-A915-6CF061C0149B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Tools.Wcf.SystemTests", "src\Tests\Moryx.Tools.Wcf.SystemTests\Moryx.Tools.Wcf.SystemTests.csproj", "{74D4C6FE-2E58-4F31-A915-6CF061C0149B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemTests", "SystemTests", "{63266199-BAA4-4463-998A-240E130A197D}"
 EndProject
@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Container.TestTools",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{0A466330-6ED6-4861-9C94-31B1949CDDB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Tools.Wcf.Tests", "src\Tests\Moryx.Tools.Wcf.Tests\Moryx.Tools.Wcf.Tests.csproj", "{A4CA7B7C-5417-4FA9-9E0B-76D4CD4663C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Tools.Wcf.Tests", "src\Tests\Moryx.Tools.Wcf.Tests\Moryx.Tools.Wcf.Tests.csproj", "{A4CA7B7C-5417-4FA9-9E0B-76D4CD4663C9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestTools.SystemTest", "src\Moryx.TestTools.SystemTest\Moryx.TestTools.SystemTest.csproj", "{D6DC00C6-9358-4839-84C0-44DF018A74DC}"
 EndProject
@@ -59,7 +59,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DE75
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Tests", "src\Tests\Moryx.Runtime.Tests\Moryx.Runtime.Tests.csproj", "{7448728C-9965-4874-A2E9-7BAB37E42963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model.Tests", "src\Tests\Moryx.Model.Tests\Moryx.Model.Tests.csproj", "{BA61840C-9E77-4454-88E2-7CA4E98EE4BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Model.Tests", "src\Tests\Moryx.Model.Tests\Moryx.Model.Tests.csproj", "{BA61840C-9E77-4454-88E2-7CA4E98EE4BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{74112169-6672-4907-A187-F055111940A9}"
 EndProject
@@ -90,6 +90,17 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.DbUpdate", "src\Moryx.Runtime.DbUpdate\Moryx.Runtime.DbUpdate.csproj", "{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Maintenance", "src\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj", "{EB039D46-906F-44BF-AC37-B3B3634A4442}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DFC092A6-B935-4D19-A564-9AEDEEF999B9}"
+	ProjectSection(SolutionItems) = preProject
+		Build.ps1 = Build.ps1
+		Directory.build.props = Directory.build.props
+		Directory.Build.targets = Directory.Build.targets
+		LICENSE = LICENSE
+		NOTICE = NOTICE
+		NuGet.Config = NuGet.Config
+		VERSION = VERSION
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -743,8 +754,8 @@ Global
 		{EB039D46-906F-44BF-AC37-B3B3634A4442} = {DE7526FF-6D25-4643-9AA3-C24253901C8C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
-		RESX_ShowErrorsInErrorList = True
 		RESX_TaskErrorCategory = Message
+		RESX_ShowErrorsInErrorList = True
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 	EndGlobalSection
 EndGlobal
