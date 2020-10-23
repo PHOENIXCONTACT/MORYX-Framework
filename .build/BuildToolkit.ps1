@@ -469,11 +469,13 @@ function Invoke-PackFrameworkProject($CsprojFile, [bool]$IsTool = $False, [bool]
 function Invoke-Pack($ProjectPath, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
     CreateFolderIfNotExists $NugetPackageArtifacts;
 
-    if (Get-CsprojIsSdkProject($ProjectPath)) {
-        Invoke-PackSdkProject $ProjectPath $IncludeSymbols;
+    $csprojFile = Get-Item $ProjectPath;
+
+    if (Get-CsprojIsSdkProject($csprojFile)) {
+        Invoke-PackSdkProject $csprojFile $IncludeSymbols;
     }
     else {
-        Invoke-PackFrameworkProject $ProjectPath $IsTool $IncludeSymbols;
+        Invoke-PackFrameworkProject $csprojFile $IsTool $IncludeSymbols;
     }
 }
 
