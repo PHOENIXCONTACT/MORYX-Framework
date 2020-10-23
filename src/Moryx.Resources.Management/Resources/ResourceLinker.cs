@@ -229,12 +229,12 @@ namespace Moryx.Resources.Management
             var referencedResources = ((IEnumerable<IResource>)propertyValue).Cast<Resource>().ToList();
 
             // Check required attribute against empty collections
-            if(referencedResources.Count == 0 && referenceAtt.IsRequired)
+            if (referencedResources.Count == 0 && referenceAtt.IsRequired)
                 throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was empty!");
 
             // First delete references that are not used by ANY property of the same configuration
             var currentReferences = CurrentReferences(resource, referenceAtt);
-            var deleted = relationTemplates.Where(m => currentReferences.All(cr =>  cr != context.ResolveReference(m))).ToList();
+            var deleted = relationTemplates.Where(m => currentReferences.All(cr => cr != context.ResolveReference(m))).ToList();
             foreach (var relation in deleted)
             {
                 ClearOnTarget(context.ResolveReference(relation), resource, referenceAtt);
@@ -496,6 +496,8 @@ namespace Moryx.Resources.Management
             public ReferenceSaverContext(IUnitOfWork unitOfWork, IResourceGraph graph, Resource initialInstance, ResourceEntity entity) : this(unitOfWork, graph)
             {
                 EntityCache[initialInstance] = entity;
+                if (initialInstance.Id == 0)
+                    ResourceLookup[entity] = initialInstance;
             }
 
             public ReferenceSaverContext(IUnitOfWork uow, IResourceGraph graph)
