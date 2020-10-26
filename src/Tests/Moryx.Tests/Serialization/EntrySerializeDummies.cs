@@ -64,4 +64,17 @@ namespace Moryx.Tests
 
         public string NullMethod2() => "1234";
     }
+
+    [EntrySerialize(EntrySerializeMode.Never)]
+    public class EntrySerialize_InheritedBase
+    {
+        public bool NullProperty1 { get; set; } = true;
+    }
+
+    public class EntrySerialize_Inherited : EntrySerialize_InheritedBase
+    {
+        public string NullProperty2 { get; set; } = "789456";
+
+        public bool NullProperty3 { get; set; } = false;
+    }
 }

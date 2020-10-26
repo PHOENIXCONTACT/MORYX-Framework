@@ -94,7 +94,7 @@ namespace Moryx.Serialization
         /// </summary>
         private static EntrySerializeMode? EvaluateSerializeMode(ICustomAttributeProvider attributeProvider)
         {
-            var entrySerializeAttr = attributeProvider.GetCustomAttribute<EntrySerializeAttribute>();
+            var entrySerializeAttr = attributeProvider.GetCustomAttribute<EntrySerializeAttribute>(true);
             return entrySerializeAttr?.Mode;
         }
 

@@ -133,5 +133,18 @@ namespace Moryx.Tests
             var alwaysMethod = sourceType.GetMethod(nameof(EntrySerialize_NeverClassAlwaysMember.AlwaysMethod1));
             Assert.AreEqual(alwaysMethod, filteredMethods[0], "Only the always method should be filtered.");
         }
+
+        [Test(Description = "Attribute is defined as 'Never' on base class: No property should be serialized")]
+        public void NeverOnBaseClass()
+        {
+            // Arrange
+            var sourceType = typeof(EntrySerialize_Inherited);
+
+            // Act
+            var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
+
+            // Assert
+            Assert.AreEqual(0, filteredProperties.Length);
+        }
     }
 }
