@@ -38,7 +38,7 @@ if ($IntegrationTests) {
 }
 
 if ($SystemTests) {
-    Invoke-Nunit -SearchFilter "*.SystemTests.csproj"
+    Invoke-CoverTests -SearchFilter "*.SystemTests.csproj"
 }
 
 if ($CoverReport) {

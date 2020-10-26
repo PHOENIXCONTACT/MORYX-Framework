@@ -35,7 +35,7 @@ jobs:
     - name: Build
       shell: pwsh
       run: ./Build.ps1 -Build
-  Test:
+  UnitTests:
     needs: [Build]
     runs-on: windows-latest
     steps:
@@ -51,6 +51,22 @@ jobs:
           shell: pwsh
           run: ./Build.ps1 -UnitTests
 
+        - name: Codecov
+          uses: codecov/codecov-action@v1
+          with:
+            files: '*.OpenCover.xml'
+  IntegrationTests:
+    needs: [Build]
+    runs-on: windows-latest
+    steps:
+        - uses: actions/checkout@v2
+
+        - name: Setup MSBuild
+          uses: microsoft/setup-msbuild@v1
+
+        - name: Setup NuGet.exe
+          uses: NuGet/setup-nuget@v1.0.2
+
         - name: Execute Integration Tests
           shell: pwsh
           run: ./Build.ps1 -IntegrationTests
@@ -59,9 +75,8 @@ jobs:
           uses: codecov/codecov-action@v1
           with:
             files: '*.OpenCover.xml'
-
   Publish:
-    needs: [Test]
+    needs: [UnitTests, IntegrationTests]
     if: ${{ github.event_name == 'push' }}
     runs-on: windows-latest
     steps:
