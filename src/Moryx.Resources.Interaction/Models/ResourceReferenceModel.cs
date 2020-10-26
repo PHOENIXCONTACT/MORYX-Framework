@@ -11,7 +11,7 @@ namespace Moryx.Resources.Interaction
     /// DTO that represents the reference of one resource with another
     /// </summary>
     [DataContract]
-    public class ResourceReferenceModel
+    internal class ResourceReferenceModel
     {
         /// <summary>
         /// Name of the reference, usually name of the property

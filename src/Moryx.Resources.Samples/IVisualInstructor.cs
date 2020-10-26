@@ -7,7 +7,6 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
-using Moryx.Resources.Interaction;
 using Moryx.Serialization;
 using Moryx.Tools.Wcf;
 
@@ -81,10 +80,35 @@ namespace Moryx.Resources.Samples
 
     [DependencyRegistration(typeof(IInteractionService))]
     [ResourceRegistration(typeof(InstructionServiceHost))]
-    public class InstructionServiceHost : InteractionResource<IInteractionService>
+    public class InstructionServiceHost : Resource, IServiceManager
     {
+        /// <summary>
+        /// Factory to create the web service
+        /// </summary>
+        public IConfiguredHostFactory HostFactory { get; set; }
+
+        /// <summary>
+        /// Host config injected by resource manager
+        /// </summary>
+        [DataMember, EntrySerialize]
+        public HostConfig HostConfig { get; set; }
+
+        /// <inheritdoc />
+        public override object Descriptor => HostConfig;
+
         [ReferenceOverride(nameof(Children), AutoSave = true)]
         public IReferences<IVisualInstructor> Instructors { get; set; }
+
+        [ResourceConstructor(IsDefault = true)]
+        public void DefaultConstructor()
+        {
+            HostConfig = new HostConfig
+            {
+                Endpoint = "AssemblyInstructions",
+                BindingType = ServiceBindingType.NetTcp,
+                MetadataEnabled = true,
+            };
+        }
 
         [ResourceConstructor, DisplayName("Create Clients")]
         public void CreateHost([Description("Number of clients")]int clientCount,
@@ -99,16 +123,51 @@ namespace Moryx.Resources.Samples
                 Instructors.Add(instructor);
             }
         }
+        
+        /// <summary>
+        /// Current service host
+        /// </summary>
+        private IConfiguredServiceHost _host;
 
-        [ResourceConstructor(IsDefault = true)]
-        public void DefaultConstructor()
+        /// <summary>
+        /// Registered service instances
+        /// </summary>
+        private ICollection<IInteractionService> _clients = new SynchronizedCollection<IInteractionService>();
+
+        /// <inheritdoc />
+        protected override void OnInitialize()
         {
-            HostConfig = new HostConfig
-            {
-                Endpoint = "AssemblyInstructions",
-                BindingType = ServiceBindingType.NetTcp,
-                MetadataEnabled = true,
-            };
+            base.OnInitialize();
+
+            _host = HostFactory.CreateHost<IInteractionService>(HostConfig);
+        }
+
+        /// <inheritdoc />
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            _host.Start();
+        }
+
+        /// <inheritdoc />
+        protected override void OnDispose()
+        {
+            _host.Stop();
+
+            base.OnDispose();
+        }
+
+        /// <inheritdoc />
+        void IServiceManager.Register(ISessionService service)
+        {
+            _clients.Add((IInteractionService)service);
+        }
+
+        /// <inheritdoc />
+        void IServiceManager.Unregister(ISessionService service)
+        {
+            _clients.Remove((IInteractionService)service);
         }
 
         public void DisplayFoo(string client, string message)
@@ -119,12 +178,12 @@ namespace Moryx.Resources.Samples
 
     [ServiceContract]
     [ServiceVersion("1.0.0")]
-    public interface IInteractionService : ISessionService
+    internal interface IInteractionService : ISessionService
     {
     }
 
     [Plugin(LifeCycle.Transient, typeof(IInteractionService))]
-    public class InteractionService : SessionService<InstructionServiceHost>, IInteractionService
+    internal class InteractionService : SessionService<InstructionServiceHost>, IInteractionService
     {
 
     }

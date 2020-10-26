@@ -14,7 +14,7 @@ namespace Moryx.Resources.Interaction
     /// </summary>
     [ServiceContract]
     [ServiceVersion("5.0.0")]
-    public interface IResourceInteraction
+    internal interface IResourceInteraction
     {
         /// <summary>
         /// Full type tree of currently installed resources

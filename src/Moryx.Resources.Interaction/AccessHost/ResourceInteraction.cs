@@ -18,8 +18,8 @@ namespace Moryx.Resources.Interaction
 {
     /// <seealso cref="IResourceInteraction"/>
     [Plugin(LifeCycle.Singleton, typeof(IResourceInteraction))]
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
-    public class ResourceInteraction : IResourceInteraction
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, IncludeExceptionDetailInFaults = true)]
+    internal class ResourceInteraction : IResourceInteraction
     {
         #region Dependency Injection
 

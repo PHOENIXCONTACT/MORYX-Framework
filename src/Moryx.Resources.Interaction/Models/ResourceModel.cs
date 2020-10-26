@@ -15,7 +15,7 @@ namespace Moryx.Resources.Interaction
     /// Base model used by details view and tree
     /// </summary>
     [DataContract]
-    public class ResourceModel
+    internal class ResourceModel
     {
         /// <summary>
         /// Id of the resource.
