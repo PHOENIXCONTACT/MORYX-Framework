@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moryx.Tools.Wcf" Version="3.0.0-dev.153" />
+    <PackageReference Include="Moryx.Tools.Wcf" />
   </ItemGroup>
 
 </Project>

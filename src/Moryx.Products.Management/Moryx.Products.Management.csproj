@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moryx.Runtime" Version="3.0.0-dev.153" />
-    <PackageReference Include="Moryx.Runtime.Wcf" Version="3.0.0-dev.153" />
+    <PackageReference Include="Moryx.Runtime" />
+    <PackageReference Include="Moryx.Runtime.Wcf" />
   </ItemGroup>
 
   <ItemGroup >

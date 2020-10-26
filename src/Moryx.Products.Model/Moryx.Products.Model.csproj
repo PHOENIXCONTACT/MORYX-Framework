@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moryx.Model.PostgreSQL" Version="3.0.0-dev.153" />
+    <PackageReference Include="Moryx.Model.PostgreSQL" />
   </ItemGroup>
 
 </Project>

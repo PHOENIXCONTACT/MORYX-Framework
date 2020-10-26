@@ -118,7 +118,7 @@ namespace Moryx.Resources.Samples
 
 
     [ServiceContract]
-    [ServiceVersion(ServerVersion = "1.0.0", MinClientVersion = "1.0.0")]
+    [ServiceVersion("1.0.0")]
     public interface IInteractionService : ISessionService
     {
     }
