@@ -34,64 +34,109 @@ jobs:
 
     - name: Build
       shell: pwsh
-      run: ./Build.ps1 -Build
+      run: ./Build.ps1 -Build -Pack
+
+    - name: Upload package artefacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: packages
+        path: artifacts/Packages/
+        retention-days: 1
+
   UnitTests:
     needs: [Build]
     runs-on: windows-latest
     steps:
-        - uses: actions/checkout@v2
-        
-        - name: Setup MSBuild
-          uses: microsoft/setup-msbuild@v1
-        
-        - name: Setup NuGet.exe
-          uses: NuGet/setup-nuget@v1.0.2
+      - uses: actions/checkout@v2
 
-        - name: Execute Unit Tests
-          shell: pwsh
-          run: ./Build.ps1 -UnitTests
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
 
-        - name: Codecov
-          uses: codecov/codecov-action@v1
-          with:
-            files: '*.OpenCover.xml'
+      - name: Setup NuGet.exe
+        uses: NuGet/setup-nuget@v1.0.2
+
+      - name: Execute Unit Tests
+        shell: pwsh
+        run: ./Build.ps1 -UnitTests
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: artifacts/Tests/
+          retention-days: 1
+
   IntegrationTests:
     needs: [Build]
     runs-on: windows-latest
     steps:
-        - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-        - name: Setup MSBuild
-          uses: microsoft/setup-msbuild@v1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
 
-        - name: Setup NuGet.exe
-          uses: NuGet/setup-nuget@v1.0.2
+      - name: Setup NuGet.exe
+        uses: NuGet/setup-nuget@v1.0.2
 
-        - name: Execute Integration Tests
-          shell: pwsh
-          run: ./Build.ps1 -IntegrationTests
+      - name: Execute Integration Tests
+        shell: pwsh
+        run: ./Build.ps1 -IntegrationTests
 
-        - name: Codecov
-          uses: codecov/codecov-action@v1
-          with:
-            files: '*.OpenCover.xml'
-  Publish:
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: artifacts/Tests/
+          retention-days: 1
+
+  Codecov:
     needs: [UnitTests, IntegrationTests]
+    runs-on: windows-latest
+    steps:
+      - name: Download test results
+        uses: actions/download-artifact@v2
+        with:
+          name: test-results
+          path: artifacts/Tests/
+
+      - name: Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          files: '*.OpenCover.xml'
+
+  Documentation:
+    needs: [Build]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Generate docFx
+        shell: pwsh
+        run: ./Build.ps1 -GenerateDocs
+
+      - name: Upload documentation results
+        uses: actions/upload-artifact@v2
+        with:
+          name: dcoumentation
+          path: artifacts/Documentation/
+          retention-days: 1
+
+  Publish:
+    needs: [Build, UnitTests, IntegrationTests]
     if: ${{ github.event_name == 'push' }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
-      
       - name: Setup NuGet.exe
         uses: NuGet/setup-nuget@v1.0.2
   
-      - name: Build
-        shell: pwsh
-        run: ./Build.ps1 -Build
+      - name: Download package artefacts
+        uses: actions/download-artifact@v2
+        with:
+          name: packages
+          path: artifacts/Packages/
 
-      - name: Pack & Publish
+      - name: Publish packages
         shell: pwsh
-        run: ./Build.ps1 -Pack -Publish
+        run: ./Build.ps1 -Publish
