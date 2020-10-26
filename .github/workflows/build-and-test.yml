@@ -36,7 +36,7 @@ jobs:
       shell: pwsh
       run: ./Build.ps1 -Build -Pack
 
-    - name: Upload package artefacts
+    - name: Upload package artifacts
       uses: actions/upload-artifact@v2
       with:
         name: packages
@@ -117,7 +117,7 @@ jobs:
       - name: Upload documentation results
         uses: actions/upload-artifact@v2
         with:
-          name: dcoumentation
+          name: documentation
           path: artifacts/Documentation/
           retention-days: 1
 
@@ -131,7 +131,7 @@ jobs:
       - name: Setup NuGet.exe
         uses: NuGet/setup-nuget@v1.0.2
   
-      - name: Download package artefacts
+      - name: Download package artifacts
         uses: actions/download-artifact@v2
         with:
           name: packages
