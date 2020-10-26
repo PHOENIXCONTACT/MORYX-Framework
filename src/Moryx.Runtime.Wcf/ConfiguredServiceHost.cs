@@ -123,7 +123,7 @@ namespace Moryx.Runtime.Wcf
                     : TimeSpan.MaxValue;
             }
 
-            _endpointAddress = $"{protocol}://{_portConfig.Host}:{port}/{config.Endpoint}";
+            _endpointAddress = $"{protocol}://{_portConfig.Host}:{port}/{config.Endpoint}/";
 
             var endpoint = _service.AddServiceEndpoint(typeof(T), binding, _endpointAddress);
 
@@ -163,22 +163,28 @@ namespace Moryx.Runtime.Wcf
         public void Start()
         {
             _logger?.Log(LogLevel.Info, "Starting wcf service {0} with version {1}", _endpointAddress,
-                (_endpointVersion ?? new ServiceVersionAttribute()).ServerVersion);
+                _endpointVersion?.Version ?? "1.0.0.0");
 
             _service.Open();
 
             if (_endpointVersion != null)
             {
-                _collector.AddEndpoint(_hostConfig.Endpoint, _endpointVersion);
-                _collector.AddService(_type, _hostConfig.BindingType, _endpointAddress, _endpointVersion, _hostConfig.RequiresAuthentification);
+                _collector.AddEndpoint(_endpointAddress, new Endpoint
+                {
+                    Service = _type.Name,
+                    Path = _hostConfig.Endpoint,
+                    Address = _endpointAddress,
+                    Binding = _hostConfig.BindingType,
+                    Version = _endpointVersion.Version,
+                    RequiresAuthentication = _hostConfig.RequiresAuthentification
+                });
             }
         }
 
         /// <inheritdoc />
         public void Stop()
         {
-            _collector.RemoveEndpoint(_hostConfig.Endpoint);
-            _collector.RemoveService(_type);
+            _collector.RemoveEndpoint(_endpointAddress);
 
             _logger?.Log(LogLevel.Info, "Stopping service {0}", _endpointAddress);
 

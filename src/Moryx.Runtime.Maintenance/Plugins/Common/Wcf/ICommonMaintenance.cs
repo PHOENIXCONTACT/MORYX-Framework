@@ -12,7 +12,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
     /// Service contract for the common maintenance.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion(ServerVersion = "1.0.0.0", MinClientVersion = "1.0.0.0")]
+    [ServiceVersion("3.0.0.0")]
     public interface ICommonMaintenance
     {
         /// <summary>

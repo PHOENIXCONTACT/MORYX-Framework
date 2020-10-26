@@ -48,13 +48,6 @@ namespace Moryx.Runtime.Wcf
             if (factoryConfig.VersionServiceDisabled)
                 return;
 
-            var hostConfig = new HostConfig
-            {
-                BindingType = ServiceBindingType.BasicHttp,
-                Endpoint = "ServiceVersions",
-                MetadataEnabled = true
-            };
-
             _container.Register<IVersionService, VersionService>(nameof(VersionService), LifeCycle.Transient);
             _container.Register<IEndpointCollector, EndpointCollector>();
             var collector = _container.Resolve<IEndpointCollector>();
@@ -63,18 +56,13 @@ namespace Moryx.Runtime.Wcf
             _container.Register<ITypedHostFactory, TypedHostFactory>();
 
             var factory = _container.Resolve<ITypedHostFactory>();
+
             var host = new ConfiguredServiceHost(factory, Logger, collector, _portConfig);
-
-            host.Setup<IVersionService>(hostConfig);
-            host.Start();
-
-            hostConfig = new HostConfig
+            var hostConfig = new HostConfig
             {
-                Endpoint = "ServiceVersionsWeb",
+                Endpoint = "endpoints",
                 MetadataEnabled = true
             };
-
-            host = new ConfiguredServiceHost(factory, Logger, collector, _portConfig);
             host.Setup<IVersionService>(hostConfig);
             host.Start();
         }

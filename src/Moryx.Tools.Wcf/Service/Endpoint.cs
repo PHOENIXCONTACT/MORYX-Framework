@@ -9,8 +9,14 @@ namespace Moryx.Tools.Wcf
     /// Information about a service to be used by a client for automatic configuration.
     /// </summary>
     [DataContract]
-    public class ServiceConfig
+    public class Endpoint
     {
+        /// <summary>
+        /// Interface of this endpoint
+        /// </summary>
+        [DataMember]
+        public string Service { get; set; }
+
         /// <summary>
         /// The binding type of the service.
         /// </summary>
@@ -18,23 +24,23 @@ namespace Moryx.Tools.Wcf
         public ServiceBindingType Binding { get; set; }
 
         /// <summary>
+        /// Relative path of the service endpoint
+        /// </summary>
+        [DataMember]
+        public string Path { get; set; }
+
+        /// <summary>
         /// The URL of the service.
         /// </summary>
         [DataMember]
-        public string ServiceUrl { get; set; }
+        public string Address { get; set; }
 
         /// <summary>
         /// The service's version
         /// </summary>
         [DataMember]
-        public string ServerVersion { get; set; }
-
-        /// <summary>
-        /// The minimum supported client version.
-        /// </summary>
-        [DataMember]
-        public string MinClientVersion { get; set; }
-
+        public string Version { get; set; }
+        
         /// <summary>
         /// <c>True</c> if service requires authentication
         /// </summary>

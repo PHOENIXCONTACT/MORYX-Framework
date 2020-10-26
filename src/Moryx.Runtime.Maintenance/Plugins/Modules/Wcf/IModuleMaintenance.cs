@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
     /// Base service contract for the maintenance module.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion(ServerVersion = "1.3.0.0", MinClientVersion = "1.3.0.0")]
+    [ServiceVersion("3.0.0")]
     public interface IModuleMaintenance
     {
         /// <summary>

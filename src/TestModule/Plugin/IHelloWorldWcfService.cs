@@ -6,8 +6,8 @@ using Moryx.Tools.Wcf;
 
 namespace Moryx.TestModule
 {
+    [ServiceVersion(HelloWorldWcfService.ServerVersion)]
     [ServiceContract(SessionMode = SessionMode.Required, CallbackContract = typeof(IHelloWorldWcfServiceCallback))]
-    [ServiceVersion(ServerVersion = HelloWorldWcfService.ServerVersion, MinClientVersion = HelloWorldWcfService.MinClientVersion)]
     public interface IHelloWorldWcfService : ISessionService
     {
         [OperationContract(IsOneWay = false)]

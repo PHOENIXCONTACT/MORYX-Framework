@@ -58,7 +58,7 @@ namespace Moryx.Tools.Wcf.SystemTests
 
         private readonly IHelloWorldWcfServiceCallback _netTcpCallback = new HelloWorldWcfServiceCallback();
         private ConnectionState _netTcpState;
-        private HelloWorldWcfServiceClient _netTcpService;
+        private HelloWorldWcfServiceClientBase _netTcpService;
 
         private readonly List<WcfClientInfo> _receivedClientInfos = new List<WcfClientInfo>();
 
@@ -144,7 +144,7 @@ namespace Moryx.Tools.Wcf.SystemTests
         [TearDown]
         public void TearDown()
         {
-            SetBindingType(BindingType.BasicHttp);
+            SetBindingType(ServiceBindingType.BasicHttp);
 
             if (_clientFactory != null)
             {
@@ -367,44 +367,13 @@ namespace Moryx.Tools.Wcf.SystemTests
             }
         }
 
-        [TestCase(ConnectionMode.New)]
-        [TestCase(ConnectionMode.Legacy)]
-        public void TestConnectionFailure(ConnectionMode mode)
+        [TestCase(ConnectionMode.New, "1.3.0")]
+        [TestCase(ConnectionMode.New, "0.9.0")]
+        [TestCase(ConnectionMode.Legacy, "1.3.0")]
+        [TestCase(ConnectionMode.Legacy, "2.1.0")]
+        public void TestVersionMismatch(ConnectionMode mode, string clientVersion)
         {
-            Connect(mode, null);
-
-            _netTcpConnectedEvent.Wait(MediumWait);
-            _basicHttpConnectedEvent.Wait(ShortWait);
-
-            Assert.IsFalse(_netTcpConnectedEvent.IsSet, "ClientConnected received for IHelloWorldWcfService");
-            Assert.IsTrue(_basicHttpConnectedEvent.IsSet, "No ClientConnected received for ISimpleHelloWorldWcfService");
-
-            Assert.NotNull(_basicHttpService, "Didn't get SimpleHelloWorld service");
-            Assert.AreEqual(ConnectionState.Success, _basicHttpState, "SimpleHelloWorld state");
-
-            Assert.Null(_netTcpService, "Got HelloWorld service");
-
-            lock (_receivedClientInfos)
-            {
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.New && i.Tries == 0), "Received initial IHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.New && i.Tries == 1), "Received intermediate IHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.FailedTry && i.Tries == 1), "Received first failed IHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.FailedTry && i.Tries == 2), "Received second IHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == NetTcpServiceName && i.State == ConnectionState.FailedTry && i.Tries == 3), "Received third IHelloWorldWcfService client info event");
-
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.New && i.Tries == 0), "Received initial ISimpleHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.New && i.Tries == 1), "Received intermediate ISimpleHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.Success && i.Tries == 1), "Received final ISimpleHelloWorldWcfService client info event");
-            }
-        }
-
-        [TestCase(ConnectionMode.New, SimpleHelloWorldWcfService.MinClientVersion, "9.9.9.9")]
-        [TestCase(ConnectionMode.New, "1.0.0.0", SimpleHelloWorldWcfService.ServerVersion)]
-        [TestCase(ConnectionMode.Legacy, SimpleHelloWorldWcfService.MinClientVersion, "9.9.9.9")]
-        [TestCase(ConnectionMode.Legacy, "1.0.0.0", SimpleHelloWorldWcfService.ServerVersion)]
-        public void TestVersionMismatch(ConnectionMode mode, string clientVersion, string serverVersion)
-        {
-            Connect(mode, clientVersion, serverVersion);
+            Connect(mode, clientVersion);
 
             _basicHttpConnectedEvent.Wait(MediumWait);
             _netTcpConnectedEvent.Wait(ShortWait);
@@ -577,7 +546,7 @@ namespace Moryx.Tools.Wcf.SystemTests
         [Test]
         public void TestChangeBinding()
         {
-            SetBindingType(BindingType.NetTcp);
+            SetBindingType(ServiceBindingType.NetTcp);
 
             TestConnect(ConnectionMode.New);
         }
@@ -596,7 +565,7 @@ namespace Moryx.Tools.Wcf.SystemTests
             Assert.IsTrue(_netTcpDisconnectedEvent.Wait(MediumWait), "Service did not send disconnect");
         }
 
-        private void SetBindingType(BindingType binding)
+        private void SetBindingType(ServiceBindingType binding)
         {
             var config = _hogController.GetConfig("DependentTestModule");
 
@@ -630,26 +599,26 @@ namespace Moryx.Tools.Wcf.SystemTests
             Connect(mode, _netTcpCallback);
         }
 
-        private void Connect(ConnectionMode mode, string clientVersion, string minServerVersion)
+        private void Connect(ConnectionMode mode, string clientVersion)
         {
-            Connect(mode, _netTcpCallback, clientVersion, minServerVersion);
+            Connect(mode, _netTcpCallback, clientVersion);
         }
 
-        private void Connect(ConnectionMode mode, IHelloWorldWcfServiceCallback netTcpCallback, string clientVersion = SimpleHelloWorldWcfService.MinClientVersion, string minServerVersion = SimpleHelloWorldWcfService.ServerVersion)
+        private void Connect(ConnectionMode mode, IHelloWorldWcfServiceCallback netTcpCallback, string clientVersion = SimpleHelloWorldWcfService.ServerVersion)
         {
             switch (mode)
             {
                 case ConnectionMode.New:
-                    _clientFactory.Create<HelloWorldWcfServiceClient, IHelloWorldWcfService>(HelloWorldWcfService.MinClientVersion, HelloWorldWcfService.ServerVersion, netTcpCallback, NetTcpCallback);
-                    _clientFactory.Create<SimpleHelloWorldWcfServiceClient, ISimpleHelloWorldWcfService>(clientVersion, minServerVersion, BasicHttpCallback);
+                    _clientFactory.Create<HelloWorldWcfServiceClient, IHelloWorldWcfService>("4.2", NetTcpCallback);
+                    _clientFactory.Create<SimpleHelloWorldWcfServiceClient, ISimpleHelloWorldWcfService>(clientVersion, BasicHttpCallback);
                     break;
 
                 case ConnectionMode.Legacy:
-                    ConnectLegacy(netTcpCallback, null, clientVersion, minServerVersion);
+                    ConnectLegacy(netTcpCallback, null, clientVersion);
                     break;
 
                 case ConnectionMode.LegacyWithHost:
-                    ConnectLegacy(netTcpCallback, "localHost", clientVersion, minServerVersion);
+                    ConnectLegacy(netTcpCallback, "localHost", clientVersion);
                     break;
 
                 default:
@@ -658,29 +627,29 @@ namespace Moryx.Tools.Wcf.SystemTests
             }
         }
 
-        private void ConnectLegacy(IHelloWorldWcfServiceCallback netTcpCallback, string host, string clientVersion, string minServerVersion)
+        private void ConnectLegacy(IHelloWorldWcfServiceCallback netTcpCallback, string host, string clientVersion)
         {
             ClientConfig netTcpClientConfig = new ClientConfig
             {
-                BindingType = BindingType.NetTcp,
+                BindingType = ServiceBindingType.NetTcp,
                 Endpoint = NetTcpEndpointName,
                 Host = host,
                 Port = _hogController.NetTcpPort,
-                ClientVersion = HelloWorldWcfService.MinClientVersion,
-                MinServerVersion = HelloWorldWcfService.ServerVersion
+                ClientVersion = "4.2",
+                CheckVersion = true
             };
 
             ClientConfig basicHttpClientConfig = new ClientConfig
             {
-                BindingType = BindingType.BasicHttp,
+                BindingType = ServiceBindingType.BasicHttp,
                 Endpoint = BasicHttpEndpointName,
                 Host = host,
                 Port = _hogController.HttpPort,
                 ClientVersion = clientVersion,
-                MinServerVersion = minServerVersion
+                CheckVersion = true
             };
 
-            _clientFactory.Create<HelloWorldWcfServiceClient, IHelloWorldWcfService>(netTcpClientConfig, netTcpCallback, NetTcpCallback);
+            _clientFactory.Create<HelloWorldWcfServiceClientBase, IHelloWorldWcfService>(netTcpClientConfig, netTcpCallback, NetTcpCallback);
             _clientFactory.Create<SimpleHelloWorldWcfServiceClient, ISimpleHelloWorldWcfService>(basicHttpClientConfig, BasicHttpCallback);
         }
 
@@ -706,10 +675,26 @@ namespace Moryx.Tools.Wcf.SystemTests
             }
         }
 
-        private void NetTcpCallback(ConnectionState state, HelloWorldWcfServiceClient service)
+        private void NetTcpCallback(ConnectionState state, HelloWorldWcfServiceClientBase service)
         {
             _netTcpState = state;
             _netTcpService = service;
+
+            if (state == ConnectionState.Success && service is HelloWorldWcfServiceClient client)
+            {
+                client.HelloCallbackReceived += (sender, args) =>
+                {
+                    _receivedMessage = args.message;
+                    NetTcpCallbackReceived.Set();
+                };
+                client.ThrowCallbackReceived += (sender, args) =>
+                {
+                    NetTcpThrowCallbackReceived.Set();
+
+                    // The exception here is on purpose!
+                    throw new NotImplementedException();
+                };
+            }
         }
 
         private void BasicHttpCallback(ConnectionState state, SimpleHelloWorldWcfServiceClient service)

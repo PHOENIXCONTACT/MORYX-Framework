@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.Threading;
+using Moryx.Communication;
 using Moryx.DependentTestModule;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.SystemTests;
@@ -20,7 +21,7 @@ namespace Moryx.Tools.Wcf.SystemTests
     public class VersionServiceTests : IDisposable
     {
         private HeartOfGoldController _hogController;
-        private IVersionService _versionService;
+        private IVersionServiceManager _versionService;
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()
@@ -43,8 +44,8 @@ namespace Moryx.Tools.Wcf.SystemTests
             var result = _hogController.WaitForService(DependentTestModule.ModuleController.ModuleName, ServerModuleState.Running, 10);
             Assert.IsTrue(result, "Service 'TestModule' did not reach state 'Running'");
 
-            var channelFactory = new ChannelFactory<IVersionService>(BindingFactory.CreateDefaultBasicHttpBinding(false, null));
-            _versionService = channelFactory.CreateChannel(new EndpointAddress($"http://localhost:{_hogController.HttpPort}/ServiceVersions"));
+            _versionService = new VersionServiceManager();
+            _versionService.Initialize(new ProxyConfig(), "localhost", _hogController.HttpPort);
 
             Assert.NotNull(_versionService, "Can't create VersionServiceClient");
         }
@@ -90,39 +91,22 @@ namespace Moryx.Tools.Wcf.SystemTests
             _hogController = null;
         }
 
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, SimpleHelloWorldWcfService.ServerVersion, SimpleHelloWorldWcfService.MinClientVersion)]
-        [TestCase(HelloWorldWcfService.ServiceName, HelloWorldWcfService.ServerVersion, HelloWorldWcfService.MinClientVersion)]
-        public void TestEndpointData(string serviceName, string serverVersion, string minClientVersion)
+        [TestCase(nameof(ISimpleHelloWorldWcfService), SimpleHelloWorldWcfService.ServerVersion)]
+        [TestCase(nameof(IHelloWorldWcfService), HelloWorldWcfService.ServerVersion)]
+        public void TestEndpointData(string serviceName, string serverVersion)
         {
-            var endpoints = _versionService.ActiveEndpoints();
-
-            var endpoint = endpoints.FirstOrDefault(e => e.Endpoint == serviceName);
+            var endpoint = _versionService.ServiceEndpoints(serviceName).FirstOrDefault();
 
             Assert.NotNull(endpoint, "Endpoint for service {0} not found.", serviceName);
 
             Assert.AreEqual(serverVersion, endpoint.Version);
-            Assert.AreEqual(minClientVersion, endpoint.MinClientVersion);
         }
 
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, ExpectedResult = SimpleHelloWorldWcfService.ServerVersion)]
-        [TestCase(HelloWorldWcfService.ServiceName, ExpectedResult = HelloWorldWcfService.ServerVersion)]
+        [TestCase(nameof(ISimpleHelloWorldWcfService), ExpectedResult = SimpleHelloWorldWcfService.ServerVersion)]
+        [TestCase(nameof(IHelloWorldWcfService), ExpectedResult = HelloWorldWcfService.ServerVersion)]
         public string TestGetServerVersion(string serviceName)
         {
-            return _versionService.GetServerVersion(serviceName);
-        }
-
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "4.3.2.1", ExpectedResult = true)]
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "4.3.2.2", ExpectedResult = true)]
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "4.3.3.0", ExpectedResult = true)]
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "4.4.1.0", ExpectedResult = true)]
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "5.2.1.0", ExpectedResult = true)]
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "4.3.2.0", ExpectedResult = false)]
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "4.3.1.2", ExpectedResult = false)]
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "4.2.3.2", ExpectedResult = false)]
-        [TestCase(SimpleHelloWorldWcfService.ServiceName, "3.4.3.2", ExpectedResult = false)]
-        public bool TestClientSupported(string serviceName, string clientVersion)
-        {
-            return _versionService.ClientSupported(serviceName, clientVersion);
+            return _versionService.ServiceEndpoints(serviceName)[0].Version;
         }
 
         [Test]
@@ -167,29 +151,28 @@ namespace Moryx.Tools.Wcf.SystemTests
             Assert.AreEqual(startLength, endpoints.Length, "{0} started", ModuleController.ModuleName);
         }
 
-        [TestCase("IHelloWorldWcfService", HelloWorldWcfService.ServerVersion, HelloWorldWcfService.MinClientVersion, ServiceBindingType.NetTcp, "net.tcp://{HOST}:{PORT}/HelloWorldWcfService")]
-        [TestCase("ISimpleHelloWorldWcfService", SimpleHelloWorldWcfService.ServerVersion, SimpleHelloWorldWcfService.MinClientVersion, ServiceBindingType.BasicHttp, "http://{HOST}:{PORT}/SimpleHelloWorldWcfService")]
-        public void TestServiceConfig(string service, string serverVersion, string minClientVersion, ServiceBindingType binding, string url)
+        [TestCase("IHelloWorldWcfService", HelloWorldWcfService.ServerVersion,  ServiceBindingType.NetTcp, "net.tcp://{HOST}:{PORT}/HelloWorldWcfService/")]
+        [TestCase("ISimpleHelloWorldWcfService", SimpleHelloWorldWcfService.ServerVersion, ServiceBindingType.BasicHttp, "http://{HOST}:{PORT}/SimpleHelloWorldWcfService/")]
+        public void TestServiceConfig(string service, string serverVersion, ServiceBindingType binding, string url)
         {
             url = url.Replace("{PORT}", binding == ServiceBindingType.NetTcp ? _hogController.NetTcpPort.ToString() : _hogController.HttpPort.ToString())
                 .Replace("{HOST}", Dns.GetHostName());
 
-            var serviceConfig = _versionService.GetServiceConfiguration(service);
+            var serviceConfig = _versionService.ServiceEndpoints(service)[0];
             Assert.NotNull(serviceConfig, "ServiceConfig for service {0} not found.", service);
 
-            Assert.AreEqual(serverVersion, serviceConfig.ServerVersion);
-            Assert.AreEqual(minClientVersion, serviceConfig.MinClientVersion);
+            Assert.AreEqual(serverVersion, serviceConfig.Version);
             Assert.AreEqual(binding, serviceConfig.Binding);
-            Assert.AreEqual(url, serviceConfig.ServiceUrl);
+            Assert.AreEqual(url, serviceConfig.Address);
         }
 
         [Test]
         public void TestServiceConfigLifeCycle()
         {
-            var helloServiceName = typeof(IHelloWorldWcfService).Name;
-            var simpleServiceName = typeof(ISimpleHelloWorldWcfService).Name;
+            var helloServiceName = nameof(IHelloWorldWcfService);
+            var simpleServiceName = nameof(ISimpleHelloWorldWcfService);
 
-            ServiceConfig[] serviceConfigs = GetServiceConfigs();
+            Endpoint[] serviceConfigs = GetServiceConfigs();
 
             Assert.NotNull(serviceConfigs[0], "{0} @ initial", helloServiceName);
             Assert.NotNull(serviceConfigs[1], "{0} @ initial", simpleServiceName);
@@ -231,12 +214,12 @@ namespace Moryx.Tools.Wcf.SystemTests
             Assert.NotNull(serviceConfigs[1], "{0} @ {1} started", simpleServiceName, ModuleController.ModuleName);
         }
 
-        private ServiceConfig[] GetServiceConfigs()
+        private Endpoint[] GetServiceConfigs()
         {
-            var result = new ServiceConfig[2];
+            var result = new Endpoint[2];
 
-            result[0] = _versionService.GetServiceConfiguration(typeof(IHelloWorldWcfService).Name);
-            result[1] = _versionService.GetServiceConfiguration(typeof(ISimpleHelloWorldWcfService).Name);
+            result[0] = _versionService.ServiceEndpoints(nameof(IHelloWorldWcfService)).FirstOrDefault();
+            result[1] = _versionService.ServiceEndpoints(nameof(ISimpleHelloWorldWcfService)).FirstOrDefault();
 
             return result;
         }
