@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <PropertyGroup>
+    <MoryxPlatformVersion>3.0.0-dev.173</MoryxPlatformVersion>
+    <MoryxClientFrameworkVersion>3.0.0-dev.47</MoryxClientFrameworkVersion>
+    <MoryxMaintenanceWebVersion>3.0.0-dev.42</MoryxMaintenanceWebVersion>
+  </PropertyGroup>
+
+  <!-- Package versions for package references across all projects -->
+  <ItemGroup>
+    <!--3rd party dependencies-->
+    <PackageReference Update="Caliburn.Micro" Version="3.2.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Update="Moq" Version="4.14.6" />
+    <PackageReference Update="NUnit" Version="3.12.0" />
+    <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
+
+    <!--Platform dependencies-->
+    <PackageReference Update="Moryx" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.Container" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.Tools.Wcf" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.Model.PostgreSQL" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.Model.InMemory" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.TestTools.UnitTest" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.Runtime" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.Runtime.Wcf" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.Runtime.Maintenance" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxPlatformVersion)" />
+
+    <!--ClientFramework dependencies-->
+    <PackageReference Update="Moryx.Controls" Version="$(MoryxClientFrameworkVersion)" />
+    <PackageReference Update="Moryx.ClientFramework" Version="$(MoryxClientFrameworkVersion)" />
+    <PackageReference Update="Moryx.ClientFramework.Configurator" Version="$(MoryxClientFrameworkVersion)" />
+    <PackageReference Update="Moryx.ClientFramework.Kernel" Version="$(MoryxClientFrameworkVersion)" />
+    <PackageReference Update="Moryx.ClientFramework.SimpleShell" Version="$(MoryxClientFrameworkVersion)" />
+
+    <!--MaintenanceWeb dependencies-->
+    <PackageReference Update="Moryx.Runtime.Maintenance.Web" Version="$(MoryxMaintenanceWebVersion)" />
+
+  </ItemGroup>
+
+</Project>

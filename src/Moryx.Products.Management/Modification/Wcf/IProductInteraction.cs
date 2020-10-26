@@ -10,7 +10,7 @@ using Moryx.Tools.Wcf;
 namespace Moryx.Products.Management.Modification
 {
     [ServiceContract]
-    [ServiceVersion(ServerVersion = "1.1.2.0", MinClientVersion = "1.1.1.0")]
+    [ServiceVersion("1.1.2.0")]
     internal interface IProductInteraction
     {
         /// <summary>

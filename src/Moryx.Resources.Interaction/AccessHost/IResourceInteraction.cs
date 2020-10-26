@@ -11,7 +11,7 @@ namespace Moryx.Resources.Interaction
     /// Interface to provide functions for interaction of resources.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion(ServerVersion = "2.0.0", MinClientVersion = "2.0.0")]
+    [ServiceVersion("2.0.0")]
     public interface IResourceInteraction
     {
         /// <summary>

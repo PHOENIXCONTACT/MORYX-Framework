@@ -342,8 +342,8 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
     }
 }
 
-function Get-CsprojIsNetCore($csprojFile) {
-    [xml]$csprojContent = Get-Content $csprojFile.FullName
+function Get-CsprojIsNetCore($CsprojItem) {
+    [xml]$csprojContent = Get-Content $CsprojItem.FullName
     $sdkProject = $csprojContent.Project.Sdk;
     if ($null -ne $sdkProject) {
         # Read Target Framework
@@ -356,8 +356,8 @@ function Get-CsprojIsNetCore($csprojFile) {
     return $false;
 }
 
-function Get-CsprojIsSdkProject($csprojFile) {
-    [xml]$csprojContent = Get-Content $csprojFile.FullName
+function Get-CsprojIsSdkProject($CsprojItem) {
+    [xml]$csprojContent = Get-Content $CsprojItem.FullName
     $sdkProject = $csprojContent.Project.Sdk;
     if ($null -ne $sdkProject) {
         return $true;
@@ -409,16 +409,16 @@ function Invoke-DocFx($Metadata = [System.IO.Path]::Combine($DocumentationDir, "
     CopyAndReplaceFolder $docFxDest "$DocumentationArtifcacts\DocFx";
 }
 
-function Invoke-PackSdkProject($CsprojFile, [bool]$IncludeSymbols = $False) {
-    Write-Host "Try to pack .NET SDK project: $($CsprojFile.Name) ...";
+function Invoke-PackSdkProject($CsprojItem, [bool]$IncludeSymbols = $False) {
+    Write-Host "Try to pack .NET SDK project: $($CsprojItem.Name) ...";
 
     # Check if the project should be packed
-    $csprojFullName = $CsprojFile.FullName;
+    $csprojFullName = $CsprojItem.FullName;
     [xml]$csprojContent = Get-Content $csprojFullName
     $createPackage = $csprojContent.Project.PropertyGroup.CreatePackage;
 ;
     if ($null -eq $createPackage -or "false" -eq $createPackage) {
-        Write-Host-Warning "... csproj not flagged with <CreatePackage>true</CreatePackage>: $($CsprojFile.Name)";
+        Write-Host-Warning "... csproj not flagged with <CreatePackage>true</CreatePackage>: $($CsprojItem.Name)";
         return;
     }
 
@@ -436,14 +436,14 @@ function Invoke-PackSdkProject($CsprojFile, [bool]$IncludeSymbols = $False) {
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-PackFrameworkProject($CsprojFile, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
-    Write-Host "Try to pack .NET Framework project: $CsprojFile.Name ...";
+function Invoke-PackFrameworkProject($CsprojItem, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
+    Write-Host "Try to pack .NET Framework project: $CsprojItem.Name ...";
 
     # Check if there is a matching nuspec for the proj
-    $csprojFullName = $CsprojFile.FullName;
+    $csprojFullName = $CsprojItem.FullName;
     $nuspecPath = [IO.Path]::ChangeExtension($csprojFullName, "nuspec")
     if(-not (Test-Path $nuspecPath)) {
-        Write-Host-Warning "Nuspec for project not found: $CsprojFile.Name";
+        Write-Host-Warning "Nuspec for project not found: $CsprojItem.Name";
         return;
     }
 
@@ -466,22 +466,22 @@ function Invoke-PackFrameworkProject($CsprojFile, [bool]$IsTool = $False, [bool]
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
-function Invoke-Pack($ProjectPath, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
+function Invoke-Pack($ProjectItem, [bool]$IsTool = $False, [bool]$IncludeSymbols = $False) {
     CreateFolderIfNotExists $NugetPackageArtifacts;
 
-    if (Get-CsprojIsSdkProject($ProjectPath)) {
-        Invoke-PackSdkProject $ProjectPath $IncludeSymbols;
+    if (Get-CsprojIsSdkProject($ProjectItem)) {
+        Invoke-PackSdkProject $ProjectItem $IncludeSymbols;
     }
     else {
-        Invoke-PackFrameworkProject $ProjectPath $IsTool $IncludeSymbols;
+        Invoke-PackFrameworkProject $ProjectItem $IsTool $IncludeSymbols;
     }
 }
 
 function Invoke-PackAll([switch]$Symbols = $False) {
     Write-Host "Looking for .csproj files..."
     # Look for csproj in this directory
-    foreach ($csprojFile in Get-ChildItem $RootPath -Recurse -Filter *.csproj) {
-        Invoke-Pack -ProjectPath $csprojFile -IncludeSymbols $Symbols
+    foreach ($csprojItem in Get-ChildItem $RootPath -Recurse -Filter *.csproj) {
+        Invoke-Pack -ProjectItem $csprojItem -IncludeSymbols $Symbols
     }
 }
 
