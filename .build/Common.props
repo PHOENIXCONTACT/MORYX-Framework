@@ -1,16 +1,16 @@
 <Project>
 
   <PropertyGroup>
-    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <AssemblyVersion>0.0.0</AssemblyVersion>
     <AssemblyVersion Condition="'$(MORYX_ASSEMBLY_VERSION)'!=''">$(MORYX_ASSEMBLY_VERSION)</AssemblyVersion>
 
-    <FileVersion>3.0.0.0</FileVersion>
+    <FileVersion>0.0.0.0</FileVersion>
     <FileVersion Condition="'$(MORYX_FILE_VERSION)'!=''">$(MORYX_FILE_VERSION)</FileVersion>
 
-    <InformationalVersion>3.0.0.0</InformationalVersion>
+    <InformationalVersion>0.0.0.0</InformationalVersion>
     <InformationalVersion Condition="'$(MORYX_INFORMATIONAL_VERSION)'!=''">$(MORYX_INFORMATIONAL_VERSION)</InformationalVersion>
 
-    <PackageVersion>3.0.0</PackageVersion>
+    <PackageVersion>0.0.0</PackageVersion>
     <PackageVersion Condition="'$(MORYX_PACKAGE_VERSION)'!=''">$(MORYX_PACKAGE_VERSION)</PackageVersion>
 
     <Authors>PHOENIXCONTACT</Authors>
@@ -20,14 +20,8 @@
     <CurrentYear>$([System.DateTime]::Now.ToString("yyyy"))</CurrentYear>
     <Copyright>Copyright © PHOENIX CONTACT $(CurrentYear)</Copyright>
 
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/PHOENIXCONTACT/MORYX-Platform</RepositoryUrl>
-
     <PackageIcon>moryx-logo.png</PackageIcon>
     <PackageProjectUrl>https://moryx-industry.net/</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
