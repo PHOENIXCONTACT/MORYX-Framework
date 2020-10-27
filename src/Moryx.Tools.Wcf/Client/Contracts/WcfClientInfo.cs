@@ -38,7 +38,7 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Identifier of this client 
+        /// Identifier of this client
         /// </summary>
         public long Id { get; private set; }
 
@@ -76,7 +76,7 @@ namespace Moryx.Tools.Wcf
         /// The number of unsuccessful retries.
         /// </summary>
         public int Tries { get; internal set; }
-        
+
         /// <summary>
         /// The current state of the client.
         /// </summary>

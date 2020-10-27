@@ -1,25 +1,39 @@
-﻿using System;
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Moryx.Communication;
-using Moryx.Serialization;
 using Newtonsoft.Json;
 
 namespace Moryx.Tools.Wcf
 {
     /// <summary>
-    /// Base class to connect 
+    /// Base class to connect to an web http service hosted by the runtime
     /// </summary>
-    public abstract class WebHttpServiceConnector : IHttpServiceConnector
+    public abstract class WebHttpServiceConnectorBase : IHttpServiceConnector
     {
-        private IVersionServiceManager _endpointService;
-
-        private HttpClient _httpClient;
-
+        private readonly IVersionServiceManager _endpointService;
         private bool _isAvailable;
+
+        /// <summary>
+        /// Name of the service interface to connect to
+        /// </summary>
+        public abstract string ServiceName { get; }
+
+        /// <summary>
+        /// Gets the current client version of the client
+        /// </summary>
+        protected abstract string ClientVersion { get; }
+
+        /// <summary>
+        /// Underlying http client used for the communication
+        /// </summary>
+        protected HttpClient HttpClient { get; private set; }
 
         /// <inheritdoc />
         public bool IsAvailable
@@ -31,16 +45,10 @@ namespace Moryx.Tools.Wcf
                 AvailabilityChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        /// <summary>
-        /// Name of the service interface to connect to
-        /// </summary>
-        public abstract string ServiceName { get; }
-
         /// <summary>
         /// Create connector using the client factories version service
         /// </summary>
-        protected WebHttpServiceConnector(IWcfClientFactory clientFactory)
+        protected WebHttpServiceConnectorBase(IWcfClientFactory clientFactory)
         {
             _endpointService = ((BaseWcfClientFactory)clientFactory).VersionService;
         }
@@ -48,7 +56,7 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Create connector with bare connection settings
         /// </summary>
-        protected WebHttpServiceConnector(string host, int port, IProxyConfig proxyConfig)
+        protected WebHttpServiceConnectorBase(string host, int port, IProxyConfig proxyConfig)
         {
             _endpointService = new VersionServiceManager(proxyConfig, host, port);
         }
@@ -62,46 +70,67 @@ namespace Moryx.Tools.Wcf
         private void TryFetchEndpoint()
         {
             _endpointService.ServiceEndpointsAsync(ServiceName)
-                .ContinueWith(EvaluateResponse);
+                .ContinueWith(EvaluateResponse).ConfigureAwait(false);
         }
 
-        private void EvaluateResponse(Task<Endpoint[]> resp)
+        private async Task EvaluateResponse(Task<Endpoint[]> resp)
         {
             //Try again or dispose old client
             if (resp.Status != TaskStatus.RanToCompletion || resp.Result.Length == 0)
             {
+                await ConnectionCallback(ConnectionState.FailedTry);
+                await Task.Delay(1000);
                 TryFetchEndpoint();
                 return;
             }
 
             // Parse endpoint url
-            var endpoint = resp.Result.FirstOrDefault(e => e.Binding == ServiceBindingType.WebHttp)?.Address;
-            if (string.IsNullOrEmpty(endpoint))
+            var endpoint = resp.Result.FirstOrDefault(e => e.Binding == ServiceBindingType.WebHttp);
+            if (endpoint == null || string.IsNullOrEmpty(endpoint.Address))
             {
+                await ConnectionCallback(ConnectionState.FailedTry);
+                await Task.Delay(1000);
+                TryFetchEndpoint();
+                return;
+            }
+
+            var clientVersion = Version.Parse(ClientVersion);
+            var serverVersion = Version.Parse(endpoint.Version);
+
+
+            // Compare version
+            if (!(serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion))
+            {
+                await ConnectionCallback(ConnectionState.VersionMissmatch);
+                await Task.Delay(1000);
                 TryFetchEndpoint();
                 return;
             }
 
             // Create new base address client
-            _httpClient = new HttpClient { BaseAddress = new Uri(endpoint) };
+            HttpClient = new HttpClient {BaseAddress = new Uri(endpoint.Address)};
 
             IsAvailable = true;
 
-            Task.Run(OnConnect);
+            await ConnectionCallback(ConnectionState.Success);
         }
 
         /// <inheritdoc />
         public void Stop()
         {
-            _httpClient?.Dispose();
+            HttpClient?.Dispose();
         }
 
         /// <summary>
-        /// Initial action to perform when client connected
+        /// Action which is called if the client gets connected or failed
         /// </summary>
-        public virtual Task OnConnect()
+        public virtual Task ConnectionCallback(ConnectionState connectionState)
         {
-            return Task.FromResult<object>(null);
+#if HAVE_TASK_COMPLETEDTASK
+            return Task.CompletedTask;
+#else
+            return Task.FromResult(true);
+#endif
         }
 
         /// <summary>
@@ -109,7 +138,7 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         protected async Task<T> GetAsync<T>(string url)
         {
-            var response = await _httpClient.GetStringAsync(url);
+            var response = await HttpClient.GetStringAsync(url);
             return JsonConvert.DeserializeObject<T>(response);
         }
 
@@ -122,7 +151,7 @@ namespace Moryx.Tools.Wcf
             if (payload != null)
                 payloadString = JsonConvert.SerializeObject(payload);
 
-            var response = await _httpClient.PostAsync(url, new StringContent(payloadString, Encoding.UTF8, "text/json"));
+            var response = await HttpClient.PostAsync(url, new StringContent(payloadString, Encoding.UTF8, "text/json"));
             var responseContent = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(responseContent);
         }
@@ -136,7 +165,7 @@ namespace Moryx.Tools.Wcf
             if (payload != null)
                 payloadString = JsonConvert.SerializeObject(payload);
 
-            var response = await _httpClient.PutAsync(url, new StringContent(payloadString, Encoding.UTF8, "text/json"));
+            var response = await HttpClient.PutAsync(url, new StringContent(payloadString, Encoding.UTF8, "text/json"));
             var responseContent = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(responseContent);
         }
@@ -146,7 +175,7 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         protected async Task<bool> DeleteAsync(string url)
         {
-            var response = await _httpClient.DeleteAsync(url);
+            var response = await HttpClient.DeleteAsync(url);
             return response.StatusCode == HttpStatusCode.OK;
         }
 

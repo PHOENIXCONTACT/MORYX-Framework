@@ -32,19 +32,21 @@ namespace Moryx.Tools.Wcf
         private readonly List<MonitoredClient> _monitoredClients = new List<MonitoredClient>();
         private readonly ICollection<WcfClientInfo> _clientInfos = new List<WcfClientInfo>();
 
-        // Initialization Configuraion
+        // Initialization configuration
         private IThreadContext _threadContext;
         private IProxyConfig _proxyConfig;
         private IWcfClientFactoryConfig _factoryConfig;
         private Timer _monitorTimer;
 
-        // Version Service - internal for the integrationtests
-        internal IVersionServiceManager VersionService { get; set; }
+        /// <summary>
+        /// Version service used to request endpoints from the server
+        /// </summary>
+        internal IVersionServiceManager VersionService { get; private set; }
 
-        ///
+        /// <inheritdoc />
         public IEnumerable<WcfClientInfo> ClientInfos => _clientInfos;
 
-        ///
+        /// <inheritdoc />
         public string ClientId => _factoryConfig.ClientId;
 
         #endregion
@@ -433,7 +435,7 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Recieves the version without a given configuration. The configuration will be loaded from
+        /// Receives the version without a given configuration. The configuration will be loaded from
         /// the version service
         /// </summary>
         private void ReceiveVersionWithoutConfig(MonitoredClient client)
@@ -514,17 +516,16 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Invokes the creation of the client. Will instanciate the client object and raises the
+        /// Invokes the creation of the client. Will instantiate the client object and raises the
         /// success event.
         /// </summary>
-        /// <param name="client">The client.</param>
         private void InvokeCreateClient(MonitoredClient client)
         {
             try
             {
                 if (client.State == InternalConnectionState.VersionMatch)
                 {
-                    client.Instance = InstanciateClientObject(client);
+                    client.Instance = InstantiateClientObject(client);
                     client.State = InternalConnectionState.Success;
                     SetClientInfoState(client.ClientInfo, client.State);
 
@@ -648,9 +649,9 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Instanciates the client object.
+        /// Instantiate the client object.
         /// </summary>
-        private ICommunicationObject InstanciateClientObject(MonitoredClient monitoredClient)
+        private ICommunicationObject InstantiateClientObject(MonitoredClient monitoredClient)
         {
             var clientParams = new List<object>();
 

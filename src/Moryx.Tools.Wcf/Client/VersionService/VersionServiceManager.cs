@@ -2,13 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.ServiceModel;
 using System.Threading.Tasks;
 using Moryx.Communication;
-using Moryx.Configuration;
 using Newtonsoft.Json;
 
 namespace Moryx.Tools.Wcf
@@ -16,9 +13,9 @@ namespace Moryx.Tools.Wcf
     internal class VersionServiceManager : IVersionServiceManager
     {
         private const string ServiceName = "endpoints";
-        
+
         private HttpClient _client;
-        
+
         public VersionServiceManager(IProxyConfig proxyConfig, string host, int port)
         {
             // Create HttpClient
@@ -39,7 +36,7 @@ namespace Moryx.Tools.Wcf
             }
             _client.BaseAddress = new Uri($"http://{host}:{port}/{ServiceName}/");
         }
-        
+
         ///
         public void Dispose()
         {

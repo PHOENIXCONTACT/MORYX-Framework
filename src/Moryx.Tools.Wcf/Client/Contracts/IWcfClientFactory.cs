@@ -53,7 +53,7 @@ namespace Moryx.Tools.Wcf
         /// <param name="callback">A callback to inform about changes of the client's state.</param>
         /// <returns>A unique ID identifying this client</returns>
         long Create<T, TK>(ClientConfig config, Action<ConnectionState, T> callback)
-            where T : ClientBase<TK> 
+            where T : ClientBase<TK>
             where TK : class;
 
         /// <summary>
