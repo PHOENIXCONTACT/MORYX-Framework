@@ -11,7 +11,6 @@ using Moryx.Runtime.Modules;
 using Moryx.Runtime.SystemTests;
 using Moryx.Tools.Wcf.SystemTests.HelloWorld;
 using Moryx.Tools.Wcf.SystemTests.SimpleHelloWorld;
-using Moryx.TestModule;
 using Moryx.TestTools.SystemTest;
 using Moryx.TestTools.UnitTest;
 using NUnit.Framework;

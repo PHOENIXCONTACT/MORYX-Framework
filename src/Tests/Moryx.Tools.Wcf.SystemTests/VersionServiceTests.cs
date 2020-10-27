@@ -44,8 +44,7 @@ namespace Moryx.Tools.Wcf.SystemTests
             var result = _hogController.WaitForService(DependentTestModule.ModuleController.ModuleName, ServerModuleState.Running, 10);
             Assert.IsTrue(result, "Service 'TestModule' did not reach state 'Running'");
 
-            _versionService = new VersionServiceManager();
-            _versionService.Initialize(new ProxyConfig(), "localhost", _hogController.HttpPort);
+            _versionService = new VersionServiceManager(new ProxyConfig(), "localhost", _hogController.HttpPort);
 
             Assert.NotNull(_versionService, "Can't create VersionServiceClient");
         }

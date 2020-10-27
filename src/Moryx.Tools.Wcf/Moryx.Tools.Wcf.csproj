@@ -3,7 +3,7 @@
   <Import Project="..\..\.build\Common.props"></Import>
 
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net45;net461</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Wcf integation in Platform.</Description>
     <CreatePackage>true</CreatePackage>
@@ -19,5 +19,9 @@
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+    <DefineConstants>HAVE_TASK_COMPLETEDTASK</DefineConstants>
+  </PropertyGroup>
 
 </Project>

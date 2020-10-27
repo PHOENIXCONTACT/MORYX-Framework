@@ -154,7 +154,6 @@ namespace Moryx.Tools.Wcf.Tests
 
             Assert.AreEqual("2.0.0.0", info0.ClientVersion, "ClientVersion before connect");
             Assert.AreEqual("2.0.0", info0.MinServerVersion, "MinServerVersion before connect");
-            Assert.AreEqual("Unknown", info0.MinClientVersion, "ClientVersion before connect");
             Assert.AreEqual("Unknown", info0.ServerVersion, "ServerVersion before connect");
             Assert.AreEqual("ILogMaintenance", info0.Service, "Service name before connect");
             Assert.AreEqual(mode == ConnectionMode.New ? "Unknown" : "http://localhost/LogMaintenance", info0.Uri, "Uri before connect");
@@ -165,7 +164,6 @@ namespace Moryx.Tools.Wcf.Tests
 
             Assert.AreEqual("2.0.0.0", info1.ClientVersion, "ClientVersion after connect");
             Assert.AreEqual("2.0.0", info1.MinServerVersion, "MinServerVersion after connect");
-            Assert.AreEqual("2.0.0", info1.MinClientVersion, "MinClientVersion after connect");
             Assert.AreEqual(_versionServiceManager.ServerVersion, info1.ServerVersion, "ServerVersion after connect");
             Assert.AreEqual("ILogMaintenance", info1.Service, "Service name after connect");
             Assert.AreEqual(mode == ConnectionMode.New ? _versionServiceManager.ServiceUrl : "http://localhost/LogMaintenance", info1.Uri, "Uri after connect");
@@ -189,21 +187,6 @@ namespace Moryx.Tools.Wcf.Tests
             Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.New && i.Tries == 0), "Received initial {0} client info event", LogMaintenanceServiceName);
             Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.New && i.Tries == 1), "Received intermediate {0} client info event", LogMaintenanceServiceName);
             Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.Success && i.Tries == 1), "Received final {0} client info event", LogMaintenanceServiceName);
-        }
-
-        private static ClientConfig CreateLegacyConfig(bool configNull, string endpoint, int port)
-        {
-            return configNull
-                ? null
-                : new ClientConfig
-                {
-                    BindingType = ServiceBindingType.BasicHttp,
-                    Endpoint = endpoint,
-                    Host = "localhost",
-                    Port = port,
-                    ClientVersion = "2.0.0.0",
-                    CheckVersion = true
-                };
         }
 
         [Test]
@@ -367,7 +350,7 @@ namespace Moryx.Tools.Wcf.Tests
                     return CreateLegacyLogClient(clientVersion);
 
                 default:
-                    Assert.Fail("Unknonw connection mode '{0}'", mode);
+                    Assert.Fail("Unknown connection mode '{0}'", mode);
                     break;
             }
 
