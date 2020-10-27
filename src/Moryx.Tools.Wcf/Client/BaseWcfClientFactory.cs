@@ -41,7 +41,7 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Version service used to request endpoints from the server
         /// </summary>
-        internal IVersionServiceManager VersionService { get; private set; }
+        internal IVersionServiceManager VersionService { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<WcfClientInfo> ClientInfos => _clientInfos;
@@ -424,7 +424,6 @@ namespace Moryx.Tools.Wcf
                 var clientVersion = Version.Parse(client.Config.ClientVersion);
                 var serverVersion = Version.Parse(endpoint.Version);
                 client.ClientInfo.ServerVersion = endpoint.Version;
-                client.ClientInfo.MinClientVersion = $"{serverVersion.Major}.0.0";
 
                 // Compare version
                 if (endpoint.Binding == client.Config.BindingType && serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion)
@@ -469,7 +468,6 @@ namespace Moryx.Tools.Wcf
             client.Endpoint = endpoint;
             Logger.Log(LogLevel.Debug, "Got service configuration for service '{0}'", client.ServiceName);
             client.ClientInfo.ServerVersion = client.Endpoint.Version;
-            client.ClientInfo.MinClientVersion = $"{Version.Parse(client.Endpoint.Version).Major}.0.0";
             client.ClientInfo.Uri = endpoint.Address;
 
             HandleConnectionState(client, InternalConnectionState.VersionMatch);
@@ -509,7 +507,6 @@ namespace Moryx.Tools.Wcf
             Logger.Log(LogLevel.Debug, "Can't get version info for service '{0}': {1}", client.ServiceName, message);
 
             client.ClientInfo.ServerVersion = WcfClientInfo.Unknown;
-            client.ClientInfo.MinClientVersion = WcfClientInfo.Unknown;
             client.ClientInfo.Uri = WcfClientInfo.Unknown;
 
             HandleConnectionState(client, InternalConnectionState.FailedTry);

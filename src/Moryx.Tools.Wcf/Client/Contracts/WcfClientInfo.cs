@@ -31,7 +31,6 @@ namespace Moryx.Tools.Wcf
             }
 
             ServerVersion = Unknown;
-            MinClientVersion = Unknown;
             Uri = Unknown;
 
             State = ConnectionState.New;
@@ -40,12 +39,12 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Identifier of this client
         /// </summary>
-        public long Id { get; private set; }
+        public long Id { get; }
 
         /// <summary>
         /// The service the client wants to connect to.
         /// </summary>
-        public string Service { get; private set; }
+        public string Service { get; }
 
         /// <summary>
         /// The URI of this service.
@@ -66,11 +65,6 @@ namespace Moryx.Tools.Wcf
         /// The service's version as retrieved from the server.
         /// </summary>
         public string ServerVersion { get; internal set; }
-
-        /// <summary>
-        /// The minimum version of the client the server needs to operate with.
-        /// </summary>
-        public string MinClientVersion { get; internal set; }
 
         /// <summary>
         /// The number of unsuccessful retries.
