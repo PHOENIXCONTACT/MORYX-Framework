@@ -40,12 +40,12 @@ namespace Moryx.Products.Management
             return EntityMapper.TransformSelector(selector);
         }
 
-        public override void SaveInstance(IProductInstance source, IGenericColumns target)
+        public override void SaveInstance(ProductInstance source, IGenericColumns target)
         {
             EntityMapper.WriteValue(source, target);
         }
 
-        public override void LoadInstance(IGenericColumns source, IProductInstance target)
+        public override void LoadInstance(IGenericColumns source, ProductInstance target)
         {
             EntityMapper.ReadValue(source, target);
         }

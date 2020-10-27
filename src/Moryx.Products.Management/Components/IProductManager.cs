@@ -75,19 +75,19 @@ namespace Moryx.Products.Management
         /// <param name="productType">Product to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
-        IProductInstance CreateInstance(IProductType productType, bool save);
+        ProductInstance CreateInstance(IProductType productType, bool save);
 
         /// <summary>
         /// Updates the database from the instance
         /// </summary>
-        void SaveInstances(params IProductInstance[] productInstances);
+        void SaveInstances(params ProductInstance[] productInstances);
 
         /// <summary>
         /// Get instances with the given ids.
         /// </summary>
         /// <param name="ids">The IDs of instances that should be loaded</param>
         /// <returns>The instance with the id when it exists.</returns>
-        IReadOnlyList<IProductInstance> GetInstances(params long[] ids);
+        IReadOnlyList<ProductInstance> GetInstances(params long[] ids);
 
         /// <summary>
         /// Get all instances that match a certain expression

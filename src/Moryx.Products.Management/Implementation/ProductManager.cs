@@ -166,7 +166,7 @@ namespace Moryx.Products.Management
             }
         }
 
-        public IProductInstance CreateInstance(IProductType productType, bool save)
+        public ProductInstance CreateInstance(IProductType productType, bool save)
         {
             var instance = productType.CreateInstance();
             if (save)
@@ -174,12 +174,12 @@ namespace Moryx.Products.Management
             return instance;
         }
 
-        public void SaveInstances(params IProductInstance[] productInstances)
+        public void SaveInstances(params ProductInstance[] productInstances)
         {
             Storage.SaveInstances(productInstances);
         }
 
-        public IReadOnlyList<IProductInstance> GetInstances(long[] ids)
+        public IReadOnlyList<ProductInstance> GetInstances(long[] ids)
         {
             return Storage.LoadInstances(ids);
         }

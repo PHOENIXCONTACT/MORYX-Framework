@@ -153,25 +153,25 @@ namespace Moryx.Products.Management
             return Workplans.SaveWorkplan(workplan);
         }
 
-        public IProductInstance CreateInstance(IProductType productType)
+        public ProductInstance CreateInstance(IProductType productType)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, false);
         }
 
-        public IProductInstance CreateInstance(IProductType productType, bool save)
+        public ProductInstance CreateInstance(IProductType productType, bool save)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, save);
         }
 
-        public IProductInstance GetInstance(long id)
+        public ProductInstance GetInstance(long id)
         {
             ValidateHealthState();
             return ProductManager.GetInstances(id).SingleOrDefault();
         }
 
-        public IProductInstance GetInstance(IIdentity identity)
+        public ProductInstance GetInstance(IIdentity identity)
         {
             ValidateHealthState();
 
@@ -195,19 +195,19 @@ namespace Moryx.Products.Management
             return ProductManager.GetInstances(selector).SingleOrDefault();
         }
 
-        public void SaveInstance(IProductInstance productInstance)
+        public void SaveInstance(ProductInstance productInstance)
         {
             ValidateHealthState();
             ProductManager.SaveInstances(productInstance);
         }
 
-        public void SaveInstances(IProductInstance[] productInstance)
+        public void SaveInstances(ProductInstance[] productInstance)
         {
             ValidateHealthState();
             ProductManager.SaveInstances(productInstance);
         }
 
-        public IReadOnlyList<IProductInstance> GetInstances(long[] ids)
+        public IReadOnlyList<ProductInstance> GetInstances(long[] ids)
         {
             ValidateHealthState();
 

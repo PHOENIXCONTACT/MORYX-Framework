@@ -34,11 +34,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save instance to database
         /// </summary>
-        void SaveInstance(IProductInstance source, IGenericColumns target);
+        void SaveInstance(ProductInstance source, IGenericColumns target);
 
         /// <summary>
         /// Load additional instance properties from entity and write them to the business object
         /// </summary>
-        void LoadInstance(IGenericColumns source, IProductInstance target);
+        void LoadInstance(IGenericColumns source, ProductInstance target);
     }
 }

@@ -597,7 +597,7 @@ namespace Moryx.Products.Management
 
         #region Get instances
         
-        public IReadOnlyList<IProductInstance> LoadInstances(params long[] id)
+        public IReadOnlyList<ProductInstance> LoadInstances(params long[] id)
         {
             using (var uow = Factory.Create())
             {
@@ -733,7 +733,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        public void SaveInstances(IProductInstance[] productInstances)
+        public void SaveInstances(ProductInstance[] productInstances)
         {
             using (var uow = Factory.Create())
             {
@@ -754,7 +754,7 @@ namespace Moryx.Products.Management
         /// <param name="uow">An open unit of work</param>
         /// <param name="productInstance">The instance to save</param>
         /// <returns>The instance entity.</returns>
-        private ProductInstanceEntity SaveInstance(IUnitOfWork uow, IProductInstance productInstance)
+        private ProductInstanceEntity SaveInstance(IUnitOfWork uow, ProductInstance productInstance)
         {
             // Check if this type is persisted
             var strategy = InstanceStrategies[productInstance.GetType().Name];
