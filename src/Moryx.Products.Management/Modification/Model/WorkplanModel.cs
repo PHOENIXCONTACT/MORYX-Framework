@@ -7,7 +7,7 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management.Modification
 {
-    [DataContract(IsReference = true)]
+    [DataContract]
     internal class WorkplanModel
     {
         [DataMember]
