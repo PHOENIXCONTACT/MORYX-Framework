@@ -7,7 +7,7 @@ using System.ServiceModel;
 namespace Moryx.Tools.Wcf
 {
     /// <summary>
-    /// Base class to connect to an http web service 
+    /// Base class to connect to an http web service
     /// </summary>
     /// <typeparam name="TWcfClient">The type of the WCF client.</typeparam>
     /// <typeparam name="TWcfInterface">The type of the WCF interface.</typeparam>
@@ -40,12 +40,7 @@ namespace Moryx.Tools.Wcf
 
         #endregion
 
-        #region Properties 
-
-        /// <summary>
-        /// Gets the minimum server version for the wcf client
-        /// </summary>
-        protected abstract string MinServerVersion { get; }
+        #region Properties
 
         /// <summary>
         /// Gets the current client version of the wcf client
@@ -60,7 +55,7 @@ namespace Moryx.Tools.Wcf
             IsAvailable = false;
 
             //Instanciate client and get client info
-            ClientId = ClientFactory.Create<TWcfClient, TWcfInterface>(ClientVersion, MinServerVersion, ClientCallback);
+            ClientId = ClientFactory.Create<TWcfClient, TWcfInterface>(ClientVersion, ClientCallback);
         }
 
         /// <inheritdoc />
