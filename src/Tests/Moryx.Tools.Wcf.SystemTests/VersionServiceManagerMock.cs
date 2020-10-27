@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading.Tasks;
 using Moryx.Communication;
 using Moryx.Tools.Wcf.Tests.Logging;
 
@@ -19,12 +20,8 @@ namespace Moryx.Tools.Wcf.Tests
 
         public bool EnableVersionService { get; set; }
 
-        public bool IsInitialized { get; private set; }
-
-        public void Initialize(IProxyConfig proxyConfig, string host, int port)
+        public VersionServiceManagerMock()
         {
-            IsInitialized = true;
-
             Binding = ServiceBindingType.BasicHttp;
             ServerVersion = "2.0.0.0";
             ServiceUrl = "http://localhost/someservice";
@@ -45,6 +42,11 @@ namespace Moryx.Tools.Wcf.Tests
             } : null;
         }
 
+        public Task<Endpoint[]> ActiveEndpointsAsync()
+        {
+            return Task.FromResult(ActiveEndpoints());
+        }
+
         public Endpoint[] ServiceEndpoints(string service)
         {
             return EnableVersionService ? new Endpoint[]
@@ -60,9 +62,13 @@ namespace Moryx.Tools.Wcf.Tests
             } : null;
         }
 
+        public Task<Endpoint[]> ServiceEndpointsAsync(string service)
+        {
+            return Task.FromResult(ServiceEndpoints(service));
+        }
+
         public void Dispose()
         {
-            IsInitialized = false;
         }
     }
 }

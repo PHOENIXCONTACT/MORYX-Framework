@@ -52,14 +52,6 @@ namespace Moryx.Tools.Wcf
         #region Initialization and Disposing
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseWcfClientFactory"/> class.
-        /// </summary>
-        protected BaseWcfClientFactory()
-        {
-            VersionService = new VersionServiceManager();
-        }
-
-        /// <summary>
         /// Initializes this factory.
         /// </summary>
         /// <param name="factoryConfig">The configuration of this factory.</param>
@@ -71,6 +63,8 @@ namespace Moryx.Tools.Wcf
             _factoryConfig = factoryConfig;
             _proxyConfig  = proxyConfig;
             _threadContext = threadContext;
+
+            VersionService = new VersionServiceManager(proxyConfig, factoryConfig.Host, factoryConfig.Port);
         }
 
         /// <summary>
@@ -78,11 +72,6 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         private void StartOnDemand()
         {
-            if (!VersionService.IsInitialized)
-            {
-                VersionService.Initialize(_proxyConfig, _factoryConfig.Host, _factoryConfig.Port);
-            }
-
             if (_monitorTimer == null)
             {
                 _monitorTimer = new Timer(new NonStackingTimerCallback(state =>

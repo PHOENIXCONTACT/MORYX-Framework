@@ -16,21 +16,11 @@ namespace Moryx.Tools.Wcf
     internal class VersionServiceManager : IVersionServiceManager
     {
         private const string ServiceName = "endpoints";
-
-        #region Fields and Properties
-
-        public bool IsInitialized { get; private set; }
-
+        
         private HttpClient _client;
-
-        #endregion
-
-        ///
-        public void Initialize(IProxyConfig proxyConfig, string host, int port)
+        
+        public VersionServiceManager(IProxyConfig proxyConfig, string host, int port)
         {
-            if (IsInitialized)
-                return;
-
             // Create HttpClient
             if (proxyConfig?.EnableProxy == true && !proxyConfig.UseDefaultWebProxy)
             {
@@ -48,32 +38,31 @@ namespace Moryx.Tools.Wcf
                 _client = new HttpClient();
             }
             _client.BaseAddress = new Uri($"http://{host}:{port}/{ServiceName}/");
-
-            IsInitialized = true;
         }
-
+        
         ///
         public void Dispose()
         {
-            if (!IsInitialized)
-                return;
-
             _client.Dispose();
             _client = null;
-            IsInitialized = false;
         }
 
         public Endpoint[] ActiveEndpoints()
         {
             try
             {
-                var response = _client.GetStringAsync("").Result;
-                return JsonConvert.DeserializeObject<Endpoint[]>(response);
+                return ActiveEndpointsAsync().Result;
             }
             catch (Exception e)
             {
                 return null;
             }
+        }
+
+        public async Task<Endpoint[]> ActiveEndpointsAsync()
+        {
+            var response = await _client.GetStringAsync("");
+            return JsonConvert.DeserializeObject<Endpoint[]>(response);
         }
 
 
@@ -81,13 +70,18 @@ namespace Moryx.Tools.Wcf
         {
             try
             {
-                var response = _client.GetStringAsync($"service/{service}").Result;
-                return JsonConvert.DeserializeObject<Endpoint[]>(response);
+                return ServiceEndpointsAsync(service).Result;
             }
             catch (Exception e)
             {
                 return null;
             }
+        }
+
+        public async Task<Endpoint[]> ServiceEndpointsAsync(string service)
+        {
+            var response = await _client.GetStringAsync($"service/{service}");
+            return JsonConvert.DeserializeObject<Endpoint[]>(response);
         }
     }
 }
