@@ -6,7 +6,7 @@ using Moryx.Serialization;
 
 namespace Moryx.Products.Management.Modification
 {
-    [DataContract(IsReference = true)]
+    [DataContract]
     internal class PartConnector
     {
         [DataMember]

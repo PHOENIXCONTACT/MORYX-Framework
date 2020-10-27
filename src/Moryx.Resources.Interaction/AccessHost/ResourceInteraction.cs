@@ -1,21 +1,25 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Resources.Interaction.Converter;
 using Moryx.Serialization;
+using Moryx.Tools;
 
 namespace Moryx.Resources.Interaction
 {
     /// <seealso cref="IResourceInteraction"/>
     [Plugin(LifeCycle.Singleton, typeof(IResourceInteraction))]
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
-    public class ResourceInteraction : IResourceInteraction
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, IncludeExceptionDetailInFaults = true)]
+    internal class ResourceInteraction : IResourceInteraction
     {
         #region Dependency Injection
 
@@ -54,30 +58,53 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
-        public ResourceModel[] GetDetails(long[] ids)
+        public ResourceModel GetDetails(string idString)
         {
+            var id = long.Parse(idString);
+            var converter = new ResourceToModelConverter(TypeTree, Serialization);
+            var resource = Graph.Get(id);
+            return converter.GetDetails(resource);
+        }
+
+        /// <inheritdoc />
+        public ResourceModel[] GetDetailsBatch(string idString)
+        {
+            var ids = idString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(long.Parse);
             var converter = new ResourceToModelConverter(TypeTree, Serialization);
             return ids.Select(Graph.Get).Select(converter.GetDetails).ToArray();
         }
 
         /// <inheritdoc />
-        public Entry InvokeMethod(long id, MethodEntry methodModel)
+        public Entry InvokeMethod(string idString, string name, Entry parameters)
         {
+            var id = long.Parse(idString);
             var resource = Graph.Get(id);
-            return EntryConvert.InvokeMethod(resource, methodModel, Serialization);
+            return EntryConvert.InvokeMethod(resource.Descriptor, new MethodEntry { Name = name, Parameters = parameters }, Serialization);
         }
 
         /// <inheritdoc />
-        public ResourceModel Create(string resourceType, MethodEntry constructor = null)
+        public ResourceModel Construct(string type)
+        {
+            return Construct(type, null);
+        }
+
+        /// <inheritdoc />
+        public ResourceModel ConstructWithParameters(string type, string method, Entry arguments)
+        {
+            return Construct(type, new MethodEntry {Name = method, Parameters = arguments});
+        }
+
+        private ResourceModel Construct(string type, MethodEntry method)
         {
             var converter = new ResourceToModelConverter(TypeTree, Serialization);
 
-            var resource = Graph.Instantiate(resourceType);
-            if (constructor != null)
-                EntryConvert.InvokeMethod(resource, constructor, Serialization);
+            var resource = Graph.Instantiate(type);
+            if (method != null)
+                EntryConvert.InvokeMethod(resource, method, Serialization);
 
             var model = converter.GetDetails(resource);
-            model.Methods = new MethodEntry[0]; // Reset methods because the can not be invoked on new objects
+            model.Methods = new MethodEntry[0]; // Reset methods because they can not be invoked on new objects
 
             return model;
         }
@@ -89,7 +116,7 @@ namespace Moryx.Resources.Interaction
 
             var resourcesToSave = new HashSet<Resource>();
             // Get or create resource
-            converter.FromModel(model, resourcesToSave);
+            var instance = converter.FromModel(model, resourcesToSave);
 
             // Save all created or altered resources
             foreach (var resourceToSave in resourcesToSave)
@@ -97,14 +124,29 @@ namespace Moryx.Resources.Interaction
                 Graph.Save(resourceToSave);
             }
 
-            return model;
+            return new ResourceToModelConverter(TypeTree, Serialization).GetDetails(instance);
         }
 
         /// <inheritdoc />
-        public bool Remove(long id)
+        public ResourceModel Update(string idString, ResourceModel model)
         {
+            var id = long.Parse(idString);
+            model.Id = id;
+            return Save(model);
+        }
+
+        /// <inheritdoc />
+        public void Remove(string idString)
+        {
+            var id = long.Parse(idString);
             var resource = Graph.Get(id);
-            return Graph.Destroy(resource);
+            var result = Graph.Destroy(resource);
+
+            var context = WebOperationContext.Current;
+            if (result)
+                context.OutgoingResponse.StatusCode = HttpStatusCode.OK;
+            else
+                context.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
         }
 
         private class ResourceQueryFilter
@@ -131,9 +173,9 @@ namespace Moryx.Resources.Interaction
 
                 var referenceCondition = _query.ReferenceCondition;
                 var references = (from property in instance.GetType().GetProperties()
-                    let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
-                    where att != null
-                    select new {property, att}).ToList();
+                                  let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
+                                  where att != null
+                                  select new { property, att }).ToList();
 
                 // Find properties matching the condition
                 PropertyInfo[] matches;
@@ -148,7 +190,7 @@ namespace Moryx.Resources.Interaction
                         .Where(r => r.att.RelationType == referenceCondition.RelationType && r.att.Role == referenceCondition.Role)
                         .Select(r => r.property).ToArray();
                 }
-                if(matches.Length != 1)
+                if (matches.Length != 1)
                     return false;
 
                 if (referenceCondition.ValueConstraint == ReferenceValue.Irrelevant)

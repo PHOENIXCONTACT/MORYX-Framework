@@ -26,8 +26,8 @@ namespace Moryx.Products.Management
         {
             InteractionHost = new HostConfig
             {
-                BindingType = ServiceBindingType.BasicHttp,
-                Endpoint = "ProductInteraction",
+                BindingType = ServiceBindingType.WebHttp,
+                Endpoint = "products",
                 MetadataEnabled = true,
                 HelpEnabled = true
             };

@@ -21,16 +21,5 @@ namespace Moryx.Products.Management.Modification
 
         [DataMember]
         public WorkplanState State { get; set; }
-
-        internal static WorkplanModel FromWorkplan(IWorkplan wp)
-        {
-            return new WorkplanModel
-            {
-                Id = wp.Id,
-                Name = wp.Name,
-                Version = wp.Version,
-                State = wp.State
-            };   
-        }
     }
 }

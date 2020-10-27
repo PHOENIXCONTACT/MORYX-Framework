@@ -7,7 +7,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
-    <ProjectReference Include="..\Moryx.Resources.Interaction\Moryx.Resources.Interaction.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moryx.Tools.Wcf" />
   </ItemGroup>
 
 </Project>

@@ -19,7 +19,7 @@
     <PackageReference Include="Moryx.Runtime.Wcf" />
   </ItemGroup>
 
-  <ItemGroup >
+  <ItemGroup>
     <Reference Include="System.ServiceModel" />
 	</ItemGroup>
 

@@ -39,9 +39,12 @@ namespace Moryx.Resources.Samples
         [ResourceConstructor]
         public void CreatePositions(int count)
         {
-            var pos = Graph.Instantiate<WpcPosition>();
-            pos.Parent = this;
-            Children.Add(pos);
+            for (int i = 0; i < count; i++)
+            {
+                var pos = Graph.Instantiate<WpcPosition>();
+                pos.Parent = this;
+                Children.Add(pos);
+            }
         }
     }
 

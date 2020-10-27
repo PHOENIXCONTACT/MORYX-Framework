@@ -36,8 +36,6 @@ namespace Moryx.Products.Management.Modification
         private static readonly PartialSerialization<ProductType> ProductSerialization = new PartialSerialization<ProductType>();
         private static readonly EntrySerializeSerialization RecipeSerialization = new EntrySerializeSerialization();
 
-        private readonly List<ProductModel> _productCache = new List<ProductModel>();
-
         #endregion
 
         #region To Model
@@ -125,13 +123,9 @@ namespace Moryx.Products.Management.Modification
 
         private ProductModel ConvertProduct(IProductType productType, bool flat)
         {
-            var converted = _productCache.FirstOrDefault(p => p.Id == productType.Id);
-            if (converted != null)
-                return converted;
-
             // Base object
             var identity = (ProductIdentity)productType.Identity ?? EmptyIdentity;
-            converted = new ProductModel
+            var converted = new ProductModel
             {
                 Id = productType.Id,
                 Type = productType.GetType().Name,
@@ -158,7 +152,6 @@ namespace Moryx.Products.Management.Modification
             // Parts
             ConvertParts(productType, properties, converted);
 
-            _productCache.Add(converted);
             return converted;
         }
 

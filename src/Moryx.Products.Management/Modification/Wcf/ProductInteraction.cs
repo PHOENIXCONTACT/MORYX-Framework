@@ -3,11 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.ServiceModel;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -74,9 +71,9 @@ namespace Moryx.Products.Management.Modification
         private static Entry ConvertParameters(IImportParameters parametersObject) =>
             EntryConvert.EncodeObject(parametersObject, new PartialSerialization<IImportParameters>());
 
-        public Entry UpdateParameters(string importerName, Entry currentParameters)
+        public Entry UpdateParameters(string importer, Entry importParameters)
         {
-            var parameters = ConvertParametersBack(importerName, currentParameters, true);
+            var parameters = ConvertParametersBack(importer, importParameters, true);
             return ConvertParameters(parameters);
         }
 
@@ -99,29 +96,33 @@ namespace Moryx.Products.Management.Modification
             return UseConverter(c => c.Create(type));
         }
 
-        public ProductModel GetProductDetails(long id)
+        public ProductModel GetProductDetails(string idString)
         {
+            var id = long.Parse(idString);
             return UseConverter(c => c.GetProduct(id));
         }
 
-        public ProductModel SaveProduct(ProductModel instance)
+        public ProductModel SaveProduct(string idString, ProductModel instance)
         {
+            instance.Id = long.Parse(idString);
             return UseConverter(c => c.Save(instance));
         }
 
-        public DuplicateProductResponse DuplicateProduct(long sourceId, string identifier, short revisionNo)
+        public DuplicateProductResponse DuplicateProduct(string idString, ProductModel product)
         {
-            return UseConverter(c => c.Duplicate(sourceId, identifier, revisionNo));
+            var sourceId = long.Parse(idString);
+            return UseConverter(c => c.Duplicate(sourceId, product.Identifier, product.Revision));
         }
 
-        public ProductModel ImportProduct(string importerName, Entry parametersModel)
+        public ProductModel ImportProduct(string importer, Entry importParameters)
         {
-            var parameters = ConvertParametersBack(importerName, parametersModel);
-            return UseConverter(c => c.ImportProduct(importerName, parameters));
+            var parameters = ConvertParametersBack(importer, importParameters);
+            return UseConverter(c => c.ImportProduct(importer, parameters));
         }
 
-        public bool DeleteProduct(long id)
+        public bool DeleteProduct(string idString)
         {
+            var id = long.Parse(idString);
             return UseConverter(c => c.DeleteProduct(id));
         }
 
@@ -130,13 +131,15 @@ namespace Moryx.Products.Management.Modification
             return ModuleController.ModuleName;
         }
 
-        public RecipeModel GetRecipe(long recipeId)
+        public RecipeModel GetRecipe(string idString)
         {
+            var recipeId = long.Parse(idString);
             return UseConverter(c => c.GetRecipe(recipeId));
         }
 
-        public RecipeModel[] GetRecipes(long productId)
+        public RecipeModel[] GetRecipes(string idString)
         {
+            var productId = long.Parse(idString);
             return UseConverter(c => c.GetRecipes(productId));
         }
 
@@ -147,6 +150,12 @@ namespace Moryx.Products.Management.Modification
 
         public RecipeModel SaveRecipe(RecipeModel recipe)
         {
+            return UseConverter(c => c.SaveRecipe(recipe));
+        }
+
+        public RecipeModel UpdateRecipe(string idString, RecipeModel recipe)
+        {
+            recipe.Id = long.Parse(idString);
             return UseConverter(c => c.SaveRecipe(recipe));
         }
 

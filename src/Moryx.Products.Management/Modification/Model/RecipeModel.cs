@@ -12,7 +12,7 @@ namespace Moryx.Products.Management.Modification
     /// <summary>
     /// DTO representation of a recipe
     /// </summary>
-    [DataContract(IsReference = true)]
+    [DataContract]
     internal class RecipeModel
     {
         /// <summary>

@@ -11,7 +11,7 @@ namespace Moryx.Resources.Interaction
     /// Type model for a reference property on a resource type
     /// </summary>
     [DataContract]
-    public class ReferenceTypeModel
+    internal class ReferenceTypeModel
     {
         /// <summary>
         /// Name of the reference, usually name of the property

@@ -24,9 +24,14 @@ namespace Moryx.Resources.Interaction.Converter
         private static readonly Dictionary<string, ResourceTypeModel> TypeCache = new Dictionary<string, ResourceTypeModel>();
 
         /// <summary>
+        /// Internal ref id sequence
+        /// </summary>
+        private long _refId = 0;
+
+        /// <summary>
         /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private readonly Dictionary<Resource, ResourceModel> _resourceCache = new Dictionary<Resource, ResourceModel>();
+        private readonly Dictionary<Resource, long> _resourceCache = new Dictionary<Resource, long>();
 
         protected ICustomSerialization Serialization { get; }
 
@@ -62,19 +67,26 @@ namespace Moryx.Resources.Interaction.Converter
         protected ResourceModel ToModel(Resource current, bool partially)
         {
             ResourceModel model;
-            if (!_resourceCache.TryGetValue(current, out model))
+            if (_resourceCache.ContainsKey(current))
+            {
+                // Include reference instead
+                model = new ResourceModel { ReferenceId = _resourceCache[current] };
+            }
+            else
             {
                 // Extract model
                 model = new ResourceModel
                 {
                     Id = current.Id,
+                    ReferenceId = ++_refId,
+
                     Name = current.Name,
                     Description = current.Description,
 
                     // Use simplified type reference
                     Type = current.ResourceType()
                 };
-                _resourceCache.Add(current, model);
+                _resourceCache.Add(current, model.ReferenceId);
 
                 // Set partial flag or load complex properties depending on details depth
                 if (partially)
@@ -90,7 +102,6 @@ namespace Moryx.Resources.Interaction.Converter
                     // Recursively read children and references
                     model.References = ConvertReferences(current);
                 }
-
             }
 
             return model;
@@ -220,7 +231,7 @@ namespace Moryx.Resources.Interaction.Converter
             {
                 Creatable = node.Creatable,
                 Name = node.Name,
-                BaseType = baseType,
+                BaseType = baseType?.Name,
 
                 // Read display name of the type otherwise use type short name
                 DisplayName = resType.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName ??
@@ -255,7 +266,7 @@ namespace Moryx.Resources.Interaction.Converter
             var referenceModel = new ReferenceTypeModel
             {
                 Name = property.Name,
-                DisplayName = !string.IsNullOrEmpty(displayName) ? displayName: property.Name,
+                DisplayName = !string.IsNullOrEmpty(displayName) ? displayName : property.Name,
                 Description = property.GetDescription(),
                 Role = referenceAttr.Role,
                 RelationType = referenceAttr.RelationType,
