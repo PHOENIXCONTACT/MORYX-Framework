@@ -9,7 +9,7 @@ using Moryx.Serialization;
 
 namespace Moryx.Products.Samples.Recipe
 {
-    public class WatchProductRecipe : WorkplanRecipe, IProductRecipe
+    public class WatchProductRecipe : ProductionRecipe
     {
         public WatchProductRecipe()
         {
@@ -17,14 +17,10 @@ namespace Moryx.Products.Samples.Recipe
 
         public WatchProductRecipe(WatchProductRecipe source) : base(source)
         {
-            Product = source.Product;
+            CoresInstalled = source.CoresInstalled;
+
+            Case = source.Case;
         }
-
-        /// <inheritdoc />
-        public IProductType Product { get; set; }
-
-        /// <inheritdoc />
-        public virtual IProductType Target => Product;
 
         [EntrySerialize]
         [DisplayName("Cores Installed")]

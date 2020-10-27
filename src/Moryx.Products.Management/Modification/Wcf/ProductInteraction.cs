@@ -69,7 +69,7 @@ namespace Moryx.Products.Management.Modification
         }
 
         private static Entry ConvertParameters(IImportParameters parametersObject) =>
-            EntryConvert.EncodeObject(parametersObject, new PartialSerialization<IImportParameters>());
+            EntryConvert.EncodeObject(parametersObject, EntrySerializeSerialization.Instance);
 
         public Entry UpdateParameters(string importer, Entry importParameters)
         {
