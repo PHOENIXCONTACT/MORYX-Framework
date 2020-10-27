@@ -10,7 +10,7 @@ namespace Moryx.AbstractionLayer.Products
     /// Base class for all product instances.
     /// </summary>
     [DataContract]
-    public abstract class ProductInstance : IProductInstance
+    public abstract class ProductInstance : IProductInstance, IPersistentObject
     {
         /// <summary>
         /// The Id of this instance

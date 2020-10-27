@@ -49,7 +49,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override void SaveInstance(IProductInstance source, IGenericColumns target)
+        public override void SaveInstance(ProductInstance source, IGenericColumns target)
         {
             var watch = (WatchInstance) source;
             target.Integer1 = watch.TimeSet ? 1 : 0;
@@ -57,7 +57,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override void LoadInstance(IGenericColumns source, IProductInstance target)
+        public override void LoadInstance(IGenericColumns source, ProductInstance target)
         {
             var watch = (WatchInstance) target;
             watch.TimeSet = source.Integer1 == 1;

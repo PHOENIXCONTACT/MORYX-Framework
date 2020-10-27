@@ -71,7 +71,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         /// <param name="productType">Product to instantiate</param>
         /// <returns>Unsaved instance</returns>
-        IProductInstance CreateInstance(IProductType productType);
+        ProductInstance CreateInstance(IProductType productType);
 
         /// <summary>
         /// Create an product instance of given product
@@ -79,19 +79,19 @@ namespace Moryx.AbstractionLayer.Products
         /// <param name="productType">Product type to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
-        IProductInstance CreateInstance(IProductType productType, bool save);
+        ProductInstance CreateInstance(IProductType productType, bool save);
 
         /// <summary>
         /// Get an product instance with the given id.
         /// </summary>
         /// <param name="id">The id for the product instance which should be searched for.</param>
         /// <returns>The product instance with the id when it exists.</returns>
-        IProductInstance GetInstance(long id);
+        ProductInstance GetInstance(long id);
 
         /// <summary>
         /// Get an instance with this identity
         /// </summary>
-        IProductInstance GetInstance(IIdentity identity);
+        ProductInstance GetInstance(IIdentity identity);
 
         /// <summary>
         /// Get only instances that match a certain condition, similar to SingleOrDefault
@@ -102,19 +102,19 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        void SaveInstance(IProductInstance productInstance);
+        void SaveInstance(ProductInstance productInstance);
 
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        void SaveInstances(IProductInstance[] productInstances);
+        void SaveInstances(ProductInstance[] productInstances);
 
         /// <summary>
         /// Get instances with the given ids.
         /// </summary>
         /// <param name="ids">The IDs of instances that should be loaded</param>
         /// <returns>The instance with the id when it exists.</returns>
-        IReadOnlyList<IProductInstance> GetInstances(long[] ids);
+        IReadOnlyList<ProductInstance> GetInstances(long[] ids);
 
         /// <summary>
         /// Get all instances that match a certain 

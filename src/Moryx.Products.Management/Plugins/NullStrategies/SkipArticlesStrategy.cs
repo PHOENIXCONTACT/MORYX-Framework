@@ -39,13 +39,13 @@ namespace Moryx.Products.Management.NullStrategies
         }
 
         /// <inheritdoc />
-        public sealed override void SaveInstance(IProductInstance source, IGenericColumns target)
+        public sealed override void SaveInstance(ProductInstance source, IGenericColumns target)
         {
             // Not necessary
         }
 
         /// <inheritdoc />
-        public sealed override void LoadInstance(IGenericColumns source, IProductInstance target)
+        public sealed override void LoadInstance(IGenericColumns source, ProductInstance target)
         {
             // Nothing
         }

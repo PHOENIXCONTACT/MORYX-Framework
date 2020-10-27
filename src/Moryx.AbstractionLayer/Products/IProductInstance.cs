@@ -6,15 +6,20 @@ namespace Moryx.AbstractionLayer.Products
     /// <summary>
     /// Interface for product instances
     /// </summary>
-    public interface IProductInstance : IPersistentObject
+    public interface IProductInstance
     {
+        /// <summary>
+        /// Id of the instance
+        /// </summary>
+        long Id { get; }
+
         /// <summary>
         /// The product type of this instance
         /// </summary>
         IProductType Type { get; }
 
         /// <summary>
-        /// Part link that created this <see cref="ProductInstance"/>. This is <value>null</value> for root instances
+        /// Part link that created this <see cref="IProductInstance"/>. This is <value>null</value> for root instances
         /// </summary>
         IProductPartLink PartLink { get; }
 

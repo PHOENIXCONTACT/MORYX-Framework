@@ -42,7 +42,7 @@ namespace Moryx.Products.Management
         /// Get instances by id
         /// </summary>
         /// <returns>The instance with the id when it exists.</returns>
-        IReadOnlyList<IProductInstance> LoadInstances(params long[] id);
+        IReadOnlyList<ProductInstance> LoadInstances(params long[] id);
 
         /// <summary>
         /// Load instances using filter expression
@@ -52,7 +52,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Updates the database from the instance
         /// </summary>
-        void SaveInstances(IProductInstance[] productInstance);
+        void SaveInstances(ProductInstance[] productInstance);
 
         /// <summary>
         /// Loads a recipe from the storage
