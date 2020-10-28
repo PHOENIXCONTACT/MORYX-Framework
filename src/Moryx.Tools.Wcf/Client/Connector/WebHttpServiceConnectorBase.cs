@@ -78,9 +78,7 @@ namespace Moryx.Tools.Wcf
             //Try again or dispose old client
             if (resp.Status != TaskStatus.RanToCompletion || resp.Result.Length == 0)
             {
-                await ConnectionCallback(ConnectionState.FailedTry);
-                await Task.Delay(1000);
-                TryFetchEndpoint();
+                await CallbackAndTryFetch(ConnectionState.FailedTry);
                 return;
             }
 
@@ -88,37 +86,43 @@ namespace Moryx.Tools.Wcf
             var endpoint = resp.Result.FirstOrDefault(e => e.Binding == ServiceBindingType.WebHttp);
             if (endpoint == null || string.IsNullOrEmpty(endpoint.Address))
             {
-                await ConnectionCallback(ConnectionState.FailedTry);
-                await Task.Delay(1000);
-                TryFetchEndpoint();
+                await CallbackAndTryFetch(ConnectionState.FailedTry);
                 return;
             }
 
             var clientVersion = Version.Parse(ClientVersion);
             var serverVersion = Version.Parse(endpoint.Version);
 
-
             // Compare version
-            if (!(serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion))
+            if (serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion)
             {
-                await ConnectionCallback(ConnectionState.VersionMissmatch);
-                await Task.Delay(1000);
-                TryFetchEndpoint();
-                return;
+                // Create new base address client
+                HttpClient = new HttpClient {BaseAddress = new Uri(endpoint.Address)};
+
+                IsAvailable = true;
+
+                await ConnectionCallback(ConnectionState.Success);
             }
-
-            // Create new base address client
-            HttpClient = new HttpClient {BaseAddress = new Uri(endpoint.Address)};
-
-            IsAvailable = true;
-
-            await ConnectionCallback(ConnectionState.Success);
+            else
+            {
+                await CallbackAndTryFetch(ConnectionState.VersionMissmatch);
+            }
         }
 
         /// <inheritdoc />
         public void Stop()
         {
             HttpClient?.Dispose();
+        }
+
+        /// <summary>
+        /// Executes the callback and starts the fetching after a defined delay
+        /// </summary>
+        private async Task CallbackAndTryFetch(ConnectionState connectionState)
+        {
+            await ConnectionCallback(connectionState);
+            await Task.Delay(1000);
+            TryFetchEndpoint();
         }
 
         /// <summary>
