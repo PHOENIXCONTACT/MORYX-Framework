@@ -105,7 +105,7 @@ namespace Moryx.Tools.Wcf
             var endpoint = resp.Result.FirstOrDefault(e => e.Binding == ServiceBindingType.WebHttp);
             if (endpoint == null || string.IsNullOrEmpty(endpoint.Address))
             {
-                Logger.Log(LogLevel.Error, "Endpoint for {0} has wrong binding or empty address: {1}-{2}", 
+                Logger.Log(LogLevel.Error, "Endpoint for {0} has wrong binding or empty address: {1}-{2}",
                     ServiceName, endpoint?.Binding, endpoint?.Address);
                 await CallbackAndTryFetch(ConnectionState.FailedTry);
                 return;
@@ -128,7 +128,7 @@ namespace Moryx.Tools.Wcf
             }
             else
             {
-                Logger.Log(LogLevel.Error, "Version mismatch: Client: {0} - Server: {1}", 
+                Logger.Log(LogLevel.Error, "Version mismatch: Client: {0} - Server: {1}",
                     clientVersion, serverVersion);
                 await CallbackAndTryFetch(ConnectionState.VersionMissmatch);
             }
@@ -163,20 +163,35 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Get data from URL
+        /// Send a GET request to the specified Url as an asynchronous operation.
         /// </summary>
+        /// <param name="url">The Url the request is sent to.</param>
+        /// <returns>The result as typed object</returns>
         protected async Task<T> GetAsync<T>(string url)
         {
-            if(!IsAvailable)
+            if (!IsAvailable)
                 throw new InvalidOperationException("Client not available!");
 
-            var response = await HttpClient.GetStringAsync(url);
-            return JsonConvert.DeserializeObject<T>(response);
+            var response = await HttpClient.GetAsync(url);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseContent);
+                case HttpStatusCode.NotFound:
+                case HttpStatusCode.NoContent:
+                    return default;
+                default:
+                    throw new WebException($"StatusCode: {response.StatusCode} ({(int)response.StatusCode}) - Check server log!");
+            }
         }
 
         /// <summary>
-        /// Post data to URL
+        /// Send a POST request to the specified Url as an asynchronous operation.
         /// </summary>
+        /// <param name="url">The Url the request is sent to.</param>
+        /// <param name="payload">The HTTP request content sent to the server.</param>
+        /// <returns>The result as typed object</returns>
         protected async Task<T> PostAsync<T>(string url, object payload)
         {
             if (!IsAvailable)
@@ -187,13 +202,26 @@ namespace Moryx.Tools.Wcf
                 payloadString = JsonConvert.SerializeObject(payload);
 
             var response = await HttpClient.PostAsync(url, new StringContent(payloadString, Encoding.UTF8, "text/json"));
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Created:
+                case HttpStatusCode.Accepted:
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseContent);
+                case HttpStatusCode.NoContent:
+                    return default;
+                default:
+                    throw new WebException($"StatusCode: {response.StatusCode} ({(int)response.StatusCode}) - Check server log!");
+            }
         }
 
         /// <summary>
-        /// Put new data on endpoint
+        /// Send a PUT request to the specified Url as an asynchronous operation.
         /// </summary>
+        /// <param name="url">The Url the request is sent to.</param>
+        /// <param name="payload">The HTTP request content sent to the server.</param>
+        /// <returns>The result as typed object</returns>
         protected async Task<T> PutAsync<T>(string url, object payload)
         {
             if (!IsAvailable)
@@ -204,20 +232,56 @@ namespace Moryx.Tools.Wcf
                 payloadString = JsonConvert.SerializeObject(payload);
 
             var response = await HttpClient.PutAsync(url, new StringContent(payloadString, Encoding.UTF8, "text/json"));
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Created:
+                case HttpStatusCode.Accepted:
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseContent);
+                case HttpStatusCode.NoContent:
+                    return default;
+                default:
+                    throw new WebException($"StatusCode: {response.StatusCode} ({(int)response.StatusCode}) - Check server log!");
+            }
         }
 
         /// <summary>
-        /// Delete on endpoint
+        /// Send a DELETE request to the specified Url as an asynchronous operation.
         /// </summary>
+        /// <param name="url">The Url the request is sent to.</param>
+        /// <returns><c>true</c> if the result is <see cref="HttpStatusCode.OK"/></returns>
         protected async Task<bool> DeleteAsync(string url)
         {
             if (!IsAvailable)
                 throw new InvalidOperationException("Client not available!");
 
             var response = await HttpClient.DeleteAsync(url);
-            return response.StatusCode == HttpStatusCode.OK;
+            return response.IsSuccessStatusCode;
+        }
+
+        /// <summary>
+        /// Send a DELETE request to the specified Url as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">The Url the request is sent to.</param>
+        /// <returns>The result as typed object</returns>
+        protected async Task<T> DeleteAsync<T>(string url)
+        {
+            if (!IsAvailable)
+                throw new InvalidOperationException("Client not available!");
+
+            var response = await HttpClient.DeleteAsync(url);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Accepted:
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseContent);
+                case HttpStatusCode.NoContent:
+                    return default;
+                default:
+                    throw new WebException($"StatusCode: {response.StatusCode} ({(int)response.StatusCode}) - Check server log!");
+            }
         }
 
         /// <inheritdoc />
