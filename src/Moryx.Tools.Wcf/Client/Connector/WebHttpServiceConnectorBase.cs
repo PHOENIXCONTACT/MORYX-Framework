@@ -173,8 +173,17 @@ namespace Moryx.Tools.Wcf
                 throw new InvalidOperationException("Client not available!");
 
             var response = await HttpClient.GetAsync(url);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseContent);
+                case HttpStatusCode.NotFound:
+                case HttpStatusCode.NoContent:
+                    return default;
+                default:
+                    throw new WebException($"StatusCode: {response.StatusCode} ({(int)response.StatusCode}) - Check server log!");
+            }
         }
 
         /// <summary>
@@ -193,8 +202,18 @@ namespace Moryx.Tools.Wcf
                 payloadString = JsonConvert.SerializeObject(payload);
 
             var response = await HttpClient.PostAsync(url, new StringContent(payloadString, Encoding.UTF8, "text/json"));
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Created:
+                case HttpStatusCode.Accepted:
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseContent);
+                case HttpStatusCode.NoContent:
+                    return default;
+                default:
+                    throw new WebException($"StatusCode: {response.StatusCode} ({(int)response.StatusCode}) - Check server log!");
+            }
         }
 
         /// <summary>
@@ -213,8 +232,18 @@ namespace Moryx.Tools.Wcf
                 payloadString = JsonConvert.SerializeObject(payload);
 
             var response = await HttpClient.PutAsync(url, new StringContent(payloadString, Encoding.UTF8, "text/json"));
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Created:
+                case HttpStatusCode.Accepted:
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseContent);
+                case HttpStatusCode.NoContent:
+                    return default;
+                default:
+                    throw new WebException($"StatusCode: {response.StatusCode} ({(int)response.StatusCode}) - Check server log!");
+            }
         }
 
         /// <summary>
@@ -228,7 +257,7 @@ namespace Moryx.Tools.Wcf
                 throw new InvalidOperationException("Client not available!");
 
             var response = await HttpClient.DeleteAsync(url);
-            return response.StatusCode == HttpStatusCode.OK;
+            return response.IsSuccessStatusCode;
         }
 
         /// <summary>
@@ -242,8 +271,17 @@ namespace Moryx.Tools.Wcf
                 throw new InvalidOperationException("Client not available!");
 
             var response = await HttpClient.DeleteAsync(url);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(responseContent);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Accepted:
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(responseContent);
+                case HttpStatusCode.NoContent:
+                    return default;
+                default:
+                    throw new WebException($"StatusCode: {response.StatusCode} ({(int)response.StatusCode}) - Check server log!");
+            }
         }
 
         /// <inheritdoc />
