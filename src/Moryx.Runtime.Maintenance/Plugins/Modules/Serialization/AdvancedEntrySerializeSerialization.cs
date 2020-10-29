@@ -13,15 +13,12 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
     /// <inheritdoc />
     internal class AdvancedEntrySerializeSerialization : PossibleValuesSerialization
     {
-        private static readonly EntrySerializeSerialization EntrySerializeFilter = new EntrySerializeSerialization();
-
         /// <inheritdoc />
         public AdvancedEntrySerializeSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider) : base(container, emptyPropertyProvider)
         {
         }
 
         /// <inheritdoc />
-        public override IEnumerable<MethodInfo> GetMethods(Type sourceType) =>
-            EntrySerializeFilter.GetMethods(sourceType);
+        public override IEnumerable<MethodInfo> GetMethods(Type sourceType) => EntrySerializeSerialization.Instance.GetMethods(sourceType);
     }
 }
