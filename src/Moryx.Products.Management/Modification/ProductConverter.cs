@@ -33,8 +33,8 @@ namespace Moryx.Products.Management.Modification
         // Null object pattern for identity
         private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
 
-        private static readonly PartialSerialization<ProductType> ProductSerialization = new PartialSerialization<ProductType>();
-        private static readonly EntrySerializeSerialization RecipeSerialization = new EntrySerializeSerialization();
+        private static readonly ICustomSerialization ProductSerialization = new PartialSerialization<ProductType>();
+        private static readonly ICustomSerialization RecipeSerialization = new PartialSerialization<ProductionRecipe>();
 
         #endregion
 

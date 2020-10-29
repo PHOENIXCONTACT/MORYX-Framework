@@ -14,7 +14,10 @@ using Moryx.Tools;
 
 namespace Moryx.Products.Management.Modification
 {
-    internal class PartialSerialization<T> : DefaultSerialization
+    /// <summary>
+    /// Specialized serialization that only considers properties of derived classes
+    /// </summary>
+    internal class PartialSerialization<T> : PossibleValuesSerialization
         where T : class
     {
         /// <summary>
@@ -22,11 +25,16 @@ namespace Moryx.Products.Management.Modification
         /// </summary>
         private static readonly string[] FilteredProperties = typeof (T).GetProperties().Select(p => p.Name).ToArray();
 
+        public PartialSerialization() : base(null, new EmptyValueProvider())
+        {
+        }
+
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             // Only simple properties not defined in the base
-            return base.GetProperties(sourceType).Where(SimpleProp);
+            return EntrySerializeSerialization.Instance.GetProperties(sourceType)
+                .Where(SimpleProp);
         }
 
         protected bool SimpleProp(PropertyInfo prop)
@@ -35,7 +43,7 @@ namespace Moryx.Products.Management.Modification
             if (prop.SetMethod == null)
                 return false;
 
-            // Check type
+            // Skip reference or domain model properties
             var type = prop.PropertyType;
             if (type == typeof(ProductFile) ||
                 typeof(IProductType).IsAssignableFrom(type) ||
@@ -53,17 +61,16 @@ namespace Moryx.Products.Management.Modification
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
         {
+            // Only update properties with values from client
             return base.WriteFilter(sourceType, encoded).Where(mapped => mapped.Entry != null);
         }
 
-        public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        private class EmptyValueProvider : IEmptyPropertyProvider
         {
-            var possibleAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
-            if (possibleAtt != null)
-                return possibleAtt.GetValues(null).ToArray(); // TODO: Replace with proper possible values handling
-
-            return base.PossibleValues(memberType, attributeProvider);
+            public void FillEmpty(object obj)
+            {
+                ValueProviderExecutor.Execute(obj, new ValueProviderExecutorSettings().AddDefaultValueProvider());
+            }
         }
-
     }
 }
