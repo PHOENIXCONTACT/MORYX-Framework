@@ -15,14 +15,14 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
     /// </summary>
     [ServiceContract]
     [ServiceVersion("3.0.0")]
-    public interface IModuleMaintenance
+    internal interface IModuleMaintenance
     {
         /// <summary>
         /// Gets the dependency evaluation.
         /// </summary>
         /// <returns>The dependency evaluation.</returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "dependencyEvaluation", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "dependencies", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         DependencyEvaluation GetDependencyEvaluation();
@@ -32,7 +32,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// </summary>
         /// <returns>A list of the server modules.</returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "/", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ServerModuleModel[] GetAll();
@@ -42,7 +42,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// </summary>
         /// <param name="moduleName">Name of the module.</param>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/healthstate", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "module/{moduleName}/healthstate", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ServerModuleState HealthState(string moduleName);
@@ -52,7 +52,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// </summary>
         /// <param name="moduleName">Name of the module.</param>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/notifications", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "module/{moduleName}/notifications", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         NotificationModel[] Notifications(string moduleName);
@@ -62,7 +62,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// </summary>
         /// <param name="moduleName">Name of the module which should be started.</param>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/start", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "module/{moduleName}/start", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void Start(string moduleName);
@@ -72,7 +72,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// </summary>
         /// <param name="moduleName">Name of the module which should be stopped.</param>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/stop", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "module/{moduleName}/stop", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void Stop(string moduleName);
@@ -82,7 +82,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// </summary>
         /// <param name="moduleName">Name of the module which should be reincarnated.</param>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/reincarnate", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "module/{moduleName}/reincarnate", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void Reincarnate(string moduleName);
@@ -91,7 +91,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// Update the modules failure and startbehavior
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "module/{moduleName}", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void Update(string moduleName, ServerModuleModel module);
@@ -101,7 +101,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// </summary>
         /// <param name="moduleName">Name of the module where the warning will confirmed.</param>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/confirm", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "module/{moduleName}/confirm", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void ConfirmWarning(string moduleName);
@@ -112,7 +112,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// <param name="moduleName">The name of the module.</param>
         /// <returns>Configuration of the requested module.</returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/config", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "module/{moduleName}/config", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         Config GetConfig(string moduleName);
@@ -121,7 +121,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// Set the given config and react to updated mode.
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/config", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "module/{moduleName}/config", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void SetConfig(string moduleName, SaveConfigRequest request);
@@ -131,7 +131,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// </summary>
         /// <returns>A list of the server modules.</returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/console", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "module/{moduleName}/console", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         MethodEntry[] GetMethods(string moduleName);
@@ -140,7 +140,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// Invokes a method
         /// </summary>
         [OperationContract]
-        [WebInvoke(UriTemplate = "modules/{moduleName}/console", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "module/{moduleName}/console", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         Entry InvokeMethod(string moduleName, MethodEntry method);

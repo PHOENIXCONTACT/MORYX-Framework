@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -151,7 +152,11 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             var clientId = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 100, 1, new SystemTestValidator(1));
             var client = GetClient(clientId);
             // Client should be connected
-            WaitForConnectionState(clientId, new TimeSpan(0, 0, 0, 20), BinaryConnectionState.Connected);
+            WaitForConnectionState(clientId, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            while (server.Connection.CurrentState != BinaryConnectionState.Connected && stopWatch.ElapsedMilliseconds < 5000)
+                Thread.Sleep(1);
 
             // Act
             var binMessage = CreateMessage(42, new byte[] { 1, 3, 3, 7, 42 });

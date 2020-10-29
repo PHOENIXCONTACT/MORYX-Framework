@@ -21,7 +21,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
         /// </summary>
         /// <returns>Array of plugin logger.</returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "loggers", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "/", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         LoggerModel[] GetAllLoggers();
@@ -32,7 +32,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
         /// <param name="loggerName">Name of the logger</param>
         /// <param name="setLogLevelRequest"></param>
         [OperationContract]
-        [WebInvoke(UriTemplate = "loggers/{loggerName}/loglevel", Method = WebRequestMethods.Http.Post,
+        [WebInvoke(UriTemplate = "logger/{loggerName}/loglevel", Method = WebRequestMethods.Http.Put,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         InvocationResponse SetLogLevel(string loggerName, SetLogLevelRequest setLogLevelRequest);
@@ -42,7 +42,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
         /// </summary>
         /// <returns>Id to identify the appender.</returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "appender", Method = WebRequestMethods.Http.Put,
+        [WebInvoke(UriTemplate = "appender", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         AddAppenderResponse AddAppender(AddAppenderRequest request);
