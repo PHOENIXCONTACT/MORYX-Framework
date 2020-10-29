@@ -426,7 +426,7 @@ namespace Moryx.Tools.Wcf
                 client.ClientInfo.ServerVersion = endpoint.Version;
 
                 // Compare version
-                if (endpoint.Binding == client.Config.BindingType && serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion)
+                if (endpoint.Binding == client.Config.BindingType && VersionCompare.ClientMatch(serverVersion, clientVersion))
                     HandleConnectionState(client, InternalConnectionState.VersionMatch);
                 else
                     HandleConnectionState(client, InternalConnectionState.VersionMissmatch);
@@ -456,7 +456,7 @@ namespace Moryx.Tools.Wcf
                 {
                     var serverVersion = Version.Parse(e.Version);
                     // The client factory can not connect WebHttp
-                    return e.Binding > ServiceBindingType.WebHttp && serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion;
+                    return e.Binding > ServiceBindingType.WebHttp && VersionCompare.ClientMatch(serverVersion, clientVersion);
                 }).OrderByDescending(e => e.Version).FirstOrDefault();
             if (endpoint == null)
             {

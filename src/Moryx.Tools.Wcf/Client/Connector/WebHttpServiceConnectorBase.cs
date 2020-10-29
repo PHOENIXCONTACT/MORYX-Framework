@@ -108,7 +108,7 @@ namespace Moryx.Tools.Wcf
             var serverVersion = Version.Parse(endpoint.Version);
 
             // Compare version
-            if (serverVersion.Major == clientVersion.Major & serverVersion >= clientVersion)
+            if (VersionCompare.ClientMatch(serverVersion, clientVersion))
             {
                 // Create new base address client
                 HttpClient = new HttpClient { BaseAddress = new Uri(endpoint.Address) };
