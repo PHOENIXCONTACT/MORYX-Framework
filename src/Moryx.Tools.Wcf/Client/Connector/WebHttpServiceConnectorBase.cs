@@ -2,10 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Moryx.Communication;
 using Moryx.Container;
@@ -71,9 +74,13 @@ namespace Moryx.Tools.Wcf
             Logger = logger;
         }
 
+        private CultureInfo _myCulture;
+
         /// <inheritdoc />
         public void Start()
         {
+            _myCulture = Thread.CurrentThread.CurrentUICulture;
+
             TryFetchEndpoint();
         }
 
@@ -112,6 +119,8 @@ namespace Moryx.Tools.Wcf
             {
                 // Create new base address client
                 HttpClient = new HttpClient { BaseAddress = new Uri(endpoint.Address) };
+                HttpClient.DefaultRequestHeaders.AcceptLanguage
+                    .Add(new StringWithQualityHeaderValue(_myCulture.IetfLanguageTag));
 
                 IsAvailable = true;
 
