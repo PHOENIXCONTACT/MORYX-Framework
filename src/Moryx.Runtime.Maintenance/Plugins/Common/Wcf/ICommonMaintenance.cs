@@ -20,7 +20,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         /// </summary>
         /// <returns>The current server time.</returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "ServerTime", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "time", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ServerTimeResponse GetServerTime();
@@ -30,7 +30,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         /// </summary>
         /// <returns></returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "ApplicationInfo", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "info/application", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ApplicationInformationResponse GetApplicationInfo();
@@ -40,7 +40,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         /// </summary>
         /// <returns></returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "HostInfo", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "info/system", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         HostInformationResponse GetHostInfo();
@@ -50,7 +50,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         /// </summary>
         /// <returns></returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "SystemLoad", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "info/system/load", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         SystemLoadResponse GetSystemLoad();
@@ -60,7 +60,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         /// </summary>
         /// <returns></returns>
         [OperationContract]
-        [WebInvoke(UriTemplate = "ApplicationLoad", Method = WebRequestMethods.Http.Get,
+        [WebInvoke(UriTemplate = "info/application/load", Method = WebRequestMethods.Http.Get,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         ApplicationLoadResponse GetApplicationLoad();

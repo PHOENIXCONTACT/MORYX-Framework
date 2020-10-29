@@ -4,7 +4,7 @@
 namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
     /// <summary>
-    /// Holds importats information about an assembly.
+    /// Holds important information about an assembly.
     /// </summary>
     public class AssemblyModel
     {
