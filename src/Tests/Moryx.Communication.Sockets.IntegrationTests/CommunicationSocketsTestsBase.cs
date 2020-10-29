@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -105,20 +106,18 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         protected void WaitForConnectionState(int clientIdx, TimeSpan timeToWait, BinaryConnectionState wantedState)
         {
             Console.WriteLine($"WaitForConnectionState. ClientIdx: {clientIdx}, wanted state: {wantedState:G}");
-            var timeout = DateTime.Now.Add(timeToWait);
-            var start = DateTime.Now;
-            var waitedFor = new TimeSpan();
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
 
-            while (!_clients[clientIdx].Connection.CurrentState.Equals(wantedState) && timeout > DateTime.Now)
-            {
+            while (!_clients[clientIdx].Connection.CurrentState.Equals(wantedState) && stopWatch.ElapsedMilliseconds < timeToWait.TotalMilliseconds)
                 Thread.Sleep(new TimeSpan(0, 0, 0, 0, 100));
-                waitedFor = DateTime.Now.Subtract(start);
-            }
+
+            stopWatch.Stop();
 
             // Client should be connected
             Assert.AreEqual(wantedState, _clients[clientIdx].Connection.CurrentState,
                 $"Client ({clientIdx}) is not in the state '{wantedState:G}'. " +
-                $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {waitedFor:g}");
+                $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {stopWatch.ElapsedMilliseconds/1000}s");
         }
 
         /// <summary>
