@@ -7,7 +7,7 @@ using Moryx.Tools.Wcf;
 namespace Moryx.Runtime.Maintenance.Plugins
 {
     /// <summary>
-    /// Base class for maintenace plugins.
+    /// Base class for maintenance plugins.
     /// </summary>
     /// <typeparam name="TConf">Type of configuration.</typeparam>
     /// <typeparam name="TWcf">Type of Wcf service.</typeparam>
