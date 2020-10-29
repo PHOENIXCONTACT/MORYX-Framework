@@ -68,13 +68,12 @@ namespace Moryx.Tools.Wcf.Tests
             _clientInfoEvent.Reset();
 
             _versionServiceManager.EnableVersionService = true;
-            _versionServiceManager.ServerVersion = "2.0.0";
+            _versionServiceManager.ServerVersion = "2.1.2";
             _versionServiceManager.Endpoint = "LogMaintenance";
 
             _wcfClientFactory = new TestWcfClientFactory
             {
                 Logger = new DummyLogger(),
-                VersionService = _versionServiceManager
             };
 
             _wcfClientFactory.Initialize(new WcfClientFactoryConfig
@@ -83,6 +82,7 @@ namespace Moryx.Tools.Wcf.Tests
                 Host = "localhost",
                 Port = 80
             });
+            _wcfClientFactory.VersionService = _versionServiceManager;
 
             _wcfClientFactory.ClientConnected += OnClientConnected;
             _wcfClientFactory.ClientDisconnected += OnClientDisconnected;
@@ -172,7 +172,12 @@ namespace Moryx.Tools.Wcf.Tests
 
         }
 
-        [TestCase("2.0.0.0")]
+        [TestCase("2.0")]
+        [TestCase("2.1")]
+        [TestCase("2.0.0")]
+        [TestCase("2.0.9")]
+        [TestCase("2.1.0")]
+        // I know this looks ridiculous, but System.Versions CompareTo implementation is stupid
         public void CreateNewClientGood(string clientVersion)
         {
             CreateNewLogClient(clientVersion);
@@ -308,6 +313,8 @@ namespace Moryx.Tools.Wcf.Tests
         [TestCase(ConnectionMode.Legacy, "3.0.0.0", "2.4.0.0")]
         public void TestVersionMismatch(ConnectionMode mode, string clientVersion, string serverVersion)
         {
+            _versionServiceManager.ServerVersion = serverVersion;
+
             CreateLogClient(mode, clientVersion);
 
             _connectedEvent.Wait(MediumWait);

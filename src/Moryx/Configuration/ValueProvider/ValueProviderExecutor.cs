@@ -9,8 +9,25 @@ namespace Moryx.Configuration
     /// <summary>
     /// Applies ValueProvider to a specific instance
     /// </summary>
-    public static class ValueProviderExecutor
+    public class ValueProviderExecutor : IEmptyPropertyProvider
     {
+        private readonly ValueProviderExecutorSettings _settings;
+
+        /// <summary>
+        /// Create provider instance with <paramref name="settings"/>
+        /// </summary>
+        /// <param name="settings">Settings for the provider</param>
+        public ValueProviderExecutor(ValueProviderExecutorSettings settings)
+        {
+            _settings = settings;
+        }
+        
+        /// <inheritdoc />
+        public void FillEmpty(object obj)
+        {
+            Execute(obj, _settings);
+        }
+
         /// <summary>
         /// Executes configured <see cref="IValueProvider"/> and <see cref="IValueProviderFilter"/>
         /// </summary>
