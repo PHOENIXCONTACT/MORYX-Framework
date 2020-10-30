@@ -306,7 +306,7 @@ Note: If you use another version of EntityFramwork you need to change the full q
 Now, open the `Package Manager Console` 
 (You may ask 'Really? 
 Why the Package Manager Console?' 
-Thats because in Visual Studio 2015 the Package Manager Console also is the Powershell console within Visual Studio). 
+Thats because in Visual Studio the Package Manager Console also is the Powershell console within Visual Studio). 
 Then enter the following command
 
 ````ps
