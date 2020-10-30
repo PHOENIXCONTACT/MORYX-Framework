@@ -1,12 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.ServiceModel;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
-using Moryx.Serialization;
+using Moryx.Resources.Wcf;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.Resources.Interaction
@@ -16,26 +15,10 @@ namespace Moryx.Resources.Interaction
     /// </summary>
     [Description("Resource to host the default web service")]
     [ResourceRegistration, DependencyRegistration(typeof(IResourceInteraction))]
-    public sealed class ResourceInteractionHost : Resource
+    public sealed class ResourceInteractionHost : InteractionResource
     {
-        /// <summary>
-        /// Factory to create the web service
-        /// </summary>
-        public IConfiguredHostFactory HostFactory { get; set; }
-
-        /// <summary>
-        /// Host config injected by resource manager
-        /// </summary>
-        [DataMember, EntrySerialize]
-        public HostConfig HostConfig { get; set; }
-
         /// <inheritdoc />
-        public override object Descriptor => HostConfig;
-
-        /// <summary>
-        /// Current service host
-        /// </summary>
-        private IConfiguredServiceHost _host;
+        protected override Type ServiceContract => typeof(IResourceInteraction);
 
         /// <summary>
         /// Constructor to set <see cref="HostConfig"/> defaults.
@@ -48,30 +31,6 @@ namespace Moryx.Resources.Interaction
                 BindingType = ServiceBindingType.WebHttp,
                 MetadataEnabled = true
             };
-        }
-
-        /// <inheritdoc />
-        protected override void OnInitialize()
-        {
-            base.OnInitialize();
-
-            _host = HostFactory.CreateHost<IResourceInteraction>(HostConfig);
-        }
-
-        /// <inheritdoc />
-        protected override void OnStart()
-        {
-            base.OnStart();
-
-            _host.Start();
-        }
-
-        /// <inheritdoc />
-        protected override void OnStop()
-        {
-            _host.Stop();
-
-            base.OnStop();
         }
     }
 }

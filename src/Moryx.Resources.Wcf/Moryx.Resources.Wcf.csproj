@@ -1,18 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\.build\Common.props"></Import>
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Provides the default implementation if the resource interaction</Description>
+    <Description>Includes base classes used to provide resources with wcf implementation</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
-    <ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />
-    <ProjectReference Include="..\Moryx.Resources.Wcf\Moryx.Resources.Wcf.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moryx.Tools.Wcf" />
   </ItemGroup>
 
 </Project>

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartProject", "src\StartProject\StartProject.csproj", "{08B7686D-63C7-498C-90F0-B756E93575DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject", "src\StartProject\StartProject.csproj", "{08B7686D-63C7-498C-90F0-B756E93575DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{D6D69517-7889-4E08-ABEA-D3E069D08A6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.AbstractionLayer", "src\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj", "{841F50C1-DEC0-48D8-92D1-F860450940D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer", "src\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj", "{841F50C1-DEC0-48D8-92D1-F860450940D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{A33D3A48-37FE-46A3-A0BE-E8D7586B862C}"
 EndProject
@@ -15,33 +15,35 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notifications", "Notifications", "{1487B4B0-C817-40CD-9C74-0E56044E49BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Notifications", "src\Moryx.Notifications\Moryx.Notifications.csproj", "{4FB1BCA9-BD6D-478A-93C5-5CD4DE2A2337}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Notifications", "src\Moryx.Notifications\Moryx.Notifications.csproj", "{4FB1BCA9-BD6D-478A-93C5-5CD4DE2A2337}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Management", "src\Moryx.Resources.Management\Moryx.Resources.Management.csproj", "{4CA4F6B5-4C26-4B99-8FB9-937971883083}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Resources.Management", "src\Moryx.Resources.Management\Moryx.Resources.Management.csproj", "{4CA4F6B5-4C26-4B99-8FB9-937971883083}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C1C2F4BB-FF3F-4239-A20A-15B56B541B4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{FE34A376-8F97-4D98-8C84-44A0C1AC01E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Management", "src\Moryx.Products.Management\Moryx.Products.Management.csproj", "{650756A0-E077-4632-8DA8-27214B5ACDA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Products.Management", "src\Moryx.Products.Management\Moryx.Products.Management.csproj", "{650756A0-E077-4632-8DA8-27214B5ACDA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Model", "src\Moryx.Products.Model\Moryx.Products.Model.csproj", "{99A470C6-1224-4475-937E-E7CA0266205C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Products.Model", "src\Moryx.Products.Model\Moryx.Products.Model.csproj", "{99A470C6-1224-4475-937E-E7CA0266205C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Samples", "src\Moryx.Products.Samples\Moryx.Products.Samples.csproj", "{00916431-5038-44B8-8BDA-4A1B13636F32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Products.Samples", "src\Moryx.Products.Samples\Moryx.Products.Samples.csproj", "{00916431-5038-44B8-8BDA-4A1B13636F32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Samples", "src\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj", "{23F6025E-1348-4ABF-A908-C5D360F9D486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Resources.Samples", "src\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj", "{23F6025E-1348-4ABF-A908-C5D360F9D486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Management.Tests", "src\Tests\Moryx.Resources.Management.Tests\Moryx.Resources.Management.Tests.csproj", "{65D88A79-9239-4BF6-AAD3-29E432A9DEDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Resources.Management.Tests", "src\Tests\Moryx.Resources.Management.Tests\Moryx.Resources.Management.Tests.csproj", "{65D88A79-9239-4BF6-AAD3-29E432A9DEDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.AbstractionLayer.Tests", "src\Tests\Moryx.AbstractionLayer.Tests\Moryx.AbstractionLayer.Tests.csproj", "{E7BCFD1C-D140-467E-BDFB-C7013DC59171}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.Tests", "src\Tests\Moryx.AbstractionLayer.Tests\Moryx.AbstractionLayer.Tests.csproj", "{E7BCFD1C-D140-467E-BDFB-C7013DC59171}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.IntegrationTests", "src\Tests\Moryx.Products.IntegrationTests\Moryx.Products.IntegrationTests.csproj", "{88D15860-19C3-4E02-A7F1-2E1EACE87963}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Products.IntegrationTests", "src\Tests\Moryx.Products.IntegrationTests\Moryx.Products.IntegrationTests.csproj", "{88D15860-19C3-4E02-A7F1-2E1EACE87963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Notifications.Tests", "src\Tests\Moryx.Notifications.Tests\Moryx.Notifications.Tests.csproj", "{93650069-26E9-4E0D-A336-9D02F1039346}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Notifications.Tests", "src\Tests\Moryx.Notifications.Tests\Moryx.Notifications.Tests.csproj", "{93650069-26E9-4E0D-A336-9D02F1039346}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Interaction", "src\Moryx.Resources.Interaction\Moryx.Resources.Interaction.csproj", "{583CBD84-DD9F-4834-A89C-1625A05EE15D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Resources.Interaction", "src\Moryx.Resources.Interaction\Moryx.Resources.Interaction.csproj", "{583CBD84-DD9F-4834-A89C-1625A05EE15D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.AbstractionLayer.TestTools", "src\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj", "{1516374C-976F-49FC-A911-29EDC481C657}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.TestTools", "src\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj", "{1516374C-976F-49FC-A911-29EDC481C657}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Wcf", "src\Moryx.Resources.Wcf\Moryx.Resources.Wcf.csproj", "{E1AD28CD-37A6-4AF6-80D7-756586A727B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{1516374C-976F-49FC-A911-29EDC481C657}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1516374C-976F-49FC-A911-29EDC481C657}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1516374C-976F-49FC-A911-29EDC481C657}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1AD28CD-37A6-4AF6-80D7-756586A727B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1AD28CD-37A6-4AF6-80D7-756586A727B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1AD28CD-37A6-4AF6-80D7-756586A727B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1AD28CD-37A6-4AF6-80D7-756586A727B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +129,7 @@ Global
 		{88D15860-19C3-4E02-A7F1-2E1EACE87963} = {A33D3A48-37FE-46A3-A0BE-E8D7586B862C}
 		{93650069-26E9-4E0D-A336-9D02F1039346} = {D6D69517-7889-4E08-ABEA-D3E069D08A6B}
 		{583CBD84-DD9F-4834-A89C-1625A05EE15D} = {BA183EBF-FAC1-45AE-9559-09879DB103AC}
+		{E1AD28CD-37A6-4AF6-80D7-756586A727B6} = {BA183EBF-FAC1-45AE-9559-09879DB103AC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23463631-1BA0-41B8-ABA3-1E9741037513}
