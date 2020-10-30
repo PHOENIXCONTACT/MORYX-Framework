@@ -1,11 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\.build\Common.props"></Import>
-
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
     <Description>Library with helper classes for SystemTests.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

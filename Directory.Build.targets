@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
+  <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
+
+  <!-- Properties for all projects if CreatePackage=true -->
+  <PropertyGroup Condition="'$(CreatePackage)' == 'true'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- Package refereces for all projects if CreatePackage=true -->
+  <ItemGroup Condition="'$(CreatePackage)' == 'true'">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
   <!-- Package versions for package references across all projects -->
   <ItemGroup>
     <!--3rd party dependencies-->
@@ -8,8 +20,6 @@
     <PackageReference Update="Moq" Version="4.14.6" />
     <PackageReference Update="NUnit" Version="3.12.0" />
     <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
-
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>
