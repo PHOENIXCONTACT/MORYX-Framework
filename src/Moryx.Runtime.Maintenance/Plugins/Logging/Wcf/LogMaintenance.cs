@@ -92,6 +92,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
             return new InvocationResponse();
         }
 
-        
+
     }
 }

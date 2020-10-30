@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using Castle.Facilities.WcfIntegration;
 using Moryx.Communication;
 using Moryx.Configuration;
@@ -63,18 +64,22 @@ namespace Moryx.Runtime.Wcf
                 Endpoint = "endpoints",
                 MetadataEnabled = true
             };
-            host.Setup<IVersionService>(hostConfig);
+            host.Setup(typeof(IVersionService), hostConfig);
             host.Start();
         }
 
         /// <inheritdoc />
-        public IConfiguredServiceHost CreateHost<T>(HostConfig config, ITypedHostFactory hostFactory, IModuleLogger logger)
+        public IConfiguredServiceHost CreateHost<TContract>(HostConfig config, ITypedHostFactory hostFactory, IModuleLogger logger) =>
+            CreateHost(typeof(TContract), config, hostFactory, logger);
+
+        public IConfiguredServiceHost CreateHost(Type contract, HostConfig config, ITypedHostFactory hostFactory,
+            IModuleLogger logger)
         {
             var collector = _container.Resolve<IEndpointCollector>();
 
             // Create instance and fill using given container
             var host = new ConfiguredServiceHost(hostFactory, logger, collector, _portConfig);
-            host.Setup<T>(config);
+            host.Setup(contract, config);
 
             return host;
         }

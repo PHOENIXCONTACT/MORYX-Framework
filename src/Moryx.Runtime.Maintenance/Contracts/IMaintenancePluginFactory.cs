@@ -3,7 +3,7 @@
 
 using Moryx.Container;
 
-namespace Moryx.Runtime.Maintenance.Contracts
+namespace Moryx.Runtime.Maintenance
 {
     [PluginFactory(typeof(IConfigBasedComponentSelector))]
     internal interface IMaintenancePluginFactory

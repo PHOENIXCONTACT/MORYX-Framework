@@ -47,17 +47,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return Convert(DbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel));
         }
 
-        public void SetAllConfigs(DatabaseConfigModel config)
-        {
-            // Overwrite all configs
-            BulkOperation(mc =>
-            {
-                // Save and reload config
-                UpdateConfigFromModel(mc.Config, config);
-                mc.UpdateConfig();
-            }, "Save config");
-        }
-
         public void SetDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var match = GetTargetConfigurator(targetModel);

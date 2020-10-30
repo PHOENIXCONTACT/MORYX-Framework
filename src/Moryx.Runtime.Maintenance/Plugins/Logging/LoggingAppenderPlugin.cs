@@ -7,7 +7,6 @@ using System.Linq;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Modules;
-using Moryx.Runtime.Maintenance.Contracts;
 using Moryx.Threading;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Logging

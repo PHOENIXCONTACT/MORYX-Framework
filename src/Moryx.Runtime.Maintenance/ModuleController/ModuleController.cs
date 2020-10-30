@@ -8,7 +8,6 @@ using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
-using Moryx.Runtime.Maintenance.Contracts;
 using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Wcf;

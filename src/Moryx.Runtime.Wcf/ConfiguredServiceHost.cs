@@ -28,7 +28,7 @@ namespace Moryx.Runtime.Wcf
         /// Endpoint information
         /// </summary>
         private HostConfig _hostConfig;
-        private Type _type;
+        private Type _contract;
         private string _endpointAddress;
         private ServiceVersionAttribute _endpointVersion;
 
@@ -46,8 +46,9 @@ namespace Moryx.Runtime.Wcf
         /// <summary>
         /// Setup service for given config
         /// </summary>
+        /// <param name="contract">Contract type of the host</param>
         /// <param name="config">Config of component</param>
-        public void Setup<T>(HostConfig config)
+        public void Setup(Type contract, HostConfig config)
         {
             // Create base address depending on chosen binding
             string protocol;
@@ -62,9 +63,9 @@ namespace Moryx.Runtime.Wcf
             }
 
             // Create service host
-            _service = _factory.CreateServiceHost<T>();
-            _type = typeof (T);
-            _endpointVersion = _type.GetCustomAttribute<ServiceVersionAttribute>();
+            _service = _factory.CreateServiceHost(contract);
+            _contract = contract;
+            _endpointVersion = _contract.GetCustomAttribute<ServiceVersionAttribute>();
 
             // Configure host
             _service.CloseTimeout = TimeSpan.Zero;
@@ -125,7 +126,7 @@ namespace Moryx.Runtime.Wcf
 
             _endpointAddress = $"{protocol}://{_portConfig.Host}:{port}/{config.Endpoint}/";
 
-            var endpoint = _service.AddServiceEndpoint(typeof(T), binding, _endpointAddress);
+            var endpoint = _service.AddServiceEndpoint(contract, binding, _endpointAddress);
 
             // Add  behaviors
             endpoint.Behaviors.Add(new CultureBehavior());
@@ -171,7 +172,7 @@ namespace Moryx.Runtime.Wcf
             {
                 _collector.AddEndpoint(_endpointAddress, new Endpoint
                 {
-                    Service = _type.Name,
+                    Service = _contract.Name,
                     Path = _hostConfig.Endpoint,
                     Address = _endpointAddress,
                     Binding = _hostConfig.BindingType,

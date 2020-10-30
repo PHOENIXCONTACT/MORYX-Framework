@@ -6,7 +6,7 @@ using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.Tools.Wcf;
 
-namespace Moryx.Runtime.Maintenance.Contracts
+namespace Moryx.Runtime.Maintenance
 {
     /// <summary>
     /// Base configuration for a maintenance plugin.

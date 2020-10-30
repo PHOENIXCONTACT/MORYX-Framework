@@ -1,6 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+
 namespace Moryx.Tools.Wcf
 {
     /// <summary>
@@ -11,6 +13,11 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Create host instance for a wcf service
         /// </summary>
-        IConfiguredServiceHost CreateHost<T>(HostConfig config);
+        IConfiguredServiceHost CreateHost<TContract>(HostConfig config);
+
+        /// <summary>
+        /// Create host instance for a wcf service
+        /// </summary>
+        IConfiguredServiceHost CreateHost(Type contract, HostConfig config);
     }
 }

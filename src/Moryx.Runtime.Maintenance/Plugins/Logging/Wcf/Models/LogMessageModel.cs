@@ -27,12 +27,12 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
         public LogLevel LogLevel { get; set; }
 
         /// <summary>
-        /// The log message iteself.
+        /// The log message itself.
         /// </summary>
         public string Message { get; set; }
 
         /// <summary>
-        /// Time when the log message occured.
+        /// Time when the log message occurred.
         /// </summary>
         public DateTime Timestamp { get; set; }
     }

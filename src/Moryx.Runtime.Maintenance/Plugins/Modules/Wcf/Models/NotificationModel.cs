@@ -16,8 +16,8 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// Default constructor for serialization
         /// </summary>
         public NotificationModel()
-        { 
-            
+        {
+
         }
 
         /// <summary>

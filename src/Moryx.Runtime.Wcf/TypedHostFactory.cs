@@ -18,10 +18,10 @@ namespace Moryx.Runtime.Wcf
             _kernel = kernel;
         }
 
-        public ServiceHost CreateServiceHost<T>()
+        public ServiceHost CreateServiceHost(Type contract)
         {
             // Get implementation type of service
-            var handler = _kernel.GetHandler(typeof (T));
+            var handler = _kernel.GetHandler(contract);
             var compModel = handler.ComponentModel;
             return base.CreateServiceHost(compModel.Implementation, new Uri[0]);
         }

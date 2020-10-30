@@ -9,38 +9,38 @@ namespace Moryx.TestTools.SystemTest.Clients
 {
     public class LogMaintenanceWebClient : TestWebClientBase
     {
-        public LogMaintenanceWebClient(int port) : base($"http://localhost:{port}/LogMaintenance/")
+        public LogMaintenanceWebClient(int port) : base($"http://localhost:{port}/loggers/")
         {
         }
 
         public LoggerModel[] GetAllLoggers()
         {
-            return Get<LoggerModel[]>("loggers");
+            return Get<LoggerModel[]>("");
         }
 
         public Task<LoggerModel[]> GetAllLoggersAsync()
         {
-            return GetAsync<LoggerModel[]>("loggers");
+            return GetAsync<LoggerModel[]>("");
         }
 
         public InvocationResponse SetLogLevel(string loggerName, SetLogLevelRequest setLogLevelRequest)
         {
-            return PostAsJson<InvocationResponse>($"loggers/{loggerName}/loglevel", setLogLevelRequest);
+            return PutAsJson<InvocationResponse>($"logger/{loggerName}/loglevel", setLogLevelRequest);
         }
 
         public Task<InvocationResponse> SetLogLevelAsync(string loggerName, SetLogLevelRequest setLogLevelRequest)
         {
-            return PostAsJsonAsync<InvocationResponse>($"loggers/{loggerName}/loglevel", setLogLevelRequest);
+            return PutAsJsonAsync<InvocationResponse>($"logger/{loggerName}/loglevel", setLogLevelRequest);
         }
 
         public AddAppenderResponse AddAppender(AddAppenderRequest request)
         {
-            return PutAsJson<AddAppenderResponse>("appender", request);
+            return PostAsJson<AddAppenderResponse>("appender", request);
         }
 
         public Task<AddAppenderResponse> AddAppenderAsync(AddAppenderRequest request)
         {
-            return PutAsJsonAsync<AddAppenderResponse>("appender", request);
+            return PostAsJsonAsync<AddAppenderResponse>("appender", request);
         }
 
         public InvocationResponse RemoveAppender(string appenderId)

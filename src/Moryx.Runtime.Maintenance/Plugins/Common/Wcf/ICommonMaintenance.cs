@@ -13,7 +13,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
     /// </summary>
     [ServiceContract]
     [ServiceVersion("3.0.0.0")]
-    public interface ICommonMaintenance
+    internal interface ICommonMaintenance
     {
         /// <summary>
         /// Get the server time.

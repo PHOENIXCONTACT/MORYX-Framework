@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
-using Moryx.Runtime.Maintenance.Contracts;
 using Moryx.Runtime.Maintenance.Plugins.Common;
 using Moryx.Runtime.Maintenance.Plugins.Databases;
 using Moryx.Runtime.Maintenance.Plugins.Logging;

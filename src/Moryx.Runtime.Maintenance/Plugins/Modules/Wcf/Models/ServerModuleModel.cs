@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Moryx.Runtime.Modules;
-using Moryx.Serialization;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
@@ -24,7 +23,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// <summary>
         /// Name of the module.
         /// </summary>
-        public string Name { get; set; } 
+        public string Name { get; set; }
 
         /// <summary>
         /// Health state of the module. See <see cref="ServerModuleState"/> for the states.
@@ -38,7 +37,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
 
         /// <summary>
         /// The failure behavior of the module. The module will do this when an error occured. See <see cref="FailureBehaviour"/> for the behaviors.
-        /// </summary> 
+        /// </summary>
         public FailureBehaviour FailureBehaviour { get; set; }
 
         /// <summary>

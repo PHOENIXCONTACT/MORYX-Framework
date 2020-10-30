@@ -3,7 +3,6 @@
 
 using Moryx.Container;
 using Moryx.Modules;
-using Moryx.Runtime.Maintenance.Contracts;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
@@ -12,7 +11,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
     /// </summary>
     [ExpectedConfig(typeof(CommonMaintenanceConfig))]
     [Plugin(LifeCycle.Singleton, typeof(IMaintenancePlugin), Name = PluginName)]
-    public class CommonMaintenancePlugin : MaintenancePluginBase<CommonMaintenanceConfig, ICommonMaintenance>
+    internal class CommonMaintenancePlugin : MaintenancePluginBase<CommonMaintenanceConfig, ICommonMaintenance>
     {
         internal const string PluginName = "CommonMaintenance";
     }

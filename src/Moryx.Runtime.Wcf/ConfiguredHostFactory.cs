@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using Moryx.Logging;
 using Moryx.Tools.Wcf;
 
@@ -18,9 +19,14 @@ namespace Moryx.Runtime.Wcf
             _hostFactory = hostFactory;
         }
 
-        public IConfiguredServiceHost CreateHost<T>(HostConfig config)
+        public IConfiguredServiceHost CreateHost<TContract>(HostConfig config)
         {
-            return _hostFactory.CreateHost<T>(config, Factory, Logger);
+            return _hostFactory.CreateHost<TContract>(config, Factory, Logger);
+        }
+
+        public IConfiguredServiceHost CreateHost(Type contract, HostConfig config)
+        {
+            return _hostFactory.CreateHost(contract, config, Factory, Logger);
         }
     }
 }
