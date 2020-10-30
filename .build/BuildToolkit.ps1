@@ -427,9 +427,9 @@ function Invoke-PackSdkProject($CsprojItem, [bool]$IncludeSymbols = $False) {
     $packargs += "--verbosity", "$env:MORYX_NUGET_VERBOSITY";
     $packargs += "--no-build";
 
-
     if ($IncludeSymbols) {
         $packargs += "--include-symbols";
+        $packargs += "--include-source";
     }
 
     & $global:DotNetCli pack "$csprojFullName" @packargs
