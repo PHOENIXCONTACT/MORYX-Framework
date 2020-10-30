@@ -579,7 +579,7 @@ namespace Moryx.Products.IntegrationTests
                     : new ProductIdentity("321" + WatchMaterial, 5);
                 var ex = Assert.Throws<IdentityConflictException>(() =>
                 {
-                    duplicate = (WatchType)productMgr.Duplicate(watch.Id, newIdentity);
+                    duplicate = (WatchType)productMgr.Duplicate(watch, newIdentity);
                 });
                 Assert.AreEqual(crossTypeIdentifier, ex.InvalidTemplate);
                 return;
@@ -587,7 +587,7 @@ namespace Moryx.Products.IntegrationTests
 
             Assert.DoesNotThrow(() =>
             {
-                duplicate = (WatchType)productMgr.Duplicate(watch.Id,
+                duplicate = (WatchType)productMgr.Duplicate(watch,
                     new ProductIdentity("654" + WatchMaterial, 1));
             });
 

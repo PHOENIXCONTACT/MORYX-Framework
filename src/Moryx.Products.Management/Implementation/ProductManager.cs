@@ -62,10 +62,7 @@ namespace Moryx.Products.Management
 
         public IProductType LoadType(long id)
         {
-            var type = Storage.LoadType(id);
-            if (type == null)
-                throw new ProductNotFoundException(id);
-            return type;
+            return Storage.LoadType(id);
         }
 
         public IProductType LoadType(ProductIdentity identity)
@@ -83,16 +80,15 @@ namespace Moryx.Products.Management
         public IProductType CreateType(string type)
         {
             // TODO: Use type wrapper
-            var productType = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == type).First();
+            var productType = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == type).FirstOrDefault();
+            if (productType == null)
+                return null;
             var product = (ProductType)Activator.CreateInstance(productType);
             return product;
         }
 
-        public IProductType Duplicate(long sourceId, ProductIdentity newIdentity)
+        public IProductType Duplicate(ProductType duplicate, ProductIdentity newIdentity)
         {
-            // Fetch source object from db
-            var duplicate = (ProductType)Storage.LoadType(sourceId);
-
             // Fetch existing products for identity validation
             var existing = LoadTypes(new ProductQuery { Identifier = newIdentity.Identifier });
             // Check if the same revision already exists
@@ -109,7 +105,7 @@ namespace Moryx.Products.Management
 
             // Load all recipes and create clones
             // Using int.MaxValue creates a bitmask that excludes ONLY clones
-            foreach (var recipe in Storage.LoadRecipes(sourceId, RecipeClassification.Unset))
+            foreach (var recipe in Storage.LoadRecipes(duplicate.Id, RecipeClassification.Unset))
             {
                 // Clone
                 var clone = (IProductRecipe)recipe.Clone();

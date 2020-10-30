@@ -4,53 +4,69 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
+using Moryx.Logging;
 using Moryx.Serialization;
 using Moryx.Tools;
+using Moryx.Workflows;
 
 namespace Moryx.Products.Management.Modification
 {
-    [Plugin(LifeCycle.Transient, typeof(IProductInteraction))]
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerCall, AddressFilterMode = AddressFilterMode.Any)]
-    internal class ProductInteraction : IProductInteraction
+    [Plugin(LifeCycle.Singleton, typeof(IProductInteraction))]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single, AddressFilterMode = AddressFilterMode.Any)]
+    internal class ProductInteraction : IProductInteraction, ILoggingComponent
     {
         #region Dependencies
 
         public ModuleConfig Config { get; set; }
 
-        public IProductConverterFactory ConverterFactory { get; set; }
+        public IProductManager ProductManager { get; set; }
 
-        public IProductManager Manager { get; set; }
+        public IRecipeManagement RecipeManagement { get; set; }
+
+        public IWorkplans WorkplanManagement { get; set; }
+
+        public IProductConverter Converter { get; set; }
+
+        public IModuleLogger Logger { get; set; }
 
         #endregion
 
         public ProductCustomization GetCustomization()
         {
-            return new ProductCustomization
+            return ExecuteCall<ProductCustomization>(delegate
             {
-                ProductTypes = ReflectionTool.GetPublicClasses<ProductType>(new IsConfiguredFilter(Config.TypeStrategies).IsConfigured)
-                    .Select(pt => new ProductDefinitionModel
-                    {
-                        Name = pt.Name,
-                        DisplayName = pt.GetDisplayName() ?? pt.Name,
-                        BaseDefinition = pt.BaseType?.Name
-                    }).ToArray(),
-                RecipeTypes = ReflectionTool.GetPublicClasses<IProductRecipe>(new IsConfiguredFilter(Config.RecipeStrategies).IsConfigured)
-                    .Select(rt => new RecipeDefinitionModel
-                    {
-                        Name = rt.Name,
-                        DisplayName = rt.GetDisplayName() ?? rt.Name,
-                        HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(rt)
-                    }).ToArray(),
-                Importers = Manager.Importers.Select(i => new ProductImporter
+                return new ProductCustomization
                 {
-                    Name = i.Name,
-                    Parameters = ConvertParameters(i.Parameters)
-                }).ToArray()
-            };
+                    ProductTypes = ReflectionTool
+                        .GetPublicClasses<ProductType>(new IsConfiguredFilter(Config.TypeStrategies).IsConfigured)
+                        .Select(pt => new ProductDefinitionModel
+                        {
+                            Name = pt.Name,
+                            DisplayName = pt.GetDisplayName() ?? pt.Name,
+                            BaseDefinition = pt.BaseType?.Name
+                        }).ToArray(),
+                    RecipeTypes = ReflectionTool
+                        .GetPublicClasses<IProductRecipe>(new IsConfiguredFilter(Config.RecipeStrategies).IsConfigured)
+                        .Select(rt => new RecipeDefinitionModel
+                        {
+                            Name = rt.Name,
+                            DisplayName = rt.GetDisplayName() ?? rt.Name,
+                            HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(rt)
+                        }).ToArray(),
+                    Importers = ProductManager.Importers.Select(i => new ProductImporter
+                    {
+                        Name = i.Name,
+                        Parameters = ConvertParameters(i.Parameters)
+                    }).ToArray()
+                };
+            });
         }
 
         private class IsConfiguredFilter
@@ -73,57 +89,117 @@ namespace Moryx.Products.Management.Modification
 
         public Entry UpdateParameters(string importer, Entry importParameters)
         {
-            var parameters = ConvertParametersBack(importer, importParameters, true);
-            return ConvertParameters(parameters);
+            return ExecuteCall(delegate
+            {
+                var parameters = ConvertParametersBack(importer, importParameters, true);
+                if (parameters == null)
+                    return RequestResult<Entry>.NotFound($"Importer '{importer}' not found!");
+                return ConvertParameters(parameters);
+            });
         }
 
         private IImportParameters ConvertParametersBack(string importerName, Entry currentParameters, bool updateFirst = false)
         {
-            var importer = Manager.Importers.First(i => i.Name == importerName);
+            var importer = ProductManager.Importers.FirstOrDefault(i => i.Name == importerName);
+            if (importer == null)
+                return null;
+
             var parameters = (IImportParameters)EntryConvert.UpdateInstance(importer.Parameters, currentParameters);
             if (updateFirst)
                 parameters = importer.Update(parameters);
+
             return parameters;
         }
 
         public ProductModel[] GetProducts(ProductQuery query)
         {
-            return UseConverter(c => c.GetTypes(query));
+            return ExecuteCall<ProductModel[]>(delegate
+            {
+                var products = ProductManager.LoadTypes(query);
+                return products.Select(p => Converter.ConvertProduct(p, true)).ToArray();
+            });
         }
 
         public ProductModel CreateProduct(string type)
         {
-            return UseConverter(c => c.Create(type));
+            return ExecuteCall(delegate
+            {
+                var product = ProductManager.CreateType(type);
+                if (product == null)
+                    return RequestResult<ProductModel>.NotFound($"Product type '{type}' not found!");
+                return Converter.ConvertProduct(product, true);
+            });
         }
 
         public ProductModel GetProductDetails(string idString)
         {
-            var id = long.Parse(idString);
-            return UseConverter(c => c.GetProduct(id));
+            return ExecuteCall(delegate
+            {
+                IProductType product;
+                if (long.TryParse(idString, out var id) && (product = ProductManager.LoadType(id)) != null)
+                    return Converter.ConvertProduct(product, false);
+                return RequestResult<ProductModel>.NotFound($"Product type '{idString}' not found!");
+            });
         }
 
         public ProductModel SaveProduct(string idString, ProductModel instance)
         {
-            instance.Id = long.Parse(idString);
-            return UseConverter(c => c.Save(instance));
+            return ExecuteCall(delegate
+            {
+                IProductType product;
+                if (!long.TryParse(idString, out var id) || (product = ProductManager.LoadType(id)) == null)
+                    return RequestResult<ProductModel>.NotFound($"Product type '{idString}' not found!");
+
+                Converter.ConvertProductBack(instance, (ProductType)product);
+                ProductManager.SaveType(product);
+                return Converter.ConvertProduct(product, false);
+            });
         }
 
-        public DuplicateProductResponse DuplicateProduct(string idString, ProductModel product)
+        public DuplicateProductResponse DuplicateProduct(string idString, ProductModel productModel)
         {
-            var sourceId = long.Parse(idString);
-            return UseConverter(c => c.Duplicate(sourceId, product.Identifier, product.Revision));
+            return ExecuteCall(delegate
+            {
+                var response = new DuplicateProductResponse();
+                try
+                {
+                    IProductType product;
+                    if (!long.TryParse(idString, out var id) || (product = ProductManager.LoadType(id)) == null)
+                        return RequestResult<DuplicateProductResponse>.NotFound($"Source product type '{idString}' not found!");
+
+                    var duplicate = ProductManager.Duplicate((ProductType)product, new ProductIdentity(productModel.Identifier, productModel.Revision));
+                    response.Duplicate = Converter.ConvertProduct(duplicate, false);
+                }
+                catch (IdentityConflictException e)
+                {
+                    response.IdentityConflict = true;
+                    response.InvalidSource = e.InvalidTemplate;
+                }
+
+                return response;
+            });
         }
 
         public ProductModel ImportProduct(string importer, Entry importParameters)
         {
-            var parameters = ConvertParametersBack(importer, importParameters);
-            return UseConverter(c => c.ImportProduct(importer, parameters));
+            return ExecuteCall(delegate
+            {
+                var parameters = ConvertParametersBack(importer, importParameters, true);
+                if (parameters == null)
+                    return RequestResult<ProductModel>.NotFound($"Importer '{importer}' not found!");
+
+                var products = ProductManager.ImportTypes(importer, parameters);
+                return Converter.ConvertProduct(products[0], false);
+            });
         }
 
         public bool DeleteProduct(string idString)
         {
-            var id = long.Parse(idString);
-            return UseConverter(c => c.DeleteProduct(id));
+            return ExecuteCall<bool>(delegate
+            {
+                var id = long.Parse(idString);
+                return ProductManager.DeleteType(id);
+            });
         }
 
         public string GetRecipeProviderName()
@@ -133,43 +209,126 @@ namespace Moryx.Products.Management.Modification
 
         public RecipeModel GetRecipe(string idString)
         {
-            var recipeId = long.Parse(idString);
-            return UseConverter(c => c.GetRecipe(recipeId));
+            return ExecuteCall(delegate
+            {
+                IProductRecipe product;
+                if (long.TryParse(idString, out var id) && (product = RecipeManagement.Get(id)) != null)
+                    return Converter.ConvertRecipe(product);
+                return RequestResult<RecipeModel>.NotFound($"Recipe '{idString}' not found!");
+            });
         }
 
         public RecipeModel[] GetRecipes(string idString)
         {
-            var productId = long.Parse(idString);
-            return UseConverter(c => c.GetRecipes(productId));
+            
+            return ExecuteCall(delegate
+            {
+                IProductType product;
+                if (long.TryParse(idString, out var id) && (product = ProductManager.LoadType(id)) != null)
+                    return RecipeManagement.GetAllByProduct(product).Select(Converter.ConvertRecipe).ToArray();
+                return RequestResult<RecipeModel[]>.NotFound($"Product type '{idString}' not found!");
+            });
         }
 
         public RecipeModel CreateRecipe(string recipeType)
         {
-            return UseConverter(c => c.CreateRecipe(recipeType));
+            return ExecuteCall(delegate
+            {
+                // TODO: Use type wrapper
+                var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipeType).FirstOrDefault();
+                if (type == null)
+                    return RequestResult<RecipeModel>.NotFound($"Recipe type {recipeType} not found!");
+                var recipe = (IProductRecipe) Activator.CreateInstance(type);
+                return Converter.ConvertRecipe(recipe);
+            });
         }
 
-        public RecipeModel SaveRecipe(RecipeModel recipe)
+        public RecipeModel SaveRecipe(RecipeModel recipeModel)
         {
-            return UseConverter(c => c.SaveRecipe(recipe));
+            return ExecuteCall(delegate
+            {
+                var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipeModel.Type)
+                    .FirstOrDefault();
+                if (type == null)
+                    return RequestResult<RecipeModel>.NotFound($"Recipe type {recipeModel.Type} not found!");
+                var productRecipe = (IProductRecipe) Activator.CreateInstance(type);
+
+                var productionRecipe = Converter.ConvertRecipeBack(recipeModel, productRecipe, null);
+                var savedId = RecipeManagement.Save(productionRecipe);
+                recipeModel.Id = savedId;
+
+                return recipeModel;
+            });
         }
 
-        public RecipeModel UpdateRecipe(string idString, RecipeModel recipe)
+        public RecipeModel UpdateRecipe(string idString, RecipeModel recipeModel)
         {
-            recipe.Id = long.Parse(idString);
-            return UseConverter(c => c.SaveRecipe(recipe));
+            return ExecuteCall(delegate
+            {
+                IProductRecipe productRecipe;
+                if (!long.TryParse(idString, out var id) || (productRecipe = RecipeManagement.Get(id)) == null)
+                    return RequestResult<RecipeModel>.NotFound($"Recipe {idString} not found!");
+
+                var productionRecipe = Converter.ConvertRecipeBack(recipeModel, productRecipe, null);
+                var savedId = RecipeManagement.Save(productionRecipe);
+                recipeModel.Id = savedId;
+
+                return recipeModel;
+            });
         }
 
         public WorkplanModel[] GetWorkplans()
         {
-            return UseConverter(c => c.GetWorkplans());
+            return ExecuteCall<WorkplanModel[]>(delegate
+            {
+                var workplans = WorkplanManagement.LoadAllWorkplans();
+                return workplans.Select(Converter.ConvertWorkplan).ToArray();
+            });
         }
 
-        private TResult UseConverter<TResult>(Func<IProductConverter, TResult> call)
+        // TODO: Duplicate between resource and product service
+        private T ExecuteCall<T>(Func<RequestResult<T>> request, [CallerMemberName]string method = "Unknown")
         {
-            var converter = ConverterFactory.Create();
-            var converted = call(converter);
-            ConverterFactory.Destroy(converter);
-            return converted;
+            try
+            {
+                var result = request();
+                if (result.AlternativeStatusCode.HasValue)
+                {
+                    Logger.Log(LogLevel.Error, result.ErrorLog);
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = result.AlternativeStatusCode.Value;
+                    return default;
+                }
+                return result.Response;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(LogLevel.Error, ex, "Exception during '{0}'", method);
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+                return default;
+            }
+        }
+
+        private class RequestResult<T>
+        {
+            public T Response { get; set; }
+
+            public string ErrorLog { get; set; }
+
+            public HttpStatusCode? AlternativeStatusCode { get; set; }
+
+            public static implicit operator RequestResult<T>(T response)
+            {
+                return new RequestResult<T> { Response = response };
+            }
+
+            public static RequestResult<T> NotFound(string msg)
+            {
+                return new RequestResult<T>
+                {
+                    ErrorLog = msg,
+                    AlternativeStatusCode = HttpStatusCode.NotFound
+                };
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management.Modification
 {
-    [Component(LifeCycle.Transient, typeof(IProductConverter))]
+    [Component(LifeCycle.Singleton, typeof(IProductConverter))]
     internal class ProductConverter : IProductConverter
     {
         #region Dependency Injection
@@ -39,89 +39,8 @@ namespace Moryx.Products.Management.Modification
         #endregion
 
         #region To Model
-
-        public ProductModel[] GetTypes(ProductQuery query)
-        {
-            var products = ProductManager.LoadTypes(query);
-            return products.Select(p => ConvertProduct(p, true)).ToArray();
-        }
-
-        public ProductModel Create(string type)
-        {
-            var product = ProductManager.CreateType(type);
-            return ConvertProduct(product, true);
-        }
-
-        public ProductModel GetProduct(long id)
-        {
-            var product = ProductManager.LoadType(id);
-            return ConvertProduct(product, false);
-        }
-
-        public DuplicateProductResponse Duplicate(long id, string identifier, short revisionNo)
-        {
-            var response = new DuplicateProductResponse();
-            try
-            {
-                var duplicate = ProductManager.Duplicate(id, new ProductIdentity(identifier, revisionNo));
-                response.Duplicate = ConvertProduct(duplicate, false);
-            }
-            catch (IdentityConflictException e)
-            {
-                response.IdentityConflict = true;
-                response.InvalidSource = e.InvalidTemplate;
-            }
-
-            return response;
-        }
-
-        public ProductModel ImportProduct(string importerName, IImportParameters parameters)
-        {
-            var products = ProductManager.ImportTypes(importerName, parameters);
-            return ConvertProduct(products[0], false);
-        }
-
-        public bool DeleteProduct(long id)
-        {
-            return ProductManager.DeleteType(id);
-        }
-
-        public RecipeModel GetRecipe(long recipeId)
-        {
-            var recipe = RecipeManagement.Get(recipeId);
-            return ConvertRecipe(recipe);
-        }
-
-        public RecipeModel[] GetRecipes(long productId)
-        {
-            var product = ProductManager.LoadType(productId);
-            return RecipeManagement.GetAllByProduct(product).Select(ConvertRecipe).ToArray();
-        }
-
-        public RecipeModel CreateRecipe(string recipeType)
-        {
-            // TODO: Use type wrapper
-            var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipeType).First();
-            var recipe = (IProductRecipe) Activator.CreateInstance(type);
-            return ConvertRecipe(recipe);
-        }
-
-        public RecipeModel SaveRecipe(RecipeModel recipe)
-        {
-            var productionRecipe = ConvertRecipeBack(recipe, null);
-            var savedId = RecipeManagement.Save(productionRecipe);
-            recipe.Id = savedId;
-
-            return recipe;
-        }
-
-        public WorkplanModel[] GetWorkplans()
-        {
-            var workplans = WorkplanManagement.LoadAllWorkplans();
-            return workplans.Select(ConvertWorkplan).ToArray();
-        }
-
-        private ProductModel ConvertProduct(IProductType productType, bool flat)
+        
+        public ProductModel ConvertProduct(IProductType productType, bool flat)
         {
             // Base object
             var identity = (ProductIdentity)productType.Identity ?? EmptyIdentity;
@@ -225,7 +144,7 @@ namespace Moryx.Products.Management.Modification
             return prodType.Name;
         }
 
-        private static RecipeModel ConvertRecipe(IRecipe recipe)
+        public RecipeModel ConvertRecipe(IRecipe recipe)
         {
             // Transform to DTO and transmit
             var converted = new RecipeModel
@@ -264,7 +183,7 @@ namespace Moryx.Products.Management.Modification
             return converted;
         }
 
-        private static WorkplanModel ConvertWorkplan(IWorkplan workplan)
+        public WorkplanModel ConvertWorkplan(IWorkplan workplan)
         {
             var workplanDto = new WorkplanModel
             {
@@ -281,25 +200,8 @@ namespace Moryx.Products.Management.Modification
 
         #region Convert back
 
-        public ProductModel Save(ProductModel productModel)
+        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, IProductType productType)
         {
-            var product = ConvertProductBack(productModel);
-            ProductManager.SaveType(product);
-
-            return ConvertProduct(product, false);
-        }
-
-        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductType productType)
-        {
-            IProductRecipe productRecipe;
-            if (recipe.Id == 0)
-            {
-                var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipe.Type).First();
-                productRecipe = (IProductRecipe)Activator.CreateInstance(type);
-            }
-            else
-                productRecipe = RecipeManagement.Get(recipe.Id);
-
             productRecipe.Name = recipe.Name;
             productRecipe.Revision = recipe.Revision;
             productRecipe.State = recipe.State;
@@ -339,31 +241,25 @@ namespace Moryx.Products.Management.Modification
             return productRecipe;
         }
 
-        private IProductType ConvertProductBack(ProductModel product)
+        public IProductType ConvertProductBack(ProductModel source, ProductType converted)
         {
-            // Fetch instance and copy base values
-            ProductType converted;
-            if (product.Id == 0)
-                converted = (ProductType)ProductManager.CreateType(product.Type);
-            else
-                converted = (ProductType)ProductManager.LoadType(product.Id);
-
-            converted.Identity = new ProductIdentity(product.Identifier, product.Revision);
-            converted.Name = product.Name;
-            converted.State = product.State;
+            // Copy base values
+            converted.Identity = new ProductIdentity(source.Identifier, source.Revision);
+            converted.Name = source.Name;
+            converted.State = source.State;
 
             // Copy extended properties
             var properties = converted.GetType().GetProperties();
-            EntryConvert.UpdateInstance(converted, product.Properties, ProductSerialization);
+            EntryConvert.UpdateInstance(converted, source.Properties, ProductSerialization);
 
-            ConvertFilesBack(converted, product, properties);
+            ConvertFilesBack(converted, source, properties);
 
             // Save recipes
-            var recipes = product.Recipes.Select(r => ConvertRecipeBack(r, converted)).ToList();
-            RecipeManagement.Save(product.Id, recipes);
+            var recipes = source.Recipes.Select(r => ConvertRecipeBack(r, RecipeManagement.Get(r.Id), converted)).ToList();
+            RecipeManagement.Save(source.Id, recipes);
 
             // Convert parts
-            foreach (var partConnector in product.Parts)
+            foreach (var partConnector in source.Parts)
             {
                 var prop = properties.First(p => p.Name == partConnector.Name);
                 var value = prop.GetValue(converted);

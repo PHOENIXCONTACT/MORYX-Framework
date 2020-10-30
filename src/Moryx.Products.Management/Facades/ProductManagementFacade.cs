@@ -52,7 +52,10 @@ namespace Moryx.Products.Management
         public IProductType LoadType(long id)
         {
             ValidateHealthState();
-            return ProductManager.LoadType(id);
+            var type = ProductManager.LoadType(id);
+            if (type == null)
+                throw new ProductNotFoundException(id);
+            return type;
         }
 
         public IProductType LoadType(ProductIdentity identity)
@@ -70,7 +73,7 @@ namespace Moryx.Products.Management
         public IProductType Duplicate(IProductType template, ProductIdentity newIdentity)
         {
             ValidateHealthState();
-            return ProductManager.Duplicate(template.Id, newIdentity);
+            return ProductManager.Duplicate((ProductType)template, newIdentity);
         }
 
         public long SaveType(IProductType modifiedInstance)
