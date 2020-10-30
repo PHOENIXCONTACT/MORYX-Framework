@@ -50,7 +50,7 @@ if ($GenerateDocs) {
 }
 
 if ($Pack) {
-    Invoke-PackAll -Symbols
+    Invoke-PackAll
 }
 
 if ($Publish) {
