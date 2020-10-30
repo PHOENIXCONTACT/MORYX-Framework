@@ -3,7 +3,6 @@
 
 using Moryx.Container;
 using Moryx.Modules;
-using Moryx.Runtime.Maintenance.Contracts;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
@@ -12,7 +11,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
     /// </summary>
     [ExpectedConfig(typeof(DatabaseConfig))]
     [Plugin(LifeCycle.Singleton, typeof(IMaintenancePlugin), Name = ComponentName)]
-    public class DatabasePlugin : MaintenancePluginBase<DatabaseConfig, IDatabaseMaintenance>
+    internal class DatabasePlugin : MaintenancePluginBase<DatabaseConfig, IDatabaseMaintenance>
     {
         /// <summary>
         /// Name of the plugin.
@@ -20,12 +19,12 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         public const string ComponentName = "DatabaseConfig";
 
         /// <summary>
-        /// Maintenacne model. Injected by castle.
+        /// Maintenance model. Injected by castle.
         /// </summary>
         public IDatabaseMaintenance ModelMaintenance { get; set; }
 
         /// <summary>
-        /// initialize the database plugin. 
+        /// initialize the database plugin.
         /// </summary>
         /// <param name="config">The database maintenance config.</param>
         public override void Initialize(MaintenancePluginConfig config)

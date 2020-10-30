@@ -6,7 +6,7 @@ using Moryx.Runtime.Maintenance.Plugins.Modules;
 namespace Moryx.TestTools.SystemTest
 {
     /// <summary>
-    /// Helper to modify the configutration servermodul
+    /// Helper to modify the configuration ServerModule
     /// </summary>
     public class ModuleConfigurator
     {
@@ -22,7 +22,7 @@ namespace Moryx.TestTools.SystemTest
         }
 
         /// <summary>
-        /// Gets the "trunk" servermodul configuration.
+        /// Gets the "trunk" ServerModule configuration.
         /// </summary>
         /// <param name="serviceName">Name of the service.</param>
         /// <returns>the "trunk" configuration</returns>

@@ -4,7 +4,7 @@
 using System;
 using Moryx.Modules;
 
-namespace Moryx.Runtime.Maintenance.Contracts
+namespace Moryx.Runtime.Maintenance
 {
     /// <summary>
     /// Interface for the maintenance plugin.

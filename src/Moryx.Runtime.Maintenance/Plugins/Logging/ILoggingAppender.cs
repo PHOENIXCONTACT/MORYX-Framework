@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Moryx.Logging;
-using Moryx.Runtime.Maintenance.Contracts;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {

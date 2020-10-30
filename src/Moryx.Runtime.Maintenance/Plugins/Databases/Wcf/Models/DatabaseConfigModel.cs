@@ -9,7 +9,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
     public class DatabaseConfigModel
     {
         /// <summary>
-        /// Databse server
+        /// Database server
         /// </summary>
         public string Server { get; set; }
 
@@ -24,7 +24,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         public string Database { get; set; }
 
         /// <summary>
-        /// Databse user
+        /// Database user
         /// </summary>
         public string User { get; set; }
 

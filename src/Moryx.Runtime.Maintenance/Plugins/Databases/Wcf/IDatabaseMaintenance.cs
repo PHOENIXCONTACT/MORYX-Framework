@@ -4,7 +4,6 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Moryx.Model;
 using Moryx.Model.Configuration;
 using Moryx.Tools.Wcf;
 using Moryx.Web;
@@ -16,7 +15,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
     /// </summary>
     [ServiceContract]
     [ServiceVersion("3.0.0.0")]
-    public interface IDatabaseMaintenance
+    internal interface IDatabaseMaintenance
     {
         /// <summary>
         /// Get all database configs

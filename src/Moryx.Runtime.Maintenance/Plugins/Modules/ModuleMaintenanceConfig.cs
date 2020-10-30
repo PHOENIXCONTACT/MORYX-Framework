@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Runtime.Maintenance.Contracts;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Modules
@@ -15,7 +14,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             ProvidedEndpoint = new HostConfig
             {
                 BindingType = ServiceBindingType.WebHttp,
-                Endpoint = "ModuleMaintenance",
+                Endpoint = "modules",
                 MetadataEnabled = true
             };
         }

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Runtime.Maintenance.Contracts;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Common
@@ -11,7 +10,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
     /// Configuration for the common maintenance plugin.
     /// </summary>
     [DataContract]
-    public class CommonMaintenanceConfig : MaintenancePluginConfig
+    internal class CommonMaintenanceConfig : MaintenancePluginConfig
     {
         /// <summary>
         /// The name of the plugin.
@@ -23,9 +22,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         /// </summary>
         public CommonMaintenanceConfig()
         {
-            ProvidedEndpoint = new HostConfig()
+            ProvidedEndpoint = new HostConfig
             {
-                Endpoint = "CommonMaintenance",
+                Endpoint = "common",
                 BindingType = ServiceBindingType.WebHttp,
             };
         }

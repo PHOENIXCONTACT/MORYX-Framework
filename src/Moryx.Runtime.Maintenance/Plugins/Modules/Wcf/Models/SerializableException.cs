@@ -14,14 +14,14 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         /// Default constructor for serialization
         /// </summary>
         public SerializableException()
-        { 
-            
+        {
+
         }
 
         /// <summary>
-        /// Constructor for the serializable exception with the occured exception.
+        /// Constructor for the serializable exception with the occurred exception.
         /// </summary>
-        /// <param name="e">The exception which occured.</param>
+        /// <param name="e">The exception which occurred.</param>
         public SerializableException(Exception e)
         {
             ExceptionTypeName = e.GetType().Name;

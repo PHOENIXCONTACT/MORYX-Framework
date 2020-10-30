@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         public DatabaseConfigModel Config { get; set; }
 
         /// <summary>
-        /// Setup to be exectued
+        /// Setup to be executed
         /// </summary>
         public SetupModel Setup { get; set; }
     }

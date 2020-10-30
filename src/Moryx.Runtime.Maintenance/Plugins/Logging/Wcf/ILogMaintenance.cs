@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
     /// </summary>
     [ServiceContract]
     [ServiceVersion("3.0.0")]
-    public interface ILogMaintenance
+    internal interface ILogMaintenance
     {
         /// <summary>
         /// Get all plugin logger.
