@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
@@ -60,7 +61,19 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Import the given file as a product to the database
         /// </summary>
-        IReadOnlyList<IProductType> ImportTypes(string importer, IImportParameters parameters);
+        Task<ProductImportResult> Import(string importer, object parameters);
+
+        /// <summary>
+        /// Import GUID based
+        /// </summary>
+        ImportState ImportParallel(string importer, object parameters);
+
+        /// <summary>
+        /// Fetch import progress
+        /// </summary>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        ImportState ImportProgress(Guid session);
 
         /// <summary>
         /// Try to delete a product. If it is still used as a part in other products, it will return <c>false</c>

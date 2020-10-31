@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Products.Management.Importers;
 
@@ -13,22 +14,23 @@ namespace Moryx.Products.Management
     /// <typeparam name="TParameters">Type of the exchanged parameters object</typeparam>
     public abstract class ProductImporterBase<TConfig, TParameters> : IProductImporter
         where TConfig : ProductImporterConfig
-        where TParameters : IImportParameters, new()
+        where TParameters : new()
     {
         /// <summary>
         /// Config of this importer
         /// </summary>
         protected TConfig Config { get; private set; }
-
-        /// <summary>
-        /// Name of the importer
-        /// </summary>
+        
+        /// <inheritdoc />
         public string Name => Config.PluginName;
 
+        /// <inheritdoc />
+        public virtual bool LongRunning => false;
+
         /// <summary>
-        /// Get the parameters of this importer
+        /// Parameters of this importer
         /// </summary>
-        public IImportParameters Parameters { get; private set; }
+        public object Parameters { get; private set; }
 
         /// <summary>
         /// Initialize this component with its config
@@ -63,9 +65,9 @@ namespace Moryx.Products.Management
         }
 
         /// <summary>
-        /// Generate a new instance of <see cref="IImportParameters"/>
+        /// Generate a new instance of parameters
         /// </summary>
-        protected virtual IImportParameters GenerateParameters()
+        protected virtual object GenerateParameters()
         {
             return new TParameters();
         }
@@ -73,7 +75,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Update parameters based on partial input
         /// </summary>
-        IImportParameters IProductImporter.Update(IImportParameters currentParameters)
+        object IProductImporter.Update(object currentParameters)
         {
             return Update((TParameters) currentParameters);
         }
@@ -89,16 +91,16 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Import products using given parameters
         /// </summary>
-        IProductType[] IProductImporter.Import(IImportParameters parameters)
+        Task<ProductImporterResult> IProductImporter.Import(ProductImportContext context, object parameters)
         {
-            var products = Import((TParameters) parameters);
+            var result = Import((TParameters) parameters);
             Parameters = GenerateParameters();
-            return products;
+            return result;
         }
 
         /// <summary>
         /// Import products using typed parameters
         /// </summary>
-        protected abstract IProductType[] Import(TParameters parameters);
+        protected abstract Task<ProductImporterResult> Import(TParameters parameters);
     }
 }

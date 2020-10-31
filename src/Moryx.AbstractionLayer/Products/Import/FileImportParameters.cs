@@ -3,16 +3,14 @@
 
 using System;
 using System.IO;
-using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Products;
 using static System.IO.File;
 
-namespace Moryx.Products.Management
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Base parameters for a file import
     /// </summary>
-    public class FileImportParameters : IFileImportParameters
+    public class FileImportParameters
     {
         /// <summary>
         /// File extension of the file

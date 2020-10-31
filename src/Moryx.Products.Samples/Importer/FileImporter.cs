@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.IO;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
@@ -19,7 +20,7 @@ namespace Moryx.Products.Samples
         /// Method to generate an instance of the parameter array
         /// </summary>
         /// <returns></returns>
-        protected override IImportParameters GenerateParameters()
+        protected override object GenerateParameters()
         {
             return new FileImportParameters { FileExtension = ".mjb" };
         }
@@ -27,7 +28,7 @@ namespace Moryx.Products.Samples
         /// <summary>
         /// Import a product using given parameters
         /// </summary>
-        protected override IProductType[] Import(FileImportParameters parameters)
+        protected override Task<ProductImporterResult> Import(FileImportParameters parameters)
         {
             using (var stream = parameters.ReadFile())
             {
@@ -36,14 +37,17 @@ namespace Moryx.Products.Samples
                 var revision = short.Parse(textReader.ReadLine() ?? "0");
                 var name = textReader.ReadLine();
 
-                return new IProductType[]
+                return Task.FromResult(new ProductImporterResult
                 {
-                    new NeedleType
+                    ImportedTypes = new ProductType[]
                     {
-                        Name = name,
-                        Identity = new ProductIdentity(identifier, revision)
+                        new NeedleType
+                        {
+                            Name = name,
+                            Identity = new ProductIdentity(identifier, revision)
+                        }
                     }
-                };
+                });
             }
         }
     }
