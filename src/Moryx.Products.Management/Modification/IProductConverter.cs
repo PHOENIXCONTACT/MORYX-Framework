@@ -3,33 +3,21 @@
 
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Workflows;
 
 namespace Moryx.Products.Management.Modification
 {
     internal interface IProductConverter
     {
-        ProductModel[] GetTypes(ProductQuery query);
+        ProductModel ConvertProduct(IProductType productType, bool flat);
 
-        ProductModel Create(string type);
+        IProductType ConvertProductBack(ProductModel source, ProductType target);
 
-        ProductModel GetProduct(long id);
+        RecipeModel ConvertRecipe(IRecipe recipe);
 
-        DuplicateProductResponse Duplicate(long id, string identifier, short revisionNo);
+        IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, IProductType productType);
 
-        ProductModel ImportProduct(string importerName, IImportParameters parameters);
-
-        bool DeleteProduct(long id);
-
-        ProductModel Save(ProductModel product);
-
-        RecipeModel GetRecipe(long recipeId);
-
-        RecipeModel[] GetRecipes(long productId);
-
-        RecipeModel CreateRecipe(string recipeType);
-
-        RecipeModel SaveRecipe(RecipeModel recipe);
-
-        WorkplanModel[] GetWorkplans();
+        WorkplanModel ConvertWorkplan(IWorkplan workplan);
     }
 }

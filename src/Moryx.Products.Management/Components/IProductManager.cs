@@ -55,7 +55,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Create revision of this product with provided revision number
         /// </summary>
-        IProductType Duplicate(long sourceId, ProductIdentity identity);
+        IProductType Duplicate(ProductType source, ProductIdentity identity);
 
         /// <summary>
         /// Import the given file as a product to the database

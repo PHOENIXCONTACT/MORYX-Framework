@@ -129,7 +129,7 @@ namespace Moryx.Products.Management.Modification
         [WebInvoke(UriTemplate = "recipe", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        RecipeModel SaveRecipe(RecipeModel recipe);
+        RecipeModel SaveRecipe(RecipeModel recipeModel);
 
         /// <summary>
         /// Saves a recipe

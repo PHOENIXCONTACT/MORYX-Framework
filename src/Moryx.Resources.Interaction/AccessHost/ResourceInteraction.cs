@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
+using Moryx.Logging;
 using Moryx.Resources.Interaction.Converter;
 using Moryx.Serialization;
 using Moryx.Tools;
@@ -19,7 +21,7 @@ namespace Moryx.Resources.Interaction
     /// <seealso cref="IResourceInteraction"/>
     [Plugin(LifeCycle.Singleton, typeof(IResourceInteraction))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, IncludeExceptionDetailInFaults = true)]
-    internal class ResourceInteraction : IResourceInteraction
+    internal class ResourceInteraction : IResourceInteraction, ILoggingComponent
     {
         #region Dependency Injection
 
@@ -38,49 +40,74 @@ namespace Moryx.Resources.Interaction
         /// </summary>
         public IResourceTypeTree TypeTree { get; set; }
 
+        /// <summary>
+        /// Logger for execution exceptions
+        /// </summary>
+        public IModuleLogger Logger { get; set; }
+
         #endregion
 
         /// <inheritdoc />
         public ResourceTypeModel GetTypeTree()
         {
-            var converter = new ResourceToModelConverter(TypeTree, Serialization);
-            return converter.ConvertType(TypeTree.RootType);
+            return ExecuteCall<ResourceTypeModel>(delegate
+            {
+                var converter = new ResourceToModelConverter(TypeTree, Serialization);
+                return converter.ConvertType(TypeTree.RootType);
+            });
         }
 
         /// <inheritdoc />
         public ResourceModel[] GetResources(ResourceQuery query)
         {
-            var filter = new ResourceQueryFilter(query, TypeTree);
-            var resources = Graph.GetResources<Resource>(filter.Match).ToArray();
+            return ExecuteCall<ResourceModel[]>(delegate
+            {
+                var filter = new ResourceQueryFilter(query, TypeTree);
+                var resources = Graph.GetResources<Resource>(filter.Match).ToArray();
 
-            var converter = new ResourceQueryConverter(TypeTree, Serialization, query);
-            return converter.QueryConversion(resources);
+                var converter = new ResourceQueryConverter(TypeTree, Serialization, query);
+                return converter.QueryConversion(resources);
+            });
         }
 
         /// <inheritdoc />
         public ResourceModel GetDetails(string idString)
         {
-            var id = long.Parse(idString);
-            var converter = new ResourceToModelConverter(TypeTree, Serialization);
-            var resource = Graph.Get(id);
-            return converter.GetDetails(resource);
+            return ExecuteCall(delegate
+            {
+                var id = long.Parse(idString);
+                var converter = new ResourceToModelConverter(TypeTree, Serialization);
+                var resource = Graph.Get(id);
+                if (resource == null)
+                    return RequestResult<ResourceModel>.NotFound($"Resource '{idString} not found!");
+                return converter.GetDetails(resource);
+            });
         }
 
         /// <inheritdoc />
         public ResourceModel[] GetDetailsBatch(string idString)
         {
-            var ids = idString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(long.Parse);
-            var converter = new ResourceToModelConverter(TypeTree, Serialization);
-            return ids.Select(Graph.Get).Select(converter.GetDetails).ToArray();
+            return ExecuteCall<ResourceModel[]>(delegate
+            {
+                var ids = idString.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(long.Parse);
+                var converter = new ResourceToModelConverter(TypeTree, Serialization);
+                return ids.Select(Graph.Get).Where(r => r != null).Select(converter.GetDetails).ToArray();
+            });
         }
 
         /// <inheritdoc />
         public Entry InvokeMethod(string idString, string name, Entry parameters)
         {
-            var id = long.Parse(idString);
-            var resource = Graph.Get(id);
-            return EntryConvert.InvokeMethod(resource.Descriptor, new MethodEntry { Name = name, Parameters = parameters }, Serialization);
+            return ExecuteCall<Entry>(delegate
+            {
+                var id = long.Parse(idString);
+                var resource = Graph.Get(id);
+                if (resource == null)
+                    return RequestResult<Entry>.NotFound($"Resource '{idString} not found!");
+
+                return EntryConvert.InvokeMethod(resource.Descriptor, new MethodEntry {Name = name, Parameters = parameters}, Serialization);
+            });
         }
 
         /// <inheritdoc />
@@ -97,56 +124,77 @@ namespace Moryx.Resources.Interaction
 
         private ResourceModel Construct(string type, MethodEntry method)
         {
-            var converter = new ResourceToModelConverter(TypeTree, Serialization);
+            return ExecuteCall<ResourceModel>(delegate
+            {
+                var converter = new ResourceToModelConverter(TypeTree, Serialization);
 
-            var resource = Graph.Instantiate(type);
-            if (method != null)
-                EntryConvert.InvokeMethod(resource, method, Serialization);
+                var resource = Graph.Instantiate(type);
+                if (method != null)
+                    EntryConvert.InvokeMethod(resource, method, Serialization);
 
-            var model = converter.GetDetails(resource);
-            model.Methods = new MethodEntry[0]; // Reset methods because they can not be invoked on new objects
+                var model = converter.GetDetails(resource);
+                model.Methods = new MethodEntry[0]; // Reset methods because they can not be invoked on new objects
 
-            return model;
+                return model;
+            });
         }
 
         /// <inheritdoc />
         public ResourceModel Save(ResourceModel model)
         {
-            var converter = new ModelToResourceConverter(Graph, Serialization);
-
-            var resourcesToSave = new HashSet<Resource>();
-            // Get or create resource
-            var instance = converter.FromModel(model, resourcesToSave);
-
-            // Save all created or altered resources
-            foreach (var resourceToSave in resourcesToSave)
+            return ExecuteCall<ResourceModel>(delegate
             {
-                Graph.Save(resourceToSave);
-            }
+                var converter = new ModelToResourceConverter(Graph, Serialization);
 
-            return new ResourceToModelConverter(TypeTree, Serialization).GetDetails(instance);
+                var resourcesToSave = new HashSet<Resource>();
+                // Get or create resource
+                var instance = converter.FromModel(model, resourcesToSave);
+
+                // Save all created or altered resources
+                foreach (var resourceToSave in resourcesToSave)
+                {
+                    Graph.Save(resourceToSave);
+                }
+
+                return new ResourceToModelConverter(TypeTree, Serialization).GetDetails(instance);
+            });
         }
 
         /// <inheritdoc />
         public ResourceModel Update(string idString, ResourceModel model)
         {
-            var id = long.Parse(idString);
-            model.Id = id;
-            return Save(model);
+            return ExecuteCall<ResourceModel>(delegate
+            {
+                var resourcesToSave = new HashSet<Resource>();
+                var converter = new ModelToResourceConverter(Graph, Serialization);
+
+                Resource resource;
+                if (!long.TryParse(idString, out var id) || (resource = Graph.Get(id)) == null)
+                    return RequestResult<ResourceModel>.NotFound($"Resource {idString} not found!");
+
+                // Get or create resource
+                converter.FromModel(model, resourcesToSave, resource);
+
+                // Save all created or altered resources
+                foreach (var resourceToSave in resourcesToSave)
+                {
+                    Graph.Save(resourceToSave);
+                }
+
+                return new ResourceToModelConverter(TypeTree, Serialization).GetDetails(resource);
+            });
         }
 
         /// <inheritdoc />
         public void Remove(string idString)
         {
-            var id = long.Parse(idString);
-            var resource = Graph.Get(id);
-            var result = Graph.Destroy(resource);
-
-            var context = WebOperationContext.Current;
-            if (result)
-                context.OutgoingResponse.StatusCode = HttpStatusCode.OK;
-            else
-                context.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+            ExecuteCall(delegate
+            {
+                Resource resource;
+                if (!long.TryParse(idString, out var id) || (resource = Graph.Get(id)) == null || !Graph.Destroy(resource))
+                    return RequestResult<bool>.NotFound($"Resource {idString} not found!");
+                return Graph.Destroy(resource);
+            });
         }
 
         private class ResourceQueryFilter
@@ -204,6 +252,51 @@ namespace Moryx.Resources.Interaction
                     return (propertyValue as IReferenceCollection)?.UnderlyingCollection.Count > 0 || propertyValue != null;
 
                 return true;
+            }
+        }
+
+        // TODO: Duplicate between resource and product service
+        private T ExecuteCall<T>(Func<RequestResult<T>> request, [CallerMemberName] string method = "Unknown")
+        {
+            try
+            {
+                var result = request();
+                if (result.AlternativeStatusCode.HasValue)
+                {
+                    Logger.Log(LogLevel.Error, result.ErrorLog);
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = result.AlternativeStatusCode.Value;
+                    return default;
+                }
+                return result.Response;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(LogLevel.Error, ex, "Exception during '{0}'", method);
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+                return default;
+            }
+        }
+
+        private class RequestResult<T>
+        {
+            public T Response { get; set; }
+
+            public string ErrorLog { get; set; }
+
+            public HttpStatusCode? AlternativeStatusCode { get; set; }
+
+            public static implicit operator RequestResult<T>(T response)
+            {
+                return new RequestResult<T> { Response = response };
+            }
+
+            public static RequestResult<T> NotFound(string msg)
+            {
+                return new RequestResult<T>
+                {
+                    ErrorLog = msg,
+                    AlternativeStatusCode = HttpStatusCode.NotFound
+                };
             }
         }
     }
