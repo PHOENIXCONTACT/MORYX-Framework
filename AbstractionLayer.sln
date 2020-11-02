@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Resources.Interaction
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.TestTools", "src\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj", "{1516374C-976F-49FC-A911-29EDC481C657}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Wcf", "src\Moryx.Resources.Wcf\Moryx.Resources.Wcf.csproj", "{E1AD28CD-37A6-4AF6-80D7-756586A727B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Resources.Wcf", "src\Moryx.Resources.Wcf\Moryx.Resources.Wcf.csproj", "{E1AD28CD-37A6-4AF6-80D7-756586A727B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
