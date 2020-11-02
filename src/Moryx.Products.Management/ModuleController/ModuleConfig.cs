@@ -49,6 +49,13 @@ namespace Moryx.Products.Management
         }
 
         /// <summary>
+        /// Maximum wait time for an import in seconds
+        /// </summary>
+        [DataMember, DefaultValue(20)]
+        [Description("Maximum wait time for an import in seconds")]
+        public int MaxImporterWait { get; set; }
+
+        /// <summary>
         /// The interaction host.
         /// </summary>
         [DataMember]

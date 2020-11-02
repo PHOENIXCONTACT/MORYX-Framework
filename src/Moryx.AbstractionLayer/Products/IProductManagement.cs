@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Workflows;
@@ -49,12 +50,12 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// All importers and their parameters currently configured in the machine
         /// </summary>
-        IDictionary<string, IImportParameters> Importers { get; }
+        IDictionary<string, object> Importers { get; }
 
         /// <summary>
         /// Import product types for the given parameters with the named importer
         /// </summary>
-        IReadOnlyList<IProductType> ImportTypes(string importerName, IImportParameters parameters);
+        Task<ProductImportResult> Import(string importerName, object parameters);
 
         /// <summary>
         /// Retrieves the current recipe for this product

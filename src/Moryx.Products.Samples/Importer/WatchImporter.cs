@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
@@ -21,7 +22,7 @@ namespace Moryx.Products.Samples
         /// <summary>
         /// Import a product using given parameters
         /// </summary>
-        protected override IProductType[] Import(SpecializedWatchImportParameters parameters)
+        protected override Task<ProductImporterResult> Import(SpecializedWatchImportParameters parameters)
         {
             var product = new WatchType
             {
@@ -41,7 +42,10 @@ namespace Moryx.Products.Samples
                 }
             };
 
-            return new IProductType[] { product };
+            return Task.FromResult(new ProductImporterResult
+            {
+                ImportedTypes = new ProductType[] { product }
+            });
         }
     }
 

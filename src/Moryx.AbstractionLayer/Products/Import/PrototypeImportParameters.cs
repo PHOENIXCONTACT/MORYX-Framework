@@ -3,20 +3,19 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.Management
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Base class for importing a prototype
     /// </summary>
-    public class PrototypeParameters : IPrototypeParameters
+    public class PrototypeParameters
     {
         /// <summary>
         /// Identifier of the new product
         /// </summary>
-        [Description("Identifier of the new product"), Required]
         [DefaultValue("2901234")]
+        [Description("Identifier of the new product"), Required]
         [StringLength(7, MinimumLength = 7), RegularExpression(@"\d+")]
         public string Identifier { get; set; }
 

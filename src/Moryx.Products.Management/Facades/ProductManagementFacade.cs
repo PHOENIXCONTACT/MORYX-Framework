@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
@@ -83,7 +84,7 @@ namespace Moryx.Products.Management
         }
 
 
-        public IDictionary<string, IImportParameters> Importers
+        public IDictionary<string, object> Importers
         {
             get
             {
@@ -92,10 +93,10 @@ namespace Moryx.Products.Management
             }
         }
 
-        public IReadOnlyList<IProductType> ImportTypes(string importerName, IImportParameters parameters)
+        public Task<ProductImportResult> Import(string importerName, object parameters)
         {
             ValidateHealthState();
-            return ProductManager.ImportTypes(importerName, parameters);
+            return ProductManager.Import(importerName, parameters);
         }
 
         public IRecipe LoadRecipe(long id)

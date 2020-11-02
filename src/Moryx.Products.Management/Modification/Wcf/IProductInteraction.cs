@@ -84,7 +84,16 @@ namespace Moryx.Products.Management.Modification
         [WebInvoke(UriTemplate = "import/{importer}", Method = WebRequestMethods.Http.Post,
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        ProductModel ImportProduct(string importer, Entry importParameters);
+        ImportStateModel Import(string importer, Entry importParameters);
+
+        /// <summary>
+        /// Poll progress of an import session
+        /// </summary>
+        [OperationContract]
+        [WebInvoke(UriTemplate = "import/session/{guid}", Method = WebRequestMethods.Http.Get,
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
+        ImportStateModel FetchImportProgress(string guid);
 
         /// <summary>
         /// Update import parameters based on their current content

@@ -10,6 +10,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Serialization;
@@ -84,8 +85,8 @@ namespace Moryx.Products.Management.Modification
             }
         }
 
-        private static Entry ConvertParameters(IImportParameters parametersObject) =>
-            EntryConvert.EncodeObject(parametersObject, EntrySerializeSerialization.Instance);
+        private static Entry ConvertParameters(object parametersObject) =>
+            EntryConvert.EncodeObject(parametersObject, new PossibleValuesSerialization(null, new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider())));
 
         public Entry UpdateParameters(string importer, Entry importParameters)
         {
@@ -98,13 +99,13 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
-        private IImportParameters ConvertParametersBack(string importerName, Entry currentParameters, bool updateFirst = false)
+        private object ConvertParametersBack(string importerName, Entry currentParameters, bool updateFirst = false)
         {
             var importer = ProductManager.Importers.FirstOrDefault(i => i.Name == importerName);
             if (importer == null)
                 return null;
 
-            var parameters = (IImportParameters)EntryConvert.UpdateInstance(importer.Parameters, currentParameters);
+            var parameters = EntryConvert.UpdateInstance(importer.Parameters, currentParameters);
             if (updateFirst)
                 parameters = importer.Update(parameters);
 
@@ -188,8 +189,36 @@ namespace Moryx.Products.Management.Modification
                 if (parameters == null)
                     return RequestResult<ProductModel>.NotFound($"Importer '{importer}' not found!");
 
-                var products = ProductManager.ImportTypes(importer, parameters);
-                return Converter.ConvertProduct(products[0], false);
+                var products = ProductManager.Import(importer, parameters);
+                return Converter.ConvertProduct(products.Result.ImportedTypes[0], false);
+            });
+        }
+
+        public ImportStateModel Import(string importer, Entry importParameters)
+        {
+            return ExecuteCall(delegate
+            {
+                var parameters = ConvertParametersBack(importer, importParameters, true);
+                if (parameters == null)
+                    return RequestResult<ImportStateModel>.NotFound($"Importer '{importer}' not found!");
+
+                var state = ProductManager.ImportParallel(importer, parameters);
+                return new ImportStateModel(state);
+            });
+        }
+
+        public ImportStateModel FetchImportProgress(string guid)
+        {
+            return ExecuteCall(delegate
+            {
+                if (!Guid.TryParse(guid, out var session))
+                    return RequestResult<ImportStateModel>.NotFound($"Guid '{guid}' invalid!");
+
+                var state = ProductManager.ImportProgress(session);
+                if (state == null)
+                    return RequestResult<ImportStateModel>.NotFound($"Session '{guid}' not found!");
+
+                return new ImportStateModel(state);
             });
         }
 
@@ -220,7 +249,7 @@ namespace Moryx.Products.Management.Modification
 
         public RecipeModel[] GetRecipes(string idString)
         {
-            
+
             return ExecuteCall(delegate
             {
                 IProductType product;
@@ -238,7 +267,7 @@ namespace Moryx.Products.Management.Modification
                 var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipeType).FirstOrDefault();
                 if (type == null)
                     return RequestResult<RecipeModel>.NotFound($"Recipe type {recipeType} not found!");
-                var recipe = (IProductRecipe) Activator.CreateInstance(type);
+                var recipe = (IProductRecipe)Activator.CreateInstance(type);
                 return Converter.ConvertRecipe(recipe);
             });
         }
@@ -251,7 +280,7 @@ namespace Moryx.Products.Management.Modification
                     .FirstOrDefault();
                 if (type == null)
                     return RequestResult<RecipeModel>.NotFound($"Recipe type {recipeModel.Type} not found!");
-                var productRecipe = (IProductRecipe) Activator.CreateInstance(type);
+                var productRecipe = (IProductRecipe)Activator.CreateInstance(type);
 
                 var productionRecipe = Converter.ConvertRecipeBack(recipeModel, productRecipe, null);
                 var savedId = RecipeManagement.Save(productionRecipe);
@@ -287,7 +316,7 @@ namespace Moryx.Products.Management.Modification
         }
 
         // TODO: Duplicate between resource and product service
-        private T ExecuteCall<T>(Func<RequestResult<T>> request, [CallerMemberName]string method = "Unknown")
+        private T ExecuteCall<T>(Func<RequestResult<T>> request, [CallerMemberName] string method = "Unknown")
         {
             try
             {

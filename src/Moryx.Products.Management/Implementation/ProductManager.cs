@@ -2,9 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
@@ -38,6 +40,8 @@ namespace Moryx.Products.Management
         private IList<IProductImporter> _importers;
 
         public IProductImporter[] Importers => _importers.ToArray();
+
+        private IDictionary<Guid, ImportState> _runningImports = new ConcurrentDictionary<Guid, ImportState>();
 
         #endregion
 
@@ -123,15 +127,47 @@ namespace Moryx.Products.Management
             return duplicate;
         }
 
-        public IReadOnlyList<IProductType> ImportTypes(string importerName, IImportParameters parameters)
+        public async Task<ProductImportResult> Import(string importerName, object parameters)
         {
             var importer = _importers.First(i => i.Name == importerName);
-            var imported = importer.Import(parameters);
-            foreach (var product in imported)
-            {
+            var context = new ProductImportContext();
+            var result = await importer.Import(context, parameters);
+            
+            HandleResult(result);
+
+            return result;
+        }
+
+        internal void HandleResult(ProductImporterResult result)
+        {
+            if (result.Saved)
+                return;
+
+            foreach (var product in result.ImportedTypes)
                 SaveType(product);
-            }
-            return imported;
+        }
+
+        public ImportState ImportParallel(string importerName, object parameters)
+        {
+            var context = new ProductImportContext();
+            var session = new ImportState(this) { Session = context.Session };
+            _runningImports.Add(context.Session, session);
+
+            var importer = _importers.First(i => i.Name == importerName);
+            var task = importer.Import(context, parameters);
+            task.ContinueWith(session.TaskCompleted);
+
+            // Wait for the task unless it is long running
+            if (!importer.LongRunning)
+                task.Wait(new TimeSpan(0, 0, 0, Config.MaxImporterWait));
+
+            // Return session object, it can be running, completed or faulted in the meantime
+            return session;
+        }
+
+        public ImportState ImportProgress(Guid session)
+        {
+            return _runningImports[session];
         }
 
         public bool DeleteType(long productId)
@@ -191,6 +227,7 @@ namespace Moryx.Products.Management
             // ReSharper disable once PossibleNullReferenceException
             TypeChanged(this, productType);
         }
+
         public event EventHandler<IProductType> TypeChanged;
     }
 }

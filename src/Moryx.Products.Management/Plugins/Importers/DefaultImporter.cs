@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Modules;
@@ -21,7 +22,7 @@ namespace Moryx.Products.Management.Importers
     public class DefaultImporter : ProductImporterBase<ProductImporterConfig, DefaultImporterParameters>
     {
         /// <inheritdoc />
-        protected override IProductType[] Import(DefaultImporterParameters parameters)
+        protected override Task<ProductImporterResult> Import(DefaultImporterParameters parameters)
         {
             // TODO: Use type wrapper
             var type = ReflectionTool.GetPublicClasses<ProductType>(p => p.Name == parameters.ProductType)
@@ -31,7 +32,10 @@ namespace Moryx.Products.Management.Importers
             productType.Identity = new ProductIdentity(parameters.Identifier, parameters.Revision);
             productType.Name = parameters.Name;
 
-            return new IProductType[] { productType };
+            return Task.FromResult(new ProductImporterResult
+            {
+                ImportedTypes = new[] { productType }
+            });
         }
     }
 
