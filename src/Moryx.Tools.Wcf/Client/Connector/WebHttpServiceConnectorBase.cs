@@ -119,8 +119,10 @@ namespace Moryx.Tools.Wcf
             {
                 // Create new base address client
                 HttpClient = new HttpClient { BaseAddress = new Uri(endpoint.Address) };
-                HttpClient.DefaultRequestHeaders.AcceptLanguage
-                    .Add(new StringWithQualityHeaderValue(_myCulture.IetfLanguageTag));
+
+                if (!string.IsNullOrEmpty(_myCulture.IetfLanguageTag))
+                    HttpClient.DefaultRequestHeaders.AcceptLanguage
+                        .Add(new StringWithQualityHeaderValue(_myCulture.IetfLanguageTag));
 
                 IsAvailable = true;
 
