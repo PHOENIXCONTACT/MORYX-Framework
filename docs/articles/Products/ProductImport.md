@@ -5,7 +5,7 @@ uid: ProductsImport
 
 Product import includes any type of product type definition except model setups. Product import may refer to importing a file or remote source, but also the simple act of creating a product manually by supplying all necessary parameters.
 
-Product imports of a machine are created by implementing the [IProductImporter](xref:Moryx.Products.Management.Importers.IProductImporter). As always it is recommended to derive from the base type [ProductImporterBase](xref:Moryx.Products.Management.ProductImporterBase`2). Each importer must define its [ProductImporterConfig](xref:Moryx.Products.Management.Importers.ProductImporterConfig) and export a typed parameters object that implements `IImportParameters`. This object is exchanged between client and server using the Entry-format. There are already two predefined types [FileImportParameters](xref:Moryx.Products.Management.FileImportParameters) and [PrototypeImportParameters](xref:Moryx.Products.Management.PrototypeParameters) that can be used directly or as a base class for your parameters.
+Product imports of a machine are created by implementing the [IProductImporter](xref:Moryx.Products.Management.Importers.IProductImporter). As always it is recommended to derive from the base type [ProductImporterBase](xref:Moryx.Products.Management.ProductImporterBase`2). Each importer must define its [ProductImporterConfig](xref:Moryx.Products.Management.Importers.ProductImporterConfig) and export a typed parameters object. This object is exchanged between client and server using the Entry-format. There are already two predefined types [FileImportParameters](xref:Moryx.Products.Management.FileImportParameters) and [PrototypeImportParameters](xref:Moryx.Products.Management.PrototypeParameters) that can be used directly or as a base class for your parameters.
 
 The base class requires three methods:
 
@@ -14,7 +14,6 @@ The base class requires three methods:
 * **Import:** Parse the parameters from the client and construct an `IProduct` instance. **DO NOT** write this to the database, but return the unsaved object instead.
 
 It is important that the new created importer is configured in the **Maintenance -> ProductManager -> Importers**.
-Otherwise it will not be shown on the client. Unless your application defines its implementation of `IProductCustomatization` use must enable `UseNullCustomization` in the Maintenance as well.
 
 ## Prototype importer
 
@@ -48,7 +47,7 @@ public class PrototypeImporter : ProductImporterBase<PrototypeImporterConfig, Wa
         return currentParameters;
     }
 
-    protected override IProduct[] Import(WatchImportParameters parameters)
+    protected override Task<ProductImporterResult> Import(WatchImportParameters parameters)
     {
         Product product = null;
         switch (parameters.ProductType)
@@ -75,7 +74,10 @@ public class PrototypeImporter : ProductImporterBase<PrototypeImporterConfig, Wa
         product.Identity = new ProductIdentity(identifier, rev);
         product.Name = parameters.Name;
 
-        return new IProduct[] { product };
+        return Task.FromResult(new ProductImporterResult
+        {
+            ImportedTypes = new[] { product }
+        });
     }
 }
 ````
@@ -97,12 +99,12 @@ public class FileImporterConfig : ProductImporterConfig
 [Plugin(LifeCycle.Singleton, typeof(IProductImporter), Name = nameof(FileImporter))]
 public class FileImporter : ProductImporterBase<FileImporterConfig>
 {
-    protected override IImportParameters GenerateParameters()
+    protected override object GenerateParameters()
     {
         return new FileImportParameters { FileExtension = ".mjb" };
     }
 
-    protected override IProduct[] Import(FileImportParameters parameters)
+    protected override Task<ProductImporterResult> Import(FileImportParameters parameters)
     {
         using (var stream = parameters.ReadFile())
         {
@@ -111,14 +113,17 @@ public class FileImporter : ProductImporterBase<FileImporterConfig>
             var revision = short.Parse(textReader.ReadLine() ?? "0");
             var name = textReader.ReadLine();
 
-            return new IProduct[]
+            return Task.FromResult(new ProductImporterResult
             {
-                new NeedleProduct
+                ImportedTypes = new ProductType[]
                 {
-                    Name = name,
-                    Identity = new ProductIdentity(identifier, revision)
+                    new NeedleType
+                    {
+                        Name = name,
+                        Identity = new ProductIdentity(identifier, revision)
+                    }
                 }
-            };
+            });
         }
     }
 }
