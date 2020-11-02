@@ -255,7 +255,21 @@ namespace Moryx.Products.Management.Modification
             ConvertFilesBack(converted, source, properties);
 
             // Save recipes
-            var recipes = source.Recipes.Select(r => ConvertRecipeBack(r, RecipeManagement.Get(r.Id), converted)).ToList();
+            var recipes = new List<IProductRecipe>(source.Recipes.Length);
+            foreach (var recipeModel in source.Recipes)
+            {
+                IProductRecipe productRecipe;
+                if (recipeModel.Id == 0)
+                {
+                    var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipeModel.Type).First();
+                    productRecipe = (IProductRecipe)Activator.CreateInstance(type);
+                }
+                else
+                    productRecipe = RecipeManagement.Get(recipeModel.Id);
+
+                ConvertRecipeBack(recipeModel, productRecipe, converted);
+                recipes.Add(productRecipe);
+            }
             RecipeManagement.Save(source.Id, recipes);
 
             // Convert parts

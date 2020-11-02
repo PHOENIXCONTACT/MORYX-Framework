@@ -38,17 +38,27 @@ namespace Moryx.Resources.Interaction.Converter
         public Resource FromModel(ResourceModel model, HashSet<Resource> resourcesToSave, Resource resource = null)
         {
             // Break recursion if we converted this instance already
-            if (_resourceCache.ContainsKey(model.ReferenceId))
+            // Try to load by real id first
+            if (_resourceCache.ContainsKey(model.Id))
+                return _resourceCache[model.Id];
+            // Otherwise by reference id
+            if (model.Id == 0 && _resourceCache.ContainsKey(model.ReferenceId))
                 return _resourceCache[model.ReferenceId];
 
             // Only fetch resource object if it was not given
             if (resource == null)
             {
                 // Get or create resource
-                resource = model.Id == 0
-                    ? _resourceGraph.Instantiate(model.Type)
-                    : _resourceGraph.Get(model.Id);
-                _resourceCache[model.ReferenceId] = resource;
+                if (model.Id == 0)
+                {
+                    resource = _resourceGraph.Instantiate(model.Type);
+                    _resourceCache[model.ReferenceId] = resource;
+                }
+                else
+                {
+                    resource = _resourceGraph.Get(model.Id);
+                    _resourceCache[model.Id] = resource;
+                }
             }
 
             // Add to list if object was created or modified
