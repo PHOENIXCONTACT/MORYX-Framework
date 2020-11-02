@@ -31,7 +31,7 @@ namespace Moryx.Resources.Interaction.Converter
         /// <summary>
         /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private readonly Dictionary<Resource, long> _resourceCache = new Dictionary<Resource, long>();
+        private readonly Dictionary<Resource, ResourceModel> _resourceCache = new Dictionary<Resource, ResourceModel>();
 
         protected ICustomSerialization Serialization { get; }
 
@@ -70,7 +70,8 @@ namespace Moryx.Resources.Interaction.Converter
             if (_resourceCache.ContainsKey(current))
             {
                 // Include reference instead
-                model = new ResourceModel { ReferenceId = _resourceCache[current] };
+                var reference = _resourceCache[current];
+                model = new ResourceModel { ReferenceId = reference.Id > 0 ? reference.Id : reference.ReferenceId };
             }
             else
             {
@@ -78,7 +79,7 @@ namespace Moryx.Resources.Interaction.Converter
                 model = new ResourceModel
                 {
                     Id = current.Id,
-                    ReferenceId = ++_refId,
+                    ReferenceId = --_refId,
 
                     Name = current.Name,
                     Description = current.Description,
@@ -86,7 +87,7 @@ namespace Moryx.Resources.Interaction.Converter
                     // Use simplified type reference
                     Type = current.ResourceType()
                 };
-                _resourceCache.Add(current, model.ReferenceId);
+                _resourceCache.Add(current, model);
 
                 // Set partial flag or load complex properties depending on details depth
                 if (partially)
