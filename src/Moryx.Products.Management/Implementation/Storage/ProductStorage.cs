@@ -26,8 +26,6 @@ namespace Moryx.Products.Management
     [Plugin(LifeCycle.Singleton, typeof(IProductStorage))]
     internal class ProductStorage : IProductStorage
     {
-        private Dictionary<string, Type> _types;
-
         /// <summary>
         /// Optimized constructor delegate for the different product types
         /// </summary>
@@ -84,8 +82,6 @@ namespace Moryx.Products.Management
         /// </summary>
         public void Start()
         {
-            _types = ReflectionTool.GetPublicClasses<ProductType>().ToDictionary(t => t.Name, t => t);
-
             // Create type strategies
             foreach (var config in Config.TypeStrategies)
             {
@@ -257,8 +253,22 @@ namespace Moryx.Products.Management
                         productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
                     else
                     {
-                        var queryType = _types[query.Type];
-                        var allTypes = ReflectionTool.GetPublicClasses(queryType).Select(t => t.Name);
+                        var allTypes = ReflectionTool.GetPublicClasses<ProductType>(pt =>
+                        {
+                            // TODO: Clean this up with full name and proper type compatibility
+                            var type = pt;
+                            // Check if any interface matches
+                            if (type.GetInterfaces().Any(inter => inter.Name == query.Type))
+                                return true;
+                            // Check if type or base type matches
+                            while (type != null)
+                            {
+                                if (type.Name == query.Type)
+                                    return true;
+                                type = type.BaseType;
+                            }
+                            return false;
+                        }).Select(t => t.Name);
                         productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
                     }
                 }
@@ -320,9 +330,9 @@ namespace Moryx.Products.Management
                     .ThenBy(p => p.Identifier)
                     .ThenBy(p => p.Revision).ToList();
                 // TODO: Use TypeWrapper with constructor delegate and isolate basic property conversion
-                return products.Select(p =>
+                return products.Where(p => TypeConstructors.ContainsKey(p.TypeName)).Select(p =>
                 {
-                    var instance = (ProductType)Activator.CreateInstance(_types[p.TypeName]);
+                    var instance = TypeConstructors[p.TypeName]();
                     instance.Id = p.Id;
                     instance.Identity = new ProductIdentity(p.Identifier, p.Revision);
                     instance.Name = p.Name;
