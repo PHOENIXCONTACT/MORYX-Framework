@@ -342,7 +342,7 @@ namespace Moryx.Products.IntegrationTests
             {
                 Name = watchName,
                 Identity = new ProductIdentity(identifierPrefix + WatchMaterial, revision),
-                Watchface = new ProductPartLink<WatchfaceType> { Product = watchface },
+                Watchface = new ProductPartLink<WatchfaceTypeBase> { Product = watchface },
                 Needles = needles,
                 Weight = 123.45
             };
@@ -416,6 +416,7 @@ namespace Moryx.Products.IntegrationTests
         {
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
+            var watchface = (WatchfaceType)watch.Watchface.Product;
 
             // Act
             var savedWatchId = _storage.SaveType(watch);
@@ -426,7 +427,8 @@ namespace Moryx.Products.IntegrationTests
             Assert.AreEqual(watch.Identity.Identifier, loadedWatch.Identity.Identifier, "Different identifier of the saved an loaded watch");
             Assert.AreEqual(watch.Watchface.Product.Identity.Identifier, loadedWatch.Watchface.Product.Identity.Identifier, "Different watchface identifier of the saved and loaded watch");
             Assert.AreEqual(watch.Needles.Count, loadedWatch.Needles.Count, "Different number of needles");
-            Assert.AreEqual(watch.Watchface.Product.Numbers.Length, loadedWatch.Watchface.Product.Numbers.Length, "Different number of watch numbers");
+            var loadedWatchface = (WatchfaceType)loadedWatch.Watchface.Product;
+            Assert.AreEqual(watchface.Numbers.Length, loadedWatchface.Numbers.Length, "Different number of watch numbers");
         }
 
         [TestCase(true, Description = "Get the latest revision of an existing product")]

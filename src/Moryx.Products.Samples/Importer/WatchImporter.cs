@@ -28,7 +28,7 @@ namespace Moryx.Products.Samples
             {
                 Name = parameters.Name,
                 Identity = new ProductIdentity(parameters.Identifier, parameters.Revision),
-                Watchface = new ProductPartLink<WatchfaceType>
+                Watchface = new ProductPartLink<WatchfaceTypeBase>
                 {
                     Product = (WatchfaceType)Storage.LoadType(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
                 },

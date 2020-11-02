@@ -20,7 +20,7 @@ namespace Moryx.Products.Samples
 
         // References to product
         [DisplayName("Wach face")]
-        public ProductPartLink<WatchfaceType> Watchface { get; set; }
+        public ProductPartLink<WatchfaceTypeBase> Watchface { get; set; }
 
         [DisplayName("Watch needle")]
         public List<NeedlePartLink> Needles { get; set; } = new List<NeedlePartLink>();

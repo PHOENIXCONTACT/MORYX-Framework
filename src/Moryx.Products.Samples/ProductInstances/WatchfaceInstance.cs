@@ -6,7 +6,7 @@ using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.Products.Samples
 {
-    public class WatchfaceInstance : ProductInstance<WatchfaceType>
+    public class WatchfaceInstance : ProductInstance<WatchfaceTypeBase>
     {
         public Guid Identifier { get; set; }
 
