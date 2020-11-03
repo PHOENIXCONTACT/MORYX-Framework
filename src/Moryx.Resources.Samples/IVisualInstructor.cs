@@ -30,6 +30,9 @@ namespace Moryx.Resources.Samples
             set { Parent = value; }
         }
 
+        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source)]
+        public IReferences<Resource> Users { get; set; }
+
         public VisualInstructor()
         {
             Descriptor = new InstructorDescriptor(this);
