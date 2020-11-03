@@ -6,7 +6,7 @@ using System;
 namespace Moryx.Logging
 {
     /// <summary>
-    /// Represens a generic target logger. 
+    /// Represents a generic target logger.
     /// Can be implemented to provide any type of logging framework.
     /// </summary>
     public interface ILogTarget
@@ -14,11 +14,11 @@ namespace Moryx.Logging
         /// <summary>
         /// Simply log the message wit the given <see cref="LogLevel"/>
         /// </summary>
-        void Log(LogLevel loglevel, string message);
+        void Log(LogLevel logLevel, string message);
 
         /// <summary>
-        /// Log the message with the given <see cref="LogLevel"/> and aditional exception
+        /// Log the message with the given <see cref="LogLevel"/> and additional exception
         /// </summary>
-        void Log(LogLevel loglevel, string message, Exception exception);
+        void Log(LogLevel logLevel, string message, Exception exception);
     }
 }

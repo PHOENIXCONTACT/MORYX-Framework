@@ -31,7 +31,7 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         protected override ILogTarget CreateLogTarget(string name)
         {
-            return new LogTarget(name);
+            return new CommonLoggingLogTarget(name);
         }
 
         /// <summary>

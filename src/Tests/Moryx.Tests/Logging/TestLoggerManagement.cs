@@ -10,12 +10,12 @@ namespace Moryx.Tests.Logging
 {
     public class LogTargetMock : ILogTarget
     {
-        public void Log(LogLevel loglevel, string message)
+        public void Log(LogLevel logLevel, string message)
         {
             
         }
 
-        public void Log(LogLevel loglevel, string message, Exception exception)
+        public void Log(LogLevel logLevel, string message, Exception exception)
         {
             
         }

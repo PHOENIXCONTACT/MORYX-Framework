@@ -23,7 +23,7 @@ namespace Moryx.Runtime.Kernel
         public LogLevel DefaultLevel { get; set; }
 
         /// <summary>
-        /// List of underliing ModuleLoggerConfigs.
+        /// List of underlying ModuleLoggerConfigs.
         /// </summary>
         [DataMember]
         public List<ModuleLoggerConfig> LoggerConfigs { get; set; }
