@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\.build\Common.props"></Import>
-
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Core module to maintain the application. It provides config and logging support by default.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

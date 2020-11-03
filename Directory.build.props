@@ -10,5 +10,9 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/PHOENIXCONTACT/MORYX-Platform</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
 </Project>

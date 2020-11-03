@@ -1,12 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\.build\Common.props"></Import>
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45;net461</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
     <Description>Root namespace of the MORYX ecosystem</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

@@ -22,8 +22,6 @@
 
     <PackageIcon>moryx-logo.png</PackageIcon>
     <PackageProjectUrl>https://moryx-industry.net/</PackageProjectUrl>
-
-    <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>

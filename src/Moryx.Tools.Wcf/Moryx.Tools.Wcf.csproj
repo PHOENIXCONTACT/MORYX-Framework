@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\.build\Common.props"></Import>
-
   <PropertyGroup>
     <TargetFrameworks>net45;net461</TargetFrameworks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Wcf integation in Platform.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

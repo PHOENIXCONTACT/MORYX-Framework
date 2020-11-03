@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\.build\Common.props"></Import>
-
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Extensions for the Moryx.Runtime for hosting wcf services.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
