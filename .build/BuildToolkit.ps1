@@ -493,7 +493,7 @@ function Invoke-Publish {
         Invoke-ExitCodeCheck 1;
     }
 
-    $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include '*.nupkg'
+    $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include *.nupkg, *.snupkg
 
     foreach ($package in $packages) {
         & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET -Verbosity $env:MORYX_NUGET_VERBOSITY

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
-        <Description>StartProject of the AbstractionLayer. This is for debugging only.</Description>
+    <Description>StartProject of the AbstractionLayer. This is for debugging only.</Description>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 

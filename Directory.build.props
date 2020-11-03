@@ -10,5 +10,8 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 </Project>
