@@ -17,7 +17,7 @@ namespace Moryx.AbstractionLayer.Tests
             var watch = new WatchType()
             {
                 Identity = new ProductIdentity("1277125", 01),
-                Watchface = new ProductPartLink<WatchfaceType>
+                Watchface = new ProductPartLink<WatchfaceTypeBase>
                 {
                     Product = new WatchfaceType
                     {

@@ -6,8 +6,24 @@ using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.Products.Samples
 {
+    public abstract class WatchfaceTypeBase : ProductType
+    {
+    }
+
+    [DisplayName("Display Watchface")]
+    public class DisplayWatchfaceType : WatchfaceTypeBase
+    {
+        [Description("Screen resolution in DPI")]
+        public int Resolution { get; set; }
+
+        protected override ProductInstance Instantiate()
+        {
+            return new WatchfaceInstance();
+        }
+    }
+
     [DisplayName("Watchface")]
-    public class WatchfaceType : ProductType
+    public class WatchfaceType : WatchfaceTypeBase
     {
         [Description("Numbers on the watchface")]
         public int[] Numbers { get; set; }
