@@ -66,43 +66,37 @@ namespace Moryx.Resources.Interaction.Converter
         /// <returns></returns>
         protected ResourceModel ToModel(Resource current, bool partially)
         {
-            ResourceModel model;
-            if (_resourceCache.ContainsKey(current))
+            // Extract model
+            var model = new ResourceModel
             {
-                // Include reference instead
-                var reference = _resourceCache[current];
-                model = new ResourceModel { ReferenceId = reference.Id > 0 ? reference.Id : reference.ReferenceId };
+                Id = current.Id,
+
+                Name = current.Name,
+                Description = current.Description,
+
+                // Use simplified type reference
+                Type = current.ResourceType()
+            };
+
+            // Set partial flag or load complex properties depending on details depth
+            var inCache = false;
+            if (partially || current.Id == 0 && (inCache = _resourceCache.ContainsKey(current)))
+            {
+                model.PartiallyLoaded = true;
+                model.ReferenceId = inCache ? _resourceCache[current].ReferenceId : 0;
             }
             else
             {
-                // Extract model
-                model = new ResourceModel
-                {
-                    Id = current.Id,
-                    ReferenceId = --_refId,
-
-                    Name = current.Name,
-                    Description = current.Description,
-
-                    // Use simplified type reference
-                    Type = current.ResourceType()
-                };
+                // Only generate reference ids and add to cache for non-partial instance
+                model.ReferenceId = --_refId; 
                 _resourceCache.Add(current, model);
 
-                // Set partial flag or load complex properties depending on details depth
-                if (partially)
-                {
-                    model.PartiallyLoaded = true;
-                }
-                else
-                {
-                    // Properties and methods are read from the descriptor
-                    // This can be the resource itself or a dedicated object
-                    model.Properties = EntryConvert.EncodeObject(current.Descriptor, Serialization);
-                    model.Methods = EntryConvert.EncodeMethods(current.Descriptor, Serialization).ToArray();
-                    // Recursively read children and references
-                    model.References = ConvertReferences(current);
-                }
+                // Properties and methods are read from the descriptor
+                // This can be the resource itself or a dedicated object
+                model.Properties = EntryConvert.EncodeObject(current.Descriptor, Serialization);
+                model.Methods = EntryConvert.EncodeMethods(current.Descriptor, Serialization).ToArray();
+                // Recursively read children and references
+                model.References = ConvertReferences(current);
             }
 
             return model;

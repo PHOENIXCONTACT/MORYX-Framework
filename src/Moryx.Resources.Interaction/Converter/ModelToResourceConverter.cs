@@ -48,18 +48,20 @@ namespace Moryx.Resources.Interaction.Converter
             // Only fetch resource object if it was not given
             if (resource == null)
             {
-                // Get or create resource
-                if (model.Id == 0)
-                {
-                    resource = _resourceGraph.Instantiate(model.Type);
-                    _resourceCache[model.ReferenceId] = resource;
-                }
-                else
-                {
-                    resource = _resourceGraph.Get(model.Id);
-                    _resourceCache[model.Id] = resource;
-                }
+                resource = model.Id == 0
+                    ? _resourceGraph.Instantiate(model.Type)
+                    : _resourceGraph.Get(model.Id);
             }
+
+            // Write to cache because following calls might only have an empty reference
+            if (model.Id == 0)
+                _resourceCache[model.ReferenceId] = resource;
+            else
+                _resourceCache[model.Id] = resource;
+
+            // Do not copy values from partially loaded models
+            if (model.PartiallyLoaded)
+                return resource;
 
             // Add to list if object was created or modified
             if (model.Id == 0 || model.DifferentFrom(resource, _serialization))
@@ -72,12 +74,10 @@ namespace Moryx.Resources.Interaction.Converter
             resource.Description = model.Description;
 
             // Copy extended properties
-            if (model.Properties != null)
-                EntryConvert.UpdateInstance(resource.Descriptor, model.Properties, _serialization);
+            EntryConvert.UpdateInstance(resource.Descriptor, model.Properties, _serialization);
 
             // Set all other references
-            if (model.References != null)
-                UpdateReferences(resource, resourcesToSave, model);
+            UpdateReferences(resource, resourcesToSave, model);
 
             return resource;
         }
