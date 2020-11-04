@@ -16,6 +16,7 @@ env:
   MORYX_BUILDNUMBER: ${{github.run_number}}
   MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
   MORYX_PACKAGE_TARGET: "https://www.myget.org/F/moryx/api/v2/package"
+  MORYX_PACKAGE_TARGET_V3: "https://www.myget.org/F/moryx/api/v3/index.json"
 
 jobs:
   Build:
