@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>InMemory extension to Moryx.Model.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

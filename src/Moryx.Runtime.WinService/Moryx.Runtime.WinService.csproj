@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Provides runtime mode for running as Windows Service.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

@@ -100,6 +100,10 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
         $env:MORYX_PACKAGE_TARGET = "";
     }
 
+    if (-not $env:MORYX_PACKAGE_TARGET_V3) {
+        $env:MORYX_PACKAGE_TARGET_V3 = "";
+    }
+
     if (-not $env:MORYX_ASSEMBLY_VERSION) {
         $env:MORYX_ASSEMBLY_VERSION = $Version;
     }
@@ -140,6 +144,7 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Variable "MORYX_TEST_VERBOSITY" $env:MORYX_TEST_VERBOSITY;
     Write-Variable "MORYX_NUGET_VERBOSITY" $env:MORYX_NUGET_VERBOSITY;
     Write-Variable "MORYX_PACKAGE_TARGET" $env:MORYX_PACKAGE_TARGET;
+    Write-Variable "MORYX_PACKAGE_TARGET_V3" $env:MORYX_PACKAGE_TARGET_V3;
 
     Write-Variable "MORYX_ASSEMBLY_VERSION" $env:MORYX_ASSEMBLY_VERSION;
     Write-Variable "MORYX_FILE_VERSION" $env:MORYX_FILE_VERSION;
@@ -488,15 +493,27 @@ function Invoke-PackAll([switch]$Symbols = $False) {
 function Invoke-Publish {
     Write-Host "Pushing packages from $NugetPackageArtifacts to $env:MORYX_PACKAGE_TARGET"
     
-    if ([string]::IsNullOrEmpty($env:MORYX_PACKAGE_TARGET)) {
+    $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include *.nupkg
+    if ($packages.Length -gt 0 -and [string]::IsNullOrEmpty($env:MORYX_PACKAGE_TARGET)) {
         Write-Host-Error "There is no package target given. Set the environment varialble MORYX_PACKAGE_TARGET to publish packages.";
         Invoke-ExitCodeCheck 1;
     }
 
-    $packages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include *.nupkg, *.snupkg
-
     foreach ($package in $packages) {
+        Write-Host "Pushing package $package"
         & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET -Verbosity $env:MORYX_NUGET_VERBOSITY
+        Invoke-ExitCodeCheck $LastExitCode;
+    }
+
+    $symbolPackages = Get-ChildItem $NugetPackageArtifacts -Recurse -Include *.snupkg
+    if ($symbolPackages.Length -gt 0 -and [string]::IsNullOrEmpty($env:MORYX_PACKAGE_TARGET_V3)) {
+        Write-Host-Error "There is no package (v3) target given. Set the environment varialble MORYX_PACKAGE_TARGET_V3 to publish snupkg symbol packages.";
+        Invoke-ExitCodeCheck 1;
+    }
+
+    foreach ($symbolPackage in $symbolPackages) {
+        Write-Host "Pushing symbol (snupkg) $symbolPackage"
+        & $global:NugetCli push $symbolPackage $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET_V3 -Verbosity $env:MORYX_NUGET_VERBOSITY
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }

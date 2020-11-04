@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Main kernel abstraction for the runtime environment</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

@@ -7,8 +7,6 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/PHOENIXCONTACT/MORYX-Platform</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <IncludeSymbols>true</IncludeSymbols>
