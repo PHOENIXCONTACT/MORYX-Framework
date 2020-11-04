@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Additional AbstractionLayer implementations for Tests</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

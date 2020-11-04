@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Model for products</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

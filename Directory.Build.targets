@@ -2,17 +2,12 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxPlatformVersion>3.0.0-dev.213</MoryxPlatformVersion>
-    <MoryxClientFrameworkVersion>3.0.0-dev.59</MoryxClientFrameworkVersion>
-    <MoryxMaintenanceWebVersion>3.0.0-dev.52</MoryxMaintenanceWebVersion>
+    <MoryxPlatformVersion>3.0.0-dev.216</MoryxPlatformVersion>
+    <MoryxClientFrameworkVersion>3.0.0-dev.61</MoryxClientFrameworkVersion>
+    <MoryxMaintenanceWebVersion>3.0.0-dev.53</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
-
-  <!-- Properties for all projects if CreatePackage=true -->
-  <PropertyGroup Condition="'$(CreatePackage)' == 'true'">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
 
   <!-- Package refereces for all projects if CreatePackage=true -->
   <ItemGroup Condition="'$(CreatePackage)' == 'true'">

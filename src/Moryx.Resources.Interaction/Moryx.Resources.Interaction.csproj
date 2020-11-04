@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Provides the default implementation if the resource interaction</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

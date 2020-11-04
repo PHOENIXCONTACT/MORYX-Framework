@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>MORYX Runtime Module: ResourceManagement</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>

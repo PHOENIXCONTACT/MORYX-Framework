@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Includes base classes used to provide resources with wcf implementation</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
