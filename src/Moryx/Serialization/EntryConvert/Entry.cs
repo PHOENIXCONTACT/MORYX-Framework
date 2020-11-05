@@ -12,7 +12,7 @@ namespace Moryx.Serialization
     /// Model class representing a single property of a config class
     /// </summary>
     [DataContract]
-    public class Entry : ICloneable, IEquatable<Entry>
+    public class Entry : ICloneable
     {
         /// <summary>
         /// Identifier used for entry objects that function as prototypes
@@ -165,73 +165,35 @@ namespace Moryx.Serialization
         }
 
         /// <summary>
-        /// Overload of the comparison operator mapped to the <see cref="Equals(Entry)"/> method
+        /// Compare two entries recursive to detect changes
         /// </summary>
-        public static bool operator ==(Entry left, Entry right)
+        public static bool ValuesEqual(Entry left, Entry right)
         {
-            if (ReferenceEquals(null, left))
-                return ReferenceEquals(right, null);
-
-            return left.Equals(right);
-        }
-
-        /// <summary>
-        /// Overload of the comparison operator mapped to the <see cref="Equals(Entry)"/> method
-        /// </summary>
-        public static bool operator !=(Entry left, Entry right)
-        {
-            return !(left == right);
-        }
-
-        /// <inheritdoc />
-        public bool Equals(Entry other)
-        {
-            if (other == null)
+            if (left == null || right == null)
                 return false;
 
-            if (ReferenceEquals(this, other))
+            if (ReferenceEquals(left, right))
                 return true;
 
-            if (Value.Current != other.Value.Current)
+            if (left.Value.Current != right.Value.Current)
                 return false;
 
-            if (SubEntries.Count != other.SubEntries.Count)
+            if (left.SubEntries.Count != right.SubEntries.Count)
                 return false;
 
-            foreach (var leftEntry in SubEntries)
+            foreach (var leftEntry in left.SubEntries)
             {
-                var rightEntry = other.SubEntries.FirstOrDefault(p => p.Identifier == leftEntry.Identifier);
+                var rightEntry = right.SubEntries.FirstOrDefault(p => p.Identifier == leftEntry.Identifier);
                 if (rightEntry == null)
                     return false;
 
-                if (!leftEntry.Equals(rightEntry))
+                if (!ValuesEqual(leftEntry, rightEntry))
                     return false;
             }
 
             return true;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            var entry = obj as Entry;
-            return entry != null && Equals(entry);
-        }
-
-        /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                // ReSharper disable NonReadonlyMemberInGetHashCode
-                // These values will not be modified
-                var hashCode = Identifier.GetHashCode();
-                hashCode = (hashCode * 397) ^ Value.Current.GetHashCode();
-                hashCode = (hashCode * 397) ^ SubEntries.GetHashCode();
-                return hashCode;
-            }
-        }
-
+        
         /// <inheritdoc />
         public override string ToString() =>
             $"{DisplayName}: {Value.Current}";
