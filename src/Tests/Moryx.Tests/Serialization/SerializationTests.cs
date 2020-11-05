@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Moryx.Serialization;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Moryx.Tests
@@ -613,7 +614,7 @@ namespace Moryx.Tests
             var clone = entry.Clone(true);
 
             // Act
-            var equals = entry.Equals(clone);
+            var equals = Entry.ValuesEqual(entry, clone);
 
             // Assert
             Assert.IsTrue(equals);
@@ -627,7 +628,7 @@ namespace Moryx.Tests
             var entry2 = CreateTestEntry();
 
             // Act
-            var equals = entry.Equals(entry2);
+            var equals = Entry.ValuesEqual(entry, entry2);
 
             // Assert
             Assert.IsTrue(equals);
@@ -643,7 +644,7 @@ namespace Moryx.Tests
             entry.Value.Current = "OtherValue";
 
             // Act
-            var equals = entry.Equals(entry2);
+            var equals = Entry.ValuesEqual(entry, entry2);
 
             // Assert
             Assert.IsFalse(equals);
@@ -695,22 +696,6 @@ namespace Moryx.Tests
 
             // Assert
             Assert.IsFalse(equals);
-        }
-
-        [Test]
-        public void EntryEqualsWithComparisonOperator()
-        {
-            // Arrange
-            var entry = CreateTestEntry();
-            var entry2 = CreateTestEntry();
-
-            // Act
-            var aEqualsB = entry == entry2;
-            var aNotEqualsB = entry != entry2;
-
-            // Assert
-            Assert.IsTrue(aEqualsB);
-            Assert.IsFalse(aNotEqualsB);
         }
 
         [Test(Description = "Encodes a MemoryStream")]
