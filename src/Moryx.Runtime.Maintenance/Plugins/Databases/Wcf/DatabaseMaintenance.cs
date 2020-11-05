@@ -133,7 +133,12 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 return new InvocationResponse("No configurator found");
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            targetConfigurator.DumpDatabase(updatedConfig, Config.SetupDataDir);
+
+            var targetPath = Path.Combine(Config.SetupDataDir, targetModel);
+            if (!Directory.Exists(targetPath))
+                Directory.CreateDirectory(targetPath);
+
+            targetConfigurator.DumpDatabase(updatedConfig, targetPath);
 
             return new InvocationResponse();
         }
@@ -145,7 +150,8 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 return new InvocationResponse("No configurator found");
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            targetConfigurator.RestoreDatabase(updatedConfig, Path.Combine(Config.SetupDataDir, request.BackupFileName));
+            var filePath = Path.Combine(Config.SetupDataDir, targetModel, request.BackupFileName);
+            targetConfigurator.RestoreDatabase(updatedConfig, filePath);
 
             return new InvocationResponse();
         }
@@ -276,14 +282,12 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         private BackupModel[] GetAllBackups(Type contextType)
         {
             var targetModel = TargetModelName(contextType);
+            var backupFolder = Path.Combine(Config.SetupDataDir, targetModel);
 
-            if (!Directory.Exists(Config.SetupDataDir))
-            {
-                Directory.CreateDirectory(Config.SetupDataDir);
+            if (!Directory.Exists(backupFolder))
                 return new BackupModel[0];
-            }
 
-            var allBackups = Directory.EnumerateFiles(Config.SetupDataDir, "*.backup").Where(fileName => fileName.Contains(targetModel)).ToList();
+            var allBackups = Directory.EnumerateFiles(backupFolder, "*.backup").ToList();
             var backups = from backup in allBackups
                 let fileName = Path.GetFileName(backup)
                 let fileInfo = new FileInfo(backup)

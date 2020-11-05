@@ -14,8 +14,18 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
         public string Name { get; set; }
 
         /// <summary>
-        /// Version of the assembly.
+        /// AssemblyVersion of the assembly.
         /// </summary>
         public string Version { get; set; }
+
+        /// <summary>
+        /// AssemblyFileVersion of the assembly.
+        /// </summary>
+        public string FileVersion { get; set; }
+
+        /// <summary>
+        /// AssemblyInformationalVersion of the assembly.
+        /// </summary>
+        public string InformationalVersion { get; set; }
     }
 }
