@@ -2,7 +2,7 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxPlatformVersion>3.0.0-dev.216</MoryxPlatformVersion>
+    <MoryxPlatformVersion>3.0.0-dev.219</MoryxPlatformVersion>
     <MoryxClientFrameworkVersion>3.0.0-dev.61</MoryxClientFrameworkVersion>
     <MoryxMaintenanceWebVersion>3.0.0-dev.53</MoryxMaintenanceWebVersion>
   </PropertyGroup>

@@ -65,9 +65,7 @@ namespace Moryx.Resources.Interaction.Converter
 
             // Add to list if object was created or modified
             if (model.Id == 0 || model.DifferentFrom(resource, _serialization))
-            {
                 resourcesToSave.Add(resource);
-            }
 
             // Copy standard properties
             resource.Name = model.Name;

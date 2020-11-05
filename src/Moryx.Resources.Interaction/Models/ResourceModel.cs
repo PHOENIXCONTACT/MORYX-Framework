@@ -80,17 +80,17 @@ namespace Moryx.Resources.Interaction
         /// <returns></returns>
         internal bool DifferentFrom(Resource resource, ICustomSerialization serialization)
         {
-            var different = resource.Name != Name ||
-                           resource.Description != Description;
-            if (different)
-                return true;
-
             // Do not compare values that were not transmitted
             if (resource.Descriptor == null || PartiallyLoaded)
                 return false;
 
+            // Compare obvious base properties
+            var different = resource.Name != Name || resource.Description != Description;
+            if (different)
+                return true;
+
             var resourceProperties = EntryConvert.EncodeObject(resource.Descriptor, serialization);
-            return !Properties.Equals(resourceProperties);
+            return !Entry.ValuesEqual(Properties, resourceProperties);
         }
     }
 }
