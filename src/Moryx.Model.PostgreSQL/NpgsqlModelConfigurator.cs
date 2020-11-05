@@ -57,7 +57,7 @@ namespace Moryx.Model.PostgreSQL
         /// <inheritdoc />
         public override void DumpDatabase(IDatabaseConfig config, string targetPath)
         {
-            var dumpName = $"{DateTime.Now:dd-MM-yyyy-hh-mm-ss}_{""}_{config.Database}.backup";
+            var dumpName = $"{DateTime.Now:dd-MM-yyyy-hh-mm-ss}_{config.Database}.backup";
             var fileName = Path.Combine(targetPath, dumpName);
 
             Logger.Log(LogLevel.Debug, "Starting to dump database with pg_dump to: {0}", fileName);
