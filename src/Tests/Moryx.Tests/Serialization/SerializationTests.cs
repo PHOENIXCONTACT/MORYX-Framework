@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Moryx.Configuration;
 using Moryx.Serialization;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -33,6 +34,35 @@ namespace Moryx.Tests
 
             // Assert
             DummyAssert(encoded, encodedSub);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void PrimitiveCollectionPrototypes(bool possibleValues)
+        {
+            // Arrange
+            var serialization = possibleValues
+                ? new PossibleValuesSerialization(null, new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider()))
+                : (ICustomSerialization)new DefaultSerialization();
+
+            // Act
+            var encoded = EntryConvert.EncodeClass(typeof(ListDummy), serialization);
+
+            // Assert
+            var doubles = encoded.SubEntries[1];
+            Assert.AreEqual(nameof(EntryValueType.Double), doubles.Value.Possible[0]);
+            Assert.AreEqual(1, doubles.Prototypes.Count);
+            if (possibleValues)
+                Assert.AreEqual(3, doubles.Prototypes[0].Value.Possible.Length);
+            else
+                Assert.IsNull(doubles.Prototypes[0].Value.Possible);
+
+
+            var enums = encoded.SubEntries[2];
+            Assert.AreEqual(3, enums.Value.Possible.Length);
+            Assert.AreEqual(3, enums.Prototypes.Count);
+            for (int i = 0; i < 3; i++)
+                Assert.AreEqual(enums.Value.Possible[i], enums.Prototypes[i].Value.Current);
         }
 
         [Test]
@@ -102,8 +132,8 @@ namespace Moryx.Tests
             // Assert
             for (var i = 1; i <= 5; i++)
             {
-                Assert.AreEqual(3, dummy.EnumDictionary.Count );
-                Assert.AreEqual(5 , dummy.SubDictionary.Count);
+                Assert.AreEqual(3, dummy.EnumDictionary.Count);
+                Assert.AreEqual(5, dummy.SubDictionary.Count);
                 Assert.AreEqual(6, dummy.SubDictionary["Key5"]);
                 Assert.AreEqual(DummyEnum.Unset, dummy.EnumDictionary["Key_01213"]);
             }
@@ -243,13 +273,13 @@ namespace Moryx.Tests
         public void UpdatePrimitiveList()
         {
             // Arrange
-            var defaultSerialization = new DefaultSerialization { FormatProvider = new CultureInfo("en-US")};
+            var defaultSerialization = new DefaultSerialization { FormatProvider = new CultureInfo("en-US") };
 
             var dummy = new ListDummy
             {
                 Number = 0,
-                DoubleList = new List<double> {1.7, 2.5, 3},
-                EnumList = new List<DummyEnum> { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB}
+                DoubleList = new List<double> { 1.7, 2.5, 3 },
+                EnumList = new List<DummyEnum> { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB }
             };
 
             var encoded = EntryConvert.EncodeObject(dummy, defaultSerialization);
@@ -320,7 +350,7 @@ namespace Moryx.Tests
         public void EncodeCollection()
         {
             // Arrange
-            var values = new string[]{"Hello", "World"};
+            var values = new string[] { "Hello", "World" };
 
             // Act
             var encoded = EntryConvert.EncodeObject(values);
@@ -402,7 +432,7 @@ namespace Moryx.Tests
 
             if (type == CollectionType.Dictionary)
             {
-                var array = (collection as IEnumerable<KeyValuePair<int,SubClass>>).ToArray();
+                var array = (collection as IEnumerable<KeyValuePair<int, SubClass>>).ToArray();
                 for (var i = 0; i < totalSize; i++)
                 {
                     Assert.AreEqual((float)i + 1, array[i].Key, "Key not set!");
@@ -498,7 +528,7 @@ namespace Moryx.Tests
 
             // Act
             var colEntry = CollectionEntry(encoded.SubEntries, type);
-            if(type == CollectionType.Dictionary)
+            if (type == CollectionType.Dictionary)
                 colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier) - 1));
             else
                 colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier)));
@@ -780,7 +810,7 @@ namespace Moryx.Tests
         public void FileStreamEncode()
         {
             // Arrange
-            var testString =  "This is a test";
+            var testString = "This is a test";
             var testFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "text.txt");
             var streamDummy = new FileStreamDummy(testFilePath, FileMode.Create);
             var testBytes = Encoding.UTF8.GetBytes(testString);

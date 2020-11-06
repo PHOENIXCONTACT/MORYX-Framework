@@ -140,7 +140,9 @@ namespace Moryx.Serialization
         /// </summary>
         private static IEnumerable<Entry> Prototypes(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization)
         {
-            var possibleElementValues = customSerialization.PossibleValues(memberType, customAttributeProvider);
+            var possibleElementValues = IsCollection(memberType)
+                ? customSerialization.PossibleElementValues(memberType, customAttributeProvider)
+                : customSerialization.PossibleValues(memberType, customAttributeProvider);
 
             foreach (var prototype in customSerialization.Prototypes(memberType, customAttributeProvider))
             {
@@ -168,15 +170,16 @@ namespace Moryx.Serialization
             if (transformedType != EntryValueType.Class)
             {
                 var value = type.Prototype.ToString();
+                var valueType = type.Prototype.GetType();
                 encoded = new Entry
                 {
-                    DisplayName = type.Key,
+                    DisplayName = valueType.Name,
                     Identifier = Entry.CreatedIdentifier,
                     Value = new EntryValue
                     {
                         Current = value,
                         Default = value,
-                        Type = TransformType(type.Prototype.GetType())
+                        Type = TransformType(valueType)
                     }
                 };
             }
