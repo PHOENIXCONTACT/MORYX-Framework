@@ -143,10 +143,12 @@ namespace Moryx.Serialization
             var possibleElementValues = IsCollection(memberType)
                 ? customSerialization.PossibleElementValues(memberType, customAttributeProvider)
                 : customSerialization.PossibleValues(memberType, customAttributeProvider);
+            var validation = customSerialization.CreateValidation(memberType, customAttributeProvider);
 
             foreach (var prototype in customSerialization.Prototypes(memberType, customAttributeProvider))
             {
                 var prototypeEntry = Prototype(prototype, customSerialization);
+                prototypeEntry.Validation = validation;
                 prototypeEntry.Value.Possible = possibleElementValues;
                 yield return prototypeEntry;
             }
