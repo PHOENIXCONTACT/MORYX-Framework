@@ -38,13 +38,12 @@ namespace Moryx.Configuration
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            // Create prototypes from possible values
             var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
-            if (possibleValuesAtt == null)
-            {
+            // We can not create prototypes for possible primitives
+            if (possibleValuesAtt == null || IsPrimitiveCollection(memberType))
                 return base.Prototypes(memberType, attributeProvider);
-            }
 
+            // Create prototypes from possible values
             var list = new List<EntryPrototype>();
             foreach (var value in possibleValuesAtt.GetValues(Container))
             {
@@ -59,14 +58,25 @@ namespace Moryx.Configuration
         public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
-            if (valuesAttribute == null)
-            {
+            // Possible values for primitive collections only apply to members
+            if (valuesAttribute == null || IsPrimitiveCollection(memberType))
                 return base.PossibleValues(memberType, attributeProvider);
-            }
 
             // Use attribute
             var values = valuesAttribute.GetValues(Container);
             return values?.Distinct().ToArray();
+        }
+
+        /// <summary>
+        /// Check if a property is a collection of primitives
+        /// </summary>
+        private static bool IsPrimitiveCollection(Type memberType)
+        {
+            if (!EntryConvert.IsCollection(memberType))
+                return false;
+
+            var elementType = EntryConvert.ElementType(memberType);
+            return EntryConvert.ValueOrStringType(elementType);
         }
 
 

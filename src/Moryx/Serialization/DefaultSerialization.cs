@@ -46,32 +46,39 @@ namespace Moryx.Serialization
                 memberType = EntryConvert.ElementType(memberType);
             }
 
-            object prototype;
+            List<EntryPrototype> prototypes = new List<EntryPrototype>();
             if (memberType == typeof(string))
             {
-                prototype = string.Empty;
+                prototypes.Add(new EntryPrototype(nameof(String), string.Empty));
+            }
+            else if (memberType.IsEnum)
+            {
+                foreach (Enum enumValue in Enum.GetValues(memberType))
+                    prototypes.Add(new EntryPrototype(enumValue.ToString("G"), enumValue));
             }
             else
             {
-                prototype = Activator.CreateInstance(memberType);
-                ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
+                var prototype = Activator.CreateInstance(memberType);
+                if (memberType.IsClass)
+                    ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
+                prototypes.Add(new EntryPrototype(memberType.Name, prototype));
             }
 
-            return new[]
-            {
-                new EntryPrototype(memberType.Name, prototype)
-            };
+            return prototypes.ToArray();
         }
 
         /// <see cref="ICustomSerialization"/>
         public virtual string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Element type for collections
-            if (EntryConvert.IsCollection(memberType))
-                return new[] { EntryConvert.ElementType(memberType).Name };
+            var isCollection = EntryConvert.IsCollection(memberType);
+            if (isCollection)
+                memberType = EntryConvert.ElementType(memberType);
 
-            // Names of Enums or null
-            return memberType.IsEnum ? Enum.GetNames(memberType) : null;
+            // Enum names, member name or null
+            return memberType.IsEnum
+                ? Enum.GetNames(memberType)
+                : isCollection ? new[] { memberType.Name } : null;
         }
 
         /// <see cref="ICustomSerialization"/>
