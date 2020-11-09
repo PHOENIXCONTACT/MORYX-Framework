@@ -6,7 +6,7 @@ using System;
 namespace Moryx.Products.Management
 {
     /// <summary>
-    /// Result of a product import
+    /// Context of a product import session
     /// </summary>
     public class ProductImportContext
     {

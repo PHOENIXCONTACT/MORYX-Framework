@@ -93,7 +93,7 @@ namespace Moryx.Products.Management
         /// </summary>
         Task<ProductImporterResult> IProductImporter.Import(ProductImportContext context, object parameters)
         {
-            var result = Import((TParameters) parameters);
+            var result = Import(context, (TParameters) parameters);
             Parameters = GenerateParameters();
             return result;
         }
@@ -101,6 +101,6 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Import products using typed parameters
         /// </summary>
-        protected abstract Task<ProductImporterResult> Import(TParameters parameters);
+        protected abstract Task<ProductImporterResult> Import(ProductImportContext context, TParameters parameters);
     }
 }

@@ -22,7 +22,7 @@ namespace Moryx.Products.Management.Importers
     public class DefaultImporter : ProductImporterBase<ProductImporterConfig, DefaultImporterParameters>
     {
         /// <inheritdoc />
-        protected override Task<ProductImporterResult> Import(DefaultImporterParameters parameters)
+        protected override Task<ProductImporterResult> Import(ProductImportContext context, DefaultImporterParameters parameters)
         {
             // TODO: Use type wrapper
             var type = ReflectionTool.GetPublicClasses<ProductType>(p => p.Name == parameters.ProductType)
