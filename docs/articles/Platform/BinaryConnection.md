@@ -18,16 +18,16 @@ To implement your protocol you must create two classes: a validator and an inter
 For header based protocols simply derive from `HeaderMessageInterpreter<T>` where `T` is the type of your header class. For the IPS-header please have a look at IpsHeader.cs(info). The base class will first read and parse the header. Then it will extract the payload length from the header and read the payload. If all is complete the binary connection publishes the message of type BinaryMessage<THeader>.
 
 ````cs
-public class IpsHeaderInterpreter : HeaderMessageInterpreter<IpsHeader>
+public class MyHeaderInterpreter : HeaderMessageInterpreter<MyHeader>
 {
-    protected override int HeaderSize => return IpsHeader.HeaderLength;
+    protected override int HeaderSize => return MyHeader.HeaderLength;
 
     protected override int FooterSize => 0;
 
-    private static IpsHeaderInterpreter _instance;
-    public static IpsHeaderInterpreter Instance
+    private static MyHeaderInterpreter _instance;
+    public static MyHeaderInterpreter Instance
     {
-        get { return _instance ?? (_instance = new IpsHeaderInterpreter()); }
+        get { return _instance ?? (_instance = new MyHeaderInterpreter()); }
     }
 }
 ````
@@ -91,13 +91,13 @@ public class HtmlInterpreter : DelimitedMessageInterpreter
 Validation is similar for both types of protocols. The only difference is that header based protocols must cast the message first to `BinaryMessage<THeader>`. Make sure to return the singleton instance of your protocol in the validator.
 
 ````cs
-public class IpsMessageValidator : IMessageValidator
+public class MyMessageValidator : IMessageValidator
 {
     public IMessageInterpreter Interpreter => IpsHeaderInterpreter.Instance;
 
     public bool Validate(BinaryMessage message)
     {
-        var ipsHeader = ((BinaryMessage<IpsHeader>)message).Header;
+        var ipsHeader = ((BinaryMessage<MyHeader>)message).Header;
         return ipsHeader.ModeID == 401;
     }
 }
