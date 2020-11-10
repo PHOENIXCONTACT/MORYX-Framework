@@ -2,9 +2,9 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxPlatformVersion>3.0.0-dev.223</MoryxPlatformVersion>
-    <MoryxClientFrameworkVersion>3.0.0-dev.63</MoryxClientFrameworkVersion>
-    <MoryxMaintenanceWebVersion>3.0.0-dev.56</MoryxMaintenanceWebVersion>
+    <MoryxPlatformVersion>3.0.0-dev.227</MoryxPlatformVersion>
+    <MoryxClientFrameworkVersion>3.0.0-dev.66</MoryxClientFrameworkVersion>
+    <MoryxMaintenanceWebVersion>3.0.0-dev.57</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
