@@ -16,13 +16,13 @@ Because the `EntryConvert`-API can be confusing on first sight, we will split it
 The `EntryConvert` API can convert objects and types as long as they comply with a few basic rules:
 
 * Properties not fields: All attributes of a type must be defined as properties, not public fields. Therefor `public int Foo { get; set; }` instead of `public int Foo;`
-* Public parameterless constructor: All types within the class hierarchy need to offer a public constructor without parameters. In Generics this would be defined as `new()` or in code `public Foo() { }`
+* Public parameter-less constructor: All types within the class hierarchy need to offer a public constructor without parameters. In Generics this would be defined as `new()` or in code `public Foo() { }`. For the root object `EntryConvert` can extract Constructors as `MethodEntry`, which can be exchanged with a client and used to create instances. 
 * Primitives or classes: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum or a another class.
 * Dictionaries of `<Primitive, Class`: Dictionaries are only supported if the key is a primitive type like `int` or `string` and the value is a class.
 
 ## Serialize Objects
 
-The return value of `EncodeClass` or `EncodeObject` is a collection of entries, that contain the properties of the given argument and their recursive children. It does not return a root entry for two reasons - information like identifier (key) are missing and in most cases the root object already has a DTO and only needs a generic way to include properties of derived classes.
+The return value of `EncodeClass` or `EncodeObject` is a root entry, that contains the properties of the given argument and their recursive children.
 
 Let's look at this with an example:
 
@@ -42,7 +42,7 @@ public class FooDto
 {
     public int FooId { get; set; }
 
-    public Entry[] Properties { get; set; }
+    public Entry Properties { get; set; }
 }
 
 public void Serialize()
@@ -77,7 +77,7 @@ If you try this examples yourself, you will notice, that properties also contain
 
 ## Deserialize Objects
 
-When converting the modified `IEnumerable<Entry>` back into an object there are two choices - creating a new object or updating an existing one. Using the `FooDto` from the previous example both options are shown below.
+When converting the modified `Entry` back into an object there are two choices - creating a new object or updating an existing one. Using the `FooDto` from the previous example both options are shown below.
 
 ````cs
 public void Deserialize()
@@ -143,7 +143,7 @@ public void Deserialize(Entry entry, FileStreamDummy dummy)
 
 ## ICustomSerialization
 
-All public methods of `EntryConvert` have overloads that expect an instance of [ICustomSerialization](xref:Moryx.Serialization.ICustomSerialization) to modify the behavior of the serializer where necessary. The overloads without the parameter use a Singleton instance of `DefaultSerialization`. When implementing a new version of `ICustomSerialization` it is recommended to derive from [DefaultSerialization](xref:Moryx.Serialization.DefaultSerialization) and only override what shall behave differently.
+All public methods of `EntryConvert` have overloads that expect an instance of [ICustomSerialization](xref:Moryx.Serialization.ICustomSerialization) to modify the behavior of the serializer where necessary. The overloads without the parameter use a Singleton instance of `DefaultSerialization`. When implementing a new version of `ICustomSerialization` it is recommended to derive from [DefaultSerialization](xref:Moryx.Serialization.DefaultSerialization) and only override what shall behave different.
 
 ````cs
 public class FooSerialization : DefaultSerialization
@@ -157,7 +157,7 @@ public class FooSerialization : DefaultSerialization
     public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
     {
         if (memberType.Name == nameof(DerivedFoo.SomeName))
-            return new [] { "Thomas", "Dennis", "Slawa", "Robert", "Moryx", "Michael", "Sascha" };
+            return new [] { "Alice", "Bob" };
 
         return base.PossibleValues(property);
     }
@@ -183,7 +183,7 @@ The [EntrySerializeAttribute](xref:Moryx.Serialization.EntrySerializeAttribute) 
 
 ### Serialize Properties
 
-Properties are serialized by the following rulues by default:
+Properties are serialized by the following rules by default:
 
 | Class | Properties | Result |
 |-------|------------|--------|

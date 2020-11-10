@@ -47,7 +47,7 @@ Entry validation enables to check if changed property value fit validation crite
 
 ## SubEntries
 
-The recursive `SubEntries` structure represents properties of a `EntryValueType.Class` entry or items of `EntryValueType.Collection` entry. For collections the `SubEntries` collection can be modified by the client. Items are deleted by simply removing from the collection and added by choosing a prototype entry to instantiate. Collections without polymorphism contain only one prototype.
+The recursive `SubEntries` structure represents properties of a `EntryValueType.Class` entry or items of `EntryValueType.Collection` entry. Some class properties can be set with different derived types. For collections the `SubEntries` collection can be modified by the client. Items are deleted by simply removing from the collection and added by choosing a prototype entry to instantiate. Collections without polymorphism contain only one prototype.
 
 ## Examples
 

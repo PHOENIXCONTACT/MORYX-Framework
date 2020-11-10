@@ -26,10 +26,10 @@ var resolver = resolverFactory.Create("Branch.Name");
 
 var root = new Root()
 {
-    Branch = new Branch { Name = "Thomas" }
+    Branch = new Branch { Name = "Alice" }
 };
 
-var name = resolver.Resolve(root); // Value of name = "Thomas"
+var name = resolver.Resolve(root); // Value of name = "Alice"
 
 // New or modified object
 root = new Root()

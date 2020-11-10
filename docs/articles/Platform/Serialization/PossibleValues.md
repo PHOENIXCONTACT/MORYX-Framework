@@ -43,7 +43,7 @@ public abstract class PossibleValuesAttribute : Attribute
 
 ### PrimitiveValuesAttribute
 
-This basic implemtantion of the `PrimitiveValuesAttribute` enables you to add several possible values to basic-datatype properties. It supports the following datatypes:
+This basic implementation of the `PossibleValuesAttribute` enables you to add several possible values to basic-datatype properties. It supports the following datatypes:
 
 - bool
 - byte
@@ -117,4 +117,17 @@ public StrategyConfig ActiveStrategy { get; set; }
 [DataMember]
 [PluginConfigs(typeof(IPlugin))]
 public List<PluginConfig> ActivePlugins { get; set; }
+````
+
+### PossibleTypesAttribute
+
+This attribute generates possible values from given or derived types found at runtime, either as simple type name or full name. This attribute is useful when creating modules or components, that can be extended with derived types later.
+
+````cs
+[PossibleTypes(typeof(MyBaseType), UseFullName = true)]
+public string ConfiguredType { get; set; }
+
+[DataMember]
+[PossibleTypes(new []{ typeof(Type1), typeof(Type2) })]
+public List<string> SupportedTypes { get; set; }
 ````
