@@ -3,7 +3,9 @@ uid: Capabilities
 ---
 # Capabilities
 
-[Capabilities](xref:Moryx.AbstractionLayer.Capabilities.ICapabilities) are basically a self description of a [Resource](../Resources/Overview.md). Every [Activity](Activities.md) defines which capabilities it needs and the provided information will be used to find a matching Resource to handle the activity. It is also possible that a resource has multiple capabilities and is able to handle various activities.
+[Capabilities](xref:Moryx.AbstractionLayer.Capabilities.ICapabilities) are based on the idea of [set theory](https://en.wikipedia.org/wiki/Set_theory). Each class with its attributes and functions describes a set. Within MORYX modules can use required capabilities to describe a set and fetch aöö resources from the `ResourceManagement` that fullfil the membership function are part of that set. [Resources](../Resources/Overview.md) can export their capabilities to be matched against the required capabilities. Every [Activity](Activities.md) defines which capabilities it needs and the provided information will be used to find a matching Resource to handle the activity. It is also possible that a resource has multiple capabilities and is able to handle various activities.
+
+![Capabilities](images/capabilities.svg)
 
 ## Single Capabilities
 
@@ -78,7 +80,7 @@ So it is possible to extend a Capability with different information to distingui
 
 ## Multiple Capabilities
 
-A resource can also have multiple capabilities. For that the [CombinedCapabilities](xref:Moryx.AbstractionLayer.Capabilities.CombinedCapabilities) class should be used, which implementes the ICapabilities interface as well. Thus, it is possible to set the resource capabilities to a list of capabilities like in the following example:
+A resource can also have multiple capabilities. For that the [CombinedCapabilities](xref:Moryx.AbstractionLayer.Capabilities.CombinedCapabilities) class should be used, which implements the ICapabilities interface as well. In set theory `CombinedCapabilities` represent unions or intersections depending on whether they are used as required or provided capabilities:
 
 ```` cs
 // some resource code
