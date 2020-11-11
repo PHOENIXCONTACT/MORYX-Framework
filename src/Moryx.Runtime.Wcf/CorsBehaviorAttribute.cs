@@ -60,13 +60,14 @@ namespace Moryx.Runtime.Wcf
         {
             if (reply.Properties["httpResponse"] is HttpResponseMessageProperty httpResponse)
             {
-                // Check if this is the response of a cors preflight
+                // Always set cors headers
+                httpResponse.Headers["Access-Control-Allow-Origin"] = "*";
+                httpResponse.Headers["Access-Control-Request-Method"] = "POST,GET,PUT,DELETE,OPTIONS";
+                httpResponse.Headers["Access-Control-Allow-Headers"] = "X-Requested-With,Content-Type";
+                // If there was a CORS preflight, make sure status indicates success
                 if (correlationState is CorsPreflightState)
                 {
                     httpResponse.StatusCode = HttpStatusCode.NoContent;
-                    httpResponse.Headers["Access-Control-Allow-Origin"] = "*";
-                    httpResponse.Headers["Access-Control-Request-Method"] = "POST,GET,PUT,DELETE,OPTIONS";
-                    httpResponse.Headers["Access-Control-Allow-Headers"] = "X-Requested-With,Content-Type";
                 }
             }
         }
