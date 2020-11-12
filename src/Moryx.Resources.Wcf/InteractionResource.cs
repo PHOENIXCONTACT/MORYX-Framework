@@ -61,11 +61,11 @@ namespace Moryx.Resources.Wcf
         }
 
         /// <inheritdoc />
-        protected override void OnDispose()
+        protected override void OnStop()
         {
             Host.Stop();
 
-            base.OnDispose();
+            base.OnStop();
         }
 
         /// <inheritdoc />
