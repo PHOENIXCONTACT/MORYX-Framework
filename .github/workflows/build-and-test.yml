@@ -15,6 +15,8 @@ env:
   MORYX_OPTIMIZE_CODE: "false"
   MORYX_BUILD_CONFIG: "Release"
   MORYX_BUILDNUMBER: ${{github.run_number}}
+  dotnet_sdk_version: '5.0.100'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 jobs:
   Build:
@@ -22,8 +24,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.dotnet_sdk_version }}
     
     - name: Setup NuGet.exe
       uses: NuGet/setup-nuget@v1
@@ -45,8 +49,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet_sdk_version }}
 
       - name: Setup NuGet.exe
         uses: NuGet/setup-nuget@v1
@@ -68,8 +74,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet_sdk_version }}
 
       - name: Setup NuGet.exe
         uses: NuGet/setup-nuget@v1
