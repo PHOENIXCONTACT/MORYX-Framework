@@ -1,11 +1,12 @@
 name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
-
 on:
   push:
     branches: 
       - dev
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
   pull_request:
     branches: 
       - dev
@@ -14,9 +15,6 @@ env:
   MORYX_OPTIMIZE_CODE: "false"
   MORYX_BUILD_CONFIG: "Release"
   MORYX_BUILDNUMBER: ${{github.run_number}}
-  MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
-  MORYX_PACKAGE_TARGET: "https://www.myget.org/F/moryx/api/v2/package"
-  MORYX_PACKAGE_TARGET_V3: "https://www.myget.org/F/moryx/api/v3/index.json"
 
 jobs:
   Build:
@@ -135,6 +133,20 @@ jobs:
           name: packages
           path: artifacts/Packages/
 
-      - name: Publish packages
+      - name: Publish on MyGet
+        if: ${{ startsWith(github.ref, 'refs/heads/') }} # Normal branches are published to myget
         shell: pwsh
+        env:
+          MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
+          MORYX_PACKAGE_TARGET: "https://www.myget.org/F/moryx/api/v2/package"
+          MORYX_PACKAGE_TARGET_V3: "https://www.myget.org/F/moryx/api/v3/index.json"
+        run: ./Build.ps1 -Publish
+
+      - name: Publish on NuGet
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }} # Version Tags are published to nuget
+        shell: pwsh
+        env:
+          MORYX_NUGET_APIKEY: ${{secrets.NUGET_TOKEN}}
+          MORYX_PACKAGE_TARGET: "https://api.nuget.org/v3/index.json"
+          MORYX_PACKAGE_TARGET_V3: "https://api.nuget.org/v3/index.json"
         run: ./Build.ps1 -Publish
