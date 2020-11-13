@@ -501,7 +501,7 @@ function Invoke-Publish {
 
     foreach ($package in $packages) {
         Write-Host "Pushing package $package"
-        & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET -Verbosity $env:MORYX_NUGET_VERBOSITY
+        & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET -Verbosity $env:MORYX_NUGET_VERBOSITY -NoSymbols
         Invoke-ExitCodeCheck $LastExitCode;
     }
 
