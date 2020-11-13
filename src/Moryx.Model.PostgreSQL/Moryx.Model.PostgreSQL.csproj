@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net45;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net45;net461;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>EntityFramework DataModel based on Npgsql.</Description>
     <CreatePackage>true</CreatePackage>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="Npgsql" Version="4.1.5" />
   </ItemGroup>
 </Project>
