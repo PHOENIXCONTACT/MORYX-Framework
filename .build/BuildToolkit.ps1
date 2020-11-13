@@ -355,7 +355,7 @@ function Get-CsprojIsNetCore($CsprojItem) {
     if ($null -ne $sdkProject) {
         # Read Target Framework
         $targetFramework = $csprojContent.Project.PropertyGroup.TargetFramework;
-        if ($targetFramework -Match "netcoreapp") {
+        if ($targetFramework -Match "netcoreapp" -or $targetFramework -Match "net5.") {
             # NETCore
             return $true;
         }
