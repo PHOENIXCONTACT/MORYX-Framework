@@ -75,7 +75,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Convert a single property into a derived type of entry using a custom strategy
         /// </summary>
-        /// <returns>Covnerted property</returns>
+        /// <returns>Converted property</returns>
         public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization)
         {
             // Fill with default if entry is null
@@ -88,12 +88,13 @@ namespace Moryx.Serialization
                 Validation = customSerialization.CreateValidation(property.PropertyType, property)
             };
 
-            // Include prototypes for collections and classes
-            if (entry.Value.Type == EntryValueType.Collection || entry.Value.Type == EntryValueType.Class)
-            {
-                var prototypes = Prototypes(property.PropertyType, property, customSerialization);
-                entry.Prototypes.AddRange(prototypes);
-            }
+            // No prototypes for readonly entries or entries without flexible sub-entries
+            if (entry.Value.IsReadOnly || entry.Value.Type != EntryValueType.Collection && entry.Value.Type != EntryValueType.Class)
+                return entry;
+
+            // Determine and convert prototypes
+            var prototypes = Prototypes(property.PropertyType, property, customSerialization);
+            entry.Prototypes.AddRange(prototypes);
 
             return entry;
         }
@@ -385,7 +386,7 @@ namespace Moryx.Serialization
                 Description = method.GetDescription(),
                 Parameters = new Entry
                 {
-                    DisplayName = "Root", 
+                    DisplayName = "Root",
                     Identifier = "Root",
                     Value = new EntryValue { Type = EntryValueType.Class },
                     SubEntries = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToList()
@@ -542,10 +543,10 @@ namespace Moryx.Serialization
         {
             // Retrieve the most specific constructor matched by the encoded method entry
             var constructor = (from ctor in type.GetConstructors()
-                let parameters = ctor.GetParameters()
-                where parameters.Length == encodedConstructor.Parameters.SubEntries.Count
-                      && ParametersProvided(parameters, encodedConstructor)
-                select ctor).First();
+                               let parameters = ctor.GetParameters()
+                               where parameters.Length == encodedConstructor.Parameters.SubEntries.Count
+                                     && ParametersProvided(parameters, encodedConstructor)
+                               select ctor).First();
             var arguments = ConvertArguments(constructor, encodedConstructor, customSerialization);
             var instance = constructor.Invoke(arguments);
             return instance;
@@ -596,7 +597,7 @@ namespace Moryx.Serialization
                 // Update class
                 else if (propertyType.IsClass)
                 {
-                   UpdateInstance(value, mapped.Entry ?? new Entry(), customSerialization);
+                    UpdateInstance(value, mapped.Entry ?? new Entry(), customSerialization);
                 }
                 else
                 {
