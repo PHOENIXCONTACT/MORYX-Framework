@@ -316,6 +316,22 @@ namespace Moryx.Tests
         }
 
         [Test]
+        public void EncodeReadonlyCollection()
+        {
+            // Arrange
+            var dummy = new ListDummy();
+
+            // Act
+            var encoded = EntryConvert.EncodeObject(dummy);
+            
+            // Assert
+            var readList = encoded.SubEntries[3];
+            Assert.AreEqual(1, readList.SubEntries.Count);
+            Assert.IsTrue(readList.Value.IsReadOnly);
+            Assert.IsEmpty(readList.Prototypes);
+        }
+
+        [Test]
         public void EncodeObject()
         {
             // Arrange
