@@ -22,26 +22,23 @@ jobs:
   Build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.dotnet_sdk_version }}
-    
-    - name: Setup NuGet.exe
-      uses: NuGet/setup-nuget@v1
+      - uses: actions/checkout@v2
 
-    - name: Build
-      shell: pwsh
-      run: ./Build.ps1 -Build -Pack
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet_sdk_version }}
 
-    - name: Upload package artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: packages
-        path: artifacts/Packages/
-        retention-days: 1
+      - name: Build
+        shell: pwsh
+        run: ./Build.ps1 -Build -Pack
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: packages
+          path: artifacts/Packages/
+          retention-days: 1
 
   UnitTests:
     needs: [Build]
@@ -53,9 +50,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.dotnet_sdk_version }}
-
-      - name: Setup NuGet.exe
-        uses: NuGet/setup-nuget@v1
 
       - name: Execute Unit Tests
         shell: pwsh
@@ -78,9 +72,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.dotnet_sdk_version }}
-
-      - name: Setup NuGet.exe
-        uses: NuGet/setup-nuget@v1
 
       - name: Execute Integration Tests
         shell: pwsh
@@ -132,8 +123,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: Setup NuGet.exe
-        uses: NuGet/setup-nuget@v1
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet_sdk_version }}
   
       - name: Download package artifacts
         uses: actions/download-artifact@v2
