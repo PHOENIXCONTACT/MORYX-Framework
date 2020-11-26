@@ -6,9 +6,6 @@
     <a href="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/workflows">
         <img src="https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/workflows/CI/badge.svg" alt="CI">
     </a>
-    <a href="https://www.myget.org/feed/Packages/moryx">
-        <img src="https://img.shields.io/myget/moryx/v/Moryx.AbstractionLayer" alt="MyGet">
-    </a>
     <a href="https://codecov.io/gh/PHOENIXCONTACT/MORYX-AbstractionLayer/branch/dev">
         <img alt="Coverage" src="https://codecov.io/gh/PHOENIXCONTACT/MORYX-AbstractionLayer/coverage.svg?branch=dev" />
     </a>
