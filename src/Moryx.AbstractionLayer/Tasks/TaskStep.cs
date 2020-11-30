@@ -21,7 +21,7 @@ namespace Moryx.AbstractionLayer
     [DataContract(IsReference = true)]
     public abstract class TaskStep<TActivity, TProcParam, TParam> : WorkplanStepBase, ITaskStep<TParam>
         where TActivity : IActivity<TProcParam>, new()
-        where TProcParam : IParameters, new()
+        where TProcParam : IParameters
         where TParam : TProcParam, new()
     {
         private IIndexResolver _indexResolver;
