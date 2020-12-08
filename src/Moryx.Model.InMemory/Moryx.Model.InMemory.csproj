@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net45;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>InMemory extension to Moryx.Model.</Description>
+    <Description>InMemory extension for unit tests referencing Moryx.Model</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 

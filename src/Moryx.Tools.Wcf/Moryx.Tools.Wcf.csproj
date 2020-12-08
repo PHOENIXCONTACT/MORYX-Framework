@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net45;net461</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Wcf integation in Platform.</Description>
+    <Description>Types and tools for WCF integation in MORYX server or client applications</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 

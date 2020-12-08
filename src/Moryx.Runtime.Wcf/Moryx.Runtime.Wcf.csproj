@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Extensions for the Moryx.Runtime for hosting wcf services.</Description>
+    <Description>WebService integration for MORYX applications based on WCF</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net45;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Extended model functionality.</Description>
+    <Description>Datamodel integration for MORYX applications based on Entity Framework</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 

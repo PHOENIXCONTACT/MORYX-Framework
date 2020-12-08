@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net45;net461;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>EntityFramework DataModel based on Npgsql.</Description>
+    <Description>Adapter for Mory.Model on PostgreSQL</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 
