@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>MORYX Runtime Module: ProductManagement</Description>
+    <Description>ProductManagement module hosting product types and instances, as well as recipes and workplans.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>MORYX Runtime Module: ResourceManagement</Description>
+    <Description>ResourceManagement module composing and maintaining the resource graph as the habitat for digital twins of manufacturing assets.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 
