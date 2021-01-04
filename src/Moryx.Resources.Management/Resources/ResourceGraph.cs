@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 
@@ -24,16 +25,17 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IResourceTypeController TypeController { get; set; }
 
+        private readonly ReaderWriterLockSlim _graphLock = new ReaderWriterLockSlim();
+
         /// <summary>
         /// All resources of the graph
-        /// TODO: Consider replacing with standard dictionary and self-implement sync for improved performance
         /// </summary>
-        private readonly IDictionary<long, ResourceWrapper> _graph = new ConcurrentDictionary<long, ResourceWrapper>();
+        private readonly IDictionary<long, ResourceWrapper> _graph = new Dictionary<long, ResourceWrapper>();
 
         /// <summary>
         /// Quick access to all public resources
         /// </summary>
-        private readonly ICollection<IPublicResource> _publicResources = new SynchronizedCollection<IPublicResource>();
+        private readonly IList<IPublicResource> _publicResources = new List<IPublicResource>();
 
         public Action<Resource> SaveDelegate { get; set; }
 
@@ -41,37 +43,47 @@ namespace Moryx.Resources.Management
 
         public ResourceWrapper Add(Resource instance)
         {
+            _graphLock.EnterWriteLock();
             var wrapper = _graph[instance.Id] = new ResourceWrapper(instance);
 
             if (instance is IPublicResource publicResource)
                 _publicResources.Add(publicResource);
+            _graphLock.ExitWriteLock();
 
             return wrapper;
         }
 
         public bool Remove(Resource instance)
         {
-            if (_graph.Remove(instance.Id))
-            {
+            _graphLock.EnterWriteLock();
+            var found = _graph.Remove(instance.Id);
+            if (found)
                 _publicResources.Remove(instance as IPublicResource);
-                return true;
-            }
-            return false;
+            _graphLock.ExitWriteLock();
+
+            return found;
         }
 
         public Resource Get(long id)
         {
-            return _graph.ContainsKey(id) ? _graph[id].Target : null;
+            return GetWrapper(id)?.Target;
         }
 
         public ResourceWrapper GetWrapper(long id)
         {
-            return _graph.ContainsKey(id) ? _graph[id] : null;
+            _graphLock.EnterReadLock();
+            var match = _graph.ContainsKey(id) ? _graph[id] : null;
+            _graphLock.ExitReadLock();
+
+            return match;
         }
 
         public ICollection<ResourceWrapper> GetAll()
         {
-            return _graph.Values;
+            _graphLock.EnterReadLock();
+            var values = _graph.Values;
+            _graphLock.ExitReadLock();
+            return values;
         }
 
         public TResource GetResource<TResource>() where TResource : class, IResource
@@ -107,15 +119,21 @@ namespace Moryx.Resources.Management
 
         public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IResource
         {
+            IEnumerable<TResource> matches;
+            _graphLock.EnterReadLock();
             // Use short cut if a public resource is requested
             if (typeof(IPublicResource).IsAssignableFrom(typeof(TResource)))
-                return _publicResources.Where(p => _graph[p.Id].State.IsAvailable).OfType<TResource>().Where(predicate);
+            {
+                matches = _publicResources.Where(p => _graph[p.Id].State.IsAvailable).OfType<TResource>().Where(predicate);
+            }
+            else
+            {
+                matches = from wrapper in _graph.Values let target = wrapper.Target as TResource 
+                    where target != null && predicate(target) select target;
+            }
+            _graphLock.ExitReadLock();
 
-            // Otherwise iterate the full graph
-            return (from wrapper in _graph.Values
-                    let target = wrapper.Target as TResource
-                    where target != null && predicate(target)
-                    select target);
+            return matches;
         }
 
         public Resource Instantiate(string type)
@@ -134,7 +152,7 @@ namespace Moryx.Resources.Management
 
         public TResource Instantiate<TResource>() where TResource : Resource
         {
-            return (TResource) Instantiate(typeof(TResource).ResourceType());
+            return (TResource)Instantiate(typeof(TResource).ResourceType());
         }
 
         public TResource Instantiate<TResource>(string type) where TResource : class, IResource
