@@ -51,7 +51,8 @@ namespace Moryx.Resources.Management
         /// </summary>
         public void Add(TResource item)
         {
-            UnderlyingCollection.Add(item);
+            lock (UnderlyingCollection)
+                UnderlyingCollection.Add(item);
             RaiseCollectionChanged();
         }
 
@@ -60,7 +61,10 @@ namespace Moryx.Resources.Management
         /// </summary>
         public bool Remove(TResource item)
         {
-            var result = UnderlyingCollection.Remove(item);
+            var result = false;
+            lock (UnderlyingCollection)
+                result = UnderlyingCollection.Remove(item);
+
             if (result)
                 RaiseCollectionChanged();
             return result;
@@ -71,7 +75,8 @@ namespace Moryx.Resources.Management
         /// </summary>
         public void Clear()
         {
-            UnderlyingCollection.Clear();
+            lock (UnderlyingCollection)
+                UnderlyingCollection.Clear();
             RaiseCollectionChanged();
         }
 
@@ -80,7 +85,8 @@ namespace Moryx.Resources.Management
         /// </summary>
         public bool Contains(TResource item)
         {
-            return UnderlyingCollection.Contains(item);
+            lock (UnderlyingCollection)
+                return UnderlyingCollection.Contains(item);
         }
 
         /// <summary>
@@ -88,7 +94,8 @@ namespace Moryx.Resources.Management
         /// </summary>
         public void CopyTo(TResource[] array, int arrayIndex)
         {
-            UnderlyingCollection.CopyTo(array, arrayIndex);
+            lock (UnderlyingCollection)
+                UnderlyingCollection.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -96,7 +103,8 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IEnumerator<TResource> GetEnumerator()
         {
-            return UnderlyingCollection.Cast<TResource>().GetEnumerator();
+            lock (UnderlyingCollection)
+                return UnderlyingCollection.Cast<TResource>().ToList().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

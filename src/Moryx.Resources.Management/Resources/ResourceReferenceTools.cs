@@ -60,7 +60,7 @@ namespace Moryx.Resources.Management
 
             // Create underlying collection if it is not given
             if (underlyingCollection == null)
-                underlyingCollection = new SynchronizedCollection<IResource>();
+                underlyingCollection = new List<IResource>();
 
             var propertyType = property.PropertyType;
             var referenceType = propertyType.GetGenericArguments()[0]; // Type of resource from ICollection<ResourceType>
