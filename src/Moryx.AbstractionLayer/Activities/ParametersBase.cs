@@ -1,14 +1,24 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+
 namespace Moryx.AbstractionLayer
 {
     /// <summary>
-    /// This is a protected base class that can not not be extended outside this assembly
+    /// Outdated base class for parameters use <see cref="Parameters"/> instead
     /// </summary>
+    [Obsolete("Use '" + nameof(Parameters) + "' instead!")]
     public abstract class ParametersBase : IParameters
     {
+        private static ProcessBindingResolverFactory _resolverFactory;
         private IProcess _process;
+
+        /// <summary>
+        /// Singleton resolver factory for process parameter binding
+        /// </summary>
+        protected static ProcessBindingResolverFactory ResolverFactory => _resolverFactory ?? (_resolverFactory = new ProcessBindingResolverFactory());
+
         /// <see cref="IParameters"/>
         public IParameters Bind(IProcess process)
         {
@@ -20,12 +30,6 @@ namespace Moryx.AbstractionLayer
             resolved._process = process;
             return resolved;
         }
-
-        private static ProcessBindingResolverFactory _resolverFactory;
-        /// <summary>
-        /// Singleton resolver factory for process parameter binding
-        /// </summary>
-        protected static ProcessBindingResolverFactory ResolverFactory => _resolverFactory ?? (_resolverFactory = new ProcessBindingResolverFactory());
 
         /// <summary>
         /// Resolve the binding parameters
