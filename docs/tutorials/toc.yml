@@ -1,7 +1,7 @@
 - name: Getting Started
-  items: 
-  - name: Quickstart
-    href: Quickstart.md
+  items:
+  - name: Quickstart Guide
+    href: QuickstartGuide.md
 
   - name: ServerModule
     href: ServerModule/toc.yml
