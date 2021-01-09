@@ -6,7 +6,7 @@ The Moryx Platform is our concept of the eco system in which we develop software
 
 ## 2. Getting Started
 
-If you are new to the `MoryxPlatform`, please follow the [Quickstart](xref:Quickstart) provided in the Tutorials section.
+If you are new to the `MoryxPlatform`, please follow the [Quickstart Guide](xref:QuickstartGuide) provided in the Tutorials section.
 
 ## 3. Use MoryxPlatform Packages
 

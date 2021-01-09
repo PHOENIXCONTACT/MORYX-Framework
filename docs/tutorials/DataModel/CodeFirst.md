@@ -1,5 +1,5 @@
 ---
-uid: GettingsStarted.CodeFirst
+uid: GettingStarted.CodeFirst
 ---
 # Code first
 
@@ -106,7 +106,7 @@ Is that necessary?
 That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`. 
 This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base. 
 It has three properties which are monitored by triggers (Created, Updated, Deleted). 
-These triggers are automatically applied to the entitiy. 
+These triggers are automatically applied to the entity. 
 You can find further information regarding Modification Tracking [here](../../articles/Platform/DataModel/ModificationTracking.md).
 
 ## Entity loading & change tracking behavior
@@ -279,7 +279,7 @@ The entity framework comes with three scripts to do database model migration:
 | `Add-Migration`     | This script is executed every time you want to create a new migration |
 | `Update-Database`   | This runs all database migrations found in the corresponding assembly. This step can also be called from code. |
 
-When EF guys are talking about the *CodeFirst Migrations* approach they mean exaclty these three scripts.
+When EF guys are talking about the *CodeFirst Migrations* approach they mean exactly these three scripts.
 
 ### Initial creation of migration configuration
 

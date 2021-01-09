@@ -61,4 +61,4 @@ public void WriteSomethingToDB()
 
 As you can see you just need to write the most important things. You might wonder how the magic of runtime code generation in context to the repository works. If you want to know more have a look on the [RepositoryProxyBuilder](xref:Model.RepositoryProxyBuilder).
 
-For a complete example please read the [CodeFirst tutorial](xref:GettingsStarted.CodeFirst#Customizations to the migration process).
+For a complete example please read the [CodeFirst tutorial](xref:GettingStarted.CodeFirst#unitofwork-repository-pattern).

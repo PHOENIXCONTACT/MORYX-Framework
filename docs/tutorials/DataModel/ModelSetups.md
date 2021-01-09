@@ -1,5 +1,5 @@
 ---
-uid: GettingsStarted.ModelSteups
+uid: GettingStarted.ModelSetups
 ---
 # Model Setups
 
@@ -39,7 +39,7 @@ First we have to take care of the properties required by the Runtime. They are n
 
 ### Hard coded entity creation
 
-When the setup gets executed, MORYX will create a `IUnitOfWork` and povides it within the `Execute` method. Here everything can be done for setting up the database:
+When the setup gets executed, MORYX will create a `IUnitOfWork` and provides it within the `Execute` method. Here everything can be done for setting up the database:
 
 ````cs
 public void Execute(IUnitOfWork openContext, string setupData)
