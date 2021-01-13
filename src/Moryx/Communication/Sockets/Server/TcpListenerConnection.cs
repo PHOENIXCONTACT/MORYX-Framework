@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Moryx.Container;
@@ -57,6 +58,11 @@ namespace Moryx.Communication.Sockets
         internal int Port => _config.Port;
 
         /// <summary>
+        /// IP-Address of this listener
+        /// </summary>
+        internal IPAddress Address { get; private set; }
+
+        /// <summary>
         /// Flag if incoming connections always need to validate the first message before assigning them
         /// </summary>
         internal bool ValidateBeforeAssignment => _config.ValidateBeforeAssignment;
@@ -87,6 +93,11 @@ namespace Moryx.Communication.Sockets
         public void Initialize(BinaryConnectionConfig config)
         {
             _config = (TcpListenerConfig)config;
+
+            if (IPAddress.TryParse(_config.IpAdress, out var address))
+                Address = address;
+            else
+                Address = IPAddress.Any; // Use previous behavior as fallback
 
             StateMachine.Initialize(this).With<ServerStateBase>();
         }
