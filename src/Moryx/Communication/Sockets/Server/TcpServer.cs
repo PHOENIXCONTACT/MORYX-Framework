@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 
 namespace Moryx.Communication.Sockets
@@ -11,29 +12,71 @@ namespace Moryx.Communication.Sockets
     /// <summary>
     /// Mapping of ports and protocols to make sure we don't mix protocols on ports
     /// </summary>
-    internal static class PortMap
+    internal class PortMap
     {
         /// <summary>
         /// Application global map of ports
         /// </summary>
-        private static readonly IDictionary<int, IMessageInterpreter> Map = new Dictionary<int, IMessageInterpreter>();
+        private static readonly List<PortMap> Registrations = new List<PortMap>();
+        
+        /// <summary>
+        /// IP Address of the registration
+        /// </summary>
+        public IPAddress Address { get; }
+
+        /// <summary>
+        /// Port of the registration
+        /// </summary>
+        public int Port { get; }
+
+        /// <summary>
+        /// Protocol interpreter registered at this address
+        /// </summary>
+        public IMessageInterpreter Interpreter { get; }
+
+        public PortMap(IPAddress address, int port, IMessageInterpreter interpreter)
+        {
+            Address = address;
+            Port = port;
+            Interpreter = interpreter;
+        }
 
         /// <summary>
         /// Try to register a message interpreter on a given port
         /// </summary>
+        /// <param name="address">Ip address to listen on</param>
         /// <param name="port">Port to use</param>
         /// <param name="protocol">Interpreter of the protocol</param>
         /// <returns>True if registration was successful, otherwise false</returns>
-        public static bool Register(int port, IMessageInterpreter protocol)
+        public static bool Register(IPAddress address, int port, IMessageInterpreter protocol)
         {
-            lock (Map)
+            lock (Registrations)
             {
-                if (Map.ContainsKey(port) && !Map[port].Equals(protocol))
-                    return false;
+                IEnumerable<PortMap> addressRelevant;
+                if (IsAny(address))
+                    // If this is a registration for all IPAddresses, we need to compare against all entries
+                    addressRelevant = Registrations;
+                else
+                    // Find all registrations on the same or all addresses
+                    addressRelevant = Registrations.Where(r => IsAny(r.Address) | r.Address.Equals(address));
 
-                Map[port] = protocol;
+                // Within relevant addresses find an entry with the same port
+                var match = addressRelevant.FirstOrDefault(m => m.Port == port);
+                if (match != null && !match.Interpreter.Equals(protocol))
+                    return false; // Conflict
+
+                // Create a registration
+                Registrations.Add(new PortMap(address, port, protocol));
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Check if a given IPAddress represents IPv4 or IPv6 any
+        /// </summary>
+        private static bool IsAny(IPAddress address)
+        {
+            return address.Equals(IPAddress.Any) | address.Equals(IPAddress.IPv6Any);
         }
     }
 
@@ -65,9 +108,9 @@ namespace Moryx.Communication.Sockets
         {
             // First check if port was taken
             var port = listener.Port;
-            var validator = listener.Validator;
-            var interpreter = validator.Interpreter;
-            if (!PortMap.Register(port, interpreter))
+            var address = listener.Address;
+            var interpreter = listener.Validator.Interpreter;
+            if (!PortMap.Register(address, port, interpreter))
             {
                 throw new InvalidOperationException($"Attempted to register protocol header {interpreter} on port {port}, but port was already taken");
             }
@@ -76,10 +119,10 @@ namespace Moryx.Communication.Sockets
             TcpPortListener portListener;
             lock (_listeners)
             {
-                portListener = _listeners.FirstOrDefault(l => l.Port == port);
+                portListener = FindListener(listener);
                 if (portListener == null)
                 {
-                    portListener = new TcpPortListener(port);
+                    portListener = new TcpPortListener(address, port);
                     _listeners.Add(portListener);
                 }
             }
@@ -96,9 +139,14 @@ namespace Moryx.Communication.Sockets
             TcpPortListener target;
             lock (_listeners)
             {
-                target = _listeners.First(l => l.Port == listener.Port);
+                target = FindListener(listener);
             }
             target.TryUnregister(listener);
+        }
+
+        private TcpPortListener FindListener(TcpListenerConnection listener)
+        {
+            return _listeners.FirstOrDefault(l => l.Address.Equals(listener.Address) && l.Port == listener.Port);
         }
     }
 }

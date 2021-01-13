@@ -16,13 +16,18 @@ namespace Moryx.Communication.Sockets
     internal class TcpPortListener
     {
         /// <summary>
-        /// 
+        /// Create new port listener
         /// </summary>
-        /// <param name="port"></param>
-        public TcpPortListener(int port)
+        public TcpPortListener(IPAddress address, int port)
         {
+            Address = address;
             Port = port;
         }
+
+        /// <summary>
+        /// IP-Address of the listener
+        /// </summary>
+        public IPAddress Address { get; }
 
         /// <summary>
         /// Port of this port listener
@@ -91,9 +96,9 @@ namespace Moryx.Communication.Sockets
             if (_listening)
                 return;
 
-            // Start tcplistener and accept clients
+            // Start tcp listener and accept clients
             if (_tcpListener == null)
-                _tcpListener = new TcpListener(new IPEndPoint(IPAddress.Any, Port));
+                _tcpListener = new TcpListener(new IPEndPoint(Address, Port));
             _tcpListener.Start();
             _tcpListener.BeginAcceptTcpClient(ClientConnected, null);
             _listening = true;
