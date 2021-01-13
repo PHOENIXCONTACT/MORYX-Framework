@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Main kernel abstraction for the runtime environment</Description>
+    <Description>Kernel components that comprise the MORYX server side runtime environment</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 

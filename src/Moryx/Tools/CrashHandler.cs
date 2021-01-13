@@ -40,15 +40,15 @@ namespace Moryx.Tools
                 Environment.Exit(2);
             }
         }
-        
+
         /// <summary>
         /// Write an exception message to a file in the CrashLogs directory
         /// </summary>
         public static void WriteErrorToFile(string message)
         {
             var crashDir = Path.Combine(Directory.GetCurrentDirectory(), @"CrashLogs");
-            var fileName = $@"{crashDir}\CrashLog_{DateTime.Now:yy-MM-dd_hh-mm-ss}.txt";
-            
+            var fileName = $@"{crashDir}\CrashLog_{DateTime.Now:s}.txt";
+
             if (!Directory.Exists(crashDir))
                 Directory.CreateDirectory(crashDir);
 

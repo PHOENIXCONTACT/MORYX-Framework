@@ -27,7 +27,6 @@ $NugetPackageArtifacts = "$ArtifactsDir\Packages";
 . "$PSScriptRoot\Output.ps1";
 
 # Define Tools
-$global:MSBuildCli = "msbuild.exe";
 $global:DotNetCli = "dotnet.exe";
 $global:NugetCli = "nuget.exe";
 $global:GitCli = "";
@@ -189,7 +188,7 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
     ForEach ($solution in (Get-ChildItem $RootPath -Filter "*.sln")) {
         Write-Host "Restoring Nuget packages of $solution";
 
-        & $global:NugetCli restore $solution -Verbosity $env:MORYX_NUGET_VERBOSITY -configfile $NugetConfig;
+        & $global:DotNetCli restore $solution --verbosity $env:MORYX_NUGET_VERBOSITY --configfile $NugetConfig;
         Invoke-ExitCodeCheck $LastExitCode;
     }
 
@@ -198,9 +197,12 @@ function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
         $additonalOptions = ",$Options";
     }
 
-    $params = "Configuration=$env:MORYX_BUILD_CONFIG,Optimize=" + (&{If($env:MORYX_OPTIMIZE_CODE -eq $True) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
+    $msbuildParams = "Optimize=" + (&{If($env:MORYX_OPTIMIZE_CODE -eq $True) {"true"} Else {"false"}}) + ",DebugSymbols=true$additonalOptions";
+    $buildArgs = "--configuration", "$env:MORYX_BUILD_CONFIG";
+    $buildArgs += "--verbosity", $env:MORYX_BUILD_VERBOSITY;
+    $buildArgs += "-p:$msbuildParams"
 
-    & $global:MSBuildCli $ProjectFile /p:$params /verbosity:$env:MORYX_BUILD_VERBOSITY
+    & $global:DotNetCli build $ProjectFile @buildArgs
     Invoke-ExitCodeCheck $LastExitCode;
 }
 
@@ -353,7 +355,7 @@ function Get-CsprojIsNetCore($CsprojItem) {
     if ($null -ne $sdkProject) {
         # Read Target Framework
         $targetFramework = $csprojContent.Project.PropertyGroup.TargetFramework;
-        if ($targetFramework -Match "netcoreapp") {
+        if ($targetFramework -Match "netcoreapp" -or $targetFramework -Match "net5.") {
             # NETCore
             return $true;
         }
@@ -501,7 +503,7 @@ function Invoke-Publish {
 
     foreach ($package in $packages) {
         Write-Host "Pushing package $package"
-        & $global:NugetCli push $package $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET -Verbosity $env:MORYX_NUGET_VERBOSITY
+        & $global:DotNetCli nuget push $package --api-key $env:MORYX_NUGET_APIKEY --no-symbols true --skip-duplicate --source $env:MORYX_PACKAGE_TARGET
         Invoke-ExitCodeCheck $LastExitCode;
     }
 
@@ -513,7 +515,7 @@ function Invoke-Publish {
 
     foreach ($symbolPackage in $symbolPackages) {
         Write-Host "Pushing symbol (snupkg) $symbolPackage"
-        & $global:NugetCli push $symbolPackage $env:MORYX_NUGET_APIKEY -Source $env:MORYX_PACKAGE_TARGET_V3 -Verbosity $env:MORYX_NUGET_VERBOSITY
+        & $global:DotNetCli nuget push $symbolPackage --api-key $env:MORYX_NUGET_APIKEY --skip-duplicate --source $env:MORYX_PACKAGE_TARGET_V3
         Invoke-ExitCodeCheck $LastExitCode;
     }
 }
@@ -643,38 +645,6 @@ function Set-AssemblyVersions([string[]]$Ignored = $(), [string]$SearchPath = $R
             Set-AssemblyVersion -InputFile $file;
         }
     }
-}
-
-function Set-VsixManifestVersion([string]$VsixManifest) {
-    $file = Get-Childitem -Path $VsixManifest
-    if (-Not $file) {
-        Write-Host "VSIX Manifest: $VsixManifest was not found!"
-        exit 1;
-    }
-    
-    [xml]$manifestContent = Get-Content $file
-    $manifestContent.PackageManifest.Metadata.Identity.Version = $env:MORYX_ASSEMBLY_VERSION
-    $manifestContent.Save($VsixManifest) 
-
-    Write-Host "Version $env:MORYX_ASSEMBLY_VERSION applied to $VsixManifest!"
-}
-
-function Set-VsTemplateVersion([string]$VsTemplate) {
-    $file = Get-Childitem -Path $VsTemplate
-    if (-Not $file) {
-        Write-Host "VsTemplate: $VsTemplate was not found!"
-        exit 1;
-    }
-
-    [xml]$templateContent = Get-Content $VsTemplate
-
-    $versionRegex = "(\d+)\.(\d+)\.(\d+)\.(\d+)"
-
-    $wizardAssemblyStrongName = $templateContent.VSTemplate.WizardExtension.Assembly -replace $versionRegex, $env:MORYX_ASSEMBLY_VERSION 
-    $templateContent.VSTemplate.WizardExtension.Assembly = $wizardAssemblyStrongName
-    $templateContent.Save($vsTemplate)
-
-    Write-Host "Version$env:MORYX_ASSEMBLY_VERSION applied to $VsTemplate!"
 }
 
 function CreateFolderIfNotExists([string]$Folder) {

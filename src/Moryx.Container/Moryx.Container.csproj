@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Handling of container structure.</Description>
+    <Description>MORYX container functionality based on Castle.Windsor.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 

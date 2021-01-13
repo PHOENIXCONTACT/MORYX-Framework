@@ -7,9 +7,6 @@
     <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/workflows">
         <img src="https://github.com/PHOENIXCONTACT/MORYX-Platform/workflows/CI/badge.svg" alt="CI">
     </a>
-    <a href="https://www.myget.org/feed/Packages/moryx">
-        <img src="https://img.shields.io/myget/moryx/v/Moryx" alt="MyGet">
-    </a>
     <a href="https://codecov.io/gh/PHOENIXCONTACT/MORYX-Platform/coverage.svg?branch=dev">
         <img alt="Coverage" src="https://codecov.io/gh/PHOENIXCONTACT/MORYX-Platform/coverage.svg?branch=dev" />
     </a>
@@ -35,7 +32,26 @@ The MORYX Platform is a .NET based framework to quickly build three-tier applica
 
 ## Getting started
 
-If you want to start developing with or for MORYX, the easiest way is our [template repository](https://github.com/PHOENIXCONTACT/MORYX-Template). It comes with two empty solutions, the necessary package feeds and preinstalled empty MORYX runtime. Add projects and packages to backend and frontend solutions depending on your specific requirements.
+If you want to start developing with or for MORYX, the easiest way is our [template repository](https://github.com/PHOENIXCONTACT/MORYX-Template). It comes with two empty solutions, the necessary package feeds and preinstalled empty MORYX runtime. Add projects and packages to backend and frontend solutions depending on your specific requirements. Install stable releases via Nuget; development releases are available via MyGet.
+
+| Package Name | Release (NuGet) | CI (MyGet) |
+|--------------|-----------------|------------|
+| `Moryx` | [![NuGet](https://img.shields.io/nuget/v/Moryx.svg)](https://www.nuget.org/packages/Moryx/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx)](https://www.myget.org/feed/moryx/package/nuget/Moryx) |
+| `Moryx.Model` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.svg)](https://www.nuget.org/packages/Moryx.Model/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model) |
+| `Moryx.Model.InMemory` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.InMemory.svg)](https://www.nuget.org/packages/Moryx.Model.InMemory/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model.InMemory)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model.InMemory) |
+| `Moryx.Model.PostgreSQL` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.PostgreSQL.svg)](https://www.nuget.org/packages/Moryx.Model.PostgreSQL/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model.PostgreSQL)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model.PostgreSQL) |
+| `Moryx.Container` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Container.svg)](https://www.nuget.org/packages/Moryx.Container/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Container)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Container) |
+| `Moryx.Communication.Serial` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Communication.Serial.svg)](https://www.nuget.org/packages/Moryx.Communication.Serial/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Communication.Serial)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Communication.Serial) |
+| `Moryx.Tools.Wcf` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Tools.Wcf.svg)](https://www.nuget.org/packages/Moryx.Tools.Wcf/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Tools.Wcf)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Tools.Wcf) |
+| `Moryx.Runtime.Wcf` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Wcf.svg)](https://www.nuget.org/packages/Moryx.Runtime.Wcf/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Wcf)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Wcf) |
+| `Moryx.Runtime` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.svg)](https://www.nuget.org/packages/Moryx.Runtime/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime) |
+| `Moryx.Runtime.DbUpdate` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.DbUpdate.svg)](https://www.nuget.org/packages/Moryx.Runtime.DbUpdate/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.DbUpdate)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.DbUpdate) |
+| `Moryx.Runtime.Kernel` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Kernel.svg)](https://www.nuget.org/packages/Moryx.Runtime.Kernel/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Kernel)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Kernel) |
+| `Moryx.Runtime.Maintenance` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Maintenance.svg)](https://www.nuget.org/packages/Moryx.Runtime.Maintenance/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Maintenance)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Maintenance) |
+| `Moryx.Runtime.SmokeTest` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.SmokeTest.svg)](https://www.nuget.org/packages/Moryx.Runtime.SmokeTest/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.SmokeTest)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.SmokeTest) |
+| `Moryx.Runtime.WinService` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.WinService.svg)](https://www.nuget.org/packages/Moryx.Runtime.WinService/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.WinService)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.WinService) |
+| `Moryx.TestTools.SystemTest` | [![NuGet](https://img.shields.io/nuget/v/Moryx.TestTools.SystemTest.svg)](https://www.nuget.org/packages/Moryx.TestTools.SystemTest/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.TestTools.SystemTest)](https://www.myget.org/feed/moryx/package/nuget/Moryx.TestTools.SystemTest) |
+| `Moryx.TestTools.UnitTest` | [![NuGet](https://img.shields.io/nuget/v/Moryx.TestTools.UnitTest.svg)](https://www.nuget.org/packages/Moryx.TestTools.UnitTest/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.TestTools.UnitTest)](https://www.myget.org/feed/moryx/package/nuget/Moryx.TestTools.UnitTest) |
 
 If you wish to contribute to this project, you simply need to clone the repository and open the solution with Visual Studio 2017 or above. The Debug target should be *StartProject*.
 

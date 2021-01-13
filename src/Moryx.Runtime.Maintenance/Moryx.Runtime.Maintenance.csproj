@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Core module to maintain the application. It provides config and logging support by default.</Description>
+    <Description>Core module to configure and control MORYX based applications</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 
