@@ -42,7 +42,7 @@ namespace Moryx.Tools.Wcf
 
         #endregion
 
-        /// <seealso cref="IConfiguredPlugin{T}.Initialize"/>
+        /// <seealso cref="IConfiguredInitializable{T}.Initialize"/>
         public virtual void Initialize(TConfig config)
         {
             Config = config;

@@ -70,7 +70,7 @@ namespace Moryx.Serialization
             var possibleValues = new List<Type>();
             if (_exportBaseType)
             {
-                var baseConfig = StrategyService.GetInterface(typeof(IConfiguredPlugin<>).Name).GetGenericArguments()[0];
+                var baseConfig = StrategyService.GetInterface(typeof(IConfiguredInitializable<>).Name).GetGenericArguments()[0];
                 if (!baseConfig.IsAbstract)
                     possibleValues.Add(baseConfig);
             }

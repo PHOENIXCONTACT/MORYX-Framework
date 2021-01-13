@@ -22,7 +22,7 @@ namespace Moryx.Container
         /// </summary>
         /// <param name="method">Method invoked on the factory - normally a create method like Create(T config, ....)</param>
         /// <param name="arguments">Argument array that must have the components config as the first parameter.</param>
-        /// <returns>Name of interface implemenation</returns>
+        /// <returns>Name of interface implementation</returns>
         protected override string GetComponentName(MethodInfo method, object[] arguments)
         {
             var config = (IPluginConfig)arguments[0];
@@ -44,9 +44,9 @@ namespace Moryx.Container
 
                 var config = additionalArguments["config"];
                 var configType = config.GetType();
-                var genericPluginApi = typeof(IConfiguredPlugin<>).MakeGenericType(configType);
+                var genericPluginApi = typeof(IConfiguredInitializable<>).MakeGenericType(configType);
 
-                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredPlugin<IPluginConfig>.Initialize), new[] { configType });
+                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<IPluginConfig>.Initialize), new[] { configType });
                 initMethod.Invoke(instance, new[] { config });
                 return instance;
             });
