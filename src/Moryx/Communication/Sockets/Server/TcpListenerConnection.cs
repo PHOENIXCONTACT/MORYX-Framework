@@ -97,7 +97,7 @@ namespace Moryx.Communication.Sockets
             if (IPAddress.TryParse(_config.IpAdress, out var address))
                 Address = address;
             else
-                Address = IPAddress.Any; // Use previous behavior as fallback
+                throw new FormatException($"Failed to parse IPAddress: {_config.IpAdress}");
 
             StateMachine.Initialize(this).With<ServerStateBase>();
         }
