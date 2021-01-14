@@ -81,22 +81,22 @@ namespace Moryx.AbstractionLayer.Tests
             Assert.AreEqual(4, newCount);
         }
 
-        public class InsertPartParameters : ParametersBase
+        public class InsertPartParameters : Parameters
         {
             public string Part { get; set; }  // e.g. Product.Part.Product
 
             public IProductType Target { get; set; }
 
             private IBindingResolver _resolver;
-            protected override ParametersBase ResolveBinding(IProcess process)
+
+            protected override void Populate(IProcess process, Parameters instance)
             {
+                var parameters = (InsertPartParameters) instance;
+
                 if (_resolver == null)
                     _resolver = ResolverFactory.Create(Part);
 
-                return new InsertPartParameters
-                {
-                    Target = (IProductType)_resolver.Resolve(process)
-                };
+                parameters.Target = (IProductType) _resolver.Resolve(process);
             }
         }
 

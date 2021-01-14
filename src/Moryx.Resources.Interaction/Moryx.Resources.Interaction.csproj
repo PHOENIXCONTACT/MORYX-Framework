@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Provides the default implementation if the resource interaction</Description>
+    <Description>Resource with a REST endpoint for UIs to interact with the resource graph and instances.</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 

@@ -10,8 +10,10 @@ using Moryx.Resources.Model;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
+#if HAVE_WCF
 using Moryx.Runtime.Wcf;
 using Moryx.Tools.Wcf;
+#endif
 
 namespace Moryx.Resources.Management
 {
@@ -35,6 +37,8 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IDbContextManager DbContextManager { get; set; }
 
+#if HAVE_WCF
+
         /// <summary>Injected property</summary>
         public IWcfClientFactory WcfClientFactory { get; set; }
 
@@ -43,10 +47,10 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IWcfHostFactory WcfHostFactory { get; set; }
 
+#endif
+
         /// <summary>Injected property</summary>
         public IRuntimeConfigManager ConfManager { get; set; }
-
-        #region State transition
 
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
@@ -55,11 +59,15 @@ namespace Moryx.Resources.Management
         {
             // Extend container
             Container.RegisterNotifications();
+#if HAVE_WCF
             Container.RegisterWcf(WcfHostFactory);
+#endif
             Container.ActivateDbContexts(DbContextManager);
 
             // Register imports
+#if HAVE_WCF
             Container.SetInstance(WcfClientFactory).SetInstance(ConfManager);
+#endif
 
             // Register for communication
             Container.Register<IBinaryConnectionFactory>();
@@ -105,16 +113,10 @@ namespace Moryx.Resources.Management
             resourceManager.Stop();
         }
 
-        #endregion
-
-        #region FacadeContainer
-
         private readonly ResourceManagementFacade _resourceManagementFacade = new ResourceManagementFacade();
         IResourceManagement IFacadeContainer<IResourceManagement>.Facade => _resourceManagementFacade;
 
         private readonly NotificationSourceFacade _notificationSourceFacade = new NotificationSourceFacade(ModuleName);
         INotificationSource IFacadeContainer<INotificationSource>.Facade => _notificationSourceFacade;
-
-        #endregion
     }
 }

@@ -12,14 +12,15 @@ namespace Moryx.Products.IntegrationTests
         public override string Name => nameof(TaskB);
     }
 
-    public class ParametersB : ParametersBase
+    public class ParametersB : Parameters
     {
         [EntrySerialize]
         public SubParameter[] Subs { get; set; }
 
-        protected override ParametersBase ResolveBinding(IProcess process)
+        protected override void Populate(IProcess process, Parameters instance)
         {
-            return this;
+            var parameters = (ParametersB) instance;
+            parameters.Subs = Subs;
         }
     }
 

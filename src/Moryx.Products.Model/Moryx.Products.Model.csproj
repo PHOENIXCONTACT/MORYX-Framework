@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net45;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Description>Model for products</Description>
+    <Description>Database model for the ProductManagement module</Description>
     <CreatePackage>true</CreatePackage>
   </PropertyGroup>
 
