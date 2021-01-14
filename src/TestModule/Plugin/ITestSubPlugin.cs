@@ -7,6 +7,6 @@ namespace Moryx.TestModule
 {
     public interface ITestSubPlugin : IConfiguredPlugin<TestSubPluginConfig>
     {
-         
+
     }
 }
