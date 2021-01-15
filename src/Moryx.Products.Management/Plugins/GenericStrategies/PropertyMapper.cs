@@ -39,6 +39,7 @@ namespace Moryx.Products.Management
             TargetType = targetType;
         }
 
+        /// <inheritdoc />
         public void Initialize(PropertyMapperConfig config)
         {
             Config = config;
@@ -65,10 +66,12 @@ namespace Moryx.Products.Management
             return ReflectionTool.PropertyAccessor<object, TColumn>(objectProp);
         }
 
+        /// <inheritdoc />
         public void Start()
         {
         }
 
+        /// <inheritdoc />
         public void Stop()
         {
         }
@@ -95,12 +98,15 @@ namespace Moryx.Products.Management
         protected virtual object ToExpressionValue(object value)
         {
             return Convert.ChangeType(value, Column.PropertyType);
-        } 
+        }
 
         public bool HasChanged(IGenericColumns current, object updated)
         {
             var objectValue = ObjectAccessor.ReadProperty(updated);
             var columnValue = ColumnAccessor.ReadProperty(current);
+
+            if (columnValue == null)
+                return objectValue != null;
 
             return !columnValue.Equals(objectValue);
         }
