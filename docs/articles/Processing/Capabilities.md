@@ -3,7 +3,7 @@ uid: Capabilities
 ---
 # Capabilities
 
-[Capabilities](xref:Moryx.AbstractionLayer.Capabilities.ICapabilities) are based on the idea of [set theory](https://en.wikipedia.org/wiki/Set_theory). Each class with its attributes and functions describes a set. Within MORYX modules can use required capabilities to describe a set and fetch aöö resources from the `ResourceManagement` that fullfil the membership function are part of that set. [Resources](../Resources/Overview.md) can export their capabilities to be matched against the required capabilities. Every [Activity](Activities.md) defines which capabilities it needs and the provided information will be used to find a matching Resource to handle the activity. It is also possible that a resource has multiple capabilities and is able to handle various activities.
+[Capabilities](xref:Moryx.AbstractionLayer.Capabilities.ICapabilities) are based on the idea of [set theory](https://en.wikipedia.org/wiki/Set_theory). Each class with its attributes and functions describes a set. Within MORYX, modules can use required capabilities to describe a set and fetch resources from the `ResourceManagement` that fullfil the membership function, which are part of that set. [Resources](../Resources/Overview.md) can export their capabilities to be matched against the required capabilities. Every [Activity](Activities.md) defines which capabilities it needs and the provided information will be used to find a matching Resource to handle the activity. It is also possible that a resource has multiple capabilities and is able to handle various activities.
 
 ![Capabilities](images/capabilities.svg)
 
@@ -38,7 +38,7 @@ public class MyCapabilities : ConcreteCapabilities
 }
 ````
 
-In any case you can extend your capabilities with more properties to give the resource are more meaningfull self description. Let's take the ScrewingCapabilities as an example. Maybe there is more than one station which has ScrewingCapabilities but each can handle a different screw head. Our Capability implementation could then look like:
+In any case you can extend your capabilities with more properties to give the resource are more meaningful self description. Let's take the ScrewingCapabilities as an example. Maybe there is more than one station which has ScrewingCapabilities but each can handle a different screw head. Our Capability implementation could then look like:
 
 ```` cs
 public enum ScrewHead

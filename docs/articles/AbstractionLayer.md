@@ -40,8 +40,7 @@ A [Process](Processing/Processes.md) consists of a series of activities.
 
 ## Products
 
-A [ProductType](xref:Moryx.AbstractionLayer.Products.IProductType) or better a *product description* is used by a [ProductRecipe](xref:Moryx.AbstractionLayer.Recipes.
-ProductRecipe) to provide a basic structure to produce a [ProductInstance](xref:Moryx.AbstractionLayer.Products.ProductInstance) 
+A [ProductType](xref:Moryx.AbstractionLayer.Products.IProductType) or better a *product description* is used by a [ProductRecipe](xref:Moryx.AbstractionLayer.Recipes.ProductRecipe) to provide a basic structure to produce a [ProductInstance](xref:Moryx.AbstractionLayer.Products.ProductInstance) 
 
 ## Recipes
 

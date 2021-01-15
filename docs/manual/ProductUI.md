@@ -4,11 +4,11 @@ The product management manages all information of a product from the master data
 
 ## Overview
 
-The products ui is structured as a master detail navigation. On the left side, the user can see the complete product structure. If the user click on an item, a product type specific [details view](xref:ProductDetails). will be opened. If no type specific details view was found, the default implementation will be used.
+The products ui is structured as a master detail navigation. On the left side, the user can see the complete product structure. If the user click on an item, a product type specific [details view](#product-details) will be opened. If no type specific details view was found, the default implementation will be used.
 
 ![Product UI](images/productUI.png)
 
-The left structure shows the structure of all availabel products. Each product is shown in the last revision by default. The details can be shown after clicking on a product. The details can be changed by using the `Edit Mode`. The edit mode will be activated after a click on the `Edit` button. All properties inside of the detail view are now open for changes. It is possible that more than one user can edit the details of the product in the same time but only the last save will remain.
+The left structure shows the structure of all available products. Each product is shown in the last revision by default. The details can be shown after clicking on a product. The details can be changed by using the `Edit Mode`. The edit mode will be activated after a click on the `Edit` button. All properties inside of the detail view are now open for changes. It is possible that more than one user can edit the details of the product at the same time but only the last save will remain.
 
 ## Product Details
 
@@ -60,7 +60,7 @@ More important: The part editor provides features to edit part links to other pr
 
 **Single Part Link:**
 
-Single part links must not be set. Therefore a `Clear` button is provided. Another opetion is to change the linked product by `Change`.
+Single part links must not be set. Therefore a `Clear` button is provided. Another option is to change the linked product by `Change`.
 
 ![Single Part Link](images/productUIAspectPartsSingle.png)
 

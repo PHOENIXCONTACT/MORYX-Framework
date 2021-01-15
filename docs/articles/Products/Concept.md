@@ -20,7 +20,7 @@ For more information regarding the definition of a product including a detailed 
 
 A recipe is used to provide a [Workplan](../Processing/Workplans.md) for a [Process](../Processing/Processes.md) in which a product is processed. It can also provides additional parameters related to the `workplan`. All recipes are derived from [Recipe](xref:Moryx.AbstractionLayer.Recipe).
 
-The Abstraction Layer provides the [IProductRecipe](xref:Moryx.AbstractionLayer.IProductRecipe) and [IWorkplanRecipe](xref:Moryx.AbstractionLayer.IWorkplanRecipe) which can be used separatly or combined. 
+The Abstraction Layer provides the [IProductRecipe](xref:Moryx.AbstractionLayer.Recipes.IProductRecipe) and [IWorkplanRecipe](xref:Moryx.AbstractionLayer.Recipes.IWorkplanRecipe) which can be used separatly or combined. 
 In a production environment, for example, we have the `process` with the belonging `product` and the corresponding `workplan`. 
 The parameters regarding the products production (e.g. the material needed, technical parameters for automatic testing, etc) are provided with the `product recipe` while the `workplan` and parameters to configure it come with the `workplan recipe`.
 

@@ -3,22 +3,24 @@ uid: Workplans
 ---
 # Workplans
 
-A [Workplan](xref:Moryx.Workflows.IWorkplan) is the definition of the production flow of a product how it should be produced at a machine and which steps must be executed and in which order. Therefore it contains a list of steps and connectors. The diagram is a model on its own. The workflow control model does not contain any information of a diagram.
+A `Workplan` is the definition of the production flow of a product how it should be produced at a machine and which steps must be executed and in which order. Therefore it contains a list of steps and connectors. The diagram is a model on its own. The workflow control model does not contain any information of a diagram.
+
+See the documentation in the [MORYX-Platform GitHub Repository](https://github.com/PHOENIXCONTACT/MORYX-Platform) to get more detailed information about Workplan, Step and Connector interface.
 
 ## Workplan Step
 
-A [workplan step](xref:Moryx.Workflows.IWorkplanStep) is basically the Task which must be implemented in an application to define the needed step in the production. The task will create the corresponding activity during the processing of the workplan.
+A `workplan step` is basically the Task which must be implemented in an application to define the needed step in the production. The task will create the corresponding activity during the processing of the workplan.
 
 ## Connector
 
-A [connector](xref:Moryx.Workflows.IConnector) is the connection between two steps to define the possible paths from the start of the workplan over the used tasks until an endpoint is reached.
+A `connector` is the connection between two steps to define the possible paths from the start of the workplan over the used tasks until an endpoint is reached.
 
 ## Meta-Model
 
 - An activity is the base type for all kinds of activities. An Activity is executed by a resource. An activity references the process it belongs to.
 - An activity can have one or more aspects.
 - A production activity represents the execution of a production step.
-- An production activity can have access to the data of a product.
+- A production activity can have access to the data of a product.
 - A process step can have a material which is available for production. If no material is given, the production activity provides some material, e.g. the worker puts some material on a WPC.
 - A process is a series of activities.
 - A production process contains a reference to the data of the workpiece the process is physically working on.
@@ -56,12 +58,12 @@ A work plan has a version identifier. There is some kind of release management n
 
 To reduce waist there must be a possibility to change the work plan version while the process is running. To change should be allowed only if the finished and the current steps are equal to the new definition. It should be quite easy to check the tracing data whether the new definition would have led to the same tracing result. It should be forbidden to change the version if the tracing data does not fit to the new one.
 
-For each group of splits and joins leading to parallel threads there must be a bounding box with exactly one entry and one exit. The only exception of this rule is a global abort, if the process shall be terminated in case of an error. Its difficult (or even impossible) to validate termination if loops are allowed, because the termination of the loop cannot be validated at all.
+For each group of splits and joins leading to parallel threads there must be a bounding box with exactly one entry and one exit. The only exception of this rule is a global abort, if the process shall be terminated in case of an error. It is difficult (or even impossible) to validate termination if loops are allowed, because the termination of the loop cannot be validated at all.
 
 
 ## Create a Workplan
 
-The most comfortable way is to use the workplan editor to draw the workplan with the created task. But it is also possible to create a workplan programmatically to use it for example during the product import. A self created workplan could be looks like that:
+The most comfortable way is to use the workplan editor to draw the workplan with the created task. But it is also possible to create a workplan programmatically to use it for example during the product import. A self-created workplan could look like this:
 
 ```` cs
 // Prepare workplan
@@ -98,4 +100,4 @@ workplan.Validate();
 RecipeStorage.SaveWorkplan(openContext, workplan);
 ````
 
-The method `AddStep` of the workplan takes a list of connectors which must fit the result enum of the corresponding activity of the used task. If it does not fit then the validation will throw an exception. In the shown example has the MountTask only two outputs where the first one is the `Mounted` connector and the last goes directly to the `Failed` output. The other activities have three possible result where two of them goes directly to the failed output. The `UnmountTask` is the last task and its first output which is the success path goes to the `End` output to close the good path of this workplan.
+The method `AddStep` of the workplan takes a list of connectors which must fit the result enum of the corresponding activity of the used task. If it does not fit then the validation will throw an exception. In the shown example has the MountTask only two outputs where the first one is the `Mounted` connector and the last goes directly to the `Failed` output. The other activities have three possible results where two of them go directly to the failed output. The `UnmountTask` is the last task and its first output, which is the success path, goes to the `End` output to close the good path of this workplan.
