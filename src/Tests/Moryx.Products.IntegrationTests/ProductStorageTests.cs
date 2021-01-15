@@ -84,6 +84,12 @@ namespace Moryx.Products.IntegrationTests
                         {
                             new PropertyMapperConfig
                             {
+                                PropertyName = nameof(WatchfaceType.Brand),
+                                Column = nameof(IGenericColumns.Text1),
+                                PluginName = nameof(TextColumnMapper)
+                            },
+                            new PropertyMapperConfig
+                            {
                                 PropertyName = nameof(WatchfaceType.IsDigital),
                                 Column = nameof(IGenericColumns.Integer1),
                                 PluginName = nameof(IntegerColumnMapper)
@@ -429,6 +435,29 @@ namespace Moryx.Products.IntegrationTests
             Assert.AreEqual(watch.Needles.Count, loadedWatch.Needles.Count, "Different number of needles");
             var loadedWatchface = (WatchfaceType)loadedWatch.Watchface.Product;
             Assert.AreEqual(watchface.Numbers.Length, loadedWatchface.Numbers.Length, "Different number of watch numbers");
+        }
+
+        [Test(Description = "This test saves a product with a null string property and saves it again. " +
+                            "The bug was, that the HasChanged of the ColumnMapper throws an NullReferenceException")]
+        public void LoadAndSaveTypeWithNullString()
+        {
+            // Arrange
+            var watchfaceWithString = new WatchfaceType
+            {
+                Name = "Blubber",
+                Identity = new ProductIdentity("8899665", 1),
+                Numbers = new[] { 3, 6, 9, 12 },
+                Brand = null //That's important for this test
+            };
+
+            var savedId = _storage.SaveType(watchfaceWithString);
+            var loaded = (WatchfaceType)_storage.LoadType(savedId);
+
+            // Act & Assert
+            Assert.DoesNotThrow(delegate
+            {
+                _storage.SaveType(loaded);
+            }, "Save should not fail with null string property");
         }
 
         [TestCase(true, Description = "Get the latest revision of an existing product")]

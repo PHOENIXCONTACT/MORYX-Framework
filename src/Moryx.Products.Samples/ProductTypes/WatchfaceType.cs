@@ -31,6 +31,9 @@ namespace Moryx.Products.Samples
         [Description("Digital or Analog")]
         public bool IsDigital { get; set; }
 
+        [DisplayName("Brand")]
+        public string Brand { get; set; }
+
         protected override ProductInstance Instantiate()
         {
             return new WatchfaceInstance();
