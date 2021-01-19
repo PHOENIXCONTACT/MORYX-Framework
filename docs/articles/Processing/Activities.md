@@ -53,7 +53,7 @@ This property defines if a process is necessary to handle this activity.
 
 ### Create Result
 
-There are two methods to create a result for the activity. One to define a failed activity and one to define a result depending on a given number which encodes a result from the result enum of the activity. A more detailed discussion of activity results can be found [later on in this article](Activities.md#activity-results).   
+There are two methods to create a result for the activity. One to define a failed activity and one to define a result depending on a given number which encodes a result from the result enum of the activity. A more detailed discussion of activity results can be found [later in this article](Activities.md#activity-results).   
 
 ## Activity Parameters
 

@@ -3,7 +3,7 @@ uid: ResourceTypeTree
 ---
 # Resource type tree
 
-All plugin types within the resource management are derived from the [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) class, either directly or by deriving from a subtype like [PublicResource](xref:Moryx.AbstractionLayer.Resources.PublicResource), [InteractionResource](xref:Moryx.Resources.Interaction.InteractionResource`1) or [Driver](xref:Moryx.AbstractionLayer.Drivers.Driver). 
+All plugin types within the resource management are derived from the [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) class, either directly or by deriving from a subtype like [PublicResource](xref:Moryx.AbstractionLayer.Resources.PublicResource), [InteractionResource](xref:Moryx.Resources.Wcf.InteractionResource) or [Driver](xref:Moryx.AbstractionLayer.Drivers.Driver). 
 Subclassing makes it possible to extend and customize existing resources or share functionality among resources by creating a common, abstract base class. 
 Of those sub-classes `PublicResource` is especially important. 
 The [Resource Management's](xref:ResourceManagement) objective is to model the CPS (cyber physical system) and make it easily accessible to other modules. 

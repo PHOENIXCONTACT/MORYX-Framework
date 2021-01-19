@@ -5,7 +5,7 @@ uid: Constraints
 
 [Constraints](xref:Moryx.AbstractionLayer.IConstraint) as well as [Capabilities](xref:Moryx.AbstractionLayer.Capabilities.ICapabilities) are used to filter the possible matches of [Resources](xref:Moryx.Resources.IResource) and [Activities](xref:Moryx.AbstractionLayer.IActivity).
 In Contrast to capabilities which are sets of provided and required abilities, constraints are boolean conditions which arise from the system's context.
-To check if the context's constraints are met the [Check()](xref:Moryx.AbstractionLayer.IConstraint.Check) method of the constraint is called.
+To check if the context's constraints are met the [Check()](xref:Moryx.AbstractionLayer.IConstraint#Moryx_AbstractionLayer_IConstraint_Check_Moryx_AbstractionLayer_IConstraintContext_) method of the constraint is called.
 The [IConstraintContext](xref:Moryx.AbstractionLayer.IConstraintContext) contains all the information which is needed to perform this check.
 
 ## ExpressionConstraint

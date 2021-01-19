@@ -5,7 +5,7 @@ uid: ProductsUIOverview
 
 The Product UI is responsible to provide all needed information about a product which are devided in its aspects. The Product UI can be extended and also has variable content.
 
-The following posibilities are supported:
+The following possibilities are supported:
 
 - Replace complete detail view
 - Replace only product aspects
@@ -39,11 +39,11 @@ Aspects are presented as `Tabs` whithin the default product detail view. An aspe
 }
 ````
 
-Additionally aspects show/hide themself if they are not relevant. For example: The `PropertiesAspectViewModel` is not *relevant* if the the product have no properties to configure.
+Additionally aspects show/hide themself if they are not relevant. For example: The `PropertiesAspectViewModel` is not *relevant* if the product has no properties to configure.
 
 For adding a custom aspect the [ProductAspectViewModelBase](Moryx.Products.UI.Interaction.Aspects.ProductAspectViewModelBase) can be used to implement an own view model. It provides the whole `IEditableObject` methods and also `Load` and `Save`. It is possible to load additional information from the server with the asynchronous `Load` method.
 
-The following snipped is a sample implementation for the `WatchfaceProduct`:
+The following snippet is a sample implementation for the `WatchfaceProduct`:
 
 ````cs
 [ProductAspectRegistration(nameof(WatchFaceAspectViewModel))]

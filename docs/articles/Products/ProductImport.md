@@ -10,7 +10,7 @@ Product imports of a machine are created by implementing the [IProductImporter](
 The base class requires three methods:
 
 * **GenerateParameters:** This override is optional in case your parameters object requires more initialization than a simple constructor invocation. Otherwise you can leave the default behavior.
-* **UpdateParameters:** Some parameters where entered by the user and the importer can now update, add or modify other parameters. This provides an interactive workflow between the client and importer plugin. For example an importer could prefill the revision field after a material number was entered.
+* **UpdateParameters:** Some parameters were entered by the user and the importer can now update, add or modify other parameters. This provides an interactive workflow between the client and importer plugin. For example an importer could prefill the revision field after a material number was entered.
 * **Import:** Parse the parameters from the client and construct an `IProduct` instance. **DO NOT** write this to the database, but return the unsaved object instead.
 
 It is important that the new created importer is configured in the **Maintenance -> ProductManager -> Importers**.
