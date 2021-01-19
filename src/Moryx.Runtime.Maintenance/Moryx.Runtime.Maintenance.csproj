@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Core module to configure and control MORYX based applications</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Runtime;Server;Configuration;UI</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
