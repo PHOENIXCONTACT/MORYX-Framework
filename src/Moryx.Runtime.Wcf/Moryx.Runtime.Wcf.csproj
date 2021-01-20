@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>WebService integration for MORYX applications based on WCF</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Runtime;Server;Client;WCF;communication;Host</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

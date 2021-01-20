@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Library with helper classes for UnitTests.</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Tests;UnitTests</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

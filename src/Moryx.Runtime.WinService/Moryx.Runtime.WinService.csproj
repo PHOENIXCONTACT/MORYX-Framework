@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Provides runtime mode for running as Windows Service.</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Runtime;Server;WindowsService</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
