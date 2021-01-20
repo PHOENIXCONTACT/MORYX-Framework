@@ -17,13 +17,13 @@ using Moryx.Tools;
 namespace Moryx.Products.Management
 {
     /// <summary>
-    /// Component that can automatically configure the strategies 
+    /// Component that can automatically configure the strategies
     /// </summary>
     [Component(LifeCycle.Singleton)]
     internal class AutoConfigurator
     {
         /// <summary>
-        /// As a meta-component the configurator can gain access to 
+        /// As a meta-component the configurator can gain access to
         /// </summary>
         public IContainer Container { get; set; }
 
