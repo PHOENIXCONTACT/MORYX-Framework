@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Resource with a REST endpoint for UIs to interact with the resource graph and instances.</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;IIoT;IoT;Resource</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
