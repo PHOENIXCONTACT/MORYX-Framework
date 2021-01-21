@@ -204,7 +204,7 @@ namespace Moryx.Tests.Extensions
             var target = new ReferenceClass
             {
                 ChildRef = new ChildClass2(),
-                Children2 = new List<ChildClass2> { new ChildClass2(), new ChildClass2()}
+                Children2 = new List<ChildClass2> { new ChildClass2(), new ChildClass2() }
             };
 
             // Act
@@ -223,18 +223,23 @@ namespace Moryx.Tests.Extensions
             // Arrange
             var target = new ReferenceClass
             {
+
                 EmptyArray = new GranChildClass1[0],
                 NullArray = null
             };
 
             // Act
             var references = ReflectionTool.GetReferences<ChildClass1>(target).ToArray();
+            var nullRef = ReflectionTool.GetReferences<ChildClass2>(target).ToArray();
 
             // Assert
             Assert.AreEqual(3, references.Length, "Tool did not detect all references");
             Assert.AreEqual(0, references[0].Count());
             Assert.AreEqual(0, references[1].Count());
             Assert.AreEqual(0, references[2].Count());
+            Assert.AreEqual(2, nullRef.Length);
+            Assert.AreEqual(nameof(ReferenceClass.ChildRef), nullRef[0].Key.Name);
+            Assert.IsEmpty(nullRef[0]);
         }
 
         [Test(Description = "ReflectionTool must handle null or empty properties")]

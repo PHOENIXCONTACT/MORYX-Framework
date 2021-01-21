@@ -23,16 +23,16 @@ namespace Moryx.Tools
         /// </summary>
         private IEnumerable<TReference> Values { get; }
 
-        public ReferenceGroup(PropertyInfo key, params TReference[] values)
+        public ReferenceGroup(PropertyInfo key, TReference value)
         {
             Key = key;
-            Values = values;
+            Values = value == null ? Enumerable.Empty<TReference>() : new[] { value };
         }
 
         public ReferenceGroup(PropertyInfo key, IEnumerable<TReference> values)
         {
             Key = key;
-            Values = values;
+            Values = values ?? Enumerable.Empty<TReference>();
         }
 
         public IEnumerator<TReference> GetEnumerator()
