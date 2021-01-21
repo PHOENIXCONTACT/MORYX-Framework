@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Types and interfaces for notifications within MORYX applications</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;IIoT;IoT;Notifications</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
