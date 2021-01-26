@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Serialization;
@@ -68,21 +69,33 @@ namespace Moryx.Communication.Sockets
 
         /// <summary>
         /// Trigger to check if we are still connected
-        /// http://stackoverflow.com/a/4667582/6082960
+        /// https://stackoverflow.com/a/4667582/6082960
+        /// https://stackoverflow.com/a/69497010/6082960
         /// http://tldp.org/HOWTO/TCP-Keepalive-HOWTO/overview.html
         /// </summary>
         public void ConfigureKeepAlive(int interval, int timeout)
         {
-            // Create config array
-            var index = 0;
-            var socketConfig = new byte[12]; // 3 * 4 byte
-            InlineConverter.Include(1, socketConfig, ref index);
-            InlineConverter.Include(interval, socketConfig, ref index);
-            InlineConverter.Include(timeout, socketConfig, ref index);
-
-            // Configure socket
             var socket = _client.Client;
-            socket.IOControl(IOControlCode.KeepAliveValues, socketConfig, null);
+
+#if HAVE_TCP_KEEPALIVE
+            // Configure socket using net6 keep alive configuration
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, interval);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, timeout);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 2);
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+#else
+            // Keep alive only supported for windows under netstandard2.0
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Create config array
+                var index = 0;
+                var socketConfig = new byte[12]; // 3 * 4 byte
+                InlineConverter.Include(1, socketConfig, ref index);
+                InlineConverter.Include(interval, socketConfig, ref index);
+                InlineConverter.Include(timeout, socketConfig, ref index);
+                socket.IOControl(IOControlCode.KeepAliveValues, socketConfig, null);
+            }
+#endif
         }
 
         #region Send
