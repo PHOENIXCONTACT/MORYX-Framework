@@ -17,7 +17,7 @@ namespace Moryx.Communication.Sockets
     /// </summary>
     [ExpectedConfig(typeof(TcpListenerConfig))]
     [Plugin(LifeCycle.Transient, typeof(IBinaryConnection), Name = nameof(TcpListenerConnection))]
-    public class TcpListenerConnection : IBinaryConnection, IStateContext, ILoggingComponent, IDisposable
+    public class TcpListenerConnection : IBinaryConnection, IStateContext, ILoggingComponent
     {
         #region Dependencies
 
@@ -48,6 +48,11 @@ namespace Moryx.Communication.Sockets
         private TcpTransmission _transmission;
 
         /// <summary>
+        /// Validator used for incoming message and listener selection
+        /// </summary>
+        private readonly IMessageValidator _validator;
+
+        /// <summary>
         /// Static TCP server
         /// </summary>
         internal TcpServer Server => TcpServer.Instance;
@@ -68,9 +73,9 @@ namespace Moryx.Communication.Sockets
         internal bool ValidateBeforeAssignment => _config.ValidateBeforeAssignment;
 
         /// <summary>
-        /// Validator used for incoming message and listener selection
+        /// Protocol interpreter of the listener
         /// </summary>
-        internal IMessageValidator Validator { get; }
+        internal IMessageInterpreter Interpreter => _validator.Interpreter;
 
         /// <summary>
         /// Gets the current ConnectionState.
@@ -83,7 +88,7 @@ namespace Moryx.Communication.Sockets
         /// <param name="validator">Validator for this listener</param>
         public TcpListenerConnection(IMessageValidator validator)
         {
-            Validator = validator;
+            _validator = validator;
         }
 
         /// <summary>
@@ -124,6 +129,15 @@ namespace Moryx.Communication.Sockets
         public void Dispose()
         {
             Stop();
+        }
+
+        /// <summary>
+        /// Validate an incoming message for this connection
+        /// </summary>
+        internal bool Validate(BinaryMessage message, bool initialMessage)
+        {
+            var advanced = _validator as IAdvancedMessageValidator;
+            return advanced?.Validate(message, initialMessage) ?? _validator.Validate(message);
         }
 
         /// <summary>
@@ -259,7 +273,7 @@ namespace Moryx.Communication.Sockets
 
         private void MessageReceived(object sender, BinaryMessage message)
         {
-            if (!Validator.Validate(message))
+            if (!Validate(message, false))
             {
                 // If you send us crap we shut you off!
                 Reconnect();

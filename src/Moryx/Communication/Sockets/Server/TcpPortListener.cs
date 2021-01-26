@@ -71,7 +71,7 @@ namespace Moryx.Communication.Sockets
             {
                 // Steal objects from the first listener
                 if (_protocolInterpreter == null)
-                    _protocolInterpreter = listener.Validator.Interpreter;
+                    _protocolInterpreter = listener.Interpreter;
                 if (_logger == null)
                     _logger = listener.Logger.GetChild(string.Empty, typeof(TcpPortListener));
 
@@ -152,7 +152,7 @@ namespace Moryx.Communication.Sockets
             TcpListenerConnection listener;
             lock (_listeners)
             {
-                listener = _listeners.FirstOrDefault(l => l.Validator.Validate(message));
+                listener = _listeners.FirstOrDefault(l => l.Validate(message, true));
                 RemoveListener(listener);
             }
 

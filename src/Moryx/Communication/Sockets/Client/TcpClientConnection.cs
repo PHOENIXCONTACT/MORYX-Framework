@@ -256,7 +256,8 @@ namespace Moryx.Communication.Sockets
 
         private void MessageReceived(object sender, BinaryMessage message)
         {
-            if (!_validator.Validate(message))
+            var advanced = _validator as IAdvancedMessageValidator;
+            if (!(advanced?.Validate(message, false) ?? _validator.Validate(message)))
             {
                 // If you send us crap we shut you off!
                 Reconnect();
