@@ -28,7 +28,9 @@ namespace Moryx.Products.Management
             var propType = objectProp.PropertyType;
             // Convert return value to string
             if (propType == typeof(Guid))
-                return new ConversionAccessor<string, Guid>(objectProp, g => g.ToString(), Guid.Parse);
+                return new ConversionAccessor<string, Guid>(objectProp,
+                    guid => guid != Guid.Empty ? guid.ToString() : null,
+                    str => !string.IsNullOrEmpty(str) ? Guid.Parse(str) : Guid.Empty);
 
             if ((propType.IsClass | propType.IsInterface) && propType != typeof(string))
                 return new ConversionAccessor<string, object>(objectProp,
