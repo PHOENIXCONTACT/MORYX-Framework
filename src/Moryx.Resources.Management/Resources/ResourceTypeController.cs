@@ -197,7 +197,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Recursively check if any type in the tree supports the referenced type
         /// </summary>
-        /// <param name="type">Root type from <see cref="IResourceTypeController.RootTypes"/></param>
+        /// <param name="type">Current node in the recursive call</param>
         /// <param name="typeConstraints">All type constraints a candidate needs to match to be compatible</param>
         /// <param name="supportedTypes">Current list of supported types</param>
         /// <returns></returns>
