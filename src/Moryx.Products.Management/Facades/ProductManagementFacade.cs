@@ -126,6 +126,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
             var recipeId = RecipeManagement.Save(recipe);
+            ReplaceOrigin(recipe);
 
             return recipeId;
         }
