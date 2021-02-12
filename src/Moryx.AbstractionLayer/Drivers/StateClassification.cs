@@ -24,7 +24,7 @@ namespace Moryx.AbstractionLayer.Drivers
         Running,
 
         /// <summary>
-        /// Busy means that the driver is running but is allready in work
+        /// Busy means that the driver is running but is already in work
         /// </summary>
         Busy,
 

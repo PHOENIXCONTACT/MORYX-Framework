@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,18 +15,27 @@ namespace Moryx.AbstractionLayer.Capabilities
         /// <summary>
         /// The capabilities this combination consists of.
         /// </summary>
-        private readonly ICapabilities[] _capabilities;
+        private readonly IReadOnlyList<ICapabilities> _capabilities;
 
         /// <summary>
-        /// Create combined capabilites instance from a dictionary of capabilities
+        /// Create combined capabilities instance from collection of capabilities
         /// </summary>
+        [Obsolete("Please create combined capabilities with IReadonlyList")]
         public CombinedCapabilities(IEnumerable<ICapabilities> capabilities)
         {
-            _capabilities = capabilities as ICapabilities[] ?? capabilities.ToArray();
+            _capabilities = capabilities as IReadOnlyList<ICapabilities> ?? capabilities.ToArray();
+        }
+
+        /// <summary>
+        /// Create combined capabilities instance from collection of capabilities
+        /// </summary>
+        public CombinedCapabilities(IReadOnlyList<ICapabilities> capabilities)
+        {
+            _capabilities = capabilities;
         }
 
         ///
-        public bool IsCombined { get; } = true;
+        public bool IsCombined => true;
 
         ///
         bool ICapabilities.ProvidedBy(ICapabilities provided)

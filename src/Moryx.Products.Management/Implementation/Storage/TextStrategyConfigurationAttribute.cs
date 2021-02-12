@@ -13,5 +13,15 @@ namespace Moryx.Products.Management
             DerivedTypes = true;
             SupportedTypes = new[] {typeof(string), typeof(object), typeof(Guid)};
         }
+
+        /// <inheritdoc />
+        public override int TypeCompliance(Type targetType)
+        {
+            // Fallback for interfaces
+            if (targetType.IsInterface)
+                return BadCompliance - 1;
+
+            return base.TypeCompliance(targetType);
+        }
     }
 }

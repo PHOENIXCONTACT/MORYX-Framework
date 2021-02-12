@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Additional AbstractionLayer implementations for Tests</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;IIoT;IoT;Abstraction;Tests</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

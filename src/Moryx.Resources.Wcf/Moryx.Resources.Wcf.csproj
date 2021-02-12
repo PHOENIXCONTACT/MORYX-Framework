@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Includes base classes used to provide resources with wcf implementation</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;IIoT;IoT;WCF</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
