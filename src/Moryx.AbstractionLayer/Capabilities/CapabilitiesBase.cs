@@ -7,7 +7,7 @@ namespace Moryx.AbstractionLayer.Capabilities
     /// <summary>
     /// Preferred base class for implementations of <see cref="ICapabilities"/>
     /// </summary>
-    public abstract class Capabilities : ConcreteCapabilities
+    public abstract class CapabilitiesBase : ConcreteCapabilities
     {
     }
 }
