@@ -94,6 +94,7 @@ namespace Moryx.AbstractionLayer
             return linkResult != null ? (object)partLink : partLink.Product;
         }
 
+        /// <inheritdoc />
         protected override bool Update(object source, object value)
         {
             throw new InvalidOperationException("PartLinks cannot be updated.");

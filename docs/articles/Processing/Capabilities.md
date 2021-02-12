@@ -28,11 +28,11 @@ public class MyCapabilities : ICapabilities
 }
 ````
 
-It is also possible to use the base class [ConcreteCapabilities](xref:Moryx.AbstractionLayer.Capabilities.ConcreteCapabilities), which reduces the code to the following lines:
+It is also possible to use the base class [Capabilities](xref:Moryx.AbstractionLayer.Capabilities.Capabilities), which reduces the code to the following lines:
 
 ```` cs
 [DataContract]
-public class MyCapabilities : ConcreteCapabilities
+public class MyCapabilities : Capabilities
 {
     protected override bool ProvidedBy(ICapabilities provided) => provided is MyCapabilities;
 }
@@ -48,7 +48,7 @@ public enum ScrewHead
 }
 
 [DataContract]
-public class ScrewingCapabilities : AssembleCapabilities
+public class ScrewingCapabilities : Capabilities
 {
     [DataMember]
     public ScrewHead Head { get; set; }

@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -10,10 +11,11 @@ namespace Moryx.AbstractionLayer.Capabilities
     /// Abstract base class for concrete capabilities
     /// </summary>
     [DataContract]
+    [Obsolete("This is removed in the next major version. Use Capabilities instead")]
     public abstract class ConcreteCapabilities : ICapabilities
     {
         /// 
-        bool ICapabilities.IsCombined { get; } = false;
+        bool ICapabilities.IsCombined => false;
 
         /// 
         bool ICapabilities.ProvidedBy(ICapabilities provided)

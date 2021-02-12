@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace Moryx.AbstractionLayer.Capabilities
 {
     /// <summary>
-    /// Null object implementation for capabilites to remove null checks.
+    /// Null object implementation for capabilities to remove null checks.
     /// They provide nothing, but are provided by everything
     /// </summary>
     [DataContract]

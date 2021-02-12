@@ -62,16 +62,16 @@ namespace Moryx.AbstractionLayer.Resources
         public override object Parse(IContainer container, string value)
         {
             var capabilitiesType = GetCapabilities()[value];
-            return Instanciate(capabilitiesType);
+            return Instantiate(capabilitiesType);
         }
 
-        private static object Instanciate(Type type)
+        private static object Instantiate(Type type)
         {
-            // Value Types can be instanciated like this
+            // Value Types can be instantiated like this
             if (type.IsValueType)
                 return Activator.CreateInstance(type);
 
-            // Check if there is a default contructor for that type
+            // Check if there is a default constructor for that type
             var defaultCtor = type.GetConstructor(Type.EmptyTypes);
             if (defaultCtor != null)
                 return Activator.CreateInstance(type);
@@ -86,7 +86,7 @@ namespace Moryx.AbstractionLayer.Resources
             {
                 var parameterInfo = parameters[i];
                 // recursion --> see recursion
-                ctorArgs[i] = Instanciate(parameterInfo.ParameterType);
+                ctorArgs[i] = Instantiate(parameterInfo.ParameterType);
             }
             
             return Activator.CreateInstance(type, ctorArgs);
@@ -95,8 +95,10 @@ namespace Moryx.AbstractionLayer.Resources
 
         private IDictionary<string, Type> GetCapabilities()
         {
+#pragma warning disable 618
             return ReflectionTool.GetPublicClasses<ConcreteCapabilities>(type => _capabilitiesFilter(type))
-                    .ToDictionary(t => t.Name, t => t);
+                .ToDictionary(t => t.Name, t => t);
+#pragma warning restore 618
         }
     }
 }
