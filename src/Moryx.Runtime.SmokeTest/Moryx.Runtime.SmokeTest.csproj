@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Runtime RunMode for executing smoke tests.</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Runtime;Test;SmokeTests</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

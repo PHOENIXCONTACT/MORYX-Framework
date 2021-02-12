@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Library with helper classes for SystemTests.</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Tests;SystemTests</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
