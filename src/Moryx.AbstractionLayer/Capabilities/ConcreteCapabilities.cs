@@ -11,13 +11,13 @@ namespace Moryx.AbstractionLayer.Capabilities
     /// Abstract base class for concrete capabilities
     /// </summary>
     [DataContract]
-    [Obsolete("This is removed in the next major version. Use Capabilities instead")]
+    [Obsolete("This is removed in the next major version. Use CapabilitiesBase instead")]
     public abstract class ConcreteCapabilities : ICapabilities
     {
-        /// 
+        ///
         bool ICapabilities.IsCombined => false;
 
-        /// 
+        ///
         bool ICapabilities.ProvidedBy(ICapabilities provided)
         {
             return provided.IsCombined ? provided.Provides(this) : ProvidedBy(provided);
@@ -29,7 +29,7 @@ namespace Moryx.AbstractionLayer.Capabilities
             return required.ProvidedBy(this);
         }
 
-        /// 
+        ///
         public IEnumerable<ICapabilities> GetAll()
         {
             return new ICapabilities[] { this };
