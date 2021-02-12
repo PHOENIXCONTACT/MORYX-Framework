@@ -3,6 +3,7 @@
 
 using System;
 using Moryx.AbstractionLayer.Capabilities;
+using Moryx.Tools;
 
 namespace Moryx.AbstractionLayer
 {
@@ -40,6 +41,11 @@ namespace Moryx.AbstractionLayer
         ///
         public ActivityResult Result { get; set; }
 
+        /// <summary>
+        /// Name of the activity
+        /// </summary>
+        public string Name { get; set; }
+
         #endregion
 
         /// <summary>
@@ -48,6 +54,9 @@ namespace Moryx.AbstractionLayer
         internal Activity()
         {
             Tracing = new Tracing();
+
+            var displayName = GetType().GetDisplayName();
+            Name = string.IsNullOrEmpty(displayName) ? GetType().Name : displayName;
         }
 
         /// <inheritdoc />
