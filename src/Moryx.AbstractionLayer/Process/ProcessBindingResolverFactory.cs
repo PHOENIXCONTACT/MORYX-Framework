@@ -110,7 +110,7 @@ namespace Moryx.AbstractionLayer
         /// <inheritdoc />
         protected override object Resolve(object source)
         {
-            return (source as IIdentifiableObject)?.Identity.Identifier;
+            return (source as IIdentifiableObject)?.Identity?.Identifier;
         }
 
         /// <inheritdoc />
