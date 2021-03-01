@@ -10,7 +10,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -473,7 +472,8 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var entity = SaveProduct(uow, modifiedInstance);
+                var productSaverContext = new ProductPartsSaverContext(uow);
+                var entity = SaveProduct(productSaverContext, modifiedInstance);
 
                 uow.SaveChanges();
 
@@ -481,12 +481,12 @@ namespace Moryx.Products.Management
             }
         }
 
-        private ProductTypeEntity SaveProduct(IUnitOfWork uow, IProductType modifiedInstance)
+        private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, IProductType modifiedInstance)
         {
             var strategy = TypeStrategies[modifiedInstance.GetType().Name];
 
             // Get or create entity
-            var repo = uow.GetRepository<IProductTypeEntityRepository>();
+            var repo = saverContext.GetRepository<IProductTypeEntityRepository>();
             var identity = (ProductIdentity)modifiedInstance.Identity;
             ProductTypeEntity typeEntity;
             var entities = repo.Linq
@@ -508,16 +508,17 @@ namespace Moryx.Products.Management
             // Check if we need to create a new version
             if (typeEntity.CurrentVersion == null || typeEntity.CurrentVersion.State != (int)modifiedInstance.State || strategy.HasChanged(modifiedInstance, typeEntity.CurrentVersion))
             {
-                var version = uow.GetRepository<IProductPropertiesRepository>().Create();
+                var version = saverContext.GetRepository<IProductPropertiesRepository>().Create();
                 version.State = (int)modifiedInstance.State;
                 typeEntity.SetCurrentVersion(version);
             }
 
             strategy.SaveType(modifiedInstance, typeEntity.CurrentVersion);
+            saverContext.EntityCache.Add(new ProductIdentity(typeEntity.Identifier,typeEntity.Revision),typeEntity);
 
             // And nasty again!
             var type = modifiedInstance.GetType();
-            var linkRepo = uow.GetRepository<IPartLinkRepository>();
+            var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
             foreach (var linkStrategy in LinkStrategies[strategy.TargetType.Name].Values)
             {
                 var property = type.GetProperty(linkStrategy.PropertyName);
@@ -532,7 +533,7 @@ namespace Moryx.Products.Management
                         linkEntity.Parent = typeEntity;
                         linkStrategy.SavePartLink(link, linkEntity);
                         EntityIdListener.Listen(linkEntity, link);
-                        linkEntity.Child = GetPartEntity(uow, link);
+                        linkEntity.Child = GetPartEntity(saverContext, link);
                     }
                     else if (linkEntity != null && link == null) // link was removed
                     {
@@ -542,7 +543,7 @@ namespace Moryx.Products.Management
                     else if (linkEntity != null && link != null) // link was modified
                     {
                         linkStrategy.SavePartLink(link, linkEntity);
-                        linkEntity.Child = GetPartEntity(uow, link);
+                        linkEntity.Child = GetPartEntity(saverContext, link);
                     }
                     // else: link was null and is still null
 
@@ -574,7 +575,7 @@ namespace Moryx.Products.Management
                             linkEntity = typeEntity.Parts.First(p => p.Id == link.Id);
                         }
                         linkStrategy.SavePartLink(link, linkEntity);
-                        linkEntity.Child = GetPartEntity(uow, link);
+                        linkEntity.Child = GetPartEntity(saverContext, link);
                     }
                 }
             }
@@ -582,9 +583,18 @@ namespace Moryx.Products.Management
             return typeEntity;
         }
 
-        private ProductTypeEntity GetPartEntity(IUnitOfWork uow, IProductPartLink link)
+        private ProductTypeEntity GetPartEntity(ProductPartsSaverContext saverContext, IProductPartLink link)
         {
-            return link.Product.Id == 0 ? SaveProduct(uow, link.Product) : uow.GetEntity<ProductTypeEntity>(link.Product);
+            if (saverContext.EntityCache.ContainsKey((ProductIdentity) link.Product.Identity))
+            {
+                var part = saverContext.EntityCache[(ProductIdentity) link.Product.Identity];
+                EntityIdListener.Listen(part,link.Product);
+                return part;
+            }
+
+            if (link.Product.Id == 0)
+                return SaveProduct(saverContext, link.Product);
+            return saverContext.UnitOfWork.GetEntity<ProductTypeEntity>(link.Product);
         }
 
         /// <summary>
@@ -804,7 +814,24 @@ namespace Moryx.Products.Management
             IDictionary<string, IProductLinkStrategy> IDictionary<string, IDictionary<string, IProductLinkStrategy>>.this[string key]
             {
                 get { return ContainsKey(key) ? this[key] : (this[key] = new Dictionary<string, IProductLinkStrategy>()); }
-                set { /*You can net set the internal cache*/  }
+                set { /*You can net set the internal cache*/ }
+            }
+        }
+
+        private class ProductPartsSaverContext
+        {
+            public IUnitOfWork UnitOfWork { get; }
+            public IDictionary<ProductIdentity, ProductTypeEntity> EntityCache { get; }
+
+            public ProductPartsSaverContext(IUnitOfWork uow)
+            {
+                UnitOfWork = uow;
+                EntityCache = new Dictionary<ProductIdentity, ProductTypeEntity>();
+            }
+
+            public T GetRepository<T>() where T : class, IRepository
+            {
+                return UnitOfWork.GetRepository<T>();
             }
         }
     }

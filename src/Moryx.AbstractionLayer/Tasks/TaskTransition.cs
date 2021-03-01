@@ -29,6 +29,11 @@ namespace Moryx.AbstractionLayer
         private readonly IIndexResolver _indexResolver;
 
         /// <summary>
+        /// Name of the task
+        /// </summary>
+        internal string Name { get; set; }
+
+        /// <summary>
         /// Create a new instance of the <see cref="TaskTransition{T}"/>
         /// </summary>
         public TaskTransition(IParameters parameters, IIndexResolver resolver)
@@ -95,6 +100,10 @@ namespace Moryx.AbstractionLayer
                 Parameters = _parameters.Bind(process),
                 Process = process
             };
+
+            // Set name of activity
+            if (activity is Activity activityClass)
+                activityClass.Name = Name;
 
             // Link objects
             process.AddActivity(activity);
