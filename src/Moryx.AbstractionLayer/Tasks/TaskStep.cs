@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
+using Moryx.Tools;
 using Moryx.Workflows;
 using Moryx.Workflows.Transitions;
 using Moryx.Workflows.WorkplanSteps;
@@ -19,7 +20,7 @@ namespace Moryx.AbstractionLayer
     /// <typeparam name="TParam">Type of the parameters object</typeparam>
     /// <typeparam name="TProcParam">Intermediate type object for the parameter of the activity</typeparam>
     [DataContract(IsReference = true)]
-    public abstract class TaskStep<TActivity, TProcParam, TParam> : WorkplanStepBase, ITaskStep<TParam>
+    public abstract class TaskStep<TActivity, TProcParam, TParam> : WorkplanStepBase, ITaskStep<TParam>, INamedTaskStep
         where TActivity : IActivity<TProcParam>, new()
         where TProcParam : IParameters
         where TParam : TProcParam, new()
@@ -32,12 +33,21 @@ namespace Moryx.AbstractionLayer
         [DataMember, EntrySerialize]
         public TParam Parameters { get; set; }
 
+        /// <inheritdoc />
+        string INamedTaskStep.Name { get; set; }
+
+        /// <inheritdoc />
+        public override string Name => ((INamedTaskStep)this).Name;
+
         /// <summary>
         /// Instantiate task and provide possible results
         /// </summary>
         protected TaskStep()
         {
             Parameters = new TParam();
+
+            var displayName = GetType().GetDisplayName();
+            ((INamedTaskStep)this).Name = string.IsNullOrEmpty(displayName) ? GetType().Name : displayName;
 
             var resultEnum = typeof(TActivity).GetCustomAttribute<ActivityResultsAttribute>().ResultEnum;
             OutputDescriptions = DescriptionsFromEnum(resultEnum);
@@ -94,7 +104,10 @@ namespace Moryx.AbstractionLayer
 
             // Create transition
             var indexResolver = _indexResolver ?? (_indexResolver = TransitionBase.CreateIndexResolver(OutputDescriptions));
-            return new TaskTransition<TActivity>(Parameters, indexResolver);
+            return new TaskTransition<TActivity>(Parameters, indexResolver)
+            {
+                Name = Name
+            };
         }
     }
 

@@ -133,18 +133,16 @@ namespace Moryx.Products.Management
                 }
 
                 // Restore parameters from JSON
-                var taskStep = step as ITaskStep<IParameters>;
-                if (taskStep != null)
-                {
+                if (step is ITaskStep<IParameters> taskStep)
                     JsonConvert.PopulateObject(stepEntity.Parameters, taskStep.Parameters);
-                }
 
                 // Restore Subworkplan if necessary
-                var subworkplanStep = step as ISubworkplanStep;
-                if (subworkplanStep != null)
-                {
+                if (step is ISubworkplanStep subworkplanStep)
                     subworkplanStep.Workplan = LoadWorkplan(stepEntity.SubWorkplan);
-                }
+
+                // Restore step name
+                if (step is INamedTaskStep namedTaskStep && !string.IsNullOrEmpty(stepEntity.Name))
+                    namedTaskStep.Name = stepEntity.Name;
 
                 // Link inputs and outputs
                 step.Inputs = RestoreReferences(stepEntity, ConnectorRole.Input, connectors);
@@ -290,18 +288,12 @@ namespace Moryx.Products.Management
                 }
 
                 // Task steps need parameters
-                var taskStep = step as ITaskStep<IParameters>;
-                if (taskStep != null)
-                {
+                if (step is ITaskStep<IParameters> taskStep)
                     stepEntity.Parameters = JsonConvert.SerializeObject(taskStep.Parameters);
-                }
 
                 // Subworkplan steps and need a reference to the workplan
-                var subworkPlanStep = step as ISubworkplanStep;
-                if (subworkPlanStep != null)
-                {
+                if (step is ISubworkplanStep subworkPlanStep)
                     stepEntity.SubWorkplanId = subworkPlanStep.WorkplanId;
-                }
 
                 stepEntities[step.Id] = stepEntity;
             }
