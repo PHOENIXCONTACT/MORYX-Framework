@@ -34,6 +34,9 @@ namespace Moryx.Products.Samples
         [DisplayName("Brand")]
         public string Brand { get; set; }
 
+        [DisplayName("Color")]
+        public int Color { get; set; }
+
         protected override ProductInstance Instantiate()
         {
             return new WatchfaceInstance();

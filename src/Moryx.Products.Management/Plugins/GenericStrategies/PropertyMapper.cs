@@ -34,6 +34,9 @@ namespace Moryx.Products.Management
         /// </summary>
         protected IPropertyAccessor<IGenericColumns, TColumn> ColumnAccessor { get; private set; }
 
+        /// <summary>
+        /// Creates a new instance of this type
+        /// </summary>
         protected ColumnMapper(Type targetType)
         {
             TargetType = targetType;
