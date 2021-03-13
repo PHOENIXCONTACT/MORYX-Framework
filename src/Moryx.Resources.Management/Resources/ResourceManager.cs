@@ -196,8 +196,7 @@ namespace Moryx.Resources.Management
             }
 
             // Inform listeners about the new resource
-            var publicResource = instance as IPublicResource;
-            if (publicResource != null)
+            if (instance is IPublicResource publicResource)
                 RaiseResourceAdded(publicResource);
         }
 
@@ -208,8 +207,7 @@ namespace Moryx.Resources.Management
         {
             instance.Changed += OnResourceChanged;
 
-            var asPublic = instance as IPublicResource;
-            if (asPublic != null)
+            if (instance is IPublicResource asPublic)
                 asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
             foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
@@ -275,6 +273,7 @@ namespace Moryx.Resources.Management
                     try
                     {
                         resourceWrapper.Stop();
+                        UnregisterEvents(resourceWrapper.Target);
                     }
                     catch (Exception e)
                     {
@@ -283,14 +282,6 @@ namespace Moryx.Resources.Management
                 });
 
             _startup = ResourceStartupPhase.Stopped;
-        }
-
-        public void Dispose()
-        {
-            foreach (var resourceWrapper in Graph.GetAll())
-            {
-                UnregisterEvents(resourceWrapper.Target);
-            }
         }
 
         #endregion
@@ -377,11 +368,6 @@ namespace Moryx.Resources.Management
             var instance = (Resource)resource;
             ((IPlugin)resource).Stop();
 
-            // Notify listeners about the removal of the resource
-            var publicResource = instance as IPublicResource;
-            if (publicResource != null)
-                RaiseResourceRemoved(publicResource);
-
             // Load entity and relations to disconnect resource and remove from database
             using (var uow = UowFactory.Create())
             {
@@ -410,11 +396,17 @@ namespace Moryx.Resources.Management
             // Unregister from all events to avoid memory leaks
             UnregisterEvents(instance);
 
+            // Remove from internal collections
+            var removed = Graph.Remove(instance);
+
+            // Notify listeners about the removal of the resource
+            if (removed && instance is IPublicResource publicResource)
+                RaiseResourceRemoved(publicResource);
+            
             // Destroy the object
             TypeController.Destroy(instance);
 
-            // Remove from internal collections
-            return Graph.Remove(instance);
+            return removed;
         }
 
         #endregion
@@ -439,7 +431,9 @@ namespace Moryx.Resources.Management
 
         private void RaiseCapabilitiesChanged(object originalSender, ICapabilities capabilities)
         {
-            CapabilitiesChanged?.Invoke(originalSender, capabilities);
+            // Only forward events for available resources
+            if (Graph.GetWrapper(((IResource)originalSender).Id).State.IsAvailable)
+                CapabilitiesChanged?.Invoke(originalSender, capabilities);
         }
 
         #endregion
