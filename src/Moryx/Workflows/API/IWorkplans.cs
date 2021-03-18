@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 
 namespace Moryx.Workflows
@@ -8,6 +9,7 @@ namespace Moryx.Workflows
     /// <summary>
     /// Additional facade interface for components that store and provide workplans
     /// </summary>
+    [Obsolete("Will be deleted. Use IWorkplanManagement instead.")]
     public interface IWorkplans
     {
         /// <summary>
