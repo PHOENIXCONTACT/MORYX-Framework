@@ -8,7 +8,7 @@ namespace Moryx.AbstractionLayer.Recipes
     /// <summary>
     /// Base class for all recipes
     /// </summary>
-    public abstract class Recipe : IRecipe, ICloneable
+    public abstract class Recipe : IRecipe, ICloneable, IRecipeTemplating
     {
         /// <summary>
         /// Default constructor to create a new recipe
@@ -26,11 +26,18 @@ namespace Moryx.AbstractionLayer.Recipes
             Revision = source.Revision;
             State = source.State;
             Origin = source.Origin;
+
+            TemplateId = source.Id;
             Classification = source.Classification | RecipeClassification.Clone;
         }
 
         /// <inheritdoc />
         public long Id { get; set; }
+
+        /// <summary>
+        /// Optional reference 
+        /// </summary>
+        public long TemplateId { get; set; }
 
         /// <inheritdoc />
         public string Name { get; set; }
