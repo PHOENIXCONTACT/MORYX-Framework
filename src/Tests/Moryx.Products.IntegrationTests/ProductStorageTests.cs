@@ -93,6 +93,12 @@ namespace Moryx.Products.IntegrationTests
                                 PropertyName = nameof(WatchfaceType.IsDigital),
                                 Column = nameof(IGenericColumns.Integer1),
                                 PluginName = nameof(IntegerColumnMapper)
+                            },
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(WatchfaceType.Color),
+                                Column = string.Empty,
+                                PluginName = nameof(NullPropertyMapper)
                             }
                         },
                         JsonColumn = nameof(IGenericColumns.Text8)
@@ -216,6 +222,9 @@ namespace Moryx.Products.IntegrationTests
                             break;
                         case nameof(TextColumnMapper):
                             mapper = new TextColumnMapper(type);
+                            break;
+                        case nameof(NullPropertyMapper):
+                            mapper = new NullPropertyMapper(type);
                             break;
                     }
 
@@ -500,6 +509,28 @@ namespace Moryx.Products.IntegrationTests
             {
                 _storage.SaveType(loaded);
             }, "Save should not fail with null string property");
+        }
+
+        [Test(Description = "This test saves a product with a property which should not be saved. " +
+                            "The NullPropertyMapper ignores this property at load and save.")]
+        public void LoadAndSaveTypeWithNullPropertyMapper()
+        {
+            // Arrange
+            var watchfaceWithString = new WatchfaceType
+            {
+                Name = "Fasel",
+                Identity = new ProductIdentity("55889966", 1),
+                Numbers = new[] { 3, 6, 9, 12 },
+                Brand = "Unknown",
+                Color = 42  //That's important for this test
+            };
+
+            // Act
+            var savedId = _storage.SaveType(watchfaceWithString);
+            var loaded = (WatchfaceType)_storage.LoadType(savedId);
+
+            // Assert
+            Assert.AreEqual(0, loaded.Color);
         }
 
         [TestCase(true, Description = "Get the latest revision of an existing product")]
