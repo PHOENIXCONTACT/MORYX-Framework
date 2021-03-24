@@ -29,18 +29,27 @@ namespace Moryx.Products.IntegrationTests
             var workplan = CreateWorkplan();
 
             // Act
-            Workplan loaded;
-            WorkplanEntity entity;
+            Workplan loaded, loaded2;
+            WorkplanEntity entity1, entity2;
             using (var uow = _factory.Create())
             {
-                entity = RecipeStorage.SaveWorkplan(uow, workplan);
+                entity1 = RecipeStorage.SaveWorkplan(uow, workplan);
                 uow.SaveChanges();
-                loaded = RecipeStorage.LoadWorkplan(uow, entity.Id);
+                loaded = RecipeStorage.LoadWorkplan(uow, entity1.Id);
+
+                loaded.Name = "Modified";
+
+                entity2 = RecipeStorage.SaveWorkplan(uow, loaded);
+                uow.SaveChanges();
+                loaded2 = RecipeStorage.LoadWorkplan(uow, entity2.Id);
             }
 
             // Assert
-            Assert.AreEqual(workplan.Id, entity.Id, "Id not assigned to original object!");
-            Assert.AreEqual(workplan.Name, loaded.Name, "Name not correctly stored and saved");
+            Assert.AreNotEqual(entity1.Id, entity2.Id);
+            Assert.AreEqual(workplan.Id, entity1.Id, "Id not assigned to original object!");
+            Assert.AreEqual(workplan.Name, entity1.Name, "Name not correctly stored and saved");
+            Assert.AreEqual(loaded.Name, entity2.Name, "Name not correctly stored and saved");
+            Assert.AreEqual(loaded.Name, loaded2.Name, "Name not correctly stored and saved");
             Assert.AreEqual(workplan.State, loaded.State);
             Assert.AreEqual(workplan.MaxElementId, loaded.MaxElementId);
 

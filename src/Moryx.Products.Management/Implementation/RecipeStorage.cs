@@ -186,15 +186,19 @@ namespace Moryx.Products.Management
             // If it is a new plan we need a new object
             if (workplanEntity == null)
             {
-                workplanEntity = workplanRepo.Create(workplan.Name, workplan.Version, (int)workplan.State);
+                workplanEntity = workplanRepo.Create(workplan.Name, 1, (int)workplan.State);
                 EntityIdListener.Listen(workplanEntity, workplan);
             }
-            // If it was modified or the version increased we create a new one and reference the old one
-            else if (workplan.Version > workplanEntity.Version)
+            // If it was modified we write to a new entity and increment the version
+            else
             {
+                // Flag the previous version deleted, to hide it from the list but keep it accessible by old recipes
+                workplanRepo.Remove(workplanEntity);
+
+                // Create a reference link between old and new version
                 var reference = referenceRepo.Create((int)WorkplanReferenceType.NewVersion);
                 reference.Source = workplanEntity;
-                reference.Target = workplanEntity = workplanRepo.Create(workplan.Name, workplan.Version, (int)workplan.State);
+                reference.Target = workplanEntity = workplanRepo.Create(workplan.Name, workplanEntity.Version + 1, (int)workplan.State);
                 EntityIdListener.Listen(workplanEntity, workplan);
             }
 
