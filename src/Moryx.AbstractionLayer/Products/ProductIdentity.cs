@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Text.RegularExpressions;
+using System.Threading;
 using Moryx.AbstractionLayer.Identity;
 
 namespace Moryx.AbstractionLayer.Products
@@ -28,9 +30,44 @@ namespace Moryx.AbstractionLayer.Products
         }
 
         /// <summary>
-        /// Create a product identity that represents the latest revision of a given identifier
+        /// Creates a product identity that represents the latest revision of a given identifier
         /// </summary>
         public static ProductIdentity AsLatestRevision(string identifier) => new ProductIdentity(identifier, LatestRevision);
+
+        /// <summary>
+        /// Create a product identity from a string. Counterpart to ToString() method
+        /// </summary>
+        /// <param name="identityString">the ProductIdentity as string</param>
+        /// <returns></returns>
+        public static ProductIdentity Parse(string identityString)
+        {
+            Regex rx = new Regex(@"(?<identifier>\w+)-(?<revision>\d+)");
+            if (!rx.IsMatch(identityString) )
+                throw new FormatException("identityString should consist of <identity>-<revision> instead of "+identityString);
+            var groups = rx.Match(identityString).Groups;
+            return new ProductIdentity(groups["identifier"].Value, Convert.ToInt16(groups["revision"].Value));
+        }
+
+        /// <summary>
+        /// Creates a product identity that represents the latest revision of a given identifier. If something goes wrong, no exception
+        /// is thrown, instead false is returned.
+        /// </summary>
+        /// <param name="identityString">the ProductIdentity as string</param>
+        /// <param name="result">If parsing was not successful, the result is set to null</param>
+        /// <returns></returns>
+        public static bool TryParse(string identityString, out ProductIdentity result)
+        {
+            try
+            {
+                result = Parse(identityString);
+                return true;
+            }
+            catch(Exception)
+            {
+                result = null;
+                return false;
+            } 
+        }
 
         /// <summary>
         /// Main and unique string identifier

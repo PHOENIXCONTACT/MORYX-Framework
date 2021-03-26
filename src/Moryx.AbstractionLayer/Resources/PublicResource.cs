@@ -26,8 +26,7 @@ namespace Moryx.AbstractionLayer.Resources
             protected set
             {
                 _capabilities = value;
-                // ReSharper disable once PossibleNullReferenceException <-- Event must always be wired by resource manager
-                CapabilitiesChanged(this, _capabilities);
+                CapabilitiesChanged?.Invoke(this, _capabilities);
             }
         }
 
