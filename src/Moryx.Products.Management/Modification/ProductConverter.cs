@@ -157,7 +157,7 @@ namespace Moryx.Products.Management.Modification
                 Properties = EntryConvert.EncodeObject(recipe, RecipeSerialization),
             };
 
-            switch (recipe.Classification)
+            switch (recipe.Classification & RecipeClassification.CloneFilter)
             {
                 case RecipeClassification.Unset:
                     converted.Classification = RecipeClassificationModel.Unset;
@@ -216,6 +216,12 @@ namespace Moryx.Products.Management.Modification
                 productRecipe.Product = productType;
             }
 
+            EntryConvert.UpdateInstance(productRecipe, recipe.Properties, RecipeSerialization);
+
+            // Do not update a clones classification
+            if (productRecipe.Classification.HasFlag(RecipeClassification.Clone))
+                return productRecipe;
+
             switch (recipe.Classification)
             {
                 case RecipeClassificationModel.Unset:
@@ -236,8 +242,6 @@ namespace Moryx.Products.Management.Modification
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            EntryConvert.UpdateInstance(productRecipe, recipe.Properties, RecipeSerialization);
             return productRecipe;
         }
 
