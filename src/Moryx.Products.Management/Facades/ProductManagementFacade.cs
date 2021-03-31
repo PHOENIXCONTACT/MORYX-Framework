@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -118,6 +117,7 @@ namespace Moryx.Products.Management
 
         private void OnRecipeChanged(object sender, IRecipe recipe)
         {
+            ReplaceOrigin(recipe);
             RecipeChanged?.Invoke(this, recipe);
         }
         public event EventHandler<IRecipe> RecipeChanged;
@@ -222,11 +222,11 @@ namespace Moryx.Products.Management
             return ProductManager.GetInstances(ids);
         }
 
-        public IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector) 
+        public IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
             where TInstance : IProductInstance
         {
             ValidateHealthState();
-            
+
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
@@ -239,7 +239,7 @@ namespace Moryx.Products.Management
                 throw new ArgumentException("Recipe could not be found");
         }
 
-        private IProductRecipe ReplaceOrigin(IProductRecipe recipe)
+        private TRecipe ReplaceOrigin<TRecipe>(TRecipe recipe) where  TRecipe : IRecipe
         {
             recipe.Origin = this;
             return recipe;
