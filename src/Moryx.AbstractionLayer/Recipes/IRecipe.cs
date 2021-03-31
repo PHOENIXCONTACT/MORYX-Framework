@@ -9,6 +9,11 @@ namespace Moryx.AbstractionLayer.Recipes
     public interface IRecipe : IPersistentObject
     {
         /// <summary>
+        /// Recipe reference that served as a template for this recipe
+        /// </summary>
+        long TemplateId { get; set; }
+
+        /// <summary>
         /// Name of the recipe
         /// </summary>
         string Name { get; set; }

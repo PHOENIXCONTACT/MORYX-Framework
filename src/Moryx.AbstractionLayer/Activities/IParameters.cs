@@ -11,8 +11,6 @@ namespace Moryx.AbstractionLayer
         /// <summary>
         /// Create new parameters object with resolved binding values from process
         /// </summary>
-        /// <param name="process"></param>
-        /// <returns></returns>
         IParameters Bind(IProcess process);
     }
 }
