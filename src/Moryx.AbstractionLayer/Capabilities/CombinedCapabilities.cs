@@ -20,15 +20,6 @@ namespace Moryx.AbstractionLayer.Capabilities
         /// <summary>
         /// Create combined capabilities instance from collection of capabilities
         /// </summary>
-        [Obsolete("Please create combined capabilities with IReadonlyList")]
-        public CombinedCapabilities(IEnumerable<ICapabilities> capabilities)
-        {
-            _capabilities = capabilities as IReadOnlyList<ICapabilities> ?? capabilities.ToArray();
-        }
-
-        /// <summary>
-        /// Create combined capabilities instance from collection of capabilities
-        /// </summary>
         public CombinedCapabilities(IReadOnlyList<ICapabilities> capabilities)
         {
             _capabilities = capabilities;
@@ -45,12 +36,12 @@ namespace Moryx.AbstractionLayer.Capabilities
 
         bool ICapabilities.Provides(ICapabilities required)
         {
-            return required.IsCombined 
-                ? required.GetAll().All(rc => rc.ProvidedBy(this)) 
+            return required.IsCombined
+                ? required.GetAll().All(rc => rc.ProvidedBy(this))
                 : _capabilities.Any(required.ProvidedBy);
         }
 
-        /// 
+        ///
         IEnumerable<ICapabilities> ICapabilities.GetAll()
         {
             return _capabilities;

@@ -11,6 +11,8 @@ namespace Moryx.Products.Model
 
         public virtual string Name { get; set; }
 
+        public virtual long TemplateId { get; set; }
+
         public virtual int Revision { get; set; }
 
         public virtual int Classification { get; set; }

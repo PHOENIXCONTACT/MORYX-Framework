@@ -23,7 +23,7 @@ namespace Moryx.AbstractionLayer.Resources
 
         /// <inheritdoc />
         public override bool UpdateFromPredecessor => false;
-        
+
         /// <summary>
         /// List all capabilities
         /// </summary>
@@ -88,7 +88,7 @@ namespace Moryx.AbstractionLayer.Resources
                 // recursion --> see recursion
                 ctorArgs[i] = Instantiate(parameterInfo.ParameterType);
             }
-            
+
             return Activator.CreateInstance(type, ctorArgs);
         }
 
@@ -96,7 +96,7 @@ namespace Moryx.AbstractionLayer.Resources
         private IDictionary<string, Type> GetCapabilities()
         {
 #pragma warning disable 618
-            return ReflectionTool.GetPublicClasses<ConcreteCapabilities>(type => _capabilitiesFilter(type))
+            return ReflectionTool.GetPublicClasses<CapabilitiesBase>(type => _capabilitiesFilter(type))
                 .ToDictionary(t => t.Name, t => t);
 #pragma warning restore 618
         }

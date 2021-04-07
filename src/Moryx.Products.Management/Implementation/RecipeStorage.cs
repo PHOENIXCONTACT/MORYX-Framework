@@ -7,7 +7,6 @@ using Moryx.AbstractionLayer.Recipes;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Products.Model;
-using Moryx.Tools;
 using Moryx.Workflows;
 using Moryx.Workflows.WorkplanSteps;
 using Newtonsoft.Json;
@@ -28,13 +27,13 @@ namespace Moryx.Products.Management
         {
             productRecipe.Id = recipeEntity.Id;
             productRecipe.Name = recipeEntity.Name;
+            productRecipe.TemplateId = recipeEntity.TemplateId;
             productRecipe.Classification = (RecipeClassification)recipeEntity.Classification;
             productRecipe.Revision = recipeEntity.Revision;
             productRecipe.State = (RecipeState)recipeEntity.State;
             productRecipe.Product = new ProductReference(recipeEntity.ProductId);
 
-            var workplanRecipe = productRecipe as IWorkplanRecipe;
-            if (workplanRecipe != null)
+            if (productRecipe is IWorkplanRecipe workplanRecipe)
                 workplanRecipe.Workplan = LoadWorkplan(recipeEntity.Workplan);
         }
 
@@ -48,12 +47,12 @@ namespace Moryx.Products.Management
             entity.Type = recipe.GetType().Name;
             entity.Revision = recipe.Revision;
             entity.Name = recipe.Name;
+            entity.TemplateId = recipe.TemplateId;
             entity.State = (int)recipe.State;
             entity.Classification = (int)recipe.Classification;
             entity.ProductId = recipe.Product.Id;
 
-            var workplanRecipe = recipe as IWorkplanRecipe;
-            if (workplanRecipe != null)
+            if (recipe is IWorkplanRecipe workplanRecipe)
                 entity.WorkplanId = workplanRecipe.Workplan.Id;
 
             return entity;
@@ -162,7 +161,7 @@ namespace Moryx.Products.Management
             var referenceEntities = stepEntity.Connectors.Where(c => c.Role == role).ToList();
 
             var references = new IConnector[referenceEntities.Count];
-            for (int index = 0; index < referenceEntities.Count; index++)
+            for (var index = 0; index < referenceEntities.Count; index++)
             {
                 var referenceEntity = referenceEntities.First(f => f.Index == index);
                 if (referenceEntity.ConnectorId.HasValue)
@@ -274,7 +273,7 @@ namespace Moryx.Products.Management
                     stepEntity.Name = step.Name;
 
                 // Update all output descriptions
-                for (int index = 0; index < step.OutputDescriptions.Length; index++)
+                for (var index = 0; index < step.OutputDescriptions.Length; index++)
                 {
                     var description = step.OutputDescriptions[index];
                     var descriptionEntity = stepEntity.OutputDescriptions.FirstOrDefault(ode => ode.Index == index);
@@ -329,7 +328,7 @@ namespace Moryx.Products.Management
         {
             // Update inputs first
             var connectorArray = role == ConnectorRole.Input ? step.Inputs : step.Outputs;
-            for (int index = 0; index < connectorArray.Length; index++)
+            for (var index = 0; index < connectorArray.Length; index++)
             {
                 var connector = connectorArray[index];
                 var connectorReference = stepEntity.Connectors.FirstOrDefault(c => c.Role == role && c.Index == index);
