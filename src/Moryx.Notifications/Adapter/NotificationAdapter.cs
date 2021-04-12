@@ -61,17 +61,12 @@ namespace Moryx.Notifications
 
             if (notification == null)
                 throw new ArgumentNullException(nameof(notification), "Notification must be set");
-
-            var managed = (IManagedNotification)notification;
-            managed.Identifier = Guid.NewGuid();
-            managed.Created = DateTime.Now;
-            managed.Sender = sender.Identifier;
-
+            
             _listLock.EnterUpgradeableReadLock();
 
             // Lets check if the notification was already published
             var isPending = _pendingPubs.Union(_pendingAcks).Union(_published)
-                .Any(n => n.Notification.Identifier.Equals(notification.Identifier));
+                .Any(n => n.Notification == notification);
 
             if (isPending)
             {
@@ -80,6 +75,11 @@ namespace Moryx.Notifications
             }
 
             _listLock.EnterWriteLock();
+            
+            var managed = (IManagedNotification)notification;
+            managed.Identifier = Guid.NewGuid();
+            managed.Created = DateTime.Now;
+            managed.Sender = sender.Identifier;
 
             _pendingPubs.Add(new NotificationMap(sender, notification, tag));
 
@@ -109,8 +109,7 @@ namespace Moryx.Notifications
             {
                 _published.Remove(published);
             }
-
-            if (published == null)
+            else
             {
                 published = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
 
