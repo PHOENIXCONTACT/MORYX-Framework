@@ -23,7 +23,7 @@ namespace Moryx.Resources.Management
         public IContainer Container { get; set; }
 
         /// <summary>
-        /// Resource factory to instantiate registred types
+        /// Resource factory to instantiate registered types
         /// </summary>
         public IResourceFactory ResourceFactory { get; set; }
 
