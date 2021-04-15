@@ -308,7 +308,8 @@ namespace Moryx.Resources.Management
             var relevantInterfaces = new List<Type>(interfaces.Length); // At max all interfaces are relevant
 
             // Load additional public interfaces from resource registration attribute
-            var additionalPublicInterfaces = node.ResourceType.GetCustomAttribute<ResourceAvailableAsAttribute>()?.AvailableAs ?? Enumerable.Empty<Type>();
+            var additionalPublicInterfaces = node.ResourceType.GetCustomAttributes<ResourceAvailableAsAttribute>()
+                .SelectMany(a => a.AvailableAs).Distinct();
 
             // Add all resources derived from IResource, but not IResource itself
             relevantInterfaces.AddRange(from resourceInterface in interfaces
