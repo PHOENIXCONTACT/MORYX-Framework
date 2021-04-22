@@ -43,7 +43,7 @@ namespace Moryx.Resources.Management
         /// Cache of all proxy instances that were created during the runtime of the ResourceManagement. They
         /// all need to be
         /// </summary>
-        private readonly Dictionary<long, IResourceProxy> _proxyCache = new Dictionary<long, IResourceProxy>();
+        private readonly Dictionary<long, ResourceProxy> _proxyCache = new Dictionary<long, ResourceProxy>();
 
         /// <summary>
         /// Cache to directly access a resource type
@@ -252,10 +252,10 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Instantiate proxy object for a given resource type name
         /// </summary>
-        private IResourceProxy InstantiateProxy(string typeName, Resource instance)
+        private ResourceProxy InstantiateProxy(string typeName, Resource instance)
         {
             var proxyType = ProxyBuilder.GetType(_proxyTypeCache[typeName]);
-            var proxyInstance = (IResourceProxy)Activator.CreateInstance(proxyType, instance, this);
+            var proxyInstance = (ResourceProxy)Activator.CreateInstance(proxyType, instance, this);
             proxyInstance.Attach();
             return proxyInstance;
         }
