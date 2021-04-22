@@ -228,6 +228,7 @@ namespace Moryx.Resources.Management.Tests
             // Act: Set resource property through proxy
             proxy.Reference = references[0];
             proxy.SetReference(reference);
+            proxy.SetMany(references);
 
             // Make sure all references where replaced with proxies
             Assert.AreNotEqual(ref1, reference);
@@ -246,7 +247,7 @@ namespace Moryx.Resources.Management.Tests
             Assert.AreEqual("NonPublic", nonPubProxy.Name);
             // Assert modifications of the setters
             Assert.AreEqual(instance.Reference, ref2);
-            Assert.AreEqual(instance.References.Count(), 2);
+            Assert.AreEqual(instance.References.Count(), 4);
             Assert.AreEqual(instance.References.ElementAt(1), ref1);
         }
 
