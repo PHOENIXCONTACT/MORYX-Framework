@@ -1,8 +1,8 @@
 # Tool Versions
-$NunitVersion = "3.11.1";
+$NunitVersion = "3.12.0";
 $OpenCoverVersion = "4.7.922";
 $DocFxVersion = "2.56.2";
-$ReportGeneratorVersion = "4.6.7";
+$ReportGeneratorVersion = "4.8.7";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
