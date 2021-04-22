@@ -91,7 +91,7 @@ namespace Moryx.Resources.Management
 
             // Target field for property and method forwarding
             const string propertyName = nameof(ResourceProxy<PublicResource>.Target);
-            var targetProperty = baseType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic);
+            var targetProperty = baseType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
             var bindingFlags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
             // Define the properties

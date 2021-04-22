@@ -200,7 +200,6 @@ namespace Moryx.Resources.Management
         /// <param name="type">Current node in the recursive call</param>
         /// <param name="typeConstraints">All type constraints a candidate needs to match to be compatible</param>
         /// <param name="supportedTypes">Current list of supported types</param>
-        /// <returns></returns>
         private static void SupportingType(ResourceTypeNode type, ICollection<Type> typeConstraints, ICollection<ResourceTypeNode> supportedTypes)
         {
             // This type supports the property -> Convert it and break recursion

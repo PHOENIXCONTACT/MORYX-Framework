@@ -99,7 +99,16 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Typed access to the target field
         /// </summary>
-        public new TTarget Target => (TTarget) base.Target;
+        public new TTarget Target
+        {
+            get
+            {
+                if (base.Target == null)
+                    throw new ProxyDetachedException();
+
+                return (TTarget)base.Target;
+            }
+        }
 
         /// <summary>
         /// Create proxy for a given target
