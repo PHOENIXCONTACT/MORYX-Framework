@@ -1,4 +1,7 @@
-﻿namespace Moryx.AbstractionLayer.Recipes
+﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.AbstractionLayer.Recipes
 {
     /// <summary>
     /// Additional interface for recipe that defines the template/source reference for cloned recipes

@@ -8,62 +8,24 @@ using Moryx.AbstractionLayer.Resources;
 namespace Moryx.Resources.Management
 {
     /// <summary>
-    /// Hidden interface for <see cref="ResourceProxy{TTarget}"/> to clear
-    /// the reference to the original object
+    /// Base type for all proxies
     /// </summary>
-    internal interface IResourceProxy : IResource
-    {
-        /// <summary>
-        /// Target object of the proxy
-        /// </summary>
-        IResource Target { get; }
-
-        /// <summary>
-        /// Attach to the target object and its events
-        /// </summary>
-        void Attach();
-
-        /// <summary>
-        /// Detach proxy from target object
-        /// </summary>
-        void Detach();
-    }
-
-    /// <summary>
-    /// Resource proxy base for typed access to resources
-    /// </summary>
-    internal abstract class ResourceProxy<TTarget> : IResourceProxy
-        where TTarget : Resource
+    internal abstract class ResourceProxy : IResource
     {
         /// <summary>
         /// Type controller field to convert references to public resources before returning them
         /// </summary>
         private IResourceTypeController _typeController;
 
-        private TTarget _target;
         /// <summary>
-        /// Target resource of this proxy
+        /// Target resource of the proxy
         /// </summary>
-        protected internal TTarget Target
-        {
-            get
-            {
-                if(_target == null)
-                    throw new ProxyDetachedException();
-
-                return _target;
-            }
-            private set { _target = value; }
-        }
-
-
-        /// <inheritdoc />
-        IResource IResourceProxy.Target => Target;
+        public IResource Target { get; private set; }
 
         /// <summary>
         /// Create proxy for a given target
         /// </summary>
-        protected ResourceProxy(TTarget target, IResourceTypeController typeController)
+        protected ResourceProxy(IResource target, IResourceTypeController typeController)
         {
             Target = target;
             _typeController = typeController;
@@ -85,27 +47,74 @@ namespace Moryx.Resources.Management
             Target = null;
         }
 
+        public override string ToString()
+        {
+            return Target.ToString();
+        }
+
         /// <summary>
         /// Convert a referenced instance to a proxy
         /// </summary>
         protected internal TResource Convert<TResource>(IResource instance)
             where TResource : IResource
         {
-            return (TResource) _typeController.GetProxy((Resource) instance);
+            return (TResource)_typeController.GetProxy((Resource)instance);
         }
 
         /// <summary>
         /// Convert a collection of referenced resources to proxies
         /// </summary>
-        protected internal TResource[] ConvertMany<TResource>(IEnumerable<IResource> instances) 
+        protected internal TResource[] ConvertMany<TResource>(IEnumerable<IResource> instances)
             where TResource : IResource
         {
             return instances.Select(Convert<TResource>).ToArray();
         }
 
-        public override string ToString()
+        /// <summary>
+        /// Extract the target object from a proxy
+        /// </summary>
+        protected internal static TResource Extract<TResource>(IResource instance)
+            where TResource : IResource
         {
-            return Target.ToString();
+            var proxy = (ResourceProxy)instance;
+            return (TResource)proxy.Target;
+        }
+
+        /// <summary>
+        /// Extract target objects from collection of proxies
+        /// </summary>
+        protected internal static TResource[] ExtractMany<TResource>(IEnumerable<IResource> instances)
+            where TResource : IResource
+        {
+            return instances.Select(Extract<TResource>).ToArray();
+        }
+    }
+
+    /// <summary>
+    /// Resource proxy base for typed access to resources
+    /// </summary>
+    internal abstract class ResourceProxy<TTarget> : ResourceProxy
+        where TTarget : Resource
+    {
+        /// <summary>
+        /// Typed access to the target field
+        /// </summary>
+        public new TTarget Target
+        {
+            get
+            {
+                if (base.Target == null)
+                    throw new ProxyDetachedException();
+
+                return (TTarget)base.Target;
+            }
+        }
+
+        /// <summary>
+        /// Create proxy for a given target
+        /// </summary>
+        protected ResourceProxy(TTarget target, IResourceTypeController typeController) : base(target, typeController)
+        {
         }
     }
 }

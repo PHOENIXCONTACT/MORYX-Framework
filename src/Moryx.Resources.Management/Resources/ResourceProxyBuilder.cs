@@ -91,7 +91,7 @@ namespace Moryx.Resources.Management
 
             // Target field for property and method forwarding
             const string propertyName = nameof(ResourceProxy<PublicResource>.Target);
-            var targetProperty = baseType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic);
+            var targetProperty = baseType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
             var bindingFlags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
             // Define the properties
@@ -198,15 +198,29 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// Cast the topmost value of the stack to <see cref="IResourceProxy"/> and extract the original resource
+        /// Extract the resource target from the topmost proxy value on the stack
         /// </summary>
         private static void ExtractTargetFromStack(ILGenerator generator, Type targetType)
         {
-            var interfaceType = typeof(IResourceProxy);
-            generator.Emit(OpCodes.Castclass, interfaceType); // Cast value to proxy
-            var proxyTarget = interfaceType.GetProperty(nameof(IResourceProxy.Target)).GetMethod;
-            generator.Emit(OpCodes.Call, proxyTarget); // Call getter on Proxy.Target to load the real resource on the stack
-            generator.Emit(OpCodes.Castclass, targetType); // Cast resource to the property type
+            // Target field for property and method forwarding
+            Type elementType;
+            string methodName;
+            if (typeof(IResource).IsAssignableFrom(targetType))
+            {
+                elementType = targetType;
+                methodName = nameof(ResourceProxy.Extract);
+            }
+            else
+            {
+                elementType = targetType.IsArray
+                    ? targetType.GetElementType()
+                    : targetType.GetGenericArguments()[0];
+                methodName = nameof(ResourceProxy.ExtractMany);
+            }
+
+            var methodInfo = typeof(ResourceProxy).GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+            methodInfo = methodInfo.MakeGenericMethod(elementType);
+            generator.Emit(OpCodes.Call, methodInfo);
         }
 
         /// <summary>
@@ -276,14 +290,14 @@ namespace Moryx.Resources.Management
             if (typeof(IResource).IsAssignableFrom(propertyType))
             {
                 elementType = propertyType;
-                methodName = nameof(ResourceProxy<PublicResource>.Convert);
+                methodName = nameof(ResourceProxy.Convert);
             }
             else
             {
                 elementType = propertyType.IsArray
                     ? propertyType.GetElementType()
                     : propertyType.GetGenericArguments()[0];
-                methodName = nameof(ResourceProxy<PublicResource>.ConvertMany);
+                methodName = nameof(ResourceProxy.ConvertMany);
             }
             var methodInfo = baseType.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
             return methodInfo.MakeGenericMethod(elementType);
@@ -372,16 +386,16 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// Override <see cref="ResourceProxy{T}.Attach"/> and register event handlers
+        /// Override <see cref="ResourceProxy.Attach"/> and register event handlers
         /// </summary>
         private static void OverrideAttach(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, Type targetType, Dictionary<EventInfo, MethodBuilder> eventHandlers)
         {
             var methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.HideBySig;
-            var methodBuilder = typeBuilder.DefineMethod(nameof(IResourceProxy.Attach), methodAttributes, typeof(void), Type.EmptyTypes);
+            var methodBuilder = typeBuilder.DefineMethod(nameof(ResourceProxy.Attach), methodAttributes, typeof(void), Type.EmptyTypes);
 
             var generator = methodBuilder.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0); // Load 'this'
-            var baseAttach = baseType.GetMethod(nameof(IResourceProxy.Attach));
+            var baseAttach = baseType.GetMethod(nameof(ResourceProxy.Attach));
             generator.Emit(OpCodes.Call, baseAttach); // Non-virtual call on base.Attach()
             // Link event handler for each event on the target object
             foreach (var eventHandler in eventHandlers)
@@ -404,12 +418,12 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// Override <see cref="ResourceProxy{T}.Detach"/> and unregister event handlers
+        /// Override <see cref="ResourceProxy.Detach"/> and unregister event handlers
         /// </summary>
         private static void OverrideDetach(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, Type targetType, Dictionary<EventInfo, MethodBuilder> eventHandlers)
         {
             var methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.HideBySig;
-            var methodBuilder = typeBuilder.DefineMethod(nameof(IResourceProxy.Detach), methodAttributes, typeof(void), Type.EmptyTypes);
+            var methodBuilder = typeBuilder.DefineMethod(nameof(ResourceProxy.Detach), methodAttributes, typeof(void), Type.EmptyTypes);
 
             var generator = methodBuilder.GetILGenerator();
             // Unregister event handler for each event on the target object
@@ -431,7 +445,7 @@ namespace Moryx.Resources.Management
 
             // Call base.Detach()
             generator.Emit(OpCodes.Ldarg_0); // Load 'this'
-            var baseAttach = baseType.GetMethod(nameof(IResourceProxy.Detach));
+            var baseAttach = baseType.GetMethod(nameof(ResourceProxy.Detach));
             generator.Emit(OpCodes.Call, baseAttach); // Non-virtual call on base.Attach()
 
             generator.Emit(OpCodes.Ret); // Finish method

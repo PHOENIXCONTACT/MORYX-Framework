@@ -23,6 +23,8 @@ namespace Moryx.Resources.Management.Tests
 
         void SetReference(ISimpleResource reference);
 
+        void SetMany(IReadOnlyList<ISimpleResource> references);
+
         event EventHandler<ISimpleResource> ReferenceChanged;
 
         event EventHandler<ISimpleResource[]> SomeChanged;
@@ -84,6 +86,13 @@ namespace Moryx.Resources.Management.Tests
         {
             References.Add(reference);
         }
+
+        public void SetMany(IReadOnlyList<ISimpleResource> references)
+        {
+            foreach (var reference in references)
+                References.Add(reference);
+        }
+
 
         public INonPublicResource NonPublic { get; set; }
 
