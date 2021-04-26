@@ -28,7 +28,9 @@ namespace Moryx.AbstractionLayer.Recipes
         /// <inheritdoc />
         public IRecipeProvider Origin { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates a new instance of the <see cref="RecipeReference"/>
+        /// </summary>
         public RecipeReference(long recipeId)
         {
             Id = recipeId;
