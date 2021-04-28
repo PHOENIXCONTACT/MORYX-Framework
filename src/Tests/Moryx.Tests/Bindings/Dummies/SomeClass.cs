@@ -7,6 +7,9 @@ namespace Moryx.Tests.Bindings
     {
         public string SimpleString { get; set; }
 
+        public int SimpleInt { get; set; }
+
         public ISomeInterface SomeObject { get; set; }
+
     }
 }

@@ -46,6 +46,23 @@ namespace Moryx.Tests.Bindings
             Assert.AreEqual(str, obj.SimpleString);
         }
 
+        [Test]
+        public void AssignStringToInt()
+        {
+            const string number = "5";
+
+            // Arrange
+            var obj = new SomeHiddenPropertyClass();
+            IBindingResolver reflectionResolver = new ReflectionResolver(nameof(SomeClass.SimpleInt));
+
+            // Act
+            var result = reflectionResolver.Update(obj, number);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(int.Parse(number), obj.SimpleInt);
+        }
+
         [Test(Description = "Checks if the reflection resolver returns null by resolving an unknown property")]
         public void NullByUnknownProperty()
         {
@@ -82,7 +99,5 @@ namespace Moryx.Tests.Bindings
             // Assert
             Assert.NotNull(result);
         }
-
-        
     }
 }
