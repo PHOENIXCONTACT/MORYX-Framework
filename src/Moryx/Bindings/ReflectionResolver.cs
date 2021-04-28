@@ -1,8 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Moryx.Bindings
 {
@@ -38,7 +40,10 @@ namespace Moryx.Bindings
             if (property == null || !property.CanWrite)
                 return false;
 
-            property.SetValue(source, value);
+            if (value is string && property.PropertyType.IsPrimitive)
+                property.SetValue(source, Convert.ChangeType(value, property.PropertyType));
+            else
+                property.SetValue(source, value);
             return true;
         }
 

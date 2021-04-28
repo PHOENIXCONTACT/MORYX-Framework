@@ -105,7 +105,7 @@ class Foo
 }
 
 var foo = new Foo();
-resolver = new ReflectionResolver("Name");
+IBindingResolver resolver = new ReflectionResolver("Name");
 resolver.Update(foo, "Bob");
 ````
 
