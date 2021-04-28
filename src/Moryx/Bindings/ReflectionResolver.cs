@@ -40,7 +40,7 @@ namespace Moryx.Bindings
             if (property == null || !property.CanWrite)
                 return false;
 
-            if (value is string && property.PropertyType.IsPrimitive)
+            if (value is IConvertible && property.PropertyType.GetInterfaces().Contains(typeof(IConvertible)) )
                 property.SetValue(source, Convert.ChangeType(value, property.PropertyType));
             else
                 property.SetValue(source, value);
