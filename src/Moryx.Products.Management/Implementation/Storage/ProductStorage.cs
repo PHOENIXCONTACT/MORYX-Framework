@@ -161,7 +161,7 @@ namespace Moryx.Products.Management
                                       let classificationValue = recipeEntity.Classification
                                       where recipeEntity.ProductId == productId
                                       where classificationValue >= 0 // We never return clones in this query
-                                      where (classificationValue & classificationMask) == classificationMask
+                                      where (classificationValue & classificationMask) == classificationValue
 
                                       select recipeEntity).ToArray();
 
@@ -616,7 +616,7 @@ namespace Moryx.Products.Management
         #endregion
 
         #region Get instances
-        
+
         public IReadOnlyList<ProductInstance> LoadInstances(params long[] id)
         {
             using (var uow = Factory.Create())
