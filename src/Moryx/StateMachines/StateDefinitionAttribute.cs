@@ -26,7 +26,7 @@ namespace Moryx.StateMachines
         public Type Type { get; }
 
         /// <summary>
-        /// Defines weather the state is the initial state of the machine or not.
+        /// Defines whether the state is the initial state of the machine or not.
         /// </summary>
         public bool IsInitial { get; set; }
     }
