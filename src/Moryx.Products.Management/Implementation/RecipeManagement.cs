@@ -36,7 +36,7 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<IProductRecipe> GetAllByProduct(IProductType productType)
         {
-            return Storage.LoadRecipes(productType.Id, RecipeClassification.Unset);
+            return Storage.LoadRecipes(productType.Id, RecipeClassification.CloneFilter);
         }
 
         public IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classification)
