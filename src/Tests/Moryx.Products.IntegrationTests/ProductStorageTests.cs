@@ -511,6 +511,50 @@ namespace Moryx.Products.IntegrationTests
             }, "Save should not fail with null string property");
         }
 
+        [Test(Description = "Loads recipes by the classification flags enum")]
+        public void LoadRecipesByClassification()
+        {
+            // Arrange
+            var watch = new WatchType
+            {
+                Name = "Test",
+                Identity = new ProductIdentity("8899665", 1),
+            };
+
+            _storage.SaveType(watch);
+
+            CreateRecipe(RecipeClassification.Default);
+            CreateRecipe(RecipeClassification.Alternative);
+            CreateRecipe(RecipeClassification.Alternative);
+            CreateRecipe(RecipeClassification.Part);
+
+            // Act
+            var defaults = _storage.LoadRecipes(watch.Id, RecipeClassification.Default);
+            var alternatives = _storage.LoadRecipes(watch.Id, RecipeClassification.Alternative);
+            var defaultsAndAlternatives = _storage.LoadRecipes(watch.Id, RecipeClassification.Default | RecipeClassification.Alternative);
+            var parts = _storage.LoadRecipes(watch.Id, RecipeClassification.Part);
+            var all = _storage.LoadRecipes(watch.Id, RecipeClassification.CloneFilter);
+
+            // Assert
+            Assert.AreEqual(1, defaults.Count);
+            Assert.AreEqual(2, alternatives.Count);
+            Assert.AreEqual(3, defaultsAndAlternatives.Count);
+            Assert.AreEqual(1, parts.Count);
+            Assert.AreEqual(4, all.Count);
+
+            void CreateRecipe(RecipeClassification classification)
+            {
+                var recipe = new WatchProductRecipe
+                {
+                    Product = watch,
+                    Classification = classification,
+                    Name = classification + ": TestRecipe",
+                    Workplan = new Workplan { Id = _workplanId }
+                };
+                _storage.SaveRecipe(recipe);
+            }
+        }
+
         [Test(Description = "This test saves a product with a property which should not be saved. " +
                             "The NullPropertyMapper ignores this property at load and save.")]
         public void LoadAndSaveTypeWithNullPropertyMapper()
