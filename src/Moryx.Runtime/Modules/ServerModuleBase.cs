@@ -153,6 +153,8 @@ namespace Moryx.Runtime.Modules
 
         void IServerModuleStateContext.Destruct()
         {
+            OnDestruct();
+
             // Destroy local container
             if (Container != null)
             {
@@ -197,6 +199,10 @@ namespace Moryx.Runtime.Modules
         /// Code executed when service is stopped
         /// </summary>
         protected abstract void OnStop();
+
+        protected virtual void OnDestruct()
+        {
+        }
 
         #endregion
 

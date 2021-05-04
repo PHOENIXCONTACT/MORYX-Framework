@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Moryx.Runtime.DbUpdate\Moryx.Runtime.DbUpdate.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
+    <ProjectReference Include="..\Moryx.Runtime.Kestrel\Moryx.Runtime.Kestrel.csproj" />
   </ItemGroup>
 
 </Project>
