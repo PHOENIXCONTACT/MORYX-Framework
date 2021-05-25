@@ -4,14 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Products.Model;
-using Moryx.Runtime.Configuration;
 using Moryx.Tools;
 
 namespace Moryx.Products.Management
@@ -184,9 +182,20 @@ namespace Moryx.Products.Management
                     .OrderBy(p => p.Name).ToList();
                 // TODO: Use type wrapper
                 var baseProperties = typeof(TBaseType).GetProperties();
-                foreach (var property in targetType.GetProperties().Where(p => baseProperties.All(bp => bp.Name != p.Name))
+
+                var filteredProperties = targetType.GetProperties().Where(p => baseProperties.All(bp => bp.Name != p.Name))
                     .Where(p => !typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))
-                    .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType)))
+                    .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType))
+                    .ToList();
+
+                // TODO: Hardcoded workaround for IRecipeTemplating. Remove in AL 6 if IRecipeTemplating is part of IRecipe
+                if (typeof(IRecipeTemplating).IsAssignableFrom(targetType))
+                {
+                    var templatingProperty = typeof(IRecipeTemplating).GetProperty(nameof(IRecipeTemplating.TemplateId));
+                    filteredProperties.Add(templatingProperty);
+                }
+
+                foreach (var property in filteredProperties)
                 {
                     var propertyTuple = CreateConfig<IPropertyMapper, PropertyMapperConfig>(property.PropertyType);
                     if (propertyTuple == null)
