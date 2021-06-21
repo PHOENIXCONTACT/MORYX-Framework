@@ -31,7 +31,7 @@ namespace Moryx.AbstractionLayer
         /// <summary>
         /// Name of the task
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Create a new instance of the <see cref="TaskTransition{T}"/>

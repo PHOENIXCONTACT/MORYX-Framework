@@ -23,7 +23,7 @@ namespace Moryx.Resources.Management
         public IContainer Container { get; set; }
 
         /// <summary>
-        /// Resource factory to instantiate registred types
+        /// Resource factory to instantiate registered types
         /// </summary>
         public IResourceFactory ResourceFactory { get; set; }
 
@@ -43,7 +43,7 @@ namespace Moryx.Resources.Management
         /// Cache of all proxy instances that were created during the runtime of the ResourceManagement. They
         /// all need to be
         /// </summary>
-        private readonly Dictionary<long, IResourceProxy> _proxyCache = new Dictionary<long, IResourceProxy>();
+        private readonly Dictionary<long, ResourceProxy> _proxyCache = new Dictionary<long, ResourceProxy>();
 
         /// <summary>
         /// Cache to directly access a resource type
@@ -200,7 +200,6 @@ namespace Moryx.Resources.Management
         /// <param name="type">Current node in the recursive call</param>
         /// <param name="typeConstraints">All type constraints a candidate needs to match to be compatible</param>
         /// <param name="supportedTypes">Current list of supported types</param>
-        /// <returns></returns>
         private static void SupportingType(ResourceTypeNode type, ICollection<Type> typeConstraints, ICollection<ResourceTypeNode> supportedTypes)
         {
             // This type supports the property -> Convert it and break recursion
@@ -252,10 +251,10 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Instantiate proxy object for a given resource type name
         /// </summary>
-        private IResourceProxy InstantiateProxy(string typeName, Resource instance)
+        private ResourceProxy InstantiateProxy(string typeName, Resource instance)
         {
             var proxyType = ProxyBuilder.GetType(_proxyTypeCache[typeName]);
-            var proxyInstance = (IResourceProxy)Activator.CreateInstance(proxyType, instance, this);
+            var proxyInstance = (ResourceProxy)Activator.CreateInstance(proxyType, instance, this);
             proxyInstance.Attach();
             return proxyInstance;
         }
@@ -308,7 +307,8 @@ namespace Moryx.Resources.Management
             var relevantInterfaces = new List<Type>(interfaces.Length); // At max all interfaces are relevant
 
             // Load additional public interfaces from resource registration attribute
-            var additionalPublicInterfaces = node.ResourceType.GetCustomAttribute<ResourceAvailableAsAttribute>()?.AvailableAs ?? Enumerable.Empty<Type>();
+            var additionalPublicInterfaces = node.ResourceType.GetCustomAttributes<ResourceAvailableAsAttribute>()
+                .SelectMany(a => a.AvailableAs).Distinct();
 
             // Add all resources derived from IResource, but not IResource itself
             relevantInterfaces.AddRange(from resourceInterface in interfaces
