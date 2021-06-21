@@ -188,13 +188,6 @@ namespace Moryx.Products.Management
                     .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType))
                     .ToList();
 
-                // TODO: Hardcoded workaround for IRecipeTemplating. Remove in AL 6 if IRecipeTemplating is part of IRecipe
-                if (typeof(IRecipeTemplating).IsAssignableFrom(targetType))
-                {
-                    var templatingProperty = typeof(IRecipeTemplating).GetProperty(nameof(IRecipeTemplating.TemplateId));
-                    filteredProperties.Add(templatingProperty);
-                }
-
                 foreach (var property in filteredProperties)
                 {
                     var propertyTuple = CreateConfig<IPropertyMapper, PropertyMapperConfig>(property.PropertyType);
