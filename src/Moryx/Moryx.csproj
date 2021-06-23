@@ -10,11 +10,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-    <DefineConstants>HAVE_TASK_FROMEXCEPTION</DefineConstants>
+    <DefineConstants>HAVE_TASK_FROMEXCEPTION;HAVE_ARRAY_EMPTY</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>HAVE_TASK_FROMEXCEPTION</DefineConstants>
+    <DefineConstants>HAVE_TASK_FROMEXCEPTION;HAVE_ARRAY_EMPTY</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
