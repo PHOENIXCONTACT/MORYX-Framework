@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
-using Moryx.Workflows.Transitions;
 
 namespace Moryx.Tools
 {
@@ -205,6 +204,49 @@ namespace Moryx.Tools
                     yield return new ReferenceGroup<TReference>(property, (IEnumerable<TReference>)property.GetValue(instance));
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks it the given PropertyInfo is part of an explicit implementation
+        /// </summary>
+        /// <param name="propertyInfo"></param>
+        /// <returns><c>true</c> if the property is part of an explicit implementation</returns>
+        public static bool IsExplicitInterfaceImplementation(PropertyInfo propertyInfo)
+        {
+            // At least one accessor must exists
+            return IsExplicitInterfaceImplementation(propertyInfo.GetMethod != null
+                ? propertyInfo.GetMethod : propertyInfo.SetMethod);
+        }
+
+        /// <summary>
+        /// Checks it the given MethodInfo is part of an explicit implementation
+        /// </summary>
+        /// <param name="methodInfo"></param>
+        /// <returns><c>true</c> if the method is part of an explicit implementation</returns>
+        public static bool IsExplicitInterfaceImplementation(MethodInfo methodInfo)
+        {
+            // Based on ideas of: https://stackoverflow.com/questions/17853671/how-to-know-if-a-memberinfo-is-an-explicit-implementation-of-a-property
+
+            // Iterate over interfaces to access interface map
+            var declaringType = methodInfo.DeclaringType;
+            foreach (var implementedInterface in declaringType.GetInterfaces())
+            {
+                var mapping = declaringType.GetInterfaceMap(implementedInterface);
+
+                // Only look at declaring types
+                if (mapping.TargetType != declaringType)
+                    continue;
+
+                for (var index = 0; index < mapping.TargetMethods.Length; index++)
+                {
+                    // If mapped method and interface method name do not match, it is explicit
+                    if (mapping.TargetMethods[index] == methodInfo &&
+                        mapping.InterfaceMethods[index]?.Name.Equals(methodInfo.Name, StringComparison.Ordinal) == false)
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }
