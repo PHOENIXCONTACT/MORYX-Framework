@@ -8,9 +8,7 @@ namespace Moryx.Runtime.Tests.Modules
 {
     internal class TestModule : ServerModuleBase<TestConfig>
     {
-        /// <summary>
-        /// Unique name for this module within the platform it is designed for
-        /// </summary>
+        /// <inheritdoc />
         public override string Name => "TestModule";
 
         /// <summary>
@@ -22,6 +20,8 @@ namespace Moryx.Runtime.Tests.Modules
         /// Access to the last invoked method to validate correct behaviour
         /// </summary>
         public InvokedMethod LastInvoke { get; set; }
+
+        public int RetryCount { get; set; }
 
         public TestConfig MyConfig => Config;
 
@@ -37,7 +37,6 @@ namespace Moryx.Runtime.Tests.Modules
             }
         }
 
-        public int RetryCount { get; set; }
         protected override void OnStart()
         {
             LastInvoke = InvokedMethod.Start;

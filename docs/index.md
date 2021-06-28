@@ -1,5 +1,5 @@
 ---
-title: Welcome to MoryxPlatform!
+title: Welcome to MoryxCore!
 documentType: index
 ---
 
@@ -12,13 +12,13 @@ footer{
 <div class="hero">
   <div class="wrap">
     <div class="text">
-      <strong>MoryxPlatform</strong>
+      <strong>MORYX Core</strong>
     </div>
     <div class="buttons-unit-small">
-      </span><a class="github-link" href="https://github.com/PHOENIXCONTACT/MORYX-Platform">View on GitHub</a>
+      </span><a class="github-link" href="https://github.com/PHOENIXCONTACT/MORYX-Core">View on GitHub</a>
     </div>
     <div class="minitext">
-      The MORYX Platform is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
+      The MORYX Core is an application framework for client-server applications. <br /> It is based on the concept of modular software development and the service pattern.
     </div>
     <div class="buttons-unit">
       <a href="tutorials/index.md" class="button"><i class="glyphicon glyphicon-send"></i>Getting Started</a>
@@ -34,7 +34,7 @@ footer{
         <i class="glyphicon glyphicon-cutlery"></i>
         <section>
           <h2>Easy Customization</h2>
-          <p class="lead">MoryxPlatform provides a flexible way to customize with Modules and Plugins</p>
+          <p class="lead">MORYX Core provides a flexible way to customize with Modules and Plugins</p>
         </section>
       </div>
     </div>

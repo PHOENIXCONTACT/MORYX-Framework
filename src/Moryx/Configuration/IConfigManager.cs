@@ -4,7 +4,7 @@
 namespace Moryx.Configuration
 {
     /// <summary>
-    /// Central component for all access to configuration objects. This should be implemented on every platform the
+    /// Central component for all access to configuration objects. This should be implemented on every environment the
     /// way it works best - file, database or remote.
     /// </summary>
     public interface IConfigManager

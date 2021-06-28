@@ -5,11 +5,11 @@ uid: Configuration
 
 ## Introduction
 
-Configuration of components is one of the core features of the MORYX. Configuration provides the base to create more flexible software and enables programmers to design components for a range of different application scenarios. Furthermore configuration gives developers the opportunity to adapt an installation to the local environment. For example a configuration may contain database names, ports or directories. It may also contain flags and values to specify different behaviours of the component. Collections in the configuration may be used to ether support a number of endpoints or to configure objects of the same type but variable number.
+Configuration of components is one of the core features of the platform. Configuration provides the base to create more flexible software and enables programmers to design components for a range of different application scenarios. Furthermore configuration gives developers the opportunity to adapt an installation to the local environment. For example a configuration may contain database names, ports or directories. It may also contain flags and values to specify different behaviours of the component. Collections in the configuration may be used to ether support a number of endpoints or to configure objects of the same type but variable number.
 
 ## Defining a configuration
 
-Configurations in the MORYX are written as classes to make in-code usage as easy as possible and avoid unnecessary file and string parsing. Configuration values are written as properties, classes or collections of class instances. With respect to a couple of rules and conventions almost any structure a developer might need is possible. Some of theses conventions are necessary to save to configuration to a file, others are boundaries set by the generic configuration editor which will explained later. These rules can be ignored but don't blame me, if this results in non permanent configurations or poor editor support!
+Configurations in the platform are written as classes to make in-code usage as easy as possible and avoid unnecessary file and string parsing. Configuration values are written as properties, classes or collections of class instances. With respect to a couple of rules and conventions almost any structure a developer might need is possible. Some of theses conventions are necessary to save to configuration to a file, others are boundaries set by the generic configuration editor which will explained later. These rules can be ignored but don't blame me, if this results in non permanent configurations or poor editor support!
 Quick example of a configuration:
 
 ````cs
@@ -47,7 +47,7 @@ These attributes are defined inside the .NET and are necessary to save the confi
 
 ### Collections
 
-The MORYX Core configuration management supports collections of subclasses if they meet two requirements. The type of elements in the collection must be `DataContracts` in order to be saved to and reloaded from the file.
+The platform configuration management supports collections of subclasses if they meet two requirements. The type of elements in the collection must be `DataContracts` in order to be saved to and reloaded from the file.
 
 Supported Collection Types:
 

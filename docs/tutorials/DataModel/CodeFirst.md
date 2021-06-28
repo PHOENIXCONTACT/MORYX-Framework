@@ -3,7 +3,7 @@ uid: GettingStarted.CodeFirst
 ---
 # Code first
 
-This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MORYX Platform. MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
+This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MORYX Core. MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
 
 ## Basics
 
@@ -15,7 +15,7 @@ You have to implement a few basics to get started working with the PostgreSQL da
 | Entities | One entity is one table |
 | Repositories | Helper functions to access a specific table. The MORYX framework implements a speciality to make your life easier. You just need to define the interface and the code will be generated at runtime. |
 
-More extended, additional repositories can be created for the [UnitOfWork Repository Pattern](../../articles/Platform/DataModel/UnitOfWorkPattern.md).
+More extended, additional repositories can be created for the [UnitOfWork Repository Pattern](../../articles/Core/DataModel/UnitOfWorkPattern.md).
 
 ## The database DbContext
 
@@ -101,13 +101,13 @@ public class Asteroid : ModificationTrackedEntityBase
 }
 ````
 
-The entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase). 
-Is that necessary? 
-That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`. 
-This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base. 
-It has three properties which are monitored by triggers (Created, Updated, Deleted). 
-These triggers are automatically applied to the entity. 
-You can find further information regarding Modification Tracking [here](../../articles/Platform/DataModel/ModificationTracking.md).
+The entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase).
+Is that necessary?
+That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`.
+This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base.
+It has three properties which are monitored by triggers (Created, Updated, Deleted).
+These triggers are automatically applied to the entity.
+You can find further information regarding Modification Tracking [here](../../articles/Core/DataModel/ModificationTracking.md).
 
 ## Entity loading & change tracking behavior
 
@@ -117,7 +117,7 @@ These two features are called lazy loading and change tracking.
 
 ### Change tracking
 
-Entity Framework needs change tracking to create the changing SQL statement, i.e. it has to know which column did change and which not. 
+Entity Framework needs change tracking to create the changing SQL statement, i.e. it has to know which column did change and which not.
 You can decide between three options of tracking:
 
 - **Snapshot Change Tracking**: EF keeps the original data "in mind" and compares them to the new version.
@@ -126,7 +126,7 @@ You can decide between three options of tracking:
 
 ### Entity loading
 
-If an entity consists of one or more navigation properties you might want to have access to them. 
+If an entity consists of one or more navigation properties you might want to have access to them.
 There are three ways to access these kind of properties:
 
 | Mode | Explaination |
@@ -137,13 +137,13 @@ There are three ways to access these kind of properties:
 
 ### Enable lazy loading
 
-If you want to profit from lazy loading, setting the right `ContextMode` is only one of the two steps required. 
+If you want to profit from lazy loading, setting the right `ContextMode` is only one of the two steps required.
 EntityFramework supports a per navigation property switch for lazy loading support.
 You need __explicitly__ define the navigation property as __`virtual`__ if you want lazy loading support to be enabled on this.
 
 ### MORYX specific
 
-To use the context within a MORYX module, you must declare a dependency on `IDbContextManager` and register it together with the context specific factory in your local container. 
+To use the context within a MORYX module, you must declare a dependency on `IDbContextManager` and register it together with the context specific factory in your local container.
 Afterwards you can use injection for context specific factories anywhere in the module.
 
 ````cs
@@ -181,7 +181,7 @@ using (var context = SolarContextFactory.Create(ContextMode.Tracking))
 
 ## UnitOfWork Repository Pattern
 
-MORYX brings out of the box extensions on the `DbContext` to provide the [UnitOfWork Repository Pattern](../../articles/Platform/DataModel/UnitOfWorkPattern.md). 
+MORYX brings out of the box extensions on the `DbContext` to provide the [UnitOfWork Repository Pattern](../../articles/Core/DataModel/UnitOfWorkPattern.md).
 For the following paragraphs, it is necessary to have a rough understanding of it.
 
 ### Repositories
@@ -228,10 +228,10 @@ public interface IAsteroidRepository : IRepository<Asteroid>
 }
 ````
 
-If you got scared that you have to implement all these functions you are lucky, they will be implemented automatically. 
-So you only have to define the interfaces. 
-If you want to know more about the automatic repository instantiation please have a look into the [Repository Proxy Builder](../../articles/Platform/DataModel/RepositoryProxyBuilder.md). 
-The example functions defined above are also not necessary. 
+If you got scared that you have to implement all these functions you are lucky, they will be implemented automatically.
+So you only have to define the interfaces.
+If you want to know more about the automatic repository instantiation please have a look into the [Repository Proxy Builder](../../articles/Core/DataModel/RepositoryProxyBuilder.md).
+The example functions defined above are also not necessary.
 Only add functions that you really need.
 
 But if you need a more specialized implementation of a repository you can either use a mixture of repository proxies and self implemented repository or your own repository implementation.
@@ -261,11 +261,11 @@ using (var uow = UnitOfWokFactory.Create())
 }
 ````
 
-You do not need to implement your repository interface, this is completly done by the [Repository Proxy Builder](../../articles/Platform/DataModel/RepositoryProxyBuilder.md).
+You do not need to implement your repository interface, this is completly done by the [Repository Proxy Builder](../../articles/Core/DataModel/RepositoryProxyBuilder.md).
 
 ## Database Migration
 
-Half of way is done for now. 
+Half of way is done for now.
 We are prepared to do the first step of migration. Database migration is a hard business if you have many changes made to your data model.
 The EntityFramework comes with a tool to make the migration hassle a little bit easier.
 
@@ -283,9 +283,9 @@ When EF guys are talking about the *CodeFirst Migrations* approach they mean exa
 
 ### Initial creation of migration configuration
 
-Before we implement the UnitOfWork you can configure your migration. 
-This is an easy step to take, because MORYX has prepared a few things for you. 
-But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project. 
+Before we implement the UnitOfWork you can configure your migration.
+This is an easy step to take, because MORYX has prepared a few things for you.
+But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project.
 After that, you need to open your `App.config` and add the following lines:
 
 ````xml
@@ -299,14 +299,14 @@ After that, you need to open your `App.config` and add the following lines:
   </entityFramework>
 ````
 
-If you found an already existing section called configSections and entityFramework replace it. 
-The migration script needs this to identify the driver to communicate with the database. 
+If you found an already existing section called configSections and entityFramework replace it.
+The migration script needs this to identify the driver to communicate with the database.
 Note: If you use another version of EntityFramwork you need to change the full qualified assembly name.
 
-Now, open the `Package Manager Console` 
-(You may ask 'Really? 
-Why the Package Manager Console?' 
-Thats because in Visual Studio the Package Manager Console also is the Powershell console within Visual Studio). 
+Now, open the `Package Manager Console`
+(You may ask 'Really?
+Why the Package Manager Console?'
+Thats because in Visual Studio the Package Manager Console also is the Powershell console within Visual Studio).
 Then enter the following command
 
 ````ps
@@ -315,13 +315,13 @@ Enable-Migrations -ContextTypeName SolarSystemContext -EnableAutomaticMigrations
     -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql
 ````
 
-and execute it. 
-This will create a folder named Migrations in the project and a `Configurations.cs` file within. 
+and execute it.
+This will create a folder named Migrations in the project and a `Configurations.cs` file within.
 As mentioned before Moryx has already done some work for you.
 
 ### Add-Migrations
 
-Now time has come to create the initial migration. You need to ensure that the target database does NOT exist yet. 
+Now time has come to create the initial migration. You need to ensure that the target database does NOT exist yet.
 This forces the Add-Migration script to create the code for a full database setup.
 
 To start, type the following line to the `Package Manager Console`:
@@ -335,7 +335,7 @@ That's it. The script should have added a new class to the `Migrations` folder o
 
 ### Update-Database
 
-The last step to do, is to apply the migrations to the database so that your context and its entities are on the same version. 
+The last step to do, is to apply the migrations to the database so that your context and its entities are on the same version.
 Now the last of the three scripts comes into play.
 Copy the following line to the Package Manager Console:
 

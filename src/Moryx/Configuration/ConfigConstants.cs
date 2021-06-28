@@ -9,7 +9,7 @@ namespace Moryx.Configuration
     public class ConfigConstants
     {
         /// <summary>
-        /// Extension of the config files used in the platform
+        /// Extension of the config files used in the MORYX
         /// </summary>
         public const string FileExtension = ".json";
     }
