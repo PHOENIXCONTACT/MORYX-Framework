@@ -11,24 +11,18 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
     {
         public ServerModuleState State { get; set; }
 
-        /// <summary>
-        /// Unique name for this module within the platform it is designed for
-        /// </summary>
+        /// <inheritdoc />
         public string Name => GetType().Name;
 
-        /// <summary>
-        /// Notifications published by this module
-        /// </summary>
+        /// <inheritdoc />
         public INotificationCollection Notifications { get; private set; }
 
-        /// <summary>
-        /// Console to interact with the module
-        /// </summary>
+        /// <inheritdoc />
         public IServerModuleConsole Console { get; private set; }
 
         /// <summary>
         /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start
-        ///             any active functionality and/or periodic execution of logic.
+        /// any active functionality and/or periodic execution of logic.
         /// </summary>
         public void Initialize()
         {

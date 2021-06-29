@@ -10,10 +10,10 @@ namespace Moryx.Runtime.Tests.Modules
 {
     internal class DelayedExceptionModule : ServerModuleBase<TestConfig>
     {
-        /// <summary>
-        /// Unique name for this module within the platform it is designed for
-        /// </summary>
+        /// <inheritdoc />
         public override string Name => "DelayedException";
+
+        public ManualResetEvent WaitEvent { get; set; }
 
         protected override void OnInitialize()
         {
@@ -32,7 +32,5 @@ namespace Moryx.Runtime.Tests.Modules
                 throw new Exception("Test");
             });
         }
-
-        public ManualResetEvent WaitEvent { get; set; }
     }
 }

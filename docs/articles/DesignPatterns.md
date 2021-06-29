@@ -3,9 +3,9 @@ uid: DesignPatterns
 ---
 # Design Patters
 
-This should be an overview of design patterns and how they will be used in MoryxPlatform applications. The Platform will provide several base classes, helper, structures and implementations to support different patterns.
+This should be an overview of design patterns and how they will be used in MORYX core applications. The Core will provide several base classes, helper, structures and implementations to support different patterns.
 
-This should be no *me too* documentation. So the focus is on the implementation and usage with the MoryxPlatform.
+This should be no *me too* documentation. So the focus is on the implementation and usage with the MORYX Core.
 
 A good starting point is a github project where a community of developers provide a detailed description with abstract samples to implement design patterns: [Design-Patterns-for-Humans](https://github.com/kamranahmedse/design-patterns-for-humans). Other sources can also be used. The world wide web is full with tons of samples and implementations. To implement the patters all on the same way that every colleagues will understand the code, please read the next pages.
 
@@ -15,9 +15,9 @@ A good starting point is a github project where a community of developers provid
 
 *The state pattern is a behavioral software design pattern that implements a state machine in an object-oriented way. With the state pattern, a state machine is implemented by implementing each individual state as a derived class of the state pattern interface, and implementing state transitions by invoking methods defined by the pattern's superclass. The state pattern can be interpreted as a strategy pattern which is able to switch the current strategy through invocations of methods defined in the pattern's interface.* (Please read the [wikipedia article](https://en.wikipedia.org/wiki/State_pattern) carefully.)
 
-The MORYX Platform provides some base classes and interfaces in the [Moryx.StateMachines](xref:Moryx.StateMachines)-Namespace. The general interface of a state context is the [IStateContext](xref:Moryx.StateMachines.IStateContext). It represents the context object of the state machine and provides a `SetState` method to provide the next state. The base interface of a state is the [IState](xref:Moryx.StateMachines.IState). All states should derive from this interface. It provides actions like `OnEnter` and `OnExti` to indicate the entering and exiting of a state. For the [IState](xref:Moryx.StateMachines.IState) a base class exists. The base class will handle all the actions of the state machine.
+The MORYX Core provides some base classes and interfaces in the [Moryx.StateMachines](xref:Moryx.StateMachines)-Namespace. The general interface of a state context is the [IStateContext](xref:Moryx.StateMachines.IStateContext). It represents the context object of the state machine and provides a `SetState` method to provide the next state. The base interface of a state is the [IState](xref:Moryx.StateMachines.IState). All states should derive from this interface. It provides actions like `OnEnter` and `OnExti` to indicate the entering and exiting of a state. For the [IState](xref:Moryx.StateMachines.IState) a base class exists. The base class will handle all the actions of the state machine.
 
-In the past we implemented the states by hand. A base state implemented a `NextState()` method which created a new state depending on the given argument. This leaded to big switch- or if-blocks. With every state change a new object instance was created which extended the workload of the garbage collector. To reduce the amount of boilerplate code we implemented a dictionary with the state name as key and a creation delegate as value to create a state like this: `var state = Map[name]`. 
+In the past we implemented the states by hand. A base state implemented a `NextState()` method which created a new state depending on the given argument. This leaded to big switch- or if-blocks. With every state change a new object instance was created which extended the workload of the garbage collector. To reduce the amount of boilerplate code we implemented a dictionary with the state name as key and a creation delegate as value to create a state like this: `var state = Map[name]`.
 This was nice because the instanciation of states was done only when the state machine was created. The problem with this idea was that it leads to Copy/Paste and much manual work for big state machines. If some state had been changed, the map had to be changed too.
 
 **Old Version 1**
@@ -50,7 +50,7 @@ protected const int StateConnecting = 20;
 
 ````
 
-The last step leading to the current implementation was to try to remove the manual work (Boilerplate Code). There is no need to implement the state map with every new implementation again. In General we know all states because all states derive from base class and have a unique identifier defined by constant `integer`. The complete statemap can be instantiated by reflection. The fields can be attributed with the needed type information to reduce the reflection work to a minumum. 
+The last step leading to the current implementation was to try to remove the manual work (Boilerplate Code). There is no need to implement the state map with every new implementation again. In General we know all states because all states derive from base class and have a unique identifier defined by constant `integer`. The complete statemap can be instantiated by reflection. The fields can be attributed with the needed type information to reduce the reflection work to a minumum.
 
 The next example shows a simple state machine and a simple context. The context initializes the state machine (described later) and selects the initial state. If the state machine will change the state, the `SetState`-Method will be called. We save it into a private field to access it in the next methods. The class is holding a `_currentValue` which is simply an `int`. In the `DoSomething`-Method the state machine is called. `AtoB` moves the state machine from the A-State to B-State and calls `HandleAtoB` on the context. `HandleAtoB` sets the current value to `10`. The next call is the `BToA`. Like before, the A-State will be set and `HandleBtoA` will be called.
 
@@ -67,7 +67,7 @@ public class MyContext : IStateContext
 
     public void Initial()
     {
-        StateMachine.Initialize<MyStateBase>(this); 
+        StateMachine.Initialize<MyStateBase>(this);
         //State is not Initial = A
         _currentValue = 0;
     }
@@ -92,7 +92,7 @@ public class MyContext : IStateContext
 }
 ````
 
-The base class of the state should derive from `StateBase<TContext>` while `TContext` is a type of [IStateContext](xref:Moryx.StateMachines.IStateContext). With the given type the `abstract class` is fully typed. 
+The base class of the state should derive from `StateBase<TContext>` while `TContext` is a type of [IStateContext](xref:Moryx.StateMachines.IStateContext). With the given type the `abstract class` is fully typed.
 
 The states are defined for the base class by adding the Attributes [StateDefinitionAttribute](xref:Moryx.StateMachines.StateDefinitionAttribute) above the `protected const int` Definition. The attribute defines the type of the regarding state. Additionally it have a property to set the initial state of the machine. Only one state can be the initial.
 
@@ -156,7 +156,7 @@ internal sealed class BState : MyStateBase
 }
 ````
 
-The parameters of the constructor will be given to the base. 
+The parameters of the constructor will be given to the base.
 
 The `NextState()`-Method is implemented as a `virtual` method in the base class. It will select the next state using the internal state map and executes the `IState.OnExit()` by leaving the state and `IState.OnEnter()` by entering the next state.
 
@@ -167,7 +167,7 @@ The state machine will be initialized with the static helper class [StateMachine
 ````cs
 private void InitializeMachine()
 {
-    StateMachine.Initialize<MyStateBase>(this); 
+    StateMachine.Initialize<MyStateBase>(this);
 }
 ````
 
@@ -177,7 +177,7 @@ The state machine will be reloaded with the static helper class [StateMachine](x
 Additionally a `stateKey` can be given to the method.
 
 ````cs
-private void ReloadMachine() 
+private void ReloadMachine()
 {
     // Get the key of current state
     var key = StateMachine.GetKey(_stat);
@@ -186,7 +186,7 @@ private void ReloadMachine()
 
     // Reload the state with the saved key
     StateMachine.Reload<MyStateBase>(this, key);
-} 
+}
 ````
 
 **Force a machine to a specific state**
@@ -201,7 +201,7 @@ private void ForceMachine()
 }
 ````
 
-The default overload of `Force` does not call `OnExit` of the given state nor calling the `OnEnter` of the forced state. 
+The default overload of `Force` does not call `OnExit` of the given state nor calling the `OnEnter` of the forced state.
 A specialized overload for this can be used:
 
 ````cs

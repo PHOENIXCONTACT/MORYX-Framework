@@ -4,7 +4,7 @@
 namespace Moryx.Runtime.Modules
 {
     /// <summary>
-    /// Module interface for all platform extension modules
+    /// Module interface for all environment extension modules
     /// </summary>
     public interface IPlatformModule : IServerModule
     {

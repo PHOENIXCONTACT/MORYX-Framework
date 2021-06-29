@@ -4,8 +4,8 @@
 - name: Design Patterns
   href: DesignPatterns.md
 
-- name: Platform
-  href: Platform/toc.yml
+- name: Core
+  href: Core/toc.yml
 
 - name: Runtime
   href: Runtime/toc.yml

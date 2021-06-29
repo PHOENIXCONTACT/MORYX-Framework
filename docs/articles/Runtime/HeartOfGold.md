@@ -3,7 +3,7 @@ uid: HeartOfGold
 ---
 # HeartOfGold
 
-The platform is called the Runtime whereas the executable is called the HeartOfGold. The HeartOfGold provides the applications entry point and is responsible for executing the boot sequence explained below. After loading the RunMode and level 1 composition it will pass control to the RunMode.
+The HeartOfGold provides the applications entry point and is responsible for executing the boot sequence explained below. After loading the RunMode and level 1 composition it will pass control to the RunMode.
 
 ## Unhandled exception handling
 

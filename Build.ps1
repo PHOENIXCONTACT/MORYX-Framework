@@ -21,7 +21,7 @@
 Invoke-Initialize -Version (Get-Content "VERSION");
 
 if ($Build) {
-    Invoke-Build ".\MoryxPlatform.sln"
+    Invoke-Build ".\Core.sln"
 }
 
 if ($SmokeTests) {

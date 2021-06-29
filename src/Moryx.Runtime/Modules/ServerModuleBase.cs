@@ -23,9 +23,7 @@ namespace Moryx.Runtime.Modules
     public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IServerModuleStateContext, ILoggingHost, ILoggingComponent
         where TConf : class, IConfig, new()
     {
-        /// <summary>
-        /// Unique name for a module within the platform it is designed for
-        /// </summary>
+        /// <inheritdoc />
         public abstract string Name { get; }
 
         /// <inheritdoc />
