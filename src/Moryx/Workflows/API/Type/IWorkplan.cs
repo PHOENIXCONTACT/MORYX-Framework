@@ -38,6 +38,6 @@ namespace Moryx.Workflows
         /// <summary>
         /// All steps of this workplan
         /// </summary>
-        IEnumerable<IWorkplanStep> Steps { get; } 
+        IEnumerable<IWorkplanStep> Steps { get; }
     }
 }
