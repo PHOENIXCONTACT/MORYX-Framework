@@ -225,7 +225,7 @@ namespace Moryx.Tools.Wcf
         #endregion
 
         /// <summary>
-        /// Adds a new client to the monitoring quene.
+        /// Adds a new client to the monitoring queue.
         /// </summary>
         private long AddClientToMonitor<T, TK>(string clientVersion, object callbackService, Action<ConnectionState, T> callback, Binding binding, ClientConfig config = null)
             where T : ClientBase<TK>

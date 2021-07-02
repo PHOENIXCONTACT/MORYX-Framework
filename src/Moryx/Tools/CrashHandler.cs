@@ -47,7 +47,7 @@ namespace Moryx.Tools
         public static void WriteErrorToFile(string message)
         {
             var crashDir = Path.Combine(Directory.GetCurrentDirectory(), @"CrashLogs");
-            var fileName = $@"{crashDir}\CrashLog_{DateTime.Now:s}.txt";
+            var fileName = $@"{crashDir}\CrashLog_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt";
 
             if (!Directory.Exists(crashDir))
                 Directory.CreateDirectory(crashDir);

@@ -20,7 +20,7 @@ public class Branch
     public string Name { get; set; }
 }
 
-// Somewhere
+// Somewhere 
 var resolverFactory = new BindingResolverFactory()
 var resolver = resolverFactory.Create("Branch.Name");
 
@@ -48,7 +48,7 @@ Implementations of [IBindingResolver](xref:Moryx.Bindings.IBindingResolver) are 
 
 The chain of resolvers is built by the [IBindingResolverFactory](xref:Moryx.Bindings.IBindingResolverFactory) by parsing the string and creating links token by token. A token is text fragement between two dots or an index like __name__ in `Parameters[name]`. Unlike XAML-binding not all tokens directly represent a property. An implementation of [IBindingResolverFactory](xref:Moryx.Bindings.IBindingResolverFactory) might define special keys or short-cuts.
 
-MORYX provides a base class [BindingResolverBase](xref:Moryx.Bindings.BindingResolverBase) and four standard implementations of [IBindingResolver](xref:Moryx.Bindings.IBindingResolver).
+The platform provides a base class [BindingResolverBase](xref:Moryx.Bindings.BindingResolverBase) and four standard implementations of [IBindingResolver](xref:Moryx.Bindings.IBindingResolver).
 
 ### BindingResolverBase
 
@@ -193,7 +193,7 @@ public class TypeResolverFactory : BindingResolverFactory
 
 ### Base Key
 
-The resolver factory, unlike XAML, offers the possibility to define logic for different base keys. The base key is per definition the text before the first dot. Per default the resolver factory ignores the base key and directly starts with a `ReflectionResolver` on the source object. This means to access our name property the binding string needs to be `"Branch.Name"`.
+The resolver factory, unlike XAML, offers the possibility to define logic for different base keys. The base key is per definition the text before the first dot. Per default the resolver factory ignores the base key and directly starts with a `ReflectionResolver` on the source object. This means to access our name property the binding string needs to be `"Branch.Name"`. 
 
 Base keys can be used for readability like the example for `"Root"` above or work as multiplexers with entry points into the object tree. Starting with a `NullResolver` can be more intuitive for users. Multiplexers make sense when creating a binding factory that always uses the same type of source object and this object is the entry point to a rather big object tree.
 
@@ -239,7 +239,7 @@ protected override IBindingResolverChain CreateBaseResolver(string baseKey)
 
 ### Add To Chain
 
-As previously mentioned the binding resolvers are built as a recursive chain and the `AddToChain`-method is used to do exactly this. It is called for each segment in the binding string between dots. Per default the factory applies a property and indexer regex to this string. Derived types can use this method to include their own resolvers and logic into the resolver chain.
+As previously mentioned the binding resolvers are built as a recursive chain and the `AddToChain`-method is used to do exactly this. It is called for each segment in the binding string between dots. Per default the factory applies a property and indexer regex to this string. Derived types can use this method to include their own resolvers and logic into the resolver chain. 
 
 The new resolvers must be added to the current resolver passed into the method and then return the new end of the chain. The extension method `Extend` does exactly this and is the recommended way to do it in new binding resolver factories. The new end of the chain need to be returned because in some cases the `AddToChain` method might add more than one link to the chain. For example when working with collections, resolving `Collection[Foo]` will add a `ReflectionResolver` and an `IndexResolver` to the chain.
 

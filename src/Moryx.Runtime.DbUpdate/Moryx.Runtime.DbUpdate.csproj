@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Runtime RunMode for executing database migrations.</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Runtime;Entity;Framework;EntityFramework;DataModel;Model;Database;Migration</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

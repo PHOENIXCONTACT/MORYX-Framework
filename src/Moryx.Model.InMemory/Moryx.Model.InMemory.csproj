@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>InMemory extension for unit tests referencing Moryx.Model</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Entity;Framework;EntityFramework;DataModel;Model;Database;InMemory;Effort</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

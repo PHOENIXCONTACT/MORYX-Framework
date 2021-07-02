@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Reflection;
 using Moryx.Bindings;
 using NUnit.Framework;
@@ -46,6 +47,40 @@ namespace Moryx.Tests.Bindings
             Assert.AreEqual(str, obj.SimpleString);
         }
 
+        [Test]
+        public void AssignStringToInt()
+        {
+            const string number = "5";
+
+            // Arrange
+            var obj = new SomeHiddenPropertyClass();
+            IBindingResolver reflectionResolver = new ReflectionResolver(nameof(SomeClass.SimpleInt));
+
+            // Act
+            var result = reflectionResolver.Update(obj, number);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(int.Parse(number), obj.SimpleInt);
+        }
+
+        [Test]
+        public void AssignDoubleToString()
+        {
+            const double value = 7.78;
+
+            // Arrange
+            var obj = new SomeHiddenPropertyClass();
+            IBindingResolver reflectionResolver = new ReflectionResolver(nameof(SomeClass.SimpleString));
+
+            // Act
+            var result = reflectionResolver.Update(obj, value);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(value, Convert.ToDouble(obj.SimpleString));
+        }
+
         [Test(Description = "Checks if the reflection resolver returns null by resolving an unknown property")]
         public void NullByUnknownProperty()
         {
@@ -82,7 +117,5 @@ namespace Moryx.Tests.Bindings
             // Assert
             Assert.NotNull(result);
         }
-
-        
     }
 }

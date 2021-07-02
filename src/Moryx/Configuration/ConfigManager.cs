@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Moryx.Configuration
 {
     /// <summary>
-    /// Basic config manager to be used by platforms to provide typed configuration
+    /// Basic config manager to be used by environments to provide typed configuration
     /// </summary>
     public class ConfigManager : IConfigManager
     {

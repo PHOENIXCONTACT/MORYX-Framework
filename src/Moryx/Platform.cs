@@ -6,7 +6,7 @@ using System;
 namespace Moryx
 {
     /// <summary>
-    /// This class provides access to the product this application belongs to and the platform it was build on.
+    /// This class provides access to the product this application belongs to and the environment it was build on.
     /// </summary>
     public abstract class Platform
     {

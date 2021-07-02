@@ -1,10 +1,35 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Serialization;
 
 namespace Moryx.Tests
 {
+    internal interface IExplicitInterface
+    {
+        string ExplicitProperty { get; set; }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public class EntrySerialize_Explicit : IExplicitInterface
+    {
+        string IExplicitInterface.ExplicitProperty { get; set; }
+
+        public int NormalProperty { get; set; }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public class EntrySerialize_BaseType
+    {
+        public int Property1 { get; set; }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public class EntrySerialize_DerivedType : EntrySerialize_BaseType
+    {
+        public int Property2 { get; set; }
+    }
+
     // ReSharper disable once InconsistentNaming
     public class EntrySerialize_NotClassMixed
     {

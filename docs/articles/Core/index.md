@@ -24,8 +24,8 @@ The CastelContainer will be used for the Component Composition as the DI Contain
 
 ## Logging
 
-Throughout the entire application every class created by a DI-container has access to a logger.
-The loggers are structured hierarchical. Structures can be instantiated manually or automatically.
+Throughout the entire application every class created by a DI-container has access to a logger.  
+The loggers are structured hierarchical. Structures can be instantiated manually or automatically.  
 See @subpage platform-logging for full documentation
 
 ## WCF support
@@ -38,7 +38,7 @@ See @subpage platform-logging for full documentation
 
 ## Bindings
 
-MORYX has its own binding engine that uses binding strings like `"Object.Foo"` to resolve the value of `Foo`
+The MORYX platform has its own binding engine that uses binding strings like `"Object.Foo"` to resolve the value of `Foo`
 for a given source object. Such strings might be embedded into texts using brackets `"Hello {Person.Name}, how are you?"`.
 
 For more details see @subpage bindings.

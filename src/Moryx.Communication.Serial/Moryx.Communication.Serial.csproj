@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>MORYX binary connection for serial communication</Description>
     <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;Communication;Serial;Ports</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

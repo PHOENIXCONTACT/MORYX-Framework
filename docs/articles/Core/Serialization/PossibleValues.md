@@ -3,7 +3,7 @@ uid: PossibleValues
 ---
 # PossibleValuesAttribute
 
-In many cases it makes sense to limit the number of options a user or maintainer can select for a value. Either to eliminate values which are not supported or to offer a preselected list of values to reduce complexity. An easy example would be to give a range of integer values for a timer interval and a more complex approach is to list all possible component names that support a given interface. This attribute is abstract and can not be used directly but must be inherited to implement a certain behaviour. This attribute is only used for user interaction purposes and is not validated by neither the configuration management nor any other component. Values modified code or the json will still be loaded as valid and passed on to the module! Its abstract members are described below.
+In many cases it makes sense to limit the number of options a user or maintainer can select for a value. Either to eliminate values which are not supported or to offer a preselected list of values to reduce complexity. An easy example would be to give a range of integer values for a timer interval and a more complex approach is to list all possible component names that support a given interface. This attribute is abstract and can not be used directly but must be inherited to implement a certain behaviour. This attribute is only used for user interaction purposes and is not validated by neither the configuration management nor any other component of the platform. Values modified code or the json will still be loaded as valid and passed on to the module! Its abstract members are described below.
 
 ````cs
 /// <summary>

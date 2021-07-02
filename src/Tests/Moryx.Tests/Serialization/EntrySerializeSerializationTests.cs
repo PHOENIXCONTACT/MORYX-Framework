@@ -146,5 +146,53 @@ namespace Moryx.Tests
             // Assert
             Assert.AreEqual(0, filteredProperties.Length);
         }
+
+        [Test(Description = "Explicit properties are not filtered by default")]
+        public void NotFilterExplicitPropertiesByDefault()
+        {
+            // Arrange
+            var sourceType = typeof(EntrySerialize_Explicit);
+
+            // Act
+            var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
+
+            // Assert
+            Assert.AreEqual(2, filteredProperties.Length);
+        }
+
+        [Test(Description = "Explicit properties are filtered if enabled")]
+        public void FilterExplicitPropertiesIfEnabled()
+        {
+            // Arrange
+            _serialization.FilterExplicitProperties = true;
+            var sourceType = typeof(EntrySerialize_Explicit);
+
+            // Act
+            var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
+
+            // Assert
+            Assert.AreEqual(1, filteredProperties.Length);
+
+            var normalProperty = sourceType.GetProperty(nameof(EntrySerialize_Explicit.NormalProperty));
+            Assert.AreEqual(normalProperty, filteredProperties[0]);
+        }
+
+        [Test(Description = "Properties of given base type are filtered by default")]
+        public void FilterByBaseType()
+        {
+            // Arrange
+            var baseType = typeof(EntrySerialize_BaseType);
+            var sourceType = typeof(EntrySerialize_DerivedType);
+            _serialization = new EntrySerializeSerialization(baseType);
+
+            // Act
+            var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
+
+            // Assert
+            Assert.AreEqual(1, filteredProperties.Length);
+
+            var baseTypeProperty = sourceType.GetProperty(nameof(EntrySerialize_BaseType.Property1));
+            Assert.IsFalse(filteredProperties.Contains(baseTypeProperty));
+        }
     }
 }

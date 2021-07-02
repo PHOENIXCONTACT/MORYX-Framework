@@ -2,6 +2,6 @@
 uid: QuickstartGuide
 ---
 
-# Getting Started with MoryxPlatform
+# Getting started with MORYX Runtime
 
 .. TODO ..

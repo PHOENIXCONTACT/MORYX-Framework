@@ -3,7 +3,7 @@ uid: Logging
 ---
 # Logging
 
-Logging is an essential part of every application and framework. Logging within MORYX is build on the Common.Logging API and Log4Net implementation. To decouple our executables from those libraries their API was wrapped within components from the [Moryx.Logging](xref:Moryx.Logging) namespace. The wrapper does not only hide the API but provides additional features. In most cases access to the loggers is fullfilled by the responsible DI Container. Level 1 components receive a logger instance by passing themselves to the ActivateLogging-method of the LoggerManagement.
+Logging is an essential part of every application and framework. Logging within the platform is build on the Common.Logging API and Log4Net implementation. To decouple our executables from those libraries their API was wrapped within components from the [Moryx.Logging](xref:Moryx.Logging) namespace. The wrapper does not only hide the API but provides additional features. In most cases access to the loggers is fullfilled by the responsible DI Container. Level 1 components receive a logger instance by passing themselves to the ActivateLogging-method of the LoggerManagement.
 
 ## Features
 
@@ -33,7 +33,7 @@ public class DummyComponent : ILoggingComponent
     public void Foo(int argument)
     {
         Logger.Log(LogLevel.Debug, "Foo was called with {0}", argument);
-
+        
         try
         {
             RiskyCall();
