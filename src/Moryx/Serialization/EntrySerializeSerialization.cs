@@ -17,12 +17,6 @@ namespace Moryx.Serialization
         private static string[] _basePropertyFilter;
 
         /// <summary>
-        /// Instance of the default <see cref="EntrySerializeSerialization"/>
-        /// </summary>
-        [Obsolete("Will be removed in the next major. Instantiate by yourself.")]
-        public static EntrySerializeSerialization Instance => new EntrySerializeSerialization();
-
-        /// <summary>
         /// If set to <c>true</c> explicit properties are filtered
         /// </summary>
         public bool FilterExplicitProperties { get; set; }

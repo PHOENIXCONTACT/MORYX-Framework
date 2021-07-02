@@ -34,13 +34,7 @@ namespace Moryx.Workflows
         /// </summary>
         /// <param name="workplanId">Workplan id</param>
         void DeleteWorkplan(long workplanId);
-    }
 
-    /// <summary>
-    /// Extended workplans interface to load previous versions of workplans
-    /// </summary>
-    public interface IWorkplansVersions : IWorkplans
-    {
         /// <summary>
         /// Load previous versions of the workplan
         /// </summary>
