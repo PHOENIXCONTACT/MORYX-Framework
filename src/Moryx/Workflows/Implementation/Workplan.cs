@@ -78,7 +78,7 @@ namespace Moryx.Workflows
             }
         }
         /// <summary>
-        /// Add a range of connectors to the workplan
+        /// Removes a node from the workplan
         /// </summary>
         public bool Remove(IWorkplanNode node)
         {
