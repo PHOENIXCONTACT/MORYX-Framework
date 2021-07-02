@@ -4,23 +4,23 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/workflows">
-        <img src="https://github.com/PHOENIXCONTACT/MORYX-Platform/workflows/CI/badge.svg" alt="CI">
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Core/workflows">
+        <img src="https://github.com/PHOENIXCONTACT/MORYX-Core/workflows/CI/badge.svg" alt="CI">
     </a>
-    <a href="https://codecov.io/gh/PHOENIXCONTACT/MORYX-Platform/coverage.svg?branch=dev">
-        <img alt="Coverage" src="https://codecov.io/gh/PHOENIXCONTACT/MORYX-Platform/coverage.svg?branch=dev" />
+    <a href="https://codecov.io/gh/PHOENIXCONTACT/MORYX-Core/coverage.svg?branch=dev">
+        <img alt="Coverage" src="https://codecov.io/gh/PHOENIXCONTACT/MORYX-Core/coverage.svg?branch=dev" />
     </a>
-    <a href="https://github.com/PHOENIXCONTACT/MORYX-Platform/blob/dev/LICENSE">
-        <img src="https://img.shields.io/github/license/PHOENIXCONTACT/MORYX-Platform" alt="License">
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Core/blob/dev/LICENSE">
+        <img src="https://img.shields.io/github/license/PHOENIXCONTACT/MORYX-Core" alt="License">
     </a>
     <a href="https://gitter.im/PHOENIXCONTACT/MORYX?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">
         <img src="https://badges.gitter.im/PHOENIXCONTACT/MORYX.svg" alt="Gitter">
     </a>
 </p>
 
-# MORYX Platform
+# MORYX Core
 
-The MORYX Platform is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort. It is also the foundation for the Phoenix Contact IoT Framework [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
+The MORYX Core is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort. It is also the foundation for the Phoenix Contact IoT Framework [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
 
 **Links**
 
@@ -64,7 +64,7 @@ To build and run from the command line you need powershell and msbuild.
 
 ## Architecture
 
-The MORYX Platform is a .NET based framework to quickly build three-tier applications. The core architecture is a modular monolith using the service and facade pattern to isolate and decouple functionality. It uses a 2-level Dependency Injection structure to isolate a modules composition and offer a per-module life-cycle with all instances hidden behind the previously mentioned facades. It also offers a range of tools and components to speed up development, increase stability and drastically reduce boilerplate code. To improve flexibility of modules and applications the platform has built in support for configuration management as well as plugin loading.
+The MORYX Core is a .NET based framework to quickly build three-tier applications. The core architecture is a modular monolith using the service and facade pattern to isolate and decouple functionality. It uses a 2-level Dependency Injection structure to isolate a modules composition and offer a per-module life-cycle with all instances hidden behind the previously mentioned facades. It also offers a range of tools and components to speed up development, increase stability and drastically reduce boilerplate code. To improve flexibility of modules and applications the core has built in support for configuration management as well as plugin loading.
 
 <p align="center">
     <img src="docs/images/arch_level1.png" width="400px"/>
@@ -78,11 +78,11 @@ Each modules composition is constructed by its own DI-container instance. This m
 
 ## Maintenance
 
-Part of the Platform is also the Maintenance module, which hosts a HTTP REST service and *optionally* a [graphic web interface](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb) to control and configure a MORYX application. The Maintenance itself does not define that logic, but simply provides easy external access to APIs and features of the Platforms kernel.
+Part of the Core is also the Maintenance module, which hosts a HTTP REST service and *optionally* a [graphic web interface](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb) to control and configure a MORYX application. The Maintenance itself does not define that logic, but simply provides easy external access to APIs and features of the runtime kernel.
 
 ## History
 
-Starting with version 3.0 of the platform we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community. Because of these changes the public version is still *Work-in-Progress*, but we will stabilize and release it soon.
+Starting with version 3.0 of the core we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community. Because of these changes the public version is still *Work-in-Progress*, but we will stabilize and release it soon.
 
 But even though this version is still under construction, its in-house predecessor has been used in production for years. Just a few examples of solutions build on MORYX are listed below:
 

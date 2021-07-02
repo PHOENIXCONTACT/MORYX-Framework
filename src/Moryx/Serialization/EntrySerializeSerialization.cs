@@ -1,11 +1,10 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Moryx.Tools;
 
 namespace Moryx.Serialization
@@ -15,13 +14,39 @@ namespace Moryx.Serialization
     /// </summary>
     public class EntrySerializeSerialization : DefaultSerialization
     {
-        private static readonly Lazy<EntrySerializeSerialization> LazyInstance
-            = new Lazy<EntrySerializeSerialization>(LazyThreadSafetyMode.ExecutionAndPublication);
+        private static string[] _basePropertyFilter;
 
         /// <summary>
-        /// Singleton instance
+        /// Instance of the default <see cref="EntrySerializeSerialization"/>
         /// </summary>
-        public static EntrySerializeSerialization Instance => LazyInstance.Value;
+        [Obsolete("Will be removed in the next major. Instantiate by yourself.")]
+        public static EntrySerializeSerialization Instance => new EntrySerializeSerialization();
+
+        /// <summary>
+        /// If set to <c>true</c> explicit properties are filtered
+        /// </summary>
+        public bool FilterExplicitProperties { get; set; }
+
+        /// <summary>
+        /// Default constructor to create a new instance of <see cref="EntrySerializeSerialization"/>
+        /// </summary>
+        public EntrySerializeSerialization()
+        {
+#if HAVE_ARRAY_EMPTY
+            _basePropertyFilter = Array.Empty<string>();
+#else
+            _basePropertyFilter = new string[0];
+#endif
+        }
+
+        /// <summary>
+        /// Constructor to create a new instance of <see cref="EntrySerializeSerialization"/> with a base filter type.
+        /// </summary>
+        /// <param name="filterBaseType">All properties of the base type are filtered by default</param>
+        public EntrySerializeSerialization(Type filterBaseType)
+        {
+            _basePropertyFilter = filterBaseType.GetProperties().Select(p => p.Name).ToArray();
+        }
 
         /// <inheritdoc />
         public override IEnumerable<ConstructorInfo> GetConstructors(Type sourceType)
@@ -49,8 +74,43 @@ namespace Moryx.Serialization
         /// <inheritdoc />
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
-            var properties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).ToArray();
+            var properties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(BasePropertyFilter).Where(ExplicitPropertyFilter).ToArray();
 
+            return EntrySerializeAttributeFilter(sourceType, properties);
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
+        {
+            // Ignore properties which are not mapped
+            return base.WriteFilter(sourceType, encoded).Where(mapped => mapped.Entry != null);
+        }
+
+        /// <summary>
+        /// Property filter for properties of the base class
+        /// </summary>
+        private static bool BasePropertyFilter(PropertyInfo prop)
+        {
+            if (_basePropertyFilter.Length == 0)
+                return true;
+
+            return !_basePropertyFilter.Contains(prop.Name);
+        }
+
+        /// <summary>
+        /// Property filter for explicit properties
+        /// </summary>
+        private bool ExplicitPropertyFilter(PropertyInfo prop)
+        {
+            if (!FilterExplicitProperties)
+                return true;
+
+            return !ReflectionTool.IsExplicitInterfaceImplementation(prop);
+        }
+
+        private static IEnumerable<PropertyInfo> EntrySerializeAttributeFilter(Type sourceType, PropertyInfo[] properties)
+        {
             var sourceTypeMode = EvaluateSerializeMode(sourceType);
             var propertyModes = properties.Select(EvaluateSerializeMode).ToArray();
 
