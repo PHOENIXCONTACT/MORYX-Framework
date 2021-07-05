@@ -3,6 +3,7 @@
 
 using System;
 using Moryx.Notifications;
+using Moryx.Runtime.Notifications;
 
 namespace Moryx.Runtime.Modules
 {
@@ -31,7 +32,12 @@ namespace Moryx.Runtime.Modules
             }
             catch (Exception ex)
             {
-                Context.LogNotification(new ModuleNotification(Severity.Error, "Failed to stop faulty module!", ex));
+                Context.LogNotification(new ModuleNotification
+                {
+                    Severity = Severity.Error,
+                    Message = "Failed to stop faulty module!",
+                    Exception = ex
+                });
             }
         }
     }
@@ -57,7 +63,12 @@ namespace Moryx.Runtime.Modules
             }
             catch (Exception ex)
             {
-                Context.LogNotification(new ModuleNotification(Severity.Error, "Failed to destroy faulty container!", ex));
+                Context.LogNotification(new ModuleNotification
+                {
+                    Severity = Severity.Error, 
+                    Message = "Failed to destroy faulty container!", 
+                    Exception = ex
+                });
             }
         }
 

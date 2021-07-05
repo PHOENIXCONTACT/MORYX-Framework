@@ -29,9 +29,6 @@ namespace Moryx.Runtime.Modules
         /// <inheritdoc />
         IServerModuleConsole IServerModule.Console => Container?.Resolve<IServerModuleConsole>();
 
-        /// <inheritdoc />
-        public INotificationCollection Notifications { get; } = new ServerNotificationCollection();
-
         /// <summary>
         /// Creates a new instance of <see cref="ServerModuleBase{TConf}"/> and initializes the state machine
         /// </summary>
@@ -104,9 +101,6 @@ namespace Moryx.Runtime.Modules
             }
 
             Logger.Log(LogLevel.Info, "{0} initialized!", Name);
-
-            // After initializing the module, all notifications are unnecessary
-            Notifications.Clear();
         }
 
         void IServerModule.Start()
@@ -273,8 +267,8 @@ namespace Moryx.Runtime.Modules
             if (message.Level < LogLevel.Warning)
                 return;
 
-            var notification = LogMessageToNotification.Convert(message, n => Notifications.Remove(n));
-            Notifications.Add(notification);
+            //var notification = LogMessageToNotification.Convert(message, n => Notifications.Remove(n));
+            //Notifications.Add(notification);
         }
 
         /// <summary>
@@ -289,7 +283,7 @@ namespace Moryx.Runtime.Modules
         /// <inheritdoc />
         void IServerModuleStateContext.LogNotification(IModuleNotification notification)
         {
-            Notifications.Add(notification);
+            //Notifications.Add(notification);
         }
 
         #endregion

@@ -15,10 +15,5 @@ namespace Moryx.Modules
         /// Unique name for this module within the environment it is designed for
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Notifications published by this module
-        /// </summary>
-        INotificationCollection Notifications { get; } 
     }
 }

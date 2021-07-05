@@ -1,18 +1,26 @@
-﻿using System;
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using Moryx.Logging;
 using Moryx.Notifications;
 
-namespace Moryx.Runtime.Modules
+namespace Moryx.Runtime.Notifications
 {
     /// <summary>
     /// Static helper to convert log messages to notifications
     /// </summary>
     internal static class LogMessageToNotification
     {
-        public static ModuleNotification Convert(ILogMessage message, Action<ModuleNotification> confirmation)
+        public static ModuleNotification Convert(ILogMessage message)
         {
             var severity = LogLevelToSeverity(message.Level);
-            return new ModuleNotification(severity, message.Message, message.Exception, confirmation);
+            return new ModuleNotification
+            {
+                Severity = severity,
+                Message = message.Message,
+                Exception = message.Exception
+            };
         }
 
 
