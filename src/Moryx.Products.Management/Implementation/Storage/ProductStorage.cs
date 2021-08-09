@@ -814,7 +814,7 @@ namespace Moryx.Products.Management
             IDictionary<string, IProductLinkStrategy> IDictionary<string, IDictionary<string, IProductLinkStrategy>>.this[string key]
             {
                 get { return ContainsKey(key) ? this[key] : (this[key] = new Dictionary<string, IProductLinkStrategy>()); }
-                set { /*You can net set the internal cache*/ }
+                set { /*You can not set the internal cache*/ }
             }
         }
 
