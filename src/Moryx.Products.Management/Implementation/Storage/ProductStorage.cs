@@ -786,7 +786,7 @@ namespace Moryx.Products.Management
             archived.ProductId = productInstance.Type.Id;
             strategy.SaveInstance(productInstance, archived);
 
-            // Save its parts if the have a dedicated archive
+            // Save its parts if they have a dedicated archive
             var partsContainer = ReflectionTool.GetReferences<ProductInstance>(productInstance);
             foreach (var partGroup in partsContainer)
             {
