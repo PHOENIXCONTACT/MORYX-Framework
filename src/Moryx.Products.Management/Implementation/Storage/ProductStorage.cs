@@ -786,7 +786,7 @@ namespace Moryx.Products.Management
             archived.ProductId = productInstance.Type.Id;
             strategy.SaveInstance(productInstance, archived);
 
-            // Save its parts if the have a dedicated archive
+            // Save its parts if they have a dedicated archive
             var partsContainer = ReflectionTool.GetReferences<ProductInstance>(productInstance);
             foreach (var partGroup in partsContainer)
             {
@@ -814,7 +814,7 @@ namespace Moryx.Products.Management
             IDictionary<string, IProductLinkStrategy> IDictionary<string, IDictionary<string, IProductLinkStrategy>>.this[string key]
             {
                 get { return ContainsKey(key) ? this[key] : (this[key] = new Dictionary<string, IProductLinkStrategy>()); }
-                set { /*You can net set the internal cache*/ }
+                set { /*You can not set the internal cache*/ }
             }
         }
 
