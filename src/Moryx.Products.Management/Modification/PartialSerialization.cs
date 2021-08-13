@@ -39,10 +39,6 @@ namespace Moryx.Products.Management.Modification
 
         protected bool SimpleProp(PropertyInfo prop)
         {
-            // Check if property can be written
-            if (prop.SetMethod == null)
-                return false;
-
             // Skip reference or domain model properties
             var type = prop.PropertyType;
             if (type == typeof(ProductFile) ||
