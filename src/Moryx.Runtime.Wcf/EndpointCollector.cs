@@ -9,7 +9,7 @@ using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Wcf
 {
-    internal class EndpointCollector : IEndpointCollector
+    internal class EndpointCollector
     {
         private readonly Dictionary<string, Endpoint> _endpoints = new Dictionary<string, Endpoint>();
 

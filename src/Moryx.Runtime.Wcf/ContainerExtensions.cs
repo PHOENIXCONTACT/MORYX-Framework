@@ -3,6 +3,7 @@
 
 using System;
 using Castle.Facilities.WcfIntegration;
+using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Tools.Wcf;
@@ -17,20 +18,15 @@ namespace Moryx.Runtime.Wcf
         /// <summary>
         /// Register wcf to the local module container
         /// </summary>
-        [Obsolete("Extension with WCF factory was replaced by IEndpointHosting.ConfigureFactory !")]
-        public static IContainer RegisterWcf(this IContainer container,
-            IWcfHostFactory wcfHostFactory)
+        [Obsolete("Extension with WCF factory was replaced by hosting independent ActivateHosting extension !")]
+        public static IContainer RegisterWcf(this IContainer container, IWcfHostFactory wcfHostFactory)
         {
+            // TODO: Move to WcfHostFactory on removal
             container.Extend<WcfFacility>();
             container.Register<ITypedHostFactory, TypedHostFactory>();
-            var logger = container.Resolve<IModuleLogger>();
-            var typedFactory = container.Resolve<ITypedHostFactory>();
-
-            container.SetInstance((IConfiguredHostFactory)new ConfiguredHostFactory(wcfHostFactory)
-            {
-                Factory = typedFactory,
-                Logger = logger
-            });
+            container.SetInstance(wcfHostFactory);
+            container.Register<IConfiguredHostFactory, ConfiguredHostFactory>();
+            container.Register<IEndpointHostFactory, ConfiguredHostFactory>();
             return container;
         }
     }
