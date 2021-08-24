@@ -12,14 +12,22 @@ using Moryx.Configuration;
 
 namespace Moryx.Runtime.Kestrel
 {
-    internal class Startup
+    /// <summary>
+    /// Default StartUp used by MORYX Kestrel Hosting
+    /// </summary>
+    public class DefaultStartup
     {
-        private readonly IConfigManager _configManager;
+        private readonly Type _controller;
 
-        public Startup(IConfiguration configuration, IConfigManager configManager)
+        /// <summary>
+        /// Instantiate start-up
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="controller"></param>
+        public DefaultStartup(IConfiguration configuration, Type controller)
         {
+            _controller = controller;
             Configuration = configuration;
-            _configManager = configManager;
         }
 
         /// <summary>
@@ -38,18 +46,8 @@ namespace Moryx.Runtime.Kestrel
                 })
                 .ConfigureApplicationPartManager(manager =>
                 {
-                    var hostConfig = _configManager.GetConfiguration<HostFactoryConfig>();
-
-                    var ignoreServices = new List<Type>();
-                    if (hostConfig.VersionServiceDisabled)
-                    {
-                        ignoreServices.Add(typeof(VersionController));
-                    }
-
-                    // Find also internal controllers
-                    manager.FeatureProviders.Add(new InternalControllerFeatureProvider(ignoreServices));
-
                     // Find all Controllers and add them to the local container
+                    // TODO: Read from container
                     var assemblies = AppDomain.CurrentDomain.GetAssemblies();
                     foreach (var assembly in assemblies.Where(a =>
                         manager.ApplicationParts.All(p => p.Name != a.GetName().Name)))
@@ -62,7 +60,7 @@ namespace Moryx.Runtime.Kestrel
                 })
                 .AddControllersAsServices();
 
-            services.AddSingleton<IEndpointCollector, EndpointCollector>();
+            services.AddSingleton<EndpointCollector>();
 
             services.AddAuthorization();
 
