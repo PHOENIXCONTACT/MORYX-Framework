@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using Castle.Facilities.WcfIntegration;
 using Moryx.Container;
 using Moryx.Logging;
@@ -16,6 +17,7 @@ namespace Moryx.Runtime.Wcf
         /// <summary>
         /// Register wcf to the local module container
         /// </summary>
+        [Obsolete("Extension with WCF factory was replaced by IEndpointHosting.ConfigureFactory !")]
         public static IContainer RegisterWcf(this IContainer container,
             IWcfHostFactory wcfHostFactory)
         {
