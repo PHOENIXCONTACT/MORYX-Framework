@@ -102,6 +102,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kestrel", "src\Moryx.Runtime.Kestrel\Moryx.Runtime.Kestrel.csproj", "{CB964668-8C90-4AB0-B6ED-A7589A3338BC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestModule.Kestrel", "src\Moryx.TestModule.Kestrel\Moryx.TestModule.Kestrel.csproj", "{E7A29304-E150-446D-AE7F-A899A7BFCB2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -715,6 +717,24 @@ Global
 		{CB964668-8C90-4AB0-B6ED-A7589A3338BC}.Release|x64.Build.0 = Release|Any CPU
 		{CB964668-8C90-4AB0-B6ED-A7589A3338BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{CB964668-8C90-4AB0-B6ED-A7589A3338BC}.Release|x86.Build.0 = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Debug|x64.Build.0 = Debug|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Debug|x86.Build.0 = Debug|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release(x86)|x86.Build.0 = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x64.ActiveCfg = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x64.Build.0 = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x86.ActiveCfg = Release|Any CPU
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -751,10 +771,11 @@ Global
 		{21C94DE5-A774-4474-8C31-DB483D49710E} = {74112169-6672-4907-A187-F055111940A9}
 		{5A9EDBD2-FFFE-4B87-9139-3D6C9265758A} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 		{EB039D46-906F-44BF-AC37-B3B3634A4442} = {DE7526FF-6D25-4643-9AA3-C24253901C8C}
+		{E7A29304-E150-446D-AE7F-A899A7BFCB2B} = {DAE7DCE8-AB9B-46A8-808D-6C6C0AAB75A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_TaskErrorCategory = Message
-		RESX_ShowErrorsInErrorList = True
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
+		RESX_ShowErrorsInErrorList = True
+		RESX_TaskErrorCategory = Message
 	EndGlobalSection
 EndGlobal
