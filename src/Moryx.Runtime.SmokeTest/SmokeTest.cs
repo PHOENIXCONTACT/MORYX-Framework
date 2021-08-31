@@ -23,7 +23,7 @@ namespace Moryx.Runtime.SmokeTest
     public class SmokeTest : RunModeBase<SmokeTestOptions>
     {
         /// <summary>
-        /// ConfigManager to receive the <see cref="WcfConfig"/>
+        /// ConfigManager to receive the <see cref="PortConfig"/>
         /// </summary>
         public IConfigManager ConfigManager { get; set; }
 
@@ -275,7 +275,7 @@ namespace Moryx.Runtime.SmokeTest
 
             lock (ModuleManager)
             {
-                // If we allready failed skip output
+                // If we already failed skip output
                 if (_failed | _timedOut)
                     return;
 

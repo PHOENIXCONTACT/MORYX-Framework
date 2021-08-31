@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Data.Common;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
 using Moryx.Model.PostgreSQL;
 
@@ -12,10 +12,13 @@ namespace Moryx.TestTools.Test.Model
     /// The DBContext of this database model.
     /// </summary>
     [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
-    [DbConfigurationType(typeof(NpgsqlConfiguration))]
     public class TestModelContext : MoryxDbContext
     {
         public TestModelContext()
+        {
+        }
+
+        public TestModelContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -25,6 +28,14 @@ namespace Moryx.TestTools.Test.Model
 
         public TestModelContext(DbConnection connection) : base(connection)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (Connection != null)
+                optionsBuilder.UseNpgsql(Connection);
+            else if (ConnectionString != null)
+                optionsBuilder.UseNpgsql(ConnectionString);
         }
 
         public virtual DbSet<CarEntity> Cars { get; set; }

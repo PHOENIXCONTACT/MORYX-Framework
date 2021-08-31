@@ -3,11 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model.Repositories
 {
@@ -24,17 +22,10 @@ namespace Moryx.Model.Repositories
         /// <inheritdoc />
         DbContext IUnitOfWork.DbContext => DbContext;
 
-        /// <inheritdoc />
-        public ContextMode Mode
-        {
-            get => DbContext.GetContextMode();
-            set => DbContext.SetContextMode(value);
-        }
-
         /// <summary>
         /// Creates a new instance of <see cref="UnitOfWork{TContext}"/>
         /// </summary>
-        /// <param name="dbContext">Responsible <see cref="System.Data.Entity.DbContext"/></param>
+        /// <param name="dbContext">Responsible <see cref="Microsoft.EntityFrameworkCore.DbContext"/></param>
         /// <param name="repositories">Current available repositories</param>
         public UnitOfWork(TContext dbContext, IDictionary<Type, Func<Repository>> repositories)
         {
@@ -68,13 +59,6 @@ namespace Moryx.Model.Repositories
             {
                 DbContext.SaveChanges();
             }
-            // Catch for validation error break point
-            catch (DbEntityValidationException valEx)
-            {
-                // ReSharper disable once UnusedVariable
-                var validationError = valEx.EntityValidationErrors;
-                throw;
-            }
             // Catch for other exception break points
             // ReSharper disable once RedundantCatchClause
             catch (Exception)
@@ -94,13 +78,6 @@ namespace Moryx.Model.Repositories
             try
             {
                 await DbContext.SaveChangesAsync(cancellationToken);
-            }
-            // Catch for validation error break point
-            catch (DbEntityValidationException valEx)
-            {
-                // ReSharper disable once UnusedVariable
-                var validationError = valEx.EntityValidationErrors;
-                throw;
             }
             // Catch for other exception break points
             // ReSharper disable once RedundantCatchClause

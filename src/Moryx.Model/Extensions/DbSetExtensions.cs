@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Data.Entity;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model
 {
@@ -18,14 +18,14 @@ namespace Moryx.Model
         /// <param name="dbSet">An open database set</param>
         /// <param name="obj">The business object</param>
         /// <typeparam name="TEntity">The entity type to use</typeparam>
-        public static TEntity GetEntity<TEntity>(this IDbSet<TEntity> dbSet, IPersistentObject obj)
-            where TEntity : class, IEntity
+        public static TEntity GetEntity<TEntity>(this DbSet<TEntity> dbSet, IPersistentObject obj)
+            where TEntity : class, IEntity, new()
         {
             var entity = dbSet.FirstOrDefault(e => e.Id == obj.Id);
             if (entity != null)
                 return entity;
 
-            entity = dbSet.Create();
+            entity = new TEntity();
             dbSet.Add(entity);
             EntityIdListener.Listen(entity, obj);
 
@@ -39,7 +39,7 @@ namespace Moryx.Model
         /// <param name="dbSet">Extended db set</param>
         /// <param name="entity">Entity to remove soft</param>
         /// <returns>soft removed entity</returns>
-        public static TEntity RemoveSoft<TEntity>(this IDbSet<TEntity> dbSet, TEntity entity) where TEntity : class, IModificationTrackedEntity
+        public static TEntity RemoveSoft<TEntity>(this DbSet<TEntity> dbSet, TEntity entity) where TEntity : class, IModificationTrackedEntity
         {
             entity.Deleted = DateTime.Now;
             return entity;

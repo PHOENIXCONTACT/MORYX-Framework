@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Configuration;
 using Moryx.Logging;
 
@@ -18,29 +18,21 @@ namespace Moryx.Model.Configuration
         public IDatabaseConfig Config => null;
 
         /// <inheritdoc />
-        public Type ContextType { get; private set; }
-
-        /// <inheritdoc />
-        public string TargetModel => string.Empty;
-
-        /// <inheritdoc />
         public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
         {
-            ContextType = contextType;
         }
 
         /// <inheritdoc />
-        public DbContext CreateContext(ContextMode mode)
+        public DbContext CreateContext()
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public DbContext CreateContext(IDatabaseConfig config, ContextMode mode)
+        public DbContext CreateContext(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
-
 
         /// <inheritdoc />
         public string BuildConnectionString(IDatabaseConfig config)
@@ -116,18 +108,6 @@ namespace Moryx.Model.Configuration
 
         /// <inheritdoc />
         public void RestoreDatabase(IDatabaseConfig config, string filePath)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModelSetup> GetAllSetups()
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }

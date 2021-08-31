@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Configuration;
 using Moryx.Logging;
 using Moryx.Model.Configuration;
@@ -52,14 +52,14 @@ namespace Moryx.Model
         void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger);
 
         /// <summary>
-        /// Creates a context based on a config and the context mode
+        /// Creates a context with internal configuration
         /// </summary>
-        DbContext CreateContext(IDatabaseConfig config, ContextMode mode);
+        DbContext CreateContext();
 
         /// <summary>
-        /// Creates a context based on the context mode with internal configuration
+        /// Creates a context based on a config
         /// </summary>
-        DbContext CreateContext(ContextMode mode);
+        DbContext CreateContext(IDatabaseConfig config);
 
         /// <summary>
         /// Builds the connection string for the database.

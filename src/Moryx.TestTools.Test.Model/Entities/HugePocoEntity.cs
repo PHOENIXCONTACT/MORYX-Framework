@@ -8,7 +8,7 @@ namespace Moryx.TestTools.Test.Model
     public  class HugePocoEntity : EntityBase
     {
         public virtual double Float1 { get; set; }
-        
+
         public virtual string Name1 { get; set; }
 
         public virtual int Number1 { get; set; }
@@ -26,11 +26,11 @@ namespace Moryx.TestTools.Test.Model
         public virtual int Number3 { get; set; }
 
         public virtual double Float4 { get; set; }
-        
+
         public virtual string Name4 { get; set; }
-        
+
         public virtual int Number4 { get; set; }
-        
+
         public virtual double Float5 { get; set; }
 
         public virtual string Name5 { get; set; }

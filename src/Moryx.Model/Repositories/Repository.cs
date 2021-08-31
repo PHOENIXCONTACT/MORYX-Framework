@@ -1,11 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model.Repositories
 {
@@ -36,10 +35,10 @@ namespace Moryx.Model.Repositories
     /// Base class for entity framework repositories
     /// </summary>
     public abstract class Repository<T> : Repository, IRepository<T>
-        where T : class, IEntity
+        where T : class, IEntity, new()
     {
         /// <summary>
-        /// Internal entity framework <see cref="IDbSet{TEntity}"/>
+        /// Internal entity framework <see cref="DbSet{TEntity}"/>
         /// </summary>
         protected DbSet<T> DbSet { get; set; }
 
@@ -76,7 +75,7 @@ namespace Moryx.Model.Repositories
         /// <inheritdoc />
         public T Create(bool addToContext)
         {
-            var newInstance = DbSet.Create();
+            var newInstance = new T();
             if (addToContext)
                 DbSet.Add(newInstance);
 
@@ -84,12 +83,19 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
-        public T Add(T entityToAdd) =>
-            DbSet.Add(entityToAdd);
+        public T Add(T entityToAdd)
+        {
+            var entry = DbSet.Add(entityToAdd);
+            return entry.Entity;
+        }
 
         /// <inheritdoc />
-        public IEnumerable<T> AddRange(IEnumerable<T> entitiesToAdd) =>
-            DbSet.AddRange(entitiesToAdd);
+        public IEnumerable<T> AddRange(IEnumerable<T> entitiesToAdd)
+        {
+            var entries = entitiesToAdd.ToList();
+            DbSet.AddRange(entries);
+            return entries;
+        }
 
         /// <inheritdoc />
         public T Remove(T entity) =>
@@ -110,21 +116,29 @@ namespace Moryx.Model.Repositories
         /// <summary>
         /// Remove entity with option of permanent removal.
         /// </summary>
-        protected virtual T ExecuteRemove(T entity, bool permanent) =>
-            DbSet.Remove(entity);
+        protected virtual T ExecuteRemove(T entity, bool permanent)
+        {
+            var entityEntry = DbSet.Remove(entity);
+            return entityEntry.Entity;
+        }
 
         /// <summary>
         /// Remove entities with option of permanent removal.
         /// </summary>
-        protected virtual IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent) =>
-            DbSet.RemoveRange(entities.ToArray());
+        protected virtual IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent)
+        {
+            var entityLst = entities.ToList();
+
+            DbSet.RemoveRange(entityLst);
+            return entityLst;
+        }
     }
 
     /// <summary>
     /// Base class for entity framework repositories of modification tracking entities
     /// </summary>
     public abstract class ModificationTrackedRepository<T> : Repository<T>
-        where T : class, IModificationTrackedEntity
+        where T : class, IModificationTrackedEntity, new()
     {
         /// <inheritdoc />
         protected override T ExecuteRemove(T entity, bool permanent)

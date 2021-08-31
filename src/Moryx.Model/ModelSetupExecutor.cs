@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 using Moryx.Model.Repositories;
 using Moryx.Tools;

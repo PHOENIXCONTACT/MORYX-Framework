@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Data.Entity;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model.Repositories
 {
@@ -22,11 +22,6 @@ namespace Moryx.Model.Repositories
         /// Call to internal container for repo implementation
         /// </summary>
         T GetRepository<T>() where T : class, IRepository;
-
-        /// <summary>
-        /// Get or set the current mode
-        /// </summary>
-        ContextMode Mode { get; set; }
 
         /// <summary>
         /// Saves all changes made in this UnitOfWork to the underlying database.

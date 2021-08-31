@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
@@ -25,18 +25,6 @@ namespace Moryx.Model
         public TContext Create(IDatabaseConfig config)
         {
             return Manager.Create<TContext>(config);
-        }
-
-        /// <inheritdoc />
-        public TContext Create(ContextMode contextMode)
-        {
-            return Manager.Create<TContext>(contextMode);
-        }
-
-        /// <inheritdoc />
-        public TContext Create(IDatabaseConfig config, ContextMode contextMode)
-        {
-            return Manager.Create<TContext>(config, contextMode);
         }
     }
 }

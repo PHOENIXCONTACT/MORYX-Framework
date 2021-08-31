@@ -72,7 +72,7 @@ namespace Moryx.Model.Repositories.Proxy
             // Do the method implementation
             ImplementMethods(typeBuilder, methodStrategyMaps, baseType, entityType);
 
-            generatedType = typeBuilder.CreateType();
+            generatedType = typeBuilder.CreateTypeInfo();
 
             return generatedType;
         }
@@ -116,7 +116,7 @@ namespace Moryx.Model.Repositories.Proxy
             // Do the method implementation
             ImplementMethods(typeBuilder, methodStrategyMaps, baseType, entityType);
 
-            generatedType = typeBuilder.CreateType();
+            generatedType = typeBuilder.CreateTypeInfo();
 
             return generatedType;
         }

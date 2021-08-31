@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
@@ -22,7 +22,7 @@ namespace Moryx.Model
         /// Get configurator for the given context type
         /// </summary>
         IModelConfigurator GetConfigurator(Type contextType);
-        
+
         /// <summary>
         /// Get setup executor for a model
         /// </summary>
@@ -42,22 +42,6 @@ namespace Moryx.Model
         /// <typeparam name="TContext">Database context type</typeparam>
         /// <returns>Preconfigured instance of the given DbContext</returns>
         TContext Create<TContext>(IDatabaseConfig config)
-            where TContext : DbContext;
-
-        /// <summary>
-        /// Creates a database context with the default configuration and custom initial context model
-        /// </summary>
-        /// <typeparam name="TContext">Database context type</typeparam>
-        /// <returns>Preconfigured instance of the given DbContext</returns>
-        TContext Create<TContext>(ContextMode contextMode)
-            where TContext : DbContext;
-
-        /// <summary>
-        /// Creates a database context with the given configuration and custom initial context model
-        /// </summary>
-        /// <typeparam name="TContext">Database context type</typeparam>
-        /// <returns>Preconfigured instance of the given DbContext</returns>
-        TContext Create<TContext>(IDatabaseConfig config, ContextMode contextMode)
             where TContext : DbContext;
     }
 }

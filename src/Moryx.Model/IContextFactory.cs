@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
@@ -21,15 +21,5 @@ namespace Moryx.Model
         /// Create context using standard mode and alternative config
         /// </summary>
         TContext Create(IDatabaseConfig config);
-
-        /// <summary>
-        /// Create context using given mode and config from config manager
-        /// </summary>
-        TContext Create(ContextMode contextMode);
-
-        /// <summary>
-        /// Create context using given mode and alternative config
-        /// </summary>
-        TContext Create(IDatabaseConfig config, ContextMode contextMode);
     }
 }

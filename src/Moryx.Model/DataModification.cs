@@ -30,7 +30,7 @@ namespace Moryx.Model
     /// DTO for modified entities
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class ModifiedEntity<TEntity> : DataModification<TEntity>, IEquatable<ModifiedEntity<TEntity>> 
+    public class ModifiedEntity<TEntity> : DataModification<TEntity>, IEquatable<ModifiedEntity<TEntity>>
         where TEntity : class, IEntity
     {
         /// <summary>

@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 using Moryx.Model.Repositories.Proxy;
 using Moryx.Tools;
@@ -52,20 +52,6 @@ namespace Moryx.Model.Repositories
         public IUnitOfWork<TContext> Create(IDatabaseConfig config)
         {
             var context = _manager.Create<TContext>(config);
-            return new UnitOfWork<TContext>(context, Repositories);
-        }
-
-        /// <inheritdoc />
-        public IUnitOfWork<TContext> Create(ContextMode contextMode)
-        {
-            var context = _manager.Create<TContext>(contextMode);
-            return new UnitOfWork<TContext>(context, Repositories);
-        }
-
-        /// <inheritdoc />
-        public IUnitOfWork<TContext> Create(IDatabaseConfig config, ContextMode contextMode)
-        {
-            var context = _manager.Create<TContext>(config, contextMode);
             return new UnitOfWork<TContext>(context, Repositories);
         }
 

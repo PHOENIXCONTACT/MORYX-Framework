@@ -152,7 +152,7 @@ namespace Moryx.TestModule
             var ids = new List<long>();
 
             // Write time
-            using (var uow = TestFactory.Create(ContextMode.ChangeTracking))
+            using (var uow = TestFactory.Create())
             {
                 stopWatch.Start();
                 for (var i = 0; i < LoopCount; i++)
@@ -164,7 +164,7 @@ namespace Moryx.TestModule
             var writeTime = stopWatch.ElapsedMilliseconds;
 
             // Read time
-            using (var uow = TestFactory.Create(ContextMode.AllOff))
+            using (var uow = TestFactory.Create())
             {
                 stopWatch.Restart();
                 foreach (var id in ids)

@@ -3,12 +3,11 @@
 
 using System;
 using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model
 {
@@ -17,47 +16,38 @@ namespace Moryx.Model
     /// </summary>
     public abstract class MoryxDbContext : DbContext
     {
-        private static readonly MethodInfo DbInitializerMethod;
+        protected string ConnectionString { get; }
+
+        protected DbConnection Connection { get; }
 
         /// <summary>
         /// Static constructor to load the database initializer method
         /// </summary>
         static MoryxDbContext()
         {
-            DbInitializerMethod = (from method in typeof(Database).GetMethods()
-                where method.Name.Equals(nameof(Database.SetInitializer)) &&
-                      method.GetGenericArguments().Length == 1
-                select method).FirstOrDefault();
+
         }
 
-        /// <summary>
-        /// Constructor for this DbContext.
-        /// Used by EntityFramework migration tools.
-        /// </summary>
         protected MoryxDbContext()
         {
         }
 
-        /// <summary>
-        /// Constructor for this DbContext using the given connection string.
-        /// Used by the Runtime environment
-        /// </summary>
-        protected MoryxDbContext(string connectionString) : base(connectionString)
+        protected MoryxDbContext(DbConnection connection)
         {
-            SetNullDatabaseInitializer();
+            Connection = connection;
         }
 
-        /// <summary>
-        /// Constructor for this DbContext using an existing connection.
-        /// Used if connection is already defined (e.g. Effort InMemory)
-        /// </summary>
-        protected MoryxDbContext(DbConnection connection) : base(connection, true)
+        protected MoryxDbContext(string connectionString)
         {
-            SetNullDatabaseInitializer();
+            ConnectionString = connectionString;
+        }
+
+        protected MoryxDbContext(DbContextOptions options) : base(options)
+        {
         }
 
         /// <inheritdoc />
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ConfigureConventions(modelBuilder);
             ConfigureProperties(modelBuilder);
@@ -67,33 +57,34 @@ namespace Moryx.Model
         /// Configure EntityFramework conventions
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected virtual void ConfigureConventions(DbModelBuilder modelBuilder)
+        protected virtual void ConfigureConventions(ModelBuilder modelBuilder)
         {
-            // Set default schmema
+            // Set default schema
             var attributes = GetType().GetCustomAttributes<DefaultSchemaAttribute>().ToArray();
             var defaultSchemaAttr = attributes.LastOrDefault();
+
             modelBuilder.HasDefaultSchema(!string.IsNullOrEmpty(defaultSchemaAttr?.Schema)
                 ? defaultSchemaAttr.Schema.ToLower() // schema names have to be lower case!
                 : DefaultSchemaAttribute.DefaultName);
 
             // Custom Code-First Conventions: https://msdn.microsoft.com/en-us/library/jj819164(v=vs.113).aspx
             // Turn off pluralization
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
         /// <summary>
         /// Configure properties
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected virtual void ConfigureProperties(DbModelBuilder modelBuilder)
+        protected virtual void ConfigureProperties(ModelBuilder modelBuilder)
         {
             // Properties flagged with IsUnicode will be configured
-            modelBuilder.Properties()
-                .Having(x => x.GetCustomAttributes(false).OfType<IsUnicodeAttribute>().FirstOrDefault())
-                .Configure((config, att) => config.IsUnicode(att.Unicode));
+            //modelBuilder.Properties()
+            //    .Having(x => x.GetCustomAttributes(false).OfType<IsUnicodeAttribute>().FirstOrDefault())
+            //    .Configure((config, att) => config.IsUnicode(att.Unicode));
 
-            // Type of string
-            modelBuilder.Properties<string>().Configure(p => p.IsMaxLength());
+            //// Type of string
+            //modelBuilder.Properties<string>().Configure(p => p.IsMaxLength());
         }
 
         /// <inheritdoc />
@@ -104,17 +95,17 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        public override Task<int> SaveChangesAsync()
-        {
-            ApplyModificationTracking();
-            return base.SaveChangesAsync();
-        }
-
-        /// <inheritdoc />
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             ApplyModificationTracking();
             return base.SaveChangesAsync(cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+        {
+            ApplyModificationTracking();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
         /// <summary>
@@ -142,22 +133,6 @@ namespace Moryx.Model
                 if (entry.State == EntityState.Modified && entry.OriginalValues[nameof(IModificationTrackedEntity.Deleted)] == null && entity.Deleted != null)
                     entity.Deleted = timeStamp;
             }
-        }
-
-        /// <summary>
-        /// Sets the <see cref="NullDatabaseInitializer{TContext}"/> to not create the database automatically
-        /// </summary>
-        private void SetNullDatabaseInitializer()
-        {
-            // Because of the limited entity framework API, we have to call the Database initializer by reflection
-            // Database.SetInitializer(new NullDatabaseInitializer<CustomContext>());
-            var contextType = GetType();
-            var initializerMethod = DbInitializerMethod.MakeGenericMethod(contextType);
-
-            var nullInitializerType = typeof(NullDatabaseInitializer<>).MakeGenericType(contextType);
-            var nullInitializer = Activator.CreateInstance(nullInitializerType);
-
-            initializerMethod.Invoke(null, new[] { nullInitializer });
         }
     }
 }
