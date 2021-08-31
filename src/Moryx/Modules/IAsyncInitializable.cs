@@ -1,5 +1,7 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
+
+using System.Threading.Tasks;
 
 namespace Moryx.Modules
 {
@@ -10,12 +12,12 @@ namespace Moryx.Modules
     /// To restore the possibility to initialize a component before it is used this base interface should be used.
     /// Code normally executed on construction is therefor moved to Initialize().
     /// </summary>
-    public interface IInitializable
+    public interface IAsyncInitializable
     {
         /// <summary>
         /// Initialize this component and prepare it for incoming tasks. This must only involve preparation and must not start
         /// any active functionality and/or periodic execution of logic.
         /// </summary>
-        void Initialize();
+        Task Initialize();
     }
 }

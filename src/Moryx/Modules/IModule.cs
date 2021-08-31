@@ -5,8 +5,8 @@ namespace Moryx.Modules
 {
     /// <summary>
     /// Base interface for all major components of applications within MORYX application family.
-    /// Each module offers a certain functionality to the user or other modules. 
-    /// It may contain components and exchangable plugins to increase reuse, customization and flexibility. 
+    /// Each module offers a certain functionality to the user or other modules.
+    /// It may contain components and exchangeable plugins to increase reuse, customization and flexibility.
     /// This does only apply to level 1 components like a ServerModule or ClientModule.
     /// </summary>
     public interface IModule : IInitializable
@@ -19,6 +19,6 @@ namespace Moryx.Modules
         /// <summary>
         /// Notifications published by this module
         /// </summary>
-        INotificationCollection Notifications { get; } 
+        INotificationCollection Notifications { get; }
     }
 }
