@@ -53,6 +53,7 @@ namespace Moryx.TestTools.Test.Model
 
             openContext.SaveChanges();
 
+            var allCarsWithLazyWheels = carRepo.Linq.ToList();
 
             var allCarsWithWheels = carRepo.Linq.Include(c => c.Wheels).ToList();
 

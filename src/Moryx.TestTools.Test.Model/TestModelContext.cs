@@ -22,6 +22,12 @@ namespace Moryx.TestTools.Test.Model
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+
         public virtual DbSet<CarEntity> Cars { get; set; }
 
         public virtual DbSet<WheelEntity> Wheels { get; set; }
