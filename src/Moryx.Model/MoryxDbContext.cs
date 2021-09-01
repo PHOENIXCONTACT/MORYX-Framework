@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Moryx.Model.Annotations;
 using Moryx.Model.Attributes;
 
 namespace Moryx.Model
@@ -27,6 +28,9 @@ namespace Moryx.Model
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Utc DateTime conversion
+            modelBuilder.ApplyDateTimeKindConverter();
+
             // Set default schema
             var attributes = GetType().GetCustomAttributes<DefaultSchemaAttribute>().ToArray();
             var defaultSchemaAttr = attributes.LastOrDefault();
