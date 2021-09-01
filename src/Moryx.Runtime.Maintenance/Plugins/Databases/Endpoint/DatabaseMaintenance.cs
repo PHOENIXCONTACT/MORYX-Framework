@@ -208,34 +208,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         }
 
 #if !USE_WCF
-        [HttpPost("model/{targetModel}/{migrationName}/migrate")]
-#endif
-        public DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, DatabaseConfigModel configModel)
-        {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
-            if (targetConfigurator == null)
-                return new DatabaseUpdateSummary { WasUpdated = false };
-
-            var config = UpdateConfigFromModel(targetConfigurator.Config, configModel);
-            return targetConfigurator.MigrateDatabase(config, migrationName);
-        }
-
-#if !USE_WCF
-        [HttpPost("model/{targetModel}/rollback")]
-#endif
-        public InvocationResponse RollbackDatabase(string targetModel, DatabaseConfigModel config)
-        {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
-            if (targetConfigurator == null)
-                return new InvocationResponse("No configurator found");
-
-            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            var rollbackResult = targetConfigurator.RollbackDatabase(updatedConfig);
-
-            return rollbackResult ? new InvocationResponse() : new InvocationResponse("Error while rollback!");
-        }
-
-#if !USE_WCF
         [HttpPost("model/{targetModel}/setup")]
 #endif
         public InvocationResponse ExecuteSetup(string targetModel, ExecuteSetupRequest request)
@@ -311,9 +283,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                     Password = dbConfig.Password
                 },
                 Setups = GetAllSetups(contextType),
-                Backups = GetAllBackups(contextType),
-                AvailableMigrations = GetAvailableUpdates(dbConfig, configurator),
-                AppliedMigrations = GetInstalledUpdates(dbConfig, configurator)
+                Backups = GetAllBackups(contextType)
             };
             return model;
         }
@@ -359,24 +329,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 };
 
             return backups.ToArray();
-        }
-
-        private static DbMigrationsModel[] GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
-        {
-            var availableMigrations = configurator.AvailableMigrations(dbConfig).ToList();
-            return availableMigrations.Select(u => new DbMigrationsModel
-            {
-                Name = u.Name
-            }).ToArray();
-        }
-
-        private static DbMigrationsModel[] GetInstalledUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
-        {
-            var appliedMigrations = configurator.AppliedMigrations(dbConfig).ToList();
-            return appliedMigrations.Select(u => new DbMigrationsModel
-            {
-                Name = u.Name
-            }).ToArray();
         }
 
         private static IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel model)

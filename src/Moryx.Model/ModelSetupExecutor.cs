@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
 using Moryx.Model.Repositories;
 using Moryx.Tools;

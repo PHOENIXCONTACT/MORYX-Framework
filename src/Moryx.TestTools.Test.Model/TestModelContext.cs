@@ -1,9 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
+using Moryx.Model.Attributes;
 using Moryx.Model.PostgreSQL;
 
 namespace Moryx.TestTools.Test.Model
@@ -20,22 +20,6 @@ namespace Moryx.TestTools.Test.Model
 
         public TestModelContext(DbContextOptions options) : base(options)
         {
-        }
-
-        public TestModelContext(string connectionString) : base(connectionString)
-        {
-        }
-
-        public TestModelContext(DbConnection connection) : base(connection)
-        {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (Connection != null)
-                optionsBuilder.UseNpgsql(Connection);
-            else if (ConnectionString != null)
-                optionsBuilder.UseNpgsql(ConnectionString);
         }
 
         public virtual DbSet<CarEntity> Cars { get; set; }

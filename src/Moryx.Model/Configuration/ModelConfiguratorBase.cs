@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Configuration;
@@ -24,11 +23,6 @@ namespace Moryx.Model.Configuration
         /// Logger for this model configurator
         /// </summary>
         protected IModuleLogger Logger { get; private set; }
-
-        /// <summary>
-        /// The invariant name of the database provider
-        /// </summary>
-        protected abstract string ProviderInvariantName { get; }
 
         /// <inheritdoc />
         public IDatabaseConfig Config { get; private set; }
@@ -60,7 +54,7 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public DbContext CreateContext(IDatabaseConfig config)
         {
-            var context = (DbContext)Activator.CreateInstance(_contextType, BuildConnectionString(config));
+            var context = (DbContext)Activator.CreateInstance(_contextType, BuildDbContextOptions(config));
             return context;
         }
 
@@ -133,45 +127,10 @@ namespace Moryx.Model.Configuration
         /// </summary>
         protected abstract DbCommand CreateCommand(string cmdText, DbConnection connection);
 
-        /// <inheritdoc />
-        public string BuildConnectionString(IDatabaseConfig config)
-        {
-            return BuildConnectionString(config, true);
-        }
-
-        /// <inheritdoc />
-        public abstract string BuildConnectionString(IDatabaseConfig config, bool includeModel);
-
-        /// <inheritdoc />
-        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config)
-        {
-            return MigrateDatabase(config, string.Empty);
-        }
-
-        /// <inheritdoc />
-        public virtual DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId)
-        {
-            var result = new DatabaseUpdateSummary();
-            return result;
-        }
-
-        /// <inheritdoc />
-        public bool RollbackDatabase(IDatabaseConfig config)
-        {
-            return false;
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config)
-        {
-            return new DatabaseUpdateInformation[0];
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config)
-        {
-            return new DatabaseUpdateInformation[0];
-        }
+        /// <summary>
+        /// Builds options to access the database
+        /// </summary>
+        public abstract DbContextOptions BuildDbContextOptions(IDatabaseConfig config);
 
         /// <inheritdoc />
         public abstract void DeleteDatabase(IDatabaseConfig config);

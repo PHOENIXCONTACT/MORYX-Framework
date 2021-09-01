@@ -141,28 +141,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         InvocationResponse RestoreDatabase(string targetModel, RestoreDatabaseRequest request);
 
         /// <summary>
-        /// Updates database model to the specified update.
-        /// </summary>
-#if USE_WCF
-        [OperationContract]
-        [WebInvoke(UriTemplate = "model/{targetModel}/{migrationName}/migrate", Method = WebRequestMethods.Http.Post,
-            ResponseFormat = WebMessageFormat.Json,
-            RequestFormat = WebMessageFormat.Json)]
-#endif
-        DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, DatabaseConfigModel config);
-
-        /// <summary>
-        /// Rollback of all migrations made
-        /// </summary>
-#if USE_WCF
-        [OperationContract]
-        [WebInvoke(UriTemplate = "model/{targetModel}/rollback", Method = WebRequestMethods.Http.Post,
-            ResponseFormat = WebMessageFormat.Json,
-            RequestFormat = WebMessageFormat.Json)]
-#endif
-        InvocationResponse RollbackDatabase(string targetModel, DatabaseConfigModel config);
-
-        /// <summary>
         /// Execute setup for this config
         /// </summary>
 #if USE_WCF

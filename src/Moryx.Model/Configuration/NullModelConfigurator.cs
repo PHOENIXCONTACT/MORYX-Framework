@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Configuration;
 using Moryx.Logging;
@@ -35,18 +34,6 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public string BuildConnectionString(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public string BuildConnectionString(IDatabaseConfig config, bool includeModel)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
         public void UpdateConfig()
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
@@ -60,36 +47,6 @@ namespace Moryx.Model.Configuration
 
         /// <inheritdoc />
         public bool CreateDatabase(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public bool RollbackDatabase(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }

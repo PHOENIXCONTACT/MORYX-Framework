@@ -37,10 +37,8 @@ namespace Moryx.Model.Repositories
     public abstract class Repository<T> : Repository, IRepository<T>
         where T : class, IEntity, new()
     {
-        /// <summary>
-        /// Internal entity framework <see cref="DbSet{TEntity}"/>
-        /// </summary>
-        protected DbSet<T> DbSet { get; set; }
+        /// <inheritdoc />
+        public DbSet<T> DbSet { get; private set; }
 
         /// <inheritdoc />
         public override void Initialize(IUnitOfWork uow, DbContext context)
@@ -61,12 +59,28 @@ namespace Moryx.Model.Repositories
             DbSet.FirstOrDefaultAsync(e => e.Id == id);
 
         /// <inheritdoc />
-        public ICollection<T> GetAll() =>
+        public virtual ICollection<T> GetAll() =>
             DbSet.ToList();
 
         /// <inheritdoc />
-        public virtual ICollection<T> GetByKeys(long[] ids) =>
-            DbSet.Where(e => ids.Contains(e.Id)).ToList();
+        public virtual async Task<ICollection<T>> GetAllAsync()
+        {
+            var results = await DbSet.ToListAsync();
+            return results;
+        }
+
+        /// <inheritdoc />
+        public virtual ICollection<T> GetByKeys(long[] ids)
+        {
+            return DbSet.Where(e => ids.Contains(e.Id)).ToList();
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<ICollection<T>> GetByKeysAsync(long[] ids)
+        {
+            var results = await DbSet.Where(e => ids.Contains(e.Id)).ToListAsync();
+            return results;
+        }
 
         /// <inheritdoc />
         public T Create() =>

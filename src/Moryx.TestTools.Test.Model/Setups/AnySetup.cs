@@ -3,6 +3,7 @@
 
 using System.Linq;
 using Moryx.Model;
+using Moryx.Model.Attributes;
 using Moryx.Model.Repositories;
 
 namespace Moryx.TestTools.Test.Model

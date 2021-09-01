@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Moryx.Model.Attributes;
 
 namespace Moryx.Model
 {
@@ -16,30 +16,8 @@ namespace Moryx.Model
     /// </summary>
     public abstract class MoryxDbContext : DbContext
     {
-        protected string ConnectionString { get; }
-
-        protected DbConnection Connection { get; }
-
-        /// <summary>
-        /// Static constructor to load the database initializer method
-        /// </summary>
-        static MoryxDbContext()
-        {
-
-        }
-
         protected MoryxDbContext()
         {
-        }
-
-        protected MoryxDbContext(DbConnection connection)
-        {
-            Connection = connection;
-        }
-
-        protected MoryxDbContext(string connectionString)
-        {
-            ConnectionString = connectionString;
         }
 
         protected MoryxDbContext(DbContextOptions options) : base(options)
@@ -49,16 +27,6 @@ namespace Moryx.Model
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ConfigureConventions(modelBuilder);
-            ConfigureProperties(modelBuilder);
-        }
-
-        /// <summary>
-        /// Configure EntityFramework conventions
-        /// </summary>
-        /// <param name="modelBuilder"></param>
-        protected virtual void ConfigureConventions(ModelBuilder modelBuilder)
-        {
             // Set default schema
             var attributes = GetType().GetCustomAttributes<DefaultSchemaAttribute>().ToArray();
             var defaultSchemaAttr = attributes.LastOrDefault();
@@ -66,25 +34,6 @@ namespace Moryx.Model
             modelBuilder.HasDefaultSchema(!string.IsNullOrEmpty(defaultSchemaAttr?.Schema)
                 ? defaultSchemaAttr.Schema.ToLower() // schema names have to be lower case!
                 : DefaultSchemaAttribute.DefaultName);
-
-            // Custom Code-First Conventions: https://msdn.microsoft.com/en-us/library/jj819164(v=vs.113).aspx
-            // Turn off pluralization
-            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-        }
-
-        /// <summary>
-        /// Configure properties
-        /// </summary>
-        /// <param name="modelBuilder"></param>
-        protected virtual void ConfigureProperties(ModelBuilder modelBuilder)
-        {
-            // Properties flagged with IsUnicode will be configured
-            //modelBuilder.Properties()
-            //    .Having(x => x.GetCustomAttributes(false).OfType<IsUnicodeAttribute>().FirstOrDefault())
-            //    .Configure((config, att) => config.IsUnicode(att.Unicode));
-
-            //// Type of string
-            //modelBuilder.Properties<string>().Configure(p => p.IsMaxLength());
         }
 
         /// <inheritdoc />

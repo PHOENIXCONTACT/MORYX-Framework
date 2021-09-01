@@ -120,21 +120,6 @@ namespace Moryx.TestTools.SystemTest.Clients
             throw new System.NotImplementedException();
         }
 
-        public DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, DatabaseConfigModel config)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<DatabaseUpdateSummary> MigrateDatabaseModelAsync(string targetModel, string migrationName, DatabaseConfigModel config)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public InvocationResponse RollbackDatabase(string targetModel, DatabaseConfigModel config)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task<InvocationResponse> RollbackDatabaseAsync(string targetModel, DatabaseConfigModel config)
         {
             throw new System.NotImplementedException();

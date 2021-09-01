@@ -5,6 +5,7 @@ using System;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Logging;
 using Moryx.Model.Configuration;
 using Npgsql;
@@ -17,12 +18,9 @@ namespace Moryx.Model.PostgreSQL
     public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDatabaseConfig>
     {
         /// <inheritdoc />
-        protected override string ProviderInvariantName => "Npgsql";
-
-        /// <inheritdoc />
         protected override DbConnection CreateConnection(IDatabaseConfig config)
         {
-            return new NpgsqlConnection(BuildConnectionString(config));
+            return CreateConnection(config, true);
         }
 
         /// <inheritdoc />
@@ -92,7 +90,15 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc />
-        public override string BuildConnectionString(IDatabaseConfig config, bool includeModel)
+        public override DbContextOptions BuildDbContextOptions(IDatabaseConfig config)
+        {
+            var builder = new DbContextOptionsBuilder();
+            builder.UseNpgsql(BuildConnectionString(config, true));
+
+            return builder.Options;
+        }
+
+        private static string BuildConnectionString(IDatabaseConfig config, bool includeModel)
         {
             var builder = new NpgsqlConnectionStringBuilder
             {

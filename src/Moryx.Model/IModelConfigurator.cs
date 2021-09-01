@@ -62,18 +62,6 @@ namespace Moryx.Model
         DbContext CreateContext(IDatabaseConfig config);
 
         /// <summary>
-        /// Builds the connection string for the database.
-        /// The model name will be included into the connection string
-        /// </summary>
-        string BuildConnectionString(IDatabaseConfig config);
-
-        /// <summary>
-        /// Builds the connection string for the database.
-        /// The model name is optional within the connection string
-        /// </summary>
-        string BuildConnectionString(IDatabaseConfig config, bool includeModel);
-
-        /// <summary>
         /// Updates the configuration of the underlying model
         /// </summary>
         void UpdateConfig();
@@ -87,36 +75,6 @@ namespace Moryx.Model
         /// Create a new database for this model with given config
         /// </summary>
         bool CreateDatabase(IDatabaseConfig config);
-
-        /// <summary>
-        /// Update the current database to the newest version
-        /// </summary>
-        /// <returns>True when an update was executed, false when this is already the latest version</returns>
-        DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config);
-
-        /// <summary>
-        /// Update the database to a the given migration version if available
-        /// </summary>
-        /// <returns>True when an update was executed, false when this is already the latest version</returns>
-        DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId);
-
-        /// <summary>
-        /// Rolls back all migrations including the first migration
-        /// </summary>
-        /// <returns></returns>
-        bool RollbackDatabase(IDatabaseConfig config);
-
-        /// <summary>
-        /// Retrieves all names of available updates
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config);
-
-        /// <summary>
-        /// Retrieves all names of installed updates
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config);
 
         /// <summary>
         /// Delete this database

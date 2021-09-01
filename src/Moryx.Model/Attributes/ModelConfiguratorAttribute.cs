@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Moryx.Model
+namespace Moryx.Model.Attributes
 {
     /// <summary>
     /// Registration attribute for data model configurators
