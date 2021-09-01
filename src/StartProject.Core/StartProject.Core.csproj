@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0" />    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,6 +16,12 @@
     <ProjectReference Include="..\Moryx.TestModule.Kestrel\Moryx.TestModule.Kestrel.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Maintenance\Moryx.Runtime.Maintenance.csproj" />
     <ProjectReference Include="..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
