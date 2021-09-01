@@ -25,8 +25,7 @@ namespace Moryx.Model.Tests
 
             // Assert
             var carsSet = context.Cars;
-            var someCar = carsSet.Create();
-            someCar.Name = carName;
+            var someCar = new CarEntity {Name = carName};
 
             carsSet.Add(someCar);
             context.SaveChanges();

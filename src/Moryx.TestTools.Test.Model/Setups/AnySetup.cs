@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
 using Moryx.Model.Attributes;
 using Moryx.Model.Repositories;
@@ -35,7 +36,7 @@ namespace Moryx.TestTools.Test.Model
                 {
                     var wheelEntity = wheelRepo.Create();
                     wheelEntity.WheelType = wheelType;
-                    carEntity.Wheels.Add(wheelEntity);
+                    wheelEntity.Car = carEntity;
                 }
 
                 CreateWheel(WheelType.FrontLeft);
@@ -51,6 +52,9 @@ namespace Moryx.TestTools.Test.Model
             carRepo.Remove(lastCar);
 
             openContext.SaveChanges();
+
+
+            var allCarsWithWheels = carRepo.Linq.Include(c => c.Wheels).ToList();
 
             // All cars with exact name "Car 1"
             var allNamedCar1 = carRepo.Linq.Where(c => c.Name == "Car 1");
