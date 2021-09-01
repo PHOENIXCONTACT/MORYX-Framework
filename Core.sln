@@ -102,6 +102,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kestrel", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestModule.Kestrel", "src\Moryx.TestModule.Kestrel\Moryx.TestModule.Kestrel.csproj", "{E7A29304-E150-446D-AE7F-A899A7BFCB2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model.Sqlite", "src\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj", "{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -755,8 +757,8 @@ Global
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B} = {DAE7DCE8-AB9B-46A8-808D-6C6C0AAB75A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_TaskErrorCategory = Message
-		RESX_ShowErrorsInErrorList = True
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
+		RESX_ShowErrorsInErrorList = True
+		RESX_TaskErrorCategory = Message
 	EndGlobalSection
 EndGlobal

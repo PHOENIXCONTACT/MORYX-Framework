@@ -155,7 +155,7 @@ namespace Moryx.Model.Configuration
                 conn.Open();
                 return true;
             }
-            catch
+            catch(Exception e)
             {
                 return false;
             }
