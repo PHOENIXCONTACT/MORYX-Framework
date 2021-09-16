@@ -21,7 +21,7 @@ namespace Moryx.Container
         /// <summary>
         /// Internal windsor container doing the real DI
         /// </summary>
-        public IWindsorContainer Container { get; private set; }
+        protected IWindsorContainer Container { get; private set; }
 
         /// <summary>
         /// Registrator used to evaluate attributes

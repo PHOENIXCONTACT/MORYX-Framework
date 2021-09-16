@@ -1,36 +1,47 @@
 ﻿using System;
 using Microsoft.Extensions.Hosting;
 using Moryx.Communication.Endpoints;
+using Moryx.Container;
 
 namespace Moryx.Runtime.Kestrel
 {
-    internal class KestrelEndpointHost : IEndpointHost
+    internal class KestrelEndpointHost : IEndpointHost, IDisposable
     {
-        private IHost _host;
+        private readonly Type _endpoint;
+        private readonly object _config;
 
-        public IHostBuilder HostBuilder { get; }
+        /// <summary>
+        /// Injected container of the module
+        /// </summary>
+        public IContainer ModuleContainer { get; set; }
+        /// <summary>
+        /// Kestrel hosting responsible for the controller
+        /// </summary>
+        public KestrelEndpointHosting Hosting { get; set; }
 
-        public KestrelEndpointHost(IHostBuilder hostBuilder)
+        public KestrelEndpointHost(Type endpoint) : this(endpoint, null)
         {
-            HostBuilder = hostBuilder;
+        }
+
+        public KestrelEndpointHost(Type endpoint, object config)
+        {
+            _endpoint = endpoint;
+            _config = config;
         }
 
         public void Start()
         {
-            if (_host == null)
-            {
-                _host = HostBuilder.Build();
-                _host.Start();
-            }
-            else
-            {
-                throw new InvalidOperationException("Host already running!");
-            }
+            Hosting.LinkController(_endpoint, ModuleContainer);
         }
 
         public void Stop()
         {
-            _host?.StopAsync();
+            Hosting.UnlinkController(_endpoint, ModuleContainer);
+        }
+
+        public void Dispose()
+        {
+            Stop();
         }
     }
 }

@@ -55,9 +55,8 @@ namespace Moryx.Container
                 var property = targetType.GetProperty(dependency.DependencyKey);
                 att = property.GetCustomAttribute<UseChildAttribute>();
             }
-            else if (dependency is ConstructorDependencyModel)
+            else if (dependency is ConstructorDependencyModel constDep)
             {
-                var constDep = (ConstructorDependencyModel)dependency;
                 var parameter = constDep.Constructor.Constructor.GetParameters().FirstOrDefault(param => param.Name == dependency.DependencyKey);
                 att = parameter.GetCustomAttribute<UseChildAttribute>();
             }

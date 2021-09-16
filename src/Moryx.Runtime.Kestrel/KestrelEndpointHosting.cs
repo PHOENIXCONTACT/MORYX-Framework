@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Reflection;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,12 +34,14 @@ namespace Moryx.Runtime.Kestrel
         #endregion
 
         #region Fields and Properties
-        
+
         private PortConfig _portConfig;
+        private WindsorContainer _hostingContainer;
 
-        private IContainer _hostingContainer;
+        private IHost _host;
+        private List<ControllerProxySubResolver> _linkedControllers = new List<ControllerProxySubResolver>();
 
-        private IEndpointHosting _versionHost;
+        private EndpointCollector _collector;
 
         #endregion
 
@@ -44,35 +50,68 @@ namespace Moryx.Runtime.Kestrel
         {
             _portConfig = ConfigManager.GetConfiguration<PortConfig>();
 
-            _hostingContainer = new LocalContainer();
-            _hostingContainer.Register<EndpointCollector, EndpointCollector>();
-            _hostingContainer.Register<Controller, VersionController>();
-            RegisterHostingComponents(_hostingContainer);
+            _hostingContainer = new WindsorContainer();
 
-            var hostFactory = _hostingContainer.Resolve <IEndpointHostFactory>();
-            var host = hostFactory.CreateHost(typeof(VersionController), null);
-            host.Start();
+            var hostBuilder = Host.CreateDefaultBuilder()
+                .UseWindsorContainerServiceProvider(_hostingContainer)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureKestrel(options =>
+                    {
+                        options.Listen(new IPAddress(0), _portConfig.HttpPort);
+                    }).ConfigureLogging(builder =>
+                    {
+                        builder.ClearProviders();
+                    }).UseStartup<Startup>();
+                });
+            _host = hostBuilder.Build();
+
+            // Missing registrations
+            _hostingContainer.Register(Component.For<EndpointCollector>());
+
+            _host.Start();
         }
 
         public void ActivateHosting(IContainer container)
         {
-            // Fetch collector for endpoit service
-            var collector = _hostingContainer.Resolve<EndpointCollector>();
-            container.SetInstance(collector);
-            // Register everything else
-            RegisterHostingComponents(container);
+            container.SetInstance(this);
+            container.Register<IEndpointHost, KestrelEndpointHost>();
+            // Let castle create the factory
+            container.Register<IEndpointHostFactory>();
         }
 
-        private void RegisterHostingComponents(IContainer container)
+        internal void LinkController(Type controller, IContainer moduleContainer)
         {
-            // TODO: 
-            container.SetInstance(_portConfig);
-            container.Register<IEndpointHostFactory, KestrelHostFactory>();
+            var proxyResolver = new ControllerProxySubResolver(controller, moduleContainer);
+            lock (_linkedControllers)
+                _linkedControllers.Add(proxyResolver);
+            _hostingContainer.Kernel.Resolver.AddSubResolver(proxyResolver);
+
+            var routeAtt = controller.GetCustomAttribute<RouteAttribute>();
+            var endpointAtt = controller.GetCustomAttribute<EndpointAttribute>();
+            var route = "/" + routeAtt?.Template ?? string.Empty;
+            var address = $"http://{_portConfig.Host}:{_portConfig.HttpPort}{route}";
+            _hostingContainer.Resolve<EndpointCollector>().AddEndpoint(address, new Endpoint
+            {
+                Address = address,
+                Path = route,
+                Service = endpointAtt?.Name ?? controller.Name,
+                Version = endpointAtt?.Version ?? "1.0.0"
+            });
+        }
+
+        internal void UnlinkController(Type controller, IContainer moduleContainer)
+        {
+            ControllerProxySubResolver proxyResolver;
+            lock (_linkedControllers)
+                proxyResolver = _linkedControllers.FirstOrDefault(p => p.Controller == controller && p.Container == moduleContainer);
+            if (proxyResolver != null)
+                _hostingContainer.Kernel.Resolver.RemoveSubResolver(proxyResolver);
         }
 
         public void Dispose()
         {
-            
+            _host.StopAsync();
         }
     }
 }
