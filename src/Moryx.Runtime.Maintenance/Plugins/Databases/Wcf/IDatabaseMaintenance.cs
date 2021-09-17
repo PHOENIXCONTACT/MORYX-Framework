@@ -4,8 +4,8 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using Moryx.Communication.Endpoints;
 using Moryx.Model.Configuration;
-using Moryx.Tools.Wcf;
 using Moryx.Web;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
     /// Service contracts for database operations.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion("3.0.0.0")]
+    [Endpoint(Name = nameof(IDatabaseMaintenance), Version = "3.0.0.0")]
     internal interface IDatabaseMaintenance
     {
         /// <summary>

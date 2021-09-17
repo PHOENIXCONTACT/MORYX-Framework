@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Communication.Endpoints;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance
@@ -12,7 +13,7 @@ namespace Moryx.Runtime.Maintenance
     /// <typeparam name="TWcf">Type of Wcf service.</typeparam>
     public abstract class MaintenancePluginBase<TConf, TWcf> : IMaintenancePlugin where TConf : MaintenancePluginConfig
     {
-        private IConfiguredServiceHost _host;
+        private IEndpointHost _host;
 
         /// <summary>
         /// Configuration of type TConf.
@@ -22,7 +23,7 @@ namespace Moryx.Runtime.Maintenance
         /// <summary>
         /// Factory to create WCF services
         /// </summary>
-        public IConfiguredHostFactory HostFactory { get; set; }
+        public IEndpointHostFactory HostFactory { get; set; }
 
         /// <inheritdoc />
         public virtual void Initialize(MaintenancePluginConfig config)
@@ -33,7 +34,7 @@ namespace Moryx.Runtime.Maintenance
         /// <inheritdoc />
         public virtual void Start()
         {
-            _host = HostFactory.CreateHost<TWcf>(Config.ProvidedEndpoint);
+            _host = HostFactory.CreateHost(typeof(TWcf), Config.ProvidedEndpoint);
             _host.Start();
         }
 

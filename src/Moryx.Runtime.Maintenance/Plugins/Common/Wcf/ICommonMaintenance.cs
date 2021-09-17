@@ -4,7 +4,7 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Moryx.Tools.Wcf;
+using Moryx.Communication.Endpoints;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
@@ -12,7 +12,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
     /// Service contract for the common maintenance.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion("3.0.0.0")]
+    [Endpoint(Name = nameof(ICommonMaintenance), Version = "3.0.0.0")]
     internal interface ICommonMaintenance
     {
         /// <summary>

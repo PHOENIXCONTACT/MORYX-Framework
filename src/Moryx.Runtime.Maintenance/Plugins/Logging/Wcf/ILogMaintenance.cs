@@ -4,7 +4,7 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Moryx.Tools.Wcf;
+using Moryx.Communication.Endpoints;
 using Moryx.Web;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Logging
@@ -13,7 +13,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
     /// Service contract for logging features of the maintenance.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion("3.0.0")]
+    [Endpoint(Name = nameof(ILogMaintenance), Version = "3.0.0.0")]
     internal interface ILogMaintenance
     {
         /// <summary>

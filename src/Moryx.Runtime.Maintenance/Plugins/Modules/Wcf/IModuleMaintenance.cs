@@ -4,9 +4,9 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using Moryx.Communication.Endpoints;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
     /// Base service contract for the maintenance module.
     /// </summary>
     [ServiceContract]
-    [ServiceVersion("3.0.0")]
+    [Endpoint(Name = nameof(IModuleMaintenance), Version = "3.0.0.0")]
     internal interface IModuleMaintenance
     {
         /// <summary>
