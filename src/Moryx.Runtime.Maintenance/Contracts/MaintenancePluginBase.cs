@@ -2,7 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Communication.Endpoints;
+#if USE_WCF
 using Moryx.Tools.Wcf;
+#endif
 
 namespace Moryx.Runtime.Maintenance
 {

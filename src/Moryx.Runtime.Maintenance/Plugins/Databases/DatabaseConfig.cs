@@ -4,7 +4,6 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
@@ -12,7 +11,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
     /// Configuration for the database maintenance plugin.
     /// </summary>
     [DataContract]
-    internal class DatabaseConfig : MaintenancePluginConfig
+    public class DatabaseConfig : MaintenancePluginConfig
     {
         /// <summary>
         /// Name of the plugin.
@@ -26,8 +25,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         {
             ProvidedEndpoint = new HostConfig
             {
-                BindingType = ServiceBindingType.WebHttp,
-                Endpoint = "databases",
+                Endpoint = DatabaseMaintenance.Endpoint,
                 MetadataEnabled = true
             };
         }

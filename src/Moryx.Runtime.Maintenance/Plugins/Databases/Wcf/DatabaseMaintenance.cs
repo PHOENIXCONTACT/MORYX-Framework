@@ -4,20 +4,35 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.ServiceModel;
 using System.Text.RegularExpressions;
+using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Model.Configuration;
+#if USE_WCF
+using System.ServiceModel;
+#else
+using Microsoft.AspNetCore.Mvc;
+#endif
+
 
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
+#if USE_WCF
     [Plugin(LifeCycle.Singleton, typeof(IDatabaseMaintenance))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     internal class DatabaseMaintenance : IDatabaseMaintenance
+#else
+    [ApiController, Route(Endpoint)]
+    [Produces("application/json")]
+    [Endpoint(Name = nameof(IDatabaseMaintenance), Version = "3.0.0")]
+    public class DatabaseMaintenance : Controller, IDatabaseMaintenance
+#endif
     {
-        #region Dependencies
+        public const string Endpoint = "databases";
+
+#region Dependencies
 
         /// <summary>
         /// Global component for database contexts
@@ -35,18 +50,27 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         /// </summary>
         public DatabaseConfig Config { get; set; }
 
-        #endregion
+#endregion
 
+#if !USE_WCF
+        [HttpGet]
+#endif
         public DataModel[] GetAll()
         {
             return DbContextManager.Contexts.Select(Convert).ToArray();
         }
 
+#if !USE_WCF
+        [HttpGet("model/{targetModel}")]
+#endif
         public DataModel GetModel(string targetModel)
         {
             return Convert(DbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel));
         }
 
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/config")]
+#endif
         public void SetDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var match = GetTargetConfigurator(targetModel);
@@ -59,6 +83,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         }
 
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/config/test")]
+#endif
         public TestConnectionResponse TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -72,12 +99,18 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return new TestConnectionResponse { Result = result };
         }
 
+#if !USE_WCF
+        [HttpPost("createall")]
+#endif
         public InvocationResponse CreateAll()
         {
             var bulkResult = BulkOperation(mc => mc.CreateDatabase(mc.Config), "Creation");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/create")]
+#endif
         public InvocationResponse CreateDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -100,12 +133,18 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             }
         }
 
+#if !USE_WCF
+        [HttpDelete("/")]
+#endif
         public InvocationResponse EraseAll()
         {
             var bulkResult = BulkOperation(mc => mc.DeleteDatabase(mc.Config), "Deletion");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
+#if !USE_WCF
+        [HttpDelete("model/{targetModel}")]
+#endif
         public InvocationResponse EraseDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -126,6 +165,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             }
         }
 
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/dump")]
+#endif
         public InvocationResponse DumpDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -143,6 +185,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return new InvocationResponse();
         }
 
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/restore")]
+#endif
         public InvocationResponse RestoreDatabase(string targetModel, RestoreDatabaseRequest request)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -156,6 +201,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return new InvocationResponse();
         }
 
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/{migrationName}/migrate")]
+#endif
         public DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, DatabaseConfigModel configModel)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -166,6 +214,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return targetConfigurator.MigrateDatabase(config, migrationName);
         }
 
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/rollback")]
+#endif
         public InvocationResponse RollbackDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -178,6 +229,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return rollbackResult ? new InvocationResponse() : new InvocationResponse("Error while rollback!");
         }
 
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/setup")]
+#endif
         public InvocationResponse ExecuteSetup(string targetModel, ExecuteSetupRequest request)
         {
             var contextType = DbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);

@@ -14,8 +14,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
     /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     [Plugin(LifeCycle.Transient, typeof(ICommonMaintenance))]
-    internal class CommonMaintenance : ICommonMaintenance
+    public class CommonMaintenance : ICommonMaintenance
     {
+        public const string Endpoint = "common";
+
         /// <summary>
         /// Get the current server time.
         /// </summary>

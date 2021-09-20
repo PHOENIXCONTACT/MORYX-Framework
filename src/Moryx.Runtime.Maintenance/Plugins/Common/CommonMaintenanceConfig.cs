@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
@@ -24,8 +23,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         {
             ProvidedEndpoint = new HostConfig
             {
-                Endpoint = "common",
-                BindingType = ServiceBindingType.WebHttp,
+                Endpoint = CommonMaintenance.Endpoint
             };
         }
     }
