@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.Communication.Endpoints;
 
 namespace Moryx.Tools.Wcf
 {
@@ -9,7 +10,8 @@ namespace Moryx.Tools.Wcf
     /// Attribute used to declare a services version for clients to check compliance
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface)]
-    public class ServiceVersionAttribute : Attribute
+    [Obsolete("Use hosting independent {EndpointAttribute} instead")]
+    public class ServiceVersionAttribute : EndpointAttribute
     {
         /// <summary>
         /// Set version of the service
@@ -19,10 +21,5 @@ namespace Moryx.Tools.Wcf
         {
             Version = version;
         }
-
-        /// <summary>
-        /// Version of the server
-        /// </summary>
-        public string Version { get; }
     }
 }

@@ -1,15 +1,13 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Description;
-using Moryx.Tools.Wcf;
+using Moryx.Communication.Endpoints;
 
-namespace Moryx.Runtime.Wcf
+namespace Moryx.Runtime.Kestrel
 {
-    internal class EndpointCollector
+    public class EndpointCollector
     {
         private readonly Dictionary<string, Endpoint> _endpoints = new Dictionary<string, Endpoint>();
 

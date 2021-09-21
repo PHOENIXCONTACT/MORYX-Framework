@@ -4,6 +4,7 @@
 using System;
 using Castle.Facilities.WcfIntegration;
 using Moryx.Communication;
+using Moryx.Communication.Endpoints;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
@@ -15,8 +16,8 @@ namespace Moryx.Runtime.Wcf
     /// <summary>
     /// Factory to create service hosts and provides hosts for the version service.
     /// </summary>
-    [InitializableKernelComponent(typeof(IWcfHostFactory))]
-    internal class WcfHostFactory : IWcfHostFactory, IInitializable, ILoggingHost
+    [InitializableKernelComponent(typeof(IWcfHostFactory), typeof(IEndpointHosting))]
+    internal class WcfHostFactory : IWcfHostFactory, IInitializable, ILoggingHost, IEndpointHosting
     {
         #region Dependencies
 
@@ -42,16 +43,11 @@ namespace Moryx.Runtime.Wcf
             LoggerManagement.ActivateLogging(this);
 
             _container = new LocalContainer();
-            var factoryConfig = ConfigManager.GetConfiguration<HostFactoryConfig>();
             _portConfig = ConfigManager.GetConfiguration<PortConfig>();
 
-            // In minimal core setups with no WCF service this can be disabled
-            if (factoryConfig.VersionServiceDisabled)
-                return;
-
             _container.Register<IVersionService, VersionService>(nameof(VersionService), LifeCycle.Transient);
-            _container.Register<IEndpointCollector, EndpointCollector>();
-            var collector = _container.Resolve<IEndpointCollector>();
+            _container.Register<EndpointCollector>();
+            var collector = _container.Resolve<EndpointCollector>();
 
             _container.Extend<WcfFacility>();
             _container.Register<ITypedHostFactory, TypedHostFactory>();
@@ -75,13 +71,18 @@ namespace Moryx.Runtime.Wcf
         public IConfiguredServiceHost CreateHost(Type contract, HostConfig config, ITypedHostFactory hostFactory,
             IModuleLogger logger)
         {
-            var collector = _container.Resolve<IEndpointCollector>();
+            var collector = _container.Resolve<EndpointCollector>();
 
             // Create instance and fill using given container
             var host = new ConfiguredServiceHost(hostFactory, logger, collector, _portConfig);
             host.Setup(contract, config);
 
             return host;
+        }
+
+        public void ActivateHosting(IContainer container)
+        {
+            container.RegisterWcf(this);
         }
     }
 }
