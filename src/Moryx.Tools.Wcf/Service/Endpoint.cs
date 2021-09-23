@@ -8,13 +8,11 @@ namespace Moryx.Tools.Wcf
     /// <summary>
     /// Information about a service to be used by a client for automatic configuration.
     /// </summary>
-    [DataContract]
     public class Endpoint : Communication.Endpoints.Endpoint
     {
         /// <summary>
         /// The binding type of the service.
         /// </summary>
-        [DataMember]
         public ServiceBindingType Binding { get; set; }
     }
 }

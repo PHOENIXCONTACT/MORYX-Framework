@@ -16,7 +16,7 @@ namespace Moryx.Runtime.Wcf
     /// <summary>
     /// Factory to create service hosts and provides hosts for the version service.
     /// </summary>
-    [InitializableKernelComponent(typeof(IWcfHostFactory), typeof(IEndpointHosting))]
+    [InitializableKernelComponent(typeof(IWcfHostFactory), typeof(IEndpointHosting), Name = "WcfHosting")]
     internal class WcfHostFactory : IWcfHostFactory, IInitializable, ILoggingHost, IEndpointHosting
     {
         #region Dependencies
@@ -46,7 +46,7 @@ namespace Moryx.Runtime.Wcf
             _portConfig = ConfigManager.GetConfiguration<PortConfig>();
 
             _container.Register<IVersionService, VersionService>(nameof(VersionService), LifeCycle.Transient);
-            _container.Register<EndpointCollector>();
+            _container.Register<EndpointCollector, EndpointCollector>();
             var collector = _container.Resolve<EndpointCollector>();
 
             _container.Extend<WcfFacility>();

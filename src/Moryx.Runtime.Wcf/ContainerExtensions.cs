@@ -26,7 +26,7 @@ namespace Moryx.Runtime.Wcf
             container.Register<ITypedHostFactory, TypedHostFactory>();
             container.SetInstance(wcfHostFactory);
             container.Register<IConfiguredHostFactory, ConfiguredHostFactory>();
-            container.Register<IEndpointHostFactory, ConfiguredHostFactory>();
+            container.Register<IEndpointHostFactory, WcfEndpointFactory>();
             return container;
         }
     }

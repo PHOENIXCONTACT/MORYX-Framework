@@ -21,7 +21,7 @@ namespace Moryx.Runtime.Kestrel
     /// <summary>
     /// Kestrel Http host factory to start up a kestrel server
     /// </summary>
-    [InitializableKernelComponent(typeof(IEndpointHosting))]
+    [InitializableKernelComponent(typeof(IEndpointHosting), Name = "KestrelHosting")]
     internal class KestrelEndpointHosting : IInitializable, IEndpointHosting, IDisposable
     {
         #region Dependencies
