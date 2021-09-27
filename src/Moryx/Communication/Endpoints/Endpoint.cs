@@ -1,8 +1,6 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Runtime.Serialization;
-
 namespace Moryx.Communication.Endpoints
 {
     /// <summary>
@@ -28,9 +26,8 @@ namespace Moryx.Communication.Endpoints
         /// <summary>
         /// The service's version
         /// </summary>
-        [DataMember]
         public string Version { get; set; }
-        
+
         /// <summary>
         /// <c>True</c> if service requires authentication
         /// </summary>

@@ -1,5 +1,7 @@
-﻿using System;
-using Microsoft.Extensions.Hosting;
+﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using Moryx.Communication.Endpoints;
 using Moryx.Container;
 

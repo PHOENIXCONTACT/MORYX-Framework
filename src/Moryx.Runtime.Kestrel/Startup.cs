@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -36,35 +39,8 @@ namespace Moryx.Runtime.Kestrel
                 })
                 .AddControllersAsServices();
 
-            //services.AddSingleton<IEndpointCollector, EndpointCollector>();
-
             services.AddAuthorization();
-
-            //services.AddApiVersioning(options =>
-            //{
-            //    options.DefaultApiVersion = new ApiVersion(1, 0);
-            //    options.AssumeDefaultVersionWhenUnspecified = true;
-            //    options.ReportApiVersions = true;
-            //});
-            //services.AddVersionedApiExplorer(
-            //    options =>
-            //    {
-            //        options.GroupNameFormat = "'v'VVV";
-            //        options.SubstituteApiVersionInUrl = true;
-            //    });
-
             services.AddCors();
-
-            //services.AddSwaggerGen(options =>
-            //{
-            //    options.OperationFilter<SwaggerDefaultValues>();
-
-            //    var baseDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-            //    foreach (var fi in baseDirectory.EnumerateFiles("*.xml"))
-            //    {
-            //        options.IncludeXmlComments(fi.FullName);
-            //    }
-            //});
         }
 
         public void Configure(IApplicationBuilder app)
@@ -76,21 +52,6 @@ namespace Moryx.Runtime.Kestrel
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
-
-            //app.UseSwagger(options =>
-            //{
-            //    options.RouteTemplate = "/swagger/{documentName}/swagger.json";
-            //});
-            //app.UseSwaggerUI(options =>
-            //{
-            //    foreach (var description in provider.ApiVersionDescriptions)
-            //    {
-            //        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
-            //            $"MORYX API {description.GroupName.ToUpperInvariant()}");
-            //    }
-
-            //    options.RoutePrefix = "swagger";
-            //});
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,7 +16,6 @@ using Moryx.Communication;
 using Moryx.Communication.Endpoints;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Modules;
 
 namespace Moryx.Runtime.Kestrel
@@ -27,7 +29,7 @@ namespace Moryx.Runtime.Kestrel
         #region Dependencies
 
         /// <summary>
-        /// Config manager
+        /// Config manager to receive the port config
         /// </summary>
         public IConfigManager ConfigManager { get; set; }
 
@@ -39,9 +41,7 @@ namespace Moryx.Runtime.Kestrel
         private WindsorContainer _hostingContainer;
 
         private IHost _host;
-        private List<ControllerProxySubResolver> _linkedControllers = new List<ControllerProxySubResolver>();
-
-        private EndpointCollector _collector;
+        private readonly List<ControllerProxySubResolver> _linkedControllers = new List<ControllerProxySubResolver>();
 
         #endregion
 

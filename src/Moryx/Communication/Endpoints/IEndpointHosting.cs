@@ -1,10 +1,7 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.Container;
-using Moryx.Logging;
-using Moryx.Modules;
 
 namespace Moryx.Communication.Endpoints
 {
@@ -14,7 +11,7 @@ namespace Moryx.Communication.Endpoints
     public interface IEndpointHosting
     {
         /// <summary>
-        /// Activate hosting within a container. Makes <see cref="IEndpointHostFactory"/> availabe
+        /// Activate hosting within a container. Makes <see cref="IEndpointHostFactory"/> available
         /// </summary>
         void ActivateHosting(IContainer container);
     }
