@@ -1,14 +1,15 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Net;
+using Moryx.Model.Configuration;
+
 #if USE_WCF
 using System.ServiceModel;
 using System.ServiceModel.Web;
-#endif
 using Moryx.Communication.Endpoints;
-using Moryx.Model.Configuration;
+using System.Net;
 using Moryx.Web;
+#endif
 
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {

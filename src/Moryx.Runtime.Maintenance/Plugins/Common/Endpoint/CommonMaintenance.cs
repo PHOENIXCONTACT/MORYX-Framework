@@ -4,24 +4,37 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.ServiceModel;
+
+#if USE_WCF
 using Moryx.Container;
+using System.ServiceModel;
+#else
+using Microsoft.AspNetCore.Mvc;
+using Moryx.Communication.Endpoints;
+#endif
 
 namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
     /// <summary>
     /// Wcf service implementations for the common maintenance.
     /// </summary>
+#if USE_WCF
+    [Plugin(LifeCycle.Singleton, typeof(ICommonMaintenance))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
-    [Plugin(LifeCycle.Transient, typeof(ICommonMaintenance))]
     public class CommonMaintenance : ICommonMaintenance
+#else
+    [ApiController, Route(Endpoint)]
+    [Produces("application/json")]
+    [Endpoint(Name = nameof(ICommonMaintenance), Version = "3.0.0")]
+    public class CommonMaintenance : Controller, ICommonMaintenance
+#endif
     {
-        public const string Endpoint = "common";
+        internal const string Endpoint = "common";
 
-        /// <summary>
-        /// Get the current server time.
-        /// </summary>
-        /// <returns>The current server time.</returns>
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("time")]
+#endif
         public ServerTimeResponse GetServerTime()
         {
             return new ServerTimeResponse
@@ -31,6 +44,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("info/application")]
+#endif
         public ApplicationInformationResponse GetApplicationInfo()
         {
             var currentPlatform = Platform.Current;
@@ -44,6 +60,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("info/system")]
+#endif
         public HostInformationResponse GetHostInfo()
         {
             return new HostInformationResponse
@@ -55,6 +74,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("info/system/load")]
+#endif
         public SystemLoadResponse GetSystemLoad()
         {
             var physicalMemory = HostHelper.PhysicalMemory();
@@ -68,6 +90,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("info/application/load")]
+#endif
         public ApplicationLoadResponse GetApplicationLoad()
         {
             var physicalMemory = HostHelper.PhysicalMemory();

@@ -5,6 +5,10 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
+#if USE_WCF
+using Moryx.Tools.Wcf;
+#endif
+
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
     /// <summary>
@@ -23,11 +27,13 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         /// </summary>
         public DatabaseConfig()
         {
+#if USE_WCF
             ProvidedEndpoint = new HostConfig
             {
                 Endpoint = DatabaseMaintenance.Endpoint,
                 MetadataEnabled = true
             };
+#endif
         }
 
         /// <summary>

@@ -3,6 +3,10 @@
 
 using System.Runtime.Serialization;
 
+#if USE_WCF
+using Moryx.Tools.Wcf;
+#endif
+
 namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
     /// <summary>
@@ -21,10 +25,12 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
         /// </summary>
         public CommonMaintenanceConfig()
         {
+#if USE_WCF
             ProvidedEndpoint = new HostConfig
             {
                 Endpoint = CommonMaintenance.Endpoint
             };
+#endif
         }
     }
 }
