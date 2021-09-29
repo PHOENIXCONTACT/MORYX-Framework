@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq;
 using Moryx.Communication.Endpoints;
 using Moryx.Container;
 
@@ -9,36 +10,38 @@ namespace Moryx.Runtime.Kestrel
 {
     internal class KestrelEndpointHost : IEndpointHost, IDisposable
     {
-        private readonly Type _endpoint;
+        private readonly Type _controller;
         private readonly object _config;
-
-        /// <summary>
-        /// Injected container of the module
-        /// </summary>
-        public IContainer ModuleContainer { get; set; }
+        private readonly IContainer _container;
         /// <summary>
         /// Kestrel hosting responsible for the controller
         /// </summary>
         public KestrelEndpointHosting Hosting { get; set; }
 
-        public KestrelEndpointHost(Type endpoint) : this(endpoint, null)
+        public KestrelEndpointHost(Type endpoint, IContainer container) : this(endpoint, null, container)
         {
         }
 
-        public KestrelEndpointHost(Type endpoint, object config)
+        public KestrelEndpointHost(Type endpoint, object config, IContainer container)
         {
-            _endpoint = endpoint;
             _config = config;
+            _container = container;
+            
+            // If the endpoint is registered, use the implementation for controller matching
+            if (_container.GetRegisteredImplementations(endpoint).Any())
+                _controller = _container.GetRegisteredImplementations(endpoint).FirstOrDefault();
+            else
+                _controller = endpoint;
         }
 
         public void Start()
         {
-            Hosting.LinkController(_endpoint, ModuleContainer);
+            Hosting.LinkController(_controller, _container);
         }
 
         public void Stop()
         {
-            Hosting.UnlinkController(_endpoint, ModuleContainer);
+            Hosting.UnlinkController(_controller, _container);
         }
 
         public void Dispose()

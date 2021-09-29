@@ -75,7 +75,7 @@ namespace Moryx.Runtime.Kestrel
         public void ActivateHosting(IContainer container)
         {
             container.SetInstance(this);
-            container.Register<IEndpointHost, KestrelEndpointHost>();
+            container.Register<IEndpointHost, KestrelEndpointHost>("KestrelHost", LifeCycle.Transient);
             // Let castle create the factory
             container.Register<IEndpointHostFactory>();
         }

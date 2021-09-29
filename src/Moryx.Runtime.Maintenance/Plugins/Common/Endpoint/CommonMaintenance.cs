@@ -4,9 +4,8 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-
-#if USE_WCF
 using Moryx.Container;
+#if USE_WCF
 using System.ServiceModel;
 #else
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +17,12 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
     /// <summary>
     /// Wcf service implementations for the common maintenance.
     /// </summary>
+    [Plugin(LifeCycle.Transient, typeof(ICommonMaintenance))]
 #if USE_WCF
-    [Plugin(LifeCycle.Singleton, typeof(ICommonMaintenance))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     public class CommonMaintenance : ICommonMaintenance
 #else
-    [ApiController, Route(Endpoint)]
-    [Produces("application/json")]
+    [ApiController, Route(Endpoint), Produces("application/json")]
     [Endpoint(Name = nameof(ICommonMaintenance), Version = "3.0.0")]
     public class CommonMaintenance : Controller, ICommonMaintenance
 #endif

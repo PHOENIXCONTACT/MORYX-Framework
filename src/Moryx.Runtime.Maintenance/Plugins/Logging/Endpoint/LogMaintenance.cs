@@ -16,13 +16,12 @@ using Moryx.Communication.Endpoints;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {
+    [Plugin(LifeCycle.Transient, typeof(ILogMaintenance))]
 #if USE_WCF
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
-    [Plugin(LifeCycle.Transient, typeof(ILogMaintenance))]
     public class LogMaintenance : ILogMaintenance, ILoggingComponent
 #else
-    [ApiController, Route(Endpoint)]
-    [Produces("application/json")]
+    [ApiController, Route(Endpoint), Produces("application/json")]
     [Endpoint(Name = nameof(ILogMaintenance), Version = "3.0.0")]
     public class LogMaintenance : Controller, ILogMaintenance, ILoggingComponent
 #endif

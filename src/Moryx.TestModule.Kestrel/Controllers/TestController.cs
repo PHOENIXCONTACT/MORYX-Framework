@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Moryx.Container;
 
 namespace Moryx.TestModule.Kestrel.Controllers
 {
     [ApiController]
+    [Component(LifeCycle.Transient)]
     public class TestController : Controller
     {
         [HttpGet("foo/{value}")]

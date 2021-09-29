@@ -20,13 +20,13 @@ using Moryx.Communication.Endpoints;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
+
+    [Plugin(LifeCycle.Transient, typeof(IDatabaseMaintenance))]
 #if USE_WCF
-    [Plugin(LifeCycle.Singleton, typeof(IDatabaseMaintenance))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     public class DatabaseMaintenance : IDatabaseMaintenance
 #else
-    [ApiController, Route(Endpoint)]
-    [Produces("application/json")]
+    [ApiController, Route(Endpoint), Produces("application/json")]
     [Endpoint(Name = nameof(IDatabaseMaintenance), Version = "3.0.0")]
     public class DatabaseMaintenance : Controller, IDatabaseMaintenance
 #endif

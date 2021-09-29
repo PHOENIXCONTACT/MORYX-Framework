@@ -27,13 +27,12 @@ using Moryx.Communication.Endpoints;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
+    [Plugin(LifeCycle.Transient, typeof(IModuleMaintenance))]
 #if USE_WCF
-    [Plugin(LifeCycle.Singleton, typeof(IModuleMaintenance))]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     public class ModuleMaintenance : IModuleMaintenance, ILoggingComponent
 #else
-    [ApiController, Route(Endpoint)]
-    [Produces("application/json")]
+    [ApiController, Route(Endpoint), Produces("application/json")]
     [Endpoint(Name = nameof(IModuleMaintenance), Version = "3.0.0")]
     public class ModuleMaintenance : Controller, IModuleMaintenance, ILoggingComponent
 #endif
