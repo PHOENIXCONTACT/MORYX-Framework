@@ -26,7 +26,7 @@ namespace Moryx.Runtime.Kestrel
                 })
                 .ConfigureApplicationPartManager(manager =>
                 {
-                    // Find all Controllers and add them to the local container
+                    // Find all assemblies with defined controllers and add them to the application parts
                     var assemblies = AppDomain.CurrentDomain.GetAssemblies();
                     foreach (var assembly in assemblies.Where(a =>
                         manager.ApplicationParts.All(p => p.Name != a.GetName().Name)))
@@ -36,6 +36,8 @@ namespace Moryx.Runtime.Kestrel
                             manager.ApplicationParts.Add(new AssemblyPart(assembly));
                         }
                     }
+
+                    manager.FeatureProviders.Add(new CustomControllerFeatureProvider());
                 })
                 .AddControllersAsServices();
 

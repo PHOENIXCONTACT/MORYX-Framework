@@ -19,11 +19,11 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
     [Plugin(LifeCycle.Transient, typeof(ILogMaintenance))]
 #if USE_WCF
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
-    public class LogMaintenance : ILogMaintenance, ILoggingComponent
+    internal class LogMaintenance : ILogMaintenance, ILoggingComponent
 #else
     [ApiController, Route(Endpoint), Produces("application/json")]
     [Endpoint(Name = nameof(ILogMaintenance), Version = "3.0.0")]
-    public class LogMaintenance : Controller, ILogMaintenance, ILoggingComponent
+    internal class LogMaintenance : Controller, ILogMaintenance, ILoggingComponent
 #endif
     {
         internal const string Endpoint = "loggers";
@@ -34,15 +34,11 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
 
         public ILoggingAppender LoggingAppender { get; set; }
 
-        /// <summary>
-        /// Logger of this component
-        /// </summary>
-        [UseChild("WcfService")]
+        [UseChild("LogMaintenance")]
         public IModuleLogger Logger { get; set; }
 
         #endregion
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet]
 #endif
@@ -51,7 +47,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
             return LoggerManagement.Select(Convert).ToArray();
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPut("logger/{loggerName}/loglevel")]
 #endif
@@ -61,7 +56,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
             return new InvocationResponse();
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("appender")]
 #endif
@@ -73,7 +67,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
             };
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("appender/{appenderId}")]
 #endif
@@ -87,7 +80,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
                 // ReSharper disable once PossibleNullReferenceException
                 ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
 #else
-            Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 #endif
                 return new LogMessageModel[0];
             }
@@ -96,7 +89,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
             return messages.ToArray();
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpDelete("appender/{appenderId}")]
 #endif

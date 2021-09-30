@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using Moryx.Container;
+
 #if USE_WCF
 using System.ServiceModel;
 #else
@@ -20,16 +21,15 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
     [Plugin(LifeCycle.Transient, typeof(ICommonMaintenance))]
 #if USE_WCF
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
-    public class CommonMaintenance : ICommonMaintenance
+    internal class CommonMaintenance : ICommonMaintenance
 #else
     [ApiController, Route(Endpoint), Produces("application/json")]
     [Endpoint(Name = nameof(ICommonMaintenance), Version = "3.0.0")]
-    public class CommonMaintenance : Controller, ICommonMaintenance
+    internal class CommonMaintenance : Controller, ICommonMaintenance
 #endif
     {
         internal const string Endpoint = "common";
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("time")]
 #endif
@@ -41,7 +41,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             };
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("info/application")]
 #endif
@@ -57,7 +56,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             };
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("info/system")]
 #endif
@@ -71,7 +69,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             };
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("info/system/load")]
 #endif
@@ -87,7 +84,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             };
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("info/application/load")]
 #endif

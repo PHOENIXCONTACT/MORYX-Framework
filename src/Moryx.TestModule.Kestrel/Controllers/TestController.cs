@@ -8,7 +8,7 @@ namespace Moryx.TestModule.Kestrel
 {
     [ApiController]
     [Component(LifeCycle.Transient)]
-    public class TestController : Controller
+    internal class TestController : Controller
     {
         [HttpGet("foo/{value}")]
         [Produces("application/json")]

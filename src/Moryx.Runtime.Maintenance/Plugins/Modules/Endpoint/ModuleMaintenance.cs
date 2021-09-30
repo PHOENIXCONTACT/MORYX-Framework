@@ -30,11 +30,11 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
     [Plugin(LifeCycle.Transient, typeof(IModuleMaintenance))]
 #if USE_WCF
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
-    public class ModuleMaintenance : IModuleMaintenance, ILoggingComponent
+    internal class ModuleMaintenance : IModuleMaintenance, ILoggingComponent
 #else
     [ApiController, Route(Endpoint), Produces("application/json")]
     [Endpoint(Name = nameof(IModuleMaintenance), Version = "3.0.0")]
-    public class ModuleMaintenance : Controller, IModuleMaintenance, ILoggingComponent
+    internal class ModuleMaintenance : Controller, IModuleMaintenance, ILoggingComponent
 #endif
     {
         internal const string Endpoint = "modules";
@@ -52,7 +52,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
 
         #endregion
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("dependencies")]
 #endif
@@ -61,7 +60,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             return new DependencyEvaluation(ModuleManager.DependencyTree);
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet]
 #endif
@@ -96,7 +94,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             return models.ToArray();
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("module/{moduleName}/healthstate")]
 #endif
@@ -119,7 +116,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             return ServerModuleState.Failure;
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("module/{moduleName}/notifications")]
 #endif
@@ -141,7 +137,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             return new NotificationModel[0];
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("module/{moduleName}/start")]
 #endif
@@ -151,7 +146,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             ModuleManager.StartModule(module);
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("module/{moduleName}/stop")]
 #endif
@@ -161,7 +155,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             ModuleManager.StopModule(module);
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("module/{moduleName}/reincarnate")]
 #endif
@@ -171,7 +164,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             ParallelOperations.ExecuteParallel(ModuleManager.ReincarnateModule, module);
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("module/{moduleName}")]
 #endif
@@ -194,7 +186,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             }
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("module/{moduleName}/confirm")]
 #endif
@@ -208,7 +199,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             ModuleManager.InitializeModule(module);
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("module/{moduleName}/config")]
 #endif
@@ -241,7 +231,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             }
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("module/{moduleName}/config")]
 #endif
@@ -272,7 +261,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             }
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("module/{moduleName}/console")]
 #endif
@@ -289,7 +277,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             return methods;
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("module/{moduleName}/console")]
 #endif
