@@ -4,7 +4,10 @@
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Modules;
+
+#if USE_WCF
 using Moryx.Tools.Wcf;
+#endif
 
 namespace Moryx.Runtime.Maintenance
 {
@@ -18,11 +21,12 @@ namespace Moryx.Runtime.Maintenance
         /// Name of the plugin.
         /// </summary>
         public abstract string PluginName { get; }
-
+#if USE_WCF
         /// <summary>
         /// Endpoint which the plugin provides.
         /// </summary>
         [DataMember]
         public HostConfig ProvidedEndpoint { get; set; }
+#endif
     }
 }

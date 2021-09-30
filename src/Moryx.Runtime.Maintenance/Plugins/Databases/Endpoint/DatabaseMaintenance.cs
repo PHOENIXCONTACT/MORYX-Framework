@@ -4,19 +4,35 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.ServiceModel;
 using System.Text.RegularExpressions;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Model.Configuration;
 
+#if USE_WCF
+using System.ServiceModel;
+#else
+using Microsoft.AspNetCore.Mvc;
+using Moryx.Communication.Endpoints;
+#endif
+
+
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
-    [Plugin(LifeCycle.Singleton, typeof(IDatabaseMaintenance))]
+
+    [Plugin(LifeCycle.Transient, typeof(IDatabaseMaintenance))]
+#if USE_WCF
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
-    internal class DatabaseMaintenance : IDatabaseMaintenance
+    public class DatabaseMaintenance : IDatabaseMaintenance
+#else
+    [ApiController, Route(Endpoint), Produces("application/json")]
+    [Endpoint(Name = nameof(IDatabaseMaintenance), Version = "3.0.0")]
+    public class DatabaseMaintenance : Controller, IDatabaseMaintenance
+#endif
     {
+        internal const string Endpoint = "databases";
+
         #region Dependencies
 
         /// <summary>
@@ -33,20 +49,38 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         /// <summary>
         /// Configuration for the database plugin
         /// </summary>
-        public DatabaseConfig Config { get; set; }
+        public ModuleConfig Config { get; set; }
 
         #endregion
 
+        #region Fields and Properties
+
+        private DatabaseConfig DatabaseConfig => Config.Plugins.OfType<DatabaseConfig>().FirstOrDefault();
+
+        #endregion
+
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet]
+#endif
         public DataModel[] GetAll()
         {
             return DbContextManager.Contexts.Select(Convert).ToArray();
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("model/{targetModel}")]
+#endif
         public DataModel GetModel(string targetModel)
         {
             return Convert(DbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel));
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/config")]
+#endif
         public void SetDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var match = GetTargetConfigurator(targetModel);
@@ -59,6 +93,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/config/test")]
+#endif
         public TestConnectionResponse TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -72,12 +110,20 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return new TestConnectionResponse { Result = result };
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("createall")]
+#endif
         public InvocationResponse CreateAll()
         {
             var bulkResult = BulkOperation(mc => mc.CreateDatabase(mc.Config), "Creation");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/create")]
+#endif
         public InvocationResponse CreateDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -100,12 +146,20 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             }
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpDelete("/")]
+#endif
         public InvocationResponse EraseAll()
         {
             var bulkResult = BulkOperation(mc => mc.DeleteDatabase(mc.Config), "Deletion");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpDelete("model/{targetModel}")]
+#endif
         public InvocationResponse EraseDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -126,6 +180,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             }
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/dump")]
+#endif
         public InvocationResponse DumpDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -134,7 +192,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
 
-            var targetPath = Path.Combine(Config.SetupDataDir, targetModel);
+            var targetPath = Path.Combine(DatabaseConfig.SetupDataDir, targetModel);
             if (!Directory.Exists(targetPath))
                 Directory.CreateDirectory(targetPath);
 
@@ -143,6 +201,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return new InvocationResponse();
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/restore")]
+#endif
         public InvocationResponse RestoreDatabase(string targetModel, RestoreDatabaseRequest request)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -150,12 +212,16 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 return new InvocationResponse("No configurator found");
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            var filePath = Path.Combine(Config.SetupDataDir, targetModel, request.BackupFileName);
+            var filePath = Path.Combine(DatabaseConfig.SetupDataDir, targetModel, request.BackupFileName);
             targetConfigurator.RestoreDatabase(updatedConfig, filePath);
 
             return new InvocationResponse();
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/{migrationName}/migrate")]
+#endif
         public DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, DatabaseConfigModel configModel)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -166,6 +232,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return targetConfigurator.MigrateDatabase(config, migrationName);
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/rollback")]
+#endif
         public InvocationResponse RollbackDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -178,6 +248,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return rollbackResult ? new InvocationResponse() : new InvocationResponse("Error while rollback!");
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("model/{targetModel}/setup")]
+#endif
         public InvocationResponse ExecuteSetup(string targetModel, ExecuteSetupRequest request)
         {
             var contextType = DbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
@@ -265,7 +339,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             var setups = allSetups.Where(setup => string.IsNullOrEmpty(setup.SupportedFileRegex))
                                   .Select(ConvertSetup).OrderBy(setup => setup.SortOrder).ToList();
             string[] files;
-            if (!Directory.Exists(Config.SetupDataDir) || !(files = Directory.GetFiles(Config.SetupDataDir)).Any())
+            if (!Directory.Exists(DatabaseConfig.SetupDataDir) || !(files = Directory.GetFiles(DatabaseConfig.SetupDataDir)).Any())
                 return setups.ToArray();
 
             var fileSetups = allSetups.Where(setup => !string.IsNullOrEmpty(setup.SupportedFileRegex))
@@ -282,7 +356,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         private BackupModel[] GetAllBackups(Type contextType)
         {
             var targetModel = TargetModelName(contextType);
-            var backupFolder = Path.Combine(Config.SetupDataDir, targetModel);
+            var backupFolder = Path.Combine(DatabaseConfig.SetupDataDir, targetModel);
 
             if (!Directory.Exists(backupFolder))
                 return new BackupModel[0];

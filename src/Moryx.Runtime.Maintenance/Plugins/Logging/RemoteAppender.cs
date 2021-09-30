@@ -12,7 +12,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
         private readonly object _bufferLock = new object();
         private List<ILogMessage> _bufferedMessages = new List<ILogMessage>();
         public DateTime LastFlush { get; set; }
- 
+
         public void BufferMessage(ILogMessage message)
         {
             lock(_bufferLock)

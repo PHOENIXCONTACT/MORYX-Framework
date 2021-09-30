@@ -15,18 +15,20 @@ namespace Moryx.Runtime.Kestrel
     /// </summary>
     internal class ControllerProxySubResolver : ISubDependencyResolver
     {
+        public Type Controller { get; }
+
+        public IContainer Container { get; }
+
         public ControllerProxySubResolver(Type controller, IContainer container)
         {
             Controller = controller;
             Container = container;
         }
-        public Type Controller { get; }
-        public IContainer Container { get; }
 
         public bool CanResolve(CreationContext context, ISubDependencyResolver contextHandlerResolver, ComponentModel model, DependencyModel dependency)
         {
             // Each proxy resolver only serves its target controller
-            return model.Implementation == Controller && Container.GetRegisteredImplementations(dependency.TargetType).Any();
+            return Controller.IsAssignableFrom(model.Implementation) && Container.GetRegisteredImplementations(dependency.TargetType).Any();
         }
 
         public object Resolve(CreationContext context, ISubDependencyResolver contextHandlerResolver, ComponentModel model, DependencyModel dependency)

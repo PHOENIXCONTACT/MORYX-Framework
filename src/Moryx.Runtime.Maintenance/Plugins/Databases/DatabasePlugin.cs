@@ -17,20 +17,5 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         /// Name of the plugin.
         /// </summary>
         public const string ComponentName = "DatabaseConfig";
-
-        /// <summary>
-        /// Maintenance model. Injected by castle.
-        /// </summary>
-        public IDatabaseMaintenance ModelMaintenance { get; set; }
-
-        /// <summary>
-        /// initialize the database plugin.
-        /// </summary>
-        /// <param name="config">The database maintenance config.</param>
-        public override void Initialize(MaintenancePluginConfig config)
-        {
-            base.Initialize(config);
-            ((DatabaseMaintenance)ModelMaintenance).Config = Config;
-        }
     }
 }

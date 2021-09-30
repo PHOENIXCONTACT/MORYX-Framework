@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -19,13 +17,29 @@ using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Moryx.Threading;
 
+#if USE_WCF
+using System.ServiceModel;
+using System.ServiceModel.Web;
+#else
+using Microsoft.AspNetCore.Mvc;
+using Moryx.Communication.Endpoints;
+#endif
+
 namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
-    [Plugin(LifeCycle.Singleton, typeof(IModuleMaintenance))]
+    [Plugin(LifeCycle.Transient, typeof(IModuleMaintenance))]
+#if USE_WCF
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
-    internal class ModuleMaintenance : IModuleMaintenance, ILoggingComponent
+    public class ModuleMaintenance : IModuleMaintenance, ILoggingComponent
+#else
+    [ApiController, Route(Endpoint), Produces("application/json")]
+    [Endpoint(Name = nameof(IModuleMaintenance), Version = "3.0.0")]
+    public class ModuleMaintenance : Controller, IModuleMaintenance, ILoggingComponent
+#endif
     {
-        #region dependency injection
+        internal const string Endpoint = "modules";
+
+        #region Dependencies
 
         public IModuleManager ModuleManager { get; set; }
 
@@ -38,6 +52,19 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
 
         #endregion
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("dependencies")]
+#endif
+        public DependencyEvaluation GetDependencyEvaluation()
+        {
+            return new DependencyEvaluation(ModuleManager.DependencyTree);
+        }
+
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet]
+#endif
         public ServerModuleModel[] GetAll()
         {
             var models = new List<ServerModuleModel>(ModuleManager.AllModules.Count());
@@ -69,6 +96,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             return models.ToArray();
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("module/{moduleName}/healthstate")]
+#endif
         public ServerModuleState HealthState(string moduleName)
         {
             var module = ModuleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
@@ -77,12 +108,21 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
                 return module.State;
             }
 
+#if USE_WCF
             var ctx = WebOperationContext.Current;
             // ReSharper disable once PossibleNullReferenceException
             ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+#else
+            Response.StatusCode = (int)HttpStatusCode.NotFound;
+#endif
+
             return ServerModuleState.Failure;
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("module/{moduleName}/notifications")]
+#endif
         public NotificationModel[] Notifications(string moduleName)
         {
             var module = ModuleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
@@ -91,35 +131,50 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
                 return module.Notifications.Select(n => new NotificationModel(n)).ToArray();
             }
 
+#if USE_WCF
             var ctx = WebOperationContext.Current;
             // ReSharper disable once PossibleNullReferenceException
             ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+#else
+            Response.StatusCode = (int)HttpStatusCode.NotFound;
+#endif
             return new NotificationModel[0];
         }
 
-        public DependencyEvaluation GetDependencyEvaluation()
-        {
-            return new DependencyEvaluation(ModuleManager.DependencyTree);
-        }
-
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("module/{moduleName}/start")]
+#endif
         public void Start(string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
             ModuleManager.StartModule(module);
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("module/{moduleName}/stop")]
+#endif
         public void Stop(string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
             ModuleManager.StopModule(module);
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("module/{moduleName}/reincarnate")]
+#endif
         public void Reincarnate(string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
             ParallelOperations.ExecuteParallel(ModuleManager.ReincarnateModule, module);
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("module/{moduleName}")]
+#endif
         public void Update(string moduleName, ServerModuleModel module)
         {
             var serverModule = GetModuleFromManager(moduleName);
@@ -139,6 +194,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             }
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("module/{moduleName}/confirm")]
+#endif
         public void ConfirmWarning(string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -149,6 +208,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             ModuleManager.InitializeModule(module);
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("module/{moduleName}/config")]
+#endif
         public Config GetConfig(string moduleName)
         {
             Logger.Log(LogLevel.Info, "Converting config of plugin {0}", moduleName);
@@ -167,11 +230,21 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Warning, ex, "Failed to convert config of {0}", moduleName);
-                HttpHelper.SetStatusCode(HttpStatusCode.InternalServerError);
+#if USE_WCF
+                var ctx = WebOperationContext.Current;
+                // ReSharper disable once PossibleNullReferenceException
+                ctx.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+#else
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+#endif
                 return null;
             }
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("module/{moduleName}/config")]
+#endif
         public void SetConfig(string moduleName, SaveConfigRequest request)
         {
             try
@@ -189,10 +262,20 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Warning, ex, "Failed to save config of {0}", moduleName);
-                HttpHelper.SetStatusCode(HttpStatusCode.InternalServerError);
+#if USE_WCF
+                var ctx = WebOperationContext.Current;
+                // ReSharper disable once PossibleNullReferenceException
+                ctx.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+#else
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+#endif
             }
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("module/{moduleName}/console")]
+#endif
         public MethodEntry[] GetMethods(string moduleName)
         {
             var methods = new MethodEntry[] {};
@@ -206,6 +289,10 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             return methods;
         }
 
+        /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("module/{moduleName}/console")]
+#endif
         public Entry InvokeMethod(string moduleName, MethodEntry method)
         {
             Entry result = null;
@@ -231,9 +318,13 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
             }
             else
             {
-                var ctx = WebOperationContext.Current;
-                // ReSharper disable once PossibleNullReferenceException
-                ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+#if USE_WCF
+            var ctx = WebOperationContext.Current;
+            // ReSharper disable once PossibleNullReferenceException
+            ctx.OutgoingResponse.StatusCode = HttpStatusCode.NotFound;
+#else
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+#endif
             }
 
             return result;
