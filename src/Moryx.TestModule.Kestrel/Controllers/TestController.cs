@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.AspNetCore.Mvc;
 using Moryx.Container;
 
-namespace Moryx.TestModule.Kestrel.Controllers
+namespace Moryx.TestModule.Kestrel
 {
     [ApiController]
     [Component(LifeCycle.Transient)]

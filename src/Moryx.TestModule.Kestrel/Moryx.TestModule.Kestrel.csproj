@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net5.0</TargetFrameworks>
-    <Description>Moryx Runtime Plugin: KestrelTestModule.</Description>
+    <Description>Moryx Runtime Module: KestrelTestModule.</Description>
     <OutputType>Library</OutputType>
   </PropertyGroup>
 

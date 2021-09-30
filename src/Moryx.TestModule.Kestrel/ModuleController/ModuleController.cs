@@ -1,24 +1,22 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using System.Threading;
 using Moryx.Communication.Endpoints;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
-using Moryx.TestModule.Kestrel.Controllers;
 
-namespace Moryx.TestModule.Kestrel.ModuleController
+namespace Moryx.TestModule.Kestrel
 {
     [ServerModule(ModuleName)]
-    [Description("Test module for System tests")]
+    [Description("Test module for testing ")]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>
     {
         private IEndpointHost _host;
         public const string ModuleName = "KestrelTester";
 
         #region Dependencies
-        
+
         /// <summary>
         /// Host factory to create wcf services
         /// </summary>
@@ -30,8 +28,6 @@ namespace Moryx.TestModule.Kestrel.ModuleController
         /// Name of this module
         /// </summary>
         public override string Name => ModuleName;
-
-        #region State transition
 
         /// <inheritdoc />
         protected override void OnInitialize()
@@ -53,6 +49,5 @@ namespace Moryx.TestModule.Kestrel.ModuleController
         {
             _host.Stop();
         }
-        #endregion
     }
 }

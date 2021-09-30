@@ -6,7 +6,6 @@ using System.Linq;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Context;
-using Microsoft.AspNetCore.Mvc;
 using Moryx.Container;
 
 namespace Moryx.Runtime.Kestrel
@@ -16,13 +15,15 @@ namespace Moryx.Runtime.Kestrel
     /// </summary>
     internal class ControllerProxySubResolver : ISubDependencyResolver
     {
+        public Type Controller { get; }
+
+        public IContainer Container { get; }
+
         public ControllerProxySubResolver(Type controller, IContainer container)
         {
             Controller = controller;
             Container = container;
         }
-        public Type Controller { get; }
-        public IContainer Container { get; }
 
         public bool CanResolve(CreationContext context, ISubDependencyResolver contextHandlerResolver, ComponentModel model, DependencyModel dependency)
         {
