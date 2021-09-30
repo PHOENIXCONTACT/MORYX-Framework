@@ -25,7 +25,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             var moc = mc.GetInstances();
             return (from ManagementObject item in moc select Convert.ToUInt64(item.Properties["TotalPhysicalMemory"].Value)).FirstOrDefault();
 #else
-            return 0; // TODO: Remove in Core 4
+            return 42; // TODO: Replace in Core 4
 #endif
         }
 
@@ -40,7 +40,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             var moc = mc.GetInstances();
             return (from ManagementObject item in moc select Convert.ToUInt64(item.Properties["FreePhysicalMemory"].Value) * 1024).FirstOrDefault();
 #else
-            return 0; // TODO: Remove in Core 4
+            return 32; // TODO: Replace in Core 4
 #endif
         }
 
@@ -58,7 +58,8 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
 
             return (ulong)processorTime;
 #else
-            return 0; // TODO: Remove in Core 4
+
+            return 0; // TODO: Replace in Core 4
 #endif
         }
     }

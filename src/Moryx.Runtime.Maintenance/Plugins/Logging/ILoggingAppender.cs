@@ -6,7 +6,7 @@ using Moryx.Logging;
 
 namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {
-    public interface ILoggingAppender : IMaintenancePlugin
+    internal interface ILoggingAppender : IMaintenancePlugin
     {
         /// <summary>
         /// Add a remote appender to the logging stream

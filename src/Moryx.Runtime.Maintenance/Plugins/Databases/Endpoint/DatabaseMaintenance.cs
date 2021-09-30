@@ -17,18 +17,17 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.Communication.Endpoints;
 #endif
 
-
 namespace Moryx.Runtime.Maintenance.Plugins.Databases
 {
 
     [Plugin(LifeCycle.Transient, typeof(IDatabaseMaintenance))]
 #if USE_WCF
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
-    public class DatabaseMaintenance : IDatabaseMaintenance
+    internal class DatabaseMaintenance : IDatabaseMaintenance
 #else
     [ApiController, Route(Endpoint), Produces("application/json")]
     [Endpoint(Name = nameof(IDatabaseMaintenance), Version = "3.0.0")]
-    public class DatabaseMaintenance : Controller, IDatabaseMaintenance
+    internal class DatabaseMaintenance : Controller, IDatabaseMaintenance
 #endif
     {
         internal const string Endpoint = "databases";
@@ -59,7 +58,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         #endregion
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet]
 #endif
@@ -68,7 +66,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return DbContextManager.Contexts.Select(Convert).ToArray();
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpGet("model/{targetModel}")]
 #endif
@@ -77,7 +74,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return Convert(DbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel));
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("model/{targetModel}/config")]
 #endif
@@ -93,7 +89,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("model/{targetModel}/config/test")]
 #endif
@@ -110,7 +105,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return new TestConnectionResponse { Result = result };
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("createall")]
 #endif
@@ -120,7 +114,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("model/{targetModel}/create")]
 #endif
@@ -146,7 +139,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             }
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpDelete("/")]
 #endif
@@ -156,7 +148,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpDelete("model/{targetModel}")]
 #endif
@@ -180,7 +171,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             }
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("model/{targetModel}/dump")]
 #endif
@@ -201,7 +191,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return new InvocationResponse();
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("model/{targetModel}/restore")]
 #endif
@@ -218,7 +207,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return new InvocationResponse();
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("model/{targetModel}/{migrationName}/migrate")]
 #endif
@@ -232,7 +220,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return targetConfigurator.MigrateDatabase(config, migrationName);
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("model/{targetModel}/rollback")]
 #endif
@@ -248,7 +235,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return rollbackResult ? new InvocationResponse() : new InvocationResponse("Error while rollback!");
         }
 
-        /// <inheritdoc />
 #if !USE_WCF
         [HttpPost("model/{targetModel}/setup")]
 #endif
