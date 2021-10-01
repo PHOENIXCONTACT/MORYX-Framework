@@ -5,7 +5,7 @@ using Newtonsoft.Json.Converters;
 namespace Moryx.Serialization
 {
     /// <summary>
-    /// Wrapper around 
+    /// Wrapper around
     /// </summary>
     public static class JsonSettings
     {
@@ -33,7 +33,7 @@ namespace Moryx.Serialization
         };
 
         /// <summary>
-        /// Json settings for human-readable text files 
+        /// Json settings for human-readable text files
         /// </summary>
         public static JsonSerializerSettings ReadableReplace
         {

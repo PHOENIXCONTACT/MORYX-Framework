@@ -6,7 +6,7 @@ using System;
 namespace Moryx.Container
 {
     /// <summary>
-    /// Attribute used to decorate dependencies which are part of larger container and shall be resolved by name 
+    /// Attribute used to decorate dependencies which are part of larger container and shall be resolved by name
     /// from this container.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]

@@ -7,7 +7,7 @@ namespace Moryx.Workflows.Transitions
 {
     /// <summary>
     /// Special transition that can be used to create optional steps in workplans. If a condition for
-    /// a <see cref="IWorkplanStep"/> is not fullfilled it can create a <see cref="NullTransition"/>
+    /// a <see cref="IWorkplanStep"/> is not fulfilled it can create a <see cref="NullTransition"/>
     /// instead of the real <see cref="ITransition"/>.
     /// </summary>
     public class NullTransition : TransitionBase

@@ -4,7 +4,7 @@
 namespace Moryx.Notifications
 {
     /// <summary>
-    /// Different levels to diffentiate the severity of a message
+    /// Different levels to differentiate the severity of a message
     /// </summary>
     public enum Severity
     {

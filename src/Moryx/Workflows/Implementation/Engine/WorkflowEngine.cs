@@ -23,7 +23,7 @@ namespace Moryx.Workflows
             State = (EngineState) state;
         }
 
-        /// 
+        ///
         public IWorkflow ExecutedWorkflow { get; private set; }
 
         ///
@@ -79,7 +79,7 @@ namespace Moryx.Workflows
             TransitionTriggered(this, (IObservableTransition)sender);
         }
 
-        /// 
+        ///
         public void Start()
         {
             State.Start();
@@ -104,7 +104,7 @@ namespace Moryx.Workflows
 
         #region Pause and restore
 
-        /// 
+        ///
         public WorkflowSnapshot Pause()
         {
             return State.Pause();
@@ -182,10 +182,10 @@ namespace Moryx.Workflows
         ///
         public event EventHandler<IPlace> PlaceReached;
 
-        /// 
+        ///
         public event EventHandler<ITransition> TransitionTriggered;
 
-        /// 
+        ///
         public event EventHandler<IPlace> Completed;
 
         ///

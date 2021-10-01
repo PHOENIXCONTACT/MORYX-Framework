@@ -1,8 +1,6 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Runtime.Serialization;
-
 namespace Moryx.Workflows
 {
     /// <summary>
@@ -13,7 +11,7 @@ namespace Moryx.Workflows
         ///
         public string Name => $"{Original.Name}-Partial";
 
-        public IToken Original { get; private set; }
+        public IToken Original { get; }
 
         public SplitToken(IToken original)
         {

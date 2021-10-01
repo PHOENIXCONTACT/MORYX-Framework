@@ -1,4 +1,7 @@
-﻿namespace Moryx.Web
+﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.Web
 {
     /// <summary>
     /// Extension class for <see cref="System.Net.WebRequestMethods"/>.

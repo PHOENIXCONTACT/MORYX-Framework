@@ -4,7 +4,7 @@
 namespace Moryx.Workflows
 {
     /// <summary>
-    /// A Workplan's state
+    /// A workplan state
     /// </summary>
     public enum WorkplanState
     {

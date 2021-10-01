@@ -25,7 +25,7 @@ namespace Moryx.Modules
         bool Confirm();
 
         /// <summary>
-        /// Time stamp of occurence
+        /// Time stamp of occurrence
         /// </summary>
         DateTime Timestamp { get; }
 

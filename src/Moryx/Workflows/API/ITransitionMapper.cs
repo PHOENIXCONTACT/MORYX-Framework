@@ -19,10 +19,10 @@ namespace Moryx.Workflows
         /// <summary>
         /// Register another <see cref="IAttemptInvokation"/> strategy
         /// </summary>
-        ITransitionMapper Map(IAttemptInvokation invokation);
+        ITransitionMapper Map(IAttemptInvokation invokation); // TODO: Rename to invocation in the next major
 
         /// <summary>
-        /// Register a typed delegate for a certain 
+        /// Register a typed delegate for a certain
         /// </summary>
         ITransitionMapper Map<T>(Action<T> transitionHandler)
             where T : class, ITransition;

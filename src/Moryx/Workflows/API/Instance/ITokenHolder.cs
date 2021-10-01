@@ -25,14 +25,14 @@ namespace Moryx.Workflows
         /// Internal state of the holder. This object should be used to store custom data.
         /// </summary>
         object InternalState { get; set; }
-        
+
         /// <summary>
         /// Pause execution on this holder and stop passing of tokens
         /// </summary>
         void Pause();
 
         /// <summary>
-        /// Resume exeuction on this holder and process placed tokens
+        /// Resume execution on this holder and process placed tokens
         /// </summary>
         void Resume();
     }

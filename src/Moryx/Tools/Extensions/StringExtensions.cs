@@ -52,7 +52,7 @@ namespace Moryx.Tools
             {
                 return string.Join(separator, s, value);
             }
-            
+
             return s;
         }
 

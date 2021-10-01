@@ -33,13 +33,13 @@ namespace Moryx.Workflows
     }
 
     /// <summary>
-    /// Public transistion relevant outside of the engine
+    /// Public transition relevant outside of the engine
     /// </summary>
     public interface IObservableTransition : ITransition
     {
         /// <summary>
         /// Event raised, when the transition was triggered
         /// </summary>
-        event EventHandler Triggered; 
+        event EventHandler Triggered;
     }
 }

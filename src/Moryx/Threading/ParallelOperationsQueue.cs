@@ -12,12 +12,12 @@ namespace Moryx.Threading
     /// Task queue that utilizes parallel operations and to execute tasks
     /// on a different thread WITHOUT blocking a thread during inactivity.
     /// The queue preserves the order of execution and avoids parallel execution
-    /// of two tasks 
+    /// of two tasks
     /// </summary>
     public class ParallelOperationsQueue<TElement>
     {
         /// <summary>
-        /// Thread counter of active 
+        /// Thread counter of active
         /// </summary>
         private int _pendingElements;
 

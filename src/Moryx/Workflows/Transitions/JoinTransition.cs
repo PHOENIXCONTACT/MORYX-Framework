@@ -25,13 +25,11 @@ namespace Moryx.Workflows.Transitions
         private void EvaluateTokens(object sender, IToken token)
         {
             var length = Inputs.Length;
-            if (_receivedTokens == null)
-            {
-                // Create an array with the same size the Inputs array
-                _receivedTokens = new IToken[length];
-            }
 
-            // Store partial token and check all other tokens simultaniously
+            // Create an array with the same size the Inputs array
+            _receivedTokens ??= new IToken[length];
+
+            // Store partial token and check all other tokens simultaneously
             var allSet = true;
             IToken original = null;
             for (var i = 0; i < length; i++)
@@ -46,8 +44,8 @@ namespace Moryx.Workflows.Transitions
                 }
                 else
                 {
-                    // Set orginal on first match otherwise skip
-                    original = original ?? splitToken.Original;
+                    // Set original on first match otherwise skip
+                    original ??= splitToken.Original;
                 }
             }
 

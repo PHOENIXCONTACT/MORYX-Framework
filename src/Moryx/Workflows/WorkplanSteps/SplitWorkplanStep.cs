@@ -31,7 +31,7 @@ namespace Moryx.Workflows.WorkplanSteps
 
             Outputs = new IConnector[outputs];
             OutputDescriptions = new OutputDescription[outputs];
-            for (int i = 0; i < outputs; i++)
+            for (var i = 0; i < outputs; i++)
             {
                 OutputDescriptions[i] = new OutputDescription{OutputType = OutputType.Success};
             }

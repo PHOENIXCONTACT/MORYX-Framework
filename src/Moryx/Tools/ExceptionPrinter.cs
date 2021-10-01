@@ -6,7 +6,7 @@ using System.Text;
 namespace Moryx.Tools
 {
     /// <summary>
-    /// Helper class to append additional information 
+    /// Helper class to append additional information
     /// </summary>
     public static class ExceptionPrinter
     {
