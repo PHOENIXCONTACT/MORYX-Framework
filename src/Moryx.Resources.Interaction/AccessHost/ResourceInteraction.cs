@@ -7,22 +7,35 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+#if USE_WCF
 using System.ServiceModel;
 using System.ServiceModel.Web;
+#else
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Moryx.Communication.Endpoints;
+#endif
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Resources.Interaction.Converter;
 using Moryx.Serialization;
-using Moryx.Tools;
 
 namespace Moryx.Resources.Interaction
 {
     /// <seealso cref="IResourceInteraction"/>
-    [Plugin(LifeCycle.Singleton, typeof(IResourceInteraction))]
+    [Plugin(LifeCycle.Transient, typeof(IResourceInteraction))]
+#if USE_WCF
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, IncludeExceptionDetailInFaults = true)]
     internal class ResourceInteraction : IResourceInteraction, ILoggingComponent
+#else
+    [ApiController, Route(Endpoint), Produces("application/json")]
+    [Endpoint(Name = nameof(IResourceInteraction), Version = "5.0.0")]
+    internal class ResourceInteraction : Controller, IResourceInteraction, ILoggingComponent
+#endif
     {
+        internal const string Endpoint = "resources";
+
         #region Dependency Injection
 
         /// <summary>
@@ -48,6 +61,9 @@ namespace Moryx.Resources.Interaction
         #endregion
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("types")]
+#endif
         public ResourceTypeModel GetTypeTree()
         {
             return ExecuteCall<ResourceTypeModel>(delegate
@@ -58,6 +74,9 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("query")]
+#endif
         public ResourceModel[] GetResources(ResourceQuery query)
         {
             return ExecuteCall<ResourceModel[]>(delegate
@@ -71,6 +90,9 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("resource/{idString}")]
+#endif
         public ResourceModel GetDetails(string idString)
         {
             return ExecuteCall(delegate
@@ -85,11 +107,14 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("batch/{idString}")]
+#endif
         public ResourceModel[] GetDetailsBatch(string idString)
         {
             return ExecuteCall<ResourceModel[]>(delegate
             {
-                var ids = idString.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                var ids = idString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(long.Parse);
                 var converter = new ResourceToModelConverter(TypeTree, Serialization);
                 return ids.Select(Graph.Get).Where(r => r != null).Select(converter.GetDetails).ToArray();
@@ -97,7 +122,10 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
-        public Entry InvokeMethod(string idString, string name, Entry parameters)
+#if !USE_WCF
+        [HttpPost("resource/{idString}/invoke/{method}")]
+#endif
+        public Entry InvokeMethod(string idString, string method, Entry parameters)
         {
             return ExecuteCall<Entry>(delegate
             {
@@ -106,10 +134,11 @@ namespace Moryx.Resources.Interaction
                 if (resource == null)
                     return RequestResult<Entry>.NotFound($"Resource '{idString} not found!");
 
-                return EntryConvert.InvokeMethod(resource.Descriptor, new MethodEntry {Name = name, Parameters = parameters}, Serialization);
+                return EntryConvert.InvokeMethod(resource.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, Serialization);
             });
         }
 
+        //[HttpPost("construct/{type}")] <-- Model binding works differently/better in ASP, so we don't need two methods
         /// <inheritdoc />
         public ResourceModel Construct(string type)
         {
@@ -117,9 +146,16 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
-        public ResourceModel ConstructWithParameters(string type, string method, Entry arguments)
+#if !USE_WCF
+        [HttpPost("construct/{type}")] // ?method={method} resolved by ASP model binding
+
+        public ResourceModel ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
+#else
+        public ResourceModel ConstructWithParameters(string type, string method = null, Entry arguments = null)
+#endif
         {
-            return Construct(type, new MethodEntry {Name = method, Parameters = arguments});
+            return method == null ? Construct(type, null)
+                : Construct(type, new MethodEntry { Name = method, Parameters = arguments });
         }
 
         private ResourceModel Construct(string type, MethodEntry method)
@@ -140,6 +176,9 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpPost("resource")]
+#endif
         public ResourceModel Save(ResourceModel model)
         {
             return ExecuteCall<ResourceModel>(delegate
@@ -161,6 +200,9 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpPut("resource/{idString}")]
+#endif
         public ResourceModel Update(string idString, ResourceModel model)
         {
             return ExecuteCall<ResourceModel>(delegate
@@ -186,6 +228,9 @@ namespace Moryx.Resources.Interaction
         }
 
         /// <inheritdoc />
+#if !USE_WCF
+        [HttpDelete("resource/{idString}")]
+#endif
         public void Remove(string idString)
         {
             ExecuteCall(delegate
@@ -264,7 +309,11 @@ namespace Moryx.Resources.Interaction
                 if (result.AlternativeStatusCode.HasValue)
                 {
                     Logger.Log(LogLevel.Error, result.ErrorLog);
+#if USE_WCF
                     WebOperationContext.Current.OutgoingResponse.StatusCode = result.AlternativeStatusCode.Value;
+#else
+                    Response.StatusCode = (int)result.AlternativeStatusCode.Value;
+#endif
                     return default;
                 }
                 return result.Response;
@@ -272,7 +321,11 @@ namespace Moryx.Resources.Interaction
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Error, ex, "Exception during '{0}'", method);
+#if USE_WCF
                 WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+#else
+                Response.StatusCode = 500;
+#endif
                 return default;
             }
         }
