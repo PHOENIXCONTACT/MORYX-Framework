@@ -2,9 +2,9 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxCoreVersion>3.2.0-dev.347</MoryxCoreVersion>
+    <MoryxCoreVersion>3.2.0-dev.351</MoryxCoreVersion>
     <MoryxClientFrameworkVersion>3.1.0-dev.109</MoryxClientFrameworkVersion>
-    <MoryxMaintenanceWebVersion>3.0.0</MoryxMaintenanceWebVersion>
+    <MoryxMaintenanceWebVersion>3.1.0-dev.75</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
@@ -34,6 +34,7 @@
     <PackageReference Update="Moryx.Runtime.Wcf" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime.Maintenance" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Kestrel" Version="$(MoryxCoreVersion)" />
 
     <!--ClientFramework dependencies-->
     <PackageReference Update="Moryx.Controls" Version="$(MoryxClientFrameworkVersion)" />

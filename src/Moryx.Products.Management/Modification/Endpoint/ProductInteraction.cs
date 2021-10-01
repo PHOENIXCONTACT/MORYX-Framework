@@ -6,8 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+#if USE_WCF
 using System.ServiceModel;
 using System.ServiceModel.Web;
+#else
+using Microsoft.AspNetCore.Mvc;
+using Moryx.Communication.Endpoints;
+#endif
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Configuration;
@@ -19,10 +24,17 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management.Modification
 {
-    [Plugin(LifeCycle.Singleton, typeof(IProductInteraction))]
+    [Plugin(LifeCycle.Transient, typeof(IProductInteraction))]
+#if USE_WCF
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single, AddressFilterMode = AddressFilterMode.Any)]
     internal class ProductInteraction : IProductInteraction, ILoggingComponent
+#else
+    [ApiController, Route(Endpoint), Produces("application/json")]
+    [Endpoint(Name = nameof(IProductInteraction), Version = "5.0.0")]
+    internal class ProductInteraction : Controller, IProductInteraction, ILoggingComponent
+#endif
     {
+        internal const string Endpoint = "products";
         #region Dependencies
 
         public ModuleConfig Config { get; set; }
@@ -39,6 +51,9 @@ namespace Moryx.Products.Management.Modification
 
         #endregion
 
+#if !USE_WCF
+        [HttpGet("customization")]
+#endif
         public ProductCustomization GetCustomization()
         {
             return ExecuteCall<ProductCustomization>(delegate
@@ -88,6 +103,9 @@ namespace Moryx.Products.Management.Modification
         private static Entry ConvertParameters(object parametersObject) =>
             EntryConvert.EncodeObject(parametersObject, new PossibleValuesSerialization(null, new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider())));
 
+#if !USE_WCF
+        [HttpPut("import/{importer}/parameters")]
+#endif
         public Entry UpdateParameters(string importer, Entry importParameters)
         {
             return ExecuteCall(delegate
@@ -112,6 +130,9 @@ namespace Moryx.Products.Management.Modification
             return parameters;
         }
 
+#if !USE_WCF
+        [HttpPost("query")]
+#endif
         public ProductModel[] GetProducts(ProductQuery query)
         {
             return ExecuteCall<ProductModel[]>(delegate
@@ -121,6 +142,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpPost("construct/{type}")]
+#endif
         public ProductModel CreateProduct(string type)
         {
             return ExecuteCall(delegate
@@ -132,6 +156,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpGet("product/{idString}")]
+#endif
         public ProductModel GetProductDetails(string idString)
         {
             return ExecuteCall(delegate
@@ -139,10 +166,13 @@ namespace Moryx.Products.Management.Modification
                 IProductType product;
                 if (long.TryParse(idString, out var id) && (product = ProductManager.LoadType(id)) != null)
                     return Converter.ConvertProduct(product, false);
-                return RequestResult<ProductModel>.NotFound($"Product type '{idString}' not found!");
+                return RequestResult<ProductModel>.NotFound($"Product type '{id}' not found!");
             });
         }
 
+#if !USE_WCF
+        [HttpPut("product/{idString}")]
+#endif
         public ProductModel SaveProduct(string idString, ProductModel instance)
         {
             return ExecuteCall(delegate
@@ -157,6 +187,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpPost("product/{idString}/duplicate")]
+#endif
         public DuplicateProductResponse DuplicateProduct(string idString, ProductModel productModel)
         {
             return ExecuteCall(delegate
@@ -181,19 +214,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
-        public ProductModel ImportProduct(string importer, Entry importParameters)
-        {
-            return ExecuteCall(delegate
-            {
-                var parameters = ConvertParametersBack(importer, importParameters, true);
-                if (parameters == null)
-                    return RequestResult<ProductModel>.NotFound($"Importer '{importer}' not found!");
-
-                var products = ProductManager.Import(importer, parameters);
-                return Converter.ConvertProduct(products.Result.ImportedTypes[0], false);
-            });
-        }
-
+#if !USE_WCF
+        [HttpPost("import/{importer}")]
+#endif
         public ImportStateModel Import(string importer, Entry importParameters)
         {
             return ExecuteCall(delegate
@@ -207,6 +230,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpGet("import/session/{guid}")]
+#endif
         public ImportStateModel FetchImportProgress(string guid)
         {
             return ExecuteCall(delegate
@@ -222,6 +248,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpDelete("product/{idString}")]
+#endif
         public bool DeleteProduct(string idString)
         {
             return ExecuteCall<bool>(delegate
@@ -231,11 +260,17 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpGet("recipe/provider")]
+#endif
         public string GetRecipeProviderName()
         {
             return ModuleController.ModuleName;
         }
 
+#if !USE_WCF
+        [HttpGet("recipe/{idString}")]
+#endif
         public RecipeModel GetRecipe(string idString)
         {
             return ExecuteCall(delegate
@@ -247,18 +282,23 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
-        public RecipeModel[] GetRecipes(string idString)
+#if !USE_WCF
+        [HttpGet("recipes")] // Product parameter resolved by model binding
+#endif
+        public RecipeModel[] GetRecipes(string product)
         {
-
             return ExecuteCall(delegate
             {
-                IProductType product;
-                if (long.TryParse(idString, out var id) && (product = ProductManager.LoadType(id)) != null)
-                    return RecipeManagement.GetAllByProduct(product).Select(Converter.ConvertRecipe).ToArray();
-                return RequestResult<RecipeModel[]>.NotFound($"Product type '{idString}' not found!");
+                IProductType productType;
+                if (long.TryParse(product, out var id) && (productType = ProductManager.LoadType(id)) != null)
+                    return RecipeManagement.GetAllByProduct(productType).Select(Converter.ConvertRecipe).ToArray();
+                return RequestResult<RecipeModel[]>.NotFound($"Product type '{product}' not found!");
             });
         }
 
+#if !USE_WCF
+        [HttpPost("recipe/construct/{recipeType}")]
+#endif
         public RecipeModel CreateRecipe(string recipeType)
         {
             return ExecuteCall(delegate
@@ -272,6 +312,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpPost("recipe")]
+#endif
         public RecipeModel SaveRecipe(RecipeModel recipeModel)
         {
             return ExecuteCall(delegate
@@ -290,6 +333,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpPut("recipe/{idString}")]
+#endif
         public RecipeModel UpdateRecipe(string idString, RecipeModel recipeModel)
         {
             return ExecuteCall(delegate
@@ -306,6 +352,9 @@ namespace Moryx.Products.Management.Modification
             });
         }
 
+#if !USE_WCF
+        [HttpGet("workplans")]
+#endif
         public WorkplanModel[] GetWorkplans()
         {
             return ExecuteCall<WorkplanModel[]>(delegate
@@ -324,7 +373,11 @@ namespace Moryx.Products.Management.Modification
                 if (result.AlternativeStatusCode.HasValue)
                 {
                     Logger.Log(LogLevel.Error, result.ErrorLog);
+#if USE_WCF
                     WebOperationContext.Current.OutgoingResponse.StatusCode = result.AlternativeStatusCode.Value;
+#else
+                    Response.StatusCode = (int)result.AlternativeStatusCode.Value;
+#endif
                     return default;
                 }
                 return result.Response;
@@ -332,7 +385,11 @@ namespace Moryx.Products.Management.Modification
             catch (Exception ex)
             {
                 Logger.LogException(LogLevel.Error, ex, "Exception during '{0}'", method);
+#if USE_WCF
                 WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+#else
+                Response.StatusCode = 500;
+#endif
                 return default;
             }
         }
