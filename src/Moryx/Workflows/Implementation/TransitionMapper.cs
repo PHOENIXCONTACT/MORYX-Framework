@@ -23,7 +23,7 @@ namespace Moryx.Workflows
         private readonly List<IAttemptInvokation> _delegateMaps = new List<IAttemptInvokation>();
 
         /// <summary>
-        /// Create mapper that invokes synchronus
+        /// Create mapper that invokes synchronous
         /// </summary>
         public TransitionMapper()
         {
@@ -42,9 +42,9 @@ namespace Moryx.Workflows
         /// </summary>
         public void TransitionTriggered(object sender, ITransition transition)
         {
-            foreach (var invokation in _delegateMaps)
+            foreach (var invocation in _delegateMaps)
             {
-                if (invokation.TryInvoke(transition))
+                if (invocation.TryInvoke(transition))
                     break;
             }
         }
@@ -59,28 +59,28 @@ namespace Moryx.Workflows
         }
 
         /// <summary>
-        /// Map transition of a certain type to this methid
+        /// Map transition of a certain type to this method
         /// </summary>
         public ITransitionMapper Map<T>(Action<T> transitionHandler)
             where T : class, ITransition
         {
             if (_parallelOperations == null)
-                Map(new AttemptInvokation<T>(transitionHandler));
+                Map(new AttemptInvocation<T>(transitionHandler));
             else
-                Map(new AsyncAttemptInvokation<T>(_parallelOperations, transitionHandler));
-            
+                Map(new AsyncAttemptInvocation<T>(_parallelOperations, transitionHandler));
+
             return this;
         }
 
         /// <summary>
-        /// Delegate that trys to invoke the callback if type matches
+        /// Delegate that tries to invoke the callback if type matches
         /// </summary>
-        private struct AttemptInvokation<T> : IAttemptInvokation
+        private readonly struct AttemptInvocation<T> : IAttemptInvokation
             where T : class , ITransition
         {
             private readonly Action<T> _callback;
 
-            public AttemptInvokation(Action<T> callback)
+            public AttemptInvocation(Action<T> callback)
             {
                 _callback = callback;
             }
@@ -97,15 +97,15 @@ namespace Moryx.Workflows
         }
 
         /// <summary>
-        /// Delegate that trys to match the type and invokes the handler on a new thread
+        /// Delegate that tries to match the type and invokes the handler on a new thread
         /// </summary>
-        private struct AsyncAttemptInvokation<T> : IAttemptInvokation
+        private readonly struct AsyncAttemptInvocation<T> : IAttemptInvokation
             where T : class , ITransition
         {
             private readonly Action<T> _callback;
             private readonly IParallelOperations _parallelOperations;
 
-            public AsyncAttemptInvokation(IParallelOperations parallelOperations, Action<T> callback)
+            public AsyncAttemptInvocation(IParallelOperations parallelOperations, Action<T> callback)
             {
                 _parallelOperations = parallelOperations;
                 _callback = callback;
@@ -113,8 +113,7 @@ namespace Moryx.Workflows
 
             public bool TryInvoke(ITransition transition)
             {
-                var casted = transition as T;
-                if (casted == null)
+                if (!(transition is T casted))
                     return false;
 
                 _parallelOperations.ExecuteParallel(_callback, casted);

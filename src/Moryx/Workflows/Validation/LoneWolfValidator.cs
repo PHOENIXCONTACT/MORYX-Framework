@@ -52,7 +52,7 @@ namespace Moryx.Workflows.Validation
         public override string Print(IWorkplan workplan)
         {
             var targetStep = workplan.Steps.First(step => step.Id == PositionId);
-            return string.Format("Step {0} at position {1} is unreachable!", targetStep.Name, PositionId);
+            return $"Step {targetStep.Name} at position {PositionId} is unreachable!";
         }
     }
 }

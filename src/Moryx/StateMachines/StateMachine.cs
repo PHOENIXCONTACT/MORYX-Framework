@@ -20,7 +20,7 @@ namespace Moryx.StateMachines
         /// <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
         /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
         /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
-        /// <example> 
+        /// <example>
         /// This sample shows how to define states in the state base
         /// <code>
         /// internal abstract class MyStateBase : StateBase{MyContext}
@@ -38,7 +38,7 @@ namespace Moryx.StateMachines
         /// }
         /// </code>
         /// </example>
-        /// <example> 
+        /// <example>
         /// This sample shows how to create the state machine instance
         /// <code>
         /// public class SomeComponent : IStateContext
@@ -68,7 +68,7 @@ namespace Moryx.StateMachines
         ///  <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
         ///  <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
         ///  <exception cref="ArgumentException">Given base class is not abstract.</exception>
-        ///  <example> 
+        ///  <example>
         ///  This sample shows how to define states in the state base
         ///  <code>
         ///  internal abstract class MyStateBase : StateBase{MyContext}
@@ -76,16 +76,16 @@ namespace Moryx.StateMachines
         ///      protected MyStateBase(MyContext context, StateMap stateMap) : base(context, stateMap)
         ///      {
         ///      }
-        /// 
+        ///
         ///      [StateDefinition(typeof(AState), IsInitial = true)]
         ///      protected const int StateA = 10;
-        /// 
+        ///
         ///      [StateDefinition(typeof(BState))]
         ///      protected const int StateB = 20;
         /// }
         /// </code>
         /// </example>
-        /// <example> 
+        /// <example>
         /// This sample shows how reload a state machine
         /// <code>
         /// public class SomeComponent : IStateContext
@@ -95,12 +95,12 @@ namespace Moryx.StateMachines
         ///         // Initialize a state machine
         ///         StateMachine.Initialize(this).With&lt;MyStateBase&gt;();
         ///         _state.GoToAnotherState();
-        ///         
+        ///
         ///         // Get the key of the other state
         ///         var key = StateMachine.GetKey(_stat);
-        ///         
+        ///
         ///         // ... save key to db or somewhere else
-        /// 
+        ///
         ///         // Reload the state with the saved key
         ///         StateMachine.Reload(this, key).With&lt;MyStateBase&gt;();
         ///     }
@@ -134,7 +134,7 @@ namespace Moryx.StateMachines
         /// </summary>
         /// <param name="current">The current StateMachine</param>
         /// <param name="forceState">The target state to be forced</param>
-        /// <example> 
+        /// <example>
         /// This sample shows how to force a state
         /// <code>
         /// public class SomeComponent : IStateContext
@@ -158,7 +158,7 @@ namespace Moryx.StateMachines
         /// <param name="forceState">The target state to be forced</param>
         /// <param name="exitCurrent">If <c>true</c> <see cref="IState.OnExit"/> will be called before force.</param>
         /// <param name="enterForced">If <c>true</c> <see cref="IState.OnEnter"/> will be called on forced state.</param>
-        /// <example> 
+        /// <example>
         /// This sample shows how to force a state
         /// <code>
         /// public class SomeComponent : IStateContext

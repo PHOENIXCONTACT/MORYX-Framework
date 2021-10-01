@@ -50,7 +50,7 @@ namespace Moryx.Workflows.Validation
         public override string Print(IWorkplan workplan)
         {
             var connector = workplan.Connectors.First(c => c.Id == PositionId);
-            return string.Format("Connector {0} at postion {1} is not used as an input in any step!", connector.Name, PositionId);
+            return $"Connector {connector.Name} at position {PositionId} is not used as an input in any step!";
         }
     }
 }

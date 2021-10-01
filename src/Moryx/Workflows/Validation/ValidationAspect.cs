@@ -15,14 +15,17 @@ namespace Moryx.Workflows.Validation
         /// Detect any places that do not serve as an input for at least one transition
         /// </summary>
         DeadEnd = 1,
+
         /// <summary>
-        /// Find any constallation of transitions and places that will result in an infinite loop
+        /// Find any constellation of transitions and places that will result in an infinite loop
         /// </summary>
         InfiniteLoop = 2,
+
         /// <summary>
         /// Make sure their is a consistent path of success places through the workplan
         /// </summary>
         LuckyStreak = 4,
+
         /// <summary>
         /// Find any steps that is not linked to any other step and is unreachable
         /// </summary>

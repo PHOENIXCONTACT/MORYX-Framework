@@ -43,7 +43,7 @@ namespace Moryx.Tools
         }
 
         /// <summary>
-        /// Add an entry only if it does not exist allready
+        /// Add an entry only if it does not exist already
         /// </summary>
         public static void AddIfNotExists<TSource>(this ICollection<TSource> coll, TSource item) where TSource : class
         {
@@ -64,7 +64,7 @@ namespace Moryx.Tools
         }
 
         /// <summary>
-        /// Shuffles the list 
+        /// Shuffles the list
         /// </summary>
         public static void Shuffle<T>(this IList<T> list)
         {

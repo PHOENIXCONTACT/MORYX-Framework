@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace Moryx.Serialization
 {
@@ -11,7 +10,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Includes a short into an array of bytes
         /// </summary>
-        public unsafe static void Include(short value, byte[] bytes, ref int index)
+        public static unsafe void Include(short value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((short*)(b + index)) = value;
@@ -21,7 +20,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Includes a short into an array of bytes
         /// </summary>+
-        public unsafe static void Include(ushort value, byte[] bytes, ref int index)
+        public static unsafe void Include(ushort value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((ushort*)(b + index)) = value;
@@ -31,7 +30,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Includes an int into an array of bytes
         /// </summary>
-        public unsafe static void Include(int value, byte[] bytes, ref int index)
+        public static unsafe void Include(int value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((int*)(b + index)) = value;
@@ -41,7 +40,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Includes an int into an array of bytes
         /// </summary>
-        public unsafe static void Include(uint value, byte[] bytes, ref int index)
+        public static unsafe void Include(uint value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((uint*)(b + index)) = value;
@@ -51,7 +50,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Includes a long into an array of bytes
         /// </summary>
-        public unsafe static void Include(long value, byte[] bytes, ref int index)
+        public static unsafe void Include(long value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((long*)(b + index)) = value;
@@ -61,7 +60,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Includes a long into an array of bytes
         /// </summary>
-        public unsafe static void Include(ulong value, byte[] bytes, ref int index)
+        public static unsafe void Include(ulong value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((ulong*)(b + index)) = value;
@@ -71,7 +70,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Includes an int into an array of bytes
         /// </summary>
-        public unsafe static void Include(float value, byte[] bytes, ref int index)
+        public static unsafe void Include(float value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((float*)(b + index)) = value;
@@ -81,7 +80,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Includes a long into an array of bytes
         /// </summary>
-        public unsafe static void Include(double value, byte[] bytes, ref int index)
+        public static unsafe void Include(double value, byte[] bytes, ref int index)
         {
             fixed (byte* b = bytes)
                 *((double*)(b + index)) = value;

@@ -19,7 +19,7 @@ namespace Moryx.Tools
         }
 
         /// <summary>
-        /// Flatts a tree of objects. Sample: root.Flatten(c => c.Children)
+        /// Flats a tree of objects. Sample: root.Flatten(c => c.Children)
         /// </summary>
         public static IEnumerable<T> Flatten<T>(this IEnumerable<T> e, Func<T, IEnumerable<T>> f)
         {

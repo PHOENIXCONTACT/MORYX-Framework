@@ -14,7 +14,7 @@ namespace Moryx.Modules
         /// <summary>
         /// Config type expected by this <see cref="IPlugin"/>
         /// </summary>
-        public Type ExcpectedConfigType { get; private set; }
+        public Type ExcpectedConfigType { get; } // TODO: Rename to ExpectedConfigType in the next major
 
         /// <summary>
         /// State that this <see cref="IPlugin"/> requires config instances of the given type

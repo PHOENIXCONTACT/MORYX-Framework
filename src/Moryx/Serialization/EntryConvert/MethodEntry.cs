@@ -36,7 +36,7 @@ namespace Moryx.Serialization
         public string Description { get; set; }
 
         /// <summary>
-        /// Arguments of the 
+        /// Arguments of the
         /// </summary>
         [DataMember]
         public Entry Parameters { get; set; }
@@ -55,8 +55,8 @@ namespace Moryx.Serialization
             // All value types can be simply copied
             var copy = new MethodEntry
             {
-                Name = Name, 
-                DisplayName = DisplayName, 
+                Name = Name,
+                DisplayName = DisplayName,
                 Description = Description
             };
 
