@@ -89,7 +89,9 @@ namespace Moryx.Runtime.Kestrel
 
             var routeAtt = controller.GetCustomAttribute<RouteAttribute>();
             var endpointAtt = controller.GetCustomAttribute<EndpointAttribute>();
-            var route = "/" + routeAtt?.Template ?? string.Empty;
+            var route = "/";
+            if (routeAtt != null)
+                route += routeAtt.Template + "/";
             var address = $"http://{_portConfig.Host}:{_portConfig.HttpPort}{route}";
             _hostingContainer.Resolve<EndpointCollector>().AddEndpoint(address, new Endpoint
             {
@@ -111,7 +113,7 @@ namespace Moryx.Runtime.Kestrel
 
         public void Dispose()
         {
-            _host.StopAsync();
+            _host.Dispose();
         }
     }
 }
