@@ -11,6 +11,6 @@ namespace Moryx.Identity
         /// <summary>
         /// Checks access for the given resource and action on a principal
         /// </summary>
-        void CheckAccess(string resource, string action);
+        bool CheckAccess(string resource, string action);
     }
 }
