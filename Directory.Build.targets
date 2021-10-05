@@ -2,8 +2,8 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxPlatformVersion>3.0.0</MoryxPlatformVersion>
-    <MoryxClientFrameworkVersion>3.1.0-dev.105</MoryxClientFrameworkVersion>
+    <MoryxCoreVersion>3.2.0-dev.347</MoryxCoreVersion>
+    <MoryxClientFrameworkVersion>3.1.0-dev.109</MoryxClientFrameworkVersion>
     <MoryxMaintenanceWebVersion>3.0.0</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
@@ -24,16 +24,16 @@
     <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
 
     <!--Platform dependencies-->
-    <PackageReference Update="Moryx" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Container" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Tools.Wcf" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Model.PostgreSQL" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Model.InMemory" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.TestTools.UnitTest" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Runtime" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Runtime.Wcf" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Runtime.Maintenance" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Container" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Tools.Wcf" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Model.PostgreSQL" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Model.InMemory" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.TestTools.UnitTest" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Wcf" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Maintenance" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxCoreVersion)" />
 
     <!--ClientFramework dependencies-->
     <PackageReference Update="Moryx.Controls" Version="$(MoryxClientFrameworkVersion)" />
