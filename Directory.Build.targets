@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <MoryxCoreVersion>3.2.0-dev.351</MoryxCoreVersion>
-    <MoryxClientFrameworkVersion>3.1.0-dev.109</MoryxClientFrameworkVersion>
-    <MoryxMaintenanceWebVersion>3.1.0-dev.75</MoryxMaintenanceWebVersion>
+    <MoryxClientFrameworkVersion>3.1.0-dev.110</MoryxClientFrameworkVersion>
+    <MoryxMaintenanceWebVersion>3.1.0-dev.76</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />

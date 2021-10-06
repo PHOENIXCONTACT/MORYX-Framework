@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
+
 #if USE_WCF
 using Moryx.Resources.Wcf;
 using Moryx.Tools.Wcf;

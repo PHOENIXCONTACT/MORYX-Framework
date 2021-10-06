@@ -2,9 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
@@ -38,7 +36,7 @@ namespace Moryx.Resources.Interaction.Converter
 
         private ResourceReferenceModel[] FilteredReferences(Resource current)
         {
-            // Get references of the instance and filter them 
+            // Get references of the instance and filter them
             var properties = current.GetType().GetProperties();
             var references = GetReferences(properties);
 

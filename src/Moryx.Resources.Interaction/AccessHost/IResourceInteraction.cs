@@ -3,12 +3,12 @@
 
 using System.Net;
 using Moryx.Serialization;
+
 #if USE_WCF
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Moryx.Tools.Wcf;
 #endif
-
 
 namespace Moryx.Resources.Interaction
 {

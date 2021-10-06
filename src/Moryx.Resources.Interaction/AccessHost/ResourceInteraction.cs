@@ -7,6 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Resources.Interaction.Converter;
+using Moryx.Serialization;
+
 #if USE_WCF
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -15,11 +21,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moryx.Communication.Endpoints;
 #endif
-using Moryx.AbstractionLayer.Resources;
-using Moryx.Container;
-using Moryx.Logging;
-using Moryx.Resources.Interaction.Converter;
-using Moryx.Serialization;
 
 namespace Moryx.Resources.Interaction
 {
