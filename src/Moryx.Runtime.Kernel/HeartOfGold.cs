@@ -19,7 +19,7 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Base kernel loader for the runtime
     /// </summary>
-    public class HeartOfGold
+    public class HeartOfGold : IApplicationRuntime
     {
         private string[] _args;
 
@@ -27,19 +27,17 @@ namespace Moryx.Runtime.Kernel
         /// Current global container
         /// </summary>
         private IContainer _container;
+
+        /// <inheritdoc />
+        public IContainer GlobalContainer => _container;
+
         /// <summary>
         /// Creates an instance of the <see cref="HeartOfGold"/>
         /// </summary>
         public HeartOfGold(string[] args)
         {
             PrepareArguments(args);
-        }
 
-        /// <summary>
-        /// Starts the runtime
-        /// </summary>
-        public RuntimeErrorCode Run()
-        {
             // Set working directory to location of this exe
             // ReSharper disable once AssignNullToNotNullAttribute
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
@@ -55,7 +53,13 @@ namespace Moryx.Runtime.Kernel
 
             // Prepare container
             _container = CreateContainer();
+        }
 
+        /// <summary>
+        /// Starts the runtime
+        /// </summary>
+        public RuntimeErrorCode Run()
+        {
             // Load and run environment
             var loadResult = LoadEnvironment(out var env);
             var returnCode = RuntimeErrorCode.NoError;

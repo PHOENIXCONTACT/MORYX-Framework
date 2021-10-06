@@ -13,9 +13,9 @@ namespace Moryx.Runtime.Kestrel
     /// <summary>
     /// Default StartUp used by MORYX Kestrel Hosting
     /// </summary>
-    internal class Startup
+    public class Startup
     {
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             services
                 .AddControllers()
@@ -45,7 +45,7 @@ namespace Moryx.Runtime.Kestrel
             services.AddCors();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public virtual void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
 
