@@ -2,13 +2,17 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
+using Moryx.Communication.Endpoints;
 using Moryx.Model;
+using Moryx.Modules;
 using Moryx.Products.Management.Importers;
 using Moryx.Products.Management.Modification;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
+#if USE_WCF
 using Moryx.Runtime.Wcf;
 using Moryx.Tools.Wcf;
+#endif
 
 namespace Moryx.Products.Management
 {
@@ -30,11 +34,16 @@ namespace Moryx.Products.Management
         public IDbContextManager DbContextManager { get; set; }
 
         /// <summary>
-        /// Host factory to create wcf hosts
+        /// Endpoint hosting
         /// </summary>
+#if USE_WCF
+        
         public IWcfHostFactory WcfHostFactory { get; set; }
+#else
+        public IEndpointHosting Hosting { get; set; }
+#endif
 
-        private IConfiguredServiceHost _host;
+        private IEndpointHost _host;
 
         #region State transition
 
@@ -44,8 +53,13 @@ namespace Moryx.Products.Management
         protected override void OnInitialize()
         {
             // Extend container
-            Container.RegisterWcf(WcfHostFactory);
-            Container.ActivateDbContexts(DbContextManager);
+            Container
+#if USE_WCF
+                .RegisterWcf(WcfHostFactory)
+#else
+                .ActivateHosting(Hosting)
+#endif
+                .ActivateDbContexts(DbContextManager);
 
             // Register imports
             Container.SetInstance(ConfigManager);
@@ -72,7 +86,12 @@ namespace Moryx.Products.Management
             Container.Resolve<IProductManager>().Start();
 
             // Start all plugins
-            _host = Container.Resolve<IConfiguredHostFactory>().CreateHost<IProductInteraction>(Config.InteractionHost);
+            _host = Container.Resolve<IEndpointHostFactory>().CreateHost(typeof(IProductInteraction),
+#if USE_WCF
+                Config.InteractionHost);
+#else
+                null);
+#endif
             _host.Start();
 
             // Activate facades
@@ -90,16 +109,16 @@ namespace Moryx.Products.Management
             _host.Stop();
             _host = null;
         }
-        #endregion
+#endregion
 
-        #region FacadeContainer
+#region FacadeContainer
         private readonly ProductManagementFacade _productManagement = new ProductManagementFacade();
         IProductManagement IFacadeContainer<IProductManagement>.Facade
         {
             get { return _productManagement; }
         }
 
-        #endregion
+#endregion
     }
 
 }
