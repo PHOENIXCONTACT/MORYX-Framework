@@ -141,7 +141,7 @@ namespace Moryx.Resources.Interaction
 
         //[HttpPost("construct/{type}")] <-- Model binding works differently/better in ASP, so we don't need two methods
         /// <inheritdoc />
-        public ResourceModel Construct(string type)
+        ResourceModel IResourceInteraction.Construct(string type) // Explicit method to hide WCF from ASP and Swagger
         {
             return Construct(type, null);
         }
