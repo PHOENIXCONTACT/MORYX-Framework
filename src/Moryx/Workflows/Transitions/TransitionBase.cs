@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.Workflows.Transitions
 {
@@ -22,14 +21,14 @@ namespace Moryx.Workflows.Transitions
 
         #region ITokenHolder
 
-        /// 
+        ///
         public long Id { get; set; }
 
         /// <summary>
         /// All tokens that were taken by this transition and are waiting to be placed on an output
         /// </summary>
         protected IList<IToken> StoredTokens { get; private set; }
-        /// 
+        ///
         public IEnumerable<IToken> Tokens
         {
             get { return StoredTokens; }
@@ -37,7 +36,7 @@ namespace Moryx.Workflows.Transitions
         }
 
         private bool _executing;
-        /// 
+        ///
         bool ITransition.Executing { get { return _executing; } }
 
         /// <summary>
@@ -100,7 +99,7 @@ namespace Moryx.Workflows.Transitions
 
         #region ITransition
 
-        /// 
+        ///
         public virtual void Initialize()
         {
             foreach (var input in Inputs)
@@ -112,10 +111,10 @@ namespace Moryx.Workflows.Transitions
         ///
         protected abstract void InputTokenAdded(object sender, IToken token);
 
-        /// 
+        ///
         public IPlace[] Inputs { get; set; }
 
-        /// 
+        ///
         public IPlace[] Outputs { get; set; }
 
         #endregion
@@ -150,7 +149,7 @@ namespace Moryx.Workflows.Transitions
         /// <summary>
         /// Resolves index by comparing the mapping value to the OutputDescriptions
         /// </summary>
-        private struct DescriptionResolver : IIndexResolver
+        private readonly struct DescriptionResolver : IIndexResolver
         {
             private readonly OutputDescription[] _descriptions;
 
@@ -169,7 +168,7 @@ namespace Moryx.Workflows.Transitions
                     if (_descriptions[i].MappingValue == mappingValue)
                         return i;
                 }
-                throw new ArgumentOutOfRangeException("mappingValue");
+                throw new ArgumentOutOfRangeException(nameof(mappingValue));
             }
         }
     }
@@ -192,8 +191,8 @@ namespace Moryx.Workflows.Transitions
         /// </summary>
         public override object InternalState
         {
-            get { return State; }
-            set { State = (TInternalState)value; }
+            get => State;
+            set => State = (TInternalState)value;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Moryx.Workflows.WorkplanSteps
         public SubworkflowStep(IWorkplan workplan) : base(workplan)
         {
         }
-        
+
         private IIndexResolver _indexResolver;
         /// <summary>
         /// Instantiate transition from this step
@@ -31,7 +31,7 @@ namespace Moryx.Workflows.WorkplanSteps
         protected override TransitionBase Instantiate(IWorkplanContext context)
         {
             var engine = Workflow.CreateEngine(Workplan, context);
-            var indexResolver = _indexResolver ?? (_indexResolver = TransitionBase.CreateIndexResolver(OutputDescriptions));
+            var indexResolver = _indexResolver ??= TransitionBase.CreateIndexResolver(OutputDescriptions);
             var transition = new SubworkflowTransition(engine, indexResolver);
             return transition;
         }

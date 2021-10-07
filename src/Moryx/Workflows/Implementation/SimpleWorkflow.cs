@@ -12,7 +12,7 @@ namespace Moryx.Workflows
     internal class SimpleWorkflow : IWorkflow
     {
         /// <summary>
-        /// Constructor to create workflow from places and transistions
+        /// Constructor to create workflow from places and transitions
         /// </summary>
         public SimpleWorkflow(IWorkplan workplan, IReadOnlyList<IPlace> places, IReadOnlyList<ITransition> transitions)
         {
@@ -37,7 +37,7 @@ namespace Moryx.Workflows
         public IReadOnlyList<ITransition> Transitions { get; }
     }
 
-    internal static class WorkflowExtenstions
+    internal static class WorkflowExtensions
     {
         public static IEnumerable<IPlace> StartPlaces(this IWorkflow workflow)
         {

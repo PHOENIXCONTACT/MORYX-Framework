@@ -234,7 +234,7 @@ namespace Moryx.Threading
         #endregion
 
         /// <summary>
-        /// Handle exception that occured in execution and would have killed the application
+        /// Handle exception that occurred in execution and would have killed the application
         /// </summary>
         private void HandleException(Exception ex, Delegate operation, bool criticalOperation)
         {

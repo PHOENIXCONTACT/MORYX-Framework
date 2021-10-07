@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Moryx.Tools;
@@ -173,7 +172,7 @@ namespace Moryx.Workflows
         private readonly long _targetId;
 
         /// <summary>
-        /// All end places reachable from 
+        /// All end places reachable from
         /// </summary>
         private readonly List<IConnector> _results = new List<IConnector>();
 
@@ -190,7 +189,7 @@ namespace Moryx.Workflows
         {
             get
             {
-                return _results.Aggregate(int.MaxValue, // Seed 
+                return _results.Aggregate(int.MaxValue, // Seed
                     (current, connector) => current & (int)connector.Classification,
                     result => (NodeClassification)result);
             }

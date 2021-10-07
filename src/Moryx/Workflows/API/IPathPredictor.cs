@@ -17,7 +17,7 @@ namespace Moryx.Workflows
         int MonitoredEngines { get; }
 
         /// <summary>
-        /// Monitor the engine of a worklow to predict its outcome
+        /// Monitor the engine of a workflow to predict its outcome
         /// </summary>
         void Monitor(IWorkflowEngine instance);
 
@@ -39,8 +39,8 @@ namespace Moryx.Workflows
     public class PathPredictionEventArgs : EventArgs
     {
         /// <summary>
-        /// Create a <see cref="PathPredictionEventArgs"/> instance for the predicated outcome of a 
-        /// <see cref="IWorkflowEngine"/> with absolute certaintity
+        /// Create a <see cref="PathPredictionEventArgs"/> instance for the predicated outcome of a
+        /// <see cref="IWorkflowEngine"/> with absolute certainty
         /// </summary>
         public PathPredictionEventArgs(IWorkflowEngine engineInstance, NodeClassification predictedOutcome)
         : this(engineInstance, predictedOutcome, 1)
@@ -48,7 +48,7 @@ namespace Moryx.Workflows
         }
 
         /// <summary>
-        /// Create a <see cref="PathPredictionEventArgs"/> instance for the predicated outcome of a 
+        /// Create a <see cref="PathPredictionEventArgs"/> instance for the predicated outcome of a
         /// <see cref="IWorkflowEngine"/> with a certain probability
         /// </summary>
         public PathPredictionEventArgs(IWorkflowEngine engineInstance, NodeClassification predictedOutcome, double probability)
@@ -69,7 +69,7 @@ namespace Moryx.Workflows
         public NodeClassification PredictedOutcome { get; }
 
         /// <summary>
-        /// Probability of the prediction. Values greater or equal <value>1.0</value> indicate 
+        /// Probability of the prediction. Values greater or equal <value>1.0</value> indicate
         /// absolute certainty about the result.
         /// </summary>
         public double Probability { get; }

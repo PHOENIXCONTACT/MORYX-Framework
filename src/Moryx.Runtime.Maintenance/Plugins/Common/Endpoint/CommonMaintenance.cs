@@ -4,22 +4,35 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.ServiceModel;
 using Moryx.Container;
+
+#if USE_WCF
+using System.ServiceModel;
+#else
+using Microsoft.AspNetCore.Mvc;
+using Moryx.Communication.Endpoints;
+#endif
 
 namespace Moryx.Runtime.Maintenance.Plugins.Common
 {
     /// <summary>
     /// Wcf service implementations for the common maintenance.
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     [Plugin(LifeCycle.Transient, typeof(ICommonMaintenance))]
+#if USE_WCF
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     internal class CommonMaintenance : ICommonMaintenance
+#else
+    [ApiController, Route(Endpoint), Produces("application/json")]
+    [Endpoint(Name = nameof(ICommonMaintenance), Version = "3.0.0")]
+    internal class CommonMaintenance : Controller, ICommonMaintenance
+#endif
     {
-        /// <summary>
-        /// Get the current server time.
-        /// </summary>
-        /// <returns>The current server time.</returns>
+        internal const string Endpoint = "common";
+
+#if !USE_WCF
+        [HttpGet("time")]
+#endif
         public ServerTimeResponse GetServerTime()
         {
             return new ServerTimeResponse
@@ -28,7 +41,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             };
         }
 
-        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("info/application")]
+#endif
         public ApplicationInformationResponse GetApplicationInfo()
         {
             var currentPlatform = Platform.Current;
@@ -41,7 +56,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             };
         }
 
-        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("info/system")]
+#endif
         public HostInformationResponse GetHostInfo()
         {
             return new HostInformationResponse
@@ -52,7 +69,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             };
         }
 
-        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("info/system/load")]
+#endif
         public SystemLoadResponse GetSystemLoad()
         {
             var physicalMemory = HostHelper.PhysicalMemory();
@@ -65,7 +84,9 @@ namespace Moryx.Runtime.Maintenance.Plugins.Common
             };
         }
 
-        /// <inheritdoc />
+#if !USE_WCF
+        [HttpGet("info/application/load")]
+#endif
         public ApplicationLoadResponse GetApplicationLoad()
         {
             var physicalMemory = HostHelper.PhysicalMemory();

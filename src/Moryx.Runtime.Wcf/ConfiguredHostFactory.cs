@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.Communication.Endpoints;
+using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Tools.Wcf;
 

@@ -11,7 +11,7 @@ namespace Moryx.Runtime.Wcf
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, IncludeExceptionDetailInFaults = true)]
     internal class VersionService : IVersionService
     {
-        public IEndpointCollector Collector { get; set; }
+        public EndpointCollector Collector { get; set; }
 
         public Endpoint[] AllEndpoints()
         {

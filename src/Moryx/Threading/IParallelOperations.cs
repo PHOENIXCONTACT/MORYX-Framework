@@ -6,7 +6,7 @@ using System;
 namespace Moryx.Threading
 {
     /// <summary>
-    /// Interface for operations that should be executed parallely without redundant try catch
+    /// Interface for operations that should be executed in parallel without redundant try catch
     /// </summary>
     public interface IParallelOperations : IDisposable
     {

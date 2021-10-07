@@ -7,7 +7,7 @@ using System.Threading;
 namespace Moryx.Threading
 {
     /// <summary>
-    /// This class can wrap a timer callback in a way to make sure that if the execution 
+    /// This class can wrap a timer callback in a way to make sure that if the execution
     /// exceeds the call duration the timer threads do not accumulate.
     /// </summary>
     public class NonStackingTimerCallback

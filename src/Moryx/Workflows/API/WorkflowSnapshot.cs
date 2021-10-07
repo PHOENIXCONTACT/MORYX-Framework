@@ -30,7 +30,7 @@ namespace Moryx.Workflows
     public class WorkflowSnapshot
     {
         /// <summary>
-        /// Name of the workplan type 
+        /// Name of the workplan type
         /// </summary>
         public string WorkplanName { get; set; }
 

@@ -4,7 +4,7 @@
 namespace Moryx.Workflows
 {
     /// <summary>
-    /// Connector of one or more transistions
+    /// Connector of one or more transitions
     /// </summary>
     public interface IConnector : IWorkplanNode
     {

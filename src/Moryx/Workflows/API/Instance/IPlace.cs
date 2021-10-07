@@ -21,7 +21,7 @@ namespace Moryx.Workflows
         void Add(IToken token);
 
         /// <summary>
-        /// Remove token from 
+        /// Remove token from
         /// </summary>
         void Remove(IToken token);
 

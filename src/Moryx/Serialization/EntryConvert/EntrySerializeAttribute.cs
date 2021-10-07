@@ -17,6 +17,9 @@ namespace Moryx.Serialization
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="EntrySerializeAttribute"/>.
+        /// </summary>
         public EntrySerializeAttribute(EntrySerializeMode mode)
         {
             Mode = mode;

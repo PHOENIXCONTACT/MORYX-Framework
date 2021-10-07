@@ -53,8 +53,8 @@ namespace Moryx.Workflows.WorkplanSteps
         /// <see cref="ISubworkplanStep"/>
         IWorkplan ISubworkplanStep.Workplan
         {
-            get { return Workplan; }
-            set { Workplan = value; }
+            get => Workplan;
+            set => Workplan = value;
         }
     }
 }

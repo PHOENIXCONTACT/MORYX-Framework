@@ -4,14 +4,17 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using Moryx.Communication.Endpoints;
 using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
-using Moryx.Runtime.Maintenance.Plugins;
 using Moryx.Runtime.Modules;
-using Moryx.Runtime.Wcf;
+
+#if USE_WCF
 using Moryx.Tools.Wcf;
+using Moryx.Runtime.Wcf;
+#endif
 
 namespace Moryx.Runtime.Maintenance
 {
@@ -44,9 +47,17 @@ namespace Moryx.Runtime.Maintenance
         public IRuntimeConfigManager RuntimeConfigManager { get; set; }
 
         /// <summary>
+        /// Endpoint hosting
+        /// </summary>
+        public IEndpointHosting Hosting { get; set; }
+
+#if USE_WCF
+        /// <summary>
         /// Factory to create wcf hosts
+        /// Endpoint hosting
         /// </summary>
         public IWcfHostFactory WcfHostFactory { get; set; }
+#endif
 
         /// <summary>
         /// Set the module manager. Not injected by castle.
@@ -69,9 +80,13 @@ namespace Moryx.Runtime.Maintenance
         /// </summary>
         protected override void OnInitialize()
         {
-            Container.RegisterWcf(WcfHostFactory)
-                .SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
-                .SetInstance((IServerLoggerManagement)LoggerManagement);
+#if USE_WCF
+            Container.RegisterWcf(WcfHostFactory);
+#else
+            Container.ActivateHosting(Hosting);
+#endif
+            Container.SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
+                .SetInstance(LoggerManagement);
 
             Container.SetInstance(DbContextManager);
 
