@@ -8,8 +8,11 @@ using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
 using Moryx.Configuration;
 using Moryx.Products.Management.Importers;
+using Moryx.Products.Management.Modification;
 using Moryx.Serialization;
+#if USE_WCF
 using Moryx.Tools.Wcf;
+#endif
 
 namespace Moryx.Products.Management
 {
@@ -19,6 +22,7 @@ namespace Moryx.Products.Management
     [DataContract]
     public class ModuleConfig : ConfigBase
     {
+#if USE_WCF
         /// <summary>
         /// Constructor which will set default values to the interaction host.
         /// </summary>
@@ -27,11 +31,12 @@ namespace Moryx.Products.Management
             InteractionHost = new HostConfig
             {
                 BindingType = ServiceBindingType.WebHttp,
-                Endpoint = "products",
+                Endpoint = ProductInteraction.Endpoint,
                 MetadataEnabled = true,
                 HelpEnabled = true
             };
         }
+#endif
 
         /// <inheritdoc />
         protected override void Initialize()
@@ -55,11 +60,13 @@ namespace Moryx.Products.Management
         [Description("Maximum wait time for an import in seconds")]
         public int MaxImporterWait { get; set; }
 
+#if USE_WCF
         /// <summary>
         /// The interaction host.
         /// </summary>
         [DataMember]
         public HostConfig InteractionHost { get; set; }
+#endif
 
         /// <summary>
         /// List of configured importers

@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Communication;
+using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Notifications;
@@ -38,7 +39,6 @@ namespace Moryx.Resources.Management
         public IDbContextManager DbContextManager { get; set; }
 
 #if HAVE_WCF
-
         /// <summary>Injected property</summary>
         public IWcfClientFactory WcfClientFactory { get; set; }
 
@@ -46,8 +46,13 @@ namespace Moryx.Resources.Management
         /// Host factory to create wcf hosts
         /// </summary>
         public IWcfHostFactory WcfHostFactory { get; set; }
-
 #endif
+
+        /// <summary>
+        /// Endpoint hosting
+        /// </summary>
+        public IEndpointHosting EndpointHosting { get; set; }
+
 
         /// <summary>Injected property</summary>
         public IRuntimeConfigManager ConfManager { get; set; }
@@ -61,13 +66,18 @@ namespace Moryx.Resources.Management
             Container.RegisterNotifications();
 #if HAVE_WCF
             Container.RegisterWcf(WcfHostFactory);
+#else
+            Container.ActivateHosting(EndpointHosting);
 #endif
+
             Container.ActivateDbContexts(DbContextManager);
 
             // Register imports
+            Container
 #if HAVE_WCF
-            Container.SetInstance(WcfClientFactory).SetInstance(ConfManager);
+                .SetInstance(WcfClientFactory)
 #endif
+                .SetInstance(ConfManager);
 
             // Register for communication
             Container.Register<IBinaryConnectionFactory>();
