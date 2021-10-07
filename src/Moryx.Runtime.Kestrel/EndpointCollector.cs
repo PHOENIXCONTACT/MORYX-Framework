@@ -7,7 +7,7 @@ using Moryx.Communication.Endpoints;
 
 namespace Moryx.Runtime.Kestrel
 {
-    public class EndpointCollector
+    internal class EndpointCollector
     {
         private readonly Dictionary<string, Endpoint> _endpoints = new Dictionary<string, Endpoint>();
 

@@ -8,6 +8,7 @@ using System.Net;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -89,18 +90,21 @@ namespace Moryx.Runtime.Kestrel
                 _linkedControllers.Add(proxyResolver);
             _hostingContainer.Kernel.Resolver.AddSubResolver(proxyResolver);
 
-            var routeAtt = controller.GetCustomAttribute<RouteAttribute>();
-            var endpointAtt = controller.GetCustomAttribute<EndpointAttribute>();
             var route = "/";
+            var routeAtt = controller.GetCustomAttribute<RouteAttribute>();
             if (routeAtt != null)
                 route += routeAtt.Template + "/";
             var address = $"http://{_portConfig.Host}:{_portConfig.HttpPort}{route}";
+
+            var authorizeAttr = controller.GetCustomAttribute<AuthorizeAttribute>();
+            var endpointAtt = controller.GetCustomAttribute<EndpointAttribute>();
             _hostingContainer.Resolve<EndpointCollector>().AddEndpoint(address, new Endpoint
             {
                 Address = address,
                 Path = route,
                 Service = endpointAtt?.Name ?? controller.Name,
-                Version = endpointAtt?.Version ?? "1.0.0"
+                Version = endpointAtt?.Version ?? "1.0.0",
+                RequiresAuthentication = authorizeAttr != null
             });
         }
 

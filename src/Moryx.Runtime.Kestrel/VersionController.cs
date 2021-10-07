@@ -9,7 +9,7 @@ namespace Moryx.Runtime.Kestrel
 {
     [ApiController, Route("endpoints")]
     [Produces("application/json")]
-    public class VersionController : Controller
+    internal class VersionController : Controller
     {
         public EndpointCollector Collector { get; set; }
 

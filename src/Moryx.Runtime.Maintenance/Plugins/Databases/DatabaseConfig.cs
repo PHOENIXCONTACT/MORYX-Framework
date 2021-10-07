@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
     /// Configuration for the database maintenance plugin.
     /// </summary>
     [DataContract]
-    public class DatabaseConfig : MaintenancePluginConfig
+    internal class DatabaseConfig : MaintenancePluginConfig
     {
         /// <summary>
         /// Name of the plugin.

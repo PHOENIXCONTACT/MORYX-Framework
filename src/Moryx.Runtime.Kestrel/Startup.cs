@@ -41,7 +41,6 @@ namespace Moryx.Runtime.Kestrel
                 })
                 .AddControllersAsServices();
 
-            services.AddAuthorization();
             services.AddCors();
         }
 

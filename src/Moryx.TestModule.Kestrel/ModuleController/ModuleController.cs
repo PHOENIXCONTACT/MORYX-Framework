@@ -9,11 +9,11 @@ using Moryx.Runtime.Modules;
 namespace Moryx.TestModule.Kestrel
 {
     [ServerModule(ModuleName)]
-    [Description("Test module for testing ")]
+    [Description("Test module for testing kestrel services")]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>
     {
         private IEndpointHost _host;
-        public const string ModuleName = "KestrelTester";
+        public const string ModuleName = "TestModuleKestrel";
 
         #region Dependencies
 

@@ -11,7 +11,6 @@ namespace Moryx.Runtime.Kestrel
     internal class KestrelEndpointHost : IEndpointHost, IDisposable
     {
         private readonly Type _controller;
-        private readonly object _config;
         private readonly IContainer _container;
         /// <summary>
         /// Kestrel hosting responsible for the controller
@@ -24,14 +23,12 @@ namespace Moryx.Runtime.Kestrel
 
         public KestrelEndpointHost(Type endpoint, object config, IContainer container)
         {
-            _config = config;
             _container = container;
-            
+
             // If the endpoint is registered, use the implementation for controller matching
-            if (_container.GetRegisteredImplementations(endpoint).Any())
-                _controller = _container.GetRegisteredImplementations(endpoint).FirstOrDefault();
-            else
-                _controller = endpoint;
+            _controller = _container.GetRegisteredImplementations(endpoint).Any()
+                ? _container.GetRegisteredImplementations(endpoint).FirstOrDefault()
+                : endpoint;
         }
 
         public void Start()
