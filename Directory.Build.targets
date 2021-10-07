@@ -2,9 +2,9 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxCoreVersion>3.2.0-dev.351</MoryxCoreVersion>
-    <MoryxClientFrameworkVersion>3.1.0-dev.110</MoryxClientFrameworkVersion>
-    <MoryxMaintenanceWebVersion>3.1.0-dev.76</MoryxMaintenanceWebVersion>
+    <MoryxCoreVersion>3.2.0</MoryxCoreVersion>
+    <MoryxClientFrameworkVersion>3.1.0</MoryxClientFrameworkVersion>
+    <MoryxMaintenanceWebVersion>3.1.0</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
@@ -18,7 +18,7 @@
   <ItemGroup>
     <!--3rd party dependencies-->
     <PackageReference Update="Caliburn.Micro" Version="3.2.0" />
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.8.0" />
     <PackageReference Update="Moq" Version="4.16.1" />
     <PackageReference Update="NUnit" Version="3.13.1" />
     <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
