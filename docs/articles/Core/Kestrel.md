@@ -65,24 +65,39 @@ public virtual void Start()
 
 ## Host extension
 
-If you wish to add the ASP host running in the background you can do this from your executable with an extension on `HeartOfGold`.
+If you wish to add the ASP host running in the background you can do this from your executable with an extension on `HeartOfGold`. For example to add swagger look at the example below
 
 ```cs
 static int Main(string[] args)
 {
     var hog = new HeartOfGold(args);
-    hog.UseStartup<CustomStartup>();
-    var result = loader.Run();
-    return (int)result;
+    hog.UseStartup<SwaggerStartup>();
+    hog.Run();
 }
 
-public class CustomStartup : Startup
+internal class SwaggerStartup : Startup
 {
     public override void ConfigureServices(IServiceCollection services)
     {
-        base.ConfigureServices(services); // The base call creates default MORYX hosting behavior. Only omit with caution!
+        base.ConfigureServices(services);
 
-        services.AddDirectoryBrowser();
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "MORYX API", Version = "v1" });
+        });
+    }
+
+    public override void Configure(IApplicationBuilder app)
+    {
+        base.Configure(app);
+
+        app.UseDeveloperExceptionPage();
+
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "MORYX API v1");
+        });
     }
 }
 ```
