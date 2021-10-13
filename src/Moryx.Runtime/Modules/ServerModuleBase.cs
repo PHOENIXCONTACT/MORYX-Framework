@@ -92,7 +92,8 @@ namespace Moryx.Runtime.Modules
             Container = ContainerFactory.Create(Strategies, GetType().Assembly)
                 .Register<IParallelOperations, ParallelOperations>()
                 // Register instances for this cycle
-                .SetInstance(Config).SetInstance(Logger);
+                .SetInstance(Config)
+                .SetInstance(Logger);
 
             OnInitialize();
 

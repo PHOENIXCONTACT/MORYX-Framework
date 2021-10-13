@@ -21,7 +21,7 @@ namespace Moryx.Tools.Wcf
             ServiceManager.Initialize();
 
             // Start wcf host with the binding specific service
-            Service = HostFactory.CreateHost<TService>(Config.ConnectorHost);
+            Service = HostFactory.CreateHost(typeof(TService), Config.ConnectorHost);
             Service.Start();
         }
     }

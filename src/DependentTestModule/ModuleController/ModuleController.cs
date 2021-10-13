@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.Threading;
+using Moryx.Communication.Endpoints;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Wcf;
@@ -26,18 +27,19 @@ namespace Moryx.DependentTestModule
         public ITestModule TestModule { get; set; }
 
         /// <summary>
-        /// Host factory to create wcf services
+        /// Host factory to create services
         /// </summary>
-        public IWcfHostFactory WcfHostFactory { get; set; }
+        public IEndpointHosting EndpointHosting { get; set; }
 
         #region State transition
+
         // ReSharper disable RedundantOverridenMember
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
         protected override void OnInitialize()
         {
-            Container.RegisterWcf(WcfHostFactory);
+            Container.ActivateHosting(EndpointHosting);
             Container.LoadComponents<ISimpleHelloWorldWcfConnector>();
         }
 

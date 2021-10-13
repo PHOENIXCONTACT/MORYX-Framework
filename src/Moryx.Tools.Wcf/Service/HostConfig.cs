@@ -29,7 +29,7 @@ namespace Moryx.Tools.Wcf
         /// Flag if service requires Authentication
         /// </summary>
         [DataMember]
-        public bool RequiresAuthentification { get; set; }
+        public bool RequiresAuthentication { get; set; }
 
         /// <summary>
         /// Metadata page enabled

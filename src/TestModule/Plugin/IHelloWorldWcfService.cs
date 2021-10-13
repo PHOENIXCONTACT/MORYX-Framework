@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ServiceModel;
+using Moryx.Communication.Endpoints;
 using Moryx.Tools.Wcf;
 
 namespace Moryx.TestModule
 {
-    [ServiceVersion(HelloWorldWcfService.ServerVersion)]
+    [Endpoint(Name = nameof(IHelloWorldWcfService), Version = HelloWorldWcfService.ServerVersion)]
     [ServiceContract(SessionMode = SessionMode.Required, CallbackContract = typeof(IHelloWorldWcfServiceCallback))]
     public interface IHelloWorldWcfService : ISessionService
     {

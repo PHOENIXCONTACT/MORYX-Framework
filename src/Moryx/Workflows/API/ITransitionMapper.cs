@@ -17,9 +17,9 @@ namespace Moryx.Workflows
         void TransitionTriggered(object sender, ITransition transition);
 
         /// <summary>
-        /// Register another <see cref="IAttemptInvokation"/> strategy
+        /// Register another <see cref="IAttemptInvocation"/> strategy
         /// </summary>
-        ITransitionMapper Map(IAttemptInvokation invokation); // TODO: Rename to invocation in the next major
+        ITransitionMapper Map(IAttemptInvocation invocation);
 
         /// <summary>
         /// Register a typed delegate for a certain

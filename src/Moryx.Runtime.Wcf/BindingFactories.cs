@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Wcf
         /// <summary>
         /// Creates a new basic http binding with our default configuration.
         /// Most parts are set to nearly int max, timeouts are set to 5 min.
-        /// Encoding is Text and TransferMode is bufferd.
+        /// Encoding is Text and TransferMode is buffered.
         /// </summary>
         /// <param name="requiresAuthentication">Is authentication required?</param>
         /// <returns>The new created binding.</returns>

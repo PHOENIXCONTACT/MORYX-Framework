@@ -6,7 +6,7 @@ namespace Moryx.Workflows
     /// <summary>
     /// Interface for a transition handling wrapper
     /// </summary>
-    public interface IAttemptInvokation // TODO: Rename to IAttemptInvocation in the next major
+    public interface IAttemptInvocation
     {
         /// <summary>
         /// Tries to map the transition to a certain type. If successful it invokes

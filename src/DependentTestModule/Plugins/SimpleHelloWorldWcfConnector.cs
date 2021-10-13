@@ -20,7 +20,7 @@ namespace Moryx.DependentTestModule
             ServiceManager = ServiceManagerFactory.Create(SimpleHelloWorldWcfSvcMgr.ComponentName);
 
             // Start wcf host with the binding specific service
-            Service = HostFactory.CreateHost<ISimpleHelloWorldWcfService>(Config.ConnectorHost);
+            Service = HostFactory.CreateHost(typeof(ISimpleHelloWorldWcfService), Config.ConnectorHost);
             Service.Start();
         }
     }

@@ -8,13 +8,13 @@ namespace Moryx.Tools.Wcf
     /// </summary>
     public class WcfClientFactoryConfig : IWcfClientFactoryConfig
     {
-        /// 
+        ///
         public string Host { get; set; }
 
-        /// 
+        ///
         public int Port { get; set; }
 
-        /// 
+        ///
         public string ClientId { get; set; }
     }
 }

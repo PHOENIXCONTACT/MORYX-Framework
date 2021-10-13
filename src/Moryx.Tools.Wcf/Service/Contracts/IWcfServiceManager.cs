@@ -10,6 +10,6 @@ namespace Moryx.Tools.Wcf
     /// </summary>
     public interface IWcfServiceManager : IServiceManager, IInitializablePlugin
     {
-         
+
     }
 }

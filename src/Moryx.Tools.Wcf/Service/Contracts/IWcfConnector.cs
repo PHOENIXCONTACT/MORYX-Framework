@@ -8,9 +8,9 @@ namespace Moryx.Tools.Wcf
     /// <summary>
     /// The public API of the WCF connector plugin.
     /// </summary>
-    public interface IWcfConnector<TConfig> : IConfiguredPlugin<TConfig>
+    public interface IWcfConnector<in TConfig> : IConfiguredPlugin<TConfig>
         where TConfig : IWcfServiceConfig
     {
-         
+
     }
 }

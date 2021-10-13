@@ -4,10 +4,6 @@
 using Moryx.Communication.Endpoints;
 using Moryx.Modules;
 
-#if USE_WCF
-using Moryx.Tools.Wcf;
-#endif
-
 namespace Moryx.Runtime.Maintenance
 {
     /// <summary>
@@ -27,16 +23,7 @@ namespace Moryx.Runtime.Maintenance
         /// <summary>
         /// Factory to create endpoint services
         /// </summary>
-#if USE_WCF
-        public IConfiguredHostFactory HostFactory { get; set; }
-#else
         public IEndpointHostFactory HostFactory { get; set; }
-#endif
-
-        /// <summary>
-        /// Factory to create endpoint services
-        /// </summary>
-        public IEndpointHostFactory EndpointHostFactory { get; set; }
 
         /// <inheritdoc />
         public virtual void Initialize(MaintenancePluginConfig config)
@@ -50,7 +37,7 @@ namespace Moryx.Runtime.Maintenance
 #if USE_WCF
             _host = HostFactory.CreateHost(typeof(TEndpoint), Config.ProvidedEndpoint);
 #else
-            _host = EndpointHostFactory.CreateHost(typeof(TEndpoint), null);
+            _host = HostFactory.CreateHost(typeof(TEndpoint), null);
 #endif
             _host.Start();
         }

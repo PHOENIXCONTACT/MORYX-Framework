@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.Threading;
+using Moryx.Communication.Endpoints;
 using Moryx.Model;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
@@ -25,9 +26,9 @@ namespace Moryx.TestModule
         public IDbContextManager DbContextManager { get; set; }
 
         /// <summary>
-        /// Host factory to create wcf services
+        /// Host factory to create services
         /// </summary>
-        public IWcfHostFactory WcfHostFactory { get; set; }
+        public IEndpointHosting Hosting { get; set; }
 
         #endregion
 
@@ -42,7 +43,7 @@ namespace Moryx.TestModule
         /// <inheritdoc />
         protected override void OnInitialize()
         {
-            Container.RegisterWcf(WcfHostFactory);
+            Container.ActivateHosting(Hosting);
             Container.ActivateDbContexts(DbContextManager);
 
             Container.LoadComponents<IHelloWorldWcfConnector>();

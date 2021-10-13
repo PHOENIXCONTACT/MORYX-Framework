@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Threading;
@@ -24,12 +25,12 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// The WCF service
         /// </summary>
-        protected IConfiguredServiceHost Service { get; set; }
+        protected IEndpointHost Service { get; set; }
 
         #region Dependency Injection
 
         /// <summary>Injected property</summary>
-        public IConfiguredHostFactory HostFactory { get; set; }
+        public IEndpointHostFactory HostFactory { get; set; }
 
         /// <summary>Injected property</summary>
         public IParallelOperations ParallelOperations { get; set; }

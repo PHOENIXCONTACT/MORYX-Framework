@@ -38,6 +38,5 @@ namespace Moryx.Tools.Wcf
         [DataMember]
         [Description("Host config")]
         public HostConfig ConnectorHost { get; set; }
-
     }
 }
