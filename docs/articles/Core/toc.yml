@@ -7,6 +7,9 @@
 - name: Logging
   href: Logging.md
 
+- name: Kestrel Hosting
+  href: Kestrel.md
+
 - name: Wcf Connections
   href: Wcf.md
 

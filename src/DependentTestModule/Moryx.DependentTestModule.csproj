@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
-    <Description>Moryx Runtime Plugin: DependentTestModule</Description>
+    <Description>Moryx Runtime Module: DependentTestModule</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -33,7 +33,7 @@ namespace Moryx.Workflows
         WorkplanBorder = 4,
 
         /// <summary>
-        /// Connector only reached when error occured
+        /// Connector only reached when error occurred
         /// </summary>
         Failure = 8,
 
@@ -48,7 +48,7 @@ namespace Moryx.Workflows
         End = Exit | WorkplanBorder,
 
         /// <summary>
-        /// Reset and abort point for normal workflow if an unrecoverable failure occured.
+        /// Reset and abort point for normal workflow if an unrecoverable failure occurred.
         /// </summary>
         Failed = Exit | Failure
     }

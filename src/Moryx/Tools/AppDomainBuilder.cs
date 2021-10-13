@@ -24,8 +24,7 @@ namespace Moryx.Tools
 
                 try
                 {
-                    var assembly = Assembly.LoadFile(assemblyFile);
-                    AppDomain.CurrentDomain.Load(assembly.GetName());
+                    Assembly.LoadFrom(assemblyFile);
                 }
                 catch(Exception ex)
                 {

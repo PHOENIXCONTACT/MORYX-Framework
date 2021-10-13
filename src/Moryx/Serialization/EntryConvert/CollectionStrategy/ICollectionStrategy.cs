@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Moryx.Serialization
 {
     /// <summary>
-    /// Interface to decouple collection operations from the differences between 
+    /// Interface to decouple collection operations from the differences between
     /// Arrays and lists
     /// </summary>
     internal interface ICollectionStrategy
@@ -21,7 +21,7 @@ namespace Moryx.Serialization
         /// </summary>
         /// <returns></returns>
         IEnumerable<string> Keys();
-        
+
         /// <summary>
         /// Retrieve element at a certain position
         /// </summary>

@@ -7,17 +7,19 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using Moryx.Communication;
+using Moryx.Communication.Endpoints;
 using Moryx.Logging;
 using Moryx.Tools.Wcf;
+using Endpoint = Moryx.Tools.Wcf.Endpoint;
 
 namespace Moryx.Runtime.Wcf
 {
-    internal class ConfiguredServiceHost : IConfiguredServiceHost
+    internal class ConfiguredServiceHost : IConfiguredServiceHost, IEndpointHost
     {
         /// <summary>
         /// Di container of parent plugin for component resolution
         /// </summary>
-        private readonly IEndpointCollector _collector;
+        private readonly EndpointCollector _collector;
         private readonly PortConfig _portConfig;
         private readonly IModuleLogger _logger;
 
@@ -30,10 +32,9 @@ namespace Moryx.Runtime.Wcf
         private HostConfig _hostConfig;
         private Type _contract;
         private string _endpointAddress;
-        private ServiceVersionAttribute _endpointVersion;
+        private EndpointAttribute _endpointAttribute;
 
-        public ConfiguredServiceHost(ITypedHostFactory factory, IModuleLogger parentLogger,
-            IEndpointCollector endpointCollector, PortConfig portConfig)
+        public ConfiguredServiceHost(ITypedHostFactory factory, IModuleLogger parentLogger, EndpointCollector endpointCollector, PortConfig portConfig)
         {
             _factory = factory;
             _collector = endpointCollector;
@@ -65,7 +66,7 @@ namespace Moryx.Runtime.Wcf
             // Create service host
             _service = _factory.CreateServiceHost(contract);
             _contract = contract;
-            _endpointVersion = _contract.GetCustomAttribute<ServiceVersionAttribute>();
+            _endpointAttribute = _contract.GetCustomAttribute<EndpointAttribute>();
 
             // Configure host
             _service.CloseTimeout = TimeSpan.Zero;
@@ -164,19 +165,19 @@ namespace Moryx.Runtime.Wcf
         public void Start()
         {
             _logger?.Log(LogLevel.Info, "Starting wcf service {0} with version {1}", _endpointAddress,
-                _endpointVersion?.Version ?? "1.0.0.0");
+                _endpointAttribute?.Version ?? "1.0.0.0");
 
             _service.Open();
 
-            if (_endpointVersion != null)
+            if (_endpointAttribute != null)
             {
                 _collector.AddEndpoint(_endpointAddress, new Endpoint
                 {
-                    Service = _contract.Name,
+                    Service = _endpointAttribute.Name ?? _contract.Name,
                     Path = _hostConfig.Endpoint,
                     Address = _endpointAddress,
                     Binding = _hostConfig.BindingType,
-                    Version = _endpointVersion.Version,
+                    Version = _endpointAttribute.Version,
                     RequiresAuthentication = _hostConfig.RequiresAuthentification
                 });
             }

@@ -11,7 +11,7 @@ using Moryx.Modules;
 namespace Moryx.Serialization
 {
     /// <summary>
-    /// Similar to the <see cref="PluginNameSelectorAttribute"/> this attribute provides a list of component configurations. 
+    /// Similar to the <see cref="PluginNameSelectorAttribute"/> this attribute provides a list of component configurations.
     /// These configurations are expected by the implementations of a certain interface and allow each implementation to define its own configuration.
     /// </summary>
     public class PluginConfigsAttribute : PossibleValuesAttribute

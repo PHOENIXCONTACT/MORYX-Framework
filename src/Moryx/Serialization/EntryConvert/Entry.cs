@@ -20,7 +20,7 @@ namespace Moryx.Serialization
         public const string CreatedIdentifier = "CREATED";
 
         /// <summary>
-        /// Create new entry instance with prefilled properties
+        /// Create new entry instance with prefiled properties
         /// </summary>
         public Entry()
         {

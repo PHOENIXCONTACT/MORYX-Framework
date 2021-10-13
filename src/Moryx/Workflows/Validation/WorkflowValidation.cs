@@ -13,7 +13,7 @@ namespace Moryx.Workflows.Validation
         private static readonly IWorkplanValidator[] Validators =
         {
             new DeadEndValidator(),
-            new LoneWolfValidator(), 
+            new LoneWolfValidator(),
         };
 
         /// <summary>
@@ -38,6 +38,6 @@ namespace Moryx.Workflows.Validation
                 Success = valid,
                 Errors = errors.ToArray()
             };
-        }    
+        }
     }
 }

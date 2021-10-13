@@ -40,7 +40,7 @@ namespace Moryx.Tools
     }
 
     /// <summary>
-    /// Accesor where instance type and property are known
+    /// Accessor where instance type and property are known
     /// </summary>
     internal class DirectAccessor<TConcrete, TProperty> : PropertyAccessor<TConcrete, TProperty>, IPropertyAccessor<TConcrete, TProperty>
     {
@@ -61,7 +61,7 @@ namespace Moryx.Tools
     }
 
     /// <summary>
-    /// Accesor for properties on derived types
+    /// Accessor for properties on derived types
     /// </summary>
     internal class InstanceCastAccessor<TConcrete, TBase, TProperty> : PropertyAccessor<TConcrete, TProperty>, IPropertyAccessor<TBase, TProperty>
             where TConcrete : TBase
@@ -83,7 +83,7 @@ namespace Moryx.Tools
     }
 
     /// <summary>
-    /// Accesor for properties with derived types on derived instances
+    /// Accessor for properties with derived types on derived instances
     /// </summary>
     internal class ValueCastAccessor<TConcrete, TBase, TProperty, TValue> : PropertyAccessor<TConcrete, TProperty>, IPropertyAccessor<TBase, TValue>
         where TConcrete : TBase
@@ -106,7 +106,7 @@ namespace Moryx.Tools
     }
 
     /// <summary>
-    /// Accesor for properties with derived types on derived instances
+    /// Accessor for properties with derived types on derived instances
     /// </summary>
     internal class PropertyCastAccessor<TConcrete, TBase, TProperty, TValue> : PropertyAccessor<TConcrete, TProperty>, IPropertyAccessor<TBase, TValue>
         where TConcrete : TBase

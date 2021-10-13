@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
-    <Description>Moryx Runtime Plugin: TestModule.</Description>
+    <Description>Moryx Runtime Module: TestModule.</Description>
   </PropertyGroup>
 
   <ItemGroup>

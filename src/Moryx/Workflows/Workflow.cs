@@ -84,7 +84,6 @@ namespace Moryx.Workflows
             return new TransitionMapper(parallelOperations);
         }
 
-
         /// <summary>
         /// Validate the workplan under different aspects. Aspects can be combined using '|' operator.
         /// </summary>

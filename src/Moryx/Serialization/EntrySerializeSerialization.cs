@@ -14,7 +14,7 @@ namespace Moryx.Serialization
     /// </summary>
     public class EntrySerializeSerialization : DefaultSerialization
     {
-        private static string[] _basePropertyFilter;
+        private readonly string[] _basePropertyFilter;
 
         /// <summary>
         /// If set to <c>true</c> explicit properties are filtered
@@ -84,7 +84,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Property filter for properties of the base class
         /// </summary>
-        private static bool BasePropertyFilter(PropertyInfo prop)
+        private bool BasePropertyFilter(PropertyInfo prop)
         {
             if (_basePropertyFilter.Length == 0)
                 return true;

@@ -26,22 +26,22 @@ namespace Moryx.Workflows.WorkplanSteps
         [DataMember]
         public long Id { get; set; }
 
-        /// 
+        ///
         public abstract string Name { get; }
 
-        /// 
+        ///
         [DataMember]
         public IConnector[] Inputs { get; set; }
 
-        /// 
+        ///
         [DataMember]
         public IConnector[] Outputs { get; set; }
 
-        /// 
+        ///
         [DataMember]
         public OutputDescription[] OutputDescriptions { get; set; }
 
-        /// 
+        ///
         public ITransition CreateInstance(IWorkplanContext context)
         {
             var transition = Instantiate(context);

@@ -23,7 +23,7 @@ namespace Moryx.Tools
             catch
             {
                 var ex = e.ExceptionObject as Exception;
-                crashText = "Some dumbass actually threw an exception in the exception: \n" +
+                crashText = "Someone actually threw an exception in the exception: \n" +
                             $"  Type of trojan exception: {e.ExceptionObject.GetType()}\n" +
                             $"  Original stack trace: \n{(ex == null ? "Exception does not inherit System.Exception" : ex.StackTrace)}";
             }

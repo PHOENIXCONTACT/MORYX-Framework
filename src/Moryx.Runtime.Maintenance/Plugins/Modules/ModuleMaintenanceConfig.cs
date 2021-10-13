@@ -2,7 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
+
+#if USE_WCF
 using Moryx.Tools.Wcf;
+#endif
 
 namespace Moryx.Runtime.Maintenance.Plugins.Modules
 {
@@ -11,12 +14,14 @@ namespace Moryx.Runtime.Maintenance.Plugins.Modules
     {
         public ModuleMaintenanceConfig()
         {
+#if USE_WCF
             ProvidedEndpoint = new HostConfig
             {
                 BindingType = ServiceBindingType.WebHttp,
                 Endpoint = "modules",
                 MetadataEnabled = true
             };
+#endif
         }
 
         public override string PluginName => ModuleMaintenancePlugin.PluginName;

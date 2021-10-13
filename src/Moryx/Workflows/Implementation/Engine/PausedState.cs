@@ -12,7 +12,7 @@ namespace Moryx.Workflows
         }
 
         /// <summary>
-        /// Pause exeuction on the engine
+        /// Pause execution on the engine
         /// </summary>
         internal override WorkflowSnapshot Pause()
         {

@@ -3,7 +3,10 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
+
+#if USE_WCF
 using Moryx.Tools.Wcf;
+#endif
 
 namespace Moryx.Runtime.Maintenance.Plugins.Logging
 {
@@ -23,12 +26,14 @@ namespace Moryx.Runtime.Maintenance.Plugins.Logging
         /// </summary>
         public LoggingMaintenanceConfig()
         {
+#if USE_WCF
             ProvidedEndpoint = new HostConfig
             {
                 Endpoint = "loggers",
                 BindingType = ServiceBindingType.WebHttp,
                 MetadataEnabled = true
             };
+#endif
         }
 
         /// <summary>

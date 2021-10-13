@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Moryx.Workflows.Transitions
@@ -25,7 +24,7 @@ namespace Moryx.Workflows.Transitions
             _indexResolver = indexResolver;
         }
 
-        /// 
+        ///
         public override void Initialize()
         {
             _engine.Completed += SubworkflowCompleted;

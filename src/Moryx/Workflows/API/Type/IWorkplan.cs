@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Moryx.Workflows
 {
     /// <summary>
-    /// Type interface for workplanes. Instances of a workplan are called workflows
+    /// Type interface for workplans. Instances of a workplan are called workflows
     /// </summary>
     public interface IWorkplan
     {
@@ -26,7 +26,7 @@ namespace Moryx.Workflows
         int Version { get; }
 
         /// <summary>
-        /// This workplan's state
+        /// This workplans state
         /// </summary>
         WorkplanState State { get; }
 

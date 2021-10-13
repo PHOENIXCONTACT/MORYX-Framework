@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Collections.Generic;
 using System.Linq;
-using Moryx.Workflows.Transitions;
 
 namespace Moryx.Workflows
 {
@@ -19,7 +21,7 @@ namespace Moryx.Workflows
                 var transition = step.CreateInstance(context);
 
                 // Set inputs
-                for (int i = 0; i < step.Inputs.Length; i++)
+                for (var i = 0; i < step.Inputs.Length; i++)
                 {
                     transition.Inputs[i] = GetPlace(step.Inputs[i], places);
                 }

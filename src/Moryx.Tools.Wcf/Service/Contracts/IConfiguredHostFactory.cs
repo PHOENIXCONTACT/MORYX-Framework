@@ -8,6 +8,7 @@ namespace Moryx.Tools.Wcf
     /// <summary>
     /// Host factory to create dependency injection enabled web services
     /// </summary>
+    [Obsolete("The WCF specific host factory was replaced by the general IEndpointHostFactory interface")]
     public interface IConfiguredHostFactory
     {
         /// <summary>
