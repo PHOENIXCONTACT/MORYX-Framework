@@ -694,8 +694,8 @@ namespace Moryx.Products.IntegrationTests
             // Assert
             Assert.AreEqual(1, products.Count, "There should be a product for the given query");
         }
-
-        // [TestCase(false, false, Description = "Duplicate product with valid id")] TODO: https://github.com/zzzprojects/EntityFramework-Effort/issues/191
+        
+        [TestCase(false, false, Description = "Duplicate product with valid id")]
         [TestCase(false, true, Description = "Duplicate product, but identity already taken")]
         [TestCase(true, false, Description = "Duplicate product but with template missmatch")]
         public void DuplicateProduct(bool crossTypeIdentifier, bool revisionTaken)
@@ -739,7 +739,7 @@ namespace Moryx.Products.IntegrationTests
                     new ProductIdentity("654" + WatchMaterial, 1));
             });
 
-            var recipeDuplicates = _storage.LoadRecipes(duplicate.Id, RecipeClassification.Unset);
+            var recipeDuplicates = _storage.LoadRecipes(duplicate.Id, RecipeClassification.CloneFilter);
 
             // Assert
             Assert.AreEqual(watch.Watchface.Product.Id, duplicate.Watchface.Product.Id);

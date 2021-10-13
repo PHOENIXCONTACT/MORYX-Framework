@@ -91,7 +91,7 @@ namespace Moryx.Products.Management
             return product;
         }
 
-        public IProductType Duplicate(ProductType duplicate, ProductIdentity newIdentity)
+        public IProductType Duplicate(ProductType template, ProductIdentity newIdentity)
         {
             // Fetch existing products for identity validation
             var existing = LoadTypes(new ProductQuery { Identifier = newIdentity.Identifier });
@@ -99,17 +99,17 @@ namespace Moryx.Products.Management
             if (existing.Any(e => ((ProductIdentity)e.Identity).Revision == newIdentity.Revision))
                 throw new IdentityConflictException();
             // If there are any products for this identifier, the source object must be one of them
-            if (existing.Any() && duplicate.Identity.Identifier != newIdentity.Identifier)
+            if (existing.Any() && template.Identity.Identifier != newIdentity.Identifier)
                 throw new IdentityConflictException(true);
 
             // Reset database id, assign identity and save
+            var duplicate = Storage.LoadType(template.Id);
             duplicate.Id = 0;
             duplicate.Identity = newIdentity;
             duplicate.Id = Storage.SaveType(duplicate);
 
             // Load all recipes and create clones
-            // Using int.MaxValue creates a bitmask that excludes ONLY clones
-            foreach (var recipe in Storage.LoadRecipes(duplicate.Id, RecipeClassification.Unset))
+            foreach (var recipe in Storage.LoadRecipes(template.Id, RecipeClassification.CloneFilter))
             {
                 // Clone
                 var clone = (IProductRecipe)recipe.Clone();
