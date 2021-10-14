@@ -124,10 +124,9 @@ namespace Moryx.Logging
         /// </summary>
         public void DeactivateLogging(ILoggingHost module)
         {
-            var logger = (module.Logger as Logger);
+            var logger = module.Logger as Logger;
             logger?.ClearChildren();
 
-            
             module.Logger = new IdleLogger(module.Name, CreateLogTarget(module.Name));
         }
 
@@ -151,7 +150,7 @@ namespace Moryx.Logging
                 {
                     break;
                 }
-                
+
                 logMessage.Format();
                 try
                 {

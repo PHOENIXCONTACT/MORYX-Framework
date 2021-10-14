@@ -2,27 +2,19 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Common.Logging;
-using Common.Logging.Simple;
+using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using LogLevel = Moryx.Logging.LogLevel;
 
 namespace Moryx.Runtime.Kernel
 {
-    internal class CommonLoggingLogTarget : ILogTarget
+    internal class MsLoggingLogTarget : ILogTarget
     {
-        private readonly ILog _internalTarget;
+        private readonly ILogger _internalTarget;
 
-        public CommonLoggingLogTarget(string name)
+        public MsLoggingLogTarget(ILoggerFactory loggerFactory, string name)
         {
-            try
-            {
-                _internalTarget = LogManager.GetLogger(name);
-            }
-            catch
-            {
-                _internalTarget = new NoOpLogger();
-            }
+            _internalTarget = loggerFactory.CreateLogger(name);
         }
 
         public void Log(LogLevel logLevel, string message)
@@ -37,39 +29,39 @@ namespace Moryx.Runtime.Kernel
             {
                 case LogLevel.Trace:
                     if (isException)
-                        _internalTarget.Trace(message, exception);
+                        _internalTarget.LogTrace(exception, message);
                     else
-                        _internalTarget.Trace(message);
+                        _internalTarget.LogTrace(message);
                     break;
                 case LogLevel.Debug:
                     if (isException)
-                        _internalTarget.Debug(message, exception);
+                        _internalTarget.LogDebug(exception, message);
                     else
-                        _internalTarget.Debug(message);
+                        _internalTarget.LogDebug(message);
                     break;
                 case LogLevel.Info:
                     if (isException)
-                        _internalTarget.Info(message, exception);
+                        _internalTarget.LogInformation(exception, message);
                     else
-                        _internalTarget.Info(message);
+                        _internalTarget.LogInformation(message);
                     break;
                 case LogLevel.Warning:
                     if (isException)
-                        _internalTarget.Warn(message, exception);
+                        _internalTarget.LogWarning(exception, message);
                     else
-                        _internalTarget.Warn(message);
+                        _internalTarget.LogWarning(message);
                     break;
                 case LogLevel.Error:
                     if (isException)
-                        _internalTarget.Error(message, exception);
+                        _internalTarget.LogError(exception, message);
                     else
-                        _internalTarget.Error(message);
+                        _internalTarget.LogError(message);
                     break;
                 case LogLevel.Fatal:
                     if (isException)
-                        _internalTarget.Fatal(message, exception);
+                        _internalTarget.LogCritical(exception, message);
                     else
-                        _internalTarget.Fatal(message);
+                        _internalTarget.LogCritical(message);
                     break;
             }
         }

@@ -5,24 +5,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
+using LogLevel = Moryx.Logging.LogLevel;
 
 namespace Moryx.Runtime.Kernel
 {
     /// <summary>
-    /// Management for the server logging. Provides mechanics to add and remove listeners for the logging. 
+    /// Management for the server logging. Provides mechanics to add and remove listeners for the logging.
     /// </summary>
     [KernelComponent(typeof(ILoggerManagement), typeof(IServerLoggerManagement))]
     public class ServerLoggerManagement : LoggerManagement, IServerLoggerManagement
     {
-        #region Configuration
-
         /// <summary>
-        /// Configuration manager instance. Injected by castel.
+        /// Configuration manager instance
         /// </summary>
         public IConfigManager ConfigManager { get; set; }
+
+        public ILoggerFactory LoggerFactory { get; set; }
 
         private LoggingConfig _config;
 
@@ -31,7 +33,7 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         protected override ILogTarget CreateLogTarget(string name)
         {
-            return new CommonLoggingLogTarget(name);
+            return new MsLoggingLogTarget(LoggerFactory, name);
         }
 
         /// <summary>
@@ -41,12 +43,12 @@ namespace Moryx.Runtime.Kernel
         /// <returns>The configuration for the requested logger.</returns>
         protected override ModuleLoggerConfig GetLoggerConfig(string name)
         {
-            var config = (_config = _config ?? ConfigManager.GetConfiguration<LoggingConfig>());
-            var loggerConf = config.LoggerConfigs.FirstOrDefault(conf => conf.LoggerName == name);
+            _config ??= ConfigManager.GetConfiguration<LoggingConfig>();
+            var loggerConf = _config.LoggerConfigs.FirstOrDefault(conf => conf.LoggerName == name);
             if (loggerConf == null)
             {
                 loggerConf = new ModuleLoggerConfig { LoggerName = name, ActiveLevel = _config.DefaultLevel, ChildConfigs = new List<ModuleLoggerConfig>() };
-                config.LoggerConfigs.Add(loggerConf);
+                _config.LoggerConfigs.Add(loggerConf);
             }
             return loggerConf;
         }
@@ -61,8 +63,6 @@ namespace Moryx.Runtime.Kernel
             base.SetLevel(logger, level);
             ConfigManager.SaveConfiguration(_config);
         }
-
-        #endregion
 
         #region Forward to listeners
 

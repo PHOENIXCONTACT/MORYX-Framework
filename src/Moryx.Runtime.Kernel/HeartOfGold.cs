@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CommandLine;
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Runtime.Configuration;
@@ -101,6 +102,9 @@ namespace Moryx.Runtime.Kernel
         private IContainer CreateContainer()
         {
             var container = new GlobalContainer();
+
+            // Install logging
+            container.ExecuteInstaller(new LoggingInstaller());
 
             // Register local components
             container.ExecuteInstaller(new AutoInstaller(GetType().Assembly));

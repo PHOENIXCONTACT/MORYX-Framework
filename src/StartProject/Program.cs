@@ -1,4 +1,6 @@
-﻿using Moryx.Runtime.Kernel;
+﻿using Microsoft.Extensions.Logging;
+using Moryx.Runtime.Kernel;
+using NLog.Extensions.Logging;
 
 namespace StartProject
 {
@@ -13,6 +15,10 @@ namespace StartProject
         public static int Main(string[] args)
         {
             var loader = new HeartOfGold(args);
+
+            var loggerFactory = loader.GlobalContainer.Resolve<ILoggerFactory>();
+            loggerFactory.AddProvider(new NLogLoggerProvider());
+
             var result = loader.Run();
             return (int)result;
         }
