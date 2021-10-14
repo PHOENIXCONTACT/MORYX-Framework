@@ -157,11 +157,7 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         public virtual Task ConnectionCallback(ConnectionState connectionState)
         {
-#if HAVE_TASK_COMPLETEDTASK
             return Task.CompletedTask;
-#else
-            return Task.FromResult(true);
-#endif
         }
 
         /// <summary>

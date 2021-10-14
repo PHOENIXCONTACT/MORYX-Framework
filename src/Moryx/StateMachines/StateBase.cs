@@ -67,13 +67,7 @@ namespace Moryx.StateMachines
         /// </summary>
         protected Task InvalidStateAsync([CallerMemberName] string methodName = "")
         {
-#if HAVE_TASK_FROMEXCEPTION
             return Task.FromException(CreateAndLogInvalidStateException(methodName));
-#else
-            var tcs = new TaskCompletionSource<int>();
-            tcs.SetException(CreateAndLogInvalidStateException(methodName));
-            return tcs.Task;
-#endif
         }
 
         /// <summary>
@@ -81,13 +75,7 @@ namespace Moryx.StateMachines
         /// </summary>
         protected Task<T> InvalidStateAsync<T>([CallerMemberName] string methodName = "")
         {
-#if HAVE_TASK_FROMEXCEPTION
             return Task.FromException<T>(CreateAndLogInvalidStateException(methodName));
-#else
-            var tcs = new TaskCompletionSource<T>();
-            tcs.SetException(CreateAndLogInvalidStateException(methodName));
-            return tcs.Task;
-#endif
         }
 
         /// <summary>

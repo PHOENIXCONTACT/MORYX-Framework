@@ -26,11 +26,7 @@ namespace Moryx.Serialization
         /// </summary>
         public EntrySerializeSerialization()
         {
-#if HAVE_ARRAY_EMPTY
             _basePropertyFilter = Array.Empty<string>();
-#else
-            _basePropertyFilter = new string[0];
-#endif
         }
 
         /// <summary>

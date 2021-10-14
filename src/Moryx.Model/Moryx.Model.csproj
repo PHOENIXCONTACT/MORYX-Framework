@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net45;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net461;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Datamodel integration for MORYX applications based on Entity Framework</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Entity;Framework;EntityFramework;DataModel;Model;Database</PackageTags>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-    <DefineConstants>HAVE_APPDOMAIN_DEFINEDYNAMICASSEMBLY</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +16,7 @@
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
 		<Reference Include="System.ComponentModel.DataAnnotations" />
 	</ItemGroup>
 

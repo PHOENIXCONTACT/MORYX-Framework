@@ -12,7 +12,7 @@
     "namespaceMappings": [
       "*, Moryx.Tools.Wcf.Tests.Logging"
     ],
-    "targetFramework": "net45",
+    "targetFramework": "net461",
     "typeReuseMode": "None"
   }
 }

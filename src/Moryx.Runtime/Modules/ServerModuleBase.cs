@@ -79,6 +79,10 @@ namespace Moryx.Runtime.Modules
 
         void IServerModuleStateContext.Initialize()
         {
+
+            //if (this._loggerFactory == null)
+            //    this._loggerFactory = (ILoggerFactory)new LoggerFactory();
+
             // Activate logging
             LoggerManagement.ActivateLogging(this);
             LoggerManagement.AppendListenerToStream(ProcessLogMessage, LogLevel.Warning, Name);

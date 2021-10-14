@@ -13,7 +13,7 @@
       "*, Moryx.Tools.Wcf.SystemTests.SimpleHelloWorld"
     ],
     "sync": true,
-    "targetFramework": "net45",
+    "targetFramework": "net461",
     "typeReuseMode": "None"
   }
 }
