@@ -367,7 +367,7 @@ namespace Moryx.Products.Management
                 if (revision == ProductIdentity.LatestRevision)
                 {
                     // Get all revisions of this product
-                    var revisions = productRepo.Linq
+                    var revisions = productRepo.Linq.Active()
                         .Where(p => p.Identifier == identity.Identifier)
                         .Select(p => p.Revision).ToList();
                     if (revisions.Any())
