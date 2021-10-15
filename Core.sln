@@ -102,7 +102,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kestrel", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestModule.Kestrel", "src\Moryx.TestModule.Kestrel\Moryx.TestModule.Kestrel.csproj", "{E7A29304-E150-446D-AE7F-A899A7BFCB2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model.Sqlite", "src\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj", "{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Model.Sqlite", "src\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj", "{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -717,6 +717,24 @@ Global
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x64.Build.0 = Release|Any CPU
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x86.ActiveCfg = Release|Any CPU
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x86.Build.0 = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Debug|x64.Build.0 = Debug|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Debug|x86.Build.0 = Debug|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release(x86)|x86.Build.0 = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release|x64.ActiveCfg = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release|x64.Build.0 = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release|x86.ActiveCfg = Release|Any CPU
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -755,10 +773,11 @@ Global
 		{EB039D46-906F-44BF-AC37-B3B3634A4442} = {DE7526FF-6D25-4643-9AA3-C24253901C8C}
 		{CB964668-8C90-4AB0-B6ED-A7589A3338BC} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B} = {DAE7DCE8-AB9B-46A8-808D-6C6C0AAB75A2}
+		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74} = {74112169-6672-4907-A187-F055111940A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
-		RESX_ShowErrorsInErrorList = True
 		RESX_TaskErrorCategory = Message
+		RESX_ShowErrorsInErrorList = True
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 	EndGlobalSection
 EndGlobal
