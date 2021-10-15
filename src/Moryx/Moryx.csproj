@@ -9,11 +9,7 @@
     <PackageTags>MORYX;Serialization;Configuration;Logging;Core;Modules;Workflows</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-    <DefineConstants>HAVE_TASK_FROMEXCEPTION;HAVE_ARRAY_EMPTY</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net5.0'">
     <DefineConstants>HAVE_TASK_FROMEXCEPTION;HAVE_ARRAY_EMPTY</DefineConstants>
   </PropertyGroup>
 
