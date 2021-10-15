@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+#if NETFRAMEWORK
 using System;
 using System.Collections;
 using System.Configuration.Install;
@@ -9,9 +10,11 @@ using System.Reflection;
 using System.Security.Principal;
 using System.ServiceProcess;
 using CommandLine;
+using Moryx.Tools;
+#endif
+
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Kernel;
-using Moryx.Tools;
 
 namespace Moryx.Runtime.WinService
 {
@@ -21,9 +24,10 @@ namespace Moryx.Runtime.WinService
     [RunMode(typeof(WinServiceOptions))]
     public class WinServiceRunMode : RunModeBase<WinServiceOptions>
     {
+#if NETFRAMEWORK
         private const string InstallLogPath = "install.log";
         private const string UninstallLogPath = "uninstall.log";
-
+#endif
         /// <summary>
         /// Config manager instance.
         /// </summary>
@@ -35,17 +39,19 @@ namespace Moryx.Runtime.WinService
         /// <returns>0: All fine - 1: Warning - 2: Error</returns>
         public override RuntimeErrorCode Run()
         {
+#if NETFRAMEWORK
             if (Options.Install)
                 return InstallService();
 
             if (Options.Uninstall)
                 return UninstallService();
+#endif
 
             var service = new HeartOfGoldService(ModuleManager, ConfigManager);
             service.Run();
             return RuntimeErrorCode.NoError;
         }
-
+#if NETFRAMEWORK
         /// <summary>
         /// Installs the service in the windows service registry
         /// </summary>
@@ -157,5 +163,6 @@ namespace Moryx.Runtime.WinService
                 return false;
             }
         }
+#endif
     }
 }

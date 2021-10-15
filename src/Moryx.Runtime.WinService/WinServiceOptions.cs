@@ -1,11 +1,14 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using CommandLine;
+using Moryx.Runtime.Kernel;
+
+#if NETFRAMEWORK
 using System.Collections.Generic;
 using System.ServiceProcess;
-using CommandLine;
 using CommandLine.Text;
-using Moryx.Runtime.Kernel;
+#endif
 
 namespace Moryx.Runtime.WinService
 {
@@ -15,6 +18,7 @@ namespace Moryx.Runtime.WinService
     [Verb("service", HelpText = "Starts the runtime in service mode. Used for Windows Services.")]
     public class WinServiceOptions : RuntimeOptions
     {
+#if NETFRAMEWORK
         /// <summary>
         /// If set, the install process will be started
         /// </summary>
@@ -68,5 +72,6 @@ namespace Moryx.Runtime.WinService
                 }),
                 new Example("Uninstalls the service in the Windows Service Registry", new WinServiceOptions { Uninstall = true}),
             };
+#endif
     }
 }
