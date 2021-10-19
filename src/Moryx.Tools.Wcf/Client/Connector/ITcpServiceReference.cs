@@ -1,14 +1,13 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Moryx.Tools.Wcf
 {
     /// <summary>
     /// Client Side Definition of Moryx.Base.Proxies.Wcf.IBaseWebSvc
-    /// inteface service contract.
+    /// interface service contract.
     /// </summary>
     public interface ITcpServiceReference
     {

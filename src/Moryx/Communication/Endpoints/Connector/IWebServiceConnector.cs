@@ -1,15 +1,15 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.Modules;
 
-namespace Moryx.Tools.Wcf
+namespace Moryx.Communication.Endpoints
 {
     /// <summary>
     /// Interface for http service connectors
     /// </summary>
-    [Obsolete("Use IWebServiceConnector from Moryx.Communication.Endpoints")]
-    public interface IHttpServiceConnector
+    public interface IWebServiceConnector : IPlugin
     {
         /// <summary>
         /// Informs that the availability of the client has changed

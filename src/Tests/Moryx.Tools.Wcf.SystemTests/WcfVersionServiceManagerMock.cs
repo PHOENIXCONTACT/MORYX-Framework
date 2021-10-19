@@ -1,14 +1,14 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Moryx.Communication;
+using Moryx.Communication.Endpoints;
 using Moryx.Tools.Wcf.Tests.Logging;
 
 namespace Moryx.Tools.Wcf.Tests
 {
-    internal class VersionServiceManagerMock : IVersionServiceManager
+    internal class WcfVersionServiceManagerMock : IVersionServiceManager
     {
         public string Endpoint { get; set; }
 
@@ -20,16 +20,16 @@ namespace Moryx.Tools.Wcf.Tests
 
         public bool EnableVersionService { get; set; }
 
-        public VersionServiceManagerMock()
+        public WcfVersionServiceManagerMock()
         {
             Binding = ServiceBindingType.BasicHttp;
             ServerVersion = "2.0.0.0";
             ServiceUrl = "http://localhost/someservice";
         }
 
-        public Endpoint[] ActiveEndpoints()
+        public Communication.Endpoints.Endpoint[] ActiveEndpoints()
         {
-            return EnableVersionService ? new Endpoint[]
+            var endpoints = new[]
             {
                 new Endpoint
                 {
@@ -39,17 +39,19 @@ namespace Moryx.Tools.Wcf.Tests
                     Version = ServerVersion,
                     Binding = Binding,
                 }
-            } : null;
+            };
+
+            return EnableVersionService ? endpoints.ToArray<Communication.Endpoints.Endpoint>() : null;
         }
 
-        public Task<Endpoint[]> ActiveEndpointsAsync()
+        public Task<Communication.Endpoints.Endpoint[]> ActiveEndpointsAsync()
         {
             return Task.FromResult(ActiveEndpoints());
         }
 
-        public Endpoint[] ServiceEndpoints(string service)
+        public Communication.Endpoints.Endpoint[] ServiceEndpoints(string service)
         {
-            return EnableVersionService ? new Endpoint[]
+            var endpoints = new[]
             {
                 new Endpoint
                 {
@@ -59,10 +61,12 @@ namespace Moryx.Tools.Wcf.Tests
                     Version = ServerVersion,
                     Binding = Binding,
                 }
-            } : null;
+            };
+
+            return EnableVersionService ? endpoints.ToArray<Communication.Endpoints.Endpoint>() : null;
         }
 
-        public Task<Endpoint[]> ServiceEndpointsAsync(string service)
+        public Task<Communication.Endpoints.Endpoint[]> ServiceEndpointsAsync(string service)
         {
             return Task.FromResult(ServiceEndpoints(service));
         }

@@ -4,7 +4,7 @@
 namespace Moryx.Communication
 {
     /// <summary>
-    /// Proxy configuration to be used by WCF clients with BasicHTTP binding.
+    /// Proxy configuration to be used by the application runtime
     /// </summary>
     public interface IProxyConfig
     {

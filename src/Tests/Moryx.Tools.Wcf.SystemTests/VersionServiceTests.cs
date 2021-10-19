@@ -4,9 +4,9 @@
 using System;
 using System.Linq;
 using System.Net;
-using System.ServiceModel;
 using System.Threading;
 using Moryx.Communication;
+using Moryx.Communication.Endpoints;
 using Moryx.DependentTestModule;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.SystemTests;
@@ -44,7 +44,7 @@ namespace Moryx.Tools.Wcf.SystemTests
             var result = _hogController.WaitForService(DependentTestModule.ModuleController.ModuleName, ServerModuleState.Running, 10);
             Assert.IsTrue(result, "Service 'TestModule' did not reach state 'Running'");
 
-            _versionService = new VersionServiceManager(new ProxyConfig(), "localhost", _hogController.HttpPort);
+            _versionService = new WcfVersionServiceManager(new ProxyConfig(), "localhost", _hogController.HttpPort);
 
             Assert.NotNull(_versionService, "Can't create VersionServiceClient");
         }
@@ -161,7 +161,7 @@ namespace Moryx.Tools.Wcf.SystemTests
             Assert.NotNull(serviceConfig, "ServiceConfig for service {0} not found.", service);
 
             Assert.AreEqual(serverVersion, serviceConfig.Version);
-            Assert.AreEqual(binding, serviceConfig.Binding);
+            Assert.AreEqual(binding, ((Endpoint)serviceConfig).Binding);
             Assert.AreEqual(url, serviceConfig.Address);
         }
 
@@ -217,8 +217,8 @@ namespace Moryx.Tools.Wcf.SystemTests
         {
             var result = new Endpoint[2];
 
-            result[0] = _versionService.ServiceEndpoints(nameof(IHelloWorldWcfService)).FirstOrDefault();
-            result[1] = _versionService.ServiceEndpoints(nameof(ISimpleHelloWorldWcfService)).FirstOrDefault();
+            result[0] = (Endpoint)_versionService.ServiceEndpoints(nameof(IHelloWorldWcfService)).FirstOrDefault();
+            result[1] = (Endpoint)_versionService.ServiceEndpoints(nameof(ISimpleHelloWorldWcfService)).FirstOrDefault();
 
             return result;
         }
