@@ -9,7 +9,7 @@ namespace Moryx.Tools.Wcf
     /// Interface for http service connectors
     /// </summary>
     [Obsolete("Use IWebServiceConnector from Moryx.Communication.Endpoints")]
-    public interface IHttpServiceConnector
+    public interface IHttpServiceConnector : IPlugin
     {
         /// <summary>
         /// Informs that the availability of the client has changed
