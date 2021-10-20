@@ -43,7 +43,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Instantiate product instance collection
         /// </summary>
-        public static ICollection<TInstance> Instantiate<TInstance>(this IEnumerable<IProductPartLink> parts)
+        public static List<TInstance> Instantiate<TInstance>(this IEnumerable<IProductPartLink> parts)
             where TInstance : ProductInstance
         {
             return parts.Select(p => (TInstance)p.Instantiate()).ToList();
