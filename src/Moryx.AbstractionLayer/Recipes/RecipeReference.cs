@@ -14,7 +14,7 @@ namespace Moryx.AbstractionLayer.Recipes
         public long Id { get; set; }
 
         /// <inheritdoc />
-        public long TemplateId { get; }
+        public long TemplateId { get; set; }
 
         /// <inheritdoc />
         public string Name { get; set; }
