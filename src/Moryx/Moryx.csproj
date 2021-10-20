@@ -9,13 +9,18 @@
     <PackageTags>MORYX;Serialization;Configuration;Logging;Core;Modules;Workflows</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net5.0'">
+    <DefineConstants>HAVE_TASK_FROMEXCEPTION;HAVE_ARRAY_EMPTY;HAVE_TASK_COMPLETEDTASK</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net461'">
-		<Reference Include="System.ComponentModel.DataAnnotations" />
-	</ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageReference Include="System.ComponentModel.Annotations" />

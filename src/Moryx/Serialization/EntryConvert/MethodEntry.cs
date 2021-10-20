@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace Moryx.Serialization
 {
     /// <summary>
-    /// Model that represents a public method on an object callable from the WCF service and UI
+    /// Model that represents a public method on an object callable from the UI
     /// </summary>
     [DataContract]
     public class MethodEntry : ICloneable
