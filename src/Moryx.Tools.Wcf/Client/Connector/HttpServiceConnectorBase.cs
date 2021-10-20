@@ -12,7 +12,7 @@ namespace Moryx.Tools.Wcf
     /// </summary>
     /// <typeparam name="TWcfClient">The type of the WCF client.</typeparam>
     /// <typeparam name="TWcfInterface">The type of the WCF interface.</typeparam>
-    public abstract class HttpServiceConnectorBase<TWcfClient, TWcfInterface> : IHttpServiceConnector, IDisposable, IWebServiceConnector
+    public abstract class HttpServiceConnectorBase<TWcfClient, TWcfInterface> : IWebServiceConnector, IDisposable
         where TWcfInterface : class
         where TWcfClient : ClientBase<TWcfInterface>, TWcfInterface
     {
@@ -90,7 +90,7 @@ namespace Moryx.Tools.Wcf
                     IsAvailable = true;
                     break;
                 case ConnectionState.FailedTry:
-                case ConnectionState.VersionMissmatch:
+                case ConnectionState.VersionMismatch:
                 case ConnectionState.ConnectionLost:
                     IsAvailable = false;
                     break;

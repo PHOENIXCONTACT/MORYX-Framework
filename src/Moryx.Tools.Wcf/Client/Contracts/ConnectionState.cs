@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.Communication.Endpoints;
 
 namespace Moryx.Tools.Wcf
 {
@@ -24,8 +25,8 @@ namespace Moryx.Tools.Wcf
                 case InternalConnectionState.VersionMatch:
                     return currentState;
 
-                case InternalConnectionState.VersionMissmatch:
-                    return ConnectionState.VersionMissmatch;
+                case InternalConnectionState.VersionMismatch:
+                    return ConnectionState.VersionMismatch;
 
                 case InternalConnectionState.ConnectionLost:
                     return ConnectionState.ConnectionLost;
@@ -41,49 +42,6 @@ namespace Moryx.Tools.Wcf
                         nameof(internalState));
             }
         }
-    }
-
-    /// <summary>
-    /// The current state of a WCF connection
-    /// </summary>
-    public enum ConnectionState
-    {
-        //TODO: Use Moryx.Communications.Endpoints ConnectionState and remove this in future
-
-        /// <summary>
-        /// Client is new.
-        /// </summary>
-        New,
-
-        /// <summary>
-        /// Connection established
-        /// </summary>
-        Success,
-
-        /// <summary>
-        /// Failed to connect to endpoint
-        /// </summary>
-        FailedTry,
-
-        /// <summary>
-        /// Versions of client and server don't match
-        /// </summary>
-        VersionMissmatch,
-
-        /// <summary>
-        /// Connection to endpoint lost
-        /// </summary>
-        ConnectionLost,
-
-        /// <summary>
-        /// Factory is closing and offers last chance to send infos to server
-        /// </summary>
-        Closing,
-
-        /// <summary>
-        /// Connection to endpoint closed
-        /// </summary>
-        Closed
     }
 
     /// <summary>
@@ -114,7 +72,7 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Versions of client and server don't match
         /// </summary>
-        VersionMissmatch,
+        VersionMismatch,
 
         /// <summary>
         /// Connection to endpoint lost

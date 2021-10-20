@@ -5,6 +5,7 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Timers;
+using Moryx.Communication.Endpoints;
 using Moryx.Logging;
 
 namespace Moryx.Tools.Wcf
@@ -82,7 +83,7 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Publish disconnect events to all the listeners.
         /// </summary>
-        public event EventHandler Diconnected; // TODO: Rename to Disconnected in the next major
+        public event EventHandler Disconnected;
 
         #endregion
 
@@ -237,7 +238,7 @@ namespace Moryx.Tools.Wcf
 
         private void RaiseDisconnected()
         {
-            Diconnected?.Invoke(this, new EventArgs());
+            Disconnected?.Invoke(this, new EventArgs());
         }
 
         #region Heartbeat

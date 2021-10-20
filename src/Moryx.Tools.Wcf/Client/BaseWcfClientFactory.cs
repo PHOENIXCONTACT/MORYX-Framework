@@ -337,7 +337,7 @@ namespace Moryx.Tools.Wcf
                 case InternalConnectionState.FailedTry:
                 case InternalConnectionState.ConnectionLost:
                 case InternalConnectionState.Closed:
-                case InternalConnectionState.VersionMissmatch:
+                case InternalConnectionState.VersionMismatch:
                 case InternalConnectionState.VersionMatch:
                     return true;
 
@@ -427,7 +427,7 @@ namespace Moryx.Tools.Wcf
                 if (((Endpoint)endpoint).Binding == client.Config.BindingType && VersionCompare.ClientMatch(serverVersion, clientVersion))
                     HandleConnectionState(client, InternalConnectionState.VersionMatch);
                 else
-                    HandleConnectionState(client, InternalConnectionState.VersionMissmatch);
+                    HandleConnectionState(client, InternalConnectionState.VersionMismatch);
             }
         }
 
@@ -458,7 +458,7 @@ namespace Moryx.Tools.Wcf
                 }).OrderByDescending(e => e.Version).FirstOrDefault();
             if (endpoint == null)
             {
-                HandleConnectionState(client, InternalConnectionState.VersionMissmatch);
+                HandleConnectionState(client, InternalConnectionState.VersionMismatch);
                 return;
             }
 

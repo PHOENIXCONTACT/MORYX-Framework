@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Moryx.Communication.Endpoints;
 using Moryx.TestTools.UnitTest;
 using Moryx.Tools.Wcf.Tests.Logging;
 using NUnit.Framework;
@@ -324,15 +325,15 @@ namespace Moryx.Tools.Wcf.Tests
             Assert.IsFalse(_allClientsConnectedEvent.IsSet, "All connected.");
 
             Assert.Null(_logMaintenanceService, "Got service");
-            Assert.AreEqual(ConnectionState.VersionMissmatch, _logMaintenanceState, "Service state");
+            Assert.AreEqual(ConnectionState.VersionMismatch, _logMaintenanceState, "Service state");
 
             lock (_receivedClientInfos)
             {
                 Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.New && i.Tries == 0), "Received initial LogMaintenanceServiceName client info event");
                 Assert.Null(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.New && i.Tries == 1), "Received intermediate LogMaintenanceServiceName client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.VersionMissmatch && i.Tries == 1), "Received first failed LogMaintenanceServiceName client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.VersionMissmatch && i.Tries == 2), "Received second LogMaintenanceServiceName client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.VersionMissmatch && i.Tries == 3), "Received third LogMaintenanceServiceName client info event");
+                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.VersionMismatch && i.Tries == 1), "Received first failed LogMaintenanceServiceName client info event");
+                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.VersionMismatch && i.Tries == 2), "Received second LogMaintenanceServiceName client info event");
+                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == LogMaintenanceServiceName && i.State == ConnectionState.VersionMismatch && i.Tries == 3), "Received third LogMaintenanceServiceName client info event");
             }
 
             _versionServiceManager.ServerVersion = clientVersion;

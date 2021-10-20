@@ -81,7 +81,7 @@ namespace Moryx.Serialization
             // Find better way to remove ExpectedConfigAttribute -> Tries: 3
             var implementations = pluginContainer.GetRegisteredImplementations(StrategyService);
             possibleValues.AddRange(implementations.Select(implementation => implementation.GetCustomAttribute<ExpectedConfigAttribute>())
-                                                   .Where(attribute => attribute != null).Select(attribute => attribute.ExcpectedConfigType));
+                                                   .Where(attribute => attribute != null).Select(attribute => attribute.ExpectedConfigType));
             return possibleValues;
         }
     }

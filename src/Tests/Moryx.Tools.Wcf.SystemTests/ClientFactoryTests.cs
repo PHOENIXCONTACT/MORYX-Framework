@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
+using Moryx.Communication.Endpoints;
 using Moryx.DependentTestModule;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.SystemTests;
@@ -91,22 +92,22 @@ namespace Moryx.Tools.Wcf.SystemTests
         [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
-            if (_hogController.Process != null && !_hogController.Process.HasExited)
-            {
-                Console.WriteLine("Trying to stop HeartOfGold");
+            if (_hogController.Process == null || _hogController.Process.HasExited)
+                return;
 
-                _hogController.StopHeartOfGold(10);
+            Console.WriteLine("Trying to stop HeartOfGold");
 
-                if (!_hogController.Process.HasExited)
-                {
-                    Console.WriteLine("Killing HeartOfGold");
-                    _hogController.Process.Kill();
+            _hogController.StopHeartOfGold(10);
 
-                    Thread.Sleep(1000);
+            if (_hogController.Process.HasExited)
+                return;
 
-                    Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
-                }
-            }
+            Console.WriteLine("Killing HeartOfGold");
+            _hogController.Process.Kill();
+
+            Thread.Sleep(1000);
+
+            Assert.IsTrue(_hogController.Process.HasExited, "Can't kill HeartOfGold.");
         }
 
         public void Dispose()
@@ -381,7 +382,7 @@ namespace Moryx.Tools.Wcf.SystemTests
             Assert.IsFalse(_basicHttpConnectedEvent.IsSet, "ClientConnected received for ISimpleHelloWorldWcfService");
 
             Assert.Null(_basicHttpService, "Got SimpleHelloWorld service");
-            Assert.AreEqual(ConnectionState.VersionMissmatch, _basicHttpState, "SimpleHelloWorld state");
+            Assert.AreEqual(ConnectionState.VersionMismatch, _basicHttpState, "SimpleHelloWorld state");
 
             Assert.NotNull(_netTcpService, "Didn't get HelloWorld service");
             Assert.AreEqual(ConnectionState.Success, _netTcpState, "HelloWorld state");
@@ -394,9 +395,9 @@ namespace Moryx.Tools.Wcf.SystemTests
 
                 Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.New && i.Tries == 0), "Received initial ISimpleHelloWorldWcfService client info event");
                 Assert.Null(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.New && i.Tries == 1), "Received intermediate ISimpleHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.VersionMissmatch && i.Tries == 1), "Received first failed ISimpleHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.VersionMissmatch && i.Tries == 2), "Received second ISimpleHelloWorldWcfService client info event");
-                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.VersionMissmatch && i.Tries == 3), "Received third ISimpleHelloWorldWcfService client info event");
+                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.VersionMismatch && i.Tries == 1), "Received first failed ISimpleHelloWorldWcfService client info event");
+                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.VersionMismatch && i.Tries == 2), "Received second ISimpleHelloWorldWcfService client info event");
+                Assert.NotNull(_receivedClientInfos.FirstOrDefault(i => i.Service == BasicHttpServiceName && i.State == ConnectionState.VersionMismatch && i.Tries == 3), "Received third ISimpleHelloWorldWcfService client info event");
             }
         }
 

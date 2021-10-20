@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using Moryx.Communication.Endpoints;
 
 namespace Moryx.Tools.Wcf
 {
