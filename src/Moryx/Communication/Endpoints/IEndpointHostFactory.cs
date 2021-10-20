@@ -11,7 +11,7 @@ namespace Moryx.Communication.Endpoints
     public interface IEndpointHostFactory
     {
         /// <summary>
-        /// Create host instance for a wcf service
+        /// Create host instance for a service
         /// </summary>
         IEndpointHost CreateHost(Type endpoint, object config);
     }

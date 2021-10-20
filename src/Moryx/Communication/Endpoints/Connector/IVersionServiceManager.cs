@@ -3,11 +3,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Moryx.Communication;
 
-namespace Moryx.Tools.Wcf
+namespace Moryx.Communication.Endpoints
 {
-    internal interface IVersionServiceManager : IDisposable
+    /// <summary>
+    /// Service manager api for provide active endpoints of the current application runtime
+    /// </summary>
+    public interface IVersionServiceManager : IDisposable
     {
         /// <summary>
         /// Available endpoints for this service type

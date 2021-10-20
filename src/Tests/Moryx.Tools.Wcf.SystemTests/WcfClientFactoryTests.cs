@@ -27,7 +27,7 @@ namespace Moryx.Tools.Wcf.Tests
             Legacy
         }
 
-        private VersionServiceManagerMock _versionServiceManager;
+        private WcfVersionServiceManagerMock _versionServiceManager;
         private TestWcfClientFactory _wcfClientFactory;
         private ConnectionState _logMaintenanceState;
         private LogMaintenanceClientMock _logMaintenanceService;
@@ -44,7 +44,7 @@ namespace Moryx.Tools.Wcf.Tests
         [OneTimeSetUp]
         public void TestFixtureSetup()
         {
-            _versionServiceManager = new VersionServiceManagerMock();
+            _versionServiceManager = new WcfVersionServiceManagerMock();
         }
 
         [OneTimeTearDown]
