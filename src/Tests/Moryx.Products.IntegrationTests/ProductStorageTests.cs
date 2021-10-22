@@ -154,6 +154,12 @@ namespace Moryx.Products.IntegrationTests
                                 PropertyName = nameof(WatchfaceInstance.Identifier),
                                 Column = nameof(IGenericColumns.Text1),
                                 PluginName = nameof(TextColumnMapper)
+                            },
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(WatchfaceInstance.Identity),
+                                Column = nameof(IGenericColumns.Text2),
+                                PluginName = nameof(TextColumnMapper)
                             }
                         },
                         JsonColumn = nameof(IGenericColumns.Text8)
@@ -818,7 +824,7 @@ namespace Moryx.Products.IntegrationTests
             // Act
             var watchCopy = (WatchInstance)_storage.LoadInstances(instance.Id)[0];
             var identity = instance.Identity;
-            var byIdentity = _storage.LoadInstances<WatchInstance>(w => identity.Equals(w.Identity));
+            var byIdentity = _storage.LoadInstances<IIdentifiableObject>(w => identity.Equals(w.Identity));
             var byDateTime = _storage.LoadInstances<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
             var byBool = _storage.LoadInstances<WatchInstance>(i => i.TimeSet);
 

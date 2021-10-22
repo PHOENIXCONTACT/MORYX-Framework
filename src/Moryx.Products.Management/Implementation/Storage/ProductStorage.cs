@@ -632,16 +632,23 @@ namespace Moryx.Products.Management
             using (var uow = Factory.Create())
             {
                 var repo = uow.GetRepository<IProductInstanceEntityRepository>();
-
-                var entities = new List<ProductInstanceEntity>();
                 var matchingStrategies = InstanceStrategies.Values
                     .Where(i => typeof(TInstance).IsAssignableFrom(i.TargetType));
+
+                IQueryable<ProductInstanceEntity> query = null;
                 foreach (var instanceStrategy in matchingStrategies)
                 {
                     var queryFilter = instanceStrategy.TransformSelector(selector);
-                    entities.AddRange(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>());
+                    query = query == null 
+                        ? repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>() // Create query
+                        : query.Union(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>()); // Append query
                 }
 
+                // No query or no result => Nothing to do
+                List<ProductInstanceEntity> entities;
+                if (query == null || (entities = query.ToList()).Count == 0)
+                    return new TInstance[0];
+                
                 var instances = TransformInstances(uow, entities).OfType<TInstance>().ToArray();
                 // Final check against compiled expression
                 var compiledSelector = selector.Compile();
