@@ -15,6 +15,7 @@ using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
+using static Moryx.Products.Management.ProductExpressionHelpers;
 
 namespace Moryx.Products.Management
 {
@@ -627,7 +628,31 @@ namespace Moryx.Products.Management
             }
         }
 
+        public IReadOnlyList<ProductInstance> LoadInstances(ProductType productType)
+        {
+            using (var uow = Factory.Create())
+            {
+                var repo = uow.GetRepository<IProductInstanceEntityRepository>();
+                var entities = repo.Linq
+                    .Where(e => e.ProductId == productType.Id)
+                    .ToList();
+                return TransformInstances(uow, entities);
+            }
+        }
+
         public IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
+        {
+            if (IsTypeQuery(selector, out var productType))
+            {
+                return LoadInstances(productType).OfType<TInstance>().ToList();
+            }
+            else
+            {
+                return LoadWithStrategy(selector);
+            }
+        }
+
+        public IReadOnlyList<TInstance> LoadWithStrategy<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
             using (var uow = Factory.Create())
             {

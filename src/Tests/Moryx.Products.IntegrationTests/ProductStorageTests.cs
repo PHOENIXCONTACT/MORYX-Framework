@@ -80,7 +80,7 @@ namespace Moryx.Products.IntegrationTests
                     new GenericTypeConfiguration
                     {
                         TargetType = nameof(WatchfaceType),
-                        PropertyConfigs = new List<PropertyMapperConfig>()
+                        PropertyConfigs = new List<PropertyMapperConfig>
                         {
                             new PropertyMapperConfig
                             {
@@ -827,6 +827,7 @@ namespace Moryx.Products.IntegrationTests
             var byIdentity = _storage.LoadInstances<IIdentifiableObject>(w => identity.Equals(w.Identity));
             var byDateTime = _storage.LoadInstances<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
             var byBool = _storage.LoadInstances<WatchInstance>(i => i.TimeSet);
+            var byType = _storage.LoadInstances<WatchInstance>(i => i.Type == watch);
 
             // Assert
             Assert.NotNull(watchCopy);
@@ -840,6 +841,7 @@ namespace Moryx.Products.IntegrationTests
             Assert.LessOrEqual(1, byIdentity.Count);
             Assert.LessOrEqual(1, byDateTime.Count);
             Assert.LessOrEqual(1, byBool.Count);
+            Assert.LessOrEqual(1, byType.Count);
         }
     }
 }

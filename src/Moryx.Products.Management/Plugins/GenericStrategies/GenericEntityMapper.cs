@@ -12,6 +12,7 @@ using Moryx.Products.Model;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Newtonsoft.Json;
+using static Moryx.Products.Management.ProductExpressionHelpers;
 
 namespace Moryx.Products.Management
 {
@@ -97,23 +98,6 @@ namespace Moryx.Products.Management
                     }
                     break;
             }
-            throw new NotSupportedException("Expression type not supported yet");
-        }
-
-        private static object ExtractExpressionValue(Expression expression)
-        {
-            if (expression is ConstantExpression constEx)
-                return constEx.Value;
-
-            if (expression is MemberExpression memEx)
-            {
-                var container = (memEx.Expression as ConstantExpression)?.Value;
-                if (memEx.Member is FieldInfo field)
-                    return field.GetValue(container);
-                if (memEx.Member is PropertyInfo prop)
-                    return prop.GetValue(container);
-            }
-
             throw new NotSupportedException("Expression type not supported yet");
         }
 
