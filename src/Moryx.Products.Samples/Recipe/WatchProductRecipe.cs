@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Serialization;
 

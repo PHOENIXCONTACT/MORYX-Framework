@@ -5,14 +5,13 @@ using System;
 using System.Collections.Generic;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Model;
 using Moryx.Modules;
 using Moryx.Products.Model;
 
 namespace Moryx.Products.Management
 {
     /// <summary>
-    /// Interface to easily access 
+    /// Interface to easily access
     /// </summary>
     public interface IProductLinkStrategy : IConfiguredPlugin<ProductLinkConfiguration>
     {

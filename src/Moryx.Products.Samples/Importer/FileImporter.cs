@@ -3,12 +3,9 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Modules;
-using Moryx.Products.Management;
-using Moryx.Products.Management.Importers;
+using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.Products.Samples
 {
@@ -19,7 +16,6 @@ namespace Moryx.Products.Samples
         /// <summary>
         /// Method to generate an instance of the parameter array
         /// </summary>
-        /// <returns></returns>
         protected override object GenerateParameters()
         {
             return new FileImportParameters { FileExtension = ".mjb" };

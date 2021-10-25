@@ -2,11 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
 
-namespace Moryx.Products.Management.Importers
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Interface for plugins that can import products from file

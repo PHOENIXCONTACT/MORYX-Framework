@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
 using Moryx.Configuration;
 using Moryx.Products.Management.Importers;
 using Moryx.Products.Management.Modification;

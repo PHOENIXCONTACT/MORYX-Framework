@@ -4,12 +4,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Products.Management;
-using Moryx.Products.Management.Importers;
+using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.Products.Samples
 {
@@ -19,18 +17,15 @@ namespace Moryx.Products.Samples
     {
         public IProductStorage Storage { get; set; }
 
-        /// <summary>
-        /// Import a product using given parameters
-        /// </summary>
         protected override Task<ProductImporterResult> Import(ProductImportContext context, SpecializedWatchImportParameters parameters)
         {
             var product = new WatchType
             {
                 Name = parameters.Name,
                 Identity = new ProductIdentity(parameters.Identifier, parameters.Revision),
-                Watchface = new ProductPartLink<WatchfaceTypeBase>
+                WatchFace = new ProductPartLink<WatchFaceTypeBase>
                 {
-                    Product = (WatchfaceType)Storage.LoadType(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
+                    Product = (WatchFaceType)Storage.LoadType(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
                 },
                 Needles = new List<NeedlePartLink>
                 {

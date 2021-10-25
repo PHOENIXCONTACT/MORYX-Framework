@@ -6,24 +6,24 @@ using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.Products.Samples
 {
-    public abstract class WatchfaceTypeBase : ProductType
+    public abstract class WatchFaceTypeBase : ProductType
     {
     }
 
     [DisplayName("Display Watchface")]
-    public class DisplayWatchfaceType : WatchfaceTypeBase
+    public class DisplayWatchFaceType : WatchFaceTypeBase
     {
         [Description("Screen resolution in DPI")]
         public int Resolution { get; set; }
 
         protected override ProductInstance Instantiate()
         {
-            return new WatchfaceInstance();
+            return new WatchFaceInstance();
         }
     }
 
     [DisplayName("Watchface")]
-    public class WatchfaceType : WatchfaceTypeBase
+    public class WatchFaceType : WatchFaceTypeBase
     {
         [Description("Numbers on the watchface")]
         public int[] Numbers { get; set; }
@@ -39,7 +39,7 @@ namespace Moryx.Products.Samples
 
         protected override ProductInstance Instantiate()
         {
-            return new WatchfaceInstance();
+            return new WatchFaceInstance();
         }
     }
 }

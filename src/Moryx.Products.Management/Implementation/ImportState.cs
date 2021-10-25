@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.Products.Management
 {

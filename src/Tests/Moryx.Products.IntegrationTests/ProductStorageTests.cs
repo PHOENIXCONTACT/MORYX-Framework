@@ -79,24 +79,24 @@ namespace Moryx.Products.IntegrationTests
                     },
                     new GenericTypeConfiguration
                     {
-                        TargetType = nameof(WatchfaceType),
+                        TargetType = nameof(WatchFaceType),
                         PropertyConfigs = new List<PropertyMapperConfig>()
                         {
                             new PropertyMapperConfig
                             {
-                                PropertyName = nameof(WatchfaceType.Brand),
+                                PropertyName = nameof(WatchFaceType.Brand),
                                 Column = nameof(IGenericColumns.Text1),
                                 PluginName = nameof(TextColumnMapper)
                             },
                             new PropertyMapperConfig
                             {
-                                PropertyName = nameof(WatchfaceType.IsDigital),
+                                PropertyName = nameof(WatchFaceType.IsDigital),
                                 Column = nameof(IGenericColumns.Integer1),
                                 PluginName = nameof(IntegerColumnMapper)
                             },
                             new PropertyMapperConfig
                             {
-                                PropertyName = nameof(WatchfaceType.Color),
+                                PropertyName = nameof(WatchFaceType.Color),
                                 Column = string.Empty,
                                 PluginName = nameof(NullPropertyMapper)
                             }
@@ -146,12 +146,12 @@ namespace Moryx.Products.IntegrationTests
                     },
                     new GenericInstanceConfiguration
                     {
-                        TargetType = nameof(WatchfaceInstance),
+                        TargetType = nameof(WatchFaceInstance),
                         PropertyConfigs = new List<PropertyMapperConfig>
                         {
                             new PropertyMapperConfig
                             {
-                                PropertyName = nameof(WatchfaceInstance.Identifier),
+                                PropertyName = nameof(WatchFaceInstance.Identifier),
                                 Column = nameof(IGenericColumns.Text1),
                                 PluginName = nameof(TextColumnMapper)
                             }
@@ -169,7 +169,7 @@ namespace Moryx.Products.IntegrationTests
                     new ProductLinkConfiguration()
                     {
                         TargetType = nameof(WatchType),
-                        PartName = nameof(WatchType.Watchface),
+                        PartName = nameof(WatchType.WatchFace),
                         PluginName = nameof(SimpleLinkStrategy)
                     },
                     new GenericLinkConfiguration
@@ -330,7 +330,7 @@ namespace Moryx.Products.IntegrationTests
 
         private static WatchType SetupProduct(string watchName, string identifierPrefix, short revision = 5)
         {
-            var watchface = new WatchfaceType
+            var watchface = new WatchFaceType
             {
                 Name = "Black water resistant for " + watchName,
                 Identity = new ProductIdentity(identifierPrefix + "4711", revision),
@@ -357,7 +357,7 @@ namespace Moryx.Products.IntegrationTests
             {
                 Name = watchName,
                 Identity = new ProductIdentity(identifierPrefix + WatchMaterial, revision),
-                Watchface = new ProductPartLink<WatchfaceTypeBase> { Product = watchface },
+                WatchFace = new ProductPartLink<WatchFaceTypeBase> { Product = watchface },
                 Needles = needles,
                 Weight = 123.45
             };
@@ -459,7 +459,7 @@ namespace Moryx.Products.IntegrationTests
             var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleType)));
             Assert.AreEqual(watchNeedlesCount, watchEntityNeedlesCount, "Different number of needles");
 
-            var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchfaceType))).Child;
+            var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchFaceType))).Child;
             Assert.NotNull(watchfaceEntity, "There is no watchface");
 
             var identity = (ProductIdentity)watch.Identity;
@@ -473,7 +473,7 @@ namespace Moryx.Products.IntegrationTests
         {
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            var watchface = (WatchfaceType)watch.Watchface.Product;
+            var watchface = (WatchFaceType)watch.WatchFace.Product;
 
             // Act
             var savedWatchId = _storage.SaveType(watch);
@@ -482,9 +482,9 @@ namespace Moryx.Products.IntegrationTests
             // Assert
             Assert.NotNull(loadedWatch, "Failed to load from database");
             Assert.AreEqual(watch.Identity.Identifier, loadedWatch.Identity.Identifier, "Different identifier of the saved an loaded watch");
-            Assert.AreEqual(watch.Watchface.Product.Identity.Identifier, loadedWatch.Watchface.Product.Identity.Identifier, "Different watchface identifier of the saved and loaded watch");
+            Assert.AreEqual(watch.WatchFace.Product.Identity.Identifier, loadedWatch.WatchFace.Product.Identity.Identifier, "Different watchface identifier of the saved and loaded watch");
             Assert.AreEqual(watch.Needles.Count, loadedWatch.Needles.Count, "Different number of needles");
-            var loadedWatchface = (WatchfaceType)loadedWatch.Watchface.Product;
+            var loadedWatchface = (WatchFaceType)loadedWatch.WatchFace.Product;
             Assert.AreEqual(watchface.Numbers.Length, loadedWatchface.Numbers.Length, "Different number of watch numbers");
         }
 
@@ -493,7 +493,7 @@ namespace Moryx.Products.IntegrationTests
         public void LoadAndSaveTypeWithNullString()
         {
             // Arrange
-            var watchfaceWithString = new WatchfaceType
+            var watchfaceWithString = new WatchFaceType
             {
                 Name = "Blubber",
                 Identity = new ProductIdentity("8899665", 1),
@@ -502,7 +502,7 @@ namespace Moryx.Products.IntegrationTests
             };
 
             var savedId = _storage.SaveType(watchfaceWithString);
-            var loaded = (WatchfaceType)_storage.LoadType(savedId);
+            var loaded = (WatchFaceType)_storage.LoadType(savedId);
 
             // Act & Assert
             Assert.DoesNotThrow(delegate
@@ -560,7 +560,7 @@ namespace Moryx.Products.IntegrationTests
         public void LoadAndSaveTypeWithNullPropertyMapper()
         {
             // Arrange
-            var watchfaceWithString = new WatchfaceType
+            var watchfaceWithString = new WatchFaceType
             {
                 Name = "Fasel",
                 Identity = new ProductIdentity("55889966", 1),
@@ -571,7 +571,7 @@ namespace Moryx.Products.IntegrationTests
 
             // Act
             var savedId = _storage.SaveType(watchfaceWithString);
-            var loaded = (WatchfaceType)_storage.LoadType(savedId);
+            var loaded = (WatchFaceType)_storage.LoadType(savedId);
 
             // Assert
             Assert.AreEqual(0, loaded.Color);
@@ -742,7 +742,7 @@ namespace Moryx.Products.IntegrationTests
             var recipeDuplicates = _storage.LoadRecipes(duplicate.Id, RecipeClassification.CloneFilter);
 
             // Assert
-            Assert.AreEqual(watch.Watchface.Product.Id, duplicate.Watchface.Product.Id);
+            Assert.AreEqual(watch.WatchFace.Product.Id, duplicate.WatchFace.Product.Id);
             Assert.AreEqual(watch.Needles.Sum(n => n.Product.Id), duplicate.Needles.Sum(n => n.Product.Id));
             Assert.Greater(recipeDuplicates.Count, 0);
             Assert.AreNotEqual(recipe.Id, recipeDuplicates[0].Id);
@@ -766,7 +766,7 @@ namespace Moryx.Products.IntegrationTests
             // Act
             bool result;
             if (stillUsed)
-                result = productMgr.DeleteType(watch.Watchface.Product.Id);
+                result = productMgr.DeleteType(watch.WatchFace.Product.Id);
             else
                 result = productMgr.DeleteType(watch.Id);
 
@@ -811,7 +811,7 @@ namespace Moryx.Products.IntegrationTests
                 var parts = root.Parts;
                 Assert.AreEqual(1, parts.Count, "Invalid number of parts!"); // needles will be skipped for saving
 
-                var single = parts.FirstOrDefault(p => p.PartLinkId == watch.Watchface.Id);
+                var single = parts.FirstOrDefault(p => p.PartLinkId == watch.WatchFace.Id);
                 Assert.NotNull(single, "Single part not saved!");
             }
 
@@ -826,8 +826,8 @@ namespace Moryx.Products.IntegrationTests
             Assert.NotNull(watchCopy);
             Assert.AreEqual(instance.DeliveryDate, watchCopy.DeliveryDate);
             Assert.AreEqual(instance.TimeSet, watchCopy.TimeSet);
-            Assert.NotNull(instance.Watchface);
-            Assert.AreEqual(instance.Watchface.Identifier, watchCopy.Watchface.Identifier, "Guid does not match");
+            Assert.NotNull(instance.WatchFace);
+            Assert.AreEqual(instance.WatchFace.Identifier, watchCopy.WatchFace.Identifier, "Guid does not match");
             Assert.NotNull(instance.Needles);
             Assert.AreEqual(3, instance.Needles.Count);
 

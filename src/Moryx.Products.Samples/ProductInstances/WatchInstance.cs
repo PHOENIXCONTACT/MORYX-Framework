@@ -16,7 +16,7 @@ namespace Moryx.Products.Samples
 
         public DateTime DeliveryDate { get; set; }
 
-        public WatchfaceInstance Watchface { get; set; }
+        public WatchFaceInstance WatchFace { get; set; }
 
         public ICollection<NeedleInstance> Needles { get; set; }
     }

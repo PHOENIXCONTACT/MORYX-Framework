@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using Moryx.Modules;
 using Moryx.Serialization;
 
-namespace Moryx.Products.Management.Importers
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Config for product importers
