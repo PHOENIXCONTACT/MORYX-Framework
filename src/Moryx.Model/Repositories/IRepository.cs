@@ -73,10 +73,21 @@ namespace Moryx.Model.Repositories
         T Create();
 
         /// <summary>
+        /// Create a new instance of this type and add it to the context
+        /// </summary>
+        Task<T> CreateAsync();
+
+        /// <summary>
         /// Create a new instance but specify, if it should be added to the context
         /// </summary>
         /// <param name="addToContext"><value>True</value>Instance is added to the context. <value>False</value>Instance is not added to the context</param>
         T Create(bool addToContext);
+
+        /// <summary>
+        /// Create a new instance but specify, if it should be added to the context
+        /// </summary>
+        /// <param name="addToContext"><value>True</value>Instance is added to the context. <value>False</value>Instance is not added to the context</param>
+        Task<T> CreateAsync(bool addToContext);
 
         /// <summary>
         /// Adds an entity to the context
@@ -85,10 +96,22 @@ namespace Moryx.Model.Repositories
         T Add(T entity);
 
         /// <summary>
+        /// Adds an entity to the context
+        /// </summary>
+        /// <param name="entity">Entity that shall be added</param>
+        Task<T> AddAsync(T entity);
+
+        /// <summary>
         /// Add multiple entities to to context at one time
         /// </summary>
         /// <param name="entities">Entities that shall be added</param>
         IEnumerable<T> AddRange(IEnumerable<T> entities);
+
+        /// <summary>
+        /// Add multiple entities to to context at one time
+        /// </summary>
+        /// <param name="entities">Entities that shall be added</param>
+        Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
 
         /// <summary>
         /// Remove entity. ModificationTracked entities will only update the

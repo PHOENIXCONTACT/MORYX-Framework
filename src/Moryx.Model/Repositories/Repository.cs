@@ -87,6 +87,10 @@ namespace Moryx.Model.Repositories
             Create(true);
 
         /// <inheritdoc />
+        public Task<T> CreateAsync() =>
+            CreateAsync(true);
+
+        /// <inheritdoc />
         public T Create(bool addToContext)
         {
             var newInstance = new T();
@@ -97,17 +101,42 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
-        public T Add(T entityToAdd)
+        public async Task<T> CreateAsync(bool addToContext)
         {
-            var entry = DbSet.Add(entityToAdd);
+            var newInstance = new T();
+            if (addToContext)
+                await DbSet.AddAsync(newInstance);
+
+            return newInstance;
+        }
+
+        /// <inheritdoc />
+        public T Add(T entity)
+        {
+            var entry = DbSet.Add(entity);
             return entry.Entity;
         }
 
         /// <inheritdoc />
-        public IEnumerable<T> AddRange(IEnumerable<T> entitiesToAdd)
+        public async Task<T> AddAsync(T entity)
         {
-            var entries = entitiesToAdd.ToList();
+            var entry = await DbSet.AddAsync(entity);
+            return entry.Entity;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<T> AddRange(IEnumerable<T> entities)
+        {
+            var entries = entities.ToList();
             DbSet.AddRange(entries);
+            return entries;
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)
+        {
+            var entries = entities.ToList();
+            await DbSet.AddRangeAsync(entries);
             return entries;
         }
 

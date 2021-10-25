@@ -3,6 +3,8 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.InMemory;
 using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
@@ -14,7 +16,7 @@ namespace Moryx.Model.Tests
     {
 
         [Test]
-        public void InMemoryContextShouldWork()
+        public async Task InMemoryContextShouldWork()
         {
             // Arrange
             const string carName = "BMW 320d F31 - Mineral Gray";
@@ -26,12 +28,12 @@ namespace Moryx.Model.Tests
             // Assert
             var carsSet = context.Cars;
             var someCar = new CarEntity {Name = carName};
+            await carsSet.AddAsync(someCar);
 
-            carsSet.Add(someCar);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             context = inMemoryFactory.Create<TestModelContext>();
-            var reloadedCar = context.Cars.First();
+            var reloadedCar = await context.Cars.FirstAsync();
 
             Assert.IsNotNull(reloadedCar);
             Assert.AreEqual(carName, reloadedCar.Name);
