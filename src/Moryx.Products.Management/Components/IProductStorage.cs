@@ -4,12 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.Model.Repositories;
 using Moryx.Modules;
-using Moryx.Products.Model;
 
 namespace Moryx.Products.Management
 {

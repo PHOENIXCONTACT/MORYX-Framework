@@ -2,10 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer.Products;
-using Moryx.Products.Management.Importers;
 
-namespace Moryx.Products.Management
+namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
     /// Base class for product importers
@@ -20,7 +18,7 @@ namespace Moryx.Products.Management
         /// Config of this importer
         /// </summary>
         protected TConfig Config { get; private set; }
-        
+
         /// <inheritdoc />
         public string Name => Config.PluginName;
 

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
+using Moryx.AbstractionLayer.Products;
 using Moryx.Products.Management.Importers;
 
 namespace Moryx.Products.Samples
