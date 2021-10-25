@@ -12,6 +12,12 @@ using Moryx.Model.Attributes;
 
 namespace Moryx.Model.Annotations
 {
+    /// <summary>
+    /// Annotation for the data model context for date time kind conversion.
+    /// If <see cref="ApplyDateTimeKindConverter"/> is used on the ModelBuilder, DateTime values are automatically
+    /// configured to be stored as Utc (default value) and converted to local time in application. The DateTimeKind can be changed by usage of the
+    /// <see cref="DateTimeKindAttribute"/>
+    /// </summary>
     public static class DateTimeKindAnnotation
     {
         private const string AnnotationName = "DateTimeKind";

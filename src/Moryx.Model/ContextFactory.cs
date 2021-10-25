@@ -10,21 +10,26 @@ namespace Moryx.Model
     public class ContextFactory<TContext> : IContextFactory<TContext>
         where TContext : DbContext
     {
+        private readonly IDbContextManager _manager;
+
         /// <summary>
-        /// Injected manager that does the real work
+        /// Creates a new instance of <see cref="ContextFactory{TContext}"/>
         /// </summary>
-        public IDbContextManager Manager { get; set; }
+        public ContextFactory(IDbContextManager dbContextManager)
+        {
+            _manager = dbContextManager;
+        }
 
         /// <inheritdoc />
         public TContext Create()
         {
-            return Manager.Create<TContext>();
+            return _manager.Create<TContext>();
         }
 
         /// <inheritdoc />
         public TContext Create(IDatabaseConfig config)
         {
-            return Manager.Create<TContext>(config);
+            return _manager.Create<TContext>(config);
         }
     }
 }

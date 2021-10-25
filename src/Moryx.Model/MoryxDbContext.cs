@@ -17,10 +17,12 @@ namespace Moryx.Model
     /// </summary>
     public abstract class MoryxDbContext : DbContext
     {
+        /// <inheritdoc />
         protected MoryxDbContext()
         {
         }
 
+        /// <inheritdoc />
         protected MoryxDbContext(DbContextOptions options) : base(options)
         {
         }

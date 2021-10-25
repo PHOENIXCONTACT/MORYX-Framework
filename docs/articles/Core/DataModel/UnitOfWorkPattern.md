@@ -37,25 +37,24 @@ And here is how you use it.
 // Injected
 public IUnitOfWorkFactory<PersonContext> UnitOfWorkFactory { get; set; }
 
-public void WriteSomethingToDB()
+public async Task WriteSomethingToDB()
 {
-    using (var uow = UnitOfWorkFactory.Create())
-    {
-        // Get the repository you want to work with
-        var personRepo = uow.GetRepository<IPersonEntityRepository>();
+    using var uow = UnitOfWorkFactory.Create()
 
-        // Get all persons
-        var persons = personRepo.GetAll();
+    // Get the repository you want to work with
+    var personRepo = uow.GetRepository<IPersonEntityRepository>();
 
-        // Create a person
-        var newPerson = personRepo.Create();
+    // Get all persons
+    var persons = await personRepo.GetAllAsync();
 
-        // Change it
-        newPerson.Name = "Spock";
+    // Create a person
+    var newPerson = await personRepo.Create();
 
-        // save it
-        uow.SaveChanges();
-    }
+    // Change it
+    newPerson.Name = "Spock";
+
+    // save it
+    await uow.SaveChangesAsync();
 }
 ````
 
