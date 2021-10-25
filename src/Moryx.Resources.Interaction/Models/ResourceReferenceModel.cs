@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Interaction
 {

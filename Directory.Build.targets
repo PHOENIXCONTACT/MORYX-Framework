@@ -2,9 +2,9 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxPlatformVersion>3.0.0</MoryxPlatformVersion>
-    <MoryxClientFrameworkVersion>3.0.0</MoryxClientFrameworkVersion>
-    <MoryxMaintenanceWebVersion>3.0.0</MoryxMaintenanceWebVersion>
+    <MoryxCoreVersion>3.2.0</MoryxCoreVersion>
+    <MoryxClientFrameworkVersion>3.1.0</MoryxClientFrameworkVersion>
+    <MoryxMaintenanceWebVersion>3.1.0</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
@@ -18,22 +18,23 @@
   <ItemGroup>
     <!--3rd party dependencies-->
     <PackageReference Update="Caliburn.Micro" Version="3.2.0" />
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-    <PackageReference Update="Moq" Version="4.14.6" />
-    <PackageReference Update="NUnit" Version="3.12.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.8.0" />
+    <PackageReference Update="Moq" Version="4.16.1" />
+    <PackageReference Update="NUnit" Version="3.13.1" />
     <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
 
     <!--Platform dependencies-->
-    <PackageReference Update="Moryx" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Container" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Tools.Wcf" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Model.PostgreSQL" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Model.InMemory" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.TestTools.UnitTest" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Runtime" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Runtime.Wcf" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Runtime.Maintenance" Version="$(MoryxPlatformVersion)" />
-    <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxPlatformVersion)" />
+    <PackageReference Update="Moryx" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Container" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Tools.Wcf" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Model.PostgreSQL" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Model.InMemory" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.TestTools.UnitTest" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Wcf" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Maintenance" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Kestrel" Version="$(MoryxCoreVersion)" />
 
     <!--ClientFramework dependencies-->
     <PackageReference Update="Moryx.Controls" Version="$(MoryxClientFrameworkVersion)" />

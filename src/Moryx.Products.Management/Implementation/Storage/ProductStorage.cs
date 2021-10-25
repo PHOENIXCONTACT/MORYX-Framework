@@ -367,7 +367,7 @@ namespace Moryx.Products.Management
                 if (revision == ProductIdentity.LatestRevision)
                 {
                     // Get all revisions of this product
-                    var revisions = productRepo.Linq
+                    var revisions = productRepo.Linq.Active()
                         .Where(p => p.Identifier == identity.Identifier)
                         .Select(p => p.Revision).ToList();
                     if (revisions.Any())
@@ -623,7 +623,7 @@ namespace Moryx.Products.Management
             {
                 var repo = uow.GetRepository<IProductInstanceEntityRepository>();
                 var entities = repo.GetByKeys(id);
-                return TransformArticles(uow, entities);
+                return TransformInstances(uow, entities);
             }
         }
 
@@ -642,7 +642,7 @@ namespace Moryx.Products.Management
                     entities.AddRange(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>());
                 }
 
-                var instances = TransformArticles(uow, entities).OfType<TInstance>().ToArray();
+                var instances = TransformInstances(uow, entities).OfType<TInstance>().ToArray();
                 // Final check against compiled expression
                 var compiledSelector = selector.Compile();
                 // Only return matches against compiled expression
@@ -653,7 +653,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Transform entities to business objects
         /// </summary>
-        private ProductInstance[] TransformArticles(IUnitOfWork uow, ICollection<ProductInstanceEntity> entities)
+        private ProductInstance[] TransformInstances(IUnitOfWork uow, ICollection<ProductInstanceEntity> entities)
         {
             var results = new ProductInstance[entities.Count];
 
@@ -671,7 +671,6 @@ namespace Moryx.Products.Management
             {
                 var product = productMap[entity.ProductId];
                 var instance = product.CreateInstance();
-                instance.Id = entity.Id;
 
                 TransformInstance(uow, entity, instance);
 
@@ -686,8 +685,10 @@ namespace Moryx.Products.Management
         /// </summary>
         private void TransformInstance(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance)
         {
+            productInstance.Id = entity.Id;
+
             // Transform the instance if it has a dedicated storage
-            var product = productInstance.Type;
+            var productType = productInstance.Type;
 
             // Check if instances of this type are persisted
             var strategy = InstanceStrategies[productInstance.GetType().Name];
@@ -698,7 +699,7 @@ namespace Moryx.Products.Management
             strategy.LoadInstance(entity, productInstance);
 
             // Group all parts of the instance by the property they belong to
-            var partLinks = ReflectionTool.GetReferences<IProductPartLink>(product)
+            var partLinks = ReflectionTool.GetReferences<IProductPartLink>(productType)
                 .SelectMany(g => g).ToList();
             var partGroups = ReflectionTool.GetReferences<ProductInstance>(productInstance)
                 .ToDictionary(p => p.Key, p => p.ToList());
@@ -708,7 +709,7 @@ namespace Moryx.Products.Management
             // Load and populate parts
             foreach (var partGroup in partGroups)
             {
-                var linkStrategy = LinkStrategies[product.GetType().Name][partGroup.Key.Name];
+                var linkStrategy = LinkStrategies[productType.GetType().Name][partGroup.Key.Name];
                 if (linkStrategy.PartCreation == PartSourceStrategy.FromPartlink && partEntityGroups.ContainsKey(partGroup.Key.Name))
                 {
                     // Update all parts that are also present as entities
@@ -722,7 +723,7 @@ namespace Moryx.Products.Management
                 {
                     // Load part using the entity and assign PartLink afterwards
                     var partCollection = partEntityGroups[partGroup.Key.Name].ToList();
-                    var partArticles = TransformArticles(uow, partCollection);
+                    var partArticles = TransformInstances(uow, partCollection);
                     for (var index = 0; index < partArticles.Length; index++)
                     {
                         partArticles[index].PartLink = partLinks.Find(pl => pl?.Id == partCollection[index].PartLinkId.Value);
@@ -786,7 +787,7 @@ namespace Moryx.Products.Management
             archived.ProductId = productInstance.Type.Id;
             strategy.SaveInstance(productInstance, archived);
 
-            // Save its parts if the have a dedicated archive
+            // Save its parts if they have a dedicated archive
             var partsContainer = ReflectionTool.GetReferences<ProductInstance>(productInstance);
             foreach (var partGroup in partsContainer)
             {
@@ -814,7 +815,7 @@ namespace Moryx.Products.Management
             IDictionary<string, IProductLinkStrategy> IDictionary<string, IDictionary<string, IProductLinkStrategy>>.this[string key]
             {
                 get { return ContainsKey(key) ? this[key] : (this[key] = new Dictionary<string, IProductLinkStrategy>()); }
-                set { /*You can net set the internal cache*/ }
+                set { /*You can not set the internal cache*/ }
             }
         }
 

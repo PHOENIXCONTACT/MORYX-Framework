@@ -11,7 +11,7 @@ namespace Moryx.AbstractionLayer
     /// <summary>
     /// Transition representing a certain task
     /// </summary>
-    public class TaskTransition<TActivity> : TransitionBase, IObservableTransition, ITask
+    public class TaskTransition<TActivity> : TransitionBase, IObservableTransition, ITaskTransition
         where TActivity : IActivity, new()
     {
         /// <summary>

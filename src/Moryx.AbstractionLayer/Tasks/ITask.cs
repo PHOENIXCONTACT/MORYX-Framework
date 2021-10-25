@@ -6,6 +6,25 @@ using System;
 namespace Moryx.AbstractionLayer
 {
     /// <summary>
+    /// Additional interface for named tasks
+    /// </summary>
+    public interface INamedTask : ITask
+    {
+        /// <summary>
+        /// Name of the task
+        /// </summary>
+        string Name { get; }
+    }
+
+    /// <summary>
+    /// Task transition interface
+    /// </summary>
+    public interface ITaskTransition : ITask, INamedTask
+    {
+
+    }
+
+    /// <summary>
     /// Task interface
     /// </summary>
     public interface ITask

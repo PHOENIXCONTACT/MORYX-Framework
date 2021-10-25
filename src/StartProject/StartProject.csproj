@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net45;net5.0</TargetFrameworks>
     <Description>StartProject of the AbstractionLayer. This is for debugging only.</Description>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
@@ -19,6 +19,12 @@
     <ProjectReference Include="..\Moryx.Resources.Interaction\Moryx.Resources.Interaction.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1' OR '$(TargetFramework)'=='net5.0'">
+    <PackageReference Include="Moryx.Runtime.Kestrel" />
+
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 </Project>
