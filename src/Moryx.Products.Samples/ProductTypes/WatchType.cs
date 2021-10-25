@@ -19,8 +19,8 @@ namespace Moryx.Products.Samples
         public double Weight { get; set; }
 
         // References to product
-        [DisplayName("Wach face")]
-        public ProductPartLink<WatchfaceTypeBase> Watchface { get; set; }
+        [DisplayName("Watch face")]
+        public ProductPartLink<WatchFaceTypeBase> WatchFace { get; set; }
 
         [DisplayName("Watch needle")]
         public List<NeedlePartLink> Needles { get; set; } = new List<NeedlePartLink>();
@@ -29,7 +29,7 @@ namespace Moryx.Products.Samples
         {
             return new WatchInstance
             {
-                Watchface = (WatchfaceInstance)Watchface.Instantiate(),
+                WatchFace = (WatchFaceInstance)WatchFace.Instantiate(),
                 Needles = Needles.Instantiate<NeedleInstance>()
             };
         }

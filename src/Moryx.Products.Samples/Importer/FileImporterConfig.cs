@@ -3,7 +3,6 @@
 
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Products.Management.Importers;
 
 namespace Moryx.Products.Samples
 {

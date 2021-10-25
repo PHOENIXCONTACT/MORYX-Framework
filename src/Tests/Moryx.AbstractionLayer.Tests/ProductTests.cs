@@ -17,9 +17,9 @@ namespace Moryx.AbstractionLayer.Tests
             var watch = new WatchType()
             {
                 Identity = new ProductIdentity("1277125", 01),
-                Watchface = new ProductPartLink<WatchfaceTypeBase>
+                WatchFace = new ProductPartLink<WatchFaceTypeBase>
                 {
-                    Product = new WatchfaceType
+                    Product = new WatchFaceType
                     {
                         Identity = new ProductIdentity("512380125", 01)
                     }
@@ -44,7 +44,7 @@ namespace Moryx.AbstractionLayer.Tests
 
             // Assert
             Assert.AreEqual(watch, watchInstance.Type, "Wrong watch product");
-            Assert.AreEqual(watch.Watchface.Product, watchInstance.Watchface.Type, "Wrong watchface product");
+            Assert.AreEqual(watch.WatchFace.Product, watchInstance.WatchFace.Type, "Wrong watchface product");
             Assert.AreEqual(NeedleRole.Hours, watch.Needles.ElementAt(0).Role, "Role not set on instance");
         }
     }
