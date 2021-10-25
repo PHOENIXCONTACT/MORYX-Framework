@@ -2,7 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Configuration;
 using Moryx.Logging;
@@ -65,33 +68,33 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual TestConnectionResult TestConnection(IDatabaseConfig config)
+        public virtual async Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
         {
             if (string.IsNullOrWhiteSpace(config.Database))
+                return TestConnectionResult.ConfigurationError;
+
+            // Simple ef independent database connection
+            var connectionResult = await TestDatabaseConnection(config);
+            if (!connectionResult)
                 return TestConnectionResult.ConnectionError;
 
-            if (!TestDatabaseConnection(config))
+            await using var context = CreateContext(config);
+
+            // Ef dependent database connection
+            var canConnect = await context.Database.CanConnectAsync();
+            if (!canConnect)
                 return TestConnectionResult.ConnectionError;
 
-            var context = CreateContext(config);
-            try
-            {
-                return context.Database.CanConnect()
-                    ? TestConnectionResult.Success
-                    : TestConnectionResult.ConnectionOkDbDoesNotExist;
-            }
-            catch
-            {
-                return TestConnectionResult.ConnectionOkDbDoesNotExist;
-            }
-            finally
-            {
-                context.Dispose();
-            }
+            // If connection is ok, test migrations
+            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
+            if (pendingMigrations.Any())
+                return TestConnectionResult.PendingMigrations;
+
+            return TestConnectionResult.Success;
         }
 
         /// <inheritdoc />
-        public virtual bool CreateDatabase(IDatabaseConfig config)
+        public virtual async Task<bool> CreateDatabase(IDatabaseConfig config)
         {
             // Check is database is configured
             if (!CheckDatabaseConfig(config))
@@ -99,17 +102,72 @@ namespace Moryx.Model.Configuration
                 return false;
             }
 
-            using var context = CreateContext(config);
-            context.Database.EnsureCreated();
+            await using var context = CreateContext(config);
+
+            //Will create the database if it does not already exist. Applies any pending migrations for the context to the database.
+            await context.Database.MigrateAsync();
 
             // Create connection to our new database
             var connection = CreateConnection(config);
-            connection.Open();
+            await connection.OpenAsync();
 
             // Creation done -> close connection
             connection.Close();
 
             return true;
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config)
+        {
+            var result = new DatabaseMigrationSummary();
+
+            await using var context = CreateContext(config);
+            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
+
+            if (pendingMigrations.Length == 0)
+            {
+                result.Result = MigrationResult.NoMigrationsAvailable;
+                result.ExecutedMigrations = Array.Empty<string>();
+                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!", config.Database);
+
+                return result;
+            }
+
+            try
+            {
+                await context.Database.MigrateAsync();
+                result.Result = MigrationResult.Migrated;
+                result.ExecutedMigrations = pendingMigrations;
+                Logger.Log(LogLevel.Info, "Database migration for database '{0}' was successful. Executed migrations: {1}",
+                    config.Database, string.Join(", ", pendingMigrations));
+
+            }
+            catch (Exception e)
+            {
+                result.Result = MigrationResult.Error;
+                Logger.LogException(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.Database);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
+        {
+            await using var context = CreateContext(config);
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+
+            return pendingMigrations.ToArray();
+        }
+
+        /// <inheritdoc />
+        public async Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
+        {
+            await using var context = CreateContext(config);
+            var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
+
+            return appliedMigrations.ToArray();
         }
 
         /// <summary>
@@ -133,18 +191,19 @@ namespace Moryx.Model.Configuration
         public abstract DbContextOptions BuildDbContextOptions(IDatabaseConfig config);
 
         /// <inheritdoc />
-        public abstract void DeleteDatabase(IDatabaseConfig config);
+        public abstract Task DeleteDatabase(IDatabaseConfig config);
 
         /// <inheritdoc />
-        public abstract void DumpDatabase(IDatabaseConfig config, string targetPath);
+        public abstract Task DumpDatabase(IDatabaseConfig config, string targetPath);
 
         /// <inheritdoc />
-        public abstract void RestoreDatabase(IDatabaseConfig config, string filePath);
+        public abstract Task RestoreDatabase(IDatabaseConfig config, string filePath);
+
 
         /// <summary>
         /// Generally tests the connection to the database
         /// </summary>
-        private bool TestDatabaseConnection(IDatabaseConfig config)
+        private async Task<bool> TestDatabaseConnection(IDatabaseConfig config)
         {
             if (!CheckDatabaseConfig(config))
                 return false;
@@ -152,10 +211,10 @@ namespace Moryx.Model.Configuration
             using var conn = CreateConnection(config, false);
             try
             {
-                conn.Open();
+                await conn.OpenAsync();
                 return true;
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return false;
             }

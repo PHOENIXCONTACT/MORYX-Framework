@@ -4,6 +4,7 @@
 using System;
 using System.Data.Common;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
@@ -34,21 +35,23 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public override void DeleteDatabase(IDatabaseConfig config)
+        public override Task DeleteDatabase(IDatabaseConfig config)
         {
             var dbFilePath = GetFilePath(config);
             if (File.Exists(dbFilePath))
                 File.Delete(dbFilePath);
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public override void DumpDatabase(IDatabaseConfig config, string targetPath)
+        public override Task DumpDatabase(IDatabaseConfig config, string targetPath)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public override void RestoreDatabase(IDatabaseConfig config, string filePath)
+        public override Task RestoreDatabase(IDatabaseConfig config, string filePath)
         {
             throw new NotSupportedException();
         }
@@ -74,20 +77,22 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public override TestConnectionResult TestConnection(IDatabaseConfig config)
+        public override Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
         {
             var dbFilePath = GetFilePath(config);
             var directory = Path.GetDirectoryName(dbFilePath);
 
             if (Directory.Exists(directory))
             {
-                return File.Exists(dbFilePath)
+                var result = File.Exists(dbFilePath)
                     ? TestConnectionResult.Success
                     : TestConnectionResult.ConnectionOkDbDoesNotExist;
+
+                return Task.FromResult(result);
             }
 
             Directory.CreateDirectory(directory);
-            return TestConnectionResult.ConnectionOkDbDoesNotExist;
+            return Task.FromResult(TestConnectionResult.ConnectionOkDbDoesNotExist);
         }
 
         private static string GetFilePath(IDatabaseConfig config)

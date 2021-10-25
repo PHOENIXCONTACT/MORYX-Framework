@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Configuration;
 using Moryx.Logging;
@@ -29,6 +30,11 @@ namespace Moryx.Model
         /// Connection could be established but database was not found
         /// </summary>
         ConnectionOkDbDoesNotExist,
+
+        /// <summary>
+        /// Connection to database was ok but the model have pending migrations
+        /// </summary>
+        PendingMigrations,
 
         /// <summary>
         /// Connection could be established but database was found
@@ -69,19 +75,36 @@ namespace Moryx.Model
         /// <summary>
         /// Test connection for config
         /// </summary>
-        TestConnectionResult TestConnection(IDatabaseConfig config);
+        Task<TestConnectionResult> TestConnection(IDatabaseConfig config);
 
         /// <summary>
         /// Create a new database for this model with given config
         /// </summary>
-        bool CreateDatabase(IDatabaseConfig config);
+        Task<bool> CreateDatabase(IDatabaseConfig config);
+
+        /// <summary>
+        /// Retrieves all names of available updates
+        /// </summary>
+        /// <returns></returns>
+        Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config);
+
+        /// <summary>
+        /// Retrieves all names of installed updates
+        /// </summary>
+        /// <returns></returns>
+        Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config);
+
+        /// <summary>
+        ///
+        /// </summary>
+        Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config);
 
         /// <summary>
         /// Delete this database
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        void DeleteDatabase(IDatabaseConfig config);
+        Task DeleteDatabase(IDatabaseConfig config);
 
         /// <summary>
         /// Dump the database und save the backup at the given file path
@@ -90,13 +113,13 @@ namespace Moryx.Model
         /// <param name="config">Config describing the database target</param>
         /// <param name="targetPath">Path to store backup</param>
         /// <returns>True if Backup is in progress</returns>
-        void DumpDatabase(IDatabaseConfig config, string targetPath);
+        Task DumpDatabase(IDatabaseConfig config, string targetPath);
 
         /// <summary>
         /// Restore this database with the given backup file
         /// </summary>
         /// <param name="config">Config to use</param>
         /// <param name="filePath">Filepath of dump</param>
-        void RestoreDatabase(IDatabaseConfig config, string filePath);
+        Task RestoreDatabase(IDatabaseConfig config, string filePath);
     }
 }

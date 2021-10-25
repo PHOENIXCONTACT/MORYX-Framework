@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Configuration;
 using Moryx.Logging;
@@ -40,31 +42,49 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public TestConnectionResult TestConnection(IDatabaseConfig config)
+        public Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public bool CreateDatabase(IDatabaseConfig config)
+        public Task<bool> CreateDatabase(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public void DeleteDatabase(IDatabaseConfig config)
+        public Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public void DumpDatabase(IDatabaseConfig config, string targetPath)
+        public Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public void RestoreDatabase(IDatabaseConfig config, string filePath)
+        public Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config)
+        {
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        }
+
+        /// <inheritdoc />
+        public Task DeleteDatabase(IDatabaseConfig config)
+        {
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        }
+
+        /// <inheritdoc />
+        public Task DumpDatabase(IDatabaseConfig config, string targetPath)
+        {
+            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        }
+
+        /// <inheritdoc />
+        public Task RestoreDatabase(IDatabaseConfig config, string filePath)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }

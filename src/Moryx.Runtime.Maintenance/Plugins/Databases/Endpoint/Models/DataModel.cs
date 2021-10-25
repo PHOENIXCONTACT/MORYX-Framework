@@ -27,5 +27,15 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
         /// An amount of backups of this model.
         /// </summary>
         public BackupModel[] Backups { get; set; }
+
+        /// <summary>
+        /// Available migrations for this context
+        /// </summary>
+        public DbMigrationsModel[] AvailableMigrations { get; set; }
+
+        /// <summary>
+        /// Installed migrations for this context
+        /// </summary>
+        public DbMigrationsModel[] AppliedMigrations { get; set; }
     }
 }

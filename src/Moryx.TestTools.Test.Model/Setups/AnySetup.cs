@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
 using Moryx.Model.Attributes;
@@ -20,7 +21,7 @@ namespace Moryx.TestTools.Test.Model
 
         public string SupportedFileRegex => string.Empty;
 
-        public void Execute(IUnitOfWork openContext, string setupData)
+        public async Task Execute(IUnitOfWork openContext, string setupData)
         {
             var carRepo = openContext.GetRepository<ICarEntityRepository>();
             var wheelRepo = openContext.GetRepository<IWheelEntityRepository>();
@@ -47,11 +48,11 @@ namespace Moryx.TestTools.Test.Model
                 lastCar = carEntity;
             }
 
-            openContext.SaveChanges();
+            await openContext.SaveChangesAsync();
 
             carRepo.Remove(lastCar);
 
-            openContext.SaveChanges();
+            await openContext.SaveChangesAsync();
 
             var allCarsWithLazyWheels = carRepo.Linq.ToList();
 

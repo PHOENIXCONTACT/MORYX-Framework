@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
@@ -40,11 +41,12 @@ namespace Moryx.Model
         public IReadOnlyList<IModelSetup> GetAllSetups() => _setups;
 
         /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
+        public Task Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
         {
             var unitOfWorkFactory = new UnitOfWorkFactory<TContext>(_dbContextManager);
-            using (var uow = unitOfWorkFactory.Create(config))
-                setup.Execute(uow, setupData);
+            using var uow = unitOfWorkFactory.Create(config);
+
+            return setup.Execute(uow, setupData);
         }
     }
 }
