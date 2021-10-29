@@ -14,8 +14,8 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management
 {
-    [Component(LifeCycle.Singleton, typeof(IRecipeManagement), typeof(IWorkplans))]
-    internal class RecipeManagement : IRecipeManagement, IWorkplans
+    [Component(LifeCycle.Singleton, typeof(IRecipeManagement), typeof(IWorkplans), typeof(IWorkplansVersions))]
+    internal class RecipeManagement : IRecipeManagement, IWorkplans, IWorkplansVersions
     {
         #region Dependencies
 
@@ -121,6 +121,14 @@ namespace Moryx.Products.Management
                 repo.Remove(workplan);
                 uow.SaveChanges();
 
+            }
+        }
+
+        public IReadOnlyList<Workplan> LoadVersions(long workplanId)
+        {
+            using (var uow = ModelFactory.Create())
+            {
+                return RecipeStorage.LoadWorkplanVersions(uow, workplanId);
             }
         }
 

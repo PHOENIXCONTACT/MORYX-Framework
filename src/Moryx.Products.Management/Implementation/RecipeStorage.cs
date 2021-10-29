@@ -64,8 +64,35 @@ namespace Moryx.Products.Management
         /// </summary>
         public static Workplan LoadWorkplan(IUnitOfWork uow, long id)
         {
-            var workplan = uow.GetRepository<IWorkplanEntityRepository>().GetByKey(id);
-            return workplan == null ? null : LoadWorkplan(workplan);
+            var workplanEntity = uow.GetRepository<IWorkplanEntityRepository>().GetByKey(id);
+            return workplanEntity == null ? null : LoadWorkplan(workplanEntity);
+        }
+
+        /// <summary>
+        /// Loads all versions of the given workplan id
+        /// </summary>
+        public static IReadOnlyList<Workplan> LoadWorkplanVersions(IUnitOfWork uow, long id)
+        {
+            var workplanEntity = uow.GetRepository<IWorkplanEntityRepository>().GetByKey(id);
+            if (workplanEntity == null)
+                return new Workplan[0];
+
+            var versions = new List<Workplan>
+            {
+                LoadWorkplan(workplanEntity)
+            };
+
+            var currentVersionEntity = workplanEntity;
+            while (currentVersionEntity.SourceReferences.Any())
+            {
+                var sourceReference = currentVersionEntity.SourceReferences.First();
+                var sourceWorkplanEntity = sourceReference.Source;
+
+                versions.Add(LoadWorkplan(sourceWorkplanEntity));
+                currentVersionEntity = sourceWorkplanEntity;
+            }
+
+            return versions;
         }
 
         /// <summary>
@@ -370,5 +397,6 @@ namespace Moryx.Products.Management
             var removedConnectors = workplanEntity.Connectors.Where(ce => workplan.Connectors.All(c => c.Id != ce.ConnectorId));
             connectorRepo.RemoveRange(removedConnectors);
         }
+
     }
 }
