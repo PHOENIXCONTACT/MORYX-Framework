@@ -36,12 +36,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Endpoint hosting
         /// </summary>
-#if USE_WCF
-        
-        public IWcfHostFactory WcfHostFactory { get; set; }
-#else
         public IEndpointHosting Hosting { get; set; }
-#endif
 
         private IEndpointHost _host;
 
@@ -54,11 +49,7 @@ namespace Moryx.Products.Management
         {
             // Extend container
             Container
-#if USE_WCF
-                .RegisterWcf(WcfHostFactory)
-#else
                 .ActivateHosting(Hosting)
-#endif
                 .ActivateDbContexts(DbContextManager);
 
             // Register imports

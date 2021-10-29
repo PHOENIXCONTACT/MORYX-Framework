@@ -41,18 +41,12 @@ namespace Moryx.Resources.Management
 #if HAVE_WCF
         /// <summary>Injected property</summary>
         public IWcfClientFactory WcfClientFactory { get; set; }
-
-        /// <summary>
-        /// Host factory to create wcf hosts
-        /// </summary>
-        public IWcfHostFactory WcfHostFactory { get; set; }
 #endif
 
         /// <summary>
         /// Endpoint hosting
         /// </summary>
         public IEndpointHosting EndpointHosting { get; set; }
-
 
         /// <summary>Injected property</summary>
         public IRuntimeConfigManager ConfManager { get; set; }
@@ -64,12 +58,7 @@ namespace Moryx.Resources.Management
         {
             // Extend container
             Container.RegisterNotifications();
-#if HAVE_WCF
-            Container.RegisterWcf(WcfHostFactory);
-#else
             Container.ActivateHosting(EndpointHosting);
-#endif
-
             Container.ActivateDbContexts(DbContextManager);
 
             // Register imports

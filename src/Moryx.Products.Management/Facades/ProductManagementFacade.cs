@@ -152,6 +152,12 @@ namespace Moryx.Products.Management
             Workplans.DeleteWorkplan(workplanId);
         }
 
+        public IReadOnlyList<Workplan> LoadVersions(long workplanId)
+        {
+            ValidateHealthState();
+            return Workplans.LoadVersions(workplanId);
+        }
+
         public long SaveWorkplan(Workplan workplan)
         {
             ValidateHealthState();

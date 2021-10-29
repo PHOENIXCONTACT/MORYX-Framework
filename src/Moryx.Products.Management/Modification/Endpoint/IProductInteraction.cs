@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
+using Moryx.Communication.Endpoints;
 using Moryx.Serialization;
 #if USE_WCF
 using System.Net;
@@ -14,7 +15,7 @@ namespace Moryx.Products.Management.Modification
 {
 #if USE_WCF
     [ServiceContract]
-    [ServiceVersion("5.0.0")]
+    [Endpoint(Name = nameof(IProductInteraction), Version = "5.0.0")]
 #endif
     internal interface IProductInteraction
     {

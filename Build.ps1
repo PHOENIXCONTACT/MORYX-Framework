@@ -28,7 +28,7 @@ if ($Build) {
 }
 
 if ($SmokeTests) {
-    $runtimePath = "$RootPath\src\StartProject\bin\$env:MORYX_BUILD_CONFIG\net45\StartProject.exe";
+    $runtimePath = "$RootPath\src\StartProject\bin\$env:MORYX_BUILD_CONFIG\net461\StartProject.exe";
     Invoke-SmokeTest $runtimePath 4 6000
 }
 

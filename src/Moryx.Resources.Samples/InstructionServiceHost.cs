@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools.Wcf;
@@ -55,7 +56,7 @@ namespace Moryx.Resources.Samples
                 Instructors.Add(instructor);
             }
         }
-        
+
         /// <summary>
         /// Current service host
         /// </summary>
@@ -109,7 +110,7 @@ namespace Moryx.Resources.Samples
 
 
     [ServiceContract]
-    [ServiceVersion("1.0.0")]
+    [Endpoint(Name = nameof(IInteractionService), Version = "1.0.0")]
     internal interface IInteractionService : ISessionService
     {
     }

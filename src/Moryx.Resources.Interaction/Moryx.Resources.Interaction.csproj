@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net5.0</TargetFrameworks>
+    <TargetFrameworks>net461;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Resource with a REST endpoint for UIs to interact with the resource graph and instances.</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;IIoT;IoT;Resource</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>USE_WCF</DefineConstants>
   </PropertyGroup>
 
@@ -20,7 +20,7 @@
     <PackageReference Include="Moryx.Runtime" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
     <Reference Include="System.ServiceModel" />
 
     <PackageReference Include="Moryx.Runtime.Wcf" />

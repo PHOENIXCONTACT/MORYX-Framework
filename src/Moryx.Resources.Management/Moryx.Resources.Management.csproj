@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net45;net5.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.1;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>ResourceManagement module composing and maintaining the resource graph as the habitat for digital twins of manufacturing assets.</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;IIoT;IoT;Manufacturing;API;Resource</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>HAVE_WCF;HAVE_APPDOMAIN_DYNAMICASSEMBLY</DefineConstants>
   </PropertyGroup>
 
@@ -22,7 +22,7 @@
     <PackageReference Include="Moryx.Runtime" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
     <PackageReference Include="Moryx.Runtime.Wcf" />
   </ItemGroup>
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Communication.Endpoints;
 using Moryx.Serialization;
 using Moryx.Tools.Wcf;
 
@@ -18,7 +19,7 @@ namespace Moryx.Resources.Wcf
         /// <summary>
         /// Factory to create the web service
         /// </summary>
-        public IConfiguredHostFactory HostFactory { get; set; }
+        public IEndpointHostFactory HostFactory { get; set; }
 
         /// <summary>
         /// Host config injected by resource manager
@@ -32,7 +33,7 @@ namespace Moryx.Resources.Wcf
         /// <summary>
         /// Current service host
         /// </summary>
-        protected IConfiguredServiceHost Host { get; private set; }
+        protected IEndpointHost Host { get; private set; }
 
         /// <summary>
         /// Registered service instances
