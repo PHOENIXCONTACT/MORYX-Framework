@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Net;
+using Moryx.Communication.Endpoints;
 using Moryx.Serialization;
 
 #if USE_WCF
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Moryx.Tools.Wcf;
 #endif
 
 namespace Moryx.Resources.Interaction
@@ -17,7 +17,7 @@ namespace Moryx.Resources.Interaction
     /// </summary>
 #if USE_WCF
     [ServiceContract]
-    [ServiceVersion("5.0.0")]
+    [Endpoint(Name = nameof(IResourceInteraction), Version = "5.0.0")]
 # endif
     internal interface IResourceInteraction
     {

@@ -14,7 +14,7 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management
 {
-    internal class ProductManagementFacade : IFacadeControl, IProductManagement, IWorkplansVersions
+    internal class ProductManagementFacade : IFacadeControl, IProductManagement
     {
         // Use this delegate in every call for clean health state management
         public Action ValidateHealthState { get; set; }
@@ -25,7 +25,7 @@ namespace Moryx.Products.Management
 
         public IRecipeManagement RecipeManagement { get; set; }
 
-        public IWorkplansVersions Workplans { get; set; }
+        public IWorkplans Workplans { get; set; }
 
         #endregion
 

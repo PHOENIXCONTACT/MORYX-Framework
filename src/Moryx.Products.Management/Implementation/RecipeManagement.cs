@@ -14,8 +14,8 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management
 {
-    [Component(LifeCycle.Singleton, typeof(IRecipeManagement), typeof(IWorkplans), typeof(IWorkplansVersions))]
-    internal class RecipeManagement : IRecipeManagement, IWorkplans, IWorkplansVersions
+    [Component(LifeCycle.Singleton, typeof(IRecipeManagement), typeof(IWorkplans))]
+    internal class RecipeManagement : IRecipeManagement, IWorkplans
     {
         #region Dependencies
 
@@ -60,19 +60,17 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<Workplan> LoadAllWorkplans()
         {
-            using (var uow = ModelFactory.Create())
-            {
-                var repo = uow.GetRepository<IWorkplanEntityRepository>();
-                var workplans = (from entity in repo.Linq.Active()
-                                 select new Workplan
-                                 {
-                                     Id = entity.Id,
-                                     Name = entity.Name,
-                                     Version = entity.Version,
-                                     State = (WorkplanState)entity.State
-                                 }).ToArray();
-                return workplans;
-            }
+            using var uow = ModelFactory.Create();
+            var repo = uow.GetRepository<IWorkplanEntityRepository>();
+            var workplans = (from entity in repo.Linq.Active()
+                select new Workplan
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Version = entity.Version,
+                    State = (WorkplanState)entity.State
+                }).ToArray();
+            return workplans;
         }
 
         public Workplan LoadWorkplan(long workplanId)
@@ -83,42 +81,42 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<Workplan> LoadVersions(long workplanId)
         {
-            using (var uow = ModelFactory.Create())
+            using var uow = ModelFactory.Create();
+
+            var versions = new List<Workplan>();
+            var repo = uow.GetRepository<IWorkplanEntityRepository>();
+            do
             {
-                var versions = new List<Workplan>();
-                var repo = uow.GetRepository<IWorkplanEntityRepository>();
-                do
-                {
-                    var result = (from entity in repo.Linq.Active()
-                        where entity.Id == workplanId
-                        let sourceRef = entity.SourceReferences.FirstOrDefault()
-                        select new
+                var result = (from entity in repo.Linq.Active()
+                    where entity.Id == workplanId
+                    let sourceRef = entity.SourceReferences.FirstOrDefault()
+                    select new
+                    {
+                        Workplan = new Workplan
                         {
-                            Workplan = new Workplan
-                            {
-                                Id = entity.Id,
-                                Name = entity.Name,
-                                Version = entity.Version,
-                                State = (WorkplanState)entity.State
-                            },
-                            Source = sourceRef == null ? 0 : sourceRef.SourceId
-                        }).FirstOrDefault();
-                    
-                    if(result == null)
-                        break;
+                            Id = entity.Id,
+                            Name = entity.Name,
+                            Version = entity.Version,
+                            State = (WorkplanState)entity.State
+                        },
+                        Source = sourceRef == null ? 0 : sourceRef.SourceId
+                    }).FirstOrDefault();
 
-                    versions.Add(result.Workplan);
-                    workplanId = result.Source;
-                } while (workplanId > 0);
+                if(result == null)
+                    break;
 
-                return versions;
-            }
+                versions.Add(result.Workplan);
+                workplanId = result.Source;
+            } while (workplanId > 0);
+
+            return versions;
         }
 
         public long SaveWorkplan(Workplan workplan)
         {
             using var uow = ModelFactory.Create();
             var recipeRepo = uow.GetRepository<IProductRecipeEntityRepository>();
+
             // Update all non-clone recipes of that workplan
             var affectedRecipes = recipeRepo.Linq
                 .Where(r => r.WorkplanId == workplan.Id && r.Classification > 0).ToList();
@@ -149,11 +147,6 @@ namespace Moryx.Products.Management
                 return; // TODO: Any feedback?
             repo.Remove(workplan);
             uow.SaveChanges();
-        }
-
-        public IReadOnlyList<Workplan> LoadVersions(long workplanId)
-        {
-            RecipeStorage.LoadWorkplan()
         }
 
         private void RaiseRecipeChanged(IRecipe recipe)

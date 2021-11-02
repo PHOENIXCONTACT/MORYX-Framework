@@ -175,41 +175,40 @@ namespace Moryx.Products.Management
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
 
             // Optionally try to configure property mappers
-            var propertyMapperConfig = config as IPropertyMappedConfiguration;
-            if (propertyMapperConfig != null)
+            if (config is not IPropertyMappedConfiguration propertyMapperConfig)
+                return config;
+
+            var remainingColumns = typeof(IGenericColumns).GetProperties()
+                .OrderBy(p => p.Name).ToList();
+            // TODO: Use type wrapper
+            var baseProperties = typeof(TBaseType).GetProperties();
+
+            var filteredProperties = targetType.GetProperties().Where(p => baseProperties.All(bp => bp.Name != p.Name))
+                .Where(p => !typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))
+                .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType))
+                .ToList();
+
+            foreach (var property in filteredProperties)
             {
-                var remainingColumns = typeof(IGenericColumns).GetProperties()
-                    .OrderBy(p => p.Name).ToList();
-                // TODO: Use type wrapper
-                var baseProperties = typeof(TBaseType).GetProperties();
+                var propertyTuple = CreateConfig<IPropertyMapper, PropertyMapperConfig>(property.PropertyType);
+                if (propertyTuple == null)
+                    continue;
 
-                var filteredProperties = targetType.GetProperties().Where(p => baseProperties.All(bp => bp.Name != p.Name))
-                    .Where(p => !typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))
-                    .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType))
-                    .ToList();
+                var strategy = propertyTuple.Item1;
+                var propertyConfig = propertyTuple.Item2;
+                propertyConfig.PropertyName = property.Name;
+                propertyConfig.PluginName = strategy.GetCustomAttribute<RegistrationAttribute>().Name;
 
-                foreach (var property in filteredProperties)
-                {
-                    var propertyTuple = CreateConfig<IPropertyMapper, PropertyMapperConfig>(property.PropertyType);
-                    if (propertyTuple == null)
-                        continue;
+                var columnType = strategy.GetCustomAttribute<PropertyStrategyConfigurationAttribute>()?.ColumnType ?? typeof(string);
+                var column = remainingColumns.FirstOrDefault(rc => rc.PropertyType == columnType);
+                if (column == null)
+                    continue;
 
-                    var strategy = propertyTuple.Item1;
-                    var propertyConfig = propertyTuple.Item2;
-                    propertyConfig.PropertyName = property.Name;
-                    propertyConfig.PluginName = strategy.GetCustomAttribute<RegistrationAttribute>().Name;
+                remainingColumns.Remove(column);
+                propertyConfig.Column = column.Name;
 
-                    var columnType = strategy.GetCustomAttribute<PropertyStrategyConfigurationAttribute>()?.ColumnType ?? typeof(string);
-                    var column = remainingColumns.FirstOrDefault(rc => rc.PropertyType == columnType);
-                    if (column == null)
-                        continue;
-
-                    remainingColumns.Remove(column);
-                    propertyConfig.Column = column.Name;
-
-                    ValueProviderExecutor.Execute(propertyConfig, new ValueProviderExecutorSettings().AddDefaultValueProvider());
-                    propertyMapperConfig.PropertyConfigs.Add(propertyConfig);
-                }
+                ValueProviderExecutor.Execute(propertyConfig, new ValueProviderExecutorSettings().AddDefaultValueProvider());
+                propertyMapperConfig.PropertyConfigs.Add(propertyConfig);
             }
 
             return config;
@@ -222,7 +221,7 @@ namespace Moryx.Products.Management
             if (typeStrategy == null)
                 return null;
 
-            var configType = typeStrategy.GetCustomAttribute<ExpectedConfigAttribute>()?.ExcpectedConfigType
+            var configType = typeStrategy.GetCustomAttribute<ExpectedConfigAttribute>()?.ExpectedConfigType
                              ?? typeof(TConfig);
             var config = (TConfig)Activator.CreateInstance(configType);
 

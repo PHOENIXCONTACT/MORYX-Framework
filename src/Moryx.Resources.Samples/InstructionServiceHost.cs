@@ -18,7 +18,7 @@ namespace Moryx.Resources.Samples
         /// <summary>
         /// Factory to create the web service
         /// </summary>
-        public IConfiguredHostFactory HostFactory { get; set; }
+        public IEndpointHostFactory HostFactory { get; set; }
 
         /// <summary>
         /// Host config injected by resource manager
@@ -31,6 +31,16 @@ namespace Moryx.Resources.Samples
 
         [ReferenceOverride(nameof(Children), AutoSave = true)]
         public IReferences<IVisualInstructor> Instructors { get; set; }
+
+        /// <summary>
+        /// Current service host
+        /// </summary>
+        private IEndpointHost _host;
+
+        /// <summary>
+        /// Registered service instances
+        /// </summary>
+        private ICollection<IInteractionService> _clients = new SynchronizedCollection<IInteractionService>();
 
         [ResourceConstructor(IsDefault = true)]
         public void DefaultConstructor()
@@ -57,22 +67,13 @@ namespace Moryx.Resources.Samples
             }
         }
 
-        /// <summary>
-        /// Current service host
-        /// </summary>
-        private IConfiguredServiceHost _host;
-
-        /// <summary>
-        /// Registered service instances
-        /// </summary>
-        private ICollection<IInteractionService> _clients = new SynchronizedCollection<IInteractionService>();
 
         /// <inheritdoc />
         protected override void OnInitialize()
         {
             base.OnInitialize();
 
-            _host = HostFactory.CreateHost<IInteractionService>(HostConfig);
+            _host = HostFactory.CreateHost(typeof(IInteractionService), HostConfig);
         }
 
         /// <inheritdoc />

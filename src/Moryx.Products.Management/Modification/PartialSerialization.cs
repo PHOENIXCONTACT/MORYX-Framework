@@ -5,12 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Configuration;
-using Moryx.Container;
 using Moryx.Serialization;
-using Moryx.Tools;
 
 namespace Moryx.Products.Management.Modification
 {
@@ -20,10 +17,17 @@ namespace Moryx.Products.Management.Modification
     internal class PartialSerialization<T> : PossibleValuesSerialization
         where T : class
     {
+        private static readonly EntrySerializeSerialization _serialization;
+
         /// <summary>
         /// Properties that shall be excluded from the generic collection
         /// </summary>
         private static readonly string[] FilteredProperties = typeof (T).GetProperties().Select(p => p.Name).ToArray();
+
+        static PartialSerialization()
+        {
+            _serialization = new EntrySerializeSerialization();
+        }
 
         public PartialSerialization() : base(null, new EmptyValueProvider())
         {
@@ -33,8 +37,7 @@ namespace Moryx.Products.Management.Modification
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             // Only simple properties not defined in the base
-            return EntrySerializeSerialization.Instance.GetProperties(sourceType)
-                .Where(SimpleProp);
+            return _serialization.GetProperties(sourceType).Where(SimpleProp);
         }
 
         protected bool SimpleProp(PropertyInfo prop)

@@ -157,7 +157,7 @@ namespace Moryx.Products.IntegrationTests
                             },
                             new PropertyMapperConfig
                             {
-                                PropertyName = nameof(WatchfaceInstance.Identity),
+                                PropertyName = nameof(WatchFaceInstance.Identity),
                                 Column = nameof(IGenericColumns.Text2),
                                 PluginName = nameof(TextColumnMapper)
                             }
