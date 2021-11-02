@@ -80,7 +80,7 @@ namespace Moryx.Products.IntegrationTests
                     new GenericTypeConfiguration
                     {
                         TargetType = nameof(WatchFaceType),
-                        PropertyConfigs = new List<PropertyMapperConfig>()
+                        PropertyConfigs = new List<PropertyMapperConfig>
                         {
                             new PropertyMapperConfig
                             {
@@ -153,6 +153,12 @@ namespace Moryx.Products.IntegrationTests
                             {
                                 PropertyName = nameof(WatchFaceInstance.Identifier),
                                 Column = nameof(IGenericColumns.Text1),
+                                PluginName = nameof(TextColumnMapper)
+                            },
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(WatchfaceInstance.Identity),
+                                Column = nameof(IGenericColumns.Text2),
                                 PluginName = nameof(TextColumnMapper)
                             }
                         },
@@ -818,9 +824,10 @@ namespace Moryx.Products.IntegrationTests
             // Act
             var watchCopy = (WatchInstance)_storage.LoadInstances(instance.Id)[0];
             var identity = instance.Identity;
-            var byIdentity = _storage.LoadInstances<WatchInstance>(w => identity.Equals(w.Identity));
+            var byIdentity = _storage.LoadInstances<IIdentifiableObject>(w => identity.Equals(w.Identity));
             var byDateTime = _storage.LoadInstances<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
             var byBool = _storage.LoadInstances<WatchInstance>(i => i.TimeSet);
+            var byType = _storage.LoadInstances<WatchInstance>(i => i.Type == watch);
 
             // Assert
             Assert.NotNull(watchCopy);
@@ -834,6 +841,7 @@ namespace Moryx.Products.IntegrationTests
             Assert.LessOrEqual(1, byIdentity.Count);
             Assert.LessOrEqual(1, byDateTime.Count);
             Assert.LessOrEqual(1, byBool.Count);
+            Assert.LessOrEqual(1, byType.Count);
         }
     }
 }
