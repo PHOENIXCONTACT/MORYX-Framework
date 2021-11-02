@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
@@ -61,15 +62,21 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 #if !USE_WCF
         [HttpGet]
 #endif
-        public DataModel[] GetAll()
+        public async Task<DataModel[]> GetAll()
         {
-            return DbContextManager.Contexts.Select(Convert).ToArray();
+            var contexts = DbContextManager.Contexts.ToArray();
+            var dataModels = new DataModel[contexts.Length];
+
+            for (var i = 0; i < contexts.Length; i++)
+                dataModels[i] = await Convert(contexts[i]);
+
+            return dataModels;
         }
 
 #if !USE_WCF
         [HttpGet("model/{targetModel}")]
 #endif
-        public DataModel GetModel(string targetModel)
+        public Task<DataModel> GetModel(string targetModel)
         {
             return Convert(DbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel));
         }
@@ -92,7 +99,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 #if !USE_WCF
         [HttpPost("model/{targetModel}/config/test")]
 #endif
-        public TestConnectionResponse TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
+        public async Task<TestConnectionResponse> TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
@@ -100,7 +107,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
             // Update config copy from model
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            var result = targetConfigurator.TestConnection(updatedConfig);
+            var result = await targetConfigurator.TestConnection(updatedConfig);
 
             return new TestConnectionResponse { Result = result };
         }
@@ -108,16 +115,16 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 #if !USE_WCF
         [HttpPost("createall")]
 #endif
-        public InvocationResponse CreateAll()
+        public async Task<InvocationResponse> CreateAll()
         {
-            var bulkResult = BulkOperation(mc => mc.CreateDatabase(mc.Config), "Creation");
+            var bulkResult = await BulkOperation(mc => mc.CreateDatabase(mc.Config), "Creation");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
 #if !USE_WCF
         [HttpPost("model/{targetModel}/create")]
 #endif
-        public InvocationResponse CreateDatabase(string targetModel, DatabaseConfigModel config)
+        public async Task<InvocationResponse> CreateDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
@@ -127,7 +134,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
             try
             {
-                var creationResult = targetConfigurator.CreateDatabase(updatedConfig);
+                var creationResult = await targetConfigurator.CreateDatabase(updatedConfig);
                 return creationResult
                     ? new InvocationResponse()
                     : new InvocationResponse("Cannot create database. May be the database already exists or was misconfigured.");
@@ -142,16 +149,16 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 #if !USE_WCF
         [HttpDelete("/")]
 #endif
-        public InvocationResponse EraseAll()
+        public async Task<InvocationResponse> EraseAll()
         {
-            var bulkResult = BulkOperation(mc => mc.DeleteDatabase(mc.Config), "Deletion");
+            var bulkResult = await BulkOperation(mc => mc.DeleteDatabase(mc.Config), "Deletion");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
 #if !USE_WCF
         [HttpDelete("model/{targetModel}")]
 #endif
-        public InvocationResponse EraseDatabase(string targetModel, DatabaseConfigModel config)
+        public async Task<InvocationResponse> EraseDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
@@ -161,7 +168,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
             try
             {
-                targetConfigurator.DeleteDatabase(updatedConfig);
+                await targetConfigurator.DeleteDatabase(updatedConfig);
                 return new InvocationResponse();
             }
             catch (Exception ex)
@@ -174,7 +181,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 #if !USE_WCF
         [HttpPost("model/{targetModel}/dump")]
 #endif
-        public InvocationResponse DumpDatabase(string targetModel, DatabaseConfigModel config)
+        public async Task<InvocationResponse> DumpDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
@@ -186,7 +193,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             if (!Directory.Exists(targetPath))
                 Directory.CreateDirectory(targetPath);
 
-            targetConfigurator.DumpDatabase(updatedConfig, targetPath);
+            await targetConfigurator.DumpDatabase(updatedConfig, targetPath);
 
             return new InvocationResponse();
         }
@@ -194,7 +201,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 #if !USE_WCF
         [HttpPost("model/{targetModel}/restore")]
 #endif
-        public InvocationResponse RestoreDatabase(string targetModel, RestoreDatabaseRequest request)
+        public async Task<InvocationResponse> RestoreDatabase(string targetModel, RestoreDatabaseRequest request)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
@@ -202,43 +209,34 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
             var filePath = Path.Combine(DatabaseConfig.SetupDataDir, targetModel, request.BackupFileName);
-            targetConfigurator.RestoreDatabase(updatedConfig, filePath);
+            await targetConfigurator.RestoreDatabase(updatedConfig, filePath);
 
             return new InvocationResponse();
         }
 
 #if !USE_WCF
-        [HttpPost("model/{targetModel}/{migrationName}/migrate")]
+        [HttpPost("model/{targetModel}/migrate")]
 #endif
-        public DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, DatabaseConfigModel configModel)
+        public async Task<DatabaseMigrationSummary> MigrateDatabase(string targetModel, DatabaseConfigModel configModel)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
-                return new DatabaseUpdateSummary { WasUpdated = false };
+            {
+                return new DatabaseMigrationSummary
+                {
+                    Result = MigrationResult.Error,
+                    ExecutedMigrations = Array.Empty<string>()
+                };
+            }
 
             var config = UpdateConfigFromModel(targetConfigurator.Config, configModel);
-            return targetConfigurator.MigrateDatabase(config, migrationName);
-        }
-
-#if !USE_WCF
-        [HttpPost("model/{targetModel}/rollback")]
-#endif
-        public InvocationResponse RollbackDatabase(string targetModel, DatabaseConfigModel config)
-        {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
-            if (targetConfigurator == null)
-                return new InvocationResponse("No configurator found");
-
-            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            var rollbackResult = targetConfigurator.RollbackDatabase(updatedConfig);
-
-            return rollbackResult ? new InvocationResponse() : new InvocationResponse("Error while rollback!");
+            return await targetConfigurator.MigrateDatabase(config);
         }
 
 #if !USE_WCF
         [HttpPost("model/{targetModel}/setup")]
 #endif
-        public InvocationResponse ExecuteSetup(string targetModel, ExecuteSetupRequest request)
+        public async Task<InvocationResponse> ExecuteSetup(string targetModel, ExecuteSetupRequest request)
         {
             var contextType = DbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
             var targetConfigurator = DbContextManager.GetConfigurator(contextType);
@@ -261,7 +259,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
             try
             {
-                setupExecutor.Execute(config, targetSetup, request.Setup.SetupData);
+                await setupExecutor.Execute(config, targetSetup, request.Setup.SetupData);
                 return new InvocationResponse();
             }
             catch (Exception ex)
@@ -290,7 +288,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return DbContextManager.GetConfigurator(context);
         }
 
-        private DataModel Convert(Type contextType)
+        private async Task<DataModel> Convert(Type contextType)
         {
             var configurator = DbContextManager.GetConfigurator(contextType);
             if (configurator?.Config == null)
@@ -312,8 +310,8 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 },
                 Setups = GetAllSetups(contextType),
                 Backups = GetAllBackups(contextType),
-                AvailableMigrations = GetAvailableUpdates(dbConfig, configurator),
-                AppliedMigrations = GetInstalledUpdates(dbConfig, configurator)
+                AvailableMigrations = await GetAvailableMigrations(dbConfig, configurator),
+                AppliedMigrations = await GetInstalledMigrations(dbConfig, configurator)
             };
             return model;
         }
@@ -361,22 +359,16 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             return backups.ToArray();
         }
 
-        private static DbMigrationsModel[] GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
+        private static async Task<DbMigrationsModel[]> GetAvailableMigrations(IDatabaseConfig dbConfig, IModelConfigurator configurator)
         {
-            var availableMigrations = configurator.AvailableMigrations(dbConfig).ToList();
-            return availableMigrations.Select(u => new DbMigrationsModel
-            {
-                Name = u.Name
-            }).ToArray();
+            var availableMigrations = await configurator.AvailableMigrations(dbConfig);
+            return availableMigrations.Select(m => new DbMigrationsModel {Name = m}).ToArray();
         }
 
-        private static DbMigrationsModel[] GetInstalledUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
+        private static async Task<DbMigrationsModel[]> GetInstalledMigrations(IDatabaseConfig dbConfig, IModelConfigurator configurator)
         {
-            var appliedMigrations = configurator.AppliedMigrations(dbConfig).ToList();
-            return appliedMigrations.Select(u => new DbMigrationsModel
-            {
-                Name = u.Name
-            }).ToArray();
+            var appliedMigrations = await configurator.AppliedMigrations(dbConfig);
+            return appliedMigrations.Select(m => new DbMigrationsModel {Name = m}).ToArray();
         }
 
         private static IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel model)
@@ -391,7 +383,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
 
         private static string TargetModelName(Type contextType) => contextType.FullName;
 
-        private string BulkOperation(Action<IModelConfigurator> operation, string operationName)
+        private async Task<string> BulkOperation(Func<IModelConfigurator, Task> operation, string operationName)
         {
             var result = string.Empty;
             foreach (var contextType in DbContextManager.Contexts)
@@ -399,7 +391,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
                 var configurator = DbContextManager.GetConfigurator(contextType);
                 try
                 {
-                    operation(configurator);
+                    await operation(configurator);
                 }
                 catch (Exception ex)
                 {

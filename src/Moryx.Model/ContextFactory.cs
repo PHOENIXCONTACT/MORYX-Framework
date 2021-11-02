@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
@@ -10,33 +10,26 @@ namespace Moryx.Model
     public class ContextFactory<TContext> : IContextFactory<TContext>
         where TContext : DbContext
     {
+        private readonly IDbContextManager _manager;
+
         /// <summary>
-        /// Injected manager that does the real work
+        /// Creates a new instance of <see cref="ContextFactory{TContext}"/>
         /// </summary>
-        public IDbContextManager Manager { get; set; }
+        public ContextFactory(IDbContextManager dbContextManager)
+        {
+            _manager = dbContextManager;
+        }
 
         /// <inheritdoc />
         public TContext Create()
         {
-            return Manager.Create<TContext>();
+            return _manager.Create<TContext>();
         }
 
         /// <inheritdoc />
         public TContext Create(IDatabaseConfig config)
         {
-            return Manager.Create<TContext>(config);
-        }
-
-        /// <inheritdoc />
-        public TContext Create(ContextMode contextMode)
-        {
-            return Manager.Create<TContext>(contextMode);
-        }
-
-        /// <inheritdoc />
-        public TContext Create(IDatabaseConfig config, ContextMode contextMode)
-        {
-            return Manager.Create<TContext>(config, contextMode);
+            return _manager.Create<TContext>(config);
         }
     }
 }

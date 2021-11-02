@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Moryx.Model.Repositories;
 
 namespace Moryx.Model
@@ -35,6 +36,6 @@ namespace Moryx.Model
         /// </summary>
         /// <param name="openContext">Context for db access</param>
         /// <param name="setupData">Any data for the setup, excel or sql etc</param>
-        void Execute(IUnitOfWork openContext, string setupData);
+        Task Execute(IUnitOfWork openContext, string setupData);
     }
 }

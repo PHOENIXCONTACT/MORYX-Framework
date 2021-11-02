@@ -3,11 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
+using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
 using Moryx.Modules;
 using Moryx.Tools;
@@ -91,18 +92,10 @@ namespace Moryx.Model
 
         /// <inheritdoc />
         public TContext Create<TContext>() where TContext : DbContext =>
-            Create<TContext>(ContextMode.AllOn);
+            Create<TContext>(null);
 
         /// <inheritdoc />
-        public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext =>
-            Create<TContext>(config, ContextMode.AllOn);
-
-        /// <inheritdoc />
-        public TContext Create<TContext>(ContextMode contextMode) where TContext : DbContext =>
-            Create<TContext>(null, contextMode);
-
-        /// <inheritdoc />
-        public TContext Create<TContext>(IDatabaseConfig config, ContextMode contextMode) where TContext : DbContext
+        public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext
         {
             var wrapper = _knownModels.FirstOrDefault(k => k.DbContextType == typeof(TContext));
             if (wrapper == null)
@@ -111,8 +104,8 @@ namespace Moryx.Model
             var configurator = wrapper.Configurator;
 
             return config != null
-                ? (TContext)configurator.CreateContext(config, contextMode)
-                : (TContext)configurator.CreateContext(contextMode);
+                ? (TContext)configurator.CreateContext(config)
+                : (TContext)configurator.CreateContext();
         }
 
         private class ModelWrapper

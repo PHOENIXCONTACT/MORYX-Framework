@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
@@ -19,6 +20,6 @@ namespace Moryx.Model
         /// <summary>
         /// Executes the given setup
         /// </summary>
-        void Execute(IDatabaseConfig config, IModelSetup setup, string setupData);
+        Task Execute(IDatabaseConfig config, IModelSetup setup, string setupData);
     }
 }

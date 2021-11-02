@@ -1,8 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Moryx.Model.Configuration;
-
 #if USE_WCF
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -32,7 +32,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        DataModel[] GetAll();
+        Task<DataModel[]> GetAll();
 
         /// <summary>
         /// Drop all data models
@@ -43,7 +43,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        InvocationResponse EraseAll();
+        Task<InvocationResponse> EraseAll();
 
         /// <summary>
         /// Get all database config
@@ -55,7 +55,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        DataModel GetModel(string targetModel);
+        Task<DataModel> GetModel(string targetModel);
 
         /// <summary>
         /// Set database config
@@ -78,7 +78,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        TestConnectionResponse TestDatabaseConfig(string targetModel, DatabaseConfigModel config);
+        Task<TestConnectionResponse> TestDatabaseConfig(string targetModel, DatabaseConfigModel config);
 
         /// <summary>
         /// Create all datamodels with current config
@@ -90,7 +90,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        InvocationResponse CreateAll();
+        Task<InvocationResponse> CreateAll();
 
         /// <summary>
         /// Create a new database matching the model
@@ -102,7 +102,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        InvocationResponse CreateDatabase(string targetModel, DatabaseConfigModel config);
+        Task<InvocationResponse> CreateDatabase(string targetModel, DatabaseConfigModel config);
 
         /// <summary>
         /// Erases the database given by the model
@@ -114,7 +114,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        InvocationResponse EraseDatabase(string targetModel, DatabaseConfigModel config);
+        Task<InvocationResponse> EraseDatabase(string targetModel, DatabaseConfigModel config);
 
         /// <summary>
         /// Dumps the database matching the model to create a restoreable backup
@@ -126,7 +126,18 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        InvocationResponse DumpDatabase(string targetModel, DatabaseConfigModel config);
+        Task<InvocationResponse> DumpDatabase(string targetModel, DatabaseConfigModel config);
+
+        /// <summary>
+        /// Updates database model to the specified update.
+        /// </summary>
+#if USE_WCF
+        [OperationContract]
+        [WebInvoke(UriTemplate = "model/{targetModel}/migrate", Method = WebRequestMethods.Http.Post,
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
+#endif
+        Task<DatabaseMigrationSummary> MigrateDatabase(string targetModel, DatabaseConfigModel config);
 
         /// <summary>
         /// Restores the database.
@@ -138,29 +149,7 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        InvocationResponse RestoreDatabase(string targetModel, RestoreDatabaseRequest request);
-
-        /// <summary>
-        /// Updates database model to the specified update.
-        /// </summary>
-#if USE_WCF
-        [OperationContract]
-        [WebInvoke(UriTemplate = "model/{targetModel}/{migrationName}/migrate", Method = WebRequestMethods.Http.Post,
-            ResponseFormat = WebMessageFormat.Json,
-            RequestFormat = WebMessageFormat.Json)]
-#endif
-        DatabaseUpdateSummary MigrateDatabaseModel(string targetModel, string migrationName, DatabaseConfigModel config);
-
-        /// <summary>
-        /// Rollback of all migrations made
-        /// </summary>
-#if USE_WCF
-        [OperationContract]
-        [WebInvoke(UriTemplate = "model/{targetModel}/rollback", Method = WebRequestMethods.Http.Post,
-            ResponseFormat = WebMessageFormat.Json,
-            RequestFormat = WebMessageFormat.Json)]
-#endif
-        InvocationResponse RollbackDatabase(string targetModel, DatabaseConfigModel config);
+        Task<InvocationResponse> RestoreDatabase(string targetModel, RestoreDatabaseRequest request);
 
         /// <summary>
         /// Execute setup for this config
@@ -171,6 +160,6 @@ namespace Moryx.Runtime.Maintenance.Plugins.Databases
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 #endif
-        InvocationResponse ExecuteSetup(string targetModel, ExecuteSetupRequest request);
+        Task<InvocationResponse> ExecuteSetup(string targetModel, ExecuteSetupRequest request);
     }
 }

@@ -1,11 +1,10 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model.Repositories
 {
@@ -36,12 +35,10 @@ namespace Moryx.Model.Repositories
     /// Base class for entity framework repositories
     /// </summary>
     public abstract class Repository<T> : Repository, IRepository<T>
-        where T : class, IEntity
+        where T : class, IEntity, new()
     {
-        /// <summary>
-        /// Internal entity framework <see cref="IDbSet{TEntity}"/>
-        /// </summary>
-        protected DbSet<T> DbSet { get; set; }
+        /// <inheritdoc />
+        public DbSet<T> DbSet { get; private set; }
 
         /// <inheritdoc />
         public override void Initialize(IUnitOfWork uow, DbContext context)
@@ -62,21 +59,41 @@ namespace Moryx.Model.Repositories
             DbSet.FirstOrDefaultAsync(e => e.Id == id);
 
         /// <inheritdoc />
-        public ICollection<T> GetAll() =>
+        public virtual ICollection<T> GetAll() =>
             DbSet.ToList();
 
         /// <inheritdoc />
-        public virtual ICollection<T> GetByKeys(long[] ids) =>
-            DbSet.Where(e => ids.Contains(e.Id)).ToList();
+        public virtual async Task<ICollection<T>> GetAllAsync()
+        {
+            var results = await DbSet.ToListAsync();
+            return results;
+        }
+
+        /// <inheritdoc />
+        public virtual ICollection<T> GetByKeys(long[] ids)
+        {
+            return DbSet.Where(e => ids.Contains(e.Id)).ToList();
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<ICollection<T>> GetByKeysAsync(long[] ids)
+        {
+            var results = await DbSet.Where(e => ids.Contains(e.Id)).ToListAsync();
+            return results;
+        }
 
         /// <inheritdoc />
         public T Create() =>
             Create(true);
 
         /// <inheritdoc />
+        public Task<T> CreateAsync() =>
+            CreateAsync(true);
+
+        /// <inheritdoc />
         public T Create(bool addToContext)
         {
-            var newInstance = DbSet.Create();
+            var newInstance = new T();
             if (addToContext)
                 DbSet.Add(newInstance);
 
@@ -84,12 +101,44 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
-        public T Add(T entityToAdd) =>
-            DbSet.Add(entityToAdd);
+        public async Task<T> CreateAsync(bool addToContext)
+        {
+            var newInstance = new T();
+            if (addToContext)
+                await DbSet.AddAsync(newInstance);
+
+            return newInstance;
+        }
 
         /// <inheritdoc />
-        public IEnumerable<T> AddRange(IEnumerable<T> entitiesToAdd) =>
-            DbSet.AddRange(entitiesToAdd);
+        public T Add(T entity)
+        {
+            var entry = DbSet.Add(entity);
+            return entry.Entity;
+        }
+
+        /// <inheritdoc />
+        public async Task<T> AddAsync(T entity)
+        {
+            var entry = await DbSet.AddAsync(entity);
+            return entry.Entity;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<T> AddRange(IEnumerable<T> entities)
+        {
+            var entries = entities.ToList();
+            DbSet.AddRange(entries);
+            return entries;
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)
+        {
+            var entries = entities.ToList();
+            await DbSet.AddRangeAsync(entries);
+            return entries;
+        }
 
         /// <inheritdoc />
         public T Remove(T entity) =>
@@ -110,21 +159,29 @@ namespace Moryx.Model.Repositories
         /// <summary>
         /// Remove entity with option of permanent removal.
         /// </summary>
-        protected virtual T ExecuteRemove(T entity, bool permanent) =>
-            DbSet.Remove(entity);
+        protected virtual T ExecuteRemove(T entity, bool permanent)
+        {
+            var entityEntry = DbSet.Remove(entity);
+            return entityEntry.Entity;
+        }
 
         /// <summary>
         /// Remove entities with option of permanent removal.
         /// </summary>
-        protected virtual IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent) =>
-            DbSet.RemoveRange(entities.ToArray());
+        protected virtual IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent)
+        {
+            var entityLst = entities.ToList();
+
+            DbSet.RemoveRange(entityLst);
+            return entityLst;
+        }
     }
 
     /// <summary>
     /// Base class for entity framework repositories of modification tracking entities
     /// </summary>
     public abstract class ModificationTrackedRepository<T> : Repository<T>
-        where T : class, IModificationTrackedEntity
+        where T : class, IModificationTrackedEntity, new()
     {
         /// <inheritdoc />
         protected override T ExecuteRemove(T entity, bool permanent)

@@ -95,5 +95,12 @@ namespace Moryx.TestModule
         {
             return moduleConfig;
         }
+
+        [EntrySerialize, Description("Executes the json test")]
+        public void JsonTest()
+        {
+            var jsonTest = Container.Resolve<JsonTest>();
+            jsonTest.Start();
+        }
     }
 }

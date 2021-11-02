@@ -5,6 +5,8 @@ using System;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Logging;
 using Moryx.Model.Configuration;
 using Npgsql;
@@ -17,12 +19,9 @@ namespace Moryx.Model.PostgreSQL
     public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDatabaseConfig>
     {
         /// <inheritdoc />
-        protected override string ProviderInvariantName => "Npgsql";
-
-        /// <inheritdoc />
         protected override DbConnection CreateConnection(IDatabaseConfig config)
         {
-            return new NpgsqlConnection(BuildConnectionString(config));
+            return CreateConnection(config, true);
         }
 
         /// <inheritdoc />
@@ -38,7 +37,7 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc />
-        public override void DeleteDatabase(IDatabaseConfig config)
+        public override async Task DeleteDatabase(IDatabaseConfig config)
         {
             // Close all connections to the server.
             // Its not possible to delete the database while there are open connections.
@@ -49,13 +48,13 @@ namespace Moryx.Model.PostgreSQL
             var command = CreateCommand($"DROP DATABASE \"{config.Database}\";", connection);
 
             // Open connection
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
+            await connection.CloseAsync();
         }
 
         /// <inheritdoc />
-        public override void DumpDatabase(IDatabaseConfig config, string targetPath)
+        public override Task DumpDatabase(IDatabaseConfig config, string targetPath)
         {
             var dumpName = $"{DateTime.Now:dd-MM-yyyy-hh-mm-ss}_{config.Database}.backup";
             var fileName = Path.Combine(targetPath, dumpName);
@@ -72,10 +71,12 @@ namespace Moryx.Model.PostgreSQL
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public override void RestoreDatabase(IDatabaseConfig config, string filePath)
+        public override Task RestoreDatabase(IDatabaseConfig config, string filePath)
         {
             Logger.Log(LogLevel.Debug, "Starting to restore database with pg_restore from: {0}", filePath);
 
@@ -89,10 +90,20 @@ namespace Moryx.Model.PostgreSQL
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public override string BuildConnectionString(IDatabaseConfig config, bool includeModel)
+        public override DbContextOptions BuildDbContextOptions(IDatabaseConfig config)
+        {
+            var builder = new DbContextOptionsBuilder();
+            builder.UseNpgsql(BuildConnectionString(config, true));
+
+            return builder.Options;
+        }
+
+        private static string BuildConnectionString(IDatabaseConfig config, bool includeModel)
         {
             var builder = new NpgsqlConnectionStringBuilder
             {

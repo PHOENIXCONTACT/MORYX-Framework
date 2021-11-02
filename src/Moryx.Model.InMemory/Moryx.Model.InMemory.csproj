@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>InMemory extension for unit tests referencing Moryx.Model</Description>
     <CreatePackage>true</CreatePackage>
@@ -9,17 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" />
-    <PackageReference Include="Effort.EF6" Version="2.2.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
   </ItemGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <DefineConstants>HAVE_ARRAY_EMPTY</DefineConstants>
-  </PropertyGroup>
 
 </Project>
