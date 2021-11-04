@@ -10,11 +10,11 @@ namespace Moryx.Resources.Model
     /// <summary>
     /// The public API of the ResourceRelation repository.
     /// </summary>
-    public interface IResourceRelationRepository : IRepository<ResourceRelation>
+    public interface IResourceRelationRepository : IRepository<ResourceRelationEntity>
     {
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        ResourceRelation Create(int relationType);
+        ResourceRelationEntity Create(int relationType);
     }
 }

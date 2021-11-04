@@ -6,7 +6,7 @@ using Moryx.Model;
 // ReSharper disable once CheckNamespace
 namespace Moryx.Resources.Model
 {
-    public class ResourceRelation : EntityBase
+    public class ResourceRelationEntity : EntityBase
     {
         public virtual int RelationType { get; set; }
 

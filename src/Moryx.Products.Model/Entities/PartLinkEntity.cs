@@ -5,7 +5,7 @@ using Moryx.Model;
 
 namespace Moryx.Products.Model
 {
-    public class PartLink : EntityBase, IGenericColumns
+    public class PartLinkEntity : EntityBase, IGenericColumns
     {
         public virtual long ParentId { get; set; }
 

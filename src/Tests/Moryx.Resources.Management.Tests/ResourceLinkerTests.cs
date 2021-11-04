@@ -162,7 +162,7 @@ namespace Moryx.Resources.Management.Tests
             instance.Children.Add(ref4);
 
             // Setup uow and repo to simulate the current database
-            var relations = new List<ResourceRelation>
+            var relations = new List<ResourceRelationEntity>
             {
                 // Parent child relations
                 //Relation(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source), <-- Represents the missing bidirectional parent relationship created during this test
@@ -186,7 +186,7 @@ namespace Moryx.Resources.Management.Tests
             Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Once), "Linker did not detect the new resource");
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangablePart), Times.Once), "Linker did not create relation for ref3 in References");
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Once), "Linker did not create relation for parent ref5");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once), "Linker did not remove relation 1-3");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once), "Linker did not remove relation 1-3");
 
             var parentChild = relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).ToArray();
             Assert.AreEqual(4, parentChild.Length);
@@ -221,7 +221,7 @@ namespace Moryx.Resources.Management.Tests
             instance.Different = different;
 
             // Setup uow and repo to simulate the current database
-            var relations = new List<ResourceRelation>
+            var relations = new List<ResourceRelationEntity>
             {
                 // Current exchangable parts
                 Relation(2, 1, ResourceRelationType.CurrentExchangablePart),
@@ -234,17 +234,17 @@ namespace Moryx.Resources.Management.Tests
             _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 2)), Times.Never), "Linker did remove relation 1-2");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-3");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelation>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-4");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 2)), Times.Never), "Linker did remove relation 1-2");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-3");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-4");
         }
 
-        private ResourceRelation Relation(long id, long otherId,
+        private ResourceRelationEntity Relation(long id, long otherId,
             ResourceRelationType relationType = ResourceRelationType.ParentChild,
             ResourceReferenceRole role = ResourceReferenceRole.Target,
             string relationName = null)
         {
-            var relation = new ResourceRelation
+            var relation = new ResourceRelationEntity
             {
                 RelationType = (int)relationType,
                 TargetName = relationName,
@@ -265,7 +265,7 @@ namespace Moryx.Resources.Management.Tests
             ResourceReferenceTools.InitializeCollections(parent);
             var child = new SimpleResource { Id = 2 };
             ResourceReferenceTools.InitializeCollections(child);
-            var mocks = SetupDbMocks(new List<ResourceRelation>());
+            var mocks = SetupDbMocks(new List<ResourceRelationEntity>());
             // Setup graph mock
             _graph[1] = new ResourceWrapper(parent);
             _graph[2] = new ResourceWrapper(child);
@@ -291,7 +291,7 @@ namespace Moryx.Resources.Management.Tests
             // Create initial relationship
             child.Parent = parent;
             parent.Children.Add(child);
-            var relations = new List<ResourceRelation>
+            var relations = new List<ResourceRelationEntity>
             {
                 Relation(2, 1) // Initial relationship
             };
@@ -323,7 +323,7 @@ namespace Moryx.Resources.Management.Tests
             // Create initial relationship
             child.Parent = parent1;
             parent1.Children.Add(child);
-            var relations = new List<ResourceRelation>
+            var relations = new List<ResourceRelationEntity>
             {
                 Relation(3, 1) // Initial relationship
             };
@@ -374,7 +374,7 @@ namespace Moryx.Resources.Management.Tests
             var reference = new SimpleResource();
             ResourceReferenceTools.InitializeCollections(instance);
             ResourceReferenceTools.InitializeCollections(reference);
-            var dbMocks = SetupDbMocks(new List<ResourceRelation>());
+            var dbMocks = SetupDbMocks(new List<ResourceRelationEntity>());
 
             // Act
             if (!isNull)
@@ -389,22 +389,22 @@ namespace Moryx.Resources.Management.Tests
                 Assert.DoesNotThrow(() => _linker.SaveReferences(dbMocks.Item1.Object, instance, new ResourceEntity()));
         }
 
-        private static Tuple<Mock<IUnitOfWork>, Mock<IResourceRelationRepository>, Mock<IResourceEntityRepository>> SetupDbMocks(List<ResourceRelation> relations)
+        private static Tuple<Mock<IUnitOfWork>, Mock<IResourceRelationRepository>, Mock<IResourceRepository>> SetupDbMocks(List<ResourceRelationEntity> relations)
         {
             // Setup uow and repo to simulate the current database
             var relRepo = new Mock<IResourceRelationRepository>();
             relRepo.Setup(r => r.Linq).Returns(relations.AsQueryable());
             relRepo.Setup(r => r.Create(It.IsAny<int>())).Returns<int>(type =>
             {
-                var relation = new ResourceRelation { RelationType = type };
+                var relation = new ResourceRelationEntity { RelationType = type };
                 relations.Add(relation);
                 return relation;
             });
-            relRepo.Setup(r => r.Remove(It.IsAny<ResourceRelation>()))
-                .Callback<ResourceRelation>(removedRelation => relations.Remove(removedRelation));
-            relRepo.Setup(r => r.RemoveRange(It.IsAny<IEnumerable<ResourceRelation>>()))
-                .Callback<IEnumerable<ResourceRelation>>(removedRelations => relations.RemoveAll(removedRelations.Contains));
-            var resRepo = new Mock<IResourceEntityRepository>();
+            relRepo.Setup(r => r.Remove(It.IsAny<ResourceRelationEntity>()))
+                .Callback<ResourceRelationEntity>(removedRelation => relations.Remove(removedRelation));
+            relRepo.Setup(r => r.RemoveRange(It.IsAny<IEnumerable<ResourceRelationEntity>>()))
+                .Callback<IEnumerable<ResourceRelationEntity>>(removedRelations => relations.RemoveAll(removedRelations.Contains));
+            var resRepo = new Mock<IResourceRepository>();
             resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id > 0))).Returns<long>(id => new ResourceEntity { Id = id });
             resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id == 0))).Returns((ResourceEntity)null);
             resRepo.Setup(r => r.Create()).Returns(new ResourceEntity());

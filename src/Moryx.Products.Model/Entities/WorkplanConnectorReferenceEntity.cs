@@ -5,7 +5,7 @@ using Moryx.Model;
 
 namespace Moryx.Products.Model
 {
-    public class ConnectorReference : EntityBase
+    public class WorkplanConnectorReferenceEntity : EntityBase
     {
         public virtual int Index { get; set; }
 
@@ -15,8 +15,8 @@ namespace Moryx.Products.Model
 
         public virtual long StepId { get; set; }
 
-        public virtual ConnectorEntity Connector { get; set; }
+        public virtual WorkplanConnectorEntity Connector { get; set; }
 
-        public virtual StepEntity Step { get; set; }
+        public virtual WorkplanStepEntity WorkplanStep { get; set; }
     }
 }

@@ -63,7 +63,7 @@ namespace Moryx.Products.Management
         /// </summary>
         public static Workplan LoadWorkplan(IUnitOfWork uow, long id)
         {
-            var workplanEntity = uow.GetRepository<IWorkplanEntityRepository>().GetByKey(id);
+            var workplanEntity = uow.GetRepository<IWorkplanRepository>().GetByKey(id);
             return workplanEntity == null ? null : LoadWorkplan(workplanEntity);
         }
 
@@ -156,7 +156,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Restore either <see cref="IWorkplanStep.Inputs"/> or <see cref="IWorkplanStep.Outputs"/>.
         /// </summary>
-        private static IConnector[] RestoreReferences(StepEntity stepEntity, ConnectorRole role, IDictionary<long, IConnector> connectors)
+        private static IConnector[] RestoreReferences(WorkplanStepEntity stepEntity, ConnectorRole role, IDictionary<long, IConnector> connectors)
         {
             var referenceEntities = stepEntity.Connectors.Where(c => c.Role == role).ToList();
 
@@ -177,7 +177,7 @@ namespace Moryx.Products.Management
         /// </summary>
         public static WorkplanEntity SaveWorkplan(IUnitOfWork uow, Workplan workplan)
         {
-            var workplanRepo = uow.GetRepository<IWorkplanEntityRepository>();
+            var workplanRepo = uow.GetRepository<IWorkplanRepository>();
             var referenceRepo = uow.GetRepository<IWorkplanReferenceRepository>();
 
             // Try to get the current object
@@ -218,11 +218,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save or update connectors of the workplan and return a map of StepId => Entity
         /// </summary>
-        private static IDictionary<long, ConnectorEntity> SaveConnectors(IUnitOfWork uow, WorkplanEntity workplanEntity, Workplan workplan)
+        private static IDictionary<long, WorkplanConnectorEntity> SaveConnectors(IUnitOfWork uow, WorkplanEntity workplanEntity, Workplan workplan)
         {
-            var connectorRepo = uow.GetRepository<IConnectorEntityRepository>();
+            var connectorRepo = uow.GetRepository<IWorkplanConnectorRepository>();
 
-            var connectorEntities = new Dictionary<long, ConnectorEntity>();
+            var connectorEntities = new Dictionary<long, WorkplanConnectorEntity>();
             foreach (var connector in workplan.Connectors)
             {
                 var connectorEntity = workplanEntity.Connectors.FirstOrDefault(ce => ce.ConnectorId == connector.Id);
@@ -241,11 +241,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save or update steps of the workplan and return a map of StepId => Entity
         /// </summary>
-        private static IDictionary<long, StepEntity> SaveSteps(IUnitOfWork uow, WorkplanEntity workplanEntity, Workplan workplan)
+        private static IDictionary<long, WorkplanStepEntity> SaveSteps(IUnitOfWork uow, WorkplanEntity workplanEntity, Workplan workplan)
         {
-            var stepRepo = uow.GetRepository<IStepEntityRepository>();
-            var descriptionRepo = uow.GetRepository<IOutputDescriptionEntityRepository>();
-            var referenceRepo = uow.GetRepository<IConnectorReferenceRepository>();
+            var stepRepo = uow.GetRepository<IWorkplanStepRepository>();
+            var descriptionRepo = uow.GetRepository<IWorkplanOutputDescriptionRepository>();
+            var referenceRepo = uow.GetRepository<IWorkplanConnectorReferenceRepository>();
 
             // Remove connectors, that are now longer used. We only use Created/Updated columns
             // and do not want the entities flagged as deleted
@@ -257,7 +257,7 @@ namespace Moryx.Products.Management
                 stepRepo.Remove(removedStep);
             }
 
-            var stepEntities = new Dictionary<long, StepEntity>();
+            var stepEntities = new Dictionary<long, WorkplanStepEntity>();
             foreach (var step in workplan.Steps)
             {
                 // Get or create entity
@@ -307,9 +307,9 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Link steps and connectors in the database
         /// </summary>
-        private static void LinkSteps(IUnitOfWork uow, Workplan workplan, IDictionary<long, StepEntity> steps, IDictionary<long, ConnectorEntity> connectors)
+        private static void LinkSteps(IUnitOfWork uow, Workplan workplan, IDictionary<long, WorkplanStepEntity> steps, IDictionary<long, WorkplanConnectorEntity> connectors)
         {
-            var referenceRepo = uow.GetRepository<IConnectorReferenceRepository>();
+            var referenceRepo = uow.GetRepository<IWorkplanConnectorReferenceRepository>();
 
             foreach (var step in workplan.Steps)
             {
@@ -324,7 +324,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Update either inputs or outputs in the database
         /// </summary>
-        private static void UpdateConnectors(IConnectorReferenceRepository referenceRepo, StepEntity stepEntity, IWorkplanStep step, ConnectorRole role, IDictionary<long, ConnectorEntity> connectors)
+        private static void UpdateConnectors(IWorkplanConnectorReferenceRepository referenceRepo, WorkplanStepEntity stepEntity, IWorkplanStep step, ConnectorRole role, IDictionary<long, WorkplanConnectorEntity> connectors)
         {
             // Update inputs first
             var connectorArray = role == ConnectorRole.Input ? step.Inputs : step.Outputs;
@@ -336,7 +336,7 @@ namespace Moryx.Products.Management
                 {
                     // Reference not yet stored in database
                     connectorReference = referenceRepo.Create(index, role);
-                    connectorReference.Step = stepEntity;
+                    connectorReference.WorkplanStep = stepEntity;
                     connectorReference.Connector = connectors[connector.Id];
                 }
                 else if (connectorReference != null && connector != null)
@@ -353,7 +353,7 @@ namespace Moryx.Products.Management
                 {
                     // Connector null and no entity exists
                     connectorReference = referenceRepo.Create(index, role);
-                    connectorReference.Step = stepEntity;
+                    connectorReference.WorkplanStep = stepEntity;
                 }
             }
         }
@@ -363,7 +363,7 @@ namespace Moryx.Products.Management
         /// </summary>
         private static void RemoveUnusedConnectors(IUnitOfWork uow, WorkplanEntity workplanEntity, Workplan workplan)
         {
-            var connectorRepo = uow.GetRepository<IConnectorEntityRepository>();
+            var connectorRepo = uow.GetRepository<IWorkplanConnectorRepository>();
 
             // Remove connectors, that are now longer part of the workplan
             var removedConnectors = workplanEntity.Connectors.Where(ce => workplan.Connectors.All(c => c.Id != ce.ConnectorId));

@@ -69,12 +69,10 @@ namespace Moryx.Resources.Management.Tests
                 References = new ReferenceCollectionMock<IResource>()
             });
 
-            using (var uow = _modelFactory.Create())
-            {
-                var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
-                resourceRepo.Create(DatabaseResourceName, typeof(ResourceMock).ResourceType());
-                uow.SaveChanges();
-            }
+            using var uow = _modelFactory.Create();
+            var resourceRepo = uow.GetRepository<IResourceRepository>();
+            resourceRepo.Create(DatabaseResourceName, typeof(ResourceMock).ResourceType());
+            uow.SaveChanges();
         }
 
         [Test(Description = "Executes a resource initializer on the manager to add resources")]
@@ -169,7 +167,7 @@ namespace Moryx.Resources.Management.Tests
 
             using (var uow = _modelFactory.Create())
             {
-                var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
+                var resourceRepo = uow.GetRepository<IResourceRepository>();
                 var entity = resourceRepo.GetByKey(_resourceMock.Id);
 
                 Assert.AreEqual(_resourceMock.Description, entity.Description);
@@ -197,7 +195,7 @@ namespace Moryx.Resources.Management.Tests
             ResourceEntity entity;
             using (var uow = _modelFactory.Create())
             {
-                var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
+                var resourceRepo = uow.GetRepository<IResourceRepository>();
                 entity = resourceRepo.GetByKey(testResource.Id);
             }
 
@@ -243,7 +241,7 @@ namespace Moryx.Resources.Management.Tests
 
             using (var uow = _modelFactory.Create())
             {
-                var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
+                var resourceRepo = uow.GetRepository<IResourceRepository>();
 
                 var entity = resourceRepo.GetByKey(testResource.Id);
                 if (permanent)

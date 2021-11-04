@@ -2,9 +2,9 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxCoreVersion>4.0.0-future.371</MoryxCoreVersion>
+    <MoryxCoreVersion>4.0.0-future.375</MoryxCoreVersion>
     <MoryxClientFrameworkVersion>4.0.0-future.116</MoryxClientFrameworkVersion>
-    <MoryxMaintenanceWebVersion>4.0.0-future.85</MoryxMaintenanceWebVersion>
+    <MoryxMaintenanceWebVersion>4.0.0-future.86</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
@@ -22,6 +22,12 @@
     <PackageReference Update="Moq" Version="4.16.1" />
     <PackageReference Update="NUnit" Version="3.13.1" />
     <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
+
+    <PackageReference Update="Microsoft.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="3.1.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 
     <!--Platform dependencies-->
     <PackageReference Update="Moryx" Version="$(MoryxCoreVersion)" />

@@ -9,7 +9,6 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Logging;
-using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.Resources.Model;
@@ -95,7 +94,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Fallback lock object if a new instance is saved BEFORE having the wrapper as a lock object
         /// </summary>
-        private readonly object _fallbackLock = new object();
+        private readonly object _fallbackLock = new();
 
         #endregion
 
@@ -108,7 +107,7 @@ namespace Moryx.Resources.Management
             Graph.DestroyDelegate = Destroy;
 
             _startup = ResourceStartupPhase.LoadResources;
-            using (var uow = UowFactory.Create(ContextMode.AllOff))
+            using (var uow = UowFactory.Create())
             {
                 // Create all objects
                 var allResources = ResourceEntityAccessor.FetchResourceTemplates(uow);
@@ -221,8 +220,7 @@ namespace Moryx.Resources.Management
         {
             instance.Changed -= OnResourceChanged;
 
-            var asPublic = instance as IPublicResource;
-            if (asPublic != null)
+            if (instance is IPublicResource asPublic)
                 asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
             foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
@@ -269,17 +267,17 @@ namespace Moryx.Resources.Management
             _startup = ResourceStartupPhase.Stopping;
 
             Parallel.ForEach(Graph.GetAll(), resourceWrapper =>
+            {
+                try
                 {
-                    try
-                    {
-                        resourceWrapper.Stop();
-                        UnregisterEvents(resourceWrapper.Target);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogException(LogLevel.Warning, e, "Failed to stop resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
-                    }
-                });
+                    resourceWrapper.Stop();
+                    UnregisterEvents(resourceWrapper.Target);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogException(LogLevel.Warning, e, "Failed to stop resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
+                }
+            });
 
             _startup = ResourceStartupPhase.Stopped;
         }
@@ -290,30 +288,28 @@ namespace Moryx.Resources.Management
         {
             lock (Graph.GetWrapper(resource.Id) ?? _fallbackLock)
             {
-                using (var uow = UowFactory.Create())
+                using var uow = UowFactory.Create();
+                var newResources = new HashSet<Resource>();
+
+                var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
+                if (entity.Id == 0)
+                    newResources.Add(resource);
+
+                var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);
+                newResources.AddRange(newInstances);
+
+                try
                 {
-                    var newResources = new HashSet<Resource>();
-
-                    var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
-                    if (entity.Id == 0)
-                        newResources.Add(resource);
-
-                    var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);
-                    newResources.AddRange(newInstances);
-
-                    try
-                    {
-                        uow.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.LogException(LogLevel.Error, ex, "Error saving resource {0}-{1}!", resource.Id, resource.Name);
-                        throw;
-                    }
-
-                    foreach (var instance in newResources)
-                        AddResource(instance, true);
+                    uow.SaveChanges();
                 }
+                catch (Exception ex)
+                {
+                    Logger.LogException(LogLevel.Error, ex, "Error saving resource {0}-{1}!", resource.Id, resource.Name);
+                    throw;
+                }
+
+                foreach (var instance in newResources)
+                    AddResource(instance, true);
             }
         }
 
@@ -327,23 +323,21 @@ namespace Moryx.Resources.Management
 
             lock (Graph.GetWrapper(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
             {
-                using (var uow = UowFactory.Create())
+                using var uow = UowFactory.Create();
+                var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
+
+                try
                 {
-                    var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
-
-                    try
-                    {
-                        uow.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.LogException(LogLevel.Error, ex, "Error saving collection {2} on resource {0}-{1}!", instance.Id, instance.Name, property.Name);
-                        throw;
-                    }
-
-                    foreach (var newResource in newResources)
-                        AddResource(newResource, true);
+                    uow.SaveChanges();
                 }
+                catch (Exception ex)
+                {
+                    Logger.LogException(LogLevel.Error, ex, "Error saving collection {2} on resource {0}-{1}!", instance.Id, instance.Name, property.Name);
+                    throw;
+                }
+
+                foreach (var newResource in newResources)
+                    AddResource(newResource, true);
             }
         }
 
@@ -354,11 +348,9 @@ namespace Moryx.Resources.Management
             if (roots.Count == 0)
                 throw new InvalidOperationException("ResourceInitializer must return at least one resource");
 
-            using (var uow = UowFactory.Create())
-            {
-                ResourceLinker.SaveRoots(uow, roots);
-                uow.SaveChanges();
-            }
+            using var uow = UowFactory.Create();
+            ResourceLinker.SaveRoots(uow, roots);
+            uow.SaveChanges();
         }
 
         #region IResourceCreator
@@ -371,7 +363,7 @@ namespace Moryx.Resources.Management
             // Load entity and relations to disconnect resource and remove from database
             using (var uow = UowFactory.Create())
             {
-                var resourceRepository = uow.GetRepository<IResourceEntityRepository>();
+                var resourceRepository = uow.GetRepository<IResourceRepository>();
                 var relationRepository = uow.GetRepository<IResourceRelationRepository>();
 
                 // Fetch entity and relations
@@ -402,7 +394,7 @@ namespace Moryx.Resources.Management
             // Notify listeners about the removal of the resource
             if (removed && instance is IPublicResource publicResource)
                 RaiseResourceRemoved(publicResource);
-            
+
             // Destroy the object
             TypeController.Destroy(instance);
 

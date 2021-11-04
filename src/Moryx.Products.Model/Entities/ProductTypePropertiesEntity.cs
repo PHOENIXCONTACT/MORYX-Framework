@@ -5,7 +5,7 @@ using Moryx.Model;
 
 namespace Moryx.Products.Model
 {
-    public class ProductProperties : ModificationTrackedEntityBase, IGenericColumns
+    public class ProductTypePropertiesEntity : ModificationTrackedEntityBase, IGenericColumns
     {
         public virtual int State { get; set; }
 

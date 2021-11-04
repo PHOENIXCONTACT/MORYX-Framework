@@ -8,11 +8,11 @@ namespace Moryx.Products.Model
     /// <summary>
     /// The public API of the ConnectorReference repository.
     /// </summary>
-    public interface IConnectorReferenceRepository : IRepository<ConnectorReference>
+    public interface IWorkplanConnectorReferenceRepository : IRepository<WorkplanConnectorReferenceEntity>
     {
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        ConnectorReference Create(int index, ConnectorRole role);
+        WorkplanConnectorReferenceEntity Create(int index, ConnectorRole role);
     }
 }

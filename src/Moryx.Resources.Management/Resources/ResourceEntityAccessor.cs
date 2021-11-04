@@ -111,7 +111,7 @@ namespace Moryx.Resources.Management
         /// </summary>
         public static ICollection<ResourceEntityAccessor> FetchResourceTemplates(IUnitOfWork uow)
         {
-            var resourceRepo = uow.GetRepository<IResourceEntityRepository>();
+            var resourceRepo = uow.GetRepository<IResourceRepository>();
 
             var resources = (from res in resourceRepo.Linq
                              where res.Deleted == null
@@ -165,7 +165,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Relation entity represented by this template
         /// </summary>
-        public ResourceRelation Entity { get; set; }
+        public ResourceRelationEntity Entity { get; set; }
 
         /// <summary>
         /// Optional name of the reference
@@ -216,9 +216,9 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// Load all relation templates from a queryable collection of <see cref="ResourceRelation"/>
+        /// Load all relation templates from a queryable collection of <see cref="ResourceRelationEntity"/>
         /// </summary>
-        public static ICollection<ResourceRelationAccessor> FromQueryable(IQueryable<ResourceRelation> relations, ResourceEntity instance)
+        public static ICollection<ResourceRelationAccessor> FromQueryable(IQueryable<ResourceRelationEntity> relations, ResourceEntity instance)
         {
             var result = (from target in relations
                           where target.Target.Deleted == null && target.Source == instance

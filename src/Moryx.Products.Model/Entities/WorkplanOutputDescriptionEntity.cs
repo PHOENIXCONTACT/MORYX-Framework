@@ -5,7 +5,7 @@ using Moryx.Model;
 
 namespace Moryx.Products.Model
 {
-    public class OutputDescriptionEntity : EntityBase
+    public class WorkplanOutputDescriptionEntity : EntityBase
     {
         public virtual int Index { get; set; }
 
@@ -17,6 +17,6 @@ namespace Moryx.Products.Model
 
         public virtual long StepEntityId { get; set; }
 
-        public virtual StepEntity Step { get; set; }
+        public virtual WorkplanStepEntity WorkplanStep { get; set; }
     }
 }

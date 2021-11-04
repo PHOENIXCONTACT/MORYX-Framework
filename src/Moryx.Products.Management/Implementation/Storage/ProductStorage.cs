@@ -6,10 +6,10 @@ using System.Collections;
 using Moryx.Model;
 using Moryx.Products.Model;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -141,7 +141,7 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var recipeRepo = uow.GetRepository<IProductRecipeEntityRepository>();
+                var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
                 var recipeEntity = recipeRepo.GetByKey(recipeId);
                 return recipeEntity != null ? LoadRecipe(uow, recipeEntity) : null;
             }
@@ -152,13 +152,13 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var repo = uow.GetRepository<IProductTypeEntityRepository>();
+                var repo = uow.GetRepository<IProductTypeRepository>();
                 var productEntity = repo.GetByKey(productId);
                 if (productEntity == null)
                     return null;
 
                 var classificationMask = (int)classifications;
-                var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeEntityRepository>().Linq.Active()
+                var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeRepository>().Linq.Active()
                                       let classificationValue = recipeEntity.Classification
                                       where recipeEntity.ProductId == productId
                                       where classificationValue >= 0 // We never return clones in this query
@@ -214,8 +214,8 @@ namespace Moryx.Products.Management
             using (var uow = Factory.Create())
             {
                 // Prepare required repos
-                var prodRepo = uow.GetRepository<IProductTypeEntityRepository>();
-                var recipeRepo = uow.GetRepository<IProductRecipeEntityRepository>();
+                var prodRepo = uow.GetRepository<IProductTypeRepository>();
+                var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
 
                 // Save changes to recipes
                 foreach (var recipe in recipes)
@@ -241,152 +241,140 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
         {
-            using (var uow = Factory.Create(ContextMode.AllOff))
+            using var uow = Factory.Create();
+            var baseSet = uow.GetRepository<IProductTypeRepository>().Linq;
+            var productsQuery = query.IncludeDeleted ? baseSet : baseSet.Active();
+
+            // Filter by type
+            if (!string.IsNullOrEmpty(query.Type))
             {
-                var baseSet = uow.GetRepository<IProductTypeEntityRepository>().Linq;
-                var productsQuery = query.IncludeDeleted ? baseSet : baseSet.Active();
-
-                // Filter by type
-                if (!string.IsNullOrEmpty(query.Type))
+                if (query.ExcludeDerivedTypes)
+                    productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
+                else
                 {
-                    if (query.ExcludeDerivedTypes)
-                        productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
-                    else
+                    var allTypes = ReflectionTool.GetPublicClasses<ProductType>(pt =>
                     {
-                        var allTypes = ReflectionTool.GetPublicClasses<ProductType>(pt =>
+                        // TODO: Clean this up with full name and proper type compatibility
+                        var type = pt;
+                        // Check if any interface matches
+                        if (type.GetInterfaces().Any(inter => inter.Name == query.Type))
+                            return true;
+                        // Check if type or base type matches
+                        while (type != null)
                         {
-                            // TODO: Clean this up with full name and proper type compatibility
-                            var type = pt;
-                            // Check if any interface matches
-                            if (type.GetInterfaces().Any(inter => inter.Name == query.Type))
+                            if (type.Name == query.Type)
                                 return true;
-                            // Check if type or base type matches
-                            while (type != null)
-                            {
-                                if (type.Name == query.Type)
-                                    return true;
-                                type = type.BaseType;
-                            }
-                            return false;
-                        }).Select(t => t.Name);
-                        productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
-                    }
+                            type = type.BaseType;
+                        }
+                        return false;
+                    }).Select(t => t.Name);
+                    productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
                 }
-
-                // Filter by identifier
-                if (!string.IsNullOrEmpty(query.Identifier))
-                {
-                    var identifierMatches = Regex.Match(query.Identifier, "(?<startCard>\\*)?(?<filter>\\w*)(?<endCard>\\*)?");
-                    var identifier = identifierMatches.Groups["filter"].Value.ToLower();
-                    if (identifierMatches.Groups["startCard"].Success && identifierMatches.Groups["endCard"].Success)
-                        productsQuery = productsQuery.Where(p => p.Identifier.ToLower().Contains(identifier));
-                    else if (identifierMatches.Groups["startCard"].Success)
-                        productsQuery = productsQuery.Where(p => p.Identifier.ToLower().EndsWith(identifier));
-                    else if (identifierMatches.Groups["endCard"].Success)
-                        productsQuery = productsQuery.Where(p => p.Identifier.ToLower().StartsWith(identifier));
-                    else
-                        productsQuery = productsQuery.Where(p => p.Identifier.ToLower() == identifier);
-                }
-
-                // Filter by revision
-                if (query.RevisionFilter == RevisionFilter.Latest)
-                {
-                    var compareSet = baseSet.Active();
-                    productsQuery = productsQuery.Where(p => p.Revision == compareSet.Where(compare => compare.Identifier == p.Identifier).Max(compare => compare.Revision));
-                }
-                else if (query.RevisionFilter == RevisionFilter.Specific)
-                {
-                    productsQuery = productsQuery.Where(p => p.Revision == query.Revision);
-                }
-
-                // Filter by name
-                if (!string.IsNullOrEmpty(query.Name))
-                    productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(query.Name.ToLower()));
-
-                // Filter by recipe
-                if (query.RecipeFilter == RecipeFilter.WithRecipe)
-                    productsQuery = productsQuery.Where(p => p.Recipes.Any());
-                else if (query.RecipeFilter == RecipeFilter.WithoutRecipes)
-                    productsQuery = productsQuery.Where(p => p.Recipes.Count == 0);
-
-                // Apply selector
-                switch (query.Selector)
-                {
-                    case Selector.Parent:
-                        productsQuery = productsQuery.SelectMany(p => p.Parents).Where(p => p.Parent.Deleted == null)
-                            .Select(link => link.Parent);
-                        break;
-                    case Selector.Parts:
-                        productsQuery = productsQuery.SelectMany(p => p.Parts).Where(p => p.Parent.Deleted == null)
-                            .Select(link => link.Child);
-                        break;
-                }
-
-                // Include current version
-                productsQuery = productsQuery.Include(p => p.CurrentVersion);
-
-                // Execute the query
-                var products = productsQuery.OrderBy(p => p.TypeName)
-                    .ThenBy(p => p.Identifier)
-                    .ThenBy(p => p.Revision).ToList();
-                // TODO: Use TypeWrapper with constructor delegate and isolate basic property conversion
-                return products.Where(p => TypeConstructors.ContainsKey(p.TypeName)).Select(p =>
-                {
-                    var instance = TypeConstructors[p.TypeName]();
-                    instance.Id = p.Id;
-                    instance.Identity = new ProductIdentity(p.Identifier, p.Revision);
-                    instance.Name = p.Name;
-                    return instance;
-                }).ToList();
             }
+
+            // Filter by identifier
+            if (!string.IsNullOrEmpty(query.Identifier))
+            {
+                var identifierMatches = Regex.Match(query.Identifier, "(?<startCard>\\*)?(?<filter>\\w*)(?<endCard>\\*)?");
+                var identifier = identifierMatches.Groups["filter"].Value.ToLower();
+                if (identifierMatches.Groups["startCard"].Success && identifierMatches.Groups["endCard"].Success)
+                    productsQuery = productsQuery.Where(p => p.Identifier.ToLower().Contains(identifier));
+                else if (identifierMatches.Groups["startCard"].Success)
+                    productsQuery = productsQuery.Where(p => p.Identifier.ToLower().EndsWith(identifier));
+                else if (identifierMatches.Groups["endCard"].Success)
+                    productsQuery = productsQuery.Where(p => p.Identifier.ToLower().StartsWith(identifier));
+                else
+                    productsQuery = productsQuery.Where(p => p.Identifier.ToLower() == identifier);
+            }
+
+            // Filter by revision
+            if (query.RevisionFilter == RevisionFilter.Latest)
+            {
+                var compareSet = baseSet.Active();
+                productsQuery = productsQuery.Where(p => p.Revision == compareSet.Where(compare => compare.Identifier == p.Identifier).Max(compare => compare.Revision));
+            }
+            else if (query.RevisionFilter == RevisionFilter.Specific)
+            {
+                productsQuery = productsQuery.Where(p => p.Revision == query.Revision);
+            }
+
+            // Filter by name
+            if (!string.IsNullOrEmpty(query.Name))
+                productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(query.Name.ToLower()));
+
+            // Filter by recipe
+            if (query.RecipeFilter == RecipeFilter.WithRecipe)
+                productsQuery = productsQuery.Where(p => p.Recipes.Any());
+            else if (query.RecipeFilter == RecipeFilter.WithoutRecipes)
+                productsQuery = productsQuery.Where(p => p.Recipes.Count == 0);
+
+            // Apply selector
+            switch (query.Selector)
+            {
+                case Selector.Parent:
+                    productsQuery = productsQuery.SelectMany(p => p.Parents).Where(p => p.Parent.Deleted == null)
+                        .Select(link => link.Parent);
+                    break;
+                case Selector.Parts:
+                    productsQuery = productsQuery.SelectMany(p => p.Parts).Where(p => p.Parent.Deleted == null)
+                        .Select(link => link.Child);
+                    break;
+            }
+
+            // Include current version
+            productsQuery = productsQuery.Include(p => p.CurrentVersion);
+
+            // Execute the query
+            var products = productsQuery.OrderBy(p => p.TypeName)
+                .ThenBy(p => p.Identifier)
+                .ThenBy(p => p.Revision).ToList();
+            // TODO: Use TypeWrapper with constructor delegate and isolate basic property conversion
+            return products.Where(p => TypeConstructors.ContainsKey(p.TypeName)).Select(p =>
+            {
+                var instance = TypeConstructors[p.TypeName]();
+                instance.Id = p.Id;
+                instance.Identity = new ProductIdentity(p.Identifier, p.Revision);
+                instance.Name = p.Name;
+                return instance;
+            }).ToList();
         }
 
         /// <inheritdoc />
         public IProductType LoadType(long id)
         {
-            using (var uow = Factory.Create())
-            {
-                return LoadType(uow, id);
-            }
+            using var uow = Factory.Create();
+            return LoadType(uow, id);
         }
 
         private IProductType LoadType(IUnitOfWork uow, long id)
         {
-            var product = uow.GetRepository<IProductTypeEntityRepository>().GetByKey(id);
+            var product = uow.GetRepository<IProductTypeRepository>().GetByKey(id);
             return product != null ? Transform(uow, product, true) : null;
         }
 
         /// <inheritdoc />
         public IProductType LoadType(ProductIdentity identity)
         {
-            using (var uow = Factory.Create())
+            using var uow = Factory.Create();
+            var productRepo = uow.GetRepository<IProductTypeRepository>();
+
+            var revision = identity.Revision;
+            // If the latest revision was requested, replace it with the highest current revision
+            if (revision == ProductIdentity.LatestRevision)
             {
-                var productRepo = uow.GetRepository<IProductTypeEntityRepository>();
-
-                var revision = identity.Revision;
-                // If the latest revision was requested, replace it with the highest current revision
-                if (revision == ProductIdentity.LatestRevision)
-                {
-                    // Get all revisions of this product
-                    var revisions = productRepo.Linq.Active()
-                        .Where(p => p.Identifier == identity.Identifier)
-                        .Select(p => p.Revision).ToList();
-                    if (revisions.Any())
-                        revision = revisions.Max();
-                    else
-                        return null;
-                }
-
-                var product = uow.GetRepository<IProductTypeEntityRepository>().Linq.Active()
-                    .FirstOrDefault(p => p.Identifier == identity.Identifier && p.Revision == revision);
-                return product != null ? Transform(uow, product, true) : null;
+                // Get all revisions of this product
+                var revisions = productRepo.Linq.Active()
+                    .Where(p => p.Identifier == identity.Identifier)
+                    .Select(p => p.Revision).ToList();
+                if (revisions.Any())
+                    revision = revisions.Max();
+                else
+                    return null;
             }
-        }
 
-        /// <inheritdoc />
-        public IProductType TransformType(IUnitOfWork context, ProductTypeEntity typeEntity, bool full)
-        {
-            return Transform(context, typeEntity, full);
+            var product = uow.GetRepository<IProductTypeRepository>().Linq.Active()
+                .FirstOrDefault(p => p.Identifier == identity.Identifier && p.Revision == revision);
+            return product != null ? Transform(uow, product, true) : null;
         }
 
         private IProductType Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, IProductType> loadedProducts = null, IProductPartLink parentLink = null)
@@ -487,7 +475,7 @@ namespace Moryx.Products.Management
             var strategy = TypeStrategies[modifiedInstance.GetType().Name];
 
             // Get or create entity
-            var repo = saverContext.GetRepository<IProductTypeEntityRepository>();
+            var repo = saverContext.GetRepository<IProductTypeRepository>();
             var identity = (ProductIdentity)modifiedInstance.Identity;
             ProductTypeEntity typeEntity;
             var entities = repo.Linq
@@ -564,7 +552,7 @@ namespace Moryx.Products.Management
                     var currentEntities = FindLinks(linkStrategy.PropertyName, typeEntity).ToArray();
                     foreach (var link in links)
                     {
-                        PartLink linkEntity;
+                        PartLinkEntity linkEntity;
                         if (link.Id == 0 || (linkEntity = currentEntities.FirstOrDefault(p => p.Id == link.Id)) == null)
                         {
                             linkEntity = linkRepo.Create(linkStrategy.PropertyName);
@@ -601,7 +589,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Find the link for this property name
         /// </summary>
-        private static PartLink FindLink(string propertyName, ProductTypeEntity typeEntity)
+        private static PartLinkEntity FindLink(string propertyName, ProductTypeEntity typeEntity)
         {
             return typeEntity.Parts.FirstOrDefault(p => p.PropertyName == propertyName);
         }
@@ -609,7 +597,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Find all links for this product name
         /// </summary>
-        private static IEnumerable<PartLink> FindLinks(string propertyName, ProductTypeEntity typeEntity)
+        private static IEnumerable<PartLinkEntity> FindLinks(string propertyName, ProductTypeEntity typeEntity)
         {
             return typeEntity.Parts.Where(p => p.PropertyName == propertyName);
         }
@@ -622,7 +610,7 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var repo = uow.GetRepository<IProductInstanceEntityRepository>();
+                var repo = uow.GetRepository<IProductInstanceRepository>();
                 var entities = repo.GetByKeys(id);
                 return TransformInstances(uow, entities);
             }
@@ -632,7 +620,7 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var repo = uow.GetRepository<IProductInstanceEntityRepository>();
+                var repo = uow.GetRepository<IProductInstanceRepository>();
                 var entities = repo.Linq
                     .Where(e => e.ProductId == productType.Id)
                     .ToList();
@@ -656,7 +644,7 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var repo = uow.GetRepository<IProductInstanceEntityRepository>();
+                var repo = uow.GetRepository<IProductInstanceRepository>();
                 var matchingStrategies = InstanceStrategies.Values
                     .Where(i => typeof(TInstance).IsAssignableFrom(i.TargetType));
 
@@ -735,7 +723,7 @@ namespace Moryx.Products.Management
                 .SelectMany(g => g).ToList();
             var partGroups = ReflectionTool.GetReferences<ProductInstance>(productInstance)
                 .ToDictionary(p => p.Key, p => p.ToList());
-            var partEntityGroups = entity.Parts.GroupBy(p => p.PartLink.PropertyName)
+            var partEntityGroups = entity.Parts.GroupBy(p => p.PartLinkEntity.PropertyName)
                 .ToDictionary(p => p.Key, p => p.ToList());
 
             // Load and populate parts
@@ -846,7 +834,7 @@ namespace Moryx.Products.Management
         {
             IDictionary<string, IProductLinkStrategy> IDictionary<string, IDictionary<string, IProductLinkStrategy>>.this[string key]
             {
-                get { return ContainsKey(key) ? this[key] : (this[key] = new Dictionary<string, IProductLinkStrategy>()); }
+                get => ContainsKey(key) ? this[key] : (this[key] = new Dictionary<string, IProductLinkStrategy>());
                 set { /*You can not set the internal cache*/ }
             }
         }

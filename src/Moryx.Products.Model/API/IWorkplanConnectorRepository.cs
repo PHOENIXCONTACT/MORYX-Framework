@@ -6,13 +6,13 @@ using Moryx.Model.Repositories;
 namespace Moryx.Products.Model
 {
     /// <summary>
-    /// The public API of the OutputDescriptionEntity repository.
+    /// The public API of the ConnectorEntity repository.
     /// </summary>
-    public interface IOutputDescriptionEntityRepository : IRepository<OutputDescriptionEntity>
+    public interface IWorkplanConnectorRepository : IRepository<WorkplanConnectorEntity>
     {
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        OutputDescriptionEntity Create(int index, int outputType, long mappingValue);
+        WorkplanConnectorEntity Create(long connectorId, int classification); 
     }
 }

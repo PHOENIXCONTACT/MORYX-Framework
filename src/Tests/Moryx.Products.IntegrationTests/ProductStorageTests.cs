@@ -41,21 +41,18 @@ namespace Moryx.Products.IntegrationTests
             // This call is necessary for NUnit to load the type
             var someType = new WatchType();
 
-            Effort.Provider.EffortProviderConfiguration.RegisterProvider();
-
-            // prepare inmemory products db
+            // prepare in memory products db
             _factory = new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("ProductStorageTest"));
 
             // prepare empty workplan
             var workplan = new Workplan { Name = "TestWorkplan" };
             workplan.AddConnector("Start", NodeClassification.Start);
             workplan.AddConnector("End", NodeClassification.End);
-            using (var uow = _factory.Create())
-            {
-                var entity = RecipeStorage.SaveWorkplan(uow, workplan);
-                uow.SaveChanges();
-                _workplanId = entity.Id;
-            }
+
+            using var uow = _factory.Create();
+            var entity = RecipeStorage.SaveWorkplan(uow, workplan);
+            uow.SaveChanges();
+            _workplanId = entity.Id;
         }
 
         [SetUp]
@@ -425,7 +422,7 @@ namespace Moryx.Products.IntegrationTests
             // Assert
             using (var uow = _factory.Create())
             {
-                var productEntityRepo = uow.GetRepository<IProductTypeEntityRepository>();
+                var productEntityRepo = uow.GetRepository<IProductTypeRepository>();
 
                 var watchEntity = productEntityRepo.GetByKey(savedWatchId);
                 Assert.NotNull(watchEntity, "Failed to save or id not written");
@@ -448,7 +445,7 @@ namespace Moryx.Products.IntegrationTests
             // Assert
             using (var uow = _factory.Create())
             {
-                var productEntityRepo = uow.GetRepository<IProductTypeEntityRepository>();
+                var productEntityRepo = uow.GetRepository<IProductTypeRepository>();
 
                 var watchEntity = productEntityRepo.GetByKey(savedWatchId);
                 Assert.NotNull(watchEntity, "Failed to save or id not written");
@@ -459,7 +456,7 @@ namespace Moryx.Products.IntegrationTests
             }
         }
 
-        private static void CheckProduct(WatchType watch, ProductTypeEntity watchProductTypeEntity, IProductTypeEntityRepository productTypeEntityRepo, long savedWatchId)
+        private static void CheckProduct(WatchType watch, ProductTypeEntity watchProductTypeEntity, IProductTypeRepository productTypeRepo, long savedWatchId)
         {
             var watchNeedlesCount = watch.Needles.Count;
             var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleType)));
@@ -469,7 +466,7 @@ namespace Moryx.Products.IntegrationTests
             Assert.NotNull(watchfaceEntity, "There is no watchface");
 
             var identity = (ProductIdentity)watch.Identity;
-            var byIdentifier = productTypeEntityRepo.GetByIdentity(identity.Identifier, identity.Revision);
+            var byIdentifier = productTypeRepo.GetByIdentity(identity.Identifier, identity.Revision);
             Assert.NotNull(byIdentifier, "New version of watch not found by identifier ");
             Assert.AreEqual(savedWatchId, byIdentifier.Id, "Different id´s");
         }
@@ -700,7 +697,7 @@ namespace Moryx.Products.IntegrationTests
             // Assert
             Assert.AreEqual(1, products.Count, "There should be a product for the given query");
         }
-        
+
         [TestCase(false, false, Description = "Duplicate product with valid id")]
         [TestCase(false, true, Description = "Duplicate product, but identity already taken")]
         [TestCase(true, false, Description = "Duplicate product but with template missmatch")]
@@ -809,7 +806,7 @@ namespace Moryx.Products.IntegrationTests
             // Assert
             using (var uow = _factory.Create())
             {
-                var root = uow.GetRepository<IProductInstanceEntityRepository>().GetByKey(instance.Id);
+                var root = uow.GetRepository<IProductInstanceRepository>().GetByKey(instance.Id);
                 Assert.NotNull(root, "Failed to save or id not written");
                 Assert.AreEqual(instance.DeliveryDate.Ticks, root.Integer1, "DateTime not saved");
                 Assert.AreEqual(1, root.Integer2, "Bool not saved");

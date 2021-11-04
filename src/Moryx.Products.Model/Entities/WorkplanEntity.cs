@@ -18,14 +18,14 @@ namespace Moryx.Products.Model
 
         public virtual ICollection<ProductRecipeEntity> Recipes { get; set; }
 
-        public virtual ICollection<WorkplanReference> SourceReferences { get; set; }
+        public virtual ICollection<WorkplanReferenceEntity> SourceReferences { get; set; }
 
-        public virtual ICollection<WorkplanReference> TargetReferences { get; set; }
+        public virtual ICollection<WorkplanReferenceEntity> TargetReferences { get; set; }
 
-        public virtual ICollection<ConnectorEntity> Connectors { get; set; }
+        public virtual ICollection<WorkplanConnectorEntity> Connectors { get; set; }
 
-        public virtual ICollection<StepEntity> Steps { get; set; }
+        public virtual ICollection<WorkplanStepEntity> Steps { get; set; }
 
-        public virtual ICollection<StepEntity> Parents { get; set; }
+        public virtual ICollection<WorkplanStepEntity> Parents { get; set; }
     }
 }

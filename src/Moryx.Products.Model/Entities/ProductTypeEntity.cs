@@ -18,22 +18,22 @@ namespace Moryx.Products.Model
 
         public virtual long CurrentVersionId { get; set; }
 
-        public virtual ICollection<PartLink> Parts { get; set; }
+        public virtual ICollection<PartLinkEntity> Parts { get; set; }
 
-        public virtual ICollection<PartLink> Parents { get; set; }
+        public virtual ICollection<PartLinkEntity> Parents { get; set; }
 
         public virtual ICollection<ProductFileEntity> Files { get; set; }
 
         public virtual ICollection<ProductRecipeEntity> Recipes { get; set; }
 
-        public virtual ICollection<ProductProperties> OldVersions { get; set; }
+        public virtual ICollection<ProductTypePropertiesEntity> OldVersions { get; set; }
 
-        public virtual ProductProperties CurrentVersion { get; protected internal set; }
+        public virtual ProductTypePropertiesEntity CurrentVersion { get; protected internal set; }
 
         /// <summary>
         /// Creates a link to the current version of this product's properties.
         /// </summary>
-        public void SetCurrentVersion(ProductProperties properties)
+        public void SetCurrentVersion(ProductTypePropertiesEntity properties)
         {
             if (CurrentVersion == properties)
                 return;

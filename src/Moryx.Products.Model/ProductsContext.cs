@@ -1,11 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure.Annotations;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Moryx.Model;
+using Moryx.Model.Attributes;
 using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Products.Model
@@ -14,7 +14,6 @@ namespace Moryx.Products.Model
     /// The DBContext of this database model.
     /// </summary>
     [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
-    [DbConfigurationType(typeof(NpgsqlConfiguration))]
     public class ProductsContext : MoryxDbContext
     {
         /// <inheritdoc />
@@ -23,150 +22,153 @@ namespace Moryx.Products.Model
         }
 
         /// <inheritdoc />
-        public ProductsContext(string connectionString) : base(connectionString)
+        public ProductsContext(DbContextOptions options) : base(options)
         {
         }
 
-        /// <inheritdoc />
-        public ProductsContext(DbConnection connection) : base(connection)
-        {
-        }
+        public virtual DbSet<ProductTypeEntity> ProductTypes { get; set; }
 
-        public virtual DbSet<ProductTypeEntity> ProductEntities { get; set; }
+        public virtual DbSet<PartLinkEntity> PartLinks { get; set; }
 
-        public virtual DbSet<PartLink> PartLinkEntities { get; set; }
+        public virtual DbSet<ProductRecipeEntity> ProductRecipes { get; set; }
 
-        public virtual DbSet<ProductRecipeEntity> ProductRecipeEntities { get; set; }
-
-        public virtual DbSet<ProductProperties> ProductPropertiesEntities { get; set; }
+        public virtual DbSet<ProductTypePropertiesEntity> ProductTypeProperties { get; set; }
 
         public virtual DbSet<ProductFileEntity> ProductFiles { get; set; }
 
-        public virtual DbSet<ProductInstanceEntity> ProductInstanceEntities { get; set; }
+        public virtual DbSet<ProductInstanceEntity> ProductInstances { get; set; }
 
-        public virtual DbSet<WorkplanEntity> WorkplanEntities { get; set; }
+        public virtual DbSet<WorkplanEntity> Workplans { get; set; }
 
-        public virtual DbSet<WorkplanReference> WorkplanReferenceEntities { get; set; }
+        public virtual DbSet<WorkplanReferenceEntity> WorkplanReferences { get; set; }
 
-        public virtual DbSet<StepEntity> StepEntities { get; set; }
+        public virtual DbSet<WorkplanStepEntity> WorkplanSteps { get; set; }
 
-        public virtual DbSet<ConnectorEntity> ConnectorEntities { get; set; }
+        public virtual DbSet<WorkplanConnectorEntity> WorkplanConnectorEntities { get; set; }
 
-        public virtual DbSet<ConnectorReference> ConnectorReferenceEntities { get; set; }
+        public virtual DbSet<WorkplanConnectorReferenceEntity> WorkplanConnectorReferences { get; set; }
 
-        public virtual DbSet<OutputDescriptionEntity> OutputDescriptionEntities { get; set; }
+        public virtual DbSet<WorkplanOutputDescriptionEntity> WorkplanOutputDescriptions { get; set; }
 
         /// <inheritdoc />
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+                var connectionString = configuration.GetConnectionString("Moryx.Products.Model");
+                optionsBuilder.UseNpgsql(connectionString);
+            }
+
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+
+        /// <inheritdoc />
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             // Workplane reference
-            modelBuilder.Entity<WorkplanReference>()
-                .HasRequired(w => w.Target)
-                .WithMany(w => w.TargetReferences)
+            modelBuilder.Entity<WorkplanReferenceEntity>()
+                .HasOne(w => w.Target)
+                .WithMany(w => w.TargetReferences).IsRequired()
                 .HasForeignKey(s => s.TargetId);
 
-            modelBuilder.Entity<WorkplanReference>()
-                .HasRequired(w => w.Source)
-                .WithMany(w => w.SourceReferences)
+            modelBuilder.Entity<WorkplanReferenceEntity>()
+                .HasOne(w => w.Source)
+                .WithMany(w => w.SourceReferences).IsRequired()
                 .HasForeignKey(s => s.SourceId);
 
             // Product Instances
             modelBuilder.Entity<ProductInstanceEntity>()
-                .HasRequired(p => p.Product)
-                .WithMany()
+                .HasOne(p => p.Product)
+                .WithMany().IsRequired()
                 .HasForeignKey(p => p.ProductId);
 
             modelBuilder.Entity<ProductInstanceEntity>()
-                .HasOptional(a => a.Parent)
+                .HasOne(a => a.Parent)
                 .WithMany(a => a.Parts)
                 .HasForeignKey(a => a.ParentId)
-                .WillCascadeOnDelete(true);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ProductInstanceEntity>()
-                .HasOptional(a => a.PartLink)
+                .HasOne(a => a.PartLinkEntity)
                 .WithMany()
                 .HasForeignKey(a => a.PartLinkId);
 
             // Connector
-            modelBuilder.Entity<ConnectorEntity>()
-                .HasRequired(c => c.Workplan)
-                .WithMany(w => w.Connectors)
+            modelBuilder.Entity<WorkplanConnectorEntity>()
+                .HasOne(c => c.Workplan)
+                .WithMany(w => w.Connectors).IsRequired()
                 .HasForeignKey(c => c.WorkplanId);
 
-            modelBuilder.Entity<ConnectorEntity>()
+            modelBuilder.Entity<WorkplanConnectorEntity>()
                 .HasMany(c => c.Usages)
-                .WithOptional(c => c.Connector)
+                .WithOne(c => c.Connector)
                 .HasForeignKey(c => c.ConnectorId);
 
             // Step entity
-            modelBuilder.Entity<StepEntity>()
+            modelBuilder.Entity<WorkplanStepEntity>()
                 .HasMany(s => s.Connectors);
 
-            modelBuilder.Entity<StepEntity>()
+            modelBuilder.Entity<WorkplanStepEntity>()
                 .HasMany(s => s.OutputDescriptions)
-                .WithRequired(o => o.Step)
+                .WithOne(o => o.WorkplanStep).IsRequired()
                 .HasForeignKey(o => o.StepEntityId);
 
-            modelBuilder.Entity<StepEntity>()
-                .HasRequired(s => s.Workplan)
-                .WithMany(w => w.Steps)
+            modelBuilder.Entity<WorkplanStepEntity>()
+                .HasOne(s => s.Workplan)
+                .WithMany(w => w.Steps).IsRequired()
                 .HasForeignKey(s => s.WorkplanId);
 
-            modelBuilder.Entity<StepEntity>()
-                .HasOptional(s => s.SubWorkplan)
+            modelBuilder.Entity<WorkplanStepEntity>()
+                .HasOne(s => s.SubWorkplan)
                 .WithMany(w => w.Parents)
                 .HasForeignKey(s => s.SubWorkplanId);
 
             // RecipeEntity
             modelBuilder.Entity<ProductRecipeEntity>()
-                .HasOptional(r => r.Workplan)
+                .HasOne(r => r.Workplan)
                 .WithMany(w => w.Recipes)
                 .HasForeignKey(s => s.WorkplanId);
 
             // ProductEntity
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.Parts)
-                .WithRequired(p => p.Parent)
+                .WithOne(p => p.Parent).IsRequired()
                 .HasForeignKey(p => p.ParentId);
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.Parents)
-                .WithRequired(p => p.Child)
+                .WithOne(p => p.Child).IsRequired()
                 .HasForeignKey(p => p.ChildId);
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.Recipes)
-                .WithRequired(p => p.Product)
+                .WithOne(p => p.Product).IsRequired()
                 .HasForeignKey(p => p.ProductId);
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasMany(p => p.OldVersions)
-                .WithOptional(p => p.Product)
+                .WithOne(p => p.Product)
                 .HasForeignKey(p => p.ProductId);
 
             modelBuilder.Entity<ProductTypeEntity>()
-                .HasRequired(p => p.CurrentVersion)
-                .WithMany()
+                .HasOne(p => p.CurrentVersion)
+                .WithMany().IsRequired()
                 .HasForeignKey(t => t.CurrentVersionId);
 
             // Indexes
             modelBuilder.Entity<ProductTypeEntity>()
-                .Property(e => e.Identifier)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new[]
-                    {
-                        new IndexAttribute("Identifier_Revision_Index", 1),
-                        new IndexAttribute("Identifier")
-                    }));
+                .HasIndex(p => new { p.Identifier, p.Revision});
 
             modelBuilder.Entity<ProductTypeEntity>()
-                .Property(e => e.Revision)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(new IndexAttribute("Identifier_Revision_Index", 2)));
+                .HasIndex(p => new { p.Identifier, p.Revision });
         }
     }
 }

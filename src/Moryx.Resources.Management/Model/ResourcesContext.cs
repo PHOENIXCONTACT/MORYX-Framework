@@ -1,10 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Data.Common;
-using System.Data.Entity;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Moryx.Model;
+using Moryx.Model.Attributes;
 using Moryx.Model.PostgreSQL;
 
 // ReSharper disable once CheckNamespace
@@ -14,7 +15,6 @@ namespace Moryx.Resources.Model
     /// The DBContext of this database model.
     /// </summary>
     [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
-    [DbConfigurationType(typeof(NpgsqlConfiguration))]
     public class ResourcesContext : MoryxDbContext
     {
         /// <inheritdoc />
@@ -23,31 +23,47 @@ namespace Moryx.Resources.Model
         }
 
         /// <inheritdoc />
-        public ResourcesContext(string connectionString) : base(connectionString)
+        public ResourcesContext(DbContextOptions options) : base(options)
         {
         }
 
+        public virtual DbSet<ResourceEntity> Resources { get; set; }
+
+        public virtual DbSet<ResourceRelationEntity> ResourceRelations { get; set; }
+
         /// <inheritdoc />
-        public ResourcesContext(DbConnection connection) : base(connection)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            base.OnConfiguring(optionsBuilder);
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+                var connectionString = configuration.GetConnectionString("Moryx.Resources.Model");
+                optionsBuilder.UseNpgsql(connectionString);
+            }
+
+            optionsBuilder.UseLazyLoadingProxies();
         }
 
-        public virtual DbSet<ResourceEntity> ResourceEntities { get; set; }
-
-        public virtual DbSet<ResourceRelation> ResourceRelations { get; set; }
-
         /// <inheritdoc />
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ResourceEntity>()
                 .HasMany(r => r.Sources)
-                .WithRequired(r => r.Target);
+                .WithOne(r => r.Target).IsRequired();
+
+            modelBuilder.Entity<ResourceEntity>()
+                .HasIndex(b => b.Name);
 
             modelBuilder.Entity<ResourceEntity>()
                 .HasMany(r => r.Targets)
-                .WithRequired(r => r.Source);
+                .WithOne(r => r.Source).IsRequired();
         }
     }
 }

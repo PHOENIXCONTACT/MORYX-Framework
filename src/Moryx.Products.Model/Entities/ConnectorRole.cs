@@ -5,7 +5,7 @@ namespace Moryx.Products.Model
 {
     public enum ConnectorRole : int
     {
-        Input,    
+        Input,
         Output
     }
 }

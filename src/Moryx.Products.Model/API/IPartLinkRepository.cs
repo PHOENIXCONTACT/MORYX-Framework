@@ -8,11 +8,11 @@ namespace Moryx.Products.Model
     /// <summary>
     /// The public API of the PartLink repository.
     /// </summary>
-    public interface IPartLinkRepository : IRepository<PartLink>
+    public interface IPartLinkRepository : IRepository<PartLinkEntity>
     {
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        PartLink Create(string propertyName);
+        PartLinkEntity Create(string propertyName);
     }
 }

@@ -8,7 +8,7 @@ namespace Moryx.Products.Model
     /// <summary>
     /// The public API of the ProductEntity repository.
     /// </summary>
-    public interface IProductTypeEntityRepository : IRepository<ProductTypeEntity>
+    public interface IProductTypeRepository : IRepository<ProductTypeEntity>
     {
         /// <summary>
         /// Creates instance with all not nullable properties prefilled

@@ -9,7 +9,7 @@ namespace Moryx.Products.Model
     /// <summary>
     /// There are no comments for Moryx.Products.Model.ConnectorEntity in the schema.
     /// </summary>
-    public class ConnectorEntity : EntityBase
+    public class WorkplanConnectorEntity : EntityBase
     {
         public virtual long ConnectorId { get; set; }
 
@@ -21,6 +21,6 @@ namespace Moryx.Products.Model
 
         public virtual WorkplanEntity Workplan { get; set; }
 
-        public virtual ICollection<ConnectorReference> Usages { get; set; }
+        public virtual ICollection<WorkplanConnectorReferenceEntity> Usages { get; set; }
     }
 }

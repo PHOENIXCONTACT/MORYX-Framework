@@ -23,7 +23,7 @@ namespace Moryx.Products.Model
 
         public virtual ProductInstanceEntity Parent { get; set; }
 
-        public virtual PartLink PartLink { get; set; }
+        public virtual PartLinkEntity PartLinkEntity { get; set; }
 
         public virtual long Integer1 { get; set; }
         public virtual long Integer2 { get; set; }

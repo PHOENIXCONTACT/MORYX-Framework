@@ -3,14 +3,12 @@
 
 using Moryx.Model;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 // ReSharper disable once CheckNamespace
 namespace Moryx.Resources.Model
 {
     public class ResourceEntity : ModificationTrackedEntityBase
     {
-        [Index]
         public virtual string Name { get; set; }
 
         public virtual string Description { get; set; }
@@ -19,8 +17,8 @@ namespace Moryx.Resources.Model
 
         public virtual string Type { get; set; }
 
-        public virtual ICollection<ResourceRelation> Targets { get; set; }
+        public virtual ICollection<ResourceRelationEntity> Targets { get; set; }
 
-        public virtual ICollection<ResourceRelation> Sources { get; set; }
+        public virtual ICollection<ResourceRelationEntity> Sources { get; set; }
     }
 }

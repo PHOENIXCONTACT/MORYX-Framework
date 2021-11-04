@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Moryx.Products.Model
 {
-    public class StepEntity : EntityBase
+    public class WorkplanStepEntity : EntityBase
     {
         public virtual long StepId { get; set; }
 
@@ -28,8 +28,8 @@ namespace Moryx.Products.Model
 
         public virtual WorkplanEntity SubWorkplan { get; set; }
 
-        public virtual ICollection<ConnectorReference> Connectors { get; set; }
+        public virtual ICollection<WorkplanConnectorReferenceEntity> Connectors { get; set; }
 
-        public virtual ICollection<OutputDescriptionEntity> OutputDescriptions { get; set; }
+        public virtual ICollection<WorkplanOutputDescriptionEntity> OutputDescriptions { get; set; }
     }
 }

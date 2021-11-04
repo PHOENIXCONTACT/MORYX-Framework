@@ -122,7 +122,7 @@ namespace Moryx.Resources.Management
             // Override Detach
             OverrideDetach(typeBuilder, baseType, targetProperty.GetMethod, resourceType, eventListener);
 
-            return typeBuilder.CreateType();
+            return typeBuilder.CreateTypeInfo();
         }
 
         /// <summary>

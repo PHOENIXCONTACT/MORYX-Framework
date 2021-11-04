@@ -174,7 +174,7 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var productRepo = uow.GetRepository<IProductTypeEntityRepository>();
+                var productRepo = uow.GetRepository<IProductTypeRepository>();
                 var queryResult = (from entity in productRepo.Linq
                                    where entity.Id == productId
                                    select new

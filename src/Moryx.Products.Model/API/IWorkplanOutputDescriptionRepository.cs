@@ -6,13 +6,13 @@ using Moryx.Model.Repositories;
 namespace Moryx.Products.Model
 {
     /// <summary>
-    /// The public API of the StepEntity repository.
+    /// The public API of the OutputDescriptionEntity repository.
     /// </summary>
-    public interface IStepEntityRepository : IRepository<StepEntity>
+    public interface IWorkplanOutputDescriptionRepository : IRepository<WorkplanOutputDescriptionEntity>
     {
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        StepEntity Create(long stepId, string name, string assembly, string nameSpace, string classname);
+        WorkplanOutputDescriptionEntity Create(int index, int outputType, long mappingValue);
     }
 }

@@ -381,9 +381,9 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// Create a <see cref="ResourceRelation"/> entity for a property match
+        /// Create a <see cref="ResourceRelationEntity"/> entity for a property match
         /// </summary>
-        private static ResourceRelation CreateRelationForProperty(ReferenceSaverContext context, IResourceRelationRepository relationRepo, ResourceReferenceAttribute att)
+        private static ResourceRelationEntity CreateRelationForProperty(ReferenceSaverContext context, IResourceRelationRepository relationRepo, ResourceReferenceAttribute att)
         {
             var relationType = att.RelationType;
             var relEntity = relationRepo.Create((int)relationType);
@@ -394,10 +394,10 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// Set <see cref="ResourceRelation.SourceId"/> and <see cref="ResourceRelation.TargetId"/> depending on the <see cref="ResourceReferenceRole"/>
+        /// Set <see cref="ResourceRelationEntity.SourceId"/> and <see cref="ResourceRelationEntity.TargetId"/> depending on the <see cref="ResourceReferenceRole"/>
         /// of the reference property
         /// </summary>
-        private static void UpdateRelationEntity(ResourceEntity resource, ResourceEntity referencedResource, ResourceRelation relEntity, ResourceReferenceAttribute att)
+        private static void UpdateRelationEntity(ResourceEntity resource, ResourceEntity referencedResource, ResourceRelationEntity relEntity, ResourceReferenceAttribute att)
         {
             if (att.Role == ResourceReferenceRole.Source)
             {
@@ -506,7 +506,7 @@ namespace Moryx.Resources.Management
                 UnitOfWork = uow;
                 EntityCache = new Dictionary<Resource, ResourceEntity>();
                 ResourceLookup = new Dictionary<ResourceEntity, Resource>();
-                CreatedRelations = new List<ResourceRelation>();
+                CreatedRelations = new List<ResourceRelationEntity>();
             }
 
             /// <summary>
@@ -527,7 +527,7 @@ namespace Moryx.Resources.Management
             /// <summary>
             /// Accesor wrappers for relations that were created while saving references
             /// </summary>
-            public IList<ResourceRelation> CreatedRelations { get; }
+            public IList<ResourceRelationEntity> CreatedRelations { get; }
 
             /// <summary>
             /// Resolve a relation reference

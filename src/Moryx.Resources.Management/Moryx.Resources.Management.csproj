@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>ResourceManagement module composing and maintaining the resource graph as the habitat for digital twins of manufacturing assets.</Description>
     <CreatePackage>true</CreatePackage>
@@ -18,12 +18,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+
     <PackageReference Include="Moryx.Model.PostgreSQL" />
     <PackageReference Include="Moryx.Runtime" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net461'">
     <PackageReference Include="Moryx.Runtime.Wcf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\Migrations\" />
   </ItemGroup>
 
 </Project>

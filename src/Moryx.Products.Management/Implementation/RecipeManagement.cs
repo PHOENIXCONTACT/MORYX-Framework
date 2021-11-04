@@ -61,7 +61,7 @@ namespace Moryx.Products.Management
         public IReadOnlyList<Workplan> LoadAllWorkplans()
         {
             using var uow = ModelFactory.Create();
-            var repo = uow.GetRepository<IWorkplanEntityRepository>();
+            var repo = uow.GetRepository<IWorkplanRepository>();
             var workplans = (from entity in repo.Linq.Active()
                 select new Workplan
                 {
@@ -84,7 +84,7 @@ namespace Moryx.Products.Management
             using var uow = ModelFactory.Create();
 
             var versions = new List<Workplan>();
-            var repo = uow.GetRepository<IWorkplanEntityRepository>();
+            var repo = uow.GetRepository<IWorkplanRepository>();
             do
             {
                 var result = (from entity in repo.Linq.Active()
@@ -115,7 +115,7 @@ namespace Moryx.Products.Management
         public long SaveWorkplan(Workplan workplan)
         {
             using var uow = ModelFactory.Create();
-            var recipeRepo = uow.GetRepository<IProductRecipeEntityRepository>();
+            var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
 
             // Update all non-clone recipes of that workplan
             var affectedRecipes = recipeRepo.Linq
@@ -141,7 +141,7 @@ namespace Moryx.Products.Management
         public void DeleteWorkplan(long workplanId)
         {
             using var uow = ModelFactory.Create();
-            var repo = uow.GetRepository<IWorkplanEntityRepository>();
+            var repo = uow.GetRepository<IWorkplanRepository>();
             var workplan = repo.GetByKey(workplanId);
             if (workplan == null)
                 return; // TODO: Any feedback?
