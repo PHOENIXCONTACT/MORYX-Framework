@@ -83,7 +83,7 @@ namespace Moryx.Model.Configuration
             // Ef dependent database connection
             var canConnect = await context.Database.CanConnectAsync();
             if (!canConnect)
-                return TestConnectionResult.ConnectionError;
+                return TestConnectionResult.ConnectionOkDbDoesNotExist;
 
             // If connection is ok, test migrations
             var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
