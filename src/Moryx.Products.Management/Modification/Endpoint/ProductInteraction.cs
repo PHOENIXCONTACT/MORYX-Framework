@@ -30,7 +30,7 @@ namespace Moryx.Products.Management.Modification
     internal class ProductInteraction : IProductInteraction, ILoggingComponent
 #else
     [ApiController, Route(Endpoint), Produces("application/json")]
-    [Endpoint(Name = nameof(IProductInteraction), Version = "5.0.0")]
+    [Endpoint(Name = nameof(IProductInteraction), Version = "6.0.0")]
     internal class ProductInteraction : Controller, IProductInteraction, ILoggingComponent
 #endif
     {

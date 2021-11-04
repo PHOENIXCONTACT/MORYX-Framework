@@ -664,7 +664,7 @@ namespace Moryx.Products.Management
                 foreach (var instanceStrategy in matchingStrategies)
                 {
                     var queryFilter = instanceStrategy.TransformSelector(selector);
-                    query = query == null 
+                    query = query == null
                         ? repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>() // Create query
                         : query.Union(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>()); // Append query
                 }
@@ -673,7 +673,7 @@ namespace Moryx.Products.Management
                 List<ProductInstanceEntity> entities;
                 if (query == null || (entities = query.ToList()).Count == 0)
                     return new TInstance[0];
-                
+
                 var instances = TransformInstances(uow, entities).OfType<TInstance>().ToArray();
                 // Final check against compiled expression
                 var compiledSelector = selector.Compile();

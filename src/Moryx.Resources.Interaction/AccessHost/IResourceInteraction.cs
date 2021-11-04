@@ -17,7 +17,7 @@ namespace Moryx.Resources.Interaction
     /// </summary>
 #if USE_WCF
     [ServiceContract]
-    [Endpoint(Name = nameof(IResourceInteraction), Version = "5.0.0")]
+    [Endpoint(Name = nameof(IResourceInteraction), Version = "6.0.0")]
 # endif
     internal interface IResourceInteraction
     {

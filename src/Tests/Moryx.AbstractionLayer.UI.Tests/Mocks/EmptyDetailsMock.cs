@@ -1,6 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Moryx.AbstractionLayer.UI.Tests
 {
     [DetailsComponentRegistration(DetailsConstants.EmptyType)]
@@ -8,10 +11,9 @@ namespace Moryx.AbstractionLayer.UI.Tests
     {
         public bool InitializeCalled { get; private set; }
 
-        protected override void OnInitialize()
+        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
-            base.OnInitialize();
-
+            await base.OnInitializeAsync(cancellationToken);
             InitializeCalled = true;
         }
     }

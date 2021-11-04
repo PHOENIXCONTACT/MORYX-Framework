@@ -31,7 +31,7 @@ namespace Moryx.Resources.Interaction
     internal class ResourceInteraction : IResourceInteraction, ILoggingComponent
 #else
     [ApiController, Route(Endpoint), Produces("application/json")]
-    [Endpoint(Name = nameof(IResourceInteraction), Version = "5.0.0")]
+    [Endpoint(Name = nameof(IResourceInteraction), Version = "6.0.0")]
     internal class ResourceInteraction : Controller, IResourceInteraction, ILoggingComponent
 #endif
     {
