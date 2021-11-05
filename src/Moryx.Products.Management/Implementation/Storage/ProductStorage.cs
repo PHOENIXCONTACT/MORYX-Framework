@@ -15,6 +15,7 @@ using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
+using static Moryx.Products.Management.ProductExpressionHelpers;
 
 namespace Moryx.Products.Management
 {
@@ -623,26 +624,57 @@ namespace Moryx.Products.Management
             {
                 var repo = uow.GetRepository<IProductInstanceEntityRepository>();
                 var entities = repo.GetByKeys(id);
-                return TransformArticles(uow, entities);
+                return TransformInstances(uow, entities);
+            }
+        }
+
+        public IReadOnlyList<ProductInstance> LoadInstances(ProductType productType)
+        {
+            using (var uow = Factory.Create())
+            {
+                var repo = uow.GetRepository<IProductInstanceEntityRepository>();
+                var entities = repo.Linq
+                    .Where(e => e.ProductId == productType.Id)
+                    .ToList();
+                return TransformInstances(uow, entities);
             }
         }
 
         public IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
+            if (IsTypeQuery(selector, out var productType))
+            {
+                return LoadInstances(productType).OfType<TInstance>().ToList();
+            }
+            else
+            {
+                return LoadWithStrategy(selector);
+            }
+        }
+
+        public IReadOnlyList<TInstance> LoadWithStrategy<TInstance>(Expression<Func<TInstance, bool>> selector)
+        {
             using (var uow = Factory.Create())
             {
                 var repo = uow.GetRepository<IProductInstanceEntityRepository>();
-
-                var entities = new List<ProductInstanceEntity>();
                 var matchingStrategies = InstanceStrategies.Values
                     .Where(i => typeof(TInstance).IsAssignableFrom(i.TargetType));
+
+                IQueryable<ProductInstanceEntity> query = null;
                 foreach (var instanceStrategy in matchingStrategies)
                 {
                     var queryFilter = instanceStrategy.TransformSelector(selector);
-                    entities.AddRange(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>());
+                    query = query == null 
+                        ? repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>() // Create query
+                        : query.Union(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>()); // Append query
                 }
 
-                var instances = TransformArticles(uow, entities).OfType<TInstance>().ToArray();
+                // No query or no result => Nothing to do
+                List<ProductInstanceEntity> entities;
+                if (query == null || (entities = query.ToList()).Count == 0)
+                    return new TInstance[0];
+                
+                var instances = TransformInstances(uow, entities).OfType<TInstance>().ToArray();
                 // Final check against compiled expression
                 var compiledSelector = selector.Compile();
                 // Only return matches against compiled expression
@@ -653,7 +685,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Transform entities to business objects
         /// </summary>
-        private ProductInstance[] TransformArticles(IUnitOfWork uow, ICollection<ProductInstanceEntity> entities)
+        private ProductInstance[] TransformInstances(IUnitOfWork uow, ICollection<ProductInstanceEntity> entities)
         {
             var results = new ProductInstance[entities.Count];
 
@@ -671,7 +703,6 @@ namespace Moryx.Products.Management
             {
                 var product = productMap[entity.ProductId];
                 var instance = product.CreateInstance();
-                instance.Id = entity.Id;
 
                 TransformInstance(uow, entity, instance);
 
@@ -686,8 +717,10 @@ namespace Moryx.Products.Management
         /// </summary>
         private void TransformInstance(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance)
         {
+            productInstance.Id = entity.Id;
+
             // Transform the instance if it has a dedicated storage
-            var product = productInstance.Type;
+            var productType = productInstance.Type;
 
             // Check if instances of this type are persisted
             var strategy = InstanceStrategies[productInstance.GetType().Name];
@@ -698,7 +731,7 @@ namespace Moryx.Products.Management
             strategy.LoadInstance(entity, productInstance);
 
             // Group all parts of the instance by the property they belong to
-            var partLinks = ReflectionTool.GetReferences<IProductPartLink>(product)
+            var partLinks = ReflectionTool.GetReferences<IProductPartLink>(productType)
                 .SelectMany(g => g).ToList();
             var partGroups = ReflectionTool.GetReferences<ProductInstance>(productInstance)
                 .ToDictionary(p => p.Key, p => p.ToList());
@@ -708,7 +741,7 @@ namespace Moryx.Products.Management
             // Load and populate parts
             foreach (var partGroup in partGroups)
             {
-                var linkStrategy = LinkStrategies[product.GetType().Name][partGroup.Key.Name];
+                var linkStrategy = LinkStrategies[productType.GetType().Name][partGroup.Key.Name];
                 if (linkStrategy.PartCreation == PartSourceStrategy.FromPartlink && partEntityGroups.ContainsKey(partGroup.Key.Name))
                 {
                     // Update all parts that are also present as entities
@@ -722,7 +755,7 @@ namespace Moryx.Products.Management
                 {
                     // Load part using the entity and assign PartLink afterwards
                     var partCollection = partEntityGroups[partGroup.Key.Name].ToList();
-                    var partArticles = TransformArticles(uow, partCollection);
+                    var partArticles = TransformInstances(uow, partCollection);
                     for (var index = 0; index < partArticles.Length; index++)
                     {
                         partArticles[index].PartLink = partLinks.Find(pl => pl?.Id == partCollection[index].PartLinkId.Value);

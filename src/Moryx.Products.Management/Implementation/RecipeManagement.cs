@@ -14,8 +14,8 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management
 {
-    [Component(LifeCycle.Singleton, typeof(IRecipeManagement), typeof(IWorkplans))]
-    internal class RecipeManagement : IRecipeManagement, IWorkplans
+    [Component(LifeCycle.Singleton, typeof(IRecipeManagement), typeof(IWorkplans), typeof(IWorkplansVersions))]
+    internal class RecipeManagement : IRecipeManagement, IWorkplans, IWorkplansVersions
     {
         #region Dependencies
 
@@ -27,7 +27,7 @@ namespace Moryx.Products.Management
 
         public IProductRecipe Get(long recipeId)
         {
-            var recipe =  Storage.LoadRecipe(recipeId);
+            var recipe = Storage.LoadRecipe(recipeId);
             if (recipe == null)
                 throw new RecipeNotFoundException(recipeId);
 
@@ -46,7 +46,7 @@ namespace Moryx.Products.Management
 
         public long Save(IProductRecipe recipe)
         {
-            var saved =  Storage.SaveRecipe(recipe);
+            var saved = Storage.SaveRecipe(recipe);
             RaiseRecipeChanged(recipe);
             return saved;
         }
@@ -64,13 +64,13 @@ namespace Moryx.Products.Management
             {
                 var repo = uow.GetRepository<IWorkplanEntityRepository>();
                 var workplans = (from entity in repo.Linq.Active()
-                    select new Workplan
-                    {
-                        Id = entity.Id,
-                        Name = entity.Name,
-                        Version = entity.Version,
-                        State = (WorkplanState)entity.State
-                    }).ToArray();
+                                 select new Workplan
+                                 {
+                                     Id = entity.Id,
+                                     Name = entity.Name,
+                                     Version = entity.Version,
+                                     State = (WorkplanState)entity.State
+                                 }).ToArray();
                 return workplans;
             }
         }
@@ -80,6 +80,40 @@ namespace Moryx.Products.Management
             using (var uow = ModelFactory.Create())
             {
                 return RecipeStorage.LoadWorkplan(uow, workplanId);
+            }
+        }
+
+        public IReadOnlyList<Workplan> LoadVersions(long workplanId)
+        {
+            using (var uow = ModelFactory.Create())
+            {
+                var versions = new List<Workplan>();
+                var repo = uow.GetRepository<IWorkplanEntityRepository>();
+                do
+                {
+                    var result = (from entity in repo.Linq.Active()
+                        where entity.Id == workplanId
+                        let sourceRef = entity.SourceReferences.FirstOrDefault()
+                        select new
+                        {
+                            Workplan = new Workplan
+                            {
+                                Id = entity.Id,
+                                Name = entity.Name,
+                                Version = entity.Version,
+                                State = (WorkplanState)entity.State
+                            },
+                            Source = sourceRef == null ? 0 : sourceRef.SourceId
+                        }).FirstOrDefault();
+                    
+                    if(result == null)
+                        break;
+
+                    versions.Add(result.Workplan);
+                    workplanId = result.Source;
+                } while (workplanId > 0);
+
+                return versions;
             }
         }
 
