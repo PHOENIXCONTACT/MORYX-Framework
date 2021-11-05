@@ -34,7 +34,7 @@ namespace Moryx.Tools.Wcf
 
         private const int HeartbeatTimerDelay = 120000; // 120 seconds
 
-        private bool _trying = false;
+        private bool _trying;
 
         /// <summary>
         /// WCF Client Instance ...
@@ -44,10 +44,7 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// The unique name of the client.
         /// </summary>
-        protected string ClientId
-        {
-            get { return (WcfClientFactory != null) ? WcfClientFactory.ClientId : String.Empty; }
-        }
+        protected string ClientId => WcfClientFactory != null ? WcfClientFactory.ClientId : string.Empty;
 
         #endregion
 
@@ -85,7 +82,7 @@ namespace Moryx.Tools.Wcf
         /// <summary>
         /// Publish disconnect events to all the listeners.
         /// </summary>
-        public event EventHandler Diconnected;
+        public event EventHandler Diconnected; // TODO: Rename to Disconnected in the next major
 
         #endregion
 
@@ -102,8 +99,8 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         protected virtual void OnSubscribed()
         {
-            // override in derived classes to perform 
-            // additional client initialisations.
+            // override in derived classes to perform
+            // additional client initializations.
         }
 
         /// <summary>
@@ -127,7 +124,7 @@ namespace Moryx.Tools.Wcf
                             ClientConfig.Endpoint, WcfClient.State);
                         StartHeartbeat();
                         RaiseConnected();
-                        // Subscribe client and 
+                        // Subscribe client and
                         WcfClient.Subscribe(ClientId);
                         RaiseOnReSubscribe();
                         break;
@@ -167,7 +164,7 @@ namespace Moryx.Tools.Wcf
         /// <param name="clientId">The client identifier.</param>
         public void Subscribe(string clientId)
         {
-            // use ReSubsribe()!
+            // use ReSubscribe()!
             return;
         }
 
@@ -178,7 +175,7 @@ namespace Moryx.Tools.Wcf
         /// <returns>A Task which represents the asynchronous operation.</returns>
         public Task SubscribeAsync(string clientId)
         {
-            // use ReSubsribe()!
+            // use ReSubscribe()!
             return null;
         }
 
@@ -212,7 +209,7 @@ namespace Moryx.Tools.Wcf
 
             try
             {
-                Task task = WcfClient.ReSubscribeAsync(clientId);
+                var task = WcfClient.ReSubscribeAsync(clientId);
 
                 RaiseOnReSubscribe();
 
@@ -230,26 +227,17 @@ namespace Moryx.Tools.Wcf
         {
             OnSubscribed();
 
-            if (Subscribed != null)
-            {
-                Subscribed(this, new EventArgs());
-            }
+            Subscribed?.Invoke(this, new EventArgs());
         }
 
         private void RaiseConnected()
         {
-            if (Connected != null)
-            {
-                Connected(this, new EventArgs());
-            }
+            Connected?.Invoke(this, new EventArgs());
         }
 
         private void RaiseDisconnected()
         {
-            if (Diconnected != null)
-            {
-                Diconnected(this, new EventArgs());
-            }
+            Diconnected?.Invoke(this, new EventArgs());
         }
 
         #region Heartbeat
@@ -275,12 +263,7 @@ namespace Moryx.Tools.Wcf
         /// <returns>A Task which represents the asynchronous operation.</returns>
         public Task HeartbeatAsync(string clientId)
         {
-            if (WcfClient != null)
-            {
-                return WcfClient.HeartbeatAsync(ClientId);
-            }
-
-            return null;
+            return WcfClient?.HeartbeatAsync(ClientId);
         }
 
         private void StartHeartbeat()
@@ -309,7 +292,7 @@ namespace Moryx.Tools.Wcf
             }
             catch (Exception e)
             {
-                Logger.LogException(LogLevel.Error, e, "Caught exception while sending Heartbeat");                    
+                Logger.LogException(LogLevel.Error, e, "Caught exception while sending Heartbeat");
             }
             finally
             {
@@ -344,10 +327,7 @@ namespace Moryx.Tools.Wcf
         /// <value>
         /// The state.
         /// </value>
-        public CommunicationState State
-        {
-            get { return (WcfClient != null) ? WcfClient.State : CommunicationState.Closed; }
-        }
+        public CommunicationState State => WcfClient?.State ?? CommunicationState.Closed;
 
         /// <summary>
         /// Gets a value indicating whether [is opened].
@@ -355,12 +335,6 @@ namespace Moryx.Tools.Wcf
         /// <value>
         ///   <c>true</c> if [is opened]; otherwise, <c>false</c>.
         /// </value>
-        public bool IsOpened
-        {
-            get
-            {
-                return (State == CommunicationState.Opened);
-            }
-        }
+        public bool IsOpened => State == CommunicationState.Opened;
     }
 }

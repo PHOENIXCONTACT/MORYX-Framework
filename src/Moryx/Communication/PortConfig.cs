@@ -19,13 +19,13 @@ namespace Moryx.Communication
         public const int InfiniteTimeout = -1;
 
         /// <summary>
-        /// Host for wcf services
+        /// Host for services
         /// </summary>
         [DataMember, CurrentHostName]
         public string Host { get; set; }
 
         /// <summary>
-        /// Port used for http bindings
+        /// Port used for services
         /// </summary>
         [DataMember]
         [DefaultValue(80)]

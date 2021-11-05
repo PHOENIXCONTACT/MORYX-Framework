@@ -3,6 +3,7 @@
 
 using System;
 using System.ServiceModel;
+using Moryx.Communication.Endpoints;
 
 namespace Moryx.Tools.Wcf
 {
@@ -11,7 +12,7 @@ namespace Moryx.Tools.Wcf
     /// </summary>
     /// <typeparam name="TWcfClient">The type of the WCF client.</typeparam>
     /// <typeparam name="TWcfInterface">The type of the WCF interface.</typeparam>
-    public abstract class HttpServiceConnectorBase<TWcfClient, TWcfInterface> : IHttpServiceConnector, IDisposable
+    public abstract class HttpServiceConnectorBase<TWcfClient, TWcfInterface> : IHttpServiceConnector, IDisposable, IWebServiceConnector
         where TWcfInterface : class
         where TWcfClient : ClientBase<TWcfInterface>, TWcfInterface
     {
@@ -54,7 +55,7 @@ namespace Moryx.Tools.Wcf
         {
             IsAvailable = false;
 
-            //Instanciate client and get client info
+            // Instantiate client and get client info
             ClientId = ClientFactory.Create<TWcfClient, TWcfInterface>(ClientVersion, ClientCallback);
         }
 
@@ -109,7 +110,7 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         public bool IsAvailable
         {
-            get { return _isAvailable; }
+            get => _isAvailable;
             private set
             {
                 _isAvailable = value;

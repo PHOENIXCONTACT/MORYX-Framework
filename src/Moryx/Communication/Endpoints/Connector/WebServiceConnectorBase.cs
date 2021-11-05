@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -10,18 +10,15 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Moryx.Communication;
-using Moryx.Communication.Endpoints;
 using Moryx.Logging;
 using Newtonsoft.Json;
 
-namespace Moryx.Tools.Wcf
+namespace Moryx.Communication.Endpoints
 {
     /// <summary>
-    /// Base class to connect to an web http service hosted by the runtime
+    /// Base class to connect to an web api service hosted by the runtime
     /// </summary>
-    [Obsolete("Use WebServiceConnectorBase from Moryx.Communication.Endpoints")]
-    public abstract class WebHttpServiceConnectorBase : IHttpServiceConnector, IWebServiceConnector
+    public abstract class WebServiceConnectorBase : IWebServiceConnector
     {
         private readonly IVersionServiceManager _endpointService;
         private bool _isAvailable;
@@ -58,20 +55,11 @@ namespace Moryx.Tools.Wcf
         }
 
         /// <summary>
-        /// Create connector using the client factories version service
-        /// </summary>
-        protected WebHttpServiceConnectorBase(IWcfClientFactory clientFactory, IModuleLogger logger)
-        {
-            var baseFactory = (BaseWcfClientFactory)clientFactory;
-            _endpointService = baseFactory.VersionService;
-            Logger = logger;
-        }
-        /// <summary>
         /// Create connector with bare connection settings and Logger
         /// </summary>
-        protected WebHttpServiceConnectorBase(string host, int port, IProxyConfig proxyConfig, IModuleLogger logger)
+        protected WebServiceConnectorBase(string host, int port, IProxyConfig proxyConfig, IModuleLogger logger)
         {
-            _endpointService = new WcfVersionServiceManager(proxyConfig, host, port);
+            _endpointService = new WebVersionServiceManager(proxyConfig, host, port);
             Logger = logger;
         }
 
@@ -85,14 +73,13 @@ namespace Moryx.Tools.Wcf
             TryFetchEndpoint();
         }
 
-
         private void TryFetchEndpoint()
         {
             _endpointService.ServiceEndpointsAsync(ServiceName)
                 .ContinueWith(EvaluateResponse).ConfigureAwait(false);
         }
 
-        private async Task EvaluateResponse(Task<Communication.Endpoints.Endpoint[]> resp)
+        private async Task EvaluateResponse(Task<Endpoint[]> resp)
         {
             //Try again or dispose old client
             if (resp.Status != TaskStatus.RanToCompletion || resp.Result.Length == 0)
@@ -103,11 +90,12 @@ namespace Moryx.Tools.Wcf
             }
 
             // Parse endpoint url
-            var endpoint = resp.Result.FirstOrDefault(e => ((Endpoint)e).Binding == ServiceBindingType.WebHttp);
+            var endpoint = resp.Result.FirstOrDefault();
             if (endpoint == null || string.IsNullOrEmpty(endpoint.Address))
             {
-                Logger.Log(LogLevel.Error, "Endpoint for {0} has wrong binding or empty address: {1}-{2}",
-                    ServiceName, ((Endpoint)endpoint)?.Binding, endpoint?.Address);
+                Logger.Log(LogLevel.Error, "Endpoint for {0} has empty address: {1}",
+                    ServiceName, endpoint?.Address);
+
                 await CallbackAndTryFetch(ConnectionState.FailedTry);
                 return;
             }
@@ -133,7 +121,7 @@ namespace Moryx.Tools.Wcf
             {
                 Logger.Log(LogLevel.Error, "Version mismatch: Client: {0} - Server: {1}",
                     clientVersion, serverVersion);
-                await CallbackAndTryFetch(ConnectionState.VersionMissmatch);
+                await CallbackAndTryFetch(ConnectionState.VersionMismatch);
             }
         }
 

@@ -8,6 +8,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Threading;
 using Moryx.Communication;
+using Moryx.Communication.Endpoints;
 using Moryx.Logging;
 using Moryx.Threading;
 
@@ -66,7 +67,7 @@ namespace Moryx.Tools.Wcf
             _proxyConfig  = proxyConfig;
             _threadContext = threadContext;
 
-            VersionService = new VersionServiceManager(proxyConfig, factoryConfig.Host, factoryConfig.Port);
+            VersionService = new WcfVersionServiceManager(proxyConfig, factoryConfig.Host, factoryConfig.Port);
         }
 
         /// <summary>
@@ -74,15 +75,12 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         private void StartOnDemand()
         {
-            if (_monitorTimer == null)
+            _monitorTimer ??= new Timer(new NonStackingTimerCallback(state =>
             {
-                _monitorTimer = new Timer(new NonStackingTimerCallback(state =>
-                {
-                    // Main operation which will iterate through the current monitored clients
-                    ConnectOfflineClients();
-                    CloseDestroyedClients();
-                }), null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
-            }
+                // Main operation which will iterate through the current monitored clients
+                ConnectOfflineClients();
+                CloseDestroyedClients();
+            }), null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         }
 
         /// <summary>
@@ -426,7 +424,7 @@ namespace Moryx.Tools.Wcf
                 client.ClientInfo.ServerVersion = endpoint.Version;
 
                 // Compare version
-                if (endpoint.Binding == client.Config.BindingType && VersionCompare.ClientMatch(serverVersion, clientVersion))
+                if (((Endpoint)endpoint).Binding == client.Config.BindingType && VersionCompare.ClientMatch(serverVersion, clientVersion))
                     HandleConnectionState(client, InternalConnectionState.VersionMatch);
                 else
                     HandleConnectionState(client, InternalConnectionState.VersionMissmatch);
@@ -442,8 +440,8 @@ namespace Moryx.Tools.Wcf
             Logger.Log(LogLevel.Debug, "Trying to get service configuration for service '{0}'", client.ServiceName);
 
             // Get all endpoints for this service
-            var endpoints = VersionService.ServiceEndpoints(client.ServiceName);
-            if (endpoints == null || endpoints.Length == 0)
+            var endpoints = VersionService.ServiceEndpoints(client.ServiceName).Cast<Endpoint>().ToArray();
+            if (endpoints.Length == 0)
             {
                 HandleConnectionFailure(client, "Endpoint service or endpoint not available");
                 return;
@@ -620,7 +618,7 @@ namespace Moryx.Tools.Wcf
             Logger.Log(LogLevel.Warning, "Connection/Callback to '{0}' {1}", client.ServiceName, reason);
 
             // State of the client. If the client was destroyed, the internal connection state will be set to closed.
-            // If the client was not destroryed, the connection was lost.
+            // If the client was not destroyed, the connection was lost.
             var clientState = client.Destroy ? InternalConnectionState.Closed : InternalConnectionState.ConnectionLost;
 
             HandleConnectionState(client, clientState);
@@ -631,7 +629,7 @@ namespace Moryx.Tools.Wcf
         #region Helper methods
 
         /// <summary>
-        /// Savely will recieve the monitored clients from the current list.
+        /// Safely will receive the monitored clients from the current list.
         /// Locks the monitored list and returns the clients
         /// </summary>
         private IEnumerable<MonitoredClient> GetMonitoredClients(Func<MonitoredClient, bool> expression = null)
@@ -655,8 +653,8 @@ namespace Moryx.Tools.Wcf
             var serviceConfiguration = monitoredClient.Endpoint;
             var monitoredClientConfig = monitoredClient.Config;
 
-            var requiresAuthentication = (serviceConfiguration != null && serviceConfiguration.RequiresAuthentication)
-                                         || (monitoredClientConfig != null && monitoredClientConfig.RequiresAuthentification);
+            var requiresAuthentication = (serviceConfiguration is {RequiresAuthentication: true})
+                                         || (monitoredClientConfig is {RequiresAuthentification: true});
 
             // Add callback context if the service is an net.tcp service
             var bindingType = serviceConfiguration?.Binding ?? monitoredClientConfig?.BindingType ?? ServiceBindingType.BasicHttp;

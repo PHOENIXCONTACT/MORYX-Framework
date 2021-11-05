@@ -37,18 +37,19 @@ namespace Moryx.Tools.Wcf
                     return ConnectionState.Closed;
 
                 default:
-                    throw new ArgumentException(string.Format("Can't convert unknown state '{0}'", internalState),
-                        "internalState");
+                    throw new ArgumentException($"Can't convert unknown state '{internalState}'",
+                        nameof(internalState));
             }
         }
     }
-
 
     /// <summary>
     /// The current state of a WCF connection
     /// </summary>
     public enum ConnectionState
     {
+        //TODO: Use Moryx.Communications.Endpoints ConnectionState and remove this in future
+
         /// <summary>
         /// Client is new.
         /// </summary>

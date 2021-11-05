@@ -1,0 +1,99 @@
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+
+namespace Moryx.Communication.Endpoints
+{
+    /// <summary>
+    /// Service manager base class for provide active endpoints of the current application runtime
+    /// </summary>
+    public abstract class VersionServiceManager<TEndpoint> : IVersionServiceManager
+        where TEndpoint : Endpoint
+    {
+        private const string ServiceName = "endpoints";
+
+        /// <summary>
+        /// Underlying http client for the requests
+        /// </summary>
+        protected HttpClient Client { get; set; }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="VersionServiceManager{TEndpoint}"/>
+        /// </summary>
+        protected VersionServiceManager(IProxyConfig proxyConfig, string host, int port)
+        {
+            // Create HttpClient
+            if (proxyConfig?.EnableProxy == true && !proxyConfig.UseDefaultWebProxy)
+            {
+                var proxy = new WebProxy
+                {
+                    Address = new Uri($"http://{proxyConfig.Address}:{proxyConfig.Port}"),
+                    BypassProxyOnLocal = false,
+                    UseDefaultCredentials = true
+                };
+
+                Client = new HttpClient(new HttpClientHandler { Proxy = proxy });
+            }
+            else
+            {
+                Client = new HttpClient();
+            }
+
+            Client.BaseAddress = new Uri($"http://{host}:{port}/{ServiceName}/");
+        }
+
+        /// <inheritdoc />
+        public virtual void Dispose()
+        {
+            Client.Dispose();
+            Client = null;
+        }
+
+        /// <inheritdoc />
+        public virtual Endpoint[] ActiveEndpoints()
+        {
+            try
+            {
+                return ActiveEndpointsAsync().Result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<Endpoint[]> ActiveEndpointsAsync()
+        {
+            var response = await Client.GetStringAsync("");
+            return JsonConvert.DeserializeObject<TEndpoint[]>(response).ToArray<Endpoint>();
+        }
+
+
+        /// <inheritdoc />
+        public virtual Endpoint[] ServiceEndpoints(string service)
+        {
+            try
+            {
+                return ServiceEndpointsAsync(service).Result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<Endpoint[]> ServiceEndpointsAsync(string service)
+        {
+            var response = await Client.GetStringAsync($"service/{service}");
+            return JsonConvert.DeserializeObject<TEndpoint[]>(response).ToArray<Endpoint>();
+        }
+    }
+}
