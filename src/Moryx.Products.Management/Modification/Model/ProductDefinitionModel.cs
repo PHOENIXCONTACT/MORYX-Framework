@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
+using Moryx.Serialization;
 
 namespace Moryx.Products.Management.Modification
 {
@@ -16,5 +17,8 @@ namespace Moryx.Products.Management.Modification
 
         [DataMember]
         public string BaseDefinition { get; set; }
+
+        [DataMember]
+        public Entry Properties { get; set; }
     }
 }

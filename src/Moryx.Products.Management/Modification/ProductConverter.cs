@@ -39,7 +39,7 @@ namespace Moryx.Products.Management.Modification
         #endregion
 
         #region To Model
-        
+
         public ProductModel ConvertProduct(IProductType productType, bool flat)
         {
             // Base object
@@ -72,6 +72,17 @@ namespace Moryx.Products.Management.Modification
             ConvertParts(productType, properties, converted);
 
             return converted;
+        }
+
+        public ProductDefinitionModel ConvertProductType(Type productType)
+        {
+            return new()
+            {
+                Name = productType.Name,
+                DisplayName = productType.GetDisplayName() ?? productType.Name,
+                BaseDefinition = productType.BaseType?.Name,
+                Properties = EntryConvert.EncodeClass(productType, ProductSerialization)
+            };
         }
 
         private static ProductFile[] ConvertFiles(IProductType productType, IEnumerable<PropertyInfo> properties)
