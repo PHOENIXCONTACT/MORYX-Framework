@@ -17,7 +17,7 @@ env:
   MORYX_OPTIMIZE_CODE: "false"
   MORYX_BUILD_CONFIG: "Release"
   MORYX_BUILDNUMBER: ${{github.run_number}}
-  dotnet_sdk_version: '5.0.100'
+  dotnet_sdk_version: '6.0.100'
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 jobs:
@@ -124,7 +124,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
         with:
@@ -137,7 +137,7 @@ jobs:
           path: artifacts/Packages/
 
       - name: Publish on MyGet-CI
-        if: ${{ github.ref == 'refs/heads/dev' }} # dev branche is published to myget moryx-dev
+        if: ${{ github.ref == 'refs/heads/dev' }} # dev branche is published to myget moryx
         shell: pwsh
         env:
           MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
