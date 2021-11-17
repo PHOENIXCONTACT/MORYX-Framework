@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -61,7 +61,8 @@ namespace Moryx.AbstractionLayer.Resources
         /// <inheritdoc />
         void IInitializable.Initialize()
         {
-            Logger = Logger?.GetChild(Name, GetType());
+            var loggerName = Name.Replace(".", "_"); // replace . with _ because of logger child structure
+            Logger = Logger?.GetChild(loggerName, GetType());
             OnInitialize();
         }
 
