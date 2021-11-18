@@ -17,7 +17,7 @@ env:
   MORYX_OPTIMIZE_CODE: "false"
   MORYX_BUILD_CONFIG: "Release"
   MORYX_BUILDNUMBER: ${{github.run_number}}
-  dotnet_sdk_version: '6.0.100'
+  dotnet_sdk_version: '5.0.403'
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 jobs:
