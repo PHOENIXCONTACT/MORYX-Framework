@@ -29,7 +29,7 @@ namespace Moryx.AbstractionLayer
         /// <summary>
         /// All activity trace information
         /// </summary>
-        IActivityTracing Tracing { get; }
+        Tracing Tracing { get; }
 
         /// <summary>
         /// Specifies the special process requirements of this type

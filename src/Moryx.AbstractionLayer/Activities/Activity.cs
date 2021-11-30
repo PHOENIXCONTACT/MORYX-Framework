@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer
         public IProcess Process { get; set; }
 
         ///
-        public IActivityTracing Tracing { get; set; }
+        public Tracing Tracing { get; set; }
 
         ///
         public ActivityResult Result { get; set; }
@@ -103,7 +103,7 @@ namespace Moryx.AbstractionLayer
     /// <typeparam name="TTracing">Type of the tracing object.</typeparam>
     public abstract class Activity<TParam, TTracing> : Activity, IActivity<TParam>
         where TParam : IParameters
-        where TTracing : IActivityTracing, new()
+        where TTracing : Tracing, new()
     {
         /// <summary>
         /// Creates a new instance of <see cref="Activity{TParam,TTracing}"/>

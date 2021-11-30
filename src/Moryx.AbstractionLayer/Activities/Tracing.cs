@@ -11,18 +11,26 @@ namespace Moryx.AbstractionLayer
     /// Activity trace information
     /// </summary>
     [DataContract]
-    public class Tracing : IActivityTracing
+    public class Tracing
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// The time when this activity was started.
+        /// </summary>
         public DateTime? Started { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The time when this activity was finished.
+        /// </summary>
         public DateTime? Completed { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Optional tracing text for errors or information
+        /// </summary>
         public string Text { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Contains the error code that is associated with the error that caused e.g. an activity failure
+        /// </summary>
         public int ErrorCode { get; set; }
 
         /// <summary>
@@ -33,7 +41,7 @@ namespace Moryx.AbstractionLayer
         ///
         // ReSharper disable once InconsistentNaming <-- too cool to rename :P
         public Sparta Transform<Sparta>() where Sparta
-            : class, IActivityTracing, new()
+            : Tracing, new()
         {
             if (this is Sparta)
                 return this as Sparta;
