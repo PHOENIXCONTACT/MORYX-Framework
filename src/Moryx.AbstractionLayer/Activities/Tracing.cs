@@ -33,7 +33,7 @@ namespace Moryx.AbstractionLayer
         /// <summary>
         /// Resource that executed the activity
         /// </summary>
-        public long Resource { get; set; }
+        public long ResourceId { get; set; }
 
         ///
         // ReSharper disable once InconsistentNaming <-- too cool to rename :P
