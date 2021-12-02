@@ -133,14 +133,12 @@ namespace Moryx.AbstractionLayer.Tests
             Done = 100
         }
 
-        private class FooTracing : Tracing, IActivityProgress
+        private class FooTracing : Tracing
         {
             public string FooName { get; set; }
 
             public int FooNumber { get; set; }
-
-            public double Relative => base.Progress;
-
+            
             public new FooProgress Progress
             {
                 get { return (FooProgress) base.Progress; }
