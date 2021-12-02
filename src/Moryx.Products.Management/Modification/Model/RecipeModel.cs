@@ -62,5 +62,11 @@ namespace Moryx.Products.Management.Modification
         /// </summary>
         [DataMember]
         public RecipeClassificationModel Classification { get; set; }
+
+        /// <summary>
+        /// Whether this Recipe is a clone or not
+        /// </summary>
+        [DataMember]
+        public bool IsClone{ get; set; }
     }
 }

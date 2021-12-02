@@ -14,7 +14,7 @@ namespace Moryx.Products.Management.Modification
 {
 #if USE_WCF
     [ServiceContract]
-    [ServiceVersion("5.0.0")]
+    [ServiceVersion("5.1.0")]
 #endif
     internal interface IProductInteraction
     {
