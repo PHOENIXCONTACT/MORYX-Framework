@@ -30,6 +30,11 @@ namespace Moryx.AbstractionLayer
         /// </summary>
         public int Progress { get; set; }
 
+        /// <summary>
+        /// Resource that executed the activity
+        /// </summary>
+        public long ResourceId { get; set; }
+
         ///
         // ReSharper disable once InconsistentNaming <-- too cool to rename :P
         public Sparta Transform<Sparta>() where Sparta

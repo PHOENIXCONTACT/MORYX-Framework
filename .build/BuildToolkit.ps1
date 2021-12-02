@@ -1,8 +1,9 @@
 # Tool Versions
 $NunitVersion = "3.12.0";
-$OpenCoverVersion = "4.7.922";
-$DocFxVersion = "2.56.2";
-$ReportGeneratorVersion = "4.8.7";
+$OpenCoverVersion = "4.7.1221";
+$DocFxVersion = "2.58.4";
+$ReportGeneratorVersion = "4.8.13";
+$OpenCoverToCoberturaVersion = "0.3.4";
 
 # Folder Pathes
 $RootPath = $MyInvocation.PSScriptRoot;
@@ -18,6 +19,7 @@ $DocumentationArtifcacts = "$ArtifactsDir\Documentation";
 # Tests
 $NunitReportsDir = "$ArtifactsDir\Tests";
 $OpenCoverReportsDir = "$ArtifactsDir\Tests"
+$CoberturaReportsDir = "$ArtifactsDir\Tests"
 
 # Nuget
 $NugetConfig = "$RootPath\NuGet.Config";
@@ -34,6 +36,7 @@ $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.
 $global:NunitCli = "$BuildTools\NUnit.ConsoleRunner.$NunitVersion\tools\nunit3-console.exe";
 $global:ReportGeneratorCli = "$BuildTools\ReportGenerator.$ReportGeneratorVersion\tools\net47\ReportGenerator.exe";
 $global:DocFxCli = "$BuildTools\docfx.console.$DocFxVersion\tools\docfx.exe";
+$global:OpenCoverToCoberturaCli = "$BuildTools\OpenCoverToCoberturaConverter.$OpenCoverToCoberturaVersion\tools\OpenCoverToCoberturaConverter.exe";
 
 # Git
 $global:GitCommitHash = "";
@@ -132,6 +135,7 @@ function Invoke-Initialize([string]$Version = "1.0.0", [bool]$Cleanup = $False) 
     Write-Variable "NUnitCli" $global:NUnitCli;
     Write-Variable "ReportGeneratorCli" $global:ReportGeneratorCli;
     Write-Variable "DocFxCli" $global:DocFxCli;
+    Write-Variable "OpenCoverToCoberturaCli" $global:OpenCoverToCoberturaCli;
     Write-Variable "GitCli" $global:GitCli;
     Write-Variable "GitCommitHash" $global:GitCommitHash;
 
@@ -269,6 +273,10 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
         Install-Tool "OpenCover" $OpenCoverVersion $global:OpenCoverCli;
     }
 
+    if (-not (Test-Path $global:OpenCoverToCoberturaCli)) {
+        Install-Tool "OpenCoverToCoberturaConverter" $OpenCoverToCoberturaVersion $global:OpenCoverToCoberturaCli;
+    }
+
     CreateFolderIfNotExists $OpenCoverReportsDir;
     CreateFolderIfNotExists $NunitReportsDir;
 
@@ -308,6 +316,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
 
         $nunitXml = ($NunitReportsDir + "\$projectName.TestResult.xml");
         $openCoverXml = ($OpenCoverReportsDir + "\$projectName.OpenCover.xml");
+        $coberturaXml = ($CoberturaReportsDir + "\$projectName.Cobertura.xml");
 
         if ($isNetCore) {
             $targetArgs = '"test -v ' + $env:MORYX_TEST_VERBOSITY + ' -c ' + $env:MORYX_BUILD_CONFIG + ' ' + $testProject + '"';
@@ -346,6 +355,9 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
             Write-Host-Error "Nunit exited with $errorText for $projectName";
             Invoke-ExitCodeCheck $exitCode;
         }
+
+        & $global:OpenCoverToCoberturaCli -input:$openCoverXml -output:$coberturaXml -sources:$rootPath
+        Invoke-ExitCodeCheck $LastExitCode;
     }
 }
 
@@ -655,7 +667,7 @@ function CreateFolderIfNotExists([string]$Folder) {
 }
 
 function CopyAndReplaceFolder($SourceDir, $TargetDir) {
-    Write-Host-Info "Copy $TargetDir to $SourceDir!"
+    Write-Host-Info "Copy $SourceDir to $TargetDir!"
     # Remove old folder if exists
     if (Test-Path $TargetDir) {
         Write-Host "Target path already exists, removing ..." -ForegroundColor Yellow

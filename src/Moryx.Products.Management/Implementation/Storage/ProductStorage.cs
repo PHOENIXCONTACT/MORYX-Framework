@@ -718,6 +718,7 @@ namespace Moryx.Products.Management
         private void TransformInstance(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance)
         {
             productInstance.Id = entity.Id;
+            productInstance.State = (ProductInstanceState)entity.State;
 
             // Transform the instance if it has a dedicated storage
             var productType = productInstance.Type;
@@ -816,6 +817,7 @@ namespace Moryx.Products.Management
 
             // Save to entity
             var archived = uow.GetEntity<ProductInstanceEntity>(productInstance);
+            archived.State = (int)productInstance.State;
             archived.ProductId = productInstance.Type.Id;
             strategy.SaveInstance(productInstance, archived);
 
