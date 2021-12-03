@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq.Expressions;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Products.Model;
@@ -14,13 +13,13 @@ namespace Moryx.Products.Management.NullStrategies
     /// Strategy for product instances that should not be saved to the database
     /// </summary>
     [PropertylessStrategyConfiguration(typeof(ProductInstance), DerivedTypes = true)]
-    [Plugin(LifeCycle.Transient, typeof(IProductInstanceStrategy), Name = nameof(SkipArticlesStrategy))]
-    public class SkipArticlesStrategy : InstanceStrategyBase
+    [Plugin(LifeCycle.Transient, typeof(IProductInstanceStrategy), Name = nameof(SkipInstancesStrategy))]
+    public class SkipInstancesStrategy : InstanceStrategyBase
     {
         /// <summary>
-        /// Create new instance of <see cref="SkipArticlesStrategy"/>
+        /// Create new instance of <see cref="SkipInstancesStrategy"/>
         /// </summary>
-        public SkipArticlesStrategy() : base(true)
+        public SkipInstancesStrategy() : base(true)
         {
         }
 
