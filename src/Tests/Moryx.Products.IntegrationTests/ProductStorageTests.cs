@@ -164,7 +164,7 @@ namespace Moryx.Products.IntegrationTests
                     new ProductInstanceConfiguration()
                     {
                         TargetType = nameof(NeedleInstance),
-                        PluginName = nameof(SkipArticlesStrategy)
+                        PluginName = nameof(SkipInstancesStrategy)
                     },
                 },
                 LinkStrategies = new List<ProductLinkConfiguration>
@@ -277,8 +277,8 @@ namespace Moryx.Products.IntegrationTests
                                 }
                             };
                             break;
-                        case nameof(SkipArticlesStrategy):
-                            strategy = new SkipArticlesStrategy();
+                        case nameof(SkipInstancesStrategy):
+                            strategy = new SkipInstancesStrategy();
                             break;
                     }
 
