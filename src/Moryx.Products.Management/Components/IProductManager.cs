@@ -29,6 +29,11 @@ namespace Moryx.Products.Management
         IReadOnlyList<IProductType> LoadTypes(ProductQuery query);
 
         /// <summary>
+        /// Load types using filter expression
+        /// </summary>
+        IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
+
+        /// <summary>
         /// Load product instance by id
         /// </summary>
         IProductType LoadType(long id);

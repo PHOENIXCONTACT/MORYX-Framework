@@ -23,8 +23,8 @@ namespace Moryx.Products.Management
     /// Base class for product storage. Contains basic functionality to load and save a product.
     /// Also has the possibility to store a version to each save.
     /// </summary>
-    [Plugin(LifeCycle.Singleton, typeof(IProductStorage))]
-    internal class ProductStorage : IProductStorage
+    [Plugin(LifeCycle.Singleton, typeof(IProductStorage), typeof(IProductSearchStorage))]
+    internal class ProductStorage : IProductSearchStorage
     {
         /// <summary>
         /// Optimized constructor delegate for the different product types
@@ -271,6 +271,23 @@ namespace Moryx.Products.Management
                         }).Select(t => t.Name);
                         productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
                     }
+
+                    // Filter by type properties properties
+                    if (query.PropertyFilters != null && TypeStrategies[query.Type] is IProductTypeSearch typeSearch)
+                    {
+                        var targetType = typeSearch.TargetType;
+                        // Make generic method for the target type
+                        var genericMethod = typeof(IProductTypeSearch).GetMethod(nameof(IProductTypeSearch.TransformSelector));
+                        var method = genericMethod.MakeGenericMethod(targetType);
+
+                        foreach (var propertyFilter in query.PropertyFilters)
+                        {
+                            var expression = ConvertPropertyFilter(targetType, propertyFilter);
+                            var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch, new object[]{ expression });
+                            var versionExpression = AsVersionExpression(columnExpression);
+                            productsQuery = productsQuery.Where(versionExpression);
+                        }
+                    }
                 }
 
                 // Filter by identifier
@@ -341,6 +358,71 @@ namespace Moryx.Products.Management
             }
         }
 
+        private static Expression ConvertPropertyFilter(Type targetType, PropertyFilter filter)
+        {
+            // Product property expression
+            var productExpression = Expression.Parameter(targetType);
+            var propertyExpresssion = Expression.Property(productExpression, filter.Entry.Identifier);
+            
+            var property = targetType.GetProperty(filter.Entry.Identifier);
+            var value = Convert.ChangeType(filter.Entry.Value.Current, property.PropertyType);
+            var constantExpression = Expression.Constant(value);
+
+            Expression expressionBody;
+            switch (filter.Operator)
+            {
+                case PropertyFilterOperator.Equals:
+                    expressionBody = Expression.MakeBinary(ExpressionType.Equal, propertyExpresssion, constantExpression);
+                    break;
+                case PropertyFilterOperator.GreaterThen:
+                    expressionBody = Expression.MakeBinary(ExpressionType.GreaterThan, propertyExpresssion, constantExpression);
+                    break;
+                case PropertyFilterOperator.LessThen:
+                    expressionBody = Expression.MakeBinary(ExpressionType.LessThan, propertyExpresssion, constantExpression);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return Expression.Lambda(expressionBody, productExpression);
+        }
+
+        public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
+        {
+            using (var uow = Factory.Create())
+            {
+                var repo = uow.GetRepository<IProductTypeEntityRepository>();
+                var matchingStrategies = TypeStrategies.Values
+                    .Where(i => typeof(TType).IsAssignableFrom(i.TargetType));
+
+                IQueryable<ProductTypeEntity> query = null;
+                foreach (var typeStrategy in matchingStrategies)
+                {
+                    var searchStrategy = typeStrategy as IProductTypeSearch;
+                    if (searchStrategy == null)
+                        throw new NotSupportedException($"Storage does not support expression search for {typeStrategy.TargetType}");
+
+                    var columnExpression = searchStrategy.TransformSelector(selector);
+                    var queryFilter = AsVersionExpression(columnExpression);
+                    query = query == null
+                        ? repo.Linq.Where(queryFilter) // Create query
+                        : query.Union(repo.Linq.Where(queryFilter)); // Append query
+                }
+
+                // No query or no result => Nothing to do
+                List<ProductTypeEntity> entities;
+                if (query == null || (entities = query.ToList()).Count == 0)
+                    return new TType[0];
+
+                var loadedProducts = new Dictionary<long, IProductType>();
+                var instances = entities.Select(entity => Transform(uow, entity, false, loadedProducts)).OfType<TType>().ToArray();
+                // Final check against compiled expression
+                var compiledSelector = selector.Compile();
+                // Only return matches against compiled expression
+                return instances.Where(compiledSelector.Invoke).ToArray();
+            }
+        }
+
         /// <inheritdoc />
         public IProductType LoadType(long id)
         {
@@ -381,12 +463,6 @@ namespace Moryx.Products.Management
                     .FirstOrDefault(p => p.Identifier == identity.Identifier && p.Revision == revision);
                 return product != null ? Transform(uow, product, true) : null;
             }
-        }
-
-        /// <inheritdoc />
-        public IProductType TransformType(IUnitOfWork context, ProductTypeEntity typeEntity, bool full)
-        {
-            return Transform(context, typeEntity, full);
         }
 
         private IProductType Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, IProductType> loadedProducts = null, IProductPartLink parentLink = null)
@@ -515,7 +591,7 @@ namespace Moryx.Products.Management
             }
 
             strategy.SaveType(modifiedInstance, typeEntity.CurrentVersion);
-            saverContext.EntityCache.Add(new ProductIdentity(typeEntity.Identifier,typeEntity.Revision),typeEntity);
+            saverContext.EntityCache.Add(new ProductIdentity(typeEntity.Identifier, typeEntity.Revision), typeEntity);
 
             // And nasty again!
             var type = modifiedInstance.GetType();
@@ -586,10 +662,10 @@ namespace Moryx.Products.Management
 
         private ProductTypeEntity GetPartEntity(ProductPartsSaverContext saverContext, IProductPartLink link)
         {
-            if (saverContext.EntityCache.ContainsKey((ProductIdentity) link.Product.Identity))
+            if (saverContext.EntityCache.ContainsKey((ProductIdentity)link.Product.Identity))
             {
-                var part = saverContext.EntityCache[(ProductIdentity) link.Product.Identity];
-                EntityIdListener.Listen(part,link.Product);
+                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];
+                EntityIdListener.Listen(part, link.Product);
                 return part;
             }
 
@@ -630,14 +706,7 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<ProductInstance> LoadInstances(ProductType productType)
         {
-            using (var uow = Factory.Create())
-            {
-                var repo = uow.GetRepository<IProductInstanceEntityRepository>();
-                var entities = repo.Linq
-                    .Where(e => e.ProductId == productType.Id)
-                    .ToList();
-                return TransformInstances(uow, entities);
-            }
+            return LoadInstances(productType.Id);
         }
 
         public IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
@@ -649,6 +718,18 @@ namespace Moryx.Products.Management
             else
             {
                 return LoadWithStrategy(selector);
+            }
+        }
+
+        private IReadOnlyList<ProductInstance> LoadInstances(long productTypeId)
+        {
+            using (var uow = Factory.Create())
+            {
+                var repo = uow.GetRepository<IProductInstanceEntityRepository>();
+                var entities = repo.Linq
+                    .Where(e => e.ProductId == productTypeId)
+                    .ToList();
+                return TransformInstances(uow, entities);
             }
         }
 
@@ -752,7 +833,7 @@ namespace Moryx.Products.Management
                         TransformInstance(uow, partEntity, part);
                     }
                 }
-                else if(linkStrategy.PartCreation == PartSourceStrategy.FromEntities)
+                else if (linkStrategy.PartCreation == PartSourceStrategy.FromEntities)
                 {
                     // Load part using the entity and assign PartLink afterwards
                     var partCollection = partEntityGroups[partGroup.Key.Name].ToList();

@@ -15,6 +15,7 @@ namespace Moryx.Products.Management
 {
     /// <summary>
     /// API for the application specific product storage
+    /// TODO: Make internal for AL 6.0, replaceable strategies are sufficient
     /// </summary>
     public interface IProductStorage : IPlugin
     {
@@ -73,5 +74,17 @@ namespace Moryx.Products.Management
         /// Save multiple recipes at once
         /// </summary>
         void SaveRecipes(long productId, ICollection<IProductRecipe> recipes);
+    }
+
+    /// <summary>
+    /// Additional interface for type storage to search for product types by expression
+    /// TODO: Remove in AL 6
+    /// </summary>
+    public interface IProductSearchStorage : IProductStorage
+    {
+        /// <summary>
+        /// Load types using filter expression
+        /// </summary>
+        IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
     }
 }
