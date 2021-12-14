@@ -204,7 +204,11 @@ namespace Moryx.Products.Management.Modification
 
             var wpRecipe = recipe as IWorkplanRecipe;
             if (wpRecipe?.Workplan != null)
+            {
                 converted.WorkplanId = wpRecipe.Workplan.Id;
+                converted.WorkplanModel = ConvertWorkplan(wpRecipe.Workplan);
+            }
+                
 
             return converted;
         }
