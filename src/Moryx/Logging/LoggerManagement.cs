@@ -22,7 +22,7 @@ namespace Moryx.Logging
     public abstract class LoggerManagement : ILoggerManagement, ILogTargetFactory, IDisposable
     {
         private readonly Thread _loggingThread;
-        private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _tokenSource = new();
 
         /// <summary>
         /// Constructor for the LoggerManagement.
@@ -96,10 +96,9 @@ namespace Moryx.Logging
             SetLevelRecursive(logger, level);
         }
 
-        private void SetLevelRecursive(IModuleLogger logger, LogLevel level)
+        private static void SetLevelRecursive(IModuleLogger logger, LogLevel level)
         {
-            var casted = logger as Logger;
-            if (casted == null)
+            if (!(logger is Logger casted))
                 return;
 
             casted.ActiveLevel = level;
@@ -169,14 +168,7 @@ namespace Moryx.Logging
         {
             // Forward message to internal log and all appender
             var logTarget = logMessage.LogTarget;
-            if (logMessage.IsException)
-            {
-                logTarget.Log(logMessage.Level, logMessage.LoggerMessage, logMessage.Exception);
-            }
-            else
-            {
-                logTarget.Log(logMessage.Level, logMessage.LoggerMessage);
-            }
+            logTarget.Log(logMessage);
         }
 
         /// <summary>

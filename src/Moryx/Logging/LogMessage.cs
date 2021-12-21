@@ -19,8 +19,6 @@ namespace Moryx.Logging
 
         public Exception Exception { get; }
 
-        public string LoggerMessage => $"{ClassName}:{Message ?? string.Empty}";
-
         #endregion
 
         #region ILogMessage
@@ -74,12 +72,6 @@ namespace Moryx.Logging
             {
                 // Someone failed to write a working format string
                 Message = _message + " - Format failed!";
-            }
-
-            // Concat exception to message
-            if (IsException)
-            {
-                Message += $"\nException: {ExceptionPrinter.Print(Exception)}";
             }
         }
     }

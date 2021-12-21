@@ -1,7 +1,6 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using LogLevel = Moryx.Logging.LogLevel;
@@ -17,53 +16,23 @@ namespace Moryx.Runtime.Kernel
             _internalTarget = loggerFactory.CreateLogger(name);
         }
 
-        public void Log(LogLevel logLevel, string message)
+        public void Log(ILogMessage logMessage)
         {
-            Log(logLevel, message, null);
-        }
-
-        public void Log(LogLevel logLevel, string message, Exception exception)
-        {
-            var isException = exception != null;
-            switch (logLevel)
+            var logLevel = logMessage.Level switch
             {
-                case LogLevel.Trace:
-                    if (isException)
-                        _internalTarget.LogTrace(exception, message);
-                    else
-                        _internalTarget.LogTrace(message);
-                    break;
-                case LogLevel.Debug:
-                    if (isException)
-                        _internalTarget.LogDebug(exception, message);
-                    else
-                        _internalTarget.LogDebug(message);
-                    break;
-                case LogLevel.Info:
-                    if (isException)
-                        _internalTarget.LogInformation(exception, message);
-                    else
-                        _internalTarget.LogInformation(message);
-                    break;
-                case LogLevel.Warning:
-                    if (isException)
-                        _internalTarget.LogWarning(exception, message);
-                    else
-                        _internalTarget.LogWarning(message);
-                    break;
-                case LogLevel.Error:
-                    if (isException)
-                        _internalTarget.LogError(exception, message);
-                    else
-                        _internalTarget.LogError(message);
-                    break;
-                case LogLevel.Fatal:
-                    if (isException)
-                        _internalTarget.LogCritical(exception, message);
-                    else
-                        _internalTarget.LogCritical(message);
-                    break;
-            }
+                LogLevel.Trace => Microsoft.Extensions.Logging.LogLevel.Trace,
+                LogLevel.Debug => Microsoft.Extensions.Logging.LogLevel.Debug,
+                LogLevel.Info => Microsoft.Extensions.Logging.LogLevel.Information,
+                LogLevel.Warning => Microsoft.Extensions.Logging.LogLevel.Warning,
+                LogLevel.Error => Microsoft.Extensions.Logging.LogLevel.Error,
+                LogLevel.Fatal => Microsoft.Extensions.Logging.LogLevel.Critical,
+                _ => Microsoft.Extensions.Logging.LogLevel.None
+            };
+
+            var logEvent = new MsLoggingLogEvent(logMessage.Message);
+            logEvent.WithProperty(nameof(logMessage.ClassName), logMessage.ClassName);
+
+            _internalTarget.Log(logLevel, default, logEvent, logMessage.Exception, MsLoggingLogEvent.Formatter);
         }
     }
 }

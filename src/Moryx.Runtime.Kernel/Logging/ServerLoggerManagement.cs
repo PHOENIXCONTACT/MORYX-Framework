@@ -19,14 +19,17 @@ namespace Moryx.Runtime.Kernel
     [KernelComponent(typeof(ILoggerManagement), typeof(IServerLoggerManagement))]
     public class ServerLoggerManagement : LoggerManagement, IServerLoggerManagement
     {
+        private LoggingConfig _config;
+
         /// <summary>
         /// Configuration manager instance
         /// </summary>
         public IConfigManager ConfigManager { get; set; }
 
+        /// <summary>
+        /// Factory to create loggers
+        /// </summary>
         public ILoggerFactory LoggerFactory { get; set; }
-
-        private LoggingConfig _config;
 
         /// <summary>
         /// Creates the log target where log messages will be sent to
