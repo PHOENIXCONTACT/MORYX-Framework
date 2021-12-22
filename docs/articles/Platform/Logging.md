@@ -3,14 +3,9 @@ uid: Logging
 ---
 # Logging
 
-Logging is an essential part of every application and framework. Logging within MORYX is build on the Common.Logging API and Log4Net implementation. To decouple our executables from those libraries their API was wrapped within components from the [Moryx.Logging](xref:Moryx.Logging) namespace. The wrapper does not only hide the API but provides additional features. In most cases access to the loggers is fullfilled by the responsible DI Container. Level 1 components receive a logger instance by passing themselves to the ActivateLogging-method of the LoggerManagement.
+Logging is an essential part of every application and framework. Logging within MORYX is build on the `Microsoft.Extensions.Logging` abstraction. To decouple our executables from those libraries their API was wrapped within components from the [Moryx.Logging](xref:Moryx.Logging) namespace. The wrapper does not only hide the API but provides additional features. In most cases access to the loggers is fullfilled by the responsible DI Container. Level 1 components receive a logger instance by passing themselves to the ActivateLogging-method of the LoggerManagement.
 
 ## Features
-
-Features from log4net:
-
-* Multiple appenders: The user can choose from a range of appenders when configuring the logging. The default Runtime config only uses the RollingFileAppender.
-* Documentation: http://logging.apache.org/log4net/release/features.html
 
 Features provided by the wrapper:
 

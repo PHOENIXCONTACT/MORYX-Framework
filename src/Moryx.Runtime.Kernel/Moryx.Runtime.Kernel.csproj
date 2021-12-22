@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
     <PackageReference Include="CommandLineParser" />
+    <PackageReference Include="Microsoft.Extensions.Logging"/>
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 using NUnit.Framework;
 
@@ -16,7 +17,7 @@ namespace Moryx.Runtime.Kernel.Tests
     [TestFixture]
     public class ServerLoggerManagementTest
     {
-        private string _tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        private readonly string _tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         private RuntimeConfigManager _configManager;
         private IServerLoggerManagement _management;
         private ILoggingHost _host;
@@ -38,17 +39,18 @@ namespace Moryx.Runtime.Kernel.Tests
             {
                 LoggerConfigs = new List<ModuleLoggerConfig>()
                 {
-                    new ModuleLoggerConfig() {LoggerName = "Test"}
+                    new() {LoggerName = "Test"}
                 }
             };
 
             _configManager.SaveConfiguration(config);
             _management = new ServerLoggerManagement()
             {
-                ConfigManager = _configManager
+                ConfigManager = _configManager,
+                LoggerFactory = new NullLoggerFactory()
             };
 
-            _host = new ModuleManager()
+            _host = new ModuleManager
             {
                 ConfigManager = _configManager,
                 LoggerManagement = _management
@@ -59,7 +61,7 @@ namespace Moryx.Runtime.Kernel.Tests
         /// <summary>
         /// Check if it is possible to change the loglevel of a logger.
         /// </summary>
-        /// <param name="initalLevel">The inital level.</param>
+        /// <param name="initialLevel">The initial level.</param>
         /// <param name="newLevel">The new level.</param>
         [TestCase(LogLevel.Debug, LogLevel.Fatal, Description = "Change logger to fatal")]
         [TestCase(LogLevel.Error, LogLevel.Debug, Description = "Change logger to debug")]
@@ -67,14 +69,14 @@ namespace Moryx.Runtime.Kernel.Tests
         [TestCase(LogLevel.Warning, LogLevel.Info, Description = "Change logger to info")]
         [TestCase(LogLevel.Trace, LogLevel.Warning, Description = "Change logger to warning")]
         [TestCase(LogLevel.Fatal, LogLevel.Trace, Description = "Change logger to trace")]
-        public void SetLevelTest(LogLevel initalLevel, LogLevel newLevel)
+        public void SetLevelTest(LogLevel initialLevel, LogLevel newLevel)
         {
             // get a logger
-            IModuleLogger logger = _host.Logger;
+            var logger = _host.Logger;
             // change its loglevel
-            _management.SetLevel(logger, initalLevel);
-            
-            Assert.AreEqual(initalLevel, logger.ActiveLevel, "The logger is not in the inital LogLevel!");
+            _management.SetLevel(logger, initialLevel);
+
+            Assert.AreEqual(initialLevel, logger.ActiveLevel, "The logger is not in the initial LogLevel!");
 
             // change its loglevel
             _management.SetLevel(logger, newLevel);
@@ -91,14 +93,14 @@ namespace Moryx.Runtime.Kernel.Tests
         [TestCase(LogLevel.Warning, LogLevel.Info, Description = "Change logger to info")]
         [TestCase(LogLevel.Trace, LogLevel.Warning, Description = "Change logger to warning")]
         [TestCase(LogLevel.Fatal, LogLevel.Trace, Description = "Change logger to trace")]
-        public void SetLevelByNameTest(LogLevel initalLevel, LogLevel newLevel)
+        public void SetLevelByNameTest(LogLevel initialLevel, LogLevel newLevel)
         {
             // get a logger
-            IModuleLogger logger = _host.Logger;
+            var logger = _host.Logger;
             // change its loglevel
-            _management.SetLevel(logger.Name, initalLevel);
+            _management.SetLevel(logger.Name, initialLevel);
 
-            Assert.AreEqual(initalLevel, logger.ActiveLevel, "The logger is not in the inital LogLevel!");
+            Assert.AreEqual(initialLevel, logger.ActiveLevel, "The logger is not in the initial LogLevel!");
 
             // set the new loglevel
             _management.SetLevel(logger.Name, newLevel);
@@ -107,10 +109,10 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         /// <summary>
-        /// Check if it is posible to activate and disable logging
+        /// Check if it is possible to activate and disable logging
         /// </summary>
         [Test]
-        public void ToggelLoggingStateTest()
+        public void ToggleLoggingStateTest()
         {
             var host = new ModuleManager()
             {
@@ -137,7 +139,7 @@ namespace Moryx.Runtime.Kernel.Tests
                 logMessage = message;
                 manualResetEvent.Set();
             });
-            
+
             // Wait for the management to be ready.
             Thread.Sleep(10);
 
@@ -153,25 +155,25 @@ namespace Moryx.Runtime.Kernel.Tests
             // prepare disable test
             manualResetEvent.Reset();
             logMessage = null;
-            
+
             // disable logging
             _management.DeactivateLogging(host);
 
             // the logger should not change to null!
-            Assert.NotNull(host.Logger, "The logger changend to null!");
+            Assert.NotNull(host.Logger, "The logger changed to null!");
             // log another message
             host.Logger.Log(LogLevel.Debug, "Testing is useful!");
 
             // wait a time; now the message should not be forwarded!
-            manualResetEvent.WaitOne(1000); // small timer because it normaly must exceed to proceed
-            // fail if we got a message 
+            manualResetEvent.WaitOne(1000); // small timer because it normally must exceed to proceed
+            // fail if we got a message
             Assert.Null(logMessage, "Logging has not been deactivated!");
 
 
             //prepare reactivation test
             manualResetEvent.Reset();
             logMessage = null;
-            
+
             // reactivate
             _management.ActivateLogging(host);
 
@@ -183,13 +185,13 @@ namespace Moryx.Runtime.Kernel.Tests
             host.Logger.Log(LogLevel.Debug, "Testing is very useful!");
             // wait for the logmessage
             manualResetEvent.WaitOne(10000); // large timer for debug
-           
+
             Assert.NotNull(logMessage, "After reactivation the log message has not been forwarded!");
             Assert.AreEqual(logMessage.Message, "Testing is very useful!", "The message is wrong!");
         }
 
         /// <summary>
-        /// Check loglevel filter
+        /// Check logLevel filter
         /// </summary>
         /// <param name="minLevel">The minimum level.</param>
         /// <param name="messageLevel">The message level.</param>
@@ -230,9 +232,9 @@ namespace Moryx.Runtime.Kernel.Tests
         [TestCase(LogLevel.Warning, LogLevel.Info   , false)]
         [TestCase(LogLevel.Warning, LogLevel.Trace  , false)]
         [TestCase(LogLevel.Warning, LogLevel.Warning, true)]
-        public void AppendListender(LogLevel minLevel, LogLevel messageLevel, bool messageExpected)
+        public void AppendListener(LogLevel minLevel, LogLevel messageLevel, bool messageExpected)
         {
-            var host = new ModuleManager()
+            var host = new ModuleManager
             {
                 ConfigManager = _configManager,
                 LoggerManagement = _management

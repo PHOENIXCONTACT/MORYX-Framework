@@ -12,6 +12,7 @@ using Moryx.Modules;
 using Moryx.Runtime.Container;
 using Moryx.StateMachines;
 using Moryx.Threading;
+using LogLevel = Moryx.Logging.LogLevel;
 
 namespace Moryx.Runtime.Modules
 {
@@ -76,13 +77,8 @@ namespace Moryx.Runtime.Modules
             lock (_stateLock)
                 _state.Initialize();
         }
-
         void IServerModuleStateContext.Initialize()
         {
-
-            //if (this._loggerFactory == null)
-            //    this._loggerFactory = (ILoggerFactory)new LoggerFactory();
-
             // Activate logging
             LoggerManagement.ActivateLogging(this);
             LoggerManagement.AppendListenerToStream(ProcessLogMessage, LogLevel.Warning, Name);

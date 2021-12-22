@@ -1,7 +1,6 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using Moryx.Logging;
@@ -10,14 +9,8 @@ namespace Moryx.Tests.Logging
 {
     public class LogTargetMock : ILogTarget
     {
-        public void Log(LogLevel logLevel, string message)
+        public void Log(ILogMessage logMessage)
         {
-            
-        }
-
-        public void Log(LogLevel logLevel, string message, Exception exception)
-        {
-            
         }
     }
 

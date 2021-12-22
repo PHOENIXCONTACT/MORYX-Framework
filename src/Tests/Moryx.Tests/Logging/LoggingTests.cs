@@ -61,17 +61,17 @@ namespace Moryx.Tests.Logging
         [Test]
         public void TestLogEntry()
         {
-            DateTime t1 = DateTime.Now;
+            var t1 = DateTime.Now;
 
             _logger.Log(LogLevel.Info, LogMsgFormat, LogMsgArgument);
 
             _loggerManagement.MessageReceivedEvent.Wait(1000);
 
-            DateTime t2 = DateTime.Now;
+            var t2 = DateTime.Now;
 
             Assert.IsTrue(_loggerManagement.MessageReceivedEvent.IsSet, "No log message received");
 
-            ILogMessage msg = _loggerManagement.Messages.First();
+            var msg = _loggerManagement.Messages.First();
 
             Assert.IsInstanceOf<LogMessage>(msg);
             Assert.AreEqual(string.Format(LogMsgFormat, LogMsgArgument), msg.Message, "Log message");
@@ -81,45 +81,44 @@ namespace Moryx.Tests.Logging
             Assert.GreaterOrEqual(msg.Timestamp, t1, "Start of time interval");
             Assert.LessOrEqual(msg.Timestamp, t2, "End of time interval");
 
-            LogMessage internalMsg = (LogMessage)msg;
+            var internalMsg = (LogMessage)msg;
 
             Assert.IsFalse(internalMsg.IsException, "IsException");
             Assert.Null(internalMsg.Exception, "Exception");
-            Assert.NotNull(internalMsg.LoggerMessage, "LoggerMessage");
-            Assert.IsTrue(internalMsg.LoggerMessage.Contains(_module.GetType().Name), "LoggerMessage Classname");
-            Assert.IsTrue(internalMsg.LoggerMessage.Contains(string.Format(LogMsgFormat, LogMsgArgument)), "LoggerMessage Content");
+            Assert.NotNull(internalMsg.Message, "Message");
+            Assert.AreEqual(internalMsg.ClassName, _module.GetType().Name, "Message ClassName");
+            Assert.AreEqual(internalMsg.Message, string.Format(LogMsgFormat, LogMsgArgument), "Message Content");
         }
 
         [Test]
         public void TestLogException()
         {
-            DateTime t1 = DateTime.Now;
+            var t1 = DateTime.Now;
 
             _logger.LogException(LogLevel.Error, new Exception(ExceptionMsg), LogMsgFormat, LogMsgArgument);
 
             _loggerManagement.MessageReceivedEvent.Wait(1000);
 
-            DateTime t2 = DateTime.Now;
+            var t2 = DateTime.Now;
 
             Assert.IsTrue(_loggerManagement.MessageReceivedEvent.IsSet, "No log message received");
 
-            ILogMessage msg = _loggerManagement.Messages.First();
+            var msg = _loggerManagement.Messages.First();
 
             Assert.IsInstanceOf<LogMessage>(msg);
             Assert.IsTrue(msg.Message.Contains(string.Format(LogMsgFormat, LogMsgArgument)), "Log message");
-            Assert.IsTrue(msg.Message.Contains(ExceptionMsg), "Exception message");
             Assert.AreEqual(_module.GetType().Name, msg.ClassName, "Message class");
             Assert.AreEqual(LogLevel.Error, msg.Level, "Log Level");
             Assert.GreaterOrEqual(msg.Timestamp, t1, "Start of time interval");
             Assert.LessOrEqual(msg.Timestamp, t2, "End of time interval");
 
-            LogMessage internalMsg = (LogMessage) msg;
+            var internalMsg = (LogMessage) msg;
 
             Assert.IsTrue(internalMsg.IsException, "IsException");
             Assert.NotNull(internalMsg.Exception, "Exception");
-            Assert.NotNull(internalMsg.LoggerMessage, "LoggerMessage");
-            Assert.IsTrue(internalMsg.LoggerMessage.Contains(_module.GetType().Name), "LoggerMessage Classname");
-            Assert.IsTrue(internalMsg.LoggerMessage.Contains(string.Format(LogMsgFormat, LogMsgArgument)), "LoggerMessage Content");
+            Assert.NotNull(internalMsg.Message, "Message");
+            Assert.AreEqual(internalMsg.ClassName, _module.GetType().Name, "ClassName");
+            Assert.AreEqual(internalMsg.Message, string.Format(LogMsgFormat, LogMsgArgument), "Message Content");
             Assert.IsInstanceOf<Exception>(internalMsg.Exception);
         }
 
