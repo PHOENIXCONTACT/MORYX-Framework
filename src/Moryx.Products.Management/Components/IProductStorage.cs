@@ -4,18 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.Model.Repositories;
 using Moryx.Modules;
-using Moryx.Products.Model;
 
 namespace Moryx.Products.Management
 {
     /// <summary>
     /// API for the application specific product storage
-    /// TODO: Make internal for AL 6.0, replaceable strategies are sufficient
     /// </summary>
     public interface IProductStorage : IPlugin
     {
