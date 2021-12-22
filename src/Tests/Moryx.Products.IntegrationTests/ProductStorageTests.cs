@@ -18,6 +18,7 @@ using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
+using Moryx.Serialization;
 using NUnit.Framework;
 
 namespace Moryx.Products.IntegrationTests
@@ -99,6 +100,20 @@ namespace Moryx.Products.IntegrationTests
                                 PropertyName = nameof(WatchfaceType.Color),
                                 Column = string.Empty,
                                 PluginName = nameof(NullPropertyMapper)
+                            }
+                        },
+                        JsonColumn = nameof(IGenericColumns.Text8)
+                    },
+                    new GenericTypeConfiguration
+                    {
+                        TargetType = nameof(DisplayWatchfaceType),
+                        PropertyConfigs = new List<PropertyMapperConfig>
+                        {
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(DisplayWatchfaceType.Resolution),
+                                Column = nameof(IGenericColumns.Integer1),
+                                PluginName = nameof(IntegerColumnMapper)
                             }
                         },
                         JsonColumn = nameof(IGenericColumns.Text8)
@@ -615,32 +630,27 @@ namespace Moryx.Products.IntegrationTests
         public void GetProductByQuery()
         {
             // Arrange
-            var productMgr = new ProductManager
-            {
-                Factory = _factory,
-                Storage = _storage
-            };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
             _storage.SaveType(watch);
             watch = SetupProduct("Jaques Lemans", string.Empty, 17);
             _storage.SaveType(watch);
 
             // Act
-            var all = productMgr.LoadTypes(new ProductQuery());
-            var latestRevision = productMgr.LoadTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
-            var byType = productMgr.LoadTypes(new ProductQuery { Type = nameof(NeedleType) });
-            var allRevision = productMgr.LoadTypes(new ProductQuery { Identifier = WatchMaterial });
-            var latestByType = productMgr.LoadTypes(new ProductQuery
+            var all = _storage.LoadTypes(new ProductQuery());
+            var latestRevision = _storage.LoadTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
+            var byType = _storage.LoadTypes(new ProductQuery { Type = nameof(NeedleType) });
+            var allRevision = _storage.LoadTypes(new ProductQuery { Identifier = WatchMaterial });
+            var latestByType = _storage.LoadTypes(new ProductQuery
             {
                 Type = nameof(WatchType),
                 RevisionFilter = RevisionFilter.Latest
             });
-            var usages = productMgr.LoadTypes(new ProductQuery
+            var usages = _storage.LoadTypes(new ProductQuery
             {
                 Identifier = "24",
                 Selector = Selector.Parent
             });
-            var needles = productMgr.LoadTypes(new ProductQuery
+            var needles = _storage.LoadTypes(new ProductQuery
             {
                 Name = "needle",
                 RevisionFilter = RevisionFilter.Latest
@@ -653,6 +663,47 @@ namespace Moryx.Products.IntegrationTests
             Assert.GreaterOrEqual(latestByType.Count, 1);
             Assert.IsTrue(usages.All(u => u is WatchType));
             Assert.GreaterOrEqual(needles.Count, 3);
+        }
+
+        [Test]
+        public void GetProductByExpression()
+        {
+            // Arrange
+            var watchface = new DisplayWatchfaceType
+            {
+                Name = "ExpressionWatchface",
+                Identity = new ProductIdentity("4742", 0),
+                Resolution = 180
+            };
+            _storage.SaveType(watchface);
+
+            // Act
+            var loaded = _storage.LoadTypes<DisplayWatchfaceType>(wf => wf.Resolution == 180);
+            var loaded2 = _storage.LoadTypes<DisplayWatchfaceType>(wf => wf.Resolution > 150);
+            var loaded3 = _storage.LoadTypes(new ProductQuery
+            {
+                Type = nameof(DisplayWatchfaceType),
+                PropertyFilters = new List<PropertyFilter>
+                {
+                    new()
+                    {
+                        Operator = PropertyFilterOperator.Equals,
+                        Entry = new Entry
+                        {
+                            Identifier = nameof(DisplayWatchfaceType.Resolution),
+                            Value = new EntryValue { Current = "180" }
+                        }
+                    }
+                }
+            });
+
+            // Assert
+            Assert.AreEqual(loaded.Count, 1);
+            Assert.AreEqual(watchface.Id, loaded[0].Id);
+            Assert.AreEqual(loaded2.Count, 1);
+            Assert.AreEqual(watchface.Id, loaded2[0].Id);
+            Assert.AreEqual(loaded3.Count, 1);
+            Assert.AreEqual(watchface.Id, loaded3[0].Id);
         }
 
         [Test]

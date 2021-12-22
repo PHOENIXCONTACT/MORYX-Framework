@@ -14,7 +14,7 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management
 {
-    internal class ProductManagementFacade : IFacadeControl, IProductManagement, IWorkplansVersions
+    internal class ProductManagementFacade : IFacadeControl, IWorkplansVersions, IProductManagementTypeSearch
     {
         // Use this delegate in every call for clean health state management
         public Action ValidateHealthState { get; set; }
@@ -47,6 +47,12 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
             return ProductManager.LoadTypes(query);
+        }
+
+        public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
+        {
+            ValidateHealthState();
+            return ProductManager.LoadTypes(selector);
         }
 
         public IProductType LoadType(long id)

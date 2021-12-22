@@ -1,7 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Products
 {
@@ -65,6 +67,52 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         [DataMember]
         public Selector Selector { get; set; }
+
+        /// <summary>
+        /// List of property filters
+        /// </summary>
+        [DataMember]
+        public List<PropertyFilter> PropertyFilters { get; set; }
+    }
+
+    /// <summary>
+    /// Property filter wrapper for the filtered entry
+    /// </summary>
+    [DataContract]
+    public class PropertyFilter
+    {
+        /// <summary>
+        /// Entry to filter
+        /// </summary>
+        [DataMember]
+        public Entry Entry { get; set; }
+
+        /// <summary>
+        /// Operator for the filter expression
+        /// </summary>
+        [DataMember]
+        public PropertyFilterOperator Operator { get; set; }
+    }
+
+    /// <summary>
+    /// Property filter operator expression
+    /// </summary>
+    public enum PropertyFilterOperator
+    {
+        /// <summary>
+        /// Value equals
+        /// </summary>
+        Equals,
+
+        /// <summary>
+        /// Value is greater then
+        /// </summary>
+        GreaterThen,
+
+        /// <summary>
+        /// Value is less then
+        /// </summary>
+        LessThen
     }
 
     /// <summary>
@@ -76,10 +124,12 @@ namespace Moryx.AbstractionLayer.Products
         /// Fetch all revisions, this is the default
         /// </summary>
         All = 0,
+
         /// <summary>
         /// Fetch only the latest revision
         /// </summary>
         Latest = 1,
+
         /// <summary>
         /// Fetch only specific revisions
         /// </summary>

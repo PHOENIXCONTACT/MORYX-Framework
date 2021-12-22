@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Moryx.AbstractionLayer.Products;
+using Moryx.Products.Model;
 
 namespace Moryx.Products.Management
 {
@@ -64,6 +65,23 @@ namespace Moryx.Products.Management
             }
             
             return productType != null;
+        }
+
+        internal static Expression<Func<ProductTypeEntity, bool>> AsVersionExpression(Expression<Func<IGenericColumns, bool>> expression)
+        {
+            // Extract lamda expression body and column
+            var lambda = (LambdaExpression)expression;
+            var binaryExpression = (BinaryExpression)lambda.Body;
+            var columnExpression = (MemberExpression)binaryExpression.Left;
+
+            // Build new parameter expression
+            var rootEntity = Expression.Parameter(typeof(ProductTypeEntity));
+            var versionExpression = Expression.Property(rootEntity, nameof(ProductTypeEntity.CurrentVersion));
+            var versionColumn = Expression.Property(versionExpression, columnExpression.Member.Name);
+
+            // Build new binary expression
+            var versionBinary = Expression.MakeBinary(binaryExpression.NodeType, versionColumn, binaryExpression.Right);
+            return Expression.Lambda(versionBinary, rootEntity) as Expression<Func<ProductTypeEntity, bool>>;
         }
     }
 }
