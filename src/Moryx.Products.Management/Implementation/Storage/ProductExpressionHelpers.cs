@@ -29,21 +29,26 @@ namespace Moryx.Products.Management
             throw new NotSupportedException("Expression type not supported yet");
         }
 
-        public static bool IsTypeQuery<TInstance>(Expression<Func<TInstance, bool>> selector, out ProductType productType)
+
+
+        public static bool IsTypeQuery<TInstance>(Expression<Func<TInstance, bool>> selector, out MemberInfo typeMember, out object memberValue)
         {
-            productType = null;
+            typeMember = null;
+            memberValue = null;
+
             var body = selector.Body;
             // Extract the property targeted by the expression
             switch (body)
             {
                 case BinaryExpression binary when binary.NodeType == ExpressionType.Equal:
-                    if (binary.Left is MemberExpression bLeft && bLeft.Member.Name == nameof(ProductInstance.Type))
+                    // Extract member and value
+                    if (binary.Left is MemberExpression bLeft && IsTypeExpression(bLeft, out typeMember))
                     {
-                        productType = ExtractExpressionValue(binary.Right) as ProductType;
+                        memberValue = ExtractExpressionValue(binary.Right);
                     }
-                    if (binary.Right is MemberExpression bRight && bRight.Member.Name == nameof(ProductInstance.Type))
+                    else if (binary.Right is MemberExpression bRight && IsTypeExpression(bRight, out typeMember))
                     {
-                        productType = ExtractExpressionValue(binary.Left) as ProductType;
+                        memberValue = ExtractExpressionValue(binary.Left);
                     }
                     break;
                 case MethodCallExpression call:
@@ -51,20 +56,34 @@ namespace Moryx.Products.Management
                     var method = call.Method;
                     if (method.Name == nameof(Equals))
                     {
-                        if (call.Object is MemberExpression callMemEx && callMemEx.Expression is ConstantExpression)
+                        if (call.Object is MemberExpression callMemEx && IsTypeExpression(callMemEx, out typeMember))
                         {
-                            productType = ExtractExpressionValue(call.Object) as ProductType;
+                            memberValue = ExtractExpressionValue(call.Arguments.First());
                         }
-                        else
+                        else if (call.Arguments.First() is MemberExpression argMemEx && IsTypeExpression(argMemEx, out typeMember))
                         {
-                            productType = ExtractExpressionValue(call.Arguments.First()) as ProductType;
+                            memberValue = ExtractExpressionValue(call.Object);
                         }
 
                     }
                     break;
             }
-            
-            return productType != null;
+
+            return memberValue is not null;
+        }
+
+        private static bool IsTypeExpression(MemberExpression expression, out MemberInfo typeMember)
+        {
+            typeMember = null;
+            do
+            {
+                if (expression.Member is PropertyInfo propertyInfo && typeof(IProductType).IsAssignableFrom(propertyInfo.PropertyType))
+                    return true;
+                typeMember = expression.Member;
+                expression = expression.Expression as MemberExpression;
+            } while (expression is not null);
+
+            return false;
         }
 
         internal static Expression<Func<ProductTypeEntity, bool>> AsVersionExpression(Expression<Func<IGenericColumns, bool>> expression)
