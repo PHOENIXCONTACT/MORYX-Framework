@@ -845,7 +845,7 @@ namespace Moryx.Products.IntegrationTests
         public void SaveAndLoadInstance()
         {
             // Arrange
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
+            var watch = SetupProduct("TestWatch", string.Empty);
             _storage.SaveType(watch);
             // Reload from storage for partlink ids if the object exists
             watch = (WatchType) _storage.LoadType(watch.Id);
@@ -879,6 +879,12 @@ namespace Moryx.Products.IntegrationTests
             var byDateTime = _storage.LoadInstances<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
             var byBool = _storage.LoadInstances<WatchInstance>(i => i.TimeSet);
             var byType = _storage.LoadInstances<WatchInstance>(i => i.Type == watch);
+            var byType2 = _storage.LoadInstances<WatchInstance>(i => i.Type.Equals(watch));
+            var byType3 = _storage.LoadInstances<WatchInstance>(i => watch.Equals(i.Type));
+            var byType4 = _storage.LoadInstances<WatchInstance>(i => i.Type.Name == "TestWatch");
+            var byType5 = _storage.LoadInstances<WatchInstance>(i => watch == i.Type);
+            identity = watch.Identity;
+            var byType6 = _storage.LoadInstances<WatchInstance>(i => i.Type.Identity == identity);
 
             // Assert
             Assert.NotNull(watchCopy);
@@ -893,6 +899,11 @@ namespace Moryx.Products.IntegrationTests
             Assert.LessOrEqual(1, byDateTime.Count);
             Assert.LessOrEqual(1, byBool.Count);
             Assert.LessOrEqual(1, byType.Count);
+            Assert.LessOrEqual(1, byType2.Count);
+            Assert.LessOrEqual(1, byType3.Count);
+            Assert.LessOrEqual(1, byType4.Count);
+            Assert.LessOrEqual(1, byType5.Count);
+            Assert.LessOrEqual(1, byType6.Count);
         }
     }
 }

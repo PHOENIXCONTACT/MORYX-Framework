@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -711,9 +712,9 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
-            if (IsTypeQuery(selector, out var productType))
+            if (IsTypeQuery(selector, out var member, out var value))
             {
-                return LoadInstances(productType).OfType<TInstance>().ToList();
+                return LoadInstancesByType(selector, member, value).ToList();
             }
             else
             {
@@ -721,15 +722,39 @@ namespace Moryx.Products.Management
             }
         }
 
-        private IReadOnlyList<ProductInstance> LoadInstances(long productTypeId)
+        private IReadOnlyList<TInstance> LoadInstancesByType<TInstance>(Expression<Func<TInstance, bool>> selector, MemberInfo typeProperty, object value)
         {
             using (var uow = Factory.Create())
             {
+                Expression<Func<ProductInstanceEntity, bool>> instanceSelector;
+                // Select by type or type id
+                if (typeProperty == null || typeProperty.Name == nameof(IProductType.Id))
+                {
+                    var productTypeId = (value as IProductType)?.Id ?? (long)value;
+                    instanceSelector = i => i.ProductId == productTypeId;
+                }
+                else if (typeProperty.Name == nameof(IProductType.Name))
+                {
+                    var productName = (string)value;
+                    instanceSelector = i => i.Product.Name == productName;
+                }
+                else if (typeProperty.Name == nameof(IProductType.Identity))
+                {
+                    var productIdentity = (ProductIdentity)value;
+                    instanceSelector = i => i.Product.Identifier == productIdentity.Identifier && i.Product.Revision == productIdentity.Revision;
+                }
+                else
+                {
+                    // TODO: Filter by type specific properties
+                    var productType = typeProperty.ReflectedType;
+                    instanceSelector = i => false;
+                }
+
                 var repo = uow.GetRepository<IProductInstanceEntityRepository>();
-                var entities = repo.Linq
-                    .Where(e => e.ProductId == productTypeId)
-                    .ToList();
-                return TransformInstances(uow, entities);
+                var entities = repo.Linq.Where(instanceSelector).ToList();
+
+
+                return TransformInstances(uow, entities).OfType<TInstance>().ToList();
             }
         }
 
