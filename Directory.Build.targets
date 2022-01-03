@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <MoryxCoreVersion>3.2.0</MoryxCoreVersion>
-    <MoryxClientFrameworkVersion>3.1.0</MoryxClientFrameworkVersion>
+    <MoryxClientFrameworkVersion>3.2.0</MoryxClientFrameworkVersion>
     <MoryxMaintenanceWebVersion>3.1.1</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
