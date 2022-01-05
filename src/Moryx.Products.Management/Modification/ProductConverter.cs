@@ -180,6 +180,7 @@ namespace Moryx.Products.Management.Modification
                 State = recipe.State,
                 Revision = recipe.Revision,
                 Properties = EntryConvert.EncodeObject(recipe, RecipeSerialization),
+                IsClone = recipe.Classification.HasFlag(RecipeClassification.Clone)
             };
 
             switch (recipe.Classification & RecipeClassification.CloneFilter)
