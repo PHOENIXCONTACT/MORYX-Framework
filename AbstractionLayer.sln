@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.352
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject", "src\StartProject\StartProject.csproj", "{08B7686D-63C7-498C-90F0-B756E93575DD}"
 EndProject
@@ -44,6 +44,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.TestTools", "src\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj", "{1516374C-976F-49FC-A911-29EDC481C657}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Resources.Wcf", "src\Moryx.Resources.Wcf\Moryx.Resources.Wcf.csproj", "{E1AD28CD-37A6-4AF6-80D7-756586A727B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Management.Tests", "src\Tests\Moryx.Products.Management.Tests\Moryx.Products.Management.Tests.csproj", "{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,10 @@ Global
 		{E1AD28CD-37A6-4AF6-80D7-756586A727B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1AD28CD-37A6-4AF6-80D7-756586A727B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1AD28CD-37A6-4AF6-80D7-756586A727B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +136,7 @@ Global
 		{93650069-26E9-4E0D-A336-9D02F1039346} = {D6D69517-7889-4E08-ABEA-D3E069D08A6B}
 		{583CBD84-DD9F-4834-A89C-1625A05EE15D} = {BA183EBF-FAC1-45AE-9559-09879DB103AC}
 		{E1AD28CD-37A6-4AF6-80D7-756586A727B6} = {BA183EBF-FAC1-45AE-9559-09879DB103AC}
+		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD} = {D6D69517-7889-4E08-ABEA-D3E069D08A6B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23463631-1BA0-41B8-ABA3-1E9741037513}
