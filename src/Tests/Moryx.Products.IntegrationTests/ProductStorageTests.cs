@@ -18,6 +18,7 @@ using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
+using Moryx.Serialization;
 using NUnit.Framework;
 
 namespace Moryx.Products.IntegrationTests
@@ -99,6 +100,20 @@ namespace Moryx.Products.IntegrationTests
                                 PropertyName = nameof(WatchfaceType.Color),
                                 Column = string.Empty,
                                 PluginName = nameof(NullPropertyMapper)
+                            }
+                        },
+                        JsonColumn = nameof(IGenericColumns.Text8)
+                    },
+                    new GenericTypeConfiguration
+                    {
+                        TargetType = nameof(DisplayWatchfaceType),
+                        PropertyConfigs = new List<PropertyMapperConfig>
+                        {
+                            new PropertyMapperConfig
+                            {
+                                PropertyName = nameof(DisplayWatchfaceType.Resolution),
+                                Column = nameof(IGenericColumns.Integer1),
+                                PluginName = nameof(IntegerColumnMapper)
                             }
                         },
                         JsonColumn = nameof(IGenericColumns.Text8)
@@ -615,32 +630,27 @@ namespace Moryx.Products.IntegrationTests
         public void GetProductByQuery()
         {
             // Arrange
-            var productMgr = new ProductManager
-            {
-                Factory = _factory,
-                Storage = _storage
-            };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
             _storage.SaveType(watch);
             watch = SetupProduct("Jaques Lemans", string.Empty, 17);
             _storage.SaveType(watch);
 
             // Act
-            var all = productMgr.LoadTypes(new ProductQuery());
-            var latestRevision = productMgr.LoadTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
-            var byType = productMgr.LoadTypes(new ProductQuery { Type = nameof(NeedleType) });
-            var allRevision = productMgr.LoadTypes(new ProductQuery { Identifier = WatchMaterial });
-            var latestByType = productMgr.LoadTypes(new ProductQuery
+            var all = _storage.LoadTypes(new ProductQuery());
+            var latestRevision = _storage.LoadTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
+            var byType = _storage.LoadTypes(new ProductQuery { Type = nameof(NeedleType) });
+            var allRevision = _storage.LoadTypes(new ProductQuery { Identifier = WatchMaterial });
+            var latestByType = _storage.LoadTypes(new ProductQuery
             {
                 Type = nameof(WatchType),
                 RevisionFilter = RevisionFilter.Latest
             });
-            var usages = productMgr.LoadTypes(new ProductQuery
+            var usages = _storage.LoadTypes(new ProductQuery
             {
                 Identifier = "24",
                 Selector = Selector.Parent
             });
-            var needles = productMgr.LoadTypes(new ProductQuery
+            var needles = _storage.LoadTypes(new ProductQuery
             {
                 Name = "needle",
                 RevisionFilter = RevisionFilter.Latest
@@ -653,6 +663,47 @@ namespace Moryx.Products.IntegrationTests
             Assert.GreaterOrEqual(latestByType.Count, 1);
             Assert.IsTrue(usages.All(u => u is WatchType));
             Assert.GreaterOrEqual(needles.Count, 3);
+        }
+
+        [Test]
+        public void GetProductByExpression()
+        {
+            // Arrange
+            var watchface = new DisplayWatchfaceType
+            {
+                Name = "ExpressionWatchface",
+                Identity = new ProductIdentity("4742", 0),
+                Resolution = 180
+            };
+            _storage.SaveType(watchface);
+
+            // Act
+            var loaded = _storage.LoadTypes<DisplayWatchfaceType>(wf => wf.Resolution == 180);
+            var loaded2 = _storage.LoadTypes<DisplayWatchfaceType>(wf => wf.Resolution > 150);
+            var loaded3 = _storage.LoadTypes(new ProductQuery
+            {
+                Type = nameof(DisplayWatchfaceType),
+                PropertyFilters = new List<PropertyFilter>
+                {
+                    new()
+                    {
+                        Operator = PropertyFilterOperator.Equals,
+                        Entry = new Entry
+                        {
+                            Identifier = nameof(DisplayWatchfaceType.Resolution),
+                            Value = new EntryValue { Current = "180" }
+                        }
+                    }
+                }
+            });
+
+            // Assert
+            Assert.AreEqual(loaded.Count, 1);
+            Assert.AreEqual(watchface.Id, loaded[0].Id);
+            Assert.AreEqual(loaded2.Count, 1);
+            Assert.AreEqual(watchface.Id, loaded2[0].Id);
+            Assert.AreEqual(loaded3.Count, 1);
+            Assert.AreEqual(watchface.Id, loaded3[0].Id);
         }
 
         [Test]
@@ -794,7 +845,7 @@ namespace Moryx.Products.IntegrationTests
         public void SaveAndLoadInstance()
         {
             // Arrange
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
+            var watch = SetupProduct("TestWatch", string.Empty);
             _storage.SaveType(watch);
             // Reload from storage for partlink ids if the object exists
             watch = (WatchType) _storage.LoadType(watch.Id);
@@ -828,6 +879,12 @@ namespace Moryx.Products.IntegrationTests
             var byDateTime = _storage.LoadInstances<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
             var byBool = _storage.LoadInstances<WatchInstance>(i => i.TimeSet);
             var byType = _storage.LoadInstances<WatchInstance>(i => i.Type == watch);
+            var byType2 = _storage.LoadInstances<WatchInstance>(i => i.Type.Equals(watch));
+            var byType3 = _storage.LoadInstances<WatchInstance>(i => watch.Equals(i.Type));
+            var byType4 = _storage.LoadInstances<WatchInstance>(i => i.Type.Name == "TestWatch");
+            var byType5 = _storage.LoadInstances<WatchInstance>(i => watch == i.Type);
+            identity = watch.Identity;
+            var byType6 = _storage.LoadInstances<WatchInstance>(i => i.Type.Identity == identity);
 
             // Assert
             Assert.NotNull(watchCopy);
@@ -842,6 +899,11 @@ namespace Moryx.Products.IntegrationTests
             Assert.LessOrEqual(1, byDateTime.Count);
             Assert.LessOrEqual(1, byBool.Count);
             Assert.LessOrEqual(1, byType.Count);
+            Assert.LessOrEqual(1, byType2.Count);
+            Assert.LessOrEqual(1, byType3.Count);
+            Assert.LessOrEqual(1, byType4.Count);
+            Assert.LessOrEqual(1, byType5.Count);
+            Assert.LessOrEqual(1, byType6.Count);
         }
     }
 }

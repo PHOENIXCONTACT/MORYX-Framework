@@ -2,23 +2,25 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Serialization;
 
 namespace Moryx.Products.Management.Modification
 {
     [DataContract]
-    internal class ProductDefinitionModel
+    internal class ProductFileModel
     {
         [DataMember]
-        public string Name { get; set; }
+        public string PropertyName { get; set; }
 
         [DataMember]
-        public string DisplayName { get; set; }
+        public string FileName { get; set; }
 
         [DataMember]
-        public string BaseDefinition { get; set; }
+        public string MimeType { get; set; }
 
         [DataMember]
-        public Entry Properties { get; set; }
+        public string FilePath { get; set; }
+
+        [DataMember]
+        public string FileHash { get; set; }
     }
 }

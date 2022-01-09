@@ -4,12 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.Model.Repositories;
 using Moryx.Modules;
-using Moryx.Products.Model;
 
 namespace Moryx.Products.Management
 {
@@ -73,5 +70,17 @@ namespace Moryx.Products.Management
         /// Save multiple recipes at once
         /// </summary>
         void SaveRecipes(long productId, ICollection<IProductRecipe> recipes);
+    }
+
+    /// <summary>
+    /// Additional interface for type storage to search for product types by expression
+    /// TODO: Remove in AL 6
+    /// </summary>
+    public interface IProductSearchStorage : IProductStorage
+    {
+        /// <summary>
+        /// Load types using filter expression
+        /// </summary>
+        IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
     }
 }

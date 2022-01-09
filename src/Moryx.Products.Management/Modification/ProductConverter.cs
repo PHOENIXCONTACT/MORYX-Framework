@@ -39,7 +39,7 @@ namespace Moryx.Products.Management.Modification
         #endregion
 
         #region To Model
-        
+
         public ProductModel ConvertProduct(IProductType productType, bool flat)
         {
             // Base object
@@ -62,7 +62,10 @@ namespace Moryx.Products.Management.Modification
             converted.Properties = EntryConvert.EncodeObject(productType, ProductSerialization);
 
             // Files
-            converted.Files = ConvertFiles(productType, properties);
+            converted.Files = (from property in properties
+                               where property.PropertyType == typeof(ProductFile)
+                               select (ProductFile)property.GetValue(productType)).ToArray();
+            converted.FileModels = ConvertFiles(productType, properties);
 
             // Recipes
             var recipes = RecipeManagement.GetAllByProduct(productType);
@@ -74,12 +77,34 @@ namespace Moryx.Products.Management.Modification
             return converted;
         }
 
-        private static ProductFile[] ConvertFiles(IProductType productType, IEnumerable<PropertyInfo> properties)
+        public ProductDefinitionModel ConvertProductType(Type productType)
         {
-            var files = (from property in properties
-                         where property.PropertyType == typeof(ProductFile)
-                         select (ProductFile)property.GetValue(productType)).ToArray();
-            return files;
+            return new()
+            {
+                Name = productType.Name,
+                DisplayName = productType.GetDisplayName() ?? productType.Name,
+                BaseDefinition = productType.BaseType?.Name,
+                Properties = EntryConvert.EncodeClass(productType, ProductSerialization)
+            };
+        }
+
+        private ProductFileModel[] ConvertFiles(IProductType productType, IEnumerable<PropertyInfo> properties)
+        {
+            var productFileProperties = properties.Where(p => p.PropertyType == typeof(ProductFile)).ToArray();
+            var fileModels = new ProductFileModel[productFileProperties.Length];
+            for (int i = 0; i < fileModels.Length; i++)
+            {
+                var value = (ProductFile)productFileProperties[i].GetValue(productType);
+                fileModels[i] = new ProductFileModel()
+                {
+                    PropertyName = productFileProperties[i].Name,
+                    FileName = value?.Name,
+                    FileHash = value?.FileHash,
+                    FilePath = value?.FilePath,
+                    MimeType = value?.MimeType
+                };
+            }
+            return fileModels;
         }
 
         private void ConvertParts(IProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
@@ -98,7 +123,7 @@ namespace Moryx.Products.Management.Modification
                         Name = property.Name,
                         DisplayName = displayName,
                         Type = FetchProductType(property.PropertyType),
-                        Parts = partModel != null ? new[] { partModel } : new PartModel[0],
+                        Parts = partModel is null ? new PartModel[0] : new[] { partModel },
                         PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, ProductSerialization)
                     };
                     connectors.Add(connector);
@@ -113,7 +138,7 @@ namespace Moryx.Products.Management.Modification
                         Name = property.Name,
                         DisplayName = displayName,
                         Type = FetchProductType(linkType),
-                        Parts = links.Select(ConvertPart).ToArray(),
+                        Parts = links?.Select(ConvertPart).ToArray(),
                         PropertyTemplates = EntryConvert.EncodeClass(linkType, ProductSerialization)
                     };
                     connectors.Add(connector);
@@ -125,7 +150,7 @@ namespace Moryx.Products.Management.Modification
         private PartModel ConvertPart(IProductPartLink link)
         {
             // No link, no DTO!
-            if (link == null)
+            if (link is null || link.Product is null)
                 return null;
 
             var part = new PartModel
@@ -155,6 +180,7 @@ namespace Moryx.Products.Management.Modification
                 State = recipe.State,
                 Revision = recipe.Revision,
                 Properties = EntryConvert.EncodeObject(recipe, RecipeSerialization),
+                IsClone = recipe.Classification.HasFlag(RecipeClassification.Clone)
             };
 
             switch (recipe.Classification & RecipeClassification.CloneFilter)
@@ -251,16 +277,10 @@ namespace Moryx.Products.Management.Modification
             converted.Identity = new ProductIdentity(source.Identifier, source.Revision);
             converted.Name = source.Name;
             converted.State = source.State;
-
-            // Copy extended properties
-            var properties = converted.GetType().GetProperties();
-            EntryConvert.UpdateInstance(converted, source.Properties, ProductSerialization);
-
-            ConvertFilesBack(converted, source, properties);
-
+            
             // Save recipes
-            var recipes = new List<IProductRecipe>(source.Recipes.Length);
-            foreach (var recipeModel in source.Recipes)
+            var recipes = new List<IProductRecipe>(source.Recipes?.Length ?? 0);
+            foreach (var recipeModel in source.Recipes ?? Enumerable.Empty<RecipeModel>())
             {
                 IProductRecipe productRecipe;
                 if (recipeModel.Id == 0)
@@ -274,15 +294,36 @@ namespace Moryx.Products.Management.Modification
                 ConvertRecipeBack(recipeModel, productRecipe, converted);
                 recipes.Add(productRecipe);
             }
-            RecipeManagement.Save(source.Id, recipes);
+            if (recipes.Any())
+                RecipeManagement.Save(source.Id, recipes);
+
+            // Product is flat
+            if (source.Properties is null)
+                return converted;
+
+            // Copy extended properties
+            var properties = converted.GetType().GetProperties();
+            EntryConvert.UpdateInstance(converted, source.Properties, ProductSerialization);
+
+            // Copy Files
+            ConvertFilesBack(converted, source, properties);
 
             // Convert parts
-            foreach (var partConnector in source.Parts)
+            foreach (var partConnector in source.Parts ?? Enumerable.Empty<PartConnector>())
             {
+                if (partConnector.Parts is null)
+                    continue;
+
                 var prop = properties.First(p => p.Name == partConnector.Name);
                 var value = prop.GetValue(converted);
                 if (partConnector.IsCollection)
                 {
+                    if (value == null)
+                    {
+                        value = Activator.CreateInstance(typeof(List<>)
+                            .MakeGenericType(prop.PropertyType.GetGenericArguments().First()));
+                        prop.SetValue(converted, value);
+                    }
                     UpdateCollection((IList)value, partConnector.Parts);
                 }
                 else if (partConnector.Parts.Length == 1)
@@ -309,21 +350,25 @@ namespace Moryx.Products.Management.Modification
             var unused = new List<IProductPartLink>(value.OfType<IProductPartLink>());
             // Iterate over the part models
             // Create or update the part links
-            var elemType = value.GetType().GetGenericArguments()[0];
+            var elemType = value.GetType().GetInterfaces()
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>))
+                .Select(i => i.GetGenericArguments()[0]).Single();
             foreach (var partModel in parts)
             {
-                var match = unused.Find(r => r.Id == partModel.Id);
+                if (partModel is null)
+                    continue;
+
+                var match = unused.Find(r => r.Id == partModel?.Id);
                 if (match == null)
                 {
                     match = (IProductPartLink)Activator.CreateInstance(elemType);
                     value.Add(match);
                 }
                 else
-                {
                     unused.Remove(match);
-                }
+
                 EntryConvert.UpdateInstance(match, partModel.Properties);
-                match.Product = (ProductType)ProductManager.LoadType(partModel.Product.Id);
+                match.Product = ProductManager.LoadType(partModel.Product.Id);
             }
 
             // Clear all values no longer present in the model
@@ -334,15 +379,25 @@ namespace Moryx.Products.Management.Modification
         private void UpdateReference(IProductPartLink value, PartModel part)
         {
             EntryConvert.UpdateInstance(value, part.Properties);
-            value.Product = (ProductType)ProductManager.LoadType(part.Product.Id);
+            value.Product = part.Product is null ? null : ProductManager.LoadType(part.Product.Id);
         }
 
         private static void ConvertFilesBack(object converted, ProductModel product, PropertyInfo[] properties)
         {
-            foreach (var fileModel in product.Files)
+            foreach (var fileModel in product.FileModels)
             {
-                var prop = properties.First(p => p.Name == fileModel.Name);
-                prop.SetValue(converted, fileModel);
+                var prop = properties.Single(p => p.Name == fileModel.PropertyName);
+                var productFile = new ProductFile()
+                {
+                    MimeType = fileModel.MimeType,
+                    FilePath = fileModel.FilePath,
+                    FileHash = fileModel.FileHash,
+                    Name = fileModel.FileName
+                };
+                if (productFile.GetType().GetProperties().All(p => p.GetValue(productFile) is null))
+                    prop.SetValue(converted, null);
+                else
+                    prop.SetValue(converted, productFile);
             }
         }
         #endregion
