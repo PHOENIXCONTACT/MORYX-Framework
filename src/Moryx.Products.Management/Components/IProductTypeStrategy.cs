@@ -33,4 +33,16 @@ namespace Moryx.Products.Management
         /// </summary>
         void LoadType(IGenericColumns source, IProductType target);
     }
+
+    /// <summary>
+    /// Additional interface for type strategies to search for product types by expression
+    /// TODO: Remove in AL 6
+    /// </summary>
+    public interface IProductTypeSearch : IProductTypeStrategy
+    {
+        /// <summary>
+        /// Transform a product class selector to a database compatible expression
+        /// </summary>
+        Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector);
+    }
 }
