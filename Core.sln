@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29905.134
+VisualStudioVersion = 16.0.32002.261
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Core", "src\StartProject.Core\StartProject.Core.csproj", "{DE77822B-592E-4192-97F7-EC9ADDAFEAE3}"
 EndProject
@@ -103,6 +103,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kestrel", "src\Moryx.Runtime.Kestrel\Moryx.Runtime.Kestrel.csproj", "{CB964668-8C90-4AB0-B6ED-A7589A3338BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.TestModule.Kestrel", "src\Moryx.TestModule.Kestrel\Moryx.TestModule.Kestrel.csproj", "{E7A29304-E150-446D-AE7F-A899A7BFCB2B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Asp.Extensions", "src\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj", "{8516EA2B-67AD-4B27-A429-E02311077F03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartProject.Asp", "src\StartProject.Asp\StartProject.Asp.csproj", "{4F1466B5-131E-4080-AC4F-BD1630EDF11F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -735,6 +739,42 @@ Global
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x64.Build.0 = Release|Any CPU
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x86.ActiveCfg = Release|Any CPU
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B}.Release|x86.Build.0 = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Debug|x64.Build.0 = Debug|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Debug|x86.Build.0 = Debug|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release(x86)|x86.Build.0 = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release|x64.ActiveCfg = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release|x64.Build.0 = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release|x86.ActiveCfg = Release|Any CPU
+		{8516EA2B-67AD-4B27-A429-E02311077F03}.Release|x86.Build.0 = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Debug|x64.Build.0 = Debug|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Debug|x86.Build.0 = Debug|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release(x86)|Any CPU.ActiveCfg = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release(x86)|Any CPU.Build.0 = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release(x86)|x64.ActiveCfg = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release(x86)|x64.Build.0 = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release(x86)|x86.ActiveCfg = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release(x86)|x86.Build.0 = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release|x64.ActiveCfg = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release|x64.Build.0 = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F1466B5-131E-4080-AC4F-BD1630EDF11F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -776,8 +816,8 @@ Global
 		{E7A29304-E150-446D-AE7F-A899A7BFCB2B} = {DAE7DCE8-AB9B-46A8-808D-6C6C0AAB75A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
-		RESX_TaskErrorCategory = Message
 		    RESX_ShowErrorsInErrorList = True
+		RESX_TaskErrorCategory = Message
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
 	EndGlobalSection
 EndGlobal
