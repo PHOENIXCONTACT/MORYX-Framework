@@ -101,3 +101,49 @@ internal class SwaggerStartup : Startup
     }
 }
 ```
+
+## Integrate MORYX with ASP.NET Core
+
+There is also the option to run MORYX alongside ASP.NET Core. We created an extension for the service collection to register all facades, so you can access MORYX modules within your controllers or Razor pages. 
+
+In your `Main` you need to load MORYX and pass it to the `StartUp` of the `HostBuilder`. Within the `StartUp` you pass it to `AddMoryxFacades()`.
+
+````cs
+public static int Main(string[] args)
+{
+    var moryxRuntime = new HeartOfGold(args);
+    moryxRuntime.Load();
+    
+    var host = Host.CreateDefaultBuilder(args)
+        .ConfigureServices(serviceCollection => serviceCollection.AddSingleton(typeof(IApplicationRuntime), moryxRuntime))
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup(conf => new Startup(moryxRuntime));
+        }).Build();
+
+    host.Start();
+    var result = moryxRuntime.Execute();
+    host.Dispose();
+
+    return (int)result;
+}
+
+public class Startup
+{
+    private readonly IApplicationRuntime _moryxRuntime;
+
+    public Startup(IApplicationRuntime moryxRuntime)
+    {
+        _moryxRuntime = moryxRuntime;
+    }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddRazorPages();
+
+        services.AddMoryxFacades(_moryxRuntime);
+    }
+````
+
+You can than access facades through standard ASP constructor or Razor page injection with `@inject IMoryxFacade facade`.

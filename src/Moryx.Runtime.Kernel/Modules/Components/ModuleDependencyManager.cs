@@ -26,6 +26,8 @@ namespace Moryx.Runtime.Kernel
 
         private PluginDependencyTree _dependencyTree;
 
+        public List<object> Facades { get; private set; }
+
         /// <summary>
         /// Cache of already transformed branches
         /// </summary>
@@ -65,6 +67,7 @@ namespace Moryx.Runtime.Kernel
                 .ToArray());
 
             // Only return modules that could be propery integrated in the dependency tree
+            Facades = facadeProviders.Keys.ToList();
             return dependencyBranches.Select(db => db.RepresentedModule).ToList();
         }
 
