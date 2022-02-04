@@ -2,6 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
+		<Description>Extensions for ASP.NET Core to combine it with the MORYX Runtime</Description>
+		<CreatePackage>true</CreatePackage>
+		<PackageTags>MORYX;ASP</PackageTags>
 	</PropertyGroup>
 
 
