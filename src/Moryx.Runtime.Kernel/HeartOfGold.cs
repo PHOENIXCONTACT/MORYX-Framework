@@ -19,7 +19,7 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Base kernel loader for the runtime
     /// </summary>
-    public class HeartOfGold : IApplicationRuntime
+    public class HeartOfGold : IApplicationRuntimeExecution
     {
         private string[] _args;
 
@@ -30,6 +30,11 @@ namespace Moryx.Runtime.Kernel
 
         /// <inheritdoc />
         public IContainer GlobalContainer => _container;
+
+        /// <summary>
+        /// Loaded environment
+        /// </summary>
+        private IRunMode _env;
 
         /// <summary>
         /// Creates an instance of the <see cref="HeartOfGold"/>
@@ -55,9 +60,43 @@ namespace Moryx.Runtime.Kernel
             _container = CreateContainer();
         }
 
+        /// <inheritdoc />
+        public int Load()
+        {
+            // Load and run environment
+            var loadResult = LoadEnvironment(out var env);
+            if (loadResult == EnvironmentLoadResult.Success)
+                _env = env;
+            return (int)loadResult;
+        }
+
+        /// <inheritdoc />
+        public int Execute()
+        {
+            if (_env == null)
+                throw new InvalidOperationException("Please load environment before execution!");
+
+            var returnCode = RunEnvironment(_env);
+            // Clean up and exit
+            try
+            {
+                _container.Destroy();
+            }
+            catch (Exception)
+            {
+                // Ignore it.
+            }
+
+            AppDomain.CurrentDomain.AssemblyResolve -= AppDomainBuilder.ResolveAssembly;
+            AppDomain.CurrentDomain.UnhandledException -= CrashHandler.HandleCrash;
+
+            return (int)returnCode;
+        }
+
         /// <summary>
         /// Starts the runtime
         /// </summary>
+        [Obsolete("Use Load and Execute instead")]
         public RuntimeErrorCode Run()
         {
             // Load and run environment
@@ -125,13 +164,13 @@ namespace Moryx.Runtime.Kernel
         {
             var runModes = _container.ResolveAll<IRunMode>();
             var runModeMap = (from existing in runModes
-                let runModeAttr = existing.GetType().GetCustomAttribute<RunModeAttribute>()
-                where runModeAttr != null
-                select new EnvironmentInfo
-                {
-                    RunMode = existing,
-                    OptionType = runModeAttr.OptionType
-                }).ToArray();
+                              let runModeAttr = existing.GetType().GetCustomAttribute<RunModeAttribute>()
+                              where runModeAttr != null
+                              select new EnvironmentInfo
+                              {
+                                  RunMode = existing,
+                                  OptionType = runModeAttr.OptionType
+                              }).ToArray();
 
             var optionTypes = runModeMap.Select(r => r.OptionType).ToArray();
 
@@ -140,11 +179,11 @@ namespace Moryx.Runtime.Kernel
             try
             {
                 Parser.Default.ParseArguments(_args, optionTypes)
-                .WithParsed(delegate(object parsed)
+                .WithParsed(delegate (object parsed)
                 {
                     // Select run mode
                     env = runModeMap.First(m => m.OptionType == parsed.GetType());
-                    env.Options = (RuntimeOptions) parsed;
+                    env.Options = (RuntimeOptions)parsed;
                     loadResult = EnvironmentLoadResult.Success;
                 })
                 .WithNotParsed(errors => loadResult = EvaluateParserErrors(errors));
@@ -266,8 +305,8 @@ namespace Moryx.Runtime.Kernel
 
         private enum EnvironmentLoadResult
         {
-            Error,
             Success,
+            Error,
             HelpRequested,
             BadVerb,
             NoVerb,

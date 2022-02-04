@@ -9,6 +9,11 @@ namespace Moryx.Runtime.Kernel
     internal interface IModuleDependencyManager
     {
         /// <summary>
+        /// All facades on modules
+        /// </summary>
+        List<object> Facades { get; }
+
+        /// <summary>
         /// Build and fill the dependency tree
         /// </summary>
         IReadOnlyList<IServerModule> BuildDependencyTree(IReadOnlyList<IServerModule> allModules);

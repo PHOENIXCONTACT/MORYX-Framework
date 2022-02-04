@@ -10,7 +10,7 @@ namespace Moryx.TestModule.Kestrel
 {
     [ServerModule(ModuleName)]
     [Description("Test module for testing kestrel services")]
-    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>
+    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<ITestFacade>
     {
         private IEndpointHost _host;
         public const string ModuleName = "TestModuleKestrel";
@@ -49,5 +49,14 @@ namespace Moryx.TestModule.Kestrel
         {
             _host.Stop();
         }
+
+
+        #region FacadeContainer
+
+        private readonly TestFacade _testModule = new TestFacade();
+
+        ITestFacade IFacadeContainer<ITestFacade>.Facade => _testModule;
+
+        #endregion
     }
 }
