@@ -42,8 +42,8 @@ namespace Moryx.AbstractionLayer.Resources
         {
             if (facade is IResourceModification modification)
                 modification.Modify(resourceId, modifier);
-
-            throw new NotSupportedException("Instance of resource management does not support resource modification");
+            else
+                throw new NotSupportedException("Instance of resource management does not support resource modification");
         }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace Moryx.AbstractionLayer.Resources
         {
             if (facade is IResourceModification modification)
                 modification.Modify(proxy.Id, modifier);
-
-            throw new NotSupportedException("Instance of resource management does not support resource modification");
+            else
+                throw new NotSupportedException("Instance of resource management does not support resource modification");
         }
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace Moryx.AbstractionLayer.Resources
         {
             if (facade is IResourceModification modification)
                 modification.Modify(proxy.Id, resource => modifier(resource, context));
-
-            throw new NotSupportedException("Instance of resource management does not support resource modification");
+            else
+                throw new NotSupportedException("Instance of resource management does not support resource modification");
         }
     }
 }
