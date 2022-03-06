@@ -15,14 +15,9 @@ namespace Moryx.Communication.Serial
     /// standard serial ports.
     /// </summary>
     [ExpectedConfig(typeof(SerialBinaryConfig))]
-    [Plugin(LifeCycle.Transient, typeof(IBinaryConnection), Name = ConnectionName)]
+    [Plugin(LifeCycle.Transient, typeof(IBinaryConnection), Name = nameof(SerialBinaryConnection))]
     public class SerialBinaryConnection : IBinaryConnection, ILoggingComponent
     {
-        /// <summary>
-        /// Unique plugin name for this type
-        /// </summary>
-        internal const string ConnectionName = "SerialBinaryConnection";
-
         /// <summary>
         /// Named injected logger instance
         /// </summary>
@@ -49,6 +44,19 @@ namespace Moryx.Communication.Serial
         /// </summary>
         private IReadContext _readContext;
 
+        private BinaryConnectionState _currentState;
+
+        /// <inheritdoc />
+        public BinaryConnectionState CurrentState
+        {
+            get => _currentState;
+            private set
+            {
+                _currentState = value;
+                NotifyConnectionState?.Invoke(this, _currentState);
+            }
+        }
+
         /// <summary>
         /// Create connection instance
         /// </summary>
@@ -57,7 +65,7 @@ namespace Moryx.Communication.Serial
             _validator = validator;
         }
 
-        ///
+        /// <inheritdoc />
         public void Initialize(BinaryConnectionConfig config)
         {
             _config = (SerialBinaryConfig)config;
@@ -65,11 +73,12 @@ namespace Moryx.Communication.Serial
             _serialPort.DataReceived += OnDataReceived;
         }
 
-        ///
+        /// <inheritdoc />
         public void Start()
         {
             _readContext = _validator.Interpreter.CreateContext();
             _serialPort.Open();
+
             CurrentState = BinaryConnectionState.Connected;
         }
 
@@ -86,13 +95,13 @@ namespace Moryx.Communication.Serial
             CurrentState = BinaryConnectionState.Disconnected;
         }
 
-        ///
+        /// <inheritdoc />
         public void Dispose()
         {
             Stop();
         }
 
-        ///
+        /// <inheritdoc />
         public void Reconnect()
         {
         }
@@ -104,14 +113,6 @@ namespace Moryx.Communication.Serial
         }
 
         /// <inheritdoc />
-        public BinaryConnectionState CurrentState { get; private set; }
-
-#pragma warning disable 67
-        /// <inheritdoc />
-        public event EventHandler<BinaryConnectionState> NotifyConnectionState;
-#pragma warning restore 67
-
-        /// <inheritdoc />
         public void Send(BinaryMessage message)
         {
             // Create bytes from message
@@ -119,10 +120,13 @@ namespace Moryx.Communication.Serial
             _serialPort.Write(bytes, 0, bytes.Length);
         }
 
-        ///
-        public Task SendAsync(BinaryMessage message)
+        /// <inheritdoc />
+        public async Task SendAsync(BinaryMessage message)
         {
-            throw new NotSupportedException();
+            // Create bytes from message
+            var bytes = _validator.Interpreter.SerializeMessage(message);
+            await _serialPort.BaseStream.WriteAsync(bytes, 0, bytes.Length);
+            await _serialPort.BaseStream.FlushAsync();
         }
 
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs serialDataReceivedEventArgs)
@@ -140,8 +144,11 @@ namespace Moryx.Communication.Serial
             Received?.Invoke(this, binaryMessage);
         }
 
-        ///
+        /// <inheritdoc />
         public event EventHandler<BinaryMessage> Received;
+
+        /// <inheritdoc />
+        public event EventHandler<BinaryConnectionState> NotifyConnectionState;
     }
 
 }

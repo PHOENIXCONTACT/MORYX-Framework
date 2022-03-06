@@ -22,7 +22,7 @@ env:
 
 jobs:
   Build:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
 
@@ -44,7 +44,7 @@ jobs:
 
   UnitTests:
     needs: [Build]
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
 
@@ -66,7 +66,7 @@ jobs:
 
   IntegrationTests:
     needs: [Build]
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
 
@@ -88,7 +88,7 @@ jobs:
 
   Codecov:
     needs: [UnitTests, IntegrationTests]
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Download test results
         uses: actions/download-artifact@v2
@@ -103,7 +103,7 @@ jobs:
 
   Documentation:
     needs: [Build]
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
 
@@ -121,7 +121,7 @@ jobs:
   Publish:
     needs: [Build, UnitTests, IntegrationTests]
     if: ${{ github.event_name == 'push' }}
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
       
