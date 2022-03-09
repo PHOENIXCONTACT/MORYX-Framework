@@ -701,7 +701,7 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<ProductInstance> LoadInstances(ProductType productType)
         {
-            return LoadInstances(productType.Id);
+            return LoadInstances<ProductInstance>(pi => pi.Type == productType);
         }
 
         public IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)

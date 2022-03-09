@@ -26,7 +26,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// </summary>
         public static TResult Read<TResult>(this IResourceManagement facade, IResource proxy, Func<Resource, TResult> accessor)
         {
-            if(facade is IResourceModification modification)
+            if (facade is IResourceModification modification)
                 return modification.Read(proxy.Id, accessor);
 
             throw new NotSupportedException("Instance of resource management does not support resource modification");
@@ -42,8 +42,8 @@ namespace Moryx.AbstractionLayer.Resources
         {
             if (facade is IResourceModification modification)
                 modification.Modify(resourceId, modifier);
-
-            throw new NotSupportedException("Instance of resource management does not support resource modification");
+            else
+                throw new NotSupportedException("Instance of resource management does not support resource modification");
         }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace Moryx.AbstractionLayer.Resources
         {
             if (facade is IResourceModification modification)
                 modification.Modify(proxy.Id, modifier);
-
-            throw new NotSupportedException("Instance of resource management does not support resource modification");
+            else
+                throw new NotSupportedException("Instance of resource management does not support resource modification");
         }
 
         /// <summary>
@@ -71,6 +71,20 @@ namespace Moryx.AbstractionLayer.Resources
         {
             if (facade is IResourceModification modification)
                 modification.Modify(proxy.Id, resource => modifier(resource, context));
+            else
+                throw new NotSupportedException("Instance of resource management does not support resource modification");
+        }
+
+        /// <summary>
+        /// Create a resource with typed initializer 
+        /// </summary>
+        /// <param name="facade"></param>
+        /// <param name="initializer"></param>
+        public static long Create<TResource>(this IResourceManagement facade, Action<TResource> initializer)
+            where TResource : Resource
+        {
+            if (facade is IResourceModification modification)
+                return modification.Create(typeof(TResource), r => initializer((TResource)r));
 
             throw new NotSupportedException("Instance of resource management does not support resource modification");
         }

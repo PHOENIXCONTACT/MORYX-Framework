@@ -875,7 +875,8 @@ namespace Moryx.Products.IntegrationTests
             var byIdentity = _storage.LoadInstances<IIdentifiableObject>(w => identity.Equals(w.Identity));
             var byDateTime = _storage.LoadInstances<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
             var byBool = _storage.LoadInstances<WatchInstance>(i => i.TimeSet);
-            var byType = _storage.LoadInstances<WatchInstance>(i => i.Type == watch);
+            var byType = _storage.LoadInstances(watch);
+            var byType1 = _storage.LoadInstances<WatchInstance>(i => i.Type == watch);
             var byType2 = _storage.LoadInstances<WatchInstance>(i => i.Type.Equals(watch));
             var byType3 = _storage.LoadInstances<WatchInstance>(i => watch.Equals(i.Type));
             var byType4 = _storage.LoadInstances<WatchInstance>(i => i.Type.Name == "TestWatch");
@@ -896,6 +897,7 @@ namespace Moryx.Products.IntegrationTests
             Assert.LessOrEqual(1, byDateTime.Count);
             Assert.LessOrEqual(1, byBool.Count);
             Assert.LessOrEqual(1, byType.Count);
+            Assert.LessOrEqual(1, byType1.Count);
             Assert.LessOrEqual(1, byType2.Count);
             Assert.LessOrEqual(1, byType3.Count);
             Assert.LessOrEqual(1, byType4.Count);
