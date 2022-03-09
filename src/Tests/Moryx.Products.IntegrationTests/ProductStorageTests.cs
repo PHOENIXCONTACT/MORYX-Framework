@@ -103,12 +103,12 @@ namespace Moryx.Products.IntegrationTests
                     },
                     new GenericTypeConfiguration
                     {
-                        TargetType = nameof(DisplayWatchfaceType),
+                        TargetType = nameof(DisplayWatchFaceType),
                         PropertyConfigs = new List<PropertyMapperConfig>
                         {
                             new PropertyMapperConfig
                             {
-                                PropertyName = nameof(DisplayWatchfaceType.Resolution),
+                                PropertyName = nameof(DisplayWatchFaceType.Resolution),
                                 Column = nameof(IGenericColumns.Integer1),
                                 PluginName = nameof(IntegerColumnMapper)
                             }
@@ -666,7 +666,7 @@ namespace Moryx.Products.IntegrationTests
         public void GetProductByExpression()
         {
             // Arrange
-            var watchface = new DisplayWatchfaceType
+            var watchface = new DisplayWatchFaceType
             {
                 Name = "ExpressionWatchface",
                 Identity = new ProductIdentity("4742", 0),
@@ -675,11 +675,11 @@ namespace Moryx.Products.IntegrationTests
             _storage.SaveType(watchface);
 
             // Act
-            var loaded = _storage.LoadTypes<DisplayWatchfaceType>(wf => wf.Resolution == 180);
-            var loaded2 = _storage.LoadTypes<DisplayWatchfaceType>(wf => wf.Resolution > 150);
+            var loaded = _storage.LoadTypes<DisplayWatchFaceType>(wf => wf.Resolution == 180);
+            var loaded2 = _storage.LoadTypes<DisplayWatchFaceType>(wf => wf.Resolution > 150);
             var loaded3 = _storage.LoadTypes(new ProductQuery
             {
-                Type = nameof(DisplayWatchfaceType),
+                Type = nameof(DisplayWatchFaceType),
                 PropertyFilters = new List<PropertyFilter>
                 {
                     new()
@@ -687,7 +687,7 @@ namespace Moryx.Products.IntegrationTests
                         Operator = PropertyFilterOperator.Equals,
                         Entry = new Entry
                         {
-                            Identifier = nameof(DisplayWatchfaceType.Resolution),
+                            Identifier = nameof(DisplayWatchFaceType.Resolution),
                             Value = new EntryValue { Current = "180" }
                         }
                     }

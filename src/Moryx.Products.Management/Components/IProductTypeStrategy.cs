@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
 using Moryx.Products.Model;

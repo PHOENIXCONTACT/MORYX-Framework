@@ -390,7 +390,7 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                var repo = uow.GetRepository<IProductTypeEntityRepository>();
+                var repo = uow.GetRepository<IProductTypeRepository>();
                 var matchingStrategies = TypeStrategies.Values
                     .Where(i => typeof(TType).IsAssignableFrom(i.TargetType));
 
