@@ -61,7 +61,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <inheritdoc />
         void IInitializable.Initialize()
         {
-            var loggerName = Name.Replace(".", "_"); // replace . with _ because of logger child structure
+            var loggerName = Name?.Replace(".", "_"); // replace . with _ because of logger child structure
             Logger = Logger?.GetChild(loggerName, GetType());
             OnInitialize();
         }

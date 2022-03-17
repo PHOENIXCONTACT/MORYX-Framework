@@ -62,12 +62,7 @@ namespace Moryx.Products.Management.Modification
                 {
                     ProductTypes = ReflectionTool
                         .GetPublicClasses<ProductType>(new IsConfiguredFilter(Config.TypeStrategies).IsConfigured)
-                        .Select(pt => new ProductDefinitionModel
-                        {
-                            Name = pt.Name,
-                            DisplayName = pt.GetDisplayName() ?? pt.Name,
-                            BaseDefinition = pt.BaseType?.Name
-                        }).ToArray(),
+                        .Select(Converter.ConvertProductType).ToArray(),
                     RecipeTypes = ReflectionTool
                         .GetPublicClasses<IProductRecipe>(new IsConfiguredFilter(Config.RecipeStrategies).IsConfigured)
                         .Select(rt => new RecipeDefinitionModel

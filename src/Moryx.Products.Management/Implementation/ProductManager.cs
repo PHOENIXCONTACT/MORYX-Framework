@@ -64,6 +64,14 @@ namespace Moryx.Products.Management
             return Storage.LoadTypes(query);
         }
 
+        public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
+        {
+            if (Storage is IProductSearchStorage searchStorage)
+                return searchStorage.LoadTypes(selector);
+
+            throw new NotSupportedException("Current storage does not support type search");
+        }
+
         public IProductType LoadType(long id)
         {
             return Storage.LoadType(id);

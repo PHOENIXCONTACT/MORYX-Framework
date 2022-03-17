@@ -30,7 +30,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </returns>
         public override string ToString()
         {
-            return Identity.ToString();
+            return Identity?.ToString();
         }
 
         /// <summary>

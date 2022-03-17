@@ -52,15 +52,28 @@ namespace Moryx.Products.Management.Modification
         public Entry Properties { get; set; }
 
         /// <summary>
-        /// The id of the current referenced workplan
+        /// The id of the currently referenced workplan
         /// </summary>
+        [Obsolete]
         [DataMember]
         public long WorkplanId { get; set; }
+
+        /// <summary>
+        /// A model of the currently referenced workplan
+        /// </summary>
+        [DataMember]
+        public WorkplanModel WorkplanModel { get; set; }
 
         /// <summary>
         /// Classification of the recipe
         /// </summary>
         [DataMember]
         public RecipeClassificationModel Classification { get; set; }
+
+        /// <summary>
+        /// Whether this Recipe is a clone or not
+        /// </summary>
+        [DataMember]
+        public bool IsClone{ get; set; }
     }
 }

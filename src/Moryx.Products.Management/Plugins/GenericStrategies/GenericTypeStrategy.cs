@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
@@ -20,7 +21,7 @@ namespace Moryx.Products.Management
     [ExpectedConfig(typeof(GenericTypeConfiguration))]
     [StrategyConfiguration(typeof(IProductType), DerivedTypes = true)]
     [Plugin(LifeCycle.Transient, typeof(IProductTypeStrategy), Name = nameof(GenericTypeStrategy))]
-    internal class GenericTypeStrategy : TypeStrategyBase<GenericTypeConfiguration>
+    internal class GenericTypeStrategy : TypeStrategyBase<GenericTypeConfiguration>, IProductTypeSearch
     {
         /// <summary>
         /// Injected entity mapper
@@ -35,6 +36,11 @@ namespace Moryx.Products.Management
             base.Initialize(config);
             
             EntityMapper.Initialize(TargetType, Config);
+        }
+
+        public Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector)
+        {
+            return EntityMapper.TransformSelector(selector);
         }
 
         public override bool HasChanged(IProductType current, IGenericColumns dbProperties)

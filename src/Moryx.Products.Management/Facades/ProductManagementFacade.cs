@@ -49,6 +49,12 @@ namespace Moryx.Products.Management
             return ProductManager.LoadTypes(query);
         }
 
+        public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
+        {
+            ValidateHealthState();
+            return ProductManager.LoadTypes(selector);
+        }
+
         public IProductType LoadType(long id)
         {
             ValidateHealthState();

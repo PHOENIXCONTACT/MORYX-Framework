@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -8,6 +8,7 @@ namespace Moryx.Notifications
     /// <summary>
     /// Additional notification interface to manipulate the notification properties in managing plugins
     /// </summary>
+    [Obsolete]
     public interface IManagedNotification : INotification
     {
         /// <summary>
@@ -72,6 +73,7 @@ namespace Moryx.Notifications
     /// <summary>
     /// Message for a consumer
     /// </summary>
+    [Obsolete]
     public interface INotification
     {
         /// <summary>
