@@ -11,7 +11,7 @@ namespace Moryx.Notifications
     public class Notification : IManagedNotification
     {
         /// <inheritdoc />
-        public Guid Identifier { get; private set; }
+        public virtual Guid Identifier { get; private set; }
 
         /// <inheritdoc />
         public Severity Severity { get; set; }
@@ -57,7 +57,7 @@ namespace Moryx.Notifications
                 if (_acknowledger is null)
                     _acknowledger = value;
                 else
-                    throw new InvalidOperationException("Tried to update time acknowledger.");
+                    throw new InvalidOperationException("Tried to update acknowledger.");
             }
         }
 
@@ -81,6 +81,7 @@ namespace Moryx.Notifications
         /// </summary>
         public Notification()
         {
+            Identifier = Guid.NewGuid();
         }
 
         /// <summary>
