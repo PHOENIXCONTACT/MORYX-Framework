@@ -65,22 +65,21 @@ namespace Moryx.Runtime.Kernel
 
         private void StartModule(IServerModule module)
         {
+            // Check for any failed dependencies
+            var hasfailedDependecies = _dependencyManager.GetDependencyBranch(module).Dependencies
+                                     .Any(item => item.RepresentedModule.State == ServerModuleState.Failure);
+            // Don't try to start modules which initialization has been failed or for which dependency initializations have failed
+            if (module.State == ServerModuleState.Failure || hasfailedDependecies)
+                return;
+
             // Now we check for any not running dependencies and start them
             var awaitingDependecies = _dependencyManager.GetDependencyBranch(module).Dependencies
                                      .Where(item => !item.RepresentedModule.State.HasFlag(ServerModuleState.Running))
                                      .Select(item => item.RepresentedModule).ToArray();
             if (awaitingDependecies.Any())
-            {
                 EnqueServiceAndStartDependencies(awaitingDependecies, module);
-            }
             else
-            {
-                // Don't try to start modules which initialization has been failed
-                if (module.State != ServerModuleState.Failure)
-                {
-                    ThreadPool.QueueUserWorkItem(ExecuteModuleStart, module);
-                }
-            }  
+                ThreadPool.QueueUserWorkItem(ExecuteModuleStart, module);
         }
 
         private void ExecuteModuleStart(object moduleObj)
