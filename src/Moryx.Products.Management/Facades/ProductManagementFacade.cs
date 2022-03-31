@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.Products.Management.Modification;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 using Moryx.Workflows;
 
 namespace Moryx.Products.Management
 {
-    internal class ProductManagementFacade : IFacadeControl, IWorkplansVersions, IProductManagementTypeSearch
+    internal class ProductManagementFacade : IFacadeControl, IWorkplansVersions, IProductManagementModification
     {
         // Use this delegate in every call for clean health state management
         public Action ValidateHealthState { get; set; }
@@ -27,12 +29,15 @@ namespace Moryx.Products.Management
 
         public IWorkplansVersions Workplans { get; set; }
 
+        public ModuleConfig Config { get; set; }
+
         #endregion
 
         public void Activate()
         {
             ProductManager.TypeChanged += OnTypeChanged;
             RecipeManagement.RecipeChanged += OnRecipeChanged;
+
         }
 
         public void Deactivate()
@@ -42,6 +47,42 @@ namespace Moryx.Products.Management
         }
 
         public string Name => ModuleController.ModuleName;
+
+        public IDictionary<string, object> Importers
+        {
+            get
+            {
+                ValidateHealthState();
+                return ProductManager.Importers.ToDictionary(i => i.Name, i => i.Parameters);
+            }
+        }
+
+        public IReadOnlyList<Type> ProductTypes
+        {
+            get
+            {
+                ValidateHealthState();
+                return ReflectionTool.GetPublicClasses<ProductType>(new IsConfiguredFilter(Config.TypeStrategies).IsConfigured).ToArray();
+            }
+        }
+
+        public IReadOnlyList<Type> RecipeTypes
+        {
+            get
+            {
+                ValidateHealthState();
+                return ReflectionTool.GetPublicClasses<IRecipe>(new IsConfiguredFilter(Config.RecipeStrategies).IsConfigured).ToArray();
+            }
+        }
+
+        public IReadOnlyList<Type> ImporterTypes
+        {
+            get
+            {
+                ValidateHealthState();
+                return ProductManager.Importers.Select(i => i.GetType()).ToArray();
+            }
+        }
 
         public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
         {
@@ -86,16 +127,6 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
             return ProductManager.SaveType(modifiedInstance);
-        }
-
-
-        public IDictionary<string, object> Importers
-        {
-            get
-            {
-                ValidateHealthState();
-                return ProductManager.Importers.ToDictionary(i => i.Name, i => i.Parameters);
-            }
         }
 
         public Task<ProductImportResult> Import(string importerName, object parameters)
@@ -255,6 +286,26 @@ namespace Moryx.Products.Management
         {
             recipe.Origin = this;
             return recipe;
+        }
+
+        public bool DeleteProduct(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        private class IsConfiguredFilter
+        {
+            private readonly IReadOnlyList<IProductStrategyConfiguation> _configurations;
+
+            public IsConfiguredFilter(IReadOnlyList<IProductStrategyConfiguation> configurations)
+            {
+                _configurations = configurations;
+            }
+
+            public bool IsConfigured(Type candidate)
+            {
+                return _configurations.Any(config => config.TargetType == candidate.Name);
+            }
         }
     }
 }
