@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.Products.Management.Modification;
 using Moryx.Runtime.Modules;
-using Moryx.Tools;
 using Moryx.Workflows;
 
 namespace Moryx.Products.Management
@@ -24,6 +22,8 @@ namespace Moryx.Products.Management
         #region Dependencies
 
         public IProductManager ProductManager { get; set; }
+
+        public IConfiguredTypesProvider TypesProvider { get; set; }
 
         public IRecipeManagement RecipeManagement { get; set; }
 
@@ -62,7 +62,7 @@ namespace Moryx.Products.Management
             get
             {
                 ValidateHealthState();
-                return ReflectionTool.GetPublicClasses<ProductType>(new IsConfiguredFilter(Config.TypeStrategies).IsConfigured).ToArray();
+                return TypesProvider.ProductTypes;
             }
         }
 
@@ -71,16 +71,7 @@ namespace Moryx.Products.Management
             get
             {
                 ValidateHealthState();
-                return ReflectionTool.GetPublicClasses<IRecipe>(new IsConfiguredFilter(Config.RecipeStrategies).IsConfigured).ToArray();
-            }
-        }
-
-        public IReadOnlyList<Type> ImporterTypes
-        {
-            get
-            {
-                ValidateHealthState();
-                return ProductManager.Importers.Select(i => i.GetType()).ToArray();
+                return TypesProvider.RecipeTypes;
             }
         }
 
@@ -290,22 +281,8 @@ namespace Moryx.Products.Management
 
         public bool DeleteProduct(long id)
         {
-            throw new NotImplementedException();
-        }
-
-        private class IsConfiguredFilter
-        {
-            private readonly IReadOnlyList<IProductStrategyConfiguation> _configurations;
-
-            public IsConfiguredFilter(IReadOnlyList<IProductStrategyConfiguation> configurations)
-            {
-                _configurations = configurations;
-            }
-
-            public bool IsConfigured(Type candidate)
-            {
-                return _configurations.Any(config => config.TargetType == candidate.Name);
-            }
+            ValidateHealthState();
+            return ProductManager.DeleteType(id);
         }
     }
 }

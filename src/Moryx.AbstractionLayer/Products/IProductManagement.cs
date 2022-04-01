@@ -50,7 +50,6 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// All importers and their parameters currently configured in the machine
         /// </summary>
-        [Obsolete("Use ImporterTypes instead")]
         IDictionary<string, object> Importers { get; }
 
         /// <summary>
@@ -152,11 +151,6 @@ namespace Moryx.AbstractionLayer.Products
         /// List of available recipes 
         /// </summary>
         IReadOnlyList<Type> RecipeTypes { get; }
-
-        /// <summary>
-        /// All importers and their parameters currently configured in the machine
-        /// </summary>
-        IReadOnlyList<Type> ImporterTypes { get; }
 
         /// <summary>
         /// Delete a product by its id
