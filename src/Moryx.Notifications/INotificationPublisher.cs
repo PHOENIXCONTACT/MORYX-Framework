@@ -7,8 +7,9 @@ namespace Moryx.Notifications
 {
     /// <summary>
     /// Notification publisher facade
+    /// For extended functions use <see cref="INotificationPublisherExtended"/> but the extended methods will be migrated in the next major into this API
     /// </summary>
-    [Obsolete]
+    // TODO: Migrate INotificationPublisherExtended
     public interface INotificationPublisher
     {
         /// <summary>
