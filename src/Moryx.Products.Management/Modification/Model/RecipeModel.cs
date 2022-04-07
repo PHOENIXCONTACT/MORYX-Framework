@@ -54,7 +54,7 @@ namespace Moryx.Products.Management.Modification
         /// <summary>
         /// The id of the currently referenced workplan
         /// </summary>
-        [Obsolete]
+        [Obsolete("Use WorkplanModel instead")]
         [DataMember]
         public long WorkplanId { get; set; }
 
