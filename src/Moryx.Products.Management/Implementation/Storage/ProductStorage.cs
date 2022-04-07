@@ -25,8 +25,18 @@ namespace Moryx.Products.Management
     /// Also has the possibility to store a version to each save.
     /// </summary>
     [Plugin(LifeCycle.Singleton, typeof(IProductStorage), typeof(IProductSearchStorage))]
-    internal class ProductStorage : IProductSearchStorage
+    internal class ProductStorage : IProductSearchStorage, IConfiguredTypesProvider
     {
+        /// <summary>
+        /// Recipe types
+        /// </summary>
+        public IReadOnlyList<Type> RecipeTypes { get => RecipeStrategies.Select(rs => rs.Value.TargetType).ToList(); }
+
+        /// <summary>
+        /// Product types
+        /// </summary>
+        public IReadOnlyList<Type> ProductTypes { get => TypeStrategies.Select(ts => ts.Value.TargetType).ToList(); }
+
         /// <summary>
         /// Optimized constructor delegate for the different product types
         /// </summary>
@@ -123,7 +133,6 @@ namespace Moryx.Products.Management
             {
                 var strategy = StrategyFactory.CreateRecipeStrategy(config);
                 RecipeStrategies[config.TargetType] = strategy;
-
                 RecipeConstructors[config.TargetType] = ReflectionTool.ConstructorDelegate<IProductRecipe>(strategy.TargetType);
             }
         }

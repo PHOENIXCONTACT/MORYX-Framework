@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 
 namespace Moryx.AbstractionLayer.Products
 {
+    // TODO: AL6 Remove extensions
     /// <summary>
     /// Extensions for the <see cref="IProductManagement"/> facade
     /// </summary>
@@ -21,6 +22,17 @@ namespace Moryx.AbstractionLayer.Products
                 return typeSearch.LoadTypes(selector);
 
             throw new NotSupportedException("Instance of product management does not support expression type search");
+        }
+
+        /// <summary>
+        /// Bridge extension for DeleteProduct using an id
+        /// </summary>
+        public static bool DeleteProduct(this IProductManagement facade, long id)
+        {
+            if (facade is IProductManagementModification modification)
+                return modification.DeleteProduct(id);
+
+            throw new NotSupportedException("Instance of product management does not support expression delete product");
         }
     }
 }

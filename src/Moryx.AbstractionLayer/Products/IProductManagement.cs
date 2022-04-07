@@ -135,4 +135,26 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
     }
+
+    /// <summary>
+    /// Additional interface for type storage to search for product types by expression
+    /// TODO: Remove in AL 6
+    /// </summary>
+    public interface IProductManagementModification : IProductManagementTypeSearch
+    {
+        /// <summary>
+        /// List of available product types
+        /// </summary>
+        IReadOnlyList<Type> ProductTypes { get; }
+
+        /// <summary>
+        /// List of available recipes 
+        /// </summary>
+        IReadOnlyList<Type> RecipeTypes { get; }
+
+        /// <summary>
+        /// Delete a product by its id
+        /// </summary>
+        bool DeleteProduct(long id);
+    }
 }
