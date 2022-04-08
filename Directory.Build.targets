@@ -2,7 +2,7 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxCoreVersion>3.2.0</MoryxCoreVersion>
+    <MoryxCoreVersion>3.4.0</MoryxCoreVersion>
     <MoryxClientFrameworkVersion>3.2.0</MoryxClientFrameworkVersion>
     <MoryxMaintenanceWebVersion>3.1.1</MoryxMaintenanceWebVersion>
   </PropertyGroup>
@@ -35,6 +35,7 @@
     <PackageReference Update="Moryx.Runtime.Maintenance" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime.Kestrel" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Asp.Extensions" Version="$(MoryxCoreVersion)" />
 
     <!--ClientFramework dependencies-->
     <PackageReference Update="Moryx.Controls" Version="$(MoryxClientFrameworkVersion)" />

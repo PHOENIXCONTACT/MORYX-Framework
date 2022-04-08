@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<Description>StartProject of the AbstractionLayer. This is for debugging only.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+		<PackageReference Include="Moryx.Runtime.Kernel" />
+		<PackageReference Include="Moryx.Asp.Extensions" />
+
+		<PackageReference Include="Moryx.Runtime.Kernel" />
+		<PackageReference Include="Moryx.Runtime.Kestrel" Version="3.4.0" />
+		<PackageReference Include="Moryx.Runtime.Maintenance" />
+		<PackageReference Include="Moryx.Runtime.Maintenance.Web" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Moryx.AbstractionLayer.Products.Endpoints\Moryx.AbstractionLayer.Products.Endpoints.csproj" />
+	  <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
+	</ItemGroup>
+
+</Project>
