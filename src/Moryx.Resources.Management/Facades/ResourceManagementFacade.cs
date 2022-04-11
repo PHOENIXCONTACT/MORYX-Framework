@@ -121,7 +121,7 @@ namespace Moryx.Resources.Management
         {
             ValidateHealthState();
 
-            var resource = TypeController.Create(resourceType.ResourceType());
+            var resource = ResourceGraph.Instantiate(resourceType.ResourceType());
             initializer(resource);
             ResourceGraph.Save(resource);
             return resource.Id;

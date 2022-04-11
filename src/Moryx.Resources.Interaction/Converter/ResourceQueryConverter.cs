@@ -34,6 +34,17 @@ namespace Moryx.Resources.Interaction.Converter
             return models;
         }
 
+        /// <summary>
+        /// Convert resource match of a query according to the queries reference configuration
+        /// </summary>
+        public ResourceModel QueryConversion(Resource match)
+        {
+            var model = ToModel(match, true);
+            model.References = Query.IncludedReferences?.Length > 0
+                ? FilteredReferences(match) : new ResourceReferenceModel[0];
+            return model;
+        }
+
         private ResourceReferenceModel[] FilteredReferences(Resource current)
         {
             // Get references of the instance and filter them
