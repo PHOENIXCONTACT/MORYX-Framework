@@ -9,7 +9,7 @@ using Moryx.Serialization;
 namespace Moryx.Products.Management.Modification
 {
     [DataContract]
-    internal class ProductModel
+    public class ProductModel
     {
         [DataMember]
         public long Id { get; set; }

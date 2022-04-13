@@ -11,8 +11,7 @@
 		<PackageReference Include="Moryx.Runtime.Kernel" />
 		<PackageReference Include="Moryx.Asp.Extensions" />
 
-		<PackageReference Include="Moryx.Runtime.Kernel" />
-		<PackageReference Include="Moryx.Runtime.Kestrel" Version="3.4.0" />
+		<PackageReference Include="Moryx.Runtime.Kestrel" />
 		<PackageReference Include="Moryx.Runtime.Maintenance" />
 		<PackageReference Include="Moryx.Runtime.Maintenance.Web" />
 	</ItemGroup>

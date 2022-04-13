@@ -24,7 +24,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
 
         /// <summary>
-        /// Hosts the MORYX Notifications webpage
+        /// Registers the SignalR hub endpoint
         /// </summary>
         public static void UseMoryxProductManagementHub(this IApplicationBuilder app)
         {

@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.Products.Management.Modification;
+using Moryx.Tools;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Moryx.AbstractionLayer.Products.Endpoints.Model;
+using Moryx.Serialization;
+using System.Net;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
@@ -13,232 +18,315 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
     [ApiController]
     [Route("api/moryx/products/")]
 
-    public class ProductManagementController: ControllerBase
+    public class ProductManagementController : ControllerBase
     {
         private readonly IProductManagementModification _productManagement;
+        private readonly ProductConverter _productConverter;
         public ProductManagementController(IProductManagementModification productManagement)
-            => _productManagement = productManagement;
-
-        #region Get-Requests
+        {
+            _productManagement = productManagement;
+            _productConverter = new ProductConverter(_productManagement);
+        }
+            
         [HttpGet]
-        [Route("[action]")]
+        [Route("name")]
         public string GetName()
         {
             return _productManagement.Name;
         }
 
+        #region importers
         [HttpGet]
-        [Route("[action]")]
-        public IReadOnlyList<IProductType> GetTypes (ProductQuery query)
-        {         
-            return _productManagement.LoadTypes(query);
+        [Route("product-customization")]
+        public ProductCustomization GetProductCustomization()
+        {
+            return new ProductCustomization
+            {
+                ProductTypes = GetProductTypes(),
+                RecipeTypes = GetRecipeTypes(),
+                Importers = _productManagement.Importers.Select(i => new ProductImporter
+                {
+                    Name = i.Key,
+                    Parameters = EntryConvert.EncodeObject(i.Value)
+                }).ToArray()
+            };
+        }
+   
+        [HttpPost]
+        [Route("importers/{importerName}")]
+        public ProductModel[] Import(string importerName, object parameters)
+        {
+            var importedTypes = _productManagement.Import(WebUtility.HtmlEncode(importerName), parameters).Result.ImportedTypes;
+            var modelList = new List<ProductModel>();
+            foreach (var t in importedTypes)
+                modelList.Add(_productConverter.ConvertProduct(t,false));
+            return modelList.ToArray();
+        }      
+
+        #endregion
+        #region product type          
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("producttypes")]
+        public ActionResult<long> SaveType(ProductModel newTypeModel)
+        {
+            if (newTypeModel == null)
+                return BadRequest($"Modified type was null");
+            var type = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == newTypeModel.Type)
+                   .FirstOrDefault();
+            if (type == null)
+                return NotFound();
+            var productType = (ProductType)Activator.CreateInstance(type);
+            var newType = _productConverter.ConvertProductBack(newTypeModel, productType);
+            return _productManagement.SaveType(newType);
+        }
+
+        [HttpPost]
+        [Route("producttypes/query")]
+        public ProductModel[] GetTypes(ProductQuery query)
+        {
+            var productTypes = _productManagement.LoadTypes(query);
+            var productModels = new List<ProductModel>();           
+            foreach (var t in productTypes)
+            {
+                productModels.Add(_productConverter.ConvertProduct(t, false));
+            }
+            return productModels.ToArray();
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("[action]")]
-        public ActionResult<IProductType> GetType(long id)
+        [Route("producttypes/{id}")]
+        public ActionResult<ProductModel> GetType(long id)
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
             var productType = _productManagement.LoadType(id);
-            if(productType == null)
+            if (productType == null)
                 return NotFound();
-            return Ok(productType);
+            return _productConverter.ConvertProduct(productType, false);
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("producttypes/{id}")]
+        public ActionResult<bool> DeleteType(long id)
+        {
+            var result = _productManagement.DeleteProduct(id);
+            if (!result)
+                return NotFound();
+            return result;
+        }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("producttypes/{id}")]
+        public ActionResult<long> UpdateType(long id, ProductModel modifiedType)
+        {
+            if (modifiedType == null)
+                return BadRequest($"Modified product type was null");
+            var type = _productManagement.LoadType(id);
+            if (type == null)
+                return BadRequest($"No product type with id {modifiedType.Id} was found");
+            type = _productConverter.ConvertProductBack(modifiedType, (ProductType) type);
+            return _productManagement.SaveType(type);
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("[action]")]
-        public ActionResult<IProductType> GetType(ProductIdentity identity)
+        [Route("producttypes/{identifier}/{revision}")]
+        public ActionResult<ProductModel> GetType(string identifier, short revision)
         {
-            if (identity == null)
+
+            if (identifier == null)
                 return BadRequest($"Identity was null");
+            var identity = new ProductIdentity(WebUtility.HtmlEncode(identifier), revision);
+            var productType = _productManagement.LoadType(identity);
+            if (productType == null)
+                return NotFound();           
+            return _productConverter.ConvertProduct(productType, false);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("producttypes/{newIdentifier}/{newRevision}")]
+        public ActionResult<ProductModel> Duplicate(string newIdentifier, short newRevision, ProductModel template)
+        {
+            if (template == null)
+                return BadRequest($"Template was null");
+            var identity = new ProductIdentity(WebUtility.HtmlEncode(newIdentifier), newRevision);
             var productType = _productManagement.LoadType(identity);
             if (productType == null)
                 return NotFound();
-            return Ok(productType);
-        }
-
-        [HttpGet]
-        [Route("[action]")]
-        public IDictionary<string, object> GetImporters()
-        {
-            return _productManagement.Importers;
+            var newProductType = _productManagement.Duplicate(productType, identity);
+            if (newProductType == null)
+                return BadRequest($"Error while duplicating");
+            return _productConverter.ConvertProduct(newProductType, false);
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("[action]")]
-        public ActionResult<IReadOnlyList<IProductRecipe>> GetRecipes(IProductType productType, 
-            RecipeClassification classification)
+        [Route("producttypes/{identifier}/{revision}/recipes/{classification}")]
+        public ActionResult<RecipeModel[]> GetRecipes(string identifier, short revision,
+            int classification)
         {
+            var identity = new ProductIdentity(WebUtility.HtmlEncode(identifier), revision);
+            var productType = _productManagement.LoadType(identity);
             if (productType == null)
                 return BadRequest($"ProductType is null");
-            return Ok(_productManagement.GetRecipes(productType, classification));
+            var recipes = _productManagement.GetRecipes(productType, (RecipeClassification)classification);
+            var recipeModels = new List<RecipeModel>();
+            foreach (var recipe in recipes)
+                recipeModels.Add(ProductConverter.ConvertRecipe(recipe));
+            return recipeModels.ToArray();
         }
 
+        [HttpGet]
+        [Route("producttypes/types")]
+        public ProductDefinitionModel[] GetProductTypes()
+        {
+            var types = _productManagement.ProductTypes;
+            var typeModels = new List<ProductDefinitionModel>();
+            foreach (var type in types)
+                typeModels.Add(_productConverter.ConvertProductType(type));
+            return typeModels.ToArray();
+        }
+        #endregion
+
+        #region product instances
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("[action]")]
-        public ActionResult<ProductInstance> GetInstance (long id)
+        [Route("instances/{id}")]
+        public ActionResult<ProductInstanceModel> GetInstance(long id)
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
             var productInstance = _productManagement.GetInstance(id);
             if (productInstance == null)
                 return NotFound();
-            return Ok(productInstance);
+            return _productConverter.ConvertProductInstance(productInstance);
+        }
+       
+        [HttpGet]
+        [Route("instances")]
+        public ProductInstanceModel[] GetInstances([FromQuery] long[] ids)
+        {
+            var instances = _productManagement.GetInstances(ids);
+            var modelList = new List<ProductInstanceModel>();
+            foreach(var instance in instances)
+                modelList.Add(_productConverter.ConvertProductInstance(instance));
+            return modelList.ToArray();
         }
 
-        [HttpGet]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("[action]")]
-        public ActionResult<ProductInstance> GetInstance (IIdentity identity)
+        [Route("instances")]
+        public ActionResult<ProductInstanceModel> CreateInstance(string identifier, short revision, bool save)
         {
-            if (identity == null)
-                return BadRequest($"Identity was null");
-            var productInstance = _productManagement.GetInstance(identity);
-            if (productInstance == null)
+            var identity = new ProductIdentity(WebUtility.HtmlEncode(identifier), revision);
+            var productType = _productManagement.LoadType(identity);
+            if (productType == null)
+                return BadRequest($"Product type not found");
+            var instance = _productManagement.CreateInstance(productType, save);
+            return _productConverter.ConvertProductInstance(instance);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("instances")]
+        public ActionResult SaveInstance(ProductInstanceModel instanceModel)
+        {
+            if (instanceModel == null)
+                return BadRequest($"Instance model was empty");
+            var type = ReflectionTool.GetPublicClasses<IProductType>(t => t.Name == instanceModel.Type)
+                    .FirstOrDefault();
+            if (type == null)
                 return NotFound();
-            return Ok(productInstance);
-        }
+            var productType = (IProductType)Activator.CreateInstance(type);
+            var productInstance = _productConverter.ConvertProductInstanceBack(instanceModel, productType);
+           _productManagement.SaveInstance(productInstance);
+            return Ok();
+        }       
 
-        [HttpGet]
-        [Route("[action]")]
-        public IReadOnlyList<ProductInstance> GetInstances(long [] ids)
-        {
-            return _productManagement.GetInstances(ids);
-        }
-
+        #endregion
+        #region recipes
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("[action]")]
-        public ActionResult<IRecipe> GetRecipe(long id)
+        [Route("recipes/{id}")]
+        public ActionResult<RecipeModel> GetRecipe(long id)
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
             var recipe = _productManagement.LoadRecipe(id);
             if (recipe == null)
                 return NotFound();
-            return Ok(recipe);
+            return ProductConverter.ConvertRecipe(recipe);
         }
 
         [HttpGet]
-        [Route("[action]")]
-        public IReadOnlyList<Type> GetProductTypes()
+        [Route("recipes/types")]
+        public RecipeDefinitionModel[] GetRecipeTypes()
         {
-            return _productManagement.ProductTypes;
-        }
-
-        [HttpGet]
-        [Route("[action]")]
-        public IReadOnlyList<Type> GetRecipeTypes()
-        {
-            return _productManagement.RecipeTypes;
-        }
-        #endregion
-
-        #region Post-Requests
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("[action]")]
-        public ActionResult<IProductType> Duplicate(IProductType template, string newIdentity)
-        {
-            if (template == null)
-                return BadRequest($"Template was null");
-            if (newIdentity == null)
-                return BadRequest($"New Identity was null");
-            var identityArray = newIdentity.Split('-'); 
-            var identity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
-            return Ok(_productManagement.Duplicate(template, identity));
+            var recipeTypes = _productManagement.RecipeTypes;
+            var typeModels = new List<RecipeDefinitionModel>();
+            foreach(var recipeType in recipeTypes)
+                typeModels.Add(_productConverter.ConvertRecipeType(recipeType));
+            return typeModels.ToArray();
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("[action]")]
-        public ActionResult<long> SaveType(IProductType modifiedInstance)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("recipes")]
+        public ActionResult<long> SaveRecipe(RecipeModel recipe)
         {
-            if(modifiedInstance == null)
-                return BadRequest($"Modified instance was null");
-            return Ok(_productManagement.SaveType(modifiedInstance));
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        public ProductImportResult Import(string importerName, object parameters)
-        {
-            return _productManagement.Import(importerName, parameters).Result;
-        }
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("[action]")]
-        public ActionResult<long> SaveRecipe(IProductRecipe recipe)
-        {
-            if(recipe == null)
+            if (recipe == null)
                 return BadRequest($"Recipe was null");
-            return _productManagement.SaveRecipe(recipe);
+            var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipe.Type)
+                    .FirstOrDefault();
+            if (type == null)
+                return NotFound();
+            var productRecipe = (IProductRecipe)Activator.CreateInstance(type);
+            return _productManagement.SaveRecipe(_productConverter.ConvertRecipeBack(recipe, productRecipe, null));
         }
 
+        [HttpPut]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("[action]")]
-        public ActionResult<ProductInstance> CreateInstance(IProductType productType)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("recipes/{id}")]
+        public ActionResult<long> UpdateRecipe(long id, RecipeModel recipeModel)
         {
-            if (productType == null)
-                return BadRequest($"Product type was null");
-            return _productManagement.CreateInstance(productType);
+            if (recipeModel == null)
+                return BadRequest($"Recipe was null");
+            var recipe = _productManagement.LoadRecipe(id);
+            if (recipe == null)
+                return BadRequest($"Recipe with id {id} not found");
+            var productRecipe = recipe as IProductRecipe;
+            if (productRecipe == null)
+                return BadRequest($"Recipe with id {id} wasn't a IProductRecipe but a {nameof(recipe.GetType)}");
+            var productionRecipe = _productConverter.ConvertRecipeBack(recipeModel, productRecipe, null);
+            return _productManagement.SaveRecipe(productionRecipe);
         }
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("[action]")]
-        public ActionResult<ProductInstance> CreateInstance(IProductType productType, bool save)
-        {
-            if (productType == null)
-                return BadRequest($"Product type was null");
-            return _productManagement.CreateInstance(productType,save);
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        public void SaveInstance(ProductInstance productInstance)
-        {
-            _productManagement.SaveInstance(productInstance);
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        public void SaveInstances(ProductInstance[] productInstances)
-        {
-            _productManagement.SaveInstances(productInstances);
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        public ActionResult<bool> DeleteProduct(long id)
-        {
-            return _productManagement.DeleteProduct(id);
-        }
-
         #endregion
+
     }
 }

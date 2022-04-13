@@ -4,6 +4,21 @@
     <TargetFramework>net5.0</TargetFramework>
 	  <Description>Endpoints for the Product Facade</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\PartConnector.cs" Link="Model\PartConnector.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\PartModel.cs" Link="Model\PartModel.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\ProductCustomization.cs" Link="Model\ProductCustomization.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\ProductDefinitionModel.cs" Link="Model\ProductDefinitionModel.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\ProductFileModel.cs" Link="Model\ProductFileModel.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\ProductImporter.cs" Link="Model\ProductImporter.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\ProductModel.cs" Link="Model\ProductModel.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\RecipeClassificationModel.cs" Link="Model\RecipeClassificationModel.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\RecipeDefinitionModel.cs" Link="Model\RecipeDefinitionModel.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\RecipeModel.cs" Link="Model\RecipeModel.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\Model\WorkplanModel.cs" Link="Model\WorkplanModel.cs" />
+    <Compile Include="..\Moryx.Products.Management\Modification\PartialSerialization.cs" Link="Serialization\PartialSerialization.cs" />
+  </ItemGroup>
 	<ItemGroup>
 		
 
@@ -11,7 +26,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
-	  <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Serialization\" />
 	</ItemGroup>
 
 </Project>

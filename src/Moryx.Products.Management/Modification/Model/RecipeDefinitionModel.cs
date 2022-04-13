@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Moryx.Products.Management.Modification
 {
     [DataContract]
-    internal class RecipeDefinitionModel
+    public class RecipeDefinitionModel
     {
         [DataMember]
         public string Name { get; set; }

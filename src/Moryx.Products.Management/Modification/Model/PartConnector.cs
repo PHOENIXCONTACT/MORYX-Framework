@@ -7,7 +7,7 @@ using Moryx.Serialization;
 namespace Moryx.Products.Management.Modification
 {
     [DataContract]
-    internal class PartConnector
+    public class PartConnector
     {
         [DataMember]
         public string Name { get; set; }

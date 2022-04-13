@@ -17,7 +17,7 @@ namespace Moryx.Products.Management.Modification
     /// <summary>
     /// Specialized serialization that only considers properties of derived classes
     /// </summary>
-    internal class PartialSerialization<T> : PossibleValuesSerialization
+    public class PartialSerialization<T> : PossibleValuesSerialization
         where T : class
     {
         /// <summary>
