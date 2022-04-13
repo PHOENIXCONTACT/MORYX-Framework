@@ -71,10 +71,15 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
         
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
-        public void DeleteWorkplan(long workplanId)
+        public ActionResult DeleteWorkplan(long id)
         {
-            _workplansVersions.DeleteWorkplan(workplanId);
+            if (_workplansVersions.LoadWorkplan(id) == null)
+                return NotFound();
+            _workplansVersions.DeleteWorkplan(id);
+            return Ok();
         }
 
         [HttpPut]
