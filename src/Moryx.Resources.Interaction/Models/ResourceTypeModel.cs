@@ -10,7 +10,7 @@ namespace Moryx.Resources.Interaction
     /// Type item for the tree
     /// </summary>
     [DataContract]
-    internal class ResourceTypeModel
+    public class ResourceTypeModel
     {
         /// <summary>
         /// The name of the resource type.

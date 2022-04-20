@@ -9,7 +9,7 @@ namespace Moryx.Resources.Interaction
     /// <summary>
     /// Enum to classify the current value of the reference property
     /// </summary>
-    internal enum ReferenceValue
+    public enum ReferenceValue
     {
         /// <summary>
         /// Value of the reference property irrelevant to the filter
@@ -31,7 +31,7 @@ namespace Moryx.Resources.Interaction
     /// Filter criteria for required or requested references
     /// </summary>
     [DataContract]
-    internal class ReferenceFilter
+    public class ReferenceFilter
     {
         /// <summary>
         /// Name of the reference
