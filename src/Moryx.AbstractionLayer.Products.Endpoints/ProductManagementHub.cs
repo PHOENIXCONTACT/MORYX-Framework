@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Moryx.AbstractionLayer.Recipes;
+using Moryx.Products.Management.Modification;
 using System.Threading.Tasks;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
@@ -15,13 +15,13 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         /// </summary>
         /// <param name="recipe">Recipe, which was changed</param>
         /// <returns></returns>
-        Task RecipeChanged(IRecipe recipe);
+        Task RecipeChanged(RecipeModel recipe);
 
         /// <summary>
         /// Client is notified when <paramref name="type"/> was changed
         /// </summary>
         /// <param name="type">Product type, which was changed</param>
         /// <returns></returns>
-        Task TypeChanged(IProductType type);
+        Task TypeChanged(ProductModel type);
     }
 }

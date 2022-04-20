@@ -26,19 +26,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             _productManagement = productManagement;
             _productConverter = new ProductConverter(_productManagement);
-        }
-            
-        [HttpGet]
-        [Route("name")]
-        public string GetName()
-        {
-            return _productManagement.Name;
-        }
+        }           
 
         #region importers
         [HttpGet]
-        [Route("product-customization")]
-        public ProductCustomization GetProductCustomization()
+        [Route("configuration")]
+        public ActionResult<ProductCustomization> GetProductCustomization()
         {
             return new ProductCustomization
             {
@@ -51,12 +44,29 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 }).ToArray()
             };
         }
-   
+
+        private ProductDefinitionModel[] GetProductTypes()
+        {
+            var types = _productManagement.ProductTypes;
+            var typeModels = new List<ProductDefinitionModel>();
+            foreach (var type in types)
+                typeModels.Add(_productConverter.ConvertProductType(type));
+            return typeModels.ToArray();
+        }
+        private RecipeDefinitionModel[] GetRecipeTypes()
+        {
+            var recipeTypes = _productManagement.RecipeTypes;
+            var typeModels = new List<RecipeDefinitionModel>();
+            foreach (var recipeType in recipeTypes)
+                typeModels.Add(_productConverter.ConvertRecipeType(recipeType));
+            return typeModels.ToArray();
+        }
+
         [HttpPost]
         [Route("importers/{importerName}")]
-        public ProductModel[] Import(string importerName, object parameters)
+        public ActionResult<ProductModel[]> Import(string importerName, object parameters)
         {
-            var importedTypes = _productManagement.Import(WebUtility.HtmlEncode(importerName), parameters).Result.ImportedTypes;
+            var importedTypes = _productManagement.Import(importerName, parameters).Result.ImportedTypes;
             var modelList = new List<ProductModel>();
             foreach (var t in importedTypes)
                 modelList.Add(_productConverter.ConvertProduct(t,false));
@@ -68,7 +78,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("producttypes")]
+        [Route("types")]
         public ActionResult<long> SaveType(ProductModel newTypeModel)
         {
             if (newTypeModel == null)
@@ -82,9 +92,36 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return _productManagement.SaveType(newType);
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("types")]
+        public ActionResult<ProductModel[]> GetType(string identity = null)
+        {
+            if (identity == null)
+            {
+                var products = _productManagement.LoadTypes(new ProductQuery { Selector = Selector.Direct, ExcludeDerivedTypes = false })
+                   .ToList();
+                var productModels = new List<ProductModel>();
+                foreach (var p in products)
+                    productModels.Add(_productConverter.ConvertProduct(p, false));
+                return productModels.ToArray();
+            }
+                
+            var identityArray = WebUtility.HtmlEncode(identity).Split('-');
+            if(identityArray.Length != 2)
+                return BadRequest($"Identity has wrong format. Must be identifier-revision");
+            var productIdentity = new ProductIdentity(identityArray[0],Convert.ToInt16(identityArray[1]));
+            var productType = _productManagement.LoadType(productIdentity);
+            if (productType == null)
+                return NotFound();
+            return new ProductModel[] { _productConverter.ConvertProduct(productType, false) };
+        }
+
         [HttpPost]
-        [Route("producttypes/query")]
-        public ProductModel[] GetTypes(ProductQuery query)
+        [Route("types/query")]
+        public ActionResult<ProductModel[]> GetTypes(ProductQuery query)
         {
             var productTypes = _productManagement.LoadTypes(query);
             var productModels = new List<ProductModel>();           
@@ -99,7 +136,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("producttypes/{id}")]
+        [Route("types/{id}")]
         public ActionResult<ProductModel> GetType(long id)
         {
             if (id == 0)
@@ -113,7 +150,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("producttypes/{id}")]
+        [Route("types/{id}")]
         public ActionResult<bool> DeleteType(long id)
         {
             var result = _productManagement.DeleteProduct(id);
@@ -125,7 +162,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("producttypes/{id}")]
+        [Route("types/{id}")]
         public ActionResult<long> UpdateType(long id, ProductModel modifiedType)
         {
             if (modifiedType == null)
@@ -136,38 +173,22 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             type = _productConverter.ConvertProductBack(modifiedType, (ProductType) type);
             return _productManagement.SaveType(type);
         }
-
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("producttypes/{identifier}/{revision}")]
-        public ActionResult<ProductModel> GetType(string identifier, short revision)
-        {
-
-            if (identifier == null)
-                return BadRequest($"Identity was null");
-            var identity = new ProductIdentity(WebUtility.HtmlEncode(identifier), revision);
-            var productType = _productManagement.LoadType(identity);
-            if (productType == null)
-                return NotFound();           
-            return _productConverter.ConvertProduct(productType, false);
-        }
-
+     
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("producttypes/{newIdentifier}/{newRevision}")]
-        public ActionResult<ProductModel> Duplicate(string newIdentifier, short newRevision, ProductModel template)
+        [Route("types/{id}")]
+        public ActionResult<ProductModel> Duplicate(long id, [FromBody] string newIdentity)
         {
+            var template = _productManagement.LoadType(id);
             if (template == null)
-                return BadRequest($"Template was null");
-            var identity = new ProductIdentity(WebUtility.HtmlEncode(newIdentifier), newRevision);
-            var productType = _productManagement.LoadType(identity);
-            if (productType == null)
-                return NotFound();
-            var newProductType = _productManagement.Duplicate(productType, identity);
+                return BadRequest($"Producttype with id {id} not found");
+            var identityArray = WebUtility.HtmlEncode(newIdentity).Split('-');
+            if (identityArray.Length != 2)
+                return BadRequest($"Identity has wrong format. Must be identifier-revision");
+            var identity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));           
+            var newProductType = _productManagement.Duplicate(template, identity);
             if (newProductType == null)
                 return BadRequest($"Error while duplicating");
             return _productConverter.ConvertProduct(newProductType, false);
@@ -176,12 +197,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("producttypes/{identifier}/{revision}/recipes/{classification}")]
-        public ActionResult<RecipeModel[]> GetRecipes(string identifier, short revision,
-            int classification)
+        [Route("types/{id}/recipes/{classification}")]
+        public ActionResult<RecipeModel[]> GetRecipes(long id, int classification)
         {
-            var identity = new ProductIdentity(WebUtility.HtmlEncode(identifier), revision);
-            var productType = _productManagement.LoadType(identity);
+            var productType = _productManagement.LoadType(id);
             if (productType == null)
                 return BadRequest($"ProductType is null");
             var recipes = _productManagement.GetRecipes(productType, (RecipeClassification)classification);
@@ -189,17 +208,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             foreach (var recipe in recipes)
                 recipeModels.Add(ProductConverter.ConvertRecipe(recipe));
             return recipeModels.ToArray();
-        }
-
-        [HttpGet]
-        [Route("producttypes/types")]
-        public ProductDefinitionModel[] GetProductTypes()
-        {
-            var types = _productManagement.ProductTypes;
-            var typeModels = new List<ProductDefinitionModel>();
-            foreach (var type in types)
-                typeModels.Add(_productConverter.ConvertProductType(type));
-            return typeModels.ToArray();
         }
         #endregion
 
@@ -221,7 +229,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
        
         [HttpGet]
         [Route("instances")]
-        public ProductInstanceModel[] GetInstances([FromQuery] long[] ids)
+        public ActionResult<ProductInstanceModel[]> GetInstances([FromQuery] long[] ids)
         {
             var instances = _productManagement.GetInstances(ids);
             var modelList = new List<ProductInstanceModel>();
@@ -244,7 +252,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return _productConverter.ConvertProductInstance(instance);
         }
 
-        [HttpPost]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("instances")]
@@ -277,17 +285,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (recipe == null)
                 return NotFound();
             return ProductConverter.ConvertRecipe(recipe);
-        }
-
-        [HttpGet]
-        [Route("recipes/types")]
-        public RecipeDefinitionModel[] GetRecipeTypes()
-        {
-            var recipeTypes = _productManagement.RecipeTypes;
-            var typeModels = new List<RecipeDefinitionModel>();
-            foreach(var recipeType in recipeTypes)
-                typeModels.Add(_productConverter.ConvertRecipeType(recipeType));
-            return typeModels.ToArray();
         }
 
         [HttpPost]
@@ -327,6 +324,5 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return _productManagement.SaveRecipe(productionRecipe);
         }
         #endregion
-
     }
 }

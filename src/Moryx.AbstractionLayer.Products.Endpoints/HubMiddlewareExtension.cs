@@ -44,12 +44,13 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
     {
         private readonly IProductManagementModification _productManagement;
         private readonly IHubContext<ProductManagementHub> _hubContext;
-
+        private readonly ProductConverter _converter;
         public ProductManagementHubService(IProductManagementModification productManagement,
             IHubContext<ProductManagementHub> hubContext)
         {
             _productManagement = productManagement ?? throw new ArgumentNullException(nameof(productManagement));
             _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
+            _converter = new ProductConverter(_productManagement);
         }
 
         /// <summary>
@@ -70,12 +71,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
         private async void RecipeChanged(object sender, IRecipe e)
         {
-            await _hubContext.Clients.All.SendAsync("RecipeChanged", e);
+            await _hubContext.Clients.All.SendAsync("RecipeChanged", ProductConverter.ConvertRecipe(e));
         }
 
         private async void TypeChanged(object sender, IProductType e)
         {
-            await _hubContext.Clients.All.SendAsync("TypeChanged", e);
+            await _hubContext.Clients.All.SendAsync("TypeChanged", _converter.ConvertProduct(e, false));
         }
     }
 }
