@@ -157,7 +157,7 @@ namespace Moryx.Resources.Management.Endpoints
         /// <summary>
         /// Convert ResourceModel back to resource and/or update its properties
         /// </summary>
-        public Resource FromModel(ResourceModel model, HashSet<long> resourcesToSave, Dictionary<long, Resource> cache, Resource resource = null)
+        private Resource FromModel(ResourceModel model, HashSet<long> resourcesToSave, Dictionary<long, Resource> cache, Resource resource = null)
         {
             // Break recursion if we converted this instance already
             // Try to load by real id first

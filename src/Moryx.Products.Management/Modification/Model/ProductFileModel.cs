@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Moryx.Products.Management.Modification
 {
     [DataContract]
-    internal class ProductFileModel
+    public class ProductFileModel
     {
         [DataMember]
         public string PropertyName { get; set; }

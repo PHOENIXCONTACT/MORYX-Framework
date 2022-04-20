@@ -8,7 +8,7 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management.Modification
 {
-    internal interface IProductConverter
+    public interface IProductConverter
     {
         ProductModel ConvertProduct(IProductType productType, bool flat);
 
