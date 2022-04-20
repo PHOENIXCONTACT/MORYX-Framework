@@ -63,15 +63,34 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("importers/{importerName}")]
-        public ActionResult<ProductModel[]> Import(string importerName, object parameters)
+        public ActionResult<ProductModel[]> Import(string importerName, Entry importParameters)
         {
+            if(importParameters == null)
+                return BadRequest($"Import parameters were null");
+            var parameters = ConvertParametersBack(importerName, importParameters);
+            if (parameters == null)
+            {
+                return BadRequest($"Importer with the name {importerName} was not found or had no parameters");
+            }
             var importedTypes = _productManagement.Import(importerName, parameters).Result.ImportedTypes;
             var modelList = new List<ProductModel>();
             foreach (var t in importedTypes)
                 modelList.Add(_productConverter.ConvertProduct(t,false));
             return modelList.ToArray();
-        }      
+        }
+
+        private object ConvertParametersBack(string importerName, Entry currentParameters)
+        {
+            var oldParameters = _productManagement.Importers.FirstOrDefault(i => i.Key == importerName).Value;
+            if (oldParameters == null)
+                return null;
+
+            var parameters = EntryConvert.UpdateInstance(oldParameters, currentParameters);            
+            return parameters;
+        }
 
         #endregion
         #region product type          
