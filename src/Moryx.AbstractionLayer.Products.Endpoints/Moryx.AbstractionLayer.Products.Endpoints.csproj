@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
 	  <Description>Endpoints for the Product Facade</Description>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <CreatePackage>true</CreatePackage>
+	  <PackageTags>MORYX;IIoT;IoT;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
