@@ -19,6 +19,7 @@ namespace Moryx.Resources.Management.Endpoints
     /// </summary>
     [ApiController]
     [Route("api/moryx/resources/")]
+    [Produces("application/json")]
     public class ResourceModificationController : ControllerBase
     {
         private readonly IResourceModification _resourceModification;
