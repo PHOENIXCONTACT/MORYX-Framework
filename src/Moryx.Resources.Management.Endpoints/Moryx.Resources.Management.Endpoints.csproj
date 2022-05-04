@@ -2,6 +2,10 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net5.0</TargetFrameworks>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Description>REST Api in order to interact with the resource management</Description>
+		<CreatePackage>true</CreatePackage>
+		<PackageTags>MORYX;IIoT;IoT;Resource</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
