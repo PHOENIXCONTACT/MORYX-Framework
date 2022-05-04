@@ -17,7 +17,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
     /// </summary>
     [ApiController]
     [Route("api/moryx/products/")]
-
+    [Produces("application/json")]
     public class ProductManagementController : ControllerBase
     {
         private readonly IProductManagementModification _productManagement;
