@@ -22,11 +22,11 @@ namespace Moryx.Resources.Management.Endpoints
     [Produces("application/json")]
     public class ResourceModificationController : ControllerBase
     {
-        private readonly IResourceModification _resourceModification;
+        private readonly IResourceModificationExtended _resourceModification;
         private readonly IResourceTypeTree _resourceTypeTree;
         private readonly ResourceSerialization _serialization;
 
-        public ResourceModificationController(IResourceModification resourceModification)
+        public ResourceModificationController(IResourceModificationExtended resourceModification)
         {
             _resourceModification = resourceModification ?? throw new ArgumentNullException(nameof(resourceModification));
             _resourceTypeTree = _resourceModification as IResourceTypeTree ?? throw new InvalidCastException(nameof(resourceModification));
@@ -64,10 +64,11 @@ namespace Moryx.Resources.Management.Endpoints
         public ActionResult<ResourceModel[]> GetResources(ResourceQuery query)
         {
             var filter = new ResourceQueryFilter(query, _resourceTypeTree);
-            var resourceProxies = _resourceModification.GetResources<IPublicResource>(r => filter.Match(r as Resource)).ToArray();
+            var resourceProxies = _resourceModification.GetAllResources<IResource>(r => filter.Match(r as Resource)).ToArray();
 
             var converter = new ResourceQueryConverter(_resourceTypeTree, _serialization, query);
-            return resourceProxies.Select(p => _resourceModification.Read(p.Id, r => converter.QueryConversion(r))).ToArray();
+            var values = resourceProxies.Select(p => _resourceModification.Read(p.Id, r => converter.QueryConversion(r))).ToArray();
+            return values;
         }
 
         [HttpGet]
