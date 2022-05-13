@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace Moryx.AbstractionLayer.Resources
 {
+    /// <summary>
+    /// Facade for returning all resources and not only resources implementing IPublicResource
+    /// </summary>
+    // TODO: Move into IResourceManagement
     public interface IResourceModificationExtended: IResourceModification
     {
         /// <summary>
