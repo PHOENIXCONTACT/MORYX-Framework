@@ -36,6 +36,8 @@ If you want to start developing with or for MORYX, the easiest way is our [templ
 |--------------|-----------------|------------|
 | `Moryx.AbstractionLayer` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer) |
 | `Moryx.AbstractionLayer.TestTools` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.TestTools.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.TestTools/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.TestTools)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.TestTools) |
+| `Moryx.AbstractionLayer.Products.Endpoints` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.Products.Endpoints.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.Products.Endpoints/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.Products.Endpoints)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.Products.Endpoints) |
+| `Moryx.AbstractionLayer.Resources.Endpoints` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.Resources.Endpoints.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.Resources.Endpoints/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.Resources.Endpoints)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.Resources.Endpoints) |
 | `Moryx.Notifications` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Notifications.svg)](https://www.nuget.org/packages/Moryx.Notifications/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Notifications)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Notifications) |
 | `Moryx.Products.Management` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Products.Management.svg)](https://www.nuget.org/packages/Moryx.Products.Management/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Products.Management)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Products.Management) |
 | `Moryx.Products.Model` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Products.Model.svg)](https://www.nuget.org/packages/Moryx.Products.Model/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Products.Model)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Products.Model) |
@@ -53,7 +55,7 @@ Whether you want to debug and experiment with this repository or build an applic
 1. Create or configure the database for *Moryx.Products.Model* using the Maintenance
 2. Configure the [storage mapping](/docs/articles/Products/ProductStorage.md) for your domain objects. This is necessary to store, load and use the objects within MORYX.
 
-**Resource Management**: 
+**Resource Management**:
 1. Create or configure the database for *Moryx.Resources.Model*
 2. Execute the `ResourceInteractionInitializer` from [ResourceManager console](http://localhost/maintenanceweb/#/modules/ResourceManager/console) to provide the endpoint for the resource configuration UI.
 

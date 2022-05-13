@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-	  <Description>Endpoints for the Product Facade</Description>
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <CreatePackage>true</CreatePackage>
-	  <PackageTags>MORYX;IIoT;IoT;</PackageTags>
+      <Description>Endpoints for the Product Facade</Description>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+      <CreatePackage>true</CreatePackage>
+      <PackageTags>MORYX;IIoT;IoT;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,11 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-	<FrameworkReference Include="Microsoft.AspNetCore.App" Version="5.0.0" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
   </ItemGroup>
 
 </Project>

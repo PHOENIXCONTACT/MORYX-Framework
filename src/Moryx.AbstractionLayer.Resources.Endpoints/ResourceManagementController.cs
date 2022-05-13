@@ -1,21 +1,20 @@
 ﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Moryx.AbstractionLayer.Resources;
-using Moryx.Resources.Interaction;
-using Moryx.Resources.Interaction.Converter;
-using Moryx.Serialization;
-using Moryx.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Moryx.Resources.Interaction;
+using Moryx.Resources.Interaction.Converter;
+using Moryx.Serialization;
+using Moryx.Tools;
 
-namespace Moryx.Resources.Management.Endpoints
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     /// <summary>
     /// Definition of a REST API on the <see cref="IResourceManagement"/> facade.

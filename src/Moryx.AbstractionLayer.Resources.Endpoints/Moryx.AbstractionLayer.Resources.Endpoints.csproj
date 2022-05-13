@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>net5.0</TargetFrameworks>
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <Description>REST Api in order to interact with the resource management</Description>
-	  <CreatePackage>true</CreatePackage>
-	  <PackageTags>MORYX;IIoT;IoT;Resource</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>REST Api in order to interact with the resource management</Description>
+    <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;IIoT;IoT;Resource</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,13 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-      <FrameworkReference Include="Microsoft.AspNetCore.App" Version="5.0.0" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
   </ItemGroup>
-
 
 </Project>

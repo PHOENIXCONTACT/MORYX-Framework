@@ -1,16 +1,15 @@
 ﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Resources;
-using Moryx.Configuration;
-using Moryx.Container;
-using Moryx.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Serialization;
 
-namespace Moryx.Resources.Management.Endpoints
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     internal class ResourceSerialization : PossibleValuesSerialization
     {
