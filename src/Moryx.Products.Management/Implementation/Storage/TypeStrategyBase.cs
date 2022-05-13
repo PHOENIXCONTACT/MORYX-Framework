@@ -1,13 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Linq;
-using System.Linq.Expressions;
-using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Model;
 using Moryx.Products.Model;
 using Moryx.Tools;
 
@@ -26,6 +21,7 @@ namespace Moryx.Products.Management
     public abstract class TypeStrategyBase<TConfig> : StrategyBase<TConfig, ProductTypeConfiguration>, IProductTypeStrategy
         where TConfig : ProductTypeConfiguration
     {
+        /// <inheritdoc />
         public override void Initialize(ProductTypeConfiguration config)
         {
             base.Initialize(config);
