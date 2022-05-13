@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Moryx;
 using Moryx.AbstractionLayer.Products.Endpoints;
 using Moryx.Asp.Integration;
+using System.Text.Json.Serialization;
 
 namespace StartProject.Asp
 {
@@ -36,8 +38,13 @@ namespace StartProject.Asp
             services.AddSignalR();
             // Add MORYX SignalR hubs
             services.AddMoryxProductManagementHub();
-            services.AddControllers();
-            services.AddSwaggerGen();
+            services.AddControllers()
+               .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
+            });
         }
 
         // Configure() is used to specify how the app responds to HTTP requests. The request pipeline is configured

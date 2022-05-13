@@ -10,7 +10,7 @@ using Moryx.Runtime.Modules;
 namespace Moryx.Resources.Management
 {
     // TODO: AL6 combine IResourceManagement with IResourceModification and make second facade for IResourceTypeTree
-    internal class ResourceManagementFacade : IResourceManagement, IFacadeControl, IResourceModification, IResourceTypeTree
+    internal class ResourceManagementFacade : IResourceManagement, IFacadeControl, IResourceModificationExtended, IResourceTypeTree
     {
         #region Dependency Injection
 
@@ -114,6 +114,8 @@ namespace Moryx.Resources.Management
             ValidateHealthState();
             return ResourceGraph.GetResources(predicate).Proxify(TypeController);
         }
+
+
         #endregion
 
         #region IResourceModification
@@ -162,6 +164,13 @@ namespace Moryx.Resources.Management
 
             return ResourceGraph.Destroy(resource);
         }
+
+        public IEnumerable<TResource> GetAllResources<TResource>(Func<TResource, bool> predicate)
+             where TResource : class, IResource
+        {
+            ValidateHealthState();
+            return ResourceGraph.GetResources(predicate);
+        }
         #endregion
 
         #region IResourceTypeTree
@@ -178,6 +187,8 @@ namespace Moryx.Resources.Management
         {
             return TypeTree.SupportedTypes(constraints);
         }
+
+        
         #endregion
 
         /// <inheritdoc />

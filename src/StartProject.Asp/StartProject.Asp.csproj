@@ -21,6 +21,7 @@
 	  <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
 	  <ProjectReference Include="..\Moryx.Resources.Management.Endpoints\Moryx.Resources.Management.Endpoints.csproj" />
 	  <ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
+	  <ProjectReference Include="..\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj" />
 	</ItemGroup>
 
 </Project>
