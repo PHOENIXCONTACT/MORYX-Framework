@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Products.Management.Modification;
@@ -26,7 +29,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             _productManagement = productManagement;
             _productConverter = new ProductConverter(_productManagement);
-        }           
+        }
 
         #region importers
         [HttpGet]
@@ -88,12 +91,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (oldParameters == null)
                 return null;
 
-            var parameters = EntryConvert.UpdateInstance(oldParameters, currentParameters);            
+            var parameters = EntryConvert.UpdateInstance(oldParameters, currentParameters);
             return parameters;
         }
 
         #endregion
-        #region product type          
+        #region product type
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -127,7 +130,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                     productModels.Add(_productConverter.ConvertProduct(p, false));
                 return productModels.ToArray();
             }
-                
+
             var identityArray = WebUtility.HtmlEncode(identity).Split('-');
             if(identityArray.Length != 2)
                 return BadRequest($"Identity has wrong format. Must be identifier-revision");
@@ -143,7 +146,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         public ActionResult<ProductModel[]> GetTypes(ProductQuery query)
         {
             var productTypes = _productManagement.LoadTypes(query);
-            var productModels = new List<ProductModel>();           
+            var productModels = new List<ProductModel>();
             foreach (var t in productTypes)
             {
                 productModels.Add(_productConverter.ConvertProduct(t, false));
@@ -192,7 +195,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             type = _productConverter.ConvertProductBack(modifiedType, (ProductType) type);
             return _productManagement.SaveType(type);
         }
-     
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -206,7 +209,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var identityArray = WebUtility.HtmlEncode(newIdentity).Split('-');
             if (identityArray.Length != 2)
                 return BadRequest($"Identity has wrong format. Must be identifier-revision");
-            var identity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));           
+            var identity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
             var newProductType = _productManagement.Duplicate(template, identity);
             if (newProductType == null)
                 return BadRequest($"Error while duplicating");
@@ -245,7 +248,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return NotFound();
             return _productConverter.ConvertProductInstance(productInstance);
         }
-       
+
         [HttpGet]
         [Route("instances")]
         public ActionResult<ProductInstanceModel[]> GetInstances([FromQuery] long[] ids)
@@ -287,7 +290,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var productInstance = _productConverter.ConvertProductInstanceBack(instanceModel, productType);
            _productManagement.SaveInstance(productInstance);
             return Ok();
-        }       
+        }
 
         #endregion
         #region recipes

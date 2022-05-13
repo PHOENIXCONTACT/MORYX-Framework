@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moryx.AbstractionLayer.Resources;
@@ -131,7 +134,7 @@ namespace Moryx.Resources.Management.Endpoints
                 EntryConvert.InvokeMethod(resource, method, _serialization);
 
             var model = new ResourceToModelConverter(_resourceTypeTree, _serialization).GetDetails(resource);
-            model.Methods = new MethodEntry[0]; // Reset methods because they can not be invoked on new objects
+            model.Methods = Array.Empty<MethodEntry>(); // Reset methods because they can not be invoked on new objects
 
             return model;
         }
@@ -144,7 +147,7 @@ namespace Moryx.Resources.Management.Endpoints
         {
             if (_resourceModification.GetAllResources<IResource>(r => r.Id == model.Id) is not null)
                 return Conflict($"The resource '{model.Id}' already exists.");
-            
+
             var id = _resourceModification.Create(_resourceTypeTree[model.Type].ResourceType, r => {
                 var resourcesToSave = new HashSet<long>();
                 var resourceCache = new Dictionary<long, Resource>();
@@ -178,9 +181,9 @@ namespace Moryx.Resources.Management.Endpoints
                     var id = _resourceModification.Create(_resourceTypeTree[model.Type].ResourceType, r => { });
                     resource = _resourceModification.Read<Resource>(model.Id, resource => resource);
                 }
-                else 
+                else
                     resource = _resourceModification.Read<Resource>(model.Id, resource => resource);
-            
+
             // Write to cache because following calls might only have an empty reference
             if (model.Id == 0)
                 cache[model.ReferenceId] = resource;
@@ -274,7 +277,6 @@ namespace Moryx.Resources.Management.Endpoints
                 }
             }
         }
-
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -22,16 +22,13 @@
     <Compile Include="..\Moryx.Products.Management\Modification\Model\WorkplanModel.cs" Link="Model\WorkplanModel.cs" />
     <Compile Include="..\Moryx.Products.Management\Modification\PartialSerialization.cs" Link="Serialization\PartialSerialization.cs" />
   </ItemGroup>
-	<ItemGroup>
-		
 
-		<FrameworkReference Include="Microsoft.AspNetCore.App" Version="5.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Serialization\" />
-	</ItemGroup>
+  <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspNetCore.App" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+  </ItemGroup>
 
 </Project>

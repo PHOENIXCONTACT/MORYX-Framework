@@ -1,4 +1,7 @@
-﻿using Moryx.Serialization;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.Serialization;
 using System.Runtime.Serialization;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints.Model
@@ -15,10 +18,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Model
         [DataMember]
         public string Type { get; set; }
 
-        [DataMember]
         /// <summary>
         /// The current state of the instance
         /// </summary>
+        [DataMember]
         public ProductInstanceState State { get; set; }
 
         [DataMember]
