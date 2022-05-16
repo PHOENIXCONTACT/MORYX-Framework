@@ -13,7 +13,7 @@ namespace Moryx.Configuration
         /// <inheritdoc />
         public bool CheckProperty(PropertyInfo propertyInfo)
         {
-            return propertyInfo.CanWrite;
+            return propertyInfo.GetSetMethod() != null;
         }
     }
 }

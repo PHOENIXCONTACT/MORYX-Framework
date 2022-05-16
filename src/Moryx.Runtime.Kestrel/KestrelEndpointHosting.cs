@@ -98,7 +98,9 @@ namespace Moryx.Runtime.Kestrel
 
             var authorizeAttr = controller.GetCustomAttribute<AuthorizeAttribute>();
             var endpointAtt = controller.GetCustomAttribute<EndpointAttribute>();
-            _hostingContainer.Resolve<EndpointCollector>().AddEndpoint(address, new Endpoint
+
+            var endpointCollector = _hostingContainer.Resolve<EndpointCollector>();
+            endpointCollector.AddEndpoint(new Endpoint
             {
                 Address = address,
                 Path = route,

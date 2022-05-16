@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using System.Linq;
 using Moryx.Configuration;
 using NUnit.Framework;
 
@@ -18,7 +17,6 @@ namespace Moryx.Tests.Configuration.ValueProvider
             var config = new TestConfig1();
 
             // Act
-
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
 
             // Assert
