@@ -142,7 +142,7 @@ namespace Moryx.Resources.Management.Endpoints
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         public ActionResult<ResourceModel> Save(ResourceModel model)
         {
-            if (_resourceModification.GetResource<IPublicResource>(model.Id) is not null)
+            if (_resourceModification.GetAllResources<IResource>(r => r.Id == model.Id) is not null)
                 return Conflict($"The resource '{model.Id}' already exists.");
             
             var id = _resourceModification.Create(_resourceTypeTree[model.Type].ResourceType, r => {
@@ -283,7 +283,7 @@ namespace Moryx.Resources.Management.Endpoints
         [Route("{id}")]
         public ActionResult<ResourceModel> Update(long id, ResourceModel model)
         {
-            if ((_resourceModification.GetResource<IPublicResource>(id)) is null)
+            if (_resourceModification.GetAllResources<IResource>(r=>r.Id == id) is null)
                 return NotFound($"Resource {id} not found!");
 
             _resourceModification.Modify(id, r => {
