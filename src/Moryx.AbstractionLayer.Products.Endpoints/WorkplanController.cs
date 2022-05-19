@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Products.Management.Modification;
 using Moryx.Workflows;
@@ -6,6 +9,7 @@ using System.Collections.Generic;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
+    /// <summary>
     /// Definition of a REST API on the <see cref="IWorkplansVersions"/> facade.
     /// </summary>
     [ApiController]
@@ -69,7 +73,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return NotFound();
             return ProductConverter.ConvertWorkplan(workplan);
         }
-        
+
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -175,15 +175,16 @@ namespace Moryx.Products.Management
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
 
             // Optionally try to configure property mappers
-            var propertyMapperConfig = config as IPropertyMappedConfiguration;
-            if (propertyMapperConfig != null)
+            if (config is IPropertyMappedConfiguration propertyMapperConfig)
             {
                 var remainingColumns = typeof(IGenericColumns).GetProperties()
                     .OrderBy(p => p.Name).ToList();
                 // TODO: Use type wrapper
                 var baseProperties = typeof(TBaseType).GetProperties();
 
-                var filteredProperties = targetType.GetProperties().Where(p => baseProperties.All(bp => bp.Name != p.Name))
+                var filteredProperties = targetType.GetProperties()
+                    .Where(p => baseProperties.All(bp => bp.Name != p.Name))
+                    .Where(p => p.GetSetMethod() != null)
                     .Where(p => !typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))
                     .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType))
                     .ToList();

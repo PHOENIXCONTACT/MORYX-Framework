@@ -1,13 +1,15 @@
-﻿using Moryx.AbstractionLayer.Resources;
-using Moryx.Configuration;
-using Moryx.Container;
-using Moryx.Serialization;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Serialization;
 
-namespace Moryx.Resources.Management.Endpoints
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     internal class ResourceSerialization : PossibleValuesSerialization
     {
@@ -21,14 +23,13 @@ namespace Moryx.Resources.Management.Endpoints
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             return typeof(Resource).IsAssignableFrom(sourceType)
-                // 
                 ? base.GetProperties(sourceType).Where(p => p.GetCustomAttribute<EntrySerializeAttribute>()?.Mode == EntrySerializeMode.Always)
-                : EntrySerializeSerialization.Instance.GetProperties(sourceType);
+                : new EntrySerializeSerialization().GetProperties(sourceType);
         }
 
         public override IEnumerable<MethodInfo> GetMethods(Type sourceType)
         {
-            return EntrySerializeSerialization.Instance.GetMethods(sourceType);
+            return new EntrySerializeSerialization().GetMethods(sourceType);
         }
 
         private class ContainerMock : IContainer

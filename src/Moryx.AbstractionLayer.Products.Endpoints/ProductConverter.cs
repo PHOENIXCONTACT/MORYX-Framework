@@ -1,4 +1,7 @@
-﻿using Moryx.AbstractionLayer.Products.Endpoints.Model;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.AbstractionLayer.Products.Endpoints.Model;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Products.Management.Modification;
 using Moryx.Serialization;
@@ -12,7 +15,7 @@ using System.Reflection;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
-    public class ProductConverter 
+    public class ProductConverter
     {
         private IProductManagementModification _productManagement;
 
@@ -27,7 +30,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             _productManagement = productManagement;
         }
         public ProductDefinitionModel ConvertProductType(Type productType)
-        {           
+        {
             return new()
             {
                 Name = productType.Name,
@@ -163,7 +166,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return part;
         }
 
-        
+
         public IProductType ConvertProductBack(ProductModel source, ProductType converted)
         {
             // Copy base values
@@ -192,7 +195,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 foreach (var r in recipes)
                     _productManagement.SaveRecipe(r);
             }
-               
+
 
             // Product is flat
             if (source.Properties is null)
@@ -399,7 +402,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             };
             return model;
         }
-       
+
 
         public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, IProductType type)
         {
@@ -432,6 +435,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             };
         }
 
-        
+
     }
 }

@@ -30,12 +30,12 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Recipe types
         /// </summary>
-        public IReadOnlyList<Type> RecipeTypes { get => RecipeStrategies.Select(rs => rs.Value.TargetType).ToList(); }
+        public IReadOnlyList<Type> RecipeTypes => RecipeStrategies.Select(rs => rs.Value.TargetType).ToList();
 
         /// <summary>
         /// Product types
         /// </summary>
-        public IReadOnlyList<Type> ProductTypes { get => TypeStrategies.Select(ts => ts.Value.TargetType).ToList(); }
+        public IReadOnlyList<Type> ProductTypes => TypeStrategies.Select(ts => ts.Value.TargetType).ToList();
 
         /// <summary>
         /// Optimized constructor delegate for the different product types
@@ -100,12 +100,14 @@ namespace Moryx.Products.Management
                 TypeStrategies[config.TargetType] = strategy;
                 TypeConstructors[config.TargetType] = ReflectionTool.ConstructorDelegate<ProductType>(strategy.TargetType);
             }
+
             // Create instance strategies
             foreach (var config in Config.InstanceStrategies)
             {
                 var strategy = StrategyFactory.CreateInstanceStrategy(config);
                 InstanceStrategies[config.TargetType] = strategy;
             }
+
             // Create link strategies
             foreach (var config in Config.LinkStrategies)
             {
@@ -128,6 +130,7 @@ namespace Moryx.Products.Management
 
                 LinkConstructors[$"{config.TargetType}.{config.PartName}"] = ReflectionTool.ConstructorDelegate<IProductPartLink>(linkType);
             }
+
             // Create recipe strategies
             foreach (var config in Config.RecipeStrategies)
             {
@@ -963,7 +966,7 @@ namespace Moryx.Products.Management
         {
             IDictionary<string, IProductLinkStrategy> IDictionary<string, IDictionary<string, IProductLinkStrategy>>.this[string key]
             {
-                get { return ContainsKey(key) ? this[key] : (this[key] = new Dictionary<string, IProductLinkStrategy>()); }
+                get => ContainsKey(key) ? this[key] : this[key] = new Dictionary<string, IProductLinkStrategy>();
                 set { /*You can not set the internal cache*/ }
             }
         }

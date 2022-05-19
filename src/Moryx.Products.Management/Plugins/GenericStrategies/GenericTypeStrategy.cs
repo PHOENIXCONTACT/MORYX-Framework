@@ -2,16 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Linq;
 using System.Linq.Expressions;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
-using Moryx.Model;
 using Moryx.Modules;
 using Moryx.Products.Model;
-using Moryx.Serialization;
-using Newtonsoft.Json;
 
 namespace Moryx.Products.Management
 {
@@ -34,7 +29,7 @@ namespace Moryx.Products.Management
         public override void Initialize(ProductTypeConfiguration config)
         {
             base.Initialize(config);
-            
+
             EntityMapper.Initialize(TargetType, Config);
         }
 

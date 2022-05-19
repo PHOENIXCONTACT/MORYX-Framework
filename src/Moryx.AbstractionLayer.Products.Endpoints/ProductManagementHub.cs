@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.AspNetCore.SignalR;
 using Moryx.Products.Management.Modification;
 using System.Threading.Tasks;
 

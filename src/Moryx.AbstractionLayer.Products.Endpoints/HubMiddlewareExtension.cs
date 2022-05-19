@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,7 +39,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
     }
 
     /// <summary>
-    /// Defines the BackgroundService for listening to events from the <see cref="IProductManagementModification"/> and feeding 
+    /// Defines the BackgroundService for listening to events from the <see cref="IProductManagementModification"/> and feeding
     /// them to the <see cref="ProductManagementHub"/>.
     /// </summary>
 
@@ -45,6 +48,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         private readonly IProductManagementModification _productManagement;
         private readonly IHubContext<ProductManagementHub> _hubContext;
         private readonly ProductConverter _converter;
+
         public ProductManagementHubService(IProductManagementModification productManagement,
             IHubContext<ProductManagementHub> hubContext)
         {
@@ -54,29 +58,31 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
 
         /// <summary>
-        /// Prepares the BackgroundService to subscribe and unsubscribe events from the <see cref="_productManagement"/>. 
+        /// Prepares the BackgroundService to subscribe and unsubscribe events from the <see cref="_productManagement"/>.
         /// The actual task to run in the BackgroundService is empty as we do not actually calculate anything.
         /// </summary>
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _productManagement.TypeChanged += TypeChanged;
             _productManagement.RecipeChanged += RecipeChanged;
+
             stoppingToken.Register(() =>
             {
                 _productManagement.TypeChanged -= TypeChanged;
                 _productManagement.RecipeChanged -= RecipeChanged;
             });
+
             return Task.CompletedTask;
         }
 
         private async void RecipeChanged(object sender, IRecipe e)
         {
-            await _hubContext.Clients.All.SendAsync("RecipeChanged", ProductConverter.ConvertRecipe(e));
+            await _hubContext.Clients.All.SendAsync(nameof(_productManagement.RecipeChanged), ProductConverter.ConvertRecipe(e));
         }
 
         private async void TypeChanged(object sender, IProductType e)
         {
-            await _hubContext.Clients.All.SendAsync("TypeChanged", _converter.ConvertProduct(e, false));
+            await _hubContext.Clients.All.SendAsync(nameof(_productManagement.TypeChanged), _converter.ConvertProduct(e, false));
         }
     }
 }
