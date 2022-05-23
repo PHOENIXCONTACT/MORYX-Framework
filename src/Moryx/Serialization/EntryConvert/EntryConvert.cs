@@ -570,6 +570,7 @@ namespace Moryx.Serialization
             {
                 var property = mapped.Property;
                 var propertyType = mapped.Property.PropertyType;
+                var doNotUpdateProperty = false; 
 
                 // Do not operate on faulty properties or read-only properties
                 // For security reasons read the flag from the property again
@@ -591,8 +592,10 @@ namespace Moryx.Serialization
                 else if (IsCollection(propertyType) && mapped.Entry != null)
                 {
                     // Pick collection strategy
-                    var strategy = CreateStrategy(value, currentValue, propertyType, customSerialization);
+                    var strategy = CreateStrategy(value, currentValue, propertyType, customSerialization, mapped.Property, instance);
                     UpdateCollection(currentValue, mapped.Property.PropertyType, mapped.Property, mapped.Entry, strategy, customSerialization);
+                    if (strategy is ArrayIListStrategy)
+                        doNotUpdateProperty = true;
                 }
                 // Update class
                 else if (propertyType.IsClass)
@@ -605,7 +608,7 @@ namespace Moryx.Serialization
                 }
 
                 // Write new value to property
-                if (property.CanWrite)
+                if (property.CanWrite && !doNotUpdateProperty)
                 {
                     mapped.Property.SetValue(instance, value);
                 }
@@ -693,7 +696,9 @@ namespace Moryx.Serialization
         /// <summary>
         /// Create strategy for collection
         /// </summary>
-        private static ICollectionStrategy CreateStrategy(object collection, object currentCollection, Type collectionType, ICustomSerialization serialization)
+        private static ICollectionStrategy CreateStrategy(object collection, object currentCollection, 
+            Type collectionType, ICustomSerialization serialization, ICustomAttributeProvider attributeProvider = null, 
+            object instance = null)
         {
             ICollectionStrategy strategy;
             if (collectionType.IsArray)
@@ -706,7 +711,12 @@ namespace Moryx.Serialization
             }
             else if (collection is IList)
             {
-                strategy = new ListStrategy((IList)collection, serialization);
+                if(currentCollection is Array)
+                {
+                    strategy = new ArrayIListStrategy(
+                        (IList)collection, serialization, attributeProvider, instance);
+                }else
+                    strategy = new ListStrategy((IList)collection, serialization);
             }
             else
             {
