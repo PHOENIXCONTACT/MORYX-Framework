@@ -99,8 +99,8 @@ namespace Moryx.Tests
         [Test]
         public void RemoveItemFromCollectionWhichIsArray()
         {
+            //Arrange
             var dummy = new DummyClassIList();
-
             dummy.Number = 10;
             dummy.Name = "Thomas";
             dummy.SingleClass = null;
@@ -113,16 +113,19 @@ namespace Moryx.Tests
             var entry = EntryConvert.EncodeObject(dummy);
             var x = entry.SubEntries.FirstOrDefault(e => e.Identifier == "SubIList");
             x.SubEntries.RemoveAt(0);
+
+            //Act
             EntryConvert.UpdateInstance(dummy, entry);
 
+            //Assert
             Assert.AreEqual(dummy.SubIList.Count, 3);
         }
 
         [Test]
         public void AddItemToCollectionWhichIsArray()
         {
+            //Arrange
             var dummy = new DummyClassIList();
-
             dummy.Number = 10;
             dummy.Name = "Thomas";
             dummy.SingleClass = null;
@@ -135,8 +138,11 @@ namespace Moryx.Tests
             var entry = EntryConvert.EncodeObject(dummy);
             var x = entry.SubEntries.FirstOrDefault(e => e.Identifier == "SubIList");
             x.SubEntries.Add(x.Prototypes.First());
+
+            //Act
             EntryConvert.UpdateInstance(dummy, entry);
 
+            //Assert
             Assert.AreEqual(dummy.SubIList.Count, 5);
         }
 
