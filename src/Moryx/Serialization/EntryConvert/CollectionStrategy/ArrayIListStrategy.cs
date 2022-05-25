@@ -12,6 +12,7 @@ namespace Moryx.Serialization
         private readonly ICustomSerialization _customSerialization;
         private readonly ICustomAttributeProvider _property;
         private readonly object _instance;
+        private readonly IList _toAdd = new List<object>();
 
         public ArrayIListStrategy(IList list, ICustomSerialization customSerialization,
              ICustomAttributeProvider attributeProvider, object instance)
@@ -45,7 +46,7 @@ namespace Moryx.Serialization
 
         public void Added(Entry entry, object addedValue)
         {
-            _list.Add(addedValue);
+            _toAdd.Add(addedValue);
         }
 
         public void Updated(Entry entry, object updatedValue)
@@ -63,18 +64,20 @@ namespace Moryx.Serialization
            
             if(_property is PropertyInfo propertyInfo)
             {
-
                 var type = propertyInfo.PropertyType;
                 var elementType = type.GenericTypeArguments[0];
-                var list = Array.CreateInstance(elementType,_list.Count - _toDelete.Count);
+                var list = Array.CreateInstance(elementType,_list.Count - _toDelete.Count + _toAdd.Count);
                 var index = 0;
                 foreach (var e in _list)
                 {
                     if (!_toDelete.Contains(e))
                     {
                         list.SetValue(e, index++);
-                    }
-                        
+                    }                       
+                }
+                foreach(var e in _toAdd)
+                {
+                    list.SetValue(e, index++);
                 }
                    
                 propertyInfo.SetValue(_instance, list);

@@ -119,6 +119,28 @@ namespace Moryx.Tests
         }
 
         [Test]
+        public void AddItemToCollectionWhichIsArray()
+        {
+            var dummy = new DummyClassIList();
+
+            dummy.Number = 10;
+            dummy.Name = "Thomas";
+            dummy.SingleClass = null;
+            dummy.SubArray = new[] { new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB } };
+            dummy.SubList = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
+            dummy.SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
+            dummy.SubDictionary = new Dictionary<int, SubClass>();
+            dummy.SubIList = new int[] { 1, 2, 3, 7 };
+
+            var entry = EntryConvert.EncodeObject(dummy);
+            var x = entry.SubEntries.FirstOrDefault(e => e.Identifier == "SubIList");
+            x.SubEntries.Add(x.Prototypes.First());
+            EntryConvert.UpdateInstance(dummy, entry);
+
+            Assert.AreEqual(dummy.SubIList.Count, 5);
+        }
+
+        [Test]
         public void RemoveItemFromEntryCollection()
         {
             // Arrange
