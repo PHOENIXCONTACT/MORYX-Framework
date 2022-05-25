@@ -136,7 +136,7 @@ namespace Moryx.Logging
                 var config = _config.ChildConfigs.FirstOrDefault(item => item.LoggerName == childName);
                 if (config == null)
                 {
-                    config = new ModuleLoggerConfig { LoggerName = childName };
+                    config = new ModuleLoggerConfig { LoggerName = childName, ActiveLevel = Parent?.ActiveLevel ?? LogLevel.Info };
                     _config.ChildConfigs.Add(config);
                 }
 
