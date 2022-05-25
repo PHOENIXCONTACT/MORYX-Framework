@@ -36,6 +36,16 @@ namespace Moryx.Serialization
         [DataMember]
         public bool IsRequired { get; set; }
 
+        /// <summary>
+        /// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/> 
+        /// and <see cref="EntryValidation.Minimum"/> validation to the largest possible range.
+        /// </summary>
+        public EntryValidation()
+        {
+            Minimum = double.MinValue;
+            Maximum = double.MaxValue;
+        }
+
         /// <see cref="ICloneable"/>
         public object Clone()
         {
