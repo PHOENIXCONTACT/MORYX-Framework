@@ -80,6 +80,9 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Route("{id}")]
         public ActionResult<ResourceModel> GetDetails(long id)
         {
+            if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
+                return NotFound($"Resource '{id}' not found!");
+
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
             var resourceModel = _resourceModification.Read(id, r => converter.GetDetails(r));
             if (resourceModel is null)
@@ -113,6 +116,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("types/{type}")]
         public ActionResult<ResourceModel> ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
@@ -144,14 +148,14 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         public ActionResult<ResourceModel> Save(ResourceModel model)
         {
-            if (_resourceModification.GetAllResources<IResource>(r => r.Id == model.Id) is not null)
+            if (_resourceModification.GetAllResources<IResource>(r => r.Id == model.Id).Count() > 0)
                 return Conflict($"The resource '{model.Id}' already exists.");
 
             var id = _resourceModification.Create(_resourceTypeTree[model.Type].ResourceType, r => {
                 var resourcesToSave = new HashSet<long>();
                 var resourceCache = new Dictionary<long, Resource>();
                 FromModel(model, resourcesToSave, resourceCache, r);
-                resourcesToSave.ForEach(id => _resourceModification.Modify(id, r => true ));
+                resourcesToSave.Skip(1).ForEach(id => _resourceModification.Modify(id, r => true ));
             });
 
             return GetDetails(id);
@@ -178,7 +182,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 else if (model.Id == 0)
                 {
                     var id = _resourceModification.Create(_resourceTypeTree[model.Type].ResourceType, r => { });
-                    resource = _resourceModification.Read<Resource>(model.Id, resource => resource);
+                    resource = _resourceModification.Read<Resource>(id, resource => resource);
                 }
                 else
                     resource = _resourceModification.Read<Resource>(model.Id, resource => resource);
@@ -306,7 +310,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Route("{id}")]
         public ActionResult Remove(long id)
         {
-            if (_resourceModification.GetResource<IPublicResource>(id) is null)
+            if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
                 return NotFound($"Resource {id} not found!");
 
             var deleted = _resourceModification.Delete(id);
