@@ -99,8 +99,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Route("{id}/invoke/{method}")]
         public ActionResult<Entry> InvokeMethod(long id, string method, Entry parameters)
         {
-            if (_resourceModification.GetResource<IPublicResource>(id) is null)
-                return NotFound($"Resource '{id}' not found!");
+            if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
+                return NotFound($"Resource {id} not found!");
 
             Entry entry = null;
             _resourceModification.Modify(id, r =>
