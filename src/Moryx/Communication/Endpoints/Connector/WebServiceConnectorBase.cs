@@ -106,8 +106,25 @@ namespace Moryx.Communication.Endpoints
             // Compare version
             if (VersionCompare.ClientMatch(serverVersion, clientVersion))
             {
-                // Create new base address client
-                HttpClient = new HttpClient { BaseAddress = new Uri(endpoint.Address) };
+                // Create HttpClient
+                var proxyConfig = (_endpointService as IProxyConfigAccess)?.ProxyConfig;
+                if (proxyConfig?.EnableProxy == true && !proxyConfig.UseDefaultWebProxy)
+                {
+                    var proxy = new WebProxy
+                    {
+                        Address = new Uri($"http://{proxyConfig.Address}:{proxyConfig.Port}"),
+                        BypassProxyOnLocal = false,
+                        UseDefaultCredentials = true
+                    };
+
+                    HttpClient = new HttpClient(new HttpClientHandler { Proxy = proxy });
+                }
+                else
+                {
+                    HttpClient = new HttpClient();
+                }
+
+                HttpClient.BaseAddress = new Uri(endpoint.Address);
 
                 if (!string.IsNullOrEmpty(_myCulture.IetfLanguageTag))
                     HttpClient.DefaultRequestHeaders.AcceptLanguage

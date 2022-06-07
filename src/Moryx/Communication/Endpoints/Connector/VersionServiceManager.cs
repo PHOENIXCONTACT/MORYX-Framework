@@ -13,7 +13,7 @@ namespace Moryx.Communication.Endpoints
     /// <summary>
     /// Service manager base class for provide active endpoints of the current application runtime
     /// </summary>
-    public abstract class VersionServiceManager<TEndpoint> : IVersionServiceManager
+    public abstract class VersionServiceManager<TEndpoint> : IVersionServiceManager, IProxyConfigAccess
         where TEndpoint : Endpoint
     {
         private const string ServiceName = "endpoints";
@@ -22,18 +22,23 @@ namespace Moryx.Communication.Endpoints
         /// Underlying http client for the requests
         /// </summary>
         protected HttpClient Client { get; set; }
+        
+        /// <inheritdoc/>
+        public IProxyConfig ProxyConfig { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the <see cref="VersionServiceManager{TEndpoint}"/>
         /// </summary>
         protected VersionServiceManager(IProxyConfig proxyConfig, string host, int port)
         {
+            ProxyConfig = proxyConfig;
+
             // Create HttpClient
-            if (proxyConfig?.EnableProxy == true && !proxyConfig.UseDefaultWebProxy)
+            if (ProxyConfig?.EnableProxy == true && !ProxyConfig.UseDefaultWebProxy)
             {
                 var proxy = new WebProxy
                 {
-                    Address = new Uri($"http://{proxyConfig.Address}:{proxyConfig.Port}"),
+                    Address = new Uri($"http://{ProxyConfig.Address}:{ProxyConfig.Port}"),
                     BypassProxyOnLocal = false,
                     UseDefaultCredentials = true
                 };
