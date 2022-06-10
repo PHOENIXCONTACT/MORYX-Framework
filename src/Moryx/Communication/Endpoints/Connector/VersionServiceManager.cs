@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -32,25 +31,7 @@ namespace Moryx.Communication.Endpoints
         protected VersionServiceManager(IProxyConfig proxyConfig, string host, int port)
         {
             ProxyConfig = proxyConfig;
-
-            // Create HttpClient
-            if (ProxyConfig?.EnableProxy == true && !ProxyConfig.UseDefaultWebProxy)
-            {
-                var proxy = new WebProxy
-                {
-                    Address = new Uri($"http://{ProxyConfig.Address}:{ProxyConfig.Port}"),
-                    BypassProxyOnLocal = false,
-                    UseDefaultCredentials = true
-                };
-
-                Client = new HttpClient(new HttpClientHandler { Proxy = proxy });
-            }
-            else
-            {
-                Client = new HttpClient();
-            }
-
-            Client.BaseAddress = new Uri($"http://{host}:{port}/{ServiceName}/");
+            Client = HttpClientBuilder.GetClient($"http://{host}:{port}/{ServiceName}/", ProxyConfig);
         }
 
         /// <inheritdoc />
