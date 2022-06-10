@@ -1,12 +1,14 @@
 ﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+
 namespace Moryx.Asp.Integration
 {
     /// <summary>
     /// Decorator for web modules
     /// </summary>
-    public class WebModuleAttribute
+    public class WebModuleAttribute : Attribute
     {
         /// <summary>
         /// Unique route of this module
