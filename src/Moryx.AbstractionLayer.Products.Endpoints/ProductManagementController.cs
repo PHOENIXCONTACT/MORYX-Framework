@@ -119,7 +119,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types")]
-        public ActionResult<ProductModel[]> GetType(string identity = null)
+        public ActionResult<ProductModel[]> GetTypeByIdentity(string identity = null)
         {
             if (identity == null)
             {
@@ -159,7 +159,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types/{id}")]
-        public ActionResult<ProductModel> GetType(long id)
+        public ActionResult<ProductModel> GetTypeById(long id)
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
@@ -327,7 +327,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
 
         [HttpPut]
-        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
