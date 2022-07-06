@@ -20,6 +20,7 @@
 	  <ProjectReference Include="..\Moryx.AbstractionLayer.Products.Endpoints\Moryx.AbstractionLayer.Products.Endpoints.csproj" />
 	  <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
 	  <ProjectReference Include="..\Moryx.AbstractionLayer.Resources.Endpoints\Moryx.AbstractionLayer.Resources.Endpoints.csproj" />
+	  <ProjectReference Include="..\Moryx.Products.Samples\Moryx.Products.Samples.csproj" />
 	  <ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
 	  <ProjectReference Include="..\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj" />
 	</ItemGroup>
