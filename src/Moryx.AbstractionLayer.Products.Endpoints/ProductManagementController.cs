@@ -346,7 +346,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return _productManagement.SaveRecipe(productionRecipe);
         }
 
-        [HttpPut("recipe/construct/{recipeType}")]
+        [HttpGet("recipe/construct/{recipeType}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<RecipeModel> CreateRecipe(string recipeType)
         {
