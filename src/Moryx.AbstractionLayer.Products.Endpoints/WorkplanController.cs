@@ -14,6 +14,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
     /// </summary>
     [ApiController]
     [Route("api/moryx/workplans/")]
+    [Produces("application/json")]
     public class WorkplanController : ControllerBase
     {
         private readonly IWorkplansVersions _workplansVersions;

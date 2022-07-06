@@ -345,6 +345,19 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var productionRecipe = _productConverter.ConvertRecipeBack(recipeModel, productRecipe, null);
             return _productManagement.SaveRecipe(productionRecipe);
         }
+
+        [HttpGet("recipe/construct/{recipeType}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<RecipeModel> CreateRecipe(string recipeType)
+        {
+                // TODO: Use type wrapper
+                var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipeType).FirstOrDefault();
+                if (type == null)
+                    return NotFound($"Recipe type {recipeType} not found!");
+                var recipe = (IProductRecipe)Activator.CreateInstance(type);
+                return ProductConverter.ConvertRecipe(recipe);
+       
+        }
         #endregion
     }
 }
