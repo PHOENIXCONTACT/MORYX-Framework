@@ -165,9 +165,9 @@ namespace Moryx.AbstractionLayer.Products
     public interface IRecipeProductManagement : IProductManagementModification
     {
         /// <summary>
-        /// Delete Recipe
+        /// Remove Recipe by given id
         /// </summary>
-        void DeleteRecipe(long recipeId);
+        void RemoveRecipe(long recipeId);
 
     }
 }

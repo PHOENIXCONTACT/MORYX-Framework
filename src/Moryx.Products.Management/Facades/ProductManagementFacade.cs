@@ -285,7 +285,7 @@ namespace Moryx.Products.Management
             return ProductManager.DeleteType(id);
         }
 
-        public void DeleteRecipe(long recipeId)
+        public void RemoveRecipe(long recipeId)
         {
             RecipeManagement.Remove(recipeId);
         }

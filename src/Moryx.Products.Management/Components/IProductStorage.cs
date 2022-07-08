@@ -84,6 +84,10 @@ namespace Moryx.Products.Management
         IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
     }
 
+    /// <summary>
+    /// Additional interface for removing a recipe
+    /// TODO: Remove in AL 6
+    /// </summary>
     public interface IProductRemoveRecipeStorage: IProductSearchStorage
     {
         /// <summary>

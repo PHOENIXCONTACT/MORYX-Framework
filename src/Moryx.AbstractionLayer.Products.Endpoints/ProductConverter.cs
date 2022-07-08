@@ -198,7 +198,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipesOfProduct = _productManagement.GetRecipes(converted, RecipeClassification.CloneFilter);
             foreach (var recipe in recipesOfProduct)
                 if (recipes.FirstOrDefault(r => r.Id == recipe.Id) == null)
-                    _productManagement.DeleteRecipe(recipe.Id);
+                    _productManagement.RemoveRecipe(recipe.Id);
 
             // Product is flat
             if (source.Properties is null)
