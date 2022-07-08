@@ -14,7 +14,7 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management
 {
-    internal class ProductManagementFacade : IFacadeControl, IWorkplansVersions, IProductManagementModification
+    internal class ProductManagementFacade : IFacadeControl, IWorkplansVersions, IRecipeProductManagement
     {
         // Use this delegate in every call for clean health state management
         public Action ValidateHealthState { get; set; }
@@ -283,6 +283,20 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
             return ProductManager.DeleteType(id);
+        }
+
+        public IReadOnlyList<IProductRecipe> GetAllRecipesByProduct(IProductType productType)
+        {
+            ValidateHealthState();
+            if(productType == null)
+                throw new ArgumentException("ProductType is null");
+            return RecipeManagement.GetAllByProduct(productType);
+        }
+
+        public void SaveRecipes(long productId, ICollection<IProductRecipe> recipes)
+        {
+            ValidateHealthState();
+            RecipeManagement.Save(productId, recipes);
         }
     }
 }

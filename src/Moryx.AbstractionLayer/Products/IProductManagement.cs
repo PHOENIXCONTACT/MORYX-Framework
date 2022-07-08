@@ -123,7 +123,7 @@ namespace Moryx.AbstractionLayer.Products
         IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
             where TInstance : IProductInstance;
     }
-    
+
     /// <summary>
     /// Additional interface for type storage to search for product types by expression
     /// TODO: Remove in AL 6
@@ -156,5 +156,23 @@ namespace Moryx.AbstractionLayer.Products
         /// Delete a product by its id
         /// </summary>
         bool DeleteProduct(long id);
+    }
+
+    /// <summary>
+    /// Additional interface for recipe management
+    /// TODO: Remove in AL 6
+    /// </summary>
+    public interface IRecipeProductManagement : IProductManagementModification
+    {
+        /// <summary>
+        /// Will load all recipes by the given product
+        /// </summary>
+        IReadOnlyList<IProductRecipe> GetAllRecipesByProduct(IProductType productType);
+
+        /// <summary>
+        /// Saves multiple recipes
+        /// </summary>
+        void SaveRecipes(long productId, ICollection<IProductRecipe> recipes);
+
     }
 }
