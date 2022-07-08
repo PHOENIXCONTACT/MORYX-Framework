@@ -83,4 +83,13 @@ namespace Moryx.Products.Management
         /// </summary>
         IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
     }
+
+    public interface IProductRemoveRecipeStorage: IProductSearchStorage
+    {
+        /// <summary>
+        /// Remove recipe by given recipeId
+        /// </summary>
+        void RemoveRecipe (long recipeId);
+    }
+
 }

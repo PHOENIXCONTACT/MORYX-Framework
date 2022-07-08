@@ -159,20 +159,15 @@ namespace Moryx.AbstractionLayer.Products
     }
 
     /// <summary>
-    /// Additional interface for recipe management
+    /// Additional interface for deleting recipes
     /// TODO: Remove in AL 6
     /// </summary>
     public interface IRecipeProductManagement : IProductManagementModification
     {
         /// <summary>
-        /// Will load all recipes by the given product
+        /// Delete Recipe
         /// </summary>
-        IReadOnlyList<IProductRecipe> GetAllRecipesByProduct(IProductType productType);
-
-        /// <summary>
-        /// Saves multiple recipes
-        /// </summary>
-        void SaveRecipes(long productId, ICollection<IProductRecipe> recipes);
+        void DeleteRecipe(long recipeId);
 
     }
 }

@@ -285,18 +285,9 @@ namespace Moryx.Products.Management
             return ProductManager.DeleteType(id);
         }
 
-        public IReadOnlyList<IProductRecipe> GetAllRecipesByProduct(IProductType productType)
+        public void DeleteRecipe(long recipeId)
         {
-            ValidateHealthState();
-            if(productType == null)
-                throw new ArgumentException("ProductType is null");
-            return RecipeManagement.GetAllByProduct(productType);
-        }
-
-        public void SaveRecipes(long productId, ICollection<IProductRecipe> recipes)
-        {
-            ValidateHealthState();
-            RecipeManagement.Save(productId, recipes);
+            RecipeManagement.Remove(recipeId);
         }
     }
 }

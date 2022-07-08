@@ -189,8 +189,16 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
                 ConvertRecipeBack(recipeModel, productRecipe, converted);
                 recipes.Add(productRecipe);
-            }           
-            _productManagement.SaveRecipes(source.Id, recipes);
+            }
+            if (recipes.Any())
+                foreach(var recipe in recipes)
+                    _productManagement.SaveRecipe(recipe);
+
+            // Delete recipes
+            var recipesOfProduct = _productManagement.GetRecipes(converted, RecipeClassification.CloneFilter);
+            foreach (var recipe in recipesOfProduct)
+                if (recipes.FirstOrDefault(r => r.Id == recipe.Id) == null)
+                    _productManagement.DeleteRecipe(recipe.Id);
 
             // Product is flat
             if (source.Properties is null)
