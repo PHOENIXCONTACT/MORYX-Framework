@@ -19,7 +19,7 @@ namespace Moryx.Products.Management
     {
         #region Dependencies
 
-        public IProductStorage Storage { get; set; }
+        public IProductRemoveRecipeStorage Storage { get; set; }
 
         public IUnitOfWorkFactory<ProductsContext> ModelFactory { get; set; }
 
@@ -56,6 +56,11 @@ namespace Moryx.Products.Management
             Storage.SaveRecipes(productId, recipes);
             foreach (var recipe in recipes)
                 RaiseRecipeChanged(recipe);
+        }
+
+        public void Remove(long recipeId)
+        {
+            Storage.RemoveRecipe(recipeId);
         }
 
         public IReadOnlyList<Workplan> LoadAllWorkplans()
@@ -143,7 +148,7 @@ namespace Moryx.Products.Management
                 return entity.Id;
             }
         }
-
+       
         public void DeleteWorkplan(long workplanId)
         {
             using (var uow = ModelFactory.Create())

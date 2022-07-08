@@ -24,8 +24,8 @@ namespace Moryx.Products.Management
     /// Base class for product storage. Contains basic functionality to load and save a product.
     /// Also has the possibility to store a version to each save.
     /// </summary>
-    [Plugin(LifeCycle.Singleton, typeof(IProductStorage), typeof(IProductSearchStorage), typeof(IConfiguredTypesProvider))]
-    internal class ProductStorage : IProductSearchStorage, IConfiguredTypesProvider
+    [Plugin(LifeCycle.Singleton, typeof(IProductStorage), typeof(IProductSearchStorage), typeof(IConfiguredTypesProvider),typeof(IProductRemoveRecipeStorage))]
+    internal class ProductStorage : IProductRemoveRecipeStorage, IConfiguredTypesProvider
     {
         /// <summary>
         /// Recipe types
@@ -243,6 +243,21 @@ namespace Moryx.Products.Management
                               where recipes.All(r => r.Id != dbRecipe.Id)
                               select dbRecipe;
                 recipeRepo.RemoveRange(deleted);
+
+                uow.SaveChanges();
+            }
+        }
+
+        /// <inheritdoc />
+        public void RemoveRecipe(long recipeId)
+        {
+            using (var uow = Factory.Create())
+            {
+                // Prepare required repos   
+                var recipeRepo = uow.GetRepository<IProductRecipeEntityRepository>();
+
+                var deletedRecipe = recipeRepo.GetByKey(recipeId);         
+                recipeRepo.Remove(deletedRecipe);
 
                 uow.SaveChanges();
             }
