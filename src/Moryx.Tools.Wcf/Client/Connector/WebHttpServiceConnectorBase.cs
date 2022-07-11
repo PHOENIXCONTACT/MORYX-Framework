@@ -118,8 +118,9 @@ namespace Moryx.Tools.Wcf
             // Compare version
             if (VersionCompare.ClientMatch(serverVersion, clientVersion))
             {
-                // Create new base address client
-                HttpClient = new HttpClient { BaseAddress = new Uri(endpoint.Address) };
+                // Create HttpClient
+                var proxyConfig = (_endpointService as IProxyConfigAccess)?.ProxyConfig;
+                HttpClient = HttpClientBuilder.GetClient(endpoint.Address, proxyConfig);
 
                 if (!string.IsNullOrEmpty(_myCulture.IetfLanguageTag))
                     HttpClient.DefaultRequestHeaders.AcceptLanguage
