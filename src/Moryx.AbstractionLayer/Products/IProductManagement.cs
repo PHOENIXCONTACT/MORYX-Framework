@@ -156,14 +156,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Delete a product by its id
         /// </summary>
         bool DeleteProduct(long id);
-    }
 
-    /// <summary>
-    /// Additional interface for deleting recipes
-    /// TODO: Remove in AL 6
-    /// </summary>
-    public interface IRecipeProductManagement : IProductManagementModification
-    {
         /// <summary>
         /// Remove Recipe by given id
         /// </summary>

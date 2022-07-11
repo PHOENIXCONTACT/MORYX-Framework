@@ -23,9 +23,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
     [Produces("application/json")]
     public class ProductManagementController : ControllerBase
     {
-        private readonly IRecipeProductManagement _productManagement;
+        private readonly IProductManagementModification _productManagement;
         private readonly ProductConverter _productConverter;
-        public ProductManagementController(IRecipeProductManagement productManagement)
+        public ProductManagementController(IProductManagementModification productManagement)
         {
             _productManagement = productManagement;
             _productConverter = new ProductConverter(_productManagement);

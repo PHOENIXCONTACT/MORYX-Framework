@@ -45,11 +45,11 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
     public class ProductManagementHubService : BackgroundService
     {
-        private readonly IRecipeProductManagement _productManagement;
+        private readonly IProductManagementModification _productManagement;
         private readonly IHubContext<ProductManagementHub> _hubContext;
         private readonly ProductConverter _converter;
 
-        public ProductManagementHubService(IRecipeProductManagement productManagement,
+        public ProductManagementHubService(IProductManagementModification productManagement,
             IHubContext<ProductManagementHub> hubContext)
         {
             _productManagement = productManagement ?? throw new ArgumentNullException(nameof(productManagement));

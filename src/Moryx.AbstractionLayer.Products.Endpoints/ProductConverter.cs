@@ -17,7 +17,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     public class ProductConverter
     {
-        private IRecipeProductManagement _productManagement;
+        private IProductManagementModification _productManagement;
 
         // Null object pattern for identity
         private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
@@ -25,7 +25,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         private static readonly ICustomSerialization ProductSerialization = new PartialSerialization<ProductType>();
         private static readonly ICustomSerialization RecipeSerialization = new PartialSerialization<ProductionRecipe>();
 
-        public ProductConverter(IRecipeProductManagement productManagement)
+        public ProductConverter(IProductManagementModification productManagement)
         {
             _productManagement = productManagement;
         }
