@@ -13,7 +13,7 @@ namespace Moryx.Workflows.WorkplanSteps
     /// Workplanstep to split execution
     /// </summary>
     [DataContract]
-    [Description("Splits the current execution path into 'n' parallel paths.")]
+    [Display(Name = "Split", Description = "Splits the incoming path into multiple outputs")]
     public class SplitWorkplanStep : WorkplanStepBase
     {
         private SplitWorkplanStep()

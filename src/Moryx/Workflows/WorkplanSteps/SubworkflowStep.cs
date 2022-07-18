@@ -10,6 +10,7 @@ namespace Moryx.Workflows.WorkplanSteps
     /// Step that creates <see cref="SubworkflowTransition"/> with the given workplan
     /// </summary>
     [DataContract]
+    [Display(Name = "Sub-Workplan", Description = "Nests a sub-workplan in the current workplan")]
     public class SubworkflowStep : SubWorkplanStep
     {
         private SubworkflowStep()
