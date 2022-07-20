@@ -140,6 +140,8 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
             var recipes = RecipeManagement.GetRecipes(productType, classification);
+            if (recipes == null)
+                return null;
             return recipes.Select(ReplaceOrigin).ToArray();
         }
 
