@@ -4,6 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.Workflows.Transitions;
 using System.ComponentModel.DataAnnotations;
+using Moryx.Properties;
 
 namespace Moryx.Workflows.WorkplanSteps
 {
@@ -11,7 +12,7 @@ namespace Moryx.Workflows.WorkplanSteps
     /// Workplan step to join multiple inputs
     /// </summary>
     [DataContract]    
-    [ClassDisplay(Name = "Join", Description = "Rejoins the incoming paths into a single output")]
+    [ClassDisplay(ResourceType = typeof(Strings), Name = "JoinWorkplanStep_Name", Description = "JoinWorkplanStep_Description")]
     public class JoinWorkplanStep : WorkplanStepBase
     {
         private JoinWorkplanStep()
