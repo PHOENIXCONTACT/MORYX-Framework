@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Moryx.Properties;
 using Moryx.Workflows.Transitions;
 
 namespace Moryx.Workflows.WorkplanSteps
@@ -13,7 +13,7 @@ namespace Moryx.Workflows.WorkplanSteps
     /// Workplanstep to split execution
     /// </summary>
     [DataContract]
-    [ClassDisplay(Name = "Split", Description = "Splits the incoming path into multiple outputs")]
+    [ClassDisplay(ResourceType = typeof(Strings), Name = "SplitWorkplanStep_Name", Description = "SplitWorkplanStep_Description")]
     public class SplitWorkplanStep : WorkplanStepBase
     {
         private SplitWorkplanStep()
