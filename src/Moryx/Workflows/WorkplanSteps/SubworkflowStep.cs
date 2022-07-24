@@ -3,6 +3,8 @@
 
 using System.Runtime.Serialization;
 using Moryx.Workflows.Transitions;
+using System.ComponentModel.DataAnnotations;
+using Moryx.Properties;
 
 namespace Moryx.Workflows.WorkplanSteps
 {
@@ -10,6 +12,7 @@ namespace Moryx.Workflows.WorkplanSteps
     /// Step that creates <see cref="SubworkflowTransition"/> with the given workplan
     /// </summary>
     [DataContract]
+    [ClassDisplay(ResourceType = typeof(Strings), Name = "SubworkflowStep_Name", Description = "SubworkflowStep_Description")]
     public class SubworkflowStep : SubWorkplanStep
     {
         private SubworkflowStep()
