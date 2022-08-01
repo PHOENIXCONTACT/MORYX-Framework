@@ -26,6 +26,8 @@ namespace StartProject.Asp
         {
             services.AddRazorPages();
 
+            services.AddMoryxKernel(_moryxRuntime);
+
             services.AddMoryxFacades(_moryxRuntime);
         }
 
