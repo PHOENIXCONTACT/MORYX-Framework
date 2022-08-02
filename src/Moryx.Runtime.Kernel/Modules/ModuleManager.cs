@@ -15,8 +15,8 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Manages all the modules on the server side. 
     /// </summary>
-    [InitializableKernelComponent(typeof(IModuleManager))]
-    public class ModuleManager : IModuleManager, IInitializable, ILoggingHost
+    [InitializableKernelComponent(typeof(IModuleManager), typeof(IFacadeCollector))]
+    public class ModuleManager : IModuleManager, IInitializable, ILoggingHost, IFacadeCollector
     {
         #region Dependencies
 
@@ -171,7 +171,7 @@ namespace Moryx.Runtime.Kernel
         /// <returns>An amount of start dependencies for the requested module.</returns>
         public IEnumerable<IServerModule> StartDependencies(IServerModule service)
         {
-            return _dependencyManager.GetDependencyBranch(service)?.Dependencies.Select(item => item.RepresentedModule) 
+            return _dependencyManager.GetDependencyBranch(service)?.Dependencies.Select(item => item.RepresentedModule)
                    ?? Enumerable.Empty<IServerModule>();
         }
 
@@ -189,6 +189,13 @@ namespace Moryx.Runtime.Kernel
         {
             return ABehaviourAccess.Create<T>(_config, plugin);
         }
+
+        #endregion
+
+        #region IFacadeCollector
+
+        /// <inheritdoc />
+        public IReadOnlyList<object> Facades => _dependencyManager.Facades;
 
         #endregion
 

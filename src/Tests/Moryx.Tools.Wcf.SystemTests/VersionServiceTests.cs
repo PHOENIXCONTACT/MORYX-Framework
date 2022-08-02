@@ -143,7 +143,7 @@ namespace Moryx.Tools.Wcf.SystemTests
 
             _hogController.StartService(ModuleController.ModuleName);
             result = _hogController.WaitForService(DependentTestModule.ModuleController.ModuleName, ServerModuleState.Running, 5);
-            Assert.IsTrue(result, "Service '{0}' did not reach state 'Running' ", ModuleController.ModuleName);
+            Assert.IsTrue(result, "Service '{0}' did not reach state 'Running' ", DependentTestModule.ModuleController.ModuleName);
 
             endpoints = _versionService.ActiveEndpoints();
 

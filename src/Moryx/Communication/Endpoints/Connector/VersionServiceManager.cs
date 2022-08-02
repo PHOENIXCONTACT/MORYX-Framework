@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -13,7 +12,7 @@ namespace Moryx.Communication.Endpoints
     /// <summary>
     /// Service manager base class for provide active endpoints of the current application runtime
     /// </summary>
-    public abstract class VersionServiceManager<TEndpoint> : IVersionServiceManager
+    public abstract class VersionServiceManager<TEndpoint> : IVersionServiceManager, IProxyConfigAccess
         where TEndpoint : Endpoint
     {
         private const string ServiceName = "endpoints";
@@ -22,30 +21,17 @@ namespace Moryx.Communication.Endpoints
         /// Underlying http client for the requests
         /// </summary>
         protected HttpClient Client { get; set; }
+        
+        /// <inheritdoc/>
+        public IProxyConfig ProxyConfig { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the <see cref="VersionServiceManager{TEndpoint}"/>
         /// </summary>
         protected VersionServiceManager(IProxyConfig proxyConfig, string host, int port)
         {
-            // Create HttpClient
-            if (proxyConfig?.EnableProxy == true && !proxyConfig.UseDefaultWebProxy)
-            {
-                var proxy = new WebProxy
-                {
-                    Address = new Uri($"http://{proxyConfig.Address}:{proxyConfig.Port}"),
-                    BypassProxyOnLocal = false,
-                    UseDefaultCredentials = true
-                };
-
-                Client = new HttpClient(new HttpClientHandler { Proxy = proxy });
-            }
-            else
-            {
-                Client = new HttpClient();
-            }
-
-            Client.BaseAddress = new Uri($"http://{host}:{port}/{ServiceName}/");
+            ProxyConfig = proxyConfig;
+            Client = HttpClientBuilder.GetClient($"http://{host}:{port}/{ServiceName}/", ProxyConfig);
         }
 
         /// <inheritdoc />

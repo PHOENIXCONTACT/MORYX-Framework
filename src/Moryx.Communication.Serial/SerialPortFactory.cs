@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.IO.Ports;
 using System.Text;
 using Moryx.Logging;
@@ -11,11 +14,11 @@ namespace Moryx.Communication.Serial
         {
             logger.Log(LogLevel.Debug, "ConfigComPort started");
 
-            // Create a new _serialPort object with default settings.
-            var serialPort = new SerialPort(config.Port);
-
             try
             {
+                // Create a new _serialPort object with default settings.
+                var serialPort = new SerialPort(config.Port);
+
                 // Allow the user to set the appropriate properties.
                 serialPort.BaudRate = config.BaudRate;
                 serialPort.Parity = config.Parity;
@@ -30,12 +33,6 @@ namespace Moryx.Communication.Serial
                 serialPort.ReadBufferSize = config.ReadBufferSize;
                 serialPort.WriteBufferSize = config.WriteBufferSize;
 
-                logger.Log(LogLevel.Debug, "ConfigPort: Opening");
-
-                serialPort.Open();
-
-                logger.Log(LogLevel.Debug, "ConfigPort: Opened");
-
                 return serialPort;
             }
             catch (Exception e)
@@ -44,7 +41,7 @@ namespace Moryx.Communication.Serial
 
                 var msg = new StringBuilder("Known devices:");
 
-                foreach (string s in SerialPort.GetPortNames())
+                foreach (var s in SerialPort.GetPortNames())
                 {
                     msg.AppendLine().AppendFormat("    Device {0}", s);
                 }

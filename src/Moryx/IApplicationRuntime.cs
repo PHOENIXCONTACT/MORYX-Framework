@@ -15,4 +15,20 @@ namespace Moryx
         /// </summary>
         IContainer GlobalContainer { get; }
     }
+
+    /// <summary>
+    /// Additional interface to interact with the MORYX application
+    /// </summary>
+    public interface IApplicationRuntimeExecution : IApplicationRuntime
+    {
+        /// <summary>
+        /// Load environment and composition
+        /// </summary>
+        int Load();
+
+        /// <summary>
+        /// Execute the
+        /// </summary>
+        int Execute();
+    }
 }

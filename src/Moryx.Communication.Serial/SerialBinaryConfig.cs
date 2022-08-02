@@ -12,8 +12,8 @@ namespace Moryx.Communication.Serial
     /// </summary>
     public class SerialBinaryConfig : BinaryConnectionConfig
     {
-        ///
-        public override string PluginName => SerialBinaryConnection.ConnectionName;
+        /// <inheritdoc />
+        public override string PluginName => nameof(SerialBinaryConnection);
 
         /// <summary>
         /// Port to use for communication

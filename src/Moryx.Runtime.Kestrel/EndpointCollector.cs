@@ -9,7 +9,7 @@ namespace Moryx.Runtime.Kestrel
 {
     internal class EndpointCollector
     {
-        private readonly Dictionary<string, Endpoint> _endpoints = new Dictionary<string, Endpoint>();
+        private readonly ICollection<Endpoint> _endpoints = new List<Endpoint>();
 
         public Endpoint[] AllEndpoints
         {
@@ -17,24 +17,16 @@ namespace Moryx.Runtime.Kestrel
             {
                 lock (_endpoints)
                 {
-                    return _endpoints.Values.ToArray();
+                    return _endpoints.ToArray();
                 }
             }
         }
 
-        public void AddEndpoint(string address, Endpoint endpoint)
+        public void AddEndpoint(Endpoint endpoint)
         {
             lock (_endpoints)
             {
-                _endpoints[address] = endpoint;
-            }
-        }
-
-        public void RemoveEndpoint(string address)
-        {
-            lock (_endpoints)
-            {
-                _endpoints.Remove(address);
+                _endpoints.Add(endpoint);
             }
         }
     }
