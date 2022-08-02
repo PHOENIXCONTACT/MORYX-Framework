@@ -20,7 +20,7 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Base kernel loader for the runtime
     /// </summary>
-    public class HeartOfGold : IApplicationRuntimeExecution
+    public class HeartOfGold
     {
         private string[] _args;
 

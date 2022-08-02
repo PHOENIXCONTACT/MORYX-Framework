@@ -14,22 +14,14 @@ namespace StartProject.Asp
 {
     public class Program
     {
-        public static int Main(string[] args)
+        public static void Main(string[] args)
         {
-            var moryxRuntime = new HeartOfGold(args);
-            moryxRuntime.Load();
-            
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup(conf => new Startup(moryxRuntime));
+                    webBuilder.UseStartup<Startup>();
                 }).Build();
-
-            host.Start();
-            var result = moryxRuntime.Execute();
-            host.Dispose();
-
-            return (int)result;
+            host.Run();
         }
     }
 }
