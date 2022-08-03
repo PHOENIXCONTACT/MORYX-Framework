@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
@@ -22,10 +23,15 @@ namespace Moryx.Runtime.Kernel
             serviceCollection.AddSingleton<IRuntimeConfigManager, RuntimeConfigManager>();
             serviceCollection.AddSingleton<IConfigManager>(x => x.GetRequiredService<IRuntimeConfigManager>());
 
+            // Register logging
+            serviceCollection.AddSingleton<IServerLoggerManagement, ServerLoggerManagement>();
+
             // Register module manager
             serviceCollection.AddSingleton<ModuleManager>();
             serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
-            serviceCollection.AddSingleton<IInitializable>(x => x.GetRequiredService<ModuleManager>());    
+
+            // Register container factory for module container
+            serviceCollection.AddSingleton<IModuleContainerFactory, ModuleContainerFactory>();
         }
 
         /// <summary>
@@ -59,6 +65,24 @@ namespace Moryx.Runtime.Kernel
                     });
                 }
             }
+        }
+
+        /// <summary>
+        /// Use the moryx config manager
+        /// </summary>
+        public static IConfigManager UseMoryxConfigurations(this IServiceProvider serviceProvider, string configDirectory)
+        {
+            // Load config manager
+            var configManager = serviceProvider.GetRequiredService<IRuntimeConfigManager>();
+            configManager.ConfigDirectory = configDirectory;
+            return configManager;
+        }
+
+        public static IModuleManager UseMoryxModules(this IServiceProvider serviceProvider)
+        {
+            var moduleManager = serviceProvider.GetRequiredService<IModuleManager>();
+            moduleManager.StartModules();
+            return moduleManager;
         }
     }
 }

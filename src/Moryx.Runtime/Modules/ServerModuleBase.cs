@@ -36,8 +36,12 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Creates a new instance of <see cref="ServerModuleBase{TConf}"/> and initializes the state machine
         /// </summary>
-        protected ServerModuleBase()
+        protected ServerModuleBase(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement)
         {
+            ContainerFactory = containerFactory;
+            ConfigManager = configManager;
+            LoggerManagement = loggerManagement;
+
             StateMachine.Initialize((IServerModuleStateContext)this).With<ServerModuleStateBase>();
         }
 
@@ -70,7 +74,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// <see cref="IModuleContainerFactory"/>
         /// </summary>
-        public IModuleContainerFactory ContainerFactory { get; set; }
+        public IModuleContainerFactory ContainerFactory { get; }
 
         void IInitializable.Initialize()
         {

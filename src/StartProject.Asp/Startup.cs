@@ -47,6 +47,10 @@ namespace StartProject.Asp
             {
                 endpoints.MapRazorPages();
             });
+
+            app.ApplicationServices.UseMoryxConfigurations("Config");
+
+            app.ApplicationServices.UseMoryxModules();
         }
     }
 }

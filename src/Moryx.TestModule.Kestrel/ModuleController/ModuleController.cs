@@ -3,6 +3,9 @@
 
 using System.ComponentModel;
 using Moryx.Communication.Endpoints;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Runtime;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 
@@ -29,25 +32,25 @@ namespace Moryx.TestModule.Kestrel
         /// </summary>
         public override string Name => ModuleName;
 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
+            : base(containerFactory, configManager, loggerManagement)
+        {
+        }
+
         /// <inheritdoc />
         protected override void OnInitialize()
         {
-            Container.ActivateHosting(Hosting);
         }
 
         /// <inheritdoc />
         protected override void OnStart()
         {
-            var hostFactory = Container.Resolve<IEndpointHostFactory>();
-            _host = hostFactory.CreateHost(typeof(TestController), null);
-            _host.Start();
         }
 
         /// <inheritdoc />
 
         protected override void OnStop()
         {
-            _host.Stop();
         }
 
 

@@ -23,6 +23,11 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         private readonly ICollection<IFacadeControl> _activeFacades = new List<IFacadeControl>();
 
+        protected ServerModuleFacadeControllerBase(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
+            : base(containerFactory, configManager, loggerManagement)
+        {
+        }
+
         /// <summary>
         /// Activate our public API facade
         /// </summary>
