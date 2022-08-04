@@ -7,7 +7,7 @@ using System.Globalization;
 namespace Moryx.Runtime.Endpoints.Common.Endpoint
 {
     [ApiController]
-    [Route("sth/common")]
+    [Route("common")]
     [Produces("application/json")]
     public class CommonController : ControllerBase, ICommonController
     {
