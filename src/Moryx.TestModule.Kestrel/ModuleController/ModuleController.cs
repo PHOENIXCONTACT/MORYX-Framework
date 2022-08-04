@@ -18,15 +18,6 @@ namespace Moryx.TestModule.Kestrel
         private IEndpointHost _host;
         public const string ModuleName = "TestModuleKestrel";
 
-        #region Dependencies
-
-        /// <summary>
-        /// Host factory to create wcf services
-        /// </summary>
-        public IEndpointHosting Hosting { get; set; }
-
-        #endregion
-
         /// <summary>
         /// Name of this module
         /// </summary>

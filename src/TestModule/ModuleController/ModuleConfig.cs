@@ -9,7 +9,6 @@ using Moryx.Configuration;
 using Moryx.Logging;
 using Moryx.Runtime.Configuration;
 using Moryx.Serialization;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.TestModule
 {
@@ -65,10 +64,6 @@ namespace Moryx.TestModule
         public TestPluginConfig TestPlugin { get; set; }
 
         [DataMember]
-        [PluginConfigs(typeof(IAnotherPlugin))]
-        public AnotherPluginConfig AnotherPlugin { get; set; }
-
-        [DataMember]
         [PluginConfigs(typeof(ITestPlugin), false)]
         public List<TestPluginConfig> Plugins { get; set; }
 
@@ -79,9 +74,5 @@ namespace Moryx.TestModule
         [DataMember]
         [DefaultValue(2000)]
         public int SleepTime { get; set; }
-
-        [DataMember]
-        [PluginConfigs(typeof(IHelloWorldWcfConnector))]
-        public HelloWorldWcfConnectorConfig HelloWorldWcfConnector { get; set; }
     }
 }

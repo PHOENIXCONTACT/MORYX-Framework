@@ -1,20 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
-    <Description>Moryx Runtime Module: TestModule.</Description>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net5.0</TargetFrameworks>
+        <Description>Moryx Runtime Module: TestModuleKestrel.</Description>
+        <OutputType>Library</OutputType>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
-    <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
-    <ProjectReference Include="..\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj" />
     <ProjectReference Include="..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj" />
   </ItemGroup>
 

@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.TestModule
 {
@@ -12,24 +11,10 @@ namespace Moryx.TestModule
     {
         public TestSubPluginConfig1()
         {
-            OrderWcfService = new HostConfig
-            {
-                BindingType = ServiceBindingType.BasicHttp,
-                Endpoint = "OrderImporting",
-                MetadataEnabled = true,
-                HelpEnabled = true
-            };
-
             OrderSources = new List<SourceConfig>();
         }
 
         public override string PluginName { get { return TestSubPlugin1.ComponentName; } }
-
-        /// <summary>
-        /// Gets or sets the configuration for the wcf service.
-        /// </summary>
-        [DataMember]
-        public HostConfig OrderWcfService { get; set; }
 
         /// <summary>
         /// Gets or sets the order source.

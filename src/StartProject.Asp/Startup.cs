@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Moryx;
 using Moryx.Asp.Integration;
 using Moryx.Runtime.Kernel;
+using Moryx.TestModule;
 
 namespace StartProject.Asp
 {
@@ -20,9 +21,7 @@ namespace StartProject.Asp
         {
             services.AddRazorPages();
 
-            services.AddMoryxKernel();
-
-            services.AddMoryxModules();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,12 +44,9 @@ namespace StartProject.Asp
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
-
-            app.ApplicationServices.UseMoryxConfigurations("Config");
-
-            app.ApplicationServices.UseMoryxModules();
         }
     }
 }

@@ -3,12 +3,12 @@
 
 using System.ComponentModel;
 using System.Threading;
-using Moryx.Communication.Endpoints;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Runtime;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
-using Moryx.Runtime.Wcf;
 using Moryx.TestModule;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.DependentTestModule
 {
@@ -26,10 +26,10 @@ namespace Moryx.DependentTestModule
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public ITestModule TestModule { get; set; }
 
-        /// <summary>
-        /// Host factory to create services
-        /// </summary>
-        public IEndpointHosting EndpointHosting { get; set; }
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
+            : base(containerFactory, configManager, loggerManagement)
+        {
+        }
 
         #region State transition
 
@@ -39,11 +39,7 @@ namespace Moryx.DependentTestModule
         /// </summary>
         protected override void OnInitialize()
         {
-            Container.ActivateHosting(EndpointHosting);
-            Container.LoadComponents<ISimpleHelloWorldWcfConnector>();
         }
-
-        private ISimpleHelloWorldWcfConnector _connector;
 
         /// <summary>
         /// Code executed after OnInitialize
@@ -51,12 +47,6 @@ namespace Moryx.DependentTestModule
         protected override void OnStart()
         {
             Thread.Sleep(2000); // Just for system testing.
-
-            var factory = Container.Resolve<ISimpleHelloWorldWcfConnectorFactory>();
-            _connector = factory.Create(Config.SimpleHelloWorldWcfConnector);
-
-            _connector.Initialize(Config.SimpleHelloWorldWcfConnector);
-            _connector.Start();
 
             // Activate facades
             ActivateFacade(_testModuleFacade);
@@ -71,15 +61,13 @@ namespace Moryx.DependentTestModule
 
             // Deactivate facades
             DeactivateFacade(_testModuleFacade);
-
-            // Stop connector
-            _connector.Stop();
-            _connector = null;
         }
+
         #endregion
 
         #region FacadeContainer
         private readonly DependentTestModuleFacade _testModuleFacade = new DependentTestModuleFacade();
+
         IDependentTestModule IFacadeContainer<IDependentTestModule>.Facade => _testModuleFacade;
 
         #endregion

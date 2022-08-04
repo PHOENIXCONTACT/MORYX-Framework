@@ -17,7 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
-    <ProjectReference Include="..\Moryx.Runtime.Kestrel\Moryx.Runtime.Kestrel.csproj" />
   </ItemGroup>
 
 </Project>

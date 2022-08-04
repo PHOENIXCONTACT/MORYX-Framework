@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <Description>Moryx Runtime Module: DependentTestModule</Description>
   </PropertyGroup>
 
@@ -12,9 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
-    <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
-    <ProjectReference Include="..\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj" />
     <ProjectReference Include="..\TestModule\Moryx.TestModule.csproj" />
   </ItemGroup>
 

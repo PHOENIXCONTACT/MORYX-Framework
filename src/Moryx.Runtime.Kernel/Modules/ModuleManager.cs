@@ -75,12 +75,6 @@ namespace Moryx.Runtime.Kernel
                 WaitingModules = waitingModules
             };
 
-            // Link framework modules
-            foreach (var platformModule in availableModules.OfType<IPlatformModule>())
-            {
-                platformModule.SetModuleManager(this);
-            }
-
             // Observe state changed events of modules
             foreach (var module in availableModules)
             {

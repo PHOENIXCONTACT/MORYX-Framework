@@ -10,8 +10,5 @@ namespace Moryx.DependentTestModule
     [DataContract]
     public class ModuleConfig : ConfigBase
     {
-        [DataMember]
-        [PluginConfigs(typeof(ISimpleHelloWorldWcfConnector))]
-        public SimpleHelloWorldWcfConnectorConfig SimpleHelloWorldWcfConnector { get; set; }
     }
 }

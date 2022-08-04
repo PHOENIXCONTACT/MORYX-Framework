@@ -10,6 +10,8 @@ using Moryx.Model;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
+using Moryx.Container;
+using Moryx.Configuration;
 
 #if USE_WCF
 using Moryx.Tools.Wcf;
@@ -24,15 +26,9 @@ namespace Moryx.Runtime.Maintenance
     [ServerModule(ModuleName)]
     [Description("Core module to maintain the application. It provides config, database and logging support by default. " +
                  "Additional plugins can be included as well as other extensions implementing IMaintenanceModule")]
-    public class ModuleController : ServerModuleBase<ModuleConfig>, IPlatformModule
+    public class ModuleController : ServerModuleBase<ModuleConfig>
     {
         internal const string ModuleName = "Maintenance";
-
-        #region Fields
-
-        private IModuleManager _moduleManager;
-
-        #endregion
 
         #region Dependency Injection
 
@@ -51,15 +47,6 @@ namespace Moryx.Runtime.Maintenance
         /// </summary>
         public IEndpointHosting Hosting { get; set; }
 
-        /// <summary>
-        /// Set the module manager. Not injected by castle.
-        /// </summary>
-        /// <param name="moduleManager">the module manager.</param>
-        public void SetModuleManager(IModuleManager moduleManager)
-        {
-            _moduleManager = moduleManager;
-        }
-
         #endregion
 
         /// <summary>
@@ -67,13 +54,18 @@ namespace Moryx.Runtime.Maintenance
         /// </summary>
         public override string Name => ModuleName;
 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
+            : base(containerFactory, configManager, loggerManagement)
+        {
+        }
+
         /// <summary>
         /// Called when [initialize].
         /// </summary>
         protected override void OnInitialize()
         {
             Container.ActivateHosting(Hosting);
-            Container.SetInstance(_moduleManager).SetInstance(RuntimeConfigManager)
+            Container.SetInstance(RuntimeConfigManager)
                 .SetInstance(LoggerManagement);
 
             Container.SetInstance(DbContextManager);

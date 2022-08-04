@@ -1,10 +1,7 @@
 ﻿@page
 @using Moryx.Runtime.Configuration
 @using Moryx.Runtime.Modules
-@using Moryx.TestModule
-@using Moryx.TestModule.Kestrel
 @model IndexModel
-@inject ITestFacade facade
 @inject IRuntimeConfigManager configManager
 @inject IEnumerable<IServerModule> modules
 @{
@@ -14,7 +11,6 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome with @(facade.Bla)</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 

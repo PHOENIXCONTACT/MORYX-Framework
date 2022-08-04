@@ -7,8 +7,10 @@ using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Moryx.Runtime.Kernel
 {
@@ -38,9 +40,10 @@ namespace Moryx.Runtime.Kernel
         /// Add MORYX modules to the service collection
         /// </summary>
         public static void AddMoryxModules(this IServiceCollection serviceCollection)
-        {
+        {           
             // Find all module types in the app domain
-            var modules = AppDomain.CurrentDomain.GetAssemblies()
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var modules = loadedAssemblies
                 .SelectMany(assembly => assembly.GetExportedTypes())
                 .Where(type => !type.IsInterface & !type.IsAbstract & typeof(IServerModule).IsAssignableFrom(type))
                 .ToList();

@@ -4,11 +4,12 @@
 using System.ComponentModel;
 using System.Threading;
 using Moryx.Communication.Endpoints;
+using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Model;
+using Moryx.Runtime;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
-using Moryx.Runtime.Wcf;
-using Moryx.Tools.Wcf;
 
 namespace Moryx.TestModule
 {
@@ -25,28 +26,26 @@ namespace Moryx.TestModule
         /// </summary>
         public IDbContextManager DbContextManager { get; set; }
 
-        /// <summary>
-        /// Host factory to create services
-        /// </summary>
-        public IEndpointHosting Hosting { get; set; }
-
         #endregion
 
         /// <summary>
         /// Name of this module
         /// </summary>
         public override string Name => ModuleName;
-        private IHelloWorldWcfConnector _connector;
+
+
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
+            : base(containerFactory, configManager, loggerManagement)
+        {
+        }
+
 
         #region State transition
 
         /// <inheritdoc />
         protected override void OnInitialize()
         {
-            Container.ActivateHosting(Hosting);
             Container.ActivateDbContexts(DbContextManager);
-
-            Container.LoadComponents<IHelloWorldWcfConnector>();
         }
 
         /// <inheritdoc />
@@ -55,12 +54,6 @@ namespace Moryx.TestModule
             Logger.Log(Config.LogLevel, "Sending log message with level '{0}'", Config.LogLevel);
 
             Thread.Sleep(Config.SleepTime); // Just for system testing.
-
-            var factory = Container.Resolve<IHelloWorldWcfConnectorFactory>();
-
-            _connector = factory.Create(Config.HelloWorldWcfConnector);
-            _connector.Initialize(Config.HelloWorldWcfConnector);
-            _connector.Start();
 
             // Activate facades
             ActivateFacade(_testModule);
@@ -74,10 +67,6 @@ namespace Moryx.TestModule
 
             // Deactivate facades
             DeactivateFacade(_testModule);
-
-            // Stop connector
-            _connector.Stop();
-            _connector = null;
         }
         #endregion
 
