@@ -20,8 +20,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net461'">
-    <ProjectReference Include="..\Moryx.Tools.Wcf\Moryx.Tools.Wcf.csproj" />
-    <ProjectReference Include="..\Moryx.Runtime.Wcf\Moryx.Runtime.Wcf.csproj" />
 
     <Reference Include="System.Management" />
   </ItemGroup>

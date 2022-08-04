@@ -8,8 +8,8 @@ namespace Moryx.TestModule
     /// </summary
     public interface ITestModule
     {
-        /*
-         * Define the API exported by TestModule
-         */
+        int Bla { get; }
+
+        int Foo(int a, int b);
     }
 }

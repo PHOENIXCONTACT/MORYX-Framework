@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
-    <ProjectReference Include="..\TestModule\Moryx.TestModule.csproj" />
+    <ProjectReference Include="..\Moryx.TestModule\Moryx.TestModule.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,5 +7,10 @@ namespace Moryx.TestModule
 {
     public class TestModuleFacade : FacadeBase, ITestModule
     {
+        private int _bla;
+
+        public int Bla => ++_bla;
+
+        public int Foo(int a, int b) => a + b;
     }
 }
