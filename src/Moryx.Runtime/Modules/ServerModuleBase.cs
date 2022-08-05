@@ -60,7 +60,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// <see cref="ILoggerManagement"/>
         /// </summary>
-        public IServerLoggerManagement LoggerManagement { get; set; }
+        public IServerLoggerManagement LoggerManagement { get; }
 
         /// <summary>
         /// Logger of this module.
@@ -210,7 +210,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Config manager kernel component used to access this module config
         /// </summary>
-        public IConfigManager ConfigManager { get; set; }
+        public IConfigManager ConfigManager { get; }
 
         /// <summary>
         /// Config instance for the current lifecycle

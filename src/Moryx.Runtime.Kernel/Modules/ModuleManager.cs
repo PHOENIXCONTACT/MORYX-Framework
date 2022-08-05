@@ -25,10 +25,6 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public IModuleLogger Logger { get; set; }
 
-        /// <summary>
-        /// Logger management instance. Injected by castle.
-        /// </summary>
-        public ILoggerManagement LoggerManagement { get; set; }
 
         #endregion
 

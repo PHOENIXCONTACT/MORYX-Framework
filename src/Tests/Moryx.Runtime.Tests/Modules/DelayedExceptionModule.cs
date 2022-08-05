@@ -3,6 +3,8 @@
 
 using System;
 using System.Threading;
+using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 
@@ -10,6 +12,11 @@ namespace Moryx.Runtime.Tests.Modules
 {
     internal class DelayedExceptionModule : ServerModuleBase<TestConfig>
     {
+        public DelayedExceptionModule(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
+            : base(containerFactory, configManager, loggerManagement)
+        {
+        }
+
         /// <inheritdoc />
         public override string Name => "DelayedException";
 
