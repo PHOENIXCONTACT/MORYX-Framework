@@ -1,14 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx;
 using Moryx.Asp.Integration;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace StartProject.Asp
 {
@@ -26,6 +23,14 @@ namespace StartProject.Asp
         {
             services.AddRazorPages();
 
+            services.AddControllers()
+                .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
+            });
+
             services.AddMoryxKernel(_moryxRuntime);
 
             services.AddMoryxFacades(_moryxRuntime);
@@ -37,6 +42,9 @@ namespace StartProject.Asp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
@@ -51,6 +59,7 @@ namespace StartProject.Asp
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
         }
