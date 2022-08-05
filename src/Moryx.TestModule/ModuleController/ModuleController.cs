@@ -13,12 +13,9 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.TestModule
 {
-    [ServerModule(ModuleName)]
     [Description("Test module for System tests")]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<ITestModule>
     {
-        public const string ModuleName = "TestModule";
-
         #region Dependencies
 
         /// <summary>
@@ -31,7 +28,7 @@ namespace Moryx.TestModule
         /// <summary>
         /// Name of this module
         /// </summary>
-        public override string Name => ModuleName;
+        public override string Name => "TestModule";
 
 
         public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 

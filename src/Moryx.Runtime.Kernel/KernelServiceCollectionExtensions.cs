@@ -81,7 +81,7 @@ namespace Moryx.Runtime.Kernel
             return configManager;
         }
 
-        public static IModuleManager UseMoryxModules(this IServiceProvider serviceProvider)
+        public static IModuleManager StartMoryxModules(this IServiceProvider serviceProvider)
         {
             var moduleManager = serviceProvider.GetRequiredService<IModuleManager>();
             moduleManager.StartModules();

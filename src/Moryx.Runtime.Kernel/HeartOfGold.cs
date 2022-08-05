@@ -153,7 +153,6 @@ namespace Moryx.Runtime.Kernel
 
             // Load kernel and core modules
             container.LoadComponents<object>(type => type.GetCustomAttribute<KernelComponentAttribute>() != null);
-            container.LoadComponents<IServerModule>(module => module.GetCustomAttribute<ServerModuleAttribute>() != null);
 
             // Load server modules
             container.LoadComponents<IServerModule>();

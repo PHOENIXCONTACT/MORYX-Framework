@@ -32,7 +32,7 @@ namespace StartProject.Asp
                 }).Build();
 
             host.Services.UseMoryxConfigurations("Config");
-            host.Services.UseMoryxModules();
+            host.Services.StartMoryxModules();
 
             host.Run();
         }

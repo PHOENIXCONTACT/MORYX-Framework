@@ -1,16 +1,19 @@
 ﻿@page
 @using Moryx.Runtime.Configuration
 @using Moryx.Runtime.Modules
+@using Moryx.TestModule
 @model IndexModel
+@inject ITestModule facade
 @inject IRuntimeConfigManager configManager
 @inject IEnumerable<IServerModule> modules
 @{
     ViewData["Title"] = "Home page";
 
-    //var config = configManager.GetConfiguration<ModuleConfig>();
+    var config = configManager.GetConfiguration<ModuleConfig>();
 }
 
 <div class="text-center">
+    <h1 class="display-4">Welcome with @(facade.Bla)</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
@@ -22,5 +25,5 @@
 </ul>
 
 <div>
-     <p>Foo</p>
+     <p>@(config.ConfigState)</p>
 </div>

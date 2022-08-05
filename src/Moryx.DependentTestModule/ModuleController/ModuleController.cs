@@ -12,16 +12,13 @@ using Moryx.TestModule;
 
 namespace Moryx.DependentTestModule
 {
-    [ServerModule(ModuleName)]
     [Description("Test module for System tests")]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<IDependentTestModule>
     {
-        public const string ModuleName = "DependentTestModule";
-
         /// <summary>
         /// Name of this module
         /// </summary>
-        public override string Name => ModuleName;
+        public override string Name => "DependentTestModule";
 
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public ITestModule TestModule { get; set; }

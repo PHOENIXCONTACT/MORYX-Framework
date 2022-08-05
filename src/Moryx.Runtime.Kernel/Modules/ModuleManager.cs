@@ -178,13 +178,6 @@ namespace Moryx.Runtime.Kernel
 
         #endregion
 
-        #region IFacadeCollector
-
-        /// <inheritdoc />
-        public IReadOnlyList<object> Facades => _dependencyManager.Facades;
-
-        #endregion
-
         private void OnModuleStateChanged(object sender, ModuleStateChangedEventArgs eventArgs)
         {
             ModuleStateChanged?.Invoke(sender, eventArgs);
