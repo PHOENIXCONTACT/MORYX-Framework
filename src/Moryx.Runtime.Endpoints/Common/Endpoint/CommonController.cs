@@ -9,7 +9,7 @@ namespace Moryx.Runtime.Endpoints.Common.Endpoint
     [ApiController]
     [Route("common")]
     [Produces("application/json")]
-    public class CommonController : ControllerBase, ICommonController
+    public class CommonController : ControllerBase
     {
         public CommonController()
         {
@@ -69,9 +69,7 @@ namespace Moryx.Runtime.Endpoints.Common.Endpoint
             var cpuLoad = 0UL;
 
             if (!Debugger.IsAttached)
-            {
                 cpuLoad = HostHelper.ProcessorTimePercentage(Process.GetCurrentProcess().ProcessName);
-            }
 
             return new ApplicationLoadResponse
             {
