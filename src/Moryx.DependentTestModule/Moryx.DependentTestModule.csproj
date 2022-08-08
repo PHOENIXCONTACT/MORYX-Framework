@@ -1,0 +1,19 @@
+﻿
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <Description>Moryx Runtime Module: DependentTestModule</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
+    <ProjectReference Include="..\Moryx.TestModule\Moryx.TestModule.csproj" />
+  </ItemGroup>
+
+</Project>

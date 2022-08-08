@@ -1,6 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Runtime.Kernel.Tests.Dummys;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks.Facade;
 using Moryx.Runtime.Modules;
@@ -12,6 +14,11 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         public override string Name => "LifeCycleBoundTestModule";
 
         private TestFacade _facade;
+
+        public LifeCycleBoundFacadeTestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
+            : base(containerFactory, configManager, loggerManagement)
+        {
+        }
 
         public int ActivatedCount { get; private set; }
         public int DeactivatedCount { get; private set; }

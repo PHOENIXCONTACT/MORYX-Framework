@@ -2,12 +2,18 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Tests.Modules
 {
     internal class TestModule : ServerModuleBase<TestConfig>
     {
+        public TestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) : base(containerFactory, configManager, loggerManagement)
+        {
+        }
+
         /// <inheritdoc />
         public override string Name => "TestModule";
 

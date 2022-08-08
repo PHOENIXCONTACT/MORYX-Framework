@@ -9,26 +9,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Moryx;
 using Moryx.Asp.Integration;
+using Moryx.Runtime.Kernel;
+using Moryx.TestModule;
 
 namespace StartProject.Asp
 {
     public class Startup
     {
-        private readonly IApplicationRuntime _moryxRuntime;
-
-        public Startup(IApplicationRuntime moryxRuntime)
-        {
-            _moryxRuntime = moryxRuntime;
-        }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
 
-            services.AddMoryxKernel(_moryxRuntime);
-
-            services.AddMoryxFacades(_moryxRuntime);
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +44,7 @@ namespace StartProject.Asp
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
         }

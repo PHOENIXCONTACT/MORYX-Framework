@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -10,10 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
-    <ProjectReference Include="..\Moryx.Runtime.Kestrel\Moryx.Runtime.Kestrel.csproj" />
-    <ProjectReference Include="..\Moryx.TestModule.Kestrel\Moryx.TestModule.Kestrel.csproj" />
+
+    <ProjectReference Include="..\Moryx.TestModule\Moryx.TestModule.csproj" />
+    <ProjectReference Include="..\Moryx.DependentTestModule\Moryx.DependentTestModule.csproj" />
   </ItemGroup>
 
 </Project>

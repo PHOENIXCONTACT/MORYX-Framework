@@ -2,9 +2,8 @@
 @using Moryx.Runtime.Configuration
 @using Moryx.Runtime.Modules
 @using Moryx.TestModule
-@using Moryx.TestModule.Kestrel
 @model IndexModel
-@inject ITestFacade facade
+@inject ITestModule facade
 @inject IRuntimeConfigManager configManager
 @inject IEnumerable<IServerModule> modules
 @{

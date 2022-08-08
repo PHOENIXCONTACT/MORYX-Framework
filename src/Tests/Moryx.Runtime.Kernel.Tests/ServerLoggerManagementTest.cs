@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
+using Moryx.Runtime.Modules;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.Kernel.Tests
@@ -44,17 +45,9 @@ namespace Moryx.Runtime.Kernel.Tests
             };
 
             _configManager.SaveConfiguration(config);
-            _management = new ServerLoggerManagement()
-            {
-                ConfigManager = _configManager,
-                LoggerFactory = new NullLoggerFactory()
-            };
+            _management = new ServerLoggerManagement(_configManager, new NullLoggerFactory());
 
-            _host = new ModuleManager
-            {
-                ConfigManager = _configManager,
-                LoggerManagement = _management
-            };
+            _host = new ModuleManager(new IServerModule[0], _configManager, _management);
             _management.ActivateLogging(_host);
         }
 
@@ -114,11 +107,7 @@ namespace Moryx.Runtime.Kernel.Tests
         [Test]
         public void ToggleLoggingStateTest()
         {
-            var host = new ModuleManager()
-            {
-                ConfigManager = _configManager,
-                LoggerManagement = _management
-            };
+            var host = new ModuleManager(new IServerModule[0], _configManager, _management);
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             ILogMessage logMessage = null;
@@ -234,11 +223,7 @@ namespace Moryx.Runtime.Kernel.Tests
         [TestCase(LogLevel.Warning, LogLevel.Warning, true)]
         public void AppendListener(LogLevel minLevel, LogLevel messageLevel, bool messageExpected)
         {
-            var host = new ModuleManager
-            {
-                ConfigManager = _configManager,
-                LoggerManagement = _management
-            };
+            var host = new ModuleManager(new IServerModule[0], _configManager, _management);
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             ILogMessage logMessage = null;

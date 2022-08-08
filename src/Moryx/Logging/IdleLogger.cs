@@ -10,7 +10,7 @@ namespace Moryx.Logging
     /// <summary>
     /// This is used to replace the logger implementation on a plugin while it idles
     /// </summary>
-    internal class IdleLogger : IModuleLogger
+    public class IdleLogger : IModuleLogger
     {
         private readonly ILogTarget _logTarget;
 

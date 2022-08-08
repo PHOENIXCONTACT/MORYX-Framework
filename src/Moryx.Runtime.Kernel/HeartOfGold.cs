@@ -20,7 +20,7 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Base kernel loader for the runtime
     /// </summary>
-    public class HeartOfGold : IApplicationRuntimeExecution
+    public class HeartOfGold
     {
         private string[] _args;
 
@@ -153,7 +153,6 @@ namespace Moryx.Runtime.Kernel
 
             // Load kernel and core modules
             container.LoadComponents<object>(type => type.GetCustomAttribute<KernelComponentAttribute>() != null);
-            container.LoadComponents<IServerModule>(module => module.GetCustomAttribute<ServerModuleAttribute>() != null);
 
             // Load server modules
             container.LoadComponents<IServerModule>();

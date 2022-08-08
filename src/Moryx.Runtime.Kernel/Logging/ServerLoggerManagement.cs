@@ -26,6 +26,13 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public IConfigManager ConfigManager { get; set; }
 
+        public ServerLoggerManagement(IConfigManager configManager, ILoggerFactory loggerFactory)
+        {
+            ConfigManager = configManager;
+
+            LoggerFactory = loggerFactory;
+        }
+
         /// <summary>
         /// Factory to create loggers
         /// </summary>

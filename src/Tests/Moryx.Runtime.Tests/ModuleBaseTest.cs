@@ -27,11 +27,7 @@ namespace Moryx.Runtime.Tests
             });
 
 
-            _moduleUnderTest = new TestModule
-            {
-                ConfigManager = configManagerMock.Object,
-                LoggerManagement = new TestLoggerMgmt()
-            };
+            _moduleUnderTest = new TestModule(null, configManagerMock.Object, new TestLoggerMgmt());
         }
 
         [Test]

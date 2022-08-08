@@ -26,12 +26,7 @@ namespace Moryx.Runtime.Tests
                 Strategy = new StrategyConfig()
             });
 
-            _moduleUnderTest = new TestModule
-            {
-                ConfigManager = _configManagerMock.Object,
-                LoggerManagement = new TestLoggerMgmt(),
-                ContainerFactory = new ModuleContainerFactory(),
-        };
+            _moduleUnderTest = new TestModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
         }
 
         [Test]
@@ -127,12 +122,7 @@ namespace Moryx.Runtime.Tests
         [Test]
         public void FailureInStopped()
         {
-            var module = new DelayedExceptionModule
-            {
-                ConfigManager = _configManagerMock.Object,
-                LoggerManagement = new TestLoggerMgmt(),
-                ContainerFactory = new ModuleContainerFactory()
-            };
+            var module = new DelayedExceptionModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
             var casted = (IServerModule) module;
 
             casted.Initialize();

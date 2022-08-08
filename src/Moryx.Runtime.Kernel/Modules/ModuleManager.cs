@@ -15,8 +15,8 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Manages all the modules on the server side. 
     /// </summary>
-    [InitializableKernelComponent(typeof(IModuleManager), typeof(IFacadeCollector))]
-    public class ModuleManager : IModuleManager, IInitializable, ILoggingHost, IFacadeCollector
+    [InitializableKernelComponent(typeof(IModuleManager))]
+    public class ModuleManager : IModuleManager, ILoggingHost
     {
         #region Dependencies
 
@@ -25,20 +25,6 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public IModuleLogger Logger { get; set; }
 
-        /// <summary>
-        /// Get/set the list of all server modules. Injected by castle.
-        /// </summary>
-        public IServerModule[] ServerModules { get; set; }
-
-        /// <summary>
-        /// Logger management instance. Injected by castle.
-        /// </summary>
-        public ILoggerManagement LoggerManagement { get; set; }
-
-        /// <summary>
-        /// Configuration manager instance. Injected by castel.
-        /// </summary>
-        public IConfigManager ConfigManager { get; set; }
 
         #endregion
 
@@ -58,17 +44,19 @@ namespace Moryx.Runtime.Kernel
         #region IModuleManager
 
         /// <summary>
-        /// Initialize the module manager.
+        /// 
         /// </summary>
-        public void Initialize()
+        public ModuleManager(IEnumerable<IServerModule> modules, IConfigManager configManager, IServerLoggerManagement loggerManagement)
         {
+            var allModules = modules.ToList();
+
             // Create components
-            LoggerManagement.ActivateLogging(this);
-            _config = ConfigManager.GetConfiguration<ModuleManagerConfig>();
+            loggerManagement.ActivateLogging(this);
+            _config = configManager.GetConfiguration<ModuleManagerConfig>();
 
             // Create dependency manager and build tree of available modules
             _dependencyManager = new ModuleDependencyManager(Logger.GetChild(string.Empty, typeof(ModuleDependencyManager)));
-            var availableModules = _dependencyManager.BuildDependencyTree(ServerModules);
+            var availableModules = _dependencyManager.BuildDependencyTree(allModules);
 
             // Create dedicated components for stopping and starting
             var waitingModules = new Dictionary<IServerModule, ICollection<IServerModule>>();
@@ -83,19 +71,13 @@ namespace Moryx.Runtime.Kernel
                 WaitingModules = waitingModules
             };
 
-            // Link framework modules
-            foreach (var platformModule in availableModules.OfType<IPlatformModule>())
-            {
-                platformModule.SetModuleManager(this);
-            }
-
             // Observe state changed events of modules
             foreach (var module in availableModules)
             {
                 module.StateChanged += OnModuleStateChanged;
             }
 
-            AllModules = ServerModules;
+            AllModules = allModules;
         }
 
         /// <summary>
@@ -189,13 +171,6 @@ namespace Moryx.Runtime.Kernel
         {
             return ABehaviourAccess.Create<T>(_config, plugin);
         }
-
-        #endregion
-
-        #region IFacadeCollector
-
-        /// <inheritdoc />
-        public IReadOnlyList<object> Facades => _dependencyManager.Facades;
 
         #endregion
 

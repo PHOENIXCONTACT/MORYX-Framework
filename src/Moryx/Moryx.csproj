@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Description>Core package of the MORYX ecosystem. It defines the necessary types for MORYX compatibility as well as commonly required tools.</Description>
@@ -9,22 +9,13 @@
     <PackageTags>MORYX;Serialization;Configuration;Logging;Core;Modules;Workflows</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net5.0'">
-    <DefineConstants>HAVE_TASK_FROMEXCEPTION;HAVE_ARRAY_EMPTY;HAVE_TASK_COMPLETEDTASK</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <PackageReference Include="System.ComponentModel.Annotations" />
-	</ItemGroup>
+      <PackageReference Include="System.ComponentModel.Annotations" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Strings.Designer.cs">

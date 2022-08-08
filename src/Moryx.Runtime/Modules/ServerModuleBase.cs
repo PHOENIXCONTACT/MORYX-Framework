@@ -36,8 +36,12 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Creates a new instance of <see cref="ServerModuleBase{TConf}"/> and initializes the state machine
         /// </summary>
-        protected ServerModuleBase()
+        protected ServerModuleBase(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement)
         {
+            ContainerFactory = containerFactory;
+            ConfigManager = configManager;
+            LoggerManagement = loggerManagement;
+
             StateMachine.Initialize((IServerModuleStateContext)this).With<ServerModuleStateBase>();
         }
 
@@ -56,7 +60,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// <see cref="ILoggerManagement"/>
         /// </summary>
-        public IServerLoggerManagement LoggerManagement { get; set; }
+        public IServerLoggerManagement LoggerManagement { get; }
 
         /// <summary>
         /// Logger of this module.
@@ -70,7 +74,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// <see cref="IModuleContainerFactory"/>
         /// </summary>
-        public IModuleContainerFactory ContainerFactory { get; set; }
+        public IModuleContainerFactory ContainerFactory { get; }
 
         void IInitializable.Initialize()
         {
@@ -206,7 +210,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Config manager kernel component used to access this module config
         /// </summary>
-        public IConfigManager ConfigManager { get; set; }
+        public IConfigManager ConfigManager { get; }
 
         /// <summary>
         /// Config instance for the current lifecycle
