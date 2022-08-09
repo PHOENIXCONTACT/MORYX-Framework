@@ -2,10 +2,15 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
+using Moryx.Asp.Extensions;
+using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Runtime;
 using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Kernel.Logging;
+using Moryx.Runtime.Logging;
 using Moryx.Runtime.Modules;
+using Moryx.Threading;
 
 namespace Moryx.Asp.Integration
 {
@@ -39,14 +44,22 @@ namespace Moryx.Asp.Integration
             var loggerManagement = runtime.GlobalContainer.Resolve<IServerLoggerManagement>();
             var dbManager = runtime.GlobalContainer.Resolve<IDbContextManager>();
 
-            // Register in service collection
+        // Register in service collection
             serviceCollection.AddSingleton(configManager);
             serviceCollection.AddSingleton(moduleManager);
             serviceCollection.AddSingleton(loggerManagement);
+            serviceCollection.AddSingleton<ILoggingAppender, LoggingAppender>();
             serviceCollection.AddSingleton(dbManager);
 
+            serviceCollection.AddTransient<IParallelOperations>((_) =>
+            {
+                var parallelOps = new ParallelOperations();
+                parallelOps.Logger = new LoggerExtension();
+                return parallelOps;
+            });
+
             // Register all modules
-            foreach(var module in runtime.GlobalContainer.ResolveAll<IServerModule>())
+            foreach (var module in runtime.GlobalContainer.ResolveAll<IServerModule>())
             {
                 serviceCollection.AddSingleton(module);
             }
