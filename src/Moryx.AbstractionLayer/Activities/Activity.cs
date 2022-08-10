@@ -46,6 +46,11 @@ namespace Moryx.AbstractionLayer
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Id of the corresponding workplan step
+        /// </summary>
+        public long StepId { get; set; }
+
         #endregion
 
         /// <summary>
