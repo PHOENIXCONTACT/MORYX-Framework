@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <Target Name="BuildUI" BeforeTargets="Build" Condition="'$(Configuration)'!='Debug' Or !Exists('wwwroot\bundle.js')">
-	<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-	<Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+	<Exec WorkingDirectory="./" Command="npm install" />
+	<Exec WorkingDirectory="./" Command="npm run build" />
   </Target>
 
 </Project>
