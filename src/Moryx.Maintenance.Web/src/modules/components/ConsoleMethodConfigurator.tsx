@@ -35,20 +35,20 @@ class ConsoleMethodConfigurator extends React.Component<ConsoleMethodConfigurato
                                className="no-padding">
                         <Row>
                             <Col md={3}><span className="font-bold">Name:</span></Col>
-                            <Col md={9}><span className="font-italic">{this.props.Method.DisplayName}</span></Col>
+                            <Col md={9}><span className="font-italic">{this.props.Method.displayName}</span></Col>
                         </Row>
                         <Row>
                             <Col md={3}><span className="font-bold">Description:</span></Col>
-                            <Col md={9}><span className="font-italic">{this.props.Method.Description}</span></Col>
+                            <Col md={9}><span className="font-italic">{this.props.Method.description}</span></Col>
                         </Row>
                         <Row>
                             <Col md={12} className="up-space-lg">
-                                { this.props.Method.Parameters.SubEntries.length === 0 ? (
+                                { this.props.Method.parameters.subEntries.length === 0 ? (
                                     <span className="font-italic">This method is parameterless.</span>
                                 ) : (
-                                    <NavigableConfigEditor Entries={this.props.Method.Parameters.SubEntries}
+                                    <NavigableConfigEditor Entries={this.props.Method.parameters.subEntries}
                                                            ParentEntry={null}
-                                                           Root={this.props.Method.Parameters}
+                                                           Root={this.props.Method.parameters}
                                                            IsReadOnly={false}
                                                            History={this.props.history}
                                                            Location={this.props.location} />

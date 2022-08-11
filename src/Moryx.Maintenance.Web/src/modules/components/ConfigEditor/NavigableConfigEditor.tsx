@@ -65,8 +65,8 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
                 let currentEntry: Entry = null;
 
                 (query.path as string).split("/").forEach((element: string) => {
-                    const searchableEntries: Entry[] = currentEntry != null ? currentEntry.SubEntries : entries;
-                    const filtered = searchableEntries.filter((entry) => entry.Identifier === element);
+                    const searchableEntries: Entry[] = currentEntry != null ? currentEntry.subEntries : entries;
+                    const filtered = searchableEntries.filter((entry) => entry.identifier === element);
 
                     if (filtered.length > 0) {
                         currentEntry = filtered[0];
@@ -76,7 +76,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
 
                 this.setState({
                                 ParentEntry: currentEntry,
-                                Entries: currentEntry != null ? currentEntry.SubEntries : entries,
+                                Entries: currentEntry != null ? currentEntry.subEntries : entries,
                                 EntryChain: entryChain
                             });
             } else {
@@ -94,7 +94,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
     }
 
     private updatePath(entryChain: Entry[]): void {
-        this.props.History.push("?path=" + entryChain.map((entry) => entry.Identifier).join("/"));
+        this.props.History.push("?path=" + entryChain.map((entry) => entry.identifier).join("/"));
     }
 
     private onClickBreadcrumb(entry: Entry): void {
@@ -112,7 +112,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
     private preRenderBreadcrumb(): React.ReactNode {
         const entryChainButtons = this.state.EntryChain.map((entry, idx) =>
         (
-            <Button key={idx} color="light" onClick={() => this.onClickBreadcrumb(entry)} disabled={idx === this.state.EntryChain.length - 1}>{entry.DisplayName}</Button>
+            <Button key={idx} color="light" onClick={() => this.onClickBreadcrumb(entry)} disabled={idx === this.state.EntryChain.length - 1}>{entry.displayName}</Button>
         ));
 
         return (

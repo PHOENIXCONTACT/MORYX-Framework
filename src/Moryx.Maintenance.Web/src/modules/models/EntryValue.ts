@@ -6,9 +6,9 @@
 import { EntryValueType } from "./EntryValueType";
 
 export default class EntryValue {
-    public Type: EntryValueType;
-    public Current: string;
-    public Default: string;
-    public Possible: string[];
-    public IsReadOnly: boolean;
+    public type: EntryValueType;
+    public current: string;
+    public default: string;
+    public possible: string[];
+    public isReadOnly: boolean;
 }

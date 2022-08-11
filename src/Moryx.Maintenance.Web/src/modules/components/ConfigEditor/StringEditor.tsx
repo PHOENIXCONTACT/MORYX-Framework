@@ -14,11 +14,11 @@ export default class StringEditor extends SelectionEditorBase {
     }
 
     private preRenderInput(): React.ReactNode {
-        return (<Input type={this.props.Entry.Validation.IsPassword ? "password" : "text"}
+        return (<Input type={this.props.Entry.validation.isPassword ? "password" : "text"}
                         onChange={(e: React.FormEvent<HTMLInputElement>) => this.onValueChange(e, this.props.Entry)}
                         placeholder={"Please enter a string ..."}
-                        disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}
-                        value={this.props.Entry.Value.Current == null ? "" : this.props.Entry.Value.Current} />);
+                        disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
+                        value={this.props.Entry.value.current == null ? "" : this.props.Entry.value.current} />);
     }
 
     private preRenderPossibleValueList(): React.ReactNode {
@@ -26,7 +26,7 @@ export default class StringEditor extends SelectionEditorBase {
     }
 
     public render(): React.ReactNode {
-        return this.props.Entry.Value.Possible != null && this.props.Entry.Value.Possible.length > 0 ?
+        return this.props.Entry.value.possible != null && this.props.Entry.value.possible.length > 0 ?
                 this.preRenderPossibleValueList() : this.preRenderInput();
     }
 }

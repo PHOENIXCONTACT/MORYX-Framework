@@ -16,9 +16,9 @@ export default class SelectionEditorBase extends React.Component<InputEditorBase
     constructor(props: InputEditorBasePropModel) {
         super(props);
 
-        if (this.props.Entry.Value.Possible != null) {
-            const possibleValues: string[] = [...this.props.Entry.Value.Possible];
-            if (possibleValues.find((value: string) => value === this.props.Entry.Value.Current) === undefined) {
+        if (this.props.Entry.value.possible != null) {
+            const possibleValues: string[] = [...this.props.Entry.value.possible];
+            if (possibleValues.find((value: string) => value === this.props.Entry.value.current) === undefined) {
                 possibleValues.unshift("");
             }
 
@@ -27,15 +27,15 @@ export default class SelectionEditorBase extends React.Component<InputEditorBase
     }
 
     public onValueChange(e: React.FormEvent<HTMLInputElement>, entry: Entry): void {
-        entry.Value.Current = e.currentTarget.value;
-        this.setState({ PossibleValues: this.props.Entry.Value.Possible });
+        entry.value.current = e.currentTarget.value;
+        this.setState({ PossibleValues: this.props.Entry.value.possible });
         this.forceUpdate();
     }
 
     public render(): React.ReactNode {
         return (
-            <Input type="select" value={this.props.Entry.Value.Current !== null ? this.props.Entry.Value.Current : ""}
-                   disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}
+            <Input type="select" value={this.props.Entry.value.current !== null ? this.props.Entry.value.current : ""}
+                   disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
                    onChange={(e: React.FormEvent<HTMLInputElement>) => this.onValueChange(e, this.props.Entry)}>
                 {
                     this.state.PossibleValues.map((possibleValue, idx) => {

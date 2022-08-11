@@ -23,7 +23,7 @@ class ConsoleMethodResult extends React.Component<ConsoleMethodResultPropModel &
     }
 
     private resetInvokeResult(): void {
-        this.props.onResetInvokeResult(this.props.Method.Name);
+        this.props.onResetInvokeResult(this.props.Method.name);
     }
 
     public render(): React.ReactNode {
@@ -36,15 +36,15 @@ class ConsoleMethodResult extends React.Component<ConsoleMethodResultPropModel &
                                className="no-padding">
                         <Row>
                             <Col md={3}><span className="font-bold">Name:</span></Col>
-                            <Col md={9}><span className="font-italic">{this.props.Method.DisplayName}</span></Col>
+                            <Col md={9}><span className="font-italic">{this.props.Method.displayName}</span></Col>
                         </Row>
                         <Row>
                             <Col md={3}><span className="font-bold">Description:</span></Col>
-                            <Col md={9}><span className="font-italic">{this.props.Method.Description}</span></Col>
+                            <Col md={9}><span className="font-italic">{this.props.Method.description}</span></Col>
                         </Row>
                         <Row>
                             <Col md={12} className="up-space-lg">
-                                <NavigableConfigEditor Entries={this.props.InvokeResult.SubEntries}
+                                <NavigableConfigEditor Entries={this.props.InvokeResult.subEntries}
                                                        ParentEntry={null}
                                                        Root={this.props.InvokeResult}
                                                        IsReadOnly={true}

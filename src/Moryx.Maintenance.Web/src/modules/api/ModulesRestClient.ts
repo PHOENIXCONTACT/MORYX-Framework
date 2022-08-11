@@ -65,7 +65,7 @@ export default class ModulesRestClient extends RestClientBase {
     }
 
     private static entryReplacer(key: string, value: any): any {
-        if (key === "Parent") { return undefined; }
+        if (key === "parent") { return undefined; }
         return value;
     }
 

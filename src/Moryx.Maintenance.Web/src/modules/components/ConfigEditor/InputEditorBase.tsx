@@ -22,7 +22,7 @@ export default class InputEditorBase extends React.Component<InputEditorBaseProp
     }
 
     public onValueChange(e: React.FormEvent<HTMLInputElement>, entry: Entry): void {
-        entry.Value.Current = e.currentTarget.value;
+        entry.value.current = e.currentTarget.value;
         this.forceUpdate();
     }
 }

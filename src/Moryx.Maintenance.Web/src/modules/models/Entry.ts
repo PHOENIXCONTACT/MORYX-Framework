@@ -10,37 +10,37 @@ import EntryValue from "./EntryValue";
 import { EntryValueType } from "./EntryValueType";
 
 export default class Entry {
-    public DisplayName: string;
-    public Identifier: string;
-    public UniqueIdentifier: string;
-    public Value: EntryValue;
-    public SubEntries: Entry[];
-    public Prototypes: Entry[];
-    public Description: string;
-    public Validation: EntryValidation;
-    public Parent: Entry;
+    public displayName: string;
+    public identifier: string;
+    public uniqueIdentifier: string;
+    public value: EntryValue;
+    public subEntries: Entry[];
+    public prototypes: Entry[];
+    public description: string;
+    public validation: EntryValidation;
+    public parent: Entry;
 
     constructor() {
-        this.UniqueIdentifier = uuidv1();
-        this.Value = new EntryValue();
-        this.SubEntries = [];
-        this.Prototypes = [];
-        this.Validation = new EntryValidation();
+        this.uniqueIdentifier = uuidv1();
+        this.value = new EntryValue();
+        this.subEntries = [];
+        this.prototypes = [];
+        this.validation = new EntryValidation();
     }
 
     public static isClassOrCollection(entry: Entry): boolean {
-        return entry.Value.Type === EntryValueType.Class || entry.Value.Type === EntryValueType.Collection;
+        return entry.value.type === EntryValueType.Class || entry.value.type === EntryValueType.Collection;
     }
 
     public static entryChain(entry: Entry): Entry[] {
         const entryChain: Entry[] = [entry];
         let currentEntry = entry;
         while (currentEntry != null) {
-            if (currentEntry.Parent != null) {
-                entryChain.push(currentEntry.Parent);
+            if (currentEntry.parent != null) {
+                entryChain.push(currentEntry.parent);
             }
 
-            currentEntry = currentEntry.Parent;
+            currentEntry = currentEntry.parent;
         }
 
         entryChain.reverse();
@@ -48,8 +48,8 @@ export default class Entry {
     }
 
     public static generateUniqueIdentifiers(entry: Entry): void {
-        entry.UniqueIdentifier = uuidv1();
-        entry.SubEntries.forEach((subEntry: Entry) => {
+        entry.uniqueIdentifier = uuidv1();
+        entry.subEntries.forEach((subEntry: Entry) => {
             Entry.generateUniqueIdentifiers(subEntry);
         });
     }

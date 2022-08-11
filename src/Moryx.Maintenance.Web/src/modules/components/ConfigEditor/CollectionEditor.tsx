@@ -26,7 +26,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     constructor(props: CollapsibleEntryEditorBasePropModel) {
         super(props);
         this.state = {
-            SelectedEntry: props.Entry.Value.Possible[0],
+            SelectedEntry: props.Entry.value.possible[0],
             ExpandedEntryNames: [],
         };
     }
@@ -48,31 +48,31 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     }
 
     public addEntry(): void {
-        const prototype = this.props.Entry.Prototypes.find((proto: Entry) => proto.DisplayName === this.state.SelectedEntry);
+        const prototype = this.props.Entry.prototypes.find((proto: Entry) => proto.displayName === this.state.SelectedEntry);
         const entryPrototype = Entry.entryFromPrototype(prototype, this.props.Entry);
 
         let counter: number = 0;
-        let entryName: string = entryPrototype.DisplayName;
+        let entryName: string = entryPrototype.displayName;
 
-        while (this.props.Entry.SubEntries.find((subEntry: Entry) => subEntry.DisplayName === entryName) !== undefined) {
+        while (this.props.Entry.subEntries.find((subEntry: Entry) => subEntry.displayName === entryName) !== undefined) {
             ++counter;
-            entryName = entryPrototype.DisplayName + " " + counter.toString();
+            entryName = entryPrototype.displayName + " " + counter.toString();
         }
 
-        entryPrototype.DisplayName = entryName;
-        this.props.Entry.SubEntries.push(entryPrototype);
+        entryPrototype.displayName = entryName;
+        this.props.Entry.subEntries.push(entryPrototype);
 
         this.forceUpdate();
     }
 
     public removeEntry(entry: Entry): void {
-        this.props.Entry.SubEntries.splice(this.props.Entry.SubEntries.indexOf(entry), 1);
+        this.props.Entry.subEntries.splice(this.props.Entry.subEntries.indexOf(entry), 1);
         this.forceUpdate();
     }
 
     public preRenderOptions(): React.ReactNode {
         const options: React.ReactNode[] = [];
-        this.props.Entry.Value.Possible.map((colEntry, idx) =>
+        this.props.Entry.value.possible.map((colEntry, idx) =>
         (
             options.push(<option key={idx} value={colEntry}>{colEntry}</option>)
         ));
@@ -81,7 +81,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
 
     public preRenderConfigEditor(entry: Entry): React.ReactNode {
         if (!Entry.isClassOrCollection(entry)) {
-            switch (entry.Value.Type) {
+            switch (entry.value.type) {
                 case EntryValueType.Byte: {
                     return (<ByteEditor Entry={entry} IsReadOnly={this.props.IsReadOnly} />);
                 }
@@ -106,11 +106,11 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                 }
             }
 
-            return (<span>Not implemented yet: {entry.Value.Type}</span>);
+            return (<span>Not implemented yet: {entry.value.type}</span>);
         }
 
         return <ConfigEditor ParentEntry={entry}
-                             Entries={entry.SubEntries}
+                             Entries={entry.subEntries}
                              Root={this.props.Root}
                              navigateToEntry={this.props.navigateToEntry}
                              IsReadOnly={this.props.IsReadOnly} />;
@@ -122,30 +122,30 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                 <Collapse isOpen={this.props.IsExpanded}>
                     <Container fluid={true} className="no-padding up-space down-space">
                         {
-                            this.props.Entry.SubEntries.map((entry, idx) => {
+                            this.props.Entry.subEntries.map((entry, idx) => {
                                 if (Entry.isClassOrCollection(entry)) {
                                     return (
                                         <div key={idx}>
                                             <Row className="table-row down-space">
-                                                <Col md={6} className="no-padding">{entry.DisplayName}</Col>
+                                                <Col md={6} className="no-padding">{entry.displayName}</Col>
                                                 <Col md={6} className="no-padding">
                                                     <ButtonGroup>
                                                         <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>
                                                             <Icon path={mdiFolderOpen} className="icon right-space" />
                                                             Open
                                                         </Button>
-                                                        <Button color="secondary" onClick={() => this.toggleCollapsible(entry.UniqueIdentifier)}>
+                                                        <Button color="secondary" onClick={() => this.toggleCollapsible(entry.uniqueIdentifier)}>
                                                             <Icon path={mdiChevronDown} className="icon right-space" />
                                                             Expand
                                                         </Button>
-                                                        <Button color="secondary" onClick={() => this.removeEntry(entry)} disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}>
+                                                        <Button color="secondary" onClick={() => this.removeEntry(entry)} disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}>
                                                             <Icon path={mdiTrashCanOutline} className="icon right-space" />
                                                             Remove
                                                         </Button>
                                                     </ButtonGroup>
                                                 </Col>
                                             </Row>
-                                            <Collapse isOpen={this.isExpanded(entry.UniqueIdentifier)}>
+                                            <Collapse isOpen={this.isExpanded(entry.uniqueIdentifier)}>
                                                 {this.preRenderConfigEditor(entry)}
                                             </Collapse>
                                         </div>
@@ -157,7 +157,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                                                 <Col md={6} className="no-padding">{this.preRenderConfigEditor(entry)}</Col>
                                                 <Col md={6} className="no-padding">
                                                     <ButtonGroup>
-                                                        <Button color="secondary" onClick={() => this.removeEntry(entry)} disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}>
+                                                        <Button color="secondary" onClick={() => this.removeEntry(entry)} disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}>
                                                             <Icon path={mdiTrashCanOutline} className="icon right-space" />
                                                             Remove
                                                         </Button>
@@ -174,11 +174,11 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                                 <Input type="select" value={this.state.SelectedEntry}
                                        className="right-space"
                                        style={{display: "inline", width: "60%"}}
-                                       disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}
+                                       disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
                                        onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelect(e)}>
                                     {this.preRenderOptions()}
                                 </Input>
-                                <Button color="primary" onClick={() => this.addEntry()} disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}>
+                                <Button color="primary" onClick={() => this.addEntry()} disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}>
                                     <Icon path={mdiPlus} className="icon-white right-space" />
                                     Add entry
                                 </Button>

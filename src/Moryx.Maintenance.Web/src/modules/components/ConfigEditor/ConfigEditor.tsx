@@ -37,13 +37,13 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         super(props);
         this.state = {
             ExpandedEntryNames: [],
-            SelectedEntryType: this.props.ParentEntry != null ? this.props.ParentEntry.Value.Current : ""
+            SelectedEntryType: this.props.ParentEntry != null ? this.props.ParentEntry.value.current : ""
         };
     }
 
     public componentWillReceiveProps(nextProps: ConfigEditorPropModel): void {
         if (this.state.SelectedEntryType === "" && this.props.ParentEntry != null) {
-            this.setState({ SelectedEntryType: this.props.ParentEntry.Value.Current});
+            this.setState({ SelectedEntryType: this.props.ParentEntry.value.current});
         }
     }
 
@@ -64,14 +64,14 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
             return false;
         }
 
-        let isEntrySettable = entry.Value.Type === EntryValueType.Class &&
-                              entry.Value.Possible != null &&
-                              entry.Value.Possible.length > 1;
+        let isEntrySettable = entry.value.type === EntryValueType.Class &&
+                              entry.value.possible != null &&
+                              entry.value.possible.length > 1;
 
         if (isEntrySettable) {
 
-            if (entry.Parent !== null && entry.Parent !== undefined) {
-                isEntrySettable = entry.Parent.Value.Type !== EntryValueType.Collection;
+            if (entry.parent !== null && entry.parent !== undefined) {
+                isEntrySettable = entry.parent.value.type !== EntryValueType.Collection;
             }
         }
 
@@ -86,34 +86,34 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         let prototype: Entry = null;
         let entryType: EntryValueType = EntryValueType.Class;
         if (this.props.ParentEntry != null) {
-            entryType = this.props.ParentEntry.Value.Type;
+            entryType = this.props.ParentEntry.value.type;
         }
 
         switch (entryType) {
             case EntryValueType.Class:
-                prototype = this.props.ParentEntry.Prototypes.find((proto: Entry) => proto.DisplayName === this.state.SelectedEntryType);
+                prototype = this.props.ParentEntry.prototypes.find((proto: Entry) => proto.displayName === this.state.SelectedEntryType);
                 break;
             default:
                 return;
         }
 
-        const entryPrototype = Entry.entryFromPrototype(prototype, this.props.ParentEntry.Parent);
-        entryPrototype.Prototypes = JSON.parse(JSON.stringify(this.props.ParentEntry.Prototypes));
-        entryPrototype.DisplayName = this.props.ParentEntry.DisplayName;
-        entryPrototype.Identifier = this.props.ParentEntry.Identifier;
+        const entryPrototype = Entry.entryFromPrototype(prototype, this.props.ParentEntry.parent);
+        entryPrototype.prototypes = JSON.parse(JSON.stringify(this.props.ParentEntry.prototypes));
+        entryPrototype.displayName = this.props.ParentEntry.displayName;
+        entryPrototype.identifier = this.props.ParentEntry.identifier;
 
-        const subEntries: Entry[] = this.props.ParentEntry.Parent.SubEntries;
+        const subEntries: Entry[] = this.props.ParentEntry.parent.subEntries;
 
         const idx = subEntries.indexOf(this.props.ParentEntry);
         if (idx !== -1) {
             subEntries[idx] = entryPrototype;
-            this.setState({SelectedEntryType: entryPrototype.Value.Current});
+            this.setState({SelectedEntryType: entryPrototype.value.current});
             this.props.navigateToEntry(this.props.ParentEntry);
         }
     }
 
     public selectPropertyByType(entry: Entry): React.ReactNode {
-        switch (entry.Value.Type) {
+        switch (entry.value.type) {
             case EntryValueType.Byte: {
                 return (<ByteEditor Entry={entry} IsReadOnly={this.props.IsReadOnly} />);
             }
@@ -144,16 +144,16 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                             <Icon path={mdiFolderOpen} className="icon right-space" />
                             Open
                         </Button>
-                        <Button color="secondary" onClick={() => this.toggleCollapsible(entry.UniqueIdentifier)}>
-                            <Icon path={this.isExpanded(entry.UniqueIdentifier) ? mdiChevronUp : mdiChevronDown} className="icon right-space" />
-                            {this.isExpanded(entry.UniqueIdentifier) ? "Collapse" : "Expand"}
+                        <Button color="secondary" onClick={() => this.toggleCollapsible(entry.uniqueIdentifier)}>
+                            <Icon path={this.isExpanded(entry.uniqueIdentifier) ? mdiChevronUp : mdiChevronDown} className="icon right-space" />
+                            {this.isExpanded(entry.uniqueIdentifier) ? "Collapse" : "Expand"}
                         </Button>
                     </ButtonGroup>
                 );
             }
         }
 
-        return (<span>Not implemented yet: {toString(entry.Value.Type)}</span>);
+        return (<span>Not implemented yet: {toString(entry.value.type)}</span>);
     }
 
     public preRenderEntries(entries: Entry[]): React.ReactNode {
@@ -164,10 +164,10 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                     <Col md={5} className="no-padding">
                         <Container fluid={true} className="no-padding">
                             <Row>
-                                <Col md={12} className="no-padding"><span className="font-bold align-self-center no-padding">{subEntry.DisplayName}</span></Col>
+                                <Col md={12} className="no-padding"><span className="font-bold align-self-center no-padding">{subEntry.displayName}</span></Col>
                             </Row>
                             <Row>
-                                <Col md={12} className="no-padding"><span className="font-disabled no-padding">{subEntry.Description}</span></Col>
+                                <Col md={12} className="no-padding"><span className="font-disabled no-padding">{subEntry.description}</span></Col>
                             </Row>
                         </Container>
                     </Col>
@@ -177,12 +177,12 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                     }
                     </Col>
                 </Row>
-                { subEntry.Value.Type === EntryValueType.Collection &&
+                { subEntry.value.type === EntryValueType.Collection &&
                     (
                         <Row>
                             <Col md={12}>
                                 <CollectionEditor Entry={subEntry}
-                                                  IsExpanded={this.isExpanded(subEntry.UniqueIdentifier)}
+                                                  IsExpanded={this.isExpanded(subEntry.uniqueIdentifier)}
                                                   Root={this.props.Root}
                                                   navigateToEntry={this.props.navigateToEntry}
                                                   IsReadOnly={this.props.IsReadOnly} />
@@ -190,12 +190,12 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                         </Row>
                     )
                 }
-                { subEntry.Value.Type === EntryValueType.Class &&
+                { subEntry.value.type === EntryValueType.Class &&
                     (
                         <Row>
                             <Col md={12}>
                                 <ClassEditor Entry={subEntry}
-                                             IsExpanded={this.isExpanded(subEntry.UniqueIdentifier)}
+                                             IsExpanded={this.isExpanded(subEntry.uniqueIdentifier)}
                                              Root={this.props.Root}
                                              navigateToEntry={this.props.navigateToEntry}
                                              IsReadOnly={this.props.IsReadOnly} />
@@ -209,7 +209,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
 
     public render(): React.ReactNode {
         let entries: any;
-        if (this.props.ParentEntry != null && this.props.ParentEntry.Value.Type === EntryValueType.Collection) {
+        if (this.props.ParentEntry != null && this.props.ParentEntry.value.type === EntryValueType.Collection) {
             entries = (
                 <Row>
                     <Col md={12} className="no-padding">
@@ -237,7 +237,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                                 <Input type="select" value={this.state.SelectedEntryType}
                                        onChange={(e: React.FormEvent<HTMLInputElement>) => this.onEntryTypeChange(e)}>
                                     {
-                                        this.props.ParentEntry.Value.Possible.map((possibleValue, idx) => {
+                                        this.props.ParentEntry.value.possible.map((possibleValue, idx) => {
                                             return (<option key={idx}>{possibleValue}</option>);
                                         })
                                     }
@@ -245,7 +245,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                             </Col>
                             <Col>
                                 <Button color="primary"
-                                        disabled={this.state.SelectedEntryType === "" || this.state.SelectedEntryType === this.props.ParentEntry.Value.Current}
+                                        disabled={this.state.SelectedEntryType === "" || this.state.SelectedEntryType === this.props.ParentEntry.value.current}
                                         onClick={() => this.onPatchToSelectedEntryType()}>
                                     Set entry type
                                 </Button>

@@ -65,8 +65,8 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
     private onModuleMethodsLoaded(methods: MethodEntry[]): void {
         methods.forEach((element: MethodEntry) => {
-            element.Parameters.SubEntries.forEach((parameter: Entry) => {
-                Config.patchParent(parameter, element.Parameters);
+            element.parameters.subEntries.forEach((parameter: Entry) => {
+                Config.patchParent(parameter, element.parameters);
                 Entry.generateUniqueIdentifiers(parameter);
             });
         });
@@ -86,7 +86,7 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
             let resultEntry = data;
 
-            switch (resultEntry.Value.Type) {
+            switch (resultEntry.value.type) {
                 case EntryValueType.Byte:
                 case EntryValueType.Boolean:
                 case EntryValueType.Int16:
@@ -100,7 +100,7 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
                 case EntryValueType.String:
                 case EntryValueType.Enum:
                     const simpleValueEntry = new Entry();
-                    simpleValueEntry.SubEntries.push(resultEntry);
+                    simpleValueEntry.subEntries.push(resultEntry);
                     resultEntry = simpleValueEntry;
                     break;
                 case EntryValueType.Collection:
@@ -111,7 +111,7 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
                     resultEntry = new Entry();
             }
 
-            this.onUpdateInvokeResults({ MethodName: methodEntry.Name, Result: resultEntry });
+            this.onUpdateInvokeResults({ MethodName: methodEntry.name, Result: resultEntry });
         });
     }
 
@@ -142,7 +142,7 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
                                        className="selectable"
                                        onClick={() => this.onSelectMethod(methodEntry)}
                                        active={this.state.SelectedMethod === methodEntry}>
-                            {methodEntry.DisplayName}
+                            {methodEntry.displayName}
                         </ListGroupItem>
                         );
                     })
@@ -161,7 +161,7 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
                                                   onInvokeMethod={this.onInvokeMethod.bind(this)} />;
 
             if (this.state.SelectedMethod != null) {
-                const invokeResult = this.invokeResult(this.state.SelectedMethod.Name);
+                const invokeResult = this.invokeResult(this.state.SelectedMethod.name);
 
                 if (invokeResult != null) {
                     view = <ConsoleMethodResult Method={this.state.SelectedMethod}

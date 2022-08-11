@@ -18,15 +18,15 @@ export default class ByteEditor extends InputEditorBase {
 
     public render(): React.ReactNode {
         return (
-            <BootstrapToggle active={this.props.Entry.Value.Current.toLowerCase() === "true"}
-                             disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}
+            <BootstrapToggle active={this.props.Entry.value.current.toLowerCase() === "true"}
+                             disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
                              onClick={(e: React.MouseEvent<HTMLElement>) => this.onToggle(e)}
                              height="35px" />
         );
     }
 
     private onToggle(e: React.MouseEvent<HTMLElement>): void {
-        this.props.Entry.Value.Current = this.props.Entry.Value.Current === "True" ? this.props.Entry.Value.Current = "False" : this.props.Entry.Value.Current = "True";
+        this.props.Entry.value.current = this.props.Entry.value.current === "True" ? this.props.Entry.value.current = "False" : this.props.Entry.value.current = "True";
         this.forceUpdate();
     }
 }

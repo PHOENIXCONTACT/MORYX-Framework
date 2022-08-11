@@ -17,14 +17,14 @@ export default class NumberEditor extends SelectionEditorBase {
     private preRenderInput(): React.ReactNode {
         return (<Input type="number"
                 onChange={(e: React.FormEvent<HTMLInputElement>) => this.onValueChange(e, this.props.Entry)}
-                placeholder={"Please enter a value of type: " + toString(this.props.Entry.Value.Type) + " ..."}
-                disabled={this.props.Entry.Value.IsReadOnly || this.props.IsReadOnly}
-                value={this.props.Entry.Value.Current}
+                placeholder={"Please enter a value of type: " + toString(this.props.Entry.value.type) + " ..."}
+                disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
+                value={this.props.Entry.value.current}
         />);
     }
 
     public render(): React.ReactNode {
-        return this.props.Entry.Value.Possible != null && this.props.Entry.Value.Possible.length > 0 ?
+        return this.props.Entry.value.possible != null && this.props.Entry.value.possible.length > 0 ?
                 super.render() : this.preRenderInput();
     }
 }

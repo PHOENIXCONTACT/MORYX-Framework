@@ -8,8 +8,8 @@ import Entry from "./Entry";
 
 export default class MethodEntry
 {
-    Name: string;
-    DisplayName: string;
-    Description: string;
-    Parameters: Entry;
+    name: string;
+    displayName: string;
+    description: string;
+    parameters: Entry;
 }

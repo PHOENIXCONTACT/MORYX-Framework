@@ -19,7 +19,7 @@ export default class ClassEditor extends CollapsibleEntryEditorBase<ClassEditorS
 
     public preRenderConfigEditor(): React.ReactNode {
         return <ConfigEditor ParentEntry={this.props.Entry}
-                             Entries={this.props.Entry.SubEntries}
+                             Entries={this.props.Entry.subEntries}
                              Root={this.props.Root}
                              navigateToEntry={this.props.navigateToEntry}
                              IsReadOnly={this.props.IsReadOnly} /> as React.ReactNode;
