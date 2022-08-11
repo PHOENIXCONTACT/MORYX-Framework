@@ -13,7 +13,7 @@ import ServerModuleModel from "../models/ServerModuleModel";
 import SaveConfigRequest from "./requests/SaveConfigRequest";
 
 const ROOT_PATH = "/modules";
-const MODULE_PATH = ROOT_PATH + "/module/{moduleName}";
+const MODULE_PATH = ROOT_PATH + "/{moduleName}";
 
 export default class ModulesRestClient extends RestClientBase {
     public modules(): Promise<ServerModuleModel[]> {

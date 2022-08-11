@@ -12,7 +12,7 @@ import SetLogLevelRequest from "./requests/SetLogLevelRequest";
 import AddAppenderResponse from "./responses/AddAppenderResponse";
 
 const ROOT_PATH = "/loggers";
-const APPENDER_PATH = ROOT_PATH + "/appender";
+const APPENDER_PATH = ROOT_PATH + "/appenders";
 
 export default class LogRestClient extends RestClientBase {
     public loggers(): Promise<LoggerModel[]> {
@@ -37,7 +37,7 @@ export default class LogRestClient extends RestClientBase {
     public logLevel(loggerName: string, level: LogLevel): Promise<InvocationResponse> {
         const request = new SetLogLevelRequest();
         request.Level = level;
-        return this.put<SetLogLevelRequest, InvocationResponse>(ROOT_PATH + "/logger/" + loggerName + "/loglevel", request, new InvocationResponse());
+        return this.put<SetLogLevelRequest, InvocationResponse>(ROOT_PATH + `/${loggerName}/loglevel`, request, new InvocationResponse());
     }
 
     public static pathToAppender(appenderId: number): string {

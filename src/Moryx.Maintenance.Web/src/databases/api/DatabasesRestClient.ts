@@ -13,7 +13,7 @@ import DatabaseUpdateSummary from "./responses/DatabaseUpdateSummary";
 import TestConnectionResponse from "./responses/TestConnectionResponse";
 
 const ROOT_PATH = "/databases";
-const MODEL_PATH = ROOT_PATH + "/model/{target}";
+const MODEL_PATH = ROOT_PATH + "/{target}";
 
 export default class DatabasesRestClient extends RestClientBase {
     public databaseModels(): Promise<DataModel[]> {
