@@ -19,12 +19,6 @@ namespace Moryx.Modules
         Severity Severity { get; }
 
         /// <summary>
-        /// Confirm acknowledgement of this notification
-        /// </summary>
-        /// <returns>True of message could be confirmed</returns>
-        bool Confirm();
-
-        /// <summary>
         /// Time stamp of occurrence
         /// </summary>
         DateTime Timestamp { get; }

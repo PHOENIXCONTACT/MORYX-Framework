@@ -20,5 +20,10 @@ namespace Moryx.Modules
         /// Notifications published by this module
         /// </summary>
         INotificationCollection Notifications { get; }
+
+        /// <summary>
+        /// Acknowledge a notification
+        /// </summary>
+        void AcknowledgeNotification(IModuleNotification notification);
     }
 }

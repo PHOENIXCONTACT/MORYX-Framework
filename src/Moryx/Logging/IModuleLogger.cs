@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Moryx.Container;
+using Moryx.Modules;
 
 namespace Moryx.Logging
 {
@@ -46,7 +47,7 @@ namespace Moryx.Logging
     /// <summary>
     /// Logger instance used within one module. All entries will be logged in the modules context.
     /// </summary>
-    public interface IModuleLogger : IEnumerable<IModuleLogger>, INamedChildContainer<IModuleLogger>, IContainerChild<IModuleLogger>
+    public interface IModuleLogger : INamedChildContainer<IModuleLogger>
     {
         /// <summary>
         /// Name of this logger instance
@@ -64,13 +65,8 @@ namespace Moryx.Logging
         void LogException(LogLevel level, Exception ex, string message, params object[] formatParameters);
 
         /// <summary>
-        /// Active logging level
+        /// Define a target for all messages with a level of <see cref="LogLevel.Warning"/> or higher
         /// </summary>
-        LogLevel ActiveLevel { get; }
-
-        /// <summary>
-        /// Clone this instance to be used on a new object
-        /// </summary>
-        IModuleLogger Clone(Type targetType);
+        void SetNotificationTarget(Action<IModuleNotification> notificationTarget);
     }
 }

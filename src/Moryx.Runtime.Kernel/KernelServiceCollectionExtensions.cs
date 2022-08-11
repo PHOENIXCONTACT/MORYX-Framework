@@ -2,10 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Runtime.Configuration;
+using Moryx.Runtime.Kernel.Logging;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
 using System;
@@ -26,7 +29,7 @@ namespace Moryx.Runtime.Kernel
             serviceCollection.AddSingleton<IConfigManager>(x => x.GetRequiredService<IRuntimeConfigManager>());
 
             // Register logging
-            serviceCollection.AddSingleton<IServerLoggerManagement, ServerLoggerManagement>();
+            serviceCollection.AddSingleton<IModuleLoggerFactory, ModuleLoggerFactory>();
 
             // Register module manager
             serviceCollection.AddSingleton<ModuleManager>();

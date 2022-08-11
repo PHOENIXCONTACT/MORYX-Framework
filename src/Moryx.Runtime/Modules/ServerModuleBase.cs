@@ -21,11 +21,16 @@ namespace Moryx.Runtime.Modules
     /// </summary>
     /// <typeparam name="TConf">Configuration type for the server module.</typeparam>
     [DebuggerDisplay("{" + nameof(Name) + "} - {" + nameof(State) + "}")]
-    public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IServerModuleStateContext, ILoggingHost, ILoggingComponent
+    public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IServerModuleStateContext
         where TConf : class, IConfig, new()
     {
         /// <inheritdoc />
         public abstract string Name { get; }
+
+        /// <summary>
+        /// Logger of this module.
+        /// </summary>
+        public IModuleLogger Logger { get; set; }
 
         /// <inheritdoc />
         IServerModuleConsole IServerModule.Console => Container?.Resolve<IServerModuleConsole>();
@@ -36,11 +41,12 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Creates a new instance of <see cref="ServerModuleBase{TConf}"/> and initializes the state machine
         /// </summary>
-        protected ServerModuleBase(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement)
+        protected ServerModuleBase(IModuleContainerFactory containerFactory, IConfigManager configManager,IModuleLoggerFactory loggerFactory)
         {
             ContainerFactory = containerFactory;
             ConfigManager = configManager;
-            LoggerManagement = loggerManagement;
+            Logger = loggerFactory.Create($"{GetType().Namespace}");
+            Logger.SetNotificationTarget(Notifications.Add);
 
             StateMachine.Initialize((IServerModuleStateContext)this).With<ServerModuleStateBase>();
         }
@@ -57,15 +63,6 @@ namespace Moryx.Runtime.Modules
 
         #region Logging
 
-        /// <summary>
-        /// <see cref="ILoggerManagement"/>
-        /// </summary>
-        public IServerLoggerManagement LoggerManagement { get; }
-
-        /// <summary>
-        /// Logger of this module.
-        /// </summary>
-        public IModuleLogger Logger { get; set; }
 
         #endregion
 
@@ -84,8 +81,6 @@ namespace Moryx.Runtime.Modules
         void IServerModuleStateContext.Initialize()
         {
             // Activate logging
-            LoggerManagement.ActivateLogging(this);
-            LoggerManagement.AppendListenerToStream(ProcessLogMessage, LogLevel.Warning, Name);
             Logger.Log(LogLevel.Info, "{0} is initializing...", Name);
 
             // Get config and parse for container settings
@@ -164,9 +159,7 @@ namespace Moryx.Runtime.Modules
                 Container.Destroy();
                 Container = null;
             }
-            // Deregister from logging
-            LoggerManagement.RemoveListenerFromStream(ProcessLogMessage);
-            LoggerManagement.DeactivateLogging(this);
+
             Logger.Log(LogLevel.Info, "{0} destructed!", Name);
         }
 
@@ -272,14 +265,10 @@ namespace Moryx.Runtime.Modules
 
         #region ErrorReporting
 
-        private void ProcessLogMessage(ILogMessage message)
+        /// <inheritdoc/>
+        public void AcknowledgeNotification(IModuleNotification notification)
         {
-            // Ignore messages lower than warning
-            if (message.Level < LogLevel.Warning)
-                return;
-
-            var notification = LogMessageToNotification.Convert(message, n => Notifications.Remove(n));
-            Notifications.Add(notification);
+            Notifications.Remove(notification);
         }
 
         /// <summary>
