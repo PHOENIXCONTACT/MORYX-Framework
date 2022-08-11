@@ -11,13 +11,6 @@ namespace StartProject.Asp
 {
     public class Startup
     {
-        private readonly IApplicationRuntime _moryxRuntime;
-
-        public Startup(IApplicationRuntime moryxRuntime)
-        {
-            _moryxRuntime = moryxRuntime;
-        }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -30,10 +23,6 @@ namespace StartProject.Asp
             {
                 c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
             });
-
-            services.AddMoryxKernel(_moryxRuntime);
-
-            services.AddMoryxFacades(_moryxRuntime);
 
             services.AddCors(options =>
             {

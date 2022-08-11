@@ -6,6 +6,11 @@
 	<CreatePackage>true</CreatePackage>
   </PropertyGroup>
 
+    <ItemGroup>
+        <Content Remove="*.config.js" />
+        <Content Remove="*.json" />
+    </ItemGroup>
+
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
