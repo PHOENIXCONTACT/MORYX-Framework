@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
@@ -16,18 +17,8 @@ namespace Moryx.Runtime.Kernel
     /// Manages all the modules on the server side. 
     /// </summary>
     [InitializableKernelComponent(typeof(IModuleManager))]
-    public class ModuleManager : IModuleManager, ILoggingHost
+    public class ModuleManager : IModuleManager
     {
-        #region Dependencies
-
-        /// <summary>
-        /// Logger instance
-        /// </summary>
-        public IModuleLogger Logger { get; set; }
-
-
-        #endregion
-
         #region Fields and Properties
 
         /// <inheritdoc />
@@ -51,21 +42,20 @@ namespace Moryx.Runtime.Kernel
             var allModules = modules.ToList();
 
             // Create components
-            loggerManagement.ActivateLogging(this);
             _config = configManager.GetConfiguration<ModuleManagerConfig>();
 
             // Create dependency manager and build tree of available modules
-            _dependencyManager = new ModuleDependencyManager(Logger.GetChild(string.Empty, typeof(ModuleDependencyManager)));
+            _dependencyManager = new ModuleDependencyManager(logger);
             var availableModules = _dependencyManager.BuildDependencyTree(allModules);
 
             // Create dedicated components for stopping and starting
             var waitingModules = new Dictionary<IServerModule, ICollection<IServerModule>>();
-            _moduleStarter = new ModuleStarter(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStarter)), _config)
+            _moduleStarter = new ModuleStarter(_dependencyManager, logger, _config)
             {
                 AvailableModules = availableModules,
                 WaitingModules = waitingModules
             };
-            _moduleStopper = new ModuleStopper(_dependencyManager, Logger.GetChild(string.Empty, typeof(ModuleStopper)))
+            _moduleStopper = new ModuleStopper(_dependencyManager, logger)
             {
                 AvailableModules = availableModules,
                 WaitingModules = waitingModules

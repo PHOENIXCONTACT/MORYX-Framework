@@ -71,8 +71,7 @@ namespace Moryx.Runtime.Kernel
         {
             // Prepare local container
             _container = new CastleContainer()
-                .SetInstance(ModuleManager).SetInstance(ConfigLoader)
-                .SetInstance(Logger);
+                .SetInstance(ModuleManager).SetInstance(ConfigLoader);
 
             _container.LoadComponents<ICommandHandler>();
 

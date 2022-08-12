@@ -20,25 +20,11 @@ namespace Moryx.Model
     /// Kernel component handling data models and their runtime configurators
     /// </summary>
     [InitializableKernelComponent(typeof(IDbContextManager))]
-    public class DbContextManager : IDbContextManager, IInitializable
+    public class DbContextManager : IDbContextManager
     {
-        #region Dependencies
-
-        /// <summary>
-        /// Config manager to handle database configurations
-        /// </summary>
-        public IConfigManager ConfigManager { get; set; }
-
-        /// <summary>
-        /// Logger for the database configurators
-        /// </summary>
-        public IModuleLogger Logger { get; set; }
-
-        #endregion
-
         private ModelWrapper[] _knownModels;
 
-        public DbContextManager(IConfigManager configManager, ILogger<DbContextManager> logger)
+        public DbContextManager(IConfigManager configManager, ILoggerFactory loggerFactory)
         {
             var dbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext), delegate (Type type)
             {
@@ -64,17 +50,9 @@ namespace Moryx.Model
             foreach (var wrapper in _knownModels)
             {
                 var configuratorType = wrapper.Configurator.GetType();
-                var logger = Logger.GetChild(configuratorType.Name, configuratorType);
-                wrapper.Configurator.Initialize(wrapper.DbContextType, ConfigManager, logger);
+                var logger =loggerFactory.CreateLogger(configuratorType);
+                wrapper.Configurator.Initialize(wrapper.DbContextType, configManager, logger);
             }
-        }
-
-        /// <inheritdoc />
-        public void Initialize()
-        {
-            LoggerManagement.ActivateLogging(this);
-
-            
         }
 
         /// <inheritdoc />

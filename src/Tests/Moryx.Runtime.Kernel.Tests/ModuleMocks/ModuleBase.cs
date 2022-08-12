@@ -42,6 +42,10 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         {
         }
 
+        public void AcknowledgeNotification(IModuleNotification notification)
+        {
+        }
+
 #pragma warning disable 67
         /// <inheritdoc />
         public event EventHandler<ModuleStateChangedEventArgs> StateChanged;

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Logging;
 
@@ -19,7 +20,7 @@ namespace Moryx.Model.Configuration
         public IDatabaseConfig Config => null;
 
         /// <inheritdoc />
-        public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
+        public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)
         {
         }
 

@@ -30,17 +30,18 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         public Exception Exception { get; }
 
-        public ModuleNotification(LogLevel logLevel, string message, Exception exception)
-            : this(LogLevelToSeverity(logLevel), message, exception)
-        {
-        }
-
         public ModuleNotification(Severity severity, string message, Exception exception)
         {
             Severity = severity;
             Message = message;
             Timestamp = DateTime.Now;
             Exception = exception;
+        }
+
+        public static ModuleNotification FromLogStream(LogLevel logLevel, string message, Exception exception)
+        {
+            var severity = LogLevelToSeverity(logLevel);
+            return new ModuleNotification(severity, message, exception);
         }
 
         private static Severity LogLevelToSeverity(LogLevel logLevel)
@@ -60,6 +61,14 @@ namespace Moryx.Runtime.Modules
                 default:
                     throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null);
             }
+        }
+    }
+
+    internal static class NotificationCollectionExtension
+    {
+        public static void AddFromLogStream(this INotificationCollection collection, LogLevel logLevel, string message, Exception exception)
+        {
+            collection.Add(ModuleNotification.FromLogStream(logLevel, message, exception));
         }
     }
 }

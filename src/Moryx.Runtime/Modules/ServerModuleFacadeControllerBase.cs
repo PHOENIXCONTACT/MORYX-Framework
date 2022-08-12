@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Runtime.Container;
 
 namespace Moryx.Runtime.Modules
@@ -24,7 +24,7 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         private readonly ICollection<IFacadeControl> _activeFacades = new List<IFacadeControl>();
 
-        protected ServerModuleFacadeControllerBase(IModuleContainerFactory containerFactory, IConfigManager configManager, IModuleLoggerFactory loggerFactory) 
+        protected ServerModuleFacadeControllerBase(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
             : base(containerFactory, configManager, loggerFactory)
         {
         }

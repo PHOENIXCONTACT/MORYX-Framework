@@ -142,9 +142,6 @@ namespace Moryx.Runtime.Kernel
         {
             var container = new GlobalContainer();
 
-            // Install logging
-            container.ExecuteInstaller(new LoggingInstaller());
-
             // Register local components
             container.ExecuteInstaller(new AutoInstaller(GetType().Assembly));
 

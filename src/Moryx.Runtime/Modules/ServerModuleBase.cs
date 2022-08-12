@@ -64,11 +64,6 @@ namespace Moryx.Runtime.Modules
 
         #endregion
 
-        #region Logging
-
-
-        #endregion
-
         #region Server Module methods
 
         /// <summary>
@@ -85,7 +80,8 @@ namespace Moryx.Runtime.Modules
         {
             // Activate logging
             Logger = new ModuleLogger(GetType().Namespace, GetType(), LoggerFactory);
-            Logger.SetNotificationTarget((l, m, e) => Notifications.Add(new ModuleNotification(l, m, e)));
+            Logger.SetNotificationTarget(Notifications.AddFromLogStream);
+
             Logger.Log(LogLevel.Info, "{0} is initializing...", Name);
 
             // Get config and parse for container settings
