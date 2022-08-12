@@ -43,10 +43,7 @@ namespace Moryx.Runtime.Kernel.Tests
 
         private LifeCycleBoundFacadeTestModule CreateLifeCycleBoundFacadeTestModuleUnderTest()
         {
-            return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory())
-            {
-                Logger = _mockLogger.Object
-            };
+            return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
         }
 
         [Test]

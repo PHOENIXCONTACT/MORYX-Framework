@@ -119,7 +119,6 @@ namespace Moryx.TestTools.UnitTest
 
         public void SetNotificationTarget(Action<LogLevel, string, Exception> notificationTarget)
         {
-            throw new NotImplementedException();
         }
     }
 

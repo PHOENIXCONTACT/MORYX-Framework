@@ -50,8 +50,6 @@ namespace Moryx.TestModule
         /// <inheritdoc />
         protected override void OnStart()
         {
-            Logger.Log(Config.LogLevel, "Sending log message with level '{0}'", Config.LogLevel);
-
             Thread.Sleep(Config.SleepTime); // Just for system testing.
 
             // Activate facades

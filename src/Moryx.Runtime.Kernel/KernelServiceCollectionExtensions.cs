@@ -2,17 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Logging;
-using Moryx.Modules;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
-using Moryx.Tools;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace Moryx.Runtime.Kernel
 {
