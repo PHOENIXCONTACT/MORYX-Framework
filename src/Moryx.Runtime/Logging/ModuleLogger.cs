@@ -8,7 +8,7 @@ using System;
 using MoryxLogLevel = Moryx.Logging.LogLevel;
 using MsLogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Moryx.Runtime.Kernel.Logging
+namespace Moryx.Runtime.Logging
 {
     internal class ModuleLogger : IModuleLogger
     {
@@ -19,7 +19,7 @@ namespace Moryx.Runtime.Kernel.Logging
 
         public string Name { get; }
 
-        protected Action<IModuleNotification> NotificationTarget { get; set; }
+        protected Action<MoryxLogLevel, string, Exception> NotificationTarget { get; set; }
 
         public ModuleLogger(string name, Type targetType, ILoggerFactory loggerFactory)
             : this(name, targetType, loggerFactory, loggerFactory.CreateLogger(name))
@@ -71,10 +71,10 @@ namespace Moryx.Runtime.Kernel.Logging
             _logger.Log(logLevel, default, logEvent, ex, ModuleLoggerEvent.Formatter);
 
             if (level >= MoryxLogLevel.Warning)
-                NotificationTarget(new ModuleNotification(level, ModuleLoggerEvent.Formatter(logEvent, ex), ex));
+                NotificationTarget(level, ModuleLoggerEvent.Formatter(logEvent, ex), ex);
         }
 
-        public void SetNotificationTarget(Action<IModuleNotification> notificationTarget)
+        public void SetNotificationTarget(Action<MoryxLogLevel, string, Exception> notificationTarget)
         {
             NotificationTarget = notificationTarget;
         }

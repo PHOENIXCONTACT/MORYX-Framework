@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Runtime.Container;
+using Moryx.Runtime.Logging;
 using Moryx.StateMachines;
 using Moryx.Threading;
 using LogLevel = Moryx.Logging.LogLevel;
@@ -32,6 +34,8 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         public IModuleLogger Logger { get; set; }
 
+        public ILoggerFactory LoggerFactory { get; set; }
+
         /// <inheritdoc />
         IServerModuleConsole IServerModule.Console => Container?.Resolve<IServerModuleConsole>();
 
@@ -41,12 +45,11 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Creates a new instance of <see cref="ServerModuleBase{TConf}"/> and initializes the state machine
         /// </summary>
-        protected ServerModuleBase(IModuleContainerFactory containerFactory, IConfigManager configManager,IModuleLoggerFactory loggerFactory)
+        protected ServerModuleBase(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
         {
             ContainerFactory = containerFactory;
             ConfigManager = configManager;
-            Logger = loggerFactory.Create($"{GetType().Namespace}");
-            Logger.SetNotificationTarget(Notifications.Add);
+            LoggerFactory = loggerFactory;
 
             StateMachine.Initialize((IServerModuleStateContext)this).With<ServerModuleStateBase>();
         }
@@ -81,6 +84,8 @@ namespace Moryx.Runtime.Modules
         void IServerModuleStateContext.Initialize()
         {
             // Activate logging
+            Logger = new ModuleLogger(GetType().Namespace, GetType(), LoggerFactory);
+            Logger.SetNotificationTarget((l, m, e) => Notifications.Add(new ModuleNotification(l, m, e)));
             Logger.Log(LogLevel.Info, "{0} is initializing...", Name);
 
             // Get config and parse for container settings
@@ -92,6 +97,7 @@ namespace Moryx.Runtime.Modules
                 .Register<IParallelOperations, ParallelOperations>()
                 // Register instances for this cycle
                 .SetInstance(Config)
+                .SetInstance(LoggerFactory)
                 .SetInstance(Logger);
 
             OnInitialize();

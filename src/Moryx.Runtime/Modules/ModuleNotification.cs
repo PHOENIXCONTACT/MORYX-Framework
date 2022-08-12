@@ -6,7 +6,7 @@ using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Notifications;
 
-namespace Moryx.Runtime.Kernel.Logging
+namespace Moryx.Runtime.Modules
 {
     internal class ModuleNotification : IModuleNotification
     {
@@ -31,8 +31,13 @@ namespace Moryx.Runtime.Kernel.Logging
         public Exception Exception { get; }
 
         public ModuleNotification(LogLevel logLevel, string message, Exception exception)
+            : this(LogLevelToSeverity(logLevel), message, exception)
         {
-            Severity = LogLevelToSeverity(logLevel);
+        }
+
+        public ModuleNotification(Severity severity, string message, Exception exception)
+        {
+            Severity = severity;
             Message = message;
             Timestamp = DateTime.Now;
             Exception = exception;

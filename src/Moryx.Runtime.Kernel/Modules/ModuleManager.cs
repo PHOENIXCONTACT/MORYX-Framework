@@ -46,7 +46,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// 
         /// </summary>
-        public ModuleManager(IEnumerable<IServerModule> modules, IConfigManager configManager, IServerLoggerManagement loggerManagement)
+        public ModuleManager(IEnumerable<IServerModule> modules, IConfigManager configManager, ILogger<ModuleManager> logger)
         {
             var allModules = modules.ToList();
 

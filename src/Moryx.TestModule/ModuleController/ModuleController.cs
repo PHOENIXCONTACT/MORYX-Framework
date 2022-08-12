@@ -3,9 +3,11 @@
 
 using System.ComponentModel;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using Moryx.Communication.Endpoints;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Runtime;
 using Moryx.Runtime.Container;
@@ -31,8 +33,8 @@ namespace Moryx.TestModule
         public override string Name => "TestModule";
 
 
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
-            : base(containerFactory, configManager, loggerManagement)
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+            : base(containerFactory, configManager, loggerFactory)
         {
         }
 

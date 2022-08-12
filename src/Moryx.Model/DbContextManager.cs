@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
@@ -19,7 +20,7 @@ namespace Moryx.Model
     /// Kernel component handling data models and their runtime configurators
     /// </summary>
     [InitializableKernelComponent(typeof(IDbContextManager))]
-    public class DbContextManager : IDbContextManager, IInitializable, ILoggingHost
+    public class DbContextManager : IDbContextManager, IInitializable
     {
         #region Dependencies
 
@@ -33,21 +34,12 @@ namespace Moryx.Model
         /// </summary>
         public IModuleLogger Logger { get; set; }
 
-        /// <summary>
-        /// Logger root for this component
-        /// </summary>
-        public ILoggerManagement LoggerManagement { get; set; }
-
         #endregion
 
-        string ILoggingHost.Name => nameof(DbContextManager);
         private ModelWrapper[] _knownModels;
 
-        /// <inheritdoc />
-        public void Initialize()
+        public DbContextManager(IConfigManager configManager, ILogger<DbContextManager> logger)
         {
-            LoggerManagement.ActivateLogging(this);
-
             var dbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext), delegate (Type type)
             {
                 var modelAttr = type.GetCustomAttribute<ModelConfiguratorAttribute>();
@@ -64,7 +56,7 @@ namespace Moryx.Model
                     var wrapper = new ModelWrapper
                     {
                         DbContextType = t.DbContextType,
-                        Configurator = (IModelConfigurator) Activator.CreateInstance(t.ModelConfiguratorAttr.ConfiguratorType)
+                        Configurator = (IModelConfigurator)Activator.CreateInstance(t.ModelConfiguratorAttr.ConfiguratorType)
                     };
                     return wrapper;
                 }).ToArray();
@@ -75,6 +67,14 @@ namespace Moryx.Model
                 var logger = Logger.GetChild(configuratorType.Name, configuratorType);
                 wrapper.Configurator.Initialize(wrapper.DbContextType, ConfigManager, logger);
             }
+        }
+
+        /// <inheritdoc />
+        public void Initialize()
+        {
+            LoggerManagement.ActivateLogging(this);
+
+            
         }
 
         /// <inheritdoc />

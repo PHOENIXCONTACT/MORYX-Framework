@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Moryx.Runtime.Kernel.Logging
+namespace Moryx.Runtime.Logging
 {
     internal class ModuleLoggerEvent : IEnumerable<KeyValuePair<string, object>>
     {

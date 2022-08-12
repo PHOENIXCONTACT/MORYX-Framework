@@ -12,6 +12,7 @@ using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Response;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Request;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 {
@@ -59,7 +60,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("model/{targetModel}/config/test")]
-        public ActionResult<TestConnectionResponse> TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
+        public async Task<ActionResult<TestConnectionResponse>> TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
@@ -70,7 +71,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
             // Update config copy from model
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            var result = targetConfigurator.TestConnection(updatedConfig);
+            var result = await targetConfigurator.TestConnection(updatedConfig);
 
             return new TestConnectionResponse { Result = result };
         }
@@ -83,7 +84,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("model/{targetModel}/create")]
-        public ActionResult<InvocationResponse> CreateDatabase(string targetModel, DatabaseConfigModel config)
+        public async Task<ActionResult<InvocationResponse>> CreateDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
@@ -96,7 +97,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
             try
             {
-                var creationResult = targetConfigurator.CreateDatabase(updatedConfig);
+                var creationResult = await targetConfigurator.CreateDatabase(updatedConfig);
                 return creationResult
                     ? new InvocationResponse()
                     : throw new Exception("Cannot create database. May be the database already exists or was misconfigured.");
@@ -175,8 +176,8 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return new InvocationResponse();
         }
 
-        [HttpPost("model/{targetModel}/{migrationName}/migrate")]
-        public ActionResult<DatabaseUpdateSummary> MigrateDatabaseModel(string targetModel, string migrationName, DatabaseConfigModel configModel)
+        [HttpPost("model/{targetModel}/migrate")]
+        public async Task<ActionResult<DatabaseMigrationSummary>> MigrateDatabaseModel(string targetModel, DatabaseConfigModel configModel)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
@@ -186,23 +187,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 throw new ArgumentException("Config values are not valid", nameof(configModel));
 
             var config = UpdateConfigFromModel(targetConfigurator.Config, configModel);
-            return targetConfigurator.MigrateDatabase(config, migrationName);
-        }
-
-        [HttpPost("model/{targetModel}/rollback")]
-        public ActionResult<InvocationResponse> RollbackDatabase(string targetModel, DatabaseConfigModel config)
-        {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
-            if (targetConfigurator == null)
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
-
-            if (!IsConfigValid(config))
-                throw new ArgumentException("Config values are not valid", nameof(config));
-
-            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            var rollbackResult = targetConfigurator.RollbackDatabase(updatedConfig);
-
-            return rollbackResult ? new InvocationResponse() : new InvocationResponse("Error while rollback!");
+            return await targetConfigurator.MigrateDatabase(config);
         }
 
         [HttpPost("model/{targetModel}/setup")]

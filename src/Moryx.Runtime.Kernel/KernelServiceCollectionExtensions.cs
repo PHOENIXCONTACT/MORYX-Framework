@@ -8,7 +8,6 @@ using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Runtime.Configuration;
-using Moryx.Runtime.Kernel.Logging;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
 using System;
@@ -27,9 +26,6 @@ namespace Moryx.Runtime.Kernel
             // Register config manager
             serviceCollection.AddSingleton<IRuntimeConfigManager, RuntimeConfigManager>();
             serviceCollection.AddSingleton<IConfigManager>(x => x.GetRequiredService<IRuntimeConfigManager>());
-
-            // Register logging
-            serviceCollection.AddSingleton<IModuleLoggerFactory, ModuleLoggerFactory>();
 
             // Register module manager
             serviceCollection.AddSingleton<ModuleManager>();
@@ -84,10 +80,25 @@ namespace Moryx.Runtime.Kernel
             return configManager;
         }
 
+        /// <summary>
+        /// Boot system and start all modules
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
         public static IModuleManager StartMoryxModules(this IServiceProvider serviceProvider)
         {
             var moduleManager = serviceProvider.GetRequiredService<IModuleManager>();
             moduleManager.StartModules();
+            return moduleManager;
+        }
+
+        /// <summary>
+        /// Stop all modules
+        /// </summary>
+        public static IModuleManager StopMoryxModules(this IServiceProvider serviceProvider)
+        {
+            var moduleManager = serviceProvider.GetRequiredService<IModuleManager>();
+            moduleManager.StopModules();
             return moduleManager;
         }
     }
