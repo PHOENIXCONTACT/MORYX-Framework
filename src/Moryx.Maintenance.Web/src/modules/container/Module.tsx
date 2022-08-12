@@ -75,12 +75,12 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
     }
 
     public onStartBehaviourChange(e: React.FormEvent<HTMLInputElement>): void {
-        const newValue = parseInt((e.target as HTMLSelectElement).value, 10);
+        const newValue = (e.target as HTMLSelectElement).value as ModuleStartBehaviour;
         this.props.RestClient.updateModule({ ...this.props.Module, startBehaviour: newValue }).then((d) => this.props.onUpdateStartBehaviour(this.props.Module.name, newValue));
     }
 
     public onFailureBehaviourChange(e: React.FormEvent<HTMLInputElement>): void {
-        const newValue = parseInt((e.target as HTMLSelectElement).value, 10);
+        const newValue = (e.target as HTMLSelectElement).value as FailureBehaviour;
         this.props.RestClient.updateModule({ ...this.props.Module, failureBehaviour: newValue }).then((d) => this.props.onUpdateFailureBehaviour(this.props.Module.name, newValue));
     }
 

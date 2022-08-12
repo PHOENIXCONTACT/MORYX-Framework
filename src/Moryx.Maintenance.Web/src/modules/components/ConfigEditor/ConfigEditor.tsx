@@ -8,7 +8,7 @@ import Icon from "@mdi/react";
 import * as React from "react";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Row, Table } from "reactstrap";
 import Entry from "../../models/Entry";
-import { EntryValueType, toString } from "../../models/EntryValueType";
+import { EntryValueType } from "../../models/EntryValueType";
 import BooleanEditor from "./BooleanEditor";
 import ByteEditor from "./ByteEditor";
 import ClassEditor from "./ClassEditor";
@@ -153,7 +153,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
             }
         }
 
-        return (<span>Not implemented yet: {toString(entry.value.type)}</span>);
+        return (<span>Not implemented yet: {entry.value.type}</span>);
     }
 
     public preRenderEntries(entries: Entry[]): React.ReactNode {

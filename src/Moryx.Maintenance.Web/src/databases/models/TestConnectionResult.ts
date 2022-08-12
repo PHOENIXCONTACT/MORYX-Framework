@@ -4,8 +4,8 @@
 */
 
 export enum TestConnectionResult {
-    ConfigurationError,
-    ConnectionError,
-    ConnectionOkDbDoesNotExist,
-    Success,
+    ConfigurationError = "ConfigurationError",
+    ConnectionError = "ConnectionError",
+    ConnectionOkDbDoesNotExist = "ConnectionOkDbDoesNotExist",
+    Success = "Success",
 }

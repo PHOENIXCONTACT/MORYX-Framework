@@ -5,7 +5,6 @@
 
 import * as React from "react";
 import { Input } from "reactstrap";
-import { toString } from "../../models/EntryValueType";
 import { InputEditorBasePropModel } from "./InputEditorBase";
 import SelectionEditorBase from "./SelectionEditorBase";
 
@@ -17,7 +16,7 @@ export default class NumberEditor extends SelectionEditorBase {
     private preRenderInput(): React.ReactNode {
         return (<Input type="number"
                 onChange={(e: React.FormEvent<HTMLInputElement>) => this.onValueChange(e, this.props.Entry)}
-                placeholder={"Please enter a value of type: " + toString(this.props.Entry.value.type) + " ..."}
+                placeholder={"Please enter a value of type: " + this.props.Entry.value.type + " ..."}
                 disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
                 value={this.props.Entry.value.current}
         />);

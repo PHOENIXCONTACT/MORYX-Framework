@@ -6,8 +6,8 @@
 import * as React from "react";
 
 export const enum IconType {
-    Image,
-    Icon
+    Image = "Image",
+    Icon = "Icon",
 }
 
 export default interface MenuItemModel {

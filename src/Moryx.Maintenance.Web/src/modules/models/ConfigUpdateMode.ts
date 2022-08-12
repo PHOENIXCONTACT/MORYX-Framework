@@ -4,7 +4,7 @@
 */
 
 export enum ConfigUpdateMode {
-    OnlySave,
-    SaveAndReincarnate,
-    UpdateLiveAndSave,
+    OnlySave = "OnlySave",
+    SaveAndReincarnate = "SaveAndReincarnate",
+    UpdateLiveAndSave = "UpdateLiveAndSave",
 }

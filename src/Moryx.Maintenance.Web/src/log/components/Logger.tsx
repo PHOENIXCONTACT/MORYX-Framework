@@ -162,7 +162,7 @@ export default class Logger extends React.Component<LogPropsModel, LogStateModel
     }
 
     private onFilterLogLevelChange(e: React.FormEvent<HTMLInputElement>): void {
-        const newValue = parseInt((e.target as HTMLSelectElement).value, 10);
+        const newValue = (e.target as HTMLSelectElement).value  as LogLevel;
         this.setState({ FilterLogLevel: newValue, FilteredLogMessages: Logger.applyFilter(this.state.LogMessages, newValue, this.state.MaxLogEntries) });
     }
 

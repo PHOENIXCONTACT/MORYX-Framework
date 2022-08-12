@@ -87,7 +87,7 @@ class Log extends React.Component<LogPropsModel & LogDispatchPropModel, LogState
     private onActiveLogLevelChange(e: React.FormEvent<HTMLInputElement>, logger: LoggerModel): void {
         e.preventDefault();
 
-        const newValue = parseInt((e.target as HTMLSelectElement).value, 10);
+        const newValue = (e.target as HTMLSelectElement).value as LogLevel;
         this.props.RestClient.logLevel(logger.Name, newValue).then((data) => {
             if (data.success) {
                 logger.ActiveLevel = newValue;

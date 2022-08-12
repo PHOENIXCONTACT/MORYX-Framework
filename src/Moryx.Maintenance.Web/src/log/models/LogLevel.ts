@@ -3,10 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 export enum LogLevel {
-    Trace,
-    Debug,
-    Info,
-    Warning,
-    Error,
-    Fatal,
+    Trace = "Trace",
+    Debug = "Debug",
+    Info = "Info",
+    Warning = "Warning",
+    Error = "Error",
+    Fatal = "Fatal",
 }

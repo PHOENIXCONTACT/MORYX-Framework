@@ -4,9 +4,9 @@
 */
 
 export const enum ServiceBindingType {
-    WebHttp,
-    BasicHttp,
-    NetTcp
+    WebHttp = "WebHttp",
+    BasicHttp = "BasicHttp",
+    NetTcp = "NetTcp",
 }
 
 export default class Endpoint {

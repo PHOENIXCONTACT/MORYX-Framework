@@ -4,8 +4,8 @@
 */
 
 export enum Serverity {
-    Info,
-    Warning,
-    Error,
-    Fatal
+    Info = "Info",
+    Warning = "Warning",
+    Error = "Error",
+    Fatal = "Fatal",
 }

@@ -4,6 +4,6 @@
 */
 
 export enum FailureBehaviour {
-    Stop = 0x00,
-    StopAndNotify = 0x02
+    Stop = "Stop",
+    StopAndNotify = "StopAndNotify",
 }

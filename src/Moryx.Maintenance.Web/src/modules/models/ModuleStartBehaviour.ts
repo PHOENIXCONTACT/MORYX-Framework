@@ -4,7 +4,7 @@
 */
 
 export enum ModuleStartBehaviour {
-    Auto,
-    Manual,
-    OnDependency,
+    Auto = "Auto",
+    Manual = "Manual",
+    OnDependency = "OnDependency",
 }
