@@ -11,13 +11,6 @@ namespace StartProject.Asp
 {
     public class Startup
     {
-        private readonly IApplicationRuntime _moryxRuntime;
-
-        public Startup(IApplicationRuntime moryxRuntime)
-        {
-            _moryxRuntime = moryxRuntime;
-        }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -31,9 +24,14 @@ namespace StartProject.Asp
                 c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
             });
 
-            services.AddMoryxKernel(_moryxRuntime);
-
-            services.AddMoryxFacades(_moryxRuntime);
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                    .WithOrigins("http://localhost:8080") // Maintenance.Web usually runs on port 8080
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +52,11 @@ namespace StartProject.Asp
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            if (env.IsDevelopment())
+            {
+                app.UseCors("CorsPolicy");
+            }
 
             app.UseAuthorization();
 

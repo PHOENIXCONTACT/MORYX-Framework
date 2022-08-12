@@ -9,5 +9,6 @@ namespace Moryx.TestModule.Kestrel
     [DataContract]
     public class ModuleConfig : ConfigBase
     {
+        public int Foo { get; set; }
     }
 }

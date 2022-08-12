@@ -1,0 +1,20 @@
+﻿@page
+@model Moryx.Runtime.Maintenance.Web.MyFeature.Pages.Page1Model
+@using Moryx.Asp.Integration
+@using System.ComponentModel.DataAnnotations
+
+@{
+    ViewData["Title"] = "MORYX Maintenance";
+    ViewData["BaseRef"] = "Maintenance";
+
+    Layout = "_Layout";
+}
+
+@attribute [WebModule("Maintenance", "settings"), Display(Name = "Maintenance", Description = "Maintenance user interface")]
+
+@section Scripts
+{
+  <script src="/_content/Moryx.Maintenance.Web/bundle.js" type="module"></script>
+}
+
+<div id="app"></div>

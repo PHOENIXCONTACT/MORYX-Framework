@@ -31,7 +31,7 @@ namespace Moryx.Runtime.Endpoints.Logging.Endpoint
             => Ok(_loggerManagement.Select(Convert));
 
 
-        [HttpPut("logger/{loggerName}/loglevel")]
+        [HttpPut("{loggerName}/loglevel")]
         public ActionResult<InvocationResponse> SetLogLevel([FromRoute] string loggerName, [FromBody] SetLogLevelRequest request)
         {
             var loggers = _loggerManagement.Select(Convert);
@@ -42,7 +42,7 @@ namespace Moryx.Runtime.Endpoints.Logging.Endpoint
             return new InvocationResponse();
         }
 
-        [HttpPost("appender")]
+        [HttpPost("appenders")]
         public ActionResult<AddAppenderResponse> AddAppender([FromBody] AddAppenderRequest request)
         {
             if (request.Name == null)
@@ -54,7 +54,7 @@ namespace Moryx.Runtime.Endpoints.Logging.Endpoint
             };
         }
 
-        [HttpGet("appender/{appenderId}")]
+        [HttpGet("appenders/{appenderId}")]
         public ActionResult<IEnumerable<LogMessageModel>> GetMessages([FromRoute] string appenderId)
         {
             var appender = int.Parse(appenderId);
@@ -65,7 +65,7 @@ namespace Moryx.Runtime.Endpoints.Logging.Endpoint
             return Ok(messages);
         }
 
-        [HttpDelete("appender/{appenderId}")]
+        [HttpDelete("appenders/{appenderId}")]
         public ActionResult<InvocationResponse> RemoveAppender([FromRoute] string appenderId)
         {
             var appender = int.Parse(appenderId);

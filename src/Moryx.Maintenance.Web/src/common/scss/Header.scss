@@ -1,0 +1,21 @@
+@import "./Theme";
+
+h1, h2, h3, {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+h2 {
+    font-size: 18px;
+}
+
+h3 {
+    font-size: 16px;
+}
+
+.header {
+    margin: 10px 10px 0px 10px;
+}
