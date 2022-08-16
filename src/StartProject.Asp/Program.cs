@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Moryx.Runtime.Kernel;
 using Moryx.Tools;
 using Moryx.Runtime.Modules;
+using System;
 
 namespace StartProject.Asp
 {
@@ -27,6 +28,8 @@ namespace StartProject.Asp
             host.Services.StartMoryxModules();
 
             host.Run();
+
+            host.Services.StopMoryxModules();
         }
     }
 }

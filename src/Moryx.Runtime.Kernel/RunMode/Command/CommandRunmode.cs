@@ -19,11 +19,6 @@ namespace Moryx.Runtime.Kernel
         public IRuntimeConfigManager ConfigLoader { get; set; }
 
         /// <summary>
-        /// Logger management instance. Injected by the castle container
-        /// </summary>
-        public IServerLoggerManagement Logger { get; set; }
-
-        /// <summary>
         /// Local container of the command run mode
         /// </summary>
         private IContainer _container;
@@ -76,8 +71,7 @@ namespace Moryx.Runtime.Kernel
         {
             // Prepare local container
             _container = new CastleContainer()
-                .SetInstance(ModuleManager).SetInstance(ConfigLoader)
-                .SetInstance(Logger);
+                .SetInstance(ModuleManager).SetInstance(ConfigLoader);
 
             _container.LoadComponents<ICommandHandler>();
 

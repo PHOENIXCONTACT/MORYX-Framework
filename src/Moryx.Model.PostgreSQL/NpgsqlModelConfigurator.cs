@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 using Moryx.Model.Configuration;
 using Npgsql;
 

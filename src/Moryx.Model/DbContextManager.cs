@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
@@ -19,35 +20,12 @@ namespace Moryx.Model
     /// Kernel component handling data models and their runtime configurators
     /// </summary>
     [InitializableKernelComponent(typeof(IDbContextManager))]
-    public class DbContextManager : IDbContextManager, IInitializable, ILoggingHost
+    public class DbContextManager : IDbContextManager
     {
-        #region Dependencies
-
-        /// <summary>
-        /// Config manager to handle database configurations
-        /// </summary>
-        public IConfigManager ConfigManager { get; set; }
-
-        /// <summary>
-        /// Logger for the database configurators
-        /// </summary>
-        public IModuleLogger Logger { get; set; }
-
-        /// <summary>
-        /// Logger root for this component
-        /// </summary>
-        public ILoggerManagement LoggerManagement { get; set; }
-
-        #endregion
-
-        string ILoggingHost.Name => nameof(DbContextManager);
         private ModelWrapper[] _knownModels;
 
-        /// <inheritdoc />
-        public void Initialize()
+        public DbContextManager(IConfigManager configManager, ILoggerFactory loggerFactory)
         {
-            LoggerManagement.ActivateLogging(this);
-
             var dbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext), delegate (Type type)
             {
                 var modelAttr = type.GetCustomAttribute<ModelConfiguratorAttribute>();
@@ -64,7 +42,7 @@ namespace Moryx.Model
                     var wrapper = new ModelWrapper
                     {
                         DbContextType = t.DbContextType,
-                        Configurator = (IModelConfigurator) Activator.CreateInstance(t.ModelConfiguratorAttr.ConfiguratorType)
+                        Configurator = (IModelConfigurator)Activator.CreateInstance(t.ModelConfiguratorAttr.ConfiguratorType)
                     };
                     return wrapper;
                 }).ToArray();
@@ -72,8 +50,8 @@ namespace Moryx.Model
             foreach (var wrapper in _knownModels)
             {
                 var configuratorType = wrapper.Configurator.GetType();
-                var logger = Logger.GetChild(configuratorType.Name, configuratorType);
-                wrapper.Configurator.Initialize(wrapper.DbContextType, ConfigManager, logger);
+                var logger =loggerFactory.CreateLogger(configuratorType);
+                wrapper.Configurator.Initialize(wrapper.DbContextType, configManager, logger);
             }
         }
 

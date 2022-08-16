@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using Moryx.Runtime.Modules;
 
@@ -11,9 +12,9 @@ namespace Moryx.Runtime.Kernel
     internal class ModuleStopper : ModuleManagerComponent, IModuleStopper
     {
         private readonly IModuleDependencyManager _dependencyManager;
-        private readonly IModuleLogger _logger;
+        private readonly ILogger _logger;
 
-        public ModuleStopper(IModuleDependencyManager dependencyManager, IModuleLogger logger)
+        public ModuleStopper(IModuleDependencyManager dependencyManager, ILogger logger)
         {
             _dependencyManager = dependencyManager;
             _logger = logger;

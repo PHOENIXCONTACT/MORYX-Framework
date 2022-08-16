@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
 
@@ -22,7 +22,7 @@ namespace Moryx.Runtime.Kernel
 
     internal class ModuleDependencyManager : IModuleDependencyManager
     {
-        private readonly IModuleLogger _logger;
+        private readonly ILogger _logger;
 
         private PluginDependencyTree _dependencyTree;
 
@@ -33,7 +33,7 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         private readonly IDictionary<IServerModule, IModuleDependency> _cache = new Dictionary<IServerModule, IModuleDependency>();
 
-        public ModuleDependencyManager(IModuleLogger logger)
+        public ModuleDependencyManager(ILogger logger)
         {
             _logger = logger;
         }

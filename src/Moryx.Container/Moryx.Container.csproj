@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Windsor" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
   </ItemGroup>
 
   <ItemGroup>

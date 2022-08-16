@@ -13,6 +13,7 @@ using Moryx.Runtime.Modules;
 using Moq;
 using Moryx.Tools;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Moryx.Runtime.Kernel.Tests
 {
@@ -20,7 +21,6 @@ namespace Moryx.Runtime.Kernel.Tests
     public class ModuleManagerTests
     {
         private Mock<IConfigManager> _mockConfigManager;
-        private Mock<IServerLoggerManagement> _mockLoggerManagement;
         private Mock<IModuleLogger> _mockLogger;
 
         [SetUp]
@@ -31,25 +31,19 @@ namespace Moryx.Runtime.Kernel.Tests
             _mockConfigManager.Setup(mock => mock.GetConfiguration<ModuleManagerConfig>()).Returns(moduleManagerConfig);
             _mockConfigManager.Setup(mock => mock.GetConfiguration<RuntimeConfigManagerTestConfig2>()).Returns(new RuntimeConfigManagerTestConfig2());
 
-            _mockLoggerManagement = new Mock<IServerLoggerManagement>();
             _mockLogger = new Mock<IModuleLogger>();
             _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);
-            _mockLoggerManagement.Setup(mock => mock.ActivateLogging(It.IsAny<ILoggingHost>()))
-                .Callback((ILoggingHost par) => par.Logger = _mockLogger.Object);
         }
 
 
         private ModuleManager CreateObjectUnderTest(IServerModule[] modules)
         {
-            return new ModuleManager(modules, _mockConfigManager.Object, _mockLoggerManagement.Object);
+            return new ModuleManager(modules, _mockConfigManager.Object, new NullLogger<ModuleManager>());
         }
 
         private LifeCycleBoundFacadeTestModule CreateLifeCycleBoundFacadeTestModuleUnderTest()
         {
-            return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(), _mockConfigManager.Object, _mockLoggerManagement.Object)
-            {
-                Logger = _mockLogger.Object
-            };
+            return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
         }
 
         [Test]

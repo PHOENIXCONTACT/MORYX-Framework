@@ -45,7 +45,7 @@ namespace Moryx.Runtime.Kernel
                 var module = CommandHelper.GetByName(ModuleManager, fullCommand[1]);
                 foreach (var notification in module.Notifications.ToArray())
                 {
-                    notification.Confirm();
+                    module.AcknowledgeNotification(notification);
                 }
                 // Invoke init - this will get failed modules back to ready
                 ModuleManager.InitializeModule(module);

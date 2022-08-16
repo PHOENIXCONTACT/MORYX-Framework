@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime;
@@ -23,8 +24,8 @@ namespace Moryx.DependentTestModule
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public ITestModule TestModule { get; set; }
 
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, IServerLoggerManagement loggerManagement) 
-            : base(containerFactory, configManager, loggerManagement)
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+            : base(containerFactory, configManager, loggerFactory)
         {
         }
 

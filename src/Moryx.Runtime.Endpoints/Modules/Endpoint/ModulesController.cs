@@ -156,7 +156,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
 
             var notifications = module.Notifications.ToArray();
             foreach (var notification in notifications)
-                notification.Confirm();
+                module.AcknowledgeNotification(notification);
 
             _moduleManager.InitializeModule(module);
             return Ok();

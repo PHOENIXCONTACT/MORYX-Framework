@@ -7,8 +7,8 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Logging;
 
 namespace Moryx.Model.Configuration
 {
@@ -25,13 +25,13 @@ namespace Moryx.Model.Configuration
         /// <summary>
         /// Logger for this model configurator
         /// </summary>
-        protected IModuleLogger Logger { get; private set; }
+        protected ILogger Logger { get; private set; }
 
         /// <inheritdoc />
         public IDatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
+        public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)
         {
             _contextType = contextType;
             _configManager = configManager;
@@ -139,14 +139,14 @@ namespace Moryx.Model.Configuration
                 await context.Database.MigrateAsync();
                 result.Result = MigrationResult.Migrated;
                 result.ExecutedMigrations = pendingMigrations;
-                Logger.Log(LogLevel.Info, "Database migration for database '{0}' was successful. Executed migrations: {1}",
+                Logger.Log(LogLevel.Information, "Database migration for database '{0}' was successful. Executed migrations: {1}",
                     config.Database, string.Join(", ", pendingMigrations));
 
             }
             catch (Exception e)
             {
                 result.Result = MigrationResult.Error;
-                Logger.LogException(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.Database);
+                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.Database);
             }
 
             return result;

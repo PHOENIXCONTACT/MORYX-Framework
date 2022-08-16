@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Logging;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
@@ -55,7 +55,7 @@ namespace Moryx.Model
         /// <summary>
         /// Initializes the model configurator
         /// </summary>
-        void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger);
+        void Initialize(Type contextType, IConfigManager configManager, ILogger logger);
 
         /// <summary>
         /// Creates a context with internal configuration
