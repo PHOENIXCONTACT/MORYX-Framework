@@ -73,7 +73,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return models;
         }
 
-        [HttpGet("module/{moduleName}/healthstate")]
+        [HttpGet("{moduleName}/healthstate")]
         public ActionResult<ServerModuleState> HealthState([FromRoute] string moduleName)
         {
             var module = _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
@@ -83,7 +83,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return NotFound($"Module with name \"{moduleName}\" could not be found");
         }
 
-        [HttpGet("module/{moduleName}/notifications")]
+        [HttpGet("{moduleName}/notifications")]
         public ActionResult<IEnumerable<NotificationModel>> Notifications([FromRoute] string moduleName)
         {
             var module = _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
@@ -93,7 +93,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return NotFound($"Module with name \"{moduleName}\" could not be found");
         }
 
-        [HttpPost("module/{moduleName}/start")]
+        [HttpPost("{moduleName}/start")]
         public ActionResult Start([FromRoute] string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -104,7 +104,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return Ok();
         }
 
-        [HttpPost("module/{moduleName}/stop")]
+        [HttpPost("{moduleName}/stop")]
         public ActionResult Stop([FromRoute] string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -115,7 +115,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return Ok();
         }
 
-        [HttpPost("module/{moduleName}/reincarnate")]
+        [HttpPost("{moduleName}/reincarnate")]
         public ActionResult Reincarnate([FromRoute] string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -126,7 +126,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return Ok();
         }
 
-        [HttpPost("module/{moduleName}")]
+        [HttpPost("{moduleName}")]
         public ActionResult Update([FromRoute] string moduleName, [FromBody] ServerModuleModel module)
         {
             if (module == null)
@@ -147,7 +147,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return Ok();
         }
 
-        [HttpPost("module/{moduleName}/confirm")]
+        [HttpPost("{moduleName}/confirm")]
         public ActionResult ConfirmWarning([FromRoute] string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -162,7 +162,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return Ok();
         }
 
-        [HttpGet("module/{moduleName}/config")]
+        [HttpGet("{moduleName}/config")]
         public ActionResult<Config> GetConfig([FromRoute] string moduleName)
         {
             try
@@ -186,7 +186,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             }
         }
 
-        [HttpPost("module/{moduleName}/config")]
+        [HttpPost("{moduleName}/config")]
         public ActionResult SetConfig([FromRoute] string moduleName, [FromBody] SaveConfigRequest request)
         {
             if (request.Config == null)
@@ -214,7 +214,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             }
         }
 
-        [HttpGet("module/{moduleName}/console")]
+        [HttpGet("{moduleName}/console")]
         public ActionResult<IEnumerable<MethodEntry>> GetMethods([FromRoute] string moduleName)
         {
             var methods = Enumerable.Empty<MethodEntry>();
@@ -228,7 +228,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             return Ok(methods);
         }
 
-        [HttpPost("module/{moduleName}/console")]
+        [HttpPost("{moduleName}/console")]
         public ActionResult<Entry> InvokeMethod([FromRoute] string moduleName, [FromBody] MethodEntry method)
         {
             if (method == null)

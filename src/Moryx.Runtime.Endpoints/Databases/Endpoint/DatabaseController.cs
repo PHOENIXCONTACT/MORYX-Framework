@@ -33,7 +33,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             => Ok(_dbContextManager.Contexts.Select(Convert));
 
 
-        [HttpGet("model/{targetModel}")]
+        [HttpGet("{targetModel}")]
         public ActionResult<DataModel> GetModel([FromRoute] string targetModel)
         {
             var model = _dbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel);
@@ -43,7 +43,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return Convert(model);
         }
 
-        [HttpPost("model/{targetModel}/config")]
+        [HttpPost("{targetModel}/config")]
         public ActionResult SetDatabaseConfig([FromRoute] string targetModel, [FromBody] DatabaseConfigModel config)
         {
             var match = GetTargetConfigurator(targetModel);
@@ -59,7 +59,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return Ok();
         }
 
-        [HttpPost("model/{targetModel}/config/test")]
+        [HttpPost("{targetModel}/config/test")]
         public async Task<ActionResult<TestConnectionResponse>> TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -83,7 +83,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
-        [HttpPost("model/{targetModel}/create")]
+        [HttpPost("{targetModel}/create")]
         public async Task<ActionResult<InvocationResponse>> CreateDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -115,7 +115,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
-        [HttpDelete("model/{targetModel}")]
+        [HttpDelete("{targetModel}")]
         public ActionResult<InvocationResponse> EraseDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -138,7 +138,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
         }
 
-        [HttpPost("model/{targetModel}/dump")]
+        [HttpPost("{targetModel}/dump")]
         public ActionResult<InvocationResponse> DumpDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -159,7 +159,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return new InvocationResponse();
         }
 
-        [HttpPost("model/{targetModel}/restore")]
+        [HttpPost("{targetModel}/restore")]
         public ActionResult<InvocationResponse> RestoreDatabase(string targetModel, RestoreDatabaseRequest request)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -176,7 +176,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return new InvocationResponse();
         }
 
-        [HttpPost("model/{targetModel}/migrate")]
+        [HttpPost("{targetModel}/migrate")]
         public async Task<ActionResult<DatabaseMigrationSummary>> MigrateDatabaseModel(string targetModel, DatabaseConfigModel configModel)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -190,7 +190,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return await targetConfigurator.MigrateDatabase(config);
         }
 
-        [HttpPost("model/{targetModel}/setup")]
+        [HttpPost("{targetModel}/setup")]
         public ActionResult<InvocationResponse> ExecuteSetup(string targetModel, ExecuteSetupRequest request)
         {
             var contextType = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);

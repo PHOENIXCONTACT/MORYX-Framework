@@ -10,5 +10,6 @@ namespace Moryx.DependentTestModule
     [DataContract]
     public class ModuleConfig : ConfigBase
     {
+        public int Foo { get; set; }
     }
 }
