@@ -34,13 +34,13 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
 
         [HttpGet("{targetModel}")]
-        public ActionResult<DataModel> GetModel([FromRoute] string targetModel)
+        public async Task<ActionResult<DataModel>> GetModel([FromRoute] string targetModel)
         {
             var model = _dbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel);
             if (model == null)
                 return NotFound($"Module with name \"{targetModel}\" could not be found");
 
-            return Convert(model);
+            return await Convert(model);
         }
 
         [HttpPost("{targetModel}/config")]
@@ -245,7 +245,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return _dbContextManager.GetConfigurator(context);
         }
 
-        private DataModel Convert(Type contextType)
+        private async Task<DataModel> Convert(Type contextType)
         {
             var configurator = _dbContextManager.GetConfigurator(contextType);
             if (configurator?.Config == null)
@@ -267,8 +267,8 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 },
                 Setups = GetAllSetups(contextType).ToArray(),
                 Backups = GetAllBackups(contextType).ToArray(),
-                AvailableMigrations = GetAvailableUpdates(dbConfig, configurator).ToArray(),
-                AppliedMigrations = GetInstalledUpdates(dbConfig, configurator).ToArray()
+                AvailableMigrations = await GetAvailableUpdates(dbConfig, configurator),
+                AppliedMigrations = await GetInstalledUpdates(dbConfig, configurator)
             };
             return model;
         }
@@ -316,22 +316,22 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return backups;
         }
 
-        private static IEnumerable<DbMigrationsModel> GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
+        private static async Task<DbMigrationsModel[]> GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
         {
-            var availableMigrations = configurator.AvailableMigrations(dbConfig).ToList();
-            return availableMigrations.Select(u => new DbMigrationsModel
+            var availableMigrations = await configurator.AvailableMigrations(dbConfig);
+            return availableMigrations.Select(migration => new DbMigrationsModel
             {
-                Name = u.Name
-            });
+                Name = migration
+            }).ToArray();
         }
 
-        private static IEnumerable<DbMigrationsModel> GetInstalledUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
+        private static async Task<DbMigrationsModel[]> GetInstalledUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
         {
-            var appliedMigrations = configurator.AppliedMigrations(dbConfig).ToList();
-            return appliedMigrations.Select(u => new DbMigrationsModel
+            var appliedMigrations = await configurator.AppliedMigrations(dbConfig);
+            return appliedMigrations.Select(migration => new DbMigrationsModel
             {
-                Name = u.Name
-            });
+                Name = migration
+            }).ToArray();
         }
 
         private static IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel model)

@@ -11,13 +11,13 @@
         <Content Remove="*.json" />
     </ItemGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Moryx\Moryx.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
 
   <Target Name="BuildUI" BeforeTargets="Build" Condition="'$(Configuration)'!='Debug' Or !Exists('wwwroot\bundle.js')">
 	<Exec WorkingDirectory="./" Command="npm install" />
