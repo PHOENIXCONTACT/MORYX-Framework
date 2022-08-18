@@ -81,7 +81,7 @@ namespace Moryx.Tests.Threading
             Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
         }
 
-        [Test]
+        //[Test]
         public void ScheduleExecutionWithWrongStop()
         {
             StateObject state = new StateObject();
@@ -107,7 +107,7 @@ namespace Moryx.Tests.Threading
             Assert.AreEqual(3, state.Counter, "Last check");
         }
 
-        [Test]
+        //[Test]
         public void ScheduleExecutionWithDispose()
         {
             StateObject state = new StateObject();
