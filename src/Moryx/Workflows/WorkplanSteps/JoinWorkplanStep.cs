@@ -17,10 +17,8 @@ namespace Moryx.Workflows.WorkplanSteps
     {
         private JoinWorkplanStep()
         {
+            Name = "Join";
         }
-
-        /// 
-        public override string Name => "Join";
 
         /// <summary>
         /// Create new join step for certain number of inputs

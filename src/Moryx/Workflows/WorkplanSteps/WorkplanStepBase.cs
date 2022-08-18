@@ -26,8 +26,11 @@ namespace Moryx.Workflows.WorkplanSteps
         [DataMember]
         public long Id { get; set; }
 
-        ///
-        public abstract string Name { get; }
+        /// <summary>
+        /// Name of the step given by the user
+        /// </summary>
+        [DataMember]
+        public string Name { get; set; }
 
         ///
         [DataMember]

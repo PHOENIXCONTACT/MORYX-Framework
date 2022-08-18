@@ -14,9 +14,6 @@ namespace Moryx.Tests.Workflows
         private readonly int _mandatory;
         private readonly ushort _mandatoryWithDefault;
 
-        ///
-        public override string Name => "DefaultValue";
-
         [EntrySerialize]
         public int OptionalParameter { get; set; }
 
@@ -27,6 +24,8 @@ namespace Moryx.Tests.Workflows
         {
             _mandatory = mandatory;
             _mandatoryWithDefault = mandatoryWithDefault;
+
+            Name = "DefaultValue";
         }
 
         ///

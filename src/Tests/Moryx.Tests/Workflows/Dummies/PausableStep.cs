@@ -10,10 +10,9 @@ namespace Moryx.Tests.Workflows
 {
     internal class PausableStep : WorkplanStepBase
     {
-        /// 
-        public override string Name
+        public PausableStep()
         {
-            get { return "Pausable"; }
+            Name = "Pausable";
         }
 
         ///

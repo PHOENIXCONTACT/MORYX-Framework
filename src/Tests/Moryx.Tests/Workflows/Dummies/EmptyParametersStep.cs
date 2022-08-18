@@ -16,8 +16,10 @@ namespace Moryx.Tests.Workflows
 
     public class EmptyParametersStep : WorkplanStepBase
     {
-        ///
-        public override string Name => "EmptyParameters";
+        public EmptyParametersStep()
+        {
+            Name = "EmptyParameters";
+        }
 
         [EntrySerialize]
         public EmptyParameters Parameters { get; set; }

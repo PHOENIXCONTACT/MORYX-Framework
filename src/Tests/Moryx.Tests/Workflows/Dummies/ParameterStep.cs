@@ -11,8 +11,10 @@ namespace Moryx.Tests.Workflows
 {
     internal class ParameterStep : WorkplanStepBase, IParameterHolder
     {
-        ///
-        public override string Name => "ParameterStep";
+        public ParameterStep()
+        {
+            Name = "ParameterStep";
+        }
 
         [EntrySerialize]
         public DummyParameters Parameters { get; set; }
@@ -33,12 +35,10 @@ namespace Moryx.Tests.Workflows
     {
         private readonly DummyParameters _parameters;
 
-        ///
-        public override string Name => "ParameterConstructorStep";
-
         public ParameterConstructorStep(DummyParameters parameters)
         {
             _parameters = parameters;
+            Name = "ParameterConstructorStep";
         }
 
         ///
