@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
@@ -103,7 +104,7 @@ namespace Moryx.TestModule
                 EnumValue = ConfigEnumeration.Value2,
                 IntegerValue = 12035,
                 SleepTime = 100,
-                LogLevel = LogLevel.Info,
+                LogLevel = LogLevel.Information,
                 LongValue = 1281259787,
                 StringValue = "hasojgwbngäqwbvqwvb",
                 TestPlugin = new TestPluginConfig1

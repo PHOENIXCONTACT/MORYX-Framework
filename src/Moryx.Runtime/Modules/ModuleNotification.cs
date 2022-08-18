@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Notifications;
@@ -50,13 +51,13 @@ namespace Moryx.Runtime.Modules
             {
                 case LogLevel.Trace:
                 case LogLevel.Debug:
-                case LogLevel.Info:
+                case LogLevel.Information:
                     return Severity.Info;
                 case LogLevel.Warning:
                     return Severity.Warning;
                 case LogLevel.Error:
                     return Severity.Error;
-                case LogLevel.Fatal:
+                case LogLevel.Critical:
                     return Severity.Fatal;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null);

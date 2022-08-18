@@ -10,6 +10,8 @@ using Moryx.Modules;
 using Moryx.TestTools.UnitTest;
 using Moryx.Threading;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Moryx.Tests.Threading
 {
@@ -22,12 +24,15 @@ namespace Moryx.Tests.Threading
 
         private ParallelOperations _threadFactory;
         private readonly ManualResetEventSlim _callbackReceivedEvent = new ManualResetEventSlim(false);
-        private DummyLogger _logger;
+        
+        private IModuleLogger _logger;
+        private Tuple<LogLevel, string, Exception> _message;
+        private IModuleNotification _notification; [OneTimeSetUp]
 
-        [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _logger = new DummyLogger();
+            _logger = new ModuleLogger("Dummy", GetType(), new NullLoggerFactory());
+            _logger.SetNotificationTarget((l, m, e) => _message = new (l, m, e));
         }
 
         [OneTimeTearDown]
@@ -38,11 +43,7 @@ namespace Moryx.Tests.Threading
         [SetUp]
         public void Setup()
         {
-            _logger.ClearBuffer();
-            _threadFactory = new ParallelOperations
-            {
-                Logger = _logger,
-            };
+            _threadFactory = new ParallelOperations(new NullLogger<ParallelOperations>());
 
             _callbackReceivedEvent.Reset();
         }
@@ -51,6 +52,7 @@ namespace Moryx.Tests.Threading
         public void TearDown()
         {
             _threadFactory.Dispose();
+            _message = null;
         }
 
         [Test]
@@ -75,8 +77,8 @@ namespace Moryx.Tests.Threading
 
             AwaitLogMessage();
 
-            Assert.AreEqual(critical, _logger.Messages.Any(m => m.Level == LogLevel.Fatal), "Failure received");
-            Assert.AreEqual(!critical, _logger.Messages.Any(m => m.Level == LogLevel.Error), "Warning received");
+            Assert.AreEqual(critical, _message.Item1 == LogLevel.Critical, "Failure received");
+            Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
         }
 
 
@@ -188,8 +190,8 @@ namespace Moryx.Tests.Threading
 
             AwaitLogMessage();
 
-            Assert.AreEqual(critical, _logger.Messages.Any(m => m.Level == LogLevel.Fatal), "Failure received");
-            Assert.AreEqual(!critical, _logger.Messages.Any(m => m.Level == LogLevel.Error), "Warning received");
+            Assert.AreEqual(critical, _message.Item1 == LogLevel.Critical, "Failure received");
+            Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
         }
 
         private void SimpleCallback(StateObject state)
@@ -216,7 +218,7 @@ namespace Moryx.Tests.Threading
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            while (stopWatch.ElapsedMilliseconds < 50 && _logger.Messages.Count == 0)
+            while (stopWatch.ElapsedMilliseconds < 50 && _message == null)
             {
                 Thread.Sleep(1);
             }

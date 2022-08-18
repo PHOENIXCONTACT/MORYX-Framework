@@ -4,6 +4,7 @@
 using System;
 using System.IO.Ports;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 
 namespace Moryx.Communication.Serial
@@ -37,7 +38,7 @@ namespace Moryx.Communication.Serial
             }
             catch (Exception e)
             {
-                logger.LogException(LogLevel.Error, e, "Caught exception while trying to configure port '{0}'", config.Port);
+                logger.Log(LogLevel.Error, e, "Caught exception while trying to configure port '{0}'", config.Port);
 
                 var msg = new StringBuilder("Known devices:");
 

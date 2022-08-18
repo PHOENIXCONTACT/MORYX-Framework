@@ -6,6 +6,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
+using Moryx.Threading;
 using System;
 using System.Linq;
 
@@ -25,6 +26,9 @@ namespace Moryx.Runtime.Kernel
             // Register module manager
             serviceCollection.AddSingleton<ModuleManager>();
             serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
+
+            // Register parallel operations
+            serviceCollection.AddTransient<IParallelOperations, ParallelOperations>();
 
             // Register container factory for module container
             serviceCollection.AddSingleton<IModuleContainerFactory, ModuleContainerFactory>();

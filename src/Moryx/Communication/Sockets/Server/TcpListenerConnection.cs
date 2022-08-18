@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Modules;
@@ -155,7 +156,7 @@ namespace Moryx.Communication.Sockets
             }
             catch (Exception ex)
             {
-                Logger.LogException(LogLevel.Fatal, ex, "StateChanged event to {0} ran into an exception!", _state);
+                Logger.Log(LogLevel.Critical, ex, "StateChanged event to {0} ran into an exception!", _state);
             }
         }
 
@@ -195,7 +196,7 @@ namespace Moryx.Communication.Sockets
         /// <param name="transmission">Open connection</param>
         internal void ExecuteAssignConnection(TcpTransmission transmission)
         {
-            Logger.Log(LogLevel.Info, "Connection established on port {0}", _config.Port);
+            Logger.Log(LogLevel.Information, "Connection established on port {0}", _config.Port);
             _transmission = transmission;
             _transmission.Disconnected += Disconnected;
             _transmission.Received += MessageReceived;
@@ -273,7 +274,7 @@ namespace Moryx.Communication.Sockets
             }
             catch (Exception ex)
             {
-                Logger.LogException(LogLevel.Fatal, ex, "Received event ran into an exception!");
+                Logger.Log(LogLevel.Critical, ex, "Received event ran into an exception!");
             }
         }
 

@@ -3,6 +3,7 @@ using Moryx.Runtime.Endpoints.Common.Endpoint.Response;
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 
 namespace Moryx.Runtime.Endpoints.Common.Endpoint
 {
@@ -28,13 +29,14 @@ namespace Moryx.Runtime.Endpoints.Common.Endpoint
         [HttpGet("info/application")]
         public ActionResult<ApplicationInformationResponse> GetApplicationInfo()
         {
-            var currentPlatform = Platform.Current;
+            var startAssembly = Assembly.GetEntryAssembly();
+            var version = new Version(startAssembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "1.0.0");
             return new ApplicationInformationResponse
             {
-                AssemblyProduct = currentPlatform.ProductName,
-                AssemblyVersion = currentPlatform.ProductVersion.ToString(3),
-                AssemblyInformationalVersion = currentPlatform.ProductVersion.ToString(3),
-                AssemblyDescription = currentPlatform.ProductDescription
+                AssemblyProduct = startAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "MORYX Application",
+                AssemblyVersion = version.ToString(3),
+                AssemblyInformationalVersion = version.ToString(3),
+                AssemblyDescription = startAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "No Description provided!",
             };
         }
 

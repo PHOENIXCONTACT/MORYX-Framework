@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 using Moryx.Serialization;
 
 namespace Moryx.Communication.Sockets
@@ -20,7 +20,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Logger for logging - makes sense ;)
         /// </summary>
-        private readonly IModuleLogger _logger;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Delegate invoked when connection was lost
@@ -38,7 +38,7 @@ namespace Moryx.Communication.Sockets
         /// <param name="client">The client.</param>
         /// <param name="interpreter">The interpreter.</param>
         /// <param name="logger">Logger used to write exceptions to log</param>
-        public TcpTransmission(TcpClient client, IMessageInterpreter interpreter, IModuleLogger logger)
+        public TcpTransmission(TcpClient client, IMessageInterpreter interpreter, ILogger logger)
         {
             _interpreter = interpreter;
             _client = client;
@@ -53,7 +53,7 @@ namespace Moryx.Communication.Sockets
         private void RaiseException(Exception ex)
         {
             if (ExceptionOccured == null)
-                _logger.LogException(LogLevel.Error, ex, "TcpTransmission encountered an error");
+                _logger.Log(LogLevel.Error, ex, "TcpTransmission encountered an error");
             else
                 ExceptionOccured(this, ex);
         }

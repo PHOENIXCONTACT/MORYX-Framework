@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Collections;
 using Moryx.Threading;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ namespace Moryx.Tests.Collections
         [SetUp]
         public void CreateQueue()
         {
-            _queue = new DelayQueue<DummyMessage>(new ParallelOperations());
+            _queue = new DelayQueue<DummyMessage>(new ParallelOperations(new NullLogger<ParallelOperations>()));
             _queue.Dequeued += OnQueueDequeued;
             _queue.Start(Delay);
             _stopwatch.Start();
@@ -147,7 +148,7 @@ namespace Moryx.Tests.Collections
         public void InterruptQueue()
         {
             // Arrange
-            var localThreading = new ParallelOperations();
+            var localThreading = new ParallelOperations(new NullLogger<ParallelOperations>());
 
             // Act
             localThreading.ScheduleExecution(_queue.Enqueue, new DummyMessage(), (int)(Delay * 0.5), -1);

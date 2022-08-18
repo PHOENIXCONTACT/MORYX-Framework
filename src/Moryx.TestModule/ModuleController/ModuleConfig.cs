@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Microsoft.Extensions.Logging;
 using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Logging;

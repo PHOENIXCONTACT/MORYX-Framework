@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Moryx.Threading
 {
@@ -39,12 +39,12 @@ namespace Moryx.Threading
         /// <summary>
         /// Logger instance to log errors
         /// </summary>
-        public IModuleLogger ErrorLogger { get; }
+        public ILogger ErrorLogger { get; }
 
         /// <summary>
         /// Create a new <see cref="Threading.ParallelOperations.EventDecoupler{TEventArgs}"/> to decouple a single listener from an event
         /// </summary>
-        public ParallelOperationsQueue(Action<TElement> elementExecution, IParallelOperations parallelOperations, IModuleLogger errorLogger)
+        public ParallelOperationsQueue(Action<TElement> elementExecution, IParallelOperations parallelOperations, ILogger errorLogger)
         {
             ElementExecution = elementExecution;
             ParallelOperations = parallelOperations;
@@ -66,7 +66,7 @@ namespace Moryx.Threading
                 }
                 catch (Exception ex)
                 {
-                    ErrorLogger.LogException(LogLevel.Error, ex, "Exception during queue element execution!");
+                    ErrorLogger.Log(LogLevel.Error, ex, "Exception during queue element execution!");
                 }
             } while (Interlocked.Decrement(ref _pendingElements) > 0);
         }

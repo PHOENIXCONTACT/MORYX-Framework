@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
 
@@ -12,7 +13,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
 
         public BinaryConnectionFactoryMock()
         {
-            _logger = new DummyLogger();
+            _logger = new ModuleLogger("Dummy", typeof(BinaryConnectionFactoryMock), new NullLoggerFactory());
         }
 
         public IBinaryConnection Create(BinaryConnectionConfig config, IMessageValidator validator)

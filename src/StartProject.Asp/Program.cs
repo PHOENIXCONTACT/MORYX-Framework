@@ -5,6 +5,7 @@ using Moryx.Runtime.Kernel;
 using Moryx.Tools;
 using Moryx.Runtime.Modules;
 using System;
+using Moryx.Model;
 
 namespace StartProject.Asp
 {
@@ -18,6 +19,7 @@ namespace StartProject.Asp
                 .ConfigureServices(serviceCollection =>
                 {
                     serviceCollection.AddMoryxKernel();
+                    serviceCollection.AddMoryxModels();
                     serviceCollection.AddMoryxModules();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>

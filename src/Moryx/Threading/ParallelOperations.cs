@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Moryx.Threading
 {
@@ -49,7 +49,12 @@ namespace Moryx.Threading
         /// <summary>
         /// Dependency to report errors to plugin
         /// </summary>
-        public IModuleLogger Logger { get; set; }
+        public ILogger Logger { get; }
+
+        public ParallelOperations(ILogger<ParallelOperations> logger)
+        {
+            Logger = logger;
+        }
 
         #region Execute Parallel
         /// <summary>
@@ -239,7 +244,7 @@ namespace Moryx.Threading
         private void HandleException(Exception ex, Delegate operation, bool criticalOperation)
         {
             var logger = ExtractLoggerFromDelegate(operation);
-            logger.LogException(criticalOperation ? LogLevel.Fatal : LogLevel.Error, ex,
+            logger.Log(criticalOperation ? LogLevel.Critical : LogLevel.Error, ex,
                 "Exception during ParallelOperations of {0}.{1}!", operation.Method.DeclaringType?.Name ?? "Unknown", operation.Method.Name);
         }
 
@@ -248,10 +253,10 @@ namespace Moryx.Threading
         /// </summary>
         /// <param name="operation"></param>
         /// <returns></returns>
-        private IModuleLogger ExtractLoggerFromDelegate(Delegate operation)
+        private ILogger ExtractLoggerFromDelegate(Delegate operation)
         {
             var target = operation?.Target ?? this;
-            var logger = (target as ILoggingComponent)?.Logger ?? Logger;
+            var logger = (target as Logging.ILoggingComponent)?.Logger ?? Logger;
             return logger;
         }
 
@@ -279,7 +284,7 @@ namespace Moryx.Threading
             /// <summary>
             /// Create a new <see cref="EventDecoupler{TEventArgs}"/> to decouple a single listener from an event
             /// </summary>
-            public EventDecoupler(EventHandler<TEventArgs> eventTarget, IParallelOperations parallelOperations, IModuleLogger logger)
+            public EventDecoupler(EventHandler<TEventArgs> eventTarget, IParallelOperations parallelOperations, ILogger logger)
              : base(elem => eventTarget(elem.Item1, elem.Item2), parallelOperations, logger)
             {
             }
