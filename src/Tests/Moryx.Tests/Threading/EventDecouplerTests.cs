@@ -12,6 +12,7 @@ using Moryx.TestTools.UnitTest;
 using Moryx.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
 namespace Moryx.Tests.Threading
@@ -20,11 +21,17 @@ namespace Moryx.Tests.Threading
     public class EventDecouplerTests
     {
         private ParallelOperations _parallelOperations;
+        private Tuple<LogLevel, string, Exception> _message;
 
         [SetUp]
         public void Setup()
         {
-            _parallelOperations = new ParallelOperations(new NullLogger<ParallelOperations>());
+            var logger = new ModuleLogger("Dummy", typeof(InvocationTarget), new NullLoggerFactory());
+            logger.SetNotificationTarget((l, m, e) => _message = new(l, m, e));
+
+            _message = null;
+
+            _parallelOperations = new ParallelOperations(logger);
         }
 
         [TearDown]
@@ -113,7 +120,15 @@ namespace Moryx.Tests.Threading
 
         private class InvocationTarget : ILoggingComponent
         {
-            public IModuleLogger Logger { get; set; } = new ModuleLogger("Dummy", typeof(InvocationTarget), new NullLoggerFactory());
+            public Tuple<LogLevel, string, Exception> Message { get; set; }
+
+            public IModuleLogger Logger { get; set; } 
+
+            public InvocationTarget()
+            {
+                Logger = new ModuleLogger("Dummy", typeof(InvocationTarget), new NullLoggerFactory());
+                Logger.SetNotificationTarget((l, m, e) => Message = new(l, m, e));
+            }
 
             public void FaultyListener(object sender, EventArgs e)
             {
@@ -121,30 +136,34 @@ namespace Moryx.Tests.Threading
             }
         }
 
-        // TODO: This needs to fixed
-        //[TestCase(true, Description = "The handler raises throws an exception and is a logging component")]
-        //[TestCase(false, Description = "The handler raises throws an exception and is a logging component")]
-        //public void ExceptionInHandler(bool targetHasLogger)
-        //{
-        //    // Arrange
-        //    var target = new InvocationTarget();
-        //    var logger = (DummyLogger)(targetHasLogger ? target.Logger : _parallelOperations.Logger);
-        //    if (targetHasLogger)
-        //        SimpleEventSource += _parallelOperations.DecoupleListener(target.FaultyListener);
-        //    else
-        //        SimpleEventSource += _parallelOperations.DecoupleListener(FaultyListener);
-        //    // Act
-        //    SimpleEventSource(this, EventArgs.Empty);
-        //    while (!logger.Messages.Any())
-        //    {
-        //        Thread.Sleep(1);
-        //    }
+       [TestCase(true, Description = "The handler raises throws an exception and is a logging component")]
+       [TestCase(false, Description = "The handler raises throws an exception and is a logging component")]
+        public void ExceptionInHandler(bool targetHasLogger)
+        {
+            // Arrange
+            var target = new InvocationTarget();
+            if (targetHasLogger)
+                SimpleEventSource += _parallelOperations.DecoupleListener(target.FaultyListener);
+            else
+                SimpleEventSource += _parallelOperations.DecoupleListener(FaultyListener);
+            // Act
+            SimpleEventSource(this, EventArgs.Empty);
+            while (target.Message == null && _message == null)
+            {
+                Thread.Sleep(1);
+            }
 
-        //    // Assert
-        //    if (targetHasLogger)
-        //        Assert.AreEqual(0, ((DummyLogger)_parallelOperations.Logger).Messages.Count, "ParallelOperations should not use its own logger for logging components");
-        //    Assert.AreEqual(logger.Messages[0].Exception.Message, "Test", "Did not log the correct exception");
-        //}
+            // Assert
+            if (targetHasLogger)
+            {
+                Assert.IsNull(_message, "ParallelOperations should not use its own logger for logging components");
+                Assert.NotNull(target.Message.Item3, "Did not log the correct exception");
+            }
+            else
+            {
+                Assert.NotNull(_message.Item3, "Did not log the correct exception");
+            }
+        }
 
         public void FaultyListener(object sender, EventArgs e)
         {

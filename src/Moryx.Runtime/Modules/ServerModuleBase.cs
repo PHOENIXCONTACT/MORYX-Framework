@@ -93,7 +93,7 @@ namespace Moryx.Runtime.Modules
                 // Register instances for this cycle
                 .SetInstance(Config)
                 .SetInstance(LoggerFactory)
-                .SetInstance(Logger);
+                .SetInstance(logger);
 
             OnInitialize();
 

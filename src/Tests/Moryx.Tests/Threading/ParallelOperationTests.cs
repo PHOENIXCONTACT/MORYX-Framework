@@ -27,8 +27,8 @@ namespace Moryx.Tests.Threading
         
         private IModuleLogger _logger;
         private Tuple<LogLevel, string, Exception> _message;
-        private IModuleNotification _notification; [OneTimeSetUp]
 
+        [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             _logger = new ModuleLogger("Dummy", GetType(), new NullLoggerFactory());
@@ -43,7 +43,7 @@ namespace Moryx.Tests.Threading
         [SetUp]
         public void Setup()
         {
-            _threadFactory = new ParallelOperations(new NullLogger<ParallelOperations>());
+            _threadFactory = new ParallelOperations(_logger);
 
             _callbackReceivedEvent.Reset();
         }
@@ -79,33 +79,6 @@ namespace Moryx.Tests.Threading
 
             Assert.AreEqual(critical, _message.Item1 == LogLevel.Critical, "Failure received");
             Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
-        }
-
-
-        [Test]
-        public void ScheduleExecutionWithStop()
-        {
-            StateObject state = new StateObject();
-
-            int id = _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
-
-            Thread.Sleep(75);
-
-            Assert.AreEqual(0, state.Counter, "First check");
-
-            Thread.Sleep(50);
-
-            Assert.AreEqual(1, state.Counter, "Second check");
-
-            Thread.Sleep(50);
-
-            Assert.AreEqual(2, state.Counter, "Third check");
-
-            _threadFactory.StopExecution(id);
-
-            Thread.Sleep(50);
-
-            Assert.AreEqual(2, state.Counter, "Last check");
         }
 
         [Test]
@@ -180,8 +153,8 @@ namespace Moryx.Tests.Threading
             Assert.AreEqual(1, state.Counter, "Last check");
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
+       [TestCase(true)]
+       [TestCase(false)]
         public void DelayedExecutionWithException(bool critical)
         {
             StateObject state = new StateObject();

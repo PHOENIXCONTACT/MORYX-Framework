@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Moryx.Logging;
 
 namespace Moryx.Threading
 {
@@ -51,7 +52,19 @@ namespace Moryx.Threading
         /// </summary>
         public ILogger Logger { get; }
 
+        /// <summary>
+        /// Create parallel operations in service collection
+        /// </summary>
         public ParallelOperations(ILogger<ParallelOperations> logger)
+        {
+            Logger = logger;
+        }
+
+        /// <summary>
+        /// Create parallel operations within module
+        /// </summary>
+        /// <param name="logger"></param>
+        public ParallelOperations(IModuleLogger logger)
         {
             Logger = logger;
         }

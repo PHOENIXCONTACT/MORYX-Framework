@@ -64,6 +64,9 @@ namespace Moryx.Logging
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             _logger.Log(logLevel, eventId, state, exception, formatter);
+
+            if (logLevel >= LogLevel.Warning)
+                NotificationTarget(logLevel, formatter(state, exception), exception);
         }
     }
 }
