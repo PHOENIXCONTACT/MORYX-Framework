@@ -11,39 +11,39 @@ namespace Moryx.Notifications
     public class Notification : IManagedNotification
     {
         /// <inheritdoc />
-        public Guid Identifier { get; private set; }
+        public virtual Guid Identifier { get; private set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="INotification"/> />
         public Severity Severity { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="INotification"/> />
         public string Title { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="INotification"/> />
         public string Message { get; set; }
-        
-        /// <inheritdoc />
+
+        /// <inheritdoc cref="INotification"/> />
         public string Sender { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="INotification"/> />
         public string Source { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="INotification"/> />
         public bool IsAcknowledgable { get; set; }
 
         // TODO: AL6 remove explicit backing attribute for property
         private DateTime? _acknowledged;
         /// <inheritdoc />
-        public virtual DateTime? Acknowledged 
-        { 
-            get => _acknowledged; 
-            set 
+        public virtual DateTime? Acknowledged
+        {
+            get => _acknowledged;
+            set
             {
                 if (_acknowledged is null)
                     _acknowledged = value;
                 else
                     throw new InvalidOperationException("Tried to update time of acknowledgement.");
-            } 
+            }
         }
 
         // TODO: AL6 remove explicit backing attribute for property
@@ -57,7 +57,7 @@ namespace Moryx.Notifications
                 if (_acknowledger is null)
                     _acknowledger = value;
                 else
-                    throw new InvalidOperationException("Tried to update time acknowledger.");
+                    throw new InvalidOperationException("Tried to update acknowledger.");
             }
         }
 
@@ -81,12 +81,12 @@ namespace Moryx.Notifications
         /// </summary>
         public Notification()
         {
+            Identifier = Guid.NewGuid();
         }
 
         /// <summary>
         /// Creates a new notification with title and message
         /// </summary>
-        [Obsolete]
         public Notification(string title, string message, Severity severity) : this()
         {
             Title = title;
@@ -97,7 +97,6 @@ namespace Moryx.Notifications
         /// <summary>
         /// Creates a new notification with title and message
         /// </summary>
-        [Obsolete]
         public Notification(string title, string message, Severity severity, bool isAcknowledgable) : this(title, message, severity)
         {
             IsAcknowledgable = isAcknowledgable;

@@ -9,7 +9,7 @@ namespace Moryx.Resources.Interaction
     /// Filter object to fetch resources from the server
     /// </summary>
     [DataContract]
-    internal class ResourceQuery
+    public class ResourceQuery
     {
         /// <summary>
         /// Type constraints to filter instances

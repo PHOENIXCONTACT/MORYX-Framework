@@ -24,9 +24,19 @@ namespace Moryx.Products.Management
     /// Base class for product storage. Contains basic functionality to load and save a product.
     /// Also has the possibility to store a version to each save.
     /// </summary>
-    [Plugin(LifeCycle.Singleton, typeof(IProductStorage), typeof(IProductSearchStorage))]
-    internal class ProductStorage : IProductSearchStorage
+    [Plugin(LifeCycle.Singleton, typeof(IProductStorage), typeof(IProductSearchStorage), typeof(IConfiguredTypesProvider),typeof(IProductRemoveRecipeStorage))]
+    internal class ProductStorage : IProductRemoveRecipeStorage, IConfiguredTypesProvider
     {
+        /// <summary>
+        /// Recipe types
+        /// </summary>
+        public IReadOnlyList<Type> RecipeTypes => RecipeStrategies.Select(rs => rs.Value.TargetType).ToList();
+
+        /// <summary>
+        /// Product types
+        /// </summary>
+        public IReadOnlyList<Type> ProductTypes => TypeStrategies.Select(ts => ts.Value.TargetType).ToList();
+
         /// <summary>
         /// Optimized constructor delegate for the different product types
         /// </summary>
@@ -90,12 +100,14 @@ namespace Moryx.Products.Management
                 TypeStrategies[config.TargetType] = strategy;
                 TypeConstructors[config.TargetType] = ReflectionTool.ConstructorDelegate<ProductType>(strategy.TargetType);
             }
+
             // Create instance strategies
             foreach (var config in Config.InstanceStrategies)
             {
                 var strategy = StrategyFactory.CreateInstanceStrategy(config);
                 InstanceStrategies[config.TargetType] = strategy;
             }
+
             // Create link strategies
             foreach (var config in Config.LinkStrategies)
             {
@@ -118,12 +130,12 @@ namespace Moryx.Products.Management
 
                 LinkConstructors[$"{config.TargetType}.{config.PartName}"] = ReflectionTool.ConstructorDelegate<IProductPartLink>(linkType);
             }
+
             // Create recipe strategies
             foreach (var config in Config.RecipeStrategies)
             {
                 var strategy = StrategyFactory.CreateRecipeStrategy(config);
                 RecipeStrategies[config.TargetType] = strategy;
-
                 RecipeConstructors[config.TargetType] = ReflectionTool.ConstructorDelegate<IProductRecipe>(strategy.TargetType);
             }
         }
@@ -231,6 +243,21 @@ namespace Moryx.Products.Management
                               where recipes.All(r => r.Id != dbRecipe.Id)
                               select dbRecipe;
                 recipeRepo.RemoveRange(deleted);
+
+                uow.SaveChanges();
+            }
+        }
+
+        /// <inheritdoc />
+        public void RemoveRecipe(long recipeId)
+        {
+            using (var uow = Factory.Create())
+            {
+                // Prepare required repos   
+                var recipeRepo = uow.GetRepository<IProductRecipeEntityRepository>();
+
+                var deletedRecipe = recipeRepo.GetByKey(recipeId);         
+                recipeRepo.Remove(deletedRecipe);
 
                 uow.SaveChanges();
             }

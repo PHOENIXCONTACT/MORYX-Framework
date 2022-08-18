@@ -42,5 +42,10 @@ namespace Moryx.Products.Management
         /// Saves multiple recipes
         /// </summary>
         void Save(long productId, ICollection<IProductRecipe> recipes);
+
+        /// <summary>
+        /// Remove the recipe by the given identifier
+        /// </summary>
+        void Remove(long recipeId);
     }
 }

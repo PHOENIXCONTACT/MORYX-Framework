@@ -37,6 +37,8 @@ namespace Moryx.Products.Samples
         [DisplayName("Color")]
         public int Color { get; set; }
 
+        public string NumbersString => string.Join(", ", Numbers);
+
         protected override ProductInstance Instantiate()
         {
             return new WatchFaceInstance();

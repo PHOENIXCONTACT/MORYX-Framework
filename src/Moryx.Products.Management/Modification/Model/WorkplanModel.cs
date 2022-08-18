@@ -2,13 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Products.Model;
 using Moryx.Workflows;
 
 namespace Moryx.Products.Management.Modification
 {
     [DataContract]
-    internal class WorkplanModel
+    public class WorkplanModel
     {
         [DataMember]
         public long Id { get; set; }

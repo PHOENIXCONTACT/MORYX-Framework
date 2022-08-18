@@ -5,8 +5,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.Container;
 using Moryx.Products.Model;
 using Moryx.Serialization;
@@ -33,30 +31,41 @@ namespace Moryx.Products.Management
 
         private JsonSerializerSettings _jsonSettings;
 
-        private IPropertyAccessor<IGenericColumns, string> JsonAccessor { get; set; }
-
+        private IPropertyAccessor<IGenericColumns, string> _jsonAccessor;
 
         public void Initialize(Type concreteType, IGenericMapperConfiguration config)
         {
             // Get JSON accessor
             var jsonColumn = typeof(IGenericColumns).GetProperty(config.JsonColumn);
-            JsonAccessor = ReflectionTool.PropertyAccessor<IGenericColumns, string>(jsonColumn);
+            _jsonAccessor = ReflectionTool.PropertyAccessor<IGenericColumns, string>(jsonColumn);
 
-            var baseProperties = typeof(TBase).GetProperties()
-                .Select(p => p.Name);
+            var baseProperties = typeof(TBase).GetProperties().Select(p => p.Name).ToArray();
             var configuredProperties = config.PropertyConfigs.Select(cm => cm.PropertyName);
-            var ignoredProperties = baseProperties.Concat(configuredProperties).ToArray();
-            _jsonSettings = JsonSettings.Minimal
-                .Overwrite(j => j.ContractResolver = new DifferentialContractResolver<TReference>(ignoredProperties));
 
-            _configuredMappers = config.PropertyConfigs.Select(pc => MapperFactory.Create(pc, concreteType)).ToArray();
+            var readOnlyProperties = concreteType.GetProperties()
+                .Where(p => p.GetSetMethod() == null).Select(p => p.Name).ToArray();
+
+            // The json should not contain base, configured nor readonly properties
+            var jsonIgnoredProperties = baseProperties
+                .Concat(configuredProperties)
+                .Concat(readOnlyProperties).ToArray();
+
+            _jsonSettings = JsonSettings.Minimal
+                .Overwrite(j => j.ContractResolver = new DifferentialContractResolver<TReference>(jsonIgnoredProperties));
+
+            // Properties where no mapper should be created for: base and read only properties
+            var mapperIgnoredProperties = baseProperties
+                .Concat(readOnlyProperties).ToArray();
+
+            _configuredMappers = config.PropertyConfigs.Where(pc => !mapperIgnoredProperties.Contains(pc.PropertyName))
+                .Select(pc => MapperFactory.Create(pc, concreteType)).ToArray();
         }
 
         public bool HasChanged(IGenericColumns storage, object instance)
         {
             // Compare JSON and mappers to entity
             var json = JsonConvert.SerializeObject(instance, _jsonSettings);
-            return JsonAccessor.ReadProperty(storage) != json || _configuredMappers.Any(m => m.HasChanged(storage, instance));
+            return _jsonAccessor.ReadProperty(storage) != json || _configuredMappers.Any(m => m.HasChanged(storage, instance));
         }
 
         public Expression<Func<IGenericColumns, bool>> TransformSelector<T>(Expression<Func<T, bool>> selector)
@@ -66,7 +75,7 @@ namespace Moryx.Products.Management
             switch (body)
             {
                 case MemberExpression memEx:
-                    // For single member expression assume 
+                    // For single member expression assume
                     return Convert(memEx.Member.Name, ExpressionType.Equal, true);
                 case BinaryExpression binary:
                     object value;
@@ -92,7 +101,7 @@ namespace Moryx.Products.Management
                             callValue = ExtractExpressionValue(call.Object);
                             return Convert(((MemberExpression)call.Arguments.First()).Member.Name, ExpressionType.Equal, callValue);
                         }
-                        
+
                         callValue = ExtractExpressionValue(call.Arguments.First());
                         return Convert(((MemberExpression)call.Object).Member.Name, ExpressionType.Equal, callValue);
                     }
@@ -120,7 +129,7 @@ namespace Moryx.Products.Management
             }
 
             // Fill the rest from JSON
-            var json = JsonAccessor.ReadProperty(source);
+            var json = _jsonAccessor.ReadProperty(source);
             if (!string.IsNullOrEmpty(json))
                 JsonConvert.PopulateObject(json, target, _jsonSettings);
 
@@ -130,7 +139,7 @@ namespace Moryx.Products.Management
         {
             // Convert and write JSON
             var json = JsonConvert.SerializeObject(source, _jsonSettings);
-            JsonAccessor.WriteProperty(target, json);
+            _jsonAccessor.WriteProperty(target, json);
 
             // Execute property mappers
             foreach (var mapper in _configuredMappers)

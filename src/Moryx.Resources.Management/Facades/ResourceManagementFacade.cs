@@ -9,7 +9,8 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management
 {
-    internal class ResourceManagementFacade : IResourceManagement, IFacadeControl, IResourceModification
+    // TODO: AL6 combine IResourceManagement with IResourceModification and make second facade for IResourceTypeTree
+    internal class ResourceManagementFacade : IResourceManagement, IFacadeControl, IResourceModificationExtended, IResourceTypeTree
     {
         #region Dependency Injection
 
@@ -19,8 +20,11 @@ namespace Moryx.Resources.Management
 
         public IResourceTypeController TypeController { get; set; }
 
+        public IResourceTypeTree TypeTree { get; set; }
+
         #endregion
 
+        #region IFacadeControl
         /// <see cref="IFacadeControl.ValidateHealthState"/>
         public Action ValidateHealthState { get; set; }
 
@@ -40,7 +44,6 @@ namespace Moryx.Resources.Management
             Manager.ResourceRemoved -= OnResourceRemoved;
         }
 
-
         private void OnCapabilitiesChanged(object sender, ICapabilities args)
         {
             CapabilitiesChanged?.Invoke(((IPublicResource)sender).Proxify(TypeController), args);
@@ -55,7 +58,9 @@ namespace Moryx.Resources.Management
         {
             ResourceRemoved?.Invoke(this, publicResource.Proxify(TypeController));
         }
+        #endregion
 
+        #region IResourceManagement
         public TResource GetResource<TResource>() where TResource : class, IPublicResource
         {
             ValidateHealthState();
@@ -110,11 +115,15 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate).Proxify(TypeController);
         }
 
+
+        #endregion
+
+        #region IResourceModification
         public long Create(Type resourceType, Action<Resource> initializer)
         {
             ValidateHealthState();
 
-            var resource = TypeController.Create(resourceType.ResourceType());
+            var resource = ResourceGraph.Instantiate(resourceType.ResourceType());
             initializer(resource);
             ResourceGraph.Save(resource);
             return resource.Id;
@@ -155,6 +164,32 @@ namespace Moryx.Resources.Management
 
             return ResourceGraph.Destroy(resource);
         }
+
+        public IEnumerable<TResource> GetAllResources<TResource>(Func<TResource, bool> predicate)
+             where TResource : class, IResource
+        {
+            ValidateHealthState();
+            return ResourceGraph.GetResources(predicate);
+        }
+        #endregion
+
+        #region IResourceTypeTree
+        public IResourceTypeNode RootType => TypeTree.RootType;
+
+        public IResourceTypeNode this[string typeName] => TypeTree[typeName];
+
+        public IEnumerable<IResourceTypeNode> SupportedTypes(Type constraint)
+        {
+            return TypeTree.SupportedTypes(constraint);
+        }
+
+        public IEnumerable<IResourceTypeNode> SupportedTypes(ICollection<Type> constraints)
+        {
+            return TypeTree.SupportedTypes(constraints);
+        }
+
+        
+        #endregion
 
         /// <inheritdoc />
         public event EventHandler<IPublicResource> ResourceAdded;

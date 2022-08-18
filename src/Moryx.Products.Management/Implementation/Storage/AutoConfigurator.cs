@@ -183,7 +183,9 @@ namespace Moryx.Products.Management
             // TODO: Use type wrapper
             var baseProperties = typeof(TBaseType).GetProperties();
 
-            var filteredProperties = targetType.GetProperties().Where(p => baseProperties.All(bp => bp.Name != p.Name))
+            var filteredProperties = targetType.GetProperties()
+                .Where(p => baseProperties.All(bp => bp.Name != p.Name))
+                .Where(p => p.GetSetMethod() != null)
                 .Where(p => !typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))
                 .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType))
                 .ToList();

@@ -1,10 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
 using Moryx.Communication.Endpoints;
 using Moryx.Model;
-using Moryx.Modules;
 using Moryx.Products.Management.Importers;
 using Moryx.Products.Management.Modification;
 using Moryx.Runtime.Container;

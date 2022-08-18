@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -14,7 +14,7 @@ using Moryx.Workflows;
 
 namespace Moryx.Products.Management
 {
-    internal class ProductManagementFacade : IFacadeControl, IProductManagement
+    internal class ProductManagementFacade : IFacadeControl, IProductManagementModification
     {
         // Use this delegate in every call for clean health state management
         public Action ValidateHealthState { get; set; }
@@ -23,9 +23,13 @@ namespace Moryx.Products.Management
 
         public IProductManager ProductManager { get; set; }
 
+        public IConfiguredTypesProvider TypesProvider { get; set; }
+
         public IRecipeManagement RecipeManagement { get; set; }
 
         public IWorkplans Workplans { get; set; }
+
+        public ModuleConfig Config { get; set; }
 
         #endregion
 
@@ -33,6 +37,7 @@ namespace Moryx.Products.Management
         {
             ProductManager.TypeChanged += OnTypeChanged;
             RecipeManagement.RecipeChanged += OnRecipeChanged;
+
         }
 
         public void Deactivate()
@@ -42,6 +47,33 @@ namespace Moryx.Products.Management
         }
 
         public string Name => ModuleController.ModuleName;
+
+        public IDictionary<string, object> Importers
+        {
+            get
+            {
+                ValidateHealthState();
+                return ProductManager.Importers.ToDictionary(i => i.Name, i => i.Parameters);
+            }
+        }
+
+        public IReadOnlyList<Type> ProductTypes
+        {
+            get
+            {
+                ValidateHealthState();
+                return TypesProvider.ProductTypes;
+            }
+        }
+
+        public IReadOnlyList<Type> RecipeTypes
+        {
+            get
+            {
+                ValidateHealthState();
+                return TypesProvider.RecipeTypes;
+            }
+        }
 
         public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
         {
@@ -88,16 +120,6 @@ namespace Moryx.Products.Management
             return ProductManager.SaveType(modifiedInstance);
         }
 
-
-        public IDictionary<string, object> Importers
-        {
-            get
-            {
-                ValidateHealthState();
-                return ProductManager.Importers.ToDictionary(i => i.Name, i => i.Parameters);
-            }
-        }
-
         public Task<ProductImportResult> Import(string importerName, object parameters)
         {
             ValidateHealthState();
@@ -118,6 +140,8 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
             var recipes = RecipeManagement.GetRecipes(productType, classification);
+            if (recipes == null)
+                return null;
             return recipes.Select(ReplaceOrigin).ToArray();
         }
 
@@ -255,6 +279,17 @@ namespace Moryx.Products.Management
         {
             recipe.Origin = this;
             return recipe;
+        }
+
+        public bool DeleteProduct(long id)
+        {
+            ValidateHealthState();
+            return ProductManager.DeleteType(id);
+        }
+
+        public void RemoveRecipe(long recipeId)
+        {
+            RecipeManagement.Remove(recipeId);
         }
     }
 }

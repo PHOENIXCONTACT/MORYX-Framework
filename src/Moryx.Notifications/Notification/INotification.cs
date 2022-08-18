@@ -8,7 +8,6 @@ namespace Moryx.Notifications
     /// <summary>
     /// Additional notification interface to manipulate the notification properties in managing plugins
     /// </summary>
-    [Obsolete]
     public interface IManagedNotification : INotification
     {
         /// <summary>
@@ -73,7 +72,6 @@ namespace Moryx.Notifications
     /// <summary>
     /// Message for a consumer
     /// </summary>
-    [Obsolete]
     public interface INotification
     {
         /// <summary>

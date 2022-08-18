@@ -45,7 +45,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Resources.Wcf", "src\Moryx.Resources.Wcf\Moryx.Resources.Wcf.csproj", "{E1AD28CD-37A6-4AF6-80D7-756586A727B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Management.Tests", "src\Tests\Moryx.Products.Management.Tests\Moryx.Products.Management.Tests.csproj", "{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Products.Management.Tests", "src\Tests\Moryx.Products.Management.Tests\Moryx.Products.Management.Tests.csproj", "{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.Products.Endpoints", "src\Moryx.AbstractionLayer.Products.Endpoints\Moryx.AbstractionLayer.Products.Endpoints.csproj", "{230A5D64-C34E-49E0-B5FA-4062AF227211}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Asp", "src\StartProject.Asp\StartProject.Asp.csproj", "{48E5CBD4-D7B3-410B-9CDD-A1E355133E3A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.Resources.Endpoints", "src\Moryx.AbstractionLayer.Resources.Endpoints\Moryx.AbstractionLayer.Resources.Endpoints.csproj", "{F5141A5C-D29F-4870-85D5-277C04A944EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +123,18 @@ Global
 		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{230A5D64-C34E-49E0-B5FA-4062AF227211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{230A5D64-C34E-49E0-B5FA-4062AF227211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{230A5D64-C34E-49E0-B5FA-4062AF227211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{230A5D64-C34E-49E0-B5FA-4062AF227211}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48E5CBD4-D7B3-410B-9CDD-A1E355133E3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48E5CBD4-D7B3-410B-9CDD-A1E355133E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48E5CBD4-D7B3-410B-9CDD-A1E355133E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48E5CBD4-D7B3-410B-9CDD-A1E355133E3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5141A5C-D29F-4870-85D5-277C04A944EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5141A5C-D29F-4870-85D5-277C04A944EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5141A5C-D29F-4870-85D5-277C04A944EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5141A5C-D29F-4870-85D5-277C04A944EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,6 +155,8 @@ Global
 		{583CBD84-DD9F-4834-A89C-1625A05EE15D} = {BA183EBF-FAC1-45AE-9559-09879DB103AC}
 		{E1AD28CD-37A6-4AF6-80D7-756586A727B6} = {BA183EBF-FAC1-45AE-9559-09879DB103AC}
 		{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD} = {D6D69517-7889-4E08-ABEA-D3E069D08A6B}
+		{230A5D64-C34E-49E0-B5FA-4062AF227211} = {FE34A376-8F97-4D98-8C84-44A0C1AC01E0}
+		{F5141A5C-D29F-4870-85D5-277C04A944EC} = {BA183EBF-FAC1-45AE-9559-09879DB103AC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23463631-1BA0-41B8-ABA3-1E9741037513}

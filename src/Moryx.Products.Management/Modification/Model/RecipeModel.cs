@@ -13,7 +13,7 @@ namespace Moryx.Products.Management.Modification
     /// DTO representation of a recipe
     /// </summary>
     [DataContract]
-    internal class RecipeModel
+    public class RecipeModel
     {
         /// <summary>
         /// Id of the recipe
@@ -54,7 +54,7 @@ namespace Moryx.Products.Management.Modification
         /// <summary>
         /// The id of the currently referenced workplan
         /// </summary>
-        [Obsolete]
+        [Obsolete("Use WorkplanModel instead")]
         [DataMember]
         public long WorkplanId { get; set; }
 

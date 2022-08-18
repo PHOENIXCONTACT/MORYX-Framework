@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>REST Api in order to interact with the resource management</Description>
+    <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;IIoT;IoT;Resource</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Moryx.Resources.Interaction\Converter\ResourceQueryConverter.cs" Link="Converter\ResourceQueryConverter.cs" />
+    <Compile Include="..\Moryx.Resources.Interaction\Converter\ResourceToModelConverter.cs" Link="Converter\ResourceToModelConverter.cs" />
+    <Compile Include="..\Moryx.Resources.Interaction\Models\ReferenceFilter.cs" Link="Models\ReferenceFilter.cs" />
+    <Compile Include="..\Moryx.Resources.Interaction\Models\ReferenceTypeModel.cs" Link="Models\ReferenceTypeModel.cs" />
+    <Compile Include="..\Moryx.Resources.Interaction\Models\ResourceModel.cs" Link="Models\ResourceModel.cs" />
+    <Compile Include="..\Moryx.Resources.Interaction\Models\ResourceQuery.cs" Link="Models\ResourceQuery.cs" />
+    <Compile Include="..\Moryx.Resources.Interaction\Models\ResourceReferenceModel.cs" Link="Models\ResourceReferenceModel.cs" />
+    <Compile Include="..\Moryx.Resources.Interaction\Models\ResourceTypeModel.cs" Link="Models\ResourceTypeModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+  </ItemGroup>
+
+</Project>

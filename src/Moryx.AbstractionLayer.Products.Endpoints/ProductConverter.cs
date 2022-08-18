@@ -1,34 +1,23 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Products.Endpoints.Model;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Products.Management.Modification;
+using Moryx.Serialization;
+using Moryx.Tools;
+using Moryx.Workflows;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Moryx.AbstractionLayer.Products;
-using Moryx.AbstractionLayer.Recipes;
-using Moryx.Container;
-using Moryx.Serialization;
-using Moryx.Tools;
-using Moryx.Workflows;
 
-namespace Moryx.Products.Management.Modification
+namespace Moryx.AbstractionLayer.Products.Endpoints
 {
-    [Component(LifeCycle.Singleton, typeof(IProductConverter))]
-     class ProductConverter : IProductConverter
+    public class ProductConverter
     {
-        #region Dependency Injection
-
-        public IProductManager ProductManager { get; set; }
-
-        public IRecipeManagement RecipeManagement { get; set; }
-
-        public IWorkplans WorkplanManagement { get; set; }
-
-        #endregion
-
-        #region Fields and Properties
+        private IProductManagementModification _productManagement;
 
         // Null object pattern for identity
         private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
@@ -36,10 +25,29 @@ namespace Moryx.Products.Management.Modification
         private static readonly ICustomSerialization ProductSerialization = new PartialSerialization<ProductType>();
         private static readonly ICustomSerialization RecipeSerialization = new PartialSerialization<ProductionRecipe>();
 
-        #endregion
-
-        #region To Model
-
+        public ProductConverter(IProductManagementModification productManagement)
+        {
+            _productManagement = productManagement;
+        }
+        public ProductDefinitionModel ConvertProductType(Type productType)
+        {
+            return new()
+            {
+                Name = productType.Name,
+                DisplayName = productType.GetDisplayName() ?? productType.Name,
+                BaseDefinition = productType.BaseType?.Name,
+                Properties = EntryConvert.EncodeClass(productType, ProductSerialization)
+            };
+        }
+        public RecipeDefinitionModel ConvertRecipeType(Type recipeType)
+        {
+            return new()
+            {
+                Name = recipeType.Name,
+                DisplayName = recipeType.GetDisplayName() ?? recipeType.Name,
+                HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(recipeType)
+            };
+        }
         public ProductModel ConvertProduct(IProductType productType, bool flat)
         {
             // Base object
@@ -68,24 +76,13 @@ namespace Moryx.Products.Management.Modification
             converted.FileModels = ConvertFiles(productType, properties);
 
             // Recipes
-            var recipes = RecipeManagement.GetAllByProduct(productType);
+            var recipes = _productManagement.GetRecipes(productType, RecipeClassification.CloneFilter);
             converted.Recipes = recipes.Select(ConvertRecipe).ToArray();
 
             // Parts
             ConvertParts(productType, properties, converted);
 
             return converted;
-        }
-
-        public ProductDefinitionModel ConvertProductType(Type productType)
-        {
-            return new()
-            {
-                Name = productType.Name,
-                DisplayName = productType.GetDisplayName() ?? productType.Name,
-                BaseDefinition = productType.BaseType?.Name,
-                Properties = EntryConvert.EncodeClass(productType, ProductSerialization)
-            };
         }
 
         private ProductFileModel[] ConvertFiles(IProductType productType, IEnumerable<PropertyInfo> properties)
@@ -106,7 +103,6 @@ namespace Moryx.Products.Management.Modification
             }
             return fileModels;
         }
-
         private void ConvertParts(IProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
         {
             var connectors = new List<PartConnector>();
@@ -147,6 +143,14 @@ namespace Moryx.Products.Management.Modification
             converted.Parts = connectors.ToArray();
         }
 
+        private static string FetchProductType(Type linkType)
+        {
+            var partLinkInterface = linkType.GetInterfaces().First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IProductPartLink<>));
+            var prodType = partLinkInterface.GetGenericArguments()[0];
+            return prodType.Name;
+        }
+
+
         private PartModel ConvertPart(IProductPartLink link)
         {
             // No link, no DTO!
@@ -162,118 +166,6 @@ namespace Moryx.Products.Management.Modification
             return part;
         }
 
-        private static string FetchProductType(Type linkType)
-        {
-            var partLinkInterface = linkType.GetInterfaces().First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IProductPartLink<>));
-            var prodType = partLinkInterface.GetGenericArguments()[0];
-            return prodType.Name;
-        }
-
-        public RecipeModel ConvertRecipe(IRecipe recipe)
-        {
-            // Transform to DTO and transmit
-            var converted = new RecipeModel
-            {
-                Id = recipe.Id,
-                Name = recipe.Name,
-                Type = recipe.GetType().Name,
-                State = recipe.State,
-                Revision = recipe.Revision,
-                Properties = EntryConvert.EncodeObject(recipe, RecipeSerialization),
-                IsClone = recipe.Classification.HasFlag(RecipeClassification.Clone)
-            };
-
-            switch (recipe.Classification & RecipeClassification.CloneFilter)
-            {
-                case RecipeClassification.Unset:
-                    converted.Classification = RecipeClassificationModel.Unset;
-                    break;
-                case RecipeClassification.Default:
-                    converted.Classification = RecipeClassificationModel.Default;
-                    break;
-                case RecipeClassification.Alternative:
-                    converted.Classification = RecipeClassificationModel.Alternative;
-                    break;
-                case RecipeClassification.Intermediate:
-                    converted.Classification = RecipeClassificationModel.Intermediate;
-                    break;
-                case RecipeClassification.Part:
-                    converted.Classification = RecipeClassificationModel.Part;
-                    break;
-            }
-
-            var wpRecipe = recipe as IWorkplanRecipe;
-            if (wpRecipe?.Workplan != null)
-            {
-                converted.WorkplanId = wpRecipe.Workplan.Id;
-                converted.WorkplanModel = ConvertWorkplan(wpRecipe.Workplan);
-            }
-                
-
-            return converted;
-        }
-
-        public WorkplanModel ConvertWorkplan(IWorkplan workplan)
-        {
-            var workplanDto = new WorkplanModel
-            {
-                Id = workplan.Id,
-                Name = workplan.Name,
-                Version = workplan.Version,
-                State = workplan.State
-            };
-
-            return workplanDto;
-        }
-
-        #endregion
-
-        #region Convert back
-
-        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, IProductType productType)
-        {
-            productRecipe.Name = recipe.Name;
-            productRecipe.Revision = recipe.Revision;
-            productRecipe.State = recipe.State;
-
-            // Only load workplan if it changed
-            var workplanRecipe = productRecipe as IWorkplanRecipe;
-            if (workplanRecipe != null && workplanRecipe.Workplan?.Id != recipe.WorkplanId)
-                workplanRecipe.Workplan = WorkplanManagement.LoadWorkplan(recipe.WorkplanId);
-
-            if (productRecipe.Product == null)
-            {
-                productRecipe.Product = productType;
-            }
-
-            EntryConvert.UpdateInstance(productRecipe, recipe.Properties, RecipeSerialization);
-
-            // Do not update a clones classification
-            if (productRecipe.Classification.HasFlag(RecipeClassification.Clone))
-                return productRecipe;
-
-            switch (recipe.Classification)
-            {
-                case RecipeClassificationModel.Unset:
-                    productRecipe.Classification = RecipeClassification.Unset;
-                    break;
-                case RecipeClassificationModel.Default:
-                    productRecipe.Classification = RecipeClassification.Default;
-                    break;
-                case RecipeClassificationModel.Alternative:
-                    productRecipe.Classification = RecipeClassification.Alternative;
-                    break;
-                case RecipeClassificationModel.Intermediate:
-                    productRecipe.Classification = RecipeClassification.Intermediate;
-                    break;
-                case RecipeClassificationModel.Part:
-                    productRecipe.Classification = RecipeClassification.Part;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            return productRecipe;
-        }
 
         public IProductType ConvertProductBack(ProductModel source, ProductType converted)
         {
@@ -281,7 +173,7 @@ namespace Moryx.Products.Management.Modification
             converted.Identity = new ProductIdentity(source.Identifier, source.Revision);
             converted.Name = source.Name;
             converted.State = source.State;
-            
+
             // Save recipes
             var recipes = new List<IProductRecipe>(source.Recipes?.Length ?? 0);
             foreach (var recipeModel in source.Recipes ?? Enumerable.Empty<RecipeModel>())
@@ -293,14 +185,24 @@ namespace Moryx.Products.Management.Modification
                     productRecipe = (IProductRecipe)Activator.CreateInstance(type);
                 }
                 else
-                    productRecipe = RecipeManagement.Get(recipeModel.Id);
+                    productRecipe = (IProductRecipe)_productManagement.LoadRecipe(recipeModel.Id);
 
                 ConvertRecipeBack(recipeModel, productRecipe, converted);
                 recipes.Add(productRecipe);
             }
             if (recipes.Any())
-                RecipeManagement.Save(source.Id, recipes);
+                foreach(var recipe in recipes)
+                    _productManagement.SaveRecipe(recipe);
 
+            // Delete recipes
+            if(converted.Id != 0)
+            {
+                var recipesOfProduct = _productManagement.GetRecipes(converted, RecipeClassification.CloneFilter);
+                foreach (var recipe in recipesOfProduct)
+                    if (recipes.FirstOrDefault(r => r.Id == recipe.Id) == null)
+                        _productManagement.RemoveRecipe(recipe.Id);
+            }
+            
             // Product is flat
             if (source.Properties is null)
                 return converted;
@@ -372,7 +274,7 @@ namespace Moryx.Products.Management.Modification
                     unused.Remove(match);
 
                 EntryConvert.UpdateInstance(match, partModel.Properties);
-                match.Product = ProductManager.LoadType(partModel.Product.Id);
+                match.Product = _productManagement.LoadType(partModel.Product.Id);
             }
 
             // Clear all values no longer present in the model
@@ -383,8 +285,9 @@ namespace Moryx.Products.Management.Modification
         private void UpdateReference(IProductPartLink value, PartModel part)
         {
             EntryConvert.UpdateInstance(value, part.Properties);
-            value.Product = part.Product is null ? null : ProductManager.LoadType(part.Product.Id);
+            value.Product = part.Product is null ? null : _productManagement.LoadType(part.Product.Id);
         }
+
 
         private static void ConvertFilesBack(object converted, ProductModel product, PropertyInfo[] properties)
         {
@@ -404,6 +307,140 @@ namespace Moryx.Products.Management.Modification
                     prop.SetValue(converted, productFile);
             }
         }
-        #endregion
+
+        public static RecipeModel ConvertRecipe(IRecipe recipe)
+        {
+            // Transform to DTO and transmit
+            var converted = new RecipeModel
+            {
+                Id = recipe.Id,
+                Name = recipe.Name,
+                Type = recipe.GetType().Name,
+                State = recipe.State,
+                Revision = recipe.Revision,
+                Properties = EntryConvert.EncodeObject(recipe, RecipeSerialization),
+                IsClone = recipe.Classification.HasFlag(RecipeClassification.Clone)
+            };
+
+            switch (recipe.Classification & RecipeClassification.CloneFilter)
+            {
+                case RecipeClassification.Unset:
+                    converted.Classification = RecipeClassificationModel.Unset;
+                    break;
+                case RecipeClassification.Default:
+                    converted.Classification = RecipeClassificationModel.Default;
+                    break;
+                case RecipeClassification.Alternative:
+                    converted.Classification = RecipeClassificationModel.Alternative;
+                    break;
+                case RecipeClassification.Intermediate:
+                    converted.Classification = RecipeClassificationModel.Intermediate;
+                    break;
+                case RecipeClassification.Part:
+                    converted.Classification = RecipeClassificationModel.Part;
+                    break;
+            }
+
+            var wpRecipe = recipe as IWorkplanRecipe;
+            if (wpRecipe?.Workplan != null)
+            {
+                converted.WorkplanId = wpRecipe.Workplan.Id;
+                converted.WorkplanModel = ConvertWorkplan(wpRecipe.Workplan);
+            }
+
+            return converted;
+        }
+
+        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, IProductType productType)
+        {
+            productRecipe.Name = recipe.Name;
+            productRecipe.Revision = recipe.Revision;
+            productRecipe.State = recipe.State;
+
+            // Only load workplan if it changed
+            var workplanRecipe = productRecipe as IWorkplanRecipe;
+            if (workplanRecipe != null && workplanRecipe.Workplan?.Id != recipe.WorkplanId)
+                workplanRecipe.Workplan = _productManagement.LoadWorkplan(recipe.WorkplanId);
+
+            if (productRecipe.Product == null)
+            {
+                productRecipe.Product = productType;
+            }
+
+            EntryConvert.UpdateInstance(productRecipe, recipe.Properties, RecipeSerialization);
+
+            // Do not update a clones classification
+            if (productRecipe.Classification.HasFlag(RecipeClassification.Clone))
+                return productRecipe;
+
+            switch (recipe.Classification)
+            {
+                case RecipeClassificationModel.Unset:
+                    productRecipe.Classification = RecipeClassification.Unset;
+                    break;
+                case RecipeClassificationModel.Default:
+                    productRecipe.Classification = RecipeClassification.Default;
+                    break;
+                case RecipeClassificationModel.Alternative:
+                    productRecipe.Classification = RecipeClassification.Alternative;
+                    break;
+                case RecipeClassificationModel.Intermediate:
+                    productRecipe.Classification = RecipeClassification.Intermediate;
+                    break;
+                case RecipeClassificationModel.Part:
+                    productRecipe.Classification = RecipeClassification.Part;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return productRecipe;
+        }
+
+
+        public ProductInstanceModel ConvertProductInstance(ProductInstance instance)
+        {
+            var model = new ProductInstanceModel
+            {
+                Id = instance.Id,
+                State = instance.State,
+                Type = instance.Type.GetType().Name,
+                Properties = EntryConvert.EncodeObject(instance)
+            };
+            return model;
+        }
+
+
+        public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, IProductType type)
+        {
+            var productInstance = type.CreateInstance();
+            productInstance.Id = model.Id;
+            productInstance.State = model.State;
+            EntryConvert.UpdateInstance(productInstance, model.Properties);
+            return productInstance;
+        }
+
+        public static WorkplanModel ConvertWorkplan(IWorkplan workplan)
+        {
+            return new WorkplanModel
+            {
+                Id = workplan.Id,
+                Name = workplan.Name,
+                Version = workplan.Version,
+                State = workplan.State
+            };
+        }
+
+        public static Workplan ConvertWorkplanBack(WorkplanModel model)
+        {
+            return new Workplan
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Version = model.Version,
+                State = model.State
+            };
+        }
+
+
     }
 }

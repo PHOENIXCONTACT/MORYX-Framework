@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace Moryx.Products.Management.Modification
 {
     [DataContract]
-    internal class ProductCustomization
+    public class ProductCustomization
     {
         [DataMember]
         public ProductDefinitionModel[] ProductTypes { get; set; }

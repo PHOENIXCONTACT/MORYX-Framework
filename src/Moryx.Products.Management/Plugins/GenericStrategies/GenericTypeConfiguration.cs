@@ -16,7 +16,7 @@ namespace Moryx.Products.Management
     {
         public override string PluginName
         {
-            get { return nameof(GenericTypeStrategy); }
+            get => nameof(GenericTypeStrategy);
             set { }
         }
 
