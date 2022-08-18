@@ -120,7 +120,7 @@ jobs:
           retention-days: 1
 
   Publish:
-    needs: [Build, UnitTests, IntegrationTests]
+    needs: [Build, UnitTests]
     if: ${{ github.event_name == 'push' }}
     runs-on: windows-2019
     steps:
