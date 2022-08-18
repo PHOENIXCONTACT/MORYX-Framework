@@ -66,6 +66,7 @@ jobs:
 
   IntegrationTests:
     needs: [Build]
+    if: ${{ github.ref == 'refs/heads/dev' }} # dev branche is published to myget moryx
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
