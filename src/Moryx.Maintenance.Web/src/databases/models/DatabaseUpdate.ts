@@ -5,7 +5,7 @@
 
 export default class DatabaseUpdate
 {
-    Description : string;
-    From : number;
-    To : number;
+    description : string;
+    from : number;
+    to : number;
 }

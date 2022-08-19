@@ -5,10 +5,10 @@
 
 export default class SetupModel
 {
-    Fullname : string;
-    SortOrder : number;
-    Name : string;
-    Description : string;
-    SupportedFileRegex : string;
-    SetupData : string;
+    fullname : string;
+    sortOrder : number;
+    name : string;
+    description : string;
+    supportedFileRegex : string;
+    setupData : string;
 }
