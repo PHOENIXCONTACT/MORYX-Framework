@@ -9,11 +9,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 		<PackageReference Include="Moryx.Runtime.Kernel" />
-		<PackageReference Include="Moryx.Asp.Extensions" />
-
-		<PackageReference Include="Moryx.Runtime.Kestrel" />
-		<PackageReference Include="Moryx.Runtime.Maintenance" />
-		<PackageReference Include="Moryx.Runtime.Maintenance.Web" />
+		<PackageReference Include="Moryx.Runtime.Endpoints" />
+		<PackageReference Include="Moryx.Maintenance.Web" />
 	</ItemGroup>
 
 	<ItemGroup>

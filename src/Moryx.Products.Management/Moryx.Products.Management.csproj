@@ -1,34 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>ProductManagement module hosting product types and instances, as well as recipes and workplans.</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;IIoT;IoT;Product;Manufacturing;Management;API</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-    <DefineConstants>USE_WCF</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
-    <ProjectReference Include="..\Moryx.Products.Model\Moryx.Products.Model.csproj" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Moryx.Runtime" />
   </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
-    <Reference Include="System.ServiceModel" />
-
-    <PackageReference Include="Moryx.Runtime.Wcf" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1' OR '$(TargetFramework)'=='net5.0'">
+  
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+    <ProjectReference Include="..\Moryx.Products.Model\Moryx.Products.Model.csproj" />
   </ItemGroup>
 
 </Project>

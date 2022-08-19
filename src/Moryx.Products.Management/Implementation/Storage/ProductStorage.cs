@@ -254,7 +254,7 @@ namespace Moryx.Products.Management
             using (var uow = Factory.Create())
             {
                 // Prepare required repos   
-                var recipeRepo = uow.GetRepository<IProductRecipeEntityRepository>();
+                var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
 
                 var deletedRecipe = recipeRepo.GetByKey(recipeId);         
                 recipeRepo.Remove(deletedRecipe);

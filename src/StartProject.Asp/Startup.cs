@@ -1,45 +1,21 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Moryx;
-using Moryx.AbstractionLayer.Products.Endpoints;
-using Moryx.Asp.Integration;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace StartProject.Asp
 {
     public class Startup
     {
-        private readonly IApplicationRuntime _moryxRuntime;
-
-        public Startup(IApplicationRuntime moryxRuntime)
-        {
-            _moryxRuntime = moryxRuntime;
-        }
-
-        // ConfigureServices() is called by the host before the Configure() method and will configure the app's
-        // services. By convention, this where configuration options are set, and where services are added the container.
-        // This method is optional for the Startup class.
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMoryxFacades(_moryxRuntime);
+            services.AddRazorPages();
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy", builder => builder
-                .WithOrigins("http://localhost:4200") // Angular app url for testing purposes
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
-            });
-
-            services.AddSignalR();
-            // Add MORYX SignalR hubs
-            services.AddMoryxProductManagementHub();
             services.AddControllers()
-               .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSwaggerGen(c =>
             {
@@ -47,10 +23,7 @@ namespace StartProject.Asp
             });
         }
 
-        // Configure() is used to specify how the app responds to HTTP requests. The request pipeline is configured
-        // by adding middleware components to an IApplicationBuilder instance. IApplicationBuilder is available to the
-        // Configure method(), but it isn't registered in the service container. Hosting creates an IApplicationBuilder
-        // and passes it directly to Configure().
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -61,21 +34,16 @@ namespace StartProject.Asp
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
-            // Add MORYX UIs
-           
             app.UseRouting();
-            if (env.IsDevelopment())
-                app.UseCors("CorsPolicy");
+
             app.UseAuthorization();
 
-            // Add MORYX SignalR hubs
-            app.UseMoryxProductManagementHub();
-           
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }

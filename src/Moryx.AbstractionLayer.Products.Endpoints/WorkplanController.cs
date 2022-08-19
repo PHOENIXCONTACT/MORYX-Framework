@@ -17,8 +17,8 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
     [Produces("application/json")]
     public class WorkplanController : ControllerBase
     {
-        private readonly IWorkplansVersions _workplansVersions;
-        public WorkplanController(IWorkplansVersions workplansVersions)
+        private readonly IWorkplans _workplansVersions;
+        public WorkplanController(IWorkplans workplansVersions)
             => _workplansVersions = workplansVersions;
 
         [HttpGet]

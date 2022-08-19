@@ -1,9 +1,11 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Communication;
 using Moryx.Communication.Endpoints;
+using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Notifications;
@@ -11,19 +13,17 @@ using Moryx.Resources.Model;
 using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
-#if HAVE_WCF
-using Moryx.Runtime.Wcf;
-using Moryx.Tools.Wcf;
-#endif
 
 namespace Moryx.Resources.Management
 {
     /// <summary>
     /// The main controller of all resource modules.
     /// </summary>
-    [ServerModule(ModuleName)]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>,
         IFacadeContainer<IResourceManagement>,
+        IFacadeContainer<IResourceModification>,
+        IFacadeContainer<IResourceModificationExtended>,
+        IFacadeContainer<IResourceTypeTree>,
         IFacadeContainer<INotificationSource>
     {
         internal const string ModuleName = "ResourceManager";
@@ -36,20 +36,13 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Generic component to access every data model
         /// </summary>
-        public IDbContextManager DbContextManager { get; set; }
+        public IDbContextManager DbContextManager { get; }
 
-#if HAVE_WCF
-        /// <summary>Injected property</summary>
-        public IWcfClientFactory WcfClientFactory { get; set; }
-#endif
-
-        /// <summary>
-        /// Endpoint hosting
-        /// </summary>
-        public IEndpointHosting EndpointHosting { get; set; }
-
-        /// <summary>Injected property</summary>
-        public IRuntimeConfigManager ConfManager { get; set; }
+        public ModuleController(IModuleContainerFactory containerFactory, IRuntimeConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+            : base(containerFactory, configManager, loggerFactory)
+        {
+            DbContextManager = contextManager;
+        }
 
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
@@ -58,15 +51,11 @@ namespace Moryx.Resources.Management
         {
             // Extend container
             Container.RegisterNotifications();
-            Container.ActivateHosting(EndpointHosting);
             Container.ActivateDbContexts(DbContextManager);
 
             // Register imports
             Container
-#if HAVE_WCF
-                .SetInstance(WcfClientFactory)
-#endif
-                .SetInstance(ConfManager);
+                .SetInstance((IRuntimeConfigManager)ConfigManager);
 
             // Register for communication
             Container.Register<IBinaryConnectionFactory>();
@@ -114,6 +103,9 @@ namespace Moryx.Resources.Management
 
         private readonly ResourceManagementFacade _resourceManagementFacade = new ResourceManagementFacade();
         IResourceManagement IFacadeContainer<IResourceManagement>.Facade => _resourceManagementFacade;
+        IResourceModification IFacadeContainer<IResourceModification>.Facade => _resourceManagementFacade;
+        IResourceModificationExtended IFacadeContainer<IResourceModificationExtended>.Facade => _resourceManagementFacade;
+        IResourceTypeTree IFacadeContainer<IResourceTypeTree>.Facade => _resourceManagementFacade;
 
         private readonly NotificationSourceFacade _notificationSourceFacade = new NotificationSourceFacade(ModuleName);
         INotificationSource IFacadeContainer<INotificationSource>.Facade => _notificationSourceFacade;

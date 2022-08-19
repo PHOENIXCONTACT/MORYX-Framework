@@ -1,25 +1,23 @@
 // Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Communication.Endpoints;
+using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Model;
-using Moryx.Products.Management.Importers;
-using Moryx.Products.Management.Modification;
-using Moryx.Runtime.Container;
+using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
-#if USE_WCF
-using Moryx.Runtime.Wcf;
-using Moryx.Tools.Wcf;
-#endif
 
 namespace Moryx.Products.Management
 {
     /// <summary>
     /// The main controller of all product modules.
     /// </summary>
-    [ServerModule(ModuleName)]
-    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<IProductManagement>
+    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, 
+        IFacadeContainer<IProductManagement>, 
+        IFacadeContainer<IProductManagementModification>,
+        IFacadeContainer<IProductManagementTypeSearch>
     {
         internal const string ModuleName = "ProductManager";
         /// <summary>
@@ -30,16 +28,16 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Generic component to access every data model
         /// </summary>
-        public IDbContextManager DbContextManager { get; set; }
+        public IDbContextManager DbContextManager { get; }
 
         /// <summary>
-        /// Endpoint hosting
+        /// Create new module instance
         /// </summary>
-        public IEndpointHosting Hosting { get; set; }
-
-        private IEndpointHost _host;
-
-        #region State transition
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
+            : base(containerFactory, configManager, loggerFactory)
+        {
+            DbContextManager = contextManager;
+        }
 
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
@@ -48,7 +46,6 @@ namespace Moryx.Products.Management
         {
             // Extend container
             Container
-                .ActivateHosting(Hosting)
                 .ActivateDbContexts(DbContextManager);
 
             // Register imports
@@ -75,15 +72,6 @@ namespace Moryx.Products.Management
             Container.Resolve<IProductStorage>().Start();
             Container.Resolve<IProductManager>().Start();
 
-            // Start all plugins
-            _host = Container.Resolve<IEndpointHostFactory>().CreateHost(typeof(IProductInteraction),
-#if USE_WCF
-                Config.InteractionHost);
-#else
-                null);
-#endif
-            _host.Start();
-
             // Activate facades
             ActivateFacade(_productManagement);
         }
@@ -95,20 +83,13 @@ namespace Moryx.Products.Management
         {
             // Deactivate facades
             DeactivateFacade(_productManagement);
-
-            _host.Stop();
-            _host = null;
         }
-#endregion
 
-#region FacadeContainer
         private readonly ProductManagementFacade _productManagement = new ProductManagementFacade();
-        IProductManagement IFacadeContainer<IProductManagement>.Facade
-        {
-            get { return _productManagement; }
-        }
 
-#endregion
+        IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManagement;
+        IProductManagementTypeSearch IFacadeContainer<IProductManagementTypeSearch>.Facade => _productManagement;
+        IProductManagementModification IFacadeContainer<IProductManagementModification>.Facade => _productManagement;
     }
 
 }

@@ -1,12 +1,14 @@
 ﻿{
   "profiles": {
     "StartProject.Asp": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:7266;http://localhost:5266",
-      "dotnetRunMessages": true
+        "commandName": "Project",
+        "launchBrowser": true,
+        "launchUrl": "Maintenance",
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "applicationUrl": "https://localhost:7266;http://localhost:5266",
+        "dotnetRunMessages": true
     }
   }
 }
