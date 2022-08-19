@@ -48,12 +48,13 @@ public static void Main(string[] args)
 }
 ````
 
-Constructor for a `ModuleController`:
+Constructor for a `ModuleController`. This also includes further imports like `IDbContextManager`.
 
 ````cs
-public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
     : base(containerFactory, configManager, loggerFactory)
 {
+    ContextManager = contextManager;
 }
 ````
 
