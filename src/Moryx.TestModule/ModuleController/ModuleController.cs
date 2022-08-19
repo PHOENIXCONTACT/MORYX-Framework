@@ -18,14 +18,10 @@ namespace Moryx.TestModule
     [Description("Test module for System tests")]
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<ITestModule>
     {
-        #region Dependencies
-
         /// <summary>
         /// Db context factory for data models
         /// </summary>
-        public IDbContextManager DbContextManager { get; set; }
-
-        #endregion
+        public IDbContextManager ContextManager { get; set; }
 
         /// <summary>
         /// Name of this module
@@ -33,9 +29,10 @@ namespace Moryx.TestModule
         public override string Name => "TestModule";
 
 
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
             : base(containerFactory, configManager, loggerFactory)
         {
+            ContextManager = contextManager;
         }
 
 
@@ -44,7 +41,7 @@ namespace Moryx.TestModule
         /// <inheritdoc />
         protected override void OnInitialize()
         {
-            Container.ActivateDbContexts(DbContextManager);
+            Container.ActivateDbContexts(ContextManager);
         }
 
         /// <inheritdoc />
