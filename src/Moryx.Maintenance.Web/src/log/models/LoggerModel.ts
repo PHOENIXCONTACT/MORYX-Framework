@@ -5,13 +5,13 @@
 import { LogLevel } from "./LogLevel";
 
 export default class LoggerModel {
-    public Name: string;
-    public ActiveLevel: LogLevel;
-    public ChildLogger: LoggerModel[];
-    public Parent: LoggerModel;
+    public name: string;
+    public activeLevel: LogLevel;
+    public childLogger: LoggerModel[];
+    public parent: LoggerModel;
 
     public static shortLoggerName(logger: LoggerModel): string {
-        const splittedLoggerPath = logger.Name.split(".");
+        const splittedLoggerPath = logger.name.split(".");
         return splittedLoggerPath[splittedLoggerPath.length - 1];
     }
 }

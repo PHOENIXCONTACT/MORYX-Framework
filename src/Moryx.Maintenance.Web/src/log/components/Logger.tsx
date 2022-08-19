@@ -48,7 +48,7 @@ export default class Logger extends React.Component<LogPropsModel, LogStateModel
     }
 
     public componentDidMount(): void {
-        this.props.RestClient.addRemoteAppender(this.props.Logger.Name, this.props.Logger.ActiveLevel).then((data) => {
+        this.props.RestClient.addRemoteAppender(this.props.Logger.name, this.props.Logger.activeLevel).then((data) => {
             this.setState({ AppenderId: data.appenderId });
             this.onUpdateLogMessages();
             this.updateLogMessagesTimer = setInterval(this.onUpdateLogMessages.bind(this), 3000);
@@ -126,14 +126,14 @@ export default class Logger extends React.Component<LogPropsModel, LogStateModel
                 </Container>
                 { this.state.SelectedLogMessage != null &&
                     <Modal isOpen={this.state.IsLogDetailDialogOpen} className="log-modal-dialog">
-                        <ModalHeader tag="h2" style={{background: LogLevelToCssClassConverter.Convert(this.state.SelectedLogMessage.LogLevel)}}>
-                            Log message from {moment(this.state.SelectedLogMessage.Timestamp).format("YYYY-MM-DD HH:mm:ss")} ({this.state.SelectedLogMessage.ClassName})
+                        <ModalHeader tag="h2" style={{background: LogLevelToCssClassConverter.Convert(this.state.SelectedLogMessage.logLevel)}}>
+                            Log message from {moment(this.state.SelectedLogMessage.timestamp).format("YYYY-MM-DD HH:mm:ss")} ({this.state.SelectedLogMessage.className})
                         </ModalHeader>
                         <ModalBody>
                             <Container fluid={true}>
                                 <Row>
                                     <Col md={12}>
-                                        <pre className="font-small">{this.state.SelectedLogMessage.Message}</pre>
+                                        <pre className="font-small">{this.state.SelectedLogMessage.message}</pre>
                                     </Col>
                                 </Row>
                             </Container>
@@ -175,7 +175,7 @@ export default class Logger extends React.Component<LogPropsModel, LogStateModel
     }
 
     private static applyFilter(logMessages: LogMessageModel[], logLevel: LogLevel, maxEntries: number): LogMessageModel[] {
-        return logMessages.filter((logMessage: LogMessageModel) => logMessage.LogLevel >= logLevel).slice(0, maxEntries);
+        return logMessages.filter((logMessage: LogMessageModel) => logMessage.logLevel >= logLevel).slice(0, maxEntries);
     }
 
     private onShowLogMessageDetailed(logMessage: LogMessageModel): void {
@@ -198,12 +198,12 @@ export default class Logger extends React.Component<LogPropsModel, LogStateModel
         return this.state.FilteredLogMessages.map((message, idx) =>
             <tr key={idx}
                 className={"selectable"}
-                style={{background: LogLevelToCssClassConverter.Convert(message.LogLevel)}}
+                style={{background: LogLevelToCssClassConverter.Convert(message.logLevel)}}
                 onClick={this.onShowLogMessageDetailed.bind(this, message)}>
-                <td>{moment(message.Timestamp).format("YYYY-MM-DD HH:mm:ss")}</td>
-                <td>{LogLevel[message.LogLevel]}</td>
-                <td>{Logger.cutMessage(message.Message)}</td>
-                <td>{message.ClassName}</td>
+                <td>{moment(message.timestamp).format("YYYY-MM-DD HH:mm:ss")}</td>
+                <td>{LogLevel[message.logLevel]}</td>
+                <td>{Logger.cutMessage(message.message)}</td>
+                <td>{message.className}</td>
             </tr>,
         );
     }

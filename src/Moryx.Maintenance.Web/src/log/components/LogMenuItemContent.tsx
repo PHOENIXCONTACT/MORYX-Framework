@@ -23,7 +23,7 @@ export default class LogMenuItemContent extends React.Component<LogMenuItemConte
 
     public render(): React.ReactNode {
         let img: any = TraceImg;
-        switch (this.props.Logger.ActiveLevel) {
+        switch (this.props.Logger.activeLevel) {
             case LogLevel.Trace: img = TraceImg; break;
             case LogLevel.Debug: img = DebugImg; break;
             case LogLevel.Info: img = InfoImg; break;
@@ -36,7 +36,7 @@ export default class LogMenuItemContent extends React.Component<LogMenuItemConte
             <div>
                 <select className="log-select" style={{backgroundImage: `url(${img})`}}
                         onChange={(e: React.FormEvent<HTMLElement>) => this.props.onActiveLogLevelChange(e, this.props.Logger)}
-                        value={this.props.Logger.ActiveLevel}>
+                        value={this.props.Logger.activeLevel}>
                     <option value={LogLevel.Trace}>Trace</option>
                     <option value={LogLevel.Debug}>Debug</option>
                     <option value={LogLevel.Info}>Info</option>

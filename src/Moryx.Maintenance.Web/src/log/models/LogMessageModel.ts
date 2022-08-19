@@ -7,9 +7,9 @@ import { LogLevel } from './LogLevel'
 
 export default class LogMessageModel
 {
-    Logger : LoggerModel;
-    ClassName : string;
-    LogLevel: LogLevel;
-    Message : string;
-    Timestamp : Date;
+    logger : LoggerModel;
+    className : string;
+    logLevel: LogLevel;
+    message : string;
+    timestamp : Date;
 }

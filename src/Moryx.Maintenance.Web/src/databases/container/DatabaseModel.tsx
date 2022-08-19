@@ -58,14 +58,14 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         super(props);
         this.state = {
             activeTab: "1",
-            host: this.props.DataModel.Config.Server,
-            port: this.props.DataModel.Config.Port,
-            database: this.props.DataModel.Config.Database,
-            username: this.props.DataModel.Config.User,
-            password: this.props.DataModel.Config.Password,
-            selectedMigration: (this.props.DataModel.AvailableMigrations.length !== 0 ? this.props.DataModel.AvailableMigrations[0].Name : ""),
-            selectedSetup : (this.props.DataModel.Setups.length !== 0 ? 0 : -1),
-            selectedBackup : (this.props.DataModel.Backups.length !== 0 ? this.props.DataModel.Backups[0].FileName : ""),
+            host: this.props.DataModel.config.server,
+            port: this.props.DataModel.config.port,
+            database: this.props.DataModel.config.database,
+            username: this.props.DataModel.config.user,
+            password: this.props.DataModel.config.password,
+            selectedMigration: (this.props.DataModel.availableMigrations.length !== 0 ? this.props.DataModel.availableMigrations[0].name : ""),
+            selectedSetup : (this.props.DataModel.setups.length !== 0 ? 0 : -1),
+            selectedBackup : (this.props.DataModel.backups.length !== 0 ? this.props.DataModel.backups[0].fileName : ""),
             testConnectionPending: false,
             testConnectionResult: TestConnectionResult.ConfigurationError,
         };
@@ -77,11 +77,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
 
     public createConfigModel(): DatabaseConfigModel {
         return {
-            Server: this.state.host,
-            Port: this.state.port,
-            Database: this.state.database,
-            User: this.state.username,
-            Password: this.state.password,
+            server: this.state.host,
+            port: this.state.port,
+            database: this.state.database,
+            user: this.state.username,
+            password: this.state.password,
         };
     }
 
@@ -124,17 +124,17 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onSave(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.saveDatabaseConfig(this.createConfigModel(), this.props.DataModel.TargetModel).then(() => {
+        this.props.RestClient.saveDatabaseConfig(this.createConfigModel(), this.props.DataModel.targetModel).then(() => {
             this.props.onShowWaitDialog(false);
 
-            this.props.RestClient.databaseModel(this.props.DataModel.TargetModel).then((data) => this.props.onUpdateDatabaseConfig(data));
+            this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((data) => this.props.onUpdateDatabaseConfig(data));
             this.props.NotificationSystem.addNotification({ title: "Configuration saved", message: "", level: "success", autoDismiss: 5 });
         }).catch((d) => this.props.onShowWaitDialog(false));
     }
 
     public onTestConnection(): void {
         this.setState({ testConnectionPending: true });
-        this.props.RestClient.testDatabaseConfig(this.createConfigModel(), this.props.DataModel.TargetModel)
+        this.props.RestClient.testDatabaseConfig(this.createConfigModel(), this.props.DataModel.targetModel)
                              .then((response) => this.setState({ testConnectionPending: false,
                                                                  testConnectionResult: response.result,
                      }));
@@ -143,11 +143,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onCreateDatabase(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.createDatabase(this.createConfigModel(), this.props.DataModel.TargetModel).then((data) => {
+        this.props.RestClient.createDatabase(this.createConfigModel(), this.props.DataModel.targetModel).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
-                this.props.RestClient.databaseModel(this.props.DataModel.TargetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
+                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Database created successfully", level: "success", autoDismiss: 5 });
            } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: "Database not created: " + data.errorMessage, level: "error", autoDismiss: 5 });
@@ -159,11 +159,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onEraseDatabase(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.eraseDatabase(this.createConfigModel(), this.props.DataModel.TargetModel).then((data) => {
+        this.props.RestClient.eraseDatabase(this.createConfigModel(), this.props.DataModel.targetModel).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
-                this.props.RestClient.databaseModel(this.props.DataModel.TargetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
+                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Database deleted successfully", level: "success", autoDismiss: 5 });
             } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: "Database not deleted: " + data.errorMessage, level: "error", autoDismiss: 5 });
@@ -175,7 +175,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onExecuteDump(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.dumpDatabase(this.createConfigModel(), this.props.DataModel.TargetModel).then((data) => {
+        this.props.RestClient.dumpDatabase(this.createConfigModel(), this.props.DataModel.targetModel).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
@@ -189,7 +189,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onExecuteRestore(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.restoreDatabase({ Config: this.createConfigModel(), BackupFileName: this.state.selectedBackup }, this.props.DataModel.TargetModel).then((data) => {
+        this.props.RestClient.restoreDatabase({ Config: this.createConfigModel(), BackupFileName: this.state.selectedBackup }, this.props.DataModel.targetModel).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
@@ -203,11 +203,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onApplyMigration(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.applyMigration(this.props.DataModel.TargetModel, this.state.selectedMigration, this.createConfigModel()).then((data) => {
+        this.props.RestClient.applyMigration(this.props.DataModel.targetModel, this.state.selectedMigration, this.createConfigModel()).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.wasUpdated) {
-                this.props.RestClient.databaseModel(this.props.DataModel.TargetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
+                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Migration applied", level: "success", autoDismiss: 5 });
             } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: "Migration not applied", level: "error", autoDismiss: 5 });
@@ -218,11 +218,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onRollbackDatabase(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.rollbackDatabase(this.props.DataModel.TargetModel, this.createConfigModel()).then((data) => {
+        this.props.RestClient.rollbackDatabase(this.props.DataModel.targetModel, this.createConfigModel()).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
-                this.props.RestClient.databaseModel(this.props.DataModel.TargetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
+                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Database rollback completed successfully", level: "success", autoDismiss: 5 });
             } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: "Database rollback failed: " + data.errorMessage, level: "error", autoDismiss: 5 });
@@ -233,13 +233,13 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onExecuteSetup(): void {
         this.props.onShowWaitDialog(true);
 
-        const foundSetup = this.props.DataModel.Setups[this.state.selectedSetup];
+        const foundSetup = this.props.DataModel.setups[this.state.selectedSetup];
 
-        this.props.RestClient.executeSetup(this.props.DataModel.TargetModel, { Config: this.createConfigModel(), Setup: foundSetup }).then((data) => {
+        this.props.RestClient.executeSetup(this.props.DataModel.targetModel, { Config: this.createConfigModel(), Setup: foundSetup }).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
-                this.props.NotificationSystem.addNotification({ title: "Success", message: "Setup '" + foundSetup.Name + "' executed successfully", level: "success", autoDismiss: 5 });
+                this.props.NotificationSystem.addNotification({ title: "Success", message: "Setup '" + foundSetup.name + "' executed successfully", level: "success", autoDismiss: 5 });
             } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: data.errorMessage, level: "error", autoDismiss: 5 });
             }
@@ -284,7 +284,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             <Card>
                 <CardHeader tag="h2">
                     <Icon path={mdiBriefcase} className="icon right-space" />
-                    {this.props.DataModel.TargetModel}
+                    {this.props.DataModel.targetModel}
                 </CardHeader>
                 <CardBody>
                     <Container fluid={true}>
@@ -336,8 +336,8 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                             <Input type="select" size={5} className="auto-height"
                                                 onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelectBackup(e)}>
                                             {
-                                                this.props.DataModel.Backups.map((backup, idx) => {
-                                                    return (<option key={idx} value={backup.FileName}>{backup.FileName + " (Size: " + kbToString(backup.Size * 1024) + ", Created on: " + moment(backup.CreationDate).format("YYYY-MM-DD HH:mm:ss") + ")"}</option>);
+                                                this.props.DataModel.backups.map((backup, idx) => {
+                                                    return (<option key={idx} value={backup.fileName}>{backup.fileName + " (Size: " + kbToString(backup.size * 1024) + ", Created on: " + moment(backup.creationDate).format("YYYY-MM-DD HH:mm:ss") + ")"}</option>);
                                                 })
                                             }
                                             </Input>
@@ -395,7 +395,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                 </Nav>
                                 <TabContent activeTab={this.state.activeTab}>
                                     <TabPane tabId="1">
-                                        { this.props.DataModel.AvailableMigrations.length !== 0 ?
+                                        { this.props.DataModel.availableMigrations.length !== 0 ?
                                             (
                                             <Container fluid={true}>
                                                 <Row>
@@ -403,11 +403,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                                         <Input type="select" size={10} className="auto-height"
                                                             onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelectMigration(e)}>
                                                         {
-                                                            this.props.DataModel.AvailableMigrations.map((migration, idx) => {
-                                                                const installed = this.props.DataModel.AppliedMigrations.find((installedMigration: DbMigrationsModel) => installedMigration.Name === migration.Name);
-                                                                const option = migration.Name + " (" + (installed ? "Installed" : "Not installed") + ")";
+                                                            this.props.DataModel.availableMigrations.map((migration, idx) => {
+                                                                const installed = this.props.DataModel.appliedMigrations.find((installedMigration: DbMigrationsModel) => installedMigration.name === migration.name);
+                                                                const option = migration.name + " (" + (installed ? "Installed" : "Not installed") + ")";
 
-                                                                return (<option key={idx} value={migration.Name}>{option}</option>);
+                                                                return (<option key={idx} value={migration.name}>{option}</option>);
                                                             })
                                                         }
                                                         </Input>
@@ -423,7 +423,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                                             </Button>
                                                             <Button color="primary"
                                                                     onClick={() => this.onRollbackDatabase()}
-                                                                    disabled={this.props.DataModel.AvailableMigrations.length === 0 || this.state.testConnectionResult !== TestConnectionResult.Success}>
+                                                                    disabled={this.props.DataModel.availableMigrations.length === 0 || this.state.testConnectionResult !== TestConnectionResult.Success}>
                                                                 Rollback all migrations
                                                             </Button>
                                                         </ButtonGroup>
@@ -439,7 +439,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                             )}
                                     </TabPane>
                                     <TabPane tabId="2">
-                                        { this.props.DataModel.Setups.length !== 0 ?
+                                        { this.props.DataModel.setups.length !== 0 ?
                                             (
                                             <Container fluid={true}>
                                                 <Row>
@@ -447,8 +447,8 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                                         <Input type="select" size={10} className="auto-height"
                                                             onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelectSetup(e)}>
                                                         {
-                                                            this.props.DataModel.Setups.map((setup, idx) => {
-                                                                return (<option key={idx} value={setup.Name}>{setup.Name} - {setup.Description}</option>);
+                                                            this.props.DataModel.setups.map((setup, idx) => {
+                                                                return (<option key={idx} value={setup.name}>{setup.name} - {setup.description}</option>);
                                                             })
                                                         }
                                                         </Input>

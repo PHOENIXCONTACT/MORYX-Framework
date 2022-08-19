@@ -5,7 +5,7 @@
 
 export default class BackupModel
 {
-    FileName : string;
-    Size : number;
-    CreationDate : Date;
+    fileName : string;
+    size : number;
+    creationDate : Date;
 }

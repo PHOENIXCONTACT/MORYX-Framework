@@ -72,8 +72,8 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
 
     private static createMenuItem(dataModel: DataModel): MenuItemModel {
         return {
-            Name: dataModel.TargetModel,
-            NavPath: "/databases/" + dataModel.TargetModel,
+            Name: dataModel.targetModel,
+            NavPath: "/databases/" + dataModel.targetModel,
             Icon: mdiBriefcase,
             SubMenuItems: [],
         };
@@ -84,7 +84,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
         let idx = 0;
 
         this.props.DatabaseConfigs.forEach((model) => {
-            routes.push(<Route key={idx} path={"/databases/" + model.TargetModel} exact={true} render={() => <DatabaseModel DataModel={model} RestClient={this.props.RestClient} NotificationSystem={this.props.NotificationSystem} />}/>);
+            routes.push(<Route key={idx} path={"/databases/" + model.targetModel} exact={true} render={() => <DatabaseModel DataModel={model} RestClient={this.props.RestClient} NotificationSystem={this.props.NotificationSystem} />}/>);
             ++idx;
         });
 
