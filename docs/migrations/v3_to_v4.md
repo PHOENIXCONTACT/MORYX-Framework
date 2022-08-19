@@ -73,6 +73,9 @@ IProductManagementTypeSearch IFacadeContainer<IProductManagementTypeSearch>.Faca
 IProductManagementModification IFacadeContainer<IProductManagementModification>.Facade => _productManagement;    
 ````
 
+### Hosting
+
+Hosting of Endpoints from within Modules is no longer supported removing IEndpointHosting and IEndpointHostFactory from within modules as well as the Activate Hosting extension on the container. Asp Controllers can get the Facade injected and are hosted by Asp natively.
 
 ### Logging
 
@@ -82,10 +85,18 @@ Changes:
 - `IModuleLogger` is basically `ILogger`, thereby `LogException` is just `Log` now
 - `Moryx.Logging.LogLevel` was replaced with log level from MS
 - LoggerManagement is gone without replacement
+- The DummyLogger was removed, an equivalent is given by instantiating `new ModuleLogger("Dummy", typeof(ResourceManager), new NullLoggerFactory())`
 
 ### Maintenance
 
 The Maintenance module and its internally hosted web UI are gone. They are replaced by kernel based ASP endpoints and a razor hosted frontend.
 
-- "Moryx.Runtime.Endpoints"
+### Package changes
+
+Added:
+- "Moryx.Runtime.Endpoints" // Contains endpoints for maintenance now
+
+Removed:
+- "Moryx.Maintenance" 
 - "Moryx.Maintenance.Web"
+- "Moryx.Asp.Extensions" // Not needed anymore, Shell related content moved to "Moryx" package
