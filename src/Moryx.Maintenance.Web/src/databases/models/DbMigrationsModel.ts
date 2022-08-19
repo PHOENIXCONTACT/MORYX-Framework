@@ -1,4 +1,4 @@
 export default class DbMigrationsModel
 {
-    Name : string;
+    name : string;
 }

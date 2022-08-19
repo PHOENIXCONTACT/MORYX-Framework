@@ -30,7 +30,7 @@ export function getDatabaseReducer(state: DatabaseState = initialDatabaseState, 
         return {
             ...state,
             DatabaseConfigs: state.DatabaseConfigs.map(
-                (config, i) => config.TargetModel === databaseConfig.TargetModel ? {...databaseConfig}
+                (config, i) => config.targetModel === databaseConfig.targetModel ? {...databaseConfig}
                                         : config,
             ),
          };

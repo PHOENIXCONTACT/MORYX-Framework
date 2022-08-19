@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Kestrel\Moryx.Runtime.Kestrel.csproj" />
     <ProjectReference Include="..\Moryx.TestModule.Kestrel\Moryx.TestModule.Kestrel.csproj" />
+    <ProjectReference Include="..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj" />
   </ItemGroup>
 
 </Project>

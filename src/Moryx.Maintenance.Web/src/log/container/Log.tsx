@@ -60,7 +60,7 @@ class Log extends React.Component<LogPropsModel & LogDispatchPropModel, LogState
         this.state = { ActiveTab: "0", Menu: { MenuItems: [] }, LoggerTabs: [] };
 
         this.overviewLogger = new LoggerModel();
-        this.overviewLogger.Name = "";
+        this.overviewLogger.name = "";
     }
 
     public componentDidMount(): void {
@@ -75,7 +75,7 @@ class Log extends React.Component<LogPropsModel & LogDispatchPropModel, LogState
                 Name: LoggerModel.shortLoggerName(logger),
                 NavPath: "/log",
                 Logger: logger,
-                SubMenuItems: logger.ChildLogger.map((childLogger, idx) => this.createMenuItem(childLogger)),
+                SubMenuItems: logger.childLogger.map((childLogger, idx) => this.createMenuItem(childLogger)),
             };
 
         menuItem.Content = (<LogMenuItemContent Logger={menuItem.Logger}
@@ -88,13 +88,13 @@ class Log extends React.Component<LogPropsModel & LogDispatchPropModel, LogState
         e.preventDefault();
 
         const newValue = (e.target as HTMLSelectElement).value as LogLevel;
-        this.props.RestClient.logLevel(logger.Name, newValue).then((data) => {
+        this.props.RestClient.logLevel(logger.name, newValue).then((data) => {
             if (data.success) {
-                logger.ActiveLevel = newValue;
+                logger.activeLevel = newValue;
                 Log.changeActiveLogLevel(logger, newValue);
                 this.forceUpdate();
 
-                this.props.NotificationSystem.addNotification({ title: "Success", message: "Log level for '" + logger.Name +  "' was set successfully", level: "success", autoDismiss: 5 });
+                this.props.NotificationSystem.addNotification({ title: "Success", message: "Log level for '" + logger.name +  "' was set successfully", level: "success", autoDismiss: 5 });
             } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: data.errorMessage, level: "error", autoDismiss: 5 });
             }
@@ -102,11 +102,11 @@ class Log extends React.Component<LogPropsModel & LogDispatchPropModel, LogState
     }
 
     private static changeActiveLogLevel(logger: LoggerModel, logLevel: LogLevel): void {
-        if (logger.ActiveLevel > logLevel) {
-            logger.ActiveLevel = logLevel;
+        if (logger.activeLevel > logLevel) {
+            logger.activeLevel = logLevel;
         }
 
-        for (const childLogger of logger.ChildLogger) {
+        for (const childLogger of logger.childLogger) {
             Log.changeActiveLogLevel(childLogger, logLevel);
         }
     }
