@@ -57,6 +57,21 @@ public ModuleController(IModuleContainerFactory containerFactory, IConfigManager
 }
 ````
 
+When exporting facades from you module, the new structure no longer exports facades with implicit polymorphism. Instead when your facade provides multiple interfaces, for example after a new minor version, you need to export each one explicitly.
+
+````cs
+public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, 
+    IFacadeContainer<IProductManagement>, 
+    IFacadeContainer<IProductManagementModification>,
+    IFacadeContainer<IProductManagementTypeSearch>
+
+private readonly ProductManagementFacade _productManagement = new ProductManagementFacade();
+
+IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManagement;
+IProductManagementTypeSearch IFacadeContainer<IProductManagementTypeSearch>.Facade => _productManagement;
+IProductManagementModification IFacadeContainer<IProductManagementModification>.Facade => _productManagement;    
+````
+
 
 ### Logging
 
