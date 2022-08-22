@@ -29,8 +29,8 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<DataModel>> GetAll()
-            => Ok(_dbContextManager.Contexts.Select(Convert));
+        public async Task<ActionResult<DataModel[]>> GetAll()
+            => await Task.WhenAll(_dbContextManager.Contexts.Select(Convert));
 
 
         [HttpGet("{targetModel}")]
