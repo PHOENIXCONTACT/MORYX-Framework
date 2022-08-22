@@ -99,10 +99,17 @@ The Maintenance module and its internally hosted web UI are gone. They are repla
 ### Package changes
 
 Added:
-- "Moryx.Runtime.Endpoints" // Contains endpoints for maintenance now
-- "Moryx.Maintenance.Web"
+- Moryx.Runtime.Endpoints // Contains endpoints for maintenance now
+- Moryx.Maintenance.Web
 
 Removed:
-- "Moryx.Runtime.Maintenance" 
-- "Moryx.Runtime.Maintenance.Web" /Replaced by Moryx.Maintenance.Web with razor hosting
-- "Moryx.Asp.Extensions" // Not needed anymore, Shell related content moved to "Moryx" package
+- Moryx.Runtime.WinService
+- Moryx.Runtime.Wcf
+- Moryx.Runtime.Kestrel
+- Moryx.Runtime.DbUpdate
+- Moryx.TestTools.SystemTest
+- Moryx.Runtime.SmokeTest
+- Moryx.Runtime.Maintenance
+- Moryx.Runtime.Wcf
+- Moryx.Runtime.Maintenance.Web /Replaced by Moryx.Maintenance.Web with razor hosting
+- Moryx.Asp.Extensions // Not needed anymore, Shell related content moved to "Moryx" package
