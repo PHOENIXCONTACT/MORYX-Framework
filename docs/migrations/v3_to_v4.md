@@ -88,7 +88,7 @@ Most of the MORYX logging was replaced by the types from "Microsoft.Extensions.L
 
 Changes:
 - `IModuleLogger` is basically `ILogger`, thereby `LogException` is just `Log` now
-- `Moryx.Logging.LogLevel` was replaced with log level from MS
+- `Moryx.Logging.LogLevel` was replaced with log level from MS, there LogLevel.Info becomes LogLevel.Information
 - LoggerManagement is gone without replacement
 - The DummyLogger was removed, an equivalent is given by instantiating `new ModuleLogger("Dummy", typeof(ResourceManager), new NullLoggerFactory())`
 
