@@ -23,6 +23,11 @@ It also requires a couple of changes when you migrate modules or applications fr
 Example for the application project:
 
 ````cs
+...
+using Moryx.Runtime.Kernel;
+using Moryx.Tools;
+using Moryx.Model;
+...
 public static void Main(string[] args)
 {            
     AppDomainBuilder.LoadAssemblies();
@@ -95,8 +100,9 @@ The Maintenance module and its internally hosted web UI are gone. They are repla
 
 Added:
 - "Moryx.Runtime.Endpoints" // Contains endpoints for maintenance now
+- "Moryx.Maintenance.Web"
 
 Removed:
-- "Moryx.Maintenance" 
-- "Moryx.Maintenance.Web"
+- "Moryx.Runtime.Maintenance" 
+- "Moryx.Runtime.Maintenance.Web" /Replaced by Moryx.Maintenance.Web with razor hosting
 - "Moryx.Asp.Extensions" // Not needed anymore, Shell related content moved to "Moryx" package
