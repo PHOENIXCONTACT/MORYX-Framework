@@ -108,8 +108,6 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
                 return true;
             });
-            if (entry is null)
-                return Conflict("Method could not be invoked.");
 
             return entry;
         }
