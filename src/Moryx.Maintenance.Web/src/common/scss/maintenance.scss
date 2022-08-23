@@ -27,12 +27,6 @@
   font-weight: bold;
 }
 
-html {
-  height: 100%;
-  width: 100%;
-  font-family: sans-serif;
-}
-
 body {
   padding-top: 0px;
   background-image: url('../images/bg_main.png');
@@ -474,4 +468,22 @@ footer ul li {
 
 .notification-modal-dialog {
   max-width: 90% !important;
+}
+
+/* 
+ * Overwrite bootstrap styles that would otherwise
+ * conflict with MORYS material styles
+*/
+
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5 !important;
+}
+
+.px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+a:hover {
+  text-decoration-line: none;
 }
