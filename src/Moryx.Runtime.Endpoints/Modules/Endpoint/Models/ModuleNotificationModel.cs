@@ -10,12 +10,12 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
     /// <summary>
     /// Model for notifications.
     /// </summary>
-    public class NotificationModel
+    public class ModuleNotificationModel
     {
         /// <summary>
         /// Default constructor for serialization
         /// </summary>
-        public NotificationModel()
+        public ModuleNotificationModel()
         {
 
         }
@@ -24,7 +24,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         /// Constructor for a notification.
         /// </summary>
         /// <param name="notification">A notification raisded by a module.</param>
-        public NotificationModel(IModuleNotification notification)
+        public ModuleNotificationModel(IModuleNotification notification)
         {
             Timestamp = notification.Timestamp;
             if(notification.Exception != null)
