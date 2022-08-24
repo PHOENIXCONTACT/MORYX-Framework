@@ -17,7 +17,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         public ServerModuleModel()
         {
             Dependencies = new List<ServerModuleModel>();
-            Notifications = new NotificationModel[0];
+            Notifications = new ModuleNotificationModel[0];
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         /// <summary>
         /// Contains a list of notifications for that model.
         /// </summary>
-        public NotificationModel[] Notifications { get; set; }
+        public ModuleNotificationModel[] Notifications { get; set; }
 
         /// <summary>
         /// The configured assembly.
