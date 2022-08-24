@@ -25,6 +25,7 @@ namespace Moryx.Workflows.WorkplanSteps
         protected SubWorkplanStep(IWorkplan workplan)
         {
             Workplan = workplan;
+            Name = workplan.Name;
 
             // Step outputs are created from all exits of the sub workflow
             OutputDescriptions = (from connector in workplan.Connectors
@@ -37,9 +38,6 @@ namespace Moryx.Workflows.WorkplanSteps
                                   }).ToArray();
             Outputs = new IConnector[OutputDescriptions.Length];
         }
-
-        /// <see cref="IWorkplanStep"/>
-        public override string Name => Workplan.Name;
 
         /// <see cref="ISubworkplanStep.WorkplanId"/>
         [DataMember]

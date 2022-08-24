@@ -9,15 +9,9 @@ namespace Moryx.Tests.Workflows
 {
     public class InvalidStep : WorkplanStepBase
     {
-        /// 
-        public override string Name
-        {
-            get { return "Invalid"; }
-        }
-
         private InvalidStep()
         {
-            
+            Name = "Invalid";
         }
 
         ///

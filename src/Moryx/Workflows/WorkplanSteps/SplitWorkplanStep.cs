@@ -18,6 +18,7 @@ namespace Moryx.Workflows.WorkplanSteps
     {
         private SplitWorkplanStep()
         {
+            Name = "Split";
         }
 
         /// <summary>
@@ -36,11 +37,6 @@ namespace Moryx.Workflows.WorkplanSteps
                 OutputDescriptions[i] = new OutputDescription{OutputType = OutputType.Success};
             }
         }
-
-        /// <summary>
-        /// Transition name
-        /// </summary>
-        public override string Name => "Split";
 
         /// <summary>
         /// Create transistion instance

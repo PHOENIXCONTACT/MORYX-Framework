@@ -28,14 +28,8 @@ namespace Moryx.Tests.Workflows
         public DummyStep(int outputs, string name)
         {
             Outputs = new IConnector[outputs];
-            _name = name;
+            Name = name;
         }
-
-        [DataMember]
-        private readonly string _name;
-
-        ///
-        public override string Name => _name;
 
         [EntrySerialize]
         public int Number { get; set; }
