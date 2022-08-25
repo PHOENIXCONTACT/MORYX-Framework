@@ -118,8 +118,8 @@ jobs:
           path: artifacts/Documentation/
           retention-days: 1
 
-  Publish:
-    needs: [Build, UnitTests, IntegrationTests]
+  Publish-CI:
+    needs: [Build]
     if: ${{ github.event_name == 'push' }}
     runs-on: windows-2019
     steps:
@@ -153,6 +153,24 @@ jobs:
           MORYX_PACKAGE_TARGET: "https://www.myget.org/F/moryx-future/api/v2/package"
           MORYX_PACKAGE_TARGET_V3: "https://www.myget.org/F/moryx-future/api/v3/index.json"
         run: ./Build.ps1 -Publish
+
+  Publish-Release:
+    needs: [Build, UnitTests, IntegrationTests]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet_sdk_version }}
+  
+      - name: Download package artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: packages
+          path: artifacts/Packages/
 
       - name: Publish on NuGet
         if: ${{ startsWith(github.ref, 'refs/tags/v') }} # Version Tags are published to nuget
