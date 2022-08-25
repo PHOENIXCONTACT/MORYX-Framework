@@ -113,3 +113,48 @@ Removed:
 - Moryx.Runtime.Wcf
 - Moryx.Runtime.Maintenance.Web /Replaced by Moryx.Maintenance.Web with razor hosting
 - Moryx.Asp.Extensions // Not needed anymore, Shell related content moved to "Moryx" package
+
+
+## Add database migrations (with Postgres)
+
+You need, at least, an initial migration for each of your database contexts. [Read more](https://docs.microsoft.com/de-de/ef/core/cli/dotnet#dotnet-ef-migrations-add) about how to add migrations with EntityFramework.
+
+After you navigated to the root directory of the project that contains the database context file, you can create a migration:
+
+```
+dotnet ef migrations add InitialCreate --startup-project Path\To\StartProject.csproj --output-dir .\Model\Migrations 
+```
+
+### Set things up
+
+In order to run this successfully, you might have to go through some configuration.
+
+#### Required packages
+
+The `StartProject.csproj` has to reference 
+
+  * `Microsoft.EntityFrameworkCore.Design`
+
+#### Database connection
+
+You need to have a connection to the database that corresponds to the context. To find out how this connection is set up, have a look at the contexts `OnConfigure()` method. By default it should look somewhat like this:
+
+```cs
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    if (!optionsBuilder.IsConfigured)
+    {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+
+      optionsBuilder.UseNpgsql("Host=localhost;Database=ProcessContext;Username=postgres;Password=postgres");
+    }
+}
+```
+
+You can setup your connection string directly there, but it is **not recommended**. You might follow the pattern, that is used within your application or have a look at the docs, mentioned by the `#warning`:
+
+> #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+
+However, this is the go to place to look for how to provide your StartProject with a `ConnectionString`.
+
+**Important!** Remember to not push sensitive data to your version control system!
