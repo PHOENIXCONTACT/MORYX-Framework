@@ -122,8 +122,8 @@ class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDi
         };
 
         return (
-            <div>
-                <div className="main-content">
+            <div className="maintenance-app-container">
+                <div className="maintenance-content-wrapper">
                     <NotificationSystem ref={ref}/>
                     <Row className="header hidden-xs hidden-sm">
                         <Col md={2}>
@@ -164,7 +164,7 @@ class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDi
                         </Col>
                     </Row>
 
-                    <Navbar className="navbar-default" expand="md">
+                    <Navbar className="maintenance-navbar-default" expand="md">
                         <NavbarBrand href="#/">
                             <Icon path={mdiTools} className="icon right-space" />
                             Maintenance
@@ -193,7 +193,7 @@ class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDi
                         </Collapse>
                     </Navbar>
 
-                    <Container fluid={true} id="body" className="content">
+                    <Container className="maintenance-content">
                         <Switch>
                             <Route exact={true} path="/" component={Dashboard} />
                             <Route path="/modules" component={Modules} />
