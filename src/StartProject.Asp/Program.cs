@@ -1,27 +1,38 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Moryx.Asp.Integration;
 using Moryx.Runtime.Kernel;
+using Moryx.Tools;
+using Moryx.Runtime.Modules;
+using System;
+using Moryx.Model;
 
 namespace StartProject.Asp
 {
-    public static class Program
+    public class Program
     {
-        // This method is the application entry point; Main() is called when the app is started.
-        public static int Main(string[] args)
-        {
-            var moryxRuntime = new HeartOfGold(args);
-            moryxRuntime.Load();
+        public static void Main(string[] args)
+        {            
+            AppDomainBuilder.LoadAssemblies();
+
             var host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices(serviceCollection =>
+                {
+                    serviceCollection.AddMoryxKernel();
+                    serviceCollection.AddMoryxModels();
+                    serviceCollection.AddMoryxModules();
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup(conf => new Startup(moryxRuntime));
+                    webBuilder.UseStartup<Startup>();
                 }).Build();
 
-            host.Start();
-            var result = moryxRuntime.Execute();
-            host.Dispose();
+            host.Services.UseMoryxConfigurations("Config");
+            host.Services.StartMoryxModules();
 
-            return (int)result;
+            host.Run();
+
+            host.Services.StopMoryxModules();
         }
     }
 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Serialization;
@@ -111,7 +112,7 @@ namespace Moryx.AbstractionLayer.Resources
             }
             catch (Exception e)
             {
-                Logger?.LogException(LogLevel.Error, e, "Failed to dispose resource {0}-{1}", Id, Name);
+                Logger?.Log(LogLevel.Error, e, "Failed to dispose resource {0}-{1}", Id, Name);
             }
         }
 

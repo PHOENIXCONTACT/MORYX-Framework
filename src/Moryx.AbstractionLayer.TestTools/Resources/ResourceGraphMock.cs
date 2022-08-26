@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
 using Moryx.Tools;
 
@@ -70,7 +72,7 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
 
             SetReferenceCollections(instance);
 
-            instance.Logger = new DummyLogger();
+            instance.Logger = new ModuleLogger("Dummy", typeof(ResourceGraphMock), new NullLoggerFactory());
 
             return instance;
         }

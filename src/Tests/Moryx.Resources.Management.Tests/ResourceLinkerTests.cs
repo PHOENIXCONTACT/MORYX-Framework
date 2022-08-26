@@ -12,6 +12,8 @@ using Moryx.TestTools.UnitTest;
 using Moq;
 using Moryx.Model.Repositories;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moryx.Logging;
 
 namespace Moryx.Resources.Management.Tests
 {
@@ -31,7 +33,7 @@ namespace Moryx.Resources.Management.Tests
             _linker = new ResourceLinker
             {
                 Graph = mock.Object,
-                Logger = new DummyLogger()
+                Logger = new ModuleLogger("Dummy", typeof(ResourceLinker), new NullLoggerFactory())
             };
         }
 

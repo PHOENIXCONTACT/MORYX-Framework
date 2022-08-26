@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
@@ -133,7 +134,7 @@ namespace Moryx.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    Logger.LogException(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
+                    Logger.Log(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
                 }
             });
             _startup = ResourceStartupPhase.Initialized;
@@ -256,7 +257,7 @@ namespace Moryx.Resources.Management
                 catch (Exception e)
                 {
                     resourceWrapper.ErrorOccured();
-                    Logger.LogException(LogLevel.Warning, e, "Failed to start resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
+                    Logger.Log(LogLevel.Warning, e, "Failed to start resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
                 }
             });
             _startup = ResourceStartupPhase.Started;
@@ -275,7 +276,7 @@ namespace Moryx.Resources.Management
                 }
                 catch (Exception e)
                 {
-                    Logger.LogException(LogLevel.Warning, e, "Failed to stop resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
+                    Logger.Log(LogLevel.Warning, e, "Failed to stop resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
                 }
             });
 
@@ -304,7 +305,7 @@ namespace Moryx.Resources.Management
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogException(LogLevel.Error, ex, "Error saving resource {0}-{1}!", resource.Id, resource.Name);
+                    Logger.Log(LogLevel.Error, ex, "Error saving resource {0}-{1}!", resource.Id, resource.Name);
                     throw;
                 }
 
@@ -332,7 +333,7 @@ namespace Moryx.Resources.Management
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogException(LogLevel.Error, ex, "Error saving collection {2} on resource {0}-{1}!", instance.Id, instance.Name, property.Name);
+                    Logger.Log(LogLevel.Error, ex, "Error saving collection {2} on resource {0}-{1}!", instance.Id, instance.Name, property.Name);
                     throw;
                 }
 

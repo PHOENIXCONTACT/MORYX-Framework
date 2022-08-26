@@ -4,9 +4,9 @@
 using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Products.Endpoints;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.Products.Management.Modification;
 using Moryx.Tools;
 using Moryx.Workflows;
 using NUnit.Framework;
@@ -19,25 +19,17 @@ namespace Moryx.Products.Management.Tests
     [TestFixture]
     public class ProductConverterTests
     {
-        private Mock<IProductManager> _productManagerMock;
-        private Mock<IRecipeManagement> _recipeManagementMock;
+        private Mock<IProductManagementModification> _productManagerMock;
         private Mock<IWorkplans> _workplanManagementMock;
 
-        private IProductConverter _productConverter;
+        private ProductConverter _productConverter;
 
         [SetUp]
         public void Setup()
         {
-            _productManagerMock = new Mock<IProductManager>();
-            _recipeManagementMock = new Mock<IRecipeManagement>();
-            _workplanManagementMock = new Mock<IWorkplans>();
+            _productManagerMock = new Mock<IProductManagementModification>();
 
-            _productConverter = new ProductConverter()
-            {
-                ProductManager = _productManagerMock.Object,
-                RecipeManagement = _recipeManagementMock.Object,
-                WorkplanManagement = _workplanManagementMock.Object,
-            };
+            _productConverter = new ProductConverter(_productManagerMock.Object);
         }
 
         #region Products
@@ -92,8 +84,8 @@ namespace Moryx.Products.Management.Tests
             // - Expected behavior from the RecipeManagement
             if (recipes.Any())
                 ReflectionTool.TestMode = true;
-            _recipeManagementMock.Setup(rm => rm.GetAllByProduct(It.IsAny<IProductType>())).Returns(recipes);
-            _recipeManagementMock.Setup(rm => rm.Get(It.IsAny<long>())).Returns((long id) => new DummyProductRecipe() { Id = id });
+            _productManagerMock.Setup(rm => rm.GetRecipes(It.IsAny<IProductType>(), RecipeClassification.CloneFilter)).Returns(recipes);
+            _productManagerMock.Setup(rm => rm.LoadRecipe(It.IsAny<long>())).Returns((long id) => new DummyProductRecipe() { Id = id });
             // - Create target ProductType object
             var targetDummyProductType = (DummyProductType)Activator.CreateInstance(originalProductType.GetType());
             targetDummyProductType.Id = 42;
@@ -122,7 +114,7 @@ namespace Moryx.Products.Management.Tests
                 Assert.AreEqual(originalProductType.Name, recoveredOriginal.Name);
                 Assert.AreEqual(originalProductType.State, recoveredOriginal.State);
                 Assert.AreEqual(originalProductType.Identity, recoveredOriginal.Identity);
-                _recipeManagementMock.VerifyNoOtherCalls();
+                _productManagerMock.VerifyNoOtherCalls();
                 _productManagerMock.VerifyNoOtherCalls();
                 return;
             }
@@ -131,10 +123,10 @@ namespace Moryx.Products.Management.Tests
             // - If there are Recipes the RecipeManagement should be called
             if (recipes.Any())
             {
-                _recipeManagementMock.Verify(rm => rm.GetAllByProduct(originalProductType));
-                _recipeManagementMock.Verify(rm => rm.Save(originalProductType.Id, It.Is<List<IProductRecipe>>(list => list.Count == recipes.Count)));
+                _productManagerMock.Verify(rm => rm.GetRecipes(originalProductType, RecipeClassification.CloneFilter));
+                _productManagerMock.Verify(rm => rm.SaveRecipe(It.Is<IProductRecipe>(recipe => recipe == recipes.LastOrDefault())));
                 if (recipes.First().Id != 0)
-                    _recipeManagementMock.Verify(rm => rm.Get(recipes.First().Id));
+                    _productManagerMock.Verify(rm => rm.LoadRecipe(recipes.First().Id));
             }                
             // - If there are ProductPartLinks the ProductManagement should be called
             var targetDummyTypeWithParts = recoveredOriginal as DummyProductTypeWithParts;
@@ -209,7 +201,7 @@ namespace Moryx.Products.Management.Tests
 
 
             // Act
-            var convertedModel = _productConverter.ConvertRecipe(originalRecipe);
+            var convertedModel = ProductConverter.ConvertRecipe(originalRecipe);
             var recoveredOriginal = _productConverter.ConvertRecipeBack(convertedModel, targetDummyRecipe, backupProductType);
 
 
@@ -248,7 +240,7 @@ namespace Moryx.Products.Management.Tests
             };
 
             // Act
-            var convertedmodel = _productConverter.ConvertWorkplan(originalWorkplan);
+            var convertedmodel = ProductConverter.ConvertWorkplan(originalWorkplan);
 
             // Assert
             Assert.AreEqual(originalWorkplan.Id, convertedmodel.Id);

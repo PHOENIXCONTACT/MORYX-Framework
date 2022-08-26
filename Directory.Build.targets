@@ -2,9 +2,8 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxCoreVersion>4.0.0-future.384</MoryxCoreVersion>
+    <MoryxCoreVersion>4.0.0-future.525</MoryxCoreVersion>
     <MoryxClientFrameworkVersion>4.0.0-future.134</MoryxClientFrameworkVersion>
-    <MoryxMaintenanceWebVersion>4.0.0-future.92</MoryxMaintenanceWebVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
@@ -37,11 +36,9 @@
     <PackageReference Update="Moryx.Model.InMemory" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.TestTools.UnitTest" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime" Version="$(MoryxCoreVersion)" />
-    <PackageReference Update="Moryx.Runtime.Wcf" Version="$(MoryxCoreVersion)" />
-    <PackageReference Update="Moryx.Runtime.Maintenance" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxCoreVersion)" />
-    <PackageReference Update="Moryx.Runtime.Kestrel" Version="$(MoryxCoreVersion)" />
-    <PackageReference Update="Moryx.Asp.Extensions" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Runtime.Endpoints" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Maintenance.Web" Version="$(MoryxCoreVersion)" />
 
     <!--ClientFramework dependencies-->
     <PackageReference Update="Moryx.Controls" Version="$(MoryxClientFrameworkVersion)" />
@@ -49,9 +46,6 @@
     <PackageReference Update="Moryx.ClientFramework.Configurator" Version="$(MoryxClientFrameworkVersion)" />
     <PackageReference Update="Moryx.ClientFramework.Kernel" Version="$(MoryxClientFrameworkVersion)" />
     <PackageReference Update="Moryx.ClientFramework.SimpleShell" Version="$(MoryxClientFrameworkVersion)" />
-
-    <!--MaintenanceWeb dependencies-->
-    <PackageReference Update="Moryx.Runtime.Maintenance.Web" Version="$(MoryxMaintenanceWebVersion)" />
 
   </ItemGroup>
 
