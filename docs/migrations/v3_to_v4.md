@@ -114,8 +114,21 @@ Removed:
 - Moryx.Runtime.Maintenance.Web /Replaced by Moryx.Maintenance.Web with razor hosting
 - Moryx.Asp.Extensions // Not needed anymore, Shell related content moved to "Moryx" package
 
+### Database
+With the update to MORYX Core 4 we also update the reference to Entity Framework. The update to Entity Framework Core comes with some changes to the API we are used to, for an overview of the changes provided by Microsoft see [here](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/). In order for you to have less of a headache when searching through the EF Core documentation to find the right translation for your code into the new way of doing things, we list the changes we went through in the subsequent bullet points:
 
-## Add database migrations (with Postgres)
+- The DB contexts requires changes
+    - `DbConfigurationType` attribute was removed
+    - The constructure parameter of the context changed to `DbContextOptions` (The parameterless constructor remains unchanged)
+    - An `OnConfiguring` method needs to be added
+    - The fluent API used in `OnModelCreating` changed:
+    - `.HasRequired(a => a.Property).WithMany(b => b.Property);` => `.HasOne(a => a.Property).WithMany(b => b.Property).IsRequired();`
+    - `.HasOptional(a => a.Property);` => `.HasOne(a => a.Property).WithMany();`
+    - `.HasMany(a => a.Property).WithOptional(b => b.Property);` => `.HasMany(a => a.Property).WithOne(b => b.Property);`
+    - `.HasOptional(a => a.Property).WithMany()` => `.HasOne(a => a.Property).WithMany();`
+- The Configuration.cs for the DB migration was removed, for the new way of setting up a database migration read the section below.
+
+### Add database migrations (with Postgres)
 
 You need, at least, an initial migration for each of your database contexts. [Read more](https://docs.microsoft.com/de-de/ef/core/cli/dotnet#dotnet-ef-migrations-add) about how to add migrations with EntityFramework.
 
@@ -125,17 +138,17 @@ After you navigated to the root directory of the project that contains the datab
 dotnet ef migrations add InitialCreate --startup-project Path\To\StartProject.csproj --output-dir .\Model\Migrations 
 ```
 
-### Set things up
+#### Set things up
 
 In order to run this successfully, you might have to go through some configuration.
 
-#### Required packages
+##### Required packages
 
 The `StartProject.csproj` has to reference 
 
   * `Microsoft.EntityFrameworkCore.Design`
 
-#### Database connection
+##### Database connection
 
 You need to have a connection to the database that corresponds to the context. To find out how this connection is set up, have a look at the contexts `OnConfigure()` method. By default it should look somewhat like this:
 
