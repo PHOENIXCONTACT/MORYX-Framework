@@ -116,6 +116,7 @@ namespace Moryx.Products.Management
                 // Create instance using public and private constructors
                 var step = (WorkplanStepBase)Activator.CreateInstance(type, true);
                 step.Id = stepEntity.StepId;
+                step.Name = stepEntity.Name;
 
                 // Restore output descriptions
                 step.OutputDescriptions = new OutputDescription[stepEntity.OutputDescriptions.Count];
@@ -138,10 +139,6 @@ namespace Moryx.Products.Management
                 // Restore Subworkplan if necessary
                 if (step is ISubworkplanStep subworkplanStep)
                     subworkplanStep.Workplan = LoadWorkplan(stepEntity.SubWorkplan);
-
-                // Restore step name
-                if (step is INamedTaskStep namedTaskStep && !string.IsNullOrEmpty(stepEntity.Name))
-                    namedTaskStep.Name = stepEntity.Name;
 
                 // Link inputs and outputs
                 step.Inputs = RestoreReferences(stepEntity, ConnectorRole.Input, connectors);
