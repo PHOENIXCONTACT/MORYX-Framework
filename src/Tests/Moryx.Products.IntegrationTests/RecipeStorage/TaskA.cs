@@ -9,7 +9,6 @@ namespace Moryx.Products.IntegrationTests
 {
     public class TaskA : TaskStep<ActivityA, ParametersA>
     {
-        public override string Name => nameof(TaskA);
     }
 
     public class ParametersA : Parameters

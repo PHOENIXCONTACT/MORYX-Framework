@@ -20,7 +20,7 @@ namespace Moryx.AbstractionLayer
     /// <typeparam name="TParam">Type of the parameters object</typeparam>
     /// <typeparam name="TProcParam">Intermediate type object for the parameter of the activity</typeparam>
     [DataContract(IsReference = true)]
-    public abstract class TaskStep<TActivity, TProcParam, TParam> : WorkplanStepBase, ITaskStep<TParam>, INamedTaskStep
+    public abstract class TaskStep<TActivity, TProcParam, TParam> : WorkplanStepBase, ITaskStep<TParam>
         where TActivity : IActivity<TProcParam>, new()
         where TProcParam : IParameters
         where TParam : TProcParam, new()
@@ -33,12 +33,6 @@ namespace Moryx.AbstractionLayer
         [DataMember, EntrySerialize]
         public TParam Parameters { get; set; }
 
-        /// <inheritdoc />
-        string INamedTaskStep.Name { get; set; }
-
-        /// <inheritdoc />
-        public override string Name => ((INamedTaskStep)this).Name;
-
         /// <summary>
         /// Instantiate task and provide possible results
         /// </summary>
@@ -47,7 +41,7 @@ namespace Moryx.AbstractionLayer
             Parameters = new TParam();
 
             var displayName = GetType().GetDisplayName();
-            ((INamedTaskStep)this).Name = string.IsNullOrEmpty(displayName) ? GetType().Name : displayName;
+            Name = string.IsNullOrEmpty(displayName) ? GetType().Name : displayName;
 
             var resultEnum = typeof(TActivity).GetCustomAttribute<ActivityResultsAttribute>().ResultEnum;
             OutputDescriptions = DescriptionsFromEnum(resultEnum);
