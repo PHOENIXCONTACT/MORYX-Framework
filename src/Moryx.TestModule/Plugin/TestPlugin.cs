@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Modules;
 
@@ -11,6 +12,9 @@ namespace Moryx.TestModule
     public class TestPlugin : ITestPlugin
     {
         public const string ComponentName = "TestPlugin";
+
+        [UseChild("Plugin")]
+        public ILogger Logger { get; set; }
 
         public void Initialize(TestPluginConfig config)
         {

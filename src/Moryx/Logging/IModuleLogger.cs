@@ -14,14 +14,5 @@ namespace Moryx.Logging
     /// </summary>
     public interface IModuleLogger : ILogger, INamedChildContainer<IModuleLogger>
     {
-        /// <summary>
-        /// Name of this logger instance
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Define a target for all messages with a level of <see cref="LogLevel.Warning"/> or higher
-        /// </summary>
-        void SetNotificationTarget(Action<LogLevel, string, Exception> notificationTarget);
     }
 }

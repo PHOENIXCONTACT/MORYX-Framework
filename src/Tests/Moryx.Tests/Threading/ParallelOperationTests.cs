@@ -25,14 +25,13 @@ namespace Moryx.Tests.Threading
         private ParallelOperations _threadFactory;
         private readonly ManualResetEventSlim _callbackReceivedEvent = new ManualResetEventSlim(false);
         
-        private IModuleLogger _logger;
+        private ModuleLogger _logger;
         private Tuple<LogLevel, string, Exception> _message;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _logger = new ModuleLogger("Dummy", GetType(), new NullLoggerFactory());
-            _logger.SetNotificationTarget((l, m, e) => _message = new (l, m, e));
+            _logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, m, e) => _message = new(l, m, e));
         }
 
         [OneTimeTearDown]

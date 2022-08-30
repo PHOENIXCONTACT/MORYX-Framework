@@ -32,7 +32,7 @@ namespace Moryx.Communication.Endpoints
         /// <summary>
         /// Logger of the connector
         /// </summary>
-        protected IModuleLogger Logger { get; }
+        protected ILogger Logger { get; }
 
         /// <summary>
         /// Gets the current client version of the client

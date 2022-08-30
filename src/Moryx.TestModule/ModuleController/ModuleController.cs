@@ -49,6 +49,10 @@ namespace Moryx.TestModule
         {
             Thread.Sleep(Config.SleepTime); // Just for system testing.
 
+            var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
+            plugin.Start();
+
+               
             // Activate facades
             ActivateFacade(_testModule);
         }
