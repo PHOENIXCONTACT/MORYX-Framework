@@ -4,15 +4,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Moryx.Asp.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace StartProject.Asp
 {
     public class Startup
     {
+        public IConfiguration Config { get; }
+
+        public Startup(IConfiguration config)
+        {
+            Config = config;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+
             services.AddRazorPages();
 
             services.AddControllers(options =>
@@ -34,6 +43,9 @@ namespace StartProject.Asp
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
+
+            var section = Config.GetSection("TestModule");
+            services.Configure<ModuleConfig>(section);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

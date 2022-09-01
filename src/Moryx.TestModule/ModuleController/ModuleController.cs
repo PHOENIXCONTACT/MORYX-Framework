@@ -4,6 +4,7 @@
 using System.ComponentModel;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moryx.Communication.Endpoints;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -29,10 +30,12 @@ namespace Moryx.TestModule
         public override string Name => "TestModule";
 
 
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+        public ModuleController(IOptions<ModuleConfig> options, IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
             : base(containerFactory, configManager, loggerFactory)
         {
             ContextManager = contextManager;
+
+            var config = options.Value;
         }
 
 
