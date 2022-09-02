@@ -1,12 +1,8 @@
 ﻿@page
-@using Moryx.TestModule
+@using Moryx.TestModule.Kestrel
 @model IndexModel
-@inject ITestFacade facade
-@{
-    ViewData["Title"] = "Home page";
-}
+
 
 <div class="text-center">
-    <h1 class="display-4">Welcome with @(facade.Bla)</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Redirect to <a href="/Maintenance">MORYX Maintenance</a>.</p>
 </div>

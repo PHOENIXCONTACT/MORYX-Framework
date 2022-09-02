@@ -1,14 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Moryx;
+using Moryx.Asp.Integration;
 using Moryx.Runtime.Kernel;
+using System.IO;
 
 namespace StartProject.Asp
 {
@@ -16,13 +10,22 @@ namespace StartProject.Asp
     {
         public static int Main(string[] args)
         {
+            var directory = Directory.GetCurrentDirectory();
+
+            // MORYX modifies current directory
             var moryxRuntime = new HeartOfGold(args);
             moryxRuntime.Load();
-            
+
             var host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices(serviceCollection =>
+                {
+                    serviceCollection.AddMoryxKernel(moryxRuntime);
+                    serviceCollection.AddMoryxFacades(moryxRuntime);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup(conf => new Startup(moryxRuntime));
+                    webBuilder.UseContentRoot(directory);
+                    webBuilder.UseStartup<Startup>();
                 }).Build();
 
             host.Start();

@@ -1,0 +1,37 @@
+%custom-bootstrap-variables {
+    @import "./node_modules/bootstrap/scss/functions";
+    @import "./node_modules/bootstrap/scss/variables";
+
+    // Variables
+    //
+    // Variables should follow the `$component-state-property-size` formula for
+    // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+    $blue:    #007bff !global;
+    $indigo:  #6610f2 !global;
+    $purple:  #6f42c1 !global;
+    $pink:    #e83e8c !global;
+    $red:     #d9534f !global;
+    $orange:  #f0ad4e !global;
+    $yellow:  #ffc107 !global;
+    $green:   #34861c !global;
+    $teal:    #5bc0de !global;
+    $cyan:    #17a2b8 !global;
+    $phoenix: #24959E !global;
+    
+    $primary:       $phoenix !global;
+    $secondary:     $white !global;
+    $success:       $green !global;
+    $info:          $cyan !global;
+    $warning:       $yellow !global;
+    $danger:        $red !global;
+    $light:         $gray-300 !global;
+    $dark:          $gray-800 !global;
+
+    $border-radius: 4px !global;
+    $border-radius-lg: 6px !global;
+    $border-radius-sm: 3px !global;
+    $border-color: $gray-800 !global;
+
+    $font-family-sans-serif: "Helvetica Neue", Helvetica, Arial, sans-serif !global;
+}

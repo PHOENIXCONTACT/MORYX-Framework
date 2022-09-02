@@ -1,32 +1,37 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx;
 using Moryx.Asp.Integration;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace StartProject.Asp
 {
     public class Startup
     {
-        private readonly IApplicationRuntime _moryxRuntime;
-
-        public Startup(IApplicationRuntime moryxRuntime)
-        {
-            _moryxRuntime = moryxRuntime;
-        }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
 
-            services.AddMoryxFacades(_moryxRuntime);
+            services.AddControllers()
+                .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                    .WithOrigins("http://localhost:8080") // Maintenance.Web usually runs on port 8080
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +40,9 @@ namespace StartProject.Asp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
@@ -45,10 +53,16 @@ namespace StartProject.Asp
 
             app.UseRouting();
 
+            if (env.IsDevelopment())
+            {
+                app.UseCors("CorsPolicy");
+            }
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
         }
