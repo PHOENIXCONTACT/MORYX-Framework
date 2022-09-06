@@ -874,7 +874,7 @@ namespace Moryx.Products.Management
                     // Update all parts that are also present as entities
                     foreach (var partEntity in partEntityGroups[partGroup.Key.Name])
                     {
-                        var part = partGroup.Value.First(p => p.PartLink.Id == partEntity.PartLinkId);
+                        var part = partGroup.Value.First(p => p.PartLink.Id == partEntity.PartLinkEntityId);
                         TransformInstance(uow, partEntity, part);
                     }
                 }
@@ -885,7 +885,7 @@ namespace Moryx.Products.Management
                     var partArticles = TransformInstances(uow, partCollection);
                     for (var index = 0; index < partArticles.Length; index++)
                     {
-                        partArticles[index].PartLink = partLinks.Find(pl => pl?.Id == partCollection[index].PartLinkId.Value);
+                        partArticles[index].PartLink = partLinks.Find(pl => pl?.Id == partCollection[index].PartLinkEntityId.Value);
                     }
 
                     if (typeof(ProductInstance).IsAssignableFrom(partGroup.Key.PropertyType) && partArticles.Length == 0)
@@ -958,7 +958,7 @@ namespace Moryx.Products.Management
                         continue;
 
                     partEntity.Parent = archived;
-                    partEntity.PartLinkId = part.PartLink.Id;
+                    partEntity.PartLinkEntityId = part.PartLink.Id;
                 }
             }
 

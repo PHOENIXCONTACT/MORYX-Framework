@@ -865,7 +865,7 @@ namespace Moryx.Products.IntegrationTests
                 var parts = root.Parts;
                 Assert.AreEqual(1, parts.Count, "Invalid number of parts!"); // needles will be skipped for saving
 
-                var single = parts.FirstOrDefault(p => p.PartLinkId == watch.WatchFace.Id);
+                var single = parts.FirstOrDefault(p => p.PartLinkEntityId == watch.WatchFace.Id);
                 Assert.NotNull(single, "Single part not saved!");
             }
 

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.Products.Model.Migrations
+namespace Moryx.Products.Model.Model.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -130,8 +130,7 @@ namespace Moryx.Products.Model.Migrations
                     Index = table.Column<int>(nullable: false),
                     Role = table.Column<int>(nullable: false),
                     ConnectorId = table.Column<long>(nullable: true),
-                    StepId = table.Column<long>(nullable: false),
-                    WorkplanStepId = table.Column<long>(nullable: true)
+                    WorkplanStepId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -149,7 +148,7 @@ namespace Moryx.Products.Model.Migrations
                         principalSchema: "public",
                         principalTable: "WorkplanSteps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,14 +162,14 @@ namespace Moryx.Products.Model.Migrations
                     OutputType = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     MappingValue = table.Column<long>(nullable: false),
-                    StepEntityId = table.Column<long>(nullable: false)
+                    WorkplanStepId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WorkplanOutputDescriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WorkplanOutputDescriptions_WorkplanSteps_StepEntityId",
-                        column: x => x.StepEntityId,
+                        name: "FK_WorkplanOutputDescriptions_WorkplanSteps_WorkplanStepId",
+                        column: x => x.WorkplanStepId,
                         principalSchema: "public",
                         principalTable: "WorkplanSteps",
                         principalColumn: "Id",
@@ -187,7 +186,7 @@ namespace Moryx.Products.Model.Migrations
                     State = table.Column<long>(nullable: false),
                     ProductId = table.Column<long>(nullable: false),
                     ParentId = table.Column<long>(nullable: true),
-                    PartLinkId = table.Column<long>(nullable: true),
+                    PartLinkEntityId = table.Column<long>(nullable: true),
                     Integer1 = table.Column<long>(nullable: false),
                     Integer2 = table.Column<long>(nullable: false),
                     Integer3 = table.Column<long>(nullable: false),
@@ -462,10 +461,10 @@ namespace Moryx.Products.Model.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductInstances_PartLinkId",
+                name: "IX_ProductInstances_PartLinkEntityId",
                 schema: "public",
                 table: "ProductInstances",
-                column: "PartLinkId");
+                column: "PartLinkEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductInstances_ProductId",
@@ -522,10 +521,10 @@ namespace Moryx.Products.Model.Migrations
                 column: "WorkplanStepId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkplanOutputDescriptions_StepEntityId",
+                name: "IX_WorkplanOutputDescriptions_WorkplanStepId",
                 schema: "public",
                 table: "WorkplanOutputDescriptions",
-                column: "StepEntityId");
+                column: "WorkplanStepId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkplanReferences_SourceId",
@@ -562,10 +561,10 @@ namespace Moryx.Products.Model.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ProductInstances_PartLinks_PartLinkId",
+                name: "FK_ProductInstances_PartLinks_PartLinkEntityId",
                 schema: "public",
                 table: "ProductInstances",
-                column: "PartLinkId",
+                column: "PartLinkEntityId",
                 principalSchema: "public",
                 principalTable: "PartLinks",
                 principalColumn: "Id",

@@ -15,7 +15,7 @@ namespace Moryx.Products.Model
 
         public virtual long? ParentId { get; set; }
 
-        public virtual long? PartLinkId { get; set; }
+        public virtual long? PartLinkEntityId { get; set; }
 
         public virtual ProductTypeEntity Product { get; set; }
 
