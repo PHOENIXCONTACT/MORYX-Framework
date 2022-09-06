@@ -4,7 +4,7 @@
 using Moryx.Serialization;
 using System.Runtime.Serialization;
 
-namespace Moryx.AbstractionLayer.Products.Endpoints.Model
+namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     [DataContract]
     public class ProductInstanceModel

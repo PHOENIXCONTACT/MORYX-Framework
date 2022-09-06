@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Interaction
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     /// <summary>
     /// Type model for a reference property on a resource type

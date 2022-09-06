@@ -9,7 +9,7 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.Products.Management.Modification
+namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     /// <summary>
     /// Specialized serialization that only considers properties of derived classes

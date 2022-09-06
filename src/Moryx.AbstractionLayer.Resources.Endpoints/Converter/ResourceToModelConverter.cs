@@ -11,7 +11,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 using Moryx.Tools;
 
-namespace Moryx.Resources.Interaction.Converter
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     /// <summary>
     /// Converts Resources to ResourceModel

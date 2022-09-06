@@ -3,11 +3,10 @@
 
 using System;
 using System.Runtime.Serialization;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Serialization;
 
-namespace Moryx.Products.Management.Modification
+namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     /// <summary>
     /// DTO representation of a recipe

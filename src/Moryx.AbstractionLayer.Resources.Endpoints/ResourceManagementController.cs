@@ -9,8 +9,6 @@ using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Moryx.Resources.Interaction;
-using Moryx.Resources.Interaction.Converter;
 using Moryx.Serialization;
 using Moryx.Tools;
 

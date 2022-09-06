@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
-namespace Moryx.Resources.Interaction
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     /// <summary>
     /// Base model used by details view and tree

@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Moryx.Resources.Interaction
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     /// <summary>
     /// DTO that represents the reference of one resource with another
