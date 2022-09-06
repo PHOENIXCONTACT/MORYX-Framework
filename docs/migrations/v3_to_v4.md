@@ -1,6 +1,11 @@
 ## Migrate to Core v4
 
 For this major release the main motivation was switching from our own MORYX Runtime to ASP.NET Core with MORYX extensions.
+It includes replacing EntityFramework 6 with EntityFramework Core as well as the replacement of the First Level DI-Container. 
+We also removed our own implementation of an injectable logger and will use the very similar logger API from Microsoft from now on.
+Regarding the configuration of our module, we are able to simplify things here as well. Tbc...
+Lastly, we remove the support for .Net Framework with the step to MORYX Core v4.
+For more information, please refer to the respective paragraphs below.
 
 ### .NET Framework
 
@@ -53,7 +58,7 @@ public static void Main(string[] args)
 }
 ````
 
-Constructor for a `ModuleController`. This also includes further imports like `IDbContextManager`.
+Constructor for a `ModuleController`. This also includes further imports like `IDbContextManager`. (Beaware that the internal dependency injection within a module still uses castel and, hence, works with parameter injection)
 
 ````cs
 public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
@@ -94,7 +99,7 @@ Changes:
 
 ### Maintenance
 
-The Maintenance module and its internally hosted web UI are gone. They are replaced by kernel based ASP endpoints and a razor hosted frontend.
+The Maintenance module and its internally hosted web UI are gone. They are replaced by kernel based ASP endpoints and a razor hosted frontend. With the changes to logging the related tab in the UI was removed as well as the index page that provided an overview of the modules. The module tab contains a list of all modules in similar fashion and the additional statistics shown on the index page cannot be provided in .Net Core.
 
 ### Package changes
 
@@ -115,11 +120,11 @@ Removed:
 - Moryx.Asp.Extensions // Not needed anymore, Shell related content moved to "Moryx" package
 
 ### Database
-With the update to MORYX Core 4 we also update the reference to Entity Framework. The update to Entity Framework Core comes with some changes to the API we are used to, for an overview of the changes provided by Microsoft see [here](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/). In order for you to have less of a headache when searching through the EF Core documentation to find the right translation for your code into the new way of doing things, we list the changes we went through in the subsequent bullet points:
+With the update to MORYX Core 4 we also update the reference to Entity Framework. The update to Entity Framework Core comes with some changes to the API we are used to, for an overview of the changes provided by Microsoft see [here](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/). In order for you to have less of a headache when searching through the EF Core documentation to find the right translation for your code into the new way of doing things (assuming that you want to keep an identical database structure), we list the changes we went through in the subsequent bullet points:
 
 - The DB contexts requires changes
     - `DbConfigurationType` attribute was removed
-    - The constructure parameter of the context changed to `DbContextOptions` (The parameterless constructor remains unchanged)
+    - The constructor parameter of the context changed to `DbContextOptions` (The parameterless constructor remains unchanged)
     - An `OnConfiguring` method needs to be added
     - The fluent API used in `OnModelCreating` changed:
     - `.HasRequired(a => a.Property).WithMany(b => b.Property);` => `.HasOne(a => a.Property).WithMany(b => b.Property).IsRequired();`
@@ -129,6 +134,8 @@ With the update to MORYX Core 4 we also update the reference to Entity Framework
 - The Configuration.cs for the DB migration was removed, for the new way of setting up a database migration read the section below.
 
 ### Add database migrations (with Postgres)
+
+*This section assumes that you are starting with a fresh database, if you already have an existing database plese skip this section*
 
 You need, at least, an initial migration for each of your database contexts. [Read more](https://docs.microsoft.com/de-de/ef/core/cli/dotnet#dotnet-ef-migrations-add) about how to add migrations with EntityFramework.
 
@@ -171,3 +178,7 @@ You can setup your connection string directly there, but it is **not recommended
 However, this is the go to place to look for how to provide your StartProject with a `ConnectionString`.
 
 **Important!** Remember to not push sensitive data to your version control system!
+
+### Migrate your existing database migrations
+
+Well, "There isn't really a feasible way to port existing EF6 migrations to EF Core".. according to the [microsoft documentation](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/port-code#existing-migrations) the best solution is to make sure the databases are up to date with your latest migration and then start anew from this state. The [migration guide of the Abstraktion Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer/blob/docs/migration-guide/docs/migrations/v5_to_v6.md) describes our solution for migrating the modul databases.
