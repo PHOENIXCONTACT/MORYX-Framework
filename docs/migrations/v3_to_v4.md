@@ -68,7 +68,7 @@ public ModuleController(IModuleContainerFactory containerFactory, IConfigManager
 }
 ````
 
-When exporting facades from you module, the new structure no longer exports facades with implicit polymorphism. Instead when your facade provides multiple interfaces, for example after a new minor version, you need to export each one explicitly.
+When exporting facades from you module, the new structure no longer exports facades with implicit polymorphism. Instead when your facade provides multiple interfaces, for example after a new minor version, you need to export each one explicitly. 
 
 ````cs
 public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, 
@@ -82,6 +82,8 @@ IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManage
 IProductManagementTypeSearch IFacadeContainer<IProductManagementTypeSearch>.Facade => _productManagement;
 IProductManagementModification IFacadeContainer<IProductManagementModification>.Facade => _productManagement;    
 ````
+Lastly, the `ServerModule` is not needed anymore and was removed.
+
 
 ### Hosting
 
@@ -131,6 +133,7 @@ With the update to MORYX Core 4 we also update the reference to Entity Framework
     - `.HasOptional(a => a.Property);` => `.HasOne(a => a.Property).WithMany();`
     - `.HasMany(a => a.Property).WithOptional(b => b.Property);` => `.HasMany(a => a.Property).WithOne(b => b.Property);`
     - `.HasOptional(a => a.Property).WithMany()` => `.HasOne(a => a.Property).WithMany();`
+- Specifying the ContextMode explicitly is not required anymore
 - The Configuration.cs for the DB migration was removed, for the new way of setting up a database migration read the section below.
 
 ### Add database migrations (with Postgres)
