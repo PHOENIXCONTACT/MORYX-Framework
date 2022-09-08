@@ -28,8 +28,8 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             _mockConfigManager = new Mock<IConfigManager>();
             var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = new List<ManagedModuleConfig>()};
-            _mockConfigManager.Setup(mock => mock.GetConfiguration<ModuleManagerConfig>()).Returns(moduleManagerConfig);
-            _mockConfigManager.Setup(mock => mock.GetConfiguration<RuntimeConfigManagerTestConfig2>()).Returns(new RuntimeConfigManagerTestConfig2());
+            _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false)).Returns(moduleManagerConfig);
+            _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false)).Returns(new RuntimeConfigManagerTestConfig2());
 
             _mockLogger = new Mock<IModuleLogger>();
             _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);

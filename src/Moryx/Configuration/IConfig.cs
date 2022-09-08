@@ -28,9 +28,8 @@ namespace Moryx.Configuration
 
     /// <summary>
     /// Base interface for all config objects managed by the <see cref="IConfigManager"/> 
-    /// and lower bound for the <see cref="IConfigManager.GetConfiguration{T}(bool)"/> method.
     /// </summary>
-    public interface IConfig
+    public interface IConfig : IInitializable
     {
         /// <summary>
         /// Current state of the config object. This should be decorated with the data member in order to save

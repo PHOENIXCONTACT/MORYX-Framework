@@ -213,7 +213,7 @@ namespace Moryx.Runtime.Kernel
             var configDir = env.Options.ConfigDir;
             if (!Directory.Exists(configDir))
                 Directory.CreateDirectory(configDir);
-            var configManager = _container.Resolve<IRuntimeConfigManager>();
+            var configManager = _container.Resolve<ConfigManager>();
             configManager.ConfigDirectory = configDir;
 
             // Setup environment

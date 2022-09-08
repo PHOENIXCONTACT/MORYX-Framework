@@ -10,9 +10,9 @@ namespace Moryx.Runtime.Kernel
 {
     internal class SharedConfigProvider : IValueProvider
     {
-        private readonly IRuntimeConfigManager _configManager;
+        private readonly IConfigManager _configManager;
 
-        public SharedConfigProvider(IRuntimeConfigManager configManager)
+        public SharedConfigProvider(IConfigManager configManager)
         {
             _configManager = configManager;
         }
@@ -23,7 +23,7 @@ namespace Moryx.Runtime.Kernel
             if (sharedAtt == null || !typeof(IConfig).IsAssignableFrom(property.PropertyType))
                 return ValueProviderResult.Skipped;
 
-            var sharedConf = _configManager.GetConfiguration(property.PropertyType, sharedAtt.UseCopy);
+            var sharedConf = _configManager.GetConfiguration(property.PropertyType, property.PropertyType.FullName, sharedAtt.UseCopy);
             property.SetValue(parent, sharedConf);
             return ValueProviderResult.Handled;
         }

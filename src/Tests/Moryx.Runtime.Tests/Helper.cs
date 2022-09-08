@@ -43,6 +43,11 @@ namespace Moryx.Runtime.Tests
 
         [ModuleStrategy(typeof(IStrategy))]
         public string StrategyName { get; set; }
+
+        public void Initialize()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class TestException : Exception

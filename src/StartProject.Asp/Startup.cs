@@ -43,9 +43,6 @@ namespace StartProject.Asp
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
-
-            var section = Config.GetSection("TestModule");
-            services.Configure<ModuleConfig>(section);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

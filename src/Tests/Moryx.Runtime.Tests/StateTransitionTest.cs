@@ -8,6 +8,8 @@ using Moryx.Runtime.Tests.Mocks;
 using Moryx.Runtime.Tests.Modules;
 using Moq;
 using NUnit.Framework;
+using Moryx.Configuration;
+using System;
 
 namespace Moryx.Runtime.Tests
 {
@@ -15,13 +17,13 @@ namespace Moryx.Runtime.Tests
     public class StateTransitionTest
     {
         private TestModule _moduleUnderTest;
-        private Mock<IRuntimeConfigManager> _configManagerMock;
+        private Mock<IConfigManager> _configManagerMock;
 
         [SetUp]
         public void Setup()
         {
-            _configManagerMock = new Mock<IRuntimeConfigManager>();
-            _configManagerMock.Setup(c => c.GetConfiguration<TestConfig>()).Returns(new TestConfig
+            _configManagerMock = new Mock<IConfigManager>();
+            _configManagerMock.Setup(c => c.GetConfiguration(typeof(TestConfig), It.IsAny<string>(), false)).Returns(new TestConfig
             {
                 Strategy = new StrategyConfig()
             });

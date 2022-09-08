@@ -4,6 +4,7 @@
 using System.IO;
 using System.Linq;
 using Moryx.Configuration;
+using Moryx.Runtime.Kernel;
 using NUnit.Framework;
 
 namespace Moryx.Tests.Configuration
@@ -77,7 +78,7 @@ namespace Moryx.Tests.Configuration
             config.DummyNumber = 0;
             _configManager.SaveConfiguration(config);
 
-            config = _configManager.GetConfiguration<TestConfig>();
+            config = _configManager.GetConfiguration<TestConfig>(true);
             Assert.AreEqual(DefaultValues.Number, config.DummyNumber, "Default not restored");
         }
 
@@ -87,7 +88,7 @@ namespace Moryx.Tests.Configuration
             const string configName = "Moryx.Tests.Configuration.TestConfig";
 
             // Write faulty config to file
-            var fileName = Path.Combine(_fullConfigDir, configName + ConfigConstants.FileExtension);
+            var fileName = Path.Combine(_fullConfigDir, configName + ConfigManager.FileExtension);
             File.WriteAllText(fileName, FaultyConfig.Content());
 
             // Load config an check if present values where preserved
@@ -111,12 +112,11 @@ namespace Moryx.Tests.Configuration
         [Test]
         public void TestGetCached()
         {
-            var config1 = _configManager.GetConfiguration<TestConfig>();
+            var config1 = _configManager.GetConfiguration<TestConfig>(true);
             var config2 = _configManager.GetConfiguration<TestConfig>(false);
 
             config1.DummyNumber++;
 
-            // The ConfigManager does not cahce at all. Therefore it should return always a copy.
             Assert.AreNotEqual(config1.DummyNumber, config2.DummyNumber);
         }
 
@@ -133,7 +133,7 @@ namespace Moryx.Tests.Configuration
             _configManager.SaveConfiguration(config, configName);
 
             //Assert
-            var configPath = Path.Combine(_fullConfigDir, configName + ConfigConstants.FileExtension);
+            var configPath = Path.Combine(_fullConfigDir, configName + ConfigManager.FileExtension);
             Assert.IsTrue(File.Exists(configPath), "Config file was not created");
 
             var reloaded = _configManager.GetConfiguration<TestConfig>(configName);
