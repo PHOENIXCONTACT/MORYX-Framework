@@ -3,13 +3,16 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiBriefcase, mdiCheckboxMultipleBlank, mdiComment} from "@mdi/js";
+import { mdiBriefcase, mdiCheckboxMultipleBlank, mdiComment, mdiDatabase, mdiHexagonMultiple} from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import { Card, CardBody, CardHeader, Col, Row } from "reactstrap";
+import Nav from "reactstrap/lib/Nav";
+import Navbar from "reactstrap/lib/Navbar";
+import NavItem from "reactstrap/lib/NavItem";
 import RoutingMenu from "../../common/components/Menu/RoutingMenu";
 import MenuItemModel from "../../common/models/MenuItemModel";
 import MenuModel from "../../common/models/MenuModel";
@@ -97,8 +100,22 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                 <Col md={3}>
                     <Card>
                         <CardHeader tag="h2">
-                            <Icon path={mdiCheckboxMultipleBlank} className="icon right-space" />
-                            Available database models
+                        <Navbar className="navbar-default" expand="md">
+                            <Nav className="navbar-left" navbar={true}>
+                                <NavItem>
+                                    <Link to="/modules">
+                                        <Icon path={mdiHexagonMultiple} className="icon right-space" />
+                                        Modules
+                                    </Link>
+                                </NavItem>
+                                <NavItem  className="active">
+                                    <Link to="/databases">
+                                        <Icon path={mdiDatabase}className="icon right-space" />
+                                        Databases
+                                    </Link>
+                                </NavItem>
+                            </Nav>
+                        </Navbar>
                         </CardHeader>
                         <CardBody>
                             { this.state.IsLoading ? (
