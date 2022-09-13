@@ -78,8 +78,7 @@ namespace Moryx.Runtime.Modules
         void IServerModuleStateContext.Initialize()
         {
             // Activate logging
-            var logger = new ModuleLogger(GetType().Namespace, GetType(), LoggerFactory);
-            logger.SetNotificationTarget(Notifications.AddFromLogStream);
+            var logger = new ModuleLogger(GetType().Namespace, LoggerFactory, Notifications.AddFromLogStream);
 
             Logger.Log(LogLevel.Information, "{0} is initializing...", Name);
 
@@ -93,7 +92,8 @@ namespace Moryx.Runtime.Modules
                 // Register instances for this cycle
                 .SetInstance(Config)
                 .SetInstance(LoggerFactory)
-                .SetInstance<IModuleLogger>(logger);
+                .SetInstance<IModuleLogger>(logger, "ModuleLogger")
+                .SetInstance<ILogger>(logger, "Logger");
 
             OnInitialize();
 

@@ -13,7 +13,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
 
         public BinaryConnectionFactoryMock()
         {
-            _logger = new ModuleLogger("Dummy", typeof(BinaryConnectionFactoryMock), new NullLoggerFactory());
+            _logger = new ModuleLogger("Dummy", new NullLoggerFactory());
         }
 
         public IBinaryConnection Create(BinaryConnectionConfig config, IMessageValidator validator)

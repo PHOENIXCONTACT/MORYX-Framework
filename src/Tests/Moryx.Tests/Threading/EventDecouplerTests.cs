@@ -26,8 +26,7 @@ namespace Moryx.Tests.Threading
         [SetUp]
         public void Setup()
         {
-            var logger = new ModuleLogger("Dummy", typeof(InvocationTarget), new NullLoggerFactory());
-            logger.SetNotificationTarget((l, m, e) => _message = new(l, m, e));
+            var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, m, e) => _message = new(l, m, e));
 
             _message = null;
 
@@ -126,8 +125,8 @@ namespace Moryx.Tests.Threading
 
             public InvocationTarget()
             {
-                Logger = new ModuleLogger("Dummy", typeof(InvocationTarget), new NullLoggerFactory());
-                Logger.SetNotificationTarget((l, m, e) => Message = new(l, m, e));
+                var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, m, e) => Message = new(l, m, e));
+                Logger = logger;
             }
 
             public void FaultyListener(object sender, EventArgs e)

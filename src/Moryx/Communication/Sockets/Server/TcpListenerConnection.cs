@@ -18,13 +18,13 @@ namespace Moryx.Communication.Sockets
     /// </summary>
     [ExpectedConfig(typeof(TcpListenerConfig))]
     [Plugin(LifeCycle.Transient, typeof(IBinaryConnection), Name = nameof(TcpListenerConnection))]
-    public class TcpListenerConnection : IBinaryConnection, IStateContext, ILoggingComponent, IDisposable
+    public class TcpListenerConnection : IBinaryConnection, IStateContext, IDisposable
     {
         #region Dependencies
 
         /// <inheritdoc />
         [UseChild]
-        public IModuleLogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         #endregion
 

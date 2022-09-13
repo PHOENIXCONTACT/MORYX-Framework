@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
+using Moryx.Container;
 using System;
 
 namespace Moryx.Logging
@@ -14,11 +15,9 @@ namespace Moryx.Logging
         private ILogger _logger;
         private readonly ILoggerFactory _loggerFactory;
 
-        private string _hostName;
-
         public string Name { get; }
 
-        protected Action<LogLevel, string, Exception> NotificationTarget { get; set; }
+        protected Action<LogLevel, string, Exception> NotificationTarget { get; }
 
         public bool IsEnabled(LogLevel logLevel)
         {
@@ -30,16 +29,20 @@ namespace Moryx.Logging
             return _logger.BeginScope(state);
         }
 
-        public ModuleLogger(string name, Type targetType, ILoggerFactory loggerFactory)
-            : this(name, targetType, loggerFactory, loggerFactory.CreateLogger(name))
+        public ModuleLogger(string name, ILoggerFactory loggerFactory)
+            : this(name, loggerFactory, loggerFactory.CreateLogger(name), null)
         {
         }
 
-        private ModuleLogger(string name, Type targetType, ILoggerFactory loggerFactory, ILogger logger)
+        public ModuleLogger(string name, ILoggerFactory loggerFactory, Action<LogLevel, string, Exception> notificationTarget)
+            : this(name, loggerFactory, loggerFactory.CreateLogger(name), notificationTarget)
+        {
+        }
+
+        private ModuleLogger(string name, ILoggerFactory loggerFactory, ILogger logger, Action<LogLevel, string, Exception> notificationTarget)
         {
             Name = name;
-
-            _hostName = targetType?.Name ?? "Unknown";
+            NotificationTarget = notificationTarget;
 
             _logger = logger;
             _loggerFactory = loggerFactory;
@@ -48,17 +51,9 @@ namespace Moryx.Logging
         public IModuleLogger GetChild(string name, Type target)
         {
             var logger = string.IsNullOrEmpty(name)
-                ? new ModuleLogger(Name, target, _loggerFactory, _logger)
-                : new ModuleLogger($"{Name}.{name}", target, _loggerFactory);
-
-            logger.NotificationTarget = NotificationTarget;
-
+                ? new ModuleLogger(Name, _loggerFactory, _logger, NotificationTarget)
+                : new ModuleLogger($"{Name}.{name}", _loggerFactory, NotificationTarget);
             return logger;
-        }
-
-        public void SetNotificationTarget(Action<LogLevel, string, Exception> notificationTarget)
-        {
-            NotificationTarget = notificationTarget;
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
@@ -66,7 +61,7 @@ namespace Moryx.Logging
             _logger.Log(logLevel, eventId, state, exception, formatter);
 
             if (logLevel >= LogLevel.Warning)
-                NotificationTarget(logLevel, formatter(state, exception), exception);
+                NotificationTarget?.Invoke(logLevel, formatter(state, exception), exception);
         }
     }
 }

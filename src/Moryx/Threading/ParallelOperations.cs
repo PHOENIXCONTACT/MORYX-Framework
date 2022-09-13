@@ -64,7 +64,7 @@ namespace Moryx.Threading
         /// Create parallel operations within module
         /// </summary>
         /// <param name="logger"></param>
-        public ParallelOperations(IModuleLogger logger)
+        public ParallelOperations(ILogger logger)
         {
             Logger = logger;
         }

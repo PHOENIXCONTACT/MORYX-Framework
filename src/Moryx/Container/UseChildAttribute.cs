@@ -25,9 +25,8 @@ namespace Moryx.Container
         /// <summary>
         /// Request a child instance with the same name custom tailored for this component
         /// </summary>
-        public UseChildAttribute()
+        public UseChildAttribute() : this(string.Empty)
         {
-            ChildName = string.Empty;
         }
 
         /// <summary>
