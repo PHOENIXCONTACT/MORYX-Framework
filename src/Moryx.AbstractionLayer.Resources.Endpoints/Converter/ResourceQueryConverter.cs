@@ -6,7 +6,7 @@ using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
-namespace Moryx.Resources.Interaction.Converter
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     internal class ResourceQueryConverter : ResourceToModelConverter
     {

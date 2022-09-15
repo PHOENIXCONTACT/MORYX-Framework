@@ -4,12 +4,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.Products.Management.Modification;
 using Moryx.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Moryx.AbstractionLayer.Products.Endpoints.Model;
 using Moryx.Serialization;
 using System.Net;
 

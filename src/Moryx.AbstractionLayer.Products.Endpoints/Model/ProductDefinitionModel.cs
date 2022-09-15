@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
-namespace Moryx.Products.Management.Modification
+namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     [DataContract]
     public class ProductDefinitionModel

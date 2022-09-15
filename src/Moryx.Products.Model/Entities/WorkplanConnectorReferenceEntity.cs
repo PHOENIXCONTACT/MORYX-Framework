@@ -13,7 +13,7 @@ namespace Moryx.Products.Model
 
         public virtual long? ConnectorId { get; set; }
 
-        public virtual long StepId { get; set; }
+        public virtual long WorkplanStepId { get; set; }
 
         public virtual WorkplanConnectorEntity Connector { get; set; }
 

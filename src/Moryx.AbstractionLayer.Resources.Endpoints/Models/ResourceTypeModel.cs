@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
-namespace Moryx.Resources.Interaction
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     /// <summary>
     /// Type item for the tree

@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Interaction
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     /// <summary>
     /// Enum to classify the current value of the reference property

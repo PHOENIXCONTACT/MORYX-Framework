@@ -1,9 +1,7 @@
 ﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Products.Endpoints.Model;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.Products.Management.Modification;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Workflows;

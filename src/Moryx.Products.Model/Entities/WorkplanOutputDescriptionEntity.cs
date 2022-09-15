@@ -15,7 +15,7 @@ namespace Moryx.Products.Model
 
         public virtual long MappingValue { get; set; }
 
-        public virtual long StepEntityId { get; set; }
+        public virtual long WorkplanStepId { get; set; }
 
         public virtual WorkplanStepEntity WorkplanStep { get; set; }
     }

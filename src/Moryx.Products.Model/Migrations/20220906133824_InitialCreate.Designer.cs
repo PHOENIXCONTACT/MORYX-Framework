@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Products.Model;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.Products.Model.Migrations
+namespace Moryx.Products.Model.Model.Migrations
 {
     [DbContext(typeof(ProductsContext))]
-    [Migration("20211104134724_InitialCreate")]
+    [Migration("20220906133824_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -209,7 +209,7 @@ namespace Moryx.Products.Model.Migrations
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("PartLinkId")
+                    b.Property<long?>("PartLinkEntityId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("ProductId")
@@ -246,7 +246,7 @@ namespace Moryx.Products.Model.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("PartLinkId");
+                    b.HasIndex("PartLinkEntityId");
 
                     b.HasIndex("ProductId");
 
@@ -557,10 +557,7 @@ namespace Moryx.Products.Model.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
-                    b.Property<long>("StepId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("WorkplanStepId")
+                    b.Property<long>("WorkplanStepId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -624,12 +621,12 @@ namespace Moryx.Products.Model.Migrations
                     b.Property<int>("OutputType")
                         .HasColumnType("integer");
 
-                    b.Property<long>("StepEntityId")
+                    b.Property<long>("WorkplanStepId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StepEntityId");
+                    b.HasIndex("WorkplanStepId");
 
                     b.ToTable("WorkplanOutputDescriptions");
                 });
@@ -730,7 +727,7 @@ namespace Moryx.Products.Model.Migrations
 
                     b.HasOne("Moryx.Products.Model.PartLinkEntity", "PartLinkEntity")
                         .WithMany()
-                        .HasForeignKey("PartLinkId");
+                        .HasForeignKey("PartLinkEntityId");
 
                     b.HasOne("Moryx.Products.Model.ProductTypeEntity", "Product")
                         .WithMany()
@@ -785,14 +782,16 @@ namespace Moryx.Products.Model.Migrations
 
                     b.HasOne("Moryx.Products.Model.WorkplanStepEntity", "WorkplanStep")
                         .WithMany("Connectors")
-                        .HasForeignKey("WorkplanStepId");
+                        .HasForeignKey("WorkplanStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Moryx.Products.Model.WorkplanOutputDescriptionEntity", b =>
                 {
                     b.HasOne("Moryx.Products.Model.WorkplanStepEntity", "WorkplanStep")
                         .WithMany("OutputDescriptions")
-                        .HasForeignKey("StepEntityId")
+                        .HasForeignKey("WorkplanStepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

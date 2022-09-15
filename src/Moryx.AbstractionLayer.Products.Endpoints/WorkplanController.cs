@@ -3,7 +3,6 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.Products.Management.Modification;
 using Moryx.Workflows;
 using System.Collections.Generic;
 

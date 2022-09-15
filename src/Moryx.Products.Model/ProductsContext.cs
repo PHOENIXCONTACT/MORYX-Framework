@@ -99,7 +99,7 @@ namespace Moryx.Products.Model
             modelBuilder.Entity<ProductInstanceEntity>()
                 .HasOne(a => a.PartLinkEntity)
                 .WithMany()
-                .HasForeignKey(a => a.PartLinkId);
+                .HasForeignKey(a => a.PartLinkEntityId);
 
             // Connector
             modelBuilder.Entity<WorkplanConnectorEntity>()
@@ -119,7 +119,7 @@ namespace Moryx.Products.Model
             modelBuilder.Entity<WorkplanStepEntity>()
                 .HasMany(s => s.OutputDescriptions)
                 .WithOne(o => o.WorkplanStep).IsRequired()
-                .HasForeignKey(o => o.StepEntityId);
+                .HasForeignKey(o => o.WorkplanStepId);
 
             modelBuilder.Entity<WorkplanStepEntity>()
                 .HasOne(s => s.Workplan)

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.SignalR;
-using Moryx.Products.Management.Modification;
 using System.Threading.Tasks;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
