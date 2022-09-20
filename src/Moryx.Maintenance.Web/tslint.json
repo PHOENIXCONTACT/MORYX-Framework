@@ -109,7 +109,7 @@
         "no-consecutive-blank-lines": true,
         "no-irregular-whitespace": true,
         "no-parameter-properties": true,
-        "no-redundant-jsdoc": true,
+        "no-redundant-jsdoc": false,
         "no-trailing-whitespace": true,
         "number-literal-format": false,
         "object-literal-key-quotes": [true, "as-needed"],
