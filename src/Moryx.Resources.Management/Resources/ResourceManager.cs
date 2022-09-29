@@ -184,8 +184,7 @@ namespace Moryx.Resources.Management
                 case ResourceStartupPhase.Starting:
                 case ResourceStartupPhase.Started:
                     // Resources those are created during the start of a resource are automatically initialized and started also.
-                    wrapped.Initialize();
-                    wrapped.Start();
+                    InitializeAndStart(wrapped);
                     break;
                 case ResourceStartupPhase.Stopping:
                 case ResourceStartupPhase.Stopped:
@@ -198,6 +197,19 @@ namespace Moryx.Resources.Management
             // Inform listeners about the new resource
             if (instance is IPublicResource publicResource)
                 RaiseResourceAdded(publicResource);
+        }
+
+        private void InitializeAndStart(ResourceWrapper wrappedResource)
+        {
+            wrappedResource.Initialize();
+            try
+            {
+                wrappedResource.Start();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(LogLevel.Warning, ex, "Could not start resource {0}-{1}!", wrappedResource.Target.Id, wrappedResource.Target.Name);
+            }
         }
 
         /// <summary>
@@ -311,8 +323,9 @@ namespace Moryx.Resources.Management
                         throw;
                     }
 
-                    foreach (var instance in newResources)
-                        AddResource(instance, true);
+                    foreach (var instance in newResources) { 
+                            AddResource(instance, true);
+                    }
                 }
             }
         }
