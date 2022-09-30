@@ -163,7 +163,14 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
-            var productType = _productManagement.LoadType(id);
+            IProductType productType=null;
+            try
+            {
+                 productType = _productManagement.LoadType(id);
+            }
+            catch (ProductNotFoundException)
+            {
+            }
             if (productType == null)
                 return NotFound();
             return _productConverter.ConvertProduct(productType, false);
