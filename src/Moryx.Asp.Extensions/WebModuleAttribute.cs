@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Asp.Extensions;
 using System;
 
 namespace Moryx.Asp.Integration
@@ -19,6 +20,11 @@ namespace Moryx.Asp.Integration
         /// Recognizable icon of this module
         /// </summary>
         public string Icon { get; }
+
+        /// <summary>
+        /// Category of the module
+        /// </summary>
+        public ModuleCategory Category { get; set; }
 
         /// <summary>
         /// Export page as web module under given route
