@@ -17,13 +17,14 @@ namespace Moryx.Logging
 
         public bool IsException => Exception != null;
 
-        public Exception Exception { get; }
-
         public string LoggerMessage => $"{ClassName}:{Message ?? string.Empty}";
 
         #endregion
 
         #region ILogMessage
+
+        /// <inheritdoc />
+        public Exception Exception { get; }
 
         /// <inheritdoc />
         public IModuleLogger Logger { get; }
@@ -73,13 +74,7 @@ namespace Moryx.Logging
             catch
             {
                 // Someone failed to write a working format string
-                Message = _message + " - Format failed!";
-            }
-
-            // Concat exception to message
-            if (IsException)
-            {
-                Message += $"\nException: {ExceptionPrinter.Print(Exception)}";
+                Message = _message + " - Formatting failed!";
             }
         }
     }
