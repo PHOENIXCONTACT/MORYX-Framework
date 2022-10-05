@@ -103,6 +103,13 @@ Changes:
 
 The Maintenance module and its internally hosted web UI are gone. They are replaced by kernel based ASP endpoints and a razor hosted frontend. With the changes to logging the related tab in the UI was removed as well as the index page that provided an overview of the modules. The module tab contains a list of all modules in similar fashion and the additional statistics shown on the index page cannot be provided in .NET Core.
 
+## Configuration
+
+Configurations were simplified and there is only one interface `IConfigManager` with only a few methods now. Most overloads from the previous interfaces are now available as extensions. Any usages of `IRuntimeConfigManager` and `CachedConfigManager` can be replaced with `IConfigManager`.
+
+You can also use the ASP options pattern for your module, how ever you will not have the same UI and MORYX platform support compared to the config manager.
+
+## Package changes
 ## Package changes
 
 Added:

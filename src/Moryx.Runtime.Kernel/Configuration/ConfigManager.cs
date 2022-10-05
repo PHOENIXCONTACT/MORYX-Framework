@@ -167,7 +167,7 @@ namespace Moryx.Runtime.Kernel
         }
 
         /// <summary>
-        /// Write config object to mcf file
+        /// Write config object to json file
         /// </summary>
         protected void WriteToFile(object config, string name)
         {

@@ -23,7 +23,7 @@ namespace Moryx.Runtime.Kernel
             if (sharedAtt == null || !typeof(IConfig).IsAssignableFrom(property.PropertyType))
                 return ValueProviderResult.Skipped;
 
-            var sharedConf = _configManager.GetConfiguration(property.PropertyType, property.PropertyType.FullName, sharedAtt.UseCopy);
+            var sharedConf = _configManager.GetConfiguration(property.PropertyType, sharedAtt.UseCopy);
             property.SetValue(parent, sharedConf);
             return ValueProviderResult.Handled;
         }

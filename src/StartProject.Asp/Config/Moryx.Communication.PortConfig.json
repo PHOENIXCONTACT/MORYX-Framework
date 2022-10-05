@@ -1,5 +1,5 @@
 {
-  "Host": "PxC-N2228",
+  "Host": "localhost",
   "HttpPort": 80,
   "NetTcpPort": 816,
   "ConfigState": "Generated",
