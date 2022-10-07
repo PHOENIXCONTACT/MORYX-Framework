@@ -6,6 +6,7 @@ using Moryx;
 using Moryx.Asp.Integration;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Moryx.Asp.Extensions.Exception;
 
 namespace StartProject.Asp
 {
@@ -16,7 +17,10 @@ namespace StartProject.Asp
         {
             services.AddRazorPages();
 
-            services.AddControllers()
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<MoryxExceptionFilter>();
+            })
                 .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSwaggerGen(c =>
