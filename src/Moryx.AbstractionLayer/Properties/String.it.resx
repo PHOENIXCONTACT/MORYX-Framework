@@ -117,37 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="IdentityConflictException_IdentityConflictMessage" xml:space="preserve">
-    <value>The identity has conflicts with existing products and revisions!</value>
-  </data>
-  <data name="IdentityConflictException_InvalidTemplateMessage" xml:space="preserve">
-    <value>The identity can not be used for duplicates of the template!</value>
-  </data>
-  <data name="ProxyDetachedException_Message" xml:space="preserve">
-    <value>The proxy was detached and can no longer be used!</value>
-  </data>
-  <data name="RecipeNotFoundException_Message" xml:space="preserve">
-    <value>Recipe with id '{0}' not found!</value>
-  </data>
   <data name="ProductNotFoundException_Message" xml:space="preserve">
-    <value>Product not found for id: {0}</value>
-  </data>
-  <data name="SegmentsNotSupportedException_Message" xml:space="preserve">
-    <value>The driver does not support segments</value>
-  </data>
-  <data name="ResourceNotFoundException_ByCapabilities_Message" xml:space="preserve">
-    <value>No resource found providing capabilities or too many matches: {0}</value>
-  </data>
-  <data name="ResourceNotFoundException_ById_Message" xml:space="preserve">
-    <value>No resource found with id: {0}</value>
-  </data>
-  <data name="TYPE_NOT_FOUND" xml:space="preserve">
-    <value>The given type was not found.</value>
+    <value>Prodotto non trovato per id: {0}</value>
   </data>
   <data name="RECIPE_TYPE_NOT_FOUND" xml:space="preserve">
-    <value>Recipe type {0} not found!</value>
+    <value>Tipo di ricetta {0} non trovato!</value>
   </data>
   <data name="RESOURCE_NOT_FOUND" xml:space="preserve">
-    <value>Resource not found!</value>
+    <value>Risorsa non trovata!</value>
+  </data>
+  <data name="TYPE_NOT_FOUND" xml:space="preserve">
+    <value>Il tipo indicato non è stato trovato.</value>
   </data>
 </root>
