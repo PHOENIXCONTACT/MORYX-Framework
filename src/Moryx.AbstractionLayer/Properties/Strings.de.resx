@@ -139,15 +139,15 @@
     <value>Es wurde keine eindeutige Resource mit den angegebenen Fähigkeiten gefunden.</value>
   </data>
   <data name="ResourceNotFoundException_ById_Message" xml:space="preserve">
-    <value>Resource mit Id {0} nicht gefunden!</value>
+    <value>Resource mit der Id '{0}' nicht gefunden!</value>
   </data>
   <data name="TYPE_NOT_FOUND" xml:space="preserve">
-    <value>Der angegebene Typ wurde nicht gefunden.</value>
+    <value>Der angegebene Typ konnte nicht gefunden werden.</value>
   </data>
   <data name="RECIPE_TYPE_NOT_FOUND" xml:space="preserve">
-    <value>Rezeptsorte {0} nicht gefunden!</value>
+    <value>Ein Rezept des Typ '{0}' konnte nicht gefunden werden.</value>
   </data>
   <data name="RESOURCE_NOT_FOUND" xml:space="preserve">
-    <value>Ressource nicht gefunden!</value>
+    <value>Die Ressource konnte nicht gefunden werden.</value>
   </data>
 </root>
