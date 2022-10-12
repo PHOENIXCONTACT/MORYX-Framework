@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Moryx.Asp.Extensions" Version="3.7.1-dev.576" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
   </ItemGroup>
 
