@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moryx.AbstractionLayer.Properties;
+using Moryx.Asp.Extensions.Exception;
 using Moryx.Resources.Interaction;
 using Moryx.Resources.Interaction.Converter;
 using Moryx.Serialization;
@@ -82,12 +83,12 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         public ActionResult<ResourceModel> GetDetails(long id)
         {
             if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
-                return NotFound(string.Format(Strings.ResourceNotFoundException_ById_Message, id));
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
             var resourceModel = _resourceModification.Read(id, r => converter.GetDetails(r));
             if (resourceModel is null)
-                return NotFound(string.Format(Strings.ResourceNotFoundException_ById_Message, id));
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             return resourceModel;
         }
@@ -101,7 +102,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         public ActionResult<Entry> InvokeMethod(long id, string method, Entry parameters)
         {
             if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
-                return NotFound(string.Format(Strings.ResourceNotFoundException_ById_Message, id));
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             Entry entry = null;
             _resourceModification.Modify(id, r =>
@@ -130,7 +131,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             var resource = (Resource)Activator.CreateInstance(_resourceTypeTree[type].ResourceType);
             if (resource is null)
-                return NotFound(Strings.RESOURCE_NOT_FOUND);
+                return NotFound(new MoryxExceptionResponse { Title = Strings.RESOURCE_NOT_FOUND });
 
             if (method != null)
                 EntryConvert.InvokeMethod(resource, method, _serialization);
@@ -288,7 +289,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         public ActionResult<ResourceModel> Update(long id, ResourceModel model)
         {
             if (_resourceModification.GetAllResources<IResource>(r=>r.Id == id) is null)
-                return NotFound(string.Format(Strings.ResourceNotFoundException_ById_Message, id));
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             _resourceModification.Modify(id, r => {
                 var resourcesToSave = new HashSet<long>();
@@ -310,7 +311,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         public ActionResult Remove(long id)
         {
             if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
-                return NotFound(string.Format(Strings.ResourceNotFoundException_ById_Message, id));
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             var deleted = _resourceModification.Delete(id);
             if (!deleted)

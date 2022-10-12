@@ -150,4 +150,7 @@
   <data name="RESOURCE_NOT_FOUND" xml:space="preserve">
     <value>Die Ressource konnte nicht gefunden werden.</value>
   </data>
+  <data name="WORKPLAN_NOT_FOUND" xml:space="preserve">
+    <value>Arbeitsplan nicht gefunden für id: {0}</value>
+  </data>
 </root>

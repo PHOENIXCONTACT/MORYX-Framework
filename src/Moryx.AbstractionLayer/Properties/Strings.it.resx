@@ -129,4 +129,7 @@
   <data name="TYPE_NOT_FOUND" xml:space="preserve">
     <value>Il tipo indicato non è stato trovato.</value>
   </data>
+  <data name="WORKPLAN_NOT_FOUND" xml:space="preserve">
+    <value>Piano di lavoro non trovato per l'id: {0}</value>
+  </data>
 </root>
