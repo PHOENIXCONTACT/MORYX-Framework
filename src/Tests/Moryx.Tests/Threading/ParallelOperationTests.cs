@@ -87,7 +87,7 @@ namespace Moryx.Tests.Threading
 
             int id = _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
 
-            Thread.Sleep(75);
+            Thread.Sleep(56);
 
             Assert.AreEqual(0, state.Counter, "First check");
 
