@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 	<CreatePackage>true</CreatePackage>
   </PropertyGroup>
@@ -19,8 +19,10 @@
     </ItemGroup>
 
   <Target Name="BuildUI" BeforeTargets="Build" Condition="'$(Configuration)'!='Debug' Or !Exists('wwwroot\bundle.js')">
+	<Exec WorkingDirectory="./" Command="npm config set strict-ssl false" />
 	<Exec WorkingDirectory="./" Command="npm install" />
-	<Exec WorkingDirectory="./" Command="npm run build" />
+	<Exec WorkingDirectory="./" Command="npm run build --force" />
+	<Exec WorkingDirectory="./" Command="npm config set strict-ssl true" />
   </Target>
 
 </Project>
