@@ -21,6 +21,11 @@ namespace Moryx.Asp.Integration
         public string Icon { get; }
 
         /// <summary>
+        /// Category of the module
+        /// </summary>
+        public ModuleCategory Category { get; set; }
+
+        /// <summary>
         /// Export page as web module under given route
         /// </summary>
         public WebModuleAttribute(string route) : this(route, "favorite")

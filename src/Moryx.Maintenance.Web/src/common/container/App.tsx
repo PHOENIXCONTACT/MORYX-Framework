@@ -114,8 +114,8 @@ class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDi
         };
 
         return (
-            <div>
-                <div className="main-content">
+            <div className="maintenance-app-container">
+                <div className="maintenance-content-wrapper">
                     <NotificationSystem ref={ref}/>
 
                     <Container fluid={true} id="body" className="content">

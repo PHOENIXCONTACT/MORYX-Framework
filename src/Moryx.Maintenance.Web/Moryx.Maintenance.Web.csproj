@@ -13,10 +13,9 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Moryx\Moryx.csproj" />
-    </ItemGroup>
+		<ProjectReference Include="..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
 
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
   <Target Name="BuildUI" BeforeTargets="Build" Condition="'$(Configuration)'!='Debug' Or !Exists('wwwroot\bundle.js')">

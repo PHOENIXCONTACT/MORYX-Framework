@@ -12,10 +12,6 @@
   cursor: pointer;
 }
 
-p {
-  margin: 0 0 5px;
-}
-
 /*
  * Main Body
  */
@@ -29,12 +25,6 @@ p {
   margin-top: 10px;
   height:40px;
   font-weight: bold;
-}
-
-html {
-  height: 100%;
-  width: 100%;
-  font-family: sans-serif;
 }
 
 body {
@@ -69,10 +59,6 @@ svg.icon-red {
   }
 }
 
-.container-fluid {
-  max-width:1560px;
-}
-
 .right-space {
   margin-right: 5px;
 }
@@ -101,11 +87,6 @@ svg.icon-red {
   margin-bottom: 20px;
 }
 
-.auto-height {
-  height: auto !important;
-  overflow: auto;
-}
-
 .bg-success {
   background: $green !important;
 }
@@ -127,20 +108,12 @@ svg.icon-red {
    overflow: hidden;
 }
 
-.navbar-brand {
-  padding: 0px;
-}
-
- .navbar-default {
+.maintenance-navbar-default {
    background-color:#f8f8f8;
    border-color:#e7e7e7;
 }
 
-.navbar-collapse {
-  height: 50px;
-}
-
-.navbar-default {
+.maintenance-navbar-default {
 
   .navbar-brand {
     color: $gray-800;
@@ -189,17 +162,25 @@ svg.icon-red {
     color: $gray-600;
     text-decoration: none;
   }
+
+  .navbar-collapse {
+    height: 50px;
+  }
 }
 
 /*
  * Content Panel
  */
-.content {
-  margin-top: 20px;
+.maintenance-app-container {
+  height: 100vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-.main-content {
-  min-height: calc(100vh - 80px);
+.maintenance-content {
+  margin-top: 20px;
+  height: 100%;
 }
 
 .component {
@@ -210,6 +191,8 @@ svg.icon-red {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
   overflow: hidden;
+  height: fit-content;
+  width: fit-content;
 }
 /*
  * Dashboard
@@ -486,4 +469,22 @@ footer ul li {
 
 .notification-modal-dialog {
   max-width: 90% !important;
+}
+
+/* 
+ * Overwrite bootstrap styles that would otherwise
+ * conflict with MORYS material styles
+*/
+
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5 !important;
+}
+
+.px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+a:hover {
+  text-decoration-line: none;
 }

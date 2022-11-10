@@ -1,0 +1,8 @@
+﻿namespace Moryx.Asp.Integration.Exception
+{
+    public class MoryxExceptionResponse
+    {
+        public string Title { get; set; }
+        public string Exception { get; set; }
+    }
+}

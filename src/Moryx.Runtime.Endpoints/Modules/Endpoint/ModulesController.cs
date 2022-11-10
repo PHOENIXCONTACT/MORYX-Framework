@@ -56,7 +56,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
                     HealthState = module.State,
                     StartBehaviour = _moduleManager.BehaviourAccess<ModuleStartBehaviour>(module).Behaviour,
                     FailureBehaviour = _moduleManager.BehaviourAccess<FailureBehaviour>(module).Behaviour,
-                    Notifications = notifications.Select(n => new NotificationModel(n)).ToArray()
+                    Notifications = notifications.Select(n => new ModuleNotificationModel(n)).ToArray()
                 };
 
                 var dependencies = _moduleManager.StartDependencies(module);
@@ -84,11 +84,11 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpGet("{moduleName}/notifications")]
-        public ActionResult<IEnumerable<NotificationModel>> Notifications([FromRoute] string moduleName)
+        public ActionResult<IEnumerable<ModuleNotificationModel>> Notifications([FromRoute] string moduleName)
         {
             var module = _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
             if (module != null)
-                return Ok(module.Notifications.Select(n => new NotificationModel(n)));
+                return Ok(module.Notifications.Select(n => new ModuleNotificationModel(n)));
 
             return NotFound($"Module with name \"{moduleName}\" could not be found");
         }

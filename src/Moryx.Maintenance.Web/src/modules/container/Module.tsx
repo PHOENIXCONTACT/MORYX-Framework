@@ -234,7 +234,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                                 <tr key={idx} className={"selectable"} style={{alignItems: "center"}}
                                                     onClick={(e: React.MouseEvent<HTMLElement>) => this.openNotificationDetailsDialog(e, notification)}>
                                                     <td><span className="align-self-center">{notification.exception != null ? notification.exception.exceptionTypeName : "-"}</span></td>
-                                                    <td><span className="align-self-center">{notification.exception != null ? notification.exception.message : notification.message}</span></td>
+                                                    <td><span className="align-self-center">{notification.message}</span></td>
                                                     <td>
                                                         <span className="align-self-center" style={ModuleNotificationTypeToCssClassConverter.Convert(notification.severity)}>
                                                             {Serverity[notification.severity]}
@@ -255,6 +255,12 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                     <ModalBody>
                         {this.state.SelectedNotification != null &&
                             <Container fluid={true}>
+                                <Row>
+                                    <Col md={2} ></Col>
+                                    <Col md={10}>
+                                            <b>{this.state.SelectedNotification.message}</b>
+                                    </Col>
+                                </Row>
                                 <Row>
                                     <Col md={2}><span className="font-bold">Type</span></Col>
                                     <Col md={10}>
