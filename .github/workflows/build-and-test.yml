@@ -25,18 +25,11 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup .NET SDK
-        if: ${{ github.ref != 'refs/heads/future' }} # Future branch uses net6
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.dotnet_sdk_version }}
-          
-      - name: Setup .NET SDK
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6'
 
       - name: Build
         shell: pwsh
@@ -56,16 +49,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup .NET SDK
-        if: ${{ github.ref != 'refs/heads/future' }} # Future branch uses net6
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.dotnet_sdk_version }}
-          
-      - name: Setup .NET SDK
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6'
 
       - name: Execute Unit Tests
         shell: pwsh
@@ -86,16 +72,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup .NET SDK
-        if: ${{ github.ref != 'refs/heads/future' }} # Future branch uses net6
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.dotnet_sdk_version }}
-          
-      - name: Setup .NET SDK
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6'
 
       - name: Execute Integration Tests
         shell: pwsh
@@ -148,16 +127,9 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Setup .NET SDK
-        if: ${{ github.ref != 'refs/heads/future' }} # Future branch uses net6
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.dotnet_sdk_version }}
-          
-      - name: Setup .NET SDK
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6'
   
       - name: Download package artifacts
         uses: actions/download-artifact@v2
