@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
     <ProjectReference Include="..\Moryx.Maintenance.Web\Moryx.Maintenance.Web.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />

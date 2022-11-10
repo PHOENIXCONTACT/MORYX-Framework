@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
 
-namespace Moryx.Asp.Integration.Exception
+namespace Moryx.Asp.Extensions
 {
     public class MoryxExceptionFilter : IExceptionFilter
     {

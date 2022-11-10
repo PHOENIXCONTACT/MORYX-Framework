@@ -78,6 +78,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Maintenance.Web", "src\Moryx.Maintenance.Web\Moryx.Maintenance.Web.csproj", "{BD8D5AB2-0C9E-4C61-B158-FF132890DB3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Asp.Extensions", "Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj", "{0FB22EF0-3C6F-4235-A50E-3A976AC261D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -184,6 +186,10 @@ Global
 		{BD8D5AB2-0C9E-4C61-B158-FF132890DB3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD8D5AB2-0C9E-4C61-B158-FF132890DB3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD8D5AB2-0C9E-4C61-B158-FF132890DB3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FB22EF0-3C6F-4235-A50E-3A976AC261D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FB22EF0-3C6F-4235-A50E-3A976AC261D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FB22EF0-3C6F-4235-A50E-3A976AC261D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FB22EF0-3C6F-4235-A50E-3A976AC261D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -212,10 +218,11 @@ Global
 		{C40AA3D2-F535-4E60-BF43-F4A5D874FD74} = {74112169-6672-4907-A187-F055111940A9}
 		{0C0374D2-BA98-4BDC-9747-7D1FF3E61715} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 		{BD8D5AB2-0C9E-4C61-B158-FF132890DB3C} = {50AD5155-2CC6-496B-849C-57DC56021F5F}
+		{0FB22EF0-3C6F-4235-A50E-3A976AC261D3} = {7DCDBDA5-4163-41EA-B24E-9316DFB9F354}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		    RESX_ShowErrorsInErrorList = True
-		RESX_TaskErrorCategory = Message
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
+		RESX_TaskErrorCategory = Message
+		    RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal
