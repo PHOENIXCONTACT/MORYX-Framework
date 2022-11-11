@@ -139,7 +139,7 @@ namespace Moryx.Tests.Threading
 
             _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
 
-            Thread.Sleep(75);
+            Thread.Sleep(55);
 
             Assert.AreEqual(0, state.Counter, "First check");
 
