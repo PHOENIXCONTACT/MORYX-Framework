@@ -33,7 +33,7 @@ namespace Moryx.Model.Tests
             await context.SaveChangesAsync();
 
             context = inMemoryFactory.Create<TestModelContext>();
-            var reloadedCar = await context.Cars.FirstAsync();
+            var reloadedCar = await context.Cars.FirstOrDefaultAsync();
 
             Assert.IsNotNull(reloadedCar);
             Assert.AreEqual(carName, reloadedCar.Name);
