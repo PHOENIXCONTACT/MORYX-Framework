@@ -19,15 +19,15 @@ namespace Moryx.Configuration
 
             // Provide default entries
             var value = property.GetValue(parent);
+            
             if (Equals(value, DefaultValue(propType)))
             {
-                value = ProvideDefaultValue(property);
-                if (value == null)
-                    return ValueProviderResult.Skipped;
+                if(ProvideDefaultValue(property, out value))
+                {
+                    property.SetValue(parent, value);
 
-                property.SetValue(parent, value);
-
-                return ValueProviderResult.Handled;
+                    return ValueProviderResult.Handled;
+                }
             }
 
             return ValueProviderResult.Skipped;
@@ -38,9 +38,41 @@ namespace Moryx.Configuration
             return propType.IsValueType ? Activator.CreateInstance(propType) : null;
         }
 
-        private static object ProvideDefaultValue(PropertyInfo property)
+        private static bool ProvideDefaultValue(PropertyInfo property, out object defaultValue)
         {
             var propertyType = property.PropertyType;
+            defaultValue = null;
+
+            var attribute = property.GetCustomAttribute<DefaultValueAttribute>(false);
+            if(attribute != null)
+            {
+                // Accept nulls for objects or nullable reference types
+                if(attribute.Value == null && (propertyType.IsClass || Nullable.GetUnderlyingType(propertyType) != null)) {
+                    return true;
+                }
+
+                // Return if type matches
+                if (property.PropertyType.IsInstanceOfType(attribute.Value))
+                {
+                    defaultValue = attribute.Value;
+                    return true;
+                }
+
+                
+
+                // Try to convert
+                try
+                {
+                    defaultValue = Convert.ChangeType(attribute.Value, propertyType);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+
             if (propertyType.IsClass && !propertyType.IsAbstract && propertyType != typeof(string))
             {
                 if (propertyType.IsArray)
@@ -48,31 +80,21 @@ namespace Moryx.Configuration
                     var elementType = propertyType.GetElementType();
 
                     if (elementType == null)
-                        return null;
+                    {
+                        return false;
+                    }
+                        
 
-                    return Array.CreateInstance(elementType, 0);
+                    defaultValue = Array.CreateInstance(elementType, 0);
+                    return true;
                 }
 
-                return Activator.CreateInstance(propertyType);
+                defaultValue = Activator.CreateInstance(propertyType);
+                return true;
+
             }
 
-            var attribute = property.GetCustomAttribute<DefaultValueAttribute>(false);
-            if (attribute == null)
-                return null;
-
-            // Return if type matches
-            if (property.PropertyType.IsInstanceOfType(attribute.Value))
-                return attribute.Value;
-
-            // Try to convert
-            try
-            {
-                return Convert.ChangeType(attribute.Value, propertyType);
-            }
-            catch
-            {
-                return null;
-            }
+            return false;
         }
     }
 }
