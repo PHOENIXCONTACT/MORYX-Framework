@@ -27,5 +27,15 @@ namespace Moryx.Products.Model
         public virtual ICollection<WorkplanStepEntity> Steps { get; set; }
 
         public virtual ICollection<WorkplanStepEntity> Parents { get; set; }
+
+        public WorkplanEntity()
+        {
+            Recipes = new List<ProductRecipeEntity>();
+            SourceReferences = new List<WorkplanReferenceEntity>();
+            TargetReferences = new List<WorkplanReferenceEntity>();
+            Connectors = new List<WorkplanConnectorEntity>();
+            Steps = new List<WorkplanStepEntity>();
+            Parents = new List<WorkplanStepEntity>();
+        }
     }
 }
