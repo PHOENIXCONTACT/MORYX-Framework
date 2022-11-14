@@ -15,10 +15,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// </summary>
         public static TResult Read<TResult>(this IResourceManagement facade, long resourceId, Func<Resource, TResult> accessor)
         {
-            if (facade is IResourceModification modification)
-                return modification.Read(resourceId, accessor);
-
-            throw new NotSupportedException("Instance of resource management does not support resource modification");
+            return facade.Read(resourceId, accessor);
         }
 
         /// <summary>
@@ -26,10 +23,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// </summary>
         public static TResult Read<TResult>(this IResourceManagement facade, IResource proxy, Func<Resource, TResult> accessor)
         {
-            if (facade is IResourceModification modification)
-                return modification.Read(proxy.Id, accessor);
-
-            throw new NotSupportedException("Instance of resource management does not support resource modification");
+            return facade.Read(proxy.Id, accessor);
         }
 
         /// <summary>
@@ -40,10 +34,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <param name="facade"></param>
         public static void Modify(this IResourceManagement facade, long resourceId, Func<Resource, bool> modifier)
         {
-            if (facade is IResourceModification modification)
-                modification.Modify(resourceId, modifier);
-            else
-                throw new NotSupportedException("Instance of resource management does not support resource modification");
+            facade.Modify(resourceId, modifier);
         }
 
         /// <summary>
@@ -54,10 +45,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <param name="facade"></param>
         public static void Modify(this IResourceManagement facade, IResource proxy, Func<Resource, bool> modifier)
         {
-            if (facade is IResourceModification modification)
-                modification.Modify(proxy.Id, modifier);
-            else
-                throw new NotSupportedException("Instance of resource management does not support resource modification");
+            facade.Modify(proxy.Id, modifier);
         }
 
         /// <summary>
@@ -69,10 +57,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <param name="context"></param>
         public static void Modify<TContext>(this IResourceManagement facade, IResource proxy, Func<Resource, TContext, bool> modifier, TContext context)
         {
-            if (facade is IResourceModification modification)
-                modification.Modify(proxy.Id, resource => modifier(resource, context));
-            else
-                throw new NotSupportedException("Instance of resource management does not support resource modification");
+            facade.Modify(proxy.Id, resource => modifier(resource, context));
         }
 
         /// <summary>
@@ -83,10 +68,7 @@ namespace Moryx.AbstractionLayer.Resources
         public static long Create<TResource>(this IResourceManagement facade, Action<TResource> initializer)
             where TResource : Resource
         {
-            if (facade is IResourceModification modification)
-                return modification.Create(typeof(TResource), r => initializer((TResource)r));
-
-            throw new NotSupportedException("Instance of resource management does not support resource modification");
+            return facade.Create(typeof(TResource), r => initializer((TResource)r));
         }
     }
 }

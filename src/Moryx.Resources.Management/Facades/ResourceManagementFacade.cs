@@ -9,8 +9,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management
 {
-    // TODO: AL6 combine IResourceManagement with IResourceModification and make second facade for IResourceTypeTree
-    internal class ResourceManagementFacade : IResourceManagement, IFacadeControl, IResourceModificationExtended, IResourceTypeTree
+    internal class ResourceManagementFacade : IResourceManagement, IFacadeControl
     {
         #region Dependency Injection
 
@@ -19,9 +18,7 @@ namespace Moryx.Resources.Management
         public IResourceGraph ResourceGraph { get; set; }
 
         public IResourceTypeController TypeController { get; set; }
-
-        public IResourceTypeTree TypeTree { get; set; }
-
+   
         #endregion
 
         #region IFacadeControl
@@ -173,23 +170,6 @@ namespace Moryx.Resources.Management
         }
         #endregion
 
-        #region IResourceTypeTree
-        public IResourceTypeNode RootType => TypeTree.RootType;
-
-        public IResourceTypeNode this[string typeName] => TypeTree[typeName];
-
-        public IEnumerable<IResourceTypeNode> SupportedTypes(Type constraint)
-        {
-            return TypeTree.SupportedTypes(constraint);
-        }
-
-        public IEnumerable<IResourceTypeNode> SupportedTypes(ICollection<Type> constraints)
-        {
-            return TypeTree.SupportedTypes(constraints);
-        }
-
-        
-        #endregion
 
         /// <inheritdoc />
         public event EventHandler<IPublicResource> ResourceAdded;
@@ -200,4 +180,5 @@ namespace Moryx.Resources.Management
         /// <inheritdoc />
         public event EventHandler<ICapabilities> CapabilitiesChanged;
     }
+
 }

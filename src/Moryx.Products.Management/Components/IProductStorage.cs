@@ -70,30 +70,16 @@ namespace Moryx.Products.Management
         /// Save multiple recipes at once
         /// </summary>
         void SaveRecipes(long productId, ICollection<IProductRecipe> recipes);
-    }
 
-    /// <summary>
-    /// Additional interface for type storage to search for product types by expression
-    /// TODO: Remove in AL 6
-    /// </summary>
-    public interface IProductSearchStorage : IProductStorage
-    {
         /// <summary>
         /// Load types using filter expression
         /// </summary>
         IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
-    }
 
-    /// <summary>
-    /// Additional interface for removing a recipe
-    /// TODO: Remove in AL 6
-    /// </summary>
-    public interface IProductRemoveRecipeStorage: IProductSearchStorage
-    {
         /// <summary>
         /// Remove recipe by given recipeId
         /// </summary>
-        void RemoveRecipe (long recipeId);
+        void RemoveRecipe(long recipeId);
     }
 
 }

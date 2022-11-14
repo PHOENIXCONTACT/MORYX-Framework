@@ -162,7 +162,7 @@ namespace Moryx.Products.Management
         }
 
         private TConfig StrategyConfig<TStrategy, TConfig, TBaseType>(Type targetType)
-            where TConfig : class, IProductStrategyConfiguation
+            where TConfig : class, IProductStrategyConfiguration
         {
             var tuple = CreateConfig<TStrategy, TConfig>(targetType);
             if (tuple == null)

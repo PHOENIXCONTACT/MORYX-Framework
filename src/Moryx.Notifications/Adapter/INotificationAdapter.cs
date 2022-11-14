@@ -13,27 +13,27 @@ namespace Moryx.Notifications
         /// <summary>
         /// Will return currently published notifications
         /// </summary>
-        IReadOnlyList<INotification> GetPublished(INotificationSender sender);
+        IReadOnlyList<Notification> GetPublished(INotificationSender sender);
 
         /// <summary>
         /// Will return currently published notifications filtered by the given tag
         /// </summary>
-        IReadOnlyList<INotification> GetPublished(INotificationSender sender, object tag);
+        IReadOnlyList<Notification> GetPublished(INotificationSender sender, object tag);
 
         /// <summary>
         /// Publishes the given notification
         /// </summary>
-        void Publish(INotificationSender sender, INotification notification);
+        void Publish(INotificationSender sender, Notification notification);
 
         /// <summary>
         /// Publishes the given notification
         /// </summary>
-        void Publish(INotificationSender sender, INotification notification, object tag);
+        void Publish(INotificationSender sender, Notification notification, object tag);
 
         /// <summary>
         /// Acknowledges the given notification
         /// </summary>
-        void Acknowledge(INotificationSender sender, INotification notification);
+        void Acknowledge(INotificationSender sender, Notification notification);
 
         /// <summary>
         /// Acknowledges all notifications of the given sender

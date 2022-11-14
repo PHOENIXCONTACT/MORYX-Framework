@@ -7,24 +7,37 @@ namespace Moryx.Notifications
 {
     /// <summary>
     /// Notification publisher facade
-    /// For extended functions use <see cref="INotificationPublisherExtended"/> but the extended methods will be migrated in the next major into this API
     /// </summary>
-    // TODO: Migrate INotificationPublisherExtended
     public interface INotificationPublisher
     {
+
         /// <summary>
-        /// Returns all current notifications
+        /// Returns all active notifications
         /// </summary>
-        INotification[] GetAll();
+        Notification[] GetAll();
+
+        /// <summary>
+        /// Gets a <see cref="Notification"/> corresponding to a specific <paramref name="id"/>
+        /// If this is an inactive <see cref="Notification"/>, than the NotificationHistory will be used to search for the asked <see cref="Notification"/>
+        /// </summary>
+        /// <param name="id">Id of the desired <see cref="Notification"/></param>
+        /// <returns>A <see cref="Notification"/> correspodning to the given id if it exists; null otherwise</returns>
+        Notification Get(Guid id);
+
+        /// <summary>
+        /// Acknowledge the given Notificatione
+        /// </summary>
+        /// <param name="notification">The notification to be acknowledged</param>
+        void Acknowledge(Notification notification);
 
         /// <summary>
         /// Raised if notification was published
         /// </summary>
-        event EventHandler<INotification> Published;
+        event EventHandler<Notification> Published;
 
         /// <summary>
         /// Raised if notification was acknowledged
         /// </summary>
-        event EventHandler<INotification> Acknowledged;
+        event EventHandler<Notification> Acknowledged;
     }
 }

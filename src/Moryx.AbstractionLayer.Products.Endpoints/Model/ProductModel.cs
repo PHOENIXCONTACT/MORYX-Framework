@@ -1,9 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Runtime.Serialization;
-using Moryx.AbstractionLayer.Products;
 using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
@@ -30,15 +28,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         public string Type { get; set; }
 
         [DataMember]
-        public Entry Properties { get; set; }
-
-        // TODO: AL6 Remove Files and rename FileModels to Files
-        [DataMember]
-        [Obsolete("Use FileModels Instead")]
-        public ProductFile[] Files { get; set; }
+        public Entry Properties { get; set; }      
 
         [DataMember]
-        public ProductFileModel[] FileModels { get; set; }
+        public ProductFileModel[] Files { get; set; }
 
         [DataMember]
         public PartConnector[] Parts { get; set; }

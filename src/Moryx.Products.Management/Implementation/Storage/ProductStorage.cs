@@ -25,8 +25,8 @@ namespace Moryx.Products.Management
     /// Base class for product storage. Contains basic functionality to load and save a product.
     /// Also has the possibility to store a version to each save.
     /// </summary>
-    [Plugin(LifeCycle.Singleton, typeof(IProductStorage), typeof(IProductSearchStorage), typeof(IConfiguredTypesProvider),typeof(IProductRemoveRecipeStorage))]
-    internal class ProductStorage : IProductRemoveRecipeStorage, IConfiguredTypesProvider
+    [Plugin(LifeCycle.Singleton, typeof(IProductStorage), typeof(IConfiguredTypesProvider))]
+    internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
     {
         /// <summary>
         /// Recipe types
@@ -258,7 +258,7 @@ namespace Moryx.Products.Management
                 // Prepare required repos   
                 var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
 
-                var deletedRecipe = recipeRepo.GetByKey(recipeId);         
+                var deletedRecipe = recipeRepo.GetByKey(recipeId);
                 recipeRepo.Remove(deletedRecipe);
 
                 uow.SaveChanges();
@@ -275,49 +275,50 @@ namespace Moryx.Products.Management
             var baseSet = uow.GetRepository<IProductTypeRepository>().Linq;
             var productsQuery = query.IncludeDeleted ? baseSet : baseSet.Active();
 
-                // Filter by type
-                if (!string.IsNullOrEmpty(query.Type))
+            // Filter by type
+            if (!string.IsNullOrEmpty(query.Type))
+            {
+                if (query.ExcludeDerivedTypes)
+                    productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
+                else
                 {
-                    if (query.ExcludeDerivedTypes)
-                        productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
-                    else
+                    var allTypes = ReflectionTool.GetPublicClasses<ProductType>(pt =>
                     {
-                        var allTypes = ReflectionTool.GetPublicClasses<ProductType>(pt =>
+                        // TODO: Clean this up with full name and proper type compatibility
+                        var type = pt;
+                        // Check if any interface matches
+                        if (type.GetInterfaces().Any(inter => inter.Name == query.Type))
+                            return true;
+                        // Check if type or base type matches
+                        while (type != null)
                         {
-                            // TODO: Clean this up with full name and proper type compatibility
-                            var type = pt;
-                            // Check if any interface matches
-                            if (type.GetInterfaces().Any(inter => inter.Name == query.Type))
+                            if (type.Name == query.Type)
                                 return true;
-                            // Check if type or base type matches
-                            while (type != null)
-                            {
-                                if (type.Name == query.Type)
-                                    return true;
-                                type = type.BaseType;
-                            }
-                            return false;
-                        }).Select(t => t.Name);
-                        productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
-                    }
-
-                    // Filter by type properties properties
-                    if (query.PropertyFilters != null && TypeStrategies[query.Type] is IProductTypeSearch typeSearch)
-                    {
-                        var targetType = typeSearch.TargetType;
-                        // Make generic method for the target type
-                        var genericMethod = typeof(IProductTypeSearch).GetMethod(nameof(IProductTypeSearch.TransformSelector));
-                        var method = genericMethod.MakeGenericMethod(targetType);
-
-                        foreach (var propertyFilter in query.PropertyFilters)
-                        {
-                            var expression = ConvertPropertyFilter(targetType, propertyFilter);
-                            var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch, new object[]{ expression });
-                            var versionExpression = AsVersionExpression(columnExpression);
-                            productsQuery = productsQuery.Where(versionExpression);
+                            type = type.BaseType;
                         }
+                        return false;
+                    }).Select(t => t.Name);
+                    productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
+                }
+
+                // Filter by type properties properties
+                if (query.PropertyFilters != null)
+                {
+                    var typeSearch = TypeStrategies[query.Type];
+                    var targetType = typeSearch.TargetType;
+                    // Make generic method for the target type
+                    var genericMethod = typeof(IProductTypeStrategy).GetMethod(nameof(IProductTypeStrategy.TransformSelector));
+                    var method = genericMethod.MakeGenericMethod(targetType);
+
+                    foreach (var propertyFilter in query.PropertyFilters)
+                    {
+                        var expression = ConvertPropertyFilter(targetType, propertyFilter);
+                        var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch, new object[] { expression });
+                        var versionExpression = AsVersionExpression(columnExpression);
+                        productsQuery = productsQuery.Where(versionExpression);
                     }
                 }
+            }
 
             // Filter by identifier
             if (!string.IsNullOrEmpty(query.Identifier))
@@ -391,7 +392,7 @@ namespace Moryx.Products.Management
             // Product property expression
             var productExpression = Expression.Parameter(targetType);
             var propertyExpresssion = Expression.Property(productExpression, filter.Entry.Identifier);
-            
+
             var property = targetType.GetProperty(filter.Entry.Identifier);
             var value = Convert.ChangeType(filter.Entry.Value.Current, property.PropertyType);
             var constantExpression = Expression.Constant(value);
@@ -426,11 +427,7 @@ namespace Moryx.Products.Management
                 IQueryable<ProductTypeEntity> query = null;
                 foreach (var typeStrategy in matchingStrategies)
                 {
-                    var searchStrategy = typeStrategy as IProductTypeSearch;
-                    if (searchStrategy == null)
-                        throw new NotSupportedException($"Storage does not support expression search for {typeStrategy.TargetType}");
-
-                    var columnExpression = searchStrategy.TransformSelector(selector);
+                    var columnExpression = typeStrategy.TransformSelector(selector);
                     var queryFilter = AsVersionExpression(columnExpression);
                     query = query == null
                         ? repo.Linq.Where(queryFilter) // Create query
@@ -883,7 +880,7 @@ namespace Moryx.Products.Management
             foreach (var partGroup in partGroups)
             {
                 var linkStrategy = LinkStrategies[productType.GetType().Name][partGroup.Key.Name];
-                if (linkStrategy.PartCreation == PartSourceStrategy.FromPartlink && partEntityGroups.ContainsKey(partGroup.Key.Name))
+                if (linkStrategy.PartCreation == PartSourceStrategy.FromPartLink && partEntityGroups.ContainsKey(partGroup.Key.Name))
                 {
                     // Update all parts that are also present as entities
                     foreach (var partEntity in partEntityGroups[partGroup.Key.Name])

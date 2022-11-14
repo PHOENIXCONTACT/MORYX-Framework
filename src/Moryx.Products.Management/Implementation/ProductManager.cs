@@ -7,14 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
-using Moryx.Model;
 using Moryx.Model.Repositories;
-using Moryx.Products.Management.Importers;
 using Moryx.Products.Model;
 using Moryx.Tools;
 
@@ -66,10 +62,7 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
         {
-            if (Storage is IProductSearchStorage searchStorage)
-                return searchStorage.LoadTypes(selector);
-
-            throw new NotSupportedException("Current storage does not support type search");
+            return Storage.LoadTypes(selector);
         }
 
         public IProductType LoadType(long id)
@@ -140,7 +133,7 @@ namespace Moryx.Products.Management
             var importer = _importers.First(i => i.Name == importerName);
             var context = new ProductImportContext();
             var result = await importer.Import(context, parameters);
-            
+
             HandleResult(result);
 
             return result;

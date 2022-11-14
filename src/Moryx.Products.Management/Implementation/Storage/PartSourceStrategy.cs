@@ -11,7 +11,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Default instance creation from partlink
         /// </summary>
-        FromPartlink = 0, // TODO: Rename to FromPartLink in the next major
+        FromPartLink = 0, 
 
         /// <summary>
         /// Create parts from entity relation

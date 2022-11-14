@@ -1,7 +1,9 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Products.Model;
 using Moryx.Tools;
@@ -37,5 +39,7 @@ namespace Moryx.Products.Management
 
         /// <inheritdoc />
         public abstract void SaveType(IProductType source, IGenericColumns target);
+
+        public abstract Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector);
     }
 }

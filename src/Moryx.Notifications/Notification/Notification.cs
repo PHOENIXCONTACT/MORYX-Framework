@@ -8,29 +8,47 @@ namespace Moryx.Notifications
     /// <summary>
     /// Base class of all notifications.
     /// </summary>
-    public class Notification : IManagedNotification
+    public class Notification 
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Unique identifier of this notification
+        /// </summary>
         public virtual Guid Identifier { get; private set; }
 
-        /// <inheritdoc cref="INotification"/> />
+        /// <summary>
+        /// The severity of this notification
+        /// </summary>
         public Severity Severity { get; set; }
 
-        /// <inheritdoc cref="INotification"/> />
+        /// <summary>
+        /// Optional title of this notification. Can be set by processor as well
+        /// </summary>
         public string Title { get; set; }
 
-        /// <inheritdoc cref="INotification"/> />
+        /// <summary>
+        /// Message of this notification.
+        /// </summary>
         public string Message { get; set; }
 
-        /// <inheritdoc cref="INotification"/> />
+        /// <summary>
+        /// Sender of this notification. <see cref="INotificationSender"/>
+        /// </summary>
         public string Sender { get; set; }
 
-        /// <inheritdoc cref="INotification"/> />
+        /// <summary>
+        /// Source of this notification. <see cref="INotificationSource"/>
+        /// </summary>
         public string Source { get; set; }
 
-        /// <inheritdoc cref="INotification"/> />
+        /// <summary>
+        /// Indicates is the notification can be acknowledged
+        /// </summary>
         public bool IsAcknowledgable { get; set; }
 
+        /// <summary>
+        /// If null, the notification was not acknowledged.
+        /// If not null, the notification was already acknowledged
+        /// </summary>
         // TODO: AL6 remove explicit backing attribute for property
         private DateTime? _acknowledged;
         /// <inheritdoc />
@@ -46,6 +64,10 @@ namespace Moryx.Notifications
             }
         }
 
+        /// <summary>
+        /// Who or what acknowledged the notification, if it was acknowledged.
+        /// <see cref="Acknowledged"/> shows if the notification has been acknowledged.
+        /// </summary>
         // TODO: AL6 remove explicit backing attribute for property
         private string _acknowledger;
         /// <inheritdoc />
@@ -61,6 +83,9 @@ namespace Moryx.Notifications
             }
         }
 
+        /// <summary>
+        /// Date of creation
+        /// </summary>
         // TODO: AL6 Remove backing attribute for property and make property nullable
         private DateTime? _created;
         /// <inheritdoc />
@@ -102,37 +127,6 @@ namespace Moryx.Notifications
             IsAcknowledgable = isAcknowledgable;
         }
 
-        #region IManagedNotification
-        /// <inheritdoc />
-        Guid IManagedNotification.Identifier
-        {
-            get => Identifier;
-            set => Identifier = value;
-        }
 
-        DateTime? IManagedNotification.Acknowledged
-        {
-            get => _acknowledged;
-            set => _acknowledged = value;
-        }
-
-        string IManagedNotification.Acknowledger
-        {
-            get => Acknowledger;
-            set => Acknowledger = value;
-        }
-
-        DateTime IManagedNotification.Created
-        {
-            get => Created;
-            set => Created = value;
-        }
-
-        /// <inheritdoc />
-        string IManagedNotification.Sender { get; set; }
-
-        /// <inheritdoc />
-        string IManagedNotification.Source { get; set; }
-        #endregion
     }
 }

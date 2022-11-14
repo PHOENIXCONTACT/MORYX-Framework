@@ -18,10 +18,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         public static IReadOnlyList<TType> LoadTypes<TType>(this IProductManagement facade, Expression<Func<TType, bool>> selector)
         {
-            if (facade is IProductManagementTypeSearch typeSearch)
-                return typeSearch.LoadTypes(selector);
-
-            throw new NotSupportedException("Instance of product management does not support expression type search");
+            return facade.LoadTypes(selector);
         }
 
         /// <summary>
@@ -29,10 +26,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         public static bool DeleteProduct(this IProductManagement facade, long id)
         {
-            if (facade is IProductManagementModification modification)
-                return modification.DeleteProduct(id);
-
-            throw new NotSupportedException("Instance of product management does not support expression delete product");
+            return facade.DeleteProduct(id);
         }
     }
 }

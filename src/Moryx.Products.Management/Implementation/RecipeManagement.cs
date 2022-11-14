@@ -19,7 +19,7 @@ namespace Moryx.Products.Management
     {
         #region Dependencies
 
-        public IProductRemoveRecipeStorage Storage { get; set; }
+        public IProductStorage Storage { get; set; }
 
         public IUnitOfWorkFactory<ProductsContext> ModelFactory { get; set; }
 

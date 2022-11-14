@@ -14,16 +14,16 @@ using System.Net;
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     /// <summary>
-    /// Definition of a REST API on the <see cref="IProductManagementModification"/> facade.
+    /// Definition of a REST API on the <see cref="IProductManagement"/> facade.
     /// </summary>
     [ApiController]
     [Route("api/moryx/products/")]
     [Produces("application/json")]
     public class ProductManagementController : ControllerBase
     {
-        private readonly IProductManagementModification _productManagement;
+        private readonly IProductManagement _productManagement;
         private readonly ProductConverter _productConverter;
-        public ProductManagementController(IProductManagementModification productManagement)
+        public ProductManagementController(IProductManagement productManagement)
         {
             _productManagement = productManagement;
             _productConverter = new ProductConverter(_productManagement);

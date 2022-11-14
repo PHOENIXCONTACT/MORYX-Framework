@@ -20,14 +20,15 @@ namespace Moryx.Products.Management.Tests
     [TestFixture]
     public class ProductConverterTests
     {
-        private Mock<IProductManagementModification> _productManagerMock;
+        private Mock<IProductManagement> _productManagerMock;
+        private Mock<IWorkplans> _workplanManagementMock;
 
         private ProductConverter _productConverter;
 
         [SetUp]
         public void Setup()
         {
-            _productManagerMock = new Mock<IProductManagementModification>();
+            _productManagerMock = new Mock<IProductManagement>();
 
             _productConverter = new ProductConverter(_productManagerMock.Object);
         }

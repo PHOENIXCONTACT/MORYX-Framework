@@ -7,7 +7,7 @@ using Moryx.Modules;
 namespace Moryx.Products.Management
 {
     public class StrategyBase<TConfig, TConfigBase> : IConfiguredPlugin<TConfigBase>
-        where TConfigBase : IProductStrategyConfiguation, IPluginConfig
+        where TConfigBase : IProductStrategyConfiguration, IPluginConfig
         where TConfig : TConfigBase
     {
         /// <summary>

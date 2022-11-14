@@ -4,14 +4,11 @@
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Communication;
-using Moryx.Communication.Endpoints;
-using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Notifications;
-using Moryx.Resources.Model;
+using Moryx.Resources.Management.Facades;
 using Moryx.Runtime.Configuration;
-using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management
@@ -21,8 +18,6 @@ namespace Moryx.Resources.Management
     /// </summary>
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>,
         IFacadeContainer<IResourceManagement>,
-        IFacadeContainer<IResourceModification>,
-        IFacadeContainer<IResourceModificationExtended>,
         IFacadeContainer<IResourceTypeTree>,
         IFacadeContainer<INotificationSource>
     {
@@ -102,10 +97,10 @@ namespace Moryx.Resources.Management
         }
 
         private readonly ResourceManagementFacade _resourceManagementFacade = new ResourceManagementFacade();
+        private readonly ResourceTypeTreeFacade _resourceTypeTreeFacade = new ResourceTypeTreeFacade();
         IResourceManagement IFacadeContainer<IResourceManagement>.Facade => _resourceManagementFacade;
-        IResourceModification IFacadeContainer<IResourceModification>.Facade => _resourceManagementFacade;
-        IResourceModificationExtended IFacadeContainer<IResourceModificationExtended>.Facade => _resourceManagementFacade;
-        IResourceTypeTree IFacadeContainer<IResourceTypeTree>.Facade => _resourceManagementFacade;
+
+        IResourceTypeTree IFacadeContainer<IResourceTypeTree>.Facade => _resourceTypeTreeFacade;
 
         private readonly NotificationSourceFacade _notificationSourceFacade = new NotificationSourceFacade(ModuleName);
         INotificationSource IFacadeContainer<INotificationSource>.Facade => _notificationSourceFacade;
