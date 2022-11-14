@@ -36,6 +36,11 @@ namespace Moryx.Configuration
         /// <exception cref="ArgumentNullException"></exception>
         public static void Execute(object targetObject, ValueProviderExecutorSettings settings)
         {
+            if (targetObject is null)
+            {
+                throw new ArgumentNullException(nameof(targetObject));
+            }
+
             if (settings.Providers == null)
             {
                 throw new ArgumentNullException(nameof(settings.Providers));
@@ -46,11 +51,17 @@ namespace Moryx.Configuration
                 throw new ArgumentNullException(nameof(settings.Filters));
             }
 
+            
             Iterate(targetObject, settings);
         }
 
         private static void Iterate(object target, ValueProviderExecutorSettings settings)
         {
+            if (target is null)
+            {
+                return;
+            }
+
             foreach (var property in FilterProperties(target, settings))
             {
                 foreach (var settingsProvider in settings.Providers)
@@ -62,6 +73,7 @@ namespace Moryx.Configuration
                 }
 
                 var value = property.GetValue(target);
+
 
                 if (property.PropertyType.IsValueType && !property.PropertyType.IsPrimitive ||
                      property.PropertyType.IsClass &&
