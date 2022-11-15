@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     internal static class WorkflowFactory
     {

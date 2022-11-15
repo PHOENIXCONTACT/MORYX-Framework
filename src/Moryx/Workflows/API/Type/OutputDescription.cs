@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Describes which type of output an out is

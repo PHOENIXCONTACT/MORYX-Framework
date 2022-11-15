@@ -6,9 +6,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
-using Moryx.Workflows;
-using Moryx.Workflows.Transitions;
-using Moryx.Workflows.WorkplanSteps;
+using Moryx.Workplans;
+using Moryx.Workplans.Transitions;
+using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.Tests.Workflows
 {

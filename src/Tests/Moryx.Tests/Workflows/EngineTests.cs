@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Moryx.Workflows;
-using Moryx.Workflows.Validation;
+using Moryx.Workplans;
+using Moryx.Workplans.Validation;
 using NUnit.Framework;
 
 namespace Moryx.Tests.Workflows

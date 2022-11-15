@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Interface of the workflow

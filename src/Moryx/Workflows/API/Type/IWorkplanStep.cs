@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Single step in the workplan

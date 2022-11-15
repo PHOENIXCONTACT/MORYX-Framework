@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     internal class PausedState : EngineState
     {

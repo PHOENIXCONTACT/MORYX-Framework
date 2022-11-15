@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Interface for a place

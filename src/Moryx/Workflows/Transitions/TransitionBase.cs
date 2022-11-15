@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Moryx.Workflows.Transitions
+namespace Moryx.Workplans.Transitions
 {
     /// <summary>
     /// Base class for all transition implementations

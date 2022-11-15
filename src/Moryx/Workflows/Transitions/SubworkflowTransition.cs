@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 
-namespace Moryx.Workflows.Transitions
+namespace Moryx.Workplans.Transitions
 {
     /// <summary>
     /// Transition that executes the given workplan transparent to the executing engine

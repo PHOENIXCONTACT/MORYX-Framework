@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moryx.Tools;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Implementation of <see cref="IPathPredictor"/>

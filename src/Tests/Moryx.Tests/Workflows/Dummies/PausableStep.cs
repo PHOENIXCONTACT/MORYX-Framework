@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
-using Moryx.Workflows;
-using Moryx.Workflows.Transitions;
-using Moryx.Workflows.WorkplanSteps;
+using Moryx.Workplans;
+using Moryx.Workplans.Transitions;
+using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.Tests.Workflows
 {

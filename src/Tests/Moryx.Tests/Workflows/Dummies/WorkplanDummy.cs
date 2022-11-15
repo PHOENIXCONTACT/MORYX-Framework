@@ -1,8 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Workflows;
-using Moryx.Workflows.WorkplanSteps;
+using Moryx.Workplans;
+using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.Tests.Workflows
 {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using Moryx.StateMachines;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     internal class WorkflowEngine : IMonitoredEngine, IStateContext
     {
