@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Moryx.Workflows;
-using Moryx.Workflows.Validation;
+using Moryx.Workplans;
+using Moryx.Workplans.Validation;
 
 namespace Moryx.AbstractionLayer
 {
