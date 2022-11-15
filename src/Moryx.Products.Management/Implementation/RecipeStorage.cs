@@ -246,7 +246,7 @@ namespace Moryx.Products.Management
 
             // Remove connectors, that are now longer used. We only use Created/Updated columns
             // and do not want the entities flagged as deleted
-            var removedSteps = workplanEntity.Steps.Where(se => workplan.Steps.All(s => s.Id != se.StepId));
+            var removedSteps = workplanEntity.Steps != null ?  workplanEntity.Steps.Where(se => workplan.Steps.All(s => s.Id != se.StepId)) : new List<WorkplanStepEntity>() ;
             foreach (var removedStep in removedSteps.ToList())
             {
                 descriptionRepo.RemoveRange(removedStep.OutputDescriptions);

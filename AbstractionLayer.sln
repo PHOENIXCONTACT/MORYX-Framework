@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Notifications.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.TestTools", "src\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj", "{1516374C-976F-49FC-A911-29EDC481C657}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Products.Management.Tests", "src\Tests\Moryx.Products.Management.Tests\Moryx.Products.Management.Tests.csproj", "{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.Products.Endpoints.Tests", "src\Tests\Moryx.Products.Management.Tests\Moryx.AbstractionLayer.Products.Endpoints.Tests.csproj", "{0CCA2AFB-1788-44C2-8919-F5CD46BC94AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.Products.Endpoints", "src\Moryx.AbstractionLayer.Products.Endpoints\Moryx.AbstractionLayer.Products.Endpoints.csproj", "{230A5D64-C34E-49E0-B5FA-4062AF227211}"
 EndProject

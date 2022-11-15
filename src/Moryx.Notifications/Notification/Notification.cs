@@ -49,7 +49,6 @@ namespace Moryx.Notifications
         /// If null, the notification was not acknowledged.
         /// If not null, the notification was already acknowledged
         /// </summary>
-        // TODO: AL6 remove explicit backing attribute for property
         private DateTime? _acknowledged;
         /// <inheritdoc />
         public virtual DateTime? Acknowledged
@@ -68,7 +67,6 @@ namespace Moryx.Notifications
         /// Who or what acknowledged the notification, if it was acknowledged.
         /// <see cref="Acknowledged"/> shows if the notification has been acknowledged.
         /// </summary>
-        // TODO: AL6 remove explicit backing attribute for property
         private string _acknowledger;
         /// <inheritdoc />
         public virtual string Acknowledger
@@ -86,12 +84,11 @@ namespace Moryx.Notifications
         /// <summary>
         /// Date of creation
         /// </summary>
-        // TODO: AL6 Remove backing attribute for property and make property nullable
         private DateTime? _created;
         /// <inheritdoc />
-        public virtual DateTime Created
+        public virtual DateTime? Created
         {
-            get => _created ?? default(DateTime);
+            get => _created;
             set
             {
                 if (_created is null)

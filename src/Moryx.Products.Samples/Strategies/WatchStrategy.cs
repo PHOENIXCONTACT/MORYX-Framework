@@ -37,6 +37,11 @@ namespace Moryx.Products.Samples
             watch.Weight = source.Float1;
             watch.Price = source.Float2;
         }
+
+        public override Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [StrategyConfiguration(typeof(WatchInstance), DerivedTypes = false)]
