@@ -70,6 +70,11 @@ namespace Moryx.Serialization
         /// <see cref="ICustomSerialization"/>
         public virtual string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
+            //Possible values for member that has PossibleAttribute 
+            var possibleTypesAttribute = attributeProvider.GetCustomAttribute<PossibleTypesAttribute>();
+            if (possibleTypesAttribute != null)
+                return possibleTypesAttribute.GetValues(null).ToArray();
+
             // Element type for collections
             var isCollection = EntryConvert.IsCollection(memberType);
             if (isCollection)
