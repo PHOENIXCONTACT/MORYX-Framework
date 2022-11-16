@@ -13,6 +13,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Moryx.Products.Management.Tests
 {
@@ -20,7 +21,6 @@ namespace Moryx.Products.Management.Tests
     public class ProductConverterTests
     {
         private Mock<IProductManagementModification> _productManagerMock;
-        private Mock<IWorkplans> _workplanManagementMock;
 
         private ProductConverter _productConverter;
 
@@ -124,7 +124,7 @@ namespace Moryx.Products.Management.Tests
             if (recipes.Any())
             {
                 _productManagerMock.Verify(rm => rm.GetRecipes(originalProductType, RecipeClassification.CloneFilter));
-                _productManagerMock.Verify(rm => rm.SaveRecipe(It.Is<IProductRecipe>(recipe => recipe == recipes.LastOrDefault())));
+                _productManagerMock.Verify(rm => rm.SaveRecipe(It.Is<IProductRecipe>(recipe => !HasChangedProperties<IProductRecipe>(recipe, recipes.LastOrDefault()))));
                 if (recipes.First().Id != 0)
                     _productManagerMock.Verify(rm => rm.LoadRecipe(recipes.First().Id));
             }                
@@ -135,6 +135,35 @@ namespace Moryx.Products.Management.Tests
                 _productManagerMock.Verify(pm => pm.LoadType(targetDummyTypeWithParts.ProductPartLink.Product.Id));
                 _productManagerMock.Verify(pm => pm.LoadType(targetDummyTypeWithParts.ProductPartLinkEnumerable.First().Product.Id));
             }
+        }
+
+        private static bool HasChangedProperties<T>(object A, object B)
+        {
+            if (A is null || B is null)
+                throw new ArgumentNullException("You need to provide 2 non-null objects");
+            
+            var type = typeof(T);
+            var allProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var allSimpleProperties = allProperties.Where(pi => IsSimpleType(pi.PropertyType));
+            var unequalProperties =
+                    from pi in allSimpleProperties
+                    let AValue = type.GetProperty(pi.Name).GetValue(A, null)
+                    let BValue = type.GetProperty(pi.Name).GetValue(B, null)
+                    where AValue != BValue && (AValue == null || !AValue.Equals(BValue))
+                    select pi.Name;
+            return unequalProperties.Any();
+        }
+
+        private static bool IsSimpleType(Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                // nullable type, check if the nested type is simple.
+                return IsSimpleType(type.GetGenericArguments()[0]);
+            
+            return type.IsPrimitive
+              || type.IsEnum
+              || type.Equals(typeof(string))
+              || type.Equals(typeof(decimal));
         }
         #endregion
 
@@ -187,7 +216,7 @@ namespace Moryx.Products.Management.Tests
             var originalWorkplanRecipe = originalRecipe as DummyProductWorkplanRecipe;
             if (originalWorkplanRecipe is not null)
             {
-                _workplanManagementMock.Setup(wm => wm.LoadWorkplan(It.IsAny<long>()))
+                _productManagerMock.Setup(pm => pm.LoadWorkplan(It.IsAny<long>()))
                     .Returns((long id) => new DummyWorkplan() { Id = id });
             }
             // - Create target object
@@ -213,9 +242,9 @@ namespace Moryx.Products.Management.Tests
             Assert.AreEqual(originalRecipe, recoveredOriginal);
             // - If there is a workplan and it changed, reload it at backward conversion
             if (originalWorkplanRecipe?.Workplan is not null && originalWorkplanRecipe.Workplan.Id != workplanInTargetRecipe.Id)
-                _workplanManagementMock.Verify(wm => wm.LoadWorkplan(originalWorkplanRecipe.Workplan.Id), Times.Once);
+                _productManagerMock.Verify(wm => wm.LoadWorkplan(originalWorkplanRecipe.Workplan.Id), Times.Once);
             else
-                _workplanManagementMock.VerifyNoOtherCalls();
+                _productManagerMock.VerifyNoOtherCalls();
         }
         #endregion
 

@@ -192,8 +192,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 foreach(var recipe in recipes)
                     _productManagement.SaveRecipe(recipe);
 
+            // Product is flat
+            if (source.Properties is null)
+                return converted;
+
             // Delete recipes
-            if(converted.Id != 0)
+            if (converted.Id != 0)
             {
                 var recipesOfProduct = _productManagement.GetRecipes(converted, RecipeClassification.CloneFilter);
                 foreach (var recipe in recipesOfProduct)
@@ -201,10 +205,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                         _productManagement.RemoveRecipe(recipe.Id);
             }
             
-            // Product is flat
-            if (source.Properties is null)
-                return converted;
-
             // Copy extended properties
             var properties = converted.GetType().GetProperties();
             EntryConvert.UpdateInstance(converted, source.Properties, ProductSerialization);
