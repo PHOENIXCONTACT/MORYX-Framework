@@ -1,17 +1,17 @@
-## Migrate to Core v4
+# Migrate to Core v4
 
 For this major release the main motivation was switching from our own MORYX Runtime to ASP.NET Core with MORYX extensions.
 It includes replacing EntityFramework 6 with EntityFramework Core as well as the replacement of the First Level DI-Container. 
 We also removed our own implementation of an injectable logger and will use the very similar logger API from Microsoft from now on.
 Regarding the configuration of our module, we are able to simplify things here as well. Tbc...
-Lastly, we remove the support for .Net Framework with the step to MORYX Core v4.
+Lastly, we remove the support for .NET Framework with the step to MORYX Core v4.
 For more information, please refer to the respective paragraphs below.
 
-### .NET Framework
+## .NET Framework
 
 MORYX Core no longer supports the legacy .NET Framework and is only available for .NET 5.0 and above. There is also no more WCF support or embedded kestrel hosting. Instead standard ASP.NET API-Controllers can be used that import MORYX components (kernel, modules or facade).
 
-### DI Container replacement
+## DI Container replacement
 
 As of version 4 we replaced the global Castle Windsor container with Microsofts `ServiceCollection`. This has several benefits:
 
@@ -58,7 +58,7 @@ public static void Main(string[] args)
 }
 ````
 
-Constructor for a `ModuleController`. This also includes further imports like `IDbContextManager`. (Beaware that the internal dependency injection within a module still uses castel and, hence, works with parameter injection)
+Constructor for a `ModuleController`. This also includes further imports like `IDbContextManager`. (Beaware that the internal dependency injection within a module still uses castle and, hence, works with parameter injection)
 
 ````cs
 public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
@@ -85,11 +85,11 @@ IProductManagementModification IFacadeContainer<IProductManagementModification>.
 Lastly, the `ServerModule` is not needed anymore and was removed.
 
 
-### Hosting
+## Hosting
 
-Hosting of Endpoints from within Modules is no longer supported removing IEndpointHosting and IEndpointHostFactory from within modules as well as the Activate Hosting extension on the container. Asp Controllers can get the Facade injected and are hosted by Asp natively.
+Hosting of Endpoints from within Modules is no longer supported removing IEndpointHosting and IEndpointHostFactory from within modules as well as the Activate Hosting extension on the container. Asp Controllers can get the facade injected and are hosted by Asp natively.
 
-### Logging
+## Logging
 
 Most of the MORYX logging was replaced by the types from "Microsoft.Extensions.Logging". 
 
@@ -99,29 +99,39 @@ Changes:
 - LoggerManagement is gone without replacement
 - The DummyLogger was removed, an equivalent is given by instantiating `new ModuleLogger("Dummy", typeof(ResourceManager), new NullLoggerFactory())`
 
-### Maintenance
+## Maintenance
 
-The Maintenance module and its internally hosted web UI are gone. They are replaced by kernel based ASP endpoints and a razor hosted frontend. With the changes to logging the related tab in the UI was removed as well as the index page that provided an overview of the modules. The module tab contains a list of all modules in similar fashion and the additional statistics shown on the index page cannot be provided in .Net Core.
+The Maintenance module and its internally hosted web UI are gone. They are replaced by kernel based ASP endpoints and a razor hosted frontend. With the changes to logging the related tab in the UI was removed as well as the index page that provided an overview of the modules. The module tab contains a list of all modules in similar fashion and the additional statistics shown on the index page cannot be provided in .NET Core.
 
-### Package changes
+## Package changes
 
 Added:
-- Moryx.Runtime.Endpoints // Contains endpoints for maintenance now
-- Moryx.Maintenance.Web
+- `Moryx.Runtime.Endpoints` (Contains endpoints for maintenance now)
+- `Moryx.Maintenance.Web`
 
 Removed:
-- Moryx.Runtime.WinService
-- Moryx.Runtime.Wcf
-- Moryx.Runtime.Kestrel
-- Moryx.Runtime.DbUpdate
-- Moryx.TestTools.SystemTest
-- Moryx.Runtime.SmokeTest
-- Moryx.Runtime.Maintenance
-- Moryx.Runtime.Wcf
-- Moryx.Runtime.Maintenance.Web /Replaced by Moryx.Maintenance.Web with razor hosting
-- Moryx.Asp.Extensions // Not needed anymore, Shell related content moved to "Moryx" package
+- `Moryx.Runtime.WinService`
+- `Moryx.Runtime.Wcf`
+- `Moryx.Runtime.Kestrel`
+- `Moryx.Runtime.DbUpdate`
+- `Moryx.TestTools.SystemTest`
+- `Moryx.Runtime.SmokeTest`
+- `Moryx.Runtime.Maintenance`
+- `Moryx.Runtime.Wcf`
+- `Moryx.Runtime.Maintenance.Web` (Replaced by Moryx.Maintenance.Web with razor hosting)
+- `Moryx.Asp.Extensions` (Not needed anymore, Shell related content moved to "Moryx" package)
 
-### Database
+## Namespaces
+
+Added
+
+- `Moryx.Workplans` (renamed from `Moryx.Workflows`)
+
+Removed
+
+- `Moryx.Workflows`
+
+## Database
 With the update to MORYX Core 4 we also update the reference to Entity Framework. The update to Entity Framework Core comes with some changes to the API we are used to, for an overview of the changes provided by Microsoft see [here](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/). In order for you to have less of a headache when searching through the EF Core documentation to find the right translation for your code into the new way of doing things (assuming that you want to keep an identical database structure), we list the changes we went through in the subsequent bullet points:
 
 - The DB contexts requires changes
@@ -136,9 +146,9 @@ With the update to MORYX Core 4 we also update the reference to Entity Framework
 - Specifying the ContextMode explicitly is not required anymore
 - The Configuration.cs for the DB migration was removed, for the new way of setting up a database migration read the section below.
 
-### Add database migrations (with Postgres)
+## Add database migrations (with Postgres)
 
-*This section assumes that you are starting with a fresh database, if you already have an existing database plese skip this section*
+*This section assumes that you are starting with a fresh database. If you already have an existing database, feel free to skip this section*
 
 You need, at least, an initial migration for each of your database contexts. [Read more](https://docs.microsoft.com/de-de/ef/core/cli/dotnet#dotnet-ef-migrations-add) about how to add migrations with EntityFramework.
 
@@ -148,17 +158,17 @@ After you navigated to the root directory of the project that contains the datab
 dotnet ef migrations add InitialCreate --startup-project Path\To\StartProject.csproj --output-dir .\Model\Migrations 
 ```
 
-#### Set things up
+### Setting things up
 
 In order to run this successfully, you might have to go through some configuration.
 
-##### Required packages
+#### Required packages
 
 The `StartProject.csproj` has to reference 
 
   * `Microsoft.EntityFrameworkCore.Design`
 
-##### Database connection
+### Database connection
 
 You need to have a connection to the database that corresponds to the context. To find out how this connection is set up, have a look at the contexts `OnConfigure()` method. By default it should look somewhat like this:
 

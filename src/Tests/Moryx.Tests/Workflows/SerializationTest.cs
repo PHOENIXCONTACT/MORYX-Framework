@@ -3,7 +3,7 @@
 
 using System.Linq;
 using Moryx.Serialization;
-using Moryx.Workflows;
+using Moryx.Workplans;
 using Newtonsoft.Json;
 using NUnit.Framework;
 

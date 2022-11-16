@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Workflows.Transitions;
+using Moryx.Workplans.Transitions;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Properties;
 
-namespace Moryx.Workflows.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps
 {
     /// <summary>
     /// Workplan step to join multiple inputs

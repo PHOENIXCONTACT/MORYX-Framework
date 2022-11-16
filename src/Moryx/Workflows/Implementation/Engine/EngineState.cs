@@ -3,7 +3,7 @@
 
 using Moryx.StateMachines;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// State pattern for the engine

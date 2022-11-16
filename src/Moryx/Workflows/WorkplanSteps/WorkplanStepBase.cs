@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Workflows.Transitions;
+using Moryx.Workplans.Transitions;
 
-namespace Moryx.Workflows.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps
 {
     /// <summary>
     /// Base class for all workplanstep

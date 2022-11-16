@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Additional facade interface for components that store and provide workplans

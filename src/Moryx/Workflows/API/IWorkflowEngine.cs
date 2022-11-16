@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Engine instance processing the workflow. Any progress on the workflow is communicated via events.

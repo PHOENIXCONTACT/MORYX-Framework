@@ -1,7 +1,7 @@
 ﻿using Moryx.Threading;
-using Moryx.Workflows.Validation;
+using Moryx.Workplans.Validation;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Workflow engine API access class with factory methods

@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Moryx.Tools;
-using Moryx.Workflows;
+using Moryx.Workplans;
 using NUnit.Framework;
 
 namespace Moryx.Tests.Workflows

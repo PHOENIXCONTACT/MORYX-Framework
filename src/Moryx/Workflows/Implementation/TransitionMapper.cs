@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Moryx.Threading;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Maps different transition types onto dedicated methods

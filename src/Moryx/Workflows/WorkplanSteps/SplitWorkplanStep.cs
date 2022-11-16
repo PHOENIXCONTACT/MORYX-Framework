@@ -5,9 +5,9 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Properties;
-using Moryx.Workflows.Transitions;
+using Moryx.Workplans.Transitions;
 
-namespace Moryx.Workflows.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps
 {
     /// <summary>
     /// Workplanstep to split execution

@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Moryx.Workflows.Validation
+namespace Moryx.Workplans.Validation
 {
     /// <summary>
     /// Interface for all validators
