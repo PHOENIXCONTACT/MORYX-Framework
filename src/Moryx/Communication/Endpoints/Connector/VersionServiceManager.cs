@@ -48,7 +48,7 @@ namespace Moryx.Communication.Endpoints
             {
                 return ActiveEndpointsAsync().Result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -69,7 +69,7 @@ namespace Moryx.Communication.Endpoints
             {
                 return ServiceEndpointsAsync(service).Result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
