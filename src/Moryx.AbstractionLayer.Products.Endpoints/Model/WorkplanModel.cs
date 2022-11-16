@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Workflows;
+using Moryx.Workplans;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {

@@ -13,7 +13,7 @@ using Moryx.Products.Model;
 using Moryx.Products.Samples;
 using Moryx.Products.Samples.Recipe;
 using Moryx.Tools;
-using Moryx.Workflows;
+using Moryx.Workplans;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.Model.InMemory;

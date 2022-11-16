@@ -33,7 +33,7 @@ namespace Moryx.Resources.Management.Tests
             _linker = new ResourceLinker
             {
                 Graph = mock.Object,
-                Logger = new ModuleLogger("Dummy", typeof(ResourceLinker), new NullLoggerFactory())
+                Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
             };
         }
 

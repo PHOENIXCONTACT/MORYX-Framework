@@ -6,9 +6,7 @@ using System.Collections.Generic;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.Model;
 using Moryx.Resources.Model;
-using Moryx.TestTools.UnitTest;
 using Moq;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
@@ -62,7 +60,7 @@ namespace Moryx.Resources.Management.Tests
                 ResourceLinker = _linkerMock.Object,
                 TypeController = _typeControllerMock.Object,
                 Graph = _graph,
-                Logger = new ModuleLogger("Dummy", typeof(ResourceManager), new NullLoggerFactory())
+                Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
         };
 
             _typeControllerMock.Setup(tc => tc.Create(typeof(ResourceMock).ResourceType())).Returns(_resourceMock);
