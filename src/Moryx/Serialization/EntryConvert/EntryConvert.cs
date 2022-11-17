@@ -321,7 +321,7 @@ namespace Moryx.Serialization
                         }
                         break;
                     default:
-                        convertedProperty.Value.Current = ConvertToString(value, customSerialization.FormatProvider);
+                        convertedProperty.Value.Current = ConvertToString(value ?? convertedProperty.Value.Default, customSerialization.FormatProvider);
                         break;
                 }
 

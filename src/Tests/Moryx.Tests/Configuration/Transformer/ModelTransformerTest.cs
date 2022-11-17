@@ -141,7 +141,7 @@ namespace Moryx.Tests.Configuration
 
                     var propertyValue = propertyInfo.GetValue(config);
                     if (propertyValue == null)
-                        Assert.IsNull(entry.Value.Current, "The current value do not match.");
+                        Assert.AreEqual(entry.Value.Default,entry.Value.Current, "The current value do not match.");
                     else if (typeof(IList).IsAssignableFrom(propertyInfo.PropertyType))
                         Assert.AreEqual(((IList)propertyValue).Count, entry.SubEntries.Count);
                     else if (propertyInfo.PropertyType.IsClass && propertyInfo.PropertyType != typeof(string))
