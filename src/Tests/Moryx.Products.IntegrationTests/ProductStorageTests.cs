@@ -47,7 +47,7 @@ namespace Moryx.Products.IntegrationTests
         public void PrepareStorage()
         {
             // prepare in memory products db
-            _factory = new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("ProductStorageTest"));
+            _factory = BuildUnitOfWorkFactory();
 
             // prepare empty workplan
             var workplan = new Workplan { Name = "TestWorkplan" };
@@ -224,6 +224,11 @@ namespace Moryx.Products.IntegrationTests
             };
 
             _storage.Start();
+        }
+
+        protected virtual UnitOfWorkFactory<ProductsContext> BuildUnitOfWorkFactory()
+        {
+            return new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("ProductStorageTest"));
         }
 
         private Mock<IStorageStrategyFactory> CreateStrategyFactory()

@@ -19,7 +19,12 @@ namespace Moryx.Products.IntegrationTests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            _factory = new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("RecipeStorageTests"));
+            _factory = BuildUnitOfWorkFactory();
+        }
+
+        protected virtual UnitOfWorkFactory<ProductsContext> BuildUnitOfWorkFactory()
+        {
+            return new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("RecipeStorageTests"));
         }
 
         [Test]

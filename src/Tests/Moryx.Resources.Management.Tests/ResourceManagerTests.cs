@@ -38,7 +38,7 @@ namespace Moryx.Resources.Management.Tests
                 References = new ReferenceCollectionMock<IResource>()
             };
 
-            _modelFactory = new UnitOfWorkFactory<ResourcesContext>(new InMemoryDbContextManager(Guid.NewGuid().ToString()));
+            _modelFactory = BuildUnitOfWorkFactory();
 
             _typeControllerMock = new Mock<IResourceTypeController>();
 
@@ -61,7 +61,7 @@ namespace Moryx.Resources.Management.Tests
                 TypeController = _typeControllerMock.Object,
                 Graph = _graph,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
-        };
+            };
 
             _typeControllerMock.Setup(tc => tc.Create(typeof(ResourceMock).ResourceType())).Returns(_resourceMock);
             _typeControllerMock.Setup(tc => tc.Create(typeof(PublicResourceMock).ResourceType())).Returns(new PublicResourceMock()
@@ -73,6 +73,11 @@ namespace Moryx.Resources.Management.Tests
             var resourceRepo = uow.GetRepository<IResourceRepository>();
             resourceRepo.Create(DatabaseResourceName, typeof(ResourceMock).ResourceType());
             uow.SaveChanges();
+        }
+
+        protected virtual UnitOfWorkFactory<ResourcesContext> BuildUnitOfWorkFactory()
+        {
+            return new UnitOfWorkFactory<ResourcesContext>(new InMemoryDbContextManager(Guid.NewGuid().ToString()));
         }
 
         [Test(Description = "Executes a resource initializer on the manager to add resources")]
