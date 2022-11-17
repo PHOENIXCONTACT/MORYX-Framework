@@ -303,6 +303,7 @@ namespace Moryx.Resources.Management
                 try
                 {
                     uow.SaveChanges();
+                    resource.Id = entity.Id;
                 }
                 catch (Exception ex)
                 {
