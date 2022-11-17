@@ -102,7 +102,6 @@ namespace Moryx.Serialization
         /// <see cref="ICustomSerialization"/>
         private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization)
         {
-           
             // Set if the current entry is readonly by checking if the property has a setter
             // or the ReadOnlyAttribute was set to true
             var isReadOnly = !property.CanWrite;
@@ -111,14 +110,14 @@ namespace Moryx.Serialization
                 var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
                 isReadOnly = readOnlyAtt?.IsReadOnly ?? false;
             }
-                     
+
             // Prepare object
             var entryValue = new EntryValue
             {
                 Type = TransformType(property.PropertyType),
                 UnitType = customSerialization.GetUnitTypeByAttributes(property),
                 IsReadOnly = isReadOnly,
-                Possible = customSerialization.PossibleValues(property.PropertyType, property) 
+                Possible = customSerialization.PossibleValues(property.PropertyType, property)
             };
 
             // Get most basic default
