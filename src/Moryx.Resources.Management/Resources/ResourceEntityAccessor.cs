@@ -119,33 +119,40 @@ namespace Moryx.Resources.Management
         {
             var resourceRepo = uow.GetRepository<IResourceRepository>();
 
-            var resources = (from res in resourceRepo.Linq
-                             where res.Deleted == null
-                             select new ResourceEntityAccessor
-                             {
-                                 Id = res.Id,
-                                 Type = res.Type,
-                                 Name = res.Name,
-                                 Description = res.Description,
-                                 ExtensionData = res.ExtensionData,
-                                 Relations = (from target in res.Targets
-                                              where target.Target.Deleted == null
-                                              // Attention: This is Copy&Paste because of LinQ limitations
-                                              select new ResourceRelationAccessor
-                                              {
-                                                  Entity = target,
-                                                  Role = ResourceReferenceRole.Target,
-                                              }).Concat(
-                                               from source in res.Sources
-                                               where source.Source.Deleted == null
-                                               // Attention: This is Copy&Paste because of LinQ limitations
-                                               select new ResourceRelationAccessor
-                                               {
-                                                   Entity = source,
-                                                   Role = ResourceReferenceRole.Source,
-                                               }).ToList()
-                             }).ToList();
-            return resources;
+            var resources = 
+                (from res in resourceRepo.Linq
+                 where res.Deleted == null
+                 select res)
+                .ToList();
+
+            var resourcEntityAccessors = resources
+                .Select(res => 
+                    new ResourceEntityAccessor
+                    {
+                        Id = res.Id,
+                        Type = res.Type,
+                        Name = res.Name,
+                        Description = res.Description,
+                        ExtensionData = res.ExtensionData,
+                        Relations = (from target in res.Targets
+                                    where target.Target.Deleted == null
+                                    // Attention: This is Copy&Paste because of LinQ limitations
+                                    select new ResourceRelationAccessor
+                                    {
+                                        Entity = target,
+                                        Role = ResourceReferenceRole.Target,
+                                    }).Concat(
+                                    from source in res.Sources
+                                    where source.Source.Deleted == null
+                                    // Attention: This is Copy&Paste because of LinQ limitations
+                                    select new ResourceRelationAccessor
+                                    {
+                                        Entity = source,
+                                        Role = ResourceReferenceRole.Source,
+                                    }).ToList()
+                    })
+                .ToList();
+            return resourcEntityAccessors;
         }
 
         /// <summary>
