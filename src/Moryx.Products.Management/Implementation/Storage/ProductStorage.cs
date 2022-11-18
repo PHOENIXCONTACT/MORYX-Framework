@@ -17,6 +17,7 @@ using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
 using static Moryx.Products.Management.ProductExpressionHelpers;
+using Moryx.Serialization;
 
 namespace Moryx.Products.Management
 {
@@ -203,8 +204,10 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                SaveRecipe(uow, recipe);
+                var entity = SaveRecipe(uow, recipe);
                 uow.SaveChanges();
+                recipe.Id = entity.Id;
+
                 return recipe.Id;
             }
         }
@@ -215,7 +218,6 @@ namespace Moryx.Products.Management
         protected ProductRecipeEntity SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
         {
             var entity = RecipeStorage.SaveRecipe(uow, recipe);
-
             RecipeStrategies[recipe.GetType().Name].SaveRecipe(recipe, entity);
 
             return entity;
@@ -367,7 +369,7 @@ namespace Moryx.Products.Management
             }
 
             // Include current version
-            productsQuery = productsQuery.Include(p => p.CurrentVersion);
+            //productsQuery = productsQuery.Include(p => p.CurrentVersion);
 
             // Execute the query
             var products = productsQuery.OrderBy(p => p.TypeName)
@@ -575,6 +577,12 @@ namespace Moryx.Products.Management
                 var entity = SaveProduct(productSaverContext, modifiedInstance);
 
                 uow.SaveChanges();
+                modifiedInstance.Id = entity.Id;
+                foreach (var item in productSaverContext.PersistentObjectCache)
+                {
+                    item.Key.Id = item.Value.Id;
+                }
+
 
                 return entity.Id;
             }
@@ -611,7 +619,7 @@ namespace Moryx.Products.Management
                 version.State = (int)modifiedInstance.State;
                 typeEntity.SetCurrentVersion(version);
             }
-
+            saverContext.PersistentObjectCache.Add(modifiedInstance, typeEntity);
             strategy.SaveType(modifiedInstance, typeEntity.CurrentVersion);
             saverContext.EntityCache.Add(new ProductIdentity(typeEntity.Identifier, typeEntity.Revision), typeEntity);
 
@@ -633,6 +641,8 @@ namespace Moryx.Products.Management
                         linkStrategy.SavePartLink(link, linkEntity);
                         EntityIdListener.Listen(linkEntity, link);
                         linkEntity.Child = GetPartEntity(saverContext, link);
+                        saverContext.PersistentObjectCache.Add(link, linkEntity);
+
                     }
                     else if (linkEntity != null && link == null) // link was removed
                     {
@@ -643,6 +653,7 @@ namespace Moryx.Products.Management
                     {
                         linkStrategy.SavePartLink(link, linkEntity);
                         linkEntity.Child = GetPartEntity(saverContext, link);
+       //                 linkEntity.Id = linkEntity.Child.Id;
                     }
                     // else: link was null and is still null
 
@@ -668,6 +679,7 @@ namespace Moryx.Products.Management
                             linkEntity = linkRepo.Create(linkStrategy.PropertyName);
                             linkEntity.Parent = typeEntity;
                             EntityIdListener.Listen(linkEntity, link);
+                            
                         }
                         else
                         {
@@ -675,6 +687,7 @@ namespace Moryx.Products.Management
                         }
                         linkStrategy.SavePartLink(link, linkEntity);
                         linkEntity.Child = GetPartEntity(saverContext, link);
+                        saverContext.PersistentObjectCache.Add(link, linkEntity);
                     }
                 }
             }
@@ -688,6 +701,7 @@ namespace Moryx.Products.Management
             {
                 var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];
                 EntityIdListener.Listen(part, link.Product);
+                saverContext.PersistentObjectCache.Add(link.Product, part);
                 return part;
             }
 
@@ -917,14 +931,20 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
+                var tuples = new Dictionary<ProductInstance, ProductInstanceEntity>();
                 // Write all to entity objects
                 foreach (var instance in productInstances)
                 {
-                    SaveInstance(uow, instance);
+                    var entity = SaveInstance(uow, instance);
+                    tuples.Add(instance, entity);
                 }
 
                 // Save transaction
                 uow.SaveChanges();
+                foreach(var tuple in tuples)
+                {
+                    tuple.Key.Id = tuple.Value.Id;
+                }
             }
         }
 
@@ -983,11 +1003,13 @@ namespace Moryx.Products.Management
         {
             public IUnitOfWork UnitOfWork { get; }
             public IDictionary<ProductIdentity, ProductTypeEntity> EntityCache { get; }
+            public IDictionary<IPersistentObject, EntityBase> PersistentObjectCache { get; }
 
             public ProductPartsSaverContext(IUnitOfWork uow)
             {
                 UnitOfWork = uow;
                 EntityCache = new Dictionary<ProductIdentity, ProductTypeEntity>();
+                PersistentObjectCache = new Dictionary<IPersistentObject, EntityBase>();
             }
 
             public T GetRepository<T>() where T : class, IRepository
