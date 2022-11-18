@@ -41,7 +41,6 @@ namespace Moryx.Workplans.Validation
         /// <summary>
         /// Print error in readable format
         /// </summary>
-        // TODO: Does it make sense to pass workplan to error
         public abstract string Print(IWorkplan workplan);
     }
 }
