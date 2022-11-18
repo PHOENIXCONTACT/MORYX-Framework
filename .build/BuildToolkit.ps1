@@ -515,7 +515,7 @@ function Invoke-Publish {
 
     foreach ($package in $packages) {
         Write-Host "Pushing package $package"
-        & $global:DotNetCli nuget push $package --api-key $env:MORYX_NUGET_APIKEY --no-symbols true --skip-duplicate --source $env:MORYX_PACKAGE_TARGET
+        & $global:DotNetCli nuget push $package --api-key $env:MORYX_NUGET_APIKEY --no-symbols --skip-duplicate --source $env:MORYX_PACKAGE_TARGET
         Invoke-ExitCodeCheck $LastExitCode;
     }
 
