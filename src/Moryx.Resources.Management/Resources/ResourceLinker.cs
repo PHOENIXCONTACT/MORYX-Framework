@@ -373,7 +373,7 @@ namespace Moryx.Resources.Management
             }
             else
             {
-                entity = ResourceEntityAccessor.SaveToEntity(context.UnitOfWork, instance);
+                entity = ResourceEntityAccessor.SaveToEntity(context.UnitOfWork, instance).Item1;
                 context.ResourceLookup[entity] = instance;
             }
 

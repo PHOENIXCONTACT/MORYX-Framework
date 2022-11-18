@@ -292,8 +292,9 @@ namespace Moryx.Resources.Management
                 using var uow = UowFactory.Create();
                 var newResources = new HashSet<Resource>();
 
-                var entity = ResourceEntityAccessor.SaveToEntity(uow, resource);
-                if (entity.Id == 0)
+                var saveResult = ResourceEntityAccessor.SaveToEntity(uow, resource);
+                var entity = saveResult.Item1;
+                if (saveResult.Item2)
                     newResources.Add(resource);
 
                 var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);

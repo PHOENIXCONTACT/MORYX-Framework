@@ -96,7 +96,7 @@ namespace Moryx.Resources.Management.Tests
             var extensionDataJson = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
 
             // Act
-            var resourceEntity = ResourceEntityAccessor.SaveToEntity(unitOfWorkMock.Object, resource);
+            var resourceEntity = ResourceEntityAccessor.SaveToEntity(unitOfWorkMock.Object, resource).Item1;
 
             // Assert
             Assert.NotNull(resourceEntity);
