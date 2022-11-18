@@ -67,8 +67,6 @@ namespace Moryx.Tools
         public static string GetDisplayName(this ICustomAttributeProvider attributeProvider)
         {
             var name = attributeProvider.GetCustomAttribute<DisplayAttribute>(false)?.GetName();
-            if (string.IsNullOrEmpty(name))
-                name = attributeProvider.GetCustomAttribute<ClassDisplayAttribute>(false)?.GetName();
 
             if (string.IsNullOrEmpty(name))
                 name = attributeProvider.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName;
@@ -86,9 +84,6 @@ namespace Moryx.Tools
         public static string GetDescription(this ICustomAttributeProvider attributeProvider)
         {
             var description = attributeProvider.GetCustomAttribute<DisplayAttribute>(false)?.GetDescription();
-
-            if (string.IsNullOrEmpty(description))
-                description = attributeProvider.GetCustomAttribute<ClassDisplayAttribute>(false)?.GetDescription();
 
             if (string.IsNullOrEmpty(description))
                 description = attributeProvider.GetCustomAttribute<DescriptionAttribute>(false)?.Description;
