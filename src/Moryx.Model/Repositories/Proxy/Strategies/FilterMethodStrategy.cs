@@ -256,11 +256,11 @@ namespace Moryx.Model.Repositories.Proxy
 
         private static void LoadFilterMethods()
         {
-            var queryableMethods = typeof(Queryable).GetMethods();
+            var queryableMethods = typeof(System.Linq.Queryable).GetMethods();
 
             // Queryable.FirstOrDefault(IQueryable, Expression)
-            var methodInfo = queryableMethods.Single(m =>
-                m.Name.Equals(nameof(Queryable.FirstOrDefault)) && m.GetParameters().Length == 2);
+            var methodInfo = queryableMethods.Last(m =>
+                m.Name.Equals(nameof(System.Linq.Queryable.FirstOrDefault)) && m.GetParameters().Length == 2);
             FilterMethods[Filter.FirstOrDefault] = methodInfo;
 
             // Queryable.First(IQueryable, Expression)
@@ -274,7 +274,7 @@ namespace Moryx.Model.Repositories.Proxy
             FilterMethods[Filter.Single] = methodInfo;
 
             // Queryable.SingleOrDefault(IQueryable, Expression)
-            methodInfo = queryableMethods.Single(m =>
+            methodInfo = queryableMethods.Last(m =>
                 m.Name.Equals(nameof(Queryable.SingleOrDefault)) && m.GetParameters().Length == 2);
             FilterMethods[Filter.SingleOrDefault] = methodInfo;
 
