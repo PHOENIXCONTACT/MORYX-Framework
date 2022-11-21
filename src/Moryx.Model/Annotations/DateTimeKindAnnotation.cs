@@ -72,7 +72,7 @@ namespace Moryx.Model.Annotations
         public static PropertyBuilder<DateTime?> HasDateTimeKind(this PropertyBuilder<DateTime?> builder, DateTimeKind kind) =>
             builder.HasAnnotation(AnnotationName, kind);
 
-        private static DateTimeKind? FindDateTimeKind(IPropertyBase property)
+        private static DateTimeKind? FindDateTimeKind(IMutablePropertyBase property)
         {
             var attribute = property.PropertyInfo.GetCustomAttribute<DateTimeKindAttribute>();
             if (attribute != null)
