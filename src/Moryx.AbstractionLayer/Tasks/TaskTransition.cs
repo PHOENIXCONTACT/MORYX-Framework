@@ -3,8 +3,8 @@
 
 using System;
 using System.Linq;
-using Moryx.Workflows;
-using Moryx.Workflows.Transitions;
+using Moryx.Workplans;
+using Moryx.Workplans.Transitions;
 
 namespace Moryx.AbstractionLayer
 {

@@ -10,7 +10,7 @@ using Moryx.Container;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Products.Model;
-using Moryx.Workflows;
+using Moryx.Workplans;
 
 namespace Moryx.Products.Management
 {

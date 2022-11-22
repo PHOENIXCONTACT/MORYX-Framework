@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.Workflows;
+using Moryx.Workplans;
 
 namespace Moryx.AbstractionLayer.Products
 {

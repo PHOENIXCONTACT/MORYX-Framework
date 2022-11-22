@@ -6,7 +6,7 @@ using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management;
 using Moryx.Products.Model;
-using Moryx.Workflows;
+using Moryx.Workplans;
 using NUnit.Framework;
 
 namespace Moryx.Products.IntegrationTests

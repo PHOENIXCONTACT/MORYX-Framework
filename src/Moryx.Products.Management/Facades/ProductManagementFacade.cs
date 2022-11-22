@@ -10,7 +10,7 @@ using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Runtime.Modules;
-using Moryx.Workflows;
+using Moryx.Workplans;
 
 namespace Moryx.Products.Management
 {

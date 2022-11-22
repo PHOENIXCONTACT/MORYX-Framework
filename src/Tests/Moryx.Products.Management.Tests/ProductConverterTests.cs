@@ -8,7 +8,7 @@ using Moryx.AbstractionLayer.Products.Endpoints;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.Tools;
-using Moryx.Workflows;
+using Moryx.Workplans;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

@@ -72,7 +72,7 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
 
             SetReferenceCollections(instance);
 
-            instance.Logger = new ModuleLogger("Dummy", typeof(ResourceGraphMock), new NullLoggerFactory());
+            instance.Logger = new ModuleLogger("Dummy", new NullLoggerFactory());
 
             return instance;
         }

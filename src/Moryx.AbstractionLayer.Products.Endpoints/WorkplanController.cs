@@ -3,7 +3,7 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.Workflows;
+using Moryx.Workplans;
 using System.Collections.Generic;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints

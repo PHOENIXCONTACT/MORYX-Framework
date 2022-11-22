@@ -7,9 +7,9 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 using Moryx.Tools;
-using Moryx.Workflows;
-using Moryx.Workflows.Transitions;
-using Moryx.Workflows.WorkplanSteps;
+using Moryx.Workplans;
+using Moryx.Workplans.Transitions;
+using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.AbstractionLayer
 {

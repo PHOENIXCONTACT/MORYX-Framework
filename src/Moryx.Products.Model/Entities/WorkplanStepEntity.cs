@@ -31,5 +31,11 @@ namespace Moryx.Products.Model
         public virtual ICollection<WorkplanConnectorReferenceEntity> Connectors { get; set; }
 
         public virtual ICollection<WorkplanOutputDescriptionEntity> OutputDescriptions { get; set; }
+
+        public WorkplanStepEntity()
+        {
+            Connectors = new List<WorkplanConnectorReferenceEntity>();
+            OutputDescriptions = new List<WorkplanOutputDescriptionEntity>();
+        }
     }
 }

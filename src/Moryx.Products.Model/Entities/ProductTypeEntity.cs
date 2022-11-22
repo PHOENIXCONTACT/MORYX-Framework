@@ -30,6 +30,15 @@ namespace Moryx.Products.Model
 
         public virtual ProductTypePropertiesEntity CurrentVersion { get; protected internal set; }
 
+        public ProductTypeEntity()
+        {
+            Parts = new List<PartLinkEntity>();
+            Parents = new List<PartLinkEntity>();
+            Files = new List<ProductFileEntity>();
+            Recipes = new List<ProductRecipeEntity>();
+            OldVersions = new List<ProductTypePropertiesEntity>();
+        }
+
         /// <summary>
         /// Creates a link to the current version of this product's properties.
         /// </summary>

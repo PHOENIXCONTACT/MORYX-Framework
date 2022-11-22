@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Serialization;
 using Moryx.Tools;
-using Moryx.Workflows;
+using Moryx.Workplans;
 using System;
 using System.Collections;
 using System.Collections.Generic;

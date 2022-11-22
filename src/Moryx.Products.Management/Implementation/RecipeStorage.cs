@@ -7,8 +7,8 @@ using Moryx.AbstractionLayer.Recipes;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Products.Model;
-using Moryx.Workflows;
-using Moryx.Workflows.WorkplanSteps;
+using Moryx.Workplans;
+using Moryx.Workplans.WorkplanSteps;
 using Newtonsoft.Json;
 
 namespace Moryx.Products.Management

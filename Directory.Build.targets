@@ -2,7 +2,7 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxCoreVersion>4.0.0-future.533</MoryxCoreVersion>
+    <MoryxCoreVersion>4.0.0-future.617</MoryxCoreVersion>
     <MoryxClientFrameworkVersion>4.0.0-future.134</MoryxClientFrameworkVersion>
   </PropertyGroup>
 
@@ -22,10 +22,10 @@
     <PackageReference Update="NUnit" Version="3.13.3" />
     <PackageReference Update="NUnit3TestAdapter" Version="4.2.1" />
 
-    <PackageReference Update="Microsoft.EntityFrameworkCore" Version="3.1.0" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="3.1.0" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.0" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="6.0.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
     <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 
     <!--Platform dependencies-->

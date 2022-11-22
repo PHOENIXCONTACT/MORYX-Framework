@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.Bindings;
-using Moryx.Workflows;
+using Moryx.Workplans;
 
 namespace Moryx.AbstractionLayer.Recipes
 {
