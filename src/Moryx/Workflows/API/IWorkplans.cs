@@ -33,7 +33,7 @@ namespace Moryx.Workplans
         /// Deletes workplan if in new state
         /// </summary>
         /// <param name="workplanId">Workplan id</param>
-        void DeleteWorkplan(long workplanId);
+        bool DeleteWorkplan(long workplanId);
 
         /// <summary>
         /// Load previous versions of the workplan
