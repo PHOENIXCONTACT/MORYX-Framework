@@ -13,7 +13,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// API for the application specific product storage
     /// </summary>
-    internal interface IProductStorage : IPlugin
+    public interface IProductStorage : IPlugin
     {
         /// <summary>
         /// Get products by query
@@ -80,6 +80,13 @@ namespace Moryx.Products.Management
         /// Remove recipe by given recipeId
         /// </summary>
         void RemoveRecipe(long recipeId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        ProductType CreateTypeInstance(string typeName);
     }
 
 }

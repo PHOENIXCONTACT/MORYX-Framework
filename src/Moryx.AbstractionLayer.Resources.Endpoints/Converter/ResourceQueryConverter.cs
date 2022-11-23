@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
@@ -48,8 +47,9 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         private ResourceReferenceModel[] FilteredReferences(Resource current)
         {
             // Get references of the instance and filter them
-            var properties = current.GetType().GetProperties();
-            var references = GetReferences(properties);
+            var node = TypeController[current.GetType().Name];     
+            var references = node.References;
+    
 
             var includedReferences = new List<ResourceReferenceModel>();
             foreach (var reference in references)

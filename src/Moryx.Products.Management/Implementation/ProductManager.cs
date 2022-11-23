@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Products.Model;
-using Moryx.Tools;
 
 namespace Moryx.Products.Management
 {
@@ -84,11 +84,9 @@ namespace Moryx.Products.Management
 
         public IProductType CreateType(string type)
         {
-            // TODO: Use type wrapper
-            var productType = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == type).FirstOrDefault();
-            if (productType == null)
-                return null;
-            var product = (ProductType)Activator.CreateInstance(productType);
+            var product = Storage.CreateTypeInstance(type);
+            if (product == null)
+                product = (ProductType)TypeTool.CreateInstance<ProductType>(type);          
             return product;
         }
 

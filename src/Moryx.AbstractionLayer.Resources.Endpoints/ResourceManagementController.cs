@@ -322,17 +322,18 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             private readonly ResourceQuery _query;
             private readonly IReadOnlyList<IResourceTypeNode> _typeNodes;
+            private readonly IResourceTypeTree _resourceTypeTree;
 
             public ResourceQueryFilter(ResourceQuery query, IResourceTypeTree typeTree)
             {
                 _query = query;
                 _typeNodes = query.Types?.Select(typeName => typeTree[typeName]).Where(t => t != null).ToArray();
+                _resourceTypeTree = typeTree;
             }
 
             public bool Match(Resource instance)
             {
-                // Check type of instance, if filter is set
-                // TODO: Use type wrapper
+                // Check type of instance, if filter is set            
                 if (_typeNodes != null && _typeNodes.All(tn => !tn.ResourceType.IsInstanceOfType(instance)))
                     return false;
 
@@ -340,8 +341,10 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 if (_query.ReferenceCondition == null)
                     return true;
 
+                var node = _resourceTypeTree[instance.GetType().Name];
+
                 var referenceCondition = _query.ReferenceCondition;
-                var references = (from property in instance.GetType().GetProperties()
+                var references = (from property in node.PropertiesOfResourceType
                                   let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
                                   where att != null
                                   select new { property, att }).ToList();
