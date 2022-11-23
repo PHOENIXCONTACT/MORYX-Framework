@@ -64,14 +64,30 @@ namespace Moryx.Configuration
 
             foreach (var property in FilterProperties(target, settings))
             {
+                
                 foreach (var settingsProvider in settings.Providers)
                 {
-                    if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
+                    try
                     {
-                        break;
+                        if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
+                        {
+                
+                            break;
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        // TODO: Restrict exceception type
+                        // TODO: Consider enabling logging
                     }
                 }
 
+                if(settings.Validators.Any(validator => !validator.CheckProperty(property, target)))
+                {
+                    throw new PropertyValidationException(property, settings);
+                }
+
+                
                 var value = property.GetValue(target);
 
 
