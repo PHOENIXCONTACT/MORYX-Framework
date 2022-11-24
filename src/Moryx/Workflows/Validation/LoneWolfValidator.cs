@@ -48,7 +48,6 @@ namespace Moryx.Workplans.Validation
         /// <summary>
         /// Print error in readable format
         /// </summary>
-        // TODO: Does it make sense to pass workplan to error
         public override string Print(IWorkplan workplan)
         {
             var targetStep = workplan.Steps.First(step => step.Id == PositionId);

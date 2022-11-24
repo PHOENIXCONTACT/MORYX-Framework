@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Datamodel integration for MORYX applications based on Entity Framework</Description>
     <CreatePackage>true</CreatePackage>
@@ -16,10 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
   </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-        <PackageReference Include="System.ComponentModel.Annotations" />
-        <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-    </ItemGroup>
 
 </Project>
 

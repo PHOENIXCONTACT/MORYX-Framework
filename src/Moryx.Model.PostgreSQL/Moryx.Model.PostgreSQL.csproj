@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Adapter for Moryx.Model on PostgreSQL</Description>
     <CreatePackage>true</CreatePackage>
@@ -17,7 +17,4 @@
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
   </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-        <PackageReference Include="System.ComponentModel.Annotations" />
-    </ItemGroup>
 </Project>
