@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
   </ItemGroup>
 
 </Project>
