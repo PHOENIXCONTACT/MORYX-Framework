@@ -143,15 +143,16 @@ namespace Moryx.Products.Management
             return entity.Id;
         }
        
-        public void DeleteWorkplan(long workplanId)
+        public bool DeleteWorkplan(long workplanId)
         {
             using var uow = ModelFactory.Create();
             var repo = uow.GetRepository<IWorkplanRepository>();
             var workplan = repo.GetByKey(workplanId);
             if (workplan == null)
-                return; // TODO: Any feedback?
+                return false;
             repo.Remove(workplan);
             uow.SaveChanges();
+            return true;
         }
 
         private void RaiseRecipeChanged(IRecipe recipe)
