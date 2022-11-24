@@ -164,34 +164,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
               || type.Equals(typeof(decimal));
         }
 
-        private static bool HasChangedProperties<T>(object A, object B)
-        {
-            if (A is null || B is null)
-                throw new ArgumentNullException("You need to provide 2 non-null objects");
-
-            var type = typeof(T);
-            var allProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var allSimpleProperties = allProperties.Where(pi => IsSimpleType(pi.PropertyType));
-            var unequalProperties =
-                    from pi in allSimpleProperties
-                    let AValue = type.GetProperty(pi.Name).GetValue(A, null)
-                    let BValue = type.GetProperty(pi.Name).GetValue(B, null)
-                    where AValue != BValue && (AValue == null || !AValue.Equals(BValue))
-                    select pi.Name;
-            return unequalProperties.Any();
-        }
-
-        private static bool IsSimpleType(Type type)
-        {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                // nullable type, check if the nested type is simple.
-                return IsSimpleType(type.GetGenericArguments()[0]);
-
-            return type.IsPrimitive
-              || type.IsEnum
-              || type.Equals(typeof(string))
-              || type.Equals(typeof(decimal));
-        }
+        
         #endregion
 
         #region Recipes
