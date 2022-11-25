@@ -17,7 +17,6 @@ using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
 using static Moryx.Products.Management.ProductExpressionHelpers;
-using Moryx.Serialization;
 using Moryx.Products.Management.Implementation.Storage;
 
 namespace Moryx.Products.Management
@@ -50,6 +49,11 @@ namespace Moryx.Products.Management
         /// </summary>
         protected IDictionary<string, ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>> RecipeInformation { get; }
             = new Dictionary<string, ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>>();
+
+        /// <summary>
+        /// Map of custom strategies for each product instance
+        /// </summary>
+        protected IDictionary<string, IProductInstanceStrategy> InstanceStrategies { get; } = new Dictionary<string, IProductInstanceStrategy>();
 
         /// <summary>
         /// Override with your merge factory
@@ -86,8 +90,7 @@ namespace Moryx.Products.Management
             foreach (var config in Config.InstanceStrategies)
             {
                 var strategy = StrategyFactory.CreateInstanceStrategy(config);
-                if (TypeInformation.ContainsKey(config.TargetType))
-                    TypeInformation[config.TargetType].InstanceStrategy = strategy;
+                InstanceStrategies[config.TargetType] = strategy;
             }
 
             // Create link strategies
@@ -290,7 +293,9 @@ namespace Moryx.Products.Management
                 // Filter by type properties properties
                 if (query.PropertyFilters != null)
                 {
-                    var typeSearch = TypeInformation[query.Type].Strategy;
+                    var targetTypeNameParts = query.Type.Split(',')[0].Split('.');
+                    var targetTypeName = targetTypeNameParts[targetTypeNameParts.Length-1];
+                    var typeSearch = TypeInformation[targetTypeName].Strategy;
                     var targetType = typeSearch.TargetType;
                     // Make generic method for the target type
                     var genericMethod = typeof(IProductTypeStrategy).GetMethod(nameof(IProductTypeStrategy.TransformSelector));
@@ -776,8 +781,8 @@ namespace Moryx.Products.Management
             using (var uow = Factory.Create())
             {
                 var repo = uow.GetRepository<IProductInstanceRepository>();
-                var matchingStrategies = TypeInformation.Values.Select(t => t.InstanceStrategy)
-                    .Where(i => typeof(TInstance).IsAssignableFrom(i.TargetType));
+                var matchingStrategies = InstanceStrategies.Values
+                   .Where(i => typeof(TInstance).IsAssignableFrom(i.TargetType));
 
                 IQueryable<ProductInstanceEntity> query = null;
                 foreach (var instanceStrategy in matchingStrategies)
@@ -843,7 +848,7 @@ namespace Moryx.Products.Management
             var productType = productInstance.Type;
 
             // Check if instances of this type are persisted
-            var strategy = TypeInformation[productInstance.GetType().Name].InstanceStrategy;
+            var strategy = InstanceStrategies[productInstance.GetType().Name];
             if (strategy.SkipInstances)
                 return;
 
@@ -936,7 +941,7 @@ namespace Moryx.Products.Management
         private ProductInstanceEntity SaveInstance(IUnitOfWork uow, ProductInstance productInstance)
         {
             // Check if this type is persisted
-            var strategy = TypeInformation[productInstance.GetType().Name].InstanceStrategy;
+            var strategy = InstanceStrategies[productInstance.GetType().Name];
             if (strategy.SkipInstances)
                 return null;
 

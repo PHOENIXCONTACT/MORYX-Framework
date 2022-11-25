@@ -14,9 +14,7 @@ namespace Moryx.Products.Management.Implementation.Storage
     }
 
     internal class ProductTypeInformation : ConstructorStrategyInformation<ProductType, ProductTypeConfiguration, IProductTypeStrategy>
-    {
-        public IProductInstanceStrategy InstanceStrategy { get; set; }
-
+    {       
         public ProductType CreateTypeFromEntity(ProductTypeEntity entity)
         {
             var productType = Constructor();
