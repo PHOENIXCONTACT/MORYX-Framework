@@ -1,0 +1,10 @@
+{
+  "Host": "localhost",
+  "HttpPort": 80,
+  "NetTcpPort": 816,
+  "ConfigState": "Generated",
+  "OpenTimeout": 30,
+  "CloseTimeout": 30,
+  "SendTimeout": 30,
+  "ReceiveTimeout": -1
+}

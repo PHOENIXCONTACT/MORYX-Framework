@@ -25,5 +25,10 @@ namespace Moryx.Runtime.Kernel.Tests.Dummys
         {
             get; set;
         }
+
+        public void Initialize()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

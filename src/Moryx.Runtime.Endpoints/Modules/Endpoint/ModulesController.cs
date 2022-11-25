@@ -26,10 +26,10 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
     public class ModulesController : ControllerBase
     {
         private readonly IModuleManager _moduleManager;
-        private readonly IRuntimeConfigManager _configManager;
+        private readonly IConfigManager _configManager;
         private readonly IParallelOperations _parallelOperations;
 
-        public ModulesController(IModuleManager moduleManager, IRuntimeConfigManager configManager, IParallelOperations parallelOperations)
+        public ModulesController(IModuleManager moduleManager, IConfigManager configManager, IParallelOperations parallelOperations)
         {
             _moduleManager = moduleManager;
             _configManager = configManager;
@@ -255,7 +255,8 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         private ICustomSerialization CreateSerialization(IModule module)
         {
             var host = (IContainerHost)module;
-            return new PossibleValuesSerialization(host.Container, _configManager)
+            // TODO: This is dangerous
+            return new PossibleValuesSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };
@@ -267,7 +268,8 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         private ICustomSerialization CreateEditorSerializeSerialization(IModule module)
         {
             var host = (IContainerHost)module;
-            return new AdvancedEntrySerializeSerialization(host.Container, _configManager)
+            // TODO: This is dangerous
+            return new AdvancedEntrySerializeSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };

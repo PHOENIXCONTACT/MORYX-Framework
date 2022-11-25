@@ -8,6 +8,8 @@ using Moryx.Runtime.Tests.Mocks;
 using Moryx.Runtime.Tests.Modules;
 using Moq;
 using NUnit.Framework;
+using Moryx.Configuration;
+using System;
 
 namespace Moryx.Runtime.Tests
 {
@@ -19,8 +21,8 @@ namespace Moryx.Runtime.Tests
         [SetUp]
         public void Init()
         {
-            var configManagerMock = new Mock<IRuntimeConfigManager>();
-            configManagerMock.Setup(c => c.GetConfiguration<TestConfig>()).Returns(new TestConfig
+            var configManagerMock = new Mock<IConfigManager>();
+            configManagerMock.Setup(c => c.GetConfiguration(typeof(TestConfig), It.IsAny<string>(), false)).Returns(new TestConfig
             {
                 Strategy = new StrategyConfig { PluginName = "Test" },
                 StrategyName = "Test"

@@ -82,7 +82,7 @@ namespace Moryx.Runtime.Kernel
 
             ModuleManager.ModuleStateChanged -= OnModuleStateChanged;
 
-            ConfigLoader.SaveAll();
+            //ConfigLoader.SaveAll();
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Moryx.Runtime.Kernel
 
         private bool Handler(CtrlType sig)
         {
-            ConfigLoader.SaveAll();
+            //ConfigLoader.SaveAll();
             ModuleManager.StopModules();
             return false;
         }

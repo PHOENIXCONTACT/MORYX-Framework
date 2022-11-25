@@ -56,6 +56,5 @@ namespace Moryx.Tests.Configuration
 
     public class NonPersistedTestConfig : TestConfig
     {
-        protected override bool PersistDefaultConfig => false;
     }
 }

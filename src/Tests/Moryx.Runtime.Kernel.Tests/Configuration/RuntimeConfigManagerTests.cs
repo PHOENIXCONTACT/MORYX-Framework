@@ -8,7 +8,7 @@ using Moryx.Configuration;
 using Moryx.Runtime.Kernel.Tests.Dummys;
 using NUnit.Framework;
 
-namespace Moryx.Runtime.Kernel.Tests
+namespace Moryx.Runtime.Kernel.Tests.Configuration
 {
     /// <summary>
     /// Tests for the runtime config manager
@@ -17,7 +17,7 @@ namespace Moryx.Runtime.Kernel.Tests
     public class RuntimeConfigManagerTests
     {
         private string _tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        private RuntimeConfigManager _manager;
+        private ConfigManager _manager;
 
         /// <summary>
         /// Initializes this test.
@@ -25,7 +25,7 @@ namespace Moryx.Runtime.Kernel.Tests
         [OneTimeSetUp]
         public void Init()
         {
-            _manager = new RuntimeConfigManager();
+            _manager = new ConfigManager();
             _manager.ConfigDirectory = _tempDirectory;
 
             DeleteTempFolder();
@@ -56,7 +56,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var copyOfConfig = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
 
             // add the config changed event
-            config.ConfigChanged += delegate(object sender, ConfigChangedEventArgs args)
+            config.ConfigChanged += delegate (object sender, ConfigChangedEventArgs args)
             {
                 configChangedEvent = true;
                 Assert.True(args.Contains(() => copyOfConfig.BooleanField), "the changed event do not acknowlege the correct property.");
@@ -88,60 +88,6 @@ namespace Moryx.Runtime.Kernel.Tests
             var config = _manager.GetConfiguration(typeof(RuntimeConfigManagerTestConfig1), false);
 
             Assert.NotNull(config, "Config not saved!");
-        }
-
-        /// <summary>
-        /// Tests the clear cache method
-        /// </summary>
-        [Test]
-        public void ClearCacheTest()
-        {
-            var random = new Random();
-
-            // add a config
-            _manager.SaveConfiguration(new RuntimeConfigManagerTestConfig1());
-
-            // read the config
-            var config = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>();
-
-            // change a value of the config
-            config.IntField = random.Next();
-
-            // read the config again
-            var config1 = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>();
-
-            Assert.AreEqual(config, config1, "GetConfig do not return the same config from the cache.");
-
-            _manager.ClearCache();
-
-            // get a new instance from the cache
-            var config2 = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>();
-
-            // check if the cache has been cleared
-            Assert.AreNotEqual(config, config2, "The cache has not been cleared correctly, we get the same instance again.");
-            Assert.False(config.IntField == config2.IntField, "The new value should not be saved.");
-
-            // get config from cache
-            config = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>();
-            // change its value
-            config.IntField = random.Next();
-            // get a second config but now a copy
-            config1 = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
-
-            // check if we got a copy from the cached item
-            Assert.AreNotEqual(config, config1, "We do not get a copy of the config, we get the same instance again.");
-            Assert.AreNotEqual(config.IntField, config1.IntField);
-
-            // get a config copy
-            config = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
-            // and change its value
-            config.IntField = random.Next();
-            // get a second copy
-            config1 = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>();
-
-            // check if we got a two different instances
-            Assert.AreNotEqual(config, config1, "We do not get a copy of the config, we get the same instance again.");
-            Assert.AreNotEqual(config.IntField, config1.IntField, "Changes on a copied item should not affect to other instances!");
         }
 
         /// <summary>

@@ -144,6 +144,11 @@ namespace Moryx.Runtime.Kernel.Tests.Dummys
                 ConfigChanged(this, new ConfigChangedEventArgs(modifiedProperties));
         }
 
+        public void Initialize()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Event raised when the config was modified
         /// </summary>

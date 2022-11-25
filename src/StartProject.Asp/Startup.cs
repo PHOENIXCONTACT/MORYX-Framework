@@ -4,22 +4,32 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.Configuration;
 using Moryx.Asp.Extensions;
 
 namespace StartProject.Asp
 {
     public class Startup
     {
+        public IConfiguration Config { get; }
+
+        public Startup(IConfiguration config)
+        {
+            Config = config;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+
             services.AddRazorPages();
 
             services.AddControllers(options =>
             {
                 options.Filters.Add<MoryxExceptionFilter>();
             })
-                .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSwaggerGen(c =>
             {

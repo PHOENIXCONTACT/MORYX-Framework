@@ -82,5 +82,10 @@ namespace Moryx.Communication
         /// </summary>
         [ReadOnly(true)]
         public string LoadError { get; set; }
+
+        /// <inheritdoc/>
+        public void Initialize()
+        {
+        }
     }
 }

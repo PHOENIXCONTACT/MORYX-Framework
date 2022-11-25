@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime.Configuration;
 
@@ -16,7 +17,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Config manger instance. Injected by the castle container
         /// </summary>
-        public IRuntimeConfigManager ConfigLoader { get; set; }
+        public IConfigManager ConfigLoader { get; set; }
 
         /// <summary>
         /// Local container of the command run mode

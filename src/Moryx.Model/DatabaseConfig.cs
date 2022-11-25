@@ -37,5 +37,9 @@ namespace Moryx.Model
         /// <inheritdoc />
         [DataMember]
         public string Password { get; set; }
+
+        public void Initialize()
+        {
+        }
     }
 }

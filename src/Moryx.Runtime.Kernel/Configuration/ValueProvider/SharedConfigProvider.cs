@@ -10,9 +10,9 @@ namespace Moryx.Runtime.Kernel
 {
     internal class SharedConfigProvider : IValueProvider
     {
-        private readonly IRuntimeConfigManager _configManager;
+        private readonly IConfigManager _configManager;
 
-        public SharedConfigProvider(IRuntimeConfigManager configManager)
+        public SharedConfigProvider(IConfigManager configManager)
         {
             _configManager = configManager;
         }

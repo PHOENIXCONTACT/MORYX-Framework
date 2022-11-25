@@ -10,7 +10,7 @@ using Moryx.Configuration;
 
 namespace Moryx.Runtime.Kernel
 {
-    internal class ConfigLiveUpdater : IConfigLiveUpdate
+    internal class ConfigLiveUpdater
     {
         public void UpdateLive(Type sharedType, IConfig activeConfig, IConfig modifiedCopy)
         {

@@ -8,6 +8,7 @@ using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace Moryx.Runtime.Kernel
@@ -20,8 +21,8 @@ namespace Moryx.Runtime.Kernel
         public static void AddMoryxKernel(this IServiceCollection serviceCollection)
         {
             // Register config manager
-            serviceCollection.AddSingleton<IRuntimeConfigManager, RuntimeConfigManager>();
-            serviceCollection.AddSingleton<IConfigManager>(x => x.GetRequiredService<IRuntimeConfigManager>());
+            serviceCollection.AddSingleton<ConfigManager>();
+            serviceCollection.AddSingleton<IConfigManager>(x => x.GetRequiredService<ConfigManager>());
 
             // Register module manager
             serviceCollection.AddSingleton<ModuleManager>();
@@ -74,7 +75,9 @@ namespace Moryx.Runtime.Kernel
         public static IConfigManager UseMoryxConfigurations(this IServiceProvider serviceProvider, string configDirectory)
         {
             // Load config manager
-            var configManager = serviceProvider.GetRequiredService<IRuntimeConfigManager>();
+            var configManager = serviceProvider.GetRequiredService<ConfigManager>(); 
+            if (!Directory.Exists(configDirectory))
+                Directory.CreateDirectory(configDirectory);
             configManager.ConfigDirectory = configDirectory;
             return configManager;
         }
