@@ -28,7 +28,7 @@ namespace Moryx.Products.Management
             base.Initialize(config);
 
 
-            TargetType = ReflectionTool.GetPublicClasses<IProductRecipe>(p => p.Name == config.TargetType).FirstOrDefault();
+            TargetType = ReflectionTool.GetPublicClasses<IProductRecipe>(p => p.FullName == config.TargetType).FirstOrDefault();
         }
 
         /// <inheritdoc />

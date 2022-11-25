@@ -42,7 +42,6 @@ namespace Moryx.Products.Management
         protected IDictionary<string, ProductTypeInformation> TypeInformation { get; }
             = new Dictionary<string, ProductTypeInformation>();
 
-
         /// <summary>
         /// Constructors for recipes
         /// Strategies for the different recipe types
@@ -211,7 +210,7 @@ namespace Moryx.Products.Management
         {
             var entity = RecipeStorage.SaveRecipe(uow, recipe);
 
-            RecipeInformation[recipe.GetType().Name].Strategy.SaveRecipe(recipe, entity);
+            RecipeInformation[recipe.GetType().FullName].Strategy.SaveRecipe(recipe, entity);
 
             return entity;
         }
@@ -282,19 +281,17 @@ namespace Moryx.Products.Management
                         if (type.GetInterface(query.Type) != null)
                             return true;
                         // Check if type or base type matches
-                        // todo what to do if type is null
                         if (baseType == null)
                             return false;
                         return baseType.IsAssignableFrom(type);
-                    }).Select(t => t.Name);
+                    }).Select(t => t.FullName);
                     productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
                 }
 
                 // Filter by type properties properties
                 if (query.PropertyFilters != null)
                 {
-                    var targetTypeNameParts = query.Type.Split(',')[0].Split('.');
-                    var targetTypeName = targetTypeNameParts[targetTypeNameParts.Length-1];
+                    var targetTypeName = query.Type.Split(',')[0];
                     var typeSearch = TypeInformation[targetTypeName].Strategy;
                     var targetType = typeSearch.TargetType;
                     // Make generic method for the target type
@@ -511,7 +508,7 @@ namespace Moryx.Products.Management
             // Let's get nasty!
             // Load children
             var type = productType.GetType();
-            foreach (var partLink in TypeInformation[type.Name].PartLinksInformation.Values)
+            foreach (var partLink in TypeInformation[type.FullName].PartLinksInformation.Values)
             {
                 var part = partLink.Strategy;
                 object value = null;
@@ -574,7 +571,7 @@ namespace Moryx.Products.Management
 
         private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, IProductType modifiedInstance)
         {
-            var strategy = TypeInformation[modifiedInstance.GetType().Name].Strategy;
+            var strategy = TypeInformation[modifiedInstance.GetType().FullName].Strategy;
 
             // Get or create entity
             var repo = saverContext.GetRepository<IProductTypeRepository>();
@@ -586,7 +583,7 @@ namespace Moryx.Products.Management
             // If entity does not exist or was deleted, create a new one
             if (entities.All(p => p.Deleted != null))
             {
-                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().Name);
+                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().FullName);
                 EntityIdListener.Listen(typeEntity, modifiedInstance);
             }
             else
@@ -610,7 +607,7 @@ namespace Moryx.Products.Management
             // And nasty again!
             var type = modifiedInstance.GetType();
             var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
-            foreach (var linkStrategy in TypeInformation[type.Name].PartLinksInformation.Values.Select(p => p.Strategy))
+            foreach (var linkStrategy in TypeInformation[type.FullName].PartLinksInformation.Values.Select(p => p.Strategy))
             {
                 var property = type.GetProperty(linkStrategy.PropertyName);
                 var value = property.GetValue(modifiedInstance);
@@ -848,7 +845,7 @@ namespace Moryx.Products.Management
             var productType = productInstance.Type;
 
             // Check if instances of this type are persisted
-            var strategy = InstanceStrategies[productInstance.GetType().Name];
+            var strategy = InstanceStrategies[productInstance.GetType().FullName];
             if (strategy.SkipInstances)
                 return;
 
@@ -866,7 +863,7 @@ namespace Moryx.Products.Management
             // Load and populate parts
             foreach (var partGroup in partGroups)
             {
-                var linkStrategy = TypeInformation[productType.GetType().Name].PartLinksInformation[partGroup.Key.Name].Strategy;
+                var linkStrategy = TypeInformation[productType.GetType().FullName].PartLinksInformation[partGroup.Key.Name].Strategy;
                 if (linkStrategy.PartCreation == PartSourceStrategy.FromPartLink && partEntityGroups.ContainsKey(partGroup.Key.Name))
                 {
                     // Update all parts that are also present as entities
@@ -941,7 +938,7 @@ namespace Moryx.Products.Management
         private ProductInstanceEntity SaveInstance(IUnitOfWork uow, ProductInstance productInstance)
         {
             // Check if this type is persisted
-            var strategy = InstanceStrategies[productInstance.GetType().Name];
+            var strategy = InstanceStrategies[productInstance.GetType().FullName];
             if (strategy.SkipInstances)
                 return null;
 

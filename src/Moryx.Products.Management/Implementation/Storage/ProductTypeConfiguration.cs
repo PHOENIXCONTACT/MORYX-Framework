@@ -29,7 +29,7 @@ namespace Moryx.Products.Management
     public class ProductTypeConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(ProductType))]
+        [DataMember, PossibleTypes(typeof(ProductType),UseFullname =true)]
         public string TargetType { get; set; }
 
         /// <inheritdoc cref="IPluginConfig"/> />
@@ -47,7 +47,7 @@ namespace Moryx.Products.Management
     public class ProductInstanceConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(ProductInstance))]
+        [DataMember, PossibleTypes(typeof(ProductInstance), UseFullname =true)]
         public string TargetType { get; set; }
 
         /// <inheritdoc cref="IPluginConfig"/> />
@@ -65,7 +65,7 @@ namespace Moryx.Products.Management
     public class ProductLinkConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(ProductType))]
+        [DataMember, PossibleTypes(typeof(ProductType), UseFullname = true)]
         public string TargetType { get; set; }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Moryx.Products.Management
     public class ProductRecipeConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(IProductRecipe))]
+        [DataMember, PossibleTypes(typeof(IProductRecipe), UseFullname = true)]
         public string TargetType { get; set; }
 
         /// <inheritdoc cref="IPluginConfig"/> />

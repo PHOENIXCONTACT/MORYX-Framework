@@ -72,12 +72,12 @@ namespace Moryx.Products.IntegrationTests
                 {
                     new ProductTypeConfiguration
                     {
-                        TargetType = nameof(WatchType),
+                        TargetType = typeof(WatchType).FullName,
                         PluginName = nameof(WatchStrategy)
                     },
                     new GenericTypeConfiguration
                     {
-                        TargetType = nameof(WatchFaceType),
+                        TargetType = typeof(WatchFaceType).FullName,
                         PropertyConfigs = new List<PropertyMapperConfig>
                         {
                             new PropertyMapperConfig
@@ -103,7 +103,7 @@ namespace Moryx.Products.IntegrationTests
                     },
                     new GenericTypeConfiguration
                     {
-                        TargetType = nameof(DisplayWatchFaceType),
+                        TargetType = typeof(DisplayWatchFaceType).FullName,
                         PropertyConfigs = new List<PropertyMapperConfig>
                         {
                             new PropertyMapperConfig
@@ -117,13 +117,13 @@ namespace Moryx.Products.IntegrationTests
                     },
                     new GenericTypeConfiguration
                     {
-                        TargetType = nameof(NeedleType),
+                        TargetType = typeof(NeedleType).FullName,
                         PropertyConfigs = new List<PropertyMapperConfig>(),
                         JsonColumn = nameof(IGenericColumns.Text8)
                     },
                     new GenericTypeConfiguration
                     {
-                        TargetType = nameof(WatchPackageType),
+                        TargetType = typeof(WatchPackageType).FullName,
                         JsonColumn = nameof(IGenericColumns.Text8),
                         PropertyConfigs = new List<PropertyMapperConfig>()
                     }
@@ -132,7 +132,7 @@ namespace Moryx.Products.IntegrationTests
                 {
                     new GenericInstanceConfiguration
                     {
-                        TargetType = nameof(WatchInstance),
+                        TargetType = typeof(WatchInstance).FullName,
                         JsonColumn = nameof(IGenericColumns.Text8),
                         PropertyConfigs = new List<PropertyMapperConfig>
                         {
@@ -158,7 +158,7 @@ namespace Moryx.Products.IntegrationTests
                     },
                     new GenericInstanceConfiguration
                     {
-                        TargetType = nameof(WatchFaceInstance),
+                        TargetType = typeof(WatchFaceInstance).FullName,
                         PropertyConfigs = new List<PropertyMapperConfig>
                         {
                             new PropertyMapperConfig
@@ -178,7 +178,7 @@ namespace Moryx.Products.IntegrationTests
                     },
                     new ProductInstanceConfiguration()
                     {
-                        TargetType = nameof(NeedleInstance),
+                        TargetType = typeof(NeedleInstance).FullName,
                         PluginName = nameof(SkipInstancesStrategy)
                     },
                 },
@@ -186,13 +186,13 @@ namespace Moryx.Products.IntegrationTests
                 {
                     new ProductLinkConfiguration()
                     {
-                        TargetType = nameof(WatchType),
+                        TargetType = typeof(WatchType).FullName,
                         PartName = nameof(WatchType.WatchFace),
                         PluginName = nameof(SimpleLinkStrategy)
                     },
                     new GenericLinkConfiguration
                     {
-                        TargetType = nameof(WatchType),
+                        TargetType = typeof(WatchType).FullName,
                         PartName = nameof(WatchType.Needles),
                         JsonColumn = nameof(IGenericColumns.Text8),
                         PropertyConfigs = new List<PropertyMapperConfig>
@@ -207,7 +207,7 @@ namespace Moryx.Products.IntegrationTests
                     },
                     new ProductLinkConfiguration()
                     {
-                        TargetType = nameof(WatchPackageType),
+                        TargetType = typeof(WatchPackageType).FullName,
                         PartName = nameof(WatchPackageType.PossibleWatches),
                         PluginName = nameof(SimpleLinkStrategy)
                     },
@@ -216,7 +216,7 @@ namespace Moryx.Products.IntegrationTests
                 {
                     new GenericRecipeConfiguration
                     {
-                        TargetType = nameof(WatchProductRecipe),
+                        TargetType = typeof(WatchProductRecipe).FullName,
                         JsonColumn = nameof(IGenericColumns.Text8),
                         PropertyConfigs = new List<PropertyMapperConfig>()
                     }
@@ -480,10 +480,10 @@ namespace Moryx.Products.IntegrationTests
         private static void CheckProduct(WatchType watch, ProductTypeEntity watchProductTypeEntity, IProductTypeRepository productTypeRepo, long savedWatchId)
         {
             var watchNeedlesCount = watch.Needles.Count;
-            var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(nameof(NeedleType)));
+            var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(typeof(NeedleType).FullName));
             Assert.AreEqual(watchNeedlesCount, watchEntityNeedlesCount, "Different number of needles");
 
-            var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(nameof(WatchFaceType))).Child;
+            var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(typeof(WatchFaceType).FullName)).Child;
             Assert.NotNull(watchfaceEntity, "There is no watchface");
 
             var identity = (ProductIdentity)watch.Identity;
@@ -756,8 +756,8 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [TestCase(false, false, Description = "Duplicate product with valid id")]
-        //[TestCase(false, true, Description = "Duplicate product, but identity already taken")]
-        //[TestCase(true, false, Description = "Duplicate product but with template missmatch")]
+        [TestCase(false, true, Description = "Duplicate product, but identity already taken")]
+        [TestCase(true, false, Description = "Duplicate product but with template missmatch")]
         public void DuplicateProduct(bool crossTypeIdentifier, bool revisionTaken)
         {
             // Arrange

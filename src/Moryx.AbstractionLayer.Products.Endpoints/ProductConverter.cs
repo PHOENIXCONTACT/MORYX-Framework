@@ -53,7 +53,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var converted = new ProductModel
             {
                 Id = productType.Id,
-                Type = productType.GetType().Name,
+                Type = productType.GetType().FullName,
                 Name = productType.Name,
                 State = productType.State,
                 Identifier = identity.Identifier,

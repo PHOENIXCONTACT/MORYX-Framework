@@ -44,7 +44,7 @@ namespace Moryx.Products.Management
         {
             var entity = uow.GetEntity<ProductRecipeEntity>(recipe);
 
-            entity.Type = recipe.GetType().Name;
+            entity.Type = recipe.GetType().FullName;
             entity.Revision = recipe.Revision;
             entity.Name = recipe.Name;
             entity.TemplateId = recipe.TemplateId;
