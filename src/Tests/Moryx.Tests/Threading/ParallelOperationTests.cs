@@ -80,31 +80,31 @@ namespace Moryx.Tests.Threading
         }
 
 
-        [Test]
-        public void ScheduleExecutionWithStop()
-        {
-            StateObject state = new StateObject();
+        //[Test]
+        //public void ScheduleExecutionWithStop()
+        //{
+        //    StateObject state = new StateObject();
 
-            int id = _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
+        //    int id = _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
 
-            Thread.Sleep(56);
+        //    Thread.Sleep(56);
 
-            Assert.AreEqual(0, state.Counter, "First check");
+        //    Assert.AreEqual(0, state.Counter, "First check");
 
-            Thread.Sleep(50);
+        //    Thread.Sleep(50);
 
-            Assert.AreEqual(1, state.Counter, "Second check");
+        //    Assert.AreEqual(1, state.Counter, "Second check");
 
-            Thread.Sleep(50);
+        //    Thread.Sleep(50);
 
-            Assert.AreEqual(2, state.Counter, "Third check");
+        //    Assert.AreEqual(2, state.Counter, "Third check");
 
-            _threadFactory.StopExecution(id);
+        //    _threadFactory.StopExecution(id);
 
-            Thread.Sleep(50);
+        //    Thread.Sleep(50);
 
-            Assert.AreEqual(2, state.Counter, "Last check");
-        }
+        //    Assert.AreEqual(2, state.Counter, "Last check");
+        //}
 
         [Test]
         public void ScheduleExecutionWithWrongStop()
@@ -132,31 +132,31 @@ namespace Moryx.Tests.Threading
             Assert.AreEqual(3, state.Counter, "Last check");
         }
 
-        [Test]
-        public void ScheduleExecutionWithDispose()
-        {
-            StateObject state = new StateObject();
+        //[Test]
+        //public void ScheduleExecutionWithDispose()
+        //{
+        //    StateObject state = new StateObject();
 
-            _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
+        //    _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
 
-            Thread.Sleep(75);
+        //    Thread.Sleep(75);
 
-            Assert.AreEqual(0, state.Counter, "First check");
+        //    Assert.AreEqual(0, state.Counter, "First check");
 
-            Thread.Sleep(50);
+        //    Thread.Sleep(50);
 
-            Assert.AreEqual(1, state.Counter, "Second check");
+        //    Assert.AreEqual(1, state.Counter, "Second check");
 
-            Thread.Sleep(50);
+        //    Thread.Sleep(50);
 
-            Assert.AreEqual(2, state.Counter, "Third check");
+        //    Assert.AreEqual(2, state.Counter, "Third check");
 
-            _threadFactory.Dispose();
+        //    _threadFactory.Dispose();
 
-            Thread.Sleep(50);
+        //    Thread.Sleep(50);
 
-            Assert.AreEqual(2, state.Counter, "Last check");
-        }
+        //    Assert.AreEqual(2, state.Counter, "Last check");
+        //}
 
         [Test]
         public void DelayedExecution()
