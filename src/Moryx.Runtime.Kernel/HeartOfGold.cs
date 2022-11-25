@@ -95,46 +95,6 @@ namespace Moryx.Runtime.Kernel
         }
 
         /// <summary>
-        /// Starts the runtime
-        /// </summary>
-        [Obsolete("Use Load and Execute instead")]
-        public RuntimeErrorCode Run()
-        {
-            // Load and run environment
-            var loadResult = LoadEnvironment(out var env);
-            var returnCode = RuntimeErrorCode.NoError;
-            switch (loadResult)
-            {
-                case EnvironmentLoadResult.BadVerb:
-                case EnvironmentLoadResult.NoVerb:
-                case EnvironmentLoadResult.Error:
-                    returnCode = RuntimeErrorCode.Error;
-                    break;
-                case EnvironmentLoadResult.HelpRequested:
-                    returnCode = RuntimeErrorCode.NoError;
-                    break;
-                case EnvironmentLoadResult.Success:
-                    returnCode = RunEnvironment(env);
-                    break;
-            }
-
-            // Clean up and exit
-            try
-            {
-                _container.Destroy();
-            }
-            catch (Exception)
-            {
-                // Ignore it.
-            }
-
-            AppDomain.CurrentDomain.AssemblyResolve -= AppDomainBuilder.ResolveAssembly;
-            AppDomain.CurrentDomain.UnhandledException -= CrashHandler.HandleCrash;
-
-            return returnCode;
-        }
-
-        /// <summary>
         /// Create the container and load all relevant directories
         /// </summary>
         /// <returns></returns>

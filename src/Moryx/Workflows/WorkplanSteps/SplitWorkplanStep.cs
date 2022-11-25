@@ -13,7 +13,7 @@ namespace Moryx.Workplans.WorkplanSteps
     /// Workplanstep to split execution
     /// </summary>
     [DataContract]
-    [ClassDisplay(ResourceType = typeof(Strings), Name = "SplitWorkplanStep_Name", Description = "SplitWorkplanStep_Description")]
+    [Display(ResourceType = typeof(Strings), Name = "SplitWorkplanStep_Name", Description = "SplitWorkplanStep_Description")]
     public class SplitWorkplanStep : WorkplanStepBase
     {
         private SplitWorkplanStep()

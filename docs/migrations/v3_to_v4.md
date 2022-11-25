@@ -138,6 +138,15 @@ Removed
 
 - `Moryx.Workflows`
 
+## Files, Classes, Attributes, ...
+
+Removed
+- `ClassDisplayAttribute` (DisplayAttribute from .NET 5 and above supports Classes now)
+- `ExceptionPrinter` (ReflectionTypeLoadException should be used for it)
+- `ApplicationLoadResponse` (Not supported feature)
+- `SystemLoadResponse` (Not supported feature)
+- `HostHelper` (Not necessary because of not supported feature)
+
 ## Database
 With the update to MORYX Core 4 we also update the reference to Entity Framework. The update to Entity Framework Core comes with some changes to the API we are used to, for an overview of the changes provided by Microsoft see [here](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/). In order for you to have less of a headache when searching through the EF Core documentation to find the right translation for your code into the new way of doing things (assuming that you want to keep an identical database structure), we list the changes we went through in the subsequent bullet points:
 
