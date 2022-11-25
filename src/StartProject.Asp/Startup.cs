@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
+using Moryx.Asp.Extensions;
 
 namespace StartProject.Asp
 {
@@ -28,7 +29,7 @@ namespace StartProject.Asp
             {
                 options.Filters.Add<MoryxExceptionFilter>();
             })
-                .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSwaggerGen(c =>
             {
