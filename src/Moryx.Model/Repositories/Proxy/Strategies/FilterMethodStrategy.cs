@@ -207,7 +207,7 @@ namespace Moryx.Model.Repositories.Proxy
 
             if (filterMatch.Success && !string.IsNullOrEmpty(filterMatch.Value))
             {
-                filterMap.Filter = (Filter) Enum.Parse(typeof(Filter), filterMatch.Value);
+                filterMap.Filter = (Filter)Enum.Parse(typeof(Filter), filterMatch.Value);
             }
             else
             {
@@ -260,7 +260,7 @@ namespace Moryx.Model.Repositories.Proxy
 
             // Queryable.FirstOrDefault(IQueryable, Expression)
             var methodInfo = queryableMethods.Single(m =>
-                m.Name.Equals(nameof(Queryable.FirstOrDefault)) && m.GetParameters().Length == 2);
+                m.Name.Equals(nameof(Queryable.FirstOrDefault)) && m.GetParameters().Length == 2 && m.GetParameters()[1].Name == "predicate");
             FilterMethods[Filter.FirstOrDefault] = methodInfo;
 
             // Queryable.First(IQueryable, Expression)
@@ -275,7 +275,7 @@ namespace Moryx.Model.Repositories.Proxy
 
             // Queryable.SingleOrDefault(IQueryable, Expression)
             methodInfo = queryableMethods.Single(m =>
-                m.Name.Equals(nameof(Queryable.SingleOrDefault)) && m.GetParameters().Length == 2);
+                m.Name.Equals(nameof(Queryable.SingleOrDefault)) && m.GetParameters().Length == 2 && m.GetParameters()[1].Name == "predicate");
             FilterMethods[Filter.SingleOrDefault] = methodInfo;
 
             // Queryable.Where(IQueryable, Expression)

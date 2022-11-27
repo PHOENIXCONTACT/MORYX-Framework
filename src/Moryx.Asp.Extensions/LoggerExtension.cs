@@ -35,7 +35,7 @@ namespace Moryx.Asp.Extensions
             Console.WriteLine(message, formatParameters);
         }
 
-        public void LogException(LogLevel level, Exception ex, string message, params object[] formatParameters)
+        public void LogException(LogLevel level, System.Exception ex, string message, params object[] formatParameters)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Red;

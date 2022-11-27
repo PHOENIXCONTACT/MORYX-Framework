@@ -107,7 +107,7 @@ namespace Moryx.Tests.Logging
 
             Assert.IsInstanceOf<LogMessage>(msg);
             Assert.IsTrue(msg.Message.Contains(string.Format(LogMsgFormat, LogMsgArgument)), "Log message");
-            Assert.IsTrue(msg.Message.Contains(ExceptionMsg), "Exception message");
+            Assert.IsFalse(msg.Message.Contains(ExceptionMsg), "Exception message");
             Assert.AreEqual(_module.GetType().Name, msg.ClassName, "Message class");
             Assert.AreEqual(LogLevel.Error, msg.Level, "Log Level");
             Assert.GreaterOrEqual(msg.Timestamp, t1, "Start of time interval");
