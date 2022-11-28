@@ -161,6 +161,12 @@ namespace Moryx.Products.Management
             // ReSharper disable once PossibleNullReferenceException
             RecipeChanged(this, recipe);
         }
+
+        public IProductRecipe CreateRecipe(string recipeType)
+        {
+            return Storage.CreateRecipe(recipeType);
+        }
+
         public event EventHandler<IRecipe> RecipeChanged;
     }
 }

@@ -47,5 +47,12 @@ namespace Moryx.Products.Management
         /// Remove the recipe by the given identifier
         /// </summary>
         void Remove(long recipeId);
+
+        /// <summary>
+        /// Create instance of a recipe
+        /// </summary>
+        /// <param name="recipeType">Full name of the recipe type</param>
+        /// <returns></returns>
+        IProductRecipe CreateRecipe(string recipeType);
     }
 }

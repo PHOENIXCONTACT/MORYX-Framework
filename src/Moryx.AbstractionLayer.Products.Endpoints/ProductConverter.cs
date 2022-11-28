@@ -48,6 +48,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
         public ProductModel ConvertProduct(IProductType productType, bool flat)
         {
+            
             // Base object
             var identity = (ProductIdentity)productType.Identity ?? EmptyIdentity;
             var converted = new ProductModel
@@ -64,7 +65,8 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return converted;
 
             // Properties
-            var properties = productType.GetType().GetProperties();
+            var typeWrapper = _productManagement.GetTypeWrapper(productType.GetType().FullName);
+            var properties = typeWrapper != null ? typeWrapper.Properties.ToArray() : productType.GetType().GetProperties();
             converted.Properties = EntryConvert.EncodeObject(productType, ProductSerialization);
 
             // Files         
@@ -98,6 +100,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             }
             return fileModels;
         }
+
         private void ConvertParts(IProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
         {
             var connectors = new List<PartConnector>();
@@ -201,9 +204,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                     if (recipes.FirstOrDefault(r => r.Id == recipe.Id) == null)
                         _productManagement.RemoveRecipe(recipe.Id);
             }
-            
+
             // Copy extended properties
-            var properties = converted.GetType().GetProperties();
+            var typeWrapper = _productManagement.GetTypeWrapper(converted.GetType().FullName);
+            var properties = typeWrapper != null ? typeWrapper.Properties.ToArray() : converted.GetType().GetProperties();
             EntryConvert.UpdateInstance(converted, source.Properties, ProductSerialization);
 
             // Copy Files

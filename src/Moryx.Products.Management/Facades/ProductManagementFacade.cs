@@ -291,5 +291,15 @@ namespace Moryx.Products.Management
         {
             RecipeManagement.Remove(recipeId);
         }
+
+        public IProductRecipe CreateRecipe(string recipeType)
+        {
+            return RecipeManagement.CreateRecipe(recipeType);
+        }
+
+        public ProductTypeWrapper GetTypeWrapper(string typeName)
+        {
+            return ProductManager.GetTypeWrapper(typeName);
+        }
     }
 }

@@ -147,6 +147,20 @@ namespace Moryx.AbstractionLayer.Products
         /// Remove Recipe by given id
         /// </summary>
         void RemoveRecipe(long recipeId);
+
+        /// <summary>
+        /// Create instance of a recipe
+        /// </summary>
+        /// <param name="recipeType">Full name of the recipe type</param>
+        /// <returns></returns>
+        IProductRecipe CreateRecipe(string recipeType);
+
+        /// <summary>
+        /// Return type wrapper to a type
+        /// </summary>
+        /// <param name="typeName">Full name of the type</param>
+        /// <returns></returns>
+        ProductTypeWrapper GetTypeWrapper(string typeName);
     }
 
 }

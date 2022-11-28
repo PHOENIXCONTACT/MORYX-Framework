@@ -76,11 +76,19 @@ namespace Moryx.Products.Management
         public void Start()
         {
             // Create type strategies
+            var types = ReflectionTool.GetPublicClasses<IProductType>();
+            foreach (var type in types)
+            {
+                if (TypeInformation.ContainsKey(type.FullName))
+                    continue;
+                TypeInformation.Add(type.FullName, new ProductTypeInformation(type));
+            }
+                
             foreach (var config in Config.TypeStrategies)
             {
                 var strategy = StrategyFactory.CreateTypeStrategy(config);
                 if (!TypeInformation.ContainsKey(config.TargetType))
-                    TypeInformation.Add(config.TargetType, new ProductTypeInformation());
+                    TypeInformation.Add(config.TargetType, new ProductTypeInformation(strategy.TargetType));
                 TypeInformation[config.TargetType].Strategy = strategy;
                 TypeInformation[config.TargetType].Constructor = ReflectionTool.ConstructorDelegate<ProductType>(strategy.TargetType);
             }
@@ -404,8 +412,8 @@ namespace Moryx.Products.Management
             using (var uow = Factory.Create())
             {
                 var repo = uow.GetRepository<IProductTypeRepository>();
-                var matchingStrategies = TypeInformation.Values.Select(p => p.Strategy)
-                    .Where(i => typeof(TType).IsAssignableFrom(i.TargetType));
+                var matchingStrategies = TypeInformation.Values.Where(v => v.Strategy != null).Select(p => p.Strategy)
+                    .Where(i => typeof(TType).IsAssignableFrom(i.TargetType)).ToList();
 
                 IQueryable<ProductTypeEntity> query = null;
                 foreach (var typeStrategy in matchingStrategies)
@@ -607,13 +615,12 @@ namespace Moryx.Products.Management
             // And nasty again!
             var type = modifiedInstance.GetType();
             var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
-            foreach (var linkStrategy in TypeInformation[type.FullName].PartLinksInformation.Values.Select(p => p.Strategy))
+            foreach (var partLinkInfo in TypeInformation[type.FullName].GetAllPartLinks(modifiedInstance))
             {
-                var property = type.GetProperty(linkStrategy.PropertyName);
-                var value = property.GetValue(modifiedInstance);
-                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType))
+                var linkStrategy = partLinkInfo.ProductLinkStrategy;             
+                if (partLinkInfo.Type == PartLinkType.single)
                 {
-                    var link = (IProductPartLink)value;
+                    var link = (IProductPartLink)partLinkInfo.Value;
                     var linkEntity = FindLink(linkStrategy.PropertyName, typeEntity);
                     if (linkEntity == null && link != null) // link is new
                     {
@@ -639,9 +646,9 @@ namespace Moryx.Products.Management
                     // else: link was null and is still null
 
                 }
-                else if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(property.PropertyType))
+                else if (partLinkInfo.Type == PartLinkType.list)
                 {
-                    var links = (IEnumerable<IProductPartLink>)value;
+                    var links = (IEnumerable<IProductPartLink>)partLinkInfo.Value;
                     // Delete the removed ones
                     var toDelete = (from link in typeEntity.Parts
                                     where link.PropertyName == linkStrategy.PropertyName
@@ -974,6 +981,23 @@ namespace Moryx.Products.Management
             if (typeInfo.Constructor == null)
                 return null;
             return typeInfo.Constructor();
+        }
+
+        public IProductRecipe CreateRecipe(string recipeType)
+        {
+            if (!RecipeInformation.ContainsKey(recipeType))
+                return null;
+            var recipeInfo = RecipeInformation[recipeType];
+            if (recipeInfo.Constructor == null)
+                return null;
+            return recipeInfo.Constructor();
+        }
+
+        public ProductTypeWrapper GetTypeWrapper(string typeName)
+        {
+            if (!TypeInformation.ContainsKey(typeName))
+                return null;
+            return TypeInformation[typeName].GetTypeWrapper();
         }
 
         #endregion

@@ -22,3 +22,8 @@ Several interfaces created for minor confirm updates got merged or removed throu
 - The interfaces `IProductTypeSearch` is now included in `IProductTypeStrategy` and obsolete
 - The interfaces `IResourceModification` and `IResourceModificationExtended` are now included in `IResourceManagement` and obsolete 
 - There is an extra Facade implementing `IResourceTypeTree` called `ResourceTypeTreeFacade`
+
+## Other Changes
+- The `Type` in the `ProductQuery` must be a assembly qualified name. Use `typeof(TType).AssemblyQualifiedName` instead of `nameof(TType)`
+- The Type in the `ProductRecipeEntity`, `ProductInstanceEntity` and `ProductTypeEntity` is the FullName including AssemblyName
+- The ProductStorage uses the FullName of the classes to organize strategies, constructors and so on

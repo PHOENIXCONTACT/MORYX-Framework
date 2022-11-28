@@ -84,10 +84,10 @@ namespace Moryx.Products.Management
 
         public IProductType CreateType(string type)
         {
-            var product = Storage.CreateTypeInstance(type);
-            if (product == null)
-                product = (ProductType)TypeTool.CreateInstance<ProductType>(type);          
-            return product;
+            var wrapper = Storage.GetTypeWrapper(type);
+            if (wrapper == null || wrapper.Constructor == null)
+                return (ProductType)TypeTool.CreateInstance<ProductType>(type);          
+            return wrapper.Constructor();
         }
 
         public IProductType Duplicate(ProductType template, ProductIdentity newIdentity)
@@ -225,6 +225,11 @@ namespace Moryx.Products.Management
             // This must never by null
             // ReSharper disable once PossibleNullReferenceException
             TypeChanged(this, productType);
+        }
+
+        public ProductTypeWrapper GetTypeWrapper(string typeName)
+        {
+            return Storage.GetTypeWrapper(typeName);
         }
 
         public event EventHandler<IProductType> TypeChanged;

@@ -348,10 +348,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<RecipeModel> CreateRecipe(string recipeType)
         {
-            var type = _productManagement.RecipeTypes.FirstOrDefault(t => t.Name == recipeType);
-            if (type == null)
-                return NotFound($"Recipe type {recipeType} not found!");
-            var recipe = (IProductRecipe)Activator.CreateInstance(type);
+            var recipe = _productManagement.CreateRecipe(recipeType);
+            if (recipe == null)
+                recipe = (IProductRecipe)TypeTool.CreateInstance<IProductRecipe>(recipeType);
             return ProductConverter.ConvertRecipe(recipe);
         }
         #endregion

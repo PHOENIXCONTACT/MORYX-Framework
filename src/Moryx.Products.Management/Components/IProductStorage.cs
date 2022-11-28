@@ -86,7 +86,14 @@ namespace Moryx.Products.Management
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns></returns>
-        ProductType CreateTypeInstance(string typeName);
+        ProductTypeWrapper GetTypeWrapper(string typeName);
+
+        /// <summary>
+        /// Create instance of a recipe
+        /// </summary>
+        /// <param name="recipeType">Full name of the recipe type</param>
+        /// <returns></returns>
+        IProductRecipe CreateRecipe(string recipeType);
     }
 
 }
