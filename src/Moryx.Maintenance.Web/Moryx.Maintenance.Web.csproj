@@ -9,7 +9,6 @@
     <ItemGroup>
         <Content Remove="*.config.js" />
         <Content Remove="*.json" />
-        <Content Update="wwwroot/**" Pack="false" />
     </ItemGroup>
 
     <ItemGroup>
