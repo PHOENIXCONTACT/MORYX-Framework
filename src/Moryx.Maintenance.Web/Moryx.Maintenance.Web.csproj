@@ -12,9 +12,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-    <ItemGroup>
-        <Content Remove="*.config.js" />
-        <Content Remove="*.json" />
+  <files> 
+    <file src="wwwroot\**" target="contentFiles\any\any" />
+  </files> 
     </ItemGroup>
 
 
