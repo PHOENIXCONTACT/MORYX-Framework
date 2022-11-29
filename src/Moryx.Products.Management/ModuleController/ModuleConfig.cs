@@ -19,7 +19,7 @@ namespace Moryx.Products.Management
     public class ModuleConfig : ConfigBase
     {
         /// <inheritdoc />
-        protected override void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
 

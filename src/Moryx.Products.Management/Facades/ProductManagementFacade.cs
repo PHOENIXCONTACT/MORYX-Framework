@@ -176,10 +176,10 @@ namespace Moryx.Products.Management
             return Workplans.LoadAllWorkplans();
         }
 
-        public void DeleteWorkplan(long workplanId)
+        public bool DeleteWorkplan(long workplanId)
         {
             ValidateHealthState();
-            Workplans.DeleteWorkplan(workplanId);
+            return Workplans.DeleteWorkplan(workplanId);
         }
 
         public IReadOnlyList<Workplan> LoadVersions(long workplanId)

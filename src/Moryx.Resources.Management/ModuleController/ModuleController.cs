@@ -38,7 +38,7 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IDbContextManager DbContextManager { get; }
 
-        public ModuleController(IModuleContainerFactory containerFactory, IRuntimeConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
             : base(containerFactory, configManager, loggerFactory)
         {
             DbContextManager = contextManager;
@@ -55,7 +55,7 @@ namespace Moryx.Resources.Management
 
             // Register imports
             Container
-                .SetInstance((IRuntimeConfigManager)ConfigManager);
+                .SetInstance((IConfigManager)ConfigManager);
 
             // Register for communication
             Container.Register<IBinaryConnectionFactory>();
