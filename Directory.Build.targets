@@ -2,7 +2,7 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxCoreVersion>4.0.0-future.617</MoryxCoreVersion>
+    <MoryxCoreVersion>4.0.0-future.656</MoryxCoreVersion>
     <MoryxClientFrameworkVersion>4.0.0-future.134</MoryxClientFrameworkVersion>
   </PropertyGroup>
 
