@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StartProject.Asp
 {
@@ -20,7 +21,7 @@ namespace StartProject.Asp
             services.AddSwaggerGen(c =>
             {
                 c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
-            });
+            });       
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,8 +43,9 @@ namespace StartProject.Asp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                var conventionBuilder = endpoints.MapControllers();
                 endpoints.MapRazorPages();
+                conventionBuilder.WithMetadata(new AllowAnonymousAttribute());
             });
         }
     }
