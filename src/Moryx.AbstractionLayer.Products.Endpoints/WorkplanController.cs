@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Workplans;
@@ -21,6 +22,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             => _workplansVersions = workplansVersions;
 
         [HttpGet]
+        [Authorize(Policy = WorkplanPermissions.CanView)]
         public WorkplanModel[] GetAllWorkplans()
         {
             var workplans = new List<WorkplanModel>();
@@ -31,6 +33,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Policy = WorkplanPermissions.CanEdit)]
         public ActionResult<long> SaveWorkplan(WorkplanModel model)
         {
             if (model == null)
@@ -44,6 +47,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}/versions")]
+        [Authorize(Policy = WorkplanPermissions.CanView)]
         public ActionResult<WorkplanModel[]> GetVersions(long id)
         {
             if (id == 0)
@@ -64,6 +68,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
+        [Authorize(Policy = WorkplanPermissions.CanView)]
         public ActionResult<WorkplanModel> GetWorkplan(long id)
         {
             if (id == 0)
@@ -78,6 +83,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
+        [Authorize(Policy = WorkplanPermissions.CanDelete)]
         public ActionResult DeleteWorkplan(long id)
         {
             if (_workplansVersions.LoadWorkplan(id) == null)
@@ -89,6 +95,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("{id}")]
+        [Authorize(Policy = WorkplanPermissions.CanEdit)]
         public ActionResult<long> UpdateWorkplan(WorkplanModel model)
         {
             if(model == null)

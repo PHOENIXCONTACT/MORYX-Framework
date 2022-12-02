@@ -4,6 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace StartProject.Asp
 {
@@ -21,6 +24,8 @@ namespace StartProject.Asp
             {
                 c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
             });
+
+            services.AddSingleton<IAuthorizationPolicyProvider, ExamplePolicyProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,9 +47,30 @@ namespace StartProject.Asp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                var conventionBuilder = endpoints.MapControllers();
                 endpoints.MapRazorPages();
+                conventionBuilder.WithMetadata(new AllowAnonymousAttribute());
             });
+        }
+    }
+
+    public class ExamplePolicyProvider : DefaultAuthorizationPolicyProvider
+    {
+        public ExamplePolicyProvider(IOptions<AuthorizationOptions> options) : base(options)
+        {
+        }
+
+        public override async Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
+        {
+            var policy = await base.GetPolicyAsync(policyName);
+
+            if (policy == null)
+            {
+                policy = new AuthorizationPolicyBuilder()
+                    .RequireClaim("Permission", policyName)
+                    .Build();               
+            }
+            return policy;
         }
     }
 }
