@@ -13,6 +13,7 @@ using Moryx.Runtime.Endpoints.Databases.Endpoint.Response;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Request;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 {
@@ -29,11 +30,13 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpGet]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
         public async Task<ActionResult<DataModel[]>> GetAll()
             => await Task.WhenAll(_dbContextManager.Contexts.Select(Convert));
 
 
         [HttpGet("{targetModel}")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
         public async Task<ActionResult<DataModel>> GetModel([FromRoute] string targetModel)
         {
             var model = _dbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel);
@@ -44,6 +47,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("{targetModel}/config")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanSetAndTestConfig)]
         public ActionResult SetDatabaseConfig([FromRoute] string targetModel, [FromBody] DatabaseConfigModel config)
         {
             var match = GetTargetConfigurator(targetModel);
@@ -60,6 +64,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("{targetModel}/config/test")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanSetAndTestConfig)]
         public async Task<ActionResult<TestConnectionResponse>> TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -77,6 +82,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("createall")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanCreate)]
         public ActionResult<InvocationResponse> CreateAll()
         {
             var bulkResult = BulkOperation(mc => mc.CreateDatabase(mc.Config), "Creation");
@@ -84,6 +90,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("{targetModel}/create")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanCreate)]
         public async Task<ActionResult<InvocationResponse>> CreateDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -109,6 +116,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpDelete]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanErase)]
         public ActionResult<InvocationResponse> EraseAll()
         {
             var bulkResult = BulkOperation(mc => mc.DeleteDatabase(mc.Config), "Deletion");
@@ -116,6 +124,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpDelete("{targetModel}")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanErase)]
         public ActionResult<InvocationResponse> EraseDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -139,6 +148,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("{targetModel}/dump")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanDumpAndRestore)]
         public ActionResult<InvocationResponse> DumpDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -160,6 +170,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("{targetModel}/restore")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanDumpAndRestore)]
         public ActionResult<InvocationResponse> RestoreDatabase(string targetModel, RestoreDatabaseRequest request)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -177,6 +188,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("{targetModel}/migrate")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanMigrateModel)]
         public async Task<ActionResult<DatabaseMigrationSummary>> MigrateDatabaseModel(string targetModel, DatabaseConfigModel configModel)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
@@ -191,6 +203,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         [HttpPost("{targetModel}/setup")]
+        [Authorize(Policy = RuntimePermissions.DatabaseCanSetup)]
         public ActionResult<InvocationResponse> ExecuteSetup(string targetModel, ExecuteSetupRequest request)
         {
             var contextType = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);

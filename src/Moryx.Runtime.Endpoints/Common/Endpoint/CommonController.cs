@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Moryx.Runtime.Endpoints.Common.Endpoint.Response;
 using System;
 using System.Globalization;
@@ -17,6 +18,7 @@ namespace Moryx.Runtime.Endpoints.Common.Endpoint
 
         [HttpGet]
         [Route("time")]
+        [Authorize(Policy = RuntimePermissions.CanGetGeneralInformation)]
         public ActionResult<ServerTimeResponse> GetServerTime()
         {
             return new ServerTimeResponse
@@ -26,6 +28,7 @@ namespace Moryx.Runtime.Endpoints.Common.Endpoint
         }
 
         [HttpGet("info/application")]
+        [Authorize(Policy = RuntimePermissions.CanGetGeneralInformation)]
         public ActionResult<ApplicationInformationResponse> GetApplicationInfo()
         {
             var startAssembly = Assembly.GetEntryAssembly();
@@ -40,6 +43,7 @@ namespace Moryx.Runtime.Endpoints.Common.Endpoint
         }
 
         [HttpGet("info/system")]
+        [Authorize(Policy = RuntimePermissions.CanGetGeneralInformation)]
         public ActionResult<HostInformationResponse> GetHostInfo()
         {
             return new HostInformationResponse
