@@ -102,7 +102,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("types")]
-        //todo why does this even exist. Find permission
+        [Authorize(Policy = ProductPermissions.CanEditType)]
         public ActionResult<long> SaveType(ProductModel newTypeModel)
         {
             if (newTypeModel == null)
