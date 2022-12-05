@@ -126,17 +126,6 @@ class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDi
                         </Switch>
                     </Container>
                 </div>
-                <footer>
-                    <Container fluid={true}>
-                        <Row><hr /></Row>
-                        <Row>
-                            <ul>
-                                <li>Maintenance {VERSION}</li>
-                                <li>&copy; 2020 PHOENIX CONTACT</li>
-                            </ul>
-                        </Row>
-                    </Container>
-                </footer>
             </div>
         );
     }

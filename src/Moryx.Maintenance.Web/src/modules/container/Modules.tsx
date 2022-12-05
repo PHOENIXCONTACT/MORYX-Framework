@@ -138,7 +138,7 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
             <Row>
                 <Col md={3}>
                     <Card>
-                        <CardHeader tag="h2">
+                        <CardHeader tag="h4">
                         <Navbar className="navbar-default" expand="md">
                             <Nav className="navbar-left" navbar={true}>
                                 <NavItem className="active">
