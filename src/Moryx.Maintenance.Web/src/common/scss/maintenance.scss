@@ -102,63 +102,62 @@ svg.icon-red {
 /*
  * Navigation
  */
+ .card-header {
+  margin-bottom: 0 !important;
+  height: 50px;
+  padding: 0 ;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ }
+
  .navbar {
-   padding: 0px 15px 0px 15px;
    transition: 0.3s;
    overflow: hidden;
 }
 
-.maintenance-navbar-default {
-   background-color:#f8f8f8;
-   border-color:#e7e7e7;
+.navbar-default.navbar.navbar-expand-md {
+  background-color: transparent;
 }
 
-.maintenance-navbar-default {
-
-  .navbar-brand {
-    color: $gray-800;
+  .navbar-left.navbar-nav {
+    width: 100%;
+    list-style-type: none;
+    margin-left: 0;
+    margin-top: 0;
+    height: 40px;
+    border: 1px solid $gray-200;
+    border-radius: $border-radius;
   }
 
-  .navbar-brand:hover {
+  .nav-item {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    margin-top: 0 !important;
+    justify-content: center;
+  }
+
+  .nav-item:hover {
+    background: $gray-200;
+    cursor: pointer;
     color: $gray-600;
   }
 
-  .navbar-nav {
-    height: 100%;
-  }
-
-  .navbar-nav>li {
-    height: 100%;
-    min-width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid $gray-200;
-    background: $gray-100;
-    margin-left: -1px;
-  }
-
-  .navbar-nav>li:hover {
-    background: $gray-200;
-  }
-
-  .navbar-nav>li.active {
+  .active {
     background: $gray-300;
+    margin-top: 0 !important;
+    border-radius: $border-radius;
   }
 
-  .navbar-nav>li>a {
-    display: flex;
+  .navbar-nav-link {
     color: $gray-800;
     text-decoration: none;
-    width: 100%;
-    height: 100%;
-    justify-items: center;
-    align-items: center;
-    margin: 0px 10px 0px 10px;
   }
 
-  .navbar-nav>li>a:hover,
-  .navbar-nav>li>a:focus {
+  .navbar-nav-link:hover,
+  .navbar-nav-link:focus {
     color: $gray-600;
     text-decoration: none;
   }
@@ -166,7 +165,6 @@ svg.icon-red {
   .navbar-collapse {
     height: 50px;
   }
-}
 
 /*
  * Content Panel
@@ -176,6 +174,7 @@ svg.icon-red {
   overflow: auto;
   display: flex;
   flex-direction: column;
+  margin-top: 20px !important;
 }
 
 .maintenance-content {
@@ -191,8 +190,6 @@ svg.icon-red {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
   overflow: hidden;
-  height: fit-content;
-  width: fit-content;
 }
 /*
  * Dashboard

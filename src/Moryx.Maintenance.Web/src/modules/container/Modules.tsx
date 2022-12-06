@@ -138,17 +138,17 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
             <Row>
                 <Col md={3}>
                     <Card>
-                        <CardHeader tag="h2">
+                        <CardHeader tag="h4">
                         <Navbar className="navbar-default" expand="md">
                             <Nav className="navbar-left" navbar={true}>
                                 <NavItem className="active">
-                                    <Link to="/modules">
+                                    <Link to="/modules" className="navbar-nav-link">
                                         <Icon path={mdiHexagonMultiple} className="icon right-space" />
                                         Modules
                                     </Link>
                                 </NavItem>
                                 <NavItem >
-                                    <Link to="/databases">
+                                    <Link to="/databases" className="navbar-nav-link">
                                         <Icon path={mdiDatabase}className="icon right-space" />
                                         Databases
                                     </Link>
@@ -165,7 +165,7 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                     <Switch>
                         <Route exact={true} path="/modules" render={() =>
                             <Card>
-                                <CardHeader tag="h2">
+                                <CardHeader tag="h4">
                                     <Icon path={mdiComment} className="icon right-space" />
                                     Information
                                 </CardHeader>

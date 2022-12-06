@@ -99,18 +99,18 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
             <Row>
                 <Col md={3}>
                     <Card>
-                        <CardHeader tag="h2">
+                        <CardHeader tag="h4">
                         <Navbar className="navbar-default" expand="md">
                             <Nav className="navbar-left" navbar={true}>
                                 <NavItem>
-                                    <Link to="/modules">
+                                    <Link to="/modules" className="navbar-nav-link">
                                         <Icon path={mdiHexagonMultiple} className="icon right-space" />
                                         Modules
                                     </Link>
                                 </NavItem>
                                 <NavItem  className="active">
-                                    <Link to="/databases">
-                                        <Icon path={mdiDatabase}className="icon right-space" />
+                                    <Link to="/databases" className="navbar-nav-link">
+                                        <Icon path={mdiDatabase} className="icon right-space" />
                                         Databases
                                     </Link>
                                 </NavItem>
@@ -130,7 +130,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                     <Switch>
                         <Route exact={true} path="/databases" render={() =>
                             <Card>
-                                <CardHeader tag="h2">
+                                <CardHeader tag="h4">
                                     <Icon path={mdiComment} className="icon right-space" />
                                     Information
                                 </CardHeader>
