@@ -27,3 +27,11 @@ Several interfaces created for minor confirm updates got merged or removed throu
 - The `Type` in the `ProductQuery` must be a assembly qualified name. Use `typeof(TType).AssemblyQualifiedName` instead of `nameof(TType)`
 - The Type in the `ProductRecipeEntity`, `ProductInstanceEntity` and `ProductTypeEntity` is the FullName including AssemblyName
 - The ProductStorage uses the FullName of the classes to organize strategies, constructors and so on
+- The following classes and interfaces moved from `Moryx.Products.Management.Importers`to  `Moryx.AbstractionLayer.Products`
+  - `ProductImporterConfig` 
+  - `FileImportParameters`
+  - `IProductImporter`
+  - `ProductImportContext`
+  - `ProductImporterBase`
+  - `ProductImporterResult
+  - `PrototypeImportParameters`
