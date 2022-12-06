@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Additional AbstractionLayer implementations for Tests</Description>
     <CreatePackage>true</CreatePackage>
@@ -14,6 +14,11 @@
 
   <ItemGroup>
     <PackageReference Include="Moryx.TestTools.UnitTest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" />
+	  <PackageReference Include="Moryx.Model.Sqlite" />
   </ItemGroup>
 
 </Project>

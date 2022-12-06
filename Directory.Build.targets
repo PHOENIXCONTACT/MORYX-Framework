@@ -21,6 +21,7 @@
     <PackageReference Update="Moq" Version="4.18.2" />
     <PackageReference Update="NUnit" Version="3.13.3" />
     <PackageReference Update="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Update="Microsoft.Data.Sqlite" Version="6.0.0" />
 
     <PackageReference Update="Microsoft.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="6.0.0" />
@@ -32,8 +33,10 @@
     <PackageReference Update="Moryx" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Container" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Tools.Wcf" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Model" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Model.PostgreSQL" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Model.InMemory" Version="$(MoryxCoreVersion)" />
+    <PackageReference Update="Moryx.Model.Sqlite" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.TestTools.UnitTest" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxCoreVersion)" />

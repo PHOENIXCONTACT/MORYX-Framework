@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
     <ProjectReference Include="..\..\Moryx.Products.Samples\Moryx.Products.Samples.csproj" />
   </ItemGroup>
 
