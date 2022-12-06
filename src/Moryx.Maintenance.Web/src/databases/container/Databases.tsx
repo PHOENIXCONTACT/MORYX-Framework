@@ -103,14 +103,14 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                         <Navbar className="navbar-default" expand="md">
                             <Nav className="navbar-left" navbar={true}>
                                 <NavItem>
-                                    <Link to="/modules">
+                                    <Link to="/modules" className="navbar-nav-link">
                                         <Icon path={mdiHexagonMultiple} className="icon right-space" />
                                         Modules
                                     </Link>
                                 </NavItem>
                                 <NavItem  className="active">
-                                    <Link to="/databases">
-                                        <Icon path={mdiDatabase}className="icon right-space" />
+                                    <Link to="/databases" className="navbar-nav-link">
+                                        <Icon path={mdiDatabase} className="icon right-space" />
                                         Databases
                                     </Link>
                                 </NavItem>
