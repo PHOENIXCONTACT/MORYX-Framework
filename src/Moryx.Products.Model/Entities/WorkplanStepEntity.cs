@@ -24,6 +24,10 @@ namespace Moryx.Products.Model
 
         public virtual long? SubWorkplanId { get; set; }
 
+        public virtual int PositionX { get; set; }
+
+        public virtual int PositionY { get; set; }
+
         public virtual WorkplanEntity Workplan { get; set; }
 
         public virtual WorkplanEntity SubWorkplan { get; set; }

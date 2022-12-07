@@ -99,7 +99,9 @@ namespace Moryx.Products.Model.Model.Migrations
                     Classname = table.Column<string>(nullable: true),
                     Parameters = table.Column<string>(nullable: true),
                     WorkplanId = table.Column<long>(nullable: false),
-                    SubWorkplanId = table.Column<long>(nullable: true)
+                    SubWorkplanId = table.Column<long>(nullable: true),
+                    PositionX = table.Column<int>(nullable: false, defaultValue: 0),
+                    PositionY = table.Column<int>(nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {

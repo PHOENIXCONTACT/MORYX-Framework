@@ -685,6 +685,14 @@ namespace Moryx.Products.Model.Model.Migrations
                     b.Property<long>("WorkplanId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("PositionX")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("PositionY")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.HasKey("Id");
 
                     b.HasIndex("SubWorkplanId");
