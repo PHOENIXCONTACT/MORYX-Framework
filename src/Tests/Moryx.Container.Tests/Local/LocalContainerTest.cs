@@ -28,14 +28,6 @@ namespace Moryx.Container.Tests
         }
 
         [Test]
-        public void GlobalsNotFound()
-        {
-            var global = _container.Resolve<GlobalComponent>();
-
-            Assert.Null(global, "Global component was registered in local container!");
-        }
-
-        [Test]
         public void DefaultFactory()
         {
             var fac = _container.Resolve<ILocalFactory>();
