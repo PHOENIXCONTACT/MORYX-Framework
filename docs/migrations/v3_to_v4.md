@@ -58,7 +58,7 @@ public static void Main(string[] args)
 }
 ````
 
-Constructor for a `ModuleController`. This also includes further imports like `IDbContextManager`. (Beaware that the internal dependency injection within a module still uses castle and, hence, works with parameter injection)
+The constructor for a `ModuleController` uses constructor injection, this also includes further imports like `IDbContextManager`. **Beaware** that the internal dependency injection within a module, as well as dependenies to other facades within the module controller still use castle and, hence, work with property injection)
 
 ````cs
 public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
@@ -82,7 +82,7 @@ IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManage
 IProductManagementTypeSearch IFacadeContainer<IProductManagementTypeSearch>.Facade => _productManagement;
 IProductManagementModification IFacadeContainer<IProductManagementModification>.Facade => _productManagement;    
 ````
-Lastly, the `ServerModule` is not needed anymore and was removed.
+Lastly, the `ServerModule` attribute is not needed anymore and was removed.
 
 
 ## Hosting
