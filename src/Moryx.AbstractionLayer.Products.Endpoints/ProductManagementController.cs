@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moryx.Serialization;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
@@ -32,6 +33,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         #region importers
         [HttpGet]
         [Route("configuration")]
+        [Authorize(Policy = ProductPermissions.CanViewTypes)]
         public ActionResult<ProductCustomization> GetProductCustomization()
         {
             return new ProductCustomization
@@ -67,6 +69,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("importers/{importerName}")]
+        [Authorize(Policy = ProductPermissions.CanImport)]
         public ActionResult<ProductModel[]> Import(string importerName, Entry importParameters)
         {
             if (importParameters == null)
@@ -99,6 +102,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("types")]
+        [Authorize(Policy = ProductPermissions.CanEditType)]
         public ActionResult<long> SaveType(ProductModel newTypeModel)
         {
             if (newTypeModel == null)
@@ -117,6 +121,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types")]
+        [Authorize(Policy = ProductPermissions.CanViewTypes)]
         public ActionResult<ProductModel[]> GetTypeByIdentity(string identity = null)
         {
             if (identity == null)
@@ -141,6 +146,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
         [HttpPost]
         [Route("types/query")]
+        [Authorize(Policy = ProductPermissions.CanViewTypes)]
         public ActionResult<ProductModel[]> GetTypes(ProductQuery query)
         {
             var productTypes = _productManagement.LoadTypes(query);
@@ -157,6 +163,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types/{id}")]
+        [Authorize(Policy = ProductPermissions.CanViewTypes)]
         public ActionResult<ProductModel> GetTypeById(long id)
         {
             if (id == 0)
@@ -171,6 +178,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types/{id}")]
+        [Authorize(Policy = ProductPermissions.CanDeleteType)]
         public ActionResult<bool> DeleteType(long id)
         {
             var result = _productManagement.DeleteProduct(id);
@@ -183,6 +191,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("types/{id}")]
+        [Authorize(Policy = ProductPermissions.CanEditType)]
         public ActionResult<long> UpdateType(long id, ProductModel modifiedType)
         {
             if (modifiedType == null)
@@ -199,6 +208,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types/{id}")]
+        [Authorize(Policy = ProductPermissions.CanDuplicateType)]
         public ActionResult<ProductModel> Duplicate(long id, [FromBody] string newIdentity)
         {
             var template = _productManagement.LoadType(id);
@@ -218,6 +228,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("types/{id}/recipes/{classification}")]
+        [Authorize(Policy = ProductPermissions.CanViewTypes)]
         public ActionResult<RecipeModel[]> GetRecipes(long id, int classification)
         {
             var productType = _productManagement.LoadType(id);
@@ -237,6 +248,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("instances/{id}")]
+        [Authorize(Policy = ProductPermissions.CanViewInstances)]
         public ActionResult<ProductInstanceModel> GetInstance(long id)
         {
             if (id == 0)
@@ -249,6 +261,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
         [HttpGet]
         [Route("instances")]
+        [Authorize(Policy = ProductPermissions.CanViewInstances)]
         public ActionResult<ProductInstanceModel[]> GetInstances([FromQuery] long[] ids)
         {
             var instances = _productManagement.GetInstances(ids);
@@ -262,6 +275,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("instances")]
+        [Authorize(Policy = ProductPermissions.CanCreateInstances)]
         public ActionResult<ProductInstanceModel> CreateInstance(string identifier, short revision, bool save)
         {
             var identity = new ProductIdentity(WebUtility.HtmlEncode(identifier), revision);
@@ -276,6 +290,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("instances")]
+        [Authorize(Policy = ProductPermissions.CanCreateInstances)]
         public ActionResult SaveInstance(ProductInstanceModel instanceModel)
         {
             if (instanceModel == null)
@@ -297,6 +312,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("recipes/{id}")]
+        [Authorize(Policy = ProductPermissions.CanViewTypes)]
         public ActionResult<RecipeModel> GetRecipe(long id)
         {
             if (id == 0)
@@ -312,6 +328,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("recipes")]
+        [Authorize(Policy = ProductPermissions.CanCreateAndEditRecipes)]
         public ActionResult<long> SaveRecipe(RecipeModel recipe)
         {
             if (recipe == null)
@@ -329,6 +346,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("recipes/{id}")]
+        [Authorize(Policy = ProductPermissions.CanCreateAndEditRecipes)]
         public ActionResult<long> UpdateRecipe(long id, RecipeModel recipeModel)
         {
             if (recipeModel == null)
@@ -346,6 +364,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [HttpGet("recipe/construct/{recipeType}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = ProductPermissions.CanCreateAndEditRecipes)]
         public ActionResult<RecipeModel> CreateRecipe(string recipeType)
         {
             var recipe = _productManagement.CreateRecipe(recipeType);

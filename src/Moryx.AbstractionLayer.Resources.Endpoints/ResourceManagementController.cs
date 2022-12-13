@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -37,6 +38,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("types")]
+        [Authorize(Policy = ResourcePermissions.CanViewTypeTree)]
         public ActionResult<ResourceTypeModel> GetTypeTree()
         {
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
@@ -46,6 +48,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        [Authorize(Policy = ResourcePermissions.CanViewDetails)]
         public ActionResult<ResourceModel[]> GetDetailsBatch([FromQuery] long[] ids)
         {
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
@@ -61,6 +64,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("query")]
+        [Authorize(Policy = ResourcePermissions.CanViewTree)]
         public ActionResult<ResourceModel[]> GetResources(ResourceQuery query)
         {
             var filter = new ResourceQueryFilter(query, _resourceTypeTree);
@@ -76,6 +80,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("{id}")]
+        [Authorize(Policy = ResourcePermissions.CanViewDetails)]
         public ActionResult<ResourceModel> GetDetails(long id)
         {
             if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
@@ -95,6 +100,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("{id}/invoke/{method}")]
+        [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
         public ActionResult<Entry> InvokeMethod(long id, string method, Entry parameters)
         {
             if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
@@ -117,6 +123,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("types/{type}")]
+        [Authorize(Policy = ResourcePermissions.CanAdd)]
         public ActionResult<ResourceModel> ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
         {
             var trustedType = WebUtility.HtmlEncode(type);
@@ -144,6 +151,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        [Authorize(Policy = ResourcePermissions.CanAdd)]
         public ActionResult<ResourceModel> Save(ResourceModel model)
         {
             if (_resourceManagement.GetAllResources<IResource>(r => r.Id == model.Id).Count() > 0)
@@ -284,6 +292,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("{id}")]
+        [Authorize(Policy = ResourcePermissions.CanEdit)]
         public ActionResult<ResourceModel> Update(long id, ResourceModel model)
         {
             if (_resourceManagement.GetAllResources<IResource>(r=>r.Id == id) is null)
@@ -306,6 +315,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("{id}")]
+        [Authorize(Policy = ResourcePermissions.CanDelete)]
         public ActionResult Remove(long id)
         {
             if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
