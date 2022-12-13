@@ -126,13 +126,15 @@ namespace Moryx.Products.Management
             var affectedRecipes = recipeRepo.Linq
                 .Where(r => r.WorkplanId == workplan.Id && r.Classification > 0).ToList();
 
-            var entity = RecipeStorage.SaveWorkplan(uow, workplan);
+            var entity = RecipeStorage.ToWorkplanEntity(uow, workplan);
             foreach (var recipe in affectedRecipes)
             {
                 recipe.Workplan = entity;
             }
 
             uow.SaveChanges();
+
+            workplan.Id = entity.Id;
 
             foreach (var recipeEntity in affectedRecipes)
             {

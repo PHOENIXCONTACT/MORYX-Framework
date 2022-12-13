@@ -40,7 +40,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save recipe to given <see cref="IUnitOfWork"/>
         /// </summary>
-        public static ProductRecipeEntity SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
+        public static ProductRecipeEntity ToRecipeEntity(IUnitOfWork uow, IProductRecipe recipe)
         {
             var entity = uow.GetEntity<ProductRecipeEntity>(recipe);
 
@@ -172,7 +172,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save a workplan to the database
         /// </summary>
-        public static WorkplanEntity SaveWorkplan(IUnitOfWork uow, Workplan workplan)
+        public static WorkplanEntity ToWorkplanEntity(IUnitOfWork uow, Workplan workplan)
         {
             var workplanRepo = uow.GetRepository<IWorkplanRepository>();
             var referenceRepo = uow.GetRepository<IWorkplanReferenceRepository>();

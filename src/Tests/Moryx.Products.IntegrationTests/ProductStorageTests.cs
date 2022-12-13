@@ -55,7 +55,7 @@ namespace Moryx.Products.IntegrationTests
             workplan.AddConnector("End", NodeClassification.End);
 
             using var uow = _factory.Create();
-            var entity = RecipeStorage.SaveWorkplan(uow, workplan);
+            var entity = RecipeStorage.ToWorkplanEntity(uow, workplan);
             uow.SaveChanges();
             _workplanId = entity.Id;
 

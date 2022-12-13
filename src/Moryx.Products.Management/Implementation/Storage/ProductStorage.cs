@@ -216,7 +216,7 @@ namespace Moryx.Products.Management
         /// </summary>
         protected ProductRecipeEntity SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
         {
-            var entity = RecipeStorage.SaveRecipe(uow, recipe);
+            var entity = RecipeStorage.ToRecipeEntity(uow, recipe);
 
             RecipeInformation[recipe.GetType().FullName].Strategy.SaveRecipe(recipe, entity);
 
