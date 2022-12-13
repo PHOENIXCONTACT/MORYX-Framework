@@ -4,6 +4,7 @@
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Communication;
+using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Notifications;
