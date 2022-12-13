@@ -11,6 +11,7 @@ namespace Moryx.AbstractionLayer.Products
         public Func<ProductType> Constructor { get; private set; }
 
         public Dictionary<string, Func<IProductPartLink>> PartLinkConstructors { get; private set; }
+
         public List<PropertyInfo> Properties { get; private set; }
 
         public IEnumerable<PropertyInfo> PartLinks { get; private set; }

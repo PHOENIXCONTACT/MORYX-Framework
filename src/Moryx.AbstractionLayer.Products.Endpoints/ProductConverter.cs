@@ -31,7 +31,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             return new()
             {
-                Name = productType.Name,
+                Name = productType.FullName,
                 DisplayName = productType.GetDisplayName() ?? productType.Name,
                 BaseDefinition = productType.BaseType?.Name,
                 Properties = EntryConvert.EncodeClass(productType, ProductSerialization)
@@ -41,7 +41,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             return new()
             {
-                Name = recipeType.Name,
+                Name = recipeType.FullName,
                 DisplayName = recipeType.GetDisplayName() ?? recipeType.Name,
                 HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(recipeType)
             };
