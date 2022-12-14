@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Moryx.Logging;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
