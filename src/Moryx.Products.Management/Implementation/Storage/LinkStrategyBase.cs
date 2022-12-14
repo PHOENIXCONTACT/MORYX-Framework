@@ -43,7 +43,7 @@ namespace Moryx.Products.Management
             PropertyName = config.PartName;
             PartCreation = config.PartCreation;
 
-            TargetType = ReflectionTool.GetPublicClasses<ProductType>(p => p.Name == config.TargetType).FirstOrDefault();
+            TargetType = ReflectionTool.GetPublicClasses<ProductType>(p => p.FullName == config.TargetType).FirstOrDefault();
         }
 
         /// <inheritdoc />

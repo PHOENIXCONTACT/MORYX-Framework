@@ -122,27 +122,13 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
             where TInstance : IProductInstance;
-    }
 
-    /// <summary>
-    /// Additional interface for type storage to search for product types by expression
-    /// TODO: Remove in AL 6
-    /// </summary>
-    public interface IProductManagementTypeSearch : IProductManagement
-    {
         /// <summary>
         /// Load types using filter expression
         /// </summary>
         IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
-    }
 
-    /// <summary>
-    /// Additional interface for type storage to search for product types by expression
-    /// TODO: Remove in AL 6
-    /// </summary>
-    public interface IProductManagementModification : IProductManagementTypeSearch
-    {
-        /// <summary>
+         /// <summary>
         /// List of available product types
         /// </summary>
         IReadOnlyList<Type> ProductTypes { get; }
@@ -162,5 +148,19 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         void RemoveRecipe(long recipeId);
 
+        /// <summary>
+        /// Create instance of a recipe
+        /// </summary>
+        /// <param name="recipeType">Full name of the recipe type</param>
+        /// <returns></returns>
+        IProductRecipe CreateRecipe(string recipeType);
+
+        /// <summary>
+        /// Return type wrapper to a type
+        /// </summary>
+        /// <param name="typeName">Full name of the type</param>
+        /// <returns></returns>
+        ProductTypeWrapper GetTypeWrapper(string typeName);
     }
+
 }

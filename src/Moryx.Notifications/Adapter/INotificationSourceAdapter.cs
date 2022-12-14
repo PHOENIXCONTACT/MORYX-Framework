@@ -14,12 +14,12 @@ namespace Moryx.Notifications
         /// <summary>
         /// Returns the currently published notifications
         /// </summary>
-        IReadOnlyList<INotification> GetPublished();
+        IReadOnlyList<Notification> GetPublished();
 
         /// <summary>
         /// Informs the sender of the notification to acknowledge it
         /// </summary>
-        void Acknowledge(INotification notification);
+        void Acknowledge(Notification notification);
 
         /// <summary>
         /// Restore notification on sender adapter
@@ -29,21 +29,21 @@ namespace Moryx.Notifications
         /// <summary>
         /// Informs a sender of an acknowledgement that it was processed
         /// </summary>
-        void AcknowledgeProcessed(INotification notification);
+        void AcknowledgeProcessed(Notification notification);
 
         /// <summary>
         /// Informs a sender of an notification that it was processed
         /// </summary>
-        void PublishProcessed(INotification notification);
+        void PublishProcessed(Notification notification);
 
         /// <summary>
         /// Event to publish a notification
         /// </summary>
-        event EventHandler<INotification> Published;
+        event EventHandler<Notification> Published;
 
         /// <summary>
         /// Event to publish an acknowledged notification
         /// </summary>
-        event EventHandler<INotification> Acknowledged;
+        event EventHandler<Notification> Acknowledged;
     }
 }

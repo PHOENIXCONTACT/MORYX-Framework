@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
-using Moryx.Products.Management.Importers;
 
 namespace Moryx.Products.Management
 {
@@ -109,5 +108,12 @@ namespace Moryx.Products.Management
         /// Get all instances that match a certain expression
         /// </summary>
         IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
+
+        /// <summary>
+        /// Return type wrapper to a type
+        /// </summary>
+        /// <param name="typeName">Full name of the type</param>
+        /// <returns></returns>
+        ProductTypeWrapper GetTypeWrapper(string typeName);
     }
 }

@@ -15,16 +15,16 @@ using Microsoft.AspNetCore.Authorization;
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     /// <summary>
-    /// Definition of a REST API on the <see cref="IProductManagementModification"/> facade.
+    /// Definition of a REST API on the <see cref="IProductManagement"/> facade.
     /// </summary>
     [ApiController]
     [Route("api/moryx/products/")]
     [Produces("application/json")]
     public class ProductManagementController : ControllerBase
     {
-        private readonly IProductManagementModification _productManagement;
+        private readonly IProductManagement _productManagement;
         private readonly ProductConverter _productConverter;
-        public ProductManagementController(IProductManagementModification productManagement)
+        public ProductManagementController(IProductManagement productManagement)
         {
             _productManagement = productManagement;
             _productConverter = new ProductConverter(_productManagement);
@@ -72,7 +72,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [Authorize(Policy = ProductPermissions.CanImport)]
         public ActionResult<ProductModel[]> Import(string importerName, Entry importParameters)
         {
-            if(importParameters == null)
+            if (importParameters == null)
                 return BadRequest($"Import parameters were null");
             var parameters = ConvertParametersBack(importerName, importParameters);
             if (parameters == null)
@@ -82,7 +82,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var importedTypes = _productManagement.Import(importerName, parameters).Result.ImportedTypes;
             var modelList = new List<ProductModel>();
             foreach (var t in importedTypes)
-                modelList.Add(_productConverter.ConvertProduct(t,false));
+                modelList.Add(_productConverter.ConvertProduct(t, false));
             return modelList.ToArray();
         }
 
@@ -135,9 +135,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             }
 
             var identityArray = WebUtility.HtmlEncode(identity).Split('-');
-            if(identityArray.Length != 2)
+            if (identityArray.Length != 2)
                 return BadRequest($"Identity has wrong format. Must be identifier-revision");
-            var productIdentity = new ProductIdentity(identityArray[0],Convert.ToInt16(identityArray[1]));
+            var productIdentity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
             var productType = _productManagement.LoadType(productIdentity);
             if (productType == null)
                 return NotFound();
@@ -199,7 +199,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var type = _productManagement.LoadType(id);
             if (type == null)
                 return BadRequest($"No product type with id {modifiedType.Id} was found");
-            type = _productConverter.ConvertProductBack(modifiedType, (ProductType) type);
+            type = _productConverter.ConvertProductBack(modifiedType, (ProductType)type);
             return _productManagement.SaveType(type);
         }
 
@@ -266,7 +266,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             var instances = _productManagement.GetInstances(ids);
             var modelList = new List<ProductInstanceModel>();
-            foreach(var instance in instances)
+            foreach (var instance in instances)
                 modelList.Add(_productConverter.ConvertProductInstance(instance));
             return modelList.ToArray();
         }
@@ -301,7 +301,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return NotFound();
             var productType = (IProductType)Activator.CreateInstance(type);
             var productInstance = _productConverter.ConvertProductInstanceBack(instanceModel, productType);
-           _productManagement.SaveInstance(productInstance);
+            _productManagement.SaveInstance(productInstance);
             return Ok();
         }
 
@@ -367,13 +367,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [Authorize(Policy = ProductPermissions.CanCreateAndEditRecipes)]
         public ActionResult<RecipeModel> CreateRecipe(string recipeType)
         {
-                // TODO: Use type wrapper
-                var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipeType).FirstOrDefault();
-                if (type == null)
-                    return NotFound($"Recipe type {recipeType} not found!");
-                var recipe = (IProductRecipe)Activator.CreateInstance(type);
-                return ProductConverter.ConvertRecipe(recipe);
-       
+            var recipe = _productManagement.CreateRecipe(recipeType);
+            if (recipe == null)
+                recipe = (IProductRecipe)TypeTool.CreateInstance<IProductRecipe>(recipeType);
+            return ProductConverter.ConvertRecipe(recipe);
         }
         #endregion
     }

@@ -40,11 +40,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save recipe to given <see cref="IUnitOfWork"/>
         /// </summary>
-        public static ProductRecipeEntity SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
+        public static ProductRecipeEntity ToRecipeEntity(IUnitOfWork uow, IProductRecipe recipe)
         {
             var entity = uow.GetEntity<ProductRecipeEntity>(recipe);
 
-            entity.Type = recipe.GetType().Name;
+            entity.Type = recipe.GetType().FullName;
             entity.Revision = recipe.Revision;
             entity.Name = recipe.Name;
             entity.TemplateId = recipe.TemplateId;
@@ -172,7 +172,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save a workplan to the database
         /// </summary>
-        public static WorkplanEntity SaveWorkplan(IUnitOfWork uow, Workplan workplan)
+        public static WorkplanEntity ToWorkplanEntity(IUnitOfWork uow, Workplan workplan)
         {
             var workplanRepo = uow.GetRepository<IWorkplanRepository>();
             var referenceRepo = uow.GetRepository<IWorkplanReferenceRepository>();
@@ -246,7 +246,7 @@ namespace Moryx.Products.Management
 
             // Remove connectors, that are now longer used. We only use Created/Updated columns
             // and do not want the entities flagged as deleted
-            var removedSteps = workplanEntity.Steps.Where(se => workplan.Steps.All(s => s.Id != se.StepId));
+            var removedSteps = workplanEntity.Steps != null ?  workplanEntity.Steps.Where(se => workplan.Steps.All(s => s.Id != se.StepId)) : new List<WorkplanStepEntity>() ;
             foreach (var removedStep in removedSteps.ToList())
             {
                 descriptionRepo.RemoveRange(removedStep.OutputDescriptions);

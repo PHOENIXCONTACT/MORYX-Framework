@@ -12,7 +12,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Common configuration interface for all strategy configs
     /// </summary>
-    public interface IProductStrategyConfiguation : IPluginConfig //TODO: Rename to IProductStrategyConfiguration in the next major
+    public interface IProductStrategyConfiguration : IPluginConfig 
     {
         /// <summary>
         /// Target type of the strategy
@@ -26,10 +26,10 @@ namespace Moryx.Products.Management
     }
 
     [DataContract]
-    public class ProductTypeConfiguration : IProductStrategyConfiguation
+    public class ProductTypeConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(ProductType))]
+        [DataMember, PossibleTypes(typeof(ProductType),UseFullname =true)]
         public string TargetType { get; set; }
 
         /// <inheritdoc cref="IPluginConfig"/> />
@@ -44,10 +44,10 @@ namespace Moryx.Products.Management
     }
 
     [DataContract]
-    public class ProductInstanceConfiguration : IProductStrategyConfiguation
+    public class ProductInstanceConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(ProductInstance))]
+        [DataMember, PossibleTypes(typeof(ProductInstance), UseFullname =true)]
         public string TargetType { get; set; }
 
         /// <inheritdoc cref="IPluginConfig"/> />
@@ -62,10 +62,10 @@ namespace Moryx.Products.Management
     }
 
     [DataContract]
-    public class ProductLinkConfiguration : IProductStrategyConfiguation
+    public class ProductLinkConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(ProductType))]
+        [DataMember, PossibleTypes(typeof(ProductType), UseFullname = true)]
         public string TargetType { get; set; }
 
         /// <summary>
@@ -92,10 +92,10 @@ namespace Moryx.Products.Management
     }
 
     [DataContract]
-    public class ProductRecipeConfiguration : IProductStrategyConfiguation
+    public class ProductRecipeConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(IProductRecipe))]
+        [DataMember, PossibleTypes(typeof(IProductRecipe), UseFullname = true)]
         public string TargetType { get; set; }
 
         /// <inheritdoc cref="IPluginConfig"/> />

@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
+using Moq;
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management;
@@ -16,10 +18,21 @@ namespace Moryx.Products.IntegrationTests
     {
         private IUnitOfWorkFactory<ProductsContext> _factory;
 
+        private RecipeManagement _recipeManagement;
+
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             _factory = BuildUnitOfWorkFactory();
+
+            var storageMock = new Mock<IProductStorage>();
+            storageMock.Setup(sm => sm.LoadRecipe(It.IsAny<long>())).Returns(new ProductionRecipe());
+
+            _recipeManagement = new RecipeManagement()
+            {
+                ModelFactory = _factory,
+                Storage = storageMock.Object
+            };
         }
 
         protected virtual UnitOfWorkFactory<ProductsContext> BuildUnitOfWorkFactory()
@@ -35,26 +48,24 @@ namespace Moryx.Products.IntegrationTests
 
             // Act
             Workplan loaded, loaded2;
-            WorkplanEntity entity1, entity2;
-            using (var uow = _factory.Create())
-            {
-                entity1 = RecipeStorage.SaveWorkplan(uow, workplan);
-                uow.SaveChanges();
-                loaded = RecipeStorage.LoadWorkplan(uow, entity1.Id);
+            long id1, id2;
+            id1 = _recipeManagement.SaveWorkplan(workplan);
+            loaded = _recipeManagement.LoadWorkplan(id1);
 
-                loaded.Name = "Modified";
+            loaded.Name = "Modified";
 
-                entity2 = RecipeStorage.SaveWorkplan(uow, loaded);
-                uow.SaveChanges();
-                loaded2 = RecipeStorage.LoadWorkplan(uow, entity2.Id);
-            }
+            id2 = _recipeManagement.SaveWorkplan(loaded);
+            loaded2 = _recipeManagement.LoadWorkplan(id2);
 
             // Assert
-            Assert.AreNotEqual(entity1.Id, entity2.Id);
-            // TODO: This test seems a bit off, since the workplan object is not DB-related
-            //Assert.AreEqual(workplan.Id, entity1.Id, "Id not assigned to original object!");
-            Assert.AreEqual(workplan.Name, entity1.Name, "Name not correctly stored and saved");
-            Assert.AreEqual(loaded.Name, entity2.Name, "Name not correctly stored and saved");
+            Assert.AreNotEqual(id1, id2);
+            Assert.AreEqual(workplan.Id, id1, "Id not assigned to original object!");
+            using (var uow = _factory.Create())
+            {
+                var entity1 = uow.GetRepository<IWorkplanRepository>().GetByKey(id1);
+                Assert.AreEqual(workplan.Name, entity1.Name, "Name not correctly stored and saved");
+            }
+            Assert.AreEqual(loaded.Id, id2, "Name not correctly stored and saved");
             Assert.AreEqual(loaded.Name, loaded2.Name, "Name not correctly stored and saved");
             Assert.AreEqual(workplan.State, loaded.State);
             Assert.AreEqual(workplan.MaxElementId, loaded.MaxElementId);

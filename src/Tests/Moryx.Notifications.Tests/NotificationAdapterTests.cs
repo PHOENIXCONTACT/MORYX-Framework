@@ -15,9 +15,9 @@ namespace Moryx.Notifications.Tests
     {
         private INotificationAdapter _adapter;
         private Mock<INotificationSender> _notificationSenderMock;
-        private IManagedNotification _publishedEventNotification;
-        private IManagedNotification _acknowledgedEventNotification;
-        private INotification _acknowledgeCallNotification;
+        private Notification _publishedEventNotification;
+        private Notification _acknowledgedEventNotification;
+        private Notification _acknowledgeCallNotification;
         private INotificationSender _sender;
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace Moryx.Notifications.Tests
         {
             _adapter = new NotificationAdapter();
             _notificationSenderMock = new Mock<INotificationSender>();
-            _notificationSenderMock.Setup(n => n.Acknowledge(It.IsAny<INotification>(), It.IsAny<object>()))
-                .Callback((INotification notification, object tag) => _acknowledgeCallNotification = notification);
+            _notificationSenderMock.Setup(n => n.Acknowledge(It.IsAny<Notification>(), It.IsAny<object>()))
+                .Callback((Notification notification, object tag) => _acknowledgeCallNotification = notification);
             _notificationSenderMock.SetupGet(n => n.Identifier).Returns("Mock");
             _sender = _notificationSenderMock.Object;
 
@@ -39,12 +39,12 @@ namespace Moryx.Notifications.Tests
 
             ((INotificationSourceAdapter)_adapter).Published += (sender, notification) =>
             {
-                _publishedEventNotification = (IManagedNotification)notification;
+                _publishedEventNotification = notification;
             };
 
             ((INotificationSourceAdapter)_adapter).Acknowledged += (sender, notification) =>
             {
-                _acknowledgedEventNotification = (IManagedNotification)notification;
+                _acknowledgedEventNotification = notification;
             };
         }
 

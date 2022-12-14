@@ -3,8 +3,6 @@
 
 using Moq;
 using Moryx.AbstractionLayer.Identity;
-using Moryx.AbstractionLayer.Products;
-using Moryx.AbstractionLayer.Products.Endpoints;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.Tools;
@@ -15,19 +13,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Moryx.Products.Management.Tests
+namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
 {
     [TestFixture]
     public class ProductConverterTests
     {
-        private Mock<IProductManagementModification> _productManagerMock;
+        private Mock<IProductManagement> _productManagerMock;
 
         private ProductConverter _productConverter;
 
         [SetUp]
         public void Setup()
         {
-            _productManagerMock = new Mock<IProductManagementModification>();
+            _productManagerMock = new Mock<IProductManagement>();
 
             _productConverter = new ProductConverter(_productManagerMock.Object);
         }
@@ -52,16 +50,16 @@ namespace Moryx.Products.Management.Tests
                 new DummyProductTypeWithFiles() { FirstProductFile = new ProductFile() { Name="FirstFile" }, SecondProductFile = new ProductFile() { Name="SecondFile" }}
             };
             // Create Recipe objects for test cases
-            var dummyRecipeLists = new List<List<IProductRecipe>>() 
-            { 
-                new List<IProductRecipe>(), 
-                new List<IProductRecipe>() { new ProductRecipe() { Id = 0 } }, 
-                new List<IProductRecipe>() { new ProductRecipe() { Id = 1923 } } 
+            var dummyRecipeLists = new List<List<IProductRecipe>>()
+            {
+                new List<IProductRecipe>(),
+                new List<IProductRecipe>() { new ProductRecipe() { Id = 0 } },
+                new List<IProductRecipe>() { new ProductRecipe() { Id = 1923 } }
             };
 
             // Create all possible combinations of input settings for the ConvertProduct method
             foreach (var identity in new IIdentity[] { null, new ProductIdentity("TestIdentifier", 1337) })
-                foreach (ProductState state in Enum.GetValues(typeof(ProductState))) 
+                foreach (ProductState state in Enum.GetValues(typeof(ProductState)))
                     foreach (var flat in new bool[] { true, false })
                         foreach (var dummyType in dummyProductTypes)
                             foreach (var recipes in dummyRecipeLists)
@@ -72,7 +70,7 @@ namespace Moryx.Products.Management.Tests
         /// in between works without information loss.
         /// </summary>
         [TestCaseSource(nameof(ProductForwardBackwardConversionTestCaseGenerator))]
-        public void ForwardBackwardProductConversionWithoutInformationLoss(DummyProductType originalProductType, 
+        public void ForwardBackwardProductConversionWithoutInformationLoss(DummyProductType originalProductType,
             ProductState state, IIdentity identity, IReadOnlyList<IProductRecipe> recipes, bool flat, int counter)
         {
             // Arrange
@@ -127,7 +125,7 @@ namespace Moryx.Products.Management.Tests
                 _productManagerMock.Verify(rm => rm.SaveRecipe(It.Is<IProductRecipe>(recipe => !HasChangedProperties<IProductRecipe>(recipe, recipes.LastOrDefault()))));
                 if (recipes.First().Id != 0)
                     _productManagerMock.Verify(rm => rm.LoadRecipe(recipes.First().Id));
-            }                
+            }
             // - If there are ProductPartLinks the ProductManagement should be called
             var targetDummyTypeWithParts = recoveredOriginal as DummyProductTypeWithParts;
             if (targetDummyTypeWithParts?.ProductPartLink?.Product is not null)
@@ -165,6 +163,8 @@ namespace Moryx.Products.Management.Tests
               || type.Equals(typeof(string))
               || type.Equals(typeof(decimal));
         }
+
+        
         #endregion
 
         #region Recipes
@@ -186,7 +186,7 @@ namespace Moryx.Products.Management.Tests
             classifications.AddRange(clonedClassifications);
 
             // Create all possible combinations of input settings for the ConvertRecipe method
-            foreach (var backupProductType in new List<DummyProductType>() { null, new DummyProductType()})
+            foreach (var backupProductType in new List<DummyProductType>() { null, new DummyProductType() })
                 foreach (RecipeState state in Enum.GetValues(typeof(RecipeState)))
                     foreach (var classification in classifications)
                         foreach (var dummyRecipe in dummyRecipes)
@@ -202,7 +202,7 @@ namespace Moryx.Products.Management.Tests
 
         //Problem Entry Convert
         [TestCaseSource(nameof(RecipeForwardBackwardConversionTestCaseGenerator))]
-        public void ForwardBackwardRecipeConversionWithoutInformationLoss(DummyProductRecipe originalRecipe, RecipeClassification classification, RecipeState state, 
+        public void ForwardBackwardRecipeConversionWithoutInformationLoss(DummyProductRecipe originalRecipe, RecipeClassification classification, RecipeState state,
             DummyProductType backupProductType, DummyWorkplan workplanInTargetRecipe, int testCaseCounter)
         {
             // Arrange
@@ -238,7 +238,7 @@ namespace Moryx.Products.Management.Tests
             // - Backup products are used for recipes without products
             if (originalRecipe.Product is null)
                 originalRecipe.Product = backupProductType;
-            
+
             Assert.AreEqual(originalRecipe, recoveredOriginal);
             // - If there is a workplan and it changed, reload it at backward conversion
             if (originalWorkplanRecipe?.Workplan is not null && originalWorkplanRecipe.Workplan.Id != workplanInTargetRecipe.Id)
@@ -262,10 +262,10 @@ namespace Moryx.Products.Management.Tests
             // Arrange
             var originalWorkplan = new DummyWorkplan()
             {
-                Id=42,
-                Name="TestWorkplan",
-                Version=1,
-                State=wpState
+                Id = 42,
+                Name = "TestWorkplan",
+                Version = 1,
+                State = wpState
             };
 
             // Act
@@ -274,8 +274,8 @@ namespace Moryx.Products.Management.Tests
             // Assert
             Assert.AreEqual(originalWorkplan.Id, convertedmodel.Id);
             Assert.AreEqual(originalWorkplan.Name, convertedmodel.Name);
-            Assert.AreEqual(originalWorkplan.Version,convertedmodel.Version);
-            Assert.AreEqual(originalWorkplan.State,convertedmodel.State);
+            Assert.AreEqual(originalWorkplan.Version, convertedmodel.Version);
+            Assert.AreEqual(originalWorkplan.State, convertedmodel.State);
         }
         #endregion
     }

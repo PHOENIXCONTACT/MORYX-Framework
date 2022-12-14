@@ -54,7 +54,7 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<INotification> GetPublished()
+        public IReadOnlyList<Notification> GetPublished()
         {
             ValidateHealthState();
             return NotificationAdapter.GetPublished();
@@ -68,44 +68,43 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        public void Acknowledge(INotification notification)
+        public void Acknowledge(Notification notification)
         {
             ValidateHealthState();
             NotificationAdapter.Acknowledge(notification);
         }
 
         /// <inheritdoc />
-        public void PublishProcessed(INotification notification)
+        public void PublishProcessed(Notification notification)
         {
             ValidateHealthState();
             NotificationAdapter.PublishProcessed(notification);
         }
 
         /// <inheritdoc />
-        public void AcknowledgeProcessed(INotification notification)
+        public void AcknowledgeProcessed(Notification notification)
         {
             ValidateHealthState();
             NotificationAdapter.AcknowledgeProcessed(notification);
         }
 
-        private void OnNotificationPublished(object sender, INotification notification)
+        private void OnNotificationPublished(object sender, Notification notification)
         {
             // Add this facade to the notification to find it on restore
-            var managed = (IManagedNotification) notification;
-            managed.Source = Name;
+            notification.Source = Name;
 
             Published?.Invoke(this, notification);
         }
 
-        private void OnNotificationAcknowledged(object sender, INotification notification)
+        private void OnNotificationAcknowledged(object sender, Notification notification)
         {
             Acknowledged?.Invoke(this, notification);
         }
 
         /// <inheritdoc />
-        public event EventHandler<INotification> Published;
+        public event EventHandler<Notification> Published;
 
         /// <inheritdoc />
-        public event EventHandler<INotification> Acknowledged;
+        public event EventHandler<Notification> Acknowledged;
     }
 }

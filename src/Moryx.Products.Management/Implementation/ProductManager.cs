@@ -8,15 +8,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
-using Moryx.Model;
 using Moryx.Model.Repositories;
-using Moryx.Products.Management.Importers;
 using Moryx.Products.Model;
-using Moryx.Tools;
 
 namespace Moryx.Products.Management
 {
@@ -66,10 +62,7 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
         {
-            if (Storage is IProductSearchStorage searchStorage)
-                return searchStorage.LoadTypes(selector);
-
-            throw new NotSupportedException("Current storage does not support type search");
+            return Storage.LoadTypes(selector);
         }
 
         public IProductType LoadType(long id)
@@ -91,12 +84,10 @@ namespace Moryx.Products.Management
 
         public IProductType CreateType(string type)
         {
-            // TODO: Use type wrapper
-            var productType = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == type).FirstOrDefault();
-            if (productType == null)
-                return null;
-            var product = (ProductType)Activator.CreateInstance(productType);
-            return product;
+            var wrapper = Storage.GetTypeWrapper(type);
+            if (wrapper == null || wrapper.Constructor == null)
+                return (ProductType)TypeTool.CreateInstance<ProductType>(type);          
+            return wrapper.Constructor();
         }
 
         public IProductType Duplicate(ProductType template, ProductIdentity newIdentity)
@@ -140,7 +131,7 @@ namespace Moryx.Products.Management
             var importer = _importers.First(i => i.Name == importerName);
             var context = new ProductImportContext();
             var result = await importer.Import(context, parameters);
-            
+
             HandleResult(result);
 
             return result;
@@ -234,6 +225,11 @@ namespace Moryx.Products.Management
             // This must never by null
             // ReSharper disable once PossibleNullReferenceException
             TypeChanged(this, productType);
+        }
+
+        public ProductTypeWrapper GetTypeWrapper(string typeName)
+        {
+            return Storage.GetTypeWrapper(typeName);
         }
 
         public event EventHandler<IProductType> TypeChanged;

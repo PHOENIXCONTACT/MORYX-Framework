@@ -41,5 +41,13 @@ namespace Moryx.AbstractionLayer.Resources
         /// Types derived from this node
         /// </summary>
         IEnumerable<IResourceTypeNode> DerivedTypes { get; }
+
+        IEnumerable<PropertyInfo> References { get;  }
+
+        IEnumerable<PropertyInfo> PropertiesOfResourceType { get;  }
+
+        Dictionary<string, List<Type>> ReferenceOverrides { get;  }
+
+
     }
 }

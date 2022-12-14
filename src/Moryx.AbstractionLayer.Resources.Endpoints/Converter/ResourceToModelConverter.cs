@@ -107,48 +107,17 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// </summary>
         private ResourceReferenceModel[] ConvertReferences(Resource current)
         {
-            var properties = current.GetType().GetProperties();
+            var node = TypeController[current.GetType().Name];
+       
             // Find all reference properties on the object
-            var referenceProperties = GetReferences(properties);
+            var referenceProperties = node.References;
 
             // Convert all references to DTOs
             return referenceProperties.Select(prop => ConvertReference(current, prop)).ToArray();
         }
 
         #region Convert References
-
-        /// <summary>
-        /// Get all reference properties
-        /// </summary>
-        protected static IEnumerable<PropertyInfo> GetReferences(IEnumerable<PropertyInfo> properties)
-        {
-            // TODO Type wrappers in AL5
-            var referenceProperties = (from prop in properties
-                                       let propType = prop.PropertyType
-                                       // Find all properties referencing a resource or a collection of resources
-                                       // Exclude read only properties, because they are simple type overrides of other references
-                                       where prop.CanWrite && Attribute.IsDefined(prop, typeof(ResourceReferenceAttribute))
-                                       select prop).ToList();
-            return referenceProperties;
-        }
-
-
-        /// <summary>
-        /// Get all reference overrides from a resources properties
-        /// </summary>
-        private static Dictionary<string, List<Type>> GetReferenceOverrides(IEnumerable<PropertyInfo> properties)
-        {
-            // TODO Type wrappers in AL5
-            var referenceOverrides = (from prop in properties
-                                      let overrideAtt = prop.GetCustomAttribute<ReferenceOverrideAttribute>()
-                                      where overrideAtt != null
-                                      let targetType = typeof(IEnumerable<IResource>).IsAssignableFrom(prop.PropertyType)
-                                        ? EntryConvert.ElementType(prop.PropertyType) : prop.PropertyType
-                                      group targetType by overrideAtt.Source into g
-                                      select new { g.Key, overrides = g.ToList() }).ToDictionary(v => v.Key, v => v.overrides);
-            return referenceOverrides;
-        }
-
+       
         /// <summary>
         /// Convert a property referencing another resource into a <see cref="ResourceReferenceModel"/>
         /// </summary>
@@ -165,8 +134,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             if (value == null)
                 return referenceModel;
 
-            // Convert referenced resource objects and possible instance types
-            // TODO Type wrappers in AL5
+            // Convert referenced resource objects and possible instance types         
             var referenceTargets = (value as IEnumerable<IResource>) ?? new[] { (IResource)value };
             foreach (Resource resource in referenceTargets)
             {
@@ -240,9 +208,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             };
 
             // Convert reference properties
-            var properties = node.ResourceType.GetProperties();
-            var references = GetReferences(properties);
-            var overrides = GetReferenceOverrides(properties);
+            var references = node.References;
+            var overrides = node.ReferenceOverrides;
             typeModel.References = references.Select(reference => ConvertReferenceProperty(reference, overrides)).ToArray();
 
             typeModel.DerivedTypes = node.DerivedTypes.Select(t => ConvertType(t, typeModel)).ToArray();

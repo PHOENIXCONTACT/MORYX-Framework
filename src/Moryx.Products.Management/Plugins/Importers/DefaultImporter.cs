@@ -1,16 +1,14 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
+using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Serialization;
-using Moryx.Tools;
 
 namespace Moryx.Products.Management.Importers
 {
@@ -23,12 +21,8 @@ namespace Moryx.Products.Management.Importers
     {
         /// <inheritdoc />
         protected override Task<ProductImporterResult> Import(ProductImportContext context, DefaultImporterParameters parameters)
-        {
-            // TODO: Use type wrapper
-            var type = ReflectionTool.GetPublicClasses<ProductType>(p => p.Name == parameters.ProductType)
-                .First();
-
-            var productType = (ProductType)Activator.CreateInstance(type);
+        {       
+            var productType = (ProductType)TypeTool.CreateInstance<ProductType>(parameters.ProductType);                     
             productType.Identity = new ProductIdentity(parameters.Identifier, parameters.Revision);
             productType.Name = parameters.Name;
 

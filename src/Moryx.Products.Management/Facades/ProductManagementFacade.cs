@@ -14,7 +14,7 @@ using Moryx.Workplans;
 
 namespace Moryx.Products.Management
 {
-    internal class ProductManagementFacade : IFacadeControl, IProductManagementModification
+    internal class ProductManagementFacade : IFacadeControl, IProductManagement
     {
         // Use this delegate in every call for clean health state management
         public Action ValidateHealthState { get; set; }
@@ -290,6 +290,16 @@ namespace Moryx.Products.Management
         public void RemoveRecipe(long recipeId)
         {
             RecipeManagement.Remove(recipeId);
+        }
+
+        public IProductRecipe CreateRecipe(string recipeType)
+        {
+            return RecipeManagement.CreateRecipe(recipeType);
+        }
+
+        public ProductTypeWrapper GetTypeWrapper(string typeName)
+        {
+            return ProductManager.GetTypeWrapper(typeName);
         }
     }
 }

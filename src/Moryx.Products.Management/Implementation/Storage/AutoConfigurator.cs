@@ -31,6 +31,11 @@ namespace Moryx.Products.Management
         public ModuleConfig Config { get; set; }
 
         /// <summary>
+        /// ProductStorage
+        /// </summary>
+        public IProductStorage Storage { get; set; }
+
+        /// <summary>
         /// Add all necessary config entries for the product
         /// </summary>
         public string ConfigureType(string productType)
@@ -62,9 +67,10 @@ namespace Moryx.Products.Management
             }
 
             // Configure part links
-            // TODO: Use type wrapper
-            var links = product.GetProperties()
-                .Where(p => typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) || typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType));
+            var typeWrapper = Storage.GetTypeWrapper(product.FullName);           
+            var links = typeWrapper != null && typeWrapper.PartLinks != null ? typeWrapper.PartLinks : 
+                product.GetProperties().Where(p => typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) || typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType));
+            
             foreach (var link in links)
             {
                 if (Config.LinkStrategies.Any(s => s.TargetType == productType && s.PartName == link.Name))
@@ -162,7 +168,7 @@ namespace Moryx.Products.Management
         }
 
         private TConfig StrategyConfig<TStrategy, TConfig, TBaseType>(Type targetType)
-            where TConfig : class, IProductStrategyConfiguation
+            where TConfig : class, IProductStrategyConfiguration
         {
             var tuple = CreateConfig<TStrategy, TConfig>(targetType);
             if (tuple == null)
@@ -180,10 +186,13 @@ namespace Moryx.Products.Management
 
             var remainingColumns = typeof(IGenericColumns).GetProperties()
                 .OrderBy(p => p.Name).ToList();
-            // TODO: Use type wrapper
-            var baseProperties = typeof(TBaseType).GetProperties();
 
-            var filteredProperties = targetType.GetProperties()
+            var baseTypeWrapper = Storage.GetTypeWrapper(typeof(TBaseType).FullName);
+            var baseProperties = baseTypeWrapper != null ? baseTypeWrapper.Properties.ToArray() : typeof(TBaseType).GetProperties();
+
+            var targetTypeWrapper = Storage.GetTypeWrapper(targetType.FullName);
+            var targetProperties = targetTypeWrapper != null ? targetTypeWrapper.Properties.ToArray() : targetType.GetProperties();
+            var filteredProperties = targetProperties
                 .Where(p => baseProperties.All(bp => bp.Name != p.Name))
                 .Where(p => p.GetSetMethod() != null)
                 .Where(p => !typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))

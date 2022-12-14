@@ -24,7 +24,6 @@ Invoke-Initialize -Version (Get-Content "VERSION");
 
 if ($Build) {
     Invoke-Build ".\AbstractionLayer.sln"
-    Invoke-Build ".\AbstractionLayer.UI.sln"
 }
 
 if ($SmokeTests) {

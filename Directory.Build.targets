@@ -2,8 +2,7 @@
 <Project>
 
   <PropertyGroup>
-    <MoryxCoreVersion>4.0.0-future.656</MoryxCoreVersion>
-    <MoryxClientFrameworkVersion>4.0.0-future.134</MoryxClientFrameworkVersion>
+    <MoryxCoreVersion>4.0.0-future.666</MoryxCoreVersion>
   </PropertyGroup>
 
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
@@ -42,13 +41,6 @@
     <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime.Endpoints" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Maintenance.Web" Version="$(MoryxCoreVersion)" />
-
-    <!--ClientFramework dependencies-->
-    <PackageReference Update="Moryx.Controls" Version="$(MoryxClientFrameworkVersion)" />
-    <PackageReference Update="Moryx.ClientFramework" Version="$(MoryxClientFrameworkVersion)" />
-    <PackageReference Update="Moryx.ClientFramework.Configurator" Version="$(MoryxClientFrameworkVersion)" />
-    <PackageReference Update="Moryx.ClientFramework.Kernel" Version="$(MoryxClientFrameworkVersion)" />
-    <PackageReference Update="Moryx.ClientFramework.SimpleShell" Version="$(MoryxClientFrameworkVersion)" />
 
   </ItemGroup>
 

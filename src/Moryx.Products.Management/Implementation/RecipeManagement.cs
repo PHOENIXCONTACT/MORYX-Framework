@@ -19,7 +19,7 @@ namespace Moryx.Products.Management
     {
         #region Dependencies
 
-        public IProductRemoveRecipeStorage Storage { get; set; }
+        public IProductStorage Storage { get; set; }
 
         public IUnitOfWorkFactory<ProductsContext> ModelFactory { get; set; }
 
@@ -126,13 +126,15 @@ namespace Moryx.Products.Management
             var affectedRecipes = recipeRepo.Linq
                 .Where(r => r.WorkplanId == workplan.Id && r.Classification > 0).ToList();
 
-            var entity = RecipeStorage.SaveWorkplan(uow, workplan);
+            var entity = RecipeStorage.ToWorkplanEntity(uow, workplan);
             foreach (var recipe in affectedRecipes)
             {
                 recipe.Workplan = entity;
             }
 
             uow.SaveChanges();
+
+            workplan.Id = entity.Id;
 
             foreach (var recipeEntity in affectedRecipes)
             {
@@ -149,7 +151,7 @@ namespace Moryx.Products.Management
             var repo = uow.GetRepository<IWorkplanRepository>();
             var workplan = repo.GetByKey(workplanId);
             if (workplan == null)
-                return false; // TODO: Any feedback?
+                return false;
             repo.Remove(workplan);
             uow.SaveChanges();
             return true;
@@ -161,6 +163,12 @@ namespace Moryx.Products.Management
             // ReSharper disable once PossibleNullReferenceException
             RecipeChanged(this, recipe);
         }
+
+        public IProductRecipe CreateRecipe(string recipeType)
+        {
+            return Storage.CreateRecipe(recipeType);
+        }
+
         public event EventHandler<IRecipe> RecipeChanged;
     }
 }

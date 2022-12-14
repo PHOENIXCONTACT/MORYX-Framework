@@ -16,7 +16,7 @@ namespace Moryx.Products.Management
     [ExpectedConfig(typeof(GenericTypeConfiguration))]
     [StrategyConfiguration(typeof(IProductType), DerivedTypes = true)]
     [Plugin(LifeCycle.Transient, typeof(IProductTypeStrategy), Name = nameof(GenericTypeStrategy))]
-    internal class GenericTypeStrategy : TypeStrategyBase<GenericTypeConfiguration>, IProductTypeSearch
+    internal class GenericTypeStrategy : TypeStrategyBase<GenericTypeConfiguration>, IProductTypeStrategy
     {
         /// <summary>
         /// Injected entity mapper
@@ -33,7 +33,7 @@ namespace Moryx.Products.Management
             EntityMapper.Initialize(TargetType, Config);
         }
 
-        public Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector)
+        public override Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector)
         {
             return EntityMapper.TransformSelector(selector);
         }

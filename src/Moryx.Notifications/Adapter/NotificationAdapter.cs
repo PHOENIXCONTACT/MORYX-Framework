@@ -23,18 +23,18 @@ namespace Moryx.Notifications
         #region Adapter <> Facade
 
         /// <inheritdoc />
-        public IReadOnlyList<INotification> GetPublished(INotificationSender sender)
+        public IReadOnlyList<Notification> GetPublished(INotificationSender sender)
         {
             return GetPublished(map => map.Sender == sender);
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<INotification> GetPublished(INotificationSender sender, object tag)
+        public IReadOnlyList<Notification> GetPublished(INotificationSender sender, object tag)
         {
             return GetPublished(map => map.Sender == sender && map.Tag.Equals(tag));
         }
 
-        private IReadOnlyList<INotification> GetPublished(Func<NotificationMap, bool> filter)
+        private IReadOnlyList<Notification> GetPublished(Func<NotificationMap, bool> filter)
         {
             _listLock.EnterReadLock();
 
@@ -48,13 +48,13 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        public void Publish(INotificationSender sender, INotification notification)
+        public void Publish(INotificationSender sender, Notification notification)
         {
             Publish(sender, notification, new object());
         }
 
         /// <inheritdoc />
-        public void Publish(INotificationSender sender, INotification notification, object tag)
+        public void Publish(INotificationSender sender, Notification notification, object tag)
         {
             if (string.IsNullOrEmpty(sender.Identifier))
                 throw new InvalidOperationException("The identifier of the sender must be set");
@@ -75,11 +75,9 @@ namespace Moryx.Notifications
             }
 
             _listLock.EnterWriteLock();
-            
-            var managed = (IManagedNotification)notification;
-            managed.Identifier = Guid.NewGuid();
-            managed.Created = DateTime.Now;
-            managed.Sender = sender.Identifier;
+
+            notification.Created = DateTime.Now;
+            notification.Sender = sender.Identifier;
 
             _pendingPubs.Add(new NotificationMap(sender, notification, tag));
 
@@ -90,7 +88,7 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        public void Acknowledge(INotificationSender sender, INotification notification)
+        public void Acknowledge(INotificationSender sender, Notification notification)
         {
             if (string.IsNullOrEmpty(sender.Identifier))
                 throw new InvalidOperationException("The identifier of the sender must be set");
@@ -98,9 +96,8 @@ namespace Moryx.Notifications
             if (notification == null)
                 throw new ArgumentNullException(nameof(notification), "Notification must be set");
 
-            var managed = (IManagedNotification)notification;
-            managed.Acknowledged = DateTime.Now;
-            managed.Acknowledger = sender.Identifier;
+            notification.Acknowledged = DateTime.Now;
+            notification.Acknowledger = sender.Identifier;
 
             _listLock.EnterWriteLock();
 
@@ -155,9 +152,9 @@ namespace Moryx.Notifications
 
             foreach (var published in publishes)
             {
-                var managed = (IManagedNotification)published.Notification;
-                managed.Acknowledged = DateTime.Now;
-                managed.Acknowledger = sender.Identifier;
+
+                published.Notification.Acknowledged = DateTime.Now;
+                published.Notification.Acknowledger = sender.Identifier;
 
                 _pendingAcks.Add(published);
             }
@@ -173,7 +170,7 @@ namespace Moryx.Notifications
         #region Facade <> Adapter
 
         /// <inheritdoc />
-        IReadOnlyList<INotification> INotificationSourceAdapter.GetPublished()
+        IReadOnlyList<Notification> INotificationSourceAdapter.GetPublished()
         {
             _listLock.EnterReadLock();
 
@@ -185,7 +182,7 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        void INotificationSourceAdapter.Acknowledge(INotification notification)
+        void INotificationSourceAdapter.Acknowledge(Notification notification)
         {
             _listLock.EnterReadLock();
 
@@ -197,7 +194,7 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        void INotificationSourceAdapter.AcknowledgeProcessed(INotification notification)
+        void INotificationSourceAdapter.AcknowledgeProcessed(Notification notification)
         {
             _listLock.EnterWriteLock();
 
@@ -211,7 +208,7 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        void INotificationSourceAdapter.PublishProcessed(INotification notification)
+        void INotificationSourceAdapter.PublishProcessed(Notification notification)
         {
             _listLock.EnterWriteLock();
 
@@ -228,9 +225,8 @@ namespace Moryx.Notifications
                 // Notification is maybe not pending anymore - we only can acknowledge it
                 _listLock.ExitWriteLock();
 
-                var managed = (IManagedNotification)notification;
-                managed.Acknowledged = DateTime.Now;
-                managed.Acknowledger = nameof(NotificationAdapter);
+                notification.Acknowledged = DateTime.Now;
+                notification.Acknowledger = nameof(NotificationAdapter);
                 Acknowledged?.Invoke(this, notification);
             }
         }
@@ -260,23 +256,23 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        public event EventHandler<INotification> Published;
+        public event EventHandler<Notification> Published;
 
         /// <inheritdoc />
-        public event EventHandler<INotification> Acknowledged;
+        public event EventHandler<Notification> Acknowledged;
 
         #endregion
 
         private class NotificationMap
         {
-            public NotificationMap(INotificationSender sender, INotification notification, object tag)
+            public NotificationMap(INotificationSender sender, Notification notification, object tag)
             {
                 Sender = sender;
                 Notification = notification;
                 Tag = tag;
             }
 
-            public INotification Notification { get; }
+            public Notification Notification { get; }
 
             public INotificationSender Sender { get; }
 

@@ -6,7 +6,6 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
-using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Products.Management
@@ -15,9 +14,7 @@ namespace Moryx.Products.Management
     /// The main controller of all product modules.
     /// </summary>
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, 
-        IFacadeContainer<IProductManagement>, 
-        IFacadeContainer<IProductManagementModification>,
-        IFacadeContainer<IProductManagementTypeSearch>
+        IFacadeContainer<IProductManagement>
     {
         internal const string ModuleName = "ProductManager";
         /// <summary>
@@ -88,8 +85,6 @@ namespace Moryx.Products.Management
         private readonly ProductManagementFacade _productManagement = new ProductManagementFacade();
 
         IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManagement;
-        IProductManagementTypeSearch IFacadeContainer<IProductManagementTypeSearch>.Facade => _productManagement;
-        IProductManagementModification IFacadeContainer<IProductManagementModification>.Facade => _productManagement;
     }
 
 }

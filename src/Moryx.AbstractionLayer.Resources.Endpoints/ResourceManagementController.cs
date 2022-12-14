@@ -23,14 +23,14 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
     [Produces("application/json")]
     public class ResourceModificationController : ControllerBase
     {
-        private readonly IResourceModificationExtended _resourceModification;
+        private readonly IResourceManagement _resourceManagement;
         private readonly IResourceTypeTree _resourceTypeTree;
         private readonly ResourceSerialization _serialization;
 
-        public ResourceModificationController(IResourceModificationExtended resourceModification)
+        public ResourceModificationController(IResourceManagement resourceManagement, IResourceTypeTree resourceTypeTree)
         {
-            _resourceModification = resourceModification ?? throw new ArgumentNullException(nameof(resourceModification));
-            _resourceTypeTree = _resourceModification as IResourceTypeTree ?? throw new InvalidCastException(nameof(resourceModification));
+            _resourceManagement = resourceManagement ?? throw new ArgumentNullException(nameof(resourceManagement));
+            _resourceTypeTree = resourceTypeTree ?? throw new ArgumentNullException(nameof(resourceTypeTree));
             _serialization = new ResourceSerialization();
         }
 
@@ -54,9 +54,9 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
 
             if (ids is null)
-                ids = _resourceModification.GetResources<IPublicResource>().Select(r => r.Id).ToArray();
+                ids = _resourceManagement.GetResources<IPublicResource>().Select(r => r.Id).ToArray();
 
-            return ids.Select(id => _resourceModification.Read(id, r => converter.GetDetails(r)))
+            return ids.Select(id => _resourceManagement.Read(id, r => converter.GetDetails(r)))
                 .Where(details => details != null).ToArray();
         }
 
@@ -68,10 +68,10 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         public ActionResult<ResourceModel[]> GetResources(ResourceQuery query)
         {
             var filter = new ResourceQueryFilter(query, _resourceTypeTree);
-            var resourceProxies = _resourceModification.GetAllResources<IResource>(r => filter.Match(r as Resource)).ToArray();
+            var resourceProxies = _resourceManagement.GetAllResources<IResource>(r => filter.Match(r as Resource)).ToArray();
 
             var converter = new ResourceQueryConverter(_resourceTypeTree, _serialization, query);
-            var values = resourceProxies.Select(p => _resourceModification.Read(p.Id, r => converter.QueryConversion(r))).ToArray();
+            var values = resourceProxies.Select(p => _resourceManagement.Read(p.Id, r => converter.QueryConversion(r))).ToArray();
             return values;
         }
 
@@ -83,11 +83,11 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanViewDetails)]
         public ActionResult<ResourceModel> GetDetails(long id)
         {
-            if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
+            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
                 return NotFound($"Resource '{id}' not found!");
 
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
-            var resourceModel = _resourceModification.Read(id, r => converter.GetDetails(r));
+            var resourceModel = _resourceManagement.Read(id, r => converter.GetDetails(r));
             if (resourceModel is null)
                 return NotFound($"Resource '{id}' not found!");
 
@@ -103,11 +103,11 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
         public ActionResult<Entry> InvokeMethod(long id, string method, Entry parameters)
         {
-            if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
+            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
                 return NotFound($"Resource {id} not found!");
 
             Entry entry = null;
-            _resourceModification.Modify(id, r =>
+            _resourceManagement.Modify(id, r =>
             {
                 entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
                 return true;
@@ -154,14 +154,14 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanAdd)]
         public ActionResult<ResourceModel> Save(ResourceModel model)
         {
-            if (_resourceModification.GetAllResources<IResource>(r => r.Id == model.Id).Count() > 0)
+            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == model.Id).Count() > 0)
                 return Conflict($"The resource '{model.Id}' already exists.");
 
-            var id = _resourceModification.Create(_resourceTypeTree[model.Type].ResourceType, r => {
+            var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r => {
                 var resourcesToSave = new HashSet<long>();
                 var resourceCache = new Dictionary<long, Resource>();
                 FromModel(model, resourcesToSave, resourceCache, r);
-                resourcesToSave.Skip(1).ForEach(id => _resourceModification.Modify(id, r => true ));
+                resourcesToSave.Skip(1).ForEach(id => _resourceManagement.Modify(id, r => true ));
             });
 
             return GetDetails(id);
@@ -187,11 +187,11 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                     resource = (Resource)Activator.CreateInstance(_resourceTypeTree[model.Type].ResourceType);
                 else if (model.Id == 0)
                 {
-                    var id = _resourceModification.Create(_resourceTypeTree[model.Type].ResourceType, r => { });
-                    resource = _resourceModification.Read<Resource>(id, resource => resource);
+                    var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r => { });
+                    resource = _resourceManagement.Read<Resource>(id, resource => resource);
                 }
                 else
-                    resource = _resourceModification.Read<Resource>(model.Id, resource => resource);
+                    resource = _resourceManagement.Read<Resource>(model.Id, resource => resource);
 
             // Write to cache because following calls might only have an empty reference
             if (model.Id == 0)
@@ -295,14 +295,14 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanEdit)]
         public ActionResult<ResourceModel> Update(long id, ResourceModel model)
         {
-            if (_resourceModification.GetAllResources<IResource>(r=>r.Id == id) is null)
+            if (_resourceManagement.GetAllResources<IResource>(r=>r.Id == id) is null)
                 return NotFound($"Resource {id} not found!");
 
-            _resourceModification.Modify(id, r => {
+            _resourceManagement.Modify(id, r => {
                 var resourcesToSave = new HashSet<long>();
                 var resourceCache = new Dictionary<long, Resource>();
                 FromModel(model, resourcesToSave, resourceCache, r);
-                resourcesToSave.ForEach(id => _resourceModification.Modify(id, r => true));
+                resourcesToSave.ForEach(id => _resourceManagement.Modify(id, r => true));
                 return true;
             });
 
@@ -318,10 +318,10 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanDelete)]
         public ActionResult Remove(long id)
         {
-            if (_resourceModification.GetAllResources<IResource>(r => r.Id == id) is null)
+            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
                 return NotFound($"Resource {id} not found!");
 
-            var deleted = _resourceModification.Delete(id);
+            var deleted = _resourceManagement.Delete(id);
             if (!deleted)
                 return Conflict($"Unable to delete {id}");
 
@@ -332,17 +332,18 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             private readonly ResourceQuery _query;
             private readonly IReadOnlyList<IResourceTypeNode> _typeNodes;
+            private readonly IResourceTypeTree _resourceTypeTree;
 
             public ResourceQueryFilter(ResourceQuery query, IResourceTypeTree typeTree)
             {
                 _query = query;
                 _typeNodes = query.Types?.Select(typeName => typeTree[typeName]).Where(t => t != null).ToArray();
+                _resourceTypeTree = typeTree;
             }
 
             public bool Match(Resource instance)
             {
-                // Check type of instance, if filter is set
-                // TODO: Use type wrapper
+                // Check type of instance, if filter is set            
                 if (_typeNodes != null && _typeNodes.All(tn => !tn.ResourceType.IsInstanceOfType(instance)))
                     return false;
 
@@ -350,8 +351,10 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 if (_query.ReferenceCondition == null)
                     return true;
 
+                var node = _resourceTypeTree[instance.GetType().Name];
+
                 var referenceCondition = _query.ReferenceCondition;
-                var references = (from property in instance.GetType().GetProperties()
+                var references = (from property in node.PropertiesOfResourceType
                                   let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
                                   where att != null
                                   select new { property, att }).ToList();

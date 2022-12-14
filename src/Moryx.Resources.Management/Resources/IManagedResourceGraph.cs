@@ -34,6 +34,10 @@ namespace Moryx.Resources.Management
 
         /// <summary>
         /// TODO: Find a better way
+        /// The ResourceGraph manages the resource instances, while the ResourceManager can save and destroy resources.
+        /// The ResourceManager references the ResourceGraph. That's the reason why the ResourceGraph cannot reference the ResourceManager.
+        /// In order to still be able to save and destroy resources, these delegates exist. 
+        /// Events are also no alternatives, since there would be problems with the return values
         /// </summary>
         Action<Resource> SaveDelegate { get; set; }
 

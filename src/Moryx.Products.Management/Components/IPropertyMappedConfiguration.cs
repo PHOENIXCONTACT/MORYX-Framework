@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Moryx.Products.Management
 {
     /// <summary>
-    /// Interface for <see cref="IProductStrategyConfiguation"/> that contains property mapper configuration
+    /// Interface for <see cref="IProductStrategyConfiguration"/> that contains property mapper configuration
     /// </summary>
     public interface IPropertyMappedConfiguration
     {
