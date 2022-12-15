@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Serverity } from "./Severity";
 import SerializableException from "./SerializableException";
+import { Serverity } from "./Severity";
 
 export default class NotificationModel {
     public timestamp: Date;

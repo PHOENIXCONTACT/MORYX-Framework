@@ -1,4 +1,3 @@
-export default class DbMigrationsModel
-{
-    name : string;
+export default class DbMigrationsModel {
+    public name: string;
 }

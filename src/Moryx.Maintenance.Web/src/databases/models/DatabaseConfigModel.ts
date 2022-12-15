@@ -3,11 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-export default class DatabaseConfigModel
-{
-    server : string;
-    port : number;
-    database : string;
-    user : string;
-    password : string;
+export default class DatabaseConfigModel {
+    public server: string;
+    public port: number;
+    public database: string;
+    public user: string;
+    public password: string;
 }

@@ -1,4 +1,4 @@
-declare module 'react-bootstrap-toggle' {
+declare module "react-bootstrap-toggle" {
 
     export interface BootstrapToggleProps {
         onstyle?: string;
@@ -13,9 +13,9 @@ declare module 'react-bootstrap-toggle' {
         off?: React.ReactNode;
         active?: boolean;
         disabled?: boolean;
-        onClick: (e: React.MouseEvent<HTMLElement>) => void;
+        onClick(e: React.MouseEvent<HTMLElement>): void;
     }
-    
+
     const BootstrapToggle: React.StatelessComponent<BootstrapToggleProps>;
     export default BootstrapToggle;
 }
