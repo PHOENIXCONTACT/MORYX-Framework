@@ -1,12 +1,9 @@
 # Migrate to Abstraction Layer 6
-For this major release the main motivation was switching from our own MORYX Runtime to ASP.NET Core with MORYX extensions.
-It includes replacing EntityFramework 6 with EntityFramework Core as well as the replacement of the First Level DI-Container. 
-We also removed our own implementation of an injectable logger and will use the very similar logger API from Microsoft from now on.
-Regarding the configuration of our module, we are able to simplify things here as well. Tbc...
-Lastly, we remove the support for .NET Framework with the step to MORYX Core v4.
+From this major release the main motivation was to harmonize and merge Facade interfaces, as well as tackling the issue raised in #59 by replacing some interfaces with their already provided implementations.
 For more information, please refer to the respective paragraphs below.
 
 ## .NET Framework
+At the beginning, however, we start by continuing the story told in the [MORYX-Core Migration Guide](https://github.com/PHOENIXCONTACT/MORYX-Core/blob/future/docs/migrations/v3_to_v4.md#migrate-to-core-v4).
 MORYX Abstraction Layer no longer supports the legacy .NET Framework and is only available for .NET 6.0 and above. There is also no more WCF support or embedded kestrel hosting. Instead standard ASP.NET API-Controllers can be used that import MORYX components (kernel, modules or facade).
 
 ## Renamed Classes and Interfaces
@@ -16,17 +13,19 @@ MORYX Abstraction Layer no longer supports the legacy .NET Framework and is only
 ## Changed Interfaces
 Several interfaces created for minor confirm updates got merged or removed throughout the update
 - `INamedTaskStep` (removed)
-- IRecipeTemplating -> IRecipe
-- IActivityProgress -> Tracing
-- IProductTypeEntityRepository -> IProductTypeRepository
-- IProductRecipeEntityRepository -> IProductRecipeRepository
+- `IRecipeTemplating` -> `IRecipe`
+- `IActivityProgress` -> `Tracing`
+- `IProductTypeEntityRepository` -> `IProductTypeRepository`
+- `IProductRecipeEntityRepository` -> `IProductRecipeRepository`
 - The interfaces `IActivityTracing` and `ITracing` were removed. Instead use the class `Tracing` directly
-- `INotificationPublisher` was removed and the `INotificationPublisherExtended` was renamed to `INotificationPublisher`
-- The interfaces `IproductManagementTypeSearch` and `IProductManagementModification` are now included in `IProductManagement` and obsolete
+- The previous `INotificationPublisher` interface was removed and the `INotificationPublisherExtended` interface was renamed to `INotificationPublisher` to replace it
+- The interfaces `IProductManagementTypeSearch` and `IProductManagementModification` are now included in `IProductManagement` and obsolete
 - The interfaces `IProductSearchStorage` and `IProductRemoveRecipeStorage` are now included in `IProductStorage` and obsolete
 - The interfaces `IProductTypeSearch` is now included in `IProductTypeStrategy` and obsolete
 - The interfaces `IResourceModification` and `IResourceModificationExtended` are now included in `IResourceManagement` and obsolete 
 - There is an extra Facade implementing `IResourceTypeTree` called `ResourceTypeTreeFacade`
+- `INotification` and `IManagedNotification` were removed. Use `Notification` instead.
+  * Note: The previous structure including two interfaces kept developers from accidently overriding properties by providing getter only properties within `INotification`. With a similar intend, the relevant properties of `Notification` throuw an `InvalidOperationException` when trying to override already defined values. You can circumvent this functionality, by overriding the respective properties in a derived class as you see fit.
 
 ## Moved Classes and Interfaces
 Several interfaces and classes moved to other namespaces
@@ -36,9 +35,9 @@ Several interfaces and classes moved to other namespaces
   - `IProductImporter`
   - `ProductImportContext`
   - `ProductImporterBase`
-  - `ProductImporterResult
+  - `ProductImporterResult`
   - `PrototypeImportParameters`
-- The following classes and interfaces moved from `Moryx.Products.Management.Modification` to `Moryx.AbstractionLayer.Products.Endpoints`
+- The following classes and interfaces moved from `Moryx.Products.Management.Modification` to `Moryx.AbstractionLayer.Products.Endpoints` (located in the Moryx.AbstractionLayer.Products.Endpoints package)
   - `PartConecctor`
   - `PartModel`
   - `ProductCustomization`
@@ -52,11 +51,11 @@ Several interfaces and classes moved to other namespaces
   - `RecipeModel`
   - `WorkplanModel`
   - `PartialSerialization`
-- The following classes and interfaces moved from `Moryx.Resources.Interaction.Converter` to `Moryx.AbstractionLayer.Resources.Endpoints`
+- The following classes and interfaces moved from `Moryx.Resources.Interaction.Converter` to `Moryx.AbstractionLayer.Resources.Endpoints` (located in the Moryx.AbstractionLayer.Resources.Endpoints package)
   - `ModelToResourceConverter`
   - `ResourceQueryConverter`
   - `ResourceToModelConverter`
-- The following classes and interfaces moved from `Moryx.Resources.Interaction` to `Moryx.AbstractionLayer.Resources.Endpoints`
+- The following classes and interfaces moved from `Moryx.Resources.Interaction` to `Moryx.AbstractionLayer.Resources.Endpoints` (located in the Moryx.AbstractionLayer.Resources.Endpoints package)
   - `ReferenceFilter`
   - `ReferenceTypeModel`
   - `ResourceModel`
@@ -65,6 +64,15 @@ Several interfaces and classes moved to other namespaces
   - `ResourceTypeModel` 
 
 ## Package Changes
+From the change to Web interfaces with REST APIs follow: 
+ - `Moryx.Resources.Interaction` removed
+ - `Moryx.AbstractionLayer.UI`removed
+ - `Moryx.Products.UI` removed
+ - `Moryx.Products.UI.Interaction` removed
+ - `Moryx.Resources.UI` removed
+ - `Moryx.Resources.UI.Interaction` removed
+ - `Moryx.AbstractionLayer.Resources.Endpoints` added
+ - `Moryx.AbstractionLayer.Products.Endpoints` added
 
 ## Namespace changes
 - `Moryx.Workflows` was renamed to `Moryx.Workplans`
@@ -75,6 +83,6 @@ Several interfaces and classes moved to other namespaces
 - In `Tracing` `Resource` was renamed to `ResourceId`
 
 ## Other Changes
-- The `Type` in the `ProductQuery` must be a assembly qualified name. Use `typeof(TType).AssemblyQualifiedName` instead of `nameof(TType)`
+- The `Type` in the `ProductQuery` must be an assembly qualified name. Use `typeof(TType).AssemblyQualifiedName` instead of `nameof(TType)`
 - The Type in the `ProductRecipeEntity`, `ProductInstanceEntity` and `ProductTypeEntity` is the FullName including AssemblyName
 - The ProductStorage uses the FullName of the classes to organize strategies, constructors and so on
