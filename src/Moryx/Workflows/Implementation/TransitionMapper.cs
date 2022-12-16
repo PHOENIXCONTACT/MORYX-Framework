@@ -38,7 +38,7 @@ namespace Moryx.Workplans
         }
 
         /// <summary>
-        /// Event handler for <see cref="IWorkflowEngine.TransitionTriggered"/>
+        /// Event handler for <see cref="IWorkplanEngine.TransitionTriggered"/>
         /// </summary>
         public void TransitionTriggered(object sender, ITransition transition)
         {

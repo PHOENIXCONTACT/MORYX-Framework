@@ -4,9 +4,10 @@ using Moryx.Workplans.Validation;
 namespace Moryx.Workplans
 {
     /// <summary>
-    /// Workflow engine API access class with factory methods
+    /// API access class with factory methods for <see cref="IConnector"/>, <see cref="IWorkplanEngine"/>, 
+    /// <see cref="IPathPredictor"/> and <see cref="ITransitionMapper"/>
     /// </summary>
-    public static class Workflow
+    public static class WorkplanInstance
     {
         /// <summary>
         /// Create a named connector instance of classification intermediate
@@ -25,29 +26,29 @@ namespace Moryx.Workplans
         }
 
         /// <summary>
-        /// Create engine instance from workplan and context. The default factory will be used to instantiate
-        /// the workflow.
+        /// Create the <see cref="WorkplanEngine"/> for a workplan instance and add a <paramref name="context"/>. 
+        /// The <see cref="WorkplanInstanceFactory"/> will be used to instantiate the <paramref name="workplan"/>.
         /// </summary>
-        public static IWorkflowEngine CreateEngine(IWorkplan workplan, IWorkplanContext context)
+        public static IWorkplanEngine CreateEngine(IWorkplan workplan, IWorkplanContext context)
         {
-            return CreateWorkflowEngine(WorkflowFactory.Instantiate(workplan, context), context);
+            return CreateWorkplanEngine(WorkplanInstanceFactory.Instantiate(workplan, context), context);
         }
 
         /// <summary>
-        /// Create the workflow engine for a given workflow instance
+        /// Create the <see cref="IWorkplanEngine"/> for a given <paramref name="workplanInstance"/>
         /// </summary>
-        public static IWorkflowEngine CreateEngine(IWorkflow workflow)
+        public static IWorkplanEngine CreateEngine(IWorkplanInstance workplanInstance)
         {
-            return CreateWorkflowEngine(workflow, new NullContext());
+            return CreateWorkplanEngine(workplanInstance, new NullContext());
         }
 
         /// <summary>
-        /// Create the workflow engine for a given workflow instance and add context
+        /// Create the <see cref="WorkplanEngine"/> for a given <paramref name="workplanInstance"/> and add a <paramref name="context"/>
         /// </summary>
-        private static WorkflowEngine CreateWorkflowEngine(IWorkflow workflow, IWorkplanContext context)
+        private static WorkplanEngine CreateWorkplanEngine(IWorkplanInstance workplanInstance, IWorkplanContext context)
         {
-            var engine = new WorkflowEngine { Context = context };
-            engine.Initialize(workflow);
+            var engine = new WorkplanEngine { Context = context };
+            engine.Initialize(workplanInstance);
             return engine;
         }
 
@@ -61,9 +62,9 @@ namespace Moryx.Workplans
         }
 
         /// <summary>
-        /// Destroy a workflow engine instance
+        /// Destroy a <see cref="IWorkplanEngine"/>
         /// </summary>
-        public static void Destroy(IWorkflowEngine engine)
+        public static void Destroy(IWorkplanEngine engine)
         {
             engine.Dispose();
         }
@@ -92,7 +93,7 @@ namespace Moryx.Workplans
         /// <returns><remarks>True</remarks> if validation succeeded. Otherwise <remarks>false</remarks>.</returns>
         public static ValidationResult Validate(IWorkplan workplan, ValidationAspect aspects)
         {
-            return WorkflowValidation.Validate(workplan, aspects);
+            return WorkplanValidation.Validate(workplan, aspects);
         }
     }
 }

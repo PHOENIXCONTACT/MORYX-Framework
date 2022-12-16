@@ -9,9 +9,9 @@ using Moryx.StateMachines;
 
 namespace Moryx.Workplans
 {
-    internal class WorkflowEngine : IMonitoredEngine, IStateContext
+    internal class WorkplanEngine : IMonitoredEngine, IStateContext
     {
-        public WorkflowEngine()
+        public WorkplanEngine()
         {
             StateMachine.Initialize(this).With<EngineState>();
         }
@@ -24,7 +24,7 @@ namespace Moryx.Workplans
         }
 
         ///
-        public IWorkflow ExecutedWorkflow { get; private set; }
+        public IWorkplanInstance ExecutedWorkplan { get; private set; }
 
         ///
         public IWorkplanContext Context { get; set; }
@@ -32,26 +32,26 @@ namespace Moryx.Workplans
         /// <summary>
         /// Reference to the snapshot, if there is one
         /// </summary>
-        internal WorkflowSnapshot CurrentSnapshot { get; set; }
+        internal WorkplanSnapshot CurrentSnapshot { get; set; }
 
         ///
-        public void Initialize(IWorkflow workflow)
+        public void Initialize(IWorkplanInstance workplanInstance)
         {
-            State.Initialize(workflow);
+            State.Initialize(workplanInstance);
         }
 
-        internal void ExecuteInitialize(IWorkflow workflow)
+        internal void ExecuteInitialize(IWorkplanInstance workplanInstance)
         {
-            ExecutedWorkflow = workflow;
+            ExecutedWorkplan = workplanInstance;
             // Register to events of observable transitions
-            foreach (var transition in ExecutedWorkflow.Transitions)
+            foreach (var transition in ExecutedWorkplan.Transitions)
             {
                 transition.Initialize();
                 if (transition is IObservableTransition)
                     ((IObservableTransition)transition).Triggered += OnTransitionTriggered;
             }
             // Register to events of exit places
-            foreach (var place in ExecutedWorkflow.Places)
+            foreach (var place in ExecutedWorkplan.Places)
             {
                 place.TokenAdded += OnPlaceReached;
             }
@@ -87,7 +87,7 @@ namespace Moryx.Workplans
 
         internal void ExecuteStart()
         {
-            foreach (var startPlace in ExecutedWorkflow.StartPlaces())
+            foreach (var startPlace in ExecutedWorkplan.StartPlaces())
             {
                 startPlace.Add(new MainToken());
             }
@@ -105,7 +105,7 @@ namespace Moryx.Workplans
         #region Pause and restore
 
         ///
-        public WorkflowSnapshot Pause()
+        public WorkplanSnapshot Pause()
         {
             return State.Pause();
         }
@@ -113,7 +113,7 @@ namespace Moryx.Workplans
         internal void ExecutePause()
         {
             // Create snapshot with workplan name
-            var snapShot = new WorkflowSnapshot { WorkplanName = ExecutedWorkflow.Workplan.Name };
+            var snapShot = new WorkplanSnapshot { WorkplanName = ExecutedWorkplan.Workplan.Name };
 
             // Pause all places or transitions with tokens
             foreach (var holder in GetAllHolders().Where(IsRelevantHolder))
@@ -122,7 +122,7 @@ namespace Moryx.Workplans
             }
 
             // Await all transitions to finish up currently executed code
-            while (ExecutedWorkflow.Transitions.Any(transition => transition.Executing))
+            while (ExecutedWorkplan.Transitions.Any(transition => transition.Executing))
             {
                 // This will force a context switch to give CPU time to the transitions
                 Thread.Sleep(1);
@@ -151,10 +151,10 @@ namespace Moryx.Workplans
         }
 
         /// <summary>
-        /// Restore the workflow state from a snapshot
+        /// Restore the state of the workplan instance from a snapshot
         /// </summary>
         /// <param name="snapshot"></param>
-        public void Restore(WorkflowSnapshot snapshot)
+        public void Restore(WorkplanSnapshot snapshot)
         {
             State.Restore(snapshot);
         }
@@ -172,8 +172,8 @@ namespace Moryx.Workplans
 
         private ITokenHolder[] GetAllHolders()
         {
-            IEnumerable<ITokenHolder> holderPlaces = ExecutedWorkflow.Places;
-            IEnumerable<ITokenHolder> holderTransitions = ExecutedWorkflow.Transitions;
+            IEnumerable<ITokenHolder> holderPlaces = ExecutedWorkplan.Places;
+            IEnumerable<ITokenHolder> holderTransitions = ExecutedWorkplan.Transitions;
             return holderPlaces.Union(holderTransitions).ToArray();
         }
 
@@ -197,16 +197,16 @@ namespace Moryx.Workplans
         internal void ExecuteDispose()
         {
             // Unregister from each observable transitions
-            foreach (var transition in ExecutedWorkflow.Transitions.OfType<IObservableTransition>())
+            foreach (var transition in ExecutedWorkplan.Transitions.OfType<IObservableTransition>())
             {
                 transition.Triggered -= OnTransitionTriggered;
             }
             // Unregister from events of exit places
-            foreach (var place in ExecutedWorkflow.Places)
+            foreach (var place in ExecutedWorkplan.Places)
             {
                 place.TokenAdded -= OnPlaceReached;
             }
-            ExecutedWorkflow = null;
+            ExecutedWorkplan = null;
         }
     }
 }

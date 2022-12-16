@@ -12,7 +12,7 @@ namespace Moryx.Workplans
     public interface ITransitionMapper : IDisposable
     {
         /// <summary>
-        /// Event handler for <see cref="IWorkflowEngine.TransitionTriggered"/>
+        /// Event handler for <see cref="IWorkplanEngine.TransitionTriggered"/>
         /// </summary>
         void TransitionTriggered(object sender, ITransition transition);
 

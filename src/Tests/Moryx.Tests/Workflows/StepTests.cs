@@ -8,7 +8,7 @@ using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     [TestFixture]
     public class StepTests
@@ -49,18 +49,18 @@ namespace Moryx.Tests.Workflows
         }
 
         [Test]
-        public void SubWorkflow()
+        public void SubWorkplan()
         {
             // Arrange
             var workplan = WorkplanDummy.CreateSub();
-            var step = new SubworkflowStep(workplan);
+            var step = new SubworkplanStep(workplan);
             var exits = workplan.Connectors.Where(c => c.Classification.HasFlag(NodeClassification.Exit)).ToArray();
 
             // Act
             var trans = step.CreateInstance(null);
 
             // Assert
-            Assert.IsInstanceOf<SubworkflowTransition>(trans);
+            Assert.IsInstanceOf<SubworkplanTransition>(trans);
             Assert.AreEqual(2, step.Outputs.Length);
             Assert.AreEqual(2, step.OutputDescriptions.Length);
             var success = step.OutputDescriptions[0];

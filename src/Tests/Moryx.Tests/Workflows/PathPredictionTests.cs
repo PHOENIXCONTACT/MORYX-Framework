@@ -9,7 +9,7 @@ using Moryx.Tools;
 using Moryx.Workplans;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     [TestFixture]
     public class PathPredictionTests
@@ -20,11 +20,11 @@ namespace Moryx.Tests.Workflows
             // Arrange
             var workplan = WorkplanDummy.CreateBig();
             bool triggered = false;
-            var predictor = Workflow.PathPrediction(workplan);
+            var predictor = WorkplanInstance.PathPrediction(workplan);
             predictor.PathPrediction += (sender, args) => triggered = triggered = true;
 
             // Act
-            var engine = Workflow.CreateEngine(workplan, new NullContext());
+            var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
             engine.Completed += (sender, place) => { };
             engine.TransitionTriggered += (sender, transition) => { };
             predictor.Monitor(engine);
@@ -34,13 +34,13 @@ namespace Moryx.Tests.Workflows
             Assert.IsFalse(triggered, "Path predictor should not have been activiated");
         }
 
-        [Test(Description = "The path predictor should predict the end classification before the workflow is completed")]
+        [Test(Description = "The path predictor should predict the end classification before the workplan instance is executed completly")]
         public void PredictFailureBeforeCompletion()
         {
             // Arrange
             var stopWatch = new Stopwatch();
             var workplan = WorkplanDummy.CreateBig();
-            var predictor = Workflow.PathPrediction(workplan);
+            var predictor = WorkplanInstance.PathPrediction(workplan);
 
             long predictionTime = long.MaxValue;
             NodeClassification prediction = NodeClassification.Intermediate;
@@ -50,8 +50,8 @@ namespace Moryx.Tests.Workflows
                 predictionTime = stopWatch.ElapsedMilliseconds;
             };
 
-            var engine = Workflow.CreateEngine(workplan, new NullContext());
-            engine.ExecutedWorkflow.Transitions.OfType<DummyTransition>().ForEach(dt => dt.ResultOutput = -1); // Disable automatic execution
+            var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
+            engine.ExecutedWorkplan.Transitions.OfType<DummyTransition>().ForEach(dt => dt.ResultOutput = -1); // Disable automatic execution
 
             // Act
             long completionTime = 0;
@@ -70,17 +70,17 @@ namespace Moryx.Tests.Workflows
             Assert.AreEqual(finalResult, prediction, "Predication was incorrect");
         }
 
-        [Test(Description = "The path predictor must be able to publish a prediction when the workflow was interrupted in a predictable path")]
+        [Test(Description = "The path predictor must be able to publish a prediction when the execution of a workplan instance was interrupted in a predictable path")]
         public void PublishPredictionAfterInterruption()
         {
             // Arrange
             var workplan = WorkplanDummy.CreateBig();
-            var predictor = Workflow.PathPrediction(workplan);
+            var predictor = WorkplanInstance.PathPrediction(workplan);
             NodeClassification prediction = NodeClassification.Intermediate;
             predictor.PathPrediction += (sender, args) => prediction = args.PredictedOutcome;
             // Start and pause engine in 
-            var engine = Workflow.CreateEngine(workplan, new NullContext());
-            var transitions = engine.ExecutedWorkflow.Transitions.OfType<DummyTransition>();
+            var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
+            var transitions = engine.ExecutedWorkplan.Transitions.OfType<DummyTransition>();
             transitions.ForEach(dt => dt.ResultOutput = -1); // Disable automatic execution
             transitions.First().ResultOutput = 1; // Except for the first one
             engine.TransitionTriggered += (sender, transition) => { };
@@ -89,7 +89,7 @@ namespace Moryx.Tests.Workflows
             // Act
             var snapshot = engine.Pause(); // Snapshot of the engine in a sure failure path
             engine.Dispose();
-            engine = Workflow.CreateEngine(workplan, new NullContext());
+            engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
             engine.Restore(snapshot); // Restore new engine from the snapshot
             var finalResult = NodeClassification.Intermediate;
             engine.Completed += (sender, place) => finalResult = place.Classification;
@@ -115,13 +115,13 @@ namespace Moryx.Tests.Workflows
         {
             // Arrange
             var workplan = WorkplanDummy.WithLoop();
-            var predictor = Workflow.PathPrediction(workplan);
+            var predictor = WorkplanInstance.PathPrediction(workplan);
             var executor = new SingleLoopExecution();
             NodeClassification prediction = NodeClassification.Intermediate;
             predictor.PathPrediction += (sender, args) => prediction = args.PredictedOutcome;
 
-            var engine = Workflow.CreateEngine(workplan, new NullContext());
-            engine.ExecutedWorkflow.Transitions.OfType<DummyTransition>().ForEach(dt => dt.ResultOutput = -1); // Disable automatic execution
+            var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
+            engine.ExecutedWorkplan.Transitions.OfType<DummyTransition>().ForEach(dt => dt.ResultOutput = -1); // Disable automatic execution
 
             // Act
             var finalResult = NodeClassification.Intermediate;

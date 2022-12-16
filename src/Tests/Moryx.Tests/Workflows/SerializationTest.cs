@@ -7,7 +7,7 @@ using Moryx.Workplans;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     [TestFixture]
     public class SerializationTest
@@ -17,9 +17,9 @@ namespace Moryx.Tests.Workflows
         {
             // Arrange
             var workplan = new Workplan();
-            var start = Workflow.CreateConnector("Initial", NodeClassification.Start);
+            var start = WorkplanInstance.CreateConnector("Initial", NodeClassification.Start);
             var step = new DummyStep(1, "Test");
-            var end = Workflow.CreateConnector("End", NodeClassification.End);
+            var end = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             step.Inputs[0] = start;
             step.Outputs[0] = end;
             workplan.Add(start, end);

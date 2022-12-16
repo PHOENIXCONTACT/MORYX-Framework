@@ -4,7 +4,7 @@
 namespace Moryx.Workplans.Validation
 {
     /// <summary>
-    /// Result of the workflow validation
+    /// Result of the workplan validation
     /// </summary>
     public class ValidationResult
     {

@@ -7,7 +7,7 @@ using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     [TestFixture]
     public class TransitionTests
@@ -114,7 +114,7 @@ namespace Moryx.Tests.Workflows
         }
 
         [Test]
-        public void SubWorkflowTransition()
+        public void SubWorkplanTransition()
         {
             // Arrange
             var workplan = WorkplanDummy.CreateSub();
@@ -124,7 +124,7 @@ namespace Moryx.Tests.Workflows
                 new OutputDescription {MappingValue = (int) exits[0].Id},
                 new OutputDescription {MappingValue = (int) exits[1].Id},
             };
-            var trans = new SubworkflowTransition(Workflow.CreateEngine(workplan, new NullContext()), TransitionBase.CreateIndexResolver(outputs))
+            var trans = new SubworkplanTransition(WorkplanInstance.CreateEngine(workplan, new NullContext()), TransitionBase.CreateIndexResolver(outputs))
             {
                 Id = 1,
                 Inputs = new[] { _inputs[0] },
@@ -145,7 +145,7 @@ namespace Moryx.Tests.Workflows
         }
 
         [Test]
-        public void SubworkflowPause()
+        public void SubworkplanPause()
         {
             // Arrange
             var workplan = WorkplanDummy.CreatePausableSub();
@@ -154,7 +154,7 @@ namespace Moryx.Tests.Workflows
             {
                 new OutputDescription {MappingValue = (int) exits[0].Id},
             };
-            var trans = new SubworkflowTransition(Workflow.CreateEngine(workplan, new NullContext()), TransitionBase.CreateIndexResolver(outputs))
+            var trans = new SubworkplanTransition(WorkplanInstance.CreateEngine(workplan, new NullContext()), TransitionBase.CreateIndexResolver(outputs))
             {
                 Id = 1,
                 Inputs = new[] { _inputs[0] },
@@ -174,8 +174,8 @@ namespace Moryx.Tests.Workflows
             Assert.AreEqual(0, _inputs[0].Tokens.Count());
             Assert.AreEqual(_token, _outputs[0].Tokens.First());
             Assert.AreEqual(1, triggered.Count);
-            Assert.IsInstanceOf<WorkflowSnapshot>(state);
-            var snapshot = (WorkflowSnapshot)state;
+            Assert.IsInstanceOf<WorkplanSnapshot>(state);
+            var snapshot = (WorkplanSnapshot)state;
             Assert.AreEqual(1, snapshot.Holders.Length);
             var stepId = workplan.Steps.First(s => s is PausableStep).Id;
             Assert.AreEqual(stepId, snapshot.Holders[0].HolderId);

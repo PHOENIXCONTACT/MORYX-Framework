@@ -17,5 +17,7 @@ namespace Moryx.Workplans
         /// Transition name
         /// </summary>
         string Name { get; set; }
+
+        position {get; set}
     }
 }

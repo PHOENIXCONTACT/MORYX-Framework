@@ -6,22 +6,22 @@ using System.Collections.Generic;
 namespace Moryx.Workplans
 {
     /// <summary>
-    /// Interface of the workflow
+    /// Interface of instances of an <see cref="IWorkplan"/>, executable by an implementation of <see cref="IWorkplanEngine"/>.
     /// </summary>
-    public interface IWorkflow
+    public interface IWorkplanInstance
     {
         /// <summary>
-        /// Workplan this workflow is an instance of
+        /// Instantiated workplan type
         /// </summary>
         IWorkplan Workplan { get; }
 
         /// <summary>
-        /// All places
+        /// All places of the <see cref="IWorkplanInstance"/>. See also <seealso href="https://en.wikipedia.org/wiki/Petri_net"/>.
         /// </summary>
         IReadOnlyList<IPlace> Places { get; }
 
         /// <summary>
-        /// All transitions of the workflow
+        /// All transitions of the <see cref="IWorkplanInstance"/>. See also <seealso href="https://en.wikipedia.org/wiki/Petri_net"/>.
         /// </summary>
         IReadOnlyList<ITransition> Transitions { get; }
     }

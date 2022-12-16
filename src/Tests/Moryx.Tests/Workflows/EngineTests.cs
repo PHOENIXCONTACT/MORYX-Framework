@@ -6,7 +6,7 @@ using Moryx.Workplans;
 using Moryx.Workplans.Validation;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     [TestFixture]
     public class EngineTests
@@ -14,27 +14,27 @@ namespace Moryx.Tests.Workflows
         private bool _completed;
 
         [Test]
-        public void InstantiateWorkflow()
+        public void InstantiateWorkplan()
         {
             // Arrange
             var workplan = WorkplanDummy.CreateFull();
 
             // Act
             var context = new FakeContext();
-            var workflow = WorkflowFactory.Instantiate(workplan, context);
+            var workplanInstance = WorkplanInstanceFactory.Instantiate(workplan, context);
 
             // Simple assert
-            Assert.AreEqual(workplan.Connectors.Count(), workflow.Places.Count(), "Not all connectors transformed to places!");
-            Assert.AreEqual(workplan.Steps.Count(), workflow.Transitions.Count(), "Not all steps transformed to transitions!");
-            Assert.IsTrue(workflow.Transitions.Cast<DummyTransition>().All(t => t.Context == context), "Context not passed to all transitions!");
+            Assert.AreEqual(workplan.Connectors.Count(), workplanInstance.Places.Count(), "Not all connectors transformed to places!");
+            Assert.AreEqual(workplan.Steps.Count(), workplanInstance.Transitions.Count(), "Not all steps transformed to transitions!");
+            Assert.IsTrue(workplanInstance.Transitions.Cast<DummyTransition>().All(t => t.Context == context), "Context not passed to all transitions!");
             // Structure assert
-            var transitions = workflow.Transitions;
+            var transitions = workplanInstance.Transitions;
             Assert.AreEqual(2, transitions[0].Outputs.Length);
             Assert.AreEqual(transitions[0].Outputs[1], transitions[1].Inputs[0]);
             Assert.AreEqual(transitions[0].Outputs[0], transitions[2].Inputs[0]);
             Assert.AreEqual(transitions[1].Outputs[0], transitions[2].Inputs[0]);
             Assert.AreEqual(transitions[2].Outputs[0], transitions[2].Outputs[1]);
-            Assert.AreEqual(transitions[2].Outputs[0], workflow.EndPlaces().First());
+            Assert.AreEqual(transitions[2].Outputs[0], workplanInstance.EndPlaces().First());
         }
 
         private class FakeContext : IWorkplanContext
@@ -52,7 +52,7 @@ namespace Moryx.Tests.Workflows
             var workplan = WorkplanDummy.CreateFull();
 
             // Act
-            var validation = Workflow.Validate(workplan, ValidationAspect.DeadEnd | ValidationAspect.LoneWolf);
+            var validation = WorkplanInstance.Validate(workplan, ValidationAspect.DeadEnd | ValidationAspect.LoneWolf);
 
             // Assert
             Assert.IsTrue(validation.Success, "Validation did not return success for a valid workplan!");
@@ -66,7 +66,7 @@ namespace Moryx.Tests.Workflows
             var workplan = WorkplanDummy.CreateLoneWolf();
 
             // Act
-            var validation = Workflow.Validate(workplan, ValidationAspect.LoneWolf);
+            var validation = WorkplanInstance.Validate(workplan, ValidationAspect.LoneWolf);
 
             // Assert
             Assert.IsFalse(validation.Success, "Validation did not detect error!");
@@ -85,7 +85,7 @@ namespace Moryx.Tests.Workflows
             var workplan = WorkplanDummy.CreateDeadEnd();
 
             // Act
-            var validation = Workflow.Validate(workplan, ValidationAspect.DeadEnd);
+            var validation = WorkplanInstance.Validate(workplan, ValidationAspect.DeadEnd);
 
             // Assert
             Assert.IsFalse(validation.Success, "Validation did not detect error!");
@@ -97,13 +97,13 @@ namespace Moryx.Tests.Workflows
             Assert.NotNull(error);
         }
 
-        [TestCase(ExecutionPath.Default, 2, "->A->C", Description = "Executing workflow on default path")]
-        [TestCase(ExecutionPath.Alternative, 3, "->A->B->C", Description = "Executiong workflow on alternative path")]
-        public void ExecuteWorkflow(ExecutionPath route, int expectedTransitions, string expectedPath)
+        [TestCase(ExecutionPath.Default, 2, "->A->C", Description = "Executing workplan instance on default path")]
+        [TestCase(ExecutionPath.Alternative, 3, "->A->B->C", Description = "Executing workplan instance on alternative path")]
+        public void ExecuteWorkplanInstance(ExecutionPath route, int expectedTransitions, string expectedPath)
         {
             // Arrange
             var workplan = WorkplanDummy.CreateFull();
-            var engine = Workflow.CreateEngine(workplan, new NullContext());
+            var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
 
             // Act
             var triggerCount = 0;
@@ -119,12 +119,12 @@ namespace Moryx.Tests.Workflows
             engine.Completed += EngineCompleted;
             engine.Start();
             // Synchronus execution means we are done here
-            Workflow.Destroy(engine);
+            WorkplanInstance.Destroy(engine);
 
             // Assert
             Assert.IsTrue(_completed);
             Assert.AreEqual(expectedTransitions, triggerCount, "Less transitions triggered than expected!");
-            Assert.AreEqual(expectedPath, path, "Workflow engine did not take the correct path!");
+            Assert.AreEqual(expectedPath, path, "Workplan engine did not take the correct path!");
         }
 
         public enum ExecutionPath
@@ -138,7 +138,7 @@ namespace Moryx.Tests.Workflows
         {
             // Arrange
             var workplan = WorkplanDummy.CreatePausable();
-            var engine = Workflow.CreateEngine(workplan, new NullContext());
+            var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
 
             engine.TransitionTriggered += (sender, transition) => { };
             engine.Completed += EngineCompleted;
@@ -163,9 +163,9 @@ namespace Moryx.Tests.Workflows
         {
             // Arrange
             var workplan = WorkplanDummy.CreatePausable();
-            var engine = Workflow.CreateEngine(workplan, new NullContext());
+            var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
             var stepId = workplan.Steps.Single(s => s is PausableStep).Id;
-            var snapShot = new WorkflowSnapshot
+            var snapShot = new WorkplanSnapshot
             {
                 Holders = new[]
                 {

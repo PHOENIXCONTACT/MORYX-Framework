@@ -5,7 +5,7 @@ namespace Moryx.Workplans
 {
     internal class RestoredState : EngineState
     {
-        public RestoredState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
+        public RestoredState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Moryx.Workplans
         /// <summary>
         /// Return the snapshot that was used to restore the engine
         /// </summary>
-        internal override WorkflowSnapshot Pause()
+        internal override WorkplanSnapshot Pause()
         {
             return Context.CurrentSnapshot;
         }

@@ -38,17 +38,17 @@ namespace Moryx.Workplans
         Failure = 8,
 
         /// <summary>
-        /// Start point for normal workflow
+        /// Start point for a normal workplan
         /// </summary>
         Start = Entry | WorkplanBorder,
 
         /// <summary>
-        /// End point for normal workflow
+        /// End point for a normal workplan
         /// </summary>
         End = Exit | WorkplanBorder,
 
         /// <summary>
-        /// Reset and abort point for normal workflow if an unrecoverable failure occurred.
+        /// Reset and abort point for a normal workplan if an unrecoverable failure occurred.
         /// </summary>
         Failed = Exit | Failure
     }

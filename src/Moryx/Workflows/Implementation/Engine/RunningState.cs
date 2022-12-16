@@ -5,11 +5,11 @@ namespace Moryx.Workplans
 {
     internal class RunningState : EngineState
     {
-        public RunningState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
+        public RunningState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
         {
         }
 
-        internal override WorkflowSnapshot Pause()
+        internal override WorkplanSnapshot Pause()
         {
             NextState(StatePaused);
             Context.ExecutePause();

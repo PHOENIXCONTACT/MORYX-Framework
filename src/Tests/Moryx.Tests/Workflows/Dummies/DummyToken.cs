@@ -3,7 +3,7 @@
 
 using Moryx.Workplans;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     public class DummyToken : IToken
     {

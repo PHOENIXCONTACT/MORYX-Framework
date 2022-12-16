@@ -7,7 +7,7 @@ namespace Moryx.Workplans
 {
     /// <summary>
     /// Component created for a certain workplan that can predict the outcome of a single
-    /// workflow instance by monitoring its workflow engine
+    /// workplan instance by monitoring its workplan engine
     /// </summary>
     public interface IPathPredictor : IDisposable
     {
@@ -17,41 +17,41 @@ namespace Moryx.Workplans
         int MonitoredEngines { get; }
 
         /// <summary>
-        /// Monitor the engine of a workflow to predict its outcome
+        /// Monitor the engine of a workplan to predict its outcome
         /// </summary>
-        void Monitor(IWorkflowEngine instance);
+        void Monitor(IWorkplanEngine instance);
 
         /// <summary>
         /// Remove a engine instance, that shall be no longer be monitored
         /// </summary>
-        bool Remove(IWorkflowEngine instance);
+        bool Remove(IWorkplanEngine instance);
 
         /// <summary>
         /// The <see cref="IPathPredictor"/> has determined the most likely result of the
-        /// workflow.
+        /// execution of the workplan instance.
         /// </summary>
         event EventHandler<PathPredictionEventArgs> PathPrediction;
     }
 
     /// <summary>
-    /// Event args when the engine has predicted a possible outcome of a workflow
+    /// Event args when the engine has predicted a possible outcome of a workplan instance
     /// </summary>
     public class PathPredictionEventArgs : EventArgs
     {
         /// <summary>
         /// Create a <see cref="PathPredictionEventArgs"/> instance for the predicated outcome of a
-        /// <see cref="IWorkflowEngine"/> with absolute certainty
+        /// <see cref="IWorkplanEngine"/> with absolute certainty
         /// </summary>
-        public PathPredictionEventArgs(IWorkflowEngine engineInstance, NodeClassification predictedOutcome)
+        public PathPredictionEventArgs(IWorkplanEngine engineInstance, NodeClassification predictedOutcome)
         : this(engineInstance, predictedOutcome, 1)
         {
         }
 
         /// <summary>
         /// Create a <see cref="PathPredictionEventArgs"/> instance for the predicated outcome of a
-        /// <see cref="IWorkflowEngine"/> with a certain probability
+        /// <see cref="IWorkplanEngine"/> with a certain probability
         /// </summary>
-        public PathPredictionEventArgs(IWorkflowEngine engineInstance, NodeClassification predictedOutcome, double probability)
+        public PathPredictionEventArgs(IWorkplanEngine engineInstance, NodeClassification predictedOutcome, double probability)
         {
             EngineInstance = engineInstance;
             PredictedOutcome = predictedOutcome;
@@ -59,12 +59,12 @@ namespace Moryx.Workplans
         }
 
         /// <summary>
-        /// Instance of the workflow engine this event refers to
+        /// Instance of the workplan engine this event refers to
         /// </summary>
-        public IWorkflowEngine EngineInstance { get; }
+        public IWorkplanEngine EngineInstance { get; }
 
         /// <summary>
-        /// Predicted outcome place of the workflow
+        /// Predicted outcome place of the workplan instance
         /// </summary>
         public NodeClassification PredictedOutcome { get; }
 

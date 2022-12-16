@@ -5,7 +5,7 @@ namespace Moryx.Workplans.Validation
     /// <summary>
     /// Engine validation class
     /// </summary>
-    internal static class WorkflowValidation
+    internal static class WorkplanValidation
     {
         /// <summary>
         /// All available validators

@@ -8,16 +8,16 @@ namespace Moryx.Workplans
     /// <summary>
     /// State pattern for the engine
     /// </summary>
-    internal abstract class EngineState : StateBase<WorkflowEngine>
+    internal abstract class EngineState : StateBase<WorkplanEngine>
     {
-        protected EngineState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
+        protected EngineState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
         {
         }
 
         /// <summary>
         /// Initialize the engine
         /// </summary>
-        internal virtual void Initialize(IWorkflow workflow)
+        internal virtual void Initialize(IWorkplanInstance workplanInstance)
         {
             InvalidState();
         }
@@ -41,16 +41,16 @@ namespace Moryx.Workplans
         /// <summary>
         /// Pause exeuction on the engine
         /// </summary>
-        internal virtual WorkflowSnapshot Pause()
+        internal virtual WorkplanSnapshot Pause()
         {
             InvalidState();
             return null;
         }
 
         /// <summary>
-        /// Restore the workflow from a snapshot
+        /// Restore the workplan instance from a snapshot
         /// </summary>
-        internal virtual void Restore(WorkflowSnapshot snapshot)
+        internal virtual void Restore(WorkplanSnapshot snapshot)
         {
             InvalidState();
         }
