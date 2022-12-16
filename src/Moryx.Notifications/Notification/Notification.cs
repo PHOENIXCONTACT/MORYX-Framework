@@ -46,8 +46,8 @@ namespace Moryx.Notifications
         public bool IsAcknowledgable { get; set; }
 
         /// <summary>
-        /// If null, the notification was not acknowledged.
-        /// If not null, the notification was already acknowledged
+        /// Contains the date and time when this notification has been acknowledged. 
+        /// Is Null, if the notification has not yet been acknowledged.
         /// </summary>
         private DateTime? _acknowledged;
         /// <inheritdoc />
@@ -59,7 +59,7 @@ namespace Moryx.Notifications
                 if (_acknowledged is null)
                     _acknowledged = value;
                 else
-                    throw new InvalidOperationException("Tried to update time of acknowledgement.");
+                    throw new InvalidOperationException($"Tried to update {nameof(Acknowledged)}.");
             }
         }
 
@@ -77,7 +77,7 @@ namespace Moryx.Notifications
                 if (_acknowledger is null)
                     _acknowledger = value;
                 else
-                    throw new InvalidOperationException("Tried to update acknowledger.");
+                    throw new InvalidOperationException($"Tried to update {nameof(Acknowledger)}.");
             }
         }
 
@@ -94,16 +94,25 @@ namespace Moryx.Notifications
                 if (_created is null)
                     _created = value;
                 else
-                    throw new InvalidOperationException("Tried to update creation time.");
+                    throw new InvalidOperationException($"Tried to update {nameof(Created)}.");
             }
         }
 
         /// <summary>
-        /// Creates a new notification
+        /// Creates a new notification with automatically set <see cref="Identifier"/>.
         /// </summary>
         public Notification()
         {
             Identifier = Guid.NewGuid();
+        }
+
+        /// <summary>
+        /// Creates a new notification with the given <paramref name="identifier"/>
+        /// </summary>
+        /// <param name="identifier">The identifier of the new notification</param>
+        public Notification(Guid identifier)
+        {
+            Identifier = identifier;
         }
 
         /// <summary>
@@ -123,7 +132,5 @@ namespace Moryx.Notifications
         {
             IsAcknowledgable = isAcknowledgable;
         }
-
-
     }
 }
