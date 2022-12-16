@@ -3,10 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-export default class AssemblyModel
-{
-    name : string;
-    version : string;
-    fileVersion : string;
-    informationalVersion : string;
+export default class AssemblyModel {
+    public name: string;
+    public version: string;
+    public fileVersion: string;
+    public informationalVersion: string;
 }

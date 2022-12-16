@@ -5,11 +5,9 @@
 
 import Entry from "./Entry";
 
-
-export default class MethodEntry
-{
-    name: string;
-    displayName: string;
-    description: string;
-    parameters: Entry;
+export default class MethodEntry {
+    public name: string;
+    public displayName: string;
+    public description: string;
+    public parameters: Entry;
 }

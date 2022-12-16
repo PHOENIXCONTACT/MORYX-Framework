@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-export default class WebClientModel
-{
-    IsConnected: boolean;
-    ServerTime: Date;
+export default class WebClientModel {
+    public IsConnected: boolean;
+    public ServerTime: Date;
 }

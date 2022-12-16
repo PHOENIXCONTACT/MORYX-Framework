@@ -3,10 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-export default class SerializableException
-{
-    exceptionTypeName : string;
-    message : string;
-    stackTrace : string;
-    innerException : SerializableException;
+export default class SerializableException {
+    public exceptionTypeName: string;
+    public message: string;
+    public stackTrace: string;
+    public innerException: SerializableException;
 }
