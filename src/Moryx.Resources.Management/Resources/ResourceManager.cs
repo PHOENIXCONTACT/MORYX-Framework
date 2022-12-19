@@ -115,12 +115,7 @@ namespace Moryx.Resources.Management
                 if (allResources.Count > 0)
                 {
                     LoadResources(allResources);
-                }
-                else
-                {
-                    Logger.Log(LogLevel.Warning, "The ResourceManager initialized without a resource." +
-                                                      "Execute a resource initializer to add resources with \"exec ResourceManager initialize\"");
-                }
+                }                
             }
 
             _startup = ResourceStartupPhase.Initializing;
