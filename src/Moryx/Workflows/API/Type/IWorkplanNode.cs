@@ -9,15 +9,34 @@ namespace Moryx.Workplans
     public interface IWorkplanNode
     {
         /// <summary>
-        /// Workplan unique element id of this connector
+        /// Workplan unique element id of this node
         /// </summary>
         long Id { get; set; }
 
         /// <summary>
-        /// Transition name
+        /// Node name
         /// </summary>
         string Name { get; set; }
 
-        position {get; set}
+        /// <summary>
+        /// Position of this <see cref="IWorkplanNode"/> in any visualization of the <see cref="IWorkplan"/>
+        /// </summary>
+        NodePosition Position { get; set; }
+    }
+
+    /// <summary>
+    /// Unitless position of a workplan node in a two-dimensional space.
+    /// </summary>
+    public struct NodePosition
+    {
+        /// <summary>
+        /// Unitless X-Coordinate of the node
+        /// </summary>
+        public double X { get; set; }
+
+        /// <summary>
+        /// Unitless Y-Coordinate of the node
+        /// </summary>
+        public double Y { get; set; }
     }
 }

@@ -24,22 +24,27 @@ namespace Moryx.Tests.Workplans
 
             var step = new DummyStep(2, "A");
             step.Inputs[0] = inital;
+            step.Position = new NodePosition() { X= 1, Y = 1 };
             workplan.Add(step);
 
             var left = WorkplanInstance.CreateConnector("Left");
+            left.Position = new NodePosition() { X = 0, Y = 2 };
             workplan.Add(left);
             step.Outputs[0] = left;
             var right = WorkplanInstance.CreateConnector("Right");
+            right.Position = new NodePosition() { X = 2, Y = 2 };
             workplan.Add(right);
             step.Outputs[1] = right;
 
             var rightOnly = new DummyStep(1, "B");
             rightOnly.Inputs[0] = right;
+            rightOnly.Position = new NodePosition() { X = 2, Y = 3 };
             workplan.Add(rightOnly);
             rightOnly.Outputs[0] = left;
 
             var merge = new DummyStep(2, "C");
-            merge.Inputs[0] = left;
+            merge.Inputs[0] = left; 
+            merge.Position = new NodePosition() { X = 1, Y = 4 };
             workplan.Add(merge);
             merge.Outputs[0] = merge.Outputs[1] = complete;
 

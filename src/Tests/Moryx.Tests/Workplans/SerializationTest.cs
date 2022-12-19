@@ -22,6 +22,7 @@ namespace Moryx.Tests.Workplans
             var end = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             step.Inputs[0] = start;
             step.Outputs[0] = end;
+            step.Position = new NodePosition() { X = 1, Y = 1 };
             workplan.Add(start, end);
             workplan.Add(step);
 
@@ -37,6 +38,7 @@ namespace Moryx.Tests.Workplans
             Assert.AreEqual(workplan.Steps.Count(), deserialized.Steps.Count());
             Assert.IsInstanceOf<DummyStep>(deserialized.Steps.First());
             Assert.AreEqual(workplan.Steps.First().Name, deserialized.Steps.First().Name);
+            Assert.AreEqual(workplan.Steps.First().Position, deserialized.Steps.First().Position);
         }
     }
 }

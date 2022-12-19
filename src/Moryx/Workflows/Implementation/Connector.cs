@@ -11,19 +11,23 @@ namespace Moryx.Workplans
     [DataContract(IsReference = true)]
     public class Connector : IConnector
     {
-        /// 
+        /// <inheritdoc/>
         [DataMember]
         public long Id { get; set; }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public string Name { get; set; }
 
-        /// 
+        /// <inheritdoc/>
         [DataMember]
         public NodeClassification Classification { get; set; }
 
-        /// 
+        /// <inheritdoc/>
+        [DataMember]
+        public NodePosition Position { get; set; }
+
+        /// <inheritdoc/>
         public virtual IPlace CreateInstance()
         {
             return new Place
