@@ -13,7 +13,7 @@ namespace Moryx.Notifications
         /// <summary>
         /// Unique identifier of this notification
         /// </summary>
-        public virtual Guid Identifier { get; private set; }
+        public virtual Guid Identifier { get; set; }
 
         /// <summary>
         /// The severity of this notification
@@ -104,15 +104,6 @@ namespace Moryx.Notifications
         public Notification()
         {
             Identifier = Guid.NewGuid();
-        }
-
-        /// <summary>
-        /// Creates a new notification with the given <paramref name="identifier"/>
-        /// </summary>
-        /// <param name="identifier">The identifier of the new notification</param>
-        public Notification(Guid identifier)
-        {
-            Identifier = identifier;
         }
 
         /// <summary>
