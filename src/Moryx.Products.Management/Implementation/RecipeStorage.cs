@@ -170,7 +170,7 @@ namespace Moryx.Products.Management
 
 
         /// <summary>
-        /// Save a workplan to the database
+        /// Convert a Workplan to a WorkplanEntity
         /// </summary>
         public static WorkplanEntity ToWorkplanEntity(IUnitOfWork uow, Workplan workplan)
         {

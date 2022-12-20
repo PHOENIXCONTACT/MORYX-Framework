@@ -77,10 +77,11 @@ From the change to Web interfaces with REST APIs follow:
 ## Namespace changes
 - `Moryx.Workflows` was renamed to `Moryx.Workplans`
 
-## Changed Property names
+## Changed Property and Method names
 - In `PartSourceStrategy` `FromPartlink` was renamed to `FromPartLink`
 - In `ProductModel` `FileModels` was renamed to `Files`. The former `Files` property was deleted
 - In `Tracing` `Resource` was renamed to `ResourceId`
+- The method `RecipeStorage.SaveWorkplan` was renamed to `RecipeStorage.ToWorkplanEntity`, since nothing is saved in this method and the name was quite confusing
 
 ## Other Changes
 - The `Type` in the `ProductQuery` must be an assembly qualified name. Use `typeof(TType).AssemblyQualifiedName` instead of `nameof(TType)`
