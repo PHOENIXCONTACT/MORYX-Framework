@@ -7,6 +7,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
+using Moryx.Workplans;
 
 namespace Moryx.Products.Management
 {
@@ -14,7 +15,8 @@ namespace Moryx.Products.Management
     /// The main controller of all product modules.
     /// </summary>
     public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, 
-        IFacadeContainer<IProductManagement>
+        IFacadeContainer<IProductManagement>,
+        IFacadeContainer<IWorkplans>
     {
         internal const string ModuleName = "ProductManager";
         /// <summary>
@@ -85,6 +87,7 @@ namespace Moryx.Products.Management
         private readonly ProductManagementFacade _productManagement = new ProductManagementFacade();
 
         IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManagement;
+        IWorkplans IFacadeContainer<IWorkplans>.Facade => _productManagement;
     }
 
 }
