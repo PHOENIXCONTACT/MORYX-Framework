@@ -96,8 +96,8 @@ workplan.AddStep(new UnmountTask(), new AssembleParameters(), input, end, failed
 // Validate the workplan of all parameters fits the task results
 workplan.Validate();
 
-// Save the workplan
-RecipeStorage.SaveWorkplan(openContext, workplan);
+// Convert the workplan to an entity
+RecipeStorage.ToWorkplanEntity(openContext, workplan);
 ````
 
 The method `AddStep` of the workplan takes a list of connectors which must fit the result enum of the corresponding activity of the used task. If it does not fit then the validation will throw an exception. In the shown example has the MountTask only two outputs where the first one is the `Mounted` connector and the last goes directly to the `Failed` output. The other activities have three possible results where two of them go directly to the failed output. The `UnmountTask` is the last task and its first output, which is the success path, goes to the `End` output to close the good path of this workplan.
