@@ -19,6 +19,10 @@ namespace Moryx.Workplans
         [DataMember]
         public string Name { get; set; }
 
+        ///
+        [DataMember]
+        public WorkplanNodePosition Position { get; set; } = new WorkplanNodePosition();
+
         /// 
         [DataMember]
         public NodeClassification Classification { get; set; }

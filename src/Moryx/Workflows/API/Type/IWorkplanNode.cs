@@ -17,5 +17,26 @@ namespace Moryx.Workplans
         /// Transition name
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// Position of this node
+        /// </summary>
+        WorkplanNodePosition Position { get; set; }
+    }
+
+    /// <summary>
+    /// Position of a workplan node
+    /// </summary>
+    public class WorkplanNodePosition
+    {
+        /// <summary>
+        /// X coordinate
+        /// </summary>
+        public long X { get; set; }
+
+        /// <summary>
+        /// Y coordinate
+        /// </summary>
+        public long Y { get; set; }
     }
 }

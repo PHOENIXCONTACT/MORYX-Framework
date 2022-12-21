@@ -45,6 +45,10 @@ namespace Moryx.Workplans.WorkplanSteps
         public OutputDescription[] OutputDescriptions { get; set; }
 
         ///
+        [DataMember]
+        public WorkplanNodePosition Position { get; set; } = new WorkplanNodePosition();
+
+        ///
         public ITransition CreateInstance(IWorkplanContext context)
         {
             var transition = Instantiate(context);
