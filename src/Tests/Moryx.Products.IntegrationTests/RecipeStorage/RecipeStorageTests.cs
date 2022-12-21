@@ -100,11 +100,11 @@ namespace Moryx.Products.IntegrationTests
                 State = WorkplanState.Released
             };
 
-            var start = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var end = Workflow.CreateConnector("End", NodeClassification.End);
-            var inter1 = Workflow.CreateConnector("Inter1");
-            var inter2 = Workflow.CreateConnector("Inter2");
-            var inter3 = Workflow.CreateConnector("Inter3");
+            var start = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var end = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+            var inter1 = WorkplanInstance.CreateConnector("Inter1");
+            var inter2 = WorkplanInstance.CreateConnector("Inter2");
+            var inter3 = WorkplanInstance.CreateConnector("Inter3");
             workplan.Add(start, end, inter1, inter2, inter3);
 
             var mount = new TaskA
