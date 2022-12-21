@@ -22,7 +22,7 @@ namespace Moryx.Workplans
         void Initialize();
 
         /// <summary>
-        /// All inputs of this transition, the amount depends on the workflow
+        /// All inputs of this transition, the amount depends on the workplan
         /// </summary>
         IPlace[] Inputs { get; }
 

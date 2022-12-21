@@ -4,7 +4,7 @@
 namespace Moryx.Workplans
 {
     /// <summary>
-    /// Context the workplan is executed on
+    /// Interface for the context an <see cref="IWorkplanInstance"/> is executed on by an <see cref="IWorkplanEngine"/>
     /// </summary>
     public interface IWorkplanContext
     {

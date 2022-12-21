@@ -25,9 +25,9 @@ namespace Moryx.Workplans
     }
 
     /// <summary>
-    /// Snapshot of the workflow used to restore it later
+    /// Snapshot of the workplan instance used to restore it later
     /// </summary>
-    public class WorkflowSnapshot
+    public class WorkplanSnapshot
     {
         /// <summary>
         /// Name of the workplan type

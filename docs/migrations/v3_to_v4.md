@@ -110,7 +110,6 @@ Configurations were simplified and there is only one interface `IConfigManager` 
 You can also use the ASP options pattern for your module, how ever you will not have the same UI and MORYX platform support compared to the config manager.
 
 ## Package changes
-## Package changes
 
 Added:
 - `Moryx.Runtime.Endpoints` (Contains endpoints for maintenance now)
@@ -146,6 +145,14 @@ Removed
 - `ApplicationLoadResponse` (Not supported feature)
 - `SystemLoadResponse` (Not supported feature)
 - `HostHelper` (Not necessary because of not supported feature)
+
+In an attempt to harmonize the naming of Workplans, their editing, and their execution within the MORYX plattform, we renamed several classes:
+- `IWorkflow` -> `IWorkplanInstance`
+- `Workflow` -> `WorkplanInstance`
+- `IWorkflowEngine` -> `IWorkplanEngine`
+- `SubworkflowTransition` -> `SubworkplanTransition`
+- `SubworkflowStep` -> `SubworkplanStepBase`
+
 
 ## Database
 With the update to MORYX Core 4 we also update the reference to Entity Framework. The update to Entity Framework Core comes with some changes to the API we are used to, for an overview of the changes provided by Microsoft see [here](https://docs.microsoft.com/en-us/ef/efcore-and-ef6/porting/). In order for you to have less of a headache when searching through the EF Core documentation to find the right translation for your code into the new way of doing things (assuming that you want to keep an identical database structure), we list the changes we went through in the subsequent bullet points:

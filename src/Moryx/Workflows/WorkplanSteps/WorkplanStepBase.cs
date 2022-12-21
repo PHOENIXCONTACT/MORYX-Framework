@@ -22,7 +22,7 @@ namespace Moryx.Workplans.WorkplanSteps
             OutputDescriptions = new[] { new OutputDescription { Name = "Complete", OutputType = OutputType.Success} };
         }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public long Id { get; set; }
 
@@ -32,19 +32,23 @@ namespace Moryx.Workplans.WorkplanSteps
         [DataMember]
         public string Name { get; set; }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public IConnector[] Inputs { get; set; }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public IConnector[] Outputs { get; set; }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public OutputDescription[] OutputDescriptions { get; set; }
 
-        ///
+        /// <inheritdoc/>
+        [DataMember]
+        public NodePosition Position { get; set; }
+
+        /// <inheritdoc/>
         public ITransition CreateInstance(IWorkplanContext context)
         {
             var transition = Instantiate(context);

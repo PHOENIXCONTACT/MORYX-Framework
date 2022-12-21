@@ -4,7 +4,7 @@
 using Moryx.Workplans;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     public class WorkplanDummy : Workplan
     {
@@ -18,28 +18,33 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             workplan.Add(inital, complete);
 
             var step = new DummyStep(2, "A");
             step.Inputs[0] = inital;
+            step.Position = new NodePosition() { X= 1, Y = 1 };
             workplan.Add(step);
 
-            var left = Workflow.CreateConnector("Left");
+            var left = WorkplanInstance.CreateConnector("Left");
+            left.Position = new NodePosition() { X = 0, Y = 2 };
             workplan.Add(left);
             step.Outputs[0] = left;
-            var right = Workflow.CreateConnector("Right");
+            var right = WorkplanInstance.CreateConnector("Right");
+            right.Position = new NodePosition() { X = 2, Y = 2 };
             workplan.Add(right);
             step.Outputs[1] = right;
 
             var rightOnly = new DummyStep(1, "B");
             rightOnly.Inputs[0] = right;
+            rightOnly.Position = new NodePosition() { X = 2, Y = 3 };
             workplan.Add(rightOnly);
             rightOnly.Outputs[0] = left;
 
             var merge = new DummyStep(2, "C");
-            merge.Inputs[0] = left;
+            merge.Inputs[0] = left; 
+            merge.Position = new NodePosition() { X = 1, Y = 4 };
             workplan.Add(merge);
             merge.Outputs[0] = merge.Outputs[1] = complete;
 
@@ -50,19 +55,19 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
-            var failed = Workflow.CreateConnector("Failed", NodeClassification.Failed);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+            var failed = WorkplanInstance.CreateConnector("Failed", NodeClassification.Failed);
             workplan.Add(inital, complete, failed);
 
             var step = new DummyStep(2, "Feed case");
             step.Inputs[0] = inital;
             workplan.Add(step);
 
-            var left = Workflow.CreateConnector("Left");
+            var left = WorkplanInstance.CreateConnector("Left");
             workplan.Add(left);
             step.Outputs[0] = left;
-            var right = Workflow.CreateConnector("Right");
+            var right = WorkplanInstance.CreateConnector("Right");
             workplan.Add(right);
             step.Outputs[1] = right;
 
@@ -70,14 +75,14 @@ namespace Moryx.Tests.Workflows
             step.Inputs[0] = left;
             workplan.Add(step);
             step.Outputs[2] = right;
-            left = Workflow.CreateConnector("Merge");
+            left = WorkplanInstance.CreateConnector("Merge");
             workplan.Add(left);
             step.Outputs[0] = step.Outputs[1] = left;
 
             step = new DummyStep(2, "Set pole");
             step.Inputs[0] = left;
             workplan.Add(step);
-            left = Workflow.CreateConnector("Pole set");
+            left = WorkplanInstance.CreateConnector("Pole set");
             workplan.Add(left);
             step.Outputs[0] = left;
             step.Outputs[1] = failed;
@@ -101,13 +106,13 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             workplan.Add(inital, complete);
 
             var subPlan = CreateSub();
             subPlan.Id = 42;
-            var sub = new SubworkflowStep(subPlan);
+            var sub = new SubworkplanStep(subPlan);
             sub.Inputs[0] = inital;
             sub.Outputs[0] = sub.Outputs[0] = complete;
             workplan.Add(sub);
@@ -119,16 +124,16 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
-            var failed = Workflow.CreateConnector("Failed", NodeClassification.Failed);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+            var failed = WorkplanInstance.CreateConnector("Failed", NodeClassification.Failed);
             workplan.Add(inital, complete, failed);
 
             var step = new DummyStep(1, "A");
             step.Inputs[0] = inital;
             workplan.Add(step);
 
-            var aComplete = Workflow.CreateConnector("A1");
+            var aComplete = WorkplanInstance.CreateConnector("A1");
             workplan.Add(aComplete);
             step.Outputs[0] = aComplete;
 
@@ -145,15 +150,15 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             workplan.Add(inital, complete);
 
             var step = new DummyStep(1, "A");
             step.Inputs[0] = inital;
             // workplan.Add(step);  // Add first step at the end
 
-            var aComplete = Workflow.CreateConnector("A1");
+            var aComplete = WorkplanInstance.CreateConnector("A1");
             workplan.Add(aComplete);
             step.Outputs[0] = aComplete;
 
@@ -171,15 +176,15 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             workplan.Add(inital, complete);
 
             var step = new DummyStep(1, "A");
             step.Inputs[0] = inital;
             workplan.Add(step);
 
-            var aComplete = Workflow.CreateConnector("A1");
+            var aComplete = WorkplanInstance.CreateConnector("A1");
             workplan.Add(aComplete);
             step.Outputs[0] = aComplete;
 
@@ -195,8 +200,8 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             workplan.Add(inital);
             workplan.Add(complete);
 
@@ -204,7 +209,7 @@ namespace Moryx.Tests.Workflows
             step.Inputs[0] = inital;
             workplan.Add(step);
 
-            var a1 = Workflow.CreateConnector("Before pause");
+            var a1 = WorkplanInstance.CreateConnector("Before pause");
             workplan.Add(a1);
             step.Outputs[0] = a1;
 
@@ -213,7 +218,7 @@ namespace Moryx.Tests.Workflows
             workplan.Add(rightOnly);
             step.Outputs[0] = a1;
 
-            var b1 = Workflow.CreateConnector("Right complete");
+            var b1 = WorkplanInstance.CreateConnector("Right complete");
             workplan.Add(b1);
             rightOnly.Outputs[0] = b1;
 
@@ -229,18 +234,18 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             workplan.Add(inital, complete);
 
             var step = new DummyStep(2, "A");
             step.Inputs[0] = inital;
             workplan.Add(step);
 
-            var left = Workflow.CreateConnector("Left");
+            var left = WorkplanInstance.CreateConnector("Left");
             workplan.Add(left);
             step.Outputs[0] = left;
-            var right = Workflow.CreateConnector("Right");
+            var right = WorkplanInstance.CreateConnector("Right");
             workplan.Add(right);
             // step.Outputs[1] = right;  <-- This causes a Lone Wolf validation error
 
@@ -261,18 +266,18 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             workplan.Add(inital, complete);
 
             var step = new DummyStep(2, "A");
             step.Inputs[0] = inital;
             workplan.Add(step);
 
-            var left = Workflow.CreateConnector("Left");
+            var left = WorkplanInstance.CreateConnector("Left");
             workplan.Add(left);
             step.Outputs[0] = left;
-            var right = Workflow.CreateConnector("DeadEnd");
+            var right = WorkplanInstance.CreateConnector("DeadEnd");
             workplan.Add(right);
             step.Outputs[1] = right;
 
@@ -292,19 +297,19 @@ namespace Moryx.Tests.Workflows
         {
             var workplan = new WorkplanDummy();
 
-            var inital = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var complete = Workflow.CreateConnector("End", NodeClassification.End);
-            var failed = Workflow.CreateConnector("Failed", NodeClassification.Failed);
+            var inital = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+            var failed = WorkplanInstance.CreateConnector("Failed", NodeClassification.Failed);
             workplan.Add(inital, complete, failed);
 
             var step = new DummyStep(2, "Feed case");
             step.Inputs[0] = inital;
             workplan.Add(step);
 
-            var left = Workflow.CreateConnector("Left");
+            var left = WorkplanInstance.CreateConnector("Left");
             workplan.Add(left);
             step.Outputs[0] = left;
-            var right = Workflow.CreateConnector("Right");
+            var right = WorkplanInstance.CreateConnector("Right");
             workplan.Add(right);
             step.Outputs[1] = right;
 
@@ -312,7 +317,7 @@ namespace Moryx.Tests.Workflows
             step.Inputs[0] = left;
             workplan.Add(step);
             step.Outputs[2] = right;
-            left = Workflow.CreateConnector("Merge");
+            left = WorkplanInstance.CreateConnector("Merge");
             workplan.Add(left);
             step.Outputs[0] = step.Outputs[1] = left;
 
@@ -320,7 +325,7 @@ namespace Moryx.Tests.Workflows
             step.Inputs[0] = left;
             workplan.Add(step);
             var oldLeft = left;
-            left = Workflow.CreateConnector("Pole set");
+            left = WorkplanInstance.CreateConnector("Pole set");
             workplan.Add(left);
             step.Outputs[0] = left;
             step.Outputs[1] = oldLeft;

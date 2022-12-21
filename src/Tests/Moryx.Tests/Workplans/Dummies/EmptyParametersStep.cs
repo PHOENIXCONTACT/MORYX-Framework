@@ -7,7 +7,7 @@ using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     public class EmptyParameters
     {

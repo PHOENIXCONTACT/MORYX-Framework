@@ -6,35 +6,35 @@ using System;
 namespace Moryx.Workplans
 {
     /// <summary>
-    /// Engine instance processing the workflow. Any progress on the workflow is communicated via events.
+    /// Engine processing a workplan using a specific instance. Any progress on the workplan instance is communicated via events.
     /// </summary>
-    public interface IWorkflowEngine : IDisposable
+    public interface IWorkplanEngine : IDisposable
     {
         /// <summary>
-        /// Workflow instance executed by this engine instance
+        /// Workplan instance executed by this engine
         /// </summary>
-        IWorkflow ExecutedWorkflow { get; }
+        IWorkplanInstance ExecutedWorkplan { get; }
 
         /// <summary>
-        /// Context of the executable workflow
+        /// Context of the executable workplan
         /// </summary>
         IWorkplanContext Context { get; }
 
         /// <summary>
-        /// Start the workflow
+        /// Start the processing the workplan instance
         /// </summary>
         void Start();
 
         /// <summary>
-        /// Pause execution and create a snapshot of the workplan
+        /// Pause execution and create a snapshot of the workplan instance
         /// </summary>
         /// <returns>Snapshot of all places and transitions and their tokens</returns>
-        WorkflowSnapshot Pause();
+        WorkplanSnapshot Pause();
 
         /// <summary>
-        /// Restore a snapshot to resume execution of a previously paused workflow
+        /// Restore a snapshot to resume execution of a previously paused workplan instance
         /// </summary>
-        void Restore(WorkflowSnapshot snapshot);
+        void Restore(WorkplanSnapshot snapshot);
 
         /// <summary>
         /// Event raised when a transition was triggered
@@ -42,15 +42,15 @@ namespace Moryx.Workplans
         event EventHandler<ITransition> TransitionTriggered;
 
         /// <summary>
-        /// Event raised when workflow was completed
+        /// Event raised when the execution of a workplan instance was completed
         /// </summary>
         event EventHandler<IPlace> Completed; 
     }
 
     /// <summary>
-    /// Additional interface for <see cref="IWorkflowEngine"/> to monitor the current execution
+    /// Additional interface for <see cref="IWorkplanEngine"/> to monitor the current execution
     /// </summary>
-    public interface IMonitoredEngine : IWorkflowEngine
+    public interface IMonitoredEngine : IWorkplanEngine
     {
         /// <summary>
         /// Event raised when a token was placed on a place with classification

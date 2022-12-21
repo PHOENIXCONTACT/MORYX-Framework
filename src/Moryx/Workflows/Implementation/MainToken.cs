@@ -4,7 +4,7 @@
 namespace Moryx.Workplans
 {
     /// <summary>
-    /// Main execution token passed trough the workflow
+    /// Main execution token passed trough the workplan instance
     /// </summary>
     internal class MainToken : IToken
     {

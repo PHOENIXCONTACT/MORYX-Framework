@@ -12,7 +12,7 @@ namespace Moryx.Workplans
     public interface ITokenHolder
     {
         /// <summary>
-        /// Workflow unique id of this holder. Same id can be present in another workflow
+        /// Workplan-unique id of this holder. Same id can be present in another workplan
         /// </summary>
         long Id { get; }
 

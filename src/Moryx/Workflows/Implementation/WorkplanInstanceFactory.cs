@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Moryx.Workplans
 {
-    internal static class WorkflowFactory
+    internal static class WorkplanInstanceFactory
     {
-        public static IWorkflow Instantiate(IWorkplan workplan, IWorkplanContext context)
+        public static IWorkplanInstance Instantiate(IWorkplan workplan, IWorkplanContext context)
         {
             // Prepare variables
             var places = new Dictionary<long, IPlace>();
@@ -35,7 +35,7 @@ namespace Moryx.Workplans
                 transitions.Add(transition);
             }
 
-            return new SimpleWorkflow(workplan, places.Values.ToList(), transitions);
+            return new SimpleWorkplanInstance(workplan, places.Values.ToList(), transitions);
         }
 
         private static IPlace GetPlace(IConnector connector, IDictionary<long, IPlace> cache)

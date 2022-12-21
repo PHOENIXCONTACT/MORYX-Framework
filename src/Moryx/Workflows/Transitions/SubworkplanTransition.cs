@@ -9,16 +9,16 @@ namespace Moryx.Workplans.Transitions
     /// <summary>
     /// Transition that executes the given workplan transparent to the executing engine
     /// </summary>
-    public class SubworkflowTransition : TransitionBase<WorkflowSnapshot>, IObservableTransition
+    public class SubworkplanTransition : TransitionBase<WorkplanSnapshot>, IObservableTransition
     {
         // Fields
-        private readonly IWorkflowEngine _engine;
+        private readonly IWorkplanEngine _engine;
         private readonly IIndexResolver _indexResolver;
 
         /// <summary>
-        /// Create a new instance of the subworkflow transition
+        /// Create a new instance of the sub-workplan transition
         /// </summary>
-        public SubworkflowTransition(IWorkflowEngine engine, IIndexResolver indexResolver)
+        public SubworkplanTransition(IWorkplanEngine engine, IIndexResolver indexResolver)
         {
             _engine = engine;
             _indexResolver = indexResolver;
@@ -27,7 +27,7 @@ namespace Moryx.Workplans.Transitions
         ///
         public override void Initialize()
         {
-            _engine.Completed += SubworkflowCompleted;
+            _engine.Completed += SubworkplanCompleted;
             _engine.TransitionTriggered += TransitionTriggered;
 
             base.Initialize();
@@ -51,7 +51,7 @@ namespace Moryx.Workplans.Transitions
             Triggered(e, new EventArgs());
         }
 
-        private void SubworkflowCompleted(object sender, IPlace place)
+        private void SubworkplanCompleted(object sender, IPlace place)
         {
             var outputIndex = _indexResolver.Resolve(place.Id);
             Executing(() => PlaceToken(Outputs[outputIndex], StoredTokens.First()));
@@ -63,7 +63,7 @@ namespace Moryx.Workplans.Transitions
         public event EventHandler Triggered;
 
         /// <summary>
-        /// Write subworkflow snapshot to our special token
+        /// Write sub-workplan snapshot to our special token
         /// </summary>
         public override void Pause()
         {

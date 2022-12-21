@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
@@ -10,7 +9,7 @@ using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     [DataContract]
     public class DummyStep : WorkplanStepBase

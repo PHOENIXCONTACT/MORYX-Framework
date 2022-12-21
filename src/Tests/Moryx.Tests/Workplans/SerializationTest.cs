@@ -7,7 +7,7 @@ using Moryx.Workplans;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Workflows
+namespace Moryx.Tests.Workplans
 {
     [TestFixture]
     public class SerializationTest
@@ -17,11 +17,12 @@ namespace Moryx.Tests.Workflows
         {
             // Arrange
             var workplan = new Workplan();
-            var start = Workflow.CreateConnector("Initial", NodeClassification.Start);
+            var start = WorkplanInstance.CreateConnector("Initial", NodeClassification.Start);
             var step = new DummyStep(1, "Test");
-            var end = Workflow.CreateConnector("End", NodeClassification.End);
+            var end = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             step.Inputs[0] = start;
             step.Outputs[0] = end;
+            step.Position = new NodePosition() { X = 1, Y = 1 };
             workplan.Add(start, end);
             workplan.Add(step);
 
@@ -37,6 +38,7 @@ namespace Moryx.Tests.Workflows
             Assert.AreEqual(workplan.Steps.Count(), deserialized.Steps.Count());
             Assert.IsInstanceOf<DummyStep>(deserialized.Steps.First());
             Assert.AreEqual(workplan.Steps.First().Name, deserialized.Steps.First().Name);
+            Assert.AreEqual(workplan.Steps.First().Position, deserialized.Steps.First().Position);
         }
     }
 }
