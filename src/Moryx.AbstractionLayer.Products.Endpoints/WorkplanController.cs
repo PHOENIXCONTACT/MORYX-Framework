@@ -10,23 +10,25 @@ using System.Collections.Generic;
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     /// <summary>
-    /// Definition of a REST API on the <see cref="IWorkplansVersions"/> facade.
+    /// Definition of a REST API on the <see cref="IWorkplans"/> facade.
     /// </summary>
     [ApiController]
     [Route("api/moryx/workplans/")]
     [Produces("application/json")]
     public class WorkplanController : ControllerBase
     {
-        private readonly IWorkplans _workplansVersions;
-        public WorkplanController(IWorkplans workplansVersions)
-            => _workplansVersions = workplansVersions;
+        private readonly IWorkplans _workplans;
+        public WorkplanController(IWorkplans workplans)
+        {
+            _workplans = workplans;
+        }
 
         [HttpGet]
         [Authorize(Policy = WorkplanPermissions.CanView)]
         public WorkplanModel[] GetAllWorkplans()
         {
             var workplans = new List<WorkplanModel>();
-            foreach (var w in _workplansVersions.LoadAllWorkplans())
+            foreach (var w in _workplans.LoadAllWorkplans())
                 workplans.Add(ProductConverter.ConvertWorkplan(w));
             return workplans.ToArray();
         }
@@ -39,7 +41,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (model == null)
                 return BadRequest($"Model was null");
             var workplan = ProductConverter.ConvertWorkplanBack(model);
-            return _workplansVersions.SaveWorkplan(workplan);
+            return _workplans.SaveWorkplan(workplan);
         }
 
         [HttpGet]
@@ -52,7 +54,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             if (id == 0)
                 return BadRequest($"Workplan id was 0");
-            var versions = _workplansVersions.LoadVersions(id);
+            var versions = _workplans.LoadVersions(id);
             if (versions == null)
                 return NotFound();
             var model = new List<WorkplanModel>();
@@ -73,7 +75,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             if (id == 0)
                 return BadRequest($"Workplan id was 0");
-            var workplan = _workplansVersions.LoadWorkplan(id);
+            var workplan = _workplans.LoadWorkplan(id);
             if (workplan == null)
                 return NotFound();
             return ProductConverter.ConvertWorkplan(workplan);
@@ -86,9 +88,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [Authorize(Policy = WorkplanPermissions.CanDelete)]
         public ActionResult DeleteWorkplan(long id)
         {
-            if (_workplansVersions.LoadWorkplan(id) == null)
+            if (_workplans.LoadWorkplan(id) == null)
                 return NotFound();
-            _workplansVersions.DeleteWorkplan(id);
+            _workplans.DeleteWorkplan(id);
             return Ok();
         }
 
@@ -100,9 +102,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             if(model == null)
                 return BadRequest($"Workplan id was 0");
-            if(_workplansVersions.LoadWorkplan(model.Id) == null)
+            if(_workplans.LoadWorkplan(model.Id) == null)
                 return BadRequest($"Workplan with id {model.Id} does not exist");
-            return _workplansVersions.SaveWorkplan(ProductConverter.ConvertWorkplanBack(model));
+            return _workplans.SaveWorkplan(ProductConverter.ConvertWorkplanBack(model));
         }
 
     }
