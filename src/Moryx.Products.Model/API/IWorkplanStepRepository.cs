@@ -13,6 +13,6 @@ namespace Moryx.Products.Model
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        WorkplanStepEntity Create(long stepId, string name, string assembly, string nameSpace, string classname);
+        WorkplanStepEntity Create(long stepId, string name, string assembly, string nameSpace, string classname, int positionX, int positionY);
     }
 }
