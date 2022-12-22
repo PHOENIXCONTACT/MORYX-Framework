@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Drawing;
 using System.Runtime.Serialization;
 
 namespace Moryx.Workplans
@@ -25,7 +26,7 @@ namespace Moryx.Workplans
 
         /// <inheritdoc/>
         [DataMember]
-        public NodePosition Position { get; set; }
+        public Point Position { get; set; }
 
         /// <inheritdoc/>
         public virtual IPlace CreateInstance()

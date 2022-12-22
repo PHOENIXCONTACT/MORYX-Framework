@@ -1,6 +1,8 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Drawing;
+
 namespace Moryx.Workplans
 {
     /// <summary>
@@ -21,22 +23,6 @@ namespace Moryx.Workplans
         /// <summary>
         /// Position of this <see cref="IWorkplanNode"/> in any visualization of the <see cref="IWorkplan"/>
         /// </summary>
-        NodePosition Position { get; set; }
-    }
-
-    /// <summary>
-    /// Unitless position of a workplan node in a two-dimensional space.
-    /// </summary>
-    public struct NodePosition
-    {
-        /// <summary>
-        /// Unitless X-Coordinate of the node
-        /// </summary>
-        public double X { get; set; }
-
-        /// <summary>
-        /// Unitless Y-Coordinate of the node
-        /// </summary>
-        public double Y { get; set; }
+        Point Position { get; set; }
     }
 }

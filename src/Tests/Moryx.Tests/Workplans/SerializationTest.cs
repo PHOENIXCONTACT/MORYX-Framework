@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Drawing;
 using System.Linq;
 using Moryx.Serialization;
 using Moryx.Workplans;
@@ -22,7 +23,7 @@ namespace Moryx.Tests.Workplans
             var end = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             step.Inputs[0] = start;
             step.Outputs[0] = end;
-            step.Position = new NodePosition() { X = 1, Y = 1 };
+            step.Position = new Point(1, 1);
             workplan.Add(start, end);
             workplan.Add(step);
 
