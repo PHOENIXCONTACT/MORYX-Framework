@@ -158,5 +158,14 @@ namespace Moryx.AbstractionLayer.Properties {
                 return ResourceManager.GetString("TYPE_NOT_FOUND", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workplan not found for id: {0}.
+        /// </summary>
+        public static string WORKPLAN_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("WORKPLAN_NOT_FOUND", resourceCulture);
+            }
+        }
     }
 }

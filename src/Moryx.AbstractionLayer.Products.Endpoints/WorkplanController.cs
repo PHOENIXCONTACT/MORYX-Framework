@@ -3,6 +3,8 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moryx.AbstractionLayer.Properties;
+using Moryx.Asp.Extensions.Exception;
 using Moryx.Products.Management.Modification;
 using Moryx.Workflows;
 using System.Collections.Generic;
@@ -51,7 +53,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Workplan id was 0");
             var versions = _workplansVersions.LoadVersions(id);
             if (versions == null)
-                return NotFound();
+                return NotFound(new MoryxExceptionResponse { Title =string.Format(Strings.WORKPLAN_NOT_FOUND,id) });
             var model = new List<WorkplanModel>();
             foreach (var v in versions)
             {
@@ -71,7 +73,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Workplan id was 0");
             var workplan = _workplansVersions.LoadWorkplan(id);
             if (workplan == null)
-                return NotFound();
+                return NotFound(new MoryxExceptionResponse { Title =string.Format(Strings.WORKPLAN_NOT_FOUND,id)});
             return ProductConverter.ConvertWorkplan(workplan);
         }
 
@@ -82,7 +84,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         public ActionResult DeleteWorkplan(long id)
         {
             if (_workplansVersions.LoadWorkplan(id) == null)
-                return NotFound();
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WORKPLAN_NOT_FOUND, id) });
             _workplansVersions.DeleteWorkplan(id);
             return Ok();
         }
