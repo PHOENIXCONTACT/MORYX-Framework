@@ -14,7 +14,7 @@ using Moryx.Serialization;
 using System.Net;
 using Moryx.AbstractionLayer.Properties;
 using Moryx.Asp.Extensions.Exception;
-
+using Moryx.Configuration;
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     /// <summary>
@@ -45,7 +45,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 Importers = _productManagement.Importers.Select(i => new ProductImporter
                 {
                     Name = i.Key,
-                    Parameters = EntryConvert.EncodeObject(i.Value)
+                    Parameters = EntryConvert.EncodeObject(i.Value, new PossibleValuesSerialization(null, new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider())))
                 }).ToArray()
             };
         }

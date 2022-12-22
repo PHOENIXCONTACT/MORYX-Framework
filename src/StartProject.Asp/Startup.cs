@@ -35,9 +35,6 @@ namespace StartProject.Asp
                 .AllowCredentials());
             });
 
-            services.AddSignalR();
-            // Add MORYX SignalR hubs
-            services.AddMoryxProductManagementHub();
             services.AddControllers()
                .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
@@ -69,10 +66,7 @@ namespace StartProject.Asp
             if (env.IsDevelopment())
                 app.UseCors("CorsPolicy");
             app.UseAuthorization();
-
-            // Add MORYX SignalR hubs
-            app.UseMoryxProductManagementHub();
-           
+                       
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
