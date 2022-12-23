@@ -11,10 +11,6 @@
 		<PackageReference Include="Moryx.Runtime.Kernel" />
 		<PackageReference Include="Moryx.Runtime.Endpoints" />
 		<PackageReference Include="Moryx.Maintenance.Web" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
