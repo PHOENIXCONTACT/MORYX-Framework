@@ -137,7 +137,7 @@ namespace Moryx.AbstractionLayer
         /// <returns></returns>
         public static IConnector AddConnector(this Workplan workplan, string name, NodeClassification classification)
         {
-            var connector = Workflow.CreateConnector(name, classification);
+            var connector = WorkplanInstance.CreateConnector(name, classification);
             workplan.Add(connector);
             return connector;
         }
@@ -169,7 +169,7 @@ namespace Moryx.AbstractionLayer
         public static void Validate(this IWorkplan workplan)
         {
             const ValidationAspect aspects = ValidationAspect.DeadEnd | ValidationAspect.InfiniteLoop | ValidationAspect.LoneWolf | ValidationAspect.LuckyStreak;
-            var result = Workflow.Validate(workplan, aspects);
+            var result = WorkplanInstance.Validate(workplan, aspects);
 
             if (result.Success)
                 return;

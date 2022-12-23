@@ -1,6 +1,7 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Drawing;
 using System.Linq;
 using Moq;
 using Moryx.AbstractionLayer.Recipes;
@@ -9,6 +10,7 @@ using Moryx.Model.Repositories;
 using Moryx.Products.Management;
 using Moryx.Products.Model;
 using Moryx.Workplans;
+using Moryx.Workplans.WorkplanSteps;
 using NUnit.Framework;
 
 namespace Moryx.Products.IntegrationTests
@@ -78,6 +80,9 @@ namespace Moryx.Products.IntegrationTests
                 var loadedStep = loadedSteps.FirstOrDefault(s => s.Id == step.Id);
                 Assert.NotNull(loadedStep);
                 Assert.AreEqual(step.GetType(), loadedStep.GetType());
+                Assert.AreEqual(step.Position.X, loadedStep.Position.X, "Workplan step position: x coordinate not as expected");
+                Assert.AreEqual(step.Position.Y, loadedStep.Position.Y, "Workplan step position: y coordinate not as expected");
+
                 for (int index = 0; index < step.Inputs.Length; index++)
                 {
                     Assert.AreEqual(step.Inputs[index].Id, loadedStep.Inputs[index].Id);
@@ -100,35 +105,39 @@ namespace Moryx.Products.IntegrationTests
                 State = WorkplanState.Released
             };
 
-            var start = Workflow.CreateConnector("Start", NodeClassification.Start);
-            var end = Workflow.CreateConnector("End", NodeClassification.End);
-            var inter1 = Workflow.CreateConnector("Inter1");
-            var inter2 = Workflow.CreateConnector("Inter2");
-            var inter3 = Workflow.CreateConnector("Inter3");
+            var start = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            var end = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+            var inter1 = WorkplanInstance.CreateConnector("Inter1");
+            var inter2 = WorkplanInstance.CreateConnector("Inter2");
+            var inter3 = WorkplanInstance.CreateConnector("Inter3");
             workplan.Add(start, end, inter1, inter2, inter3);
 
             var mount = new TaskA
             {
                 Inputs = { [0] = start },
-                Outputs = { [0] = inter1, [1] = end, [2] = end }
+                Outputs = { [0] = inter1, [1] = end, [2] = end },
+                Position = new Point(1, 2),
             };
 
             var identity = new TaskB
             {
                 Inputs = { [0] = inter1 },
-                Outputs = { [0] = inter2, [1] = inter3, [2] = end }
+                Outputs = { [0] = inter2, [1] = inter3, [2] = end },
+                Position = new Point(3, 4),
             };
 
             var unmount1 = new TaskA
             {
                 Inputs = {[0] = inter2},
-                Outputs = {[0] = end, [1] = end, [2] = end }
+                Outputs = {[0] = end, [1] = end, [2] = end },
+                Position = new Point(5, 6),
             };
 
             var unmount2 = new TaskB
             {
                 Inputs = { [0] = inter3 },
-                Outputs = { [0] = end, [1] = end, [2] = end }
+                Outputs = { [0] = end, [1] = end, [2] = end },
+                Position = new Point(7, 8),
             };
 
             workplan.Add(mount, identity, unmount1, unmount2);

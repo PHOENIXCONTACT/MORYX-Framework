@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
@@ -117,6 +118,7 @@ namespace Moryx.Products.Management
                 var step = (WorkplanStepBase)Activator.CreateInstance(type, true);
                 step.Id = stepEntity.StepId;
                 step.Name = stepEntity.Name;
+                step.Position = new Point(stepEntity.PositionX, stepEntity.PositionY);
 
                 // Restore output descriptions
                 step.OutputDescriptions = new OutputDescription[stepEntity.OutputDescriptions.Count];
@@ -263,7 +265,7 @@ namespace Moryx.Products.Management
                 {
                     var stepType = step.GetType();
                     var assemblyName = stepType.Assembly.GetName().Name;
-                    stepEntity = stepRepo.Create(step.Id, step.Name, assemblyName, stepType.Namespace, stepType.Name);
+                    stepEntity = stepRepo.Create(step.Id, step.Name, assemblyName, stepType.Namespace, stepType.Name, step.Position.X, step.Position.Y);
                     workplanEntity.Steps.Add(stepEntity);
                 }
                 else
