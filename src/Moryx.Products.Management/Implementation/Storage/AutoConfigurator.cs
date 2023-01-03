@@ -41,10 +41,10 @@ namespace Moryx.Products.Management
         public string ConfigureType(string productType)
         {
             var productTypes = ReflectionTool.GetPublicClasses<ProductType>();
-            var product = productTypes.FirstOrDefault(p => p.Name == productType);
+            var product = productTypes.FirstOrDefault(p => p.FullName == productType);
             if (product == null)
                 return $"Found no product type {productType ?? string.Empty}!\n" +
-                    "Available types: " + string.Join(", ", productTypes.Select(t => t.Name));
+                    "Available types: " + string.Join(", ", productTypes.Select(t => t.FullName));
 
             var result = string.Empty;
             // First try to select the best type strategy
@@ -106,10 +106,10 @@ namespace Moryx.Products.Management
         public string ConfigureInstance(string instanceType)
         {
             var types = ReflectionTool.GetPublicClasses<ProductInstance>();
-            var instance = types.FirstOrDefault(p => p.Name == instanceType);
+            var instance = types.FirstOrDefault(p => p.FullName == instanceType);
             if (instance == null)
                 return $"Found no instance type {instanceType ?? string.Empty}!\n" +
-                       "Available types: " + string.Join(", ", types.Select(t => t.Name));
+                       "Available types: " + string.Join(", ", types.Select(t => t.FullName));
 
             var result = string.Empty;
             if (Config.InstanceStrategies.Any(s => s.TargetType == instanceType))
@@ -139,10 +139,10 @@ namespace Moryx.Products.Management
         public string ConfigureRecipe(string recipeType)
         {
             var types = ReflectionTool.GetPublicClasses<IProductRecipe>();
-            var recipe = types.FirstOrDefault(p => p.Name == recipeType);
+            var recipe = types.FirstOrDefault(p => p.FullName == recipeType);
             if (recipe == null)
                 return $"Found no recipe type {recipeType ?? string.Empty}!\n" +
-                       "Available types: " + string.Join(", ", types.Select(t => t.Name));
+                       "Available types: " + string.Join(", ", types.Select(t => t.FullName));
 
             var result = string.Empty;
             if (Config.RecipeStrategies.Any(s => s.TargetType == recipeType))
@@ -175,7 +175,7 @@ namespace Moryx.Products.Management
                 return null;
 
             var config = tuple.Item2;
-            config.TargetType = targetType.Name;
+            config.TargetType = targetType.FullName;
             config.PluginName = tuple.Item1.GetCustomAttribute<RegistrationAttribute>().Name;
 
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());

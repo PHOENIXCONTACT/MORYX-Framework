@@ -38,7 +38,8 @@ namespace Moryx.Products.Management
         /// Optimized constructor delegate for the different product types
         /// Custom strategies for each product type
         /// </summary>
-        public IReadOnlyList<Type> ProductTypes => TypeInformation.Select(ts => ts.Value.Strategy.TargetType).ToList();
+        public IReadOnlyList<Type> ProductTypes => TypeInformation.Where(ts => ts.Value.Strategy != null)
+            .Select(ts => ts.Value.Strategy.TargetType).ToList();
 
         protected IDictionary<string, ProductTypeInformation> TypeInformation { get; }
             = new Dictionary<string, ProductTypeInformation>();
@@ -283,7 +284,7 @@ namespace Moryx.Products.Management
                     productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
                 else
                 {
-                    var baseType = Type.GetType(query.Type);
+                    var baseType = TypeInformation[query.Type].Type;
                     var allTypes = ReflectionTool.GetPublicClasses<ProductType>(type =>
                     {
                         // Check if any interface matches

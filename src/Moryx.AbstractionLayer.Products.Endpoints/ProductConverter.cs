@@ -145,7 +145,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             var partLinkInterface = linkType.GetInterfaces().First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IProductPartLink<>));
             var prodType = partLinkInterface.GetGenericArguments()[0];
-            return prodType.Name;
+            return prodType.FullName;
         }
 
 

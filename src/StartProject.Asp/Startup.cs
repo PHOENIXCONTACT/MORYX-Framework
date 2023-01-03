@@ -20,6 +20,16 @@ namespace StartProject.Asp
             services.AddControllers()
                 .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                .WithOrigins("http://localhost:4200") // Angular app url for testing purposes
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
+
+
             services.AddSwaggerGen(c =>
             {
                 c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
@@ -37,6 +47,9 @@ namespace StartProject.Asp
 
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.UseCors("CorsPolicy");
+
+
             }
 
             app.UseStaticFiles();
