@@ -84,6 +84,6 @@ From the change to Web interfaces with REST APIs follow:
 - The method `RecipeStorage.SaveWorkplan` was renamed to `RecipeStorage.ToWorkplanEntity`, since nothing is saved in this method and the name was quite confusing
 
 ## Other Changes
-- The `Type` in the `ProductQuery` must be an assembly qualified name. Use `typeof(TType).AssemblyQualifiedName` instead of `nameof(TType)`
+- The `Type` in the `ProductQuery` must be the full name.
 - The Type in the `ProductRecipeEntity`, `ProductInstanceEntity` and `ProductTypeEntity` is the FullName including AssemblyName
 - The ProductStorage uses the FullName of the classes to organize strategies, constructors and so on

@@ -20,6 +20,8 @@ namespace Moryx.Products.Management.Implementation.Storage
         public string Identifier { get; set; }
         public Func<ProductType> Constructor { get; set; }
 
+        public Type Type { get; private set; }
+
         public IProductTypeStrategy Strategy { get; set; }
 
         public IDictionary<string, ConstructorStrategyInformation<IProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>> PartLinksInformation =
@@ -29,6 +31,7 @@ namespace Moryx.Products.Management.Implementation.Storage
 
         public ProductTypeInformation(Type type)
         {
+            Type = type;
             foreach (var propInfo in type.GetProperties())
             {
                 _properties.Add(propInfo.Name, propInfo);

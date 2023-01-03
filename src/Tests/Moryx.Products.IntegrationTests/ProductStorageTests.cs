@@ -641,11 +641,11 @@ namespace Moryx.Products.IntegrationTests
             // Act
             var all = _storage.LoadTypes(new ProductQuery());
             var latestRevision = _storage.LoadTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
-            var byType = _storage.LoadTypes(new ProductQuery { Type = typeof(NeedleType).AssemblyQualifiedName });
+            var byType = _storage.LoadTypes(new ProductQuery { Type = typeof(NeedleType).FullName });
             var allRevision = _storage.LoadTypes(new ProductQuery { Identifier = WatchMaterial });
             var latestByType = _storage.LoadTypes(new ProductQuery
             {
-                Type = typeof(WatchType).AssemblyQualifiedName,
+                Type = typeof(WatchType).FullName,
                 RevisionFilter = RevisionFilter.Latest
             });
             var usages = _storage.LoadTypes(new ProductQuery
@@ -685,7 +685,7 @@ namespace Moryx.Products.IntegrationTests
             var loaded2 = _storage.LoadTypes<DisplayWatchFaceType>(wf => wf.Resolution > 150);
             var loaded3 = _storage.LoadTypes(new ProductQuery
             {
-                Type = typeof(DisplayWatchFaceType).AssemblyQualifiedName,
+                Type = typeof(DisplayWatchFaceType).FullName,
                 PropertyFilters = new List<PropertyFilter>
                 {
                     new()

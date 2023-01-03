@@ -37,21 +37,21 @@ namespace Moryx.Products.Management
 
         [EntrySerialize]
         [Description("Automatically configure the necessary strategies for a product type.")]
-        public string ConfigureType([PossibleTypes(typeof(ProductType))] string productType)
+        public string ConfigureType([PossibleTypes(typeof(ProductType), UseFullname = true)] string productType)
         {
             return Configurator.ConfigureType(productType);
         }
 
         [EntrySerialize]
         [Description("Automatically configure the necessary strategies for a product type.")]
-        public string ConfigureInstance([PossibleTypes(typeof(ProductInstance))] string instanceType)
+        public string ConfigureInstance([PossibleTypes(typeof(ProductInstance), UseFullname = true)] string instanceType)
         {
             return Configurator.ConfigureInstance(instanceType);
         }
 
         [EntrySerialize]
         [Description("Automatically configure the necessary strategies for a product type.")]
-        public string ConfigureRecipe([PossibleTypes(typeof(IProductRecipe))] string recipeType)
+        public string ConfigureRecipe([PossibleTypes(typeof(IProductRecipe), UseFullname = true)] string recipeType)
         {
             return Configurator.ConfigureRecipe(recipeType);
         }

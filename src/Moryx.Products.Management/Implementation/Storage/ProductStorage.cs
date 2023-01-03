@@ -284,7 +284,7 @@ namespace Moryx.Products.Management
                     productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
                 else
                 {
-                    var baseType = Type.GetType(query.Type);
+                    var baseType = TypeInformation[query.Type].Type;
                     var allTypes = ReflectionTool.GetPublicClasses<ProductType>(type =>
                     {
                         // Check if any interface matches
