@@ -80,8 +80,10 @@ namespace Moryx.Resources.Management
             resourceManager.Start();
 
             // Activate external facade to register events
+            ActivateFacade(_resourceTypeTreeFacade);
             ActivateFacade(_notificationSourceFacade);
             ActivateFacade(_resourceManagementFacade);
+  
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace Moryx.Resources.Management
             // Tear down facades
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_resourceManagementFacade);
-
+            DeactivateFacade(_resourceTypeTreeFacade);
             var resourceManager = Container.Resolve<IResourceManager>();
             resourceManager.Stop();
         }

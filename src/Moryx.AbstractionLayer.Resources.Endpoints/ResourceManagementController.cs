@@ -351,7 +351,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 if (_query.ReferenceCondition == null)
                     return true;
 
-                var node = _resourceTypeTree[instance.GetType().Name];
+                var node = _resourceTypeTree[instance.GetType().FullName];
 
                 var referenceCondition = _query.ReferenceCondition;
                 var references = (from property in node.PropertiesOfResourceType

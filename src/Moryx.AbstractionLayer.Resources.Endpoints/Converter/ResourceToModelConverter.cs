@@ -107,7 +107,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// </summary>
         private ResourceReferenceModel[] ConvertReferences(Resource current)
         {
-            var node = TypeController[current.GetType().Name];
+            var name = current.GetType().FullName;
+            var node = TypeController[name];
        
             // Find all reference properties on the object
             var referenceProperties = node.References;

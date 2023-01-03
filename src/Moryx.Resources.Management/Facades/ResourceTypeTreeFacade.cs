@@ -1,10 +1,11 @@
 ﻿using Moryx.AbstractionLayer.Resources;
+using Moryx.Runtime.Modules;
 using System;
 using System.Collections.Generic;
 
 namespace Moryx.Resources.Management.Facades
 {
-    internal class ResourceTypeTreeFacade: IResourceTypeTree
+    internal class ResourceTypeTreeFacade: IResourceTypeTree, IFacadeControl
     {
         #region Dependency Injection
 
@@ -12,6 +13,8 @@ namespace Moryx.Resources.Management.Facades
         #endregion
         #region IResourceTypeTree
         public IResourceTypeNode RootType => TypeTree.RootType;
+
+        public Action ValidateHealthState { get; set; }
 
         public IResourceTypeNode this[string typeName] => TypeTree[typeName];
 
@@ -23,6 +26,16 @@ namespace Moryx.Resources.Management.Facades
         public IEnumerable<IResourceTypeNode> SupportedTypes(ICollection<Type> constraints)
         {
             return TypeTree.SupportedTypes(constraints);
+        }
+
+        public void Activate()
+        {
+            
+        }
+
+        public void Deactivate()
+        {
+
         }
 
 
