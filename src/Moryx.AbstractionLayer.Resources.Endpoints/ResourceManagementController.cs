@@ -83,7 +83,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanViewDetails)]
         public ActionResult<ResourceModel> GetDetails(long id)
         {
-            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
+            var resources = _resourceManagement.GetAllResources<IResource>(r => r.Id == id).ToList();
+            if (resources is null || resources.Count == 0)
                 return NotFound($"Resource '{id}' not found!");
 
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
@@ -107,13 +108,18 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 return NotFound($"Resource {id} not found!");
 
             Entry entry = null;
-            _resourceManagement.Modify(id, r =>
+            try
             {
-                entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
-                return true;
-            });
-            if (entry is null)
+                _resourceManagement.Modify(id, r =>
+                {
+                    entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
+                    return true;
+                });
+            }
+            catch
+            {
                 return Conflict("Method could not be invoked.");
+            }
 
             return entry;
         }

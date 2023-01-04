@@ -131,8 +131,6 @@ namespace Moryx.Resources.Management
             ValidateHealthState();
 
             var resource = ResourceGraph.Get(id);
-            if (resource == null)
-                throw new KeyNotFoundException($"No resource with Id {id} found!");
 
             var result = accessor(resource);
             return result;
