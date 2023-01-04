@@ -94,6 +94,10 @@ namespace Moryx.Products.IntegrationTests
                     Assert.AreEqual(step.Outputs[index].Name, loadedStep.Outputs[index].Name);
                 }
             }
+
+            var startConnector = loaded.Connectors.FirstOrDefault(c => c.Name == "Start");
+            Assert.AreEqual(10, startConnector.Position.X, "Connector position: x coordingate not as expected");
+            Assert.AreEqual(15, startConnector.Position.Y, "Connector position: y coordingate not as expected");
         }
 
         private static Workplan CreateWorkplan()
@@ -106,6 +110,7 @@ namespace Moryx.Products.IntegrationTests
             };
 
             var start = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+            start.Position = new Point(10, 15);
             var end = WorkplanInstance.CreateConnector("End", NodeClassification.End);
             var inter1 = WorkplanInstance.CreateConnector("Inter1");
             var inter2 = WorkplanInstance.CreateConnector("Inter2");
