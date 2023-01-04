@@ -55,6 +55,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <returns></returns>
         public ResourceModel GetDetails(Resource current)
         {
+            if (current == null) return null;
             return ToModel(current, false);
         }
 
@@ -66,6 +67,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <returns></returns>
         protected ResourceModel ToModel(Resource current, bool partially)
         {
+            if (current == null) return null;
             // Extract model
             var model = new ResourceModel
             {

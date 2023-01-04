@@ -83,10 +83,6 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanViewDetails)]
         public ActionResult<ResourceModel> GetDetails(long id)
         {
-            var resources = _resourceManagement.GetAllResources<IResource>(r => r.Id == id).ToList();
-            if (resources is null || resources.Count == 0)
-                return NotFound($"Resource '{id}' not found!");
-
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
             var resourceModel = _resourceManagement.Read(id, r => converter.GetDetails(r));
             if (resourceModel is null)
