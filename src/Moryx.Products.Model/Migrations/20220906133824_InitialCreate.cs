@@ -41,7 +41,9 @@ namespace Moryx.Products.Model.Model.Migrations
                     ConnectorId = table.Column<long>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Classification = table.Column<int>(nullable: false),
-                    WorkplanId = table.Column<long>(nullable: false)
+                    WorkplanId = table.Column<long>(nullable: false),
+                    PositionX = table.Column<int>(nullable: false, defaultValue: 0),
+                    PositionY = table.Column<int>(nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
