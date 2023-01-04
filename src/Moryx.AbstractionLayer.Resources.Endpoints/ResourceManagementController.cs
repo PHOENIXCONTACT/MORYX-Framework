@@ -71,7 +71,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             var resourceProxies = _resourceManagement.GetAllResources<IResource>(r => filter.Match(r as Resource)).ToArray();
 
             var converter = new ResourceQueryConverter(_resourceTypeTree, _serialization, query);
-            var values = resourceProxies.Select(p => _resourceManagement.Read(p.Id, r => converter.QueryConversion(r))).ToArray();
+            var values = resourceProxies.Select(p => _resourceManagement.Read(p.Id, r => converter.QueryConversion(r))).Where(details => details != null).ToArray();
             return values;
         }
 

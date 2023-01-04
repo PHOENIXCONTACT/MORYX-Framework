@@ -126,6 +126,13 @@ namespace Moryx.Resources.Management
             return resource.Id;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="accessor"></param>
+        /// <returns>null, when a resource with this id doesn't exist</returns>
         public TResult Read<TResult>(long id, Func<Resource, TResult> accessor)
         {
             ValidateHealthState();

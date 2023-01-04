@@ -33,7 +33,7 @@ namespace Moryx.Resources.Management
         /// in relations on the fly.
         /// </summary>
         /// <returns>Found new instances</returns>
-        IReadOnlyList<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity);
+        IReadOnlyList<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> partsDict = null);
 
         /// <summary>
         /// Save changes to a single collection
