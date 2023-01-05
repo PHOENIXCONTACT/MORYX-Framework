@@ -43,14 +43,16 @@ namespace Moryx.Resources.Management.Tests
             _typeControllerMock = new Mock<IResourceTypeController>();
 
             _linkerMock = new Mock<IResourceLinker>();
-            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>()))
+            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(), 
+                It.IsAny<Dictionary<Resource,ResourceEntity>>()))
                 .Returns(new Resource[0]);
 
             _initializerMock = new Mock<IResourceInitializer>();
             _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>())).Returns(new[] { _resourceMock });
             _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
                 .Returns(new[] { _resourceMock });
-            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>()))
+            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
+                It.IsAny<Dictionary<Resource, ResourceEntity>>()))
                 .Returns(new Resource[0]);
 
             _graph = new ResourceGraph { TypeController = _typeControllerMock.Object };
@@ -168,7 +170,8 @@ namespace Moryx.Resources.Management.Tests
             _resourceManager.Save(_resourceMock);
 
             // Assert
-            _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), _resourceMock, It.IsAny<ResourceEntity>()), Times.Once);
+            _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), _resourceMock, It.IsAny<ResourceEntity>(),
+                It.IsAny<Dictionary<Resource, ResourceEntity>>()), Times.Once);
 
             using (var uow = _modelFactory.Create())
             {
@@ -195,7 +198,8 @@ namespace Moryx.Resources.Management.Tests
             testResource.RaiseChanged();
 
             // Assert
-            _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), testResource, It.IsAny<ResourceEntity>()), Times.Once);
+            _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), testResource, It.IsAny<ResourceEntity>()
+                , It.IsAny<Dictionary<Resource, ResourceEntity>>()), Times.Once);
 
             ResourceEntity entity;
             using (var uow = _modelFactory.Create())
