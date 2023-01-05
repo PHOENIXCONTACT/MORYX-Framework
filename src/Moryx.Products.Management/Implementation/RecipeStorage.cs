@@ -99,6 +99,7 @@ namespace Moryx.Products.Management
                 {
                     Id = connector.ConnectorId,
                     Name = connector.Name,
+                    Position = new Point(connector.PositionX, connector.PositionY),
                     Classification = (NodeClassification)connector.Classification
                 });
         }
@@ -231,6 +232,8 @@ namespace Moryx.Products.Management
                     workplanEntity.Connectors.Add(connectorEntity);
                 }
                 connectorEntity.Name = connector.Name;
+                connectorEntity.PositionX = connector.Position.X;
+                connectorEntity.PositionY = connector.Position.Y;
                 connectorEntities[connector.Id] = connectorEntity;
             }
 

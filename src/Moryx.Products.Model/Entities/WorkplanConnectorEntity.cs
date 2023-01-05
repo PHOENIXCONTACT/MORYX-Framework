@@ -19,6 +19,11 @@ namespace Moryx.Products.Model
 
         public virtual long WorkplanId { get; set; }
 
+        public virtual int PositionX { get; set; }
+
+        public virtual int PositionY { get; set; }
+
+
         public virtual WorkplanEntity Workplan { get; set; }
 
         public virtual ICollection<WorkplanConnectorReferenceEntity> Usages { get; set; }
