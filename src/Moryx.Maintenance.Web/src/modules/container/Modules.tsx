@@ -3,14 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {mdiCogs, mdiComment, mdiConsoleLine, mdiDatabase, mdiHexagon, mdiHexagonMultiple} from "@mdi/js";
+import { mdiCogs, mdiComment, mdiConsoleLine, mdiDatabase, mdiHexagon, mdiHexagonMultiple } from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
 import { Link, Route, Switch } from "react-router-dom";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
-import Nav from "reactstrap/lib/Nav";
+import { Card, CardBody, CardHeader, Col, Row } from "reactstrap";
 import Navbar from "reactstrap/lib/Navbar";
 import NavItem from "reactstrap/lib/NavItem";
 import RoutingMenu from "../../common/components/Menu/RoutingMenu";
@@ -140,20 +139,18 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                     <Card>
                         <CardHeader tag="h2">
                         <Navbar className="navbar-default" expand="md">
-                            <Nav className="navbar-left" navbar={true}>
-                                <NavItem className="active">
-                                    <Link to="/modules">
-                                        <Icon path={mdiHexagonMultiple} className="icon right-space" />
-                                        Modules
-                                    </Link>
-                                </NavItem>
-                                <NavItem >
-                                    <Link to="/databases">
-                                        <Icon path={mdiDatabase}className="icon right-space" />
-                                        Databases
-                                    </Link>
-                                </NavItem>
-                            </Nav>
+                            <NavItem className="active">
+                                <Link to="/modules">
+                                    <Icon path={mdiHexagonMultiple} className="icon right-space" />
+                                    Modules
+                                </Link>
+                            </NavItem>
+                            <NavItem >
+                                <Link to="/databases">
+                                    <Icon path={mdiDatabase}className="icon right-space" />
+                                    Databases
+                                </Link>
+                            </NavItem>
                         </Navbar>
                         </CardHeader>
                         <CardBody>

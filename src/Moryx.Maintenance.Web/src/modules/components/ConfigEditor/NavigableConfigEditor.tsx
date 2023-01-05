@@ -116,7 +116,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
         ));
 
         return (
-            <ButtonGroup>
+            <ButtonGroup className="home-btn">
                 <Button color="dark" disabled={this.state.EntryChain.length === 0} onClick={() => this.onClickBreadcrumb(null)}>Home</Button>
                 {entryChainButtons}
             </ButtonGroup>
@@ -127,7 +127,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
         return (
             <div>
                 {this.preRenderBreadcrumb()}
-                <Container fluid={true} className="up-space-lg no-padding">
+                <Container fluid={true}>
                     <Row className="config-editor-header">
                         <Col md={5} className="no-padding"><span className="font-bold">Property</span></Col>
                         <Col md={7} className="no-padding"><span className="font-bold">Value</span></Col>

@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCogs, mdiContentSave, mdiSync, mdiUndo} from "@mdi/js";
+import { mdiCogs, mdiContentSave, mdiSync, mdiUndo } from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { Button, ButtonGroup, Card, CardBody, CardHeader } from "reactstrap";
 import ModulesRestClient from "../api/ModulesRestClient";
 import NavigableConfigEditor from "../components/ConfigEditor/NavigableConfigEditor";
 import Config from "../models/Config";
@@ -97,7 +97,7 @@ class ModuleConfiguration extends React.Component<ModuleConfigurationPropModel &
                                            History={this.props.history}
                                            Location={this.props.location} />
 
-                    <ButtonGroup className="up-space-lg">
+                    <ButtonGroup className="actions-btns">
                         <Button color="primary" onClick={() => this.onApply()}>
                             <Icon path={mdiSync} className="icon-white right-space" />
                             Save &amp; Restart
