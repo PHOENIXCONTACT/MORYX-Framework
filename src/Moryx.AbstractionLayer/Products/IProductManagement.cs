@@ -24,11 +24,13 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Load product type by id
         /// </summary>
+        /// <exception cref="ProductNotFoundException">Thrown when the product with the given id doesn't exist.</exception>
         IProductType LoadType(long id);
 
         /// <summary>
         /// Load product type by identity
         /// </summary>
+        /// <exception cref="ProductNotFoundException">Thrown when the product with the given id doesn't exist.</exception>
         IProductType LoadType(ProductIdentity identity);
 
         /// <summary>

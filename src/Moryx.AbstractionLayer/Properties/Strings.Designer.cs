@@ -19,10 +19,10 @@ namespace Moryx.AbstractionLayer.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Strings {
+    public class Strings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Moryx.AbstractionLayer.Properties.Strings", typeof(Strings).Assembly);
@@ -51,7 +51,7 @@ namespace Moryx.AbstractionLayer.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Moryx.AbstractionLayer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The identity has conflicts with existing products and revisions!.
         /// </summary>
-        internal static string IdentityConflictException_IdentityConflictMessage {
+        public static string IdentityConflictException_IdentityConflictMessage {
             get {
                 return ResourceManager.GetString("IdentityConflictException_IdentityConflictMessage", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Moryx.AbstractionLayer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The identity can not be used for duplicates of the template!.
         /// </summary>
-        internal static string IdentityConflictException_InvalidTemplateMessage {
+        public static string IdentityConflictException_InvalidTemplateMessage {
             get {
                 return ResourceManager.GetString("IdentityConflictException_InvalidTemplateMessage", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Moryx.AbstractionLayer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Product not found for id: {0}.
         /// </summary>
-        internal static string ProductNotFoundException_Message {
+        public static string ProductNotFoundException_Message {
             get {
                 return ResourceManager.GetString("ProductNotFoundException_Message", resourceCulture);
             }
@@ -90,25 +90,43 @@ namespace Moryx.AbstractionLayer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The proxy was detached and can no longer be used!.
         /// </summary>
-        internal static string ProxyDetachedException_Message {
+        public static string ProxyDetachedException_Message {
             get {
                 return ResourceManager.GetString("ProxyDetachedException_Message", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recipe type {0} not found!.
+        /// </summary>
+        public static string RECIPE_TYPE_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("RECIPE_TYPE_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recipe with id &apos;{0}&apos; not found!.
         /// </summary>
-        internal static string RecipeNotFoundException_Message {
+        public static string RecipeNotFoundException_Message {
             get {
                 return ResourceManager.GetString("RecipeNotFoundException_Message", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resource not found!.
+        /// </summary>
+        public static string RESOURCE_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("RESOURCE_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No resource found providing capabilities or too many matches: {0}.
         /// </summary>
-        internal static string ResourceNotFoundException_ByCapabilities_Message {
+        public static string ResourceNotFoundException_ByCapabilities_Message {
             get {
                 return ResourceManager.GetString("ResourceNotFoundException_ByCapabilities_Message", resourceCulture);
             }
@@ -117,7 +135,7 @@ namespace Moryx.AbstractionLayer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No resource found with id: {0}.
         /// </summary>
-        internal static string ResourceNotFoundException_ById_Message {
+        public static string ResourceNotFoundException_ById_Message {
             get {
                 return ResourceManager.GetString("ResourceNotFoundException_ById_Message", resourceCulture);
             }
@@ -126,9 +144,27 @@ namespace Moryx.AbstractionLayer.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The driver does not support segments.
         /// </summary>
-        internal static string SegmentsNotSupportedException_Message {
+        public static string SegmentsNotSupportedException_Message {
             get {
                 return ResourceManager.GetString("SegmentsNotSupportedException_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type was not found..
+        /// </summary>
+        public static string TYPE_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("TYPE_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workplan not found for id: {0}.
+        /// </summary>
+        public static string WORKPLAN_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("WORKPLAN_NOT_FOUND", resourceCulture);
             }
         }
     }

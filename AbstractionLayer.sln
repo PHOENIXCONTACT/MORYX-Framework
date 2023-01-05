@@ -47,9 +47,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Asp", "src\Sta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.AbstractionLayer.Resources.Endpoints", "src\Moryx.AbstractionLayer.Resources.Endpoints\Moryx.AbstractionLayer.Resources.Endpoints.csproj", "{F5141A5C-D29F-4870-85D5-277C04A944EC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{07667FA0-45F2-4DD9-AEF4-50D05441281C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{843F6C15-A383-4C46-9436-1F54C5FF4017}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.targets = Directory.Build.targets
+		NuGet.Config = NuGet.Config
+		VERSION = VERSION
 	EndProjectSection
 EndProject
 Global

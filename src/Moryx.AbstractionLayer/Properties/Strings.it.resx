@@ -117,40 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="IdentityConflictException_IdentityConflictMessage" xml:space="preserve">
-    <value>Die Identität besitzt konflikte mit existierenden Produkten und Revisionen</value>
-  </data>
-  <data name="IdentityConflictException_InvalidTemplateMessage" xml:space="preserve">
-    <value>Diese Identität kann nicht für Duplikate der Vorlage verwendet werden.</value>
-  </data>
-  <data name="ProxyDetachedException_Message" xml:space="preserve">
-    <value>Der Proxy wurde entkoppelt und kann nicht weiter genutzt werden!</value>
-  </data>
-  <data name="RecipeNotFoundException_Message" xml:space="preserve">
-    <value>Rezept mit der Id '{0}' wurde nicht gefunden!</value>
-  </data>
   <data name="ProductNotFoundException_Message" xml:space="preserve">
-    <value>Produkt mit der Id '{0}' wurde nicht gefunden!</value>
-  </data>
-  <data name="SegmentsNotSupportedException_Message" xml:space="preserve">
-    <value>Der Treiber unterstützt keine Segmente</value>
-  </data>
-  <data name="ResourceNotFoundException_ByCapabilities_Message" xml:space="preserve">
-    <value>Es wurde keine eindeutige Resource mit den angegebenen Fähigkeiten gefunden.</value>
-  </data>
-  <data name="ResourceNotFoundException_ById_Message" xml:space="preserve">
-    <value>Resource mit der Id '{0}' nicht gefunden!</value>
-  </data>
-  <data name="TYPE_NOT_FOUND" xml:space="preserve">
-    <value>Der angegebene Typ konnte nicht gefunden werden.</value>
+    <value>Prodotto non trovato per id: {0}</value>
   </data>
   <data name="RECIPE_TYPE_NOT_FOUND" xml:space="preserve">
-    <value>Ein Rezept des Typ '{0}' konnte nicht gefunden werden.</value>
+    <value>Tipo di ricetta {0} non trovato!</value>
   </data>
   <data name="RESOURCE_NOT_FOUND" xml:space="preserve">
-    <value>Die Ressource konnte nicht gefunden werden.</value>
+    <value>Risorsa non trovata!</value>
+  </data>
+  <data name="TYPE_NOT_FOUND" xml:space="preserve">
+    <value>Il tipo indicato non è stato trovato.</value>
   </data>
   <data name="WORKPLAN_NOT_FOUND" xml:space="preserve">
-    <value>Arbeitsplan nicht gefunden für id: {0}</value>
+    <value>Piano di lavoro non trovato per l'id: {0}</value>
   </data>
 </root>

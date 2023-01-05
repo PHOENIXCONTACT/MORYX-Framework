@@ -41,7 +41,7 @@
     <PackageReference Update="Moryx.Runtime.Kernel" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Runtime.Endpoints" Version="$(MoryxCoreVersion)" />
     <PackageReference Update="Moryx.Maintenance.Web" Version="$(MoryxCoreVersion)" />
-
+	<PackageReference Update="Moryx.Asp.Extensions" Version="$(MoryxCoreVersion)" />
   </ItemGroup>
 
 </Project>
