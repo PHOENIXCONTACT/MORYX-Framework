@@ -39,6 +39,7 @@ namespace StartProject.Asp
                 c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
             });
 
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
