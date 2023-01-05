@@ -207,7 +207,7 @@ namespace Moryx.Model.Repositories.Proxy
 
             if (filterMatch.Success && !string.IsNullOrEmpty(filterMatch.Value))
             {
-                filterMap.Filter = (Filter) Enum.Parse(typeof(Filter), filterMatch.Value);
+                filterMap.Filter = (Filter)Enum.Parse(typeof(Filter), filterMatch.Value);
             }
             else
             {

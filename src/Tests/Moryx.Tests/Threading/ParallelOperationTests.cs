@@ -80,7 +80,34 @@ namespace Moryx.Tests.Threading
             Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
         }
 
-        //[Test]
+        [Ignore("Test fails because of timing issue on different system")]
+        [Test]
+        public void ScheduleExecutionWithStop()
+        {
+            StateObject state = new StateObject();
+
+            int id = _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
+
+            Thread.Sleep(75);
+
+            Assert.AreEqual(0, state.Counter, "First check");
+
+            Thread.Sleep(50);
+
+            Assert.AreEqual(1, state.Counter, "Second check");
+
+            Thread.Sleep(50);
+
+            Assert.AreEqual(2, state.Counter, "Third check");
+
+            _threadFactory.StopExecution(id);
+
+            Thread.Sleep(50);
+
+            Assert.AreEqual(2, state.Counter, "Last check");
+        }
+
+        [Test]
         public void ScheduleExecutionWithWrongStop()
         {
             StateObject state = new StateObject();
@@ -106,7 +133,8 @@ namespace Moryx.Tests.Threading
             Assert.AreEqual(3, state.Counter, "Last check");
         }
 
-        //[Test]
+        [Ignore("Test fails because of timing issue on different system")]
+        [Test]
         public void ScheduleExecutionWithDispose()
         {
             StateObject state = new StateObject();
