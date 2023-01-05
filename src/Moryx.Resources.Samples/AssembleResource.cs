@@ -28,7 +28,7 @@ namespace Moryx.Resources.Samples
 
             if (Setup == null)
             {
-                Setup = Graph.Instantiate<AssembleFoo>();
+                Setup = Graph.Instantiate<AssembleFoo>();              
                 RaiseResourceChanged();
             }
         }

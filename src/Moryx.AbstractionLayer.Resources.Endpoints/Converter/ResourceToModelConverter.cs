@@ -55,6 +55,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <returns></returns>
         public ResourceModel GetDetails(Resource current)
         {
+            if (current == null) return null;
             return ToModel(current, false);
         }
 
@@ -66,6 +67,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <returns></returns>
         protected ResourceModel ToModel(Resource current, bool partially)
         {
+            if (current == null) return null;
             // Extract model
             var model = new ResourceModel
             {
@@ -107,7 +109,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// </summary>
         private ResourceReferenceModel[] ConvertReferences(Resource current)
         {
-            var node = TypeController[current.GetType().Name];
+            var name = current.GetType().FullName;
+            var node = TypeController[name];
        
             // Find all reference properties on the object
             var referenceProperties = node.References;

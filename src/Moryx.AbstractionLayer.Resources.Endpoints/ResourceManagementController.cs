@@ -71,7 +71,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             var resourceProxies = _resourceManagement.GetAllResources<IResource>(r => filter.Match(r as Resource)).ToArray();
 
             var converter = new ResourceQueryConverter(_resourceTypeTree, _serialization, query);
-            var values = resourceProxies.Select(p => _resourceManagement.Read(p.Id, r => converter.QueryConversion(r))).ToArray();
+            var values = resourceProxies.Select(p => _resourceManagement.Read(p.Id, r => converter.QueryConversion(r))).Where(details => details != null).ToArray();
             return values;
         }
 
@@ -83,9 +83,6 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanViewDetails)]
         public ActionResult<ResourceModel> GetDetails(long id)
         {
-            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
-                return NotFound($"Resource '{id}' not found!");
-
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
             var resourceModel = _resourceManagement.Read(id, r => converter.GetDetails(r));
             if (resourceModel is null)
@@ -107,13 +104,18 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 return NotFound($"Resource {id} not found!");
 
             Entry entry = null;
-            _resourceManagement.Modify(id, r =>
+            try
             {
-                entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
-                return true;
-            });
-            if (entry is null)
+                _resourceManagement.Modify(id, r =>
+                {
+                    entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
+                    return true;
+                });
+            }
+            catch
+            {
                 return Conflict("Method could not be invoked.");
+            }
 
             return entry;
         }
@@ -351,7 +353,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 if (_query.ReferenceCondition == null)
                     return true;
 
-                var node = _resourceTypeTree[instance.GetType().Name];
+                var node = _resourceTypeTree[instance.GetType().FullName];
 
                 var referenceCondition = _query.ReferenceCondition;
                 var references = (from property in node.PropertiesOfResourceType

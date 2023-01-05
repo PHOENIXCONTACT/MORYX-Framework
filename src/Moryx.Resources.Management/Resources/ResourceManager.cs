@@ -292,13 +292,21 @@ namespace Moryx.Resources.Management
                 if (saveResult.Item2)
                     newResources.Add(resource);
 
-                var newInstances = ResourceLinker.SaveReferences(uow, resource, entity);
+                var references = new Dictionary<Resource, ResourceEntity>();
+                var newInstances = ResourceLinker.SaveReferences(uow, resource, entity, references);
                 newResources.AddRange(newInstances);
 
                 try
                 {
                     uow.SaveChanges();
                     resource.Id = entity.Id;
+                    foreach(var instance in newResources)
+                    {
+                        if (!references.ContainsKey(instance))
+                            continue;
+                        instance.Id = references[instance].Id;
+                    }
+
                 }
                 catch (Exception ex)
                 {

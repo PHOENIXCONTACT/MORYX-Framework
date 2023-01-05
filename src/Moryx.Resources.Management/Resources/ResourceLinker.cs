@@ -85,16 +85,18 @@ namespace Moryx.Resources.Management
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity)
+        public IReadOnlyList<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> dict = null)
         {
             var context = new ReferenceSaverContext(uow, Graph, instance, entity);
-            SaveReferences(context, instance);
+            SaveReferences(context, instance, dict);
             return context.EntityCache.Keys.Where(i => i.Id == 0).ToList();
         }
 
-        private void SaveReferences(ReferenceSaverContext context, Resource instance)
+        private void SaveReferences(ReferenceSaverContext context, Resource instance, Dictionary<Resource, ResourceEntity> dict = null)
         {
             var entity = GetOrCreateEntity(context, instance);
+            if(dict != null)
+                dict.Add(instance, entity);
 
             var relations = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity)
                 .Union(ResourceRelationAccessor.FromQueryable(context.CreatedRelations.AsQueryable(), entity))
@@ -122,7 +124,7 @@ namespace Moryx.Resources.Management
 
             // Recursively save references for new resources
             foreach (var resource in createdResources)
-                SaveReferences(context, resource);
+                SaveReferences(context, resource, dict);
         }
 
         /// <inheritdoc />
