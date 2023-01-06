@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <PropertyGroup>
-    <MoryxCoreVersion>4.0.0-future.677</MoryxCoreVersion>
-  </PropertyGroup>
-
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
 
   <!-- Package refereces for all projects if CreatePackage=true -->

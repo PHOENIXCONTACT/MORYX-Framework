@@ -9,16 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moryx.TestTools.UnitTest" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" />
-	  <PackageReference Include="Moryx.Model.Sqlite" />
+	<ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
+	<ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+	<ProjectReference Include="..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
   </ItemGroup>
 
 </Project>

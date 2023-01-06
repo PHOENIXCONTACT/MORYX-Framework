@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moryx" />
+	  <ProjectReference Include="..\Moryx\Moryx.csproj" />
   </ItemGroup>
 
   <ItemGroup>
