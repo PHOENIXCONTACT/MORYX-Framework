@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Additional AbstractionLayer implementations for Tests</Description>
+    <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;IIoT;IoT;Abstraction;Tests</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moryx.TestTools.UnitTest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" />
+	  <PackageReference Include="Moryx.Model.Sqlite" />
+  </ItemGroup>
+
+</Project>

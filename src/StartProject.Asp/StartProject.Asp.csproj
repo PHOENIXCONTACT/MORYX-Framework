@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+  	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
-  </PropertyGroup>
+		<Description>StartProject of the MORYX-Framework. This is for debugging only.</Description>
+	</PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.13" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-  </ItemGroup>
+	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
     <ProjectReference Include="..\Moryx.Maintenance.Web\Moryx.Maintenance.Web.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
@@ -19,6 +20,12 @@
 
     <ProjectReference Include="..\Moryx.TestModule\Moryx.TestModule.csproj" />
     <ProjectReference Include="..\Moryx.DependentTestModule\Moryx.DependentTestModule.csproj" />
-  </ItemGroup>
+	  <ProjectReference Include="..\Moryx.AbstractionLayer.Products.Endpoints\Moryx.AbstractionLayer.Products.Endpoints.csproj" />
+	  <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
+	  <ProjectReference Include="..\Moryx.AbstractionLayer.Resources.Endpoints\Moryx.AbstractionLayer.Resources.Endpoints.csproj" />
+	  <ProjectReference Include="..\Moryx.Products.Samples\Moryx.Products.Samples.csproj" />
+	  <ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
+	  <ProjectReference Include="..\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj" />
+	</ItemGroup>
 
 </Project>

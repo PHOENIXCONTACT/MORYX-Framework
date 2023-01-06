@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
+  <PropertyGroup>
+    <MoryxCoreVersion>4.0.0-future.677</MoryxCoreVersion>
+  </PropertyGroup>
+
   <Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
 
   <!-- Package refereces for all projects if CreatePackage=true -->
@@ -11,10 +15,12 @@
   <!-- Package versions for package references across all projects -->
   <ItemGroup>
     <!--3rd party dependencies-->
+    <PackageReference Update="Caliburn.Micro" Version="4.0.173" />
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Update="Moq" Version="4.16.1" />
-    <PackageReference Update="NUnit" Version="3.13.2" />
-    <PackageReference Update="NUnit3TestAdapter" Version="4.1.0" />
+    <PackageReference Update="Moq" Version="4.18.2" />
+    <PackageReference Update="NUnit" Version="3.13.3" />
+    <PackageReference Update="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Update="Microsoft.Data.Sqlite" Version="6.0.0" />
 
     <PackageReference Update="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Update="CommandLineParser" Version="2.8.0" />

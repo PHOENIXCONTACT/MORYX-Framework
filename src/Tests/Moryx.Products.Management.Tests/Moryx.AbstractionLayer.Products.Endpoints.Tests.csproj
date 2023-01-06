@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="NUnit" />
+        <PackageReference Include="NUnit3TestAdapter" />
+        <PackageReference Include="Moq" />
+        <PackageReference Include="Moryx.Model.InMemory" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Moryx.AbstractionLayer.Products.Endpoints\Moryx.AbstractionLayer.Products.Endpoints.csproj" />
+        <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+        <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
+        <ProjectReference Include="..\..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
+    </ItemGroup>
+
+</Project>

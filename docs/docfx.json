@@ -10,7 +10,9 @@
           "exclude": [
             "**/obj/**",
             "**/bin/**",
-            "**/Tests/**"
+            ".build/**",
+            "/**/*Tests.csproj",
+            "/**/*.Model.csproj"
           ],
           "src": "../src"
         }

@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>ResourceManagement module composing and maintaining the resource graph as the habitat for digital twins of manufacturing assets.</Description>
+    <CreatePackage>true</CreatePackage>
+    <PackageTags>MORYX;IIoT;IoT;Manufacturing;API;Resource</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+    <DefineConstants>HAVE_WCF;HAVE_APPDOMAIN_DYNAMICASSEMBLY</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+    <ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+
+    <PackageReference Include="Moryx.Model.PostgreSQL" />
+    <PackageReference Include="Moryx.Runtime" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
+    <PackageReference Include="Moryx.Runtime.Wcf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\Migrations\" />
+  </ItemGroup>
+
+</Project>
