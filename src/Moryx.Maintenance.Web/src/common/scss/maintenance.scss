@@ -170,11 +170,8 @@ svg.icon-red {
  * Content Panel
  */
 .maintenance-app-container {
-  height: 100vh;
-  overflow: auto;
   display: flex;
   flex-direction: column;
-  margin-top: 20px !important;
 }
 
 .maintenance-content {
