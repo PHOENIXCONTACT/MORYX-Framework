@@ -152,6 +152,7 @@ In an attempt to harmonize the naming of Workplans, their editing, and their exe
 - `IWorkflowEngine` -> `IWorkplanEngine`
 - `SubworkflowTransition` -> `SubworkplanTransition`
 - `SubworkflowStep` -> `SubWorkplanStepBase`
+- `WorkflowSnapshot` -> `WorkplanSnapshot`
 
 
 ## Database
