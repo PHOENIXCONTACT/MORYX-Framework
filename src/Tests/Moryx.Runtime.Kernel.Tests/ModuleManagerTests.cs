@@ -276,10 +276,8 @@ namespace Moryx.Runtime.Kernel.Tests
             //moduleManager.Initialize();
             moduleManager.StartModules();
 
-            while (module.State != ServerModuleState.Running)
-            {
-                Thread.Sleep(100);
-            }
+            var i = 0;
+            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
             // Assert
             Assert.AreEqual(1, module.ActivatedCount);
@@ -296,20 +294,23 @@ namespace Moryx.Runtime.Kernel.Tests
             //moduleManager.Initialize();
             moduleManager.StartModules();
 
-            while (module.State != ServerModuleState.Running)
-            {
-                Thread.Sleep(100);
-            }
+            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
             moduleManager.StopModules();
 
-            while (module.State != ServerModuleState.Stopped)
-            {
-                Thread.Sleep(100);
-            }
+            WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
 
             // Assert
             Assert.AreEqual(1, module.ActivatedCount);
+        }
+
+        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10) {
+            var i = 0;
+            while (!condition() && (i < maxSeconds))
+            {
+                Thread.Sleep(100);
+                i++;
+            }
         }
     }
 }
