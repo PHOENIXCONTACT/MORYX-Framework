@@ -335,6 +335,7 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
         $openCoverAgs += "-returntargetcode" # We need the nunit return code
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
 
+        Write-Host "$global:OpenCoverCli $openCoverAgs"
         & $global:OpenCoverCli $openCoverAgs
         
         $exitCode = [int]::Parse($LastExitCode);
@@ -367,7 +368,7 @@ function Get-CsprojIsNetCore($CsprojItem) {
     if ($null -ne $sdkProject) {
         # Read Target Framework
         $targetFramework = $csprojContent.Project.PropertyGroup.TargetFramework;
-        if ($targetFramework -Match "netcoreapp" -or $targetFramework -Match "net5.") {
+        if ($targetFramework -Match "netcoreapp" -or $targetFramework -Match "net5." -or $targetFramework -Match "net6.") {
             # NETCore
             return $true;
         }
