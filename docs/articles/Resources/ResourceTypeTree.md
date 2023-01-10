@@ -1,0 +1,33 @@
+---
+uid: ResourceTypeTree
+---
+# Resource type tree
+
+All plugin types within the resource management are derived from the [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) class, either directly or by deriving from a subtype like [PublicResource](xref:Moryx.AbstractionLayer.Resources.PublicResource), [InteractionResource](xref:Moryx.Resources.Wcf.InteractionResource) or [Driver](xref:Moryx.AbstractionLayer.Drivers.Driver). 
+Subclassing makes it possible to extend and customize existing resources or share functionality among resources by creating a common, abstract base class. 
+Of those sub-classes `PublicResource` is especially important. 
+The [Resource Management's](xref:ResourceManagement) objective is to model the CPS (cyber physical system) and make it easily accessible to other modules. 
+Types derived from `PublicResource` or more general those implementing [IPublicResource](xref:Moryx.AbstractionLayer.Resources.IPublicResource) are the entry points into the resource graph from the facade. 
+In that sense, the abstraction layer can be compared to the `Android HAL` and its device contracts. 
+Interfaces derived from `IPublicResource` are those contracts that can be deﬁned by applications from different domains. 
+
+Storage of resources and their information is done by storing it as part of a resource itself or by using a dedicated resource. 
+Thereby, the complete type information is taken from the class definition. 
+Base type, provided interfaces, dependencies and typed references to other resource can all be expressed with C# code. 
+The minimal required code to create a plugin for the resource management is shown in an example below.
+
+```cs
+public class MyFirstResource : Resource
+{
+}
+```
+
+The above example shows only the minimum required code to illustrate extensibility and lack of boilerplate code. 
+Most resource implementations will also declare the [ResourceRegistration](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute) attribute to activate dependency injection for non-resource components like logging. 
+During module startup all types are loaded and the bidirectional [type tree](xref:Moryx.AbstractionLayer.Resources.IResourceTypeTree) is constructed using reﬂection. 
+For each node in the tree it is possible to traverse the tree in both directions. 
+Especially the ability to directly access all derived types is an advantage over the standard .NET reﬂection API. 
+Besides the base and derived types, each node also exports the system type, its name and information how to construct instances of the type.
+
+## Resource types
+The abstraction layer allows for grouping similar resources types in branches. Look [here](Types/Overview.md) for more information on that.

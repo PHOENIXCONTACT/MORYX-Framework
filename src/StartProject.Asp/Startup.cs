@@ -32,7 +32,7 @@ namespace StartProject.Asp
             {
                 options.Filters.Add<MoryxExceptionFilter>();
             })
-            .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSwaggerGen(c =>
             {
@@ -43,10 +43,16 @@ namespace StartProject.Asp
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
-                    .WithOrigins("http://localhost:8080") // Maintenance.Web usually runs on port 8080
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
+                .WithOrigins("http://localhost:4200", "http://localhost:8080") // Angular app url for testing purposes
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
+
+
+            services.AddSwaggerGen(c =>
+            {
+                c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
             });
 
             services.AddSingleton<IAuthorizationPolicyProvider, ExamplePolicyProvider>();
@@ -86,6 +92,7 @@ namespace StartProject.Asp
             });
         }
     }
+
     public class ExamplePolicyProvider : DefaultAuthorizationPolicyProvider
     {
         public ExamplePolicyProvider(IOptions<AuthorizationOptions> options) : base(options)
@@ -100,7 +107,7 @@ namespace StartProject.Asp
             {
                 policy = new AuthorizationPolicyBuilder()
                     .RequireClaim("Permission", policyName)
-                    .Build();
+                    .Build();               
             }
             return policy;
         }

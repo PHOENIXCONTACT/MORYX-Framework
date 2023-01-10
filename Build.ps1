@@ -6,7 +6,7 @@
     [switch]$UnitTests,
     [switch]$IntegrationTests,
     [switch]$SystemTests,
-
+    
     [switch]$CoverReport,
     [switch]$GenerateDocs,
 
@@ -16,6 +16,9 @@
 
 # Load Toolkit
 . ".build\BuildToolkit.ps1"
+
+# Set MSBuild to latest version
+$MsBuildVersion = "latest";
 
 # Initialize Toolkit
 Invoke-Initialize -Version (Get-Content "VERSION");
@@ -50,7 +53,7 @@ if ($GenerateDocs) {
 }
 
 if ($Pack) {
-    Invoke-PackAll
+    Invoke-PackAll -Symbols
 }
 
 if ($Publish) {
