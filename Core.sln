@@ -76,7 +76,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Endpoints", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance", "{50AD5155-2CC6-496B-849C-57DC56021F5F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Maintenance.Web", "src\Moryx.Maintenance.Web\Moryx.Maintenance.Web.csproj", "{BD8D5AB2-0C9E-4C61-B158-FF132890DB3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.CommandCenter.Web", "src\Moryx.CommandCenter.Web\Moryx.CommandCenter.Web.csproj", "{BD8D5AB2-0C9E-4C61-B158-FF132890DB3C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Asp.Extensions", "src\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj", "{0FB22EF0-3C6F-4235-A50E-3A976AC261D3}"
 EndProject
