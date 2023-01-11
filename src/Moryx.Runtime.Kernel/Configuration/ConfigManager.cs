@@ -41,7 +41,8 @@ namespace Moryx.Runtime.Kernel
         protected IValueProvider[] ValueProviders => new IValueProvider[]
         {
             _sharedProvider,
-            new DefaultValueProvider(),
+            new DefaultValueAttributeProvider(),
+            new ActivatorValueProvider()
         };
 
         /// <summary>

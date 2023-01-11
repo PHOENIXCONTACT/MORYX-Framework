@@ -15,8 +15,6 @@ namespace Moryx.Configuration
 
         private readonly List<IValueProviderFilter> _filters = new List<IValueProviderFilter> { new DefaultCanWriteValueProviderFilter() };
 
-        private readonly List<IValueProviderValidator> _validators = new List<IValueProviderValidator>();
-
         /// <summary>
         /// Configured filters
         /// </summary>
@@ -26,11 +24,6 @@ namespace Moryx.Configuration
         /// Configured providers
         /// </summary>
         public IEnumerable<IValueProvider> Providers => _providers;
-
-        /// <summary>
-        /// Configured Validators
-        /// </summary>
-        public IEnumerable<IValueProviderValidator> Validators => _validators;
 
         /// <summary>
         /// Configured <see cref="BindingFlags"/>

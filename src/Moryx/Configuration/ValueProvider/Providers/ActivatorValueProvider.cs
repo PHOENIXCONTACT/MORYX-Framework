@@ -14,7 +14,6 @@ namespace Moryx.Configuration
         /// <inheritdoc/>
         public ValueProviderResult Handle(object parent, PropertyInfo property)
         {
-
             var propertyType = property.PropertyType;
             var value = property.GetValue(parent);
 
@@ -23,13 +22,6 @@ namespace Moryx.Configuration
                 if (propertyType.IsArray)
                 {
                     var elementType = propertyType.GetElementType();
-
-                    if (elementType == null)
-                    {
-                        return ValueProviderResult.Skipped;
-                    }
-
-
                     property.SetValue(parent, Array.CreateInstance(elementType, 0));
                     return ValueProviderResult.Handled;
                 }
