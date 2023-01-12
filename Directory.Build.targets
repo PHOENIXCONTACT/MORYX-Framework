@@ -27,6 +27,7 @@
     <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
     <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 
     <PackageReference Update="Castle.Windsor" Version="5.1.1" />
     <PackageReference Update="Castle.WcfIntegrationFacility" Version="5.1.1" />
