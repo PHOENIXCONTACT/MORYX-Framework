@@ -74,7 +74,7 @@ namespace Moryx.Runtime.Kernel
 
             lock (ConfigCache)
             {
-                if (ConfigCache.ContainsKey(name))
+                if (ConfigCache.ContainsKey(name) && ConfigCache[name].GetType().Equals(configType))
                     return ConfigCache[name];
 
                 ConfigCache[name] = TryGetFromDirectory(configType, name);

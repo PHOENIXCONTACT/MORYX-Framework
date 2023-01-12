@@ -43,5 +43,13 @@ namespace Moryx.Model
         /// <returns>Preconfigured instance of the given DbContext</returns>
         TContext Create<TContext>(IDatabaseConfig config)
             where TContext : DbContext;
+
+
+        /// <summary>
+        /// Updates the database configurator for the given context type
+        /// </summary>
+        /// <param name="dbContextType">Database context type</param>
+        /// <param name="configuratorType">Configurator type</param>
+        void UpdateConfig(Type dbContextType, Type configuratorType);
     }
 }

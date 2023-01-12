@@ -16,12 +16,23 @@ namespace Moryx.Model.PostgreSQL
         /// </summary>
         public NpgsqlDatabaseConfig()
         {
-            // Set default values
-            Host = "localhost";
-            Port = 5432;
-            Database = "";
-            Username = "postgres";
-            Password = "postgres";
+            ConnectionSettings = new NpgsqlDatabaseConnectionSettings();
+            ConfiguratorTypename = typeof(NpgsqlModelConfigurator).AssemblyQualifiedName;
+        }
+    }
+
+
+    /// <summary>
+    /// Database connection settings for the Npgsql databases
+    /// </summary>
+    public class NpgsqlDatabaseConnectionSettings : DatabaseConnectionSettings
+    {
+        /// <summary>
+        /// Creates a new instance of the <see cref="NpgsqlDatabaseConnectionSettings"/>
+        /// </summary>
+        public NpgsqlDatabaseConnectionSettings()
+        {
+            ConnectionString= "Username=postgres;Password=postgres;Host=localhost;Port=5432";
         }
     }
 }

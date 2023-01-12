@@ -3,7 +3,7 @@ uid: GettingStarted.CodeFirst
 ---
 # Code first
 
-This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MORYX Core. MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
+This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) (or any other data provider) in the world of the MORYX Core. MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
 
 ## Basics
 
@@ -22,8 +22,6 @@ More extended, additional repositories can be created for the [UnitOfWork Reposi
 Create your own database context by deriving from `DbContext` or for more comfortability from [MoryxDbContext](xref:Moryx.Model.MoryxDbContext) and add the two constructor overloads as shown below.
 
 ````cs
-[ModelConfigurator(typeof(NpgsqlModelConfigurator))]
-[DbConfigurationType(typeof(NpgsqlConfiguration))]
 public class SolarSystemContext : MoryxDbContext
 {
     public SolarSystemContext()
@@ -49,8 +47,6 @@ public class SolarSystemContext : MoryxDbContext
     }
 }
 ````
-
-Please note the [ModelConfiguratorAttribute](xref:Moryx.Model.ModelConfiguratorAttribute) which is used by MORYX to create a configuration for the context. Here the `NpgsqlModelConfigurator` is using `Npgsql` for PostgreSQL databases.
 
 ## Entities
 

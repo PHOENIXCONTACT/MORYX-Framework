@@ -3,7 +3,9 @@
 
 using System.Runtime.Serialization;
 using Moryx.Configuration;
+using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
+using Moryx.Serialization;
 
 namespace Moryx.Model
 {
@@ -20,24 +22,15 @@ namespace Moryx.Model
 
         /// <inheritdoc />
         [DataMember]
-        public string Host { get; set; }
+        [PluginConfigs(typeof(DatabaseConnectionSettings))]
+        public DatabaseConnectionSettings ConnectionSettings { get; set; }
 
         /// <inheritdoc />
         [DataMember]
-        public int Port { get; set; }
+        [PossibleConfigurators]
+        public string ConfiguratorTypename { get; set; }
 
         /// <inheritdoc />
-        [DataMember]
-        public string Database { get; set; }
-
-        /// <inheritdoc />
-        [DataMember]
-        public string Username { get; set; }
-
-        /// <inheritdoc />
-        [DataMember]
-        public string Password { get; set; }
-
         public void Initialize()
         {
         }
