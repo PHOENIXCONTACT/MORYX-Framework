@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Configuration;
+using System.Runtime.Serialization;
 
 namespace Moryx.Model.Configuration
 {
@@ -11,28 +12,33 @@ namespace Moryx.Model.Configuration
     public interface IDatabaseConfig : IConfig
     {
         /// <summary>
-        /// Database server
+        /// Connection string
         /// </summary>
-        string Host { get; set; }
+        DatabaseConnectionSettings ConnectionSettings { get; set; }
 
         /// <summary>
-        /// Port to access the server
+        /// Database configurator typename
         /// </summary>
-        int Port { get; set; }
+        string ConfiguratorTypename { get; set; }
+    }
+
+    /// <summary>
+    /// Base class for database connection settings
+    /// </summary>
+    [DataContract]
+    public class DatabaseConnectionSettings
+    {
 
         /// <summary>
-        /// Database to use
+        /// Database name
         /// </summary>
-        string Database { get; set; }
+        [DataMember]
+        public virtual string Database { get; set; }
 
         /// <summary>
-        /// Databse user
+        /// Database provider specific connection string
         /// </summary>
-        string Username { get; set; }
-
-        /// <summary>
-        /// Password for <see cref="Username"/>
-        /// </summary>
-        string Password { get; set; }
+        [DataMember]
+        public string ConnectionString { get; set; }
     }
 }

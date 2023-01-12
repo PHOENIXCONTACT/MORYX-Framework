@@ -44,8 +44,8 @@ namespace Moryx.Model.Configuration
             Config = _configManager.GetConfiguration<TConfig>(_configName);
 
             // If database is empty, fill with TargetModel name
-            if (string.IsNullOrWhiteSpace(Config.Database))
-                Config.Database = contextType.Name;
+            if (string.IsNullOrWhiteSpace(Config.ConnectionSettings.Database))
+                Config.ConnectionSettings.Database = contextType.Name;
         }
 
         /// <inheritdoc />
@@ -70,7 +70,7 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public virtual async Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
         {
-            if (string.IsNullOrWhiteSpace(config.Database))
+            if (string.IsNullOrWhiteSpace(config.ConnectionSettings.Database))
                 return TestConnectionResult.ConfigurationError;
 
             // Simple ef independent database connection
@@ -129,7 +129,7 @@ namespace Moryx.Model.Configuration
             {
                 result.Result = MigrationResult.NoMigrationsAvailable;
                 result.ExecutedMigrations = Array.Empty<string>();
-                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!", config.Database);
+                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!", config.ConnectionSettings.Database);
 
                 return result;
             }
@@ -140,13 +140,13 @@ namespace Moryx.Model.Configuration
                 result.Result = MigrationResult.Migrated;
                 result.ExecutedMigrations = pendingMigrations;
                 Logger.Log(LogLevel.Information, "Database migration for database '{0}' was successful. Executed migrations: {1}",
-                    config.Database, string.Join(", ", pendingMigrations));
+                    config.ConnectionSettings.Database, string.Join(", ", pendingMigrations));
 
             }
             catch (Exception e)
             {
                 result.Result = MigrationResult.Error;
-                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.Database);
+                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.ConnectionSettings.Database);
             }
 
             return result;
@@ -225,10 +225,8 @@ namespace Moryx.Model.Configuration
         /// </summary>
         protected static bool CheckDatabaseConfig(IDatabaseConfig config)
         {
-            return !(string.IsNullOrWhiteSpace(config.Host) ||
-                     string.IsNullOrWhiteSpace(config.Database) ||
-                     string.IsNullOrWhiteSpace(config.Username) ||
-                     config.Port <= 0);
+            return (!(string.IsNullOrEmpty(config.ConfiguratorTypename) ||
+                     string.IsNullOrEmpty(config.ConnectionSettings.ConnectionString)));
         }
     }
 }

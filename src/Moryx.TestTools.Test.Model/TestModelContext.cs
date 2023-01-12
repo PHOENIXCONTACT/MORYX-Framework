@@ -14,7 +14,6 @@ namespace Moryx.TestTools.Test.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
     public class TestModelContext : MoryxDbContext
     {
         public TestModelContext()

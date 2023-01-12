@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Response;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Request;
+using Moryx.Runtime.Endpoints.Databases.Endpoint.Serialization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Moryx.Serialization;
 
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 {
@@ -237,7 +239,9 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         }
 
         private bool IsConfigValid(DatabaseConfigModel config)
-            => !string.IsNullOrEmpty(config.Database) && !string.IsNullOrEmpty(config.Server);
+            => !string.IsNullOrEmpty(config.Database) 
+                && !string.IsNullOrEmpty(config.ConnectionString) 
+                && !string.IsNullOrEmpty(config.ConfiguratorTypename);
 
         private SetupModel ConvertSetup(IModelSetup setup)
         {
@@ -270,14 +274,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             var model = new DataModel
             {
                 TargetModel = TargetModelName(contextType),
-                Config = new DatabaseConfigModel
-                {
-                    Server = dbConfig.Host,
-                    Port = dbConfig.Port,
-                    Database = dbConfig.Database,
-                    User = dbConfig.Username,
-                    Password = dbConfig.Password
-                },
+                Config = EntryConvert.EncodeObject(dbConfig, new DatabaseConfigSerialization()),
                 Setups = GetAllSetups(contextType).ToArray(),
                 Backups = GetAllBackups(contextType).ToArray(),
                 AvailableMigrations = await GetAvailableUpdates(dbConfig, configurator),
@@ -331,29 +328,43 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
         private static async Task<DbMigrationsModel[]> GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
         {
-            var availableMigrations = await configurator.AvailableMigrations(dbConfig);
-            return availableMigrations.Select(migration => new DbMigrationsModel
+            try
             {
-                Name = migration
-            }).ToArray();
+                var availableMigrations = await configurator.AvailableMigrations(dbConfig);
+                return availableMigrations.Select(migration => new DbMigrationsModel
+                {
+                    Name = migration
+                }).ToArray();
+            }
+            catch (NotSupportedException)
+            {
+                return Array.Empty<DbMigrationsModel>(); 
+            }
+            
         }
 
         private static async Task<DbMigrationsModel[]> GetInstalledUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
         {
-            var appliedMigrations = await configurator.AppliedMigrations(dbConfig);
-            return appliedMigrations.Select(migration => new DbMigrationsModel
+            try
             {
-                Name = migration
-            }).ToArray();
+                var appliedMigrations = await configurator.AppliedMigrations(dbConfig);
+                return appliedMigrations.Select(migration => new DbMigrationsModel
+                {
+                    Name = migration
+                }).ToArray();
+            }
+            catch (NotSupportedException)
+            {
+                return Array.Empty<DbMigrationsModel>();
+            }
         }
 
         private static IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel model)
         {
-            dbConfig.Host = model.Server;
-            dbConfig.Port = model.Port;
-            dbConfig.Database = model.Database;
-            dbConfig.Username = model.User;
-            dbConfig.Password = model.Password;
+            dbConfig.ConfiguratorTypename = model.ConfiguratorTypename;
+            dbConfig.ConnectionSettings.Database = model.Database;
+            dbConfig.ConnectionSettings.ConnectionString = model.ConnectionString;
+
             return dbConfig;
         }
 

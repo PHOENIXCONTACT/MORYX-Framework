@@ -8,10 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
-using Moryx.Modules;
 using Moryx.Tools;
 
 namespace Moryx.Model
@@ -24,25 +22,35 @@ namespace Moryx.Model
     {
         private ModelWrapper[] _knownModels;
 
+        /// <inheritdoc />
         public DbContextManager(IConfigManager configManager, ILoggerFactory loggerFactory)
         {
             var dbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext), delegate (Type type)
             {
-                var modelAttr = type.GetCustomAttribute<ModelConfiguratorAttribute>();
-                return modelAttr != null;
+                return type != typeof(DbContext);
             });
 
             _knownModels = dbContextTypes
-                .Select(dbContextType => new
+                .Select(dbContextType =>
                 {
-                    DbContextType = dbContextType,
-                    ModelConfiguratorAttr = dbContextType.GetCustomAttribute<ModelConfiguratorAttribute>()
+                    var configName = dbContextType.FullName + ".DbConfig";
+                    var config = configManager.GetConfiguration<DatabaseConfig>(configName);
+
+                    var configuratorType = !string.IsNullOrEmpty(config.ConfiguratorTypename)
+                        ? Type.GetType(config.ConfiguratorTypename)
+                        : typeof(NullModelConfigurator);
+
+                    return new
+                    {
+                        DbContextType = dbContextType,
+                        ConfiguratorType = configuratorType,
+                    };
                 }).Select(t =>
                 {
                     var wrapper = new ModelWrapper
                     {
                         DbContextType = t.DbContextType,
-                        Configurator = (IModelConfigurator)Activator.CreateInstance(t.ModelConfiguratorAttr.ConfiguratorType)
+                        Configurator = (IModelConfigurator)Activator.CreateInstance(t.ConfiguratorType)
                     };
                     return wrapper;
                 }).ToArray();

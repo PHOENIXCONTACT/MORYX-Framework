@@ -9,28 +9,20 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
     public class DatabaseConfigModel
     {
         /// <summary>
-        /// Database server
+        /// Database connection string. Given a connection string, it has
+        /// highest priority over all other properties.
         /// </summary>
-        public string Server { get; set; }
+        public string ConnectionString { get; set; }
 
         /// <summary>
-        /// Port on server
+        /// The database provider to use with a `ConnectionString`
+        /// Takes a fully qualified assembly name
         /// </summary>
-        public int Port { get; set; }
+        public string ConfiguratorTypename { get; set; }
 
         /// <summary>
-        /// Database to use
+        /// Database name
         /// </summary>
         public string Database { get; set; }
-
-        /// <summary>
-        /// Database user
-        /// </summary>
-        public string User { get; set; }
-
-        /// <summary>
-        /// Password for the username
-        /// </summary>
-        public string Password { get; set; }
     }
 }
