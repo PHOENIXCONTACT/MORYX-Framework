@@ -43,45 +43,8 @@ Additionally aspects show/hide themself if they are not relevant. For example: T
 
 For adding a custom aspect the [ProductAspectViewModelBase](Moryx.Products.UI.Interaction.Aspects.ProductAspectViewModelBase) can be used to implement an own view model. It provides the whole `IEditableObject` methods and also `Load` and `Save`. It is possible to load additional information from the server with the asynchronous `Load` method.
 
-The following snippet is a sample implementation for the `WatchfaceProduct`:
-
-````cs
-[ProductAspectRegistration(nameof(WatchFaceAspectViewModel))]
-public class WatchFaceAspectViewModel : ProductAspectViewModelBase
-{
-    public override string DisplayName => "Watchface";
-
-    public override bool IsRelevant(ProductViewModel product)
-    {
-        return product.Model.Type == "WatchfaceProduct";
-    }
-
-    protected override void OnInitialize()
-    {
-        base.OnInitialize();
-    }
-}
-
-````
-
 ## Custom DetailView
 
 ### Functions of the base class
 
 The [ProductDetailsViewModelBase](xref:Moryx.Products.UI.Interaction.ProductDetailsViewModelBase) is responsible to load the basic product data. Every known data will be loaded into the [ProductViewModel](xref:Moryx.Products.UI.ProductViewModel): `Recipes`, `Properties` and `Parts`. A deeper description can be found in the class definition.
-
-### Add specialized detail views
-
-The detail view can be replaced with specialized views for specialized product types. The view will be selected by the product type.
-
-Create a view model and inherit the [ProductDetailsViewModelBase](xref:Moryx.Products.UI.Interaction.ProductDetailsViewModelBase) and implement the needed methods. To register this new view model, add the [ResourceDetailsRegistrationAttribute](xref:Moryx.Resources.UI.ResourceDetailsRegistrationAttribute) on top of the class.
-
-The [ProductDetailsRegistration](xref:Moryx.Products.UI.ProductDetailsRegistrationAttribute) need a parameter *typeName*. It will define the product type for which the view model should be used for. Additionally add a user control which have the same name as the view model (without the model at the end) to fit the naming convension: TestChildProductView
-
-````cs
-[ProductDetailsRegistration("TestChildProduct")]
-internal class TestChildProductViewModel : ProductDetailsViewModelBase
-{
-
-}
-````
