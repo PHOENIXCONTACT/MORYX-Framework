@@ -28,10 +28,6 @@ Throughout the entire application every class created by a DI-container has acce
 The loggers are structured hierarchical. Structures can be instantiated manually or automatically.
 See @subpage platform-logging for full documentation
 
-## WCF support
-
-- [WCF](xref:Wcf)
-
 ## Collections
 
 - [Collections](xref:Collections)
