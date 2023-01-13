@@ -196,7 +196,6 @@ By implementing the [IVisualInstruction](xref:Moryx.Resources.Samples.IVisualIns
 
 ## Tracing
 
-For long-term tracibility and to resume interrupted activities it is possible to use [IActivityTracing](xref:Moryx.AbstractionLayer.Activities.IActivityTracing).
 Using the `Progress` property of the base class [Tracing](Moryx.AbstractionLayer.Activities.Tracing) derived types can trace intermediate progress during an activities execution. The example below shows how to define an enum for the progress.
 
 ````cs
@@ -206,7 +205,7 @@ public enum FooProgress
     Running = 50,
     Done = 100
 }
-public class FooTracing : Tracing, IActivityProgress
+public class FooTracing : Tracing
 {
     public new FooProgress Progress
     {
@@ -214,7 +213,7 @@ public class FooTracing : Tracing, IActivityProgress
         set { base.Progress = (int)value; }
     }
 
-    // Relative progress defined by IActivityProgress
+    // Relative progress defined by Tracing
     public double Relative => base.Progress;
 }
 ````
