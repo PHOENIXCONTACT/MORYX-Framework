@@ -96,7 +96,7 @@ As explained in [Product Definition](xref:ProductsDefinition) product instances 
 
 #### Sample Code
 
-We only have to configure the instance strategy for the root instance. Watchface instances use the empty `GenericProductStrategy` implementation while needles are not saved at all by configuring the `SkipArticlesStrategy`. Not having to persist needles is one of the benefits of recreating the instance from the product instead from the entity. The only instance information `Role` is restored by creating an instance of the watch product. Keeping the previous two sections in mind this example shows how instance storage is supposed to be efficient and not pretty or even human readable.
+We only have to configure the instance strategy for the root instance. Watchface instances use the empty `GenericProductStrategy` implementation while needles are not saved at all by configuring the `SkipInstanceStrategy`. Not having to persist needles is one of the benefits of recreating the instance from the product instead from the entity. The only instance information `Role` is restored by creating an instance of the watch product. Keeping the previous two sections in mind this example shows how instance storage is supposed to be efficient and not pretty or even human readable.
 
 ````cs
 public void LoadInstance(IGenericColumns source, ProductInstance target);
