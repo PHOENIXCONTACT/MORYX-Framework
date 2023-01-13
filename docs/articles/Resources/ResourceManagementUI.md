@@ -107,34 +107,6 @@ If the server side object declares a collection, they are mapped to a specialize
 Building a user friendly custom view will always mean more effort and thereby require more work than the default view.
 But with the availability of the Entry-mapper and reusable controls building a custom view requires only a few lines of code.
 
-## Aspects
-
-A resource has different aspects which are available in seperate `Tabs`. Each aspect is configurable. So it is possible to hide aspects and show for example only the custom aspect. To show or hide an aspect just add or delete it from the config which is shown in the following example:
-
-````json
-{
-  "AspectConfigurations": [
-    {
-      "PluginName": "PropertiesAspectViewModel"
-    },
-    {
-      "PluginName": "ReferencesAspectViewModel"
-    },
-    {
-      "PluginName": "ResourceMethodsAspectViewModel"
-    },
-    {
-      "PluginName": "MyAspectViewModel"
-    }
-  ],
-  "ConfigState": "Generated"
-}
-````
-
-An aspect will hide itself automatically if it is not relevant. 
-For example: The `PropertiesAspectViewModel` is not *relevant* if the the resource has no properties to configure.
-To implement a custom aspect just use the base class [ResourceAspectViewModelBase](xref:Moryx.Resources.UI.Interaction.Details.Aspects.ResourceAspectViewModelBase). 
-It provides the methods `Load` and `Save` to load additional data and save the changes.
 
 ### Properties
 
