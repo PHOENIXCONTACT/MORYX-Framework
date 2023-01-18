@@ -289,16 +289,19 @@ namespace Moryx.Products.Management
 
         public void RemoveRecipe(long recipeId)
         {
+            ValidateHealthState();
             RecipeManagement.Remove(recipeId);
         }
 
         public IProductRecipe CreateRecipe(string recipeType)
         {
+            ValidateHealthState();
             return RecipeManagement.CreateRecipe(recipeType);
         }
 
         public ProductTypeWrapper GetTypeWrapper(string typeName)
         {
+            ValidateHealthState();
             return ProductManager.GetTypeWrapper(typeName);
         }
     }

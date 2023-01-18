@@ -94,6 +94,12 @@ namespace Moryx.Products.Management
         /// <param name="recipeType">Full name of the recipe type</param>
         /// <returns></returns>
         IProductRecipe CreateRecipe(string recipeType);
+
+        /// <summary>
+        /// Checks database's connection by making an initial attempt
+        /// </summary>
+        /// <returns></returns>
+        void CheckDatabase();
     }
 
 }
