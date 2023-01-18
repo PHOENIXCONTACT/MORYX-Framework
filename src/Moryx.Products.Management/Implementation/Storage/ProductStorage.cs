@@ -1003,6 +1003,15 @@ namespace Moryx.Products.Management
             return TypeInformation[typeName].GetTypeWrapper();
         }
 
+        public void CheckDatabase()
+        {
+            using (var uow = Factory.Create())
+            {
+                uow.DbContext.Database.OpenConnection();
+                uow.DbContext.Database.CloseConnection();
+            }
+        }
+
         #endregion
 
         private class ProductPartsSaverContext
