@@ -69,7 +69,9 @@ namespace Moryx.Configuration
         /// <returns></returns>
         public ValueProviderExecutorSettings AddDefaultValueProvider()
         {
-            return AddProvider(new DefaultValueProvider());
+            return AddProvider(new DefaultValueAttributeProvider())
+                .AddProvider(new ActivatorValueProvider());
+
         }
     }
 }

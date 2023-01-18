@@ -127,5 +127,30 @@ namespace Moryx.Tests.Configuration.ValueProvider
             Assert.NotNull(config.ArrayNumbers);
             Assert.IsNull(config.EnumerableNumbers);
         }
+
+        [Test]
+        public void PropertyWithoutDefaultCtorDoesNotThrow()
+        {
+            // Arrange
+            var config = new TestConfig5();
+            var settings = new ValueProviderExecutorSettings().AddDefaultValueProvider();
+            
+            // Act
+            // Assert
+            Assert.DoesNotThrow(() => ValueProviderExecutor.Execute(config, settings));
+        }
+
+        [Test]
+        public void NullableValueTypesHandledCorrectly()
+        {
+            var config = new TestConfig6();
+
+            // Act
+            ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider().AddProvider(new ThreeProvider()));
+
+            Assert.AreEqual(5, config.WithDefaultValue, "Not null default value was not applied");
+            Assert.IsNull(config.WithDefaultValueNull, "Did not respect default value null");
+            Assert.AreEqual(3, config.WithoutDefaultValue, "DefaultValueProvider did handle the field without a DefaultValue Attribute");
+        }
     }
 }
