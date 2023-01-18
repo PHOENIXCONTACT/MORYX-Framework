@@ -29,7 +29,7 @@ The parameters regarding the products production (e.g. the material needed, tech
 The workplan defines the steps needed to run a `process`. 
 For each step it defines the successors to be used depending on the result of the step. 
 Each step basically represents an [Activity](../Processing/Activities.md). 
-Workplans are represented inside MORYX by objects implementing [IWorkplan](xref:Moryx.Workflows.IWorkplan) and usually just [Workplan](xref:Moryx.Workflows.Workplan) is used.
+Workplans are represented inside MORYX by objects implementing [IWorkplan](xref:Moryx.Workplans.IWorkplan) and usually just [Workplan](xref:Moryx.Workplans.Workplan) is used.
 
 ### Process
 

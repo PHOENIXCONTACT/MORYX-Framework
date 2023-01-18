@@ -13,6 +13,7 @@ MORYX Abstraction Layer no longer supports the legacy .NET Framework and is only
 ## Changed Interfaces
 Several interfaces created for minor confirm updates got merged or removed throughout the update
 - `INamedTaskStep` (removed)
+- `IProductInteraction` (removed)
 - `IRecipeTemplating` -> `IRecipe`
 - `IActivityProgress` -> `Tracing`
 - `IProductTypeEntityRepository` -> `IProductTypeRepository`
