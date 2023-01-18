@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Moryx.Runtime.Maintenance.Web.MyFeature.Pages
+namespace Moryx.Runtime.CommandCenter.Web.MyFeature.Pages
 {
 	public class Page1Model : PageModel
 	{
