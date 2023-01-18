@@ -358,8 +358,8 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
             // Only load workplan if it changed
             var workplanRecipe = productRecipe as IWorkplanRecipe;
-            if (workplanRecipe != null && workplanRecipe.Workplan?.Id != recipe.WorkplanId)
-                workplanRecipe.Workplan = _productManagement.LoadWorkplan(recipe.WorkplanId);
+            if (workplanRecipe != null && workplanRecipe.Workplan?.Id != recipe.WorkplanModel.Id)
+                workplanRecipe.Workplan = _productManagement.LoadWorkplan(recipe.WorkplanModel.Id);
 
             if (productRecipe.Product == null)
             {
