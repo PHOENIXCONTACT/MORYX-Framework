@@ -43,7 +43,7 @@
         "reactstrap": "^7.1.0",
         "redux": "^4.0.1",
         "ts-loader": "^8.1.0",
-        "uuid": "^3.3.2"
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "@types/react-router": "^5.1.18",
