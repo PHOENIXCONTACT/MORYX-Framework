@@ -30,7 +30,7 @@ Several interfaces created for minor confirm updates got merged or removed throu
 
 ## Moved Classes and Interfaces
 Several interfaces and classes moved to other namespaces
-- The following classes and interfaces moved from `Moryx.Products.Management.Importers`to  `Moryx.AbstractionLayer.Products`
+- The following classes and interfaces moved from `Moryx.Products.Management.Importers` to `Moryx.AbstractionLayer.Products`
   - `ProductImporterConfig` 
   - `FileImportParameters`
   - `IProductImporter`
