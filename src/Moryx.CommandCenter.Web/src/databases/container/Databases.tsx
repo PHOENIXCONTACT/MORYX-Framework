@@ -66,6 +66,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
         this.setState({ IsLoading: true });
 
         this.props.RestClient.databaseModels().then((data) => {
+            console.log("loading de databases :", data);
             const validModels = data.filter((model) => model);
 
             this.props.onUpdateDatabaseConfigs(validModels);

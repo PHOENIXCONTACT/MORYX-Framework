@@ -9,4 +9,6 @@ export default class DatabaseConfigModel {
     public database: string;
     public user: string;
     public password: string;
+    public connectionString: string;
+    public configuratorTypename: string;
 }
