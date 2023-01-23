@@ -88,9 +88,9 @@ In this tutorial log4net will be added to an existing project.
 
     moryxRuntime.Load();
     ```
-7. (With Asp-Net Core | Optional) Add logging to the aps runtime:
+7. (With Asp-Net Core | Optional) Add logging to the asp runtime:
     - Add the nuget package `Microsoft.Extensions.Logging.Log4Net.AspNetCore` (Note: You might have to update your `log4net` version to a version that is compatible with both, your `Common.Logging.Log4Net208` and the new package)
-    - In your `program.cs` add ConfigureLogging call to the host builder:
+    - In your `Program.cs` add ConfigureLogging call to the host builder:
     ```cs 
     var host = Host.CreateDefaultBuilder(args)
                 
@@ -110,5 +110,5 @@ In this tutorial log4net will be added to an existing project.
     })
     .Build();
     ```
-    - In the `ConfigureServices` Method in your `Startup` class add `services.AddLogging()`
+    - In the `ConfigureServices` method in your `Startup` class add `services.AddLogging()`
 8. Test your configuration after a rebuild
