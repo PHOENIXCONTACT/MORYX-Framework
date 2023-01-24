@@ -9,10 +9,6 @@
 
 - name: Developer
   href: articles/
-  
-- name: API
-  href: api/
-  homepage: api/index.md
 
 - name: Migrations
   href: migrations/
