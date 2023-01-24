@@ -31,6 +31,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
     }
 }
 ````
+If you are implementing a Driver sending messages, [IMessageDriver](xref:Moryx.AbstractionLayer.Drivers.Message.IMessageDriver) is probably the beter choice. An `IMessageDriver<TMessage>` is for a specific type of message. It contains several channels, which can represent for example Mqtt-Topics or OPC UA nodes. 
 
 ### The implementation
 
@@ -68,7 +69,6 @@ namespace Moryx.Resources.Samples.DriverTutorial
 
 The implementation of the `ExampleDriver` derives from the [Driver](xref:Moryx.AbstractionLayer.Drivers.Driver) base class. It also implements the `IDriver` interface. The next important thing is the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this driver as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
-![ResourceUI](images/ExampleDriverResourceUI.png)
 
 The two properties `AStringValue` and `AnIntValue` are shown in the ResourceUI and can be edited by the user. The member `ANonEntrySerializeMember` is invisible for the user and is only used inside the AbstractionLayer.
 The `Square` function is also visible in the Resource UI. And: It is callable from there.
@@ -101,6 +101,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
     }
 }
 ````
+For the configuration and implementation of the State machine look [here](../articles/DesignPatterns.md).
 
 ## When to use a driver
 

@@ -1,5 +1,0 @@
----
-uid: ApiIndex
----
-API Documentation
-=================

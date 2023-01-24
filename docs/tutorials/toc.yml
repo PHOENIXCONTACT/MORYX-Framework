@@ -1,13 +1,19 @@
 - name: Getting Started
   items:
-  - name: Quickstart Guide
-    href: QuickstartGuide.md
-
   - name: ServerModule
     href: ServerModule/toc.yml
 
   - name: NLog
     href: NLog.md
+
+  - name: How to build a Driver
+    href: HowToBuildADriver.md
+
+  - name: How to create a Resource
+    href: HowToCreateResource.md
+
+  - name: How to create a Product
+    href: HowToCreateAProduct.md
 
 - name: Data Models
   href: DataModel/toc.yml
