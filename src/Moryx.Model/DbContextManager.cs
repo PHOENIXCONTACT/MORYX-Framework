@@ -21,10 +21,15 @@ namespace Moryx.Model
     public class DbContextManager : IDbContextManager
     {
         private ModelWrapper[] _knownModels;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IConfigManager _configManager;
 
         /// <inheritdoc />
         public DbContextManager(IConfigManager configManager, ILoggerFactory loggerFactory)
         {
+            _loggerFactory = loggerFactory;
+            _configManager = configManager;
+
             var dbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext), delegate (Type type)
             {
                 return type != typeof(DbContext);
@@ -57,10 +62,25 @@ namespace Moryx.Model
 
             foreach (var wrapper in _knownModels)
             {
-                var configuratorType = wrapper.Configurator.GetType();
-                var logger =loggerFactory.CreateLogger(configuratorType);
-                wrapper.Configurator.Initialize(wrapper.DbContextType, configManager, logger);
+                InitializeConfigurator(wrapper);
             }
+        }
+
+        /// <inheritdoc />
+        public void UpdateConfig(Type dbContextType, Type configuratorType)
+        {
+            var modelWrapper = _knownModels.First(w => w.DbContextType == dbContextType);
+
+            modelWrapper.Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType);
+            
+            InitializeConfigurator(modelWrapper);
+        }
+
+        private void InitializeConfigurator(ModelWrapper modelWrapper)
+        {
+            var configuratorType = modelWrapper.Configurator.GetType();
+            var logger = _loggerFactory.CreateLogger(configuratorType);
+            modelWrapper.Configurator.Initialize(modelWrapper.DbContextType, _configManager, logger);
         }
 
         /// <inheritdoc />

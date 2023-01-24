@@ -60,8 +60,11 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 throw new ArgumentException("Config values are not valid", nameof(config));
 
             // Save config and reload all DataModels
-            UpdateConfigFromModel(match.Config, config);
-            match.UpdateConfig();
+            var updatedConfig = UpdateConfigFromModel(new DatabaseConfig(), config);
+            var dbContextType = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
+            _dbContextManager.UpdateConfig(
+                dbContextType, 
+                Type.GetType(updatedConfig.ConfiguratorTypename));
             return Ok();
         }
 
@@ -238,10 +241,14 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
         }
 
-        private bool IsConfigValid(DatabaseConfigModel config)
-            => !string.IsNullOrEmpty(config.Database) 
-                && !string.IsNullOrEmpty(config.ConnectionString) 
+        private static bool IsConfigValid(DatabaseConfigModel configModel)
+        {
+            IDatabaseConfig config = new DatabaseConfig();
+            UpdateConfigFromModel(config, configModel);
+
+            return !string.IsNullOrEmpty(config.ConnectionSettings.Database)
                 && !string.IsNullOrEmpty(config.ConfiguratorTypename);
+        }
 
         private SetupModel ConvertSetup(IModelSetup setup)
         {
@@ -361,9 +368,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
         private static IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel model)
         {
-            dbConfig.ConfiguratorTypename = model.ConfiguratorTypename;
-            dbConfig.ConnectionSettings.Database = model.Database;
-            dbConfig.ConnectionSettings.ConnectionString = model.ConnectionString;
+            EntryConvert.UpdateInstance(dbConfig, model.Config);
 
             return dbConfig;
         }
