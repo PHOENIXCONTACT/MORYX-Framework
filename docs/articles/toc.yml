@@ -16,8 +16,6 @@
     href: Products/ProductStorage.md
   - name: Recipe Storage
     href: Products/RecipeStorage.md
-  - name: User Interface
-    href: Products/ProductManagementUI.md
 
 - name: Resources
   href: Resources/Overview.md
@@ -37,8 +35,6 @@
         href: Resources/Types/DriverResource.md
       - name: Interaction Resource
         href: Resources/Types/InteractionResource.md
-  - name: User Interface
-    href: Resources/ResourceManagementUI.md
 
 - name: Processing
   items:
