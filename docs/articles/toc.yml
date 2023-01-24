@@ -1,8 +1,7 @@
-- name: Introduction
-  href: index.md
-
 - name: Design Patterns
   href: DesignPatterns.md
+- name: AbstractionLayer
+  href: AbstractionLayer.md
 - name: Products
   items:
   - name: Concept
@@ -56,12 +55,6 @@
   - name: Workplans
     href: Processing/Workplans.md
 
-- name: Tutorials
-  items: 
-  - name: How to create a Driver
-    href: Tutorials/HowToBuildADriver.md
-  - name: How to create a Resource
-    href: Tutorials/HowToCreateResource.md
 - name: Core
   href: Core/toc.yml
 

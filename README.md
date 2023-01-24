@@ -20,17 +20,16 @@
 
 # MORYX Core
 
-The MORYX Core is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort. It is also the foundation for the Phoenix Contact IoT Framework [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
+The MORYX Core is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort.
+It originates from the original MORYX project targeted to develop machines but has expanded to a much bigger field of use. The MORYX Core defines a base namespace and set of interfaces used to develop modular applications.
+
 The **MORYX AbstractionLayer** is the environment for the digital twins of resources and products. It defines the domain independent [meta model](/docs/articles/AbstractionLayer.md) and enables applications to model their physical system and product portfolio as typed objects. It thereby makes other modules hardware independent by encapsulating details of the underlying structure and devices. [Like the platform](https://github.com/PHOENIXCONTACT/MORYX-Platform#history) version 5.0 of the AbstractionLayer is focused on the open source community and we are still applying the final touches, while the in-house stable version powers a range of different applications.
 
 **Links**
 
 - [Package Feed](https://www.myget.org/feed/Packages/moryx)
 - [Repository Template](https://github.com/PHOENIXCONTACT/MORYX-Template)
-- [MORYX Platform](https://github.com/PHOENIXCONTACT/MORYX-Platform)
-- [MORYX Maintenance](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb)
-- [MORYX ClientFramework](https://github.com/PHOENIXCONTACT/MORYX-ClientFramework)
-- [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
+- [MORYX Factory](https://github.com/PHOENIXCONTACT/MORYX-Factory)
 
 ## Getting Started
 
@@ -111,20 +110,24 @@ The [Product Management](/docs/articles/Products/ProductManagement.md) holds all
 
 ## Tutorials
 
-To start using the AbstractionLayer for your own projects you can jump into these tutorials:
+To start using the MORYX for your own projects you can jump into these tutorials:
 
-* [How to create a Resource](/docs/articles/Tutorials/HowToCreateResource.md)
-* [How to build a Driver](/docs/articles/Tutorials/HowToBuildADriver.md)
+* [How to create a Resource](/docs/tutorials/HowToCreateResource.md)
+* [How to build a Driver](/docs/tutorials/HowToBuildADriver.md)
+* [How to create a Product](/docs/tutorials/HowToCreateAProduct.md)
+* [How to create a Server Module](/docs/tutorials/ServerModule/ServerModule.md)
 
 ## Maintenance
 
-Part of the Core is also the Maintenance module, which hosts a HTTP REST service and *optionally* a [graphic web interface](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb) to control and configure a MORYX application. The Maintenance itself does not define that logic, but simply provides easy external access to APIs and features of the runtime kernel.
+Part of the Core is also the Maintenance module, which hosts a HTTP REST service and *optionally* a graphic web interface to control and configure a MORYX application. The Maintenance itself does not define that logic, but simply provides easy external access to APIs and features of the runtime kernel.
 
 ## History
 
-Starting with version 3.0 of the core we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community. Because of these changes the public version is still *Work-in-Progress*, but we will stabilize and release it soon.
+Starting with version 3.0 of the core we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community.
 
-But even though this version is still under construction, its in-house predecessor has been used in production for years. Just a few examples of solutions build on MORYX are listed below:
+Version 6 uses .net 6 with ASP.net Core and EntityFramework 6. All WPF UIs were replaced by WebUIs.
+
+A few examples of solutions build on MORYX are listed below:
 
 - Manufacturing Control System
 - Plastic Mold Tracking

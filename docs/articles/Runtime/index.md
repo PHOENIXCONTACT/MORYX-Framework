@@ -31,7 +31,6 @@ Even though the framework is fully functional without any kind of database at al
 * [ServerModuleGuide](xref:ServerModuleGuide)
 * [FacadeGuide](xref:FacadeGuide)
 * [ModelSetupGuide](xref:ModelSetupGuide)
-* [WindowsServiceGuide](xref:WindowsServiceGuide)
 * [DataModelUpdateGuide](xref:DataModelUpdateGuide)
 * [SetupGuide](xref:SetupGuide)
 
