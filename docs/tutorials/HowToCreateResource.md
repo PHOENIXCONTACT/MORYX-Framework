@@ -3,7 +3,7 @@ uid: HowToCreateAResource
 ---
 # How to create a resource
 
-This tutorial shows how [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) should be implemented. Look [here](../Resources/Overview.md) if you are not firm with `Resource`. This tutorial describes how a basic `Resource` is created. Other specializations are [Public resources](xref:Moryx.AbstractionLayer.Resources.PublicResource), [Driver resources](../Resources/Types/DriverResource.md) or [Interaction resources](../Resources/Types/InteractionResource.md).
+This tutorial shows how [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) should be implemented. Look [here](../articles/Resources/Overview.md) if you are not firm with `Resource`. This tutorial describes how a basic `Resource` is created. Other specializations are [Public resources](xref:Moryx.AbstractionLayer.Resources.PublicResource), [Driver resources](../Resources/Types/DriverResource.md) or [Interaction resources](../Resources/Types/InteractionResource.md).
 
 ## Basic resource files
 
@@ -65,7 +65,24 @@ namespace Moryx.Resources.Samples.DriverTutorial
 }
 ````
 
-The implementation of the `ExampleResource` derives from the [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) base class. It also implements the `IResource` interface. This is enough to use your resource definition within MORYX. If your resource relies on dependency injection like logging it is important to add the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this class as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
+The implementation of the `ExampleResource` derives from the [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) base class. It also implements the `IResource` interface. This is enough to use your resource definition within MORYX. If your resource relies on dependency injection like logging it is important to add the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). MORYX can now identify this class as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
+
+## Configure Relations between Resources
+Resources can reference other resources. When for example a cell communicates with a PLC via a Driver, the Driver has to be referenced in the Cell. Every Resource have the References `Children` and `Parent` as default. In order to overwrite 
+References use the attribute `ReferenceOverride`. New References can be added using the attribute `ResourceReference`. For the different ResourceRelationTypes look [here](xref:Moryx.AbstractionLayer.Resources.ResourceRelationType).
+
+```C#
+[ResourceRegistration]
+    public class ExampleCell : PublicResource
+    {
+        [ResourceReference(ResourceRelationType.Driver)]
+        public IMessageDriver<object> Driver {get;set;}
+
+        [ReferenceOverride(nameof(Children))]
+        public IReferences<IMessageChannel> Channels {get;set;}
+    }
+
+```
 
 ## How to use the Resource in a custom module
 
