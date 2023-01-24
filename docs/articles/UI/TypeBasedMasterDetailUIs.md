@@ -5,7 +5,7 @@ uid: MasterDetailUIs
 
 Within the abstraction layer we use the pattern of type based master detail views very often. Currently the `Products UI` and Resource UI are using this concept.
 
-![Basic structure](images\BasicStructure.png)
+![Basic structure](images/BasicStructure.png)
 
 Type based detail views will select a details view from a type given from the master. 
 As an example: The Resource UI will select the detail view regarding the given resource type name.

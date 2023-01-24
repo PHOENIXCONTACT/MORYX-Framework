@@ -13,6 +13,7 @@ MORYX Abstraction Layer no longer supports the legacy .NET Framework and is only
 ## Changed Interfaces
 Several interfaces created for minor confirm updates got merged or removed throughout the update
 - `INamedTaskStep` (removed)
+- `IProductInteraction` (removed)
 - `IRecipeTemplating` -> `IRecipe`
 - `IActivityProgress` -> `Tracing`
 - `IProductTypeEntityRepository` -> `IProductTypeRepository`
@@ -25,11 +26,11 @@ Several interfaces created for minor confirm updates got merged or removed throu
 - The interfaces `IResourceModification` and `IResourceModificationExtended` are now included in `IResourceManagement` and obsolete 
 - There is an extra Facade implementing `IResourceTypeTree` called `ResourceTypeTreeFacade`
 - `INotification` and `IManagedNotification` were removed. Use `Notification` instead.
-  * Note: The previous structure including two interfaces kept developers from accidently overriding properties by providing getter only properties within `INotification`. With a similar intend, the relevant properties of `Notification` throuw an `InvalidOperationException` when trying to override already defined values. You can circumvent this functionality, by overriding the respective properties in a derived class as you see fit.
+  * Note: The previous structure including two interfaces kept developers from accidently overriding properties by providing getter only properties within `INotification`. With a similar intend, the relevant properties of `Notification` throw an `InvalidOperationException` when trying to override already defined values. You can circumvent this functionality, by overriding the respective properties in a derived class as you see fit.
 
 ## Moved Classes and Interfaces
 Several interfaces and classes moved to other namespaces
-- The following classes and interfaces moved from `Moryx.Products.Management.Importers`to  `Moryx.AbstractionLayer.Products`
+- The following classes and interfaces moved from `Moryx.Products.Management.Importers` to `Moryx.AbstractionLayer.Products`
   - `ProductImporterConfig` 
   - `FileImportParameters`
   - `IProductImporter`
@@ -38,7 +39,7 @@ Several interfaces and classes moved to other namespaces
   - `ProductImporterResult`
   - `PrototypeImportParameters`
 - The following classes and interfaces moved from `Moryx.Products.Management.Modification` to `Moryx.AbstractionLayer.Products.Endpoints` (located in the Moryx.AbstractionLayer.Products.Endpoints package)
-  - `PartConecctor`
+  - `PartConnector`
   - `PartModel`
   - `ProductCustomization`
   - `ProductDefinitionModel`
@@ -73,6 +74,7 @@ From the change to Web interfaces with REST APIs follow:
  - `Moryx.Resources.UI.Interaction` removed
  - `Moryx.AbstractionLayer.Resources.Endpoints` added
  - `Moryx.AbstractionLayer.Products.Endpoints` added
+ - `Moryx.WebShell` -> `Moryx.Launcher` (renamed)
  - `Moryx.Maintenance.Web` -> `Moryx.CommandCenter.Web` (renamed)
 
 ## Namespace changes

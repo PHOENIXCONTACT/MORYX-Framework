@@ -33,9 +33,7 @@ Component name|Implementation|Desription
 --------------|--------------|----------
 [IProductManager](xref:Moryx.Products.Management.IProductManager)|internal|The API of the ProductManager
 [IProductStorage](xref:Moryx.Products.Management.IProductStorage)|external|The plant specific product storage
-[IProductInteraction](xref:Moryx.Products.Management.Modification.IProductInteraction)|internal|Defines teAPI of the product WCF service.
-[IProductConverter](xref:Moryx.Products.Management.Modification.IProductConverter)|internal| *TBD*
-[IProductImporter](xref:Moryx.Products.Management.Importers.IProductImporter)|internal/external|Plugins that can import products from file
+[IProductImporter](xref:Moryx.AbstractionLayer.Products.IProductImporter)|internal/external|Plugins that can import products from file
 [IRecipeManagement](xref:Moryx.Products.Management.IRecipeManagement)|internal|Component to handle all recipe operations
 
 ## Diagrams
