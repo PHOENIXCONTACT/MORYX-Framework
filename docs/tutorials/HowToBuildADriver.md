@@ -15,11 +15,11 @@ A driver has this basic solution structure which can be extended for your needs:
 |-ExampleDriver.cs
 ````
 
-The interface `IExampleDriver` is the API of the driver and important for registration within the AbstractionLayer. For compatibility and reduced dependencies it is based to use an existing driver interface or suggest adding an additional driver interface.
+The interface `IExampleDriver` is the API of the driver and important for registration within the AbstractionLayer. For a loose coupling between the resources it is best to use an existing driver interface or add an a new driver interface instead of using the implementation directly.
 
 ### The interface
 
-This interface is simply derived from [IDriver](xref:Moryx.AbstractionLayer.Drivers.IDriver). No further definitions are needed.
+This interface is simply derived from [IDriver](../../src/Moryx.AbstractionLayer/Drivers/IDriver.cs). No further definitions are needed.
 
 ````cs
 using Moryx.AbstractionLayer.Drivers;
@@ -31,7 +31,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
     }
 }
 ````
-If you are implementing a Driver sending messages, [IMessageDriver](xref:Moryx.AbstractionLayer.Drivers.Message.IMessageDriver) is probably the beter choice. An `IMessageDriver<TMessage>` is for a specific type of message. It contains several channels, which can represent for example Mqtt-Topics or OPC UA nodes. 
+If you are implementing a Driver that is sending messages, [IMessageDriver](../../src/Moryx.AbstractionLayer/Drivers/Message/IMessageDriver.cs) is probably the beter choice. An `IMessageDriver<TMessage>` can be used for a specific type of message. It contains several channels, which can represent for example Mqtt-Topics or OPC UA nodes. 
 
 ### The implementation
 
@@ -67,15 +67,14 @@ namespace Moryx.Resources.Samples.DriverTutorial
 }
 ````
 
-The implementation of the `ExampleDriver` derives from the [Driver](xref:Moryx.AbstractionLayer.Drivers.Driver) base class. It also implements the `IDriver` interface. The next important thing is the [ResourceRegistration attribute](xref:Moryx.AbstractionLayer.Resources.ResourceRegistrationAttribute). The AbstractionLayer can now identify this driver as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
-
+The implementation of the `ExampleDriver` derives from the [Driver](../../src/Moryx.AbstractionLayer/Drivers/Driver.cs) base class. It also implements the `IDriver` interface. The next important thing is the [ResourceRegistration attribute](../../src/Moryx.AbstractionLayer/Resources/Attributes/ResourceRegistrationAttribute.csResourceRegistrationAttribute). The AbstractionLayer can now identify this driver as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
 The two properties `AStringValue` and `AnIntValue` are shown in the ResourceUI and can be edited by the user. The member `ANonEntrySerializeMember` is invisible for the user and is only used inside the AbstractionLayer.
 The `Square` function is also visible in the Resource UI. And: It is callable from there.
 
-## Additional things that are good to know
+## Lifecycle and StateMachine
 
-The `ExampleDriver` is just a simple implementation for a driver. As like every [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) you can `Initialize`, `Start`, `Stop` a driver. Also `State machine` support is built in:
+The `ExampleDriver` is just a simple implementation for a driver. As like every [Resource](../../src/Moryx.AbstractionLayer/Resources/Resource.cs) you can `Initialize`, `Start`, `Stop` a driver. Also `State machine` support is built in:
 
 ````cs
 using Moryx.AbstractionLayer.Drivers;
@@ -85,7 +84,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
 {
     [ResourceRegistration]
     [DisplayName("StateExample Driver"), Description("An example driver that uses the state machine")]
-    public class StateExampleDriver : Driver, IExampleDriver
+    public class StateExampleDriver : Driver, IExampleDriver, IStateContext
     {
         ...
 
@@ -99,10 +98,20 @@ namespace Moryx.Resources.Samples.DriverTutorial
 
         ...
     }
+
+    
 }
 ````
-For the configuration and implementation of the State machine look [here](../articles/DesignPatterns.md).
+
+Define a base type, the methods you need and your states. All states are derived from your abstract StateBase. The Container locks
+
+```C#
+internal class ExampleStateBase: IState<StateExampleDriver>{
+
+}
+```
+For futher information about the configuration and implementation of the State machine look [here](../articles/DesignPatterns.md).
 
 ## When to use a driver
 
-If you want to communicate with the outside world like a database , a PLC, RFID scanner or bar code reader you should implement it as a driver.
+If you want to communicate with the OT Layer in the outside world like a PLC, RFID scanner or bar code reader, implement it as a driver. For the communication with IT infrastructure like ERP systems please use Adapters.

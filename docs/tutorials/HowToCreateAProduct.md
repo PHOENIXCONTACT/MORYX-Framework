@@ -3,7 +3,7 @@ uid: HowToCreateAProduct
 ---
 # How to create a resource
 
-This tutorial shows how [Products](xref:Moryx.AbstractionLayer.Products.ProductType) should be implemented. Look [here](../articles/Products/Concept.md) if you are not firm with `Product`. 
+This tutorial shows how [Products](../../src/Moryx.AbstractionLayer/Products/ProductType.cs) should be implemented. Look [here](../articles/Products/Concept.md) if you are not firm with the concept of a `Product`. 
 
 For products we differentiate between [ProductType](xref:Moryx.AbstractionLayer.Products.ProductType) and [ProductInstance](xref:Moryx.AbstractionLayer.Products.ProductInstance). The `ProductType` is what you can order in a catalog, while the `ProductInstance` is what you received after ordering: an instance of the product with its unique serialnumber. So that a `ProductType` can be producted it needs a corresponding `ProductInstance`. If your application isn't used for production, you can skip the `ProductInstances`. 
 
@@ -26,7 +26,7 @@ public class NeedleType : ProductType
     }
 }
 ```
-All ProductInstances are derived from `ProductInstance<TProductType>`. Instance specific properties can be added. If you have for example only one materialnumber for a car type and the configuration depends on the user, this could be part of the properties of the instance.
+All ProductInstances are derived from `ProductInstance<TProductType>`. Instance specific properties can be added. Depending on the size of the watch it could happen that the needle used for hours in one watch is used for minutes in another one (although this example is quite unlikely).
 ```C#
 public class NeedleInstance : ProductInstance<NeedleType>
 {
@@ -58,6 +58,7 @@ public class WatchType : ProductType
         {
             //All parts need to be instantiated
             WatchFace = (WatchFaceInstance)WatchFace.Instantiate(),
+            //The PartlinkExtension instantiates every NeedleType in Needles and adds them to a List
             Needles = Needles.Instantiate<NeedleInstance>()
         };
     }
