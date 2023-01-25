@@ -57,7 +57,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
             if (!IsConfigValid(config))
-                throw new ArgumentException("Config values are not valid", nameof(config));
+                return BadConfigValues(config); 
 
             // Save config and reload all DataModels
             var updatedConfig = UpdateConfigFromModel(new DatabaseConfig(), config);
@@ -66,6 +66,11 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 dbContextType, 
                 Type.GetType(updatedConfig.ConfiguratorTypename));
             return Ok();
+        }
+
+        private ActionResult BadConfigValues(DatabaseConfigModel subject)
+        {
+            return BadRequest($"Config values are not valid");
         }
 
         [HttpPost("{targetModel}/config/test")]
@@ -77,7 +82,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
             if (!IsConfigValid(config))
-                throw new ArgumentException("Config values are not valid", nameof(config));
+                return BadConfigValues(config);
 
             // Update config copy from model
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
@@ -103,7 +108,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
             if (!IsConfigValid(config))
-                throw new ArgumentException("Config values are not valid", nameof(config));
+                return BadConfigValues(config);
 
             // Update config copy from model
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
@@ -137,7 +142,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
             if (!IsConfigValid(config))
-                throw new ArgumentException("Config values are not valid", nameof(config));
+                return BadConfigValues(config);
 
             // Update config copy from model
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
@@ -161,7 +166,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
             if (!IsConfigValid(config))
-                throw new ArgumentException("Config values are not valid", nameof(config));
+                return BadConfigValues(config);
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
 
@@ -183,7 +188,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
             if (!IsConfigValid(request.Config))
-                throw new ArgumentException("Config values are not valid", nameof(request.Config));
+                return BadConfigValues(request.Config);
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
             var filePath = Path.Combine(_dataDirectory, targetModel, request.BackupFileName);
@@ -201,7 +206,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
             if (!IsConfigValid(configModel))
-                throw new ArgumentException("Config values are not valid", nameof(configModel));
+                return BadConfigValues(configModel);
 
             var config = UpdateConfigFromModel(targetConfigurator.Config, configModel);
             return await targetConfigurator.MigrateDatabase(config);
@@ -217,7 +222,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
             if (!IsConfigValid(request.Config))
-                throw new ArgumentException("Config values are not valid", nameof(request.Config));
+                return BadConfigValues(request.Config);
 
             // Update config copy from model
             var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
