@@ -18,12 +18,16 @@
     </a>
 </p>
 
-# MORYX Core
+# MORYX Framework
 
-The MORYX Core is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort.
-It originates from the original MORYX project targeted to develop machines but has expanded to a much bigger field of use. The MORYX Core defines a base namespace and set of interfaces used to develop modular applications.
+The MORYX Framework is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort.
+It originates from the original MORYX project targeted to develop machines but has expanded to a much bigger field of use. 
 
-The **MORYX AbstractionLayer** is the environment for the digital twins of resources and products. It defines the domain independent [meta model](/docs/articles/AbstractionLayer.md) and enables applications to model their physical system and product portfolio as typed objects. It thereby makes other modules hardware independent by encapsulating details of the underlying structure and devices. [Like the platform](https://github.com/PHOENIXCONTACT/MORYX-Platform#history) version 5.0 of the AbstractionLayer is focused on the open source community and we are still applying the final touches, while the in-house stable version powers a range of different applications.
+The **MORYX Core** defines a base namespace and set of interfaces used to develop modular applications.
+
+The **MORYX AbstractionLayer** is the environment for the digital twins of resources and products. It defines the domain independent [meta model](/docs/articles/AbstractionLayer.md) and enables applications to model their physical system and product portfolio as typed objects. It thereby makes other modules hardware independent by encapsulating details of the underlying structure and devices.
+
+The **MORYX Factory** contains the APIs, domain objects and developer documentation for the MORYX factory scope.
 
 **Links**
 
@@ -113,13 +117,13 @@ To start using the MORYX for your own projects you can jump into these tutorials
 
 ## Maintenance
 
-Part of the Core is also the Maintenance module, which hosts a HTTP REST service and *optionally* a graphic web interface to control and configure a MORYX application. The Maintenance itself does not define that logic, but simply provides easy external access to APIs and features of the runtime kernel.
+Part of the Framework is also the Maintenance module, which hosts a HTTP REST service and *optionally* a graphic web interface to control and configure a MORYX application. The Maintenance itself does not define that logic, but simply provides easy external access to APIs and features of the runtime kernel.
 
 ## History
 
 Starting with version 3.0 of the core we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community.
 
-Version 6 uses .net 6 with ASP.net Core and EntityFramework 6. All WPF UIs were replaced by WebUIs.
+Version 6 uses .net 6 with ASP.net Core and EntityFramework Core 6. All WPF UIs were replaced by WebUIs. In order to make debugging easier, we decided to merge the AbstractionLayer and Core repositories into one and name this one MORYX Framework.
 
 A few examples of solutions build on MORYX are listed below:
 

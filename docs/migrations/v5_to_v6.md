@@ -75,7 +75,6 @@ From the change to Web interfaces with REST APIs follow:
  - `Moryx.Resources.UI.Interaction` removed
  - `Moryx.AbstractionLayer.Resources.Endpoints` added
  - `Moryx.AbstractionLayer.Products.Endpoints` added
- - `Moryx.WebShell` -> `Moryx.Launcher` (renamed)
  - `Moryx.Maintenance.Web` -> `Moryx.CommandCenter.Web` (renamed)
 
 ## Namespace changes
