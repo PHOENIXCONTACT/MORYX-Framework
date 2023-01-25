@@ -30,11 +30,6 @@ namespace Moryx.Model.PostgreSQL
     /// </summary>
     public class NpgsqlDatabaseConnectionSettings : DatabaseConnectionSettings
     {
-        public string Username => Regex.Matches(ConnectionString, @"Username=(\w+)")[0].Groups[0].Value;
-        public string Password => Regex.Matches(ConnectionString, @"Password=(\w+)")[0].Groups[0].Value;
-        public int Port => Convert.ToInt32(Regex.Matches(ConnectionString, @"Port=(\d+)")[0].Groups[0].Value);
-        public string Host => Regex.Matches(ConnectionString, @"Host=(\w+)")[0].Groups[0].Value;
-
         /// <summary>
         /// Creates a new instance of the <see cref="NpgsqlDatabaseConnectionSettings"/>
         /// </summary>
