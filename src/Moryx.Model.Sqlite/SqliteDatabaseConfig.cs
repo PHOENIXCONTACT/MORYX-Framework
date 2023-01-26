@@ -1,8 +1,10 @@
 // Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Model.Configuration;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Reflection;
 
 namespace Moryx.Model.Sqlite
 {
@@ -10,7 +12,7 @@ namespace Moryx.Model.Sqlite
     /// Database config for the Sqlite databases
     /// </summary>
     [DataContract]
-    public class SqliteDatabaseConfig : DatabaseConfig
+    public class SqliteDatabaseConfig : DatabaseConfig<SqliteDatabaseConnectionSettings>
     {
         /// <summary>
         /// Creates a new instance of the <see cref="SqliteDatabaseConfig"/>
@@ -30,23 +32,21 @@ namespace Moryx.Model.Sqlite
     {
         private string _database;
 
+        /// <inheritdoc/>
         [DataMember]
         public override string Database
         {
-            get => _database; 
+            get => _database;
             set
             {
+                if (null == value) return;
                 _database = value;
-                ConnectionString = ConnectionString.Replace("<DatabaseName>", value);
+                ConnectionString = ConnectionString?.Replace("<DatabaseName>", value);
             }
         }
 
-        /// <summary>
-        /// Creates a new instance of the <see cref="SqliteDatabaseConnectionSettings"/>
-        /// </summary>
-        public SqliteDatabaseConnectionSettings()
-        {
-            ConnectionString = $"Data Source=.\\db\\<DatabaseName>.db";
-        }
+        /// <inheritdoc/>
+        [DataMember, Required, DefaultValue("Data Source=.\\db\\<DatabaseName>.db")]
+        public override string ConnectionString { get; set; }
     }
 }

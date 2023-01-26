@@ -38,7 +38,7 @@ namespace Moryx.Model
             _knownModels = dbContextTypes
                 .Select(dbContextType =>
                 {
-                    var config = configManager.GetConfiguration<DatabaseConfig>(ConfigFilename(dbContextType));
+                    var config = configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(dbContextType));
 
                     var configuratorType = !string.IsNullOrEmpty(config.ConfiguratorTypename)
                         ? Type.GetType(config.ConfiguratorTypename)
@@ -66,15 +66,14 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        public void UpdateConfig(Type dbContextType, Type configuratorType)
+        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
         {
+            _configManager.SaveConfiguration(databaseConfig, ConfigFilename(dbContextType));
+
             var modelWrapper = _knownModels.First(w => w.DbContextType == dbContextType);
-
             modelWrapper.Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType);
-            
-            InitializeConfigurator(modelWrapper);
 
-            _configManager.SaveConfiguration(modelWrapper.Configurator.Config, ConfigFilename(dbContextType));
+            InitializeConfigurator(modelWrapper);
         }
 
         private void InitializeConfigurator(ModelWrapper modelWrapper)

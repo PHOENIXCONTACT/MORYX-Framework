@@ -50,6 +50,7 @@ namespace Moryx.Model
         /// </summary>
         /// <param name="dbContextType">Database context type</param>
         /// <param name="configuratorType">Configurator type</param>
-        void UpdateConfig(Type dbContextType, Type configuratorType);
+        /// <param name="dbConfig">Database config</param>
+        void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig dbConfig);
     }
 }

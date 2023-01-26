@@ -16,7 +16,7 @@ namespace Moryx.Model.Configuration
     public sealed class NullModelConfigurator : IModelConfigurator
     {
         /// <inheritdoc />
-        public IDatabaseConfig Config => new DatabaseConfig();
+        public IDatabaseConfig Config => new DatabaseConfig<DatabaseConnectionSettings>();
 
         /// <inheritdoc />
         public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)

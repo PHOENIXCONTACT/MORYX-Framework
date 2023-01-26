@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
@@ -16,6 +17,7 @@ namespace Moryx.Model.PostgreSQL
     /// <summary>
     /// Used to configure, create and update data models
     /// </summary>
+    [DisplayName("PostgreSQL adapter")]
     public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDatabaseConfig>
     {
         /// <inheritdoc />

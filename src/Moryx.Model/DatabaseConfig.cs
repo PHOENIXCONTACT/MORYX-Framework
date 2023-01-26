@@ -11,7 +11,8 @@ namespace Moryx.Model
 {
     /// <inheritdoc />
     [DataContract]
-    public class DatabaseConfig : IDatabaseConfig
+    public class DatabaseConfig<T> : IDatabaseConfig
+        where T : DatabaseConnectionSettings
     {
         /// <inheritdoc />
         [DataMember]
@@ -22,17 +23,20 @@ namespace Moryx.Model
 
         /// <inheritdoc />
         [DataMember]
-        [PluginConfigs(typeof(DatabaseConnectionSettings))]
         public DatabaseConnectionSettings ConnectionSettings { get; set; }
 
         /// <inheritdoc />
         [DataMember]
-        [PossibleConfigurators]
         public string ConfiguratorTypename { get; set; }
 
         /// <inheritdoc />
         public void Initialize()
         {
         }
+
+        /// <inheritdoc />
+        public bool IsValid()
+            => !string.IsNullOrEmpty(ConfiguratorTypename)
+                && ConnectionSettings.IsValid();
     }
 }

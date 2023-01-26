@@ -23,7 +23,6 @@ namespace Moryx.Model.Configuration
         /// <summary>
         /// Checks if the configuration is valid
         /// </summary>
-        public bool IsValid() 
-            => !string.IsNullOrEmpty(ConfiguratorTypename) && ConnectionSettings.IsValid();
+        public bool IsValid();
     }
 }

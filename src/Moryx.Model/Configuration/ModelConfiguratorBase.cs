@@ -156,18 +156,32 @@ namespace Moryx.Model.Configuration
         public async Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
         {
             await using var context = CreateContext(config);
-            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+            try
+            {
+                var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
 
-            return pendingMigrations.ToArray();
+                return pendingMigrations.ToArray();
+            }
+            catch (Exception)
+            {
+                return Array.Empty<string>();
+            }
         }
 
         /// <inheritdoc />
         public async Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
         {
             await using var context = CreateContext(config);
-            var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
+            try
+            {
+                var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
 
-            return appliedMigrations.ToArray();
+                return appliedMigrations.ToArray();
+            }
+            catch (Exception)
+            {
+                return Array.Empty<string>();
+            }
         }
 
         /// <summary>

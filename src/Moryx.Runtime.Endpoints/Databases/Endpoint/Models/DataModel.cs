@@ -19,8 +19,12 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
         /// <summary>
         /// Configuration of the database model.
         /// </summary>
-        [PossibleTypes(typeof(IDatabaseConfig))]
-        public Entry Config { get; set; }
+        public DatabaseConfigModel Config { get; set; }
+
+        /// <summary>
+        /// Configurators that could be set up
+        /// </summary>
+        public DatabaseConfigOptionModel[] PossibleConfigurators { get; set; }
 
         /// <summary>
         /// An amount of setups for this model.

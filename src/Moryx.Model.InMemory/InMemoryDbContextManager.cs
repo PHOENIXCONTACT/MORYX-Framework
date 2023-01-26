@@ -68,7 +68,7 @@ namespace Moryx.Model.InMemory
         }
         
         /// <inheritdoc />
-        public void UpdateConfig(Type dbContextType, Type configuratorType)
+        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
         {
             throw new NotImplementedException();
         }
