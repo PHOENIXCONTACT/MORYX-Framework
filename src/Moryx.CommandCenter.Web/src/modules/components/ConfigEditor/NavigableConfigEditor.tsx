@@ -35,6 +35,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
             ParentEntry: this.props.ParentEntry,
             Entries: this.props.Entries
         };
+        console.log("Navigable Entry is being used");
     }
 
     public componentWillReceiveProps(nextProps: NavigableConfigEditorPropModel): void {

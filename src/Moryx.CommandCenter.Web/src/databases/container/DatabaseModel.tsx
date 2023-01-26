@@ -15,10 +15,11 @@ import kbToString from "../../common/converter/ByteConverter";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";
 import { ActionType } from "../../common/redux/Types";
 import "../../common/scss/Theme.scss";
+import NavigableConfigEditor from "../../modules/components/ConfigEditor/NavigableConfigEditor";
 import Entry from "../../modules/models/Entry";
 import DatabasesRestClient from "../api/DatabasesRestClient";
+import NavigableEntry from "../components/SettingEditor/NavigableEntry";
 import DatabaseConfigModel from "../models/DatabaseConfigModel";
-import DatabaseConfiguratorTypeModel from "../models/DatabaseConfiguratorTypeModel";
 import DataModel from "../models/DataModel";
 import DbMigrationsModel from "../models/DbMigrationsModel";
 import { TestConnectionResult } from "../models/TestConnectionResult";
@@ -44,11 +45,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): DatabaseM
 
 interface DatabaseModelStateModel {
     activeTab: string;
-    host: string;
-    port: number;
-    database: string;
-    username: string;
-    password: string;
+    config: Entry;
     connectionString: string;
     configuratorTypename: string;
     selectedMigration: string;
@@ -64,11 +61,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         super(props);
         this.state = {
             activeTab: "1",
-            host: "",
-            port: 0,
-            database: "",
-            username: "",
-            password: "",
+            config : this.props.DataModel.config,
             configuratorTypename: this.getCurrentConfiguratorTypeName(this.props.DataModel.config),
             connectionString: this.getConnectionSettings(this.props.DataModel.config).connectionString,
             selectedMigration: (this.props.DataModel.availableMigrations.length !== 0 ? this.props.DataModel.availableMigrations[0].name : ""),
@@ -78,13 +71,13 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             testConnectionResult: TestConnectionResult.ConfigurationError,
         };
         this.setConfiguratorTypeNames(this.props.DataModel.config);
-        console.log("current configurator :", this.state.configuratorTypename);
     }
 
     public componentDidMount(): void {
         this.onTestConnection();
 
     }
+
     public getConnectionSettings(configEntry: Entry) {
         return {
             database : configEntry.subEntries.find((x) => x.displayName === "ConnectionSettings")
@@ -94,30 +87,8 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         };
     }
 
-    public setConfiguratorTypeNames(configEntry: Entry) {
-        return this.databaseConfiguratorTypes = configEntry.subEntries.find((x) => x.displayName === "ConfiguratorTypename")
-        .value.possible;
-    }
-    public getConnectionSettings(configEntry: Entry) {
-        return {
-            database : configEntry.subEntries.find((x) => x.displayName === "ConnectionSettings")
-            .subEntries.find((n) => n.displayName === "Database").value.current,
-            connectionString: configEntry.subEntries.find((x) => x.displayName === "ConnectionSettings")
-            .subEntries.find((n) => n.displayName === "ConnectionString").value.current
-        };
-    }
-
-    public getCurrentConfiguratorTypeName(configEntry: Entry) {
-        return  configEntry.subEntries.find((x) => x.displayName === "ConfiguratorTypename")
-        .value.current;
-    }
-    public getConnectionSettings(configEntry: Entry) {
-        return {
-            database : configEntry.subEntries.find((x) => x.displayName === "ConnectionSettings")
-            .subEntries.find((n) => n.displayName === "Database").value.current,
-            connectionString: configEntry.subEntries.find((x) => x.displayName === "ConnectionSettings")
-            .subEntries.find((n) => n.displayName === "ConnectionString").value.current
-        };
+    public getConnectionSettingsEntry(configEntry: Entry): Entry {
+        return configEntry.subEntries.find((x) => x.displayName === "ConnectionSettings");
     }
 
     public setConfiguratorTypeNames(configEntry: Entry) {
@@ -128,18 +99,41 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public getCurrentConfiguratorTypeName(configEntry: Entry) {
         return  configEntry.subEntries.find((x) => x.displayName === "ConfiguratorTypename")
         .value.current;
+    }
+
+    public getCurrentConfiguratorTypeNameEntry(configEntry: Entry): Entry {
+        return  configEntry.subEntries.find((x) => x.displayName === "ConfiguratorTypename");
     }
 
     public createConfigModel(): DatabaseConfigModel {
+        const connectionSettingsEntry = this.getConnectionSettingsEntry(this.state.config);
+        connectionSettingsEntry.subEntries = connectionSettingsEntry.subEntries.map((connectionSettingsSubentries) => {
+            if (connectionSettingsSubentries.displayName === "ConnectionString") {
+                 connectionSettingsEntry.value.current = this.state.connectionString;
+            }
+
+            return connectionSettingsSubentries;
+        });
+
+        const configuratorTypenameEntry = this.getCurrentConfiguratorTypeNameEntry(this.state.config);
+        configuratorTypenameEntry.value.current = this.state.configuratorTypename;
+
+        const newConfig = this.state.config;
+        newConfig.subEntries = newConfig.subEntries.map((subEntry) => {
+            if (subEntry.displayName === "ConnectionString") {
+                subEntry = connectionSettingsEntry;
+            } else if (subEntry.displayName === "ConfiguratorTypename") {
+                subEntry = configuratorTypenameEntry;
+ }
+
+            return subEntry;
+        });
+
+        this.setState({config : newConfig});
+        console.log("new state =", this.state.config);
         return {
-            server: this.state.host,
-            port: this.state.port,
-            database: this.state.database,
-            user: this.state.username,
-            password: this.state.password,
-            connectionString: this.state.connectionString,
-            configuratorTypename: this.state.configuratorTypename,
-        };
+        config : newConfig,
+       };
     }
 
     // Public buildConnectionString() {
@@ -243,49 +237,31 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     }
 
     public onChangeHost(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({host: (e.target as HTMLInputElement).value});
+       // This.setState({host: (e.target as HTMLInputElement).value});
     }
 
     public onChangePort(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({port: parseInt((e.target as HTMLInputElement).value, 10)});
+       // This.setState({port: parseInt((e.target as HTMLInputElement).value, 10)});
     }
 
     public onChangeDatabase(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({database: (e.target as HTMLInputElement).value});
+       // This.setState({database: (e.target as HTMLInputElement).value});
     }
 
     public onChangeUsername(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({username: (e.target as HTMLInputElement).value});
+       // This.setState({username: (e.target as HTMLInputElement).value});
     }
 
     public onChangePassword(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({password: (e.target as HTMLInputElement).value});
+       // This.setState({password: (e.target as HTMLInputElement).value});
     }
 
     public onChangeConnectionString(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({connectionString: (e.target as HTMLInputElement).value});
+       this.setState({connectionString: (e.target as HTMLInputElement).value});
     }
 
     public onChangeProvider(e: React.FormEvent<HTMLInputElement>): void {
-        console.log("new configurator :", (e.target as HTMLInputElement).value);
-        this.setState({configuratorTypename: (e.target as HTMLInputElement).value});
-    }
-
-    public onChangeConnectionString(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({connectionString: (e.target as HTMLInputElement).value});
-    }
-
-    public onChangeProvider(e: React.FormEvent<HTMLInputElement>): void {
-        console.log("new configurator :", (e.target as HTMLInputElement).value);
-        this.setState({configuratorTypename: (e.target as HTMLInputElement).value});
-    }
-
-    public onChangeConnectionString(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({connectionString: (e.target as HTMLInputElement).value});
-    }
-
-    public onChangeProvider(e: React.FormEvent<HTMLInputElement>): void {
-        console.log("new configurator :", (e.target as HTMLInputElement).value);
+       // Console.log("new configurator :", (e.target as HTMLInputElement).value);
         this.setState({configuratorTypename: (e.target as HTMLInputElement).value});
     }
 
@@ -492,7 +468,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                             </Input>
                                         </Col>
                                     </Row>
-                                    <Row className="up-space">
+                                    {/* <Row className="up-space">
                                         <Col md={12}>
                                             <Form inline={true}>
                                                 <Input placeholder={"Host"} value={this.state.host} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onChangeHost(e)} onBlur={this.onTestConnection.bind(this)} style={{width: "78%"}} />
@@ -500,8 +476,8 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                                 <Input placeholder={"Port"} value={this.state.port} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onChangePort(e)} onBlur={this.onTestConnection.bind(this)} style={{width: "20%"}} />
                                             </Form>
                                         </Col>
-                                    </Row>
-                                    <Row className="up-space">
+                                    </Row> */}
+                                    {/* <Row className="up-space">
                                         <Col md={12}><Input placeholder={"Name of database"} value={this.state.database} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onChangeDatabase(e)} onBlur={this.onTestConnection.bind(this)} /></Col>
                                     </Row>
                                     <Row className="up-space">
@@ -509,8 +485,8 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                     </Row>
                                     <Row className="up-space">
                                         <Col md={12}><Input type="password" placeholder={"Password"} value={this.state.password} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onChangePassword(e)} onBlur={this.onTestConnection.bind(this)} /></Col>
-                                    </Row>
-                                    <Row className="up-space">
+                                    </Row> */}
+                                   <Row className="up-space">
                                         <Col md={12}><Input className="lg-height" type="textarea" placeholder={"connectionString"} value={this.state.connectionString} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onChangeConnectionString(e)} onBlur={this.onTestConnection.bind(this)} /></Col>
                                     </Row>
                                     <Row className="up-space-lg">

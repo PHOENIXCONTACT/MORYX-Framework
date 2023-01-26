@@ -3,12 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import Entry from "../../modules/models/Entry";
+
 export default class DatabaseConfigModel {
-    public server: string;
-    public port: number;
-    public database: string;
-    public user: string;
-    public password: string;
-    public connectionString: string;
-    public configuratorTypename: string;
+config : Entry;
 }
