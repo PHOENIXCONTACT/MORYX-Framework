@@ -82,11 +82,16 @@ using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Samples.DriverTutorial
 {
+    
     [ResourceRegistration]
     [DisplayName("StateExample Driver"), Description("An example driver that uses the state machine")]
     public class StateExampleDriver : Driver, IExampleDriver, IStateContext
     {
         ...
+
+        private ExampleStateBase _state;
+
+        private readonly object _stateLock = new object();
 
         /// <seealso cref="IDriver"/>
         public override void Initialize()
@@ -97,19 +102,59 @@ namespace Moryx.Resources.Samples.DriverTutorial
         }
 
         ...
+
+        public override void OnStart(){
+            lock(_stateLock)
+                State.Connect();
+        }
     }
 
     
 }
 ````
 
-Define a base type, the methods you need and your states. All states are derived from your abstract StateBase. The Container locks
+In order to create the State machine, first define a base type, the methods you need and your states.  States are derived from `StateBase`. For drivers there exists a specific `DriverState`, which includes the methods `Connect()` and `Disconnect()`. Typical States for a Driver are `Disconnected`, `Connecting` and `Connected`.
 
 ```C#
-internal class ExampleStateBase: IState<StateExampleDriver>{
+internal class ExampleStateBase: DriverState<StateExampleDriver>{
+    protected MyStateBase(MyContext context, StateMap stateMap)
+        : base(context, stateMap)
+    {
+    }
+
+    // Here you will add all needed methods
+    ... 
+
+    internal virtual void ConnectionLost(){
+        //In order to change the State, use NextState()
+        NextState(StateDisconnected);
+    }
+    
+    [StateDefinition(typeof(DisconnectedState), IsInitial = true)]
+    protected const int StateDisconnected = 10;
+
+    [StateDefinition(typeof(ConnectingState))]
+    protected const int StateConnecting = 20;
+
+    [StateDefinition(typeof(ConnectedState))]
+    protected const int StateConnected = 30;
 
 }
 ```
+All states are derived from the base state and contain the state specific implementations of the methods. If a state shouldn't be able to call a method, use `InvalidState()`.
+
+```C#
+internal class DisconnectedState: ExampleStateBase{
+    ...
+
+    internal override void Send(object payload){
+        InvalidState();
+    }
+
+    ...
+}
+```
+
 For futher information about the configuration and implementation of the State machine look [here](../articles/DesignPatterns.md).
 
 ## When to use a driver

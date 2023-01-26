@@ -3,43 +3,42 @@ uid: GettingStarted.ServerModule
 ---
 # ServerModule
 
-The ServerModule is the place where you have access to [level 1 and the level 2 components](xref:ComponentComposition) of your module.
+The ServerModule is the place where you have access to [level 1 and the level 2 components](../../articles/Runtime/ComponentComposition.md) of your module.
 So this is the place where you have to link the different components and make them work together.
 
 This document describes how to build (the basis for) a new ServerModule from scratch and step by step.
 
 Add a new project to your solution. The name of the project should be the name of your new ServerModule. (In the following examples the name "Execution" is chosen.)
 
-Your new ServerModule-Project gets at least one folder: "ModuleController". The "ModuleController" consists at least of three files. To get detailed information about the architecture of the ModuleController click [here](xref:ComponentComposition#runtime-ServerModuleArchitecture). 
+Your new ServerModule-Project gets at least one folder: "ModuleController". The "ModuleController" consists at least of three files. To get detailed information about the architecture of the ModuleController click [here](../../articles/Runtime/ComponentComposition.md). 
 
 For implementation details click on the file name:
+- [ServerModule](#servermodule)
+  - [The ModuleController.cs](#the-modulecontrollercs)
+  - [The ModuleConfig.cs - File](#the-moduleconfigcs---file)
+  - [The ModuleConsole.cs - File](#the-moduleconsolecs---file)
 
-    * [ModuleController.cs](#moduleControllerFile)
-    * [ModuleConfig.cs](#moduleConfigFile)
-    * [ModuleConsole.cs](#moduleConsoleFile)
-
-## The ModuleController.cs - File <a id="moduleControllerFile" />
-
-The ModuleController.cs-File is the key point of your module. Here all the components of your module came together and you are responsible to initialize, start and stop them in the right way. Because every ServerModule can have its own architecture there is not _the correct way_ to do so, but there are some _usually points_ a ModuleController.cs-File covers. These points are:
+## The ModuleController.cs 
+The ModuleController.cs-File is the key point of your module. Here all the components of your module come together and you are responsible to initialize, start and stop them in the right way. Because every ServerModule can have its own architecture, there is not _the correct way_ to do so, but there are some _usual points_ a ModuleController.cs-File covers. These points are:
 
 1. Import the global components your ServerModule needs
 2. Register imported _global_ components to the internal container
 3. Resolve the desired components from the container and **start** them
 4. Stop the started components when the ServerModule is stopped
-5. (Export and Import facades -> this topic is covered in [this guide](xref:FacadeGuide))
+5. Export and Import facades -> this topic is covered in [this guide](Facades.md)
 
-Now we will look at examples for these points. But first create your your class with the ServerModuleAttribute.cs and the ServerModuleBase.cs.
+Now we will look at examples for these points. But first create your your class implementing `ServerModuleBase`. If your ServerModule exports facades, use `ServerModuleFacadeControllerBase` instead and show which facades are managed in this Module using `IFacadeContainer`.
 For the following properties and attributes reference these files:
 
 * Moryx.dll
 * Moryx.Runtime.dll
 
 ````cs
-[ServerModule(ModuleName)]
 [Description("Example description")]
 public class ModuleController : ServerModuleBase<ModuleConfig>
 {
     internal const string ModuleName = "ExampleName";
+    
     /// <summary>
     /// Name of this module
     /// </summary>
@@ -47,9 +46,8 @@ public class ModuleController : ServerModuleBase<ModuleConfig>
     {
         get { return ModuleName; }
     }
-.
-.
-.   
+    
+    ...
 ````
 
 As example for the first point we import the ResourceManagement and the ProductManagement. We do so by simply write them as public properties, the global DI container will do the rest. (The RequiredModuleApi-Attribute is described [here](xref:FacadeGuide))
@@ -113,7 +111,7 @@ protected override void OnStop()
 }
 ````
 
-## The ModuleConfig.cs - File <a id="moduleConfigFile" />
+## The ModuleConfig.cs - File 
 
 The _ModuleConfig.cs_-file is the place where you can define the data fields which are needed to configure your ServerModule. During the _build_ process a xml configuration file is automatically created for each _ModuleConfig.cs_, here you can set the configuration values for your ServerModule. Furthermore you can use the maintenance website to edit the values of the different data fields.
 
@@ -154,7 +152,7 @@ public class ModuleConfig : ConfigBase
 }
 ````
 
-## The ModuleConsole.cs - File <a id="moduleConsoleFile" />
+## The ModuleConsole.cs - File
 
 The module console provides a command line interface to interact with the server module without any custom client. It can be used for initial testing, debugging or 'admin access'-features. It can be used for initial testing, debugging or 'admin access'-features. As a starting point for this feature you can create ModuleConsole.cs file in your _ModuleController_ folder and copy the following code to it:
 
