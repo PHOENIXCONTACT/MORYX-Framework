@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Configuration;
+using System.Runtime.Serialization;
 
 namespace Moryx.Model.Configuration
 {
