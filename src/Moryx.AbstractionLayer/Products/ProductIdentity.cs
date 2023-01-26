@@ -3,7 +3,6 @@
 
 using System;
 using System.Text.RegularExpressions;
-using System.Threading;
 using Moryx.AbstractionLayer.Identity;
 
 namespace Moryx.AbstractionLayer.Products

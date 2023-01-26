@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Moryx.Tests.Serialization;
 
 namespace Moryx.Tests
 {

@@ -1,0 +1,8 @@
+{
+  "ConfigState": "Generated",
+  "Host": "localhost",
+  "Port": 5432,
+  "Database": "Framework6_TestModelContext",
+  "Username": "postgres",
+  "Password": "postgres"
+}

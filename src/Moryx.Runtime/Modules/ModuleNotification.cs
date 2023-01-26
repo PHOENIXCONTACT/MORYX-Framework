@@ -3,7 +3,6 @@
 
 using System;
 using Microsoft.Extensions.Logging;
-using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Notifications;
 

@@ -4,10 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Linq;
 using Moryx.Logging;
-using Moryx.Modules;
-using Moryx.TestTools.UnitTest;
 using Moryx.Threading;
 using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;

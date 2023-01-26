@@ -10,7 +10,6 @@ using Moryx.Model.Repositories;
 using Moryx.Products.Management;
 using Moryx.Products.Model;
 using Moryx.Workplans;
-using Moryx.Workplans.WorkplanSteps;
 using NUnit.Framework;
 
 namespace Moryx.Products.IntegrationTests

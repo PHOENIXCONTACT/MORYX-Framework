@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Linq;
-using Moryx.Configuration;
 using Moryx.StateMachines;
 using NUnit.Framework;
 

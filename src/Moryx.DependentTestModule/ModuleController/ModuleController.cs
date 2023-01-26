@@ -6,8 +6,6 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Runtime;
-using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.TestModule;
 

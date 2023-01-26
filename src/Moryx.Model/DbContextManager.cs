@@ -8,10 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
-using Moryx.Modules;
 using Moryx.Tools;
 
 namespace Moryx.Model

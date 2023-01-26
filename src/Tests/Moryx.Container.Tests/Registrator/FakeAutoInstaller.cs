@@ -1,10 +1,6 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Reflection;
-using Castle.MicroKernel.SubSystems.Configuration;
-using Castle.Windsor;
-
 namespace Moryx.Container.Tests
 {
     internal class FakeAutoInstaller : AutoInstaller

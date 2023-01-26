@@ -3,7 +3,6 @@
 
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Model;
 using Moryx.Resources.Model;
 using Moryx.Serialization;
 using Moq;

@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.Serialization;
 

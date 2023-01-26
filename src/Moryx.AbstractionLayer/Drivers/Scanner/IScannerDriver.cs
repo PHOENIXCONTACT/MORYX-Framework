@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Moryx.AbstractionLayer.Drivers.InOut;
 
 namespace Moryx.AbstractionLayer.Drivers.Scanner
 {

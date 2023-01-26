@@ -7,7 +7,6 @@ using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Logging;
-using Moryx.TestTools.UnitTest;
 using Moryx.Tools;
 
 namespace Moryx.AbstractionLayer.TestTools.Resources

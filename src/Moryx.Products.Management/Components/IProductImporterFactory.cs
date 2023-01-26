@@ -3,7 +3,6 @@
 
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
-using Moryx.Products.Management.Importers;
 
 namespace Moryx.Products.Management
 {

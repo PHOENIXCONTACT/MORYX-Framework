@@ -8,12 +8,9 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
-using Moryx.TestTools.UnitTest;
 using Moryx.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
 
 namespace Moryx.Tests.Threading
 {

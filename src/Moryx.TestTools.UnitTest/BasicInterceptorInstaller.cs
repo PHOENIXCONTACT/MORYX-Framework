@@ -4,7 +4,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Container;
-using Moryx.Logging;
 
 namespace Moryx.TestTools.UnitTest
 {

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc;
-using Moryx.Container;
 
 namespace Moryx.TestModule.Kestrel
 {

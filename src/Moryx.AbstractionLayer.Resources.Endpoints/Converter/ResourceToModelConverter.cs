@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 using Moryx.Tools;
 

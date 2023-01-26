@@ -5,13 +5,9 @@ using System.ComponentModel;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moryx.Communication.Endpoints;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Model;
-using Moryx.Runtime;
-using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.TestModule

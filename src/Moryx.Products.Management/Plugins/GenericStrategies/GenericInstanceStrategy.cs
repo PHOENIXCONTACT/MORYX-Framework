@@ -3,10 +3,8 @@
 
 using System;
 using System.Linq.Expressions;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
-using Moryx.Model;
 using Moryx.Modules;
 using Moryx.Products.Model;
 

@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
-using Moryx.TestTools.UnitTest;
 
 namespace Moryx.Communication.Sockets.IntegrationTests
 {

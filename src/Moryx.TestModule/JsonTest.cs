@@ -8,8 +8,6 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Logging;
-using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.TestTools.Test.Model;

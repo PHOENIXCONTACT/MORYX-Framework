@@ -7,7 +7,6 @@ using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.Communication;
 using Moryx.Configuration;
-using Moryx.Logging;
 using Moryx.Runtime.Configuration;
 using Moryx.Serialization;
 

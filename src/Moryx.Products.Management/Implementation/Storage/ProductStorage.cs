@@ -17,7 +17,6 @@ using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
 using static Moryx.Products.Management.ProductExpressionHelpers;
-using Moryx.Serialization;
 using Moryx.Products.Management.Implementation.Storage;
 
 namespace Moryx.Products.Management

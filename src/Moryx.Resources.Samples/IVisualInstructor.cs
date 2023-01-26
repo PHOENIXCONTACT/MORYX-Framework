@@ -4,7 +4,6 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Container;
 using Moryx.Serialization;
 
 namespace Moryx.Resources.Samples
@@ -20,14 +19,6 @@ namespace Moryx.Resources.Samples
         [DataMember]
         public string ClientId { get; set; }
 
-#if HAVE_WCF
-        [ReferenceOverride(nameof(Parent))]
-        public InstructionServiceHost ServiceHost
-        {
-            get { return (InstructionServiceHost) Parent; }
-            set { Parent = value; }
-        }
-#endif
 
         [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source)]
         public IReferences<Resource> Users { get; set; }
@@ -39,9 +30,6 @@ namespace Moryx.Resources.Samples
 
         public void Show(string foo)
         {
-#if HAVE_WCF
-            ServiceHost.DisplayFoo(ClientId, foo);
-#endif
         }
 
         public override object Descriptor { get; }

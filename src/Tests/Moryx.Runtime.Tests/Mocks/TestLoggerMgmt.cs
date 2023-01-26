@@ -2,10 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Moryx.Logging;
 
 namespace Moryx.Runtime.Tests.Mocks
 {

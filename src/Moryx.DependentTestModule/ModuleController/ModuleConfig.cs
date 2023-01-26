@@ -3,7 +3,6 @@
 
 using System.Runtime.Serialization;
 using Moryx.Configuration;
-using Moryx.Serialization;
 
 namespace Moryx.DependentTestModule
 {

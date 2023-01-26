@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
-using Moryx.Logging;
 
 namespace Moryx.Communication.Sockets
 {

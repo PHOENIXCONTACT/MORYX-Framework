@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using Moryx.Container;
 using Moryx.Products.Model;
 using Moryx.Serialization;

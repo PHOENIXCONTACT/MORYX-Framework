@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Moryx.AbstractionLayer.Capabilities;
 
 namespace Moryx.AbstractionLayer.Resources
 {

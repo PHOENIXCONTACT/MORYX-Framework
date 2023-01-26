@@ -5,7 +5,6 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moryx.Model;
-using Moryx.Model.Annotations;
 using Moryx.Model.Attributes;
 using Moryx.Model.PostgreSQL;
 

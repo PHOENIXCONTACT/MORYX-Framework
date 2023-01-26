@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.AbstractionLayer.TestTools
