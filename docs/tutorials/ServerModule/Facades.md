@@ -15,20 +15,43 @@ Creating a facade:
 - Open the Facades.Dependency project and create a folder Facade
 - Add an interface "IFacade.cs" to the folder
 - Define a "Foo"-method in the interface that accepts two integers and returns an integer.
-- Add a class "Facade.cs" to the folder an make it implement "IFacade".
+- Add a class "Facade.cs" to the folder and implement "IFacade" as well as `IFacadeControl`.
 - Implement "Foo" by returning the sum of a and b
 
 After we defined our facade we want to export it from the server module. All we must do is let our module controller implement the [IFacadeContainer](xref:Moryx.Runtime.Modules.IFacadeContainer´1) interface. Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file:
 
-![Facade export](images/FacadeExport.png)
+```C#
+public class ModuleController: ServerModuleFacadeControllerBase<ModuleConfig>, 
+        IFacadeContainer<IFacade>
+{
+internal const string ModuleName = "ExampleName";
+    
+    /// <summary>
+    /// Name of this module
+    /// </summary>
+    public override string Name
+    {
+        get { return ModuleName; }
+    }
 
-It is important, that the property always returns the same object in order for the Runtime to function correctly.
+    private readonly Facade _facade = new Facade();
+    IFacade IFacadeContainer<IFacade>.Facade => _facade;
 
-The facade property should be implemented explicit for a simple reason. If our module should export more than one facade it would have two properties with the same name but different type. While this is not possible for implicit class members, explicit interface implementations do not cause any conflicts. In our case this does not matter but since it does no harm for single facades.
+    protected override void OnStart(){
+        ActivateFacade(_facade);
+    }
 
-````cs
-IFacade IFacadeContainer<IFacade>.Facade => _facade;
-````
+    protected override void OnStop(){
+        DeactivateFacade(_facade);
+    }  
+
+    ...
+}
+```
+
+It is important that the property *Facade* always returns the same object in order for the Runtime to function correctly.
+
+The Facade property should be implemented explicit for a simple reason. If our module should export more than one facade it would have two properties with the same name but different type. While this is not possible for implicit class members, explicit interface implementations do not cause any conflicts.
 
 ## Importing a facade
 
@@ -39,12 +62,32 @@ Steps:
 1. Reference the project "Facades.Dependency" and set CopyLocal to false
 2. Add a property of type "IFacade" to the module controller
 3. Decorate it with [RequiredModuleApiAttribute](xref:Moryx.Runtime.ModuleManagement.RequiredModuleApiAttribute)
-  3.1 IsStartDependency = true will instruct the module manager to bind the dependent modules life cycle to the dependency ones
-  3.2 IsOptional = true will allow this property to be null if no other module exports it. If this remains false the module manager will abort the boot process due to incomplete dependencies.
+   
+    3.1 `IsStartDependency = true` will instruct the module manager to bind the dependent modules life cycle to the dependency ones
+
+    3.2 `IsOptional = true` will allow this property to be null if no other module exports it. If this remains false the module manager will abort the boot process due to incomplete dependencies.
 
 Your dependent module should look like this:
 
-![Dependant](images/FacadeGuideDependent.png)
+````cs
+[Description("Example description")]
+public class ModuleController : ServerModuleBase<ModuleConfig>
+{
+    internal const string ModuleName = "Dependent";
+    
+    /// <summary>
+    /// Name of this module
+    /// </summary>
+    public override string Name
+    {
+        get { return ModuleName; }
+    }
+    
+    [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
+    public IFacade Facade { get; set; }
+
+    ...
+````
 
 Of course a module can import more than one facade. Just add more properties of the facades you want to import and decorate them with RequiredModuleApiAttribute
 
