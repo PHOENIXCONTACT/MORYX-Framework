@@ -27,7 +27,8 @@ The ModuleController.cs-File is the key point of your module. Here all the compo
 4. Stop the started components when the ServerModule is stopped
 5. Export and Import facades -> this topic is covered in [this guide](Facades.md)
 
-Now we will look at examples for these points. But first create your your class implementing `ServerModuleBase`. If your ServerModule exports facades, use `ServerModuleFacadeControllerBase` instead and show which facades are managed in this Module using `IFacadeContainer`.
+Now we will look at examples for these points. But first create your your class implementing `ServerModuleBase`. If your ServerModule exports facades, use `ServerModuleFacadeControllerBase` instead and specifiy those facades using `IFacadeContainer<TFacade>`.
+
 For the following properties and attributes reference these files:
 
 * Moryx.dll
@@ -50,7 +51,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>
     ...
 ````
 
-As example for the first point we import the ResourceManagement and the ProductManagement. We do so by simply write them as public properties, the global DI container will do the rest. (The RequiredModuleApi-Attribute is described [here](xref:FacadeGuide))
+As example for the first point we import the ResourceManagement and the ProductManagement. We do so by simply write them as public properties, the global DI container will do the rest. (The RequiredModuleApi-Attribute is described [here](Facades.md))
 
 ````cs
 [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
@@ -60,7 +61,7 @@ public IResourceManagement ResourceManagement { get; set; }
 public IProductManagement ProductManagement { get; set; }
 ````
 
-Now we will register the global components to the internal container of our module. We do this in the _OnInitialize_ method we must override form our base class:
+Now we will register the global components to the internal container of our module. We will also load the components of this module. Components can be for example Plugins or Strategies. We do this in the _OnInitialize_ method we must override form our base class:
 
 ````cs
 /// <summary>
@@ -69,9 +70,12 @@ Now we will register the global components to the internal container of our modu
 protected override void OnInitialize()
 {
     // TODO: Check config if necessary!
-
     // Register all imported components
     Container.SetInstances(ResourceManagement, ProductManagement);
+
+    // Load all components
+    Container.LoadComponents<IExamplePlugin>();
+    Container.LoadComponents<IExampleStrategy>();
 }
 ````
 
@@ -83,11 +87,8 @@ protected override void OnStart()
     // Activate facades
     ActivateFacade(_playGroundExecution);
 
-    // Start wcf services
-    var factory = Container.Resolve<IConfiguredHostFactory>();
-    var host = factory.CreateHost<IExecutionWeb>(Config.ExecutionWebHostConfig);
-    host.Start();
-    _hosts.Add(host);
+    // Start Plugin
+    Container.Resolve<IExamplePlugin>().Start();
 }
 ````
 
@@ -99,15 +100,11 @@ Even the greatest ServerModule must be stopped from time to time. We must overri
 /// </summary>
 protected override void OnStop()
 {
-    // Stop wcf hosts 
-    foreach (var host in _hosts)
-        host.Dispose();
-
-    _hosts.Clear();
-
     // Deactivate facades
     DeactivateFacade(_playGroundExecution);
 
+    // Stop Plugin
+    Container.Resolve<IExamplePlugin>().Stop();
 }
 ````
 
@@ -117,7 +114,7 @@ The _ModuleConfig.cs_-file is the place where you can define the data fields whi
 
 For this to work, the following points must be considered:
 
-* Your ModuleConfig class must derive form ConfigBase.cs
+* Your ModuleConfig class must derive fromm ConfigBase.cs
 * You must add the _DataContract_ attribute to your class
 * You must add the _DataMember_ attribute for each of the data fields
 * (Beyond this you can use the _DefaultValue_ attribute to add a default value to your data fields)
@@ -154,33 +151,19 @@ public class ModuleConfig : ConfigBase
 
 ## The ModuleConsole.cs - File
 
-The module console provides a command line interface to interact with the server module without any custom client. It can be used for initial testing, debugging or 'admin access'-features. It can be used for initial testing, debugging or 'admin access'-features. As a starting point for this feature you can create ModuleConsole.cs file in your _ModuleController_ folder and copy the following code to it:
+The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features.As a starting point for this feature you can create ModuleConsole.cs file in your _ModuleController_ folder, implement `IServerModuleConsole` and add methods using the Attribute `EntrySerialize` in order to see them on the UI. Although the interface is empty, it's needed for the export.
 
-````cs
+````C#
 [ServerModuleConsole]
 internal class ModuleConsole : IServerModuleConsole
 {
-    public void ExecuteCommand(string[] args, Action<string> outputStream)
+    
+    [EntrySerialize]
+    public void DoSomething(int input)
     {
-        if (!args.Any())
-            outputStream("Execution console requires arguments");
-
-        switch (args[0])
-        {
-            // Handle commands
-            case "testAdminCommand":
-                outputStream("Your method is executed");
-                break;
-        }
+        ...
     }
+
+    ...
 }
 ````
-
-Most of this code should be self explanatory and the most interesting part happens in the _ExecuteCommand_ method. Here you can add your own _command words_ which will be used to execute your custom testing or admin methods. These methods can be defined right below the _ExecuteCommand_ method and have access to both, the global and the local DI container. The following pictures show this functions for the example code above.
-
-* Type "enter _ServerModule-Name_" in the runtime console you get access to your custom _ServerModule-Console_.
-![](images/enterServerModule.png)
-* In the _ServerModule-Console_ you can enter your command words to execute the defined functions.
-![](images/executeServerModuleCommand.png)
-* Type "bye" to exit the _ServerModule-Console_.
-![](images/exitServerModuleConsole.png)
