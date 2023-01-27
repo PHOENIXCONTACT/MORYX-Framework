@@ -53,12 +53,28 @@ public class ModuleController : ServerModuleBase<ModuleConfig>
 
 As example for the first point we import the ResourceManagement and the ProductManagement. We do so by simply write them as public properties, the global DI container will do the rest. (The RequiredModuleApi-Attribute is described [here](Facades.md))
 
+The DbContextManager as well as the ConfigManager are part of the ASP Service Collection. This is the reason why they have to injected via the constructor. 
+
 ````cs
 [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
 public IResourceManagement ResourceManagement { get; set; }
 
 [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
 public IProductManagement ProductManagement { get; set; }
+
+/// <summary>
+/// Generic component to access every data model
+/// </summary>
+public IDbContextManager DbContextManager { get; }
+
+/// <summary>
+/// Create new module instance
+/// </summary>
+public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
+    : base(containerFactory, configManager, loggerFactory)
+{
+    DbContextManager = contextManager;
+}
 ````
 
 Now we will register the global components to the internal container of our module. We will also load the components of this module. Components can be for example Plugins or Strategies. We do this in the _OnInitialize_ method we must override form our base class:
@@ -69,7 +85,6 @@ Now we will register the global components to the internal container of our modu
 /// </summary>
 protected override void OnInitialize()
 {
-    // TODO: Check config if necessary!
     // Register all imported components
     Container.SetInstances(ResourceManagement, ProductManagement);
 
