@@ -115,7 +115,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
 
 In order to create the State machine, first define a base type, the methods you need and your states.  States are derived from `StateBase`. For drivers there exists a specific `DriverState`, which includes the methods `Connect()` and `Disconnect()`. Typical States for a Driver are `Disconnected`, `Connecting` and `Connected`.
 
-```C#
+```cs
 internal class ExampleStateBase: DriverState<StateExampleDriver>{
     protected MyStateBase(MyContext context, StateMap stateMap)
         : base(context, stateMap)
@@ -143,7 +143,7 @@ internal class ExampleStateBase: DriverState<StateExampleDriver>{
 ```
 All states are derived from the base state and contain the state specific implementations of the methods. If a state shouldn't be able to call a method, use `InvalidState()`.
 
-```C#
+```cs
 internal class DisconnectedState: ExampleStateBase{
     ...
 

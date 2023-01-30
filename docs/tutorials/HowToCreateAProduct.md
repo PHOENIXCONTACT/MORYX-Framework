@@ -11,7 +11,7 @@ For products we differentiate between [ProductType](xref:Moryx.AbstractionLayer.
 All ProductTypes are derived from `ProductType`. The methode `Instantiate()` returns an object of the correspoding `ProductInstance`.
 
 With the attibute `DisplayName` you can change the name displayed on the UI. Using `Description` adds descriptions to a property on the UI. All public properties of a `ProductType` will be displayed on the UI.
-```C#
+```cs
 [DisplayName("Watch Needle")]
 public class NeedleType : ProductType
 {
@@ -27,7 +27,7 @@ public class NeedleType : ProductType
 }
 ```
 All ProductInstances are derived from `ProductInstance<TProductType>`. Instance specific properties can be added. Depending on the size of the watch it could happen that the needle used for hours in one watch is used for minutes in another one (although this example is quite unlikely).
-```C#
+```cs
 public class NeedleInstance : ProductInstance<NeedleType>
 {
     // Instance specific properties
@@ -40,7 +40,7 @@ public class NeedleInstance : ProductInstance<NeedleType>
 ## Use PartLinks
 Some `ProductTypes` have components. These can be modeled using [PartLinks](xref:Moryx.AbstractionLayer.Products.ProductPartLink). If no additional properties are needed, use the basic `ProductPartLink`. This is done for the part *WatchFace* in the example.
 
-```C#
+```cs
 [DisplayName("Watch")]
 public class WatchType : ProductType
 {
@@ -65,7 +65,7 @@ public class WatchType : ProductType
 }
 ```
 If you want to add properties to the `PartLink`, you can create custom ones. In our example we used the costum part link `NeedlePartLink` to specify the role of the needle in the watch.
-```C#
+```cs
 public class NeedlePartLink : ProductPartLink<NeedleType>
 {
     public NeedlePartLink()
