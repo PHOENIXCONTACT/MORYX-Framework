@@ -3,7 +3,13 @@ uid: GettingStarted.Facades
 ---
 # Facades
 
-Facades are the Runtime ways of interaction between server modules. This tutorial shall cover the both ends of this concept - exporting a facade and importing a facade. This tutorial does require basic knowledge of server modules. The first steps do not represent good code style and should not be used as a reference for facade design. Please complete the tutorial to get the right understanding of how facades work and how they are supposed to be used. As a starting base we need two server modules. Make sure to clear the facade entries on the first tab. Name one module Facades.Dependency and the othter Facades.Dependent. Your solutions should now look like this:
+Facades are the runtime-way of interaction between server modules. 
+This tutorial covers both ends of this concept - exporting a facade and importing a facade. 
+To continue you should habe basic knowledge of server modules. 
+The first steps of the subsequent example do not represent good code style and should not be used as a reference for facade design. 
+Please complete the tutorial to get the right understanding of how facades work and how they are supposed to be used. 
+We start by creating two server modules. 
+Make sure to clear the facade entries on the first tab. Name one module `Facades.Dependency` and the othter `Facades.Dependent`. Your solutions should now look like this:
 
 ![Facade guide projects](images/FacadeGuideProjects.png)
 
@@ -18,7 +24,9 @@ Creating a facade:
 - Add a class "Facade.cs" to the folder and implement "IFacade" as well as `IFacadeControl`.
 - Implement "Foo" by returning the sum of a and b
 
-After we defined our facade we want to export it from the server module. All we must do is let our module controller implement the [IFacadeContainer](xref:Moryx.Runtime.Modules.IFacadeContainer´1) interface. Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file:
+After we defined our facade, we want to export it from the server module. 
+All we must do for this is to let our module controller implement the [IFacadeContainer](xref:Moryx.Runtime.Modules.IFacadeContainer´1) interface. 
+Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file:
 
 ```C#
 public class ModuleController: ServerModuleFacadeControllerBase<ModuleConfig>, 
@@ -51,11 +59,12 @@ internal const string ModuleName = "ExampleName";
 
 It is important that the property *Facade* always returns the same object in order for the Runtime to function correctly.
 
-The Facade property should be implemented explicit for a simple reason. If our module should export more than one facade it would have two properties with the same name but different type. While this is not possible for implicit class members, explicit interface implementations do not cause any conflicts.
+The Facade property should be implemented explicit for a simple reason. If our module exports more than one facade it would have two properties with the same name but different type. While this is not possible for implicit class members, explicit interface implementations do not cause any conflicts.
 
 ## Importing a facade
 
-Now that we have exported the facade we want to use it in another server module. To do this our dependent module must reference the dependency module. In real world applications the facade interface will be located in a separate bundle library to reduce coupling of dependency and implementation.
+Now that we have exported the facade, we want to use it in another server module. 
+To do this our dependent module must reference the dependency module. In real world applications the facade interface will be located in a separate bundle library to reduce coupling of dependency and implementation.
 
 Steps:
 
@@ -106,17 +115,19 @@ public IFacade[] AllInstances { get; set; }
 ## Bidirectional Communication
 
 Occasionally the relationship between two modules requires bidirectional communication. The standard .NET way to to this is by using method calls from the dependent
-to its dependencies and events/callbacks from dependency to dependent. The starting behaviour of the Runtime however created problems in the kind of missed events
-when the dependency raised events before the listener has reached the necessary state. After many long discussions including circular dependencies, three way handshake
+to its dependencies and events/callbacks from dependency to dependent. 
+The starting behaviour of the Runtime, however, created problems in the kind of missed events
+when the dependency raised events before the listener had reached the necessary state. 
+After many long discussions including circular dependencies, three way handshake
 and sacrificing kittens to the race-condition-god, we came up with a fairly simple solution. Events are supposed to propagate changes and should be used as such.
 
 Every event invocation represents an incremental change that occurred within an object. An entry added to the collection or a modified property. Without the initial/
-previous state of the object its current state can not be determined. Therefore every API that offers events must also provide methods to retrieve the current state
-of the component. For `NotifyPropertyChanged` and `NotifyCollectionChanged` the initial state is the object itself.
+previous state of the object its current state can not be determined. 
+Therefore, every API that offers events must also provide methods to retrieve the current state of the component. For `NotifyPropertyChanged` and `NotifyCollectionChanged` the initial state is the object itself.
 
-Transferring this to MORYX facades means that for every event there must be way to retrieve the current state of the module. This decouples the life cycles and allows
-the dependent to be started and stopped at any time without having to worry what he might miss in the process. For example the API for the JobManagement could simply
-be:
+Transferring this to MORYX facades means that for every event there must be a way to retrieve the current state of the module. 
+This decouples the life cycles and allows the dependent to be started and stopped at any time without having to worry what they might miss in the process. 
+For example the API for a `JobManagement` could simply be:
 
 ````cs
 /// <summary>
@@ -145,7 +156,8 @@ public interface IJobManagement
 
 ## Lifecycle bound facades
 
-Sometimes you need to know when a facade gets `activated` or `deactivated`. It's quite possible to get notified if the activation state of a facade has been changed. Your facade should inherit from [FacadeBase](xref:Moryx.Runtime.Modules.ILifeCycleBoundFacade) or at least from [ILifeCycleBoundFacade](xref:Moryx.Runtime.Modules.FacadeBase):
+Sometimes you need to know when a facade gets `activated` or `deactivated`. It's quite possible to get notified when the activation state of a facade has been changed.
+Your facade should inherit from [FacadeBase](xref:Moryx.Runtime.Modules.ILifeCycleBoundFacade) or at least from [ILifeCycleBoundFacade](xref:Moryx.Runtime.Modules.FacadeBase):
 
 ````cs
 public class CustomFacade : FacadeBase, ICustomFacade
