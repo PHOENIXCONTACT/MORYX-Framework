@@ -19,13 +19,13 @@ For implementation details click on the file name:
   - [The ModuleConsole.cs - File](#the-moduleconsolecs---file)
 
 ## The ModuleController.cs 
-The ModuleController.cs-File is the key point of your module. Here all the components of your module come together and you are responsible to initialize, start and stop them in the right way. Because every ServerModule can have its own architecture, there is not _the correct way_ to do so, but there are some _usual points_ a ModuleController.cs-File covers. These points are:
+The ModuleController.cs-File is the key point of your module. Here, all the components of your module come together and you are responsible to initialize, start and stop them in the right way. Because every ServerModule can have its own architecture, there is not _the correct way_ to do so, but there are some _usual points_ a ModuleController.cs-File covers. These points are:
 
 1. Import the global components your ServerModule needs
 2. Register imported _global_ components to the internal container
 3. Resolve the desired components from the container and **start** them
 4. Stop the started components when the ServerModule is stopped
-5. Export and Import facades -> this topic is covered in [this guide](Facades.md)
+5. Export and Import facades -> this topic of its own, take a look into [this guide](Facades.md)
 
 Now we will look at examples for these points. But first create your your class implementing `ServerModuleBase`. If your ServerModule exports facades, use `ServerModuleFacadeControllerBase` instead and specifiy those facades using `IFacadeContainer<TFacade>`.
 
@@ -51,9 +51,9 @@ public class ModuleController : ServerModuleBase<ModuleConfig>
     ...
 ````
 
-As example for the first point we import the ResourceManagement and the ProductManagement. We do so by simply write them as public properties, the global DI container will do the rest. (The RequiredModuleApi-Attribute is described [here](Facades.md))
+As an example for the first bullet point, we import the ResourceManagement and the ProductManagement. We do so by simply adding them as public properties, the global DI container will do the rest. (The RequiredModuleApi-Attribute is described [here](Facades.md))
 
-The DbContextManager as well as the ConfigManager are part of the ASP Service Collection. This is the reason why they have to injected via the constructor. 
+The DbContextManager as well as the ConfigManager are part of the ASP Service Collection. This is the reason why they have to be injected via the constructor. 
 
 ````cs
 [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
@@ -125,11 +125,11 @@ protected override void OnStop()
 
 ## The ModuleConfig.cs - File 
 
-The _ModuleConfig.cs_-file is the place where you can define the data fields which are needed to configure your ServerModule. During the _build_ process a xml configuration file is automatically created for each _ModuleConfig.cs_, here you can set the configuration values for your ServerModule. Furthermore you can use the maintenance website to edit the values of the different data fields.
+In the _ModuleConfig.cs_-file you can define the data fields needed to configure your ServerModule. For each file a xml configuration file will be automatically during the *build* process. Here you can set the configuration values for your ServerModule manually. You can also use the CommandCenter website to edit the values.
 
-For this to work, the following points must be considered:
+The following points must be noted:
 
-* Your ModuleConfig class must derive fromm ConfigBase.cs
+* Your ModuleConfig class must derive from ConfigBase.cs
 * You must add the _DataContract_ attribute to your class
 * You must add the _DataMember_ attribute for each of the data fields
 * (Beyond this you can use the _DefaultValue_ attribute to add a default value to your data fields)
@@ -166,7 +166,7 @@ public class ModuleConfig : ConfigBase
 
 ## The ModuleConsole.cs - File
 
-The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features.As a starting point for this feature you can create ModuleConsole.cs file in your _ModuleController_ folder, implement `IServerModuleConsole` and add methods using the Attribute `EntrySerialize` in order to see them on the UI. Although the interface is empty, it's needed for the export.
+The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features. For this feature you need to create a `ModuleConsole.cs` file in your _ModuleController_ folder, implement `IServerModuleConsole` and add methods using the Attribute `EntrySerialize` in order to see them on the UI. Although the interface is empty, it's needed for the export.
 
 ````C#
 [ServerModuleConsole]
