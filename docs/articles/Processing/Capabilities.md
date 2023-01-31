@@ -3,7 +3,7 @@ uid: Capabilities
 ---
 # Capabilities
 
-[Capabilities](xref:Moryx.AbstractionLayer.Capabilities.ICapabilities) are based on the idea of [set theory](https://en.wikipedia.org/wiki/Set_theory). Each class with its attributes and functions describes a set. Within MORYX, modules can use required capabilities to describe a set and fetch resources from the `ResourceManagement` that fullfil the membership function, which are part of that set. [Resources](../Resources/Overview.md) can export their capabilities to be matched against the required capabilities. Every [Activity](Activities.md) defines which capabilities it needs and the provided information will be used to find a matching Resource to handle the activity. It is also possible that a resource has multiple capabilities and is able to handle various activities.
+[Capabilities](../../../src/Moryx.AbstractionLayer/Capabilities/ICapabilities.cs) are based on the idea of [set theory](https://en.wikipedia.org/wiki/Set_theory). Each class with its attributes and functions describes a set. Within MORYX, modules can use required capabilities to describe a set and fetch resources from the `ResourceManagement` that fullfil the membership function, which are part of that set. [Resources](../Resources/Overview.md) can export their capabilities to be matched against the required capabilities. Every [Activity](Activities.md) defines which capabilities it needs and the provided information will be used to find a matching Resource to handle the activity. It is also possible that a resource has multiple capabilities and is able to handle various activities.
 
 ![Capabilities](images/capabilities.svg)
 
@@ -28,11 +28,11 @@ public class MyCapabilities : ICapabilities
 }
 ````
 
-It is also possible to use the base class [Capabilities](xref:Moryx.AbstractionLayer.Capabilities.Capabilities), which reduces the code to the following lines:
+It is also possible to use the base class [CapabilitiesBase](../../../src/Moryx.AbstractionLayer/Capabilities/CapabilitiesBase.cs), which reduces the code to the following lines:
 
 ```` cs
 [DataContract]
-public class MyCapabilities : Capabilities
+public class MyCapabilities : CapabilitiesBase
 {
     protected override bool ProvidedBy(ICapabilities provided) => provided is MyCapabilities;
 }
@@ -48,7 +48,7 @@ public enum ScrewHead
 }
 
 [DataContract]
-public class ScrewingCapabilities : Capabilities
+public class ScrewingCapabilities : CapabilitiesBase
 {
     [DataMember]
     public ScrewHead Head { get; set; }
