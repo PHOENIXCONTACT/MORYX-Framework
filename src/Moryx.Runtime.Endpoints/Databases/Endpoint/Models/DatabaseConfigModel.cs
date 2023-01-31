@@ -8,7 +8,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
     /// <summary>
     /// Configuration of the database.
     /// </summary>
-    public class DatabaseConfigModel
+    public record DatabaseConfigModel
     {
         /// <summary>
         /// Name of the database configurator type

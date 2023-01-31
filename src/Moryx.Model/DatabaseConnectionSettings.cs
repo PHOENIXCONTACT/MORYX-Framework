@@ -33,7 +33,7 @@ namespace Moryx.Model
         /// Validates if the settings are valid or not
         /// </summary>
         /// <returns>true, if valid</returns>
-        public bool IsValid()
+        public virtual bool IsValid()
             => !string.IsNullOrEmpty(Database) && !string.IsNullOrEmpty(ConnectionString);
 
         /// <summary>

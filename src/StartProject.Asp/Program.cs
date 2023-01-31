@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Moryx.Runtime.Kernel;
 using Moryx.Tools;
 using Moryx.Model;
+using Moryx.Runtime.Endpoints;
 
 namespace StartProject.Asp
 {
@@ -18,6 +19,7 @@ namespace StartProject.Asp
                     serviceCollection.AddMoryxKernel();
                     serviceCollection.AddMoryxModels();
                     serviceCollection.AddMoryxModules();
+                    serviceCollection.AddEndpoints();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

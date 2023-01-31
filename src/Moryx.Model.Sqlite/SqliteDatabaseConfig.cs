@@ -4,7 +4,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using System.Reflection;
+using Microsoft.Data.Sqlite;
+using System;
 
 namespace Moryx.Model.Sqlite
 {
@@ -32,21 +33,34 @@ namespace Moryx.Model.Sqlite
     {
         private string _database;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         [DataMember]
         public override string Database
         {
             get => _database;
             set
             {
-                if (null == value) return;
+                if (string.IsNullOrEmpty(value)) return;
                 _database = value;
                 ConnectionString = ConnectionString?.Replace("<DatabaseName>", value);
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         [DataMember, Required, DefaultValue("Data Source=.\\db\\<DatabaseName>.db")]
         public override string ConnectionString { get; set; }
+
+        /// <inheritdoc />
+        public override bool IsValid()
+        {
+            try
+            {
+                var builder = new SqliteConnectionStringBuilder(ConnectionString);
+                return !string.IsNullOrEmpty(ConnectionString);
+            } catch(ArgumentException)
+            {
+                return false;
+            }
+        }
     }
 }

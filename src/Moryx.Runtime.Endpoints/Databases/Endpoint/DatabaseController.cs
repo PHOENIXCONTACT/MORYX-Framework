@@ -18,6 +18,8 @@ using Moryx.Tools;
 using System.Runtime.Serialization;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Moryx.Runtime.Endpoints.Databases.Endpoint.Services;
+using Moryx.Runtime.Endpoints.Databases.Endpoint.Exceptions;
 
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 {
@@ -26,11 +28,13 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
     public class DatabaseController : ControllerBase
     {
         private readonly IDbContextManager _dbContextManager;
+        private readonly IDatabaseConfigUpdateService _databaseUpdateService;
         private readonly string _dataDirectory = @".\Backups\";
 
-        public DatabaseController(IDbContextManager dbContextManager)
+        public DatabaseController(IDbContextManager dbContextManager, IDatabaseConfigUpdateService databaseUpdateService)
         {
             _dbContextManager = dbContextManager;
+            _databaseUpdateService = databaseUpdateService;
         }
 
         [HttpGet]
@@ -55,43 +59,29 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         [Authorize(Policy = RuntimePermissions.DatabaseCanSetAndTestConfig)]
         public async Task<ActionResult<ResponseModel<DataModel>>> SetDatabaseConfig([FromRoute] string targetModel, [FromBody] DatabaseConfigModel config)
         {
-            var match = GetTargetConfigurator(targetModel);
-            if (match == null)
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
-
-            var dbContextType = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
-            var configuratorType = Type.GetType(config.ConfiguratorTypename);
-
-            // Assert config
-            var configType = configuratorType.BaseType.GenericTypeArguments.First();
-            var dbConfig = (IDatabaseConfig)Activator.CreateInstance(configType);
-            var updatedConfig = UpdateConfigFromModel(dbConfig, config);
-            if (!IsConfigValid(updatedConfig))
-                return BadConfigResponse<DataModel>(config);
-
-            // Save config and reload all DataModels
-            _dbContextManager.UpdateConfig(
-                dbContextType,
-                configuratorType,
-                dbConfig);
-            return OkResponse(await Convert(dbContextType));
+            try
+            {
+                var result = _databaseUpdateService.UpdateModel(targetModel, config);
+                return OkResponse(await Convert(_dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel)));
+            }
+            catch (NotFoundException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (BadRequestException exception)
+            {
+                return BadRequestResponse<DataModel>(exception.Errors);
+            }
         }
 
         private ActionResult<ResponseModel<T>> OkResponse<T>(T result)
             => Ok(new ResponseModel<T>() { Result = result });
 
-        private static ResponseModel<T> ErrorResponse<T>(string error)
-            => new() { Errors = new[] { error } };
-
-        private ActionResult<ResponseModel<T>> BadConfigResponse<T>(DatabaseConfigModel subject)
-        {
-            return BadRequest(ErrorResponse<T>($"Config values are not valid"));
-        }
+        private ActionResult<ResponseModel<T>> BadRequestResponse<T>(string[] errors)
+            => BadRequest(new ResponseModel<T> { Errors = errors });
 
         private ActionResult BadConfigValues(DatabaseConfigModel subject)
-        {
-            return BadRequest($"Config values are not valid");
-        }
+         => BadRequest($"Config values are not valid");
 
         [HttpPost("{targetModel}/config/test")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanSetAndTestConfig)]
@@ -145,6 +135,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
         private IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel configModel)
         {
+            dbConfig.ConfiguratorTypename = configModel.ConfiguratorTypename;
             dbConfig.ConnectionSettings.FromDictionary(configModel.Entries);
             return dbConfig;
         }
