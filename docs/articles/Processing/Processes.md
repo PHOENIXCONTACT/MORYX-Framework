@@ -3,7 +3,7 @@ uid: Processes
 ---
 # Processes
 
-A [Process](xref:Moryx.AbstractionLayer.IProcess) will be created to produce one instance. Therefore it consists of a series of Activities from a defined workplan. It is managed by the ProcessController.
+A [Process](../../../src/Moryx.AbstractionLayer/Process/IProcess.cs) will be created to produce one instance. Therefore it consists of a series of Activities from a defined workplan. It is managed by the ProcessController.
 
 ## Processes in a Resource
 
