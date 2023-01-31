@@ -35,24 +35,25 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
         [HttpGet]
         [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
-        public async Task<ActionResult<DataModel[]>> GetAll()
-            => await Task.WhenAll(_dbContextManager.Contexts.Select(Convert));
+        public async Task<ActionResult<ResponseModel<ListOfDataModels>>> GetAll()
+            => OkResponse(new ListOfDataModels { Databases = await Task.WhenAll(_dbContextManager.Contexts.Select(Convert)) });
 
 
         [HttpGet("{targetModel}")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
-        public async Task<ActionResult<DataModel>> GetModel([FromRoute] string targetModel)
+        public async Task<ActionResult<ResponseModel<DataModel>>> GetModel([FromRoute] string targetModel)
         {
             var model = _dbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel);
             if (model == null)
                 return NotFound($"Module with name \"{targetModel}\" could not be found");
 
-            return await Convert(model);
+            var result = await Convert(model);
+            return OkResponse(result);
         }
 
         [HttpPost("{targetModel}/config")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanSetAndTestConfig)]
-        public ActionResult SetDatabaseConfig([FromRoute] string targetModel, [FromBody] DatabaseConfigModel config)
+        public async Task<ActionResult<ResponseModel<DataModel>>> SetDatabaseConfig([FromRoute] string targetModel, [FromBody] DatabaseConfigModel config)
         {
             var match = GetTargetConfigurator(targetModel);
             if (match == null)
@@ -66,14 +67,25 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             var dbConfig = (IDatabaseConfig)Activator.CreateInstance(configType);
             var updatedConfig = UpdateConfigFromModel(dbConfig, config);
             if (!IsConfigValid(updatedConfig))
-                return BadConfigValues(config);
+                return BadConfigResponse<DataModel>(config);
 
             // Save config and reload all DataModels
             _dbContextManager.UpdateConfig(
                 dbContextType,
                 configuratorType,
                 dbConfig);
-            return Ok();
+            return OkResponse(await Convert(dbContextType));
+        }
+
+        private ActionResult<ResponseModel<T>> OkResponse<T>(T result)
+            => Ok(new ResponseModel<T>() { Result = result });
+
+        private static ResponseModel<T> ErrorResponse<T>(string error)
+            => new() { Errors = new[] { error } };
+
+        private ActionResult<ResponseModel<T>> BadConfigResponse<T>(DatabaseConfigModel subject)
+        {
+            return BadRequest(ErrorResponse<T>($"Config values are not valid"));
         }
 
         private ActionResult BadConfigValues(DatabaseConfigModel subject)
