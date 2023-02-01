@@ -19,7 +19,6 @@ namespace StartProject.Asp
                     serviceCollection.AddMoryxKernel();
                     serviceCollection.AddMoryxModels();
                     serviceCollection.AddMoryxModules();
-                    serviceCollection.AddEndpoints();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
