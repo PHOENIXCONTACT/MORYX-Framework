@@ -103,7 +103,7 @@ The method `AddStep` of the workplan takes a list of connectors which must fit t
 
 ## Workplan Instance Execution
 
-For execution the above mentioned _Workplans_ are instantiated to _WorkplanInstances_, which can than be executed by an instance of the [workplan engine](xref:Moryx.Workplans.IWorkplanEngine). The internal architecture is based on [the concept of petri-nets](https://en.wikipedia.org/wiki/Petri_net) with its transition and places. The execution is performed by tokens that are moved by transitions from one place to another.
+For execution the above mentioned _Workplans_ are instantiated to _WorkplanInstances_, which can then be executed by an instance of the [workplan engine](xref:Moryx.Workplans.IWorkplanEngine). The internal architecture is based on [the concept of petri-nets](https://en.wikipedia.org/wiki/Petri_net) with its transition and places. The execution is performed by tokens that are moved by transitions from one place to another.
 
 ````cs
 var workplan = MethodThatReturnsWorkplan();
@@ -120,7 +120,7 @@ engine.Start();
 
 Sometimes the result of a worplan instance execution is foreseeable during execution even though the engine has not completed yet because the workplan defines final steps before the instance was truly completed. However in order to save time it might make sense to process the expected result without awaiting the engines completion. Path prediction refers to the ability to analyze a workplan and identify paths that lead to only one possible outcome. Once the workplan engine enters that path during execution the result can be predicted **before** the workplan instance was completed.
 
-In _Moryx.Workplans_ this feature is available in through the [PathPredictor](xref:Moryx.Workplans.IPathPredictor). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that paths an event is published that contains the expected result in the form of a `NodeClassification`.
+In _Moryx.Workplans_ this feature is available via the [PathPredictor](xref:Moryx.Workplans.IPathPredictor). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of  the afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that paths an event is published that contains the expected result in the form of a `NodeClassification`.
 
 ````cs
 var workplan = MethodThatReturnsWorkplan();
