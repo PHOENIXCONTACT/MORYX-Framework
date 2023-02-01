@@ -66,10 +66,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             testConnectionPending: false,
             testConnectionResult: TestConnectionResult.ConfigurationError,
         };
-
-        console.log("database model :", this.props.DataModel);
-        console.log("initial  config :", this.props.DataModel.config);
-
     }
 
     public componentDidMount(): void {
@@ -168,10 +164,9 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         this.setState({ testConnectionPending: true });
         this.props.RestClient.testDatabaseConfig(this.createConfigModel(), this.props.DataModel.targetModel)
                              .then((response) => {
-                                console.log("TestConnectionResult :", response);
                                 this.setState({ testConnectionPending: false,
                                                 testConnectionResult: response.result !== undefined ? response.result : TestConnectionResult.ConnectionError });
-                             }).catch((error) => console.log("error catch while onTestConnection:", error));
+                             });
     }
 
     public onCreateDatabase(): void {
