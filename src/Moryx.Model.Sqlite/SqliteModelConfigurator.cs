@@ -92,8 +92,8 @@ namespace Moryx.Model.Sqlite
 
         private static string GetFilePath(IDatabaseConfig config)
         {
-            return Regex.Matches(config.ConnectionSettings.ConnectionString, @"Data Source=(\w+)")[0]
-                .Groups[0].Value;
+            var builder = new SqliteConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
+            return builder.DataSource;
         }
     }
 }

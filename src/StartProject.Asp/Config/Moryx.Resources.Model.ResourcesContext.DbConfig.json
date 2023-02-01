@@ -1,9 +1,0 @@
-{
-  "ConfigState": "Generated",
-  "ConnectionSettings": {
-    "$type": "Moryx.Model.PostgreSQL.NpgsqlDatabaseConnectionSettings, Moryx.Model.PostgreSQL",
-    "Database": "Core_ProductsContext",
-    "ConnectionString": "Username=postgres;Password=postgres;Host=localhost;Port=5432"
-  },
-  "ConfiguratorTypename": "Moryx.Model.PostgreSQL.NpgsqlModelConfigurator, Moryx.Model.PostgreSQL, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-}

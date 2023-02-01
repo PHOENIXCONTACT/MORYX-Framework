@@ -20,6 +20,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Services;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Exceptions;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 {
@@ -90,6 +92,11 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
+
+            if(targetConfigurator.GetType() == typeof(NullModelConfigurator))
+            {
+                return new TestConnectionResponse { Result = TestConnectionResult.ConfigurationError };
+            }
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
             if (!IsConfigValid(updatedConfig))
