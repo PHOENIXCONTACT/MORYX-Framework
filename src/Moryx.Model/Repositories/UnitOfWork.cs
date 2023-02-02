@@ -54,6 +54,7 @@ namespace Moryx.Model.Repositories
             return instance;
         }
 
+        /// <inheritdoc />
         public void LinkEntityToBusinessObject (IPersistentObject businessObject, IEntity entity)
         {
             _entityBusinessObjectLinks.Add(businessObject, entity);
