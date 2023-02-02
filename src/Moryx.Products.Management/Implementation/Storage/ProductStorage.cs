@@ -583,7 +583,7 @@ namespace Moryx.Products.Management
         private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, IProductType modifiedInstance)
         {
             var strategy = TypeInformation[modifiedInstance.GetType().FullName].Strategy;
-
+            //TODO use uow directly instead of repo if that is possible
             // Get or create entity
             var repo = saverContext.GetRepository<IProductTypeRepository>();
             var identity = (ProductIdentity)modifiedInstance.Identity;
@@ -595,7 +595,7 @@ namespace Moryx.Products.Management
             if (entities.All(p => p.Deleted != null))
             {
                 typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().FullName);
-                EntityIdListener.Listen(typeEntity, modifiedInstance);
+              
             }
             else
             {
@@ -617,6 +617,7 @@ namespace Moryx.Products.Management
 
             // And nasty again!
             var type = modifiedInstance.GetType();
+
             var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
             foreach (var partLinkInfo in TypeInformation[type.FullName].GetAllPartLinks(modifiedInstance))
             {
@@ -629,8 +630,7 @@ namespace Moryx.Products.Management
                     {
                         linkEntity = linkRepo.Create(linkStrategy.PropertyName);
                         linkEntity.Parent = typeEntity;
-                        linkStrategy.SavePartLink(link, linkEntity);
-                        EntityIdListener.Listen(linkEntity, link);
+                        linkStrategy.SavePartLink(link, linkEntity);                     
                         linkEntity.Child = GetPartEntity(saverContext, link);
                         saverContext.PersistentObjectCache.Add(link, linkEntity);
 
@@ -669,7 +669,7 @@ namespace Moryx.Products.Management
                         {
                             linkEntity = linkRepo.Create(linkStrategy.PropertyName);
                             linkEntity.Parent = typeEntity;
-                            EntityIdListener.Listen(linkEntity, link);
+                          
                             
                         }
                         else
@@ -690,8 +690,7 @@ namespace Moryx.Products.Management
         {
             if (saverContext.EntityCache.ContainsKey((ProductIdentity)link.Product.Identity))
             {
-                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];
-                EntityIdListener.Listen(part, link.Product);
+                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];            
                 saverContext.PersistentObjectCache.Add(link.Product, part);
                 return part;
             }

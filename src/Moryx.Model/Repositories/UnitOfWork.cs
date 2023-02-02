@@ -22,6 +22,8 @@ namespace Moryx.Model.Repositories
         /// <inheritdoc />
         DbContext IUnitOfWork.DbContext => DbContext;
 
+        private Dictionary<IPersistentObject, IEntity> _entityBusinessObjectLinks = new Dictionary<IPersistentObject, IEntity>();
+
         /// <summary>
         /// Creates a new instance of <see cref="UnitOfWork{TContext}"/>
         /// </summary>
@@ -52,6 +54,11 @@ namespace Moryx.Model.Repositories
             return instance;
         }
 
+        public void LinkEntityToBusinessObject (IPersistentObject businessObject, IEntity entity)
+        {
+            _entityBusinessObjectLinks.Add(businessObject, entity);
+        }
+
         /// <inheritdoc />
         public void SaveChanges()
         {
@@ -65,6 +72,11 @@ namespace Moryx.Model.Repositories
             {
                 // Debug entity framework exceptions
                 throw;
+            }
+
+            foreach(var link in _entityBusinessObjectLinks)
+            {
+                link.Key.Id = link.Value.Id;
             }
         }
 

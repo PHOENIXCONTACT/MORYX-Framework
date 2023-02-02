@@ -56,9 +56,11 @@ namespace Moryx.Model
             var repository = unitOfWork.GetRepository<IRepository<TEntity>>();
 
             var entity = repository.Create();
-            EntityIdListener.Listen(entity, obj);
+            unitOfWork.LinkEntityToBusinessObject(obj, entity);
 
             return entity;
         }
+
+        
     }
 }
