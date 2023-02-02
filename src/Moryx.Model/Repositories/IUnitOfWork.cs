@@ -37,6 +37,14 @@ namespace Moryx.Model.Repositories
         /// Asynchronously saves all changes made in this UnitOfWork to the underlying database.
         /// </summary>
         Task SaveChangesAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Links an entity to a business object. When calling uow.SaveChanged(), the unit of work
+        /// will update the IDs of all linke businessObjects 
+        /// </summary>
+        /// <param name="businessObject"></param>
+        /// <param name="entity"></param>
+        void LinkEntityToBusinessObject(IPersistentObject businessObject, IEntity entity);
     }
 
     /// <summary>
