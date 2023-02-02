@@ -98,7 +98,7 @@ public class AssembleTask : TaskStep<AssembleActivity, AssembleParameters>
 ```
 
 ## Capabilities
-In our example we said that in order to put everything together for a cake, we need a resource, which has `AssembleCapabilities`. Now let us take a look at how they are written. Capabilities always have to implement [CapabilitiesBase](../../src/Moryx.AbstractionLayer/Capabilities/CapabilitiesBase.cs). The method `ProvidedBy()` checks, if the capabilities provided by the resource (`provided`) meet the needs of the activity. If it's simple you just check if the class of the provided capability is correct. But if you have different resources which can put a different number ingredients together, the needed capabilities depend on the characteristics of the cake.
+In order to put everything together for a cake, we need a resource, which has `AssembleCapabilities`. Now let us take a look at how they are written. Capabilities always have to implement [CapabilitiesBase](../../src/Moryx.AbstractionLayer/Capabilities/CapabilitiesBase.cs). The method `ProvidedBy()` checks, if the capabilities provided by the resource (`provided`) meet the needs of the activity. In simple scenarios, we just check, if the class of the provided capability is correct.
 
 ```cs
 public class AssembleCapabilities : CapabilitiesBase
@@ -110,3 +110,27 @@ public class AssembleCapabilities : CapabilitiesBase
 }
 ```
 
+If you have different resources which can put a different number ingredients together, the needed capabilities depend on the characteristics of the cake.
+```cs
+public class AssembleCapabilities : CapabilitiesBase{   
+    public int NumberOfIngredients {get;set;}    
+    
+    protected override bool ProvidedBy(ICapabilities provided){
+        var providedAssemble = provided as AssembleCapabilities; 
+        if(providedAssebmle == null)            
+            return false;        
+    
+        return provided.NumberOfIngredients >= NumberOfIngredients;    
+    }
+}
+
+[ActivityResults(typeof(AssembleResults))]
+public class AssembleActivity: Activity<AssembleParameters>{ 
+       
+    public override ICapabilities RequiredCapabilities => new AssembleCapabilities(){ NumberOfIngredients = 5 }; 
+
+    ...
+}
+```
+
+Now you can repeat these steps for all steps in your process. After you are done, you have all the required classes to create a workplan out of it and execute the digital process.For more information on how to implement the execution of an activity in a specific resource, please have a look at the tutorial about [Cells](HowToCreateACell.md).
