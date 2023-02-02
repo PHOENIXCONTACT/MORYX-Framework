@@ -6,6 +6,6 @@
 import Entry from "../../modules/models/Entry";
 
 export default class DatabaseConfigModel {
-    configuratorTypename: string;
-    entries: any;
+    public configuratorTypename: string;
+    public entries: any;
 }

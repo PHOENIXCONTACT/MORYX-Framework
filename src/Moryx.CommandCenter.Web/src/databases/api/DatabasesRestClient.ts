@@ -6,32 +6,31 @@
 import InvocationResponse from "../../common/api/responses/InvocationResponse";
 import RestClientBase from "../../common/api/RestClientBase";
 import DatabaseConfigModel from "../models/DatabaseConfigModel";
+import DatabasesResponse from "../models/DatabasesResponse";
 import DataModel from "../models/DataModel";
-import ListOfDataModels from "../models/ListOfDataModels";
 import ExecuteSetupRequest from "./requests/ExecuteSetupRequest";
 import RestoreDatabaseRequest from "./requests/RestoreDatabaseRequest";
 import DatabaseUpdateSummary from "./responses/DatabaseUpdateSummary";
-import ResponseModel from "./responses/ResponseModel";
 import TestConnectionResponse from "./responses/TestConnectionResponse";
 
 const ROOT_PATH = "/databases";
 const MODEL_PATH = ROOT_PATH + "/{target}";
 
 export default class DatabasesRestClient extends RestClientBase {
-    public databaseModels(): Promise<ResponseModel<ListOfDataModels>> {
-        return this.get<ResponseModel<ListOfDataModels>>(ROOT_PATH, new ResponseModel<ListOfDataModels>());
+    public databaseModels(): Promise<DatabasesResponse> {
+        return this.get<DatabasesResponse>(ROOT_PATH, new DatabasesResponse());
     }
 
     public deleteAllDatabaseModels(): Promise<InvocationResponse> {
         return this.deleteNoBody<InvocationResponse>(ROOT_PATH, new InvocationResponse());
     }
 
-    public databaseModel(targetModel: string): Promise<ResponseModel<DataModel>> {
-        return this.get<ResponseModel<DataModel>>(DatabasesRestClient.pathTo(targetModel), new ResponseModel<DataModel>());
+    public databaseModel(targetModel: string): Promise<DataModel> {
+        return this.get<DataModel>(DatabasesRestClient.pathTo(targetModel), new DataModel());
     }
 
-    public saveDatabaseConfig(request: DatabaseConfigModel, targetModel: string): Promise<ResponseModel<DatabaseConfigModel>> {
-        return this.post<DatabaseConfigModel, ResponseModel<DatabaseConfigModel>>(DatabasesRestClient.pathTo(targetModel, "/config"), request, new ResponseModel<DatabaseConfigModel>());
+    public saveDatabaseConfig(request: DatabaseConfigModel, targetModel: string): Promise<DataModel> {
+        return this.post<DatabaseConfigModel, DataModel>(DatabasesRestClient.pathTo(targetModel, "/config"), request, new DataModel());
     }
 
     public testDatabaseConfig(request: DatabaseConfigModel, targetModel: string): Promise<TestConnectionResponse> {

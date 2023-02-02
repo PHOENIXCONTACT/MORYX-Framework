@@ -66,7 +66,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
         this.setState({ IsLoading: true });
 
         this.props.RestClient.databaseModels().then((data) => {
-            const validModels = data.result.databases.filter((model) => model);
+            const validModels = data.databases.filter((model) => model);
             this.props.onUpdateDatabaseConfigs(validModels);
             this.setState({ MenuModel: { MenuItems: validModels.map((dataModel, idx) => Database.createMenuItem(dataModel)) }, IsLoading: false });
         });

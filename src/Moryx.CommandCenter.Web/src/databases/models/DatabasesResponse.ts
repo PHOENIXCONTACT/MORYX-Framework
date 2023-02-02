@@ -5,7 +5,6 @@
 
 import DataModel from "./DataModel";
 
-
-export default class ListOfDataModels {
-    public databases: DataModel[]
+export default class DatabasesResponse {
+    public databases: DataModel[];
 }

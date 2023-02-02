@@ -16,9 +16,7 @@ import kbToString from "../../common/converter/ByteConverter";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";
 import { ActionType } from "../../common/redux/Types";
 import "../../common/scss/Theme.scss";
-import NavigableConfigEditor from "../../modules/components/ConfigEditor/NavigableConfigEditor";
 import DatabasesRestClient from "../api/DatabasesRestClient";
-import ResponseModel from "../api/responses/ResponseModel";
 import DatabaseConfigModel from "../models/DatabaseConfigModel";
 import DataModel from "../models/DataModel";
 import DbMigrationsModel from "../models/DbMigrationsModel";
@@ -146,16 +144,12 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         this.props.onShowWaitDialog(true);
 
         this.onTestConnection();
-        this.props.RestClient.saveDatabaseConfig(this.createConfigModel(), this.props.DataModel.targetModel).then((response: ResponseModel<DatabaseConfigModel>) => {
+        this.props.RestClient.saveDatabaseConfig(this.createConfigModel(), this.props.DataModel.targetModel).then((response) => {
             this.props.onShowWaitDialog(false);
 
-            this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((data) => this.props.onUpdateDatabaseConfig(data.result));
-            if (!response.errors) {
+            this.setState({config: response.config});
+            this.props.onUpdateDatabaseConfig(response);
             this.props.NotificationSystem.addNotification({ title: "Configuration saved", message: "", level: "success", autoDismiss: 5 });
-            } else {
-                const msg = response.errors.join(";");
-                this.props.NotificationSystem.addNotification({ title: "Error", message: "Connection settings not saved : " + msg, level: "error", autoDismiss: 5 });
-            }
             this.onTestConnection();
         }).catch((d) => this.props.onShowWaitDialog(false));
     }
@@ -176,7 +170,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
-                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig.result));
+                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Database created successfully", level: "success", autoDismiss: 5 });
            } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: "Database not created: " + data.errorMessage, level: "error", autoDismiss: 5 });
@@ -196,7 +190,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
-                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig.result));
+                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Database deleted successfully", level: "success", autoDismiss: 5 });
             } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: "Database not deleted: " + data.errorMessage, level: "error", autoDismiss: 5 });
@@ -209,7 +203,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         this.props.onShowWaitDialog(true);
 
         this.props.RestClient.dumpDatabase(this.createConfigModel(), this.props.DataModel.targetModel).then((data) => {
-
+            this.props.onShowWaitDialog(false);
             if (data.success) {
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Database dump started successfully. Please refer to the log to get information about the progress.", level: "success", autoDismiss: 5 });
             } else {
@@ -238,7 +232,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             this.props.onShowWaitDialog(false);
 
             if (data.wasUpdated) {
-                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig.result));
+                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Migration applied", level: "success", autoDismiss: 5 });
             } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: "Migration not applied", level: "error", autoDismiss: 5 });
@@ -253,7 +247,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
-                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig.result));
+                this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 this.props.NotificationSystem.addNotification({ title: "Success", message: "Database rollback completed successfully", level: "success", autoDismiss: 5 });
             } else {
                 this.props.NotificationSystem.addNotification({ title: "Error", message: "Database rollback failed: " + data.errorMessage, level: "error", autoDismiss: 5 });
