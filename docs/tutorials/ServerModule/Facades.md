@@ -123,7 +123,7 @@ and sacrificing kittens to the race-condition-god, we came up with a fairly simp
 
 Every event invocation represents an incremental change that occurred within an object. An entry added to the collection or a modified property. Without the initial/
 previous state of the object its current state can not be determined. 
-Therefore, every API that offers events must also provide methods to retrieve the current state of the component. For `NotifyPropertyChanged` and `NotifyCollectionChanged` the initial state is the object itself.
+Therefore, every API that offers events must also provide methods to retrieve the current state of the component. 
 
 Transferring this to MORYX facades means that for every event there must be a way to retrieve the current state of the module. 
 This decouples the life cycles and allows the dependent to be started and stopped at any time without having to worry what they might miss in the process. 
