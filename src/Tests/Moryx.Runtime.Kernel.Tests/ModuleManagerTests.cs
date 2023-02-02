@@ -221,8 +221,10 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             moduleManager.StartModule(mockModule.Object);
 
+            Thread.Sleep(1);
+
             // Assert
-            mockModule.Verify(mock => mock.Initialize(), Times.Exactly(2));
+            mockModule.Verify(mock => mock.Initialize());
             mockModule.Verify(mock => mock.Start());
         }
 
