@@ -65,6 +65,11 @@ public async Task UseExtensionMethodsToFurtherSimplifyYouLife(Person person)
     // Create an entity for the existing business object 
     var personEntity = UnitOfWorkFactory.CreateEntity<PersonEntity>(person)
     
+    // Make sure ID updates for the entity are reflected in the business object.
+    // Usually this is only needed for new business objects
+    var personEntity = UnitOfWorkFactory.GetEntity<PersonEntity>(person)
+    
+
     // Find the existing entity that belongs to the business object 
     var personEntity = UnitOfWorkFactory.FindEntity<PersonEntity>(person)
     
@@ -80,4 +85,4 @@ public async Task UseExtensionMethodsToFurtherSimplifyYouLife(Person person)
 
 As you can see you just need to write the most important things. 
 The magic of the runtime code generation takes care of the rest.
-For a complete example please read the [CodeFirst tutorial](xref:GettingStarted.CodeFirst#unitofwork-repository-pattern).
+For a complete example please read the [CodeFirst tutorial](../../../tutorials/DataModel/CodeFirst.md).
