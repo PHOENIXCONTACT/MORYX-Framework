@@ -7,7 +7,7 @@ An [Activity](../../src/Moryx.AbstractionLayer/Activities/IActivity.cs) is the s
 
 ## Activity Structure
 
-To create an activity it is necessary to derive at least the abstract class [Activity](xref:Moryx.AbstractionLayer.Activity). An implementation could look like the following:
+To create an activity it is necessary to derive at least the abstract class [Activity](../../../src/Moryx.AbstractionLayer/Activities/Activity.cs). An implementation could look like the following:
 
 ```` cs
 [ActivityResults(typeof(DefaultActivityResult))]
@@ -100,7 +100,7 @@ internal class MyParameters : ParametersBase
 }
 ````
 
-The method `ResolveBinding` will be called during the creation of the activity and in this case the given process will be used to get the [Recipe](xref:Moryx.AbstractionLayer.Recipes.IRecipe) which contains the needed adapter number for the electrical test. The number will be stored in the parameter class and will be available during the execution inside of the resource:
+The method `ResolveBinding` will be called during the creation of the activity and in this case the given process will be used to get the [Recipe](../../../src/Moryx.AbstractionLayer/Recipes/IRecipe.cs) which contains the needed adapter number for the electrical test. The number will be stored in the parameter class and will be available during the execution inside of the resource:
 
 ```` cs
 // some resource code
@@ -167,7 +167,7 @@ public class MyActivity : Activity<MyParameters>
 ````
 
 ## An Example using the VisualInstruction Resource
-If the activity is used for [VisualInstruction](xref:Moryx.Resources.Samples.IVisualInstructor), the UI will create a button for each possible result from the result enum. It is also possible to show a different text at the visual instruction or hide a result like in the following example:
+If the activity is used for [VisualInstruction](../../../src/Moryx.Resources.Samples/IVisualInstructor.cs), the UI will create a button for each possible result from the result enum. It is also possible to show a different text at the visual instruction or hide a result like in the following example:
 
 ```` cs
 public enum MyActivityResults
@@ -192,7 +192,7 @@ public enum MyActivityResults
 }
 ````
 
-By implementing the [IVisualInstruction](xref:Moryx.Resources.Samples.IVisualInstructor) interface we can also define which text to display alongside the possible results giving the required instructions for the user.
+By implementing the [IVisualInstruction](../../../src/Moryx.Resources.Samples/IVisualInstructor.cs) interface we can also define which text to display alongside the possible results giving the required instructions for the user.
 
 ## Tracing
 For long-term tracibility and to resume interrupted activities it is possible to use [ActivityTracing](xref:Moryx.AbstractionLayer.Activities.ActivityTracing).
@@ -218,7 +218,7 @@ public class FooTracing : Tracing
 }
 ````
 
-Resources can access and transform an activities tracing information using the fluent API [TracingExtension](xref:Moryx.AbstractionLayer.Activities.TracingExtension). This rather complex approach is taken because the type of the tracing object might change at runtime depending on the resource executing the activity or the circumstances of the execution.
+Resources can access and transform an activities tracing information using the fluent API [TracingExtension](../../../src/Moryx.AbstractionLayer/Activities/TracingExtension.cs). This rather complex approach is taken because the type of the tracing object might change at runtime depending on the resource executing the activity or the circumstances of the execution.
 For the example above this would look like the following:
 
 ````cs

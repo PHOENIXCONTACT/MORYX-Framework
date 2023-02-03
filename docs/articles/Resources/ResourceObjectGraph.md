@@ -4,8 +4,8 @@ uid: ResourceObjectGraph
 # Resource object graph
 
 The [Resource Type Tree](ResourceTypeTree.md) has uniﬁed the different types of plugins within the [Resource Management](ResourceManagement.md).
-The [Resource Graph](xref:Moryx.AbstractionLayer.Resources.IResourceGraph) standardizes their creation, conﬁguration, references and dependencies.
-Except for the meta components required to construct the type tree, build and manage the resource graph and provide access to the resources, all plugins of the resource management are [Resources](xref:Moryx.AbstractionLayer.Resources.IResource).
+The [Resource Graph](../../../src/Moryx.AbstractionLayer/Resources/IResourceGraph.cs) standardizes their creation, conﬁguration, references and dependencies.
+Except for the meta components required to construct the type tree, build and manage the resource graph and provide access to the resources, all plugins of the resource management are [Resources](../../../src/Moryx.AbstractionLayer/Resources/IResource.cs).
 At module startup the resource manager loads all resource and relation entities from the database and for each one creates a instance of the type declared on the entity.
 It copies all standard properties to the instance and populates the rest from the JSON extension data.
 Additional properties or ﬁelds of a resource that should be saved to and loaded from the database are decorated with the `DataMember` attribute for the NewtonSoft JSON serializer used in the MORYX ecosystem.
@@ -44,7 +44,7 @@ public class PropertyDummy : Resource
 The ability to make changes at runtime that are automatically saved is not limited to an existing resource instance.
 It is also possible to change [Relations](ResourceRelations.md) between resources to expand and reduce the resource graph at runtime.
 To make sure the resource manager knows of the new resource and takes care of its dependencies and reference properties, it is not possible to create new resources naturally through constructor invocation.
-Instead each resource can use the [IResourceGraph](xref:Moryx.AbstractionLayer.Resources.IResourceGraph) to create and destroy resource instances.
+Instead each resource can use the [IResourceGraph](../../../src/Moryx.AbstractionLayer/Resources/IResourceGraph.cs) to create and destroy resource instances.
 Resources access the graph through the inherited [Graph](xref:Moryx.AbstractionLayer.Resources.Resource.Graph) property.
 It sets the reference on each instance it loads in the startup phase and those created through the graph interface at runtime.
 This ensures that dynamic resource creation is not limited to the ﬁrst generation of objects, but works indeﬁnitely.
@@ -53,7 +53,7 @@ The statically typed one is the replacement for direct constructor invocation.
 The type speciﬁed is also the type of the returned object.
 The other two overloads are similar to the factory pattern and can return different objects speciﬁed by the type string.
 This makes object creation more ﬂexible than a constructor and enables subclassing of the created resource type.
-Additionally, the [ResourceTypes](xref:Moryx.AbstractionLayer.Resources.ResourceTypesAttribute) attribute can be used to generate a drop-down box of available resource types for properties or method parameters.
+Additionally, the [ResourceTypes](../../../src/Moryx.AbstractionLayer/Resources/Attributes/ResourceTypesAttribute.cs) attribute can be used to generate a drop-down box of available resource types for properties or method parameters.
 
 ```cs
 public class DynamicTree : Resource

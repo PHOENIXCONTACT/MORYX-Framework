@@ -7,7 +7,7 @@ The `MoryxDbContext` is an inhertied `DbContext` which brings a set of additiona
 
 - [Modification Tracking](ModificationTracking.md)
 - [Automatic DateTimeKind conversion](#DateTimeKind-conversion)
-- Support of [`DefaultSchemaAttribute`](xref:Moryx.Model.DefaultSchemaAttribute)
+- Support of [`DefaultSchemaAttribute`](../../../../src/Moryx.Model/Attributes/DefaultSchemaAttribute.cs)
 
 ## DateTimeKind conversion
 

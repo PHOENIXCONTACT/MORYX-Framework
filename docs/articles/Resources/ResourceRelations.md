@@ -3,7 +3,7 @@ uid: ResourceRelations
 ---
 # Resource relations
 
-[Resources](xref:Moryx.AbstractionLayer.Resources.IResource) only declare the relations to other resources as auto-properties and decorate them with an attribute to specify [RelationType](xref:Moryx.AbstractionLayer.Resources.ResourceRelationType) and optionally role and name. 
+[Resources](../../../src/Moryx.AbstractionLayer/Resources/IResource.cs) only declare the relations to other resources as auto-properties and decorate them with an attribute to specify [RelationType](../../../src/Moryx.AbstractionLayer/Resources/ResourceRelationType.cs) and optionally role and name. 
 The relation type is deﬁned through an enum of different relations like parent and child or referencing a driver. 
 The role refers to the role of the referenced resource in the relationship and can be either `Source` or `Target` where `Target` is the default. 
 The Source role is required for a bidirectional reference. 
@@ -32,17 +32,17 @@ The code example above shows how to declare references to other resources.
 References to a collection of other resources must be of type [IReferences](xref:Moryx.AbstractionLayer.Resources.IReferences%601>). 
 The specialized type is necessary for the resource manager. 
 Collections can optionally be decorated with `AutoSave` = true to enable automatic saving of modifications to the database. While `RaiseResourceChanged` saves the entire resource and all its references, `AutoSave` raises an event that only saves the new state of the collection.
-The [Resource](xref:Moryx.AbstractionLayer.Resources.Resource) base class declares two relations - `Parent` and `Children`. 
+The [Resource](../../../src/Moryx.AbstractionLayer/Resources/Resource.cs) base class declares two relations - `Parent` and `Children`. 
 Both are of relation type ParentChild. 
 The reference to the parent uses the attributes role property to identify the reference as the Source in the relationship and distinguish it from the `Children`.
 
 ## Required References
 
-Resources can declare references as `Required` for their functionality as shown in the example above. Required references **must** be set to save a resource, otherwise the [ResourceLinker](xref:Moryx.Resources.Management.IResourceLinker) will throw a `ValidationException`. The information is also transmitted to the client, which visualizes and validates the reference **before** transmitting the model to the server. 
+Resources can declare references as `Required` for their functionality as shown in the example above. Required references **must** be set to save a resource, otherwise the [ResourceLinker](../../../src/Moryx.Resources.Management/Resources/IResourceLinker.cs) will throw a `ValidationException`. The information is also transmitted to the client, which visualizes and validates the reference **before** transmitting the model to the server. 
 
 ## Reference Override
 
-If a resource is derived from a base type that already declares a certain relation type it is possible to override this reference's resource type by declaring a new property with the [ReferenceOverride](xref:Moryx.AbstractionLayer.Resources.ReferenceOverrideAttribute) attribute. 
+If a resource is derived from a base type that already declares a certain relation type it is possible to override this reference's resource type by declaring a new property with the [ReferenceOverride](../../../src/Moryx.AbstractionLayer/Resources/Attributes/ReferenceOverrideAttribute.cs) attribute. 
 A common use case shown in the example below is to override the `Children` reference declared in the `Resource` base class to limit the type of resources that can be added as children.
 
 ```cs

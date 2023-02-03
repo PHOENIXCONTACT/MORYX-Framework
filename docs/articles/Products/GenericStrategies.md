@@ -11,9 +11,9 @@ Property mappers are strategies to map a single property to a database column an
 
 | Name | Column Type | Supported Property Types |
 |---|---|---|
-| [IntegerColumnMapper](xref:Moryx.Products.Management.IntegerColumnMapper) | long | Int16 - UInt64 , Enum, DateTime, bool |
-| [FloatColumnMapper](xref:Moryx.Products.Management.FloatColumnMapper) | double | Float, Double, Decimal |
-| [TextColumnMapper](xref:Moryx.Products.Management.TextColumnMapper) | string | string (plain), object (JSON) |
+| [IntegerColumnMapper](../../../src/Moryx.Products.Management/Plugins/GenericStrategies/IntegerColumnMapper.cs) | long | Int16 - UInt64 , Enum, DateTime, bool |
+| [FloatColumnMapper](../../../src/Moryx.Products.Management/Plugins/GenericStrategies/FloatColumnMapper.cs) | double | Float, Double, Decimal |
+| [TextColumnMapper](../../../src/Moryx.Products.Management/Plugins/GenericStrategies/TextColumnMapper.cs) | string | string (plain), object (JSON) |
 
 ## Configuration
 

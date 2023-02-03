@@ -5,7 +5,7 @@ uid: HowToCreateAProduct
 
 This tutorial shows how [Products](../../src/Moryx.AbstractionLayer/Products/ProductType.cs) should be implemented. Look [here](../articles/Products/Concept.md) if you are not firm with the concept of a `Product`. 
 
-For products we differentiate between [ProductType](xref:Moryx.AbstractionLayer.Products.ProductType) and [ProductInstance](xref:Moryx.AbstractionLayer.Products.ProductInstance). The `ProductType` is what you can order in a catalog, while the `ProductInstance` is what you received after ordering: an instance of the product with its unique serialnumber. So that a `ProductType` can be producted it needs a corresponding `ProductInstance`. If your application isn't used for production, you can skip the `ProductInstances`. 
+For products we differentiate between [ProductType](../../src/Moryx.AbstractionLayer/Products/ProductType.cs) and [ProductInstance](../../src/Moryx.AbstractionLayer/Products/ProductInstance.cs). The `ProductType` is what you can order in a catalog, while the `ProductInstance` is what you received after ordering: an instance of the product with its unique serialnumber. So that a `ProductType` can be producted it needs a corresponding `ProductInstance`. If your application isn't used for production, you can skip the `ProductInstances`. 
 
 ## Create a basic ProductType and ProductInstance
 All ProductTypes are derived from `ProductType`. The methode `Instantiate()` returns an object of the correspoding `ProductInstance`.
@@ -38,7 +38,7 @@ public class NeedleInstance : ProductInstance<NeedleType>
 ```
 
 ## Use PartLinks
-Some `ProductTypes` have components. These can be modeled using [PartLinks](xref:Moryx.AbstractionLayer.Products.ProductPartLink). If no additional properties are needed, use the basic `ProductPartLink`. This is done for the part *WatchFace* in the example.
+Some `ProductTypes` have components. These can be modeled using [PartLinks](../../src/Moryx.AbstractionLayer/Products/ProductPartLink.cs). If no additional properties are needed, use the basic `ProductPartLink`. This is done for the part *WatchFace* in the example.
 
 ```cs
 [DisplayName("Watch")]

@@ -80,7 +80,7 @@ So it is possible to extend a Capability with different information to distingui
 
 ## Multiple Capabilities
 
-A resource can also have multiple capabilities. For that the [CombinedCapabilities](xref:Moryx.AbstractionLayer.Capabilities.CombinedCapabilities) class should be used, which implements the ICapabilities interface as well. In set theory `CombinedCapabilities` represent unions or intersections depending on whether they are used as required or provided capabilities:
+A resource can also have multiple capabilities. For that the [CombinedCapabilities](../../../src/Moryx.AbstractionLayer/Capabilities/CombinedCapabilities.cs) class should be used, which implements the ICapabilities interface as well. In set theory `CombinedCapabilities` represent unions or intersections depending on whether they are used as required or provided capabilities:
 
 ```` cs
 // some resource code

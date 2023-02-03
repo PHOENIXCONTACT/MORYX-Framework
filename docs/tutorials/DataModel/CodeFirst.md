@@ -19,7 +19,7 @@ More extended, additional repositories can be created for the [UnitOfWork Reposi
 
 ## The database DbContext
 
-Create your own database context by deriving from `DbContext` or for more comfortability from [MoryxDbContext](xref:Moryx.Model.MoryxDbContext) and add the two constructor overloads as shown below.
+Create your own database context by deriving from `DbContext` or for more comfortability from [MoryxDbContext](../../../src/Moryx.Model/MoryxDbContext.cs) and add the two constructor overloads as shown below.
 
 ````cs
 public class SolarSystemContext : MoryxDbContext
@@ -89,10 +89,10 @@ public class Asteroid : ModificationTrackedEntityBase
 }
 ````
 
-The entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase).
+The entities are either derived from [EntityBase](../../../src/Moryx.Model/EntityBase.cs) or [ModificationTrackedEntityBase](../../../src/Moryx.Model/ModificationTrackedEntityBase.cs).
 Is that necessary?
-That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`.
-This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base.
+That's pretty much better because the [EntityBase](../../../src/Moryx.Model/EntityBase.cs) defines an extra property for the `Id`.
+This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](../../../src/Moryx.Model/ModificationTrackedEntityBase.cs) derives from the base.
 It has three properties which are monitored by triggers (Created, Updated, Deleted).
 These triggers are automatically applied to the entity.
 You can find further information regarding modification tracking [here](../../articles/Core/DataModel/ModificationTracking.md).

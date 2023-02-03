@@ -3,7 +3,7 @@ uid: InteractionResource
 ---
 # InteractionResource
 
-InteractionResources are resources [Resource](xref:Moryx.AbstractionLayer.Resources.Resource), that host web services in addition to the one hosted by the 
+InteractionResources are resources [Resource](../../../../src/Moryx.AbstractionLayer/Resources/Resource.cs), that host web services in addition to the one hosted by the 
 `ResourceInteractionHost`, that hosts the endpoint for the standard resource UI. For WCF they use the Runtimes host factory. 
 This enables developers to build special interfaces to interact with resources that are not covered by the standard web-service.
 
