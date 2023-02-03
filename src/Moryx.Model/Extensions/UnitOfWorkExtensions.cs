@@ -21,10 +21,7 @@ namespace Moryx.Model
         {
             var entity = unitOfWork.FindEntity<TEntity>(obj);
 
-            if (entity == null)
-            {
-                entity = unitOfWork.CreateEntity<TEntity>(obj);
-            }
+            entity ??= unitOfWork.CreateEntity<TEntity>(obj);
 
             return entity;
         }

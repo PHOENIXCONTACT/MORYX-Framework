@@ -22,7 +22,7 @@ namespace Moryx.Model.Repositories
         /// <inheritdoc />
         DbContext IUnitOfWork.DbContext => DbContext;
 
-        private Dictionary<IPersistentObject, IEntity> _entityBusinessObjectLinks = new Dictionary<IPersistentObject, IEntity>();
+        private readonly Dictionary<IPersistentObject, IEntity> _entityBusinessObjectLinks = new();
 
         /// <summary>
         /// Creates a new instance of <see cref="UnitOfWork{TContext}"/>
@@ -57,7 +57,7 @@ namespace Moryx.Model.Repositories
         /// <inheritdoc />
         public void LinkEntityToBusinessObject (IPersistentObject businessObject, IEntity entity)
         {
-            _entityBusinessObjectLinks.Add(businessObject, entity);
+            _entityBusinessObjectLinks[businessObject] = entity;
         }
 
         /// <inheritdoc />
