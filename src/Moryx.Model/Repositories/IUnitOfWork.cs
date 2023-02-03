@@ -39,12 +39,19 @@ namespace Moryx.Model.Repositories
         Task SaveChangesAsync(CancellationToken cancellationToken);
 
         /// <summary>
-        /// Links an entity to a business object. When calling uow.SaveChanged(), the unit of work
-        /// will update the IDs of all linke businessObjects 
+        /// Links an entity to a business object. When calling <see cref="IUnitOfWork.SaveChanges()"/>, the unit of work
+        /// will update the IDs of all linked business objects 
         /// </summary>
-        /// <param name="businessObject"></param>
-        /// <param name="entity"></param>
+        /// <param name="businessObject">The business object to update on <see cref="IUnitOfWork.SaveChanges()"/></param>
+        /// <param name="entity">The entity saved with <see cref="IUnitOfWork.SaveChanges()"/></param>
         void LinkEntityToBusinessObject(IPersistentObject businessObject, IEntity entity);
+
+        /// <summary>
+        /// Checks whether the given business object is linked to an entity to update its <seealso cref="IPersistentObject.Id"/>
+        /// when calling <see cref="IUnitOfWork.SaveChanges()"/>.
+        /// </summary>
+        /// <param name="businessObject">The business object to check</param>
+        bool IsLinked(IPersistentObject businessObject);
     }
 
     /// <summary>

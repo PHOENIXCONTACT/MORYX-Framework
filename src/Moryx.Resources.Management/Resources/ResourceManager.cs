@@ -301,7 +301,7 @@ namespace Moryx.Resources.Management
 
                 var saveResult = ResourceEntityAccessor.SaveToEntity(uow, resource);
                 var entity = saveResult;
-                if (entity.Id == 0)
+                if (uow.IsLinked(resource))
                     newResources.Add(resource);
 
                 var references = new Dictionary<Resource, ResourceEntity>();

@@ -101,6 +101,12 @@ namespace Moryx.Model.Repositories
             }
         }
 
+        /// <inheritdoc />
+        public bool IsLinked(IPersistentObject businessObject)
+        {
+            return _entityBusinessObjectLinks.ContainsKey(businessObject);
+        }
+
         private bool _disposed;
 
         /// <inheritdoc />
