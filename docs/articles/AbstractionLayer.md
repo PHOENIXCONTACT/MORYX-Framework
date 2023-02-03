@@ -48,7 +48,7 @@ A [Recipe](../../src/Moryx.AbstractionLayer/Recipes/Recipe.cs) is the base for a
 
 A [ProductRecipe](../../src/Moryx.AbstractionLayer/Recipes/ProductRecipe.cs) provides a basic structure to use a product for production cases.
 
-A [WorkplanRecipe](../../src/Moryx.AbstractionLayer/Recipes/WorkplanRecipe.cs) provides a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process.
+A [WorkplanRecipe](../../src/Moryx.AbstractionLayer/Recipes/WorkplanRecipe.cs) provides a Workplan and a set of parameters to define all the [Activities](Processing/Activities.md) needed for a Process.
 
 A [ProductionRecipe](../../src/Moryx.AbstractionLayer/Recipes/ProductionRecipe.cs) is the combination of a `ProductRecipe` and `WorkplanRecipe`.
 

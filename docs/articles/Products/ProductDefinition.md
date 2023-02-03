@@ -20,7 +20,7 @@ Each product must provide a method to create typed instances of itself. Those in
 
 ### Sample code
 
-The level 1 definition for a watch, its watchface and needles is shown below. This is not the complete definition. The full definition can be found [here](xref:Moryx.Products.Samples).
+The level 1 definition for a watch, its watchface and needles is shown below. This is not the complete definition. The full definition can be found [here](../../../src/Moryx.Products.Samples/).
 
 **The watch itself:**
 
