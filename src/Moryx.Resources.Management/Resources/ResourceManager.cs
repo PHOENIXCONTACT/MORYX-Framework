@@ -300,8 +300,8 @@ namespace Moryx.Resources.Management
                 var newResources = new HashSet<Resource>();
 
                 var saveResult = ResourceEntityAccessor.SaveToEntity(uow, resource);
-                var entity = saveResult.Item1;
-                if (saveResult.Item2)
+                var entity = saveResult;
+                if (entity.Id == 0)
                     newResources.Add(resource);
 
                 var references = new Dictionary<Resource, ResourceEntity>();
