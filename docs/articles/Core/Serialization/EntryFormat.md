@@ -21,7 +21,7 @@ We can decorate property with attributes:
 
 ## EntryValue
 
-It holds the value of the `Entry`, its type and necessary modification information like `Possible` values. The type is defined by the [EntryValueType](xref:Moryx.Serialization.EntryValueType) enum. It specifies the common primitives like `Int16`, `Double` or `String` and the two special types `Class` or `Collection`.
+It holds the value of the `Entry`, its type and necessary modification information like `Possible` values. The type is defined by the [EntryValueType](../../../../src/Moryx/Serialization/EntryConvert/EntryValueType.cs) enum. It specifies the common primitives like `Int16`, `Double` or `String` and the two special types `Class` or `Collection`.
 
 `EntryValueType.Class` is used either for properties that reference another object, items in a collection or as object prototypes. 
 

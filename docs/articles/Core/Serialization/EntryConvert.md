@@ -3,7 +3,7 @@ uid: EntryConvert
 ---
 # Entry Convert
 
-The static class [EntryConvert](xref:Moryx.Serialization.EntryConvert) transforms classes or objects into the MORYX [entry format](xref:Moryx.Serialization.Entry) and back. If you are not familiar with this format, please read this section first: [EntryFormat](xref:EntryFormat)
+The static class [EntryConvert](../../../../src/Moryx/Serialization/EntryConvert/EntryConvert.cs) transforms classes or objects into the MORYX [entry format](../../../../src/Moryx/Serialization/EntryConvert/Entry.cs) and back. If you are not familiar with this format, please read this section first: [EntryFormat](xref:EntryFormat)
 
 Because the `EntryConvert`-API can be confusing on first sight, we will split it into three sections. Each of these sections is explained in detail and supported with numerous examples.
 
@@ -143,7 +143,7 @@ public void Deserialize(Entry entry, FileStreamDummy dummy)
 
 ## ICustomSerialization
 
-All public methods of `EntryConvert` have overloads that expect an instance of [ICustomSerialization](xref:Moryx.Serialization.ICustomSerialization) to modify the behavior of the serializer where necessary. The overloads without the parameter use a Singleton instance of `DefaultSerialization`. When implementing a new version of `ICustomSerialization` it is recommended to derive from [DefaultSerialization](xref:Moryx.Serialization.DefaultSerialization) and only override what shall behave different.
+All public methods of `EntryConvert` have overloads that expect an instance of [ICustomSerialization](../../../../src/Moryx/Serialization/ICustomSerialization.cs) to modify the behavior of the serializer where necessary. The overloads without the parameter use a Singleton instance of `DefaultSerialization`. When implementing a new version of `ICustomSerialization` it is recommended to derive from [DefaultSerialization](../../../../src/Moryx/Serialization/DefaultSerialization.cs) and only override what shall behave different.
 
 ````cs
 public class FooSerialization : DefaultSerialization
@@ -179,7 +179,7 @@ EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
 
 ## EntrySerialize Attribute
 
-The [EntrySerializeAttribute](xref:Moryx.Serialization.EntrySerializeAttribute) will be handled by the [EntrySerializeSerialization](xref:Moryx.Serialization.EntrySerializeSerialization) which is a custom implementation of the [ICustomSerialization](xref:Moryx.Serialization.ICustomSerialization). This serialization evaluates the attribute with some defined rules depending on the serialized type:
+The [EntrySerializeAttribute](../../../../src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) will be handled by the [EntrySerializeSerialization](../../../../src/Moryx/Serialization/EntrySerializeSerialization.cs) which is a custom implementation of the [ICustomSerialization](../../../../src/Moryx/Serialization/ICustomSerialization.cs). This serialization evaluates the attribute with some defined rules depending on the serialized type:
 
 ### Serialize Properties
 
@@ -197,7 +197,7 @@ Properties are serialized by the following rules by default:
 
 In the other sections you have learned that `EntryConvert` is able to serialize and deserialize objects. With the `GetMethods` and `InvokeMethod` features of `EntryConvert` you are able to build your own `RPC (Remote Procedure Call)` service.
 
-To enable the `RPC` features of `EntryConvert` you need to use the [EntrySerializeSerialization](xref:Moryx.Serialization.EntrySerializeSerialization) serializer on `EntryConvert`. Then you add the [EntrySerializeAttribute](xref:Moryx.Serialization.EntrySerializeAttribute) to all private/public methods or properties you want to expose. The serialization only serializes methods with the attribute defined.
+To enable the `RPC` features of `EntryConvert` you need to use the [EntrySerializeSerialization](../../../../src/Moryx/Serialization/EntrySerializeSerialization.cs) serializer on `EntryConvert`. Then you add the [EntrySerializeAttribute](../../../../src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) to all private/public methods or properties you want to expose. The serialization only serializes methods with the attribute defined.
 
 ````cs
 public class MyLittleRPC
@@ -232,4 +232,4 @@ public Entry InvokeMethod(MethodEntry method)
 
 ### Serialize Constructors
 
-In the previous sections, it was described that `EntryConvert` can also serialize constructors. The [EntrySerializeSerialization](xref:Moryx.Serialization.EntrySerializeSerialization) only serializes constructos like methods with the [EntrySerializeAttribute](xref:Moryx.Serialization.EntrySerializeAttribute) defined.
+In the previous sections, it was described that `EntryConvert` can also serialize constructors. The [EntrySerializeSerialization](../../../../src/Moryx/Serialization/EntrySerializeSerialization.cs) only serializes constructos like methods with the [EntrySerializeAttribute](../../../../src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) defined.

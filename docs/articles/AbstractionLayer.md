@@ -32,7 +32,7 @@ The constraint is also not based on an inherent property of the activity or reso
 
 ## Identity
 
-[Identities](xref:Moryx.AbstractionLayer.Identity.IIdentity) are used to represent unique properties like serial numbers and MAC adresses for instances and material number for products. There is also the derived type [ProductIdentity](xref:Moryx.AbstractionLayer.ProductIdentity) that represents a products material number and revision. The static constructor `AsLatestRevision` also lets you refer to the latest revision for a certain material.
+[Identities](../../src/Moryx.AbstractionLayer/Identity/IIdentity.cs) are used to represent unique properties like serial numbers and MAC adresses for instances and material number for products. There is also the derived type [ProductIdentity](../../src/Moryx.AbstractionLayer/Products/ProductIdentity.cs) that represents a products material number and revision. The static constructor `AsLatestRevision` also lets you refer to the latest revision for a certain material.
 
 ## Process
 
@@ -40,21 +40,21 @@ A [Process](Processing/Processes.md) consists of a series of activities.
 
 ## Products
 
-A [ProductType](xref:Moryx.AbstractionLayer.Products.IProductType) or better a *product description* is used by a [ProductRecipe](xref:Moryx.AbstractionLayer.Recipes.ProductRecipe) to provide a basic structure to produce a [ProductInstance](xref:Moryx.AbstractionLayer.Products.ProductInstance) 
+A [ProductType](../../src/Moryx.AbstractionLayer/Products/IProductType.cs) or better a *product description* is used by a [ProductRecipe](../../src/Moryx.AbstractionLayer/Recipes/ProductRecipe.cs) to provide a basic structure to produce a [ProductInstance](../../src/Moryx.AbstractionLayer/Products/ProductInstance.cs) 
 
 ## Recipes
 
-A [Recipe](xref:Moryx.AbstractionLayer.Recipes.Recipe) is the base for all recipes which combines all needed data for a process.
+A [Recipe](../../src/Moryx.AbstractionLayer/Recipes/Recipe.cs) is the base for all recipes which combines all needed data for a process.
 
-A [ProductRecipe](xref:Moryx.AbstractionLayer.Recipes.ProductRecipe) provides a basic structure to use a product for production cases.
+A [ProductRecipe](../../src/Moryx.AbstractionLayer/Recipes/ProductRecipe.cs) provides a basic structure to use a product for production cases.
 
-A [WorkplanRecipe](xref:Moryx.AbstractionLayer.Recipes.WorkplanRecipe) provides a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process.
+A [WorkplanRecipe](../../src/Moryx.AbstractionLayer/Recipes/WorkplanRecipe.cs) provides a Workplan and a set of parameters to define all the [Activities](xref:Activities) needed for a Process.
 
-A [ProductionRecipe](xref:Moryx.AbstractionLayer.Recipes.ProductionRecipe) is the combination of a `ProductRecipe` and `WorkplanRecipe`.
+A [ProductionRecipe](../../src/Moryx.AbstractionLayer/Recipes/ProductionRecipe.cs) is the combination of a `ProductRecipe` and `WorkplanRecipe`.
 
 ## Resources
 
-The Resources package of the AbstrationLayer contains several basic classes to be used by the [Resources](xref:Moryx.AbstractionLayer.Resources.IResource) and the [ResourceManager](Resources/ResourceManagement.md)
+The Resources package of the AbstrationLayer contains several basic classes to be used by the [Resources](../../src/Moryx.AbstractionLayer/Resources/IResource.cs) and the [ResourceManager](Resources/ResourceManagement.md)
 
 ## Tasks
 

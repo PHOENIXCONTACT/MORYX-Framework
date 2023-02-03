@@ -3,7 +3,7 @@ uid: Model.RepositoryProxyBuilder
 ---
 # Repository Proxy Builder
 
-The [RepositoryProxyBuilder](xref:Moryx.Model.RepositoryProxyBuilder) is the fancy component which is responsible for generating classes for given `Repository`-API's and also existing `abstract` classes.
+The [RepositoryProxyBuilder](../../../../src/Moryx.Model/Repositories/Proxy/RepositoryProxyBuilder.cs) is the fancy component which is responsible for generating classes for given `Repository`-API's and also existing `abstract` classes.
 
 The builder provides runtime generated types for predefined APIs for example:
 

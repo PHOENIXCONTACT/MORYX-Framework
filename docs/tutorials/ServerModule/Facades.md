@@ -157,7 +157,7 @@ public interface IJobManagement
 ## Lifecycle bound facades
 
 Sometimes you need to know when a facade gets `activated` or `deactivated`. It's quite possible to get notified when the activation state of a facade has been changed.
-Your facade should inherit from [FacadeBase](xref:Moryx.Runtime.Modules.ILifeCycleBoundFacade) or at least from [ILifeCycleBoundFacade](xref:Moryx.Runtime.Modules.FacadeBase):
+Your facade should inherit from [FacadeBase](../../../src/Moryx.Runtime/Modules/ILifeCycleBoundFacade.cs) or at least from [ILifeCycleBoundFacade](../../../src/Moryx.Runtime/Modules/FacadeBase.cs):
 
 ````cs
 public class CustomFacade : FacadeBase, ICustomFacade
