@@ -120,7 +120,7 @@ Part of the Framework is also the Maintenance module, which hosts a HTTP REST se
 
 Starting with version 3.0 of the core we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community.
 
-Version 6 uses .net 6 with ASP.net Core and EntityFramework Core 6. All WPF UIs were replaced by WebUIs. In order to make debugging easier, we decided to merge the AbstractionLayer and Core repositories into one and name this one MORYX Framework.
+Version 6 uses .net 6 with ASP.net Core and EntityFramework Core 6. All WPF UIs were replaced by WebUIs. In order to make debugging easier, we decided to merge the AbstractionLayer and Core repositories into one and name this one MORYX Framework. The AbstractionLayer will be archived.
 
 A few examples of solutions build on MORYX are listed below:
 
