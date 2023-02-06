@@ -17,23 +17,7 @@ namespace Moryx.Products.Management
     {
         public AutoConfigurator Configurator { get; set; }
 
-        public IConfigManager ConfigManager { get; set; }
-
-        public void ExecuteCommand(string[] args, Action<string> outputStream)
-        {
-            if (!args.Any())
-                outputStream("ProductManagement console requires arguments");
-
-            switch (args[0])
-            {
-                case "configure":
-                    var product = args.Length >= 2 ? args[1] : null;
-                    outputStream($"Running configurator for {product}");
-                    var result = Configurator.ConfigureType(product);
-                    outputStream(result);
-                    break;
-            }
-        }
+        public IConfigManager ConfigManager { get; set; }       
 
         [EntrySerialize]
         [Description("Automatically configure the necessary strategies for a product type.")]

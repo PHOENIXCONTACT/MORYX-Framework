@@ -26,8 +26,7 @@ namespace Moryx.Model
                 return entity;
 
             entity = new TEntity();
-            dbSet.Add(entity);
-            EntityIdListener.Listen(entity, obj);
+            dbSet.Add(entity);          
 
             return entity;
         }

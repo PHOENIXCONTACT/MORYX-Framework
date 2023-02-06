@@ -177,6 +177,7 @@ namespace Moryx.Products.Management
         /// </summary>
         public static WorkplanEntity ToWorkplanEntity(IUnitOfWork uow, Workplan workplan)
         {
+            //TODO Use uow directly instead of the repository
             var workplanRepo = uow.GetRepository<IWorkplanRepository>();
             var referenceRepo = uow.GetRepository<IWorkplanReferenceRepository>();
 
@@ -186,7 +187,6 @@ namespace Moryx.Products.Management
             if (workplanEntity == null)
             {
                 workplanEntity = workplanRepo.Create(workplan.Name, 1, (int)workplan.State);
-                EntityIdListener.Listen(workplanEntity, workplan);
             }
             // If it was modified we write to a new entity and increment the version
             else
@@ -198,7 +198,7 @@ namespace Moryx.Products.Management
                 var reference = referenceRepo.Create((int)WorkplanReferenceType.NewVersion);
                 reference.Source = workplanEntity;
                 reference.Target = workplanEntity = workplanRepo.Create(workplan.Name, workplanEntity.Version + 1, (int)workplan.State);
-                EntityIdListener.Listen(workplanEntity, workplan);
+                
             }
 
             // Set properties of the workplan entity
