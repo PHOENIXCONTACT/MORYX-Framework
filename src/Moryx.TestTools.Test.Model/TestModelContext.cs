@@ -5,16 +5,12 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moryx.Model;
-using Moryx.Model.Annotations;
-using Moryx.Model.Attributes;
-using Moryx.Model.PostgreSQL;
 
 namespace Moryx.TestTools.Test.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
     public class TestModelContext : MoryxDbContext
     {
         public TestModelContext()

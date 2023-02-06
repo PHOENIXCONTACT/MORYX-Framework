@@ -8,4 +8,5 @@ export enum TestConnectionResult {
     ConnectionError = "ConnectionError",
     ConnectionOkDbDoesNotExist = "ConnectionOkDbDoesNotExist",
     Success = "Success",
+    PendingMigrations = "PendingMigrations",
 }

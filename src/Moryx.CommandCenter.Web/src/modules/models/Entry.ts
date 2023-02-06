@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import uuidv1 = require("uuid/v1");
+import { v4 as uuidv4 } from "uuid";
 import Config from "./Config";
 import EntryValidation from "./EntryValidation";
 import EntryValue from "./EntryValue";
@@ -21,7 +21,7 @@ export default class Entry {
     public parent: Entry;
 
     constructor() {
-        this.uniqueIdentifier = uuidv1();
+        this.uniqueIdentifier = uuidv4();
         this.value = new EntryValue();
         this.subEntries = [];
         this.prototypes = [];
@@ -48,7 +48,7 @@ export default class Entry {
     }
 
     public static generateUniqueIdentifiers(entry: Entry): void {
-        entry.uniqueIdentifier = uuidv1();
+        entry.uniqueIdentifier = uuidv4();
         entry.subEntries.forEach((subEntry: Entry) => {
             Entry.generateUniqueIdentifiers(subEntry);
         });

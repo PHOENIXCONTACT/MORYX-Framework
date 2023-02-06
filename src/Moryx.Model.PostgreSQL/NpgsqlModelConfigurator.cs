@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
@@ -16,6 +17,7 @@ namespace Moryx.Model.PostgreSQL
     /// <summary>
     /// Used to configure, create and update data models
     /// </summary>
+    [DisplayName("PostgreSQL Connector")]
     public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDatabaseConfig>
     {
         /// <inheritdoc />
@@ -39,13 +41,15 @@ namespace Moryx.Model.PostgreSQL
         /// <inheritdoc />
         public override async Task DeleteDatabase(IDatabaseConfig config)
         {
+            var settings = (NpgsqlDatabaseConnectionSettings)config.ConnectionSettings;
+
             // Close all connections to the server.
             // Its not possible to delete the database while there are open connections.
             NpgsqlConnection.ClearAllPools();
 
             // Create connection and prepare command
             var connection = new NpgsqlConnection(BuildConnectionString(config, false));
-            var command = CreateCommand($"DROP DATABASE \"{config.Database}\";", connection);
+            var command = CreateCommand($"DROP DATABASE \"{settings.Database}\";", connection);
 
             // Open connection
             await connection.OpenAsync();
@@ -56,16 +60,18 @@ namespace Moryx.Model.PostgreSQL
         /// <inheritdoc />
         public override Task DumpDatabase(IDatabaseConfig config, string targetPath)
         {
-            var dumpName = $"{DateTime.Now:dd-MM-yyyy-hh-mm-ss}_{config.Database}.backup";
+            var connectionString = CreateConnectionStringBuilder(config);
+
+            var dumpName = $"{DateTime.Now:dd-MM-yyyy-hh-mm-ss}_{connectionString.Database}.backup";
             var fileName = Path.Combine(targetPath, dumpName);
 
             Logger.Log(LogLevel.Debug, "Starting to dump database with pg_dump to: {0}", fileName);
 
             // Create process
-            var arguments = $"-U {config.Username} --format=c --file={fileName} " +
-                            $"-h {config.Host} -p {config.Port} {config.Database}";
+            var arguments = $"-U {connectionString.Username} --format=c --file={fileName} " +
+                            $"-h {connectionString.Host} -p {connectionString.Port} {connectionString.Database}";
 
-            var process = CreateBackgroundPgProcess("pg_dump.exe", arguments, config.Password);
+            var process = CreateBackgroundPgProcess("pg_dump.exe", arguments, connectionString.Password);
 
             // Configure the process using the StartInfo properties.
             process.Start();
@@ -75,16 +81,29 @@ namespace Moryx.Model.PostgreSQL
             return Task.CompletedTask;
         }
 
+        private static NpgsqlConnectionStringBuilder CreateConnectionStringBuilder(IDatabaseConfig config, bool includeModel = true)
+        {
+            var builder = new NpgsqlConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
+            
+            if(includeModel)
+            {
+                builder.Database = config.ConnectionSettings.Database;
+            }
+
+            return builder;
+        }
+
         /// <inheritdoc />
         public override Task RestoreDatabase(IDatabaseConfig config, string filePath)
         {
             Logger.Log(LogLevel.Debug, "Starting to restore database with pg_restore from: {0}", filePath);
+            var connectionString = CreateConnectionStringBuilder(config);
 
             // Create process
-            var arguments = $"-U {config.Username} --format=c --single-transaction --clean " +
-                            $"-h {config.Host} -p {config.Port} -d {config.Database} {filePath}";
+            var arguments = $"-U {connectionString.Username} --format=c --single-transaction --clean " +
+                            $"-h {connectionString.Host} -p {connectionString.Port} -d {connectionString.Database} {filePath}";
 
-            var process = CreateBackgroundPgProcess("pg_restore.exe", arguments, config.Password);
+            var process = CreateBackgroundPgProcess("pg_restore.exe", arguments, connectionString.Password);
 
             // Configure the process using the StartInfo properties.
             process.Start();
@@ -105,17 +124,8 @@ namespace Moryx.Model.PostgreSQL
 
         private static string BuildConnectionString(IDatabaseConfig config, bool includeModel)
         {
-            var builder = new NpgsqlConnectionStringBuilder
-            {
-                Username = config.Username,
-                Password = config.Password,
-                Host = config.Host,
-                Port = config.Port,
-                PersistSecurityInfo = true,
-            };
-
-            if (includeModel)
-                builder.Database = config.Database;
+            var builder = CreateConnectionStringBuilder(config, includeModel);
+            builder.PersistSecurityInfo = true;
 
             return builder.ToString();
         }

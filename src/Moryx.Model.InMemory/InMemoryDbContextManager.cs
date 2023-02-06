@@ -66,5 +66,11 @@ namespace Moryx.Model.InMemory
             var context = (TContext)Activator.CreateInstance(typeof(TContext), options);
             return context;
         }
+        
+        /// <inheritdoc />
+        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

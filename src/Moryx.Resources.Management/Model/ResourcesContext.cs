@@ -14,7 +14,6 @@ namespace Moryx.Resources.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
     public class ResourcesContext : MoryxDbContext
     {
         /// <inheritdoc />

@@ -1,36 +1,23 @@
 // Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Generic;
+
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
 {
     /// <summary>
     /// Configuration of the database.
     /// </summary>
-    public class DatabaseConfigModel
+    public record DatabaseConfigModel
     {
         /// <summary>
-        /// Database server
+        /// Name of the database configurator type
         /// </summary>
-        public string Server { get; set; }
+        public string ConfiguratorTypename { get; set; }
 
         /// <summary>
-        /// Port on server
+        /// Configuration of the database model.
         /// </summary>
-        public int Port { get; set; }
-
-        /// <summary>
-        /// Database to use
-        /// </summary>
-        public string Database { get; set; }
-
-        /// <summary>
-        /// Database user
-        /// </summary>
-        public string User { get; set; }
-
-        /// <summary>
-        /// Password for the username
-        /// </summary>
-        public string Password { get; set; }
+        public Dictionary<string, string> Entries { get;set; }
     }
 }

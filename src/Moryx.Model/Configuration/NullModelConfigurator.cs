@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Logging;
 
 namespace Moryx.Model.Configuration
 {
@@ -17,7 +16,7 @@ namespace Moryx.Model.Configuration
     public sealed class NullModelConfigurator : IModelConfigurator
     {
         /// <inheritdoc />
-        public IDatabaseConfig Config => null;
+        public IDatabaseConfig Config => new DatabaseConfig<DatabaseConnectionSettings>();
 
         /// <inheritdoc />
         public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)
