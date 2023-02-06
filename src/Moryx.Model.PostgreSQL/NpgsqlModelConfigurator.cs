@@ -17,7 +17,7 @@ namespace Moryx.Model.PostgreSQL
     /// <summary>
     /// Used to configure, create and update data models
     /// </summary>
-    [DisplayName("PostgreSQL adapter")]
+    [DisplayName("PostgreSQL Connector")]
     public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDatabaseConfig>
     {
         /// <inheritdoc />
