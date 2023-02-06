@@ -6,6 +6,7 @@
 import InvocationResponse from "../../common/api/responses/InvocationResponse";
 import RestClientBase from "../../common/api/RestClientBase";
 import DatabaseConfigModel from "../models/DatabaseConfigModel";
+import DatabasesResponse from "../models/DatabasesResponse";
 import DataModel from "../models/DataModel";
 import ExecuteSetupRequest from "./requests/ExecuteSetupRequest";
 import RestoreDatabaseRequest from "./requests/RestoreDatabaseRequest";
@@ -16,8 +17,8 @@ const ROOT_PATH = "/databases";
 const MODEL_PATH = ROOT_PATH + "/{target}";
 
 export default class DatabasesRestClient extends RestClientBase {
-    public databaseModels(): Promise<DataModel[]> {
-        return this.get<DataModel[]>(ROOT_PATH, []);
+    public databaseModels(): Promise<DatabasesResponse> {
+        return this.get<DatabasesResponse>(ROOT_PATH, new DatabasesResponse());
     }
 
     public deleteAllDatabaseModels(): Promise<InvocationResponse> {
@@ -28,8 +29,8 @@ export default class DatabasesRestClient extends RestClientBase {
         return this.get<DataModel>(DatabasesRestClient.pathTo(targetModel), new DataModel());
     }
 
-    public saveDatabaseConfig(request: DatabaseConfigModel, targetModel: string): Promise<Response> {
-        return this.post<DatabaseConfigModel, Response>(DatabasesRestClient.pathTo(targetModel, "/config"), request, new Response());
+    public saveDatabaseConfig(request: DatabaseConfigModel, targetModel: string): Promise<DataModel> {
+        return this.post<DatabaseConfigModel, DataModel>(DatabasesRestClient.pathTo(targetModel, "/config"), request, new DataModel());
     }
 
     public testDatabaseConfig(request: DatabaseConfigModel, targetModel: string): Promise<TestConnectionResponse> {

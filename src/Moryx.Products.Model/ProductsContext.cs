@@ -5,15 +5,12 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moryx.Model;
-using Moryx.Model.Attributes;
-using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Products.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
     public class ProductsContext : MoryxDbContext
     {
         /// <inheritdoc />

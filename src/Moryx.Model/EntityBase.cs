@@ -22,12 +22,8 @@ namespace Moryx.Model
             get => _id;
             set
             {
-                _id = value;
-                IdChanged?.Invoke(this, EventArgs.Empty);
+                _id = value;            
             }
-        }
-
-        /// <inheritdoc />
-        public event EventHandler IdChanged;
+        }      
     }
 }

@@ -3,7 +3,7 @@
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {
-    internal interface IFacadeA
+    public interface IFacadeA
     {
          
     }

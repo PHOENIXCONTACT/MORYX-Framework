@@ -87,16 +87,14 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Save the resource instance to a database entity
         /// </summary>
-        public static Tuple<ResourceEntity, bool> SaveToEntity(IUnitOfWork uow, Resource instance)
+        public static ResourceEntity SaveToEntity(IUnitOfWork uow, Resource instance)
         {
-            var wasCreated = false;
             // Create entity and populate from object
             var entity = uow.FindEntity<ResourceEntity>(instance);
-            if (entity == null)
+            if (entity is null)
             {
                 entity = uow.CreateEntity<ResourceEntity>(instance);
                 entity.Type = instance.ResourceType();
-                wasCreated = true;
             }
 
             // All those checks are necessary since EF change tracker does not recognize equal values as such
@@ -108,7 +106,7 @@ namespace Moryx.Resources.Management
             if (entity.ExtensionData != extensionData)
                 entity.ExtensionData = extensionData;
 
-            return new (entity, wasCreated);
+            return entity;
         }
 
         /// <summary>

@@ -12,6 +12,7 @@
 	<ItemGroup>
       <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
       <ProjectReference Include="..\Moryx.CommandCenter.Web\Moryx.CommandCenter.Web.csproj" />
+      <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
       <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
       <ProjectReference Include="..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
       <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />	  

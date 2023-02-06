@@ -19,11 +19,6 @@ namespace Moryx.DependentTestModule
 
         #endregion
 
-        public void ExecuteCommand(string[] args, Action<string> outputStream)
-        {
-            outputStream("The DependentTestModule does not provide any commands!");
-        }
-
         [EntrySerialize, Description("Creates a log message for the given log level")]
         public void CreateTestLogMessage(LogLevel logLevel)
         {

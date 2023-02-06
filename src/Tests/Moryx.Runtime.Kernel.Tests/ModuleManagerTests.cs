@@ -61,7 +61,7 @@ namespace Moryx.Runtime.Kernel.Tests
 
 
             // Act
-            //moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.NotNull(dependend.Facades, "No facade injected");
@@ -79,7 +79,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            //moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.NotNull(dependend.Facades, "No facade injected");
@@ -98,7 +98,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            //moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.NotNull(dependend.Facades, "No facade injected");
@@ -119,7 +119,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            //moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.NotNull(depend.Dependency, "Facade not injected correctly");
@@ -138,7 +138,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            //moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.AreEqual(4, moduleManager.AllModules.Count());
@@ -159,7 +159,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            //moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.AreEqual(3, moduleManager.AllModules.Count());
@@ -196,7 +196,6 @@ namespace Moryx.Runtime.Kernel.Tests
                 mockModule1.Object,
                 mockModule2.Object
             });
-            //moduleManager.Initialize();
 
             // Act
             moduleManager.StartModules();
@@ -211,22 +210,23 @@ namespace Moryx.Runtime.Kernel.Tests
             mockModule2.Verify(mock => mock.Start());
         }
 
-        //[Test]
-        //public void ShouldStartOneModule()
-        //{
-        //    // Argange
-        //    var mockModule = new Mock<IServerModule>();
+        [Test]
+        public void ShouldStartOneModule()
+        {
+            // Argange
+            var mockModule = new Mock<IServerModule>();
 
-        //    var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
-        //    moduleManager.Initialize();
+            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
 
-        //    // Act
-        //    moduleManager.StartModule(mockModule.Object);
+            // Act
+            moduleManager.StartModule(mockModule.Object);
 
-        //    // Assert
-        //    mockModule.Verify(mock => mock.Initialize(), Times.Exactly(2));
-        //    mockModule.Verify(mock => mock.Start());
-        //}
+            Thread.Sleep(1);
+
+            // Assert
+            mockModule.Verify(mock => mock.Initialize());
+            mockModule.Verify(mock => mock.Start());
+        }
 
         [Test]
         public void ShouldStopModulesAndDeregisterFromEvents()
@@ -236,7 +236,6 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule2 = new Mock<IServerModule>();
 
             var moduleManager = CreateObjectUnderTest(new[] {mockModule1.Object, mockModule2.Object});
-            //moduleManager.Initialize();
             moduleManager.StartModules();
 
             // Act
@@ -258,7 +257,6 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.ModuleStateChanged += (sender, args) => eventFired = true;
 
             // Act
-            //moduleManager.Initialize();
             mockModule.Raise(mock => mock.StateChanged += null, null, new ModuleStateChangedEventArgs());
 
             // Assert
@@ -273,13 +271,10 @@ namespace Moryx.Runtime.Kernel.Tests
             var moduleManager = CreateObjectUnderTest(new[] { module });
 
             // Act
-            //moduleManager.Initialize();
             moduleManager.StartModules();
 
-            while (module.State != ServerModuleState.Running)
-            {
-                Thread.Sleep(100);
-            }
+            var i = 0;
+            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
             // Assert
             Assert.AreEqual(1, module.ActivatedCount);
@@ -293,23 +288,25 @@ namespace Moryx.Runtime.Kernel.Tests
             var moduleManager = CreateObjectUnderTest(new[] { module });
 
             // Act
-            //moduleManager.Initialize();
             moduleManager.StartModules();
 
-            while (module.State != ServerModuleState.Running)
-            {
-                Thread.Sleep(100);
-            }
+            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
             moduleManager.StopModules();
 
-            while (module.State != ServerModuleState.Stopped)
-            {
-                Thread.Sleep(100);
-            }
+            WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
 
             // Assert
             Assert.AreEqual(1, module.ActivatedCount);
+        }
+
+        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10) {
+            var i = 0;
+            while (!condition() && (i < maxSeconds))
+            {
+                Thread.Sleep(100);
+                i++;
+            }
         }
     }
 }

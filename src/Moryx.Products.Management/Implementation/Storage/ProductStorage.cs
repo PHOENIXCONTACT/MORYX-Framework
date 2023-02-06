@@ -582,7 +582,7 @@ namespace Moryx.Products.Management
         private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, IProductType modifiedInstance)
         {
             var strategy = TypeInformation[modifiedInstance.GetType().FullName].Strategy;
-
+            //TODO use uow directly instead of repo if that is possible
             // Get or create entity
             var repo = saverContext.GetRepository<IProductTypeRepository>();
             var identity = (ProductIdentity)modifiedInstance.Identity;
@@ -594,7 +594,7 @@ namespace Moryx.Products.Management
             if (entities.All(p => p.Deleted != null))
             {
                 typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().FullName);
-                EntityIdListener.Listen(typeEntity, modifiedInstance);
+                saverContext.UnitOfWork.LinkEntityToBusinessObject(modifiedInstance, typeEntity);
             }
             else
             {
@@ -616,6 +616,7 @@ namespace Moryx.Products.Management
 
             // And nasty again!
             var type = modifiedInstance.GetType();
+
             var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
             foreach (var partLinkInfo in TypeInformation[type.FullName].GetAllPartLinks(modifiedInstance))
             {
@@ -627,9 +628,9 @@ namespace Moryx.Products.Management
                     if (linkEntity == null && link != null) // link is new
                     {
                         linkEntity = linkRepo.Create(linkStrategy.PropertyName);
+                        saverContext.UnitOfWork.LinkEntityToBusinessObject(link, linkEntity);
                         linkEntity.Parent = typeEntity;
-                        linkStrategy.SavePartLink(link, linkEntity);
-                        EntityIdListener.Listen(linkEntity, link);
+                        linkStrategy.SavePartLink(link, linkEntity);                     
                         linkEntity.Child = GetPartEntity(saverContext, link);
                         saverContext.PersistentObjectCache.Add(link, linkEntity);
 
@@ -667,9 +668,8 @@ namespace Moryx.Products.Management
                         if (link.Id == 0 || (linkEntity = currentEntities.FirstOrDefault(p => p.Id == link.Id)) == null)
                         {
                             linkEntity = linkRepo.Create(linkStrategy.PropertyName);
+                            saverContext.UnitOfWork.LinkEntityToBusinessObject(link, linkEntity);
                             linkEntity.Parent = typeEntity;
-                            EntityIdListener.Listen(linkEntity, link);
-                            
                         }
                         else
                         {
@@ -689,8 +689,7 @@ namespace Moryx.Products.Management
         {
             if (saverContext.EntityCache.ContainsKey((ProductIdentity)link.Product.Identity))
             {
-                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];
-                EntityIdListener.Listen(part, link.Product);
+                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];            
                 saverContext.PersistentObjectCache.Add(link.Product, part);
                 return part;
             }
@@ -919,23 +918,14 @@ namespace Moryx.Products.Management
         /// </summary>
         public void SaveInstances(ProductInstance[] productInstances)
         {
-            using (var uow = Factory.Create())
-            {
-                var tuples = new Dictionary<ProductInstance, ProductInstanceEntity>();
-                // Write all to entity objects
-                foreach (var instance in productInstances)
-                {
-                    var entity = SaveInstance(uow, instance);
-                    tuples.Add(instance, entity);
-                }
+            using var uow = Factory.Create();
 
-                // Save transaction
-                uow.SaveChanges();
-                foreach(var tuple in tuples)
-                {
-                    tuple.Key.Id = tuple.Value.Id;
-                }
-            }
+            // Write all to entity objects
+            foreach (var instance in productInstances)
+                SaveInstance(uow, instance);
+
+            // Save transaction
+            uow.SaveChanges();
         }
 
         /// <summary>

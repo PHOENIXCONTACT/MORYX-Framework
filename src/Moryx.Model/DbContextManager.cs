@@ -21,37 +21,70 @@ namespace Moryx.Model
     public class DbContextManager : IDbContextManager
     {
         private ModelWrapper[] _knownModels;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IConfigManager _configManager;
 
+        /// <inheritdoc />
         public DbContextManager(IConfigManager configManager, ILoggerFactory loggerFactory)
         {
+            _loggerFactory = loggerFactory;
+            _configManager = configManager;
+
             var dbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext), delegate (Type type)
             {
-                var modelAttr = type.GetCustomAttribute<ModelConfiguratorAttribute>();
-                return modelAttr != null;
+                return type != typeof(DbContext);
             });
 
             _knownModels = dbContextTypes
-                .Select(dbContextType => new
+                .Select(dbContextType =>
                 {
-                    DbContextType = dbContextType,
-                    ModelConfiguratorAttr = dbContextType.GetCustomAttribute<ModelConfiguratorAttribute>()
+                    var config = configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(dbContextType));
+
+                    var configuratorType = !string.IsNullOrEmpty(config.ConfiguratorTypename)
+                        ? Type.GetType(config.ConfiguratorTypename)
+                        : typeof(NullModelConfigurator);
+
+                    return new
+                    {
+                        DbContextType = dbContextType,
+                        ConfiguratorType = configuratorType,
+                    };
                 }).Select(t =>
                 {
                     var wrapper = new ModelWrapper
                     {
                         DbContextType = t.DbContextType,
-                        Configurator = (IModelConfigurator)Activator.CreateInstance(t.ModelConfiguratorAttr.ConfiguratorType)
+                        Configurator = (IModelConfigurator)Activator.CreateInstance(t.ConfiguratorType)
                     };
                     return wrapper;
                 }).ToArray();
 
             foreach (var wrapper in _knownModels)
             {
-                var configuratorType = wrapper.Configurator.GetType();
-                var logger =loggerFactory.CreateLogger(configuratorType);
-                wrapper.Configurator.Initialize(wrapper.DbContextType, configManager, logger);
+                InitializeConfigurator(wrapper);
             }
         }
+
+        /// <inheritdoc />
+        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
+        {
+            _configManager.SaveConfiguration(databaseConfig, ConfigFilename(dbContextType));
+
+            var modelWrapper = _knownModels.First(w => w.DbContextType == dbContextType);
+            modelWrapper.Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType);
+
+            InitializeConfigurator(modelWrapper);
+        }
+
+        private void InitializeConfigurator(ModelWrapper modelWrapper)
+        {
+            var configuratorType = modelWrapper.Configurator.GetType();
+            var logger = _loggerFactory.CreateLogger(configuratorType);
+            modelWrapper.Configurator.Initialize(modelWrapper.DbContextType, _configManager, logger);
+        }
+
+        private string ConfigFilename(Type dbContextType)
+            => dbContextType.FullName + ".DbConfig";
 
         /// <inheritdoc />
         public IReadOnlyCollection<Type> Contexts => _knownModels.Select(km => km.DbContextType).ToArray();

@@ -9,6 +9,7 @@ MORYX Abstraction Layer no longer supports the legacy .NET Framework and is only
 ## Renamed Classes and Interfaces
 - `SkipArticleStrategy` was renamed to `SkipInstanceStrategy`
 - `IProductStrategyConfiguation` was renamed to `IProductStrategyConfiguration`
+- `RuntimePlatform` was removed, instead `Platform` can be used directly now
 
 ## Changed Interfaces
 Several interfaces created for minor confirm updates got merged or removed throughout the update

@@ -81,9 +81,6 @@ export default class RestClientBase {
         return promise
             .then((results) => results.text())
             .then((data) => data ? JSON.parse(data) : {})
-            .catch((e) => {
-                console.log(e);
-                return errorInstance;
-            });
+            .catch((e) => errorInstance);
     }
 }

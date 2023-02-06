@@ -4,6 +4,7 @@
 using System;
 using System.Data.Common;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -67,13 +68,7 @@ namespace Moryx.Model.Sqlite
 
         private static string BuildConnectionString(IDatabaseConfig config)
         {
-            var builder = new SqliteConnectionStringBuilder
-            {
-                DataSource = GetFilePath(config),
-                Password = config.Password,
-            };
-
-            return builder.ToString();
+                return config.ConnectionSettings.ConnectionString;
         }
 
         /// <inheritdoc />
@@ -97,13 +92,8 @@ namespace Moryx.Model.Sqlite
 
         private static string GetFilePath(IDatabaseConfig config)
         {
-            if (string.IsNullOrEmpty(config.Host))
-                config.Host = "models";
-
-            if (!Directory.Exists(config.Host))
-                Directory.CreateDirectory(config.Host);
-
-            return Path.Combine(config.Host, config.Database);
+            var builder = new SqliteConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
+            return builder.DataSource;
         }
     }
 }

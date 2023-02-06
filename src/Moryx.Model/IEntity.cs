@@ -14,11 +14,6 @@ namespace Moryx.Model
         /// Database key of this entity
         /// </summary>
         long Id { get; set; }
-
-        /// <summary>
-        /// Event if the id was changed
-        /// </summary>
-        event EventHandler IdChanged;
     }
 
     /// <summary>

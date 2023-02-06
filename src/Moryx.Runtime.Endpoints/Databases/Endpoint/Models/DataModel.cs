@@ -1,6 +1,9 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Model.Configuration;
+using Moryx.Serialization;
+
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
 {
     /// <summary>
@@ -17,6 +20,11 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
         /// Configuration of the database model.
         /// </summary>
         public DatabaseConfigModel Config { get; set; }
+
+        /// <summary>
+        /// Configurators that could be set up
+        /// </summary>
+        public DatabaseConfigOptionModel[] PossibleConfigurators { get; set; }
 
         /// <summary>
         /// An amount of setups for this model.

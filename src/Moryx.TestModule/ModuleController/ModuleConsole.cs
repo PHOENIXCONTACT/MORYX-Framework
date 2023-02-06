@@ -61,11 +61,6 @@ namespace Moryx.TestModule
     {
         public IContainer Container { get; set; }
 
-        public void ExecuteCommand(string[] args, Action<string> outputStream)
-        {
-            outputStream("The TestModule does not provide any commands!");
-        }
-
         [EntrySerialize, Description("Returns the string that was sent.")]
         public string Echo(string message)
         {

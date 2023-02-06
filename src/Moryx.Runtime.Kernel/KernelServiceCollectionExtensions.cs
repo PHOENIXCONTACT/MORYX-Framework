@@ -12,6 +12,9 @@ using System.Linq;
 
 namespace Moryx.Runtime.Kernel
 {
+    /// <summary>
+    /// Contains <seealso cref="IServiceCollection"/> extensions to easily add MORYX to an Asp.Net Core application
+    /// </summary>
     public static class KernelServiceCollectionExtensions
     {
         /// <summary>
@@ -32,6 +35,9 @@ namespace Moryx.Runtime.Kernel
 
             // Register container factory for module container
             serviceCollection.AddSingleton<IModuleContainerFactory, ModuleContainerFactory>();
+
+            // Initialize Platform class
+            Platform.SetPlatform();
         }
 
         /// <summary>
@@ -40,7 +46,7 @@ namespace Moryx.Runtime.Kernel
         public static void AddMoryxModules(this IServiceCollection serviceCollection)
         {           
             // Find all module types in the app domain
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic);
             var modules = loadedAssemblies
                 .SelectMany(assembly => assembly.GetExportedTypes())
                 .Where(type => !type.IsInterface & !type.IsAbstract & typeof(IServerModule).IsAssignableFrom(type))
