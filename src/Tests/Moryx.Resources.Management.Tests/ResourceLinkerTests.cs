@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -6,9 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Model;
 using Moryx.Resources.Model;
-using Moryx.TestTools.UnitTest;
 using Moq;
 using Moryx.Model.Repositories;
 using NUnit.Framework;

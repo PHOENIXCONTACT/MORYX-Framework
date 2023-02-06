@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -10,7 +10,6 @@ using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Resources.Model;
 using Moryx.Serialization;
-using Moryx.Tools;
 using Newtonsoft.Json;
 
 namespace Moryx.Resources.Management

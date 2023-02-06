@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -48,11 +48,8 @@ namespace Moryx.Resources.Management
                 return;
 
             // Check if we already created the assembly and the module builder
-#if HAVE_APPDOMAIN_DYNAMICASSEMBLY
-            var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(AssemblyName), AssemblyBuilderAccess.Run);
-#else
             var assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(AssemblyName), AssemblyBuilderAccess.Run);
-#endif
+
             ModuleBuilder = assembly.DefineDynamicModule(ModuleName);
         }
 

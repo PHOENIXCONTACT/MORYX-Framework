@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -7,8 +7,6 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Logging;
-using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel

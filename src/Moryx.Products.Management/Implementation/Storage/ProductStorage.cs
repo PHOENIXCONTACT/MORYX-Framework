@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -17,7 +17,6 @@ using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
 using static Moryx.Products.Management.ProductExpressionHelpers;
-using Moryx.Serialization;
 using Moryx.Products.Management.Implementation.Storage;
 
 namespace Moryx.Products.Management
