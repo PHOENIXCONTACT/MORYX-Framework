@@ -94,7 +94,7 @@ public void Deserialize()
 
 ## Serialize and deserialize Streams
 
-The EntryConvert also supports serialization and deserialization of [Streams](xref:System.IO.Stream). Therefore the stream is serialized by converting the content to a Base64 encoded string. Many stream types are supported like [MemoryStream](xref:System.IO.MemoryStream) or [FileStream](xref:System.IO.FileStream).
+The EntryConvert also supports serialization and deserialization of [Streams](https://learn.microsoft.com/en-us/dotnet/api/system.io.stream). Therefore the stream is serialized by converting the content to a Base64 encoded string. Many stream types are supported like [MemoryStream](https://learn.microsoft.com/en-us/dotnet/api/system.io.MemoryStream) or [FileStream](https://learn.microsoft.com/en-us/dotnet/api/system.io.FileStream).
 
 ### Limitations on serializing and deserializing Streams
 

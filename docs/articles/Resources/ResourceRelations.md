@@ -29,7 +29,7 @@ public class ReferenceSample : Resource
 ```
 
 The code example above shows how to declare references to other resources. 
-References to a collection of other resources must be of type [IReferences](xref:Moryx.AbstractionLayer.Resources.IReferences%601>). 
+References to a collection of other resources must be of type [IReferences](../../../src/Moryx.AbstractionLayer/Resources/IReferences.cs). 
 The specialized type is necessary for the resource manager. 
 Collections can optionally be decorated with `AutoSave` = true to enable automatic saving of modifications to the database. While `RaiseResourceChanged` saves the entire resource and all its references, `AutoSave` raises an event that only saves the new state of the collection.
 The [Resource](../../../src/Moryx.AbstractionLayer/Resources/Resource.cs) base class declares two relations - `Parent` and `Children`. 

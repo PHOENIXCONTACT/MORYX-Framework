@@ -3,10 +3,10 @@ uid: ResourceTypeTree
 ---
 # Resource type tree
 
-All plugin types within the resource management are derived from the [Resource](../../../src/Moryx.AbstractionLayer/Resources/Resource.cs) class, either directly or by deriving from a subtype like [PublicResource](../../../src/Moryx.AbstractionLayer/Resources/PublicResource.cs), [InteractionResource](xref:Moryx.Resources.Wcf.InteractionResource) or [Driver](../../../src/Moryx.AbstractionLayer/Drivers/Driver.cs). 
+All plugin types within the resource management are derived from the [Resource](../../../src/Moryx.AbstractionLayer/Resources/Resource.cs) class, either directly or by deriving from a subtype like [PublicResource](../../../src/Moryx.AbstractionLayer/Resources/PublicResource.cs), [InteractionResource](xref:Moryx.Resources.InteractionResource) or [Driver](../../../src/Moryx.AbstractionLayer/Drivers/Driver.cs). 
 Subclassing makes it possible to extend and customize existing resources or share functionality among resources by creating a common, abstract base class. 
 Of those sub-classes `PublicResource` is especially important. 
-The [Resource Management's](xref:ResourceManagement) objective is to model the CPS (cyber physical system) and make it easily accessible to other modules. 
+The [Resource Management's](ResourceManagement.md) objective is to model the CPS (cyber physical system) and make it easily accessible to other modules. 
 Types derived from `PublicResource` or more general those implementing [IPublicResource](../../../src/Moryx.AbstractionLayer/Resources/IPublicResource.cs) are the entry points into the resource graph from the facade. 
 In that sense, the abstraction layer can be compared to the `Android HAL` and its device contracts. 
 Interfaces derived from `IPublicResource` are those contracts that can be deﬁned by applications from different domains. 

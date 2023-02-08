@@ -57,7 +57,7 @@ There are two methods to create a result for the activity. One to define a faile
 
 ## Activity Parameters
 
-Is there some information which is necessary to handle the activity like an adapter number for an electrical test or something like that? Then it is necessary to define a paramater class for the activity and derive the activity from the [Activity<TParam>](xref:Moryx.AbstractionLayer.Activity%601>) class like in the following example:
+Is there some information which is necessary to handle the activity like an adapter number for an electrical test or something like that? Then it is necessary to define a paramater class for the activity and derive the activity from the [Activity<TParam>](../../../src/Moryx.AbstractionLayer/Activities/Activity.cs) class like in the following example:
 
 ```` cs
 [ActivityResults(typeof(DefaultActivityResult))]

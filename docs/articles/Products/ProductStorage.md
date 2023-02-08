@@ -3,9 +3,9 @@ uid: ProductsStorage
 ---
 # Product Storage
 
-Section [Product Definition](xref:ProductsDefinition) describes how applications can create their own product structures in form of custom classes. In order to save and load those to and from the database it is also necessary to configure the product storage. The product model defines [`IGenericColumns`](../../../src/Moryx.Products.Model/Entities/IGenericColumns.cs) for all entities that represent business objects, which are usually derived and extended in applications. The product management comes with a range of plugins to store and load user defined product types, instances, partlinks and recipes in these structures. They can be configured through the maintenance web UI or using the modules configure console command. The configure command attempts to automatically map a product type, its part links, properties and instance to database columns using a range of conversion strategies.
+Section [Product Definition](ProductDefinition.md) describes how applications can create their own product structures in form of custom classes. In order to save and load those to and from the database it is also necessary to configure the product storage. The product model defines [`IGenericColumns`](../../../src/Moryx.Products.Model/Entities/IGenericColumns.cs) for all entities that represent business objects, which are usually derived and extended in applications. The product management comes with a range of plugins to store and load user defined product types, instances, partlinks and recipes in these structures. They can be configured through the maintenance web UI or using the modules configure console command. The configure command attempts to automatically map a product type, its part links, properties and instance to database columns using a range of conversion strategies.
 
-Make sure that all your product definitions have properly configured mappings. Refer to the [Generic Strategies Documentation](xref:ProductGenericStrategies) on how to configure the generic strategies for product types, instances, part links and recipes.
+Make sure that all your product definitions have properly configured mappings. Refer to the [Generic Strategies Documentation](GenericStrategies.md) on how to configure the generic strategies for product types, instances, part links and recipes.
 
 ## Product Type Strategy
 
@@ -31,7 +31,7 @@ public override bool HasChanged(IProduct current, IGenericColumns dbProperties)
 
 ### Load Product
 
-Loading products refer to the conversion from product entity to typed object of type [IProduct](xref:Moryx.AbstractionLayer.IProduct). The implementation usually follows a standard pattern.
+Loading products refer to the conversion from product entity to typed object of type [IProduct](../../../src/Moryx.AbstractionLayer/Products/IProductType.cs). The implementation usually follows a standard pattern.
 
 * (optional) fetch extended repo and entity
 * copy properties to product
@@ -40,7 +40,7 @@ An implementation for our watch would look like this:
 
 ````cs
 // In class WatchStrategy
-public void LoadType(IGenericColumns source, IProduct target)
+public void LoadType(IGenericColumns source, IProductType target)
 {
     var watch = (WatchProduct)target;
     watch.Weight = source.Float1;
@@ -92,7 +92,7 @@ private class NeedleLinkStrategy : LinkStrategyBase<NeedleProduct>
 
 ### Load Instances
 
-As explained in [Product Definition](xref:ProductsDefinition) product instances are supposed to be limited to instance attributes and part link attributes. This limitation should be extended and even increased for the instance storage. In a regular industry or production environment an application may have houndreds of different products, but it will soon have thousands or millions of instances. When it comes to instances every byte of wasted memory quickly turns into wasted storage in the dimensions of MegaBytes or GigaBytes. To reduce the required instance storage to an absolute minimum the [ProductStorage](../../../src/Moryx.Products.Management/Implementation/Storage/ProductStorage.cs) recreates instance objects from their products instead of trying to recreate them from the entity. This approach covers all instance attributes, that can be derived from the type definition like part link attributes - e.g. the role of our needle in a watch. All the strategy implementation has to do is copy instance properties from the entity to the created and typed object.
+As explained in [Product Definition](ProductDefinition.md) product instances are supposed to be limited to instance attributes and part link attributes. This limitation should be extended and even increased for the instance storage. In a regular industry or production environment an application may have houndreds of different products, but it will soon have thousands or millions of instances. When it comes to instances every byte of wasted memory quickly turns into wasted storage in the dimensions of MegaBytes or GigaBytes. To reduce the required instance storage to an absolute minimum the [ProductStorage](../../../src/Moryx.Products.Management/Implementation/Storage/ProductStorage.cs) recreates instance objects from their products instead of trying to recreate them from the entity. This approach covers all instance attributes, that can be derived from the type definition like part link attributes - e.g. the role of our needle in a watch. All the strategy implementation has to do is copy instance properties from the entity to the created and typed object.
 
 #### Sample Code
 
