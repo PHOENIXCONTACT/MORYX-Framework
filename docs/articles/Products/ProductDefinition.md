@@ -8,7 +8,7 @@ be limited to those of the concrete physical instance like production date, seri
 
 ## Product - Level 1
 
-The level 1 product group definition is done by creating a class used to represent instances of the group. Such a group and its respective class could be a [watch](xref:Moryx.Products.Samples.WatchProduct) or one of its [needles](xref:Moryx.Products.Samples.NeedleProduct). The properties of the class define attributes each product of the group defines. Properties derived from `ProductPartLink` reference other  products that represent parts. The product base class defines standard attributes like database id, name and identity. Each product class also implements a method `CreateInstance()` that acts as a strategy to create instances for this type of product.
+The level 1 product group definition is done by creating a class used to represent instances of the group. Such a group and its respective class could be a [watch](../../../src/Moryx.Products.Samples/ProductTypes/WatchType.cs) or one of its [needles](../../../src/Moryx.Products.Samples/ProductTypes/NeedleType.cs). The properties of the class define attributes each product of the group defines. Properties derived from `ProductPartLink` reference other  products that represent parts. The product base class defines standard attributes like database id, name and identity. Each product class also implements a method `CreateInstance()` that acts as a strategy to create instances for this type of product.
 
 ## Product Parts
 

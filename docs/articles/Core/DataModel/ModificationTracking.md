@@ -7,7 +7,7 @@ uid: Model.ModificationTracking
 
 Sometimes developers want to keep track about modifications of a row in their table. MORYX framework has a built-in solution to keep track about creation, update and deletion time.
 
-To make an entity trackable you just need to derive from [IModificationTrackedEntity](xref:Moryx.Model.IModificationTrackedEntity) or the corresponding base class [ModificationTrackedEntityBase](../../../../src/Moryx.Model/ModificationTrackedEntityBase.cs).
+To make an entity trackable you just need to derive from [IModificationTrackedEntity](../../../../src/Moryx.Model/IEntity.cs) or the corresponding base class [ModificationTrackedEntityBase](../../../../src/Moryx.Model/ModificationTrackedEntityBase.cs).
 
 ````cs
 public class PersonEntity : ModificationTrackedEntityBase

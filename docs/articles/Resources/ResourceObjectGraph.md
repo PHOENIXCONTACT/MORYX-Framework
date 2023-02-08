@@ -45,7 +45,7 @@ The ability to make changes at runtime that are automatically saved is not limit
 It is also possible to change [Relations](ResourceRelations.md) between resources to expand and reduce the resource graph at runtime.
 To make sure the resource manager knows of the new resource and takes care of its dependencies and reference properties, it is not possible to create new resources naturally through constructor invocation.
 Instead each resource can use the [IResourceGraph](../../../src/Moryx.AbstractionLayer/Resources/IResourceGraph.cs) to create and destroy resource instances.
-Resources access the graph through the inherited [Graph](xref:Moryx.AbstractionLayer.Resources.Resource.Graph) property.
+Resources access the graph through the inherited [Graph](../../../src/Moryx.Resources.Management/Resources/ResourceGraph.cs) property.
 It sets the reference on each instance it loads in the startup phase and those created through the graph interface at runtime.
 This ensures that dynamic resource creation is not limited to the ﬁrst generation of objects, but works indeﬁnitely.
 The code below shows the usage of the resource graph. The `Grow` method in the example shows all three different alternatives to instantiate resources with the graph.

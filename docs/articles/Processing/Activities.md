@@ -195,8 +195,8 @@ public enum MyActivityResults
 By implementing the [IVisualInstruction](../../../src/Moryx.Resources.Samples/IVisualInstructor.cs) interface we can also define which text to display alongside the possible results giving the required instructions for the user.
 
 ## Tracing
-For long-term tracibility and to resume interrupted activities it is possible to use [ActivityTracing](xref:Moryx.AbstractionLayer.Activities.ActivityTracing).
-Using the `Progress` property of the base class [Tracing](Moryx.AbstractionLayer.Activities.Tracing) derived types can trace intermediate progress during an activities execution. The example below shows how to define an enum for the progress.
+For long-term tracibility and to resume interrupted activities it is possible to use [Tracing](../../../src/Moryx.AbstractionLayer/Activities/Tracing.cs).
+Using the `Progress` property of the base class [Tracing](../../../src/Moryx.AbstractionLayer/Activities/Tracing.cs) derived types can trace intermediate progress during an activities execution. The example below shows how to define an enum for the progress.
 
 ````cs
 public enum FooProgress
