@@ -3,7 +3,7 @@ uid: EntryConvert
 ---
 # Entry Convert
 
-The static class [EntryConvert](../../../../src/Moryx/Serialization/EntryConvert/EntryConvert.cs) transforms classes or objects into the MORYX [entry format](../../../../src/Moryx/Serialization/EntryConvert/Entry.cs) and back. If you are not familiar with this format, please read this section first: [EntryFormat](EntryFormat)
+The static class [EntryConvert](../../../../src/Moryx/Serialization/EntryConvert/EntryConvert.cs) transforms classes or objects into the MORYX [entry format](../../../../src/Moryx/Serialization/EntryConvert/Entry.cs) and back. If you are not familiar with this format, please read this section first: [EntryFormat](EntryFormat.md)
 
 Because the `EntryConvert`-API can be confusing on first sight, we will split it into three sections. Each of these sections is explained in detail and supported with numerous examples.
 
