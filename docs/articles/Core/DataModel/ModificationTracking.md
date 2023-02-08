@@ -30,4 +30,4 @@ You do not need to treat modified trackable entities in another way. It will wor
 
 ## A last word
 
-If you are interested how the modified trackable mechanism is implemented you'll find some deeper information in [Code First](xref:GettingsStarted.CodeFirst) article or the [EntityFramework Tutorial](https://www.entityframeworktutorial.net/faq/set-created-and-modified-date-in-efcore.aspx)
+If you are interested how the modified trackable mechanism is implemented you'll find some deeper information in [Code First](../../../tutorials/DataModel/CodeFirst.md) article or the [EntityFramework Tutorial](https://www.entityframeworktutorial.net/faq/set-created-and-modified-date-in-efcore.aspx)

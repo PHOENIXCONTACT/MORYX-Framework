@@ -25,7 +25,7 @@ Creating a facade:
 - Implement "Foo" by returning the sum of a and b
 
 After we defined our facade, we want to export it from the server module. 
-All we must do for this is to let our module controller implement the [IFacadeContainer](xref:Moryx.Runtime.Modules.IFacadeContainer´1) interface. 
+All we must do for this is to let our module controller implement the [IFacadeContainer](../../../src/Moryx.Runtime/Modules/IFacadeContainer.cs) interface. 
 Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file:
 
 ```C#
@@ -70,7 +70,7 @@ Steps:
 
 1. Reference the project "Facades.Dependency" and set CopyLocal to false
 2. Add a property of type "IFacade" to the module controller
-3. Decorate it with [RequiredModuleApiAttribute](xref:Moryx.Runtime.ModuleManagement.RequiredModuleApiAttribute)
+3. Decorate it with [RequiredModuleApiAttribute](../../../src/Moryx.Runtime/Modules/Management/RequiredModuleApiAttribute.cs).
    
     3.1 `IsStartDependency = true` will instruct the module manager to bind the dependent modules life cycle to the dependency ones
 

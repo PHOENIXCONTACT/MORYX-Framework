@@ -1,6 +1,6 @@
 # Enable NLog
 
-The runtime uses `Microsoft.Extensions.Logging` as a lower abstraction for several logging appender. The whole logging structure is described in [Logging](xref:Logging).
+The runtime uses `Microsoft.Extensions.Logging` as a lower abstraction for several logging appender. The whole logging structure is described in [Logging](../articles/Core/Logging.md).
 One possible way to extend the logging mechanism is to attach [NLog](https://nlog-project.org/).
 
 In this tutorial log4net will be added to an existing project.
