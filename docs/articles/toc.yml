@@ -1,8 +1,7 @@
-- name: Introduction
-  href: index.md
-
 - name: Design Patterns
   href: DesignPatterns.md
+- name: AbstractionLayer
+  href: AbstractionLayer.md
 - name: Products
   items:
   - name: Concept
@@ -17,8 +16,6 @@
     href: Products/ProductStorage.md
   - name: Recipe Storage
     href: Products/RecipeStorage.md
-  - name: User Interface
-    href: Products/ProductManagementUI.md
 
 - name: Resources
   href: Resources/Overview.md
@@ -38,8 +35,6 @@
         href: Resources/Types/DriverResource.md
       - name: Interaction Resource
         href: Resources/Types/InteractionResource.md
-  - name: User Interface
-    href: Resources/ResourceManagementUI.md
 
 - name: Processing
   items:
@@ -56,14 +51,5 @@
   - name: Workplans
     href: Processing/Workplans.md
 
-- name: Tutorials
-  items: 
-  - name: How to create a Driver
-    href: Tutorials/HowToBuildADriver.md
-  - name: How to create a Resource
-    href: Tutorials/HowToCreateResource.md
 - name: Core
   href: Core/toc.yml
-
-- name: Runtime
-  href: Runtime/toc.yml

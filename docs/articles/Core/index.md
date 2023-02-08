@@ -16,11 +16,11 @@ The PlatformToolkit is a stack of components and code shared over several platfo
 The dependency injection in MORYX is basically depending on a Castle Widsor Container and a MORYX specific decorator called CastelContainer.
 The CastelContainer will be used for the Component Composition as the DI Container for each level. Please open the following subpage to read more about the dependency injection in MORYX.
 
-- [DependencyInjection](xref:DependencyInjection)
+- [DependencyInjection](DependencyInjection.md)
 
 ## Configuration
 
-- [DelayQueue](xref:DelayQueue)
+- [DelayQueue](Collections/DelayQueue.md)
 
 ## Logging
 
@@ -28,13 +28,9 @@ Throughout the entire application every class created by a DI-container has acce
 The loggers are structured hierarchical. Structures can be instantiated manually or automatically.  
 See @subpage platform-logging for full documentation
 
-## WCF support
-
-- [WCF](xref:Wcf)
-
 ## Collections
 
-- [Collections](xref:Collections)
+- [Collections](Collections)
 
 ## Bindings
 
@@ -45,8 +41,8 @@ For more details see @subpage bindings.
 
 ## BinaryConnection
 
-- [BinaryConnection](xref:BinaryConnection)
+- [BinaryConnection](BinaryConnection.md)
 
 ## Serialization
 
-- [Serialization](xref:Serialization)
+- [Serialization](Serialization)

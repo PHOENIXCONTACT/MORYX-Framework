@@ -3,11 +3,11 @@ uid: Activities
 ---
 # Activities
 
-An [Activity](xref:Moryx.AbstractionLayer.IActivity) is the smallest separately executable step of a [Process](Processes.md). Activities are defined as classes derived from [Activity](xref:Moryx.AbstractionLayer.Activity) and are always specific to a certain task or application. Activities are instantiated by dedicated modules in their respective domains and then executed by resources. Each activity has a set of required [Capabilities](Capabilities.md) while the [production Resources](../Resources/Overview.md) each have a set of provided capabilities. All activities are stored permanently with the process for tracing purposes.
+An [Activity](../../src/Moryx.AbstractionLayer/Activities/IActivity.cs) is the smallest separately executable step of a [Process](Processes.md). Activities are defined as classes derived from [Activity](../../src/Moryx.AbstractionLayer/Activities/Activity.cs) and are always specific to a certain task or application. Activities are instantiated by dedicated modules in their respective domains and then executed by resources. Each activity has a set of required [Capabilities](Capabilities.md) while the [production Resources](../Resources/Overview.md) each have a set of provided capabilities. All activities are stored permanently with the process for tracing purposes.
 
 ## Activity Structure
 
-To create an activity it is necessary to derive at least the abstract class [Activity](xref:Moryx.AbstractionLayer.Activity). An implementation could look like the following:
+To create an activity it is necessary to derive at least the abstract class [Activity](../../../src/Moryx.AbstractionLayer/Activities/Activity.cs). An implementation could look like the following:
 
 ```` cs
 [ActivityResults(typeof(DefaultActivityResult))]
@@ -57,7 +57,7 @@ There are two methods to create a result for the activity. One to define a faile
 
 ## Activity Parameters
 
-Is there some information which is necessary to handle the activity like an adapter number for an electrical test or something like that? Then it is necessary to define a paramater class for the activity and derive the activity from the [Activity<TParam>](xref:Moryx.AbstractionLayer.Activity%601>) class like in the following example:
+Is there some information which is necessary to handle the activity like an adapter number for an electrical test or something like that? Then it is necessary to define a paramater class for the activity and derive the activity from the [Activity<TParam>](../../../src/Moryx.AbstractionLayer/Activities/Activity.cs) class like in the following example:
 
 ```` cs
 [ActivityResults(typeof(DefaultActivityResult))]
@@ -100,7 +100,7 @@ internal class MyParameters : ParametersBase
 }
 ````
 
-The method `ResolveBinding` will be called during the creation of the activity and in this case the given process will be used to get the [Recipe](xref:Moryx.AbstractionLayer.Recipes.IRecipe) which contains the needed adapter number for the electrical test. The number will be stored in the parameter class and will be available during the execution inside of the resource:
+The method `ResolveBinding` will be called during the creation of the activity and in this case the given process will be used to get the [Recipe](../../../src/Moryx.AbstractionLayer/Recipes/IRecipe.cs) which contains the needed adapter number for the electrical test. The number will be stored in the parameter class and will be available during the execution inside of the resource:
 
 ```` cs
 // some resource code
@@ -167,7 +167,7 @@ public class MyActivity : Activity<MyParameters>
 ````
 
 ## An Example using the VisualInstruction Resource
-If the activity is used for [VisualInstruction](xref:Moryx.Resources.Samples.IVisualInstructor), the UI will create a button for each possible result from the result enum. It is also possible to show a different text at the visual instruction or hide a result like in the following example:
+If the activity is used for [VisualInstruction](../../../src/Moryx.Resources.Samples/IVisualInstructor.cs), the UI will create a button for each possible result from the result enum. It is also possible to show a different text at the visual instruction or hide a result like in the following example:
 
 ```` cs
 public enum MyActivityResults
@@ -192,12 +192,11 @@ public enum MyActivityResults
 }
 ````
 
-By implementing the [IVisualInstruction](xref:Moryx.Resources.Samples.IVisualInstructor) interface we can also define which text to display alongside the possible results giving the required instructions for the user.
+By implementing the [IVisualInstruction](../../../src/Moryx.Resources.Samples/IVisualInstructor.cs) interface we can also define which text to display alongside the possible results giving the required instructions for the user.
 
 ## Tracing
-
-For long-term tracibility and to resume interrupted activities it is possible to use [IActivityTracing](xref:Moryx.AbstractionLayer.Activities.IActivityTracing).
-Using the `Progress` property of the base class [Tracing](Moryx.AbstractionLayer.Activities.Tracing) derived types can trace intermediate progress during an activities execution. The example below shows how to define an enum for the progress.
+For long-term tracibility and to resume interrupted activities it is possible to use [Tracing](../../../src/Moryx.AbstractionLayer/Activities/Tracing.cs).
+Using the `Progress` property of the base class [Tracing](../../../src/Moryx.AbstractionLayer/Activities/Tracing.cs) derived types can trace intermediate progress during an activities execution. The example below shows how to define an enum for the progress.
 
 ````cs
 public enum FooProgress
@@ -206,7 +205,7 @@ public enum FooProgress
     Running = 50,
     Done = 100
 }
-public class FooTracing : Tracing, IActivityProgress
+public class FooTracing : Tracing
 {
     public new FooProgress Progress
     {
@@ -214,12 +213,12 @@ public class FooTracing : Tracing, IActivityProgress
         set { base.Progress = (int)value; }
     }
 
-    // Relative progress defined by IActivityProgress
+    // Relative progress defined by Tracing
     public double Relative => base.Progress;
 }
 ````
 
-Resources can access and transform an activities tracing information using the fluent API [TracingExtension](xref:Moryx.AbstractionLayer.Activities.TracingExtension). This rather complex approach is taken because the type of the tracing object might change at runtime depending on the resource executing the activity or the circumstances of the execution.
+Resources can access and transform an activities tracing information using the fluent API [TracingExtension](../../../src/Moryx.AbstractionLayer/Activities/TracingExtension.cs). This rather complex approach is taken because the type of the tracing object might change at runtime depending on the resource executing the activity or the circumstances of the execution.
 For the example above this would look like the following:
 
 ````cs
