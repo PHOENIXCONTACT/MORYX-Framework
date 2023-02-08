@@ -1,6 +1,3 @@
-- name: Dependency Injection
-  href: DependencyInjection.md
-
 - name: Configuration
   href: Configuration.md
 
