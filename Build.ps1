@@ -24,7 +24,7 @@ $MsBuildVersion = "latest";
 Invoke-Initialize -Version (Get-Content "VERSION");
 
 if ($Build) {
-    Invoke-Build ".\Core.sln"
+    Invoke-Build ".\MORYX-Framework.sln"
 }
 
 if ($SmokeTests) {
