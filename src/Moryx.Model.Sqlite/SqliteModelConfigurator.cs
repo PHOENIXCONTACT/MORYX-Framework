@@ -4,7 +4,6 @@
 using System;
 using System.Data.Common;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +61,7 @@ namespace Moryx.Model.Sqlite
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite(BuildConnectionString(config));
+            
 
             return builder.Options;
         }
@@ -94,6 +94,20 @@ namespace Moryx.Model.Sqlite
         {
             var builder = new SqliteConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
             return builder.DataSource;
+        }
+
+        /// <inheritdoc />
+        public override Task<bool> CreateDatabase(IDatabaseConfig config)
+        {
+            // Overwrite the connection mode to ensure that the database
+            // file can be created
+            var connectionStringBuilder = new SqliteConnectionStringBuilder(config.ConnectionSettings.ConnectionString)
+            {
+                Mode = SqliteOpenMode.ReadWriteCreate
+            };
+            config.ConnectionSettings.ConnectionString = connectionStringBuilder.ConnectionString;
+
+            return base.CreateDatabase(config);
         }
     }
 }

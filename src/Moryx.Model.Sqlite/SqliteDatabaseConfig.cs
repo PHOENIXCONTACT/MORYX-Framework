@@ -47,7 +47,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        [DataMember, Required, DefaultValue("Data Source=.\\db\\<DatabaseName>.db")]
+        [DataMember, Required, DefaultValue("Data Source=.\\db\\<DatabaseName>.db;Mode=ReadWrite;")]
         public override string ConnectionString { get; set; }
 
         /// <inheritdoc />
