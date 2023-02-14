@@ -2,18 +2,16 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Products.Model;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.Products.Model.Model.Migrations
+namespace Moryx.Products.Model.Migrations.Npgsql
 {
-    [DbContext(typeof(ProductsContext))]
-    [Migration("20220906133824_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(NpgsqlProductsContext))]
+    partial class ProductsContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -534,6 +532,14 @@ namespace Moryx.Products.Model.Model.Migrations
                     b.Property<long>("WorkplanId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("PositionX")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("PositionY")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.HasKey("Id");
 
                     b.HasIndex("WorkplanId");
@@ -686,6 +692,14 @@ namespace Moryx.Products.Model.Model.Migrations
 
                     b.Property<long>("WorkplanId")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("PositionX")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("PositionY")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 

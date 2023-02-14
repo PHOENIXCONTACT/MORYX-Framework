@@ -68,6 +68,11 @@ namespace Moryx.Model
         DbContext CreateContext(IDatabaseConfig config);
 
         /// <summary>
+        /// Creates a context based on `DbContextOptions`
+        /// </summary>
+        DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions);
+
+        /// <summary>
         /// Updates the configuration of the underlying model
         /// </summary>
         void UpdateConfig();

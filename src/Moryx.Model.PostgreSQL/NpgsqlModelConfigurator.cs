@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Model.Configuration;
+using Moryx.Model.PostgreSQL.Attributes;
 using Npgsql;
 
 namespace Moryx.Model.PostgreSQL
@@ -176,6 +177,19 @@ namespace Moryx.Model.PostgreSQL
         {
             var process = (Process)sender;
             Logger.Log(LogLevel.Debug, "Process: {0}: {1}", process.Id, args.Data);
+        }
+
+        /// <inheritdoc />
+        protected override DbContext CreateMigrationContext(IDatabaseConfig config)
+        {
+            var migrationAssemblyType = FindMigrationAssemblyType(typeof(NpgsqlDatabaseContextAttribute));
+
+            var builder = new DbContextOptionsBuilder();
+            builder.UseNpgsql(
+                BuildConnectionString(config, true),
+                x => x.MigrationsAssembly(migrationAssemblyType.Assembly.FullName));
+
+            return CreateContext(migrationAssemblyType, builder.Options);
         }
     }
 }

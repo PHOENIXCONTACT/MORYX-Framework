@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.Resources.Management.Model.Migrations
+namespace Moryx.Resources.Management.Model.Migrations.Npgsql
 {
     public partial class InitialCreate : Migration
     {

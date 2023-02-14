@@ -20,8 +20,4 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\Migrations\" />
-  </ItemGroup>
-
 </Project>

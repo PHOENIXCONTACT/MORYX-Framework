@@ -2,16 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Resources.Model;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.Resources.Management.Model.Migrations
+namespace Moryx.Resources.Management.Model.Migrations.Npgsql
 {
-    [DbContext(typeof(ResourcesContext))]
-    partial class ResourcesContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(NpgsqlResourcesContext))]
+    [Migration("20211104134830_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

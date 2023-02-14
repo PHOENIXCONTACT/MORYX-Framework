@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
@@ -30,10 +31,9 @@ namespace Moryx.Model
             _loggerFactory = loggerFactory;
             _configManager = configManager;
 
-            var dbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext), delegate (Type type)
-            {
-                return type != typeof(DbContext);
-            });
+            var dbContextTypes = ReflectionTool.GetPublicClasses(
+                typeof(DbContext), 
+                type => type != typeof(DbContext) && !type.GetCustomAttributes<DatabaseSpecificContextAttribute>().Any());
 
             _knownModels = dbContextTypes
                 .Select(dbContextType =>
