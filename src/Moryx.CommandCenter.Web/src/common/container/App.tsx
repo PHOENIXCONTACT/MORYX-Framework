@@ -25,7 +25,7 @@ import SystemLoadResponse from "../api/responses/SystemLoadResponse";
 import { AppState } from "../redux/AppState";
 import { updateIsConnected, updateNotificationInstance, updateServerTime } from "../redux/CommonActions";
 import { ActionType } from "../redux/Types";
-import "../scss/maintenance.scss";
+import "../scss/commandcenter.scss";
 
 interface AppPropModel {
   ModulesRestClient: ModulesRestClient;
@@ -106,8 +106,8 @@ class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDi
     };
 
     return (
-      <div className="maintenance-app-container">
-        <div className="maintenance-content-wrapper">
+      <div className="commandcenter-app-container">
+        <div className="commandcenter-content-wrapper">
           <NotificationSystem ref={ref} />
 
           <Container fluid={true} id="body" className="content">

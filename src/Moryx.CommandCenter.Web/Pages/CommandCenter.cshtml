@@ -4,14 +4,14 @@
 @using System.ComponentModel.DataAnnotations
 
 @{
-    ViewData["Title"] = "MORYX Maintenance";
-    ViewData["BaseRef"] = "Maintenance";
+    ViewData["Title"] = "MORYX Command Center";
+    ViewData["BaseRef"] = "CommandCenter";
 
     Layout = "_Layout";
 }
 
-@attribute [WebModule("Maintenance", "settings", Category = ModuleCategory.Settings), 
-            Display(Name = "Maintenance", Description = "Maintenance user interface")]
+@attribute [WebModule("CommandCenter", "settings", Category = ModuleCategory.Settings), 
+            Display(Name = "CommandCenter", Description = "Command Center user interface")]
 
 @section Scripts
 {

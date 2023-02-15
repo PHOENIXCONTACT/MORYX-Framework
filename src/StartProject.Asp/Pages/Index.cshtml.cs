@@ -15,7 +15,7 @@ namespace StartProject.Asp.Pages
 
         public IActionResult OnGet()
         {
-            return Redirect("/Maintenance");
+            return Redirect("/CommandCenter");
         }
     }
 }
