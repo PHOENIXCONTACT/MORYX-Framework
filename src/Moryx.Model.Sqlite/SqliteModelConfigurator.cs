@@ -2,12 +2,16 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
+using Moryx.Model.Sqlite.Attributes;
+using Moryx.Tools;
 
 namespace Moryx.Model.Sqlite
 {
@@ -99,6 +103,11 @@ namespace Moryx.Model.Sqlite
         /// <inheritdoc />
         public override Task<bool> CreateDatabase(IDatabaseConfig config)
         {
+            if (!CheckDatabaseConfig(config))
+            {
+                return Task.FromResult(false);
+            }
+
             // Overwrite the connection mode to ensure that the database
             // file can be created
             var connectionStringBuilder = new SqliteConnectionStringBuilder(config.ConnectionSettings.ConnectionString)
@@ -108,6 +117,19 @@ namespace Moryx.Model.Sqlite
             config.ConnectionSettings.ConnectionString = connectionStringBuilder.ConnectionString;
 
             return base.CreateDatabase(config);
+        }
+
+        /// <inheritdoc />
+        protected override DbContext CreateMigrationContext(IDatabaseConfig config)
+        {
+            var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqliteContextAttribute));
+
+            var builder = new DbContextOptionsBuilder();
+            builder.UseSqlite(
+                BuildConnectionString(config),
+                x => x.MigrationsAssembly(migrationAssemblyType.Assembly.FullName));
+
+            return CreateContext(migrationAssemblyType, builder.Options);
         }
     }
 }

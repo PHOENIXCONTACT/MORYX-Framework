@@ -7,8 +7,10 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
+using Moryx.Tools;
 
 namespace Moryx.Model.Configuration
 {
@@ -20,7 +22,11 @@ namespace Moryx.Model.Configuration
     {
         private IConfigManager _configManager;
         private string _configName;
-        private Type _contextType;
+
+        /// <summary>
+        /// The underlying context's type
+        /// </summary>
+        protected Type _contextType;
 
         /// <summary>
         /// Logger for this model configurator
@@ -57,7 +63,13 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public DbContext CreateContext(IDatabaseConfig config)
         {
-            var context = (DbContext)Activator.CreateInstance(_contextType, BuildDbContextOptions(config));
+            return CreateContext(_contextType, BuildDbContextOptions(config));
+        }
+
+        /// <inheritdoc />
+        public DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions)
+        {
+            var context = (DbContext)Activator.CreateInstance(contextType, dbContextOptions);
             return context;
         }
 
@@ -102,8 +114,20 @@ namespace Moryx.Model.Configuration
                 return false;
             }
 
-            await using var context = CreateContext(config);
+            await using var context = CreateMigrationContext(config);
 
+            return await CreateDatabase(config, context);
+        }
+
+        /// <summary>
+        /// Creates a database for the given context and checks if it's possible
+        /// to connect to it
+        /// </summary>
+        /// <param name="config">Config for testing the connection</param>
+        /// <param name="context">Database context</param>
+        /// <returns></returns>
+        protected async Task<bool> CreateDatabase(IDatabaseConfig config, DbContext context)
+        {
             //Will create the database if it does not already exist. Applies any pending migrations for the context to the database.
             await context.Database.MigrateAsync();
 
@@ -122,7 +146,7 @@ namespace Moryx.Model.Configuration
         {
             var result = new DatabaseMigrationSummary();
 
-            await using var context = CreateContext(config);
+            await using var context = CreateMigrationContext(config);
             var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
 
             if (pendingMigrations.Length == 0)
@@ -153,9 +177,18 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
+        public virtual async Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
         {
-            await using var context = CreateContext(config);
+            await using var context = CreateMigrationContext(config);
+            return await AvailableMigrations(context);
+        }
+
+        /// <summary>
+        /// Retrieves all names of available updates
+        /// </summary>
+        /// <returns></returns>
+        protected async Task<IReadOnlyList<string>> AvailableMigrations(DbContext context)
+        {
             try
             {
                 var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
@@ -169,9 +202,18 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
+        public virtual async Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
         {
-            await using var context = CreateContext(config);
+            await using var context = CreateMigrationContext(config);
+            return await AppliedMigrations(context);
+        }
+
+        /// <summary>
+        /// Retrieves all names of installed updates
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IReadOnlyList<string>> AppliedMigrations(DbContext context)
+        {
             try
             {
                 var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
@@ -241,6 +283,27 @@ namespace Moryx.Model.Configuration
         {
             return (!(string.IsNullOrEmpty(config.ConfiguratorTypename) ||
                      string.IsNullOrEmpty(config.ConnectionSettings.ConnectionString)));
+        }
+
+        /// <summary>
+        /// Finds the context type marked with the provided attribute type.
+        /// </summary>
+        protected Type FindMigrationAssemblyType(Type attributeType)
+        {
+            var contextTypes =
+                ReflectionTool.GetPublicClasses(_contextType);
+
+            var fileteredAssembly = contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
+
+            return fileteredAssembly ?? contextTypes.First();
+        }
+
+        /// <summary>
+        /// Creates a context for migration purposes based on a config 
+        /// </summary>
+        protected virtual DbContext CreateMigrationContext(IDatabaseConfig config)
+        {
+            return CreateContext(config);
         }
     }
 }

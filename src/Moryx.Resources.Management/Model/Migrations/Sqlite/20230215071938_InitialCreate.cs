@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.Resources.Management.Model.Migrations
+#nullable disable
+
+namespace Moryx.Resources.Management.Model.Migrations.Sqlite
 {
     public partial class InitialCreate : Migration
     {
@@ -16,15 +17,15 @@ namespace Moryx.Resources.Management.Model.Migrations
                 schema: "public",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Created = table.Column<DateTime>(nullable: false),
-                    Updated = table.Column<DateTime>(nullable: false),
-                    Deleted = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    ExtensionData = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    ExtensionData = table.Column<string>(type: "TEXT", nullable: true),
+                    Type = table.Column<string>(type: "TEXT", nullable: true),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Updated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Deleted = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -36,13 +37,13 @@ namespace Moryx.Resources.Management.Model.Migrations
                 schema: "public",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RelationType = table.Column<int>(nullable: false),
-                    SourceName = table.Column<string>(nullable: true),
-                    SourceId = table.Column<long>(nullable: false),
-                    TargetName = table.Column<string>(nullable: true),
-                    TargetId = table.Column<long>(nullable: false)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RelationType = table.Column<int>(type: "INTEGER", nullable: false),
+                    SourceName = table.Column<string>(type: "TEXT", nullable: true),
+                    SourceId = table.Column<long>(type: "INTEGER", nullable: false),
+                    TargetName = table.Column<string>(type: "TEXT", nullable: true),
+                    TargetId = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

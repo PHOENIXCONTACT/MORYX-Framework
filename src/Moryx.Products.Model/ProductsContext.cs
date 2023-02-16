@@ -1,9 +1,7 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.IO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Moryx.Model;
 
 namespace Moryx.Products.Model
@@ -51,16 +49,6 @@ namespace Moryx.Products.Model
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-
-            if (!optionsBuilder.IsConfigured)
-            {
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
-                var connectionString = configuration.GetConnectionString("Moryx.Products.Model");
-                optionsBuilder.UseNpgsql(connectionString);
-            }
 
             optionsBuilder.UseLazyLoadingProxies();
         }

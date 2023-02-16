@@ -35,16 +35,6 @@ namespace Moryx.Resources.Model
         {
             base.OnConfiguring(optionsBuilder);
 
-            if (!optionsBuilder.IsConfigured)
-            {
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
-                var connectionString = configuration.GetConnectionString("Moryx.Resources.Model");
-                optionsBuilder.UseNpgsql(connectionString);
-            }
-
             optionsBuilder.UseLazyLoadingProxies();
         }
 

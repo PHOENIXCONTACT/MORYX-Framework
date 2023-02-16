@@ -2,82 +2,77 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Resources.Model;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.Resources.Management.Model.Migrations
+#nullable disable
+
+namespace Moryx.Resources.Management.Model.Migrations.Sqlite
 {
-    [DbContext(typeof(ResourcesContext))]
-    [Migration("20211104134830_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(SqliteResourcesContext))]
+    partial class SqliteResourcesContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("Moryx.Resources.Model.ResourceEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("Deleted")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ExtensionData")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Type")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Updated")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Resources");
+                    b.ToTable("Resources", "public");
                 });
 
             modelBuilder.Entity("Moryx.Resources.Model.ResourceRelationEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("RelationType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<long>("SourceId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SourceName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<long>("TargetId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TargetName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -85,7 +80,7 @@ namespace Moryx.Resources.Management.Model.Migrations
 
                     b.HasIndex("TargetId");
 
-                    b.ToTable("ResourceRelations");
+                    b.ToTable("ResourceRelations", "public");
                 });
 
             modelBuilder.Entity("Moryx.Resources.Model.ResourceRelationEntity", b =>
@@ -101,6 +96,17 @@ namespace Moryx.Resources.Management.Model.Migrations
                         .HasForeignKey("TargetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Source");
+
+                    b.Navigation("Target");
+                });
+
+            modelBuilder.Entity("Moryx.Resources.Model.ResourceEntity", b =>
+                {
+                    b.Navigation("Sources");
+
+                    b.Navigation("Targets");
                 });
 #pragma warning restore 612, 618
         }

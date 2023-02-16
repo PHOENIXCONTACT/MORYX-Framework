@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Resources.Model;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.Resources.Management.Model.Migrations
+namespace Moryx.Resources.Management.Model.Migrations.Npgsql
 {
-    [DbContext(typeof(ResourcesContext))]
+    [DbContext(typeof(NpgsqlResourcesContext))]
     partial class ResourcesContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
