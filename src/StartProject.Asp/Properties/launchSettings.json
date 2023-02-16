@@ -19,7 +19,7 @@
     "StartProject.Asp": {
         "commandName": "Project",
         "launchBrowser": true,
-        "launchUrl": "Maintenance",
+        "launchUrl": "CommandCenter",
         "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"

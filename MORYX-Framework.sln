@@ -74,7 +74,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Asp", "src\Sta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Endpoints", "src\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj", "{0C0374D2-BA98-4BDC-9747-7D1FF3E61715}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance", "{50AD5155-2CC6-496B-849C-57DC56021F5F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommandCenter", "CommandCenter", "{50AD5155-2CC6-496B-849C-57DC56021F5F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.CommandCenter.Web", "src\Moryx.CommandCenter.Web\Moryx.CommandCenter.Web.csproj", "{BD8D5AB2-0C9E-4C61-B158-FF132890DB3C}"
 EndProject
