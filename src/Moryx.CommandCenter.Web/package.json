@@ -3,9 +3,6 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
-    "engines" : { 
-        "node" : ">=16.0.0 <17.0.0"
-    },
     "scripts": {
         "start": "npm dev",
         "dev": "webpack-dev-server --watch --progress --mode development --config webpack.dev.config.js",
