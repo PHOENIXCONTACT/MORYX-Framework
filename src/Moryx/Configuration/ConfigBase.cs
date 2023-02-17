@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -10,14 +10,8 @@ namespace Moryx.Configuration
     /// Base implementation of IConfig to reduce redundant code
     /// </summary>
     [DataContract]
-    public class ConfigBase : UpdatableEntry, IConfig, IPersistentConfig
+    public class ConfigBase : UpdatableEntry, IConfig
     {
-        /// <inheritdoc />
-        bool IPersistentConfig.PersistDefaultConfig => PersistDefaultConfig;
-
-        /// <see cref="IPersistentConfig"/>
-        protected virtual bool PersistDefaultConfig => true;
-
         /// <summary>
         /// Current state of the config object
         /// </summary>
@@ -33,7 +27,7 @@ namespace Moryx.Configuration
         /// <summary>
         /// Method called if no file was found and the config was generated
         /// </summary>
-        protected internal virtual void Initialize()
+        public virtual void Initialize()
         {
         }
     }

@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -26,11 +26,8 @@ namespace Moryx.Model.Repositories.Proxy
         /// </summary>
         static RepositoryProxyBuilder()
         {
-#if HAVE_APPDOMAIN_DEFINEDYNAMICASSEMBLY
-            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(AssemblyName), AssemblyBuilderAccess.Run);
-#else
             var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(AssemblyName), AssemblyBuilderAccess.Run);
-#endif
+
             ModuleBuilder = assemblyBuilder.DefineDynamicModule(DynamicModuleName);
             MethodStrategies = new IMethodProxyStrategy[]
             {
@@ -75,7 +72,7 @@ namespace Moryx.Model.Repositories.Proxy
             // Do the method implementation
             ImplementMethods(typeBuilder, methodStrategyMaps, baseType, entityType);
 
-            generatedType = typeBuilder.CreateType();
+            generatedType = typeBuilder.CreateTypeInfo();
 
             return generatedType;
         }
@@ -119,7 +116,7 @@ namespace Moryx.Model.Repositories.Proxy
             // Do the method implementation
             ImplementMethods(typeBuilder, methodStrategyMaps, baseType, entityType);
 
-            generatedType = typeBuilder.CreateType();
+            generatedType = typeBuilder.CreateTypeInfo();
 
             return generatedType;
         }

@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -14,14 +14,14 @@ namespace Moryx.Modules
         /// <summary>
         /// Config type expected by this <see cref="IPlugin"/>
         /// </summary>
-        public Type ExcpectedConfigType { get; } // TODO: Rename to ExpectedConfigType in the next major
+        public Type ExpectedConfigType { get; }
 
         /// <summary>
         /// State that this <see cref="IPlugin"/> requires config instances of the given type
         /// </summary>
         public ExpectedConfigAttribute(Type configType)
         {
-            ExcpectedConfigType = configType;
+            ExpectedConfigType = configType;
         }
     }
 }

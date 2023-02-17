@@ -1,10 +1,10 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workflows.Validation
+namespace Moryx.Workplans.Validation
 {
     /// <summary>
-    /// Result of the workflow validation
+    /// Result of the workplan validation
     /// </summary>
     public class ValidationResult
     {
@@ -41,7 +41,6 @@ namespace Moryx.Workflows.Validation
         /// <summary>
         /// Print error in readable format
         /// </summary>
-        // TODO: Does it make sense to pass workplan to error
         public abstract string Print(IWorkplan workplan);
     }
 }

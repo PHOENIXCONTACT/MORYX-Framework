@@ -186,7 +186,9 @@ function Install-Tool([string]$PackageName, [string]$Version, [string]$TargetExe
 }
 
 function Invoke-Build([string]$ProjectFile, [string]$Options = "") {
-    Write-Step "Building $ProjectFile"
+    Write-Step "Building $ProjectFile";
+
+    $env:NODE_OPTIONS = "--openssl-legacy-provider";
 
     # TODO: maybe we find a better way: currently all packages of all solutions are restored.
     ForEach ($solution in (Get-ChildItem $RootPath -Filter "*.sln")) {
@@ -515,7 +517,7 @@ function Invoke-Publish {
 
     foreach ($package in $packages) {
         Write-Host "Pushing package $package"
-        & $global:DotNetCli nuget push $package --api-key $env:MORYX_NUGET_APIKEY --no-symbols true --skip-duplicate --source $env:MORYX_PACKAGE_TARGET
+        & $global:DotNetCli nuget push $package --api-key $env:MORYX_NUGET_APIKEY --no-symbols --skip-duplicate --source $env:MORYX_PACKAGE_TARGET
         Invoke-ExitCodeCheck $LastExitCode;
     }
 

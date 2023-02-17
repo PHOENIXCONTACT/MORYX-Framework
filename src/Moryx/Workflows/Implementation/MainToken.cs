@@ -1,10 +1,10 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
-    /// Main execution token passed trough the workflow
+    /// Main execution token passed trough the workplan instance
     /// </summary>
     internal class MainToken : IToken
     {

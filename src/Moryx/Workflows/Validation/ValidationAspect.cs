@@ -1,9 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 
-namespace Moryx.Workflows.Validation
+namespace Moryx.Workplans.Validation
 {
     /// <summary>
     /// Aspect that should be validated

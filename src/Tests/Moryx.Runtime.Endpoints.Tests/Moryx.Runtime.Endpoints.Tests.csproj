@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <!--<Nullable>enable</Nullable>-->
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <!--<PackageReference Include="coverlet.collector" Version="3.1.2" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
+    <ProjectReference Include="..\..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
+    <ProjectReference Include="..\..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj" />
+  </ItemGroup>
+
+</Project>

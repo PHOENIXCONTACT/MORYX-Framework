@@ -1,7 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workflows
+using System.Drawing;
+
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Common interface for <see cref="IWorkplanStep"/> and <see cref="IConnector"/>
@@ -9,13 +11,18 @@ namespace Moryx.Workflows
     public interface IWorkplanNode
     {
         /// <summary>
-        /// Workplan unique element id of this connector
+        /// Workplan unique element id of this node
         /// </summary>
         long Id { get; set; }
 
         /// <summary>
-        /// Transition name
+        /// Node name
         /// </summary>
-        string Name { get; }
+        string Name { get; set; }
+
+        /// <summary>
+        /// Position of this <see cref="IWorkplanNode"/> in any visualization of the <see cref="IWorkplan"/>
+        /// </summary>
+        Point Position { get; set; }
     }
 }

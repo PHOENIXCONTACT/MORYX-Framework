@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -142,6 +142,11 @@ namespace Moryx.Runtime.Kernel.Tests.Dummys
         {
             if (ConfigChanged != null)
                 ConfigChanged(this, new ConfigChangedEventArgs(modifiedProperties));
+        }
+
+        public void Initialize()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -163,7 +163,7 @@ namespace Moryx.Model.Repositories.Proxy
             generator.Emit(OpCodes.Ldarg_0); //Stack: this
 
             // DbSet Property
-            var dbSetProperty = baseType.GetProperty("DbSet", BindingFlags.Instance | BindingFlags.NonPublic);
+            var dbSetProperty = baseType.GetProperty(nameof(IRepository<object>.DbSet), BindingFlags.Instance | BindingFlags.Public);
             // ReSharper disable once PossibleNullReferenceException
             generator.Emit(OpCodes.Call, dbSetProperty.GetGetMethod(true)); //Stack: this, DbSet
 

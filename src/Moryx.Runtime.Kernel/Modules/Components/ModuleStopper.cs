@@ -1,9 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Linq;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel
@@ -11,9 +11,9 @@ namespace Moryx.Runtime.Kernel
     internal class ModuleStopper : ModuleManagerComponent, IModuleStopper
     {
         private readonly IModuleDependencyManager _dependencyManager;
-        private readonly IModuleLogger _logger;
+        private readonly ILogger _logger;
 
-        public ModuleStopper(IModuleDependencyManager dependencyManager, IModuleLogger logger)
+        public ModuleStopper(IModuleDependencyManager dependencyManager, ILogger logger)
         {
             _dependencyManager = dependencyManager;
             _logger = logger;

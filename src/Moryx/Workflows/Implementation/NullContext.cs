@@ -1,4 +1,4 @@
-﻿namespace Moryx.Workflows
+﻿namespace Moryx.Workplans
 {
     /// <summary>
     /// Null object pattern for the workplan context

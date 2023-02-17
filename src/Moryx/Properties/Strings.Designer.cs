@@ -99,18 +99,18 @@ namespace Moryx.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Sub-Workplan.
         /// </summary>
-        public static string SubworkflowStep_Description {
+        public static string SubworkplanStep_Description {
             get {
-                return ResourceManager.GetString("SubworkflowStep_Description", resourceCulture);
+                return ResourceManager.GetString("SubworkplanStep_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Nests a sub-workplan in the current workplan.
         /// </summary>
-        public static string SubworkflowStep_Name {
+        public static string SubworkplanStep_Name {
             get {
-                return ResourceManager.GetString("SubworkflowStep_Name", resourceCulture);
+                return ResourceManager.GetString("SubworkplanStep_Name", resourceCulture);
             }
         }
     }

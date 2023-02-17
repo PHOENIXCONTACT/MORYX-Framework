@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+
+  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\bundle.js')) And ('$(NoBuild)' != 'true') ">
+   <Exec WorkingDirectory="./" Command="npm config set strict-ssl false" />
+   <Exec WorkingDirectory="./" Command="npm install" />
+   <Exec WorkingDirectory="./" Command="npm run build --force" />
+   <Exec WorkingDirectory="./" Command="npm config set strict-ssl true" />
+  </Target>
+	
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+	<CreatePackage>true</CreatePackage>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <Content Remove="*.config.js" />
+        <Content Remove="*.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Moryx\Moryx.csproj" />
+		<ProjectReference Include="..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
+
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+
+</Project>

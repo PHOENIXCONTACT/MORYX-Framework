@@ -1,8 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Container;
-using Moryx.Logging;
 
 namespace Moryx.TestTools.UnitTest
 {
@@ -15,7 +16,7 @@ namespace Moryx.TestTools.UnitTest
         public void Install(IComponentRegistrator registrator)
         {
             registrator.Register(typeof(EmptyInterceptor));
-            registrator.Register(typeof(DummyLogger), new []{typeof(IModuleLogger)});
+            registrator.Register(typeof(NullLoggerFactory), new []{typeof(ILoggerFactory)});
         }
     }
 }

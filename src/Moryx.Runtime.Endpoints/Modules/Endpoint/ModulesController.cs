@@ -1,15 +1,13 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Modules;
-using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
@@ -26,10 +24,10 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
     public class ModulesController : ControllerBase
     {
         private readonly IModuleManager _moduleManager;
-        private readonly IRuntimeConfigManager _configManager;
+        private readonly IConfigManager _configManager;
         private readonly IParallelOperations _parallelOperations;
 
-        public ModulesController(IModuleManager moduleManager, IRuntimeConfigManager configManager, IParallelOperations parallelOperations)
+        public ModulesController(IModuleManager moduleManager, IConfigManager configManager, IParallelOperations parallelOperations)
         {
             _moduleManager = moduleManager;
             _configManager = configManager;
@@ -156,7 +154,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
 
             var notifications = module.Notifications.ToArray();
             foreach (var notification in notifications)
-                notification.Confirm();
+                module.AcknowledgeNotification(notification);
 
             _moduleManager.InitializeModule(module);
             return Ok();
@@ -255,7 +253,8 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         private ICustomSerialization CreateSerialization(IModule module)
         {
             var host = (IContainerHost)module;
-            return new PossibleValuesSerialization(host.Container, _configManager)
+            // TODO: This is dangerous
+            return new PossibleValuesSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };
@@ -267,7 +266,8 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         private ICustomSerialization CreateEditorSerializeSerialization(IModule module)
         {
             var host = (IContainerHost)module;
-            return new AdvancedEntrySerializeSerialization(host.Container, _configManager)
+            // TODO: This is dangerous
+            return new AdvancedEntrySerializeSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };

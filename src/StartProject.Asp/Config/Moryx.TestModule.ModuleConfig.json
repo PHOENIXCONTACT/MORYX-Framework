@@ -1,0 +1,38 @@
+{
+  "ByteValue": 13,
+  "IntegerValue": 5,
+  "BoolValue": false,
+  "LongValue": 4200000000000,
+  "StringValue": "Hello",
+  "DoubleValue": 3.14,
+  "EnumValue": "Value0",
+  "TestPlugin": {
+    "PluginName": "TestPlugin",
+    "PluginIntegerValue": 500,
+    "PluginBoolValue": false,
+    "PluginLongValue": 420000000000000,
+    "PluginStringValue": "Hallo",
+    "PluginDoubleValue": 3.14159,
+    "PluginEnumValue": "Value9",
+    "SubPlugin": {},
+    "SubPlugins": []
+  },
+  "Plugins": [
+    {
+      "$type": "Moryx.TestModule.TestPluginConfig1, Moryx.TestModule",
+      "PluginName": "TestPlugin1",
+      "OrderSources": [],
+      "PluginIntegerValue": 500,
+      "PluginBoolValue": false,
+      "PluginLongValue": 420000000000000,
+      "PluginStringValue": "Hallo",
+      "PluginDoubleValue": 3.14159,
+      "PluginEnumValue": "Value9",
+      "SubPlugin": {},
+      "SubPlugins": []
+    }
+  ],
+  "LogLevel": "Trace",
+  "SleepTime": 2000,
+  "ConfigState": "Generated"
+}

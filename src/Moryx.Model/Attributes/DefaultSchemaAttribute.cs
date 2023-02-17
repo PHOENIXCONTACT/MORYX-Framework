@@ -1,9 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 
-namespace Moryx.Model
+namespace Moryx.Model.Attributes
 {
     /// <summary>
     /// Defines the default schema for this database context

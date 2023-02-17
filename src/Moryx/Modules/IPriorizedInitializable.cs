@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -6,7 +6,7 @@ using System;
 namespace Moryx.Modules
 {
     /// <summary>
-    /// Inizializable component wich can set a priority for the initialization process
+    /// Initializable component witch can set a priority for the initialization process
     /// </summary>
     public interface IPrioritizedInitializable : IInitializable
     {
@@ -75,11 +75,11 @@ namespace Moryx.Modules
         /// <inheritdoc />
         public int CompareTo(Priority other)
         {
-            // Invert standard compare of ushort for reversed behavior of 
+            // Invert standard compare of ushort for reversed behavior of
             // priorities
             return other._priority.CompareTo(_priority);
         }
-        
+
         /// <inheritdoc />
         public bool Equals(Priority other)
         {

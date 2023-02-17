@@ -1,11 +1,12 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Logging;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
@@ -31,6 +32,11 @@ namespace Moryx.Model
         ConnectionOkDbDoesNotExist,
 
         /// <summary>
+        /// Connection to database was ok but the model have pending migrations
+        /// </summary>
+        PendingMigrations,
+
+        /// <summary>
         /// Connection could be established but database was found
         /// </summary>
         Success
@@ -49,29 +55,22 @@ namespace Moryx.Model
         /// <summary>
         /// Initializes the model configurator
         /// </summary>
-        void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger);
+        void Initialize(Type contextType, IConfigManager configManager, ILogger logger);
 
         /// <summary>
-        /// Creates a context based on a config and the context mode
+        /// Creates a context with internal configuration
         /// </summary>
-        DbContext CreateContext(IDatabaseConfig config, ContextMode mode);
+        DbContext CreateContext();
 
         /// <summary>
-        /// Creates a context based on the context mode with internal configuration
+        /// Creates a context based on a config
         /// </summary>
-        DbContext CreateContext(ContextMode mode);
+        DbContext CreateContext(IDatabaseConfig config);
 
         /// <summary>
-        /// Builds the connection string for the database.
-        /// The model name will be included into the connection string
+        /// Creates a context based on `DbContextOptions`
         /// </summary>
-        string BuildConnectionString(IDatabaseConfig config);
-
-        /// <summary>
-        /// Builds the connection string for the database.
-        /// The model name is optional within the connection string
-        /// </summary>
-        string BuildConnectionString(IDatabaseConfig config, bool includeModel);
+        DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions);
 
         /// <summary>
         /// Updates the configuration of the underlying model
@@ -81,49 +80,36 @@ namespace Moryx.Model
         /// <summary>
         /// Test connection for config
         /// </summary>
-        TestConnectionResult TestConnection(IDatabaseConfig config);
+        Task<TestConnectionResult> TestConnection(IDatabaseConfig config);
 
         /// <summary>
         /// Create a new database for this model with given config
         /// </summary>
-        bool CreateDatabase(IDatabaseConfig config);
-
-        /// <summary>
-        /// Update the current database to the newest version
-        /// </summary>
-        /// <returns>True when an update was executed, false when this is already the latest version</returns>
-        DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config);
-
-        /// <summary>
-        /// Update the database to a the given migration version if available
-        /// </summary>
-        /// <returns>True when an update was executed, false when this is already the latest version</returns>
-        DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId);
-
-        /// <summary>
-        /// Rolls back all migrations including the first migration
-        /// </summary>
-        /// <returns></returns>
-        bool RollbackDatabase(IDatabaseConfig config);
+        Task<bool> CreateDatabase(IDatabaseConfig config);
 
         /// <summary>
         /// Retrieves all names of available updates
         /// </summary>
         /// <returns></returns>
-        IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config);
+        Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config);
 
         /// <summary>
         /// Retrieves all names of installed updates
         /// </summary>
         /// <returns></returns>
-        IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config);
+        Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config);
+
+        /// <summary>
+        ///
+        /// </summary>
+        Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config);
 
         /// <summary>
         /// Delete this database
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        void DeleteDatabase(IDatabaseConfig config);
+        Task DeleteDatabase(IDatabaseConfig config);
 
         /// <summary>
         /// Dump the database und save the backup at the given file path
@@ -132,13 +118,13 @@ namespace Moryx.Model
         /// <param name="config">Config describing the database target</param>
         /// <param name="targetPath">Path to store backup</param>
         /// <returns>True if Backup is in progress</returns>
-        void DumpDatabase(IDatabaseConfig config, string targetPath);
+        Task DumpDatabase(IDatabaseConfig config, string targetPath);
 
         /// <summary>
         /// Restore this database with the given backup file
         /// </summary>
         /// <param name="config">Config to use</param>
         /// <param name="filePath">Filepath of dump</param>
-        void RestoreDatabase(IDatabaseConfig config, string filePath);
+        Task RestoreDatabase(IDatabaseConfig config, string filePath);
     }
 }
