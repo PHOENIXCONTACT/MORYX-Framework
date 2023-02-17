@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moryx.Tools;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Implementation of <see cref="IPathPredictor"/>
@@ -80,7 +80,7 @@ namespace Moryx.Workflows
             }
         }
 
-        public void Monitor(IWorkflowEngine instance)
+        public void Monitor(IWorkplanEngine instance)
         {
             lock (_monitoredEngines)
             {
@@ -93,7 +93,7 @@ namespace Moryx.Workflows
             }
         }
 
-        public bool Remove(IWorkflowEngine instance)
+        public bool Remove(IWorkplanEngine instance)
         {
             lock (_monitoredEngines)
             {
@@ -125,17 +125,17 @@ namespace Moryx.Workflows
             // Publish the result if it is one of the final ones
             if (classification == NodeClassification.End || classification == NodeClassification.Failed)
             {
-                var eventArgs = new PathPredictionEventArgs((IWorkflowEngine)sender, classification);
+                var eventArgs = new PathPredictionEventArgs((IWorkplanEngine)sender, classification);
                 PathPrediction(this, eventArgs);
 
                 // As far as we are concerne this engine is complete
-                Remove((IWorkflowEngine)sender);
+                Remove((IWorkplanEngine)sender);
             }
         }
 
         private void EngineCompleted(object sender, IPlace e)
         {
-            Remove((IWorkflowEngine)sender);
+            Remove((IWorkplanEngine)sender);
         }
 
 

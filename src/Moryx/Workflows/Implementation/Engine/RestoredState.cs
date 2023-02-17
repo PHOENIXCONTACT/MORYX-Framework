@@ -1,11 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     internal class RestoredState : EngineState
     {
-        public RestoredState(WorkflowEngine context, StateMap stateMap) : base(context, stateMap)
+        public RestoredState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Moryx.Workflows
         /// <summary>
         /// Return the snapshot that was used to restore the engine
         /// </summary>
-        internal override WorkflowSnapshot Pause()
+        internal override WorkplanSnapshot Pause()
         {
             return Context.CurrentSnapshot;
         }

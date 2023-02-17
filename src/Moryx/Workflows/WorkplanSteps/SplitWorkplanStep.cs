@@ -1,23 +1,24 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Properties;
-using Moryx.Workflows.Transitions;
+using Moryx.Workplans.Transitions;
 
-namespace Moryx.Workflows.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps
 {
     /// <summary>
     /// Workplanstep to split execution
     /// </summary>
     [DataContract]
-    [ClassDisplay(ResourceType = typeof(Strings), Name = "SplitWorkplanStep_Name", Description = "SplitWorkplanStep_Description")]
+    [Display(ResourceType = typeof(Strings), Name = "SplitWorkplanStep_Name", Description = "SplitWorkplanStep_Description")]
     public class SplitWorkplanStep : WorkplanStepBase
     {
         private SplitWorkplanStep()
         {
+            Name = "Split";
         }
 
         /// <summary>
@@ -36,11 +37,6 @@ namespace Moryx.Workflows.WorkplanSteps
                 OutputDescriptions[i] = new OutputDescription{OutputType = OutputType.Success};
             }
         }
-
-        /// <summary>
-        /// Transition name
-        /// </summary>
-        public override string Name => "Split";
 
         /// <summary>
         /// Create transistion instance

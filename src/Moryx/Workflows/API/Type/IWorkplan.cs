@@ -1,12 +1,12 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
-    /// Type interface for workplans. Instances of a workplan are called workflows
+    /// Type interface for workplans. Instances of a workplan are denoted by <see cref="IWorkplanInstance"/>
     /// </summary>
     public interface IWorkplan
     {

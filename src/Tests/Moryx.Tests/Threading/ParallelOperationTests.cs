@@ -1,15 +1,14 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Linq;
 using Moryx.Logging;
-using Moryx.Modules;
-using Moryx.TestTools.UnitTest;
 using Moryx.Threading;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Moryx.Tests.Threading
 {
@@ -22,12 +21,14 @@ namespace Moryx.Tests.Threading
 
         private ParallelOperations _threadFactory;
         private readonly ManualResetEventSlim _callbackReceivedEvent = new ManualResetEventSlim(false);
-        private DummyLogger _logger;
+        
+        private ModuleLogger _logger;
+        private Tuple<LogLevel, string, Exception> _message;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _logger = new DummyLogger();
+            _logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, m, e) => _message = new(l, m, e));
         }
 
         [OneTimeTearDown]
@@ -38,11 +39,7 @@ namespace Moryx.Tests.Threading
         [SetUp]
         public void Setup()
         {
-            _logger.ClearBuffer();
-            _threadFactory = new ParallelOperations
-            {
-                Logger = _logger,
-            };
+            _threadFactory = new ParallelOperations(_logger);
 
             _callbackReceivedEvent.Reset();
         }
@@ -51,6 +48,7 @@ namespace Moryx.Tests.Threading
         public void TearDown()
         {
             _threadFactory.Dispose();
+            _message = null;
         }
 
         [Test]
@@ -75,8 +73,8 @@ namespace Moryx.Tests.Threading
 
             AwaitLogMessage();
 
-            Assert.AreEqual(critical, _logger.Messages.Any(m => m.Level == LogLevel.Fatal), "Failure received");
-            Assert.AreEqual(!critical, _logger.Messages.Any(m => m.Level == LogLevel.Error), "Warning received");
+            Assert.AreEqual(critical, _message.Item1 == LogLevel.Critical, "Failure received");
+            Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
         }
 
         [Ignore("Test fails because of timing issue on different system")]
@@ -179,8 +177,8 @@ namespace Moryx.Tests.Threading
             Assert.AreEqual(1, state.Counter, "Last check");
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
+       [TestCase(true)]
+       [TestCase(false)]
         public void DelayedExecutionWithException(bool critical)
         {
             StateObject state = new StateObject();
@@ -189,8 +187,8 @@ namespace Moryx.Tests.Threading
 
             AwaitLogMessage();
 
-            Assert.AreEqual(critical, _logger.Messages.Any(m => m.Level == LogLevel.Fatal), "Failure received");
-            Assert.AreEqual(!critical, _logger.Messages.Any(m => m.Level == LogLevel.Error), "Warning received");
+            Assert.AreEqual(critical, _message.Item1 == LogLevel.Critical, "Failure received");
+            Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
         }
 
         private void SimpleCallback(StateObject state)
@@ -217,7 +215,7 @@ namespace Moryx.Tests.Threading
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            while (stopWatch.ElapsedMilliseconds < 50 && _logger.Messages.Count == 0)
+            while (stopWatch.ElapsedMilliseconds < 50 && _message == null)
             {
                 Thread.Sleep(1);
             }

@@ -1,4 +1,4 @@
-﻿namespace Moryx.Asp.Extensions.Exception
+﻿namespace Moryx.Asp.Extensions
 {
     public class MoryxExceptionResponse
     {

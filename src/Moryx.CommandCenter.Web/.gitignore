@@ -1,0 +1,7 @@
+/node_modules
+/yarn.lock
+/yarn-error.log
+/.vscode/chrome
+/wwwroot/
+!/wwwroot/favicon.ico
+/package-lock.json

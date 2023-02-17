@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Configuration;
@@ -11,28 +11,18 @@ namespace Moryx.Model.Configuration
     public interface IDatabaseConfig : IConfig
     {
         /// <summary>
-        /// Database server
+        /// Connection string
         /// </summary>
-        string Host { get; set; }
+        DatabaseConnectionSettings ConnectionSettings { get; set; }
 
         /// <summary>
-        /// Port to access the server
+        /// Database configurator typename
         /// </summary>
-        int Port { get; set; }
+        string ConfiguratorTypename { get; set; }
 
         /// <summary>
-        /// Database to use
+        /// Checks if the configuration is valid
         /// </summary>
-        string Database { get; set; }
-
-        /// <summary>
-        /// Databse user
-        /// </summary>
-        string Username { get; set; }
-
-        /// <summary>
-        /// Password for <see cref="Username"/>
-        /// </summary>
-        string Password { get; set; }
+        public bool IsValid();
     }
 }

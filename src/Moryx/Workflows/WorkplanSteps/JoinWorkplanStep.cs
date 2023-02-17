@@ -1,26 +1,24 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.Workflows.Transitions;
+using Moryx.Workplans.Transitions;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Properties;
 
-namespace Moryx.Workflows.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps
 {
     /// <summary>
     /// Workplan step to join multiple inputs
     /// </summary>
     [DataContract]    
-    [ClassDisplay(ResourceType = typeof(Strings), Name = "JoinWorkplanStep_Name", Description = "JoinWorkplanStep_Description")]
+    [Display(ResourceType = typeof(Strings), Name = "JoinWorkplanStep_Name", Description = "JoinWorkplanStep_Description")]
     public class JoinWorkplanStep : WorkplanStepBase
     {
         private JoinWorkplanStep()
         {
+            Name = "Join";
         }
-
-        /// 
-        public override string Name => "Join";
 
         /// <summary>
         /// Create new join step for certain number of inputs

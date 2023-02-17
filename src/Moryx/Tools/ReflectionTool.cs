@@ -25,9 +25,10 @@ namespace Moryx.Tools
         /// <returns></returns>
         private static Assembly[] LoadAssemblies()
         {
-            var currentDir = Directory.GetCurrentDirectory().ToLower();
+            // Fetch location of binaries from our assembly
+            var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).ToLower();
             var relevantAssemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                          // Only load non-dynamic assemblies from our directory
+                                      // Only load non-dynamic assemblies from our directory
                                       where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
                                       let path = Path.GetDirectoryName(assembly.Location).ToLower()
                                       where TestMode || path == currentDir

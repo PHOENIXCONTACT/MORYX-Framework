@@ -18,19 +18,24 @@
     </a>
 </p>
 
-# MORYX Core
+# MORYX Framework
 
-The MORYX Core is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort. It is also the foundation for the Phoenix Contact IoT Framework [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
+The MORYX Framework is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort.
+It originates from the original MORYX project targeted to develop machines but has expanded to a much bigger field of use. 
+
+The **MORYX Core** defines a base namespace and set of interfaces used to develop modular applications.
+
+The **MORYX AbstractionLayer** is the environment for the digital twins of resources and products. It defines the domain independent [meta model](/docs/articles/AbstractionLayer.md) and enables applications to model their physical system and product portfolio as typed objects. It thereby makes other modules hardware independent by encapsulating details of the underlying structure and devices.
+
+The **MORYX Factory** contains the APIs, domain objects and developer documentation for the MORYX factory scope.
 
 **Links**
 
 - [Package Feed](https://www.myget.org/feed/Packages/moryx)
 - [Repository Template](https://github.com/PHOENIXCONTACT/MORYX-Template)
-- [MORYX Maintenance](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb)
-- [MORYX ClientFramework](https://github.com/PHOENIXCONTACT/MORYX-ClientFramework)
-- [MORYX Abstraction Layer](https://github.com/PHOENIXCONTACT/MORYX-AbstractionLayer)
+- [MORYX Factory](https://github.com/PHOENIXCONTACT/MORYX-Factory)
 
-## Getting started
+## Getting Started
 
 If you want to start developing with or for MORYX, the easiest way is our [template repository](https://github.com/PHOENIXCONTACT/MORYX-Template). It comes with two empty solutions, the necessary package feeds and preinstalled empty MORYX runtime. Add projects and packages to backend and frontend solutions depending on your specific requirements. Install stable releases via Nuget; development releases are available via MyGet.
 
@@ -40,18 +45,23 @@ If you want to start developing with or for MORYX, the easiest way is our [templ
 | `Moryx.Model` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.svg)](https://www.nuget.org/packages/Moryx.Model/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Model)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Model) |
 | `Moryx.Model.InMemory` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.InMemory.svg)](https://www.nuget.org/packages/Moryx.Model.InMemory/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model.InMemory)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model.InMemory) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Model.InMemory)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Model.InMemory) |
 | `Moryx.Model.PostgreSQL` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.PostgreSQL.svg)](https://www.nuget.org/packages/Moryx.Model.PostgreSQL/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model.PostgreSQL)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model.PostgreSQL) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Model.PostgreSQL)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Model.PostgreSQL) |
+| `Moryx.Model.Sqlite` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.Sqlite.svg)](https://www.nuget.org/packages/Moryx.Model.Sqlite/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model.Sqlite)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model.Sqlite) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Model.Sqlite)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Model.Sqlite) |
 | `Moryx.Container` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Container.svg)](https://www.nuget.org/packages/Moryx.Container/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Container)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Container) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Container)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Container) |
 | `Moryx.Communication.Serial` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Communication.Serial.svg)](https://www.nuget.org/packages/Moryx.Communication.Serial/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Communication.Serial)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Communication.Serial) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Communication.Serial)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Communication.Serial) |
-| `Moryx.Tools.Wcf` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Tools.Wcf.svg)](https://www.nuget.org/packages/Moryx.Tools.Wcf/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Tools.Wcf)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Tools.Wcf) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Tools.Wcf)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Tools.Wcf) |
-| `Moryx.Runtime.Wcf` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Wcf.svg)](https://www.nuget.org/packages/Moryx.Runtime.Wcf/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Wcf)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Wcf) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.Wcf)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.Wcf) |
+| `Moryx.Asp.Extensions` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Asp.Extensions.svg)](https://www.nuget.org/packages/Moryx.Asp.Extensions/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Asp.Extensions)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Asp.Extensions) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Asp.Extensions)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Asp.Extensions) |
 | `Moryx.Runtime` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.svg)](https://www.nuget.org/packages/Moryx.Runtime/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime) |
-| `Moryx.Runtime.DbUpdate` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.DbUpdate.svg)](https://www.nuget.org/packages/Moryx.Runtime.DbUpdate/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.DbUpdate)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.DbUpdate) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.DbUpdate)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.DbUpdate) |
 | `Moryx.Runtime.Kernel` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Kernel.svg)](https://www.nuget.org/packages/Moryx.Runtime.Kernel/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Kernel)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Kernel) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.Kernel)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.Kernel) |
-| `Moryx.Runtime.Kestrel` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Kestrel.svg)](https://www.nuget.org/packages/Moryx.Runtime.Kestrel/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Kestrel)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Kestrel) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.Kestrel)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.Kestrel) |
-| `Moryx.Runtime.Maintenance` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Maintenance.svg)](https://www.nuget.org/packages/Moryx.Runtime.Maintenance/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Maintenance)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Maintenance) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.Maintenance)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.Maintenance) |
-| `Moryx.Runtime.SmokeTest` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.SmokeTest.svg)](https://www.nuget.org/packages/Moryx.Runtime.SmokeTest/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.SmokeTest)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.SmokeTest) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.SmokeTest)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.SmokeTest) |
-| `Moryx.Runtime.WinService` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.WinService.svg)](https://www.nuget.org/packages/Moryx.Runtime.WinService/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.WinService)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.WinService) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.WinService)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.WinService) |
-| `Moryx.TestTools.SystemTest` | [![NuGet](https://img.shields.io/nuget/v/Moryx.TestTools.SystemTest.svg)](https://www.nuget.org/packages/Moryx.TestTools.SystemTest/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.TestTools.SystemTest)](https://www.myget.org/feed/moryx/package/nuget/Moryx.TestTools.SystemTest) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.TestTools.SystemTest)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.TestTools.SystemTest) |
+| `Moryx.Runtime.Endpoints` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Endpoints.svg)](https://www.nuget.org/packages/Moryx.Runtime.Endpoints/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Endpoints)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Endpoints) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.Kernel)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.Kernel) |
+| `Moryx.CommandCenter.Web` | [![NuGet](https://img.shields.io/nuget/v/Moryx.CommandCenter.Web.svg)](https://www.nuget.org/packages/Moryx.CommandCenter.Web/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.CommandCenter.Web)](https://www.myget.org/feed/moryx/package/nuget/Moryx.CommandCenter.Web) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.CommandCenter.Web)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.CommandCenter.Web) |
+| `Moryx.AbstractionLayer` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.AbstractionLayer)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.AbstractionLayer) |
+| `Moryx.AbstractionLayer.TestTools` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.TestTools.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.TestTools/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.TestTools)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.TestTools) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.AbstractionLayer.TestTools)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.AbstractionLayer.TestTools) |
+| `Moryx.TestTools.UnitTest` | [![NuGet](https://img.shields.io/nuget/v/Moryx.TestTools.UnitTest.svg)](https://www.nuget.org/packages/Moryx.TestTools.UnitTest/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.TestTools.UnitTest)](https://www.myget.org/feed/moryx/package/nuget/Moryx.TestTools.UnitTest) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.TestTools.UnitTest)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.TestTools.UnitTest) |
+| `Moryx.AbstractionLayer.Products.Endpoints` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.Products.Endpoints.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.Products.Endpoints/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.Products.Endpoints)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.Products.Endpoints) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.AbstractionLayer.Products.Endpoints)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.AbstractionLayer.Products.Endpoints) |
+| `Moryx.AbstractionLayer.Resources.Endpoints` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.Resources.Endpoints.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.Resources.Endpoints/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.Resources.Endpoints)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.Resources.Endpoints) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.AbstractionLayer.Resources.Endpoints)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.AbstractionLayer.Resources.Endpoints) |
+| `Moryx.Notifications` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Notifications.svg)](https://www.nuget.org/packages/Moryx.Notifications/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Notifications)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Notifications) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.Notifications)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Notifications) |
+| `Moryx.Products.Management` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Products.Management.svg)](https://www.nuget.org/packages/Moryx.Products.Management/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Products.Management)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Products.Management) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.Products.Management)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Products.Management) |
+| `Moryx.Products.Model` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Products.Model.svg)](https://www.nuget.org/packages/Moryx.Products.Model/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Products.Model)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Products.Model) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.Products.Model)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Products.Model) |
+| `Moryx.Resources.Management` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Resources.Management.svg)](https://www.nuget.org/packages/Moryx.Resources.Management/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Resources.Management)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Resources.Management) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.Resources.Management)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Resources.Management) |
 
 If you wish to contribute to this project, you simply need to clone the repository and open the solution with Visual Studio 2017 or above. The Debug target should be *StartProject*.
 
@@ -62,8 +72,17 @@ To build and run from the command line you need powershell and msbuild.
 .\src\StartProject\bin\Debug\StartProject.exe
 ```
 
-## Architecture
+Whether you want to debug and experiment with this repository or build an application based on the Abstraction Layers packages you need to follow a few simple steps to setup each of the modules. For both modules this requires the package *Moryx.Runtime.Maintenance.Web* and its [database configuration](http://localhost/maintenanceweb/#/databases).
 
+**Product Management**:
+1. Create or configure the database for *Moryx.Products.Model* using the Maintenance
+2. Configure the [storage mapping](/docs/articles/Products/ProductStorage.md) for your domain objects. This is necessary to store, load and use the objects within MORYX.
+
+**Resource Management**:
+1. Create or configure the database for *Moryx.Resources.Model*
+2. Execute the `ResourceInteractionInitializer` from [ResourceManager console](http://localhost/maintenanceweb/#/modules/ResourceManager/console) to provide the endpoint for the resource configuration UI.
+
+## Architecture
 The MORYX Core is a .NET based framework to quickly build three-tier applications. The core architecture is a modular monolith using the service and facade pattern to isolate and decouple functionality. It uses a 2-level Dependency Injection structure to isolate a modules composition and offer a per-module life-cycle with all instances hidden behind the previously mentioned facades. It also offers a range of tools and components to speed up development, increase stability and drastically reduce boilerplate code. To improve flexibility of modules and applications the core has built in support for configuration management as well as plugin loading.
 
 <p align="center">
@@ -76,15 +95,34 @@ Each modules composition is constructed by its own DI-container instance. This m
     <img src="docs/images/arch_level2.png" width="400px"/>
 </p>
 
+## Resource Management
+
+The [Resource Management](/docs/articles/Resources/ResourceManagement.md) holds the object graph representing the physical system. It maintains the database entities for the object graph in the background and reconstructs the object graph upon boot. It also provides the API for other modules to interact with resources based on their implemented interfaces and supports resource look-up by various conditions or capabilities.
+
+## Product Management
+
+The [Product Management](/docs/articles/Products/ProductManagement.md) holds all product variants, created instances of those variants and recipes how to create an instance. It provides an API giving access to product types, instances, recipes and workplans.
+
+## Tutorials
+
+To start using the MORYX for your own projects you can jump into these tutorials:
+
+* [How to create a Resource](/docs/tutorials/HowToCreateResource.md)
+* [How to build a Driver](/docs/tutorials/HowToBuildADriver.md)
+* [How to create a Product](/docs/tutorials/HowToCreateAProduct.md)
+* [How to create a Server Module](/docs/tutorials/ServerModule/ServerModule.md)
+
 ## Maintenance
 
-Part of the Core is also the Maintenance module, which hosts a HTTP REST service and *optionally* a [graphic web interface](https://github.com/PHOENIXCONTACT/MORYX-MaintenanceWeb) to control and configure a MORYX application. The Maintenance itself does not define that logic, but simply provides easy external access to APIs and features of the runtime kernel.
+Part of the Framework is also the Maintenance module, which hosts a HTTP REST service and *optionally* a graphic web interface to control and configure a MORYX application. The Maintenance itself does not define that logic, but simply provides easy external access to APIs and features of the runtime kernel.
 
 ## History
 
-Starting with version 3.0 of the core we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community. Because of these changes the public version is still *Work-in-Progress*, but we will stabilize and release it soon.
+Starting with version 3.0 of the core we decided to open source it as a foundation for Industrial IoT (IIoT) applications. For this public version, the framework received an overhaul to replace commercial libraries and tools, remove specialized Phoenix Contact code and better comply with the .NET open source community.
 
-But even though this version is still under construction, its in-house predecessor has been used in production for years. Just a few examples of solutions build on MORYX are listed below:
+Version 6 uses .net 6 with ASP.net Core and EntityFramework Core 6. All WPF UIs were replaced by WebUIs. In order to make debugging easier, we decided to merge the AbstractionLayer and Core repositories into one and name this one MORYX Framework. The AbstractionLayer will be archived.
+
+A few examples of solutions build on MORYX are listed below:
 
 - Manufacturing Control System
 - Plastic Mold Tracking

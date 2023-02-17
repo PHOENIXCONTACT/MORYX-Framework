@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -14,11 +14,6 @@ namespace Moryx.Model
         /// Database key of this entity
         /// </summary>
         long Id { get; set; }
-
-        /// <summary>
-        /// Event if the id was changed
-        /// </summary>
-        event EventHandler IdChanged;
     }
 
     /// <summary>

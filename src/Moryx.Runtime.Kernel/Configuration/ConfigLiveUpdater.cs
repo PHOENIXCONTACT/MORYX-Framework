@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -10,7 +10,7 @@ using Moryx.Configuration;
 
 namespace Moryx.Runtime.Kernel
 {
-    internal class ConfigLiveUpdater : IConfigLiveUpdate
+    internal class ConfigLiveUpdater
     {
         public void UpdateLive(Type sharedType, IConfig activeConfig, IConfig modifiedCopy)
         {

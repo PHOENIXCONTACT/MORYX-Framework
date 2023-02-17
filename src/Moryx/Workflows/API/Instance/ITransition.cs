@@ -1,9 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Interface representing a transition
@@ -22,7 +22,7 @@ namespace Moryx.Workflows
         void Initialize();
 
         /// <summary>
-        /// All inputs of this transition, the amount depends on the workflow
+        /// All inputs of this transition, the amount depends on the workplan
         /// </summary>
         IPlace[] Inputs { get; }
 

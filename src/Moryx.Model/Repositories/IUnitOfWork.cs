@@ -1,10 +1,10 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Data.Entity;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model.Repositories
 {
@@ -24,11 +24,6 @@ namespace Moryx.Model.Repositories
         T GetRepository<T>() where T : class, IRepository;
 
         /// <summary>
-        /// Get or set the current mode
-        /// </summary>
-        ContextMode Mode { get; set; }
-
-        /// <summary>
         /// Saves all changes made in this UnitOfWork to the underlying database.
         /// </summary>
         void SaveChanges();
@@ -42,6 +37,21 @@ namespace Moryx.Model.Repositories
         /// Asynchronously saves all changes made in this UnitOfWork to the underlying database.
         /// </summary>
         Task SaveChangesAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Links an entity to a business object. When calling <see cref="IUnitOfWork.SaveChanges()"/>, the unit of work
+        /// will update the IDs of all linked business objects 
+        /// </summary>
+        /// <param name="businessObject">The business object to update on <see cref="IUnitOfWork.SaveChanges()"/></param>
+        /// <param name="entity">The entity saved with <see cref="IUnitOfWork.SaveChanges()"/></param>
+        void LinkEntityToBusinessObject(IPersistentObject businessObject, IEntity entity);
+
+        /// <summary>
+        /// Checks whether the given business object is linked to an entity to update its <seealso cref="IPersistentObject.Id"/>
+        /// when calling <see cref="IUnitOfWork.SaveChanges()"/>.
+        /// </summary>
+        /// <param name="businessObject">The business object to check</param>
+        bool IsLinked(IPersistentObject businessObject);
     }
 
     /// <summary>

@@ -1,13 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model.Repositories
 {
@@ -24,17 +22,12 @@ namespace Moryx.Model.Repositories
         /// <inheritdoc />
         DbContext IUnitOfWork.DbContext => DbContext;
 
-        /// <inheritdoc />
-        public ContextMode Mode
-        {
-            get => DbContext.GetContextMode();
-            set => DbContext.SetContextMode(value);
-        }
+        private readonly Dictionary<IPersistentObject, IEntity> _entityBusinessObjectLinks = new();
 
         /// <summary>
         /// Creates a new instance of <see cref="UnitOfWork{TContext}"/>
         /// </summary>
-        /// <param name="dbContext">Responsible <see cref="System.Data.Entity.DbContext"/></param>
+        /// <param name="dbContext">Responsible <see cref="Microsoft.EntityFrameworkCore.DbContext"/></param>
         /// <param name="repositories">Current available repositories</param>
         public UnitOfWork(TContext dbContext, IDictionary<Type, Func<Repository>> repositories)
         {
@@ -62,18 +55,17 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
+        public void LinkEntityToBusinessObject (IPersistentObject businessObject, IEntity entity)
+        {
+            _entityBusinessObjectLinks[businessObject] = entity;
+        }
+
+        /// <inheritdoc />
         public void SaveChanges()
         {
             try
             {
                 DbContext.SaveChanges();
-            }
-            // Catch for validation error break point
-            catch (DbEntityValidationException valEx)
-            {
-                // ReSharper disable once UnusedVariable
-                var validationError = valEx.EntityValidationErrors;
-                throw;
             }
             // Catch for other exception break points
             // ReSharper disable once RedundantCatchClause
@@ -81,6 +73,11 @@ namespace Moryx.Model.Repositories
             {
                 // Debug entity framework exceptions
                 throw;
+            }
+
+            foreach(var link in _entityBusinessObjectLinks)
+            {
+                link.Key.Id = link.Value.Id;
             }
         }
 
@@ -95,13 +92,6 @@ namespace Moryx.Model.Repositories
             {
                 await DbContext.SaveChangesAsync(cancellationToken);
             }
-            // Catch for validation error break point
-            catch (DbEntityValidationException valEx)
-            {
-                // ReSharper disable once UnusedVariable
-                var validationError = valEx.EntityValidationErrors;
-                throw;
-            }
             // Catch for other exception break points
             // ReSharper disable once RedundantCatchClause
             catch (Exception)
@@ -109,6 +99,12 @@ namespace Moryx.Model.Repositories
                 // Debug entity framework exceptions
                 throw;
             }
+        }
+
+        /// <inheritdoc />
+        public bool IsLinked(IPersistentObject businessObject)
+        {
+            return _entityBusinessObjectLinks.ContainsKey(businessObject);
         }
 
         private bool _disposed;

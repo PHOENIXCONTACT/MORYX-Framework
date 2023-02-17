@@ -1,9 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Classification of a connector to increase semantic meaning
@@ -38,17 +38,17 @@ namespace Moryx.Workflows
         Failure = 8,
 
         /// <summary>
-        /// Start point for normal workflow
+        /// Start point for a normal workplan
         /// </summary>
         Start = Entry | WorkplanBorder,
 
         /// <summary>
-        /// End point for normal workflow
+        /// End point for a normal workplan
         /// </summary>
         End = Exit | WorkplanBorder,
 
         /// <summary>
-        /// Reset and abort point for normal workflow if an unrecoverable failure occurred.
+        /// Reset and abort point for a normal workplan if an unrecoverable failure occurred.
         /// </summary>
         Failed = Exit | Failure
     }

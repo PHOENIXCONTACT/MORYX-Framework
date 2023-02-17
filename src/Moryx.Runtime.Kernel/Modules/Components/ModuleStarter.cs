@@ -1,11 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel
@@ -13,10 +13,10 @@ namespace Moryx.Runtime.Kernel
     internal class ModuleStarter : ModuleManagerComponent, IModuleStarter
     {
         private readonly IModuleDependencyManager _dependencyManager;
-        private readonly IModuleLogger _logger;
+        private readonly ILogger _logger;
         private readonly ModuleManagerConfig _config;
 
-        public ModuleStarter(IModuleDependencyManager dependencyManager, IModuleLogger logger, ModuleManagerConfig config)
+        public ModuleStarter(IModuleDependencyManager dependencyManager, ILogger logger, ModuleManagerConfig config)
         {
             _dependencyManager = dependencyManager;
             _logger = logger;
@@ -93,7 +93,7 @@ namespace Moryx.Runtime.Kernel
             }
             catch(Exception ex)
             {
-                _logger.LogException(LogLevel.Error, ex, "Failed to start module {0}", module.Name);
+                _logger.LogError(ex, "Failed to start module {0}", module.Name);
             }
             // Forward result
             ModuleChangedState(module, module.State);

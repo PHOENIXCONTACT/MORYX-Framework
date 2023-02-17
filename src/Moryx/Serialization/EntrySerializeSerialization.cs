@@ -1,4 +1,4 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -17,12 +17,6 @@ namespace Moryx.Serialization
         private readonly string[] _basePropertyFilter;
 
         /// <summary>
-        /// Instance of the default <see cref="EntrySerializeSerialization"/>
-        /// </summary>
-        [Obsolete("Will be removed in the next major. Instantiate by yourself.")]
-        public static EntrySerializeSerialization Instance => new EntrySerializeSerialization();
-
-        /// <summary>
         /// If set to <c>true</c> explicit properties are filtered
         /// </summary>
         public bool FilterExplicitProperties { get; set; }
@@ -32,11 +26,7 @@ namespace Moryx.Serialization
         /// </summary>
         public EntrySerializeSerialization()
         {
-#if HAVE_ARRAY_EMPTY
             _basePropertyFilter = Array.Empty<string>();
-#else
-            _basePropertyFilter = new string[0];
-#endif
         }
 
         /// <summary>

@@ -1,8 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Threading;
+using Microsoft.Extensions.Logging;
+using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 
@@ -10,6 +13,11 @@ namespace Moryx.Runtime.Tests.Modules
 {
     internal class DelayedExceptionModule : ServerModuleBase<TestConfig>
     {
+        public DelayedExceptionModule(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+            : base(containerFactory, configManager, loggerFactory)
+        {
+        }
+
         /// <inheritdoc />
         public override string Name => "DelayedException";
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using NUnit.Framework;
@@ -25,14 +25,6 @@ namespace Moryx.Container.Tests
 
             Assert.NotNull(local, "Failed to resolve local component!");
             Assert.NotNull(localFac, "Failed to resolve local factory");
-        }
-
-        [Test]
-        public void GlobalsNotFound()
-        {
-            var global = _container.Resolve<GlobalComponent>();
-
-            Assert.Null(global, "Global component was registered in local container!");
         }
 
         [Test]
