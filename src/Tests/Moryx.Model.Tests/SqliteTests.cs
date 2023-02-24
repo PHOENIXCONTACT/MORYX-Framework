@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Moryx.Model.Tests
 {
     [TestFixture]
-    public  class SqliteTests
+    public class SqliteTests
     {
         private SqliteDatabaseConfig dbConfig;
         private SqliteModelConfigurator configurator;
@@ -30,7 +30,7 @@ namespace Moryx.Model.Tests
         public async Task SqliteCreateDatabaseShouldWork()
         {
             var result = await configurator.TestConnection(dbConfig);
-            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist,result);
+            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, result);
 
             bool isCreated = await configurator.CreateDatabase(dbConfig);
 
@@ -46,7 +46,7 @@ namespace Moryx.Model.Tests
         public async Task SqliteDeleteDatabaseShouldWork()
         {
             var connectionResult = await configurator.TestConnection(dbConfig);
-            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist,connectionResult);
+            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, connectionResult);
 
             bool isCreated = await configurator.CreateDatabase(dbConfig);
             Assert.IsTrue(isCreated);
@@ -67,9 +67,9 @@ namespace Moryx.Model.Tests
         [TearDown]
         public void Destroy()
         {
-            if(File.Exists(datasource))
-            //remove the database
-            configurator.DeleteDatabase(dbConfig).Wait();
+            if (File.Exists(datasource))
+                //remove the database
+                configurator.DeleteDatabase(dbConfig).Wait();
 
         }
     }

@@ -2,15 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
-using Moryx.Tools;
 using Moryx.Model.Sqlite.Attributes;
 
 namespace Moryx.Model.Sqlite
@@ -41,7 +38,7 @@ namespace Moryx.Model.Sqlite
         /// <inheritdoc />
         public override Task DeleteDatabase(IDatabaseConfig config)
         {
-           SqliteConnection.ClearAllPools();
+            SqliteConnection.ClearAllPools();
 
             var dbFilePath = GetFilePath(config);
             if (File.Exists(dbFilePath))
