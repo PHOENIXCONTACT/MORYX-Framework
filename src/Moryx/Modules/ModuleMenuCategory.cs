@@ -31,7 +31,7 @@ namespace Moryx.Asp.Integration
         Help = 30,
 
         /// <summary>
-        /// Module represents a sign-in screen
+        /// Module represents a sign-in screen 
         /// </summary>
         [Obsolete]
         SignIn = 40,
