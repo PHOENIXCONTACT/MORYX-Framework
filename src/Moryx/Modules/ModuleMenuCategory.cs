@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+
 namespace Moryx.Asp.Integration
 {
     /// <summary>
@@ -29,8 +31,9 @@ namespace Moryx.Asp.Integration
         Help = 30,
 
         /// <summary>
-        /// Module represents a sign-in screen
+        /// Module represents a sign-in screen 
         /// </summary>
+        [Obsolete]
         SignIn = 40,
     }
 }
