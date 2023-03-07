@@ -662,6 +662,9 @@ namespace Moryx.Products.Management
 
                     // Save those currently active
                     var currentEntities = FindLinks(linkStrategy.PropertyName, typeEntity).ToArray();
+
+                    if (links is null) return typeEntity;
+
                     foreach (var link in links)
                     {
                         PartLinkEntity linkEntity;
