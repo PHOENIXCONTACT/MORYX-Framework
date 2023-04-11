@@ -52,7 +52,7 @@ namespace Moryx.Serialization
         /// <inheritdoc />
         public override IEnumerable<MethodInfo> GetMethods(Type sourceType)
         {
-            var methods = sourceType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(m => !m.IsSpecialName);
+            var methods = sourceType.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(m => !m.IsSpecialName);
             methods = from method in methods
                 let mode = EvaluateSerializeMode(method)
                 where mode.HasValue && mode.Value == EntrySerializeMode.Always
