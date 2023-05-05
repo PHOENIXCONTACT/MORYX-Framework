@@ -740,7 +740,12 @@ namespace Moryx.Serialization
         public static Entry InvokeMethod(object target, MethodEntry methodEntry, ICustomSerialization customSerialization)
         {
             var method = target.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .First(m => m.Name == methodEntry.Name && (m.IsPublic || m.IsAssembly) && ParametersProvided(m.GetParameters(), methodEntry));
+                .FirstOrDefault(m => m.Name == methodEntry.Name && (m.IsPublic || m.IsAssembly) && ParametersProvided(m.GetParameters(), methodEntry));
+            if(method == null)
+            {
+                throw new MissingMethodException();
+            }
+
             var arguments = ConvertArguments(method, methodEntry, customSerialization);
 
             var result = method.Invoke(target, arguments);
