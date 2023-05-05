@@ -9,6 +9,16 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Wibu.Build" Version="7.21.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Compile Remove="$(NugetPackageRoot)\**\*.WibuCmRaU" />
+		<None Remove="$(NugetPackageRoot)\**\*.WibuCmRaU" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
+	</ItemGroup>
+	
 </Project>

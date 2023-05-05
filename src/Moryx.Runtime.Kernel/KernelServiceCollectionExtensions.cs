@@ -87,6 +87,7 @@ namespace Moryx.Runtime.Kernel
             return configManager;
         }
 
+        [Obsolete("please use Moryx.Asp.Extensions.StartAllMoryxModules instead.")]
         /// <summary>
         /// Boot system and start all modules
         /// </summary>
