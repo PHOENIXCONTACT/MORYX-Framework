@@ -102,4 +102,19 @@ namespace Moryx.Tests
 
         public bool NullProperty3 { get; set; } = false;
     }
+
+    public class EntrySerialize_Methods : EntrySerialize_InheritedBase
+    {
+        [EntrySerialize]
+        public void InvocablePublic() { }
+        
+        [EntrySerialize]
+        internal void InvocableInternal() { }
+
+        [EntrySerialize]
+        protected void NonInvocableProtected() { }
+     
+        [EntrySerialize]
+        private void NonInvocablePrivate() { }
+    }
 }
