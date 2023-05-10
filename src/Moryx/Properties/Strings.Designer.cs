@@ -97,7 +97,7 @@ namespace Moryx.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sub-Workplan.
+        ///   Looks up a localized string similar to Nests a sub-workplan in the current workplan.
         /// </summary>
         public static string SubworkflowStep_Description {
             get {
@@ -106,7 +106,7 @@ namespace Moryx.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nests a sub-workplan in the current workplan.
+        ///   Looks up a localized string similar to Sub-Workplan.
         /// </summary>
         public static string SubworkflowStep_Name {
             get {
