@@ -118,9 +118,13 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                     return true;
                 });
             }
+            catch(MissingMethodException)
+            {
+                return BadRequest("Method could not be invoked. Please check spelling and access modifier (has to be `public` or `internal`).");
+            }
             catch
             {
-                return Conflict("Method could not be invoked.");
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
 
             return entry;
