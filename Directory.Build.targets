@@ -5,7 +5,7 @@
 
 	<PropertyGroup>
 		<dotnetVersion>6.0.0</dotnetVersion>
-		<efCoreVersion>6.0.0</efCoreVersion>
+		<efCoreVersion>7.0.4</efCoreVersion>
 
 	</PropertyGroup>
 
