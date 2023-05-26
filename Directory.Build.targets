@@ -4,7 +4,7 @@
 	<Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
 
 	<PropertyGroup>
-		<dotnetVersion>6.0.0</dotnetVersion>
+		<dotnetVersion>7.0.0</dotnetVersion>
 		<efCoreVersion>6.0.0</efCoreVersion>
 
 	</PropertyGroup>
