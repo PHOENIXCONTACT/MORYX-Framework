@@ -54,7 +54,7 @@
         "node-sass": "^6.0.0",
         "sass-loader": "^10.2.1",
         "source-map-loader": "^0.2.4",
-        "style-loader": "^0.23.1",
+        "style-loader": "^2.0.0",
         "tslint": "^5.14.0",
         "tslint-loader": "^3.5.4",
         "tslint-react": "^3.6.0",
