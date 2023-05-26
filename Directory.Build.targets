@@ -43,7 +43,7 @@
 		<PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="$(efCoreVersion)" />
 		<PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(efCoreVersion)" />
 
-		<PackageReference Update="System.IO.Ports" Version="6.0.0" />
+		<PackageReference Update="System.IO.Ports" Version="7.0.0" />
 		<PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
 
 		<PackageReference Update="Castle.Windsor" Version="5.1.1" />
