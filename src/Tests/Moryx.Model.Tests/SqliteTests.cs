@@ -1,16 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Moryx.Model.InMemory;
-using Moryx.Model.Sqlite;
+﻿using Moryx.Model.Sqlite;
 using Moryx.Products.Model;
-using Moryx.Runtime.Endpoints.Databases.Endpoint.Services;
 using Moryx.Runtime.Kernel;
-using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Moryx.Model.Tests
@@ -26,7 +18,7 @@ namespace Moryx.Model.Tests
         public void Setup()
         {
             string databaseName = "TestDatabase";
-            datasource = $".\\db\\{databaseName}.db";
+            datasource = Path.Combine(".", "db", databaseName+".db");
             string connectionString = $@"Data Source={datasource};";
             dbConfig = new SqliteDatabaseConfig();
             dbConfig.ConnectionSettings = new DatabaseConnectionSettings { ConnectionString = connectionString, Database = databaseName };
@@ -80,6 +72,5 @@ namespace Moryx.Model.Tests
             configurator.DeleteDatabase(dbConfig).Wait();
 
         }
-
     }
 }
