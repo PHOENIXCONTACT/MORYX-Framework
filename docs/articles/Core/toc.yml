@@ -19,6 +19,9 @@
 - name: Parallel Operations
   href: ParallelOperations.md
 
+- name: Resource Reference
+  href: ResourceReference.md
+
 - name: Serialization
   homepage: Serialization/index.md
   href: Serialization/toc.yml
