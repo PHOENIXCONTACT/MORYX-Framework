@@ -1,6 +1,6 @@
 # ResourceReference
 
-`ResourceReference` is an attribute that links to resources together. 
+`ResourceReference` is an attribute that links 2 or more resources together. 
 it's a mechanism that is used to save and load the source and the target relationship in the database.
 
 ## How does it work?
