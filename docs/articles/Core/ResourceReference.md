@@ -23,3 +23,5 @@ And uses the same information to load a resource and it's reference from the dat
 In this case at load time, the resource manager checks for all the resources 
 that implement the `IVisualInstructor` interface, then filters them by `ResourceRelationType` 
 which in this case is `Extension`.
+
+![Resource Reference in the Database](./images/resource%20reference.PNG)
