@@ -65,7 +65,7 @@ export default class Entry {
         const entryPrototype = JSON.parse(JSON.stringify(prototype));
 
         Config.patchParent(entryPrototype, parent);
-
+        entryPrototype.identifier = "CREATED";
         Entry.generateUniqueIdentifiers(entryPrototype);
         return entryPrototype;
     }
