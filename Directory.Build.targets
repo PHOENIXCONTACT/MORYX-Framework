@@ -7,6 +7,7 @@
 		<dotnetVersion>6.0.0</dotnetVersion>
 		<efCoreVersion>6.0.0</efCoreVersion>
 
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<!-- Package refereces for all projects if CreatePackage=true -->
