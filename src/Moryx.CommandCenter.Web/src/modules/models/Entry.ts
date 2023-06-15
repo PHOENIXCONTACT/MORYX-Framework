@@ -66,6 +66,7 @@ export default class Entry {
 
         Config.patchParent(entryPrototype, parent);
 
+        entryPrototype.identifier = "CREATED";
         Entry.generateUniqueIdentifiers(entryPrototype);
         return entryPrototype;
     }
