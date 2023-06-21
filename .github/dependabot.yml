@@ -1,0 +1,33 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  - package-ecosystem: "nuget" # See documentation for possible values
+    directory: "/" # Location of package manifests
+    open-pull-requests-limit: 10
+    schedule:
+      interval: "weekly"
+      # Check for nuget updates on Fridays
+      day: "friday"
+      time: "08:00"
+      timezone: "Europe/Berlin"
+    # Labels on pull requests for security and version updates
+    labels:
+      - "nuget" 
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "src/Moryx.CommandCenter.Web/" 
+    open-pull-requests-limit: 10
+    schedule:
+      interval: "weekly"
+      # Check for npm updates on Fridays
+      day: "friday"
+      time: "08:05"
+      timezone: "Europe/Berlin"
+    # Labels on pull requests for security and version updates
+    labels:
+      - "npm" 
+      - "dependencies"

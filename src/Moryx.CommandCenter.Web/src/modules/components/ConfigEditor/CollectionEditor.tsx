@@ -50,6 +50,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     public addEntry(): void {
         const prototype = this.props.Entry.prototypes.find((proto: Entry) => proto.displayName === this.state.SelectedEntry);
         const entryPrototype = Entry.entryFromPrototype(prototype, this.props.Entry);
+        entryPrototype.identifier = "CREATED";
 
         let counter: number = 0;
         let entryName: string = entryPrototype.displayName;
