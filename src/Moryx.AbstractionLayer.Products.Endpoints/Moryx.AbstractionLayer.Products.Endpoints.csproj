@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
       <Description>Endpoints for the Product Facade</Description>
       <GenerateDocumentationFile>true</GenerateDocumentationFile>
       <CreatePackage>true</CreatePackage>

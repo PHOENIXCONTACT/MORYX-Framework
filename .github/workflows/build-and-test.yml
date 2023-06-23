@@ -14,7 +14,7 @@ on:
       - future
 
 env:
-  dotnet_sdk_version: '7.x'
+  dotnet_sdk_version: '8.0.100-preview.5.23303.2'
   REPOSITORY_NAME: ${{ github.event.repository.name }}
   MORYX_PACKAGE_TARGET_DEV: 'https://www.myget.org/F/moryx/api/v2/package'
   MORYX_PACKAGE_TARGET_V3_DEV: 'https://www.myget.org/F/moryx/api/v3/index.json'
