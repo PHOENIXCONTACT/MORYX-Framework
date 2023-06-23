@@ -1,7 +1,9 @@
 ﻿@page
 @model Moryx.Runtime.CommandCenter.Web.MyFeature.Pages.Page1Model
+@using Microsoft.AspNetCore.Authorization;
 @using Moryx.Asp.Integration
 @using System.ComponentModel.DataAnnotations
+@using Moryx.Runtime.Endpoints;
 
 @{
     ViewData["Title"] = "MORYX Command Center";
@@ -11,7 +13,10 @@
 }
 
 @attribute [WebModule("CommandCenter", "settings", Category = ModuleCategory.Settings), 
-            Display(Name = "Command Center", Description = "Command Center user interface")]
+            Display(Name = "Command Center", Description = "Command Center user interface"),
+            Authorize(Policy = RuntimePermissions.DatabaseCanView),
+            AllowAnonymous]
+
 
 @section Scripts
 {
