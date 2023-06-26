@@ -13,7 +13,7 @@ namespace Moryx.AbstractionLayer.Resources
     /// <summary>
     /// Base class for all resources to reduce boilerplate code
     /// </summary>
-    [DataContract]
+    [DataContract, EntrySerialize(EntrySerializeMode.Never)]
     public abstract class Resource : ILoggingComponent, IResource, IInitializablePlugin, IDisposable, IPersistentObject
     {
         #region Dependencies
