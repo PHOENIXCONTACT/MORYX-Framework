@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Description>Extensions for the Integration of MORYX in ASP.NET Core</Description>
-		<CreatePackage>true</CreatePackage>
 		<PackageTags>MORYX;ASP</PackageTags>
 	</PropertyGroup>
 

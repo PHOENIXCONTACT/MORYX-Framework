@@ -4,7 +4,6 @@
     <TargetFrameworks>net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Database model for the ProductManagement module</Description>
-    <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;IIoT;IoT;Product;Manufacturing;Management</PackageTags>
   </PropertyGroup>
 
