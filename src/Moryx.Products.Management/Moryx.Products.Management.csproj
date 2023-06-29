@@ -4,7 +4,6 @@
     <TargetFrameworks>net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>ProductManagement module hosting product types and instances, as well as recipes and workplans.</Description>
-    <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;IIoT;IoT;Product;Manufacturing;Management;API</PackageTags>
   </PropertyGroup>
   

@@ -10,7 +10,6 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-	<CreatePackage>true</CreatePackage>
   </PropertyGroup>
 
     <ItemGroup>
