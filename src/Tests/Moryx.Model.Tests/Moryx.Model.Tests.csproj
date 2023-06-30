@@ -9,7 +9,6 @@
   <ItemGroup>
 	<PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
   </ItemGroup>
@@ -19,7 +18,6 @@
     <ProjectReference Include="..\..\Moryx.Model\Moryx.Model.csproj" />
     <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
     <ProjectReference Include="..\..\Moryx.Products.Model\Moryx.Products.Model.csproj" />
-    <ProjectReference Include="..\..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
     <ProjectReference Include="..\..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
     <ProjectReference Include="..\..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj" />
   </ItemGroup>
