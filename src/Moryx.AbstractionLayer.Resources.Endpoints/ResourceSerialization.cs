@@ -13,23 +13,35 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     internal class ResourceSerialization : PossibleValuesSerialization
     {
+        /// <summary>
+        /// Instance for <see cref="EntrySerializeSerialization"/> we use to filter properties and methods
+        /// </summary>
+        private EntrySerializeSerialization _memberFilter = new();
+
         public ResourceSerialization(IContainer container) : base(container, new ValueProviderExecutor(new ValueProviderExecutorSettings()))
         {
         }
 
         /// <summary>
-        /// Only export properties flagged with <see cref="EntrySerializeAttribute"/>
+        /// Follow the rules for <see cref="EntrySerializeSerialization"/>
         /// </summary>
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
-            return typeof(Resource).IsAssignableFrom(sourceType)
-                ? base.GetProperties(sourceType).Where(p => p.GetCustomAttribute<EntrySerializeAttribute>()?.Mode == EntrySerializeMode.Always)
-                : new EntrySerializeSerialization().GetProperties(sourceType);
+            return _memberFilter.GetProperties(sourceType);
         }
 
+        /// <summary>
+        /// Follow the rules for <see cref="EntrySerializeSerialization"/>
+        /// </summary>
         public override IEnumerable<MethodInfo> GetMethods(Type sourceType)
         {
-            return new EntrySerializeSerialization().GetMethods(sourceType);
+            return _memberFilter.GetMethods(sourceType);
+        }
+
+        public override IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
+        {
+            return _memberFilter.WriteFilter(sourceType, encoded);
+            
         }
     }
 }
