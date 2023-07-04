@@ -74,7 +74,15 @@ namespace Moryx.Serialization
         public override IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
         {
             // Ignore properties which are not mapped
-            return base.WriteFilter(sourceType, encoded).Where(mapped => mapped.Entry != null);
+            var properties = GetProperties(sourceType);
+            var result = from entry in encoded
+                         let property = properties.FirstOrDefault(x => x.Name.Equals(entry.Identifier))
+                         select new MappedProperty
+                         {
+                             Entry = entry,
+                             Property = property
+                         };
+            return result.Where(mapped => mapped.Entry != null);
         }
 
         /// <summary>

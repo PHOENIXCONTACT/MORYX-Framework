@@ -37,5 +37,11 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             return _memberFilter.GetMethods(sourceType);
         }
+
+        public override IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
+        {
+            return _memberFilter.WriteFilter(sourceType, encoded);
+            
+        }
     }
 }
