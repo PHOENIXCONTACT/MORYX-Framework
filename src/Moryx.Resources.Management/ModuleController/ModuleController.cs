@@ -33,6 +33,7 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IDbContextManager DbContextManager { get; }
 
+        /// <inheritdoc />
         public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
             : base(containerFactory, configManager, loggerFactory)
         {

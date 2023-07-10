@@ -31,12 +31,6 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        #region Fields
-
-        private IResourceInitializer[] _initializers;
-
-        #endregion     
-
         [EntrySerialize, DisplayName("Initialize Resource"), Description("Calls the configured resource initializer")]
         public string CallResourceInitializer([PluginConfigs(typeof(IResourceInitializer), true)] ResourceInitializerConfig[] configs)
         {

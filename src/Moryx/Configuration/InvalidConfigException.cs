@@ -51,6 +51,7 @@ namespace Moryx.Configuration
         /// <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual
         /// information about the source or destination.</param>
         /// <exception cref="System.ArgumentNullException">The info parameter is a null reference</exception>
+        [Obsolete("Override of an obsolete method.")]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

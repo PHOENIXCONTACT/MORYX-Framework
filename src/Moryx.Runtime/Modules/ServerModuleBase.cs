@@ -38,6 +38,9 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         public ILogger Logger { get; set; }
 
+        /// <summary>
+        /// Shared factory to create logger in this module
+        /// </summary>
         public ILoggerFactory LoggerFactory { get; set; }
 
         /// <inheritdoc />

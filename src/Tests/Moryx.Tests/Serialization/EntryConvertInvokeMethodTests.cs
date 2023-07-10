@@ -13,7 +13,6 @@ namespace Moryx.Tests
     public class EntryConvertInvokeMethodTests
     {
         private readonly EntrySerialize_Methods _sut;
-        private readonly EntrySerializeSerialization _serialization;
 
         public EntryConvertInvokeMethodTests() {
             _sut = new EntrySerialize_Methods();
