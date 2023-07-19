@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.DependencyInjection;
 using Moryx.Container;
 using Moryx.Model.Repositories;
 
@@ -14,21 +15,14 @@ namespace Moryx.Model
         /// <summary>
         /// Register <see cref="IDbContextManager"/> and <see cref="IContextFactory{TContext}"/>
         /// </summary>
-        public static IContainer ActivateDbContexts(this IContainer container, IDbContextManager contextManager)
+        public static IServiceCollection ActivateDbContexts(this IServiceCollection services, IDbContextManager contextManager)
         {
-            container.SetInstance(contextManager);
-            container.ExecuteInstaller(new ContextFactoryInstaller());
+            services.AddSingleton(contextManager);
 
-            return container;
-        }
+            services.AddSingleton(typeof(IContextFactory<>), typeof(ContextFactory<>));
+            services.AddSingleton(typeof(IUnitOfWorkFactory<>), typeof(UnitOfWorkFactory<>));
 
-        private class ContextFactoryInstaller : IContainerInstaller
-        {
-            public void Install(IComponentRegistrator registrator)
-            {
-                registrator.Register(typeof(ContextFactory<>), new []{ typeof(IContextFactory<>) }, "GenericContextFactory", LifeCycle.Singleton);
-                registrator.Register(typeof(UnitOfWorkFactory<>), new[] { typeof(IUnitOfWorkFactory<>) }, "UnitOfWorkFactory", LifeCycle.Singleton);
-            }
+            return services;
         }
     }
 }

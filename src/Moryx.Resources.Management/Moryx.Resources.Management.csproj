@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<ProjectReference Include="..\Moryx.Container\Moryx.Container.csproj" />
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
     <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
     <ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />

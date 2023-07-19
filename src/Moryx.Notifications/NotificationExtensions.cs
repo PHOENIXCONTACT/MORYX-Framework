@@ -1,4 +1,5 @@
-﻿using Moryx.Container;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moryx.Container;
 
 namespace Moryx.Notifications
 {
@@ -10,14 +11,14 @@ namespace Moryx.Notifications
         /// <summary>
         /// Registers all components to handling notifications in the current container
         /// </summary>
-        public static IContainer RegisterNotifications(this IContainer container)
+        public static IServiceCollection RegisterNotifications(this IServiceCollection services)
         {
             var adapter = new NotificationAdapter();
 
-            container.SetInstance((INotificationAdapter)adapter, "NotificationAdapter");
-            container.SetInstance((INotificationSourceAdapter)adapter, "NotificationSenderAdapter");
+            services.AddSingleton<INotificationAdapter>(adapter);
+            services.AddSingleton<INotificationSourceAdapter>(adapter);
 
-            return container;
+            return services;
         }
     }
 }
