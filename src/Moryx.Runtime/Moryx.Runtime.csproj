@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
+	<ProjectReference Include="..\Moryx.Container\Moryx.Container.csproj" />
   </ItemGroup>
 
 </Project>

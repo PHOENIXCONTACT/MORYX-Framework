@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -21,7 +22,7 @@ namespace Moryx.Runtime.Modules
     /// </summary>
     /// <typeparam name="TConf">Configuration type for the server module.</typeparam>
     [DebuggerDisplay("{" + nameof(Name) + "} - {" + nameof(State) + "}")]
-    public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IServerModuleStateContext
+    public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStateContext
         where TConf : class, IConfig, new()
     {
         /// <inheritdoc />
@@ -43,9 +44,8 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Creates a new instance of <see cref="ServerModuleBase{TConf}"/> and initializes the state machine
         /// </summary>
-        protected ServerModuleBase(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
+        protected ServerModuleBase(IConfigManager configManager, ILoggerFactory loggerFactory)
         {
-            ContainerFactory = containerFactory;
             ConfigManager = configManager;
             LoggerFactory = loggerFactory;
             Logger = LoggerFactory.CreateLogger(GetType().Namespace);
@@ -65,11 +65,6 @@ namespace Moryx.Runtime.Modules
 
         #region Server Module methods
 
-        /// <summary>
-        /// <see cref="IModuleContainerFactory"/>
-        /// </summary>
-        public IModuleContainerFactory ContainerFactory { get; }
-
         void IInitializable.Initialize()
         {
             lock (_stateLock)
@@ -86,23 +81,28 @@ namespace Moryx.Runtime.Modules
             Config = ConfigManager.GetConfiguration<TConf>();
             ConfigParser.ParseStrategies(Config, Strategies);
 
-            // Initialize container with server module dll and this dll
-            Container = ContainerFactory.Create(Strategies, GetType().Assembly)
-                .Register<IParallelOperations, ParallelOperations>()
-                // Register instances for this cycle
-                .SetInstance(Config)
-                .SetInstance(LoggerFactory)
-                .SetInstance<IModuleLogger>(logger, "ModuleLogger")
-                .SetInstance<ILogger>(logger, "Logger");
+            // Initialize service collection with standard dependencies
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddFromAssembly(GetType().Assembly)
+                .AddSingleton<IParallelOperations, ParallelOperations>()
+                .AddSingleton(Config)
+                .AddSingleton(LoggerFactory)
+                .AddSingleton<IModuleLogger>(logger)
+                .AddSingleton<ILogger>(logger);
+            _container = new ServiceCollectionContainer(Strategies, serviceCollection);
 
-            OnInitialize();
+            // Load all components from this assembly
+            OnInitialize(serviceCollection);
 
             // Execute SubInitializer
-            var subInits = Container.ResolveAll<ISubInitializer>() ?? new ISubInitializer[0];
-            foreach (var subInitializer in subInits)
-            {
-                subInitializer.Initialize(Container);
-            }
+            //var subInits = Container.ResolveAll<ISubInitializer>() ?? new ISubInitializer[0];
+            //foreach (var subInitializer in subInits)
+            //{
+            //    subInitializer.Initialize(Container);
+            //}
+
+            _container.BuildProvider();
 
             Logger.Log(LogLevel.Information, "{0} initialized!", Name);
 
@@ -120,7 +120,7 @@ namespace Moryx.Runtime.Modules
         {
             Logger.Log(LogLevel.Information, "{0} is starting...", Name);
 
-            OnStart();
+            OnStart(_container.ServiceProvider);
 
             Logger.Log(LogLevel.Information, "{0} started!", Name);
         }
@@ -147,7 +147,7 @@ namespace Moryx.Runtime.Modules
         {
             Logger.Log(LogLevel.Information, "{0} is stopping...", Name);
 
-            OnStop();
+            OnStop(_container.ServiceProvider);
 
             Logger.Log(LogLevel.Information, "{0} stopped!", Name);
         }
@@ -155,10 +155,10 @@ namespace Moryx.Runtime.Modules
         void IServerModuleStateContext.Destruct()
         {
             // Destroy local container
-            if (Container != null)
+            if (_container != null)
             {
-                Container.Destroy();
-                Container = null;
+                _container.Dispose();
+                _container = null;
             }
 
             Logger.Log(LogLevel.Information, "{0} destructed!", Name);
@@ -168,10 +168,13 @@ namespace Moryx.Runtime.Modules
 
         #region Container
 
+        private ServiceCollectionContainer _container;
+
         /// <summary>
         /// Internal container can only be set from inside this assembly
         /// </summary>
-        public IContainer Container { get; private set; }
+        [Obsolete("Try to replace direct access to the container with ServiceCollection and ServiceProvider calls")]
+        public IContainer Container => _container;
 
         /// <summary>
         /// Configuration used for the container
@@ -185,17 +188,17 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again.
         /// </summary>
-        protected abstract void OnInitialize();
+        protected abstract void OnInitialize(IServiceCollection services);
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected abstract void OnStart();
+        protected abstract void OnStart(IServiceProvider serviceProvider);
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected abstract void OnStop();
+        protected abstract void OnStop(IServiceProvider serviceProvider);
 
         #endregion
 

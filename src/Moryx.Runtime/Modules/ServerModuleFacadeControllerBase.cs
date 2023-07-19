@@ -8,7 +8,6 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Runtime.Container;
 
 namespace Moryx.Runtime.Modules
 {
@@ -24,8 +23,8 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         private readonly ICollection<IFacadeControl> _activeFacades = new List<IFacadeControl>();
 
-        protected ServerModuleFacadeControllerBase(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
-            : base(containerFactory, configManager, loggerFactory)
+        protected ServerModuleFacadeControllerBase(IConfigManager configManager, ILoggerFactory loggerFactory) 
+            : base(configManager, loggerFactory)
         {
         }
 
@@ -104,7 +103,7 @@ namespace Moryx.Runtime.Modules
 
         private string StrategyName(Type dependencyType)
         {
-            var config = ((IContainerHost)this).Strategies;
+            var config = Strategies;
             return config.ContainsKey(dependencyType) ? config[dependencyType] : null;
         }
     }
