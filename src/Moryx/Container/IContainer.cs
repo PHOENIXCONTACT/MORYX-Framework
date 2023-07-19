@@ -1,6 +1,7 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 
@@ -10,13 +11,8 @@ namespace Moryx.Container
     /// Interface for all container bootstrapper
     /// Can be castle or Unity
     /// </summary>
-    public interface IContainer
+    public interface IContainer : IServiceProvider, IServiceCollection, IDisposable
     {
-        /// <summary>
-        /// Destroy the internal container and all registered objects
-        /// </summary>
-        void Destroy();
-
         #region Resolve
 
         /// <summary>
@@ -83,12 +79,6 @@ namespace Moryx.Container
         #region Register
 
         /// <summary>
-        /// Execute the installer
-        /// </summary>
-        /// <param name="installer"></param>
-        IContainer ExecuteInstaller(IContainerInstaller installer);
-
-        /// <summary>
         /// Register external type in local container
         /// </summary>
         IContainer Register<TService, TComp>()
@@ -134,15 +124,6 @@ namespace Moryx.Container
         /// <param name="instance">Instance to register</param>
         /// <param name="name">Name of instance</param>
         IContainer SetInstance<T>(T instance, string name) where T : class;
-
-        #endregion
-
-        #region Extensions
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void Extend<TExtension>() where TExtension : new();
 
         #endregion
     }
