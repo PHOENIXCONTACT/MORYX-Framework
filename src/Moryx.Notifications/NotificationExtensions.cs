@@ -1,4 +1,5 @@
 ﻿using Moryx.Container;
+using Moryx.Logging;
 
 namespace Moryx.Notifications
 {
@@ -12,7 +13,9 @@ namespace Moryx.Notifications
         /// </summary>
         public static IContainer RegisterNotifications(this IContainer container)
         {
-            var adapter = new NotificationAdapter();
+            var logger = container.Resolve<IModuleLogger>();
+
+            var adapter = new NotificationAdapter() { Logger = logger};
 
             container.SetInstance((INotificationAdapter)adapter, "NotificationAdapter");
             container.SetInstance((INotificationSourceAdapter)adapter, "NotificationSenderAdapter");
