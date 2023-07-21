@@ -3,7 +3,7 @@
 
 namespace Moryx.Container.Tests
 {
-    [Registration(LifeCycle.Singleton)]
+    [Component(LifeCycle.Singleton)]
     internal class Component
     {
         public IDependency Unnamed { get; set; }

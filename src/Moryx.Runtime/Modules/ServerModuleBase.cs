@@ -10,7 +10,6 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Modules;
-using Moryx.Runtime.Container;
 using Moryx.StateMachines;
 using Moryx.Threading;
 
@@ -21,7 +20,7 @@ namespace Moryx.Runtime.Modules
     /// </summary>
     /// <typeparam name="TConf">Configuration type for the server module.</typeparam>
     [DebuggerDisplay("{" + nameof(Name) + "} - {" + nameof(State) + "}")]
-    public abstract class ServerModuleBase<TConf> : IServerModule, IContainerHost, IServerModuleStateContext
+    public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStateContext
         where TConf : class, IConfig, new()
     {
         /// <inheritdoc />

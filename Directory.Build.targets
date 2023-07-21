@@ -47,9 +47,7 @@
 		<PackageReference Update="System.IO.Ports" Version="$(dotnetVersion)" />
 		<PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
 
-		<PackageReference Update="Castle.Windsor" Version="5.1.1" />
-		<PackageReference Update="Castle.WcfIntegrationFacility" Version="5.1.1" />
-		<PackageReference Update="Castle.Windsor.Extensions.DependencyInjection" Version="5.1.1" />
+		<PackageReference Update="Castle.Windsor" Version="6.0.0" />
 
 	</ItemGroup>
 

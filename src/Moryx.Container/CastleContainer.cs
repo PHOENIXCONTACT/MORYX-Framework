@@ -30,12 +30,22 @@ namespace Moryx.Container
 
         #region Constructors
 
+        private readonly IDictionary<Type, string> _strategies;
+
         /// <summary>
-        /// Create new container instance with default registrator
+        /// Create instance without strategies
         /// </summary>
         public CastleContainer()
-            : this(new ComponentRegistrator())
+            : this(new Dictionary<Type, string>())
         {
+        }
+        /// <summary>
+        /// Create container with strategies
+        /// </summary>
+        /// <param name="strategies"></param>
+        public CastleContainer(IDictionary<Type, string> strategies)
+        {
+            _strategies = strategies;
         }
 
         /// <summary>
@@ -82,7 +92,10 @@ namespace Moryx.Container
         /// <returns>Instance of type</returns>
         public virtual T Resolve<T>()
         {
-            return Container.Kernel.HasComponent(typeof(T)) ? Container.Resolve<T>() : default(T);
+            var service = typeof(T);
+            return _strategies.ContainsKey(service) 
+                ? Resolve<T>(_strategies[service]) 
+                : Container.Kernel.HasComponent(typeof(T)) ? Container.Resolve<T>() : default(T);
         }
 
         /// <summary>
@@ -90,7 +103,9 @@ namespace Moryx.Container
         /// </summary>
         public virtual object Resolve(Type service)
         {
-            return Container.Kernel.HasComponent(service) ? Container.Resolve(service) : null;
+            return _strategies.ContainsKey(service)
+                ? Resolve(service, _strategies[service])
+                : Container.Kernel.HasComponent(service) ? Container.Resolve(service) : null;
         }
 
         /// <summary>
@@ -161,16 +176,39 @@ namespace Moryx.Container
                 _knownTypes = ReflectionTool.GetAssemblies()
                     .Where(a => a.GetCustomAttribute<ComponentLoaderIgnoreAttribute>() == null)
                     .SelectMany(a => a.GetTypes())
-                    .Where(t => t.GetCustomAttribute<RegistrationAttribute>(true) != null).ToArray();
+                    .Where(t => t.GetCustomAttribute<ComponentAttribute>(true) != null).ToArray();
             }
 
             foreach (var type in _knownTypes.Where(type => typeof(T).IsAssignableFrom(type)))
             {
-                if(Registrator.ShallInstall(type) && (condition?.Invoke(type) ?? true))
+                if (Registrator.ShallInstall(type) && (condition?.Invoke(type) ?? true))
+                {
                     Registrator.Register(type);
+
+                    RegisterAdditionalDependencies(type);
+                }
             }
         }
 
+        private void RegisterAdditionalDependencies(Type implementation)
+        {
+            var att = implementation.GetCustomAttribute<DependencyRegistrationAttribute>();
+            if (att == null)
+                return;
+
+            var installer = att.InstallerMode == InstallerMode.All ? new AutoInstaller(implementation.Assembly)
+                                                                   : new DependencyAutoInstaller(implementation.Assembly, att);
+            ExecuteInstaller(installer);
+            if (att.Initializer == null)
+                return;
+
+            if (!typeof(ISubInitializer).IsAssignableFrom(att.Initializer))
+                throw new InvalidCastException($"SubInitializer {att.Initializer.Name} of component {implementation.Name} does not implement interface ISubInitializer");
+
+            // If someone registered this sub initializer before just skip
+            if (!Container.Kernel.HasComponent(att.Initializer))
+                Container.Register(Component.For(typeof(ISubInitializer), att.Initializer).ImplementedBy(att.Initializer));
+        }
         #endregion
 
         #region Register methods
@@ -204,7 +242,7 @@ namespace Moryx.Container
         public IContainer Register<TFactory>(string name) where TFactory : class
         {
             var factoryType = typeof(TFactory);
-            var att = typeof(TFactory).GetCustomAttribute<FactoryRegistrationAttribute>();
+            var att = typeof(TFactory).GetCustomAttribute<PluginFactoryAttribute>();
             Registrator.RegisterFactory(factoryType, name, att?.Selector);
             return this;
         }

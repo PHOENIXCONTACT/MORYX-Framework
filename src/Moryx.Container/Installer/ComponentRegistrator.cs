@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Castle.Facilities.TypedFactory;
@@ -12,18 +13,25 @@ namespace Moryx.Container
 {
     internal class ComponentRegistrator : IComponentRegistrator
     {
+        private readonly IDictionary<Type, string> _strategies;
+
         /// <summary>
         /// Internal windsor container for registration
         /// </summary>
         protected internal IWindsorContainer Container { get; set; }
+
+        public ComponentRegistrator(IDictionary<Type, string> strategies)
+        {
+            _strategies = strategies;
+        }
 
         /// <summary>
         /// Method to determine if this component shall be installed
         /// </summary>
         public virtual bool ShallInstall(Type foundType)
         {
-            var regAtt = foundType.GetCustomAttribute<RegistrationAttribute>();
-            var facAtt = foundType.GetCustomAttribute<FactoryRegistrationAttribute>();
+            var regAtt = foundType.GetCustomAttribute<ComponentAttribute>();
+            var facAtt = foundType.GetCustomAttribute<PluginFactoryAttribute>();
 
             return (regAtt != null || facAtt != null) && NotRegisteredYet(foundType, regAtt);
         }
@@ -34,7 +42,7 @@ namespace Moryx.Container
         /// <param name="foundType">Type that must be checked for suitability to register</param>
         /// <param name="regAtt"></param>
         /// <returns>True if the component was not registered before</returns>
-        protected bool NotRegisteredYet(Type foundType, RegistrationAttribute regAtt)
+        protected bool NotRegisteredYet(Type foundType, ComponentAttribute regAtt)
         {
             var name = string.IsNullOrEmpty(regAtt?.Name) ? foundType.FullName : regAtt.Name;
             return !Container.Kernel.HasComponent(name);
@@ -57,7 +65,7 @@ namespace Moryx.Container
         /// </summary>
         public static Type[] GetComponentServices(Type type)
         {
-            var att = type.GetCustomAttribute<RegistrationAttribute>();
+            var att = type.GetCustomAttribute<ComponentAttribute>();
             if (att != null)
                 return att.Services.Any() ? att.Services : new[] { type };
 
@@ -67,7 +75,7 @@ namespace Moryx.Container
 
         public void Register(Type type, Type[] services)
         {
-            var regAtt = type.GetCustomAttribute<RegistrationAttribute>();
+            var regAtt = type.GetCustomAttribute<ComponentAttribute>();
             Register(type, services, regAtt?.Name, regAtt?.LifeStyle ?? LifeCycle.Singleton);
         }
 
@@ -140,14 +148,19 @@ namespace Moryx.Container
         protected virtual ServiceOverride OverrideDependency(string dependencyName, Type dependencyType, ICustomAttributeProvider attributeProvider)
         {
             var atts = attributeProvider.GetCustomAttributes(typeof(NamedAttribute), false);
-            return atts.Any() ? Dependency.OnComponent(dependencyName, ((NamedAttribute)atts[0]).ComponentName) : null;
+            var dependency = atts.Any() ? Dependency.OnComponent(dependencyName, ((NamedAttribute)atts[0]).ComponentName) : null;
+
+            if (dependency == null && _strategies.ContainsKey(dependencyType))
+                dependency = Dependency.OnComponent(dependencyName, _strategies[dependencyType]);
+
+            return dependency;
         }
 
 
         public void RegisterFactory(Type factoryInterface)
         {
-            var facAtt = factoryInterface.GetCustomAttribute<FactoryRegistrationAttribute>();
-            RegisterFactory(factoryInterface, facAtt?.Name, facAtt?.Selector);
+            var facAtt = factoryInterface.GetCustomAttribute<PluginFactoryAttribute>();
+            RegisterFactory(factoryInterface, null, facAtt?.Selector);
         }
 
 
