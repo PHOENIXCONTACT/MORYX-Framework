@@ -1,6 +1,7 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,11 @@ namespace Moryx.Notifications
         private readonly List<NotificationMap> _pendingPubs = new List<NotificationMap>();
 
         private readonly ReaderWriterLockSlim _listLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+
+        /// <summary>
+        /// Logger used by the <see cref="NotificationAdapter"/>
+        /// </summary>
+        public ILogger Logger { get; set; }
 
         #region Adapter <> Facade
 
@@ -219,16 +225,24 @@ namespace Moryx.Notifications
                 _pendingPubs.Remove(map);
                 _published.Add(map);
                 _listLock.ExitWriteLock();
+                return;
             }
-            else
-            {
-                // Notification is maybe not pending anymore - we only can acknowledge it
-                _listLock.ExitWriteLock();
 
+            // Notification is maybe not pending anymore
+            _listLock.ExitWriteLock();
+
+            // If necessary we can acknowledge it
+            if (notification.Acknowledged is null)
+            {
+                Logger.Log(LogLevel.Error, "Notification was removed from the pending publications " +
+                    "before being published but is not acknowledged.");
                 notification.Acknowledged = DateTime.Now;
                 notification.Acknowledger = nameof(NotificationAdapter);
                 Acknowledged?.Invoke(this, notification);
             }
+
+            Logger.Log(LogLevel.Warning, "Notification was removed from the pending publications. " +
+                "It was already acknowledged by {0} at {1}.", notification.Acknowledger, notification.Acknowledged);
         }
 
         /// <inheritdoc />
