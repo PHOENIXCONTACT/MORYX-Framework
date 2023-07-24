@@ -16,7 +16,7 @@ namespace Moryx.Container.Tests
         public void Init()
         {
             _container = new CastleContainer(new Dictionary<Type, string>());
-            _container.ExecuteInstaller(new AutoInstaller(GetType().Assembly));
+            _container.LoadFromAssembly(GetType().Assembly);
         }
 
         [Test]

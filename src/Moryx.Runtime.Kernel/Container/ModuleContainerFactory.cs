@@ -17,8 +17,8 @@ namespace Moryx.Runtime.Kernel
         /// <inheritdoc />
         public IContainer Create(IDictionary<Type, string> strategies, Assembly moduleAssembly)
         {
-            var container = new CastleContainer(strategies)
-                .ExecuteInstaller(new AutoInstaller(moduleAssembly));
+            var container = new CastleContainer(strategies);
+            container.LoadFromAssembly(moduleAssembly);
             return container;
         }
     }

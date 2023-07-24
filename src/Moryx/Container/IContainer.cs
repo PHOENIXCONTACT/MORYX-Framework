@@ -62,80 +62,20 @@ namespace Moryx.Container
         /// <returns></returns>
         IEnumerable<Type> GetRegisteredImplementations(Type componentInterface);
 
-        #region LoadComponents
+        /// <summary>
+        /// Full registration method
+        /// </summary>
+        void Register(Type type, Type[] services, string name, LifeCycle lifeCycle);
 
         /// <summary>
-        /// Load all implementations of type from currently known types
-        /// KnownTypes: Types in default framework folders and deeper.
+        /// Register a factory interface for automatic implementation
         /// </summary>
-        void LoadComponents<T>()
-            where T : class;
+        void RegisterFactory(Type factoryInterface, string name, Type selector);
 
         /// <summary>
-        /// Load all implementations of type from currently known types
-        /// KnownTypes: Types in default framework folders and deeper.
+        /// Register instance for given services in the container
         /// </summary>
-        void LoadComponents<T>(Predicate<Type> condition)
-            where T : class;
-
-        #endregion
-
-        #region Register
-
-        /// <summary>
-        /// Execute the installer
-        /// </summary>
-        /// <param name="installer"></param>
-        IContainer ExecuteInstaller(IContainerInstaller installer);
-
-        /// <summary>
-        /// Register external type in local container
-        /// </summary>
-        IContainer Register<TService, TComp>()
-            where TComp : TService
-            where TService : class;
-
-        /// <summary>
-        /// Register external type in local container
-        /// </summary>
-        IContainer Register<TService, TComp>(string name, LifeCycle lifeCycle)
-            where TComp : TService
-            where TService : class;
-
-        /// <summary>
-        /// Register factory interface
-        /// </summary>
-        /// <typeparam name="TFactory"></typeparam>
-        IContainer Register<TFactory>()
-            where TFactory : class;
-
-        /// <summary>
-        /// Register factory interface
-        /// </summary>
-        /// <typeparam name="TFactory"></typeparam>
-        IContainer Register<TFactory>(string name)
-            where TFactory : class;
-
-        #endregion
-
-        #region Set instance
-
-        /// <summary>
-        /// Set instance of service
-        /// </summary>
-        /// <typeparam name="T">Type of service</typeparam>
-        /// <param name="instance">Instance implementing the service</param>
-        IContainer SetInstance<T>(T instance) where T : class;
-
-        /// <summary>
-        /// Set globally imported instance with name
-        /// </summary>
-        /// <typeparam name="T">Type of service</typeparam>
-        /// <param name="instance">Instance to register</param>
-        /// <param name="name">Name of instance</param>
-        IContainer SetInstance<T>(T instance, string name) where T : class;
-
-        #endregion
+        void RegisterInstance(Type[] services, object instance, string name);
 
         #region Extensions
 
