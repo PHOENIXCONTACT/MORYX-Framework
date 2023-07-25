@@ -13,30 +13,6 @@ namespace Moryx.Container
     public interface IContainer
     {
         /// <summary>
-        /// Destroy the internal container and all registered objects
-        /// </summary>
-        void Destroy();
-
-        #region Resolve
-
-        /// <summary>
-        /// Resolve an instance of the given service
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns>Instance of type</returns>
-        T Resolve<T>();
-
-        /// <summary>
-        /// Resolve this dependency
-        /// </summary>
-        object Resolve(Type service);
-
-        /// <summary>
-        /// Resolve a named instance of the given service
-        /// </summary>
-        T Resolve<T>(string name);
-
-        /// <summary>
         /// Resolve this named dependency
         /// </summary>
         object Resolve(Type service, string name);
@@ -44,23 +20,15 @@ namespace Moryx.Container
         /// <summary>
         /// Resolve all implementations of this contract
         /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns></returns>
-        T[] ResolveAll<T>();
-
-        /// <summary>
-        /// Resolve all implementations of this contract
-        /// </summary>
         /// <param name="service">Service to resolve implementation for</param>
         /// <returns></returns>
         Array ResolveAll(Type service);
-        #endregion
 
         /// <summary>
         /// Get all implementations for a given component interface
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Type> GetRegisteredImplementations(Type componentInterface);
+        IEnumerable<Type> GetRegisteredImplementations(Type service);
 
         /// <summary>
         /// Full registration method
@@ -77,13 +45,9 @@ namespace Moryx.Container
         /// </summary>
         void RegisterInstance(Type[] services, object instance, string name);
 
-        #region Extensions
-
         /// <summary>
-        /// 
+        /// Destroy the internal container and all registered objects
         /// </summary>
-        void Extend<TExtension>() where TExtension : new();
-
-        #endregion
+        void Destroy();
     }
 }

@@ -52,61 +52,24 @@ namespace Moryx.Container
 
         #endregion
 
-        /// <see cref="IContainer"/>
-        public virtual void Destroy()
-        {
-            _container.Dispose();
-        }
-
-        /// <summary>
-        /// Resolve an instance of the given service
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns>Instance of type</returns>
-        public virtual T Resolve<T>()
-        {
-            var service = typeof(T);
-            return _strategies.ContainsKey(service)
-                ? Resolve<T>(_strategies[service])
-                : _container.Kernel.HasComponent(typeof(T)) ? _container.Resolve<T>() : default(T);
-        }
-
-        /// <summary>
-        /// Resolve this dependency
-        /// </summary>
-        public virtual object Resolve(Type service)
-        {
-            return _strategies.ContainsKey(service)
-                ? Resolve(service, _strategies[service])
-                : _container.Kernel.HasComponent(service) ? _container.Resolve(service) : null;
-        }
-
-        /// <summary>
-        /// Resolve a named instance of the given service
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns>Instance of type</returns>
-        public T Resolve<T>(string name)
-        {
-            return _container.Kernel.HasComponent(name) ? _container.Resolve<T>(name) : default(T);
-        }
-
         /// <summary>
         /// Resolve this named dependency
         /// </summary>
         public object Resolve(Type service, string name)
         {
-            return _container.Kernel.HasComponent(name) ? _container.Resolve(name, service) : null;
-        }
+            if(name == null && _strategies.ContainsKey(service))
+                name = _strategies[service];
+            
+            // Resolve by name if given or determined
+            if (name != null && _container.Kernel.HasComponent(name))
+                return _container.Resolve(name, service);
 
-        /// <summary>
-        /// Resolve all implementations of this contract
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns></returns>
-        public T[] ResolveAll<T>()
-        {
-            return _container.ResolveAll<T>();
+            // Resolve by type if found
+            if (_container.Kernel.HasComponent(service))
+                return _container.Resolve(service);
+
+            // Otherwise return null
+            return null;
         }
 
         /// <summary>
@@ -121,9 +84,9 @@ namespace Moryx.Container
         /// Get all implementations for a given component interface
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Type> GetRegisteredImplementations(Type componentInterface)
+        public IEnumerable<Type> GetRegisteredImplementations(Type service)
         {
-            return _container.Kernel.GetHandlers(componentInterface).Select(handler => handler.ComponentModel.Implementation);
+            return _container.Kernel.GetHandlers(service).Select(handler => handler.ComponentModel.Implementation);
         }
 
         #region Register methods
@@ -238,18 +201,10 @@ namespace Moryx.Container
 
         #endregion
 
-        #region SetInstances
-
-        public void Extend<TExtension>() where TExtension : new()
+        /// <see cref="IContainer"/>
+        public virtual void Destroy()
         {
-            var facilityType = typeof(IFacility);
-            if (!facilityType.IsAssignableFrom(typeof(TExtension)))
-                throw new InvalidOperationException("The underlying container only supports " + facilityType.FullName + "!");
-
-            var facility = (IFacility)new TExtension();
-            _container.AddFacility(facility);
+            _container.Dispose();
         }
-
-        #endregion
     }
 }
