@@ -44,7 +44,7 @@ namespace Moryx.Container
             _container = new WindsorContainer();
 
             _container.AddFacility<TypedFactoryFacility>();
-            _container.AddFacility<MoryxFacility>();
+            _container.AddFacility<MoryxFacility>(mf => mf.AddStrategies(strategies));
 
             // Self registration for framework functionality
             RegisterInstance(new[] { typeof(IContainer) }, this, null);
@@ -120,43 +120,7 @@ namespace Moryx.Container
                     break;
             }
 
-            // Optionally override property injection
-            foreach (var property in registration.Implementation.GetProperties())
-            {
-                // Check if this property has an override
-                var dependency = OverrideDependency(property.Name, property.PropertyType, property);
-
-                // Override property injection for this property if found
-                if (dependency != null)
-                    registration.DependsOn(dependency);
-            }
-
-            // Override Constructor injection as well
-            foreach (var constructorParameter in registration.Implementation.GetConstructors().SelectMany(constructor => constructor.GetParameters()))
-            {
-                // Check if this paramter has an override
-                var dependency = OverrideDependency(constructorParameter.Name, constructorParameter.ParameterType, constructorParameter);
-
-                // Override constructor injection for this property if found
-                if (dependency != null)
-                    registration.DependsOn(dependency);
-            }
-
             _container.Register(registration);
-        }
-
-        /// <summary>
-        /// Determine a possible override for this member. Base implementatin checks for named attribute
-        /// </summary>
-        private ServiceOverride OverrideDependency(string dependencyName, Type dependencyType, ICustomAttributeProvider attributeProvider)
-        {
-            var atts = attributeProvider.GetCustomAttributes(typeof(NamedAttribute), false);
-            var dependency = atts.Any() ? Dependency.OnComponent(dependencyName, ((NamedAttribute)atts[0]).ComponentName) : null;
-
-            if (dependency == null && _strategies.ContainsKey(dependencyType))
-                dependency = Dependency.OnComponent(dependencyName, _strategies[dependencyType]);
-
-            return dependency;
         }
 
         /// <summary>
