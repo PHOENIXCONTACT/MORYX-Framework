@@ -76,11 +76,6 @@ namespace Moryx.Resources.Management
             if (ExtensionData != null)
                 JsonConvert.PopulateObject(ExtensionData, Instance, JsonSettings.Minimal);
 
-            // Read everything else from defaults
-            ValueProviderExecutor.Execute(Instance, new ValueProviderExecutorSettings()
-                .AddFilter(new DataMemberAttributeValueProviderFilter(false))
-                .AddDefaultValueProvider());
-
             return Instance;
         }
 
