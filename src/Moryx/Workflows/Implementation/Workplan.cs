@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Linq;
+using System.ComponentModel;
 
 namespace Moryx.Workplans
 {
@@ -92,5 +94,99 @@ namespace Moryx.Workplans
         {
             return new Workplan(connectors, steps);
         }
+
+        /// <summary>
+        /// Compare two workplans
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+
+            if (!(obj is Workplan))
+            {
+                return false;
+            }
+            Workplan newPlan = (Workplan)obj;
+
+            var start = this.Connectors.First(x => x.Name.Equals("Start"));
+            var end = this.Connectors.First(x => x.Name.Equals("End"));
+            var failed = this.Connectors.First(x => x.Name.Equals("Failed"));
+
+            var newStart = newPlan.Connectors.First(x => x.Name.Equals("Start"));
+            var newEnd = newPlan.Connectors.First(x => x.Name.Equals("End"));
+            var newFailed = newPlan.Connectors.First(x => x.Name.Equals("Failed"));
+
+            var step = this.Steps.First(x => x.Inputs.Any(y => y.Equals(start)));
+            var newStep = newPlan.Steps.First(x => x.Inputs.Any(y => y.Equals(newStart)));
+
+            List<IWorkplanStep> needToCheck = new List<IWorkplanStep>();
+            List<IWorkplanStep> newNeedToCheck = new List<IWorkplanStep>();
+
+            List<IWorkplanStep> check = new List<IWorkplanStep>();
+
+            needToCheck.Add(step);
+            newNeedToCheck.Add(newStep);
+
+            while (needToCheck.Count != 0 && newNeedToCheck.Count != 0)
+            {
+
+
+                for (int a = 0; a < step.Outputs.Length; a++)
+                {
+
+                    var connector = step.Outputs[a];
+                    var newConnector = newStep.Outputs[a];
+
+                    bool isNotEndConnector = (connector != end && newConnector != newEnd);
+                    bool isNotFailedConnector = (connector != failed && newConnector != newFailed);
+
+                    if (isNotEndConnector && isNotFailedConnector)
+                    {
+                        var follower = this.Steps.FirstOrDefault(x => x.Inputs.Any(y => y.Equals(connector)));
+                        var newFollower = newPlan.Steps.FirstOrDefault(x => x.Inputs.Any(y => y.Equals(newConnector)));
+
+                        bool isAlreadyChecked = (check.Contains(follower) || check.Contains(newFollower));
+
+                        if (!(isAlreadyChecked))
+                        {
+                            needToCheck.Add(follower);
+                            newNeedToCheck.Add(newFollower);
+                        }
+                    }
+                    else if (connector.Classification != newConnector.Classification)
+                    {
+                        return false;
+                    }
+                }
+
+
+
+                bool isSameStep = (step.GetType() == newStep.GetType());
+                if (isSameStep)
+                {
+                    needToCheck.Remove(step);
+                    newNeedToCheck.Remove(newStep);
+
+                    check.Add(step);
+
+                    if (needToCheck.Count != 0 && newNeedToCheck.Count != 0)
+                    {
+                        step = needToCheck[0];
+                        newStep = newNeedToCheck[0];
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+            
+            
+
     }
 }
+
