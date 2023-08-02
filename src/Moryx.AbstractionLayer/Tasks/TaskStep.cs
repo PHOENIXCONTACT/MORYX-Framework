@@ -77,9 +77,9 @@ namespace Moryx.AbstractionLayer
         private static string GetEnumName(object value, Type enumType)
         {
             var enumMembers = enumType.GetMembers();
-            var enumValueInfo = enumMembers?.FirstOrDefault(x => x.DeclaringType == enumType && 
+            var enumValueInfo = enumMembers.FirstOrDefault(x => x.DeclaringType == enumType && 
             x.Name == value.ToString());
-            var displayAttributeValue = enumValueInfo?.GetDisplayName();
+            var displayAttributeValue = enumValueInfo.GetDisplayName();
 
             return displayAttributeValue ?? value.ToString();
         }
