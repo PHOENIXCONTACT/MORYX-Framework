@@ -107,7 +107,10 @@ namespace Moryx.Tests
     {
         [EntrySerialize]
         public void InvocablePublic() { }
-        
+
+        [EntrySerialize]
+        public void InvocablePublic(int intValue,string stringValue1,string stringValue2 = "testing value") { }
+
         [EntrySerialize]
         internal void InvocableInternal() { }
 
