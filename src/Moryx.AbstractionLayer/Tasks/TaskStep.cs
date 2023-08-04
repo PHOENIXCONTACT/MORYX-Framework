@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -56,7 +57,7 @@ namespace Moryx.AbstractionLayer
         private static OutputDescription[] DescriptionsFromEnum(Type enumType)
         {
             return (from value in Enum.GetValues(enumType).OfType<object>()
-                    let name = value.ToString()
+                    let name = GetEnumName(value,enumType)
                     let numeric = (int) value
                     select new OutputDescription
                     {
@@ -64,6 +65,23 @@ namespace Moryx.AbstractionLayer
                         OutputType = OutputTypeFromEnum(enumType, value, numeric),
                         MappingValue = numeric
                     }).ToArray();
+        }
+
+        /// <summary>
+        /// Get the enum name. If Display attribute is applied on the enum value
+        /// the display value get used otherwise the enum value is used.
+        /// </summary>
+        /// <param name="value"> value of the enum</param>
+        /// <param name="enumType">type of the enum</param>
+        /// <returns></returns>
+        private static string GetEnumName(object value, Type enumType)
+        {
+            var enumMembers = enumType.GetMembers();
+            var enumValueInfo = enumMembers.FirstOrDefault(x => x.DeclaringType == enumType && 
+            x.Name == value.ToString());
+            var displayAttributeValue = enumValueInfo.GetDisplayName();
+
+            return displayAttributeValue ?? value.ToString();
         }
 
         private static OutputType OutputTypeFromEnum(Type enumType, object value, int numeric)
