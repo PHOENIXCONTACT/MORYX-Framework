@@ -15,6 +15,9 @@ using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.AbstractionLayer.Properties;
 using Moryx.Runtime.Modules;
+using Moryx.Runtime.Container;
+using Moryx.Configuration;
+using Moryx.Resources.Management;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
@@ -147,6 +150,10 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             var resource = (Resource)Activator.CreateInstance(_resourceTypeTree[type].ResourceType);
             if (resource is null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.RESOURCE_NOT_FOUND });
+
+            ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
+                .AddFilter(new DataMemberAttributeValueProviderFilter(false))
+                .AddDefaultValueProvider());
 
             if (method != null)
                 EntryConvert.InvokeMethod(resource, method, _serialization);

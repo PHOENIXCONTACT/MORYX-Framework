@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
 	<ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
+	<ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
 	<ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
   </ItemGroup>
 
