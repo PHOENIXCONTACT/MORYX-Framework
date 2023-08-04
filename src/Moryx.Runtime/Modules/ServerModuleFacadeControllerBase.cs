@@ -8,7 +8,6 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Runtime.Container;
 
 namespace Moryx.Runtime.Modules
 {
@@ -104,7 +103,7 @@ namespace Moryx.Runtime.Modules
 
         private string StrategyName(Type dependencyType)
         {
-            var config = ((IContainerHost)this).Strategies;
+            var config = Strategies;
             return config.ContainsKey(dependencyType) ? config[dependencyType] : null;
         }
     }

@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Modules;
-using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Microsoft.AspNetCore.Mvc;
@@ -250,11 +249,9 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         /// <summary>
         /// Create serialization for this module
         /// </summary>
-        private ICustomSerialization CreateSerialization(IModule module)
+        private ICustomSerialization CreateSerialization(IServerModule module)
         {
-            var host = (IContainerHost)module;
-            // TODO: This is dangerous
-            return new PossibleValuesSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
+            return new PossibleValuesSerialization(module.Container, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };
@@ -263,11 +260,9 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         /// <summary>
         /// Create serialization for this module
         /// </summary>
-        private ICustomSerialization CreateEditorSerializeSerialization(IModule module)
+        private ICustomSerialization CreateEditorSerializeSerialization(IServerModule module)
         {
-            var host = (IContainerHost)module;
-            // TODO: This is dangerous
-            return new AdvancedEntrySerializeSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
+            return new AdvancedEntrySerializeSerialization(module.Container, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };
