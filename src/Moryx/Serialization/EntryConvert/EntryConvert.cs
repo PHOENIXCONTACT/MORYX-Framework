@@ -468,6 +468,9 @@ namespace Moryx.Serialization
                 Validation = serialization.CreateValidation(parameterType, parameter)
             };
 
+            // mark the parameter as required when there is no default value
+            parameterModel.Validation.IsRequired = defaultValue is null ? true : false;
+
             switch (parameterModel.Value.Type)
             {
                 case EntryValueType.Class:
