@@ -9,9 +9,6 @@ using NUnit.Framework;
 
 namespace Moryx.Communication.Sockets.IntegrationTests
 {
-    // preprocessor statement for differentiating between different os
-    // see: https://github.com/PHOENIXCONTACT/MORYX-Framework/issues/100 (Moryx-Framework/src/Moryx/Communication/Sockets/TcpTransmission.cs in line 85)
-    #if _WINDOWS
     [TestFixture]
     public class CommunicationSocketsTests : CommunicationSocketsTestsBase<BinaryMessage<SystemTestHeader>>
     {
@@ -132,5 +129,4 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             WaitForConnectionState(0, new TimeSpan(0, 0, 0, 1), BinaryConnectionState.AttemptingConnection);
         }
     }
-    #endif
 }

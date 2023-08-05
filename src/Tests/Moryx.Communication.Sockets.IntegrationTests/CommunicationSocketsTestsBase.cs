@@ -11,9 +11,6 @@ using NUnit.Framework;
 
 namespace Moryx.Communication.Sockets.IntegrationTests
 {
-    // preprocessor statement for differentiating between different os
-    // see: https://github.com/PHOENIXCONTACT/MORYX-Framework/issues/100 (Moryx-Framework/src/Moryx/Communication/Sockets/TcpTransmission.cs in line 85)
-    #if _WINDOWS
     public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : BinaryMessage
     {
         private List<ConnectionBuffer<TMessage>> _serverConnections;
@@ -343,5 +340,4 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             };
         }
     }
-    #endif
 }

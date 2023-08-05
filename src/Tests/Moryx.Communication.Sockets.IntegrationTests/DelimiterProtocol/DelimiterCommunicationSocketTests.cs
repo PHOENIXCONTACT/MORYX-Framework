@@ -8,9 +8,6 @@ using NUnit.Framework;
 
 namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
 {
-    // preprocessor statement for differentiating between different os
-    // see: https://github.com/PHOENIXCONTACT/MORYX-Framework/issues/100 (Moryx-Framework/src/Moryx/Communication/Sockets/TcpTransmission.cs in line 85)
-    #if _WINDOWS
     [TestFixture]
     public class DelimiterCommunicationSocketTests : CommunicationSocketsTestsBase<BinaryMessage>
     {
@@ -69,5 +66,4 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
                 EndDelimiterOnlyInterpreter.TestEndDelimiter.Length, published.Payload.Length);
         }
     }
-    #endif
 }
