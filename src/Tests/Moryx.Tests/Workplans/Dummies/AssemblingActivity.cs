@@ -1,18 +1,11 @@
 ﻿using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Capabilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moryx.Tests.Workplans.Dummies
 {
     [ActivityResults(typeof(DefaultActivityResult))]
     public class AssemblingActivity : Activity<AssemblingParameters>
     {
-       
-
         public override ProcessRequirement ProcessRequirement => ProcessRequirement.NotRequired;
 
         public override ICapabilities RequiredCapabilities => new AssemblingCapabilities();
@@ -26,9 +19,5 @@ namespace Moryx.Tests.Workplans.Dummies
         {
             return ActivityResult.Create(DefaultActivityResult.Failed);
         }
-
-
-
-
     }
 }

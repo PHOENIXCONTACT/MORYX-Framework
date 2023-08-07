@@ -16,7 +16,7 @@ namespace Moryx.Tests.Workplans
         private Workplan fifthWorkplan;
         private Workplan sixthWorkplan;
         
-        public Workplan CreateFirstWorkplan()
+        public Workplan CreateSimpleWorkplan()
         {
             var plan = new Workplan();
             
@@ -38,7 +38,7 @@ namespace Moryx.Tests.Workplans
             return plan;
         }
 
-        public Workplan CreateSecondWorkplan()
+        public Workplan CreateWorkplanWithLoop()
         {
             var plan = new Workplan();
 
@@ -58,7 +58,7 @@ namespace Moryx.Tests.Workplans
             return plan;
         }
 
-        public Workplan CreateThirdWorkplan()
+        public Workplan CreateWorkplanWithLoopsAndBranches()
         {
             var plan = new Workplan();
 
@@ -85,41 +85,41 @@ namespace Moryx.Tests.Workplans
         [SetUp]
         public void SetUp()
         {
-            firstWorkplan = CreateFirstWorkplan();
-            secondWorkplan = CreateFirstWorkplan();
+            firstWorkplan = CreateSimpleWorkplan();
+            secondWorkplan = CreateSimpleWorkplan();
 
-            thirdWorkplan = CreateSecondWorkplan();
-            fourthWorkplan = CreateSecondWorkplan();
+            thirdWorkplan = CreateWorkplanWithLoop();
+            fourthWorkplan = CreateWorkplanWithLoop();
 
-            fifthWorkplan = CreateThirdWorkplan();
-            sixthWorkplan = CreateThirdWorkplan();
+            fifthWorkplan = CreateWorkplanWithLoopsAndBranches();
+            sixthWorkplan = CreateWorkplanWithLoopsAndBranches();
         }
 
         [Test]
         public void TestEqualWorkplans()
         {
-            bool result = firstWorkplan.Equals(secondWorkplan);
+            bool result = Workplan.Equals(firstWorkplan, secondWorkplan);
             Assert.That(result, Is.True);
         }
 
         [Test]
         public void TestEqualWorkplansSimpleLoop()
         {
-            bool result = thirdWorkplan.Equals(fourthWorkplan);
+            bool result = Workplan.Equals(thirdWorkplan, fourthWorkplan);
             Assert.That(result, Is.True);
         }
 
         [Test]
         public void TestEqualWorkplansDoubleLoop()
         {
-            bool result = fifthWorkplan.Equals(sixthWorkplan);
+            bool result = Workplan.Equals(fifthWorkplan, sixthWorkplan);
             Assert.That(result, Is.True);
         }
 
         [Test]
         public void TestUnequalWorkplans()
         {
-            bool r = thirdWorkplan.Equals(fifthWorkplan);
+            bool r = Workplan.Equals(firstWorkplan, sixthWorkplan);
             Assert.That(r, Is.False);
         }
     }
