@@ -10,6 +10,7 @@ using Moryx.Container;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Products.Model;
+using Moryx.Tools;
 using Moryx.Workplans;
 
 namespace Moryx.Products.Management
@@ -68,13 +69,13 @@ namespace Moryx.Products.Management
             using var uow = ModelFactory.Create();
             var repo = uow.GetRepository<IWorkplanRepository>();
             var workplans = (from entity in repo.Linq.Active()
-                select new Workplan
-                {
-                    Id = entity.Id,
-                    Name = entity.Name,
-                    Version = entity.Version,
-                    State = (WorkplanState)entity.State
-                }).ToArray();
+                             select new Workplan
+                             {
+                                 Id = entity.Id,
+                                 Name = entity.Name,
+                                 Version = entity.Version,
+                                 State = (WorkplanState)entity.State
+                             }).ToArray();
             return workplans;
         }
 
@@ -88,31 +89,37 @@ namespace Moryx.Products.Management
         {
             using var uow = ModelFactory.Create();
 
-            var versions = new List<Workplan>();
             var repo = uow.GetRepository<IWorkplanRepository>();
-            do
+            var currentWorkplan = repo.GetAll()
+                .FirstOrDefault(entity => entity.Id == workplanId);
+            var sourcesReferences = currentWorkplan.SourceReferences;
+            var targetsReferences = currentWorkplan.TargetReferences;
+            List<WorkplanEntity> sources = new List<WorkplanEntity>();
+            List<WorkplanEntity> targets = new List<WorkplanEntity>();
+            sourcesReferences.ForEach(source =>
             {
-                var result = (from entity in repo.Linq.Active()
-                    where entity.Id == workplanId
-                    let sourceRef = entity.SourceReferences.FirstOrDefault()
-                    select new
-                    {
-                        Workplan = new Workplan
-                        {
-                            Id = entity.Id,
-                            Name = entity.Name,
-                            Version = entity.Version,
-                            State = (WorkplanState)entity.State
-                        },
-                        Source = sourceRef == null ? 0 : sourceRef.SourceId
-                    }).FirstOrDefault();
+                if(source.Target != null)
+                    sources.Add(source.Target);
+            });
+            targetsReferences.ForEach(target =>
+            {
+                if (target.Source != null)
+                    targets.Add(target.Source);
+            });
 
-                if(result == null)
-                    break;
-
-                versions.Add(result.Workplan);
-                workplanId = result.Source;
-            } while (workplanId > 0);
+            var versions = sources
+                .Concat(targets)
+                // add the current workplan version
+                .Concat(new[] { currentWorkplan })
+                .Select(x => new Workplan
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Version = x.Version,
+                    State = (WorkplanState)x.State
+                })
+                .OrderBy(x => x.Version)
+                .ToList();
 
             return versions;
         }
@@ -144,7 +151,7 @@ namespace Moryx.Products.Management
 
             return entity.Id;
         }
-       
+
         public bool DeleteWorkplan(long workplanId)
         {
             using var uow = ModelFactory.Create();
