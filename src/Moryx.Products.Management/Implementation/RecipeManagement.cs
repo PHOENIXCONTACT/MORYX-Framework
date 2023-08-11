@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -90,27 +91,33 @@ namespace Moryx.Products.Management
             using var uow = ModelFactory.Create();
 
             var repo = uow.GetRepository<IWorkplanRepository>();
-            var currentWorkplan = repo.GetAll()
-                .FirstOrDefault(entity => entity.Id == workplanId);
-            var sourcesReferences = currentWorkplan.SourceReferences;
-            var targetsReferences = currentWorkplan.TargetReferences;
-            List<WorkplanEntity> sources = new List<WorkplanEntity>();
-            List<WorkplanEntity> targets = new List<WorkplanEntity>();
-            sourcesReferences.ForEach(source =>
+            var currentWorkplan = repo.GetByKey(workplanId);
+
+            if (currentWorkplan == null) return new List<Workplan>();
+
+            List<WorkplanReferenceEntity> backwardReferences = new List<WorkplanReferenceEntity>();
+            List<WorkplanReferenceEntity> forwardReferences = new List<WorkplanReferenceEntity>();
+
+            currentWorkplan.TargetReferences.ForEach(reference =>
             {
-                if(source.Target != null)
-                    sources.Add(source.Target);
-            });
-            targetsReferences.ForEach(target =>
-            {
-                if (target.Source != null)
-                    targets.Add(target.Source);
+                backwardReferences.AddRange(GetAllReferences(reference));
             });
 
-            var versions = sources
-                .Concat(targets)
-                // add the current workplan version
-                .Concat(new[] { currentWorkplan })
+            currentWorkplan.SourceReferences.ForEach(reference =>
+            {
+                forwardReferences.AddRange(GetAllReferences(reference,false));
+            });
+
+            // concact backward search and forward search results
+            var outputReferences = backwardReferences.Concat(forwardReferences);
+
+            //flatten the list of target and sources into a single list
+            var references = outputReferences
+                .Select(x => x.Target)
+                .Concat(outputReferences
+                .Select(x => x.Source));
+
+            var versions = references
                 .Select(x => new Workplan
                 {
                     Id = x.Id,
@@ -120,8 +127,44 @@ namespace Moryx.Products.Management
                 })
                 .OrderBy(x => x.Version)
                 .ToList();
-
             return versions;
+        }
+
+        private ICollection<WorkplanReferenceEntity> GetAllReferences(WorkplanReferenceEntity reference,bool backward = true)
+        {
+            var results = new List<WorkplanReferenceEntity>();
+            if(backward)
+            {
+                foreach (var item in reference.Source.TargetReferences)
+                {
+                    if (item.Source.TargetReferences.Count == 0)
+                        results.Add(item);
+                    else
+                    {
+                        var founds = GetAllReferences(item);
+                        if (founds is not null && founds.Count > 0)
+                            results.AddRange(founds);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var item in reference.Target.SourceReferences)
+                {
+                    if (item.Target.SourceReferences.Count == 0)
+                        results.Add(item);
+                    else
+                    {
+                        var founds = GetAllReferences(item,false);
+                        if (founds is not null && founds.Count > 0)
+                            results.AddRange(founds);
+                    }
+                }
+            }
+            //add the current reference
+            results.Add(reference);
+
+            return results;
         }
 
         public long SaveWorkplan(Workplan workplan)
