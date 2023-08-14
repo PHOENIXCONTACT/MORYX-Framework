@@ -35,8 +35,7 @@ namespace Moryx.Runtime.Modules
         protected void ActivateFacade(IFacadeControl facade)
         {
             // First activation
-            if (facade.ValidateHealthState == null)
-                facade.ValidateHealthState = ValidateHealthState;
+            facade.ValidateHealthState = ValidateHealthState;
 
             FillProperties(facade, FillProperty);
             facade.Activate();
