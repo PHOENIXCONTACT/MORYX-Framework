@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
+using Moryx.Runtime.Kernel.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
 
@@ -110,10 +111,7 @@ namespace Moryx.Runtime.Kernel
                     else
                         FillFacade(propType, importingProperty, module, facadeProviders);
                 }
-
-                // Make sure no imports are missing
-                if (importingProperties.All(ip => !ip.Missing))
-                    satisfiedModules.Add(module);
+                 satisfiedModules.Add(module);
             }
 
             return satisfiedModules;
@@ -179,7 +177,7 @@ namespace Moryx.Runtime.Kernel
                     var module = remaining[index];
                     // Go over all dependencies and convert if they were converted before
                     var dependencies = StartDependencies(module, facadeProviders);
-                    if (dependencies.Any(dep => converted.All(con => con.RepresentedModule != dep)))
+                    if (dependencies.Any(dep => converted.All(con => con.RepresentedModule != dep) && dep.GetType() != typeof(MissingServerModule)))
                         continue; // Unconverted dependency
 
                     var branch = new ModuleDependencyBranch(module);
@@ -187,11 +185,20 @@ namespace Moryx.Runtime.Kernel
                     converted.Add(branch);
 
                     // Loop over dependencies and cross-link
-                    foreach (var dependency in dependencies.Select(d => converted.First(cd => cd.RepresentedModule == d)))
+                    var filteredDependencies = dependencies
+                        .Select(d => converted.FirstOrDefault(cd => cd.RepresentedModule == d))
+                        .Where(d => d is not null);
+                    foreach (var dependency in filteredDependencies)
                     {
                         branch.Dependencies.Add(dependency);
                         dependency.Dependends.Add(branch);
                     }
+
+                    // check for missing dependencies and add them to the dependencies list
+                    // of the current module
+                    var nullDependencies = dependencies.Where(d => d.GetType() == typeof(MissingServerModule)).ToList();
+                    if (nullDependencies != null && nullDependencies.Count() > 0)
+                        branch.Dependencies.AddRange(nullDependencies.Select( nd => new MissingModuleDependency((MissingServerModule)nd)));
 
                     remaining.Remove(module);
                 }
@@ -215,6 +222,11 @@ namespace Moryx.Runtime.Kernel
                 var dependencyProviders = facadeProviders.Where(facadePair => propType.IsInstanceOfType(facadePair.Key));
                 foreach (var dependencyProvider in dependencyProviders)
                     dependencyServices.Add(dependencyProvider.Value);
+
+                // when there is no facade provider for the dependency,
+                // add a missing dependency for the property type
+                if(dependencyProviders.Count() == 0)
+                    dependencyServices.Add(new MissingServerModule(propType));
             }
 
             return dependencyServices;
