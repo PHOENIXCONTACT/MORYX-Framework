@@ -165,7 +165,28 @@ namespace Moryx.Runtime.Kernel.Tests
             Assert.AreEqual(3, moduleManager.AllModules.Count());
             var available = moduleManager.DependencyTree.RootModules
                 .Flatten(md => md.Dependends).ToList();
-            Assert.AreEqual(1, available.Count);
+            Assert.AreEqual(2, available.Count);
+        }
+
+        [Test]
+        public void ShouldIncludeMissingFacadeInDependencyList()
+        {
+            // Arrange
+            var moduleBUsingA = new ModuleBUsingA();
+            var moduleManager = CreateObjectUnderTest(new IServerModule[]
+            {
+                new ModuleB1(),
+                moduleBUsingA,
+                new ModuleC()
+            });
+
+            // Act
+            moduleManager.StartModules();
+
+            // Assert
+            Assert.AreEqual(3, moduleManager.AllModules.Count());
+            var moduleBUsingA_Dependencies = moduleManager.StartDependencies(moduleBUsingA);
+            Assert.AreEqual(1,moduleBUsingA_Dependencies.Count());
         }
 
         [Test]
