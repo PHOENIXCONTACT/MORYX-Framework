@@ -11,7 +11,6 @@ using Moryx.Container;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Products.Model;
-using Moryx.Tools;
 using Moryx.Workplans;
 
 namespace Moryx.Products.Management
@@ -90,81 +89,71 @@ namespace Moryx.Products.Management
         {
             using var uow = ModelFactory.Create();
 
-            var repo = uow.GetRepository<IWorkplanRepository>();
-            var currentWorkplan = repo.GetByKey(workplanId);
+            var versions = new List<Workplan>();
+            var workplanRepo = uow.GetRepository<IWorkplanRepository>();
+            var referenceRepo = uow.GetRepository<IWorkplanReferenceRepository>();
 
-            if (currentWorkplan == null) return new List<Workplan>();
+            var currentVersion = workplanRepo.GetByKey(workplanId);
+            if (currentVersion == null)
+                return versions;
 
-            List<WorkplanReferenceEntity> backwardReferences = new List<WorkplanReferenceEntity>();
-            List<WorkplanReferenceEntity> forwardReferences = new List<WorkplanReferenceEntity>();
-
-            currentWorkplan.TargetReferences.ForEach(reference =>
+            // Convert current version
+            versions.Add(new Workplan
             {
-                backwardReferences.AddRange(GetAllReferences(reference));
+                Id = currentVersion.Id,
+                Name = currentVersion.Name,
+                Version = currentVersion.Version,
+                State = (WorkplanState)currentVersion.State
             });
 
-            currentWorkplan.SourceReferences.ForEach(reference =>
+            // First fetch all previous versions
+            var currentId = workplanId;
+            do
             {
-                forwardReferences.AddRange(GetAllReferences(reference,false));
-            });
+                var result = (from reference in referenceRepo.Linq
+                              where reference.TargetId == currentId && reference.ReferenceType == (int)WorkplanReferenceType.NewVersion
+                              let entity = reference.Source
+                              select new Workplan
+                              {
+                                  Id = entity.Id,
+                                  Name = entity.Name,
+                                  Version = entity.Version,
+                                  State = (WorkplanState)entity.State
+                              }).FirstOrDefault();
 
-            // concact backward search and forward search results
-            var outputReferences = backwardReferences.Concat(forwardReferences);
+                if (result == null)
+                    break;
 
-            //flatten the list of target and sources into a single list
-            var references = outputReferences
-                .Select(x => x.Target)
-                .Concat(outputReferences
-                .Select(x => x.Source));
+                versions.Add(result);
+                currentId = result.Id;
+            } while (currentId > 0);
 
-            var versions = references
-                .Select(x => new Workplan
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Version = x.Version,
-                    State = (WorkplanState)x.State
-                })
-                .OrderBy(x => x.Version)
-                .ToList();
+            // Now use a similar method to fetch all target versions
+            currentId = workplanId;
+            do
+            {
+                var result = (from reference in referenceRepo.Linq
+                              where reference.SourceId == currentId && reference.ReferenceType == (int)WorkplanReferenceType.NewVersion
+                              let entity = reference.Target
+                              select new Workplan
+                              {
+                                  Id = entity.Id,
+                                  Name = entity.Name,
+                                  Version = entity.Version,
+                                  State = (WorkplanState)entity.State
+                              }).FirstOrDefault();
+
+                if (result == null)
+                    break;
+
+                versions.Add(result);
+                currentId = result.Id;
+            } while (currentId > 0);
+
+            // Sort the versions
+            versions = versions.OrderBy(v => v.Version).ToList();
+
             return versions;
-        }
-
-        private ICollection<WorkplanReferenceEntity> GetAllReferences(WorkplanReferenceEntity reference,bool backward = true)
-        {
-            var results = new List<WorkplanReferenceEntity>();
-            if(backward)
-            {
-                foreach (var item in reference.Source.TargetReferences)
-                {
-                    if (item.Source.TargetReferences.Count == 0)
-                        results.Add(item);
-                    else
-                    {
-                        var founds = GetAllReferences(item);
-                        if (founds is not null && founds.Count > 0)
-                            results.AddRange(founds);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var item in reference.Target.SourceReferences)
-                {
-                    if (item.Target.SourceReferences.Count == 0)
-                        results.Add(item);
-                    else
-                    {
-                        var founds = GetAllReferences(item,false);
-                        if (founds is not null && founds.Count > 0)
-                            results.AddRange(founds);
-                    }
-                }
-            }
-            //add the current reference
-            results.Add(reference);
-
-            return results;
         }
 
         public long SaveWorkplan(Workplan workplan)
