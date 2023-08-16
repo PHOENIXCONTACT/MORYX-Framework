@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiChevronDown, mdiFolderOpen, mdiPlus, mdiTrashCanOutline } from "@mdi/js";
+import { mdiChevronDown, mdiChevronUp, mdiFolderOpen, mdiPlus, mdiTrashCanOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
 import { Button, ButtonGroup, Col, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Input, Row } from "reactstrap";
@@ -136,8 +136,8 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                                                             Open
                                                         </Button>
                                                         <Button color="secondary" onClick={() => this.toggleCollapsible(entry.uniqueIdentifier)}>
-                                                            <Icon path={mdiChevronDown} className="icon right-space" />
-                                                            Expand
+                                                        <Icon path={this.isExpanded(entry.uniqueIdentifier ?? entry.identifier) ? mdiChevronUp : mdiChevronDown} className="icon right-space" />
+                                                            {this.isExpanded(entry.uniqueIdentifier ?? entry.identifier) ? "Collapse" : "Expand"}
                                                         </Button>
                                                         <Button color="secondary" onClick={() => this.removeEntry(entry)} disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}>
                                                             <Icon path={mdiTrashCanOutline} className="icon right-space" />
