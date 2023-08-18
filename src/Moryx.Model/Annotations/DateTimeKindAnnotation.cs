@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Model.Attributes;
+using Newtonsoft.Json.Linq;
 
 namespace Moryx.Model.Annotations
 {
@@ -23,13 +24,20 @@ namespace Moryx.Model.Annotations
         private const string AnnotationName = "DateTimeKind";
 
         private static readonly ValueConverter<DateTime, DateTime> UtcConverter =
-            new ValueConverter<DateTime, DateTime>(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
-
+            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
         private static readonly ValueConverter<DateTime, DateTime> LocalConverter =
-            new ValueConverter<DateTime, DateTime>(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Local));
-
+            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Local));
         private static readonly ValueConverter<DateTime, DateTime> UnspecifiedConverter =
-            new ValueConverter<DateTime, DateTime>(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
+           new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
+
+        private static DateTime ConvertToUtc(DateTime dateTime)
+        {                
+            if (dateTime.Kind == DateTimeKind.Utc)
+                return dateTime;
+            else
+                return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
+        }
+       
 
         /// <summary>
         /// Adds the date time kind converter to the model builder.
@@ -43,6 +51,7 @@ namespace Moryx.Model.Annotations
             foreach (var property in dateTimeProperties)
             {
                 var kind = FindDateTimeKind(property) ?? defaultKind;
+                property.SetValueConverter(UtcConverter);
                 switch (kind)
                 {
                     case DateTimeKind.Utc:
