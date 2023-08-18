@@ -15,11 +15,11 @@ namespace Moryx.Notifications
     /// </summary>
     public class NotificationAdapter : INotificationAdapter, INotificationSourceAdapter
     {
-        private readonly List<NotificationMap> _published = new List<NotificationMap>();
-        private readonly List<NotificationMap> _pendingAcks = new List<NotificationMap>();
-        private readonly List<NotificationMap> _pendingPubs = new List<NotificationMap>();
+        private readonly List<NotificationMap> _published = new List<NotificationMap>(16);
+        private readonly List<NotificationMap> _pendingAcks = new List<NotificationMap>(16);
+        private readonly List<NotificationMap> _pendingPubs = new List<NotificationMap>(16);
 
-        private readonly ReaderWriterLockSlim _listLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        private readonly object _listLock = new();
 
         /// <summary>
         /// Logger used by the <see cref="NotificationAdapter"/>
@@ -42,13 +42,13 @@ namespace Moryx.Notifications
 
         private IReadOnlyList<Notification> GetPublished(Func<NotificationMap, bool> filter)
         {
-            _listLock.EnterReadLock();
-
-            var notifications = _published.Union(_pendingPubs).Where(filter)
+            IReadOnlyList<Notification> notifications;
+            lock (_listLock)
+            {
+                notifications = _published.Union(_pendingPubs).Where(filter)
                 .Select(map => map.Notification)
                 .ToArray();
-
-            _listLock.ExitReadLock();
+            }
 
             return notifications;
         }
@@ -67,28 +67,21 @@ namespace Moryx.Notifications
 
             if (notification == null)
                 throw new ArgumentNullException(nameof(notification), "Notification must be set");
-            
-            _listLock.EnterUpgradeableReadLock();
 
-            // Lets check if the notification was already published
-            var isPending = _pendingPubs.Union(_pendingAcks).Union(_published)
-                .Any(n => n.Notification == notification);
 
-            if (isPending)
+            lock (_listLock)
             {
-                _listLock.ExitUpgradeableReadLock();
-                throw new InvalidOperationException("Notification cannot be published twice!");
+                // Lets check if the notification was already published
+                var isPending = _pendingPubs.Union(_pendingAcks).Union(_published)
+                    .Any(n => n.Notification == notification);
+
+                if (isPending)
+                    throw new InvalidOperationException("Notification cannot be published twice!");
+                notification.Created = DateTime.Now;
+                notification.Sender = sender.Identifier;
+
+                _pendingPubs.Add(new NotificationMap(sender, notification, tag));
             }
-
-            _listLock.EnterWriteLock();
-
-            notification.Created = DateTime.Now;
-            notification.Sender = sender.Identifier;
-
-            _pendingPubs.Add(new NotificationMap(sender, notification, tag));
-
-            _listLock.ExitWriteLock();
-            _listLock.ExitUpgradeableReadLock();
 
             Published?.Invoke(this, notification);
         }
@@ -105,32 +98,28 @@ namespace Moryx.Notifications
             notification.Acknowledged = DateTime.Now;
             notification.Acknowledger = sender.Identifier;
 
-            _listLock.EnterWriteLock();
-
-            var published = _published.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
-            if (published != null)
+            NotificationMap published;
+            lock (_listLock)
             {
-                _published.Remove(published);
-            }
-            else
-            {
-                published = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
-
-                if (published == null)
+                published = _published.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
+                if (published is not null)
+                    _published.Remove(published);
+                else
                 {
-                    _listLock.ExitWriteLock();
-                    throw new InvalidOperationException("Notification was not managed by the adapter. " +
-                                                        "The sender was not registered on the adapter");
+                    published = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
+
+                    if (published is null)
+                        throw new InvalidOperationException("Notification was not managed by the adapter. " +
+                                                            "The sender was not registered on the adapter");
+
+                    _pendingPubs.Remove(published);
                 }
 
-                _pendingPubs.Remove(published);
+                _pendingAcks.Add(published);
             }
 
-            _pendingAcks.Add(published);
-
-            _listLock.ExitWriteLock();
-
-            Acknowledged?.Invoke(this, published.Notification);
+            if (published is not null)
+                Acknowledged?.Invoke(this, published.Notification);
         }
 
         /// <inheritdoc />
@@ -150,24 +139,23 @@ namespace Moryx.Notifications
         /// </summary>
         private void AcknowledgeByFilter(INotificationSender sender, Predicate<NotificationMap> filter)
         {
-            _listLock.EnterWriteLock();
-
-            var publishes = _published.Where(m => filter(m)).ToArray();
-            _published.RemoveAll(filter);
-            _pendingPubs.RemoveAll(filter);
-
-            foreach (var published in publishes)
+            NotificationMap[] publishes;
+            lock (_listLock)
             {
+                publishes = _published.Union(_pendingPubs).Where(m => filter(m)).ToArray();
+                _published.RemoveAll(filter);
+                _pendingPubs.RemoveAll(filter);
 
-                published.Notification.Acknowledged = DateTime.Now;
-                published.Notification.Acknowledger = sender.Identifier;
+                foreach (var published in publishes)
+                {
+                    published.Notification.Acknowledged = DateTime.Now;
+                    published.Notification.Acknowledger = sender.Identifier;
 
-                _pendingAcks.Add(published);
+                    _pendingAcks.Add(published);
+                }
             }
 
-            _listLock.ExitWriteLock();
-
-            foreach (var published in publishes)
+            foreach (var published in publishes ?? Array.Empty<NotificationMap>())
                 Acknowledged?.Invoke(this, published.Notification);
         }
 
@@ -178,11 +166,11 @@ namespace Moryx.Notifications
         /// <inheritdoc />
         IReadOnlyList<Notification> INotificationSourceAdapter.GetPublished()
         {
-            _listLock.EnterReadLock();
-
-            var published = _published.Union(_pendingAcks).Select(map => map.Notification).ToArray();
-
-            _listLock.ExitReadLock();
+            IReadOnlyList<Notification> published;
+            lock (_listLock)
+            {
+                published = _published.Union(_pendingAcks).Select(map => map.Notification).ToArray();
+            }
 
             return published;
         }
@@ -190,11 +178,11 @@ namespace Moryx.Notifications
         /// <inheritdoc />
         void INotificationSourceAdapter.Acknowledge(Notification notification)
         {
-            _listLock.EnterReadLock();
-
-            var map = _published.Single(m => m.Notification.Identifier == notification.Identifier);
-
-            _listLock.ExitReadLock();
+            NotificationMap map;
+            lock (_listLock)
+            {
+                map = _published.Single(m => m.Notification.Identifier == notification.Identifier);
+            }
 
             map.Sender.Acknowledge(map.Notification, map.Tag);
         }
@@ -202,67 +190,66 @@ namespace Moryx.Notifications
         /// <inheritdoc />
         void INotificationSourceAdapter.AcknowledgeProcessed(Notification notification)
         {
-            _listLock.EnterWriteLock();
+            lock (_listLock)
+            {
+                var map = _pendingAcks.SingleOrDefault(n => n.Notification.Identifier.Equals(notification.Identifier));
 
-            var map = _pendingAcks.SingleOrDefault(n => n.Notification.Identifier.Equals(notification.Identifier));
-
-            // Maybe already removed from this adapter
-            if (map != null)
-                _pendingAcks.Remove(map);
-
-            _listLock.ExitWriteLock();
+                // Maybe already removed from this adapter
+                if (map is not null)
+                    _pendingAcks.Remove(map);
+            }
         }
 
         /// <inheritdoc />
         void INotificationSourceAdapter.PublishProcessed(Notification notification)
         {
-            _listLock.EnterWriteLock();
-
-            var map = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier.Equals(notification.Identifier));
-
-            if (map != null)
+            NotificationMap map;
+            lock (_listLock)
             {
-                _pendingPubs.Remove(map);
-                _published.Add(map);
-                _listLock.ExitWriteLock();
-                return;
-            }
+                map = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier.Equals(notification.Identifier));
 
-            // Notification is maybe not pending anymore
-            _listLock.ExitWriteLock();
+                if (map != null)
+                {
+                    _pendingPubs.Remove(map);
+                    _published.Add(map);
+                    return;
+                }
+            }
 
             // If necessary we can acknowledge it
             if (notification.Acknowledged is null)
             {
-                Logger.Log(LogLevel.Error, "Notification was removed from the pending publications " +
-                    "before being published but is not acknowledged.");
+                Logger.Log(LogLevel.Error, "Notification {0} was removed from the pending publications " +
+                    "before being published but is not acknowledged.", notification.Identifier);
                 notification.Acknowledged = DateTime.Now;
                 notification.Acknowledger = nameof(NotificationAdapter);
                 Acknowledged?.Invoke(this, notification);
             }
 
-            Logger.Log(LogLevel.Warning, "Notification was removed from the pending publications. " +
-                "It was already acknowledged by {0} at {1}.", notification.Acknowledger, notification.Acknowledged);
+            Logger.Log(LogLevel.Warning, "Notification {0} was removed from the pending publications. " +
+                "It was already acknowledged by {1} at {2}.", notification.Identifier, notification.Acknowledger, notification.Acknowledged);
         }
 
         /// <inheritdoc />
         void INotificationSourceAdapter.Sync()
         {
             // Publish pending notifications
-            _listLock.EnterReadLock();
-            var pendingPublishs = _pendingPubs.ToArray();
-            _listLock.ExitReadLock();
-
-            foreach (var pendingPublish in pendingPublishs)
+            NotificationMap[] pendingPublishes = Array.Empty<NotificationMap>();
+            lock (_listLock)
+            {
+                pendingPublishes = _pendingPubs.ToArray();
+            }
+            foreach (var pendingPublish in pendingPublishes)
             {
                 Published?.Invoke(this, pendingPublish.Notification);
             }
 
             // Acknowledge pending acknowledges
-            _listLock.EnterReadLock();
-            var pendingAcks = _pendingAcks.ToArray();
-            _listLock.ExitReadLock();
-
+            NotificationMap[] pendingAcks = Array.Empty<NotificationMap>();
+            lock (_listLock)
+            {
+                pendingAcks = _pendingAcks.ToArray();
+            }
             foreach (var pendingAck in pendingAcks)
             {
                 Acknowledged?.Invoke(this, pendingAck.Notification);

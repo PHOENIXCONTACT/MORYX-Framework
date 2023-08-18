@@ -11,4 +11,5 @@ export enum ModuleServerModuleState {
     Running = "Running",
     Stopping = "Stopping",
     Failure = "Failure",
+    Missing = "Missing",
 }

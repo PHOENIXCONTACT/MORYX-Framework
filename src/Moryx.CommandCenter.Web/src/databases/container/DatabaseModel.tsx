@@ -330,7 +330,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                         <Col md={12}>
                                            <Input  type="select" placeholder="Configurator Type Name" onChange={(e: React.FormEvent<HTMLInputElement>) => this.onConfiguratorTypeChanged(e)}
                                             value={this.state.config.configuratorTypename} onBlur={() => this.onTestConnection()}>
-                                                <option  value={""}>{}</option>
                                              {this.props.DataModel.possibleConfigurators.map((config, idx) =>  (<option key={idx} value={config.configuratorTypename}>{config.name}</option>))}
                                            </Input>
                                         </Col>

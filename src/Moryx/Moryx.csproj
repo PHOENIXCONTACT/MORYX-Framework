@@ -9,6 +9,10 @@
     <PackageTags>MORYX;Serialization;Configuration;Logging;Core;Modules;Workplans</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <DefineConstants>HAVE_TCP_KEEPALIVE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Microsoft.Extensions.Logging"/>
