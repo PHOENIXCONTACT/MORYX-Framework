@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -26,7 +27,7 @@ namespace Moryx.Model.Annotations
         private static readonly ValueConverter<DateTime, DateTime> UtcConverter =
             new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
         private static readonly ValueConverter<DateTime, DateTime> LocalConverter =
-            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Local));
+            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => ConvertToLocal(v));
         private static readonly ValueConverter<DateTime, DateTime> UnspecifiedConverter =
            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
 
@@ -38,6 +39,12 @@ namespace Moryx.Model.Annotations
                 return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
         }
        
+        private static DateTime ConvertToLocal(DateTime timeUtc)
+        {
+            var result = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, TimeZoneInfo.Local);
+            result = DateTime.SpecifyKind(result, DateTimeKind.Local);
+            return result;
+        }
 
         /// <summary>
         /// Adds the date time kind converter to the model builder.
@@ -51,7 +58,6 @@ namespace Moryx.Model.Annotations
             foreach (var property in dateTimeProperties)
             {
                 var kind = FindDateTimeKind(property) ?? defaultKind;
-                property.SetValueConverter(UtcConverter);
                 switch (kind)
                 {
                     case DateTimeKind.Utc:
