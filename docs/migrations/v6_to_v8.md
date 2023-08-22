@@ -11,3 +11,7 @@ The DI container within modules based on Castle Windsor was refactored and simpl
 - **Extend** The flexible method for passing facilities to Castle was removed as it was only added and used by WCF.
 - **MoryxFacility** All MORYX specific behavior like strategies and `Named` import overrides were refactored to follow Castle best practises and are now isolated in the `MoryxFacility`. This enables everyone to achieve the MORYX DI behavior with a Castle Container without the MORYX wrapper.
 - **Installers** As previously mentioned installers were removed, but since the API on `IContainer` now supports everything previously reserved for installers and registrators, just migrate the registration onto the container like the [DbContextContainerExtension](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/future/src/Moryx.Model/DbContextContainerExtension.cs) or the [BasicInterceptorInstaller](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/future/src/Moryx.TestTools.UnitTest/BasicInterceptorInstaller.cs)
+
+## ServerModuleBase
+
+To simplify development and prepare easier integration of the Moryx.Cli we merged the `ServerModuleFacadeControllerBase` into the `ServerModuleBase`. Just replace the base type if your module is affected by this.
