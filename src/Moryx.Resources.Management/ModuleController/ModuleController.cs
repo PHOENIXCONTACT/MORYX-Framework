@@ -16,7 +16,7 @@ namespace Moryx.Resources.Management
     /// <summary>
     /// The main controller of all resource modules.
     /// </summary>
-    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>,
+    public class ModuleController : ServerModuleBase<ModuleConfig>,
         IFacadeContainer<IResourceManagement>,
         IFacadeContainer<IResourceTypeTree>,
         IFacadeContainer<INotificationSource>
