@@ -19,6 +19,10 @@ namespace Moryx.Bindings
         /// </summary>
         public static ITextBindingResolver Create(string parameterWithBindings, IBindingResolverFactory resolverFactory)
         {
+            //null check to make sure the parameterWithBinding is not null
+            if (parameterWithBindings == null)
+                return new NullResolver(parameterWithBindings);
+
             // Parse bindings
             var matches = Regex.Matches(parameterWithBindings, BindingRegex);
 
@@ -102,7 +106,8 @@ namespace Moryx.Bindings
                 foreach (var resolver in _resolvers)
                 {
                     var resolvedReference = resolver.Value.Resolve(source);
-                    result = result.Replace(resolver.Key, resolvedReference?.ToString() ?? "'null'");
+                    result = resolvedReference is null ? 
+                             result : result.Replace(resolver.Key, resolvedReference.ToString());
                 }
                 return result;
             }
