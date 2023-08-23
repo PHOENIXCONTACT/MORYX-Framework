@@ -5,6 +5,7 @@
 
 import { mdiConsoleLine } from "@mdi/js";
 import Icon from "@mdi/react";
+import { number } from "prop-types";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
@@ -45,13 +46,14 @@ interface ModuleConsoleStateModel {
     Methods: MethodEntry[];
     SelectedMethod: MethodEntry;
     InvokeResults: InvokeResult[];
+    Seed: number;
 }
 
 class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConsoleDispatchPropsModel, ModuleConsoleStateModel> {
     constructor(props: ModuleConsolePropModel & ModuleConsoleDispatchPropsModel) {
         super(props);
 
-        this.state = { IsLoading: false, SelectedMethod: null, Methods: [], InvokeResults: [] };
+        this.state = { IsLoading: false, SelectedMethod: null, Methods: [], InvokeResults: [], Seed: 0 };
     }
 
     public componentDidMount(): void {
@@ -75,7 +77,7 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
     }
 
     private onSelectMethod(methodEntry: MethodEntry): void {
-        this.setState({SelectedMethod: methodEntry});
+        this.setState({SelectedMethod: methodEntry, Seed: this.state.Seed + 1});
     }
 
     private onInvokeMethod(methodEntry: MethodEntry): void {
@@ -156,7 +158,9 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
         let content = (<span className="font-italic">No exported methods found.</span>);
 
         if (this.state.Methods.length > 0) {
-            let view = <ConsoleMethodConfigurator Method={this.state.SelectedMethod}
+            let view = <ConsoleMethodConfigurator
+                                                  key={this.state.Seed}
+                                                  Method={this.state.SelectedMethod}
                                                   ModuleName={this.props.ModuleName}
                                                   onInvokeMethod={this.onInvokeMethod.bind(this)} />;
 

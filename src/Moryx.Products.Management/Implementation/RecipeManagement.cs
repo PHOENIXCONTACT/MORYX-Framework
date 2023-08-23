@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -68,13 +69,13 @@ namespace Moryx.Products.Management
             using var uow = ModelFactory.Create();
             var repo = uow.GetRepository<IWorkplanRepository>();
             var workplans = (from entity in repo.Linq.Active()
-                select new Workplan
-                {
-                    Id = entity.Id,
-                    Name = entity.Name,
-                    Version = entity.Version,
-                    State = (WorkplanState)entity.State
-                }).ToArray();
+                             select new Workplan
+                             {
+                                 Id = entity.Id,
+                                 Name = entity.Name,
+                                 Version = entity.Version,
+                                 State = (WorkplanState)entity.State
+                             }).ToArray();
             return workplans;
         }
 
@@ -89,30 +90,68 @@ namespace Moryx.Products.Management
             using var uow = ModelFactory.Create();
 
             var versions = new List<Workplan>();
-            var repo = uow.GetRepository<IWorkplanRepository>();
+            var workplanRepo = uow.GetRepository<IWorkplanRepository>();
+            var referenceRepo = uow.GetRepository<IWorkplanReferenceRepository>();
+
+            var currentVersion = workplanRepo.GetByKey(workplanId);
+            if (currentVersion == null)
+                return versions;
+
+            // Convert current version
+            versions.Add(new Workplan
+            {
+                Id = currentVersion.Id,
+                Name = currentVersion.Name,
+                Version = currentVersion.Version,
+                State = (WorkplanState)currentVersion.State
+            });
+
+            // First fetch all previous versions
+            var currentId = workplanId;
             do
             {
-                var result = (from entity in repo.Linq.Active()
-                    where entity.Id == workplanId
-                    let sourceRef = entity.SourceReferences.FirstOrDefault()
-                    select new
-                    {
-                        Workplan = new Workplan
-                        {
-                            Id = entity.Id,
-                            Name = entity.Name,
-                            Version = entity.Version,
-                            State = (WorkplanState)entity.State
-                        },
-                        Source = sourceRef == null ? 0 : sourceRef.SourceId
-                    }).FirstOrDefault();
+                var result = (from reference in referenceRepo.Linq
+                              where reference.TargetId == currentId && reference.ReferenceType == (int)WorkplanReferenceType.NewVersion
+                              let entity = reference.Source
+                              select new Workplan
+                              {
+                                  Id = entity.Id,
+                                  Name = entity.Name,
+                                  Version = entity.Version,
+                                  State = (WorkplanState)entity.State
+                              }).FirstOrDefault();
 
-                if(result == null)
+                if (result == null)
                     break;
 
-                versions.Add(result.Workplan);
-                workplanId = result.Source;
-            } while (workplanId > 0);
+                versions.Add(result);
+                currentId = result.Id;
+            } while (currentId > 0);
+
+            // Now use a similar method to fetch all target versions
+            currentId = workplanId;
+            do
+            {
+                var result = (from reference in referenceRepo.Linq
+                              where reference.SourceId == currentId && reference.ReferenceType == (int)WorkplanReferenceType.NewVersion
+                              let entity = reference.Target
+                              select new Workplan
+                              {
+                                  Id = entity.Id,
+                                  Name = entity.Name,
+                                  Version = entity.Version,
+                                  State = (WorkplanState)entity.State
+                              }).FirstOrDefault();
+
+                if (result == null)
+                    break;
+
+                versions.Add(result);
+                currentId = result.Id;
+            } while (currentId > 0);
+
+            // Sort the versions
+            versions = versions.OrderBy(v => v.Version).ToList();
 
             return versions;
         }
@@ -144,7 +183,7 @@ namespace Moryx.Products.Management
 
             return entity.Id;
         }
-       
+
         public bool DeleteWorkplan(long workplanId)
         {
             using var uow = ModelFactory.Create();

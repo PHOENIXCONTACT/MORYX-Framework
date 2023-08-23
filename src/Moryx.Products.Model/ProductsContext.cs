@@ -61,12 +61,12 @@ namespace Moryx.Products.Model
             // Workplane reference
             modelBuilder.Entity<WorkplanReferenceEntity>()
                 .HasOne(w => w.Target)
-                .WithMany(w => w.TargetReferences).IsRequired()
+                .WithMany(w => w.SourceReferences).IsRequired()
                 .HasForeignKey(s => s.TargetId);
 
             modelBuilder.Entity<WorkplanReferenceEntity>()
                 .HasOne(w => w.Source)
-                .WithMany(w => w.SourceReferences).IsRequired()
+                .WithMany(w => w.TargetReferences).IsRequired()
                 .HasForeignKey(s => s.SourceId);
 
             // Product Instances

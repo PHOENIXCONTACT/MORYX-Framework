@@ -41,7 +41,7 @@ namespace Moryx.Model
 
                     var configuratorType = !string.IsNullOrEmpty(config.ConfiguratorTypename)
                         ? Type.GetType(config.ConfiguratorTypename)
-                        : typeof(NullModelConfigurator);
+                        : DefaultConfigurator();
 
                     return new
                     {
@@ -62,6 +62,16 @@ namespace Moryx.Model
             {
                 InitializeConfigurator(wrapper);
             }
+        }
+
+        private Type DefaultConfigurator()
+        {
+            var sqliteModelConfigurator = ReflectionTool.GetAssemblies()
+                .FirstOrDefault(x => x.GetName().Name.Contains("Moryx.Model.Sqlite"))
+                ?.GetTypes()
+                .FirstOrDefault(x => x.Name == "SqliteModelConfigurator");
+
+            return sqliteModelConfigurator ?? typeof(NullModelConfigurator);
         }
 
         /// <inheritdoc />
