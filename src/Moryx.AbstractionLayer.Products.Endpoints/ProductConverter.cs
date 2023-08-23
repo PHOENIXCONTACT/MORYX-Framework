@@ -46,7 +46,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(recipeType)
             };
         }
-        public ProductModel ConvertProduct(IProductType productType, bool flat)
+
+        /// <param name="includeParts">Determines whether parts should be included</param>
+        public ProductModel ConvertProduct(IProductType productType, bool flat, bool includeParts = true)
         {
             
             // Base object
@@ -77,7 +79,8 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             converted.Recipes = recipes.Select(ConvertRecipe).ToArray();
 
             // Parts
-            ConvertParts(productType, properties, converted);
+            if (includeParts)
+                ConvertParts(productType, properties, converted);
 
             return converted;
         }

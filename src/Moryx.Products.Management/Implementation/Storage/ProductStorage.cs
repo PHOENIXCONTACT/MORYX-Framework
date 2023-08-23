@@ -353,6 +353,28 @@ namespace Moryx.Products.Management
             else if (query.RecipeFilter == RecipeFilter.WithoutRecipes)
                 productsQuery = productsQuery.Where(p => p.Recipes.Count == 0);
 
+            // Exclude parts
+            if (query.NoPartLinks)
+            {
+                productsQuery = productsQuery.Select(p => new ProductTypeEntity
+                {
+                   TypeName = p.TypeName,
+                   Identifier = p.Identifier,
+                   Revision = p.Revision,
+                   Name = p.Name,
+                   CurrentVersionId = p.CurrentVersionId,
+                   Parents = p.Parents,
+                   Files = p.Files,
+                   Recipes = p.Recipes,
+                   OldVersions = p.OldVersions,
+                   CurrentVersion = p.CurrentVersion, 
+                   Id = p.Id,
+                   Created = p.Created,
+                   Updated = p.Updated,
+                   Deleted = p.Deleted
+                });;
+            }
+
             // Apply selector
             switch (query.Selector)
             {

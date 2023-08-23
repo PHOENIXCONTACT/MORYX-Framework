@@ -28,7 +28,7 @@ namespace Moryx.Products.Model
 
         public virtual ICollection<ProductTypePropertiesEntity> OldVersions { get; set; }
 
-        public virtual ProductTypePropertiesEntity CurrentVersion { get; protected internal set; }
+        public virtual ProductTypePropertiesEntity CurrentVersion { get; set; }
 
         public ProductTypeEntity()
         {
