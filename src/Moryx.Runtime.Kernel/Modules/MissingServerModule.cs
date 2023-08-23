@@ -1,4 +1,5 @@
-﻿using Moryx.Modules;
+﻿using Moryx.Container;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using System;
 using System.Collections.Generic;
@@ -58,5 +59,7 @@ namespace Moryx.Runtime.Kernel.Modules
         }
 
         public Type RepresentedService { get; private set; }
+
+        public IContainer Container => throw new NotImplementedException();
     }
 }
