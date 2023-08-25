@@ -131,11 +131,6 @@ namespace Moryx.Resources.Management
             // initialize resources
             Parallel.ForEach(Graph.GetAll(), InitializeResource);
             _startup = ResourceStartupPhase.Initialized;
-
-            // start resources
-            _startup = ResourceStartupPhase.Starting;
-            Parallel.ForEach(Graph.GetAll(), StartResource);
-            _startup = ResourceStartupPhase.Started;
         }
 
         private void ResourceFailed(Resource resource, Exception e)
@@ -302,7 +297,10 @@ namespace Moryx.Resources.Management
 
         public void Start()
         {
-           InitializeAndStart();
+            // start resources
+            _startup = ResourceStartupPhase.Starting;
+            Parallel.ForEach(Graph.GetAll(), StartResource);
+            _startup = ResourceStartupPhase.Started;
         }
 
         public void Stop()
