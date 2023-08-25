@@ -60,7 +60,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
 
             if (ids is null || ids.Length == 0)
-                ids = _resourceManagement.GetResources<IPublicResource>().Select(r => r.Id).ToArray();
+                ids = _resourceManagement.GetResources<IResource>().Select(r => r.Id).ToArray();
 
             return ids.Select(id => _resourceManagement.Read(id, r => converter.GetDetails(r)))
                 .Where(details => details != null).ToArray();

@@ -9,7 +9,7 @@ using Moryx.Serialization;
 
 namespace Moryx.Resources.Samples
 {
-    public abstract class Cell : PublicResource
+    public abstract class Cell : Resource
     {
         #region Config
 

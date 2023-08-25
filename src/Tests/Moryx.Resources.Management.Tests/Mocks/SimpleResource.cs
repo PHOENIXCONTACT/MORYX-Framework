@@ -6,12 +6,12 @@ using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Management.Tests
 {
-    public interface IDuplicateFoo : IPublicResource
+    public interface IDuplicateFoo : IResource
     {
         int Foo { get; }
     }
 
-    public interface ISimpleResource : IPublicResource
+    public interface ISimpleResource : IResource
     {
         int Foo { get; set; }
 
@@ -34,7 +34,7 @@ namespace Moryx.Resources.Management.Tests
     }
 
     [ResourceAvailableAs(typeof(INonResourceInterface))]
-    public class SimpleResource : PublicResource, ISimpleResource, IDuplicateFoo, INonResourceInterface
+    public class SimpleResource : Resource, ISimpleResource, IDuplicateFoo, INonResourceInterface
     {
         private int _foo;
 

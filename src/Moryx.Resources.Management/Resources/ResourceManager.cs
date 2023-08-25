@@ -190,7 +190,7 @@ namespace Moryx.Resources.Management
             }
 
             // Inform listeners about the new resource
-            if (instance is IPublicResource publicResource)
+            if (instance is IResource publicResource)
                 RaiseResourceAdded(publicResource);
         }
 
@@ -214,7 +214,7 @@ namespace Moryx.Resources.Management
         {
             instance.Changed += OnResourceChanged;
 
-            if (instance is IPublicResource asPublic)
+            if (instance is IResource asPublic)
                 asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
             foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
@@ -228,7 +228,7 @@ namespace Moryx.Resources.Management
         {
             instance.Changed -= OnResourceChanged;
 
-            if (instance is IPublicResource asPublic)
+            if (instance is IResource asPublic)
                 asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
             foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
@@ -410,7 +410,7 @@ namespace Moryx.Resources.Management
             var removed = Graph.Remove(instance);
 
             // Notify listeners about the removal of the resource
-            if (removed && instance is IPublicResource publicResource)
+            if (removed && instance is IResource publicResource)
                 RaiseResourceRemoved(publicResource);
 
             // Destroy the object
@@ -424,17 +424,17 @@ namespace Moryx.Resources.Management
         #region IResourceManagement
 
 
-        private void RaiseResourceAdded(IPublicResource newResource)
+        private void RaiseResourceAdded(IResource newResource)
         {
             ResourceAdded?.Invoke(this, newResource);
         }
-        public event EventHandler<IPublicResource> ResourceAdded;
+        public event EventHandler<IResource> ResourceAdded;
 
-        private void RaiseResourceRemoved(IPublicResource newResource)
+        private void RaiseResourceRemoved(IResource newResource)
         {
             ResourceRemoved?.Invoke(this, newResource);
         }
-        public event EventHandler<IPublicResource> ResourceRemoved;
+        public event EventHandler<IResource> ResourceRemoved;
 
         ///
         public event EventHandler<ICapabilities> CapabilitiesChanged;

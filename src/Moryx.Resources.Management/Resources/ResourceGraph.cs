@@ -34,7 +34,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Quick access to all public resources
         /// </summary>
-        private readonly IList<IPublicResource> _publicResources = new List<IPublicResource>();
+        private readonly IList<IResource> _publicResources = new List<IResource>();
 
         public Action<Resource> SaveDelegate { get; set; }
 
@@ -45,7 +45,7 @@ namespace Moryx.Resources.Management
             _graphLock.EnterWriteLock();
             var wrapper = _graph[instance.Id] = new ResourceWrapper(instance);
 
-            if (instance is IPublicResource publicResource)
+            if (instance is IResource publicResource)
                 _publicResources.Add(publicResource);
             _graphLock.ExitWriteLock();
 
@@ -57,7 +57,7 @@ namespace Moryx.Resources.Management
             _graphLock.EnterWriteLock();
             var found = _graph.Remove(instance.Id);
             if (found)
-                _publicResources.Remove(instance as IPublicResource);
+                _publicResources.Remove(instance as IResource);
             _graphLock.ExitWriteLock();
 
             return found;
@@ -121,7 +121,7 @@ namespace Moryx.Resources.Management
             IEnumerable<TResource> matches;
             _graphLock.EnterReadLock();
             // Use short cut if a public resource is requested
-            if (typeof(IPublicResource).IsAssignableFrom(typeof(TResource)))
+            if (typeof(IResource).IsAssignableFrom(typeof(TResource)))
             {
                 matches = _publicResources.Where(p => _graph[p.Id].State.IsAvailable).OfType<TResource>().Where(predicate);
             }
