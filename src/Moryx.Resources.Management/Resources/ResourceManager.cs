@@ -108,12 +108,6 @@ namespace Moryx.Resources.Management
 
         public void Initialize()
         {
-            InitializeAndStart();
-        }
-
-
-        private void InitializeAndStart()
-        {
             // Set delegates on graph
             Graph.SaveDelegate = Save;
             Graph.DestroyDelegate = Destroy;
@@ -133,7 +127,20 @@ namespace Moryx.Resources.Management
             _startup = ResourceStartupPhase.Initialized;
         }
 
-        private void ResourceFailed(Resource resource, Exception e)
+
+        public void InitializeAndStart()
+        {
+            Initialize();
+            Start();
+        }
+
+        /// <summary>
+        /// Handles the failed resource by adding it to the list of failed resources
+        /// </summary>
+        /// <param name="resource">Failed resource</param>
+        /// <param name="e">Exception that cause this resource to fail</param>
+        /// <param name="failedDuringInitialization">Resource failed during Initialization. default true</param>
+        private void HandleResourceFailed(Resource resource, Exception e, bool failedDuringInitialization = true)
         {
             //populate the failed resources list for tracking
             lock (_failedResources)
@@ -144,9 +151,14 @@ namespace Moryx.Resources.Management
                 if(!_failedResources.Any(x => x.Id == resource.Id))
                 _failedResources.Add(resource);
             }
-            Logger.Log(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resource.Id, resource.Name);
+            var label = failedDuringInitialization == true ? "initialize":"start";
+            Logger.Log(LogLevel.Warning, e, "Failed to {0} resource {1}-{2}", label, resource.Id, resource.Name);
         }
 
+        /// <summary>
+        /// Handles the initialization of the resource 
+        /// </summary>
+        /// <param name="resource"></param>
         private void InitializeResource(Resource resource)
         {
             try
@@ -155,20 +167,24 @@ namespace Moryx.Resources.Management
             }
             catch (Exception e)
             {
-                ResourceFailed(resource, e);
+                HandleResourceFailed(resource, e);
             }
         }
 
+        /// <summary>
+        /// Starts a resource and handles in case of failure.
+        /// </summary>
+        /// <param name="resource"></param>
         private void StartResource(Resource resource)
         {
             try
             {
                 ((IPlugin)resource).Start();
-                ResourceStarted(resource);
+                HandleResourceStarted(resource);
             }
             catch (Exception e)
             {
-                ResourceFailed(resource, e);
+                HandleResourceFailed(resource, e,false);
             }
         }
 
@@ -191,7 +207,11 @@ namespace Moryx.Resources.Management
                 RegisterEvents(resource);
         }
 
-        private void ResourceStarted(IResource resource)
+        /// <summary>
+        /// Handles the resource started by adding it to the list of running resources and removes it from failed resources
+        /// </summary>
+        /// <param name="resource">Started resource</param>
+        private void HandleResourceStarted(IResource resource)
         {
             lock (_runningResources)
             {
@@ -244,6 +264,10 @@ namespace Moryx.Resources.Management
                 RaiseResourceAdded(publicResource);
         }
 
+        /// <summary>
+        /// Initialize and start the current resource
+        /// </summary>
+        /// <param name="resource">Current resource</param>
         private void InitializeAndStart(Resource resource)
         {
             InitializeResource(resource);

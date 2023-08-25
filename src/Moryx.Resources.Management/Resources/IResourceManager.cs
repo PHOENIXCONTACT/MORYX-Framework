@@ -31,5 +31,11 @@ namespace Moryx.AbstractionLayer.Resources
         /// Raised when the capabilities have changed.
         /// </summary>
         event EventHandler<ICapabilities> CapabilitiesChanged;
+
+
+        /// <summary>
+        /// Initialize and start all the resources available
+        /// </summary>
+        void InitializeAndStart();
     }
 }
