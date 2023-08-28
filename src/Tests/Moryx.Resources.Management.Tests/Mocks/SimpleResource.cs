@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Management.Tests
@@ -69,6 +70,10 @@ namespace Moryx.Resources.Management.Tests
             SomeEvent?.Invoke(this, EventArgs.Empty);
         }
 
+        public void UpdateCapabilities(ICapabilities capabilities)
+        {
+            Capabilities = capabilities;
+        }
         public void Validate()
         {
         }

@@ -8,6 +8,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moq;
 using NUnit.Framework;
+using Moryx.AbstractionLayer.Capabilities;
 
 namespace Moryx.Resources.Management.Tests
 {
@@ -147,8 +148,9 @@ namespace Moryx.Resources.Management.Tests
             var proxy = (ISimpleResource) _typeController.GetProxy(instance);
 
             // Act: Register listener and change foo
-            object eventSender = null, eventSender2 = null;
+            object eventSender = null, eventSender2 = null, eventSender3 = null;
             int eventValue = 0;
+            ICapabilities capabilitiesValue = null;
             var finallyEven = false;
             Assert.DoesNotThrow(() => instance.Foo = 10);
             EventHandler<int> eventHandler = (sender, foo) =>
@@ -156,18 +158,29 @@ namespace Moryx.Resources.Management.Tests
                 eventSender = sender;
                 eventValue = foo;
             };
+            EventHandler<ICapabilities> eventHandler2 = (sender, capabilities) =>
+            {
+                eventSender3 = sender;
+                capabilitiesValue = capabilities;
+            };
+
             proxy.FooChanged += eventHandler;
             proxy.FooEven += (sender, b) => finallyEven = b;
             proxy.SomeEvent += (sender, args) => eventSender2 = sender;
+            proxy.CapabilitiesChanged += eventHandler2;
             instance.Foo = 100;
             instance.RaiseEvent();
+            instance.UpdateCapabilities(NullCapabilities.Instance);
             proxy.FooChanged -= eventHandler;
+            proxy.CapabilitiesChanged -= eventHandler2;
 
             // Assert: Check if eventSender is not null and equals the proxy
             Assert.NotNull(eventSender);
             Assert.NotNull(eventSender2);
+            Assert.NotNull(eventSender3);
             Assert.AreNotEqual(0, eventValue);
             Assert.AreEqual(proxy, eventSender);
+            Assert.AreEqual(NullCapabilities.Instance, capabilitiesValue);
             Assert.AreEqual(100, eventValue);
             Assert.IsTrue(finallyEven);
         }

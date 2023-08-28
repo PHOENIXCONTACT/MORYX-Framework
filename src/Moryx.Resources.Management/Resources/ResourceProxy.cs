@@ -19,7 +19,11 @@ namespace Moryx.Resources.Management
         /// </summary>
         private IResourceTypeController _typeController;
 
-        public event EventHandler<ICapabilities> CapabilitiesChanged;
+        public event EventHandler<ICapabilities> CapabilitiesChanged
+        {
+            add { Target.CapabilitiesChanged += value; }
+            remove { Target.CapabilitiesChanged -= value; }
+        }
 
         /// <summary>
         /// Target resource of the proxy

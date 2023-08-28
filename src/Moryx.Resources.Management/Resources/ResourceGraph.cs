@@ -31,11 +31,6 @@ namespace Moryx.Resources.Management
         /// </summary>
         private readonly IDictionary<long, Resource> _graph = new Dictionary<long, Resource>();
 
-        /// <summary>
-        /// Quick access to all public resources
-        /// </summary>
-        private readonly IList<IResource> _publicResources = new List<IResource>();
-
         public Action<Resource> SaveDelegate { get; set; }
 
         public Func<Resource, bool, bool> DestroyDelegate { get; set; }
@@ -44,9 +39,6 @@ namespace Moryx.Resources.Management
         {
             _graphLock.EnterWriteLock();
             var wrapper = _graph[instance.Id] = instance;
-
-            if (instance is IResource publicResource)
-                _publicResources.Add(publicResource);
             _graphLock.ExitWriteLock();
 
             return wrapper;
@@ -56,8 +48,6 @@ namespace Moryx.Resources.Management
         {
             _graphLock.EnterWriteLock();
             var found = _graph.Remove(instance.Id);
-            if (found)
-                _publicResources.Remove(instance as IResource);
             _graphLock.ExitWriteLock();
 
             return found;
@@ -65,10 +55,10 @@ namespace Moryx.Resources.Management
 
         public Resource Get(long id)
         {
-            return GetWrapper(id);
+            return GetResource(id);
         }
 
-        public Resource GetWrapper(long id)
+        public Resource GetResource(long id)
         {
             _graphLock.EnterReadLock();
             var match = _graph.ContainsKey(id) ? _graph[id] : null;
@@ -120,16 +110,8 @@ namespace Moryx.Resources.Management
         {
             IEnumerable<TResource> matches;
             _graphLock.EnterReadLock();
-            // Use short cut if a public resource is requested
-            if (typeof(IResource).IsAssignableFrom(typeof(TResource)))
-            {
-                matches = _publicResources.Where(p => _graph[p.Id] is not null).OfType<TResource>().Where(predicate);
-            }
-            else
-            {
                 matches = from resource in _graph.Values let target = resource as TResource 
                     where target != null && predicate(target) select target;
-            }
             _graphLock.ExitReadLock();
 
             return matches;

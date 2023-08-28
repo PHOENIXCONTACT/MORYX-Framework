@@ -23,9 +23,9 @@ namespace Moryx.Resources.Management
         bool Remove(Resource instance);
 
         /// <summary>
-        /// Return the wrapper of a resource instance
+        /// Return the resource instance
         /// </summary>
-        Resource GetWrapper(long id);
+        Resource GetResource(long id);
 
         /// <summary>
         /// Access the full graph

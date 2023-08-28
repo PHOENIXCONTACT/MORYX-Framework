@@ -100,7 +100,6 @@ namespace Moryx.Resources.Management
         private readonly object _fallbackLock = new();
 
         private List<IResource> _failedResources = new();
-        private List<IResource> _runningResources = new();
 
         #endregion
 
@@ -123,15 +122,12 @@ namespace Moryx.Resources.Management
 
             _startup = ResourceStartupPhase.Initializing;
             // initialize resources
-            Parallel.ForEach(Graph.GetAll(), InitializeResource);
+            var availableResources = Graph
+                .GetAll()
+                .Except(_failedResources)
+                .Select(x => x as Resource);
+            Parallel.ForEach(availableResources, InitializeResource);
             _startup = ResourceStartupPhase.Initialized;
-        }
-
-
-        public void InitializeAndStart()
-        {
-            Initialize();
-            Start();
         }
 
         /// <summary>
@@ -145,10 +141,7 @@ namespace Moryx.Resources.Management
             //populate the failed resources list for tracking
             lock (_failedResources)
             {
-                if(_runningResources.Any(x => x.Id == resource.Id))
-                    _runningResources.Remove(resource);
-
-                if(!_failedResources.Any(x => x.Id == resource.Id))
+                if(_failedResources.FirstOrDefault(x => x.Id == resource.Id) is null)
                 _failedResources.Add(resource);
             }
             var label = failedDuringInitialization == true ? "initialize":"start";
@@ -213,14 +206,11 @@ namespace Moryx.Resources.Management
         /// <param name="resource">Started resource</param>
         private void HandleResourceStarted(IResource resource)
         {
-            lock (_runningResources)
+            lock (_failedResources)
             {
                 //check if the resource exist in failed resources
-                if (_failedResources.Any(x => x.Id == resource.Id))
+                if (_failedResources.FirstOrDefault(x => x.Id == resource.Id) is not null)
                     _failedResources.Remove(resource);
-
-                if (!_runningResources.Any(x => x.Id == resource.Id))
-                    _runningResources.Add(resource);
             }
         }
 
@@ -259,9 +249,7 @@ namespace Moryx.Resources.Management
                     throw new ArgumentOutOfRangeException();
             }
 
-            // Inform listeners about the new resource
-            if (instance is IResource publicResource)
-                RaiseResourceAdded(publicResource);
+            RaiseResourceAdded(resource);
         }
 
         /// <summary>
@@ -280,9 +268,7 @@ namespace Moryx.Resources.Management
         private void RegisterEvents(Resource instance)
         {
             instance.Changed += OnResourceChanged;
-
-            if (instance is IResource asPublic)
-                asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
+            instance.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
             foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
                 autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
@@ -294,9 +280,7 @@ namespace Moryx.Resources.Management
         private void UnregisterEvents(Resource instance)
         {
             instance.Changed -= OnResourceChanged;
-
-            if (instance is IResource asPublic)
-                asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
+            instance.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
             foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
                 autoSaveCollection.CollectionChanged -= OnAutoSaveCollectionChanged;
@@ -351,7 +335,7 @@ namespace Moryx.Resources.Management
 
         public void Save(Resource resource)
         {
-            lock (Graph.GetWrapper(resource.Id) ?? _fallbackLock)
+            lock (Graph.GetResource(resource.Id) ?? _fallbackLock)
             {
                 using var uow = UowFactory.Create();
                 var newResources = new HashSet<Resource>();
@@ -396,7 +380,7 @@ namespace Moryx.Resources.Management
             var instance = args.Parent;
             var property = args.CollectionProperty;
 
-            lock (Graph.GetWrapper(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
+            lock (Graph.GetResource(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
             {
                 using var uow = UowFactory.Create();
                 var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
@@ -467,8 +451,8 @@ namespace Moryx.Resources.Management
             var removed = Graph.Remove(instance);
 
             // Notify listeners about the removal of the resource
-            if (removed && instance is IResource publicResource)
-                RaiseResourceRemoved(publicResource);
+            if (removed)
+                RaiseResourceRemoved(instance);
 
             // Destroy the object
             TypeController.Destroy(instance);
