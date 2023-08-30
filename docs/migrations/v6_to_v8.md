@@ -6,7 +6,7 @@ The DI container within modules based on Castle Windsor was refactored and simpl
 
 - **Attribute changes:** The base attributes for registration were removed, use `ComponentAttribute`, `PluginAttribute` and `PluginFactory` instead.
 - **Installers removed** The concept of installes was removed and with it their implementations `AutoInstaller` and `DependencyInstaller`. They were replaced by the extensions `LoadFromAssembly` with different signature options for `DependencyRegistrationAttribute` and `Predicate<Type>`
-- **LoadComponents** was removed as a dedicate feature and is now an extension on `IContainer`.
+- **LoadComponents** was removed as a dedicate feature and is now an extension on `IContainer`. It has also been restricted to public/exported types.
 - **IContainerHost** was removed. The seperate interface for accessing a modules container just caused unnecessary casts and the risk of invalid type. The property `Container` was added to `IServerModule` instead.
 - **Extend** The flexible method for passing facilities to Castle was removed as it was only added and used by WCF.
 - **MoryxFacility** All MORYX specific behavior like strategies and `Named` import overrides were refactored to follow Castle best practises and are now isolated in the `MoryxFacility`. This enables everyone to achieve the MORYX DI behavior with a Castle Container without the MORYX wrapper.
