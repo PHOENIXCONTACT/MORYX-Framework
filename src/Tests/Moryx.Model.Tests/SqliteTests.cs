@@ -1,16 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Moryx.Model.InMemory;
-using Moryx.Model.Sqlite;
+﻿using Moryx.Model.Sqlite;
 using Moryx.Products.Model;
-using Moryx.Runtime.Endpoints.Databases.Endpoint.Services;
 using Moryx.Runtime.Kernel;
-using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Moryx.Model.Tests
@@ -78,7 +70,6 @@ namespace Moryx.Model.Tests
             if (File.Exists(datasource))
                 //remove the database
                 configurator.DeleteDatabase(dbConfig).Wait();
-
         }
 
     }
