@@ -160,7 +160,28 @@ namespace Moryx.Container
             {
                 _knownTypes = ReflectionTool.GetAssemblies()
                     .Where(a => a.GetCustomAttribute<ComponentLoaderIgnoreAttribute>() == null)
-                    .SelectMany(a => a.GetTypes())
+                    .SelectMany(a => 
+                    {
+                        // TODO: Replace with exported types in MORYX 8
+                        try
+                        {
+                            // This should only return exported types
+                            return a.GetTypes();
+                        }
+                        catch
+                        {
+                            // Fall back to exported types in case of exception
+                            try
+                            {
+                                return a.GetExportedTypes();
+                            }
+                            catch
+                            {
+                                // Give up
+                                return new Type[0];
+                            }
+                        }
+                    })
                     .Where(t => t.GetCustomAttribute<RegistrationAttribute>(true) != null).ToArray();
             }
 
