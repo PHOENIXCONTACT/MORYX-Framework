@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Moryx.Runtime.Kernel.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel
@@ -75,6 +76,8 @@ namespace Moryx.Runtime.Kernel
             // Now we check for any not running dependencies and start them
             var awaitingDependecies = _dependencyManager.GetDependencyBranch(module).Dependencies
                                      .Where(item => !item.RepresentedModule.State.HasFlag(ServerModuleState.Running))
+                                     // Filter missing modules if they are optional
+                                     .Where(item => item.RepresentedModule is not MissingServerModule module || !module.Optional)
                                      .Select(item => item.RepresentedModule).ToArray();
             if (awaitingDependecies.Any())
                 EnqueServiceAndStartDependencies(awaitingDependecies, module);

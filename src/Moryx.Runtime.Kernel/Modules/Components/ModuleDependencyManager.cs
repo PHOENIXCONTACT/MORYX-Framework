@@ -226,7 +226,7 @@ namespace Moryx.Runtime.Kernel
                 // when there is no facade provider for the dependency,
                 // add a missing dependency for the property type
                 if(dependencyProviders.Count() == 0)
-                    dependencyServices.Add(new MissingServerModule(propType));
+                    dependencyServices.Add(new MissingServerModule(propType, importingProperty.Attribute.IsOptional));
             }
 
             return dependencyServices;
