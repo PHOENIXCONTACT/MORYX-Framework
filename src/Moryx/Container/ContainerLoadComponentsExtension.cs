@@ -15,8 +15,6 @@ namespace Moryx.Container
     /// </summary>
     public static class ContainerLoadComponentsExtension
     {
-        private static Type[] _knownTypes;
-
         /// <summary>
         /// Load all types from an assembly
         /// </summary>
@@ -90,15 +88,7 @@ namespace Moryx.Container
         /// </summary>
         public static IContainer LoadComponents<T>(this IContainer container, Predicate<Type> condition) where T : class
         {
-            if (_knownTypes == null)
-            {
-                _knownTypes = ReflectionTool.GetAssemblies()
-                    .Where(a => a.GetCustomAttribute<ComponentLoaderIgnoreAttribute>() == null)
-                    .SelectMany(a => a.GetTypes())
-                    .Where(t => t.GetCustomAttribute<ComponentAttribute>(true) != null).ToArray();
-            }
-
-            foreach (var type in _knownTypes.Where(type => typeof(T).IsAssignableFrom(type)))
+            foreach (var type in ReflectionTool.GetPublicClasses<T>(LoadComponentCandidate))
             {
                 if (condition?.Invoke(type) ?? true)
                 {
@@ -109,6 +99,17 @@ namespace Moryx.Container
             }
 
             return container;
+        }
+
+        private static bool LoadComponentCandidate(Type type)
+        {
+            if (type.Assembly.GetCustomAttribute<ComponentLoaderIgnoreAttribute>() != null)
+                return false;
+
+            if (type.GetCustomAttribute<ComponentAttribute>(true) == null)
+                return false;
+
+            return true;
         }
         
         private static void RegisterAdditionalDependencies(IContainer container, Type implementation)
