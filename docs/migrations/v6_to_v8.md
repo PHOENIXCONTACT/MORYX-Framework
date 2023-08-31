@@ -15,3 +15,11 @@ The DI container within modules based on Castle Windsor was refactored and simpl
 ## ServerModuleBase
 
 To simplify development and prepare easier integration of the Moryx.Cli we merged the `ServerModuleFacadeControllerBase` into the `ServerModuleBase`. Just replace the base type if your module is affected by this.
+
+## GetObjectData(SerializationInfo info, StreamingContext context)
+
+Removed all overrides of the obsolete method `Exception.GetObjectData(SerializationInfo info, StreamingContext context)` as well as all constructors which were calling the base class constructor `Exception(SerializationInfo info, StreamingContext context)`
+The following classes are affected by this change
+- MissingFacadeException
+- HealthStateException
+- InvalidConfigException

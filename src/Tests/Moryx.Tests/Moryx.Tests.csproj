@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
     <ProjectReference Include="..\..\Moryx\Moryx.csproj" />
   </ItemGroup>
 

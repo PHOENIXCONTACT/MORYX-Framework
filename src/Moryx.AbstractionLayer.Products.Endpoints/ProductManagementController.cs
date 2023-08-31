@@ -176,7 +176,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             {
                  productType = _productManagement.LoadType(id);
             }
-            catch (ProductNotFoundException e)
+            catch (ProductNotFoundException)
             {
             }
             if (productType == null)

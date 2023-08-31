@@ -8,13 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Microsoft.EntityFrameworkCore" />
-  </ItemGroup>
-
-  <ItemGroup>
 	<ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
 	<ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
-	<ProjectReference Include="..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
   </ItemGroup>
 
 </Project>

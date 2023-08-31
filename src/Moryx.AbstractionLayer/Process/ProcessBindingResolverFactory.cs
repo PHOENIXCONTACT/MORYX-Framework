@@ -127,6 +127,10 @@ namespace Moryx.AbstractionLayer
     {
         private readonly string _fallbackProperty;
 
+        /// <summary>
+        /// Creates a new <see cref="ProductResolver"/>
+        /// </summary>
+        /// <param name="fallbackProperty"></param>
         public ProductResolver(string fallbackProperty)
         {
             _fallbackProperty = fallbackProperty;
