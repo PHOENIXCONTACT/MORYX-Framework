@@ -4,7 +4,7 @@
 namespace Moryx.Container.Tests
 {
     [Component(LifeCycle.Singleton)]
-    internal class Component
+    public class Component
     {
         public IDependency Unnamed { get; set; }
 
@@ -15,18 +15,18 @@ namespace Moryx.Container.Tests
         public IDependency DepB { get; set; }
     }
 
-    internal class Impossible
+    public class Impossible
     {
         [Named("DepC")]
         public IDependency DepC { get; set; }
     }
 
-    internal interface IDependency
+    public interface IDependency
     {
         string GetName();
     }
 
-    internal class DependencyA : IDependency
+    public class DependencyA : IDependency
     {
         public string GetName()
         {
@@ -34,7 +34,7 @@ namespace Moryx.Container.Tests
         }
     }
 
-    internal class DependencyB : IDependency
+    public class DependencyB : IDependency
     {
         public string GetName()
         {
