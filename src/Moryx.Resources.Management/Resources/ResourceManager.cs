@@ -98,6 +98,11 @@ namespace Moryx.Resources.Management
         /// </summary>
         private readonly object _fallbackLock = new();
 
+        /// <summary>
+        /// Look-up of resources that failed during init or start and are excluded from certain calls
+        /// </summary>
+        private List<Resource> _failedResources = new List<Resource>();
+
         #endregion
 
         #region LifeCycle
@@ -136,8 +141,9 @@ namespace Moryx.Resources.Management
             catch (Exception e)
             {
                 Logger.Log(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resource.Id, resource.Name);
-                //remove the failed resource from the Graph
-                Graph.Remove(resource);
+                // Track resources as failed to exclude from future calls
+                lock (_failedResources)
+                    _failedResources.Add(resource);
             }
         }
 
@@ -163,10 +169,7 @@ namespace Moryx.Resources.Management
         private void LoadResources(ICollection<ResourceEntityAccessor> allResources)
         {
             // Create resource objects on multiple threads
-            var query = from template in allResources.AsParallel()
-                        select template.Instantiate(TypeController, Graph);
-            foreach (var resource in query)
-                AddResource(resource, false);
+            Parallel.ForEach(allResources, InstantiateResource);
 
             // Link them to each other
             Parallel.ForEach(allResources, LinkReferences);
@@ -174,6 +177,22 @@ namespace Moryx.Resources.Management
             // Register events after all links were set
             foreach (var resource in Graph.GetAll())
                 RegisterEvents(resource);
+        }
+
+        /// <summary>
+        /// Instantiate object from entity based template
+        /// </summary>
+        private void InstantiateResource(ResourceEntityAccessor template)
+        {
+            try
+            {
+                var resource = template.Instantiate(TypeController, Graph);
+                AddResource(resource, false);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(LogLevel.Warning, e, "Failed to instantiate resource {0}-{1}", template.Id, template.Name);
+            }
         }
 
         /// <summary>
@@ -269,7 +288,7 @@ namespace Moryx.Resources.Management
         {
             // start resources
             _startup = ResourceStartupPhase.Starting;
-            Parallel.ForEach(Graph.GetAll(), StartResource);
+            Parallel.ForEach(Graph.GetAll().Except(_failedResources), StartResource);
             _startup = ResourceStartupPhase.Started;
         }
 
