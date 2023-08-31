@@ -1,11 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Castle.Core.Resource;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
@@ -15,6 +10,10 @@ using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.Resources.Model;
 using Moryx.Tools;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using IResource = Moryx.AbstractionLayer.Resources.IResource;
 
 namespace Moryx.Resources.Management
@@ -99,8 +98,6 @@ namespace Moryx.Resources.Management
         /// </summary>
         private readonly object _fallbackLock = new();
 
-        private List<IResource> _failedResources = new();
-
         #endregion
 
         #region LifeCycle
@@ -122,30 +119,8 @@ namespace Moryx.Resources.Management
 
             _startup = ResourceStartupPhase.Initializing;
             // initialize resources
-            var availableResources = Graph
-                .GetAll()
-                .Except(_failedResources)
-                .Select(x => x as Resource);
-            Parallel.ForEach(availableResources, InitializeResource);
+            Parallel.ForEach(Graph.GetAll(), InitializeResource);
             _startup = ResourceStartupPhase.Initialized;
-        }
-
-        /// <summary>
-        /// Handles the failed resource by adding it to the list of failed resources
-        /// </summary>
-        /// <param name="resource">Failed resource</param>
-        /// <param name="e">Exception that cause this resource to fail</param>
-        /// <param name="failedDuringInitialization">Resource failed during Initialization. default true</param>
-        private void HandleResourceFailed(Resource resource, Exception e, bool failedDuringInitialization = true)
-        {
-            //populate the failed resources list for tracking
-            lock (_failedResources)
-            {
-                if(_failedResources.FirstOrDefault(x => x.Id == resource.Id) is null)
-                _failedResources.Add(resource);
-            }
-            var label = failedDuringInitialization == true ? "initialize":"start";
-            Logger.Log(LogLevel.Warning, e, "Failed to {0} resource {1}-{2}", label, resource.Id, resource.Name);
         }
 
         /// <summary>
@@ -160,7 +135,9 @@ namespace Moryx.Resources.Management
             }
             catch (Exception e)
             {
-                HandleResourceFailed(resource, e);
+                Logger.Log(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resource.Id, resource.Name);
+                //remove the failed resource from the Graph
+                Graph.Remove(resource);
             }
         }
 
@@ -173,11 +150,10 @@ namespace Moryx.Resources.Management
             try
             {
                 ((IPlugin)resource).Start();
-                HandleResourceStarted(resource);
             }
             catch (Exception e)
             {
-                HandleResourceFailed(resource, e,false);
+                Logger.Log(LogLevel.Warning, e, "Failed to start resource {0}-{1}", resource.Id, resource.Name);
             }
         }
 
@@ -198,20 +174,6 @@ namespace Moryx.Resources.Management
             // Register events after all links were set
             foreach (var resource in Graph.GetAll())
                 RegisterEvents(resource);
-        }
-
-        /// <summary>
-        /// Handles the resource started by adding it to the list of running resources and removes it from failed resources
-        /// </summary>
-        /// <param name="resource">Started resource</param>
-        private void HandleResourceStarted(IResource resource)
-        {
-            lock (_failedResources)
-            {
-                //check if the resource exist in failed resources
-                if (_failedResources.FirstOrDefault(x => x.Id == resource.Id) is not null)
-                    _failedResources.Remove(resource);
-            }
         }
 
         /// <summary>
@@ -261,7 +223,7 @@ namespace Moryx.Resources.Management
             InitializeResource(resource);
             StartResource(resource);
         }
-      
+
         /// <summary>
         /// Register a resources events
         /// </summary>
@@ -482,9 +444,7 @@ namespace Moryx.Resources.Management
 
         private void RaiseCapabilitiesChanged(object originalSender, ICapabilities capabilities)
         {
-            var availableResources = Graph.GetAll().Except(_failedResources);
-            // Only forward events for available resources
-            if (availableResources.Any(x => x.Id == ((IResource)originalSender).Id))
+            if (Graph.GetAll().Any(x => x.Id == ((IResource)originalSender).Id))
                 CapabilitiesChanged?.Invoke(originalSender, capabilities);
         }
 

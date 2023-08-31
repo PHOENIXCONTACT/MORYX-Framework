@@ -180,6 +180,7 @@ namespace Moryx.Resources.Management.Tests
             Assert.NotNull(eventSender3);
             Assert.AreNotEqual(0, eventValue);
             Assert.AreEqual(proxy, eventSender);
+            Assert.AreEqual(proxy, eventSender3);
             Assert.AreEqual(NullCapabilities.Instance, capabilitiesValue);
             Assert.AreEqual(100, eventValue);
             Assert.IsTrue(finallyEven);

@@ -19,11 +19,7 @@ namespace Moryx.Resources.Management
         /// </summary>
         private IResourceTypeController _typeController;
 
-        public event EventHandler<ICapabilities> CapabilitiesChanged
-        {
-            add { Target.CapabilitiesChanged += value; }
-            remove { Target.CapabilitiesChanged -= value; }
-        }
+        public event EventHandler<ICapabilities> CapabilitiesChanged;
 
         /// <summary>
         /// Target resource of the proxy
@@ -37,7 +33,9 @@ namespace Moryx.Resources.Management
         {
             Target = target;
             _typeController = typeController;
+            Target.CapabilitiesChanged += OnCapabilitiesChanged;
         }
+
 
         /// <inheritdoc />
         long IResource.Id => Target.Id;
@@ -62,6 +60,10 @@ namespace Moryx.Resources.Management
             return Target.ToString();
         }
 
+        private void OnCapabilitiesChanged(object sender, ICapabilities e)
+        {
+            CapabilitiesChanged?.Invoke(this, e);
+        }
         /// <summary>
         /// Convert a referenced instance to a proxy
         /// </summary>
