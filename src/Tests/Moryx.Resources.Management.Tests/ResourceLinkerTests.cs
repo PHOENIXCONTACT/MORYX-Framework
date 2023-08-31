@@ -20,13 +20,13 @@ namespace Moryx.Resources.Management.Tests
     {
         private ResourceLinker _linker;
 
-        private readonly Dictionary<long, ResourceWrapper> _graph = new Dictionary<long, ResourceWrapper>();
+        private readonly Dictionary<long, Resource> _graph = new Dictionary<long, Resource>();
 
         [OneTimeSetUp]
         public void PrepareLinker()
         {
             var mock = new Mock<IResourceGraph>();
-            mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => _graph.ContainsKey(id) ? _graph[id].Target : null);
+            mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => _graph.ContainsKey(id) ? _graph[id] : null);
 
             _linker = new ResourceLinker
             {
@@ -83,12 +83,12 @@ namespace Moryx.Resources.Management.Tests
         {
             // Arrange
             var instance = new ReferenceResource { Id = 1 };
-            _graph[1] = new ResourceWrapper(instance);
-            _graph[2] = new ResourceWrapper(new SimpleResource { Id = 2, Name = "Ref1" });
-            _graph[3] = new ResourceWrapper(new SimpleResource { Id = 3, Name = "Pos1" });
-            _graph[4] = new ResourceWrapper(new DerivedResource { Id = 4, Name = "Ref2" });
-            _graph[5] = new ResourceWrapper(new DerivedResource { Id = 5, Name = "ChildOnly" });
-            _graph[6] = new ResourceWrapper(new DerivedResource { Id = 6, Name = "BackRef" });
+            _graph[1] = instance;
+            _graph[2] = new SimpleResource { Id = 2, Name = "Ref1" };
+            _graph[3] = new SimpleResource { Id = 3, Name = "Pos1" };
+            _graph[4] = new DerivedResource { Id = 4, Name = "Ref2" };
+            _graph[5] = new DerivedResource { Id = 5, Name = "ChildOnly" };
+            _graph[6] = new DerivedResource { Id = 6, Name = "BackRef" };
             var relations = new List<ResourceRelationAccessor>
             {
                 // All Parent-Child relations
@@ -142,11 +142,11 @@ namespace Moryx.Resources.Management.Tests
             var ref5 = new DerivedResource { Id = 6, Name = "BackRef" };
             ResourceReferenceTools.InitializeCollections(ref5);
             // Fill graph
-            _graph[1] = new ResourceWrapper(instance);
-            _graph[2] = new ResourceWrapper(ref1);
-            _graph[3] = new ResourceWrapper(ref2);
-            _graph[5] = new ResourceWrapper(ref4);
-            _graph[6] = new ResourceWrapper(ref5);
+            _graph[1] = instance;
+            _graph[2] = ref1;
+            _graph[3] = ref2;
+            _graph[5] = ref4;
+            _graph[6] = ref5;
             // Set single references
             instance.Parent = ref5; // Parent is set and
             // ref5.Children.Add(instance); Bidirectional reference synced --> no longer necessary
@@ -211,10 +211,10 @@ namespace Moryx.Resources.Management.Tests
             var other = new OtherResource { Id = 3, Name = "Ref2" };
             var different = new DifferentResource { Id = 4, Name = "Different" };
             // Fill graph
-            _graph[1] = new ResourceWrapper(instance);
-            _graph[2] = new ResourceWrapper(derived);
-            _graph[3] = new ResourceWrapper(other);
-            _graph[4] = new ResourceWrapper(different);
+            _graph[1] = instance;
+            _graph[2] = derived;
+            _graph[3] = other;
+            _graph[4] = different;
             // Set references
             instance.Derived = derived;
             instance.Others.Add(other);
@@ -267,8 +267,8 @@ namespace Moryx.Resources.Management.Tests
             ResourceReferenceTools.InitializeCollections(child);
             var mocks = SetupDbMocks(new List<ResourceRelationEntity>());
             // Setup graph mock
-            _graph[1] = new ResourceWrapper(parent);
-            _graph[2] = new ResourceWrapper(child);
+            _graph[1] = parent;
+            _graph[2] = child;
 
             // Act
             parent.Children.Add(child);
@@ -297,8 +297,8 @@ namespace Moryx.Resources.Management.Tests
             };
             var mocks = SetupDbMocks(relations);
             // Setup graph mock
-            _graph[1] = new ResourceWrapper(parent);
-            _graph[2] = new ResourceWrapper(child);
+            _graph[1] = parent;
+            _graph[2] = child;
 
             // Act
             parent.Children.Remove(child);
@@ -329,9 +329,9 @@ namespace Moryx.Resources.Management.Tests
             };
             var mocks = SetupDbMocks(relations);
             // Setup graph mock
-            _graph[1] = new ResourceWrapper(parent1);
-            _graph[2] = new ResourceWrapper(parent2);
-            _graph[3] = new ResourceWrapper(child);
+            _graph[1] = parent1;
+            _graph[2] = parent2;
+            _graph[3] = child;
 
             // Act
             child.Parent = parent2;

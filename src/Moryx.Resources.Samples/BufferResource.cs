@@ -11,7 +11,7 @@ using Moryx.Serialization;
 namespace Moryx.Resources.Samples
 {
     [ResourceRegistration]
-    public class BufferResource : PublicResource
+    public class BufferResource : Resource
     {
         [ReferenceOverride(nameof(Children), AutoSave = true)]
         public IReferences<BufferValue> Values { get; set; }
