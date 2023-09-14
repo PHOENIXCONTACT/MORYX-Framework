@@ -58,6 +58,9 @@ namespace Moryx.Serialization
             }
             else
             {
+                // check if this member is abstract
+                if (memberType.IsAbstract) return prototypes.ToArray();
+
                 var prototype = Activator.CreateInstance(memberType);
                 if (memberType.IsClass)
                     ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
