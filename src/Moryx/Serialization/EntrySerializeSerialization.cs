@@ -66,7 +66,14 @@ namespace Moryx.Serialization
         {
             var properties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(BasePropertyFilter).Where(ExplicitPropertyFilter).ToArray();
-
+            var attributeOnClass = sourceType.GetCustomAttribute<EntrySerializeAttribute>(false);
+            var attributeOnClassOrBaseClass = sourceType.GetCustomAttribute<EntrySerializeAttribute>(true);
+            // to-do: remove this in .net8 and use restriction on the EntrySerializeAttribute
+            //EntrySerialize property on both class and base class
+            if (attributeOnClass != null && attributeOnClassOrBaseClass != null)
+            {
+                properties = properties.Where(property => property.GetCustomAttribute<EntrySerializeAttribute>() != null).ToArray();
+            }
             return EntrySerializeAttributeFilter(sourceType, properties);
         }
 
