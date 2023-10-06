@@ -229,7 +229,33 @@ namespace Moryx.Resources.Management
             var argumentTypes = parameters.Select(p => p.ParameterType).ToArray();
 
             const MethodAttributes methodAttributes = MethodAttributes.Private | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
-            var methodBuilder = typeBuilder.DefineMethod(ExplicitMemberName(method), methodAttributes, method.ReturnType, argumentTypes);
+            MethodBuilder methodBuilder;
+            if (method.IsGenericMethodDefinition)
+            {
+                var genericArguments = method.GetGenericArguments();
+
+                methodBuilder = typeBuilder.DefineMethod(ExplicitMemberName(method), methodAttributes);
+                var genericDefinitions = methodBuilder.DefineGenericParameters(genericArguments.Select(ga => ga.Name).ToArray());
+
+                if (method.ReturnType.IsGenericParameter)
+                {
+                    methodBuilder.SetReturnType(genericDefinitions[method.ReturnType.GenericParameterPosition]);
+                }
+                else if (method.ReturnType.IsGenericType && method.GetGenericArguments()[0].IsGenericParameter)
+                {
+                    var genericReturn = method.ReturnType.GetGenericTypeDefinition();
+                    genericReturn = genericReturn.MakeGenericType(genericDefinitions[method.ReturnType.GetGenericArguments()[0].GenericParameterPosition]);
+                    methodBuilder.SetReturnType(genericReturn);
+                }
+                else
+                {
+                    methodBuilder.SetReturnType(method.ReturnType);
+                }
+            }
+            else
+            {
+                methodBuilder = typeBuilder.DefineMethod(ExplicitMemberName(method), methodAttributes, method.ReturnType, argumentTypes);
+            }
 
             var isResourceReference = IsResourceReference(method.ReturnType);
 
@@ -265,7 +291,7 @@ namespace Moryx.Resources.Management
         /// Create a unique name for each explicit member implementation
         /// </summary>
         private static string ExplicitMemberName(MemberInfo member) => $"{member.DeclaringType.Name}_{member.Name}";
-        
+
 
         /// <summary>
         /// Determine if the return type indicates a resource reference

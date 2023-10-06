@@ -194,6 +194,19 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test]
+        public void ProxyForGenericMethod()
+        {
+            // Arrange
+            var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+
+            // Act
+            var proxy = (IGenericMethodCall<object>)_typeController.GetProxy(driver);
+
+            // Assert
+            Assert.IsNotNull(proxy);
+        }
+
+        [Test]
         public void ReplaceWithProxy()
         {
             // Arrange: Create instance and reference
