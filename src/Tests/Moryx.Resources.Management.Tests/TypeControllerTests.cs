@@ -194,6 +194,30 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test]
+        public void ProxyBuilderFiltersGenericInterfaces()
+        {
+            // Arrange
+            var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+
+            // Act
+            var proxy = (ISimpleResource)_typeController.GetProxy(driver);
+
+            // Assert
+            Assert.IsNotNull(proxy);
+            Assert.IsFalse(typeof(IGenericMethodCall).IsAssignableFrom(proxy.GetType()));
+        }
+
+        [Test]
+        public void FacadeExceptionForGenericProxy()
+        {
+            // Arrange
+            var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => ResourceExtensions.Proxify<IGenericMethodCall>(driver, _typeController));
+        }
+
+        [Test]
         public void ReplaceWithProxy()
         {
             // Arrange: Create instance and reference
