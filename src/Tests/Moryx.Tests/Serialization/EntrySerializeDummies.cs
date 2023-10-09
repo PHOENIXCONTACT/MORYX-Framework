@@ -82,13 +82,10 @@ namespace Moryx.Tests
         public string AlwaysProperty { get; set; } = "123456";
         [EntrySerialize]
         public int Property1 { get; set; }
-        [EntrySerialize]
-        public int Property2 { get; set; } 
-
-        public object Property => this;
 
         [EntrySerialize]
         public EntrySerialize_AlwaysClassAlwaysMember AnotherProperty { get; set; }
+
         internal IExplicitInterface ExplicitInterface { get; }
     }
 

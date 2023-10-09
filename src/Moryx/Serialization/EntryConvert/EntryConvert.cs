@@ -275,12 +275,6 @@ namespace Moryx.Serialization
                 var propertyType = property.PropertyType;
                 if (propertyType == instanceType)
                     continue;
-                if(propertyType == typeof(Object))
-                {
-                    var propertyValue = property.GetValue(instance);
-                    if (propertyValue != null && propertyValue?.GetType() == instanceType)
-                        continue;
-                }
 
                 var convertedProperty = EncodeProperty(property, customSerialization);
 
