@@ -325,7 +325,21 @@ namespace Moryx.Resources.Management
                                            && relevantInterfaces.Any(generalInterface.IsAssignableFrom) // It is a base type of a relevant interface
                                         select generalInterface);
 
+            // Filter all interfaces that are generic OR contain generic methods
+            relevantInterfaces = relevantInterfaces.Where(candidate => !IsGenericResourceInterface(candidate)).ToList();
+
             return relevantInterfaces;
+        }
+
+        internal static bool IsGenericResourceInterface(Type resourceInterface)
+        {
+            if (resourceInterface.IsGenericType || resourceInterface.IsGenericTypeDefinition)
+                return true;
+
+            if (resourceInterface.GetMethods().Any(method => method.IsGenericMethod || method.ContainsGenericParameters))
+                return true;
+
+            return false;
         }
     }
 }

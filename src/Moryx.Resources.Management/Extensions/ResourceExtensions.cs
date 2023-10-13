@@ -10,6 +10,9 @@ namespace Moryx.Resources.Management
         public static TResource Proxify<TResource>(this TResource source, IResourceTypeController typeController)
             where TResource : class, IPublicResource
         {
+            if (ResourceTypeController.IsGenericResourceInterface(typeof(TResource)))
+                throw new NotSupportedException("Generic resource interfaces are not supported through the facade!");
+
             return (TResource)typeController.GetProxy(source as Resource);
         }
 
