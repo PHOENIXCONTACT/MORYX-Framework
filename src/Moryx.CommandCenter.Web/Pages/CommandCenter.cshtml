@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization;
 @using Moryx.Asp.Integration
 @using System.ComponentModel.DataAnnotations
+@using Moryx.CommandCenter.Web.Properties;
 @using Moryx.Runtime.Endpoints;
 
 @{
@@ -13,7 +14,7 @@
 }
 
 @attribute [WebModule("CommandCenter", "settings", Category = ModuleCategory.Settings), 
-            Display(Name = "Command Center", Description = "Command Center user interface"),
+            Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"),
             Authorize(Policy = RuntimePermissions.DatabaseCanView),
             AllowAnonymous]
 
