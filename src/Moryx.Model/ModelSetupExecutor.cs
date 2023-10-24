@@ -41,12 +41,12 @@ namespace Moryx.Model
         public IReadOnlyList<IModelSetup> GetAllSetups() => _setups;
 
         /// <inheritdoc />
-        public Task Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
+        public async Task Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
         {
             var unitOfWorkFactory = new UnitOfWorkFactory<TContext>(_dbContextManager);
             using var uow = unitOfWorkFactory.Create(config);
 
-            return setup.Execute(uow, setupData);
+            await setup.Execute(uow, setupData);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
     internal class ModelSetupTests
     {
         private IDbContextManager? _dbContextManager;
-        private DatabaseController? _databaseController;
+        private DatabaseController _databaseController;
         private readonly List<Exception> _exceptions = new List<Exception>();
 
         [SetUp]
@@ -34,7 +34,7 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
         }
 
         [Test] 
-        public void ExecuteSetupDoesNotThrowDisposedObjectException()
+        public async Task ExecuteSetupDoesNotThrowDisposedObjectException()
         {
             // Add unobserved task exceptions to a list, to be checked later.
             TaskScheduler.UnobservedTaskException += (sender, e) =>
@@ -42,7 +42,7 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
                 _exceptions.Add(e.Exception);
             };
 
-            var result = _databaseController?.ExecuteSetup("Moryx.TestTools.Test.Model.TestModelContext", new()
+            var result = await _databaseController!.ExecuteSetup("Moryx.TestTools.Test.Model.TestModelContext", new()
             {
                 Config = new()
                 {
