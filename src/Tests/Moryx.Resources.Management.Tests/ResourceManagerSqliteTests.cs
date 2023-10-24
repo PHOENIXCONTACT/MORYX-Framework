@@ -13,9 +13,11 @@ namespace Moryx.Resources.Management.Tests
     {
         protected override UnitOfWorkFactory<ResourcesContext> BuildUnitOfWorkFactory()
         {
-            return InMemoryUnitOfWorkFactoryBuilder
-                .Sqlite<ResourcesContext>()
-                .EnsureDbIsCreated();
+            var uowFactory = InMemoryUnitOfWorkFactoryBuilder
+                .Sqlite<ResourcesContext>();
+            uowFactory.EnsureDbIsCreated();
+
+            return uowFactory;
         }
     }
 }
