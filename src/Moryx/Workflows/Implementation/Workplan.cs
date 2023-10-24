@@ -1,8 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
-// Licensed under the Apache License, Version 2.0
-
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Linq;
+using Moryx.Workflows.Implementation;
 
 namespace Moryx.Workplans
 {
@@ -92,5 +91,91 @@ namespace Moryx.Workplans
         {
             return new Workplan(connectors, steps);
         }
+
+        public static bool CompareOutputs(ComparingProperties outputProperties)
+        {
+
+            for (int a = 0; a < outputProperties.Step.Outputs.Length; a++)
+            {
+                var connector = outputProperties.Step.Outputs[a];
+                var newConnector = outputProperties.NewStep.Outputs[a];
+
+                bool isNotEndConnector = !(connector.Classification.Equals(NodeClassification.End)) && !(newConnector.Classification.Equals(NodeClassification.End));
+                bool isNotFailedConnector = !(connector.Classification.Equals(NodeClassification.Failed)) && !(newConnector.Classification.Equals(NodeClassification.Failed));
+
+                if (isNotEndConnector && isNotFailedConnector)
+                {
+                    var follower = outputProperties.Workplan.Steps.FirstOrDefault(x => x.Inputs.Any(y => y.Equals(connector)));
+                    var newFollower = outputProperties.NewWorkplan.Steps.FirstOrDefault(x => x.Inputs.Any(y => y.Equals(newConnector)));
+
+                    bool isSameStep = CompareSteps(follower, newFollower);
+                    if (!isSameStep)
+                    {
+                        return false;
+                    }
+
+                    bool isAlreadyChecked = (outputProperties.IsChecked.Contains(follower));
+
+                    if (!(isAlreadyChecked))
+                    {
+                        outputProperties.NeedToCheck.Add(follower);
+                        outputProperties.NewNeedToCheck.Add(newFollower);
+                    }
+                }
+            }
+            return true;
+        }
+
+        public static bool CompareSteps(IWorkplanStep step1, IWorkplanStep step2)
+        {
+            return step1.GetType() == step2.GetType();
+        }
+
+        /// <summary>
+        /// Compare two workplans
+        /// </summary>
+        /// <param name="workplan"></param>
+        /// <param name="newWorkplan"></param>
+        /// <returns></returns>
+        public static bool Equals(Workplan workplan, Workplan newWorkplan)
+        {
+            var step = workplan.Steps.FirstOrDefault(x => x.Inputs.Any(y => y.Classification.Equals(NodeClassification.Start)));
+            var newStep = newWorkplan.Steps.FirstOrDefault(x => x.Inputs.Any(y => y.Classification.Equals(NodeClassification.Start)));
+
+            List<IWorkplanStep> needToCheck = new List<IWorkplanStep>() { step };
+            List<IWorkplanStep> newNeedToCheck = new List<IWorkplanStep>() { newStep };
+
+            List<IWorkplanStep> isChecked = new List<IWorkplanStep>();
+
+            while (needToCheck.Count != 0 && newNeedToCheck.Count != 0)
+            {
+
+                bool isSameStep = CompareSteps(step, newStep);
+                if (!isSameStep)
+                {
+                    return false;
+                }
+                var properties = new ComparingProperties() {Step = step, NewStep = newStep, Workplan = workplan, NewWorkplan = newWorkplan,IsChecked = isChecked, NeedToCheck = needToCheck, NewNeedToCheck = newNeedToCheck };
+                bool sameConnections = CompareOutputs(properties);
+                if (!sameConnections)
+                {
+                    return false;
+                }
+                needToCheck.Remove(step);
+                newNeedToCheck.Remove(newStep);
+
+                isChecked.Add(step);
+
+                if (needToCheck.Count != 0 && newNeedToCheck.Count != 0)
+                {
+                    step = needToCheck[0];
+                    newStep = newNeedToCheck[0];
+                }
+
+            }
+
+            return true;
+        }
+
     }
 }
