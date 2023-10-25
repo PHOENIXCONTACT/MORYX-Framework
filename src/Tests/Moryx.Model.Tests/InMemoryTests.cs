@@ -36,6 +36,30 @@ namespace Moryx.Model.Tests
 
             Assert.IsNotNull(reloadedCar);
             Assert.AreEqual(carName, reloadedCar.Name);
+            
+        }
+
+        [Test]
+        public async Task TimeShouldAlwaysBeSavedAsUtc()
+        {
+            // Arrange          
+            var inMemoryFactory = new InMemoryDbContextManager(Guid.NewGuid().ToString());
+
+            // Act
+            var context = inMemoryFactory.Create<TestModelContext>();
+            var carsSet = context.Cars;
+            var someCar = new CarEntity { ReleaseDateLocal = DateTime.Now, ReleaseDateUtc = DateTime.Now };
+            await carsSet.AddAsync(someCar);
+
+            await context.SaveChangesAsync();
+
+            context = inMemoryFactory.Create<TestModelContext>();
+            var reloadedCar = await context.Cars.FirstAsync();
+
+            // Assert
+            Assert.IsNotNull(reloadedCar);
+            Assert.AreEqual(DateTimeKind.Utc, reloadedCar.ReleaseDateUtc.Kind);
+            Assert.AreEqual(DateTimeKind.Local, reloadedCar.ReleaseDateLocal.Kind);
         }
     }
 }

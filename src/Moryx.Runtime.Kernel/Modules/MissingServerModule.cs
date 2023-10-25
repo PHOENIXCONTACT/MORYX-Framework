@@ -23,9 +23,10 @@ namespace Moryx.Runtime.Kernel.Modules
 
         public event EventHandler<ModuleStateChangedEventArgs> StateChanged;
 
-        public MissingServerModule(Type service)
+        public MissingServerModule(Type service, bool optional)
         {
             RepresentedService = service;
+            Optional = optional;
         }
 
         /// <summary>
@@ -61,5 +62,7 @@ namespace Moryx.Runtime.Kernel.Modules
         public Type RepresentedService { get; private set; }
 
         public IContainer Container => throw new NotImplementedException();
+
+        public bool Optional { get; }
     }
 }

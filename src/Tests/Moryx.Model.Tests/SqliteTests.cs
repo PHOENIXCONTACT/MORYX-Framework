@@ -70,7 +70,6 @@ namespace Moryx.Model.Tests
             if (File.Exists(datasource))
                 //remove the database
                 configurator.DeleteDatabase(dbConfig).Wait();
-
         }
     }
 }
