@@ -87,24 +87,27 @@ namespace Moryx.Runtime.Kernel
             return configManager;
         }
 
+        private static IModuleManager _moduleManager;
         /// <summary>
         /// Boot system and start all modules
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
+        [Obsolete("Resolve IModuleManager and call StartModules directly")]
         public static IModuleManager StartMoryxModules(this IServiceProvider serviceProvider)
         {
             var moduleManager = serviceProvider.GetRequiredService<IModuleManager>();
             moduleManager.StartModules();
-            return moduleManager;
+            return _moduleManager = moduleManager;
         }
 
         /// <summary>
         /// Stop all modules
         /// </summary>
+        [Obsolete("Stopping modules on service collection causes an exception, call StopModules on the return value of StartModules")]
         public static IModuleManager StopMoryxModules(this IServiceProvider serviceProvider)
         {
-            var moduleManager = serviceProvider.GetRequiredService<IModuleManager>();
+            var moduleManager = _moduleManager ?? serviceProvider.GetRequiredService<IModuleManager>();
             moduleManager.StopModules();
             return moduleManager;
         }
