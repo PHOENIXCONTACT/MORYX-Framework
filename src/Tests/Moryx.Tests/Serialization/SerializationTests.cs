@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Moryx.Configuration;
 using Moryx.Serialization;
@@ -393,6 +394,39 @@ namespace Moryx.Tests
             Assert.AreEqual(EntryValueType.Exception, encoded.SubEntries[0].Value.Type);
             Assert.NotNull(encoded.SubEntries[0].Value.Current);
         }
+
+
+        [Test(Description = "Class with EntrySerializationAttribute should not Override the attribute on the Base Class Resource|PublicResource")]
+        public void ClassWithSerializationAttribute_AndBaseClass()
+        {
+            // Arrange
+            var serialization = new EntrySerializeSerialization { FormatProvider = new CultureInfo("en-US") };
+            var dummy = new AlwaysClass_Inherited();
+
+            // Act
+            var encoded = EntryConvert.EncodeObject(dummy, serialization);
+
+            // Assert
+            var alwaysProperties = 1;
+            Assert.That(encoded.SubEntries.Count, Is.EqualTo(alwaysProperties));
+        }
+
+        [Test(Description = "Class with EntrySerializationAttribute should not Override the attribute on the Base Class Resource|PublicResource")]
+        public void ClassWithSerializationAttribute()
+        {
+            // Arrange
+            var serialization = new EntrySerializeSerialization { FormatProvider = new CultureInfo("en-US") };
+            var dummy = new EntrySerialize_AlwaysClassAlwaysMember();
+
+            // Act
+            var encoded = EntryConvert.EncodeObject(dummy, serialization);
+
+            // Assert
+            var alwaysProperties = 3;
+            Assert.That(encoded.SubEntries.Count, Is.EqualTo(alwaysProperties));
+        }
+
+
 
         [TestCase(CollectionType.Array, 3, 2)]
         [TestCase(CollectionType.Array, 0, 4)]

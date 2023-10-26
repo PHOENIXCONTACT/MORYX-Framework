@@ -271,6 +271,11 @@ namespace Moryx.Serialization
             var filtered = customSerialization.GetProperties(instance.GetType());
             foreach (var property in filtered)
             {
+                //exclude property that can lead to self reference
+                var propertyType = property.PropertyType;
+                if (propertyType == instanceType)
+                    continue;
+
                 var convertedProperty = EncodeProperty(property, customSerialization);
 
                 object value;
