@@ -85,11 +85,11 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void StartAllModules()
+        public void StartAndStopAllModules()
         {
             // Arrange
             var moduleManagerMock = new Mock<IModuleManager>();
-            _serviceCollection.AddSingleton<IModuleManager>(moduleManagerMock.Object);
+            _serviceCollection.AddSingleton(moduleManagerMock.Object);
             var provider = _serviceCollection.BuildServiceProvider();
 
             // Act
@@ -98,22 +98,12 @@ namespace Moryx.Runtime.Kernel.Tests
             // Assert
             moduleManagerMock.Verify(m => m.StartModules(), Times.Once);
             moduleManagerMock.VerifyNoOtherCalls();
-        }
-
-        [Test]
-        public void StopAllModules()
-        {
-            // Arrange
-            var moduleManagerMock = new Mock<IModuleManager>();
-            _serviceCollection.AddSingleton<IModuleManager>(moduleManagerMock.Object);
-            var provider = _serviceCollection.BuildServiceProvider();
 
             // Act
             provider.StopMoryxModules();
 
             // Assert
             moduleManagerMock.Verify(m => m.StopModules(), Times.Once);
-            moduleManagerMock.VerifyNoOtherCalls();
         }
     }
 }
