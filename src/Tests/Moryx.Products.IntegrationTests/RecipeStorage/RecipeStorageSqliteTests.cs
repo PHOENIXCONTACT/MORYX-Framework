@@ -14,9 +14,11 @@ namespace Moryx.Products.IntegrationTests
 
         protected override UnitOfWorkFactory<ProductsContext> BuildUnitOfWorkFactory()
         {
-            return InMemoryUnitOfWorkFactoryBuilder
-                .Sqlite<ProductsContext>()
-                .EnsureDbIsCreated();
+            var uowFactory = InMemoryUnitOfWorkFactoryBuilder
+                .Sqlite<ProductsContext>();
+            uowFactory.EnsureDbIsCreated();
+
+            return uowFactory;
         }
     }
 }
