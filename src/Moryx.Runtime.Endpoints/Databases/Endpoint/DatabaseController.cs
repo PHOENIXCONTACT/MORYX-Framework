@@ -227,7 +227,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
         [HttpPost("{targetModel}/setup")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanSetup)]
-        public ActionResult<InvocationResponse> ExecuteSetup(string targetModel, ExecuteSetupRequest request)
+        public async Task<ActionResult<InvocationResponse>> ExecuteSetup(string targetModel, ExecuteSetupRequest request)
         {
             var contextType = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
             var targetConfigurator = _dbContextManager.GetConfigurator(contextType);
@@ -250,7 +250,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             // ReSharper disable once SuspiciousTypeConversion.Global
             try
             {
-                setupExecutor.Execute(config, targetSetup, request.Setup.SetupData);
+                await setupExecutor.Execute(config, targetSetup, request.Setup.SetupData);
                 return new InvocationResponse();
             }
             catch (Exception ex)
