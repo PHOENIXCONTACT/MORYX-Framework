@@ -3,13 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiBriefcase, mdiCheckboxMultipleBlank, mdiComment, mdiDatabase, mdiHexagonMultiple} from "@mdi/js";
+import { mdiBriefcase, mdiComment, mdiDatabase, mdiHexagonMultiple} from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
-import { Link, Route, Switch } from "react-router-dom";
+import { Link, Route, RouteComponentProps, Switch } from "react-router-dom";
 import { Card, CardBody, CardHeader, Col, Row } from "reactstrap";
+import ListGroup from "reactstrap/lib/ListGroup";
 import Nav from "reactstrap/lib/Nav";
 import Navbar from "reactstrap/lib/Navbar";
 import NavItem from "reactstrap/lib/NavItem";
@@ -73,10 +74,13 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
     }
 
     private static createMenuItem(dataModel: DataModel): MenuItemModel {
+        const context = dataModel.targetModel.replace(/^.+\./, "");
+        const namespace = dataModel.targetModel.replace("." + context, "");
         return {
-            Name: dataModel.targetModel,
+            Name: context,
             NavPath: "/databases/" + dataModel.targetModel,
             Icon: mdiBriefcase,
+            Content: (<p style={{margin: "inherit", color: "gray", fontSize: "x-small"}}>{namespace}</p>),
             SubMenuItems: [],
         };
     }
@@ -116,13 +120,13 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                             </Nav>
                         </Navbar>
                         </CardHeader>
-                        <CardBody>
+                        <ListGroup>
                             { this.state.IsLoading ? (
                                 <span>Loading...</span>
                             ) : (
                                 <RoutingMenu Menu={this.state.MenuModel} />
                             )}
-                        </CardBody>
+                        </ListGroup>
                     </Card>
                 </Col>
                 <Col md={9}>
