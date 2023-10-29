@@ -3,12 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCheck, mdiHexagon, mdiPlay, mdiRestart, mdiStop} from "@mdi/js";
+import { mdiCheck, mdiDatabase, mdiHexagon, mdiHexagonMultiple, mdiPlay, mdiRestart, mdiStop} from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table } from "reactstrap";
+import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Input, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Nav, Navbar, NavItem, Row, Table } from "reactstrap";
+import ModuleHeader from "../../common/components/ModuleHeader";
 import { ActionType } from "../../common/redux/Types";
 import { HealthStateBadge } from "../../dashboard/components/HealthStateBadge";
 import ModulesRestClient from "../api/ModulesRestClient";
@@ -121,8 +122,13 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
             <Card>
                 <CardHeader tag="h2">
                     <Icon path={mdiHexagon} className="icon right-space" />
-                    {this.props.Module.name} - General
+                    {this.props.Module.name}
                 </CardHeader>
+                <ListGroup>
+                    <ListGroupItem className="nav-listgroup-item">
+                        <ModuleHeader ModuleName={this.props.Module.name} />
+                    </ListGroupItem>
+                </ListGroup>
                 <CardBody>
                     <Container fluid={true}>
                         <Row>

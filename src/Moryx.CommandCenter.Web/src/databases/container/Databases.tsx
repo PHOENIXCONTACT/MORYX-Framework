@@ -98,7 +98,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
             <Row>
                 <Col md={3}>
                     <Card>
-                        <CardHeader tag="h4">
+                        <CardHeader tag="h5">
                         <Navbar className="navbar-default" expand="md">
                             <Nav className="navbar-left" navbar={true}>
                                 <NavItem>

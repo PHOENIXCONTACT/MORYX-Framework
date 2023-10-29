@@ -70,14 +70,13 @@ class RoutingMenuItem extends React.Component<RouteComponentProps<{}> & MenuItem
     }
 
     public render(): React.ReactNode {
-        const bold = this.props.location.pathname === this.props.MenuItem.NavPath ? "font-bold" : "";
-        const hasSubItems = this.props.MenuItem.SubMenuItems.length > 0;
+        const isActive = this.props.location.pathname.includes(this.props.MenuItem.NavPath);
 
         return (
             <div style={{paddingLeft: this.props.Level * 10 + "px", margin: "5px 0px 5px 0px"}}>
                 <Container fluid={true} className="menu-item" onClick={(e: React.MouseEvent<HTMLElement>) => this.handleMenuItemClick(e)}>
                     <Row>
-                        <Col md={hasSubItems ? 10 : 12} style={{display: "flex"}}>
+                        <Col md={12} style={{display: "flex"}}>
                             <Link to={this.props.MenuItem.NavPath} className={bold} style={{flex: "1"}}>
                                 { this.props.MenuItem.Icon != undefined &&
                                     <Icon path={this.props.MenuItem.Icon} className="icon right-space" />
@@ -86,16 +85,8 @@ class RoutingMenuItem extends React.Component<RouteComponentProps<{}> & MenuItem
                             </Link>
                             {this.props.MenuItem.Content}
                         </Col>
-                        <Col md={hasSubItems ? 2 : 0}>
-                            { hasSubItems &&
-                                <Icon path={this.state.IsOpened ? mdiChevronUp : mdiChevronDown} className="icon"/>
-                            }
-                        </Col>
                     </Row>
                 </Container>
-                <Collapse isOpen={this.state.IsOpened}>
-                    {this.renderSubMenuItems()}
-                </Collapse>
             </div>
         );
     }

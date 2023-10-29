@@ -5,9 +5,8 @@
 
 import DatabaseConfigOptionPropertyModel from "./DatabaseConfigOptionPropertyModel";
 
-
 export default class DatabaseConfigOptionModel {
-    name: string;
-    configuratorTypename: string;
-    properties: DatabaseConfigOptionPropertyModel[];
+    public name: string;
+    public configuratorTypename: string;
+    public properties: DatabaseConfigOptionPropertyModel[];
 }
