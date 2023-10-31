@@ -3,12 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCogs, mdiContentSave, mdiSync, mdiUndo} from "@mdi/js";
+import { mdiCogs, mdiContentSave, mdiHexagon, mdiSync, mdiUndo} from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, ListGroup, Row } from "reactstrap";
+import ListGroupItem from "reactstrap/lib/ListGroupItem";
+import ModuleHeader from "../../common/components/ModuleHeader";
 import ModulesRestClient from "../api/ModulesRestClient";
 import NavigableConfigEditor from "../components/ConfigEditor/NavigableConfigEditor";
 import Config from "../models/Config";
@@ -83,9 +85,14 @@ class ModuleConfiguration extends React.Component<ModuleConfigurationPropModel &
         return (
             <Card>
                 <CardHeader tag="h2">
-                    <Icon path={mdiCogs} className="icon right-space" />
-                    {this.props.ModuleName} - Configuration
+                    <Icon path={mdiHexagon} className="icon right-space" />
+                    {this.props.ModuleName}
                 </CardHeader>
+                <ListGroup>
+                    <ListGroupItem className="nav-listgroup-item">
+                        <ModuleHeader ModuleName={this.props.ModuleName} />
+                    </ListGroupItem>
+                </ListGroup>
                 <CardBody>
                     {this.state.ConfigIsLoading &&
                         <span className="font-bold font-small">Loading config ...</span>
