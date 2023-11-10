@@ -118,6 +118,8 @@ svg.icon-red {
  .navbar {
    transition: 0.3s;
    overflow: hidden;
+   padding: 0;
+   height: inherit;
 }
 
 .navbar-default.navbar.navbar-expand-md {
@@ -129,18 +131,20 @@ svg.icon-red {
     list-style-type: none;
     margin-left: 0;
     margin-top: 0;
-    height: 40px;
-    border: 1px solid $gray-200;
-    border-radius: $border-radius;
+    height: inherit;
   }
 
   .nav-item {
     height: 100%;
     display: flex;
     align-items: center;
-    padding: 5px;
     margin-top: 0 !important;
     justify-content: center;
+    border-right: 1px solid $gray-200;
+  }
+
+  .nav-item:last-child {
+    border: none;
   }
 
   .nav-item:hover {
@@ -152,12 +156,21 @@ svg.icon-red {
   .active {
     background: $gray-300;
     margin-top: 0 !important;
-    border-radius: $border-radius;
   }
 
   .navbar-nav-link {
     color: $gray-800;
     text-decoration: none;
+    height: 100%;
+    padding: 5px;
+  }
+
+  a.navbar-nav-link {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 7px;
   }
 
   .navbar-nav-link:hover,
@@ -168,6 +181,13 @@ svg.icon-red {
 
   .navbar-collapse {
     height: 50px;
+  }
+
+  .nav-listgroup-item {
+    padding: 0;
+    height: 40px;
+    border-left: none;
+    border-right: none;
   }
 
 /*

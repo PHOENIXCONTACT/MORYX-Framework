@@ -22,12 +22,13 @@ class RoutingMenu extends React.Component<RouteComponentProps<{}> & MenuProps, {
         if (this.props.onActiveMenuItemChanged != null) {
             this.props.onActiveMenuItemChanged(menuItem);
         }
+        this.props.history.push(menuItem.NavPath);
     }
 
     protected renderMenu(menuItems: MenuItemModel[]): React.ReactNode {
         return menuItems.map ((menuItem, idx) => {
             return (
-                <RoutingMenuItem key={idx} MenuItem={menuItem} Level={0} onMenuItemClicked={this.handleMenuItemClick.bind(this)} />
+                <RoutingMenuItem key={idx} MenuItem={menuItem} Level={0} onMenuItemClicked={(menuItem) => this.handleMenuItemClick(menuItem)} />
             );
         });
     }

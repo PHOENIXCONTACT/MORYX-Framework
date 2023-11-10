@@ -3,13 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiConsoleLine } from "@mdi/js";
+import { mdiConsoleLine, mdiHexagon } from "@mdi/js";
 import Icon from "@mdi/react";
 import { number } from "prop-types";
 import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Row } from "reactstrap";
+import ModuleHeader from "../../common/components/ModuleHeader";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";
 import { ActionType } from "../../common/redux/Types";
 import ModulesRestClient from "../api/ModulesRestClient";
@@ -191,16 +192,21 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
         return (
             <Card>
                 <CardHeader tag="h2">
-                    <Icon path={mdiConsoleLine} className="icon right-space" />
-                    {this.props.ModuleName} - Console
+                    <Icon path={mdiHexagon} className="icon right-space" />
+                    {this.props.ModuleName}
                 </CardHeader>
-                <CardBody>
-                    {this.state.IsLoading ? (
-                        <span className="up-space-lg font-italic">Loading available methods...</span>
-                    ) : (
-                        content
-                    )}
-                </CardBody>
+                <ListGroup>
+                    <ListGroupItem className="nav-listgroup-item">
+                        <ModuleHeader ModuleName={this.props.ModuleName} />
+                    </ListGroupItem>
+                    <CardBody>
+                        {this.state.IsLoading ? (
+                            <span className="up-space-lg font-italic">Loading available methods...</span>
+                        ) : (
+                            content
+                        )}
+                    </CardBody>
+                </ListGroup>
             </Card>
         );
     }

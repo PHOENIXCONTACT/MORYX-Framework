@@ -9,7 +9,7 @@ import * as React from "react";
 import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
 import { Link, Route, Switch } from "react-router-dom";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { Card, CardBody, CardHeader, Col, ListGroup, NavLink, Row } from "reactstrap";
 import Nav from "reactstrap/lib/Nav";
 import Navbar from "reactstrap/lib/Navbar";
 import NavItem from "reactstrap/lib/NavItem";
@@ -138,14 +138,14 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
             <Row>
                 <Col md={3}>
                     <Card>
-                        <CardHeader tag="h4">
+                        <CardHeader tag="h5">
                         <Navbar className="navbar-default" expand="md">
                             <Nav className="navbar-left" navbar={true}>
                                 <NavItem className="active">
-                                    <Link to="/modules" className="navbar-nav-link">
+                                    <NavLink to="/modules" className="navbar-nav-link">
                                         <Icon path={mdiHexagonMultiple} className="icon right-space" />
                                         Modules
-                                    </Link>
+                                    </NavLink>
                                 </NavItem>
                                 <NavItem >
                                     <Link to="/databases" className="navbar-nav-link">
@@ -156,9 +156,9 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                             </Nav>
                         </Navbar>
                         </CardHeader>
-                        <CardBody>
+                        <ListGroup>
                             <RoutingMenu Menu={this.state.MenuModel} />
-                        </CardBody>
+                        </ListGroup>
                     </Card>
                 </Col>
                 <Col md={9}>
