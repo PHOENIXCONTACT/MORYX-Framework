@@ -23,3 +23,8 @@ The following classes are affected by this change
 - MissingFacadeException
 - HealthStateException
 - InvalidConfigException
+
+## Driver APIs
+The APIs for MessageDriver and InOutDriver with their generics, channels and different variants was too complicated and all known usages simply used objects and root members instead of channels and different argument types. So we simplified the APIs, which also improves exhangeability of different drivers and simplifies Simulator implementations.
+
+To adjust your usages, simply remove all generic arguments. If you used channels, please define payload objects that contain the relevant routing information like topics or target device identifiers.

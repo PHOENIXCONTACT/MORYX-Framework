@@ -8,7 +8,7 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
     /// <summary>
     /// Interface for reading input
     /// </summary>
-    public interface IInput<out TIn>
+    public interface IInput
     {
         /// <summary>
         /// Access flags for the input
@@ -19,19 +19,19 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Single value input
         /// Only available for <see cref="SupportedAccess.Single"/>
         /// </summary>
-        TIn Value { get; }
+        object Value { get; }
 
         /// <summary>
         /// Index based input
         /// Only available for <see cref="SupportedAccess.Index"/>
         /// </summary>
-        TIn this[int index] { get; }
+        object this[int index] { get; }
 
         /// <summary>
         /// Key based input
         /// Only available for <see cref="SupportedAccess.Key"/>
         /// </summary>
-        TIn this[string key] { get; }
+        object this[string key] { get; }
 
         /// <summary>
         /// Event raised when any input value changed

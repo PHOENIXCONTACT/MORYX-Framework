@@ -6,7 +6,7 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
     /// <summary>
     /// Interface for writing output
     /// </summary>
-    public interface IOutput<TOut>
+    public interface IOutput
     {
         /// <summary>
         /// Access flags for the output
@@ -17,18 +17,18 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Single value output
         /// Only available for <see cref="SupportedAccess.Single"/>
         /// </summary>
-        TOut Value { get; set;  }
+        object Value { get; set;  }
 
         /// <summary>
         /// Index based output
         /// Only available for <see cref="SupportedAccess.Index"/>
         /// </summary>
-        TOut this[int index] { get; set; }
+        object this[int index] { get; set; }
 
         /// <summary>
         /// Key based output
         /// Only available for <see cref="SupportedAccess.Key"/>
         /// </summary>
-        TOut this[string key] { get; set; }
+        object this[string key] { get; set; }
     }
 }

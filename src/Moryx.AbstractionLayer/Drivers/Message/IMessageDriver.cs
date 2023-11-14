@@ -1,26 +1,29 @@
 ﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
+using System;
+
 namespace Moryx.AbstractionLayer.Drivers.Message
 {
     /// <summary>
     /// Multi-purpose driver that exchanges information with a device
     /// </summary>
-    public interface IMessageDriver<TMessage> : IDriver, IMessageChannel<TMessage>
+    public interface IMessageDriver : IDriver
     {
         /// <summary>
-        /// Flag if the drivers supports identified channels or topics
+        /// Send message through the driver
         /// </summary>
-        bool HasChannels { get; }
+        void Send(object payload);
 
         /// <summary>
-        /// Get channel using specialized API
+        /// Send data async through channel
         /// </summary>
-        IMessageChannel<TChannel> Channel<TChannel>(string identifier);
+        Task SendAsync(object payload);
 
         /// <summary>
-        /// Get channel using specialized API
+        /// Event raised when the driver receives a message
         /// </summary>
-        IMessageChannel<TSend, TReceive> Channel<TSend, TReceive>(string identifier);
+        event EventHandler<object> Received;
     }
 }
