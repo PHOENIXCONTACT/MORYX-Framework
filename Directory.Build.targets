@@ -12,7 +12,7 @@
 
 	<!-- Package refereces for all projects if CreatePackage=true -->
 	<ItemGroup Condition="'$(CreatePackage)' == 'true'">
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
 	<!-- Package versions for package references across all projects -->
