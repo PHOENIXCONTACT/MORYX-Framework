@@ -8,7 +8,7 @@
     <PackageTags>MORYX;Serialization;Configuration;Logging;Core;Modules;Workplans</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <DefineConstants>HAVE_TCP_KEEPALIVE</DefineConstants>
   </PropertyGroup>
 
