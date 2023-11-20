@@ -23,7 +23,7 @@ env:
 
 jobs:
   Build:
-    uses: PHOENIXCONTACT/tools/.github/workflows/build-tool.yml@main
+    uses: PHOENIXCONTACT/tools/.github/workflows/build-tool.yml@release-6
     with:
       MORYX_OPTIMIZE_CODE: "false"
       MORYX_BUILD_CONFIG: "Release"
@@ -34,7 +34,7 @@ jobs:
 
   UnitTests:
     needs: [Build]
-    uses: PHOENIXCONTACT/tools/.github/workflows/unittest-tool.yml@main
+    uses: PHOENIXCONTACT/tools/.github/workflows/unittest-tool.yml@release-6
     with:
       MORYX_OPTIMIZE_CODE: "false"
       MORYX_BUILD_CONFIG: "Release"
@@ -45,7 +45,7 @@ jobs:
 
   IntegrationTests:
     needs: [Build]
-    uses: PHOENIXCONTACT/tools/.github/workflows/integrationtest-tool.yml@main
+    uses: PHOENIXCONTACT/tools/.github/workflows/integrationtest-tool.yml@release-6
     with:
       MORYX_OPTIMIZE_CODE: "false"
       MORYX_BUILD_CONFIG: "Release"
@@ -56,7 +56,7 @@ jobs:
 
   ReportGenerator:
     needs: [UnitTests, IntegrationTests]
-    uses: PHOENIXCONTACT/tools/.github/workflows/reportgenerator-tool.yml@main
+    uses: PHOENIXCONTACT/tools/.github/workflows/reportgenerator-tool.yml@release-6
     with:
       MORYX_OPTIMIZE_CODE: "false"
       MORYX_BUILD_CONFIG: "Release"
@@ -67,7 +67,7 @@ jobs:
                
   Publish-Test-Coverage:
     needs: [ReportGenerator]
-    uses: PHOENIXCONTACT/tools/.github/workflows/publish-test-coverage-tool.yml@main
+    uses: PHOENIXCONTACT/tools/.github/workflows/publish-test-coverage-tool.yml@release-6
     with:
       MORYX_OPTIMIZE_CODE: "false"
       MORYX_BUILD_CONFIG: "Release"
@@ -81,7 +81,7 @@ jobs:
 
   Documentation:
     needs: [UnitTests]
-    uses: PHOENIXCONTACT/tools/.github/workflows/documentation-tool.yml@main
+    uses: PHOENIXCONTACT/tools/.github/workflows/documentation-tool.yml@release-6
     with:
       MORYX_OPTIMIZE_CODE: "false"
       MORYX_BUILD_CONFIG: "Release"
@@ -92,7 +92,7 @@ jobs:
 
   Publish:
     needs: [UnitTests]
-    uses: PHOENIXCONTACT/tools/.github/workflows/publish-tool.yml@main
+    uses: PHOENIXCONTACT/tools/.github/workflows/publish-tool.yml@release-6
     with:
       MORYX_OPTIMIZE_CODE: "false"
       MORYX_BUILD_CONFIG: "Release"
