@@ -75,6 +75,20 @@ namespace Moryx.Tests
         public string NullMethod2() => "1234";
     }
 
+    [EntrySerialize]
+    public class EntrySerialize_AlwaysClassAlwaysMember 
+    {
+        [EntrySerialize]
+        public string AlwaysProperty { get; set; } = "123456";
+        [EntrySerialize]
+        public int Property1 { get; set; }
+
+        [EntrySerialize]
+        public EntrySerialize_AlwaysClassAlwaysMember AnotherProperty { get; set; }
+
+        internal IExplicitInterface ExplicitInterface { get; }
+    }
+
     // ReSharper disable once InconsistentNaming
     [EntrySerialize(EntrySerializeMode.Never)]
     public class EntrySerialize_NeverClassAlwaysMember
@@ -98,6 +112,15 @@ namespace Moryx.Tests
 
     public class EntrySerialize_Inherited : EntrySerialize_InheritedBase
     {
+        public string NullProperty2 { get; set; } = "789456";
+
+        public bool NullProperty3 { get; set; } = false;
+    }
+
+    [EntrySerialize]
+    public class AlwaysClass_Inherited : EntrySerialize_InheritedBase
+    {
+        [EntrySerialize]
         public string NullProperty2 { get; set; } = "789456";
 
         public bool NullProperty3 { get; set; } = false;

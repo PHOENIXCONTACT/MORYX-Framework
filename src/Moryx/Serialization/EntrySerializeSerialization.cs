@@ -42,9 +42,9 @@ namespace Moryx.Serialization
         public override IEnumerable<ConstructorInfo> GetConstructors(Type sourceType)
         {
             var constructors = from ctor in base.GetConstructors(sourceType)
-                let mode = EvaluateSerializeMode(ctor)
-                where mode.HasValue && mode.Value == EntrySerializeMode.Always
-                select ctor;
+                               let mode = EvaluateSerializeMode(ctor)
+                               where mode.HasValue && mode.Value == EntrySerializeMode.Always
+                               select ctor;
 
             return constructors;
         }
@@ -54,9 +54,9 @@ namespace Moryx.Serialization
         {
             var methods = sourceType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(m => !m.IsSpecialName);
             methods = from method in methods
-                let mode = EvaluateSerializeMode(method)
-                where mode.HasValue && mode.Value == EntrySerializeMode.Always
-                select method;
+                      let mode = EvaluateSerializeMode(method)
+                      where mode.HasValue && mode.Value == EntrySerializeMode.Always
+                      select method;
 
             return methods;
         }
@@ -66,7 +66,6 @@ namespace Moryx.Serialization
         {
             var properties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(BasePropertyFilter).Where(ExplicitPropertyFilter).ToArray();
-
             return EntrySerializeAttributeFilter(sourceType, properties);
         }
 
@@ -148,6 +147,23 @@ namespace Moryx.Serialization
         }
 
         /// <summary>
+        /// Iterate the inheritance tree and find lowest declaration of the attribute
+        /// </summary>
+        private static EntrySerializeMode? EvaluateSerializeMode(Type attributeProvider)
+        {
+            // If more than 1 is declared, determine the lowest definition as it takes precedence
+            // For each declaration check assignability to determine lower type            
+            var currentType = attributeProvider;
+            EntrySerializeAttribute lowestDeclaration = null;
+            while (currentType != typeof(object))
+            {
+                lowestDeclaration = currentType.GetCustomAttribute<EntrySerializeAttribute>(false) ?? lowestDeclaration;
+                currentType = currentType.BaseType;
+            }
+            return lowestDeclaration?.Mode;
+        }
+
+        /// <summary>
         /// Checks if the <see cref="EntrySerializeAttribute"/> is existent and activated
         /// </summary>
         private static EntrySerializeMode? EvaluateSerializeMode(ICustomAttributeProvider attributeProvider)
@@ -161,7 +177,7 @@ namespace Moryx.Serialization
             return new PropertyMode
             {
                 Property = property,
-                Mode = EvaluateSerializeMode((ICustomAttributeProvider)property)
+                Mode = property.GetCustomAttribute<EntrySerializeAttribute>(true)?.Mode
             };
         }
 

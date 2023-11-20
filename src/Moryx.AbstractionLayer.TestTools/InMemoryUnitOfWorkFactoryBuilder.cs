@@ -3,6 +3,7 @@
 
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Model.Sqlite;
 
@@ -15,11 +16,26 @@ namespace Moryx.AbstractionLayer.TestTools
     {
 
         /// <summary>
-        /// Instanciate a `UnitOfWorkFactory` of type `T`
+        /// Instantiate a `UnitOfWorkFactory` of type `T`
         /// </summary>
         public static UnitOfWorkFactory<T> Sqlite<T>() where T : DbContext
         {
+            return SqliteDbContextManager().Factory<T>();
+        }
 
+        /// <summary>
+        /// Instantiate a `UnitOfWorkFactory` of type `T`
+        /// </summary>
+        public static UnitOfWorkFactory<T> Factory<T>(this IDbContextManager dbContextManager) where T : DbContext
+        {
+            return new UnitOfWorkFactory<T>(dbContextManager);
+        }
+
+        /// <summary>
+        /// Instantiate an in memory `SqliteDbContextProvider`
+        /// </summary>
+        public static IDbContextManager SqliteDbContextManager()
+        {
             // The in memory tests using SQLite need a permanently opened connection. Otherwise,
             // opening a database connection would result in creating a new in memory database
             var connectionStringBuilder = new SqliteConnectionStringBuilder
@@ -30,7 +46,7 @@ namespace Moryx.AbstractionLayer.TestTools
             var inMemoryDbConnection = new SqliteConnection(connectionStringBuilder.ConnectionString);
             inMemoryDbConnection.Open();
 
-            return new UnitOfWorkFactory<T>(new SqliteDbContextManager(inMemoryDbConnection));
+            return new SqliteDbContextManager(inMemoryDbConnection);
         }
 
         /// <summary>
@@ -46,5 +62,6 @@ namespace Moryx.AbstractionLayer.TestTools
             uow.DbContext.Database.EnsureCreated();
             return factory;
         }
+
     }
 }

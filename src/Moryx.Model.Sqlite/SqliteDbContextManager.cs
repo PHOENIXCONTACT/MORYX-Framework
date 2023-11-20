@@ -3,9 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Moryx.Model.Configuration;
+using Moryx.Runtime.Kernel;
 
 namespace Moryx.Model.Sqlite
 {
@@ -14,6 +17,7 @@ namespace Moryx.Model.Sqlite
     /// </summary>
     public sealed class SqliteDbContextManager : IDbContextManager
     {
+        private Dictionary<Type, IModelConfigurator> _configurators;
         private readonly string _connectionString;
         private readonly SqliteConnection _sqliteConnection;
 
@@ -24,6 +28,7 @@ namespace Moryx.Model.Sqlite
         public SqliteDbContextManager(string connectionString)
         {
             _connectionString = connectionString;
+            _configurators = new Dictionary<Type, IModelConfigurator>();
         }
 
         /// <summary>
@@ -33,21 +38,23 @@ namespace Moryx.Model.Sqlite
         public SqliteDbContextManager(SqliteConnection sqliteConnection)
         {
             _sqliteConnection = sqliteConnection;
+            _configurators = new Dictionary<Type, IModelConfigurator>();
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<Type> Contexts => Array.Empty<Type>();
+        public IReadOnlyCollection<Type> Contexts => _configurators.Select(c => c.Key).ToArray();
 
         /// <inheritdoc />
         public IModelConfigurator GetConfigurator(Type contextType)
         {
-            throw new NotImplementedException();
+            return _configurators[contextType];
         }
 
         /// <inheritdoc />
         public IModelSetupExecutor GetSetupExecutor(Type contextType)
         {
-            throw new NotImplementedException();
+            var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(contextType);
+            return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, this);
         }
 
         /// <inheritdoc />
@@ -76,7 +83,10 @@ namespace Moryx.Model.Sqlite
             }
 
             // Create instance of context
-            var context = (TContext)Activator.CreateInstance(typeof(TContext), options);
+            var configurator = new SqliteModelConfigurator();
+            configurator.Initialize(typeof(TContext), CreateConfigManager(), null);
+            var context = (TContext)configurator.CreateContext(typeof(TContext), options);
+            _configurators.TryAdd(context.GetType(), configurator);
             return context;
         }
 
@@ -84,6 +94,15 @@ namespace Moryx.Model.Sqlite
         public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
         {
             throw new NotImplementedException();
+        }
+
+        private static ConfigManager CreateConfigManager()
+        {
+            var configManager = new ConfigManager
+            {
+                ConfigDirectory = ""
+            };
+            return configManager;
         }
     }
 }

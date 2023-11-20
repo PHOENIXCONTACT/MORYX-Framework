@@ -3,6 +3,9 @@ using Microsoft.Extensions.Hosting;
 using Moryx.Runtime.Kernel;
 using Moryx.Tools;
 using Moryx.Model;
+using Moryx.Runtime.Endpoints;
+using Microsoft.Extensions.DependencyInjection;
+using Moryx.Runtime.Modules;
 
 namespace StartProject.Asp
 {
@@ -25,11 +28,13 @@ namespace StartProject.Asp
                 }).Build();
 
             host.Services.UseMoryxConfigurations("Config");
-            host.Services.StartMoryxModules();
+
+            var moduleManager = host.Services.GetRequiredService<IModuleManager>();
+            moduleManager.StartModules();
 
             host.Run();
 
-            host.Services.StopMoryxModules();
+            moduleManager.StopModules();
         }
     }
 }
