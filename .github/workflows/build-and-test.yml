@@ -14,7 +14,7 @@ on:
       - future
 
 env:
-  dotnet_sdk_version: '8.0.100-preview.7.23376.3'
+  dotnet_sdk_version: '8.0.100'
   REPOSITORY_NAME: ${{ github.event.repository.name }}
   MORYX_PACKAGE_TARGET_DEV: 'https://www.myget.org/F/moryx/api/v2/package'
   MORYX_PACKAGE_TARGET_V3_DEV: 'https://www.myget.org/F/moryx/api/v3/index.json'
@@ -40,34 +40,34 @@ jobs:
 
   Build:
     needs: [EnvVar]
-    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@future
+    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   UnitTests:
     needs: [EnvVar, Build]
-    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@future
+    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   IntegrationTests:
     needs: [EnvVar, Build]
-    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@future
+    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   ReportGenerator:
     needs: [EnvVar, UnitTests, IntegrationTests]
-    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@future
+    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
     with:
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
                
   Publish-Test-Coverage:
     needs: [EnvVar, ReportGenerator]
-    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@future
+    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
     with:
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
     secrets:
@@ -77,13 +77,13 @@ jobs:
   # currently not working
   # Documentation:
   #   needs: [EnvVar, UnitTests]
-  #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@future
+  #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@main
   #   with:
   #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   Publish:
     needs: [EnvVar, UnitTests]
-    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@future
+    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
