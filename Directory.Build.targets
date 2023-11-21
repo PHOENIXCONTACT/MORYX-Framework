@@ -4,8 +4,8 @@
 	<Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
 
 	<PropertyGroup>
-		<dotnetVersion>8.0.0-preview.*</dotnetVersion>
-		<efCoreVersion>8.0.0-preview.*</efCoreVersion>
+		<dotnetVersion>8.0.0</dotnetVersion>
+		<efCoreVersion>8.0.0</efCoreVersion>
 
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
@@ -18,9 +18,9 @@
 	<!-- Package versions for package references across all projects -->
 	<ItemGroup>
 		<!--3rd party dependencies-->
-		<PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.7.1" />
+		<PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 		<PackageReference Update="Moq" Version="4.20.69" />
-		<PackageReference Update="NUnit" Version="3.13.3" />
+		<PackageReference Update="NUnit" Version="3.14.0" />
 		<PackageReference Update="NUnit3TestAdapter" Version="4.5.0" />
 		<PackageReference Update="coverlet.collector" Version="6.0.0" >
       		<PrivateAssets>all</PrivateAssets>
