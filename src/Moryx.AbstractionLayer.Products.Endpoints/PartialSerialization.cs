@@ -28,6 +28,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             _serialization = new EntrySerializeSerialization();
         }
 
+        /// <summary>
+        /// Creates a new <see cref="PartialSerialization{T}"/>  instance
+        /// </summary>
         public PartialSerialization() : base(null, new EmptyValueProvider())
         {
         }

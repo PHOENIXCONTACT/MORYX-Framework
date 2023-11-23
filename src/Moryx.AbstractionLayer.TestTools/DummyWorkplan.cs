@@ -6,8 +6,12 @@ using System.Linq;
 
 namespace Moryx.AbstractionLayer.TestTools
 {
+    /// <summary>
+    /// Dummy implementation of <see cref="IWorkplan"/> with overridden <see cref="Equals(object)"/> method for testing purposes.
+    /// </summary>
     public class DummyWorkplan : Workplan
     {
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             var toCompareWith = obj as DummyWorkplan;

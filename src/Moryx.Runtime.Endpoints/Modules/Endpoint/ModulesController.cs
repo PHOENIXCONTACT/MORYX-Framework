@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Modules;
-using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +15,7 @@ using Moryx.Runtime.Endpoints.Modules.Endpoint.Models;
 using Moryx.Runtime.Endpoints.Modules.Endpoint.Request;
 using Moryx.Runtime.Endpoints.Modules.Serialization;
 using Moryx.Threading;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Moryx.Runtime.Endpoints.Modules.Endpoint
 {
@@ -40,6 +40,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
 
 
         [HttpGet]
+        [Authorize(Policy = RuntimePermissions.ModulesCanView)]
         public ActionResult<IEnumerable<ServerModuleModel>> GetAll()
         {
             var models = new List<ServerModuleModel>(_moduleManager.AllModules.Count());
@@ -72,6 +73,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpGet("{moduleName}/healthstate")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanView)]
         public ActionResult<ServerModuleState> HealthState([FromRoute] string moduleName)
         {
             var module = _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
@@ -82,6 +84,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpGet("{moduleName}/notifications")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanView)]
         public ActionResult<IEnumerable<ModuleNotificationModel>> Notifications([FromRoute] string moduleName)
         {
             var module = _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
@@ -92,6 +95,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpPost("{moduleName}/start")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanControl)]
         public ActionResult Start([FromRoute] string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -103,6 +107,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpPost("{moduleName}/stop")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanControl)]
         public ActionResult Stop([FromRoute] string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -114,6 +119,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpPost("{moduleName}/reincarnate")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanControl)]
         public ActionResult Reincarnate([FromRoute] string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -125,6 +131,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpPost("{moduleName}")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanConfigure)]
         public ActionResult Update([FromRoute] string moduleName, [FromBody] ServerModuleModel module)
         {
             if (module == null)
@@ -146,6 +153,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpPost("{moduleName}/confirm")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanConfirmNotifications)]
         public ActionResult ConfirmWarning([FromRoute] string moduleName)
         {
             var module = GetModuleFromManager(moduleName);
@@ -161,6 +169,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpGet("{moduleName}/config")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanViewConfiguration)]
         public ActionResult<Config> GetConfig([FromRoute] string moduleName)
         {
             try
@@ -185,6 +194,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpPost("{moduleName}/config")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanConfigure)]
         public ActionResult SetConfig([FromRoute] string moduleName, [FromBody] SaveConfigRequest request)
         {
             if (request.Config == null)
@@ -213,6 +223,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpGet("{moduleName}/console")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanViewMethods)]
         public ActionResult<IEnumerable<MethodEntry>> GetMethods([FromRoute] string moduleName)
         {
             var methods = Enumerable.Empty<MethodEntry>();
@@ -227,6 +238,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         }
 
         [HttpPost("{moduleName}/console")]
+        [Authorize(Policy = RuntimePermissions.ModulesCanInvoke)]
         public ActionResult<Entry> InvokeMethod([FromRoute] string moduleName, [FromBody] MethodEntry method)
         {
             if (method == null)
@@ -250,11 +262,9 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         /// <summary>
         /// Create serialization for this module
         /// </summary>
-        private ICustomSerialization CreateSerialization(IModule module)
+        private ICustomSerialization CreateSerialization(IServerModule module)
         {
-            var host = (IContainerHost)module;
-            // TODO: This is dangerous
-            return new PossibleValuesSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
+            return new PossibleValuesSerialization(module.Container, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };
@@ -263,11 +273,9 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         /// <summary>
         /// Create serialization for this module
         /// </summary>
-        private ICustomSerialization CreateEditorSerializeSerialization(IModule module)
+        private ICustomSerialization CreateEditorSerializeSerialization(IServerModule module)
         {
-            var host = (IContainerHost)module;
-            // TODO: This is dangerous
-            return new AdvancedEntrySerializeSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
+            return new AdvancedEntrySerializeSerialization(module.Container, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };

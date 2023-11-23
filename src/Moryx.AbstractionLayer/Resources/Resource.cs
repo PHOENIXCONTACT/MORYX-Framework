@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Serialization;
@@ -143,6 +144,31 @@ namespace Moryx.AbstractionLayer.Resources
         {
             return $"{Id}:{Name} ({GetType().Name})";
         }
+
+
+        /// <summary>
+        /// Current capabilities of this resource
+        /// </summary>
+        private ICapabilities _capabilities = NullCapabilities.Instance;
+
+        /// <inheritdoc />
+        public ICapabilities Capabilities
+        {
+            get
+            {
+                return _capabilities;
+            }
+            protected set
+            {
+                _capabilities = value;
+                CapabilitiesChanged?.Invoke(this, _capabilities);
+            }
+        }
+
+        /// <summary>
+        /// <seealso cref="IResource"/>
+        /// </summary>
+        public event EventHandler<ICapabilities> CapabilitiesChanged;
 
         /// <summary>
         /// Event raised when the resource was modified and the changes should be

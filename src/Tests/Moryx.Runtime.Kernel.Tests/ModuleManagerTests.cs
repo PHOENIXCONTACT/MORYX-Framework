@@ -294,7 +294,6 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             moduleManager.StartModules();
 
-            var i = 0;
             WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
             // Assert

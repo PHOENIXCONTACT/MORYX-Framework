@@ -15,7 +15,6 @@ using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.AbstractionLayer.Properties;
 using Moryx.Runtime.Modules;
-using Moryx.Runtime.Container;
 using Moryx.Configuration;
 using Moryx.Resources.Management;
 
@@ -38,8 +37,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             _resourceManagement = resourceManagement ?? throw new ArgumentNullException(nameof(resourceManagement));
             _resourceTypeTree = resourceTypeTree ?? throw new ArgumentNullException(nameof(resourceTypeTree));
             var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
-            var containerHost = (IContainerHost)module;
-            _serialization = new ResourceSerialization(containerHost.Container);
+            _serialization = new ResourceSerialization(module.Container);
         }
 
         [HttpGet]
@@ -62,7 +60,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
 
             if (ids is null || ids.Length == 0)
-                ids = _resourceManagement.GetResources<IPublicResource>().Select(r => r.Id).ToArray();
+                ids = _resourceManagement.GetResources<IResource>().Select(r => r.Id).ToArray();
 
             return ids.Select(id => _resourceManagement.Read(id, r => converter.GetDetails(r)))
                 .Where(details => details != null).ToArray();
