@@ -75,6 +75,15 @@ namespace Moryx.Runtime.Kernel
         }
 
         /// <summary>
+        /// Register BackgroundService that controls that starts and stops the MORYX modules inside the lifetime of the host.
+        /// The MORYX Service can hook into the command line and gracefuly stop the modules when the user tries to close the window.
+        /// </summary>
+        public static void AddMoryxService(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddHostedService<MoryxService>();
+        }
+        
+        /// <summary>
         /// Use the moryx config manager
         /// </summary>
         public static IConfigManager UseMoryxConfigurations(this IServiceProvider serviceProvider, string configDirectory)
