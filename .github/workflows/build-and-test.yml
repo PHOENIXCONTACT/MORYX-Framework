@@ -12,94 +12,87 @@ on:
     branches: 
       - dev
       - future
-      
+
 env:
-  MORYX_OPTIMIZE_CODE: "false"
-  MORYX_BUILD_CONFIG: "Release"
-  MORYX_BUILDNUMBER: ${{github.run_number}}
-  dotnet_sdk_version: '7.x'
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  dotnet_sdk_version: '8.0.100'
   REPOSITORY_NAME: ${{ github.event.repository.name }}
+  MORYX_PACKAGE_TARGET_DEV: 'https://www.myget.org/F/moryx/api/v2/package'
+  MORYX_PACKAGE_TARGET_V3_DEV: 'https://www.myget.org/F/moryx/api/v3/index.json'
+  MORYX_PACKAGE_TARGET_FUTURE: 'https://www.myget.org/F/moryx-future/api/v2/package'
+  MORYX_PACKAGE_TARGET_V3_FUTURE: 'https://www.myget.org/F/moryx-future/api/v3/index.json'
+  MORYX_PACKAGE_TARGET_RELEASE: 'https://api.nuget.org/v3/index.json'
+  MORYX_PACKAGE_TARGET_V3_RELEASE: 'https://api.nuget.org/v3/index.json'
 
 jobs:
+  EnvVar:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ""
+    outputs:
+      dotnet_sdk_version: ${{ env.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
+      MORYX_PACKAGE_TARGET_DEV: ${{ env.MORYX_PACKAGE_TARGET_DEV }}
+      MORYX_PACKAGE_TARGET_V3_DEV: ${{ env.MORYX_PACKAGE_TARGET_V3_DEV }}
+      MORYX_PACKAGE_TARGET_FUTURE: ${{ env.MORYX_PACKAGE_TARGET_FUTURE }}
+      MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ env.MORYX_PACKAGE_TARGET_V3_FUTURE }}
+      MORYX_PACKAGE_TARGET_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_RELEASE }}
+      MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_V3_RELEASE }}
+
   Build:
-    uses: PHOENIXCONTACT/tools/.github/workflows/build-tool.yml@main
+    needs: [EnvVar]
+    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@main
     with:
-      MORYX_OPTIMIZE_CODE: "false"
-      MORYX_BUILD_CONFIG: "Release"
-      MORYX_BUILDNUMBER: ${{github.run_number}}
-      dotnet_sdk_version: '7.x'
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   UnitTests:
-    needs: [Build]
-    uses: PHOENIXCONTACT/tools/.github/workflows/unittest-tool.yml@main
+    needs: [EnvVar, Build]
+    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
     with:
-      MORYX_OPTIMIZE_CODE: "false"
-      MORYX_BUILD_CONFIG: "Release"
-      MORYX_BUILDNUMBER: ${{github.run_number}}
-      dotnet_sdk_version: '7.x'
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   IntegrationTests:
-    needs: [Build]
-    uses: PHOENIXCONTACT/tools/.github/workflows/integrationtest-tool.yml@main
+    needs: [EnvVar, Build]
+    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@main
     with:
-      MORYX_OPTIMIZE_CODE: "false"
-      MORYX_BUILD_CONFIG: "Release"
-      MORYX_BUILDNUMBER: ${{github.run_number}}
-      dotnet_sdk_version: '7.x'
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   ReportGenerator:
-    needs: [UnitTests, IntegrationTests]
-    uses: PHOENIXCONTACT/tools/.github/workflows/reportgenerator-tool.yml@main
+    needs: [EnvVar, UnitTests, IntegrationTests]
+    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
     with:
-      MORYX_OPTIMIZE_CODE: "false"
-      MORYX_BUILD_CONFIG: "Release"
-      MORYX_BUILDNUMBER: ${{github.run_number}}
-      dotnet_sdk_version: '7.x'
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
                
   Publish-Test-Coverage:
-    needs: [ReportGenerator]
-    uses: PHOENIXCONTACT/tools/.github/workflows/publish-test-coverage-tool.yml@main
+    needs: [EnvVar, ReportGenerator]
+    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
     with:
-      MORYX_OPTIMIZE_CODE: "false"
-      MORYX_BUILD_CONFIG: "Release"
-      MORYX_BUILDNUMBER: ${{github.run_number}}
-      dotnet_sdk_version: '7.x'
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  Documentation:
-    needs: [UnitTests]
-    uses: PHOENIXCONTACT/tools/.github/workflows/documentation-tool.yml@main
-    with:
-      MORYX_OPTIMIZE_CODE: "false"
-      MORYX_BUILD_CONFIG: "Release"
-      MORYX_BUILDNUMBER: ${{github.run_number}}
-      dotnet_sdk_version: '7.x'
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      REPOSITORY_NAME: ${{ github.event.repository.name }}
+  # currently not working
+  # Documentation:
+  #   needs: [EnvVar, UnitTests]
+  #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@main
+  #   with:
+  #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   Publish:
-    needs: [UnitTests]
-    uses: PHOENIXCONTACT/tools/.github/workflows/publish-tool.yml@main
+    needs: [EnvVar, UnitTests]
+    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
     with:
-      MORYX_OPTIMIZE_CODE: "false"
-      MORYX_BUILD_CONFIG: "Release"
-      MORYX_BUILDNUMBER: ${{github.run_number}}
-      dotnet_sdk_version: '7.x'
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+      MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
+      MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
+      MORYX_PACKAGE_TARGET_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_FUTURE }}
+      MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
+      MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
+      MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
     secrets: 
       MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
       NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}

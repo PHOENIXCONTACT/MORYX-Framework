@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Domain model types and definitions of Cyber-physical systems in IIoT projects.</Description>
-    <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;IIoT;IoT;Hardware;Communication;Manufacturing;Industrial;Abstraction;Realtime</PackageTags>
   </PropertyGroup>
 

@@ -176,7 +176,7 @@ namespace Moryx.Products.Management
 
             var config = tuple.Item2;
             config.TargetType = targetType.FullName;
-            config.PluginName = tuple.Item1.GetCustomAttribute<RegistrationAttribute>().Name;
+            config.PluginName = tuple.Item1.GetCustomAttribute<ComponentAttribute>().Name;
 
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
 
@@ -208,7 +208,7 @@ namespace Moryx.Products.Management
                 var strategy = propertyTuple.Item1;
                 var propertyConfig = propertyTuple.Item2;
                 propertyConfig.PropertyName = property.Name;
-                propertyConfig.PluginName = strategy.GetCustomAttribute<RegistrationAttribute>().Name;
+                propertyConfig.PluginName = strategy.GetCustomAttribute<ComponentAttribute>().Name;
 
                 var columnType = strategy.GetCustomAttribute<PropertyStrategyConfigurationAttribute>()?.ColumnType ?? typeof(string);
                 var column = remainingColumns.FirstOrDefault(rc => rc.PropertyType == columnType);

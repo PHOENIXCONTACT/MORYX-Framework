@@ -1,10 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
@@ -14,6 +10,11 @@ using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.Resources.Model;
 using Moryx.Tools;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using IResource = Moryx.AbstractionLayer.Resources.IResource;
 
 namespace Moryx.Resources.Management
 {
@@ -97,6 +98,11 @@ namespace Moryx.Resources.Management
         /// </summary>
         private readonly object _fallbackLock = new();
 
+        /// <summary>
+        /// Look-up of resources that failed during init or start and are excluded from certain calls
+        /// </summary>
+        private List<Resource> _failedResources = new List<Resource>();
+
         #endregion
 
         #region LifeCycle
@@ -113,26 +119,48 @@ namespace Moryx.Resources.Management
                 // Create all objects
                 var allResources = ResourceEntityAccessor.FetchResourceTemplates(uow);
                 if (allResources.Count > 0)
-                {
                     LoadResources(allResources);
-                }                
             }
 
             _startup = ResourceStartupPhase.Initializing;
-            // Boot resources
-            Parallel.ForEach(Graph.GetAll(), resourceWrapper =>
-            {
-                try
-                {
-                    resourceWrapper.Initialize();
-                }
-                catch (Exception e)
-                {
-                    resourceWrapper.ErrorOccured();
-                    Logger.Log(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
-                }
-            });
+            // initialize resources
+            Parallel.ForEach(Graph.GetAll(), InitializeResource);
             _startup = ResourceStartupPhase.Initialized;
+        }
+
+        /// <summary>
+        /// Handles the initialization of the resource 
+        /// </summary>
+        /// <param name="resource"></param>
+        private void InitializeResource(Resource resource)
+        {
+            try
+            {
+                ((IInitializable)resource).Initialize();
+            }
+            catch (Exception e)
+            {
+                Logger.Log(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resource.Id, resource.Name);
+                // Track resources as failed to exclude from future calls
+                lock (_failedResources)
+                    _failedResources.Add(resource);
+            }
+        }
+
+        /// <summary>
+        /// Starts a resource and handles in case of failure.
+        /// </summary>
+        /// <param name="resource"></param>
+        private void StartResource(Resource resource)
+        {
+            try
+            {
+                ((IPlugin)resource).Start();
+            }
+            catch (Exception e)
+            {
+                Logger.Log(LogLevel.Warning, e, "Failed to start resource {0}-{1}", resource.Id, resource.Name);
+            }
         }
 
         /// <summary>
@@ -141,17 +169,30 @@ namespace Moryx.Resources.Management
         private void LoadResources(ICollection<ResourceEntityAccessor> allResources)
         {
             // Create resource objects on multiple threads
-            var query = from template in allResources.AsParallel()
-                        select template.Instantiate(TypeController, Graph);
-            foreach (var resource in query)
-                AddResource(resource, false);
+            Parallel.ForEach(allResources, InstantiateResource);
 
             // Link them to each other
             Parallel.ForEach(allResources, LinkReferences);
 
             // Register events after all links were set
-            foreach (var resourceWrapper in Graph.GetAll())
-                RegisterEvents(resourceWrapper.Target);
+            foreach (var resource in Graph.GetAll())
+                RegisterEvents(resource);
+        }
+
+        /// <summary>
+        /// Instantiate object from entity based template
+        /// </summary>
+        private void InstantiateResource(ResourceEntityAccessor template)
+        {
+            try
+            {
+                var resource = template.Instantiate(TypeController, Graph);
+                AddResource(resource, false);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(LogLevel.Warning, e, "Failed to instantiate resource {0}-{1}", template.Id, template.Name);
+            }
         }
 
         /// <summary>
@@ -160,7 +201,7 @@ namespace Moryx.Resources.Management
         private void AddResource(Resource instance, bool registerEvents)
         {
             // Add instance to the graph
-            var wrapped = Graph.Add(instance);
+            var resource = Graph.Add(instance);
 
             // Register to events
             if (registerEvents)
@@ -174,12 +215,12 @@ namespace Moryx.Resources.Management
                 case ResourceStartupPhase.Initializing:
                 case ResourceStartupPhase.Initialized:
                     // Resources those are created during the initialize of a resource are automatically initialized also.
-                    wrapped.Initialize();
+                    InitializeResource(resource);
                     break;
                 case ResourceStartupPhase.Starting:
                 case ResourceStartupPhase.Started:
                     // Resources those are created during the start of a resource are automatically initialized and started also.
-                    InitializeAndStart(wrapped);
+                    InitializeAndStart(resource);
                     break;
                 case ResourceStartupPhase.Stopping:
                 case ResourceStartupPhase.Stopped:
@@ -189,22 +230,17 @@ namespace Moryx.Resources.Management
                     throw new ArgumentOutOfRangeException();
             }
 
-            // Inform listeners about the new resource
-            if (instance is IPublicResource publicResource)
-                RaiseResourceAdded(publicResource);
+            RaiseResourceAdded(resource);
         }
 
-        private void InitializeAndStart(ResourceWrapper wrappedResource)
+        /// <summary>
+        /// Initialize and start the current resource
+        /// </summary>
+        /// <param name="resource">Current resource</param>
+        private void InitializeAndStart(Resource resource)
         {
-            wrappedResource.Initialize();
-            try
-            {
-                wrappedResource.Start();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(LogLevel.Warning, ex, "Could not start resource {0}-{1}!", wrappedResource.Target.Id, wrappedResource.Target.Name);
-            }
+            InitializeResource(resource);
+            StartResource(resource);
         }
 
         /// <summary>
@@ -213,9 +249,7 @@ namespace Moryx.Resources.Management
         private void RegisterEvents(Resource instance)
         {
             instance.Changed += OnResourceChanged;
-
-            if (instance is IPublicResource asPublic)
-                asPublic.CapabilitiesChanged += RaiseCapabilitiesChanged;
+            instance.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
             foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
                 autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
@@ -227,9 +261,7 @@ namespace Moryx.Resources.Management
         private void UnregisterEvents(Resource instance)
         {
             instance.Changed -= OnResourceChanged;
-
-            if (instance is IPublicResource asPublic)
-                asPublic.CapabilitiesChanged -= RaiseCapabilitiesChanged;
+            instance.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
             foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
                 autoSaveCollection.CollectionChanged -= OnAutoSaveCollectionChanged;
@@ -254,19 +286,9 @@ namespace Moryx.Resources.Management
 
         public void Start()
         {
+            // start resources
             _startup = ResourceStartupPhase.Starting;
-            Parallel.ForEach(Graph.GetAll(), resourceWrapper =>
-            {
-                try
-                {
-                    resourceWrapper.Start();
-                }
-                catch (Exception e)
-                {
-                    resourceWrapper.ErrorOccured();
-                    Logger.Log(LogLevel.Warning, e, "Failed to start resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
-                }
-            });
+            Parallel.ForEach(Graph.GetAll().Except(_failedResources), StartResource);
             _startup = ResourceStartupPhase.Started;
         }
 
@@ -274,16 +296,16 @@ namespace Moryx.Resources.Management
         {
             _startup = ResourceStartupPhase.Stopping;
 
-            Parallel.ForEach(Graph.GetAll(), resourceWrapper =>
+            Parallel.ForEach(Graph.GetAll(), resource =>
             {
                 try
                 {
-                    resourceWrapper.Stop();
-                    UnregisterEvents(resourceWrapper.Target);
+                    ((IPlugin)resource).Stop();
+                    UnregisterEvents(resource);
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(LogLevel.Warning, e, "Failed to stop resource {0}-{1}", resourceWrapper.Target.Id, resourceWrapper.Target.Name);
+                    Logger.Log(LogLevel.Warning, e, "Failed to stop resource {0}-{1}", resource.Id, resource.Name);
                 }
             });
 
@@ -294,7 +316,7 @@ namespace Moryx.Resources.Management
 
         public void Save(Resource resource)
         {
-            lock (Graph.GetWrapper(resource.Id) ?? _fallbackLock)
+            lock (Graph.GetResource(resource.Id) ?? _fallbackLock)
             {
                 using var uow = UowFactory.Create();
                 var newResources = new HashSet<Resource>();
@@ -339,7 +361,7 @@ namespace Moryx.Resources.Management
             var instance = args.Parent;
             var property = args.CollectionProperty;
 
-            lock (Graph.GetWrapper(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
+            lock (Graph.GetResource(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
             {
                 using var uow = UowFactory.Create();
                 var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
@@ -410,8 +432,8 @@ namespace Moryx.Resources.Management
             var removed = Graph.Remove(instance);
 
             // Notify listeners about the removal of the resource
-            if (removed && instance is IPublicResource publicResource)
-                RaiseResourceRemoved(publicResource);
+            if (removed)
+                RaiseResourceRemoved(instance);
 
             // Destroy the object
             TypeController.Destroy(instance);
@@ -424,25 +446,24 @@ namespace Moryx.Resources.Management
         #region IResourceManagement
 
 
-        private void RaiseResourceAdded(IPublicResource newResource)
+        private void RaiseResourceAdded(IResource newResource)
         {
             ResourceAdded?.Invoke(this, newResource);
         }
-        public event EventHandler<IPublicResource> ResourceAdded;
+        public event EventHandler<IResource> ResourceAdded;
 
-        private void RaiseResourceRemoved(IPublicResource newResource)
+        private void RaiseResourceRemoved(IResource newResource)
         {
             ResourceRemoved?.Invoke(this, newResource);
         }
-        public event EventHandler<IPublicResource> ResourceRemoved;
+        public event EventHandler<IResource> ResourceRemoved;
 
         ///
         public event EventHandler<ICapabilities> CapabilitiesChanged;
 
         private void RaiseCapabilitiesChanged(object originalSender, ICapabilities capabilities)
         {
-            // Only forward events for available resources
-            if (Graph.GetWrapper(((IResource)originalSender).Id).State.IsAvailable)
+            if (Graph.GetAll().Any(x => x.Id == ((IResource)originalSender).Id))
                 CapabilitiesChanged?.Invoke(originalSender, capabilities);
         }
 

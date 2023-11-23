@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace Moryx.Model
