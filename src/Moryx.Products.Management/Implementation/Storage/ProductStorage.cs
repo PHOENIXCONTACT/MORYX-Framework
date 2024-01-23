@@ -17,7 +17,7 @@ using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
 using static Moryx.Products.Management.ProductExpressionHelpers;
-using Moryx.Products.Management.Implementation.Storage;
+using Moryx.Logging;
 
 namespace Moryx.Products.Management
 {
@@ -70,6 +70,11 @@ namespace Moryx.Products.Management
         /// Necessary to access the type mappings
         /// </summary>
         public ModuleConfig Config { get; set; }
+
+        /// <summary>
+        /// Logger for the product manager module
+        /// </summary>
+        public IModuleLogger Logger { get; set; }
 
         /// <summary>
         /// Start the storage and load the type strategies
@@ -770,6 +775,8 @@ namespace Moryx.Products.Management
                 else
                 {
                     // TODO: Filter by type specific properties
+                    Logger.Log(LogLevel.Warning, "You tried to load an instance filtering a property ({0}) of the custom type {1}. " +
+                        "This is not supported yet and will always return a negative result.", typeProperty.Name, typeProperty.ReflectedType.Name);
                     var productType = typeProperty.ReflectedType;
                     instanceSelector = i => false;
                 }
@@ -877,6 +884,13 @@ namespace Moryx.Products.Management
                     // Update all parts that are also present as entities
                     foreach (var partEntity in partEntityGroups[partGroup.Key.Name])
                     {
+                        if (!partGroup.Value.Any())
+                        {
+                            Logger.Log(LogLevel.Warning, "No reconstruction of the property {1} possible. You have configured the {0} strategy, but the property was null." +
+                                "Please initialize the property in the Initialize method or select the {2} strategy.", 
+                                nameof(PartSourceStrategy.FromPartlink), partGroup.Key.Name, nameof(PartSourceStrategy.FromEntities));
+                            continue;
+                        }
                         var part = partGroup.Value.First(p => p.PartLink.Id == partEntity.PartLinkEntityId);
                         TransformInstance(uow, partEntity, part);
                     }
@@ -891,7 +905,7 @@ namespace Moryx.Products.Management
                         partArticles[index].PartLink = partLinks.Find(pl => pl?.Id == partCollection[index].PartLinkEntityId.Value);
                     }
 
-                    if (typeof(ProductInstance).IsAssignableFrom(partGroup.Key.PropertyType) && partArticles.Length == 0)
+                    if (typeof(ProductInstance).IsAssignableFrom(partGroup.Key.PropertyType) && partArticles.Length == 1)
                     {
                         partGroup.Key.SetValue(productInstance, partArticles[0]);
                     }
