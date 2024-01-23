@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.Logging;
 using Moryx.Runtime.Modules;
 using Moryx.Workplans;
 
@@ -30,6 +31,8 @@ namespace Moryx.Products.Management
         public IWorkplans Workplans { get; set; }
 
         public ModuleConfig Config { get; set; }
+
+        public IModuleLogger Logger { get; set; }
 
         #endregion
 
@@ -219,10 +222,15 @@ namespace Moryx.Products.Management
             if (identity == null)
                 throw new ArgumentNullException(nameof(identity));
 
-            var instance = ProductManager
-                .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity))
-                .SingleOrDefault();
-            return (ProductInstance) instance;
+            var instances = ProductManager
+                .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
+            if (instances.Count > 1)
+            {
+                Logger.Log(LogLevel.Error, "ProductManagement contains more than one {0} with the identity {1}.", nameof(ProductInstance), identity);
+                throw new InvalidOperationException();
+            }
+                
+            return (ProductInstance) instances.SingleOrDefault(); ;
         }
 
         public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
