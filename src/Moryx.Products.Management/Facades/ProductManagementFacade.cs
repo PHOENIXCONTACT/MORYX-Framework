@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -226,8 +227,9 @@ namespace Moryx.Products.Management
                 .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
             if (instances.Count > 1)
             {
-                Logger.Log(LogLevel.Error, "ProductManagement contains more than one {0} with the identity {1}.", nameof(ProductInstance), identity);
-                throw new InvalidOperationException();
+                var ex = new InvalidOperationException($"ProductManagement contains more than one {nameof(ProductInstance)} with the identity {identity}.");
+                Logger.LogError(ex, "Please make sure that an identity is unique.");
+                throw ex;
             }
                 
             return (ProductInstance) instances.SingleOrDefault(); ;
