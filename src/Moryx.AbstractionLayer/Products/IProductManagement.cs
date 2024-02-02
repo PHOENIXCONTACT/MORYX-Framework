@@ -94,6 +94,8 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Get an instance with this identity
         /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="identity"/> is null</exception>
+        /// <exception cref="InvalidOperationException">Thrown when there is more than one product with the given <paramref name="identity"/></exception>
         ProductInstance GetInstance(IIdentity identity);
 
         /// <summary>
