@@ -8,7 +8,7 @@ namespace Moryx.AbstractionLayer.Resources
     /// <summary>
     /// Members of the given interfaces are available outside of the resource management
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class ResourceAvailableAsAttribute : Attribute
     {
         /// <summary>
