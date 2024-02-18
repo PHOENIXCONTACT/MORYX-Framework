@@ -7,7 +7,7 @@ import * as React from "react";
 import { Collapse } from "reactstrap";
 import Entry from "../../models/Entry";
 
-export interface CollapsibleEntryEditorBasePropModel {
+export interface CollapsibleEntryEditorBasePropModel extends React.PropsWithChildren {
     Entry: Entry;
     IsExpanded: boolean;
     IsReadOnly: boolean;

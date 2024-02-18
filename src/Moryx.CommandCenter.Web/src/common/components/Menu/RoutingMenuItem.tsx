@@ -6,7 +6,7 @@
 import { Location, UnregisterCallback } from "history";
 import * as React from "react";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import ListGroupItem from "reactstrap/lib/ListGroupItem";
+import { ListGroupItem } from "reactstrap";
 import MenuItemModel from "../../models/MenuItemModel";
 
 interface MenuItemProps {
@@ -23,7 +23,7 @@ class RoutingMenuItem extends React.Component<RouteComponentProps<{}> & MenuItem
     private unregisterListenerCallback: UnregisterCallback;
 
     constructor(props: RouteComponentProps<{}> & MenuItemProps) {
-        super (props);
+        super(props);
         this.state = { IsOpened: this.isOpened(this.props.location) };
 
         this.unregisterListenerCallback = this.props.history.listen(this.onRouteChanged.bind(this));
