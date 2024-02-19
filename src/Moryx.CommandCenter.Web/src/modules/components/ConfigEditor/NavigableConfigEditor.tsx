@@ -4,7 +4,7 @@
 */
 
 import { Action, History, Location, UnregisterCallback } from "history";
-import * as qs from "query-string";
+import queryString from "query-string";
 import * as React from "react";
 import { Button, ButtonGroup, Col, Container, Row } from "reactstrap";
 import Entry from "../../models/Entry";
@@ -42,7 +42,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
             this.props.Entries !== nextProps.Entries) {
             this.setState({ ParentEntry: nextProps.ParentEntry, Entries: nextProps.Entries });
             this.resolveEntryChainByPath(this.props.Location, nextProps.Entries);
-            }
+        }
     }
 
     public componentDidMount(): void {
@@ -59,7 +59,7 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
 
     private resolveEntryChainByPath(location: Location, entries: Entry[]): void {
         if (location !== undefined) {
-            const query = qs.parse(location.search);
+            const query = queryString.parse(location.search);
             if (query != null && "path" in query) {
                 const entryChain: Entry[] = [];
                 let currentEntry: Entry = null;
@@ -75,10 +75,10 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
                 });
 
                 this.setState({
-                                ParentEntry: currentEntry,
-                                Entries: currentEntry != null ? currentEntry.subEntries : entries,
-                                EntryChain: entryChain
-                            });
+                    ParentEntry: currentEntry,
+                    Entries: currentEntry != null ? currentEntry.subEntries : entries,
+                    EntryChain: entryChain
+                });
             } else {
                 this.setState({ ParentEntry: null, Entries: entries, EntryChain: [] });
             }
@@ -133,10 +133,10 @@ export default class NavigableConfigEditor extends React.Component<NavigableConf
                         <Col md={7} className="no-padding"><span className="font-bold">Value</span></Col>
                     </Row>
                     <ConfigEditor ParentEntry={this.state.ParentEntry}
-                                  Entries={this.state.Entries}
-                                  Root={this.props.Root}
-                                  navigateToEntry={this.navigateToEntry.bind(this)}
-                                  IsReadOnly={this.props.IsReadOnly} />
+                        Entries={this.state.Entries}
+                        Root={this.props.Root}
+                        navigateToEntry={this.navigateToEntry.bind(this)}
+                        IsReadOnly={this.props.IsReadOnly} />
                 </Container>
             </div>
         );

@@ -7,7 +7,6 @@ import { mdiConsoleLine, mdiHexagon } from "@mdi/js";
 import Icon from "@mdi/react";
 import { number } from "prop-types";
 import * as React from "react";
-import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Row } from "reactstrap";
 import ModuleHeader from "../../common/components/ModuleHeader";
@@ -24,7 +23,6 @@ import MethodEntry from "../models/MethodEntry";
 interface ModuleConsolePropModel {
     RestClient?: ModulesRestClient;
     ModuleName: string;
-    NotificationSystem: NotificationSystem;
 }
 
 interface ModuleConsoleDispatchPropsModel {
@@ -78,7 +76,7 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
     }
 
     private onSelectMethod(methodEntry: MethodEntry): void {
-        this.setState({SelectedMethod: methodEntry, Seed: this.state.Seed + 1});
+        this.setState({ SelectedMethod: methodEntry, Seed: this.state.Seed + 1 });
     }
 
     private onInvokeMethod(methodEntry: MethodEntry): void {
@@ -134,23 +132,23 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
         return (
             <ListGroup>
                 <ListGroupItem color="primary"
-                               className="selectable"
-                               onClick={() => this.onReset()}>
+                    className="selectable"
+                    onClick={() => this.onReset()}>
                     Reset
                 </ListGroupItem>
 
                 {this.state.Methods.map((methodEntry, idx) => {
                     return (
                         <ListGroupItem key={idx}
-                                       className="selectable"
-                                       onClick={() => this.onSelectMethod(methodEntry)}
-                                       active={this.state.SelectedMethod === methodEntry}>
+                            className="selectable"
+                            onClick={() => this.onSelectMethod(methodEntry)}
+                            active={this.state.SelectedMethod === methodEntry}>
                             {methodEntry.displayName}
                         </ListGroupItem>
-                        );
-                    })
+                    );
+                })
                 }
-                </ListGroup>
+            </ListGroup>
 
         );
     }
@@ -160,18 +158,18 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
         if (this.state.Methods.length > 0) {
             let view = <ConsoleMethodConfigurator
-                                                  key={this.state.Seed}
-                                                  Method={this.state.SelectedMethod}
-                                                  ModuleName={this.props.ModuleName}
-                                                  onInvokeMethod={this.onInvokeMethod.bind(this)} />;
+                key={this.state.Seed}
+                Method={this.state.SelectedMethod}
+                ModuleName={this.props.ModuleName}
+                onInvokeMethod={this.onInvokeMethod.bind(this)} />;
 
             if (this.state.SelectedMethod != null) {
                 const invokeResult = this.invokeResult(this.state.SelectedMethod.name);
 
                 if (invokeResult != null) {
                     view = <ConsoleMethodResult Method={this.state.SelectedMethod}
-                                                InvokeResult={invokeResult.Result}
-                                                onResetInvokeResult={this.resetInvokeResult.bind(this)} />;
+                        InvokeResult={invokeResult.Result}
+                        onResetInvokeResult={this.resetInvokeResult.bind(this)} />;
                 }
             }
 

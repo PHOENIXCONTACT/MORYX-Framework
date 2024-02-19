@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCheck, mdiDatabase, mdiHexagon, mdiHexagonMultiple, mdiPlay, mdiRestart, mdiStop} from "@mdi/js";
+import { mdiCheck, mdiDatabase, mdiHexagon, mdiHexagonMultiple, mdiPlay, mdiRestart, mdiStop } from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -53,8 +53,8 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
     }
 
     public componentWillReceiveProps(nextProps: ModulePropModel): void {
-        const warningsOrErrors = nextProps.Module.notifications.filter(function(element: NotificationModel, index: number, array: NotificationModel[]): boolean {
-             return element.severity === Serverity.Warning || element.severity === Serverity.Error || element.severity === Serverity.Fatal;
+        const warningsOrErrors = nextProps.Module.notifications.filter(function (element: NotificationModel, index: number, array: NotificationModel[]): boolean {
+            return element.severity === Serverity.Warning || element.severity === Serverity.Error || element.severity === Serverity.Fatal;
         });
         this.setState({ HasWarningsOrErrors: warningsOrErrors.length !== 0 });
     }
@@ -97,7 +97,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
 
     private static preRenderInnerException(exception: SerializableException): React.ReactNode {
         return (
-            <div style={{margin: "0px 0px 0px 5px"}}>
+            <div style={{ margin: "0px 0px 0px 5px" }}>
                 <Container fluid={true}>
                     <Row>
                         <Col md={2}><span className="font-bold">Type</span></Col>
@@ -182,10 +182,10 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                         <tbody>
                                             {
                                                 this.props.Module.dependencies.map((module, idx) =>
-                                                <tr key={idx}>
-                                                    <td><Link to={"/modules/" + module.name}>{module.name}</Link></td>
-                                                    <td><HealthStateBadge HealthState={module.healthState} /></td>
-                                                </tr>)
+                                                    <tr key={idx}>
+                                                        <td><Link to={"/modules/" + module.name}>{module.name}</Link></td>
+                                                        <td><HealthStateBadge HealthState={module.healthState} /></td>
+                                                    </tr>)
                                             }
                                         </tbody>
                                     </Table>
@@ -200,7 +200,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                         <Col md={4}><span className="font-bold font-small center-text">Start behaviour:</span></Col>
                                         <Col md={8}>
                                             <Input type="select" value={this.props.Module.startBehaviour}
-                                                   onChange={(e: React.FormEvent<HTMLInputElement>) => this.onStartBehaviourChange(e)}>
+                                                onChange={(e: React.FormEvent<HTMLInputElement>) => this.onStartBehaviourChange(e)}>
                                                 <option value={ModuleStartBehaviour.Auto}>Auto</option>
                                                 <option value={ModuleStartBehaviour.Manual}>Manual</option>
                                                 <option value={ModuleStartBehaviour.OnDependency}>On dependency</option>
@@ -211,7 +211,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                         <Col md={4}><span className="font-bold font-small center-text">Failure behaviour:</span></Col>
                                         <Col md={8}>
                                             <Input type="select" value={this.props.Module.failureBehaviour}
-                                                   onChange={(e: React.FormEvent<HTMLInputElement>) => this.onFailureBehaviourChange(e)}>
+                                                onChange={(e: React.FormEvent<HTMLInputElement>) => this.onFailureBehaviourChange(e)}>
                                                 <option value={FailureBehaviour.Stop}>Stop</option>
                                                 <option value={FailureBehaviour.StopAndNotify}>Stop and notify</option>
                                             </Input>
@@ -235,20 +235,20 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        {
-                                            this.props.Module.notifications.map((notification, idx) =>
-                                                <tr key={idx} className={"selectable"} style={{alignItems: "center"}}
-                                                    onClick={(e: React.MouseEvent<HTMLElement>) => this.openNotificationDetailsDialog(e, notification)}>
-                                                    <td><span className="align-self-center">{notification.exception != null ? notification.exception.exceptionTypeName : "-"}</span></td>
-                                                    <td><span className="align-self-center">{notification.message}</span></td>
-                                                    <td>
-                                                        <span className="align-self-center" style={ModuleNotificationTypeToCssClassConverter.Convert(notification.severity)}>
-                                                            {Serverity[notification.severity]}
-                                                        </span>
-                                                    </td>
-                                                </tr>,
-                                            )
-                                        }
+                                            {
+                                                this.props.Module.notifications.map((notification, idx) =>
+                                                    <tr key={idx} className={"selectable"} style={{ alignItems: "center" }}
+                                                        onClick={(e: React.MouseEvent<HTMLElement>) => this.openNotificationDetailsDialog(e, notification)}>
+                                                        <td><span className="align-self-center">{notification.exception != null ? notification.exception.exceptionTypeName : "-"}</span></td>
+                                                        <td><span className="align-self-center">{notification.message}</span></td>
+                                                        <td>
+                                                            <span className="align-self-center" style={ModuleNotificationTypeToCssClassConverter.Convert(notification.severity)}>
+                                                                {Serverity[notification.severity]}
+                                                            </span>
+                                                        </td>
+                                                    </tr>,
+                                                )
+                                            }
                                         </tbody>
                                     </Table>
                                 )}
@@ -262,9 +262,9 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                         {this.state.SelectedNotification != null &&
                             <Container fluid={true}>
                                 <Row>
-                                    <Col md={2} ></Col>
+                                    <Col md={2} />
                                     <Col md={10}>
-                                            <b>{this.state.SelectedNotification.message}</b>
+                                        <b>{this.state.SelectedNotification.message}</b>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -285,14 +285,14 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                 </Row>
                                 <Row>
                                     <Col md={12}>
-                                        { this.state.SelectedNotification.exception.innerException == null ? (
+                                        {this.state.SelectedNotification.exception.innerException == null ? (
                                             <span className="font-italic">No inner exception found.</span>
                                         ) : (
                                             <span className="font-bold">Inner exception</span>
                                         )}
                                     </Col>
                                 </Row>
-                                { this.state.SelectedNotification.exception.innerException != null &&
+                                {this.state.SelectedNotification.exception.innerException != null &&
                                     <Row>
                                         <Col md={12}>{Module.preRenderInnerException(this.state.SelectedNotification.exception.innerException)}</Col>
                                     </Row>

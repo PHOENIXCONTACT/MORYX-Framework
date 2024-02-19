@@ -3,13 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCogs, mdiContentSave, mdiHexagon, mdiSync, mdiUndo} from "@mdi/js";
+import { mdiCogs, mdiContentSave, mdiHexagon, mdiSync, mdiUndo } from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
-import NotificationSystem = require("react-notification-system");
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, ListGroup, Row } from "reactstrap";
-import ListGroupItem from "reactstrap/lib/ListGroupItem";
+import { toast, ToastContainer } from "react-toastify";
+import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Row } from "reactstrap";
 import ModuleHeader from "../../common/components/ModuleHeader";
 import ModulesRestClient from "../api/ModulesRestClient";
 import NavigableConfigEditor from "../components/ConfigEditor/NavigableConfigEditor";
@@ -20,7 +19,6 @@ import Entry from "../models/Entry";
 interface ModuleConfigurationPropModel {
     RestClient?: ModulesRestClient;
     ModuleName: string;
-    NotificationSystem: NotificationSystem;
 }
 
 interface ModuleConfigurationStateModel {
@@ -52,33 +50,33 @@ class ModuleConfiguration extends React.Component<ModuleConfigurationPropModel &
 
     public loadConfig(): Promise<void> {
         return this.props.RestClient.moduleConfig(this.props.ModuleName)
-                             .then((data) => {
-                                 Config.patchConfig(data);
-                                 this.setState(
-                                    {
-                                        ModuleConfig: data,
-                                        ParentEntry: data.root,
-                                        CurrentSubEntries: data.root.subEntries,
-                                        ConfigIsLoading: false,
-                                    });
-                                });
+            .then((data) => {
+                Config.patchConfig(data);
+                this.setState(
+                    {
+                        ModuleConfig: data,
+                        ParentEntry: data.root,
+                        CurrentSubEntries: data.root.subEntries,
+                        ConfigIsLoading: false,
+                    });
+            });
     }
 
     public onApply(): void {
         this.props.RestClient.saveModuleConfig(this.props.ModuleName, { Config: this.state.ModuleConfig, UpdateMode: ConfigUpdateMode.SaveAndReincarnate })
-                             .then((result) => this.props.NotificationSystem.addNotification({ title: "Saved", message: "Configuration was saved successfully. Module is restarting...", level: "success", autoDismiss: 5 }));
+            .then((result) => toast.success("Configuration was saved successfully. Module is restarting...", { autoClose: 5000 }));
     }
 
     public onSave(): void {
         this.props.RestClient.saveModuleConfig(this.props.ModuleName, { Config: this.state.ModuleConfig, UpdateMode: ConfigUpdateMode.OnlySave })
-                             .then((result) => this.props.NotificationSystem.addNotification({ title: "Saved", message: "Configuration was saved successfully", level: "success", autoDismiss: 5 }));
+            .then((result) => toast.success("Configuration was saved successfully", { autoClose: 5000 }));
     }
 
     public onRevert(): void {
         this.props.history.push("?");
         this.setState({ ConfigIsLoading: true });
         this.loadConfig()
-            .then((result) => this.props.NotificationSystem.addNotification({ title: "Reverted", message: "Configuration was reverted", level: "success", autoDismiss: 3 }));
+            .then((result) => toast.success("Configuration was reverted", { autoClose: 3000 }));
     }
 
     public render(): React.ReactNode {
@@ -98,11 +96,11 @@ class ModuleConfiguration extends React.Component<ModuleConfigurationPropModel &
                         <span className="font-bold font-small">Loading config ...</span>
                     }
                     <NavigableConfigEditor ParentEntry={this.state.ParentEntry}
-                                           Entries={this.state.CurrentSubEntries}
-                                           Root={this.state.ModuleConfig.root}
-                                           IsReadOnly={false}
-                                           History={this.props.history}
-                                           Location={this.props.location} />
+                        Entries={this.state.CurrentSubEntries}
+                        Root={this.state.ModuleConfig.root}
+                        IsReadOnly={false}
+                        History={this.props.history}
+                        Location={this.props.location} />
 
                     <ButtonGroup className="up-space-lg">
                         <Button color="primary" onClick={() => this.onApply()}>
