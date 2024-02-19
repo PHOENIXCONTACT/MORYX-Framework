@@ -6,11 +6,9 @@
 import { mdiBriefcase, mdiCheck, mdiDatabase, mdiExclamationThick, mdiLoading, mdiPowerPlug, mdiTable } from "@mdi/js";
 import Icon from "@mdi/react";
 import * as moment from "moment";
-import { any, element, string } from "prop-types";
 import * as React from "react";
-import { connect, Provider } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { connect } from "react-redux";
+import { toast } from "react-toastify";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Form, Input, Nav, NavItem, NavLink, Row, TabContent, TabPane, UncontrolledTooltip } from "reactstrap";
 import kbToString from "../../common/converter/ByteConverter";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";

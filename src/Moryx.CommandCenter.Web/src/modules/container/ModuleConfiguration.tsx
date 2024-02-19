@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCogs, mdiContentSave, mdiHexagon, mdiSync, mdiUndo } from "@mdi/js";
+import { mdiContentSave, mdiHexagon, mdiSync, mdiUndo } from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Row } from "reactstrap";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Button, ButtonGroup, Card, CardBody, CardHeader, ListGroup, ListGroupItem } from "reactstrap";
 import ModuleHeader from "../../common/components/ModuleHeader";
 import ModulesRestClient from "../api/ModulesRestClient";
 import NavigableConfigEditor from "../components/ConfigEditor/NavigableConfigEditor";
@@ -28,98 +28,92 @@ interface ModuleConfigurationStateModel {
     CurrentSubEntries: Entry[];
 }
 
-class ModuleConfiguration extends React.Component<ModuleConfigurationPropModel & RouteComponentProps<{}>, ModuleConfigurationStateModel> {
-    constructor(props: ModuleConfigurationPropModel & RouteComponentProps<{}>) {
-        super(props);
+function ModuleConfiguration(props: ModuleConfigurationPropModel) {
+    const navigate = useNavigate();
+    const location = useLocation();
 
-        const config = new Config();
-        config.module = this.props.ModuleName;
-        config.root = new Entry();
+    const config = new Config();
+    config.module = props.ModuleName;
+    config.root = new Entry();
 
-        this.state = {
-            ModuleConfig: config,
-            ConfigIsLoading: true,
-            ParentEntry: null,
-            CurrentSubEntries: [],
-        };
-    }
+    const [moduleConfig, setModuleConfig] = React.useState<ModuleConfigurationStateModel>({
+        ModuleConfig: config,
+        ConfigIsLoading: true,
+        ParentEntry: null,
+        CurrentSubEntries: [],
+    });
 
-    public componentDidMount(): void {
-        this.loadConfig();
-    }
+    React.useEffect(() => {
+        loadConfig();
+    }, []);
 
-    public loadConfig(): Promise<void> {
-        return this.props.RestClient.moduleConfig(this.props.ModuleName)
+    const loadConfig = (): Promise<void> => {
+        return props.RestClient.moduleConfig(props.ModuleName)
             .then((data) => {
                 Config.patchConfig(data);
-                this.setState(
-                    {
-                        ModuleConfig: data,
-                        ParentEntry: data.root,
-                        CurrentSubEntries: data.root.subEntries,
-                        ConfigIsLoading: false,
-                    });
+                setModuleConfig({
+                    ModuleConfig: data,
+                    ParentEntry: data.root,
+                    CurrentSubEntries: data.root.subEntries,
+                    ConfigIsLoading: false,
+                });
             });
-    }
+    };
 
-    public onApply(): void {
-        this.props.RestClient.saveModuleConfig(this.props.ModuleName, { Config: this.state.ModuleConfig, UpdateMode: ConfigUpdateMode.SaveAndReincarnate })
-            .then((result) => toast.success("Configuration was saved successfully. Module is restarting...", { autoClose: 5000 }));
-    }
+    const onApply = (): void => {
+        props.RestClient.saveModuleConfig(props.ModuleName, { Config: moduleConfig.ModuleConfig, UpdateMode: ConfigUpdateMode.SaveAndReincarnate })
+            .then(() => toast.success("Configuration was saved successfully. Module is restarting...", { autoClose: 5000 }));
+    };
 
-    public onSave(): void {
-        this.props.RestClient.saveModuleConfig(this.props.ModuleName, { Config: this.state.ModuleConfig, UpdateMode: ConfigUpdateMode.OnlySave })
-            .then((result) => toast.success("Configuration was saved successfully", { autoClose: 5000 }));
-    }
+    const onSave = (): void => {
+        props.RestClient.saveModuleConfig(props.ModuleName, { Config: moduleConfig.ModuleConfig, UpdateMode: ConfigUpdateMode.OnlySave })
+            .then(() => toast.success("Configuration was saved successfully", { autoClose: 5000 }));
+    };
 
-    public onRevert(): void {
-        this.props.history.push("?");
-        this.setState({ ConfigIsLoading: true });
-        this.loadConfig()
-            .then((result) => toast.success("Configuration was reverted", { autoClose: 3000 }));
-    }
+    const onRevert = (): void => {
+        navigate("?");
+        setModuleConfig({ ...moduleConfig, ConfigIsLoading: true });
+        loadConfig()
+            .then(() => toast.success("Configuration was reverted", { autoClose: 3000 }));
+    };
 
-    public render(): React.ReactNode {
-        return (
-            <Card>
-                <CardHeader tag="h2">
-                    <Icon path={mdiHexagon} className="icon right-space" />
-                    {this.props.ModuleName}
-                </CardHeader>
-                <ListGroup>
-                    <ListGroupItem className="nav-listgroup-item">
-                        <ModuleHeader ModuleName={this.props.ModuleName} />
-                    </ListGroupItem>
-                </ListGroup>
-                <CardBody>
-                    {this.state.ConfigIsLoading &&
-                        <span className="font-bold font-small">Loading config ...</span>
-                    }
-                    <NavigableConfigEditor ParentEntry={this.state.ParentEntry}
-                        Entries={this.state.CurrentSubEntries}
-                        Root={this.state.ModuleConfig.root}
-                        IsReadOnly={false}
-                        History={this.props.history}
-                        Location={this.props.location} />
+    return (
+        <Card>
+            <CardHeader tag="h2">
+                <Icon path={mdiHexagon} className="icon right-space" />
+                {props.ModuleName}
+            </CardHeader>
+            <ListGroup>
+                <ListGroupItem className="nav-listgroup-item">
+                    <ModuleHeader ModuleName={props.ModuleName} />
+                </ListGroupItem>
+            </ListGroup>
+            <CardBody>
+                {moduleConfig.ConfigIsLoading &&
+                    <span className="font-bold font-small">Loading config ...</span>
+                }
+                <NavigableConfigEditor ParentEntry={moduleConfig.ParentEntry}
+                    Entries={moduleConfig.CurrentSubEntries}
+                    Root={moduleConfig.ModuleConfig.root}
+                    IsReadOnly={false} />
 
-                    <ButtonGroup className="up-space-lg">
-                        <Button color="primary" onClick={() => this.onApply()}>
-                            <Icon path={mdiSync} className="icon-white right-space" />
-                            Save &amp; Restart
-                        </Button>
-                        <Button color="primary" onClick={() => this.onSave()}>
-                            <Icon path={mdiContentSave} className="icon-white right-space" />
-                            Save only
-                        </Button>
-                        <Button color="dark" onClick={() => this.onRevert()}>
-                            <Icon path={mdiUndo} className="icon-white right-space" />
-                            Revert
-                        </Button>
-                    </ButtonGroup>
-                </CardBody>
-            </Card>
-        );
-    }
+                <ButtonGroup className="up-space-lg">
+                    <Button color="primary" onClick={() => onApply()}>
+                        <Icon path={mdiSync} className="icon-white right-space" />
+                        Save &amp; Restart
+                    </Button>
+                    <Button color="primary" onClick={() => onSave()}>
+                        <Icon path={mdiContentSave} className="icon-white right-space" />
+                        Save only
+                    </Button>
+                    <Button color="dark" onClick={() => onRevert()}>
+                        <Icon path={mdiUndo} className="icon-white right-space" />
+                        Revert
+                    </Button>
+                </ButtonGroup>
+            </CardBody>
+        </Card>
+    );
 }
 
-export default withRouter<ModuleConfigurationPropModel & RouteComponentProps<{}>, React.ComponentType<any>>(ModuleConfiguration);
+export default ModuleConfiguration;

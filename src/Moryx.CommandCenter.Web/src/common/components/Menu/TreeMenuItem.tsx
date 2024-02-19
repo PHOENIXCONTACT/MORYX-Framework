@@ -6,7 +6,6 @@
 import { mdiChevronDown, mdiChevronUp } from "@mdi/js";
 import Icon from "@mdi/react";
 import * as React from "react";
-import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { Col, Collapse, Container, Row } from "reactstrap";
 import MenuItemModel, { IconType } from "../../models/MenuItemModel";
 
@@ -22,7 +21,7 @@ interface MenuItemState {
 
 export default class TreeMenuItem extends React.Component<MenuItemProps, MenuItemState> {
     constructor(props: MenuItemProps) {
-        super (props);
+        super(props);
         this.state = { IsOpened: false };
 
         this.onMenuItemClicked = this.onMenuItemClicked.bind(this);
@@ -42,12 +41,12 @@ export default class TreeMenuItem extends React.Component<MenuItemProps, MenuIte
     }
 
     private renderSubMenuItems(): React.ReactNode {
-        return this.props.MenuItem.SubMenuItems.map ((menuItem, idx) =>
+        return this.props.MenuItem.SubMenuItems.map((menuItem, idx) =>
             <TreeMenuItem key={idx}
-                          MenuItem={menuItem}
-                          Level={this.props.Level + 1}
-                          onMenuItemClicked={this.onMenuItemClicked}
-                          />);
+                MenuItem={menuItem}
+                Level={this.props.Level + 1}
+                onMenuItemClicked={this.onMenuItemClicked}
+            />);
     }
 
     public render(): React.ReactNode {
@@ -55,34 +54,34 @@ export default class TreeMenuItem extends React.Component<MenuItemProps, MenuIte
         const iconType = this.props.MenuItem.IconType == undefined ? IconType.Icon : IconType.Image;
         const defaultContent = (
             <div>
-                { this.props.MenuItem.Icon !== undefined && iconType === IconType.Icon &&
+                {this.props.MenuItem.Icon !== undefined && iconType === IconType.Icon &&
                     <Icon path={this.props.MenuItem.Icon} className="icon right-space" />
                 }
-                { this.props.MenuItem.Icon !== undefined && iconType === IconType.Image &&
-                    <img src={this.props.MenuItem.Icon} style={{marginRight: "4px"}} />
+                {this.props.MenuItem.Icon !== undefined && iconType === IconType.Image &&
+                    <img src={this.props.MenuItem.Icon} style={{ marginRight: "4px" }} />
                 }
                 <Icon path={this.props.MenuItem.Icon} className="icon right-sapce" />
-                <span style={{wordBreak: "break-all"}}>{this.props.MenuItem.Name}</span>
+                <span style={{ wordBreak: "break-all" }}>{this.props.MenuItem.Name}</span>
             </div>
         );
 
         return (
-            <div style={{paddingLeft: this.props.Level * 10 + "px", margin: "5px 0px 5px 0px"}}>
+            <div style={{ paddingLeft: this.props.Level * 10 + "px", margin: "5px 0px 5px 0px" }}>
                 <Container fluid={true} className="menu-item">
                     <Row>
                         <Col md={10}>
                             <div>
-                                { this.props.MenuItem.Content === undefined &&
+                                {this.props.MenuItem.Content === undefined &&
                                     defaultContent
                                 }
-                                { this.props.MenuItem.Content !== undefined &&
+                                {this.props.MenuItem.Content !== undefined &&
                                     this.props.MenuItem.Content
                                 }
                             </div>
                         </Col>
                         <Col md={2} onClick={(e: React.MouseEvent<HTMLElement>) => this.handleMenuItemClick(e)}>
-                            { hasSubItems &&
-                                <Icon path={this.state.IsOpened ? mdiChevronUp : mdiChevronDown} className="icon"/>
+                            {hasSubItems &&
+                                <Icon path={this.state.IsOpened ? mdiChevronUp : mdiChevronDown} className="icon" />
                             }
                         </Col>
                     </Row>
