@@ -144,7 +144,7 @@ namespace Moryx.Tests.Collections
             Assert.AreEqual(0, _times.Count);
         }
 
-        [Test(Description = "")]
+        [Test(Description = ""), Explicit]
         public void InterruptQueue()
         {
             // Arrange

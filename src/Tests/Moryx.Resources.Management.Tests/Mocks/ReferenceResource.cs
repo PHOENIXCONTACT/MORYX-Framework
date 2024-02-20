@@ -12,7 +12,11 @@ namespace Moryx.Resources.Management.Tests
     {
         ISimpleResource Reference { get; set; }
 
+        DerivedResource Reference2 { get; set; }
+
         IEnumerable<ISimpleResource> MoreReferences { get; }
+
+        IEnumerable<ISimpleResource> EvenMoreReferences { get; set; }
 
         INonPublicResource NonPublic { get; }
 
@@ -70,6 +74,8 @@ namespace Moryx.Resources.Management.Tests
         internal IReferences<ISimpleResource> ChildReferences { get; set; }
 
         IEnumerable<ISimpleResource> IReferenceResource.MoreReferences => References;
+
+        public IEnumerable<ISimpleResource> EvenMoreReferences { get; set; }
 
         public ISimpleResource GetReference()
         {
