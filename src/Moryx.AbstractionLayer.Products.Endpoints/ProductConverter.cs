@@ -27,16 +27,22 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             _productManagement = productManagement;
         }
+
         public ProductDefinitionModel ConvertProductType(Type productType)
         {
+            var baseType = productType.BaseType;
+            var baseTypeName = baseType == typeof(ProductType)
+                ? string.Empty : baseType.FullName;
+
             return new()
             {
                 Name = productType.FullName,
                 DisplayName = productType.GetDisplayName() ?? productType.Name,
-                BaseDefinition = productType.BaseType?.Name,
+                BaseDefinition = baseTypeName,
                 Properties = EntryConvert.EncodeClass(productType, ProductSerialization)
             };
         }
+
         public RecipeDefinitionModel ConvertRecipeType(Type recipeType)
         {
             return new()
