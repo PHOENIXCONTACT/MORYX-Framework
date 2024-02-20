@@ -243,6 +243,8 @@ namespace Moryx.Resources.Management.Tests
             {
                 Id = 8,
                 Reference = ref1,
+                Reference2 = null,
+                EvenMoreReferences = null,
                 NonPublic = nonPub
             };
             instance.References = new ReferenceCollection<ISimpleResource>(instance,
@@ -288,6 +290,11 @@ namespace Moryx.Resources.Management.Tests
             Assert.AreEqual(instance.Reference, ref2);
             Assert.AreEqual(instance.References.Count, 3);
             Assert.AreEqual(instance.References.ElementAt(1), ref1);
+            // Make sure null references work
+            Assert.DoesNotThrow(() => _ = proxy.Reference2);
+            Assert.DoesNotThrow(() => proxy.Reference2 = null);
+            Assert.DoesNotThrow(() => _ = proxy.EvenMoreReferences);
+            Assert.DoesNotThrow(() => proxy.EvenMoreReferences = null);
         }
 
     }

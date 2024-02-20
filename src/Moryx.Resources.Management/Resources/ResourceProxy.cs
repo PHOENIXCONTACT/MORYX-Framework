@@ -58,6 +58,8 @@ namespace Moryx.Resources.Management
         protected internal TResource Convert<TResource>(IResource instance)
             where TResource : IResource
         {
+            if (instance is null) return default;
+
             return (TResource)_typeController.GetProxy((Resource)instance);
         }
 
@@ -67,6 +69,8 @@ namespace Moryx.Resources.Management
         protected internal TResource[] ConvertMany<TResource>(IEnumerable<IResource> instances)
             where TResource : IResource
         {
+            if (instances is null) return default;
+
             return instances.Select(Convert<TResource>).ToArray();
         }
 
@@ -76,6 +80,8 @@ namespace Moryx.Resources.Management
         protected internal static TResource Extract<TResource>(IResource instance)
             where TResource : IResource
         {
+            if (instance is null) return default;
+
             var proxy = (ResourceProxy)instance;
             return (TResource)proxy.Target;
         }
@@ -86,6 +92,8 @@ namespace Moryx.Resources.Management
         protected internal static TResource[] ExtractMany<TResource>(IEnumerable<IResource> instances)
             where TResource : IResource
         {
+            if (instances is null) return default;
+
             return instances.Select(Extract<TResource>).ToArray();
         }
     }
