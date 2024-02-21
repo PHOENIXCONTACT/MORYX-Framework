@@ -156,7 +156,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var productModels = new List<ProductModel>();
             foreach (var t in productTypes)
             {
-                productModels.Add(_productConverter.ConvertProduct(t, false));
+                productModels.Add(_productConverter.ConvertProduct(t, false, query.NoPartLinks == false));
             }
             return productModels.ToArray();
         }
