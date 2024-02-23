@@ -7,7 +7,7 @@ import { mdiBriefcase, mdiComment, mdiDatabase, mdiHexagonMultiple } from "@mdi/
 import Icon from "@mdi/react";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Link, Route, RouteComponentProps, Switch } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { Card, CardBody, CardHeader, Col, ListGroup, Nav, Navbar, NavItem, Row } from "reactstrap";
 import RoutingMenu from "../../common/components/Menu/RoutingMenu";
 import MenuItemModel from "../../common/models/MenuItemModel";
@@ -84,9 +84,8 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
 
         this.props.DatabaseConfigs.forEach((model) => {
             routes.push(
-                <Route key={idx} path={`/databases/${model.targetModel}`} exact={true}>
-                    <DatabaseModel DataModel={model} RestClient={this.props.RestClient} />
-                </Route>);
+                <Route key={idx} path={`${model.targetModel}`} element={
+                    <DatabaseModel DataModel={model} RestClient={this.props.RestClient} />} />);
             ++idx;
         });
 
@@ -126,8 +125,8 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                     </Card>
                 </Col>
                 <Col md={9}>
-                    <Switch>
-                        <Route exact={true} path="/databases">
+                    <Routes>
+                        <Route path="*" element={
                             <Card>
                                 <CardHeader tag="h4">
                                     <Icon path={mdiComment} className="icon right-space" />
@@ -136,10 +135,9 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                                 <CardBody>
                                     <span className="font-italic font-small">Configure all available database models. Please select a database model to proceed...</span>
                                 </CardBody>
-                            </Card>
-                        </Route>
+                            </Card>} />
                         {this.preRenderRoutesList()}
-                    </Switch>
+                    </Routes>
                 </Col>
             </Row>
         );

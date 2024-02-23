@@ -7,7 +7,7 @@ import { mdiCogs, mdiComment, mdiConsoleLine, mdiDatabase, mdiHexagon, mdiHexago
 import Icon from "@mdi/react";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Link, Route, Switch } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { Card, CardBody, CardHeader, Col, ListGroup, Nav, Navbar, NavItem, NavLink, Row } from "reactstrap";
 import RoutingMenu from "../../common/components/Menu/RoutingMenu";
 import MenuItemModel from "../../common/models/MenuItemModel";
@@ -104,21 +104,18 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
         this.state.MenuModel.MenuItems.forEach((menuItem) => {
             const module = this.props.Modules.filter(function (element: ServerModuleModel, index: number, array: ServerModuleModel[]): boolean { return element.name === menuItem.Name; })[0];
             routes.push(
-                <Route key={idx} path={menuItem.NavPath} exact={true}>
-                    <Module Module={module} RestClient={this.props.RestClient} />
-                </Route>);
+                <Route key={idx} path={menuItem.NavPath.replace("/modules/", "")} element={
+                    <Module Module={module} RestClient={this.props.RestClient} />} />);
 
             menuItem.SubMenuItems.forEach((subMenuItem) => {
                 if (subMenuItem.NavPath.endsWith("configuration")) {
                     routes.push(
-                        <Route key={idx} path={subMenuItem.NavPath} exact={true}>
-                            <ModuleConfiguration ModuleName={module.name} RestClient={this.props.RestClient} />
-                        </Route>);
+                        <Route key={idx} path={subMenuItem.NavPath.replace("/modules/", "")} element={
+                            <ModuleConfiguration ModuleName={module.name} RestClient={this.props.RestClient} />} />);
                 } else if (subMenuItem.NavPath.endsWith("console")) {
                     routes.push(
-                        <Route key={idx} path={subMenuItem.NavPath} exact={true}>
-                            <ModuleConsole ModuleName={module.name} RestClient={this.props.RestClient} />
-                        </Route>);
+                        <Route key={idx} path={subMenuItem.NavPath.replace("/modules/", "")} element={
+                            <ModuleConsole ModuleName={module.name} RestClient={this.props.RestClient} />} />);
                 }
 
                 ++idx;
@@ -159,8 +156,8 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                     </Card>
                 </Col>
                 <Col md={9}>
-                    <Switch>
-                        <Route exact={true} path="/modules" >
+                    <Routes>
+                        <Route path="*" element={
                             <Card>
                                 <CardHeader tag="h4">
                                     <Icon path={mdiComment} className="icon right-space" />
@@ -169,10 +166,9 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                                 <CardBody>
                                     <span className="font-italic font-small">Watch, configure and maintain all available modules. Please select a module to proceed...</span>
                                 </CardBody>
-                            </Card>
-                        </Route>
+                            </Card>} />
                         {this.preRenderRoutesList()}
-                    </Switch>
+                    </Routes>
                 </Col>
             </Row>
         );

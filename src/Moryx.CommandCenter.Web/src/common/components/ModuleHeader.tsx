@@ -48,7 +48,7 @@ export class ModuleHeader extends React.Component<ModulePropModel & ModuleDispat
             <Navbar className="navbar-default" expand="md">
                 <Nav className="navbar-left" navbar={true}>
                     <NavItem>
-                        <NavLink exact={true} to={`/modules/${this.props.ModuleName}`} className="navbar-nav-link">
+                        <NavLink end={true} to={`/modules/${this.props.ModuleName}`} className="navbar-nav-link">
                             <Icon path={mdiMonitor} className="icon right-space" />
                             Overview
                         </NavLink>
@@ -61,7 +61,7 @@ export class ModuleHeader extends React.Component<ModulePropModel & ModuleDispat
                     </NavItem>
                     <NavItem >
                         <NavLink to={`/modules/${this.props.ModuleName}/console`} className="navbar-nav-link">
-                            <Icon path={mdiConsoleLine}className="icon right-space" />
+                            <Icon path={mdiConsoleLine} className="icon right-space" />
                             Console
                         </NavLink>
                     </NavItem>
