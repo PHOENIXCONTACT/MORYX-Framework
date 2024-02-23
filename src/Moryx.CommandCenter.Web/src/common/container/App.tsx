@@ -5,8 +5,8 @@
 
 import * as React from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Container } from "reactstrap";
 import DatabasesRestClient from "../../databases/api/DatabasesRestClient";
@@ -71,56 +71,46 @@ const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): AppDispat
   };
 };
 
-class App extends React.Component<AppPropModel & RouteComponentProps<{}> & AppDispatchPropModel> {
-  private updateClockTimer: NodeJS.Timeout;
-  private updateLoadAndModulesTimer: NodeJS.Timeout;
+function App(props: AppPropModel & AppDispatchPropModel) {
+  const updateClockTimerRef = React.useRef<NodeJS.Timeout>();
+  const updateLoadAndModulesTimerRef = React.useRef<NodeJS.Timeout>();
 
-  constructor(props: AppPropModel & RouteComponentProps<{}> & AppDispatchPropModel) {
-    super(props);
+  React.useEffect(() => {
+    updateLoadAndModulesTimerRef.current = setInterval(loadAndModulesUpdater, 5000);
+    props.ModulesRestClient.modules().then((data) => props?.onUpdateModules(data));
 
-    this.loadAndModulesUpdater = this.loadAndModulesUpdater.bind(this);
-  }
+    return () => {
+      clearInterval(updateClockTimerRef.current!);
+      clearInterval(updateLoadAndModulesTimerRef.current!);
+    };
+  }, []);
 
-  public componentDidMount(): void {
-    this.updateLoadAndModulesTimer = setInterval(this.loadAndModulesUpdater, 5000);
-    this.props.ModulesRestClient.modules().then((data) => this.props?.onUpdateModules(data));
-  }
-
-  public componentWillUnmount(): void {
-    clearInterval(this.updateClockTimer);
-    clearInterval(this.updateLoadAndModulesTimer);
-  }
-
-  public render(): React.ReactNode {
-    return (
-      <div className="commandcenter-app-container">
-        <div className="commandcenter-content-wrapper">
-          <ToastContainer />
-
-          <Container fluid={true} id="body" className="content">
-            <Switch>
-              <Route path="/modules" component={Modules} />
-              <Route path="/databases" component={Databases} />
-              <Route render={() => <Redirect to="/databases" />} />
-            </Switch>
-          </Container>
-        </div>
-      </div>
-    );
-  }
-
-  private loadAndModulesUpdater(): void {
-    this.props.Modules.forEach((module) => {
-      this.props.ModulesRestClient.healthState(module.name).then((data) =>
-        this.props.onUpdateModuleHealthState(module.name, data)
+  const loadAndModulesUpdater = (): void => {
+    props.Modules.forEach((module) => {
+      props.ModulesRestClient.healthState(module.name).then((data) =>
+        props.onUpdateModuleHealthState(module.name, data)
       );
-      this.props.ModulesRestClient.notifications(module.name).then((data) =>
-        this.props.onUpdateModuleNotifications(module.name, data)
+      props.ModulesRestClient.notifications(module.name).then((data) =>
+        props.onUpdateModuleNotifications(module.name, data)
       );
     });
-  }
+  };
+
+  return (
+    <div className="commandcenter-app-container">
+      <div className="commandcenter-content-wrapper">
+        <ToastContainer />
+
+        <Container fluid={true} id="body" className="content">
+          <Routes>
+            <Route path="/modules/*" element={<Modules />} />
+            <Route path="/databases/*" element={<Databases />} />
+            <Route path="*" element={<Navigate to="/databases/*" />} />
+          </Routes>
+        </Container>
+      </div>
+    </div>
+  );
 }
 
-export default withRouter<RouteComponentProps<{}>, React.ComponentType<any>>(
-  connect<AppPropModel, AppDispatchPropModel>(mapStateToProps, mapDispatchToProps)(App)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

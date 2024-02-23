@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
- * Licensed under the Apache License, Version 2.0
+* Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+* Licensed under the Apache License, Version 2.0
 */
 
-import { Location, UnregisterCallback } from "history";
 import * as React from "react";
-import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import { Link, Location, useLocation, useNavigate } from "react-router-dom";
 import { ListGroupItem } from "reactstrap";
 import MenuItemModel from "../../models/MenuItemModel";
 
@@ -19,54 +18,42 @@ interface MenuItemState {
     IsOpened: boolean;
 }
 
-class RoutingMenuItem extends React.Component<RouteComponentProps<{}> & MenuItemProps, MenuItemState> {
-    private unregisterListenerCallback: UnregisterCallback;
+function RoutingMenuItem(props: MenuItemProps) {
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    constructor(props: RouteComponentProps<{}> & MenuItemProps) {
-        super(props);
-        this.state = { IsOpened: this.isOpened(this.props.location) };
+    const isOpened = (location: Location): boolean => {
+        return location.pathname.startsWith(props.MenuItem.NavPath);
+    };
 
-        this.unregisterListenerCallback = this.props.history.listen(this.onRouteChanged.bind(this));
-        this.onMenuItemClicked = this.onMenuItemClicked.bind(this);
-    }
+    const [IsOpened, setIsOpened] = React.useState<boolean>(isOpened(location));
 
-    public componentWillUnmount(): void {
-        this.unregisterListenerCallback();
-    }
+    React.useEffect(() => {
+        setIsOpened(isOpened(location));
+    }, [navigate]);
 
-    private isOpened(location: Location): boolean {
-        return location.pathname.startsWith(this.props.MenuItem.NavPath);
-    }
-
-    private onRouteChanged(location: Location, action: string): void {
-        this.setState({ IsOpened: this.isOpened(location) });
-    }
-
-    private handleMenuItemClick(e: React.MouseEvent<HTMLElement>): void {
+    const handleMenuItemClick = (e: React.MouseEvent<HTMLElement>): void => {
         e.preventDefault();
+        setIsOpened((prevState) => !prevState);
+        onMenuItemClicked(props.MenuItem);
+    };
 
-        this.setState((prevState) => ({ IsOpened: !prevState.IsOpened }));
-        this.onMenuItemClicked(this.props.MenuItem);
-    }
-
-    private onMenuItemClicked(menuItem: MenuItemModel): void {
-        if (this.props.onMenuItemClicked != null) {
-            this.props.onMenuItemClicked(menuItem);
+    const onMenuItemClicked = (menuItem: MenuItemModel): void => {
+        if (props.onMenuItemClicked != null) {
+            props.onMenuItemClicked(menuItem);
         }
-    }
+    };
 
-    public render(): React.ReactNode {
-        const isActive = this.props.location.pathname.includes(this.props.MenuItem.NavPath);
+    const isActive = isOpened(location);
 
-        return (
-            <ListGroupItem active={isActive} className="menu-item" onClick={(e: React.MouseEvent<HTMLElement>) => this.handleMenuItemClick(e)}>
-                <Link to={this.props.MenuItem.NavPath}>
-                    {this.props.MenuItem.Name}
-                </Link>
-                {this.props.MenuItem.Content}
-            </ListGroupItem >
-        );
-    }
+    return (
+        <ListGroupItem active={isActive} className="menu-item" onClick={(e: React.MouseEvent<HTMLElement>) => handleMenuItemClick(e)}>
+            <Link to={props.MenuItem.NavPath}>
+                {props.MenuItem.Name}
+            </Link>
+            {props.MenuItem.Content}
+        </ListGroupItem>
+    );
 }
 
-export default withRouter<RouteComponentProps<{}> & MenuItemProps, React.ComponentType<any>>(RoutingMenuItem);
+export default RoutingMenuItem;

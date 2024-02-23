@@ -60,7 +60,7 @@
         "no-sparse-arrays": true,
         "no-string-literal": true,
         "no-string-throw": true,
-        "no-submodule-imports": [true, "history/createHashHistory", "bootstrap-toggle/css/bootstrap2-toggle.css", "uuid/v1" ], // ToDo: define allowed sub modules
+        "no-submodule-imports": [true, "bootstrap-toggle/css/bootstrap2-toggle.css", "uuid/v1" ], // ToDo: define allowed sub modules
         "no-switch-case-fall-through": true,
         "no-this-assignment": true,
         "no-unbound-method": false,

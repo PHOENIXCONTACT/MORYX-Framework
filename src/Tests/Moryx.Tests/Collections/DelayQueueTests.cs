@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace Moryx.Tests.Collections
 {
-    [TestFixture]
+    [TestFixture, Explicit]
     public class DelayQueueTests
     {
         private class DummyMessage

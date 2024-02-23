@@ -3,7 +3,6 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { createHashHistory } from "history";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -13,7 +12,6 @@ import App from "./common/container/App";
 import { AppState, getAppReducer } from "./common/redux/AppState";
 import { ActionType } from "./common/redux/Types";
 
-export const history = createHashHistory();
 const store = createStore<AppState, ActionType<{}>, any, any>(getAppReducer);
 
 ReactDOM.render(
