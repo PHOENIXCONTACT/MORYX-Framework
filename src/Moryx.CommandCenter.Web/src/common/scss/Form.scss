@@ -4,6 +4,12 @@
     height: 1.95rem !important;
 }
 
+.form-control,
+.form-select {
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
 .log-menu {
     padding: 0px;
 }
@@ -12,7 +18,7 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    border:none;
+    border: none;
     border-radius: 0;
     font-size: 1em;
     background-repeat: no-repeat;
