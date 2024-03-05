@@ -45,7 +45,7 @@ export class ModuleHeader extends React.Component<ModulePropModel & ModuleDispat
 
     public render(): React.ReactNode {
         return (
-            <Navbar className="navbar-default" expand="md">
+            <Navbar className="navbar-default" expand="md" container={false}>
                 <Nav className="navbar-left" navbar={true}>
                     <NavItem>
                         <NavLink end={true} to={`/modules/${this.props.ModuleName}`} className="navbar-nav-link">

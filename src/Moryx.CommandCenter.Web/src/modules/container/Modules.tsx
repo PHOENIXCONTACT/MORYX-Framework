@@ -133,7 +133,7 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                 <Col md={3}>
                     <Card>
                         <CardHeader tag="h5">
-                            <Navbar className="navbar-default" expand="md">
+                            <Navbar className="navbar-default" expand="md" container={false}>
                                 <Nav className="navbar-left" navbar={true}>
                                     <NavItem className="active">
                                         <NavLink to="/modules" className="navbar-nav-link">
