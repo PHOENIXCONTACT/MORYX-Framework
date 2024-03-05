@@ -350,7 +350,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                 <Container fluid={true}>
                                     <Row className="up-space-lg">
                                         <Col md={12}>
-                                            <Input type="select" size={5} className="auto-height"
+                                            <Input type="select" className="auto-height"
                                                 onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelectBackup(e)}>
                                                 {
                                                     this.props.DataModel.backups.map((backup, idx) => {
@@ -443,7 +443,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                                                 <Button color="primary"
                                                                     onClick={() => this.onApplyMigration()}
                                                                     disabled={this.state.selectedMigration === "" || (this.state.testConnectionResult !== TestConnectionResult.Success && this.state.testConnectionResult !== TestConnectionResult.PendingMigrations)}>
-                                                                    Apply selected migration
+                                                                    Apply all migrations
                                                                 </Button>
                                                                 <Button color="primary"
                                                                     onClick={() => this.onRollbackDatabase()}
@@ -468,7 +468,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                                 <Container fluid={true}>
                                                     <Row>
                                                         <Col md={12}>
-                                                            <Input type="select" size={10} className="auto-height"
+                                                            <Input type="select" className="auto-height"
                                                                 onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelectSetup(e)}>
                                                                 {
                                                                     this.props.DataModel.setups.map((setup, idx) => {
