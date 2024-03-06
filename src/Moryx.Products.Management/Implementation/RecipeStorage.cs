@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using Moryx.AbstractionLayer;
@@ -137,7 +138,7 @@ namespace Moryx.Products.Management
 
                 // Restore parameters from JSON
                 if (step is ITaskStep<IParameters> taskStep)
-                    JsonConvert.PopulateObject(stepEntity.Parameters, taskStep.Parameters);
+                    PopulateStepParameters(stepEntity, taskStep);
 
                 // Restore Subworkplan if necessary
                 if (step is ISubworkplanStep subworkplanStep)
@@ -151,6 +152,16 @@ namespace Moryx.Products.Management
             }
 
             return steps;
+        }
+
+        private static void PopulateStepParameters(WorkplanStepEntity stepEntity, ITaskStep<IParameters> taskStep)
+        {
+            if (taskStep.Parameters is null)
+                throw new InvalidOperationException($"{nameof(taskStep.Parameters)} could not " +
+                    $"be populated from the database. Make sure the property of {taskStep.GetType()} " +
+                    $"is initilized on instance creation.");
+            else
+                JsonConvert.PopulateObject(stepEntity.Parameters, taskStep.Parameters);
         }
 
         /// <summary>
