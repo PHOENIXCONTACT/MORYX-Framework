@@ -8,6 +8,7 @@ import Icon from "@mdi/react";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Input, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Nav, Navbar, NavItem, Row, Table } from "reactstrap";
 import ModuleHeader from "../../common/components/ModuleHeader";
 import { ActionType } from "../../common/redux/Types";
@@ -68,7 +69,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
     }
 
     public reincarnateModule(): void {
-        this.props.RestClient.reincarnateModule(this.props.Module.name);
+        this.props.RestClient.reincarnateModule(this.props.Module.name).then((result) => toast.info("Module is restarting...", { autoClose: 5000 }));
     }
 
     public confirmModuleWarning(): void {
