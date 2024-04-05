@@ -30,7 +30,6 @@ interface ModuleConfigurationStateModel {
 
 function ModuleConfiguration(props: ModuleConfigurationPropModel) {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const config = new Config();
     config.module = props.ModuleName;

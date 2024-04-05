@@ -16,9 +16,6 @@ export interface ConsoleMethodConfiguratorPropModel {
 }
 
 function ConsoleMethodConfigurator(props: ConsoleMethodConfiguratorPropModel) {
-    const navigate = useNavigate();
-    const location = useLocation();
-
     const invokeSelectedMethod = (): void => {
         props.onInvokeMethod(props.Method);
     };

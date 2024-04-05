@@ -17,9 +17,6 @@ export interface ConsoleMethodResultPropModel {
 }
 
 function ConsoleMethodResult(props: ConsoleMethodResultPropModel) {
-    const navigate = useNavigate();
-    const location = useLocation();
-
     const resetInvokeResult = (): void => {
         props.onResetInvokeResult(props.Method.name);
     };
