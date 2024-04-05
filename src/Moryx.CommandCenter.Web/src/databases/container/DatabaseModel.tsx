@@ -54,7 +54,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         super(props);
         this.state = {
             activeTab: "1",
-            config: this.getConfigValue(),
+            config: this.props.DataModel.config,
             selectedMigration: (this.props.DataModel.availableMigrations.length !== 0 ? this.props.DataModel.availableMigrations[0].name : ""),
             selectedSetup: (this.props.DataModel.setups.length !== 0 ? 0 : -1),
             selectedBackup: (this.props.DataModel.backups.length !== 0 ? this.props.DataModel.backups[0].fileName : ""),
@@ -101,8 +101,9 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     }
 
     public onInputChanged(e: React.FormEvent<HTMLInputElement>, entryName: string): void {
+        this.props.DataModel.config.entries[entryName] = (e.target as HTMLSelectElement).value
         this.setState({
-            config: { ...this.state.config, entries: { ...this.state.config.entries, [entryName]: (e.target as HTMLSelectElement).value } }
+            config: { ...this.props.DataModel.config }
         });
     }
 
@@ -111,9 +112,9 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     }
 
     public createEntriesInput() {
-        return Object.keys(this.state.config.entries)?.map((element) => {
+        return Object.keys(this.props.DataModel.config.entries)?.map((element) => {
             return (<Col md={12} className="up-space">
-                <Input placeholder={element} {...this.getValidationState(element)} value={this.state.config.entries[element]} onBlur={() => this.onTestConnection()} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onInputChanged(e, element)} />
+                <Input placeholder={element} {...this.getValidationState(element)} value={this.props.DataModel.config.entries[element]} onBlur={() => this.onTestConnection()} onChange={(e: React.FormEvent<HTMLInputElement>) => this.onInputChanged(e, element)} />
             </Col>);
         });
     }
@@ -134,7 +135,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         return newEntries;
     }
 
-    public getConfigValue() {
+    public getConfigValue(): DatabaseConfigModel {
         return {
             ...this.props.DataModel.config,
             entries: this.props.DataModel.config.entries ?
@@ -333,11 +334,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                     <Row >
                                         <Col md={12}>
                                             <Input type="select" placeholder="Configurator Type Name" onChange={(e: React.FormEvent<HTMLInputElement>) => this.onConfiguratorTypeChanged(e)}
-                                                value={this.state.config.configuratorTypename} onBlur={() => this.onTestConnection()}>
+                                                value={this.props.DataModel.config.configuratorTypename} onBlur={() => this.onTestConnection()}>
                                                 {this.props.DataModel.possibleConfigurators.map((config, idx) => (<option key={idx} value={config.configuratorTypename}>{config.name}</option>))}
                                             </Input>
                                         </Col>
-                                        {this.state.config.configuratorTypename && this.createEntriesInput()}
+                                        {this.props.DataModel.config.configuratorTypename && this.createEntriesInput()}
                                     </Row>
                                     <Row className="up-space-lg">
                                         <Col md={12}>
