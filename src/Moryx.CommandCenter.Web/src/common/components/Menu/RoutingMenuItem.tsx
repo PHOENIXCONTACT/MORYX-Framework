@@ -44,10 +44,20 @@ function RoutingMenuItem(props: MenuItemProps) {
         }
     };
 
-    const isActive = isOpened(location);
+    const isActive = (location: Location): boolean => {
+        // Path has to be equal to be 'active' or must be a sub path (following
+        // after a `/`). Otherwise, with similar entries, multiple list items
+        // could be highlighted. E.g.: 'Orders' and 'OrdersSimulator' would both
+        // match the condition of `OrdersSimulator.startsWith(Orders)`.
+        return location.pathname === props.MenuItem.NavPath
+           || (location.pathname.startsWith(props.MenuItem.NavPath)
+                && location.pathname.replace(props.MenuItem.NavPath, "")[0] === "/");
+    };
+
+    const isLocationActive = isActive(location);
 
     return (
-        <ListGroupItem active={isActive} className="menu-item" onClick={(e: React.MouseEvent<HTMLElement>) => handleMenuItemClick(e)}>
+        <ListGroupItem active={isLocationActive} className="menu-item" onClick={(e: React.MouseEvent<HTMLElement>) => handleMenuItemClick(e)}>
             <Link to={props.MenuItem.NavPath}>
                 {props.MenuItem.Name}
             </Link>
