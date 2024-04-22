@@ -26,7 +26,6 @@ function RoutingMenu(props: MenuProps) {
                 return (
                     <RoutingMenuItem
                         Key={idx}
-                        key={idx}
                         MenuItem={menuItem}
                         Level={0}
                         Divider={idx < menuItems.length - 1}
