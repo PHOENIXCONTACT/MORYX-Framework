@@ -3,13 +3,17 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCogs, mdiComment, mdiConsoleLine, mdiDatabase, mdiHexagon, mdiHexagonMultiple } from "@mdi/js";
-import Icon from "@mdi/react";
+import { mdiCogs, mdiConsoleLine, mdiHexagon, mdiHexagonMultiple } from "@mdi/js";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link, Route, Routes } from "react-router-dom";
-import { Card, CardBody, CardHeader, Col, ListGroup, Nav, Navbar, NavItem, NavLink, Row } from "reactstrap";
 import RoutingMenu from "../../common/components/Menu/RoutingMenu";
+import { SectionInfo } from "../../common/components/SectionInfo";
 import MenuItemModel from "../../common/models/MenuItemModel";
 import MenuModel from "../../common/models/MenuModel";
 import { AppState } from "../../common/redux/AppState";
@@ -78,7 +82,7 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
             Name: moduleModel.name,
             NavPath: "/modules/" + moduleModel.name,
             Icon: mdiHexagon,
-            Content: (<span className="font-small" style={{ float: "right" }}><HealthStateBadge HealthState={moduleModel.healthState} /></span>),
+            Content: (<HealthStateBadge HealthState={moduleModel.healthState} />),
             SubMenuItems:
                 [
                     {
@@ -129,48 +133,31 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
 
     public render(): React.ReactNode {
         return (
-            <Row>
-                <Col md={3}>
-                    <Card>
-                        <CardHeader tag="h5">
-                            <Navbar className="navbar-default" expand="md" container={false}>
-                                <Nav className="navbar-left" navbar={true}>
-                                    <NavItem className="active">
-                                        <NavLink to="/modules" className="navbar-nav-link">
-                                            <Icon path={mdiHexagonMultiple} className="icon right-space" />
-                                            Modules
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem >
-                                        <Link to="/databases" className="navbar-nav-link">
-                                            <Icon path={mdiDatabase} className="icon right-space" />
-                                            Databases
-                                        </Link>
-                                    </NavItem>
-                                </Nav>
-                            </Navbar>
-                        </CardHeader>
-                        <ListGroup>
-                            <RoutingMenu Menu={this.state.MenuModel} />
-                        </ListGroup>
+            <Grid container={true} spacing={2}>
+                <Grid item={true} md={3}>
+                    <Card className="mcc-menu-card">
+                        <Tabs value="modules" role="navigation" centered={true}>
+                            <Tab label="Modules" value="modules" component={Link} to="/modules" />
+                            <Tab label="Databases" value="databases" component={Link} to="/databases" />
+                        </Tabs>
+                        <RoutingMenu Menu={this.state.MenuModel} />
                     </Card>
-                </Col>
-                <Col md={9}>
+                </Grid>
+                <Grid item={true} md={9}>
                     <Routes>
                         <Route path="*" element={
                             <Card>
-                                <CardHeader tag="h4">
-                                    <Icon path={mdiComment} className="icon right-space" />
-                                    Information
-                                </CardHeader>
-                                <CardBody>
-                                    <span className="font-italic font-small">Watch, configure and maintain all available modules. Please select a module to proceed...</span>
-                                </CardBody>
+                                <CardContent>
+                                    <SectionInfo
+                                        description="Watch, configure and maintain all available modules. Please select a module to proceed."
+                                        icon={mdiHexagonMultiple}
+                                    />
+                                </CardContent>
                             </Card>} />
                         {this.preRenderRoutesList()}
                     </Routes>
-                </Col>
-            </Row>
+                </Grid>
+            </Grid>
         );
     }
 }
