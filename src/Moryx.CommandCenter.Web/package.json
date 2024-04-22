@@ -12,8 +12,11 @@
     "author": "mma",
     "license": "Apache-2.0",
     "dependencies": {
+        "@emotion/react": "^11.11.4",
+        "@emotion/styled": "^11.11.5",
         "@mdi/js": "^7.4.47",
         "@mdi/react": "^1.6.1",
+        "@mui/material": "^5.15.15",
         "@types/react": "^18.2.55",
         "@types/react-dom": "^18.2.19",
         "@types/react-redux": "^7.1.33",
