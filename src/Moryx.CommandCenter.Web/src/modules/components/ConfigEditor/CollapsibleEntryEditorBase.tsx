@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import Collapse from "@mui/material/Collapse";
 import * as React from "react";
-import { Collapse } from "reactstrap";
 import Entry from "../../models/Entry";
 
 export interface CollapsibleEntryEditorBasePropModel extends React.PropsWithChildren {
@@ -23,7 +23,7 @@ export default class CollapsibleEntryEditorBase<T> extends React.Component<Colla
     public render(): React.ReactNode {
         return (
             <div>
-                <Collapse isOpen={this.props.IsExpanded}>
+                <Collapse in={this.props.IsExpanded}>
                     {this.props.children}
                 </Collapse>
             </div>

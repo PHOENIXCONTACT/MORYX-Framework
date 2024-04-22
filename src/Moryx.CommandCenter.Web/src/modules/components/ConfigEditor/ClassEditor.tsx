@@ -3,8 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import Collapse from "@mui/material/Collapse";
+import Container from "@mui/material/Container";
 import * as React from "react";
-import { Button, ButtonGroup, Col, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Row, UncontrolledDropdown } from "reactstrap";
 import CollapsibleEntryEditorBase, { CollapsibleEntryEditorBasePropModel } from "./CollapsibleEntryEditorBase";
 import ConfigEditor from "./ConfigEditor";
 
@@ -28,8 +29,8 @@ export default class ClassEditor extends CollapsibleEntryEditorBase<ClassEditorS
     public render(): React.ReactNode {
         return (
             <div>
-                <Collapse isOpen={this.props.IsExpanded}>
-                    <Container fluid={true} className="no-padding">
+                <Collapse in={this.props.IsExpanded}>
+                    <Container style={{paddingRight: "0"}}>
                         {this.preRenderConfigEditor()}
                     </Container>
                 </Collapse>

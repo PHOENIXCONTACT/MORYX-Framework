@@ -3,10 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
 import queryString from "query-string";
 import * as React from "react";
 import { Location, useLocation, useNavigate } from "react-router-dom";
-import { Button, ButtonGroup, Col, Container, Row } from "reactstrap";
 import Entry from "../../models/Entry";
 import ConfigEditor from "./ConfigEditor";
 
@@ -15,12 +18,6 @@ interface NavigableConfigEditorPropModel {
     Entries: Entry[];
     IsReadOnly: boolean;
     Root: Entry;
-}
-
-interface NavigableConfigEditorStateModel {
-    EntryChain: Entry[];
-    ParentEntry: Entry;
-    Entries: Entry[];
 }
 
 function NavigableConfigEditor(props: NavigableConfigEditorPropModel) {
@@ -82,26 +79,28 @@ function NavigableConfigEditor(props: NavigableConfigEditorPropModel) {
     };
 
     const preRenderBreadcrumb = (): React.ReactNode => {
-        const entryChainButtons = entryChain.map((entry, idx) => (
-            <Button key={idx} color="light" onClick={() => onClickBreadcrumb(entry)} disabled={idx === entryChain.length - 1} >{entry.displayName}</Button>
-        ));
+        const entryChainButtons = entryChain.map((entry, idx) => {
+            if (idx === entryChain.length - 1) {
+                return (<Typography key={entry.displayName} color="text.primary">{entry.displayName}</Typography>);
+            } else {
+                return (<Link key={entry.displayName} underline="hover" color="inherit" onClick={() => onClickBreadcrumb(entry)}>{entry.displayName}</Link>);
+            }
+        });
 
         return (
-            <ButtonGroup>
-                <Button color="dark" disabled={entryChain.length === 0} onClick={() => onClickBreadcrumb(null)}>Home</Button>
+            <Breadcrumbs className="mcc-breadcrumbs">
+                <Link key="home" color="inherit" underline="hover" onClick={() => onClickBreadcrumb(null)}>Home</Link>
                 {entryChainButtons}
-            </ButtonGroup>
+            </Breadcrumbs>
         );
     };
 
     return (
-        <div>
-            {preRenderBreadcrumb()}
-            <Container fluid={true} className="up-space-lg no-padding">
-                <Row className="config-editor-header">
-                    <Col md={5} className="no-padding"><span className="font-bold">Property</span></Col>
-                    <Col md={7} className="no-padding"><span className="font-bold">Value</span></Col>
-                </Row>
+        <Grid container={true} spacing={1}>
+            <Grid container={true} item={true} md={12}>
+                {preRenderBreadcrumb()}
+            </Grid>
+            <Grid container={true} item={true} md={12}>
                 <ConfigEditor
                     ParentEntry={parentEntry}
                     Entries={entries}
@@ -109,8 +108,8 @@ function NavigableConfigEditor(props: NavigableConfigEditorPropModel) {
                     navigateToEntry={navigateToEntry}
                     IsReadOnly={props.IsReadOnly}
                 />
-            </Container>
-        </div>
+            </Grid>
+    </Grid>
     );
 }
 

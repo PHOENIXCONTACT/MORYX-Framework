@@ -4,7 +4,6 @@
 */
 
 import * as React from "react";
-import { Button, ButtonGroup, Col, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Row, UncontrolledDropdown } from "reactstrap";
 import Entry from "../../models/Entry";
 
 export interface InputEditorBasePropModel {
@@ -21,8 +20,8 @@ export default class InputEditorBase extends React.Component<InputEditorBaseProp
         this.state = { };
     }
 
-    public onValueChange(e: React.FormEvent<HTMLInputElement>, entry: Entry): void {
-        entry.value.current = e.currentTarget.value;
+    public onValueChange(e: string, entry: Entry): void {
+        entry.value.current = e;
         this.forceUpdate();
     }
 }
