@@ -18,6 +18,12 @@
     </a>
 </p>
 
+<p align="center">
+    <a href="https://www.nuget.org/packages/Moryx/">
+        <img alt="NuGet Release" src="https://img.shields.io/nuget/v/Moryx?color=0098A1">
+    </a>
+</p>
+
 # MORYX Framework
 
 The MORYX Framework is a .NET based framework to quickly build three-tier applications. It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort.
@@ -39,29 +45,29 @@ The **MORYX Factory** contains the APIs, domain objects and developer documentat
 
 If you want to start developing with or for MORYX, the easiest way is our [template repository](https://github.com/PHOENIXCONTACT/MORYX-Template). It comes with two empty solutions, the necessary package feeds and preinstalled empty MORYX runtime. Add projects and packages to backend and frontend solutions depending on your specific requirements. Install stable releases via Nuget; development releases are available via MyGet.
 
-| Package Name | Release (NuGet) | CI (MyGet) | Future (MyGet) |
-|--------------|-----------------|------------|------------|
-| `Moryx` | [![NuGet](https://img.shields.io/nuget/v/Moryx.svg)](https://www.nuget.org/packages/Moryx/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx)](https://www.myget.org/feed/moryx/package/nuget/Moryx) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx) |
-| `Moryx.Model` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.svg)](https://www.nuget.org/packages/Moryx.Model/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Model)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Model) |
-| `Moryx.Model.InMemory` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.InMemory.svg)](https://www.nuget.org/packages/Moryx.Model.InMemory/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model.InMemory)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model.InMemory) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Model.InMemory)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Model.InMemory) |
-| `Moryx.Model.PostgreSQL` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.PostgreSQL.svg)](https://www.nuget.org/packages/Moryx.Model.PostgreSQL/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model.PostgreSQL)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model.PostgreSQL) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Model.PostgreSQL)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Model.PostgreSQL) |
-| `Moryx.Model.Sqlite` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Model.Sqlite.svg)](https://www.nuget.org/packages/Moryx.Model.Sqlite/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Model.Sqlite)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Model.Sqlite) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Model.Sqlite)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Model.Sqlite) |
-| `Moryx.Container` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Container.svg)](https://www.nuget.org/packages/Moryx.Container/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Container)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Container) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Container)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Container) |
-| `Moryx.Communication.Serial` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Communication.Serial.svg)](https://www.nuget.org/packages/Moryx.Communication.Serial/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Communication.Serial)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Communication.Serial) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Communication.Serial)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Communication.Serial) |
-| `Moryx.Asp.Extensions` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Asp.Extensions.svg)](https://www.nuget.org/packages/Moryx.Asp.Extensions/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Asp.Extensions)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Asp.Extensions) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Asp.Extensions)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Asp.Extensions) |
-| `Moryx.Runtime` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.svg)](https://www.nuget.org/packages/Moryx.Runtime/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime) |
-| `Moryx.Runtime.Kernel` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Kernel.svg)](https://www.nuget.org/packages/Moryx.Runtime.Kernel/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Kernel)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Kernel) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.Kernel)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.Kernel) |
-| `Moryx.Runtime.Endpoints` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Runtime.Endpoints.svg)](https://www.nuget.org/packages/Moryx.Runtime.Endpoints/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Runtime.Endpoints)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Runtime.Endpoints) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.Runtime.Kernel)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Runtime.Kernel) |
-| `Moryx.CommandCenter.Web` | [![NuGet](https://img.shields.io/nuget/v/Moryx.CommandCenter.Web.svg)](https://www.nuget.org/packages/Moryx.CommandCenter.Web/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.CommandCenter.Web)](https://www.myget.org/feed/moryx/package/nuget/Moryx.CommandCenter.Web) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.CommandCenter.Web)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.CommandCenter.Web) |
-| `Moryx.AbstractionLayer` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.AbstractionLayer)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.AbstractionLayer) |
-| `Moryx.AbstractionLayer.TestTools` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.TestTools.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.TestTools/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.TestTools)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.TestTools) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.AbstractionLayer.TestTools)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.AbstractionLayer.TestTools) |
-| `Moryx.TestTools.UnitTest` | [![NuGet](https://img.shields.io/nuget/v/Moryx.TestTools.UnitTest.svg)](https://www.nuget.org/packages/Moryx.TestTools.UnitTest/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.TestTools.UnitTest)](https://www.myget.org/feed/moryx/package/nuget/Moryx.TestTools.UnitTest) | [![MyGet-Release](https://img.shields.io/myget/moryx-future/vpre/Moryx.TestTools.UnitTest)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.TestTools.UnitTest) |
-| `Moryx.AbstractionLayer.Products.Endpoints` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.Products.Endpoints.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.Products.Endpoints/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.Products.Endpoints)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.Products.Endpoints) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.AbstractionLayer.Products.Endpoints)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.AbstractionLayer.Products.Endpoints) |
-| `Moryx.AbstractionLayer.Resources.Endpoints` | [![NuGet](https://img.shields.io/nuget/v/Moryx.AbstractionLayer.Resources.Endpoints.svg)](https://www.nuget.org/packages/Moryx.AbstractionLayer.Resources.Endpoints/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.AbstractionLayer.Resources.Endpoints)](https://www.myget.org/feed/moryx/package/nuget/Moryx.AbstractionLayer.Resources.Endpoints) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.AbstractionLayer.Resources.Endpoints)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.AbstractionLayer.Resources.Endpoints) |
-| `Moryx.Notifications` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Notifications.svg)](https://www.nuget.org/packages/Moryx.Notifications/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Notifications)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Notifications) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.Notifications)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Notifications) |
-| `Moryx.Products.Management` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Products.Management.svg)](https://www.nuget.org/packages/Moryx.Products.Management/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Products.Management)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Products.Management) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.Products.Management)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Products.Management) |
-| `Moryx.Products.Model` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Products.Model.svg)](https://www.nuget.org/packages/Moryx.Products.Model/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Products.Model)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Products.Model) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.Products.Model)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Products.Model) |
-| `Moryx.Resources.Management` | [![NuGet](https://img.shields.io/nuget/v/Moryx.Resources.Management.svg)](https://www.nuget.org/packages/Moryx.Resources.Management/) | [![MyGet](https://img.shields.io/myget/moryx/vpre/Moryx.Resources.Management)](https://www.myget.org/feed/moryx/package/nuget/Moryx.Resources.Management) | [![MyGet](https://img.shields.io/myget/moryx-future/vpre/Moryx.Resources.Management)](https://www.myget.org/feed/moryx-future/package/nuget/Moryx.Resources.Management) |
+| Package Name |  |
+|--------------|--|
+| `Moryx` |  |
+| `Moryx.Model` |  |
+| `Moryx.Model.InMemory` |  |
+| `Moryx.Model.PostgreSQL` |  |
+| `Moryx.Model.Sqlite` |  |
+| `Moryx.Container` |  |
+| `Moryx.Communication.Serial` |  |
+| `Moryx.Asp.Extensions` |  |
+| `Moryx.Runtime` |  |
+| `Moryx.Runtime.Kernel` |  |
+| `Moryx.Runtime.Endpoints` |  |
+| `Moryx.CommandCenter.Web` |  |
+| `Moryx.AbstractionLayer` |  |
+| `Moryx.AbstractionLayer.TestTools` |  |
+| `Moryx.TestTools.UnitTest` |  |
+| `Moryx.AbstractionLayer.Products.Endpoints` |  |
+| `Moryx.AbstractionLayer.Resources.Endpoints` |  |
+| `Moryx.Notifications` |  |
+| `Moryx.Products.Management` |  |
+| `Moryx.Products.Model` |  |
+| `Moryx.Resources.Management` |  |
 
 If you wish to contribute to this project, you simply need to clone the repository and open the solution with Visual Studio 2017 or above. The Debug target should be *StartProject*.
 
