@@ -94,7 +94,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     }
 
     public onSelectSetup(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({selectedSetup: (e.target as HTMLSelectElement).selectedIndex});
+        this.setState({selectedSetup: (e.target as HTMLSelectElement).value});
     }
 
     public onSelectBackup(e: React.FormEvent<HTMLInputElement>): void {
@@ -447,8 +447,8 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                                         <Input type="select" size={10} className="auto-height"
                                                             onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelectSetup(e)}>
                                                         {
-                                                            this.props.DataModel.setups.map((setup, idx) => {
-                                                                return (<option key={idx} value={setup.name}>{setup.name} - {setup.description}</option>);
+                                                                    this.props.DataModel.setups.map((setup, idx) => {
+                                                                        return (<option key={idx} value={idx}>{setup.name} - {setup.description}</option>);
                                                             })
                                                         }
                                                         </Input>
