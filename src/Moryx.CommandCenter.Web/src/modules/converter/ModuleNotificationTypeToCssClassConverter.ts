@@ -13,13 +13,13 @@ export class ModuleNotificationTypeToCssClassConverter {
                 return { color: "black" };
             }
             case Serverity.Warning: {
-                return { color: "orange" };
+                return { color: "#e5ac02" };
             }
             case Serverity.Error: {
-                return { color: "red" };
+                return { color: "#d32f2f" };
             }
             case Serverity.Fatal: {
-                return { color: "purple" };
+                return { color: "#d32f2f" };
             }
             default: {
                 return { color: "black" };

@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import Container from "@mui/material/Container";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Container } from "reactstrap";
 import DatabasesRestClient from "../../databases/api/DatabasesRestClient";
 import Databases from "../../databases/container/Databases";
 import ModulesRestClient from "../../modules/api/ModulesRestClient";
@@ -25,7 +25,6 @@ import SystemLoadResponse from "../api/responses/SystemLoadResponse";
 import { AppState } from "../redux/AppState";
 import { updateIsConnected, updateServerTime } from "../redux/CommonActions";
 import { ActionType } from "../redux/Types";
-import "../scss/commandcenter.scss";
 
 interface AppPropModel {
   ModulesRestClient: ModulesRestClient;
@@ -97,11 +96,11 @@ function App(props: AppPropModel & AppDispatchPropModel) {
   };
 
   return (
-    <div className="commandcenter-app-container">
-      <div className="commandcenter-content-wrapper">
+    <div>
+      <div>
         <ToastContainer />
 
-        <Container fluid={true} id="body" className="content">
+        <Container id="body">
           <Routes>
             <Route path="/modules/*" element={<Modules />} />
             <Route path="/databases/*" element={<Databases />} />

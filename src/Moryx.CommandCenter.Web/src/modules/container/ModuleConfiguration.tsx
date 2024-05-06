@@ -3,15 +3,20 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiContentSave, mdiHexagon, mdiSync, mdiUndo } from "@mdi/js";
-import Icon from "@mdi/react";
+import { mdiUndo } from "@mdi/js";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import SvgIcon from "@mui/material/SvgIcon";
 import * as React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, ListGroup, ListGroupItem } from "reactstrap";
 import ModuleHeader from "../../common/components/ModuleHeader";
 import ModulesRestClient from "../api/ModulesRestClient";
 import NavigableConfigEditor from "../components/ConfigEditor/NavigableConfigEditor";
+import DropDownButton from "../components/DropDownButton";
 import Config from "../models/Config";
 import { ConfigUpdateMode } from "../models/ConfigUpdateMode";
 import Entry from "../models/Entry";
@@ -30,7 +35,6 @@ interface ModuleConfigurationStateModel {
 
 function ModuleConfiguration(props: ModuleConfigurationPropModel) {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const config = new Config();
     config.module = props.ModuleName;
@@ -77,41 +81,39 @@ function ModuleConfiguration(props: ModuleConfigurationPropModel) {
             .then(() => toast.success("Configuration was reverted", { autoClose: 3000 }));
     };
 
+    const svgIcon = (path: string) => {
+        return (
+            <SvgIcon>
+                <path d={path} />
+            </SvgIcon>
+        );
+    };
+
     return (
         <Card>
-            <CardHeader tag="h2">
-                <Icon path={mdiHexagon} className="icon right-space" />
-                {props.ModuleName}
-            </CardHeader>
-            <ListGroup>
-                <ListGroupItem className="nav-listgroup-item">
-                    <ModuleHeader ModuleName={props.ModuleName} />
-                </ListGroupItem>
-            </ListGroup>
-            <CardBody>
+            <ModuleHeader ModuleName={props.ModuleName} selectedTab="configuration" />
+            <CardContent>
                 {moduleConfig.ConfigIsLoading &&
-                    <span className="font-bold font-small">Loading config ...</span>
+                    <CircularProgress />
                 }
-                <NavigableConfigEditor ParentEntry={moduleConfig.ParentEntry}
-                    Entries={moduleConfig.CurrentSubEntries}
-                    Root={moduleConfig.ModuleConfig.root}
-                    IsReadOnly={false} />
-
-                <ButtonGroup className="up-space-lg">
-                    <Button color="primary" onClick={() => onApply()}>
-                        <Icon path={mdiSync} className="icon-white right-space" />
-                        Save &amp; Restart
-                    </Button>
-                    <Button color="primary" onClick={() => onSave()}>
-                        <Icon path={mdiContentSave} className="icon-white right-space" />
-                        Save only
-                    </Button>
-                    <Button color="dark" onClick={() => onRevert()}>
-                        <Icon path={mdiUndo} className="icon-white right-space" />
-                        Revert
-                    </Button>
-                </ButtonGroup>
-            </CardBody>
+                <Grid container={true} spacing={1}>
+                    <Grid item={true} md={12}>
+                    <NavigableConfigEditor ParentEntry={moduleConfig.ParentEntry}
+                        Entries={moduleConfig.CurrentSubEntries}
+                        Root={moduleConfig.ModuleConfig.root}
+                        IsReadOnly={false} />
+                        </Grid>
+                    <Grid item={true} md={12}>
+                        <DropDownButton Buttons={[
+                            {Label: "Save + Restart", onClick: onApply},
+                            {Label: "Save", onClick: onSave},
+                        ]}/>
+                        <Button sx={{marginLeft: 1}} color="secondary" variant="outlined" onClick={() => onRevert()} startIcon={svgIcon(mdiUndo)}>
+                            Revert
+                        </Button>
+                    </Grid>
+                </Grid>
+            </CardContent>
         </Card>
     );
 }

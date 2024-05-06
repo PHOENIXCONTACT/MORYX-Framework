@@ -3,9 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import * as React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Col, Container, Row } from "reactstrap";
 import MethodEntry from "../models/MethodEntry";
 import NavigableConfigEditor from "./ConfigEditor/NavigableConfigEditor";
 
@@ -16,51 +17,49 @@ export interface ConsoleMethodConfiguratorPropModel {
 }
 
 function ConsoleMethodConfigurator(props: ConsoleMethodConfiguratorPropModel) {
-    const navigate = useNavigate();
-    const location = useLocation();
-
     const invokeSelectedMethod = (): void => {
         props.onInvokeMethod(props.Method);
     };
 
     return (
-        <div>
+        <Grid container={true} spacing={1}>
             {props.Method == null ? (
-                <span className="font-italic">Please select a method.</span>
-            ) : (
-                <Container fluid={true} className="no-padding">
-                    <Row>
-                        <Col md={3}><span className="font-bold">Name:</span></Col>
-                        <Col md={9}><span className="font-italic">{props.Method.displayName}</span></Col>
-                    </Row>
-                    <Row>
-                        <Col md={3}><span className="font-bold">Description:</span></Col>
-                        <Col md={9}><span className="font-italic">{props.Method.description}</span></Col>
-                    </Row>
-                    <Row>
-                        <Col md={12} className="up-space-lg">
-                            {props.Method.parameters.subEntries.length === 0 ? (
-                                <span className="font-italic">This method is parameterless.</span>
-                            ) : (
-                                <NavigableConfigEditor
-                                    Entries={props.Method.parameters.subEntries}
-                                    ParentEntry={null}
-                                    Root={props.Method.parameters}
-                                    IsReadOnly={false}
-                                />
-                            )}
-                        </Col>
-                    </Row>
-                    <Row className="up-space-lg">
-                        <Col md={12}>
-                            <Button color="primary" className="float-right" onClick={invokeSelectedMethod}>
-                                Invoke
-                            </Button>
-                        </Col>
-                    </Row>
-                </Container>
-            )}
-        </div>
+                <Grid item={true} md={12}>
+                    <Typography variant="body2">Please select a method.</Typography>
+                </Grid>
+            ) : [
+
+                <Grid container={true} item={true}>
+                    <Grid item={true} md={3}><Typography variant="body2" fontWeight="bold">Name:</Typography></Grid>
+                    <Grid item={true} md={9}><Typography variant="body2">{props.Method.displayName}</Typography></Grid>
+                </Grid>,
+                <Grid container={true} item={true}>
+                    <Grid item={true} md={3}><Typography variant="body2" fontWeight="bold">Description:</Typography></Grid>
+                    <Grid item={true} md={9}><Typography variant="body2">{props.Method.description}</Typography></Grid>
+                </Grid>,
+                <Grid container={true} item={true}>
+                    <Grid item={true} md={12}>
+                        {props.Method.parameters.subEntries.length === 0 ? (
+                            <Typography variant="body2">This method is parameterless.</Typography>
+                        ) : (
+                            <NavigableConfigEditor
+                                Entries={props.Method.parameters.subEntries}
+                                ParentEntry={null}
+                                Root={props.Method.parameters}
+                                IsReadOnly={false}
+                            />
+                        )}
+                    </Grid>
+                </Grid>,
+                <Grid container={true} item={true}>
+                    <Grid container={true} item={true} md={12} direction="row" justifyContent="flex-end">
+                        <Button variant="contained" onClick={invokeSelectedMethod}>
+                            Invoke
+                        </Button>
+                    </Grid>
+                </Grid>
+            ]}
+        </Grid>
     );
 }
 

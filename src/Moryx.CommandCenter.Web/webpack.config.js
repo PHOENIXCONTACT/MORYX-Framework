@@ -17,7 +17,7 @@ module.exports = (env, options) => {
         },
 
         devServer: {
-            contentBase: __dirname + "/wwwroot"
+            static: __dirname + "/wwwroot"
         },
 
         resolve: {
