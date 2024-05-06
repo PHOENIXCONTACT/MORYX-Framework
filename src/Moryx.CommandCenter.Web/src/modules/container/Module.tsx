@@ -3,25 +3,36 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCheck, mdiDatabase, mdiHexagon, mdiHexagonMultiple, mdiPlay, mdiRestart, mdiStop } from "@mdi/js";
-import Icon from "@mdi/react";
+import { mdiCheck, mdiPlay, mdiRestart, mdiStop } from "@mdi/js";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import SvgIcon from "@mui/material/SvgIcon";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Input, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Nav, Navbar, NavItem, Row, Table } from "reactstrap";
 import ModuleHeader from "../../common/components/ModuleHeader";
 import { ActionType } from "../../common/redux/Types";
 import { HealthStateBadge } from "../../dashboard/components/HealthStateBadge";
 import ModulesRestClient from "../api/ModulesRestClient";
-import { ModuleNotificationTypeToCssClassConverter } from "../converter/ModuleNotificationTypeToCssClassConverter";
 import { FailureBehaviour } from "../models/FailureBehaviour";
 import { ModuleStartBehaviour } from "../models/ModuleStartBehaviour";
 import NotificationModel from "../models/NotificationModel";
-import SerializableException from "../models/SerializableException";
 import ServerModuleModel from "../models/ServerModuleModel";
 import { Serverity } from "../models/Severity";
 import { updateFailureBehaviour, updateStartBehaviour } from "../redux/ModulesActions";
+import { ModuleInfoTile } from "./ModuleInfoTile";
+import { Notifications } from "./Notifications";
 
 interface ModulePropModel {
     RestClient?: ModulesRestClient;
@@ -47,6 +58,7 @@ const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModuleDis
 };
 
 class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, ModuleStateModel> {
+
     constructor(props: ModulePropModel & ModuleDispatchPropModel) {
         super(props);
 
@@ -76,235 +88,155 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
         this.props.RestClient.confirmModuleWarning(this.props.Module.name);
     }
 
-    public onStartBehaviourChange(e: React.FormEvent<HTMLInputElement>): void {
-        const newValue = (e.target as HTMLSelectElement).value as ModuleStartBehaviour;
+    public onStartBehaviourChange(e: React.ChangeEvent<HTMLInputElement>): void {
+        const newValue = e.target.value as ModuleStartBehaviour;
         this.props.RestClient.updateModule({ ...this.props.Module, startBehaviour: newValue }).then((d) => this.props.onUpdateStartBehaviour(this.props.Module.name, newValue));
     }
 
-    public onFailureBehaviourChange(e: React.FormEvent<HTMLInputElement>): void {
-        const newValue = (e.target as HTMLSelectElement).value as FailureBehaviour;
+    public onFailureBehaviourChange(e: React.ChangeEvent<HTMLInputElement>): void {
+        const newValue = e.target.value as FailureBehaviour;
         this.props.RestClient.updateModule({ ...this.props.Module, failureBehaviour: newValue }).then((d) => this.props.onUpdateFailureBehaviour(this.props.Module.name, newValue));
     }
 
-    private openNotificationDetailsDialog(e: React.MouseEvent<HTMLElement>, notification: NotificationModel): void {
-        if (notification.exception != null) {
-            this.setState({ IsNotificationDialogOpened: true, SelectedNotification: notification });
-        }
-    }
-
-    private closeNotificationDetailsDialog(): void {
-        this.setState({ IsNotificationDialogOpened: false, SelectedNotification: null });
-    }
-
-    private static preRenderInnerException(exception: SerializableException): React.ReactNode {
-        return (
-            <div style={{ margin: "0px 0px 0px 5px" }}>
-                <Container fluid={true}>
-                    <Row>
-                        <Col md={2}><span className="font-bold">Type</span></Col>
-                        <Col md={10}>
-                            <span>{exception.exceptionTypeName}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={2}><span className="font-bold">Message</span></Col>
-                        <Col md={10}><span className="font-italic">{exception.message}</span></Col>
-                    </Row>
-                </Container>
-                {exception.innerException != null &&
-                    Module.preRenderInnerException(exception.innerException)
-                }
-            </div>
+    private static dependenciesList(module: ServerModuleModel): React.ReactNode {
+        return (<List dense={true} disablePadding={true}>
+            {module.dependencies.map((module, idx) => {
+                return [
+                    <ListItem
+                        secondaryAction={<HealthStateBadge HealthState={module.healthState} />}
+                        disablePadding={true}
+                        component={NavLink} to={"/modules/" + module.name} sx={{color: "black"}}
+                        key={idx}
+                    >
+                        <ListItemButton
+                            divider={idx < module.dependencies.length - 1}
+                        >
+                        <ListItemText secondary={false} primary={module.name} />
+                        </ListItemButton>
+                    </ListItem>
+                ];
+            })}
+            </List>
         );
     }
 
     public render(): React.ReactNode {
+        const svgIcon = (path: string) => {
+            return (
+                <SvgIcon>
+                    <path d={path} />
+                </SvgIcon>
+            );
+        };
+
         return (
             <Card>
-                <CardHeader tag="h2">
-                    <Icon path={mdiHexagon} className="icon right-space" />
-                    {this.props.Module.name}
-                </CardHeader>
-                <ListGroup>
-                    <ListGroupItem className="nav-listgroup-item">
-                        <ModuleHeader ModuleName={this.props.Module.name} />
-                    </ListGroupItem>
-                </ListGroup>
-                <CardBody>
-                    <Container fluid={true}>
-                        <Row>
-                            <Col md={6}>
-                                <h3>Control</h3>
-                                <ButtonGroup>
-                                    <Button color="primary" onClick={this.startModule.bind(this)}><Icon path={mdiPlay} className="icon-white right-space" />Start</Button>
-                                    <Button color="primary" onClick={this.stopModule.bind(this)}><Icon path={mdiStop} className="icon-white right-space" />Stop</Button>
-                                    <Button color="primary" onClick={this.reincarnateModule.bind(this)}><Icon path={mdiRestart} className="icon-white right-space" />Reincarnate</Button>
+                <ModuleHeader ModuleName={this.props.Module.name} selectedTab="module" />
+                <CardContent>
+                    <Grid container={true} spacing={2} direction="row" alignItems="stretch">
+                        <ModuleInfoTile
+                            title={this.props.Module.name}
+                        >
+                            <Grid item={true}>
+                                <ButtonGroup variant="contained" sx={{flex: "none"}} fullWidth={false}>
+                                    <Button onClick={this.startModule.bind(this)} startIcon={svgIcon(mdiPlay)}>Start</Button>
+                                    <Button onClick={this.stopModule.bind(this)} startIcon={svgIcon(mdiStop)}>Stop</Button>
+                                    <Button onClick={this.reincarnateModule.bind(this)} startIcon={svgIcon(mdiRestart)}>Reincarnate</Button>
                                 </ButtonGroup>
-                            </Col>
-                            <Col md={6}>
-                                <h3>Error Handling</h3>
+                            </Grid>
+                        </ModuleInfoTile>
+                        <ModuleInfoTile
+                            title="Error Handling"
+                        >
+                            <Grid item={true} justifyContent="center">
                                 {this.state.HasWarningsOrErrors ? (
-                                    <Button color="warning" onClick={this.confirmModuleWarning.bind(this)}><Icon path={mdiCheck} className="icon right-space" />Confirm</Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="warning"
+                                        onClick={this.confirmModuleWarning.bind(this)}
+                                        startIcon={<SvgIcon><path d={mdiCheck} /></SvgIcon>}
+                                    >
+                                        Confirm
+                                    </Button>
                                 ) : (
-                                    <span className="font-italic font-small">No warnings or errors.</span>
+                                    <Typography variant="body2" gutterBottom={true}>No warnings or errors.</Typography>
                                 )}
-                            </Col>
-                        </Row>
-                        <Row className="up-space-lg">
-                            <Col md={6}>
-                                <h3>General Information</h3>
-                                <Container fluid={true}>
-                                    <Row>
-                                        <Col md={4}><span className="font-bold font-small">Name:</span></Col>
-                                        <Col md={8}><span className="font-small font-italic">{this.props.Module.name}</span></Col>
-                                    </Row>
-                                    <Row>
-                                        <Col md={4}><span className="font-bold font-small">State:</span></Col>
-                                        <Col md={8}><span className="font-small"><HealthStateBadge HealthState={this.props.Module.healthState} /></span></Col>
-                                    </Row>
-                                    <Row>
-                                        <Col md={4}><span className="font-bold font-small">Assembly:</span></Col>
-                                        <Col md={8}><span className="font-small font-italic">{this.props.Module.assembly.name}</span></Col>
-                                    </Row>
-                                </Container>
-                            </Col>
-                            <Col md={6}>
-                                <h3>Dependencies</h3>
-                                {this.props.Module.dependencies.length === 0 ? (
-                                    <span className="font-italic font-small">This module has no dependencies.</span>
+                            </Grid>
+                        </ModuleInfoTile>
+                        <ModuleInfoTile
+                            title="General Information"
+                            spacing={1}
+                        >
+                            <Grid item={true}>
+                                <List dense={true} disablePadding={true}>
+                                    <ListItem  disablePadding={true}>
+                                        <ListItemText primary={<HealthStateBadge HealthState={this.props.Module.healthState} />} />
+                                    </ListItem>
+                                    <ListItem  disablePadding={true}>
+                                        <ListItemText primary={this.props.Module.assembly.name} secondary="Assembly" />
+                                    </ListItem>
+                                    <ListItem  disablePadding={true}>
+                                        <ListItemText primary={this.props.Module.assembly.fileVersion} secondary="Version" />
+                                    </ListItem>
+                                </List>
+                            </Grid>
+                        </ModuleInfoTile>
+
+                        <ModuleInfoTile
+                            title="Dependencies"
+                        >
+                            <Grid>
+                                {
+                                this.props.Module.dependencies.length === 0 ? (
+                                    <span>This module has no dependencies.</span>
                                 ) : (
-                                    <Table striped={true}>
-                                        <thead>
-                                            <tr>
-                                                <th>Module Name</th>
-                                                <th>State</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                this.props.Module.dependencies.map((module, idx) =>
-                                                    <tr key={idx}>
-                                                        <td><Link to={"/modules/" + module.name}>{module.name}</Link></td>
-                                                        <td><HealthStateBadge HealthState={module.healthState} /></td>
-                                                    </tr>)
-                                            }
-                                        </tbody>
-                                    </Table>
-                                )}
-                            </Col>
-                        </Row>
-                        <Row className="up-space-lg">
-                            <Col md={6}>
-                                <h3>Start &amp; Failure behaviour</h3>
-                                <Container fluid={true}>
-                                    <Row>
-                                        <Col md={4}><span className="font-bold font-small center-text">Start behaviour:</span></Col>
-                                        <Col md={8}>
-                                            <Input type="select" value={this.props.Module.startBehaviour}
-                                                onChange={(e: React.FormEvent<HTMLInputElement>) => this.onStartBehaviourChange(e)}>
-                                                <option value={ModuleStartBehaviour.Auto}>Auto</option>
-                                                <option value={ModuleStartBehaviour.Manual}>Manual</option>
-                                                <option value={ModuleStartBehaviour.OnDependency}>On dependency</option>
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                    <Row className="up-space">
-                                        <Col md={4}><span className="font-bold font-small center-text">Failure behaviour:</span></Col>
-                                        <Col md={8}>
-                                            <Input type="select" value={this.props.Module.failureBehaviour}
-                                                onChange={(e: React.FormEvent<HTMLInputElement>) => this.onFailureBehaviourChange(e)}>
-                                                <option value={FailureBehaviour.Stop}>Stop</option>
-                                                <option value={FailureBehaviour.StopAndNotify}>Stop and notify</option>
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </Container>
-                            </Col>
-                        </Row>
-                        <Row className="up-space-lg">
-                            <Col md={12}>
-                                <h3>Notifications</h3>
-                                {this.props.Module.notifications.length === 0 ? (
-                                    <span className="font-italic font-small">No notifications detected.</span>
-                                ) : (
-                                    <Table>
-                                        <thead>
-                                            <tr>
-                                                <th>Type</th>
-                                                <th>Message</th>
-                                                <th>Level</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                this.props.Module.notifications.map((notification, idx) =>
-                                                    <tr key={idx} className={"selectable"} style={{ alignItems: "center" }}
-                                                        onClick={(e: React.MouseEvent<HTMLElement>) => this.openNotificationDetailsDialog(e, notification)}>
-                                                        <td><span className="align-self-center">{notification.exception != null ? notification.exception.exceptionTypeName : "-"}</span></td>
-                                                        <td><span className="align-self-center">{notification.message}</span></td>
-                                                        <td>
-                                                            <span className="align-self-center" style={ModuleNotificationTypeToCssClassConverter.Convert(notification.severity)}>
-                                                                {Serverity[notification.severity]}
-                                                            </span>
-                                                        </td>
-                                                    </tr>,
-                                                )
-                                            }
-                                        </tbody>
-                                    </Table>
-                                )}
-                            </Col>
-                        </Row>
-                    </Container>
-                </CardBody>
-                <Modal isOpen={this.state.IsNotificationDialogOpened} className="notification-modal-dialog">
-                    <ModalHeader tag="h2">Notification details</ModalHeader>
-                    <ModalBody>
-                        {this.state.SelectedNotification != null &&
-                            <Container fluid={true}>
-                                <Row>
-                                    <Col md={2} />
-                                    <Col md={10}>
-                                        <b>{this.state.SelectedNotification.message}</b>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={2}><span className="font-bold">Type</span></Col>
-                                    <Col md={10}>
-                                        <span style={ModuleNotificationTypeToCssClassConverter.Convert(this.state.SelectedNotification.severity)}>
-                                            {this.state.SelectedNotification.exception.exceptionTypeName}
-                                        </span>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={2}><span className="font-bold">Message</span></Col>
-                                    <Col md={10}><span className="font-italic">{this.state.SelectedNotification.exception.message}</span></Col>
-                                </Row>
-                                <Row>
-                                    <Col md={2}><span className="font-bold">Stack trace</span></Col>
-                                    <Col md={10}>{this.state.SelectedNotification.exception.stackTrace}</Col>
-                                </Row>
-                                <Row>
-                                    <Col md={12}>
-                                        {this.state.SelectedNotification.exception.innerException == null ? (
-                                            <span className="font-italic">No inner exception found.</span>
-                                        ) : (
-                                            <span className="font-bold">Inner exception</span>
-                                        )}
-                                    </Col>
-                                </Row>
-                                {this.state.SelectedNotification.exception.innerException != null &&
-                                    <Row>
-                                        <Col md={12}>{Module.preRenderInnerException(this.state.SelectedNotification.exception.innerException)}</Col>
-                                    </Row>
+                                    Module.dependenciesList(this.props.Module)
+                                )
                                 }
-                            </Container>
-                        }
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.closeNotificationDetailsDialog.bind(this)}>Close</Button>
-                    </ModalFooter>
-                </Modal>
+                            </Grid>
+                        </ModuleInfoTile>
+                        <ModuleInfoTile
+                            title="Start &amp; Failure behaviour"
+                        >
+                            <Grid item={true} md={12}>
+                                <TextField
+                                    select={true}
+                                    label="Start behaviour"
+                                    value={this.props.Module.startBehaviour}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onStartBehaviourChange(e)}
+                                    size="small"
+                                    margin="dense"
+                                    fullWidth={true}>
+                                    <MenuItem value={ModuleStartBehaviour.Auto}>Auto</MenuItem>
+                                    <MenuItem value={ModuleStartBehaviour.Manual}>Manual</MenuItem>
+                                    <MenuItem value={ModuleStartBehaviour.OnDependency}>On dependency</MenuItem>
+                                </TextField>
+                            </Grid>
+
+                            <Grid item={true} md={12}>
+                                <TextField
+                                    select={true}
+                                    label="Failure behaviour"
+                                    value={this.props.Module.failureBehaviour}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onFailureBehaviourChange(e)}
+                                    size="small"
+                                    margin="dense"
+                                    fullWidth={true}
+                                    >
+                                    <MenuItem value={FailureBehaviour.Stop}>Stop</MenuItem>
+                                    <MenuItem value={FailureBehaviour.StopAndNotify}>Stop and notify</MenuItem>
+                                </TextField>
+                            </Grid>
+                        </ModuleInfoTile>
+                        <ModuleInfoTile
+                                title="Notifications"
+                                md={12}
+                            >
+                                <Notifications messages={this.props.Module.notifications}/>
+
+                        </ModuleInfoTile>
+                    </Grid>
+                </CardContent>
             </Card>
         );
     }

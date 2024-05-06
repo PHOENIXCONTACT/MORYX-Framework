@@ -3,6 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -12,12 +13,29 @@ import App from "./common/container/App";
 import { AppState, getAppReducer } from "./common/redux/AppState";
 import { ActionType } from "./common/redux/Types";
 
+const theme = createTheme({
+    palette: {
+        primary: {
+          main: "#24959e",
+          light: "#c2e1e4",
+          contrastText: "#fff",
+        },
+        secondary: {
+          main: "#249e75",
+          light: "#e1f3ee"
+        },
+      },
+  });
+
 const store = createStore<AppState, ActionType<{}>, any, any>(getAppReducer);
 
 ReactDOM.render(
     <Provider store={store}>
         <HashRouter>
-            <App />
+            <ThemeProvider theme={theme}>
+                <App />
+
+            </ThemeProvider>
         </HashRouter>
     </Provider>
     ,
