@@ -54,7 +54,7 @@ export default class DatabasesRestClient extends RestClientBase {
     }
 
     public applyMigration(targetModel: string, migrationName: string, request: DatabaseConfigModel): Promise<DatabaseUpdateSummary> {
-        return this.post<DatabaseConfigModel, DatabaseUpdateSummary>(DatabasesRestClient.pathTo(targetModel, `/${migrationName}/migrate`), request, new DatabaseUpdateSummary());
+        return this.post<DatabaseConfigModel, DatabaseUpdateSummary>(DatabasesRestClient.pathTo(targetModel, `/migrate`), request, new DatabaseUpdateSummary());
     }
 
     public rollbackDatabase(targetModel: string, request: DatabaseConfigModel): Promise<InvocationResponse> {
