@@ -69,6 +69,8 @@ namespace Moryx.Resources.Management
         /// </summary>
         protected override void OnStart()
         {
+            ActivateFacade(_notificationSourceFacade);
+
             // Start type controller for resource and proxy creation
             Container.Resolve<IResourceTypeController>().Start();
 
@@ -81,7 +83,6 @@ namespace Moryx.Resources.Management
 
             // Activate external facade to register events
             ActivateFacade(_resourceTypeTreeFacade);
-            ActivateFacade(_notificationSourceFacade);
             ActivateFacade(_resourceManagementFacade);
   
         }
@@ -92,11 +93,12 @@ namespace Moryx.Resources.Management
         protected override void OnStop()
         {
             // Tear down facades
-            DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_resourceManagementFacade);
             DeactivateFacade(_resourceTypeTreeFacade);
             var resourceManager = Container.Resolve<IResourceManager>();
             resourceManager.Stop();
+
+            DeactivateFacade(_notificationSourceFacade);
         }
 
         private readonly ResourceManagementFacade _resourceManagementFacade = new ResourceManagementFacade();
