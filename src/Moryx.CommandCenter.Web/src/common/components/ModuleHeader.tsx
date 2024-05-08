@@ -3,27 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiCogs, mdiConsole, mdiConsoleLine, mdiDatabase, mdiHexagon, mdiHexagonMultiple, mdiMonitor } from "@mdi/js";
-import Icon from "@mdi/react";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
-import { Nav, Navbar, NavItem } from "reactstrap";
+import { Link } from "react-router-dom";
 import { FailureBehaviour } from "../../modules/models/FailureBehaviour";
 import { ModuleStartBehaviour } from "../../modules/models/ModuleStartBehaviour";
-import ServerModuleModel from "../../modules/models/ServerModuleModel";
 import { updateFailureBehaviour, updateStartBehaviour } from "../../modules/redux/ModulesActions";
-import { AppState } from "../redux/AppState";
 import { ActionType } from "../redux/Types";
-
-interface ModuleHeaderPropModel {
-    Module?: ServerModuleModel;
-}
-
-const mapStateToProps = (state: AppState): ModuleHeaderPropModel => {
-    return {
-    };
-};
 
 const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModuleDispatchPropModel => {
     return {
@@ -32,41 +20,23 @@ const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModuleDis
     };
 };
 
-interface ModulePropModel {
+interface ModuleHeaderPropModel {
     ModuleName: string;
+    selectedTab: string;
 }
 
-export class ModuleHeader extends React.Component<ModulePropModel & ModuleDispatchPropModel> {
-    constructor(props: ModulePropModel & ModuleDispatchPropModel) {
+export class ModuleHeader extends React.Component<ModuleHeaderPropModel & ModuleDispatchPropModel> {
+    constructor(props: ModuleHeaderPropModel & ModuleDispatchPropModel) {
         super(props);
-
-        // This.state = { HasWarningsOrErrors: false, IsNotificationDialogOpened: false, SelectedNotification: null };
     }
 
     public render(): React.ReactNode {
         return (
-            <Navbar className="navbar-default" expand="md">
-                <Nav className="navbar-left" navbar={true}>
-                    <NavItem>
-                        <NavLink exact={true} to={`/modules/${this.props.ModuleName}`} className="navbar-nav-link">
-                            <Icon path={mdiMonitor} className="icon right-space" />
-                            Overview
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink to={`/modules/${this.props.ModuleName}/configuration`} className="navbar-nav-link">
-                            <Icon path={mdiCogs} className="icon right-space" />
-                            Configuration
-                        </NavLink>
-                    </NavItem>
-                    <NavItem >
-                        <NavLink to={`/modules/${this.props.ModuleName}/console`} className="navbar-nav-link">
-                            <Icon path={mdiConsoleLine}className="icon right-space" />
-                            Console
-                        </NavLink>
-                    </NavItem>
-                </Nav>
-            </Navbar>
+            <Tabs value={this.props.selectedTab} role="navigation">
+                <Tab label="Overview" value="module" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}`} />
+                <Tab label="Configuration" value="configuration" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}/configuration`} />
+                <Tab label="Console" value="console" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}/console`} />
+            </Tabs>
         );
     }
 }

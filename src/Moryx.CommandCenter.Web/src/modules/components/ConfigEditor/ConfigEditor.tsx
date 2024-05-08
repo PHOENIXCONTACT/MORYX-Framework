@@ -3,10 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiChevronDown, mdiChevronUp, mdiFolderOpen} from "@mdi/js";
-import Icon from "@mdi/react";
+import { mdiChevronDown, mdiChevronRight } from "@mdi/js";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
+import SvgIcon from "@mui/material/SvgIcon";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Row, Table } from "reactstrap";
 import Entry from "../../models/Entry";
 import { EntryValueType } from "../../models/EntryValueType";
 import BooleanEditor from "./BooleanEditor";
@@ -31,7 +36,6 @@ interface ConfigEditorStateModel {
 }
 
 export default class ConfigEditor extends React.Component<ConfigEditorPropModel, ConfigEditorStateModel> {
-    private static divider: number = 2;
 
     constructor(props: ConfigEditorPropModel) {
         super(props);
@@ -39,6 +43,13 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
             ExpandedEntryNames: [],
             SelectedEntryType: this.props.ParentEntry != null ? this.props.ParentEntry.value.current : ""
         };
+    }
+
+    public componentDidUpdate(prevProps: Readonly<ConfigEditorPropModel>, prevState: Readonly<ConfigEditorStateModel>, snapshot?: any): void {
+        if (this.props.ParentEntry && (prevProps.ParentEntry?.value.current !== this.props.ParentEntry.value.current)) {
+            this.setState({SelectedEntryType: this.props.ParentEntry.value.current});
+
+        }
     }
 
     public componentWillReceiveProps(nextProps: ConfigEditorPropModel): void {
@@ -77,13 +88,14 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         return isEntrySettable;
     }
 
-    private onEntryTypeChange(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({SelectedEntryType: e.currentTarget.value});
+    private onEntryTypeChange(e: React.ChangeEvent<HTMLInputElement>): void {
+        this.setState({SelectedEntryType: e.target.value});
     }
 
     private onPatchToSelectedEntryType(): void {
         let prototype: Entry = null;
         let entryType: EntryValueType = EntryValueType.Class;
+
         if (this.props.ParentEntry != null) {
             entryType = this.props.ParentEntry.value.type;
         }
@@ -138,16 +150,20 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
             case EntryValueType.Collection:
             case EntryValueType.Class: {
                 return (
-                    <ButtonGroup>
-                        <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>
-                            <Icon path={mdiFolderOpen} className="icon right-space" />
-                            Open
-                        </Button>
-                        <Button color="secondary" onClick={() => this.toggleCollapsible(entry.uniqueIdentifier ?? entry.identifier)}>
-                            <Icon path={this.isExpanded(entry.uniqueIdentifier ?? entry.identifier) ? mdiChevronUp : mdiChevronDown} className="icon right-space" />
-                            {this.isExpanded(entry.uniqueIdentifier ?? entry.identifier) ? "Collapse" : "Expand"}
-                        </Button>
-                    </ButtonGroup>
+                    <div>
+                        <IconButton
+                            sx={{padding: 0}}
+                            onClick={() => this.toggleCollapsible(entry.uniqueIdentifier ?? entry.identifier)}>
+                            <SvgIcon><path d={this.isExpanded(entry.uniqueIdentifier ?? entry.identifier) ? mdiChevronDown : mdiChevronRight } /></SvgIcon>
+                        </IconButton>
+                        <Tooltip title={entry.description} placement="right">
+                            <Button onClick={() => this.props.navigateToEntry(entry)}
+                                sx={{textTransform: "none"}}
+                                >
+                                {entry.displayName}
+                            </Button>
+                        </Tooltip>
+                    </div>
                 );
             }
         }
@@ -156,53 +172,38 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
     }
 
     public preRenderEntries(entries: Entry[]): React.ReactNode {
-        return entries.map((subEntry, idx) =>
+        return entries.map((subEntry) =>
         (
-            <div key={idx} className="table-row">
-                <Row className="entry-row">
-                    <Col md={5} className="no-padding">
-                        <Container fluid={true} className="no-padding">
-                            <Row>
-                                <Col md={12} className="no-padding"><span className="font-bold align-self-center no-padding">{subEntry.displayName}</span></Col>
-                            </Row>
-                            <Row>
-                                <Col md={12} className="no-padding"><span className="font-disabled no-padding">{subEntry.description}</span></Col>
-                            </Row>
-                        </Container>
-                    </Col>
-                    <Col md={7} className="no-padding">
-                    {
-                        this.selectPropertyByType(subEntry)
-                    }
-                    </Col>
-                </Row>
+            <Grid container={true} sx={{ marginTop: 0.5 }} key={subEntry.identifier}>
+                <Grid container={true} item={true} md={12} direction="column" alignItems="stretch">
+                {
+                    this.selectPropertyByType(subEntry)
+                }
+                </Grid>
+
                 { subEntry.value.type === EntryValueType.Collection &&
                     (
-                        <Row>
-                            <Col md={12}>
-                                <CollectionEditor Entry={subEntry}
-                                                  IsExpanded={this.isExpanded(subEntry.uniqueIdentifier ?? subEntry.identifier)}
-                                                  Root={this.props.Root}
-                                                  navigateToEntry={this.props.navigateToEntry}
-                                                  IsReadOnly={this.props.IsReadOnly} />
-                            </Col>
-                        </Row>
+                        <Grid container={true} item={true} md={12} direction="column" alignItems="stretch">
+                            <CollectionEditor Entry={subEntry}
+                                                IsExpanded={this.isExpanded(subEntry.uniqueIdentifier ?? subEntry.identifier)}
+                                                Root={this.props.Root}
+                                                navigateToEntry={this.props.navigateToEntry}
+                                                IsReadOnly={this.props.IsReadOnly} />
+                        </Grid>
                     )
                 }
                 { subEntry.value.type === EntryValueType.Class &&
                     (
-                        <Row>
-                            <Col md={12}>
-                                <ClassEditor Entry={subEntry}
-                                             IsExpanded={this.isExpanded(subEntry.uniqueIdentifier ?? subEntry.identifier)}
-                                             Root={this.props.Root}
-                                             navigateToEntry={this.props.navigateToEntry}
-                                             IsReadOnly={this.props.IsReadOnly} />
-                            </Col>
-                        </Row>
+                        <Grid item={true} md={12} direction="column" alignItems="stretch">
+                            <ClassEditor Entry={subEntry}
+                                            IsExpanded={this.isExpanded(subEntry.uniqueIdentifier ?? subEntry.identifier)}
+                                            Root={this.props.Root}
+                                            navigateToEntry={this.props.navigateToEntry}
+                                            IsReadOnly={this.props.IsReadOnly} />
+                        </Grid>
                     )
                 }
-            </div>
+            </Grid>
         ));
     }
 
@@ -210,50 +211,49 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         let entries: any;
         if (this.props.ParentEntry != null && this.props.ParentEntry.value.type === EntryValueType.Collection) {
             entries = (
-                <Row>
-                    <Col md={12} className="no-padding">
+                <Grid container={true}>
+                    <Grid container={true} item={true} md={12} direction="column" alignItems="stretch">
                         <CollectionEditor Entry={this.props.ParentEntry}
                                           IsExpanded={true}
                                           Root={this.props.Root}
                                           navigateToEntry={this.props.navigateToEntry}
                                           IsReadOnly={this.props.IsReadOnly} />
-                    </Col>
-                </Row>
+                    </Grid>
+                </Grid>
             );
         } else {
             entries = this.preRenderEntries(this.props.Entries);
         }
 
         return (
-            <div className="config-editor" style={{marginLeft: 10}}>
+            <Grid container={true} item={true} md={12}>
                 {entries}
                 { ConfigEditor.isEntryTypeSettable(this.props.ParentEntry) &&
-                    <Container fluid={true}
-                               style={{margin: "10px 0px 10px 0px"}}
-                               className="no-padding">
-                        <Row style={{alignItems: "center"}}>
-                            <Col md={4} className="no-padding">
-                                <Input type="select" value={this.state.SelectedEntryType}
-                                       onChange={(e: React.FormEvent<HTMLInputElement>) => this.onEntryTypeChange(e)}>
-                                    {
-                                        this.props.ParentEntry.value.possible.map((possibleValue, idx) => {
-                                            return (<option key={idx}>{possibleValue}</option>);
-                                        })
-                                    }
-                                </Input>
-                            </Col>
-                            <Col>
-                                <Button color="primary"
-                                        disabled={this.state.SelectedEntryType === "" || this.state.SelectedEntryType === this.props.ParentEntry.value.current}
-
-                                        onClick={() => this.onPatchToSelectedEntryType()}>
-                                    Set entry type
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
+                    <Grid container={true}>
+                        <Grid container={true} item={true} md={12}>
+                            <TextField
+                                select={true}
+                                value={this.state.SelectedEntryType}
+                                fullWidth={true}
+                                size="small"
+                                label="Type"
+                                margin="dense"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onEntryTypeChange(e)}>
+                                {
+                                    this.props.ParentEntry.value.possible.map((possibleValue, idx) => {
+                                        return (<MenuItem key={idx} value={possibleValue}>{possibleValue}</MenuItem>);
+                                    })
+                                }
+                            </TextField>
+                            <Button color="primary"
+                                    disabled={this.state.SelectedEntryType === "" || this.state.SelectedEntryType === this.props.ParentEntry.value.current}
+                                    onClick={() => this.onPatchToSelectedEntryType()}>
+                                Set entry type
+                            </Button>
+                        </Grid>
+                    </Grid>
                 }
-            </div>
+            </Grid>
         );
     }
 }

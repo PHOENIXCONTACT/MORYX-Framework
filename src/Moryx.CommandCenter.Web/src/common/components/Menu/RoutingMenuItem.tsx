@@ -1,72 +1,58 @@
 /*
- * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
- * Licensed under the Apache License, Version 2.0
+* Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+* Licensed under the Apache License, Version 2.0
 */
 
-import { Location, UnregisterCallback } from "history";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
-import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import ListGroupItem from "reactstrap/lib/ListGroupItem";
+import { Location, NavLink, useLocation } from "react-router-dom";
 import MenuItemModel from "../../models/MenuItemModel";
 
 interface MenuItemProps {
+    Key: number;
     MenuItem: MenuItemModel;
     Level: number;
-    onMenuItemClicked?(menuItem: MenuItemModel): void;
+    Divider: boolean;
 }
 
-interface MenuItemState {
-    IsOpened: boolean;
+function RoutingMenuItem(props: MenuItemProps) {
+    const location = useLocation();
+
+    const isActive = (location: Location): boolean => {
+        // Path has to be equal to be 'active' or must be a sub path (following
+        // After a `/`). Otherwise, with similar entries, multiple list items
+        // Could be highlighted. E.g.: 'Orders' and 'OrdersSimulator' would both
+        // Match the condition of `OrdersSimulator.startsWith(Orders)`.
+        return location.pathname === props.MenuItem.NavPath
+           || (location.pathname.startsWith(props.MenuItem.NavPath)
+                && location.pathname.replace(props.MenuItem.NavPath, "")[0] === "/");
+    };
+
+    const isLocationActive = isActive(location);
+
+    return (
+        <ListItem
+            key={props.Key}
+            secondaryAction={props.MenuItem.Content}
+            disablePadding={true}
+            component={NavLink} to={props.MenuItem.NavPath} sx={{color: "black"}}
+        >
+            <ListItemButton
+                selected={isLocationActive}
+
+                divider={props.Divider}
+            >
+                <ListItemText
+                    primary={props.MenuItem.Name}
+                    secondary={props.MenuItem.SecondaryName}
+                    secondaryTypographyProps={{fontSize: "x-small"}}>
+                        {props.MenuItem.Content}
+                </ListItemText>
+            </ListItemButton>
+        </ListItem>
+    );
 }
 
-class RoutingMenuItem extends React.Component<RouteComponentProps<{}> & MenuItemProps, MenuItemState> {
-    private unregisterListenerCallback: UnregisterCallback;
-
-    constructor(props: RouteComponentProps<{}> & MenuItemProps) {
-        super (props);
-        this.state = { IsOpened: this.isOpened(this.props.location) };
-
-        this.unregisterListenerCallback = this.props.history.listen(this.onRouteChanged.bind(this));
-        this.onMenuItemClicked = this.onMenuItemClicked.bind(this);
-    }
-
-    public componentWillUnmount(): void {
-        this.unregisterListenerCallback();
-    }
-
-    private isOpened(location: Location): boolean {
-        return location.pathname.startsWith(this.props.MenuItem.NavPath);
-    }
-
-    private onRouteChanged(location: Location, action: string): void {
-        this.setState({ IsOpened: this.isOpened(location) });
-    }
-
-    private handleMenuItemClick(e: React.MouseEvent<HTMLElement>): void {
-        e.preventDefault();
-
-        this.setState((prevState) => ({ IsOpened: !prevState.IsOpened }));
-        this.onMenuItemClicked(this.props.MenuItem);
-    }
-
-    private onMenuItemClicked(menuItem: MenuItemModel): void {
-        if (this.props.onMenuItemClicked != null) {
-            this.props.onMenuItemClicked(menuItem);
-        }
-    }
-
-    public render(): React.ReactNode {
-        const isActive = this.props.location.pathname.includes(this.props.MenuItem.NavPath);
-
-        return (
-            <ListGroupItem active={isActive} className="menu-item" onClick={(e: React.MouseEvent<HTMLElement>) => this.handleMenuItemClick(e)}>
-                <Link to={this.props.MenuItem.NavPath}>
-                    {this.props.MenuItem.Name}
-                </Link>
-                {this.props.MenuItem.Content}
-            </ListGroupItem >
-        );
-    }
-}
-
-export default withRouter<RouteComponentProps<{}> & MenuItemProps, React.ComponentType<any>>(RoutingMenuItem);
+export default RoutingMenuItem;

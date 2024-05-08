@@ -137,7 +137,7 @@ namespace Moryx.Resources.Management
 
         public Resource Create(string type)
         {
-            if(!_typeCache.ContainsKey(type))
+            if (!_typeCache.ContainsKey(type))
                 throw new KeyNotFoundException($"No resource of type {type} found!");
 
             var linker = _typeCache[type];
@@ -337,6 +337,10 @@ namespace Moryx.Resources.Management
                 return true;
 
             if (resourceInterface.GetMethods().Any(method => method.IsGenericMethod || method.ContainsGenericParameters))
+                return true;
+
+            // We also need to filter all interfaces that contain/inherit generic interfaces
+            if (resourceInterface.GetInterfaces().Any(IsGenericResourceInterface))
                 return true;
 
             return false;

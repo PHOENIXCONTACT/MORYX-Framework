@@ -81,6 +81,21 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test]
+        public void UseNewProxyForDerivedTypeWithNewInterface()
+        {
+            // Arrange: Create instance
+            var baseInstance = new SimpleResource { Id = 2 };
+            var instance = new DerivedResourceWithNewProxy { Id = 3 };
+
+            // Act: Build Proxy
+            var baseProxy = _typeController.GetProxy(baseInstance);
+            var proxy = _typeController.GetProxy(instance);
+
+            // Assert: Make sure proxy is still the base type
+            Assert.That(baseProxy.GetType(), Is.Not.EqualTo(proxy.GetType()));
+        }
+
+        [Test]
         public void CallMethodOnProxy()
         {
             // Arrange: Create instance
@@ -242,6 +257,8 @@ namespace Moryx.Resources.Management.Tests
             {
                 Id = 8,
                 Reference = ref1,
+                Reference2 = null,
+                EvenMoreReferences = null,
                 NonPublic = nonPub
             };
             instance.References = new ReferenceCollection<ISimpleResource>(instance,
@@ -287,6 +304,11 @@ namespace Moryx.Resources.Management.Tests
             Assert.AreEqual(instance.Reference, ref2);
             Assert.AreEqual(instance.References.Count, 3);
             Assert.AreEqual(instance.References.ElementAt(1), ref1);
+            // Make sure null references work
+            Assert.DoesNotThrow(() => _ = proxy.Reference2);
+            Assert.DoesNotThrow(() => proxy.Reference2 = null);
+            Assert.DoesNotThrow(() => _ = proxy.EvenMoreReferences);
+            Assert.DoesNotThrow(() => proxy.EvenMoreReferences = null);
         }
 
     }

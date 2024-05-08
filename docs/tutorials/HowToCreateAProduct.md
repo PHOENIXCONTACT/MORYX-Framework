@@ -1,11 +1,11 @@
 ---
 uid: HowToCreateAProduct
 ---
-# How to create a resource
+# How to create a product
 
 This tutorial shows how [Products](../../src/Moryx.AbstractionLayer/Products/ProductType.cs) should be implemented. Look [here](../articles/Products/Concept.md) if you are not firm with the concept of a `Product`. 
 
-For products we differentiate between [ProductType](../../src/Moryx.AbstractionLayer/Products/ProductType.cs) and [ProductInstance](../../src/Moryx.AbstractionLayer/Products/ProductInstance.cs). The `ProductType` is what you can order in a catalog, while the `ProductInstance` is what you received after ordering: an instance of the product with its unique serialnumber. So that a `ProductType` can be producted it needs a corresponding `ProductInstance`. If your application isn't used for production, you can skip the `ProductInstances`. 
+For products we differentiate between [ProductType](../../src/Moryx.AbstractionLayer/Products/ProductType.cs) and [ProductInstance](../../src/Moryx.AbstractionLayer/Products/ProductInstance.cs). The `ProductType` is what you can order in a catalog, while the `ProductInstance` is what you received after ordering: an instance of the product with its unique serialnumber. So that a `ProductType` can be produced it needs a corresponding `ProductInstance`. If your application isn't used for production, you can skip the `ProductInstances`. 
 
 ## Create a basic ProductType and ProductInstance
 All ProductTypes are derived from `ProductType`. The methode `Instantiate()` returns an object of the correspoding `ProductInstance`.
