@@ -176,7 +176,7 @@ namespace Moryx.Communication.Sockets
         {
             _transmission = new TcpTransmission(_tcpClient, _validator.Interpreter, Logger.GetChild(string.Empty, typeof(TcpTransmission)));
             _transmission.Disconnected += ConnectionClosed;
-            _transmission.ExceptionOccured += OnTransmissionException;
+            _transmission.ExceptionOccurred += OnTransmissionException;
             _transmission.Received += MessageReceived;
             _transmission.StartReading();
 
@@ -205,7 +205,7 @@ namespace Moryx.Communication.Sockets
 
             // First close the connection and then unregister events
             transmission.Disconnect();
-            transmission.ExceptionOccured -= OnTransmissionException;
+            transmission.ExceptionOccurred -= OnTransmissionException;
             transmission.Received -= MessageReceived;
             transmission.Disconnected -= ConnectionClosed;
 
