@@ -128,7 +128,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
         return (
             <Collapse in={this.props.IsExpanded}>
                 <Grid container={true} item={true} sx={{paddingLeft: 3, paddingRight: 0}}>
-                    {
+                    {   this.props.IsExpanded &&
                         this.props.Entry.subEntries.map((entry, idx) => {
                             if (Entry.isClassOrCollection(entry)) {
                                 return (
