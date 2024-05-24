@@ -30,9 +30,12 @@ export default class ClassEditor extends CollapsibleEntryEditorBase<ClassEditorS
         return (
             <div>
                 <Collapse in={this.props.IsExpanded}>
-                    <Container style={{paddingRight: "0"}}>
-                        {this.preRenderConfigEditor()}
-                    </Container>
+                    {
+                        this.props.IsExpanded &&
+                        <Container style={{paddingRight: "0"}}>
+                            {this.preRenderConfigEditor()}
+                        </Container>
+                    }
                 </Collapse>
             </div>
         );

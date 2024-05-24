@@ -31,7 +31,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Callback to forward transmission exceptions to connection
         /// </summary>
-        public event EventHandler<Exception> ExceptionOccured;
+        public event EventHandler<Exception> ExceptionOccurred;
 
         /// <summary>
         /// Initialize TcpTransmission
@@ -53,10 +53,10 @@ namespace Moryx.Communication.Sockets
 
         private void RaiseException(Exception ex)
         {
-            if (ExceptionOccured == null)
+            if (ExceptionOccurred == null)
                 _logger.Log(LogLevel.Error, ex, "TcpTransmission encountered an error");
             else
-                ExceptionOccured(this, ex);
+                ExceptionOccurred(this, ex);
         }
 
         private void RaiseDisconnected()
@@ -81,7 +81,19 @@ namespace Moryx.Communication.Sockets
             // Configure socket using net6 keep alive configuration
             socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, interval);
             socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, timeout);
-            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 2);
+
+            try
+            {
+                // Try to set the TcpKeeepAliveRetryCount, it is not supported on all windows systems
+                // https://learn.microsoft.com/en-us/windows/win32/winsock/ipproto-tcp-socket-options#windows-support-for-ipproto_tcp-options
+                socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 2);
+                
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "TcpKeepAliveRetryCount could not be applied!");
+            }
+
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 #else
             // Keep alive only supported for windows under netstandard2.0
