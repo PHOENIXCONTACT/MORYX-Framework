@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+	<Description>Library with helper classes for integration tests.</Description>
+	<CreatePackage>true</CreatePackage>
+	<PackageTags>MORYX;Tests;IntegrationTest</PackageTags>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
+    <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
+    <ProjectReference Include="..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
+  </ItemGroup>
+</Project>
