@@ -270,16 +270,21 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                     continue;
 
                 var match = unused.Find(r => r.Id == partModel?.Id);
+                // new partlink
                 if (match == null)
                 {
                     match = (IProductPartLink)Activator.CreateInstance(elemType);
+                    match.Product = _productManagement.LoadType(partModel.Product.Id);
                     value.Add(match);
                 }
+                //modified reference
+                else if (match.Product.Id != partModel.Product.Id)
+                    match.Product = _productManagement.LoadType(partModel.Product.Id);
                 else
+                 //part removed
                     unused.Remove(match);
 
                 EntryConvert.UpdateInstance(match, partModel.Properties);
-                match.Product = _productManagement.LoadType(partModel.Product.Id);
             }
 
             // Clear all values no longer present in the model
