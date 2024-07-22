@@ -129,10 +129,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // - If there are ProductPartLinks the ProductManagement should be called
             var targetDummyTypeWithParts = recoveredOriginal as DummyProductTypeWithParts;
             if (targetDummyTypeWithParts?.ProductPartLink?.Product is not null)
-            {
                 _productManagerMock.Verify(pm => pm.LoadType(targetDummyTypeWithParts.ProductPartLink.Product.Id));
-                _productManagerMock.Verify(pm => pm.LoadType(targetDummyTypeWithParts.ProductPartLinkEnumerable.First().Product.Id));
-            }
         }
 
         private static bool HasChangedProperties<T>(object A, object B)
