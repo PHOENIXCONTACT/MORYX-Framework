@@ -258,7 +258,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         private void UpdateCollection(IList value, IEnumerable<PartModel> parts)
         {
             // Track which part links are still represented by the models
-            var unused = new List<IProductPartLink>(value.OfType<IProductPartLink>());
+            var oldParts = new List<IProductPartLink>(value.OfType<IProductPartLink>());
             // Iterate over the part models
             // Create or update the part links
             var elemType = value.GetType().GetInterfaces()
@@ -269,27 +269,27 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 if (partModel is null)
                     continue;
 
-                var match = unused.Find(r => r.Id == partModel?.Id);
+                var oldPartMatch = oldParts.Find(r => r.Id == partModel.Id);
                 // new partlink
-                if (match == null)
+                if (oldPartMatch == null)
                 {
-                    match = (IProductPartLink)Activator.CreateInstance(elemType);
-                    match.Product = _productManagement.LoadType(partModel.Product.Id);
-                    value.Add(match);
+                    oldPartMatch = (IProductPartLink)Activator.CreateInstance(elemType);
+                    oldPartMatch.Product = _productManagement.LoadType(partModel.Product.Id);
+                    value.Add(oldPartMatch);
                 }
                 //modified reference
-                else if (match.Product.Id != partModel.Product.Id)
-                    match.Product = _productManagement.LoadType(partModel.Product.Id);
+                else if (oldPartMatch.Product.Id != partModel.Product.Id)
+                    oldPartMatch.Product = _productManagement.LoadType(partModel.Product.Id);
                 else
-                 //part removed
-                    unused.Remove(match);
+                    // existing unchanged partlink: do not delete at the end
+                    oldParts.Remove(oldPartMatch);
 
-                EntryConvert.UpdateInstance(match, partModel.Properties);
+                EntryConvert.UpdateInstance(oldPartMatch, partModel.Properties);
             }
 
             // Clear all values no longer present in the model
-            foreach (var link in unused)
-                value.Remove(link);
+            foreach (var part in oldParts)
+                value.Remove(part);
         }
 
         private void UpdateReference(IProductPartLink value, PartModel part)
