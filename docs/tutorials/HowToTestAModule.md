@@ -11,16 +11,16 @@ The following example shows a setup for the `IShiftManagement` facade interface.
 private ModuleConfig _config;
 private Mock<IResourceManagement> _resourceManagementMock;
 private Mock<IOperatorManagement> _operatorManagementMock;
-private MoryxTestEnvironment<IShiftManagement> _env;
+private MoryxTestEnvironment _env;
 
 [SetUp]
 public void SetUp()
 {
     ReflectionTool.TestMode = true;
     _config = new();
-    _resourceManagementMock = MoryxTestEnvironment<IShiftManagement>.CreateModuleMock<IResourceManagement>();
-    _operatorManagementMock = MoryxTestEnvironment<IShiftManagement>.CreateModuleMock<IOperatorManagement>();
-    _env = new MoryxTestEnvironment<IShiftManagement>(typeof(ModuleController),
+    _resourceManagementMock = MoryxTestEnvironment.CreateModuleMock<IResourceManagement>();
+    _operatorManagementMock = MoryxTestEnvironment.CreateModuleMock<IOperatorManagement>();
+    _env = new MoryxTestEnvironment(typeof(ModuleController),
         new Mock[] { _resourceManagementMock, _operatorManagementMock }, _config);
 }
 ```

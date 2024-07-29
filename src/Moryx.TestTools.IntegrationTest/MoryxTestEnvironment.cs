@@ -23,8 +23,10 @@ namespace Moryx.Shifts.Management.IntegrationTests
     /// dependencies.
     /// </summary>
     /// <typeparam name="T">Type of the facade to be tested.</typeparam>
-    public class MoryxTestEnvironment<T> where T : class
+    public class MoryxTestEnvironment
     {
+        private readonly Type _moduleType;
+
         public IServiceProvider Services { get; private set; }
 
         /// <summary>
@@ -40,6 +42,8 @@ namespace Moryx.Shifts.Management.IntegrationTests
         /// <exception cref="ArgumentException">Throw if <paramref name="serverModuleType"/> is not a server module</exception>
         public MoryxTestEnvironment(Type serverModuleType, IEnumerable<Mock> dependencyMocks, ConfigBase config)
         {
+            _moduleType = serverModuleType;
+
             if (!serverModuleType.IsAssignableTo(typeof(IServerModule)))
                 throw new ArgumentException("Provided parameter is no server module", nameof(serverModuleType));
 
@@ -96,8 +100,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
         /// <returns>The started module.</returns>
         public IServerModule StartTestModule()
         {
-            var module = Services.GetServices<IServerModule>()
-                .Single(s => s.GetType().IsAssignableTo(typeof(IFacadeContainer<T>)));
+            var module = (IServerModule)Services.GetService(_moduleType);
 
             module.Initialize();
             var containerHost = module as IContainerHost;
@@ -115,8 +118,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
         /// <returns>The stopped module.</returns>
         public IServerModule StopTestModule()
         {
-            var module = Services.GetServices<IServerModule>()
-                .Single(s => s.GetType().IsAssignableTo(typeof(IFacadeContainer<T>)));
+            var module = (IServerModule)Services.GetService(_moduleType);
             module.Stop();
 
             return module;
@@ -125,6 +127,6 @@ namespace Moryx.Shifts.Management.IntegrationTests
         /// <summary>
         /// Returns the service for the facade of type <typeparamref name="T"/> to be tested.
         /// </summary>
-        public T GetTestModule() => Services.GetRequiredService<T>();
+        public TModule GetTestModule<TModule>() => Services.GetRequiredService<TModule>();
     }
 }
