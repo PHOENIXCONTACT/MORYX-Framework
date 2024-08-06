@@ -1,8 +1,10 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moryx.TestTools.NUnit;
 using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using NUnit.Framework;
@@ -56,14 +58,15 @@ namespace Moryx.Tests.Workplans
             // Act
             trans.Initialize();
             _inputs[0].Add(_token);
-
+            
             // Assert
-            Assert.AreEqual(0, _inputs[0].Tokens.Count());
-            Assert.IsTrue(_outputs.All(o => o.Tokens.Count() == 1));
-            Assert.IsInstanceOf<SplitToken>(_outputs[0].Tokens.First());
-            Assert.IsInstanceOf<SplitToken>(_outputs[1].Tokens.First());
-            Assert.AreEqual(_token, ((SplitToken)_outputs[0].Tokens.First()).Original);
-            Assert.AreEqual(_token, ((SplitToken)_outputs[1].Tokens.First()).Original);
+            Assert.Multiple(() =>
+            {
+                MAssert.That(_inputs[0].Tokens, Is.Empty);
+                MAssert.That(_outputs.Select(o => o.Tokens), Has.All.Count.EqualTo(1));
+                MAssert.That(() => ((SplitToken)_outputs[0].Tokens.First()).Original, Is.EqualTo(_token));
+                MAssert.That(() => ((SplitToken)_outputs[1].Tokens.First()).Original, Is.EqualTo(_token));
+            });
         }
 
         [Test]
@@ -83,11 +86,13 @@ namespace Moryx.Tests.Workplans
             trans.Initialize();
             _inputs[0].Add(split1);
             _inputs[1].Add(split2);
-
             // Assert
-            Assert.IsTrue(_inputs.All(i => !i.Tokens.Any()));
-            Assert.AreEqual(1, _outputs[0].Tokens.Count());
-            Assert.AreEqual(_token, _outputs[0].Tokens.First());
+            Assert.Multiple(() =>
+            {
+                MAssert.That(_inputs.All(i => !i.Tokens.Any()));
+                MAssert.That(_outputs[0].Tokens.Count(), Is.EqualTo(1), "The split token should be joined into one");
+                MAssert.That(_outputs[0].Tokens.First(), Is.EqualTo(_token));
+            });
         }
 
         [TestCase(0, Description = "Place only one split token on the first input")]
@@ -108,9 +113,12 @@ namespace Moryx.Tests.Workplans
             _inputs[index].Add(split);
 
             // Assert
-            Assert.AreEqual(1, _inputs[index].Tokens.Count());
-            Assert.AreEqual(0, _inputs[(index + 1) % 2].Tokens.Count());
-            Assert.AreEqual(0, _outputs[0].Tokens.Count());
+            Assert.Multiple(() =>
+            {
+                MAssert.That(_inputs[index].Tokens, Has.Count.EqualTo(1));
+                MAssert.That(_inputs[(index + 1) % 2].Tokens, Is.Empty);
+                MAssert.That(_outputs[0].Tokens, Is.Empty);
+            });
         }
 
         [Test]
@@ -138,10 +146,12 @@ namespace Moryx.Tests.Workplans
             _inputs[0].Add(_token);
 
             // Assert
-            Assert.AreEqual(0, _inputs[0].Tokens.Count());
-            Assert.AreEqual(_token, _outputs[0].Tokens.First());
-            Assert.AreEqual(2, triggered.Count);
-            Assert.IsTrue(triggered.All(t => t is DummyTransition));
+            Assert.Multiple(() => { 
+                MAssert.That(_inputs[0].Tokens, Is.Empty);
+                MAssert.That(() => _outputs[0].Tokens.First(), Is.EqualTo(_token));
+                MAssert.That(triggered.Count, Is.EqualTo(2));
+                MAssert.That(triggered, Has.All.InstanceOf<DummyTransition>());
+            });
         }
 
         [Test]
@@ -171,14 +181,17 @@ namespace Moryx.Tests.Workplans
             trans.Resume();
 
             // Assert
-            Assert.AreEqual(0, _inputs[0].Tokens.Count());
-            Assert.AreEqual(_token, _outputs[0].Tokens.First());
-            Assert.AreEqual(1, triggered.Count);
-            Assert.IsInstanceOf<WorkplanSnapshot>(state);
-            var snapshot = (WorkplanSnapshot)state;
-            Assert.AreEqual(1, snapshot.Holders.Length);
-            var stepId = workplan.Steps.First(s => s is PausableStep).Id;
-            Assert.AreEqual(stepId, snapshot.Holders[0].HolderId);
+            Assert.Multiple(() =>
+            {
+                MAssert.That(_inputs[0].Tokens, Is.Empty);
+                MAssert.That(_outputs[0].Tokens.First(), Is.EqualTo(_token));
+                MAssert.That(triggered, Has.Count.EqualTo(1));
+                MAssert.That(state, Is.InstanceOf<WorkplanSnapshot>());
+                var snapshot = (WorkplanSnapshot)state;
+                MAssert.That(snapshot.Holders, Has.Length.EqualTo(1));
+                var stepId = workplan.Steps.First(s => s is PausableStep).Id;
+                MAssert.That(snapshot.Holders[0].HolderId, Is.EqualTo(stepId));
+            });
         }
     }
 }
