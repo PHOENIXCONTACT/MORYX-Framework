@@ -1,13 +1,12 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Runtime.Configuration;
-using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Tests.Mocks;
 using Moryx.Runtime.Tests.Modules;
 using Moq;
 using NUnit.Framework;
+using Moryx.Configuration;
 
 namespace Moryx.Runtime.Tests
 {
@@ -19,19 +18,15 @@ namespace Moryx.Runtime.Tests
         [SetUp]
         public void Init()
         {
-            var configManagerMock = new Mock<IRuntimeConfigManager>();
-            configManagerMock.Setup(c => c.GetConfiguration<TestConfig>()).Returns(new TestConfig
+            var configManagerMock = new Mock<IConfigManager>();
+            configManagerMock.Setup(c => c.GetConfiguration(typeof(TestConfig), It.IsAny<string>(), false)).Returns(new TestConfig
             {
                 Strategy = new StrategyConfig { PluginName = "Test" },
                 StrategyName = "Test"
             });
 
 
-            _moduleUnderTest = new TestModule
-            {
-                ConfigManager = configManagerMock.Object,
-                LoggerManagement = new TestLoggerMgmt()
-            };
+            _moduleUnderTest = new TestModule(null, configManagerMock.Object, new TestLoggerMgmt());
         }
 
         [Test]
@@ -40,7 +35,7 @@ namespace Moryx.Runtime.Tests
             var casted = (IServerModule) _moduleUnderTest;
             casted.Initialize();
 
-            var containerConfig = ((IContainerHost) _moduleUnderTest).Strategies;
+            var containerConfig = _moduleUnderTest.Strategies;
 
             Assert.GreaterOrEqual(containerConfig.Count, 1, "No strategy found!");
             Assert.IsTrue(containerConfig.ContainsKey(typeof(IStrategy)), "Wrong type!");

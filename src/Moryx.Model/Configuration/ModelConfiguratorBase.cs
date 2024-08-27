@@ -1,16 +1,15 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Migrations;
-using System.Data.Entity.Migrations.Infrastructure;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Logging;
+using Moryx.Tools;
 
 namespace Moryx.Model.Configuration
 {
@@ -22,25 +21,22 @@ namespace Moryx.Model.Configuration
     {
         private IConfigManager _configManager;
         private string _configName;
-        private DbMigrationsConfiguration _migrationsConfiguration;
-        private string[] _migrations;
-        private Type _contextType;
+
+        /// <summary>
+        /// The underlying context's type
+        /// </summary>
+        protected Type _contextType;
 
         /// <summary>
         /// Logger for this model configurator
         /// </summary>
-        protected IModuleLogger Logger { get; private set; }
-
-        /// <summary>
-        /// The invariant name of the database provider
-        /// </summary>
-        protected abstract string ProviderInvariantName { get; }
+        protected ILogger Logger { get; private set; }
 
         /// <inheritdoc />
         public IDatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
+        public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)
         {
             _contextType = contextType;
             _configManager = configManager;
@@ -53,27 +49,26 @@ namespace Moryx.Model.Configuration
             Config = _configManager.GetConfiguration<TConfig>(_configName);
 
             // If database is empty, fill with TargetModel name
-            if (string.IsNullOrWhiteSpace(Config.Database))
-                Config.Database = contextType.Name;
-
-            // Create migrations configuration
-            _migrationsConfiguration = CreateDbMigrationsConfiguration();
-
-            // Load local migrations
-            _migrations = GetAvailableMigrations();
+            if (string.IsNullOrWhiteSpace(Config.ConnectionSettings.Database))
+                Config.ConnectionSettings.Database = contextType.Name;
         }
 
         /// <inheritdoc />
-        public DbContext CreateContext(ContextMode mode)
+        public DbContext CreateContext()
         {
-            return CreateContext(Config, mode);
+            return CreateContext(Config);
         }
 
         /// <inheritdoc />
-        public DbContext CreateContext(IDatabaseConfig config, ContextMode mode)
+        public DbContext CreateContext(IDatabaseConfig config)
         {
-            var context = (DbContext)Activator.CreateInstance(_contextType, BuildConnectionString(config));
-            context.SetContextMode(mode);
+            return CreateContext(_contextType, BuildDbContextOptions(config));
+        }
+
+        /// <inheritdoc />
+        public DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions)
+        {
+            var context = (DbContext)Activator.CreateInstance(contextType, dbContextOptions);
             return context;
         }
 
@@ -84,33 +79,33 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual TestConnectionResult TestConnection(IDatabaseConfig config)
+        public virtual async Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
         {
-            if (string.IsNullOrWhiteSpace(config.Database))
+            if (string.IsNullOrWhiteSpace(config.ConnectionSettings.Database))
+                return TestConnectionResult.ConfigurationError;
+
+            // Simple ef independent database connection
+            var connectionResult = await TestDatabaseConnection(config);
+            if (!connectionResult)
                 return TestConnectionResult.ConnectionError;
 
-            if (!TestDatabaseConnection(config))
-                return TestConnectionResult.ConnectionError;
+            await using var context = CreateContext(config);
 
-            var context = CreateContext(config, ContextMode.AllOff);
-            try
-            {
-                return context.Database.Exists()
-                    ? TestConnectionResult.Success
-                    : TestConnectionResult.ConnectionOkDbDoesNotExist;
-            }
-            catch
-            {
+            // Ef dependent database connection
+            var canConnect = await context.Database.CanConnectAsync();
+            if (!canConnect)
                 return TestConnectionResult.ConnectionOkDbDoesNotExist;
-            }
-            finally
-            {
-                context.Dispose();
-            }
+
+            // If connection is ok, test migrations
+            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
+            if (pendingMigrations.Any())
+                return TestConnectionResult.PendingMigrations;
+
+            return TestConnectionResult.Success;
         }
 
         /// <inheritdoc />
-        public virtual bool CreateDatabase(IDatabaseConfig config)
+        public virtual async Task<bool> CreateDatabase(IDatabaseConfig config)
         {
             // Check is database is configured
             if (!CheckDatabaseConfig(config))
@@ -118,25 +113,115 @@ namespace Moryx.Model.Configuration
                 return false;
             }
 
-            using (var context = CreateContext(config, ContextMode.AllOff))
+            await using var context = CreateMigrationContext(config);
+
+            return await CreateDatabase(config, context);
+        }
+
+        /// <summary>
+        /// Creates a database for the given context and checks if it's possible
+        /// to connect to it
+        /// </summary>
+        /// <param name="config">Config for testing the connection</param>
+        /// <param name="context">Database context</param>
+        /// <returns></returns>
+        protected async Task<bool> CreateDatabase(IDatabaseConfig config, DbContext context)
+        {
+            //Will create the database if it does not already exist. Applies any pending migrations for the context to the database.
+            await context.Database.MigrateAsync();
+
+            // Create connection to our new database
+            var connection = CreateConnection(config);
+            await connection.OpenAsync();
+
+            // Creation done -> close connection
+            connection.Close();
+
+            return true;
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config)
+        {
+            var result = new DatabaseMigrationSummary();
+
+            await using var context = CreateMigrationContext(config);
+            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
+
+            if (pendingMigrations.Length == 0)
             {
-                // Check if this database is present on the server
-                var dbExists = context.Database.Exists();
-                if (dbExists)
-                {
-                    return false;
-                }
+                result.Result = MigrationResult.NoMigrationsAvailable;
+                result.ExecutedMigrations = Array.Empty<string>();
+                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!", config.ConnectionSettings.Database);
 
-                context.Database.Create();
+                return result;
+            }
 
-                // Create connection to our new database
-                var connection = CreateConnection(config);
-                connection.Open();
+            try
+            {
+                await context.Database.MigrateAsync();
+                result.Result = MigrationResult.Migrated;
+                result.ExecutedMigrations = pendingMigrations;
+                Logger.Log(LogLevel.Information, "Database migration for database '{0}' was successful. Executed migrations: {1}",
+                    config.ConnectionSettings.Database, string.Join(", ", pendingMigrations));
 
-                // Creation done -> close connection
-                connection.Close();
+            }
+            catch (Exception e)
+            {
+                result.Result = MigrationResult.Error;
+                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.ConnectionSettings.Database);
+            }
 
-                return true;
+            return result;
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
+        {
+            await using var context = CreateMigrationContext(config);
+            return await AvailableMigrations(context);
+        }
+
+        /// <summary>
+        /// Retrieves all names of available updates
+        /// </summary>
+        /// <returns></returns>
+        protected async Task<IReadOnlyList<string>> AvailableMigrations(DbContext context)
+        {
+            try
+            {
+                var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+
+                return pendingMigrations.ToArray();
+            }
+            catch (Exception)
+            {
+                return Array.Empty<string>();
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
+        {
+            await using var context = CreateMigrationContext(config);
+            return await AppliedMigrations(context);
+        }
+
+        /// <summary>
+        /// Retrieves all names of installed updates
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IReadOnlyList<string>> AppliedMigrations(DbContext context)
+        {
+            try
+            {
+                var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
+
+                return appliedMigrations.ToArray();
+            }
+            catch (Exception)
+            {
+                return Array.Empty<string>();
             }
         }
 
@@ -155,115 +240,38 @@ namespace Moryx.Model.Configuration
         /// </summary>
         protected abstract DbCommand CreateCommand(string cmdText, DbConnection connection);
 
-        /// <inheritdoc />
-        public string BuildConnectionString(IDatabaseConfig config)
-        {
-            return BuildConnectionString(config, true);
-        }
+        /// <summary>
+        /// Builds options to access the database
+        /// </summary>
+        public abstract DbContextOptions BuildDbContextOptions(IDatabaseConfig config);
 
         /// <inheritdoc />
-        public abstract string BuildConnectionString(IDatabaseConfig config, bool includeModel);
+        public abstract Task DeleteDatabase(IDatabaseConfig config);
 
         /// <inheritdoc />
-        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config)
-        {
-            return MigrateDatabase(config, string.Empty);
-        }
+        public abstract Task DumpDatabase(IDatabaseConfig config, string targetPath);
 
         /// <inheritdoc />
-        public virtual DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId)
-        {
-            var result = new DatabaseUpdateSummary();
+        public abstract Task RestoreDatabase(IDatabaseConfig config, string filePath);
 
-            if (string.IsNullOrEmpty(migrationId))
-                migrationId = _migrations.LastOrDefault();
-
-            var isAvailable = _migrations.Any(available => available == migrationId);
-            if (isAvailable)
-            {
-                CreateDbMigrator(config).Update(migrationId);
-                result.ExecutedUpdates = GetInstalledMigrations(config).Select(migration => new DatabaseUpdate
-                {
-                    Description = migration
-                }).ToArray();
-                result.WasUpdated = true;
-            }
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public bool RollbackDatabase(IDatabaseConfig config)
-        {
-            var dbMigrator = CreateDbMigrator(config);
-
-            if (dbMigrator != null)
-            {
-                dbMigrator.Update("0");
-                return true;
-            }
-            return false;
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config)
-        {
-            return _migrations.Select(migration => new DatabaseUpdateInformation
-            {
-                Name = migration
-            });
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config)
-        {
-            return GetInstalledMigrations(config).Select(migration => new DatabaseUpdateInformation
-            {
-                Name = migration
-            });
-        }
-
-        /// <inheritdoc />
-        public abstract void DeleteDatabase(IDatabaseConfig config);
-
-        /// <inheritdoc />
-        public abstract void DumpDatabase(IDatabaseConfig config, string targetPath);
-
-        /// <inheritdoc />
-        public abstract void RestoreDatabase(IDatabaseConfig config, string filePath);
-
-        private DbMigrator CreateDbMigrator(IDatabaseConfig config)
-        {
-            if (_migrationsConfiguration == null)
-            {
-                return null;
-            }
-
-            var configuration = _migrationsConfiguration;
-            configuration.TargetDatabase = new DbConnectionInfo(BuildConnectionString(config), ProviderInvariantName);
-
-            return new DbMigrator(configuration);
-        }
 
         /// <summary>
         /// Generally tests the connection to the database
         /// </summary>
-        private bool TestDatabaseConnection(IDatabaseConfig config)
+        private async Task<bool> TestDatabaseConnection(IDatabaseConfig config)
         {
             if (!CheckDatabaseConfig(config))
                 return false;
 
-            using (var conn = CreateConnection(config, false))
+            using var conn = CreateConnection(config, false);
+            try
             {
-                try
-                {
-                    conn.Open();
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                await conn.OpenAsync();
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
             }
         }
 
@@ -272,59 +280,29 @@ namespace Moryx.Model.Configuration
         /// </summary>
         protected static bool CheckDatabaseConfig(IDatabaseConfig config)
         {
-            return !(string.IsNullOrWhiteSpace(config.Host) ||
-                     string.IsNullOrWhiteSpace(config.Database) ||
-                     string.IsNullOrWhiteSpace(config.Username) ||
-                     config.Port <= 0);
+            return (!(string.IsNullOrEmpty(config.ConfiguratorTypename) ||
+                     string.IsNullOrEmpty(config.ConnectionSettings.ConnectionString)));
         }
 
         /// <summary>
-        /// Returns or creates and returns the DbMigrationsConfiguration of the Model
+        /// Finds the context type marked with the provided attribute type.
         /// </summary>
-        private DbMigrationsConfiguration CreateDbMigrationsConfiguration()
+        protected Type FindMigrationAssemblyType(Type attributeType)
         {
-            var configuration = _contextType.Assembly.DefinedTypes
-                .FirstOrDefault(t => typeof(DbMigrationsConfiguration).IsAssignableFrom(t));
+            var contextTypes =
+                ReflectionTool.GetPublicClasses(_contextType);
 
-            if (configuration == null)
-                return null;
+            var fileteredAssembly = contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
 
-            return (DbMigrationsConfiguration)Activator.CreateInstance(configuration);
+            return fileteredAssembly ?? contextTypes.First();
         }
 
         /// <summary>
-        /// Loads all available migrations for the model
+        /// Creates a context for migration purposes based on a config 
         /// </summary>
-        private string[] GetAvailableMigrations()
+        protected virtual DbContext CreateMigrationContext(IDatabaseConfig config)
         {
-            // Get configuration, if not available, no migrations are defined
-            if (_migrationsConfiguration == null)
-                return new string[0];
-
-            // There is no suitable method to get model migrations without connection string - lets load them manually
-            // https://stackoverflow.com/questions/23996785/get-local-migrations-from-assembly-using-ef-code-first-without-a-connection-stri
-            var migrations = (from type in _migrationsConfiguration.MigrationsAssembly.GetTypes()
-                              where typeof(DbMigration).IsAssignableFrom(type)
-                              select (IMigrationMetadata)Activator.CreateInstance(type)).Select(m => m.Id).ToArray();
-
-            return migrations;
-        }
-
-        /// <summary>
-        /// Opens a database connection and checks the currently installed migrations
-        /// </summary>
-        private IEnumerable<string> GetInstalledMigrations(IDatabaseConfig config)
-        {
-            DbMigrator dbMigrator = null;
-
-            if (TestDatabaseConnection(config))
-            {
-                dbMigrator = CreateDbMigrator(config);
-            }
-
-            return dbMigrator != null
-                ? dbMigrator.GetDatabaseMigrations()
-                : Enumerable.Empty<string>();
+            return CreateContext(config);
         }
     }
 }

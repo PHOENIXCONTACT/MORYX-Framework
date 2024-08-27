@@ -1,60 +1,42 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Linq;
 using System.Runtime.Serialization;
+using Moryx.Workplans.Transitions;
+using System.ComponentModel.DataAnnotations;
+using Moryx.Properties;
 
-namespace Moryx.Workflows.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps
 {
     /// <summary>
-    /// Base class for all steps that are build around another workplan
+    /// Step that creates a <see cref="SubworkplanTransition"/> with the given workplan
     /// </summary>
     [DataContract]
-    public abstract class SubWorkplanStep : WorkplanStepBase, ISubworkplanStep
+    [Display(ResourceType = typeof(Strings), Name = "SubworkplanStep_Name", Description = "SubworkplanStep_Description")]
+    public class SubworkplanStep : SubWorkplanStepBase
     {
-        /// <summary>
-        /// Create empty instance and set workplan later
-        /// </summary>
-        protected SubWorkplanStep()
+        private SubworkplanStep()
         {
+            // Empty constructor for JSON
         }
 
         /// <summary>
-        /// Create step from another workflow
+        /// Create step from workplan
         /// </summary>
-        protected SubWorkplanStep(IWorkplan workplan)
+        public SubworkplanStep(IWorkplan workplan) : base(workplan)
         {
-            Workplan = workplan;
-
-            // Step outputs are created from all exits of the sub workflow
-            OutputDescriptions = (from connector in workplan.Connectors
-                                  where connector.Classification.HasFlag(NodeClassification.Exit)
-                                  select new OutputDescription
-                                  {
-                                      Name = connector.Name,
-                                      MappingValue = connector.Id,
-                                      OutputType = connector.Classification == NodeClassification.End ? OutputType.Success : OutputType.Failure
-                                  }).ToArray();
-            Outputs = new IConnector[OutputDescriptions.Length];
         }
 
-        /// <see cref="IWorkplanStep"/>
-        public override string Name => Workplan.Name;
-
-        /// <see cref="ISubworkplanStep.WorkplanId"/>
-        [DataMember]
-        long ISubworkplanStep.WorkplanId => Workplan.Id;
-
+        private IIndexResolver _indexResolver;
         /// <summary>
-        /// Our SubWorkplan
+        /// Instantiate transition from this step
         /// </summary>
-        protected IWorkplan Workplan { get; private set; }
-
-        /// <see cref="ISubworkplanStep"/>
-        IWorkplan ISubworkplanStep.Workplan
+        protected override TransitionBase Instantiate(IWorkplanContext context)
         {
-            get => Workplan;
-            set => Workplan = value;
+            var engine = WorkplanInstance.CreateEngine(Workplan, context);
+            var indexResolver = _indexResolver ??= TransitionBase.CreateIndexResolver(OutputDescriptions);
+            var transition = new SubworkplanTransition(engine, indexResolver);
+            return transition;
         }
     }
 }

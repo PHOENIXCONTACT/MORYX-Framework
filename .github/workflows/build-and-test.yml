@@ -14,179 +14,85 @@ on:
       - future
 
 env:
-  MORYX_OPTIMIZE_CODE: "false"
-  MORYX_BUILD_CONFIG: "Release"
-  MORYX_BUILDNUMBER: ${{github.run_number}}
-  dotnet_sdk_version: '5.0.403'
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  dotnet_sdk_version: '8.0.100'
+  REPOSITORY_NAME: ${{ github.event.repository.name }}
+  MORYX_PACKAGE_TARGET_DEV: 'https://www.myget.org/F/moryx-oss-ci/api/v2/package'
+  MORYX_PACKAGE_TARGET_V3_DEV: 'https://www.myget.org/F/moryx-oss-ci/api/v3/index.json'
+  MORYX_PACKAGE_TARGET_FUTURE: 'https://www.myget.org/F/moryx-oss-ci/api/v2/package'
+  MORYX_PACKAGE_TARGET_V3_FUTURE: 'https://www.myget.org/F/moryx-oss-ci/api/v3/index.json'
+  MORYX_PACKAGE_TARGET_RELEASE: 'https://api.nuget.org/v3/index.json'
+  MORYX_PACKAGE_TARGET_V3_RELEASE: 'https://api.nuget.org/v3/index.json'
 
 jobs:
-  Build:
-    runs-on: windows-2019
+  EnvVar:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      
-      - name: Setup .NET SDK
-        if: ${{ github.ref != 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.dotnet_sdk_version }}
-          
-      - name: Setup .NET SDK
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6'
+      - run: echo ""
+    outputs:
+      dotnet_sdk_version: ${{ env.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
+      MORYX_PACKAGE_TARGET_DEV: ${{ env.MORYX_PACKAGE_TARGET_DEV }}
+      MORYX_PACKAGE_TARGET_V3_DEV: ${{ env.MORYX_PACKAGE_TARGET_V3_DEV }}
+      MORYX_PACKAGE_TARGET_FUTURE: ${{ env.MORYX_PACKAGE_TARGET_FUTURE }}
+      MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ env.MORYX_PACKAGE_TARGET_V3_FUTURE }}
+      MORYX_PACKAGE_TARGET_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_RELEASE }}
+      MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_V3_RELEASE }}
 
-      - name: Build
-        shell: pwsh
-        run: ./Build.ps1 -Build -Pack
-
-      - name: Upload package artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: packages
-          path: artifacts/Packages/
-          retention-days: 1
+  Build:
+    needs: [EnvVar]
+    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@main
+    with:
+      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   UnitTests:
-    needs: [Build]
-    runs-on: windows-2019
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup .NET SDK
-        if: ${{ github.ref != 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.dotnet_sdk_version }}
-          
-      - name: Setup .NET SDK
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6'
-
-      - name: Execute Unit Tests
-        shell: pwsh
-        run: ./Build.ps1 -UnitTests
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: artifacts/Tests/
-          retention-days: 1
+    needs: [EnvVar, Build]
+    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
+    with:
+      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   IntegrationTests:
-    needs: [Build]
-    runs-on: windows-2019
-    steps:
-      - uses: actions/checkout@v2
+    needs: [EnvVar, Build]
+    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@main
+    with:
+      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
-      - name: Setup .NET SDK
-        if: ${{ github.ref != 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.dotnet_sdk_version }}
-          
-      - name: Setup .NET SDK
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6'
+  ReportGenerator:
+    needs: [EnvVar, UnitTests, IntegrationTests]
+    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
+    with:
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+               
+  Publish-Test-Coverage:
+    needs: [EnvVar, ReportGenerator]
+    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
+    with:
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Execute Integration Tests
-        shell: pwsh
-        run: ./Build.ps1 -IntegrationTests
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: artifacts/Tests/
-          retention-days: 1
-
-  Codecov:
-    needs: [UnitTests, IntegrationTests]
-    runs-on: windows-2019
-    steps:
-      - name: Download test results
-        uses: actions/download-artifact@v2
-        with:
-          name: test-results
-          path: artifacts/Tests/
-
-      - name: Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          files: '*.OpenCover.xml'
-
-  Documentation:
-    needs: [Build]
-    runs-on: windows-2019
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Generate docFx
-        shell: pwsh
-        run: ./Build.ps1 -GenerateDocs
-
-      - name: Upload documentation results
-        uses: actions/upload-artifact@v2
-        with:
-          name: documentation
-          path: artifacts/Documentation/
-          retention-days: 1
+  # currently not working
+  # Documentation:
+  #   needs: [EnvVar, UnitTests]
+  #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@main
+  #   with:
+  #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   Publish:
-    needs: [Build, UnitTests, IntegrationTests]
-    if: ${{ github.event_name == 'push' }}
-    runs-on: windows-2019
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Setup .NET SDK
-        if: ${{ github.ref != 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.dotnet_sdk_version }}
-          
-      - name: Setup .NET SDK
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch uses net6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6'
-  
-      - name: Download package artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: packages
-          path: artifacts/Packages/
-
-      - name: Publish on MyGet-CI
-        if: ${{ github.ref == 'refs/heads/dev' }} # dev branche is published to myget moryx
-        shell: pwsh
-        env:
-          MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
-          MORYX_PACKAGE_TARGET: "https://www.myget.org/F/moryx/api/v2/package"
-          MORYX_PACKAGE_TARGET_V3: "https://www.myget.org/F/moryx/api/v3/index.json"
-        run: ./Build.ps1 -Publish
-
-      - name: Publish on MyGet-Future
-        if: ${{ github.ref == 'refs/heads/future' }} # Future branch is published to myget moryx-future
-        shell: pwsh
-        env:
-          MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
-          MORYX_PACKAGE_TARGET: "https://www.myget.org/F/moryx-future/api/v2/package"
-          MORYX_PACKAGE_TARGET_V3: "https://www.myget.org/F/moryx-future/api/v3/index.json"
-        run: ./Build.ps1 -Publish
-
-      - name: Publish on NuGet
-        if: ${{ startsWith(github.ref, 'refs/tags/v') }} # Version Tags are published to nuget
-        shell: pwsh
-        env:
-          MORYX_NUGET_APIKEY: ${{secrets.NUGET_TOKEN}}
-          MORYX_PACKAGE_TARGET: "https://api.nuget.org/v3/index.json"
-          MORYX_PACKAGE_TARGET_V3: "https://api.nuget.org/v3/index.json"
-        run: ./Build.ps1 -Publish
+    needs: [EnvVar, UnitTests]
+    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
+    with:
+      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+      MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
+      MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
+      MORYX_PACKAGE_TARGET_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_FUTURE }}
+      MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
+      MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
+      MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
+    secrets: 
+      MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
+      NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}

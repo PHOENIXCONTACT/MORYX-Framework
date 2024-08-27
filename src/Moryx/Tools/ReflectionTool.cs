@@ -25,9 +25,10 @@ namespace Moryx.Tools
         /// <returns></returns>
         private static Assembly[] LoadAssemblies()
         {
-            var currentDir = Directory.GetCurrentDirectory().ToLower();
+            // Fetch location of binaries from our assembly
+            var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).ToLower();
             var relevantAssemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                          // Only load non-dynamic assemblies from our directory
+                                      // Only load non-dynamic assemblies from our directory
                                       where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
                                       let path = Path.GetDirectoryName(assembly.Location).ToLower()
                                       where TestMode || path == currentDir
@@ -49,10 +50,23 @@ namespace Moryx.Tools
         /// </summary>
         private static Type[] LoadPublicClasses()
         {
-            return (from assembly in RelevantAssemblies.Value
-                    from type in assembly.GetExportedTypes()
-                    where type.IsClass && !type.IsAbstract
-                    select type).ToArray();
+            // Assume 30 exports per assembly for initial size
+            var publicClasses = new List<Type>(RelevantAssemblies.Value.Length * 30);
+            foreach (var assembly in RelevantAssemblies.Value)
+            {
+                try
+                {
+                    var exports = assembly.GetExportedTypes()
+                        .Where(type => type.IsClass && !type.IsAbstract);
+                    publicClasses.AddRange(exports);
+                }
+                catch(Exception x)
+                {
+                    CrashHandler.WriteErrorToFile($"Failed to load types from {assembly.FullName}. Error: {x.Message}");
+                }
+            }
+
+            return publicClasses.ToArray();
         }
 
         /// <summary>

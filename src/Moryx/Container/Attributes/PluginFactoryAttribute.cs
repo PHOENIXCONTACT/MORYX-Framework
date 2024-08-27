@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -9,23 +9,31 @@ namespace Moryx.Container
     /// Interface for plguin factories within the local container
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface)]
-    public class PluginFactoryAttribute : FactoryRegistrationAttribute
+    public class PluginFactoryAttribute : Attribute
     {
         /// <summary>
-        /// 
+        /// Optional component selector
         /// </summary>
-        public PluginFactoryAttribute()
+        public Type Selector
         {
-            
+            get;
+            private set;
         }
 
         /// <summary>
-        /// 
+        /// Default constructor
         /// </summary>
-        /// <param name="selectorType"></param>
-        public PluginFactoryAttribute(Type selectorType) : base(selectorType)
+        public PluginFactoryAttribute()
         {
+        }
 
+        /// <summary>
+        /// Constructor with component selector
+        /// </summary>
+        /// <param name="selectorType">Selector</param>
+        public PluginFactoryAttribute(Type selectorType)
+        {
+            Selector = selectorType;
         }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.Container.Tests
@@ -9,7 +9,7 @@ namespace Moryx.Container.Tests
     }
     
     [Plugin(LifeCycle.Transient, typeof(INamedComponent), Name = ComponentName)]
-    internal class NamedComponentA : INamedComponent
+    public class NamedComponentA : INamedComponent
     {
         internal const string ComponentName = "CompA";
 
@@ -20,7 +20,7 @@ namespace Moryx.Container.Tests
     }
 
     [Plugin(LifeCycle.Transient, typeof(INamedComponent), Name = ComponentName)]
-    internal class NamedComponentB : INamedComponent
+    public class NamedComponentB : INamedComponent
     {
         internal const string ComponentName = "CompB";
 

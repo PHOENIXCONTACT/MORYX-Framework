@@ -1,11 +1,12 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Logging;
 
 namespace Moryx.Model.Configuration
 {
@@ -15,41 +16,21 @@ namespace Moryx.Model.Configuration
     public sealed class NullModelConfigurator : IModelConfigurator
     {
         /// <inheritdoc />
-        public IDatabaseConfig Config => null;
+        public IDatabaseConfig Config => new DatabaseConfig<DatabaseConnectionSettings>();
 
         /// <inheritdoc />
-        public Type ContextType { get; private set; }
-
-        /// <inheritdoc />
-        public string TargetModel => string.Empty;
-
-        /// <inheritdoc />
-        public void Initialize(Type contextType, IConfigManager configManager, IModuleLogger logger)
+        public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)
         {
-            ContextType = contextType;
         }
 
         /// <inheritdoc />
-        public DbContext CreateContext(ContextMode mode)
+        public DbContext CreateContext()
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public DbContext CreateContext(IDatabaseConfig config, ContextMode mode)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-
-        /// <inheritdoc />
-        public string BuildConnectionString(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public string BuildConnectionString(IDatabaseConfig config, bool includeModel)
+        public DbContext CreateContext(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
@@ -61,75 +42,57 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public TestConnectionResult TestConnection(IDatabaseConfig config)
+        public Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public bool CreateDatabase(IDatabaseConfig config)
+        public Task<bool> CreateDatabase(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config)
+        public Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public DatabaseUpdateSummary MigrateDatabase(IDatabaseConfig config, string migrationId)
+        public Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public bool RollbackDatabase(IDatabaseConfig config)
+        public Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AvailableMigrations(IDatabaseConfig config)
+        public Task DeleteDatabase(IDatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public IEnumerable<DatabaseUpdateInformation> AppliedMigrations(IDatabaseConfig config)
+        public Task DumpDatabase(IDatabaseConfig config, string targetPath)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public void DeleteDatabase(IDatabaseConfig config)
+        public Task RestoreDatabase(IDatabaseConfig config, string filePath)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public void DumpDatabase(IDatabaseConfig config, string targetPath)
+        public DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions)
         {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void RestoreDatabase(IDatabaseConfig config, string filePath)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModelSetup> GetAllSetups()
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+            throw new NotImplementedException();
         }
     }
 }

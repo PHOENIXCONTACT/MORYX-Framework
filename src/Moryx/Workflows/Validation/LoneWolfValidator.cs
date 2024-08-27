@@ -1,10 +1,10 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Moryx.Workflows.Validation
+namespace Moryx.Workplans.Validation
 {
     internal class LoneWolfValidator : IWorkplanValidator
     {
@@ -48,7 +48,6 @@ namespace Moryx.Workflows.Validation
         /// <summary>
         /// Print error in readable format
         /// </summary>
-        // TODO: Does it make sense to pass workplan to error
         public override string Print(IWorkplan workplan)
         {
             var targetStep = workplan.Steps.First(step => step.Id == PositionId);

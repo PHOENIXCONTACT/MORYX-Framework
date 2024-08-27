@@ -1,4 +1,4 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -48,7 +48,7 @@ namespace Moryx.Communication.Endpoints
             {
                 return ActiveEndpointsAsync().Result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -69,7 +69,7 @@ namespace Moryx.Communication.Endpoints
             {
                 return ServiceEndpointsAsync(service).Result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -122,7 +122,7 @@ namespace Moryx.Container.Tests
 
         private static IContainer CreateContainer(IDictionary<Type, string> strategies)
         {
-            var container = new LocalContainer(strategies);
+            var container = new CastleContainer(strategies);
 
             container.LoadComponents<IRootClass>();
             container.LoadComponents<IConfiguredComponent>();

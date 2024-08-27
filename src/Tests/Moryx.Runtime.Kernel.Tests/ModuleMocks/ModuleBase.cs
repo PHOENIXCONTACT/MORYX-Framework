@@ -1,7 +1,8 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
@@ -19,6 +20,8 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 
         /// <inheritdoc />
         public IServerModuleConsole Console { get; private set; }
+
+        public IContainer Container => throw new NotImplementedException();
 
         /// <summary>
         /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start
@@ -39,6 +42,10 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         /// Stop execution, dispose components and return to clean state
         /// </summary>
         public void Stop()
+        {
+        }
+
+        public void AcknowledgeNotification(IModuleNotification notification)
         {
         }
 

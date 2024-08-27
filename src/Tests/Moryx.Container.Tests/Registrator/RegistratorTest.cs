@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Castle.MicroKernel;
@@ -22,18 +22,14 @@ namespace Moryx.Container.Tests
         [Test]
         public void DoubleRegistrationWithRegister()
         {
-            Assert.Throws<ComponentRegistrationException>(() => _container.Register<NamedDummy, NamedDummy>());
-            Assert.Throws<ComponentRegistrationException>(() => _container.Register<UnnamedDummy, UnnamedDummy>());
+            Assert.DoesNotThrow(() => _container.Register<NamedDummy, NamedDummy>());
+            Assert.DoesNotThrow(() => _container.Register<UnnamedDummy, UnnamedDummy>());
         }
 
         [Test]
         public void DoubleRegistrationWithAutoInstaller()
         {
-            var fakeAutoInstaller = new FakeAutoInstaller();
-            _container.ExecuteInstaller(fakeAutoInstaller);
-
-            Assert.True(fakeAutoInstaller.SkippedNamed, "Named was not skipped");
-            Assert.True(fakeAutoInstaller.SkippedUnnamed, "Unnamed was not skipped");
+            Assert.DoesNotThrow(() => _container.LoadFromAssembly(GetType().Assembly));
         }
     }
 }

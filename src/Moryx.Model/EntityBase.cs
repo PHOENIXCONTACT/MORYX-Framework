@@ -1,7 +1,6 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,12 +21,8 @@ namespace Moryx.Model
             get => _id;
             set
             {
-                _id = value;
-                IdChanged?.Invoke(this, EventArgs.Empty);
+                _id = value;            
             }
-        }
-
-        /// <inheritdoc />
-        public event EventHandler IdChanged;
+        }      
     }
 }

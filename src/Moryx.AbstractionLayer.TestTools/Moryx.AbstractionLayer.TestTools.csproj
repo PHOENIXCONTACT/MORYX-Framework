@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Additional AbstractionLayer implementations for Tests</Description>
+    <PackageTags>MORYX;IIoT;IoT;Abstraction;Tests</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
+	<ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+  </ItemGroup>
+
+</Project>

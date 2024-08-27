@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.NET.Test.Sdk" />
+	  <PackageReference Include="NUnit" />
+	  <PackageReference Include="NUnit3TestAdapter" />
+	  <PackageReference Include="Moq" />
+	  <PackageReference Include="coverlet.collector" Version="3.2.0">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
+    <ProjectReference Include="..\..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
+    <ProjectReference Include="..\..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
+    <ProjectReference Include="..\..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj" />
+  </ItemGroup>
+
+</Project>

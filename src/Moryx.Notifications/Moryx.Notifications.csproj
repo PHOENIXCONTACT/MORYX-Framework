@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Types and interfaces for notifications within MORYX applications</Description>
+    <PackageTags>MORYX;IIoT;IoT;Notifications</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
+  </ItemGroup>
+
+</Project>

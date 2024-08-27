@@ -1,8 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
+using Moryx.Model.Attributes;
 using Moryx.Model.Repositories;
 
 namespace Moryx.TestTools.Test.Model
@@ -18,7 +21,7 @@ namespace Moryx.TestTools.Test.Model
 
         public string SupportedFileRegex => string.Empty;
 
-        public void Execute(IUnitOfWork openContext, string setupData)
+        public async Task Execute(IUnitOfWork openContext, string setupData)
         {
             var carRepo = openContext.GetRepository<ICarEntityRepository>();
             var wheelRepo = openContext.GetRepository<IWheelEntityRepository>();
@@ -26,35 +29,39 @@ namespace Moryx.TestTools.Test.Model
             CarEntity lastCar = null;
             for (var i = 0; i < 1; i++)
             {
-                var carEntity = carRepo.Create();
+                var carEntity = await carRepo.CreateAsync();
                 carEntity.Name = "Car " + i;
                 carEntity.Price = i + 100;
 
-                void CreateWheel(WheelType wheelType)
+                async Task CreateWheel(WheelType wheelType)
                 {
-                    var wheelEntity = wheelRepo.Create();
+                    var wheelEntity = await wheelRepo.CreateAsync();
                     wheelEntity.WheelType = wheelType;
-                    carEntity.Wheels.Add(wheelEntity);
+                    wheelEntity.Car = carEntity;
                 }
 
-                CreateWheel(WheelType.FrontLeft);
-                CreateWheel(WheelType.FrontRight);
-                CreateWheel(WheelType.RearLeft);
-                CreateWheel(WheelType.RearRight);
+                await CreateWheel(WheelType.FrontLeft);
+                await CreateWheel(WheelType.FrontRight);
+                await CreateWheel(WheelType.RearLeft);
+                await CreateWheel(WheelType.RearRight);
 
                 lastCar = carEntity;
             }
 
-            openContext.SaveChanges();
+            await openContext.SaveChangesAsync();
 
             carRepo.Remove(lastCar);
 
-            openContext.SaveChanges();
+            await openContext.SaveChangesAsync();
+
+            var allCarsWithLazyWheels = await carRepo.Linq.ToListAsync();
+
+            var allCarsWithWheels = await carRepo.Linq.Include(c => c.Wheels).ToListAsync();
 
             // All cars with exact name "Car 1"
             var allNamedCar1 = carRepo.Linq.Where(c => c.Name == "Car 1");
 
-            var firstContains = carRepo.Linq.First(c => c.Name.Contains("Car"));
+            var firstContains = await carRepo.Linq.FirstAsync(c => c.Name.Contains("Car"));
 
             var allContains = carRepo.Linq.Where(c => c.Name.Contains("Car"));
         }

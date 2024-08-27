@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using Newtonsoft.Json;
 
@@ -31,7 +32,7 @@ namespace Moryx.Communication.Endpoints
         /// <summary>
         /// Logger of the connector
         /// </summary>
-        protected IModuleLogger Logger { get; }
+        protected ILogger Logger { get; }
 
         /// <summary>
         /// Gets the current client version of the client
@@ -147,11 +148,7 @@ namespace Moryx.Communication.Endpoints
         /// </summary>
         public virtual Task ConnectionCallback(ConnectionState connectionState)
         {
-#if HAVE_TASK_COMPLETEDTASK
             return Task.CompletedTask;
-#else
-            return Task.FromResult(true);
-#endif
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -13,7 +13,7 @@ namespace Moryx.Model
     public static class QueryableExtensions
     {
         /// <summary>
-        /// Queries all entities wich are not deleted
+        /// Queries all entities which are not deleted
         /// </summary>
         /// <typeparam name="TSource">The type of the source.</typeparam>
         /// <param name="query">The current query</param>

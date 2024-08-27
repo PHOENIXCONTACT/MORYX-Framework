@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Modules;
@@ -123,7 +124,7 @@ namespace Moryx.Communication.Sockets
             }
             catch (Exception ex)
             {
-                Logger.LogException(LogLevel.Fatal, ex, "StateChanged event to {0} ran into an exception!", _state);
+                Logger.Log(LogLevel.Critical, ex, "StateChanged event to {0} ran into an exception!", _state);
             }
             // ReSharper enable InconsistentlySynchronizedField
         }
@@ -175,7 +176,7 @@ namespace Moryx.Communication.Sockets
         {
             _transmission = new TcpTransmission(_tcpClient, _validator.Interpreter, Logger.GetChild(string.Empty, typeof(TcpTransmission)));
             _transmission.Disconnected += ConnectionClosed;
-            _transmission.ExceptionOccured += OnTransmissionException;
+            _transmission.ExceptionOccurred += OnTransmissionException;
             _transmission.Received += MessageReceived;
             _transmission.StartReading();
 
@@ -186,7 +187,7 @@ namespace Moryx.Communication.Sockets
 
         private void OnTransmissionException(object sender, Exception e)
         {
-            Logger.LogException(LogLevel.Error, e, "Tcp connection encountered an error.");
+            Logger.Log(LogLevel.Error, e, "Tcp connection encountered an error.");
         }
 
         private void ConnectionClosed(object sender, EventArgs eventArgs)
@@ -204,7 +205,7 @@ namespace Moryx.Communication.Sockets
 
             // First close the connection and then unregister events
             transmission.Disconnect();
-            transmission.ExceptionOccured -= OnTransmissionException;
+            transmission.ExceptionOccurred -= OnTransmissionException;
             transmission.Received -= MessageReceived;
             transmission.Disconnected -= ConnectionClosed;
 
@@ -270,7 +271,7 @@ namespace Moryx.Communication.Sockets
             }
             catch (Exception ex)
             {
-                Logger.LogException(LogLevel.Fatal, ex, "Received event ran into an exception!");
+                Logger.Log(LogLevel.Critical, ex, "Received event ran into an exception!");
             }
         }
 

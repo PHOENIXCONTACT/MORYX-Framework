@@ -1,7 +1,7 @@
-﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model.Repositories
@@ -21,15 +21,5 @@ namespace Moryx.Model.Repositories
         /// Create unit of work using standard mode and alternative config
         /// </summary>
         IUnitOfWork<TContext> Create(IDatabaseConfig config);
-
-        /// <summary>
-        /// Create unit of work using given mode and config from config manager
-        /// </summary>
-        IUnitOfWork<TContext> Create(ContextMode contextMode);
-
-        /// <summary>
-        /// Create unit of work using given mode and alternative config
-        /// </summary>
-        IUnitOfWork<TContext> Create(IDatabaseConfig config, ContextMode contextMode);
     }
 }

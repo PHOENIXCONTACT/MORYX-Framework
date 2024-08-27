@@ -1,9 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Base interface for places and transitions. It declares properties and fields
@@ -12,7 +12,7 @@ namespace Moryx.Workflows
     public interface ITokenHolder
     {
         /// <summary>
-        /// Workflow unique id of this holder. Same id can be present in another workflow
+        /// Workplan-unique id of this holder. Same id can be present in another workplan
         /// </summary>
         long Id { get; }
 

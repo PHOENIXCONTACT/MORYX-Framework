@@ -1,9 +1,9 @@
-﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model.InMemory
@@ -33,11 +33,8 @@ namespace Moryx.Model.InMemory
         }
 
         /// <inheritdoc />
-#if HAVE_ARRAY_EMPTY
         public IReadOnlyCollection<Type> Contexts => Array.Empty<Type>();
-#else
-        public IReadOnlyCollection<Type> Contexts => new Type[0];
-#endif
+
         /// <inheritdoc />
         public IModelConfigurator GetConfigurator(Type contextType)
         {
@@ -55,27 +52,25 @@ namespace Moryx.Model.InMemory
             Create<TContext>(null);
 
         /// <inheritdoc />
-        public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext =>
-            Create<TContext>(ContextMode.AllOn);
-
-        /// <inheritdoc />
-        public TContext Create<TContext>(ContextMode contextMode) where TContext : DbContext =>
-            Create<TContext>(null, contextMode);
-
-        /// <inheritdoc />
-        public TContext Create<TContext>(IDatabaseConfig config, ContextMode contextMode) where TContext : DbContext
+        public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext
         {
-            var connection = string.IsNullOrEmpty(_instanceId)
-                ? Effort.DbConnectionFactory.CreatePersistent(Guid.NewGuid().ToString())
-                : Effort.DbConnectionFactory.CreatePersistent(_instanceId);
+            var dbName = string.IsNullOrEmpty(_instanceId)
+                ? Guid.NewGuid().ToString()
+                : _instanceId;
+
+            var options = new DbContextOptionsBuilder<TContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
 
             // Create instance of context
-            var context = (TContext)Activator.CreateInstance(typeof(TContext), connection);
-
-            // Override initializer of MoryxDbContext: Create database if not exists
-            Database.SetInitializer(new CreateDatabaseIfNotExists<TContext>());
-
+            var context = (TContext)Activator.CreateInstance(typeof(TContext), options);
             return context;
+        }
+        
+        /// <inheritdoc />
+        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
+        {
+            throw new NotImplementedException();
         }
     }
 }

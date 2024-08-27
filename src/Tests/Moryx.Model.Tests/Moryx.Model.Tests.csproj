@@ -1,21 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
     <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
     <ProjectReference Include="..\..\Moryx.Model\Moryx.Model.csproj" />
     <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
+    <ProjectReference Include="..\..\Moryx.Products.Model\Moryx.Products.Model.csproj" />
+    <ProjectReference Include="..\..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
     <ProjectReference Include="..\..\Moryx.TestTools.Test.Model\Moryx.TestTools.Test.Model.csproj" />
   </ItemGroup>
 </Project>

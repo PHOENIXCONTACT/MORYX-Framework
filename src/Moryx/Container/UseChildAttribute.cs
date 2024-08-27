@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -25,9 +25,8 @@ namespace Moryx.Container
         /// <summary>
         /// Request a child instance with the same name custom tailored for this component
         /// </summary>
-        public UseChildAttribute()
+        public UseChildAttribute() : this(string.Empty)
         {
-            ChildName = string.Empty;
         }
 
         /// <summary>

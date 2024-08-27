@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -70,7 +70,7 @@ namespace Moryx.Serialization
             var possibleValues = new List<Type>();
             if (_exportBaseType)
             {
-                var baseConfig = StrategyService.GetInterface(typeof(IConfiguredPlugin<>).Name).GetGenericArguments()[0];
+                var baseConfig = StrategyService.GetInterface(typeof(IConfiguredInitializable<>).Name).GetGenericArguments()[0];
                 if (!baseConfig.IsAbstract)
                     possibleValues.Add(baseConfig);
             }
@@ -81,7 +81,7 @@ namespace Moryx.Serialization
             // Find better way to remove ExpectedConfigAttribute -> Tries: 3
             var implementations = pluginContainer.GetRegisteredImplementations(StrategyService);
             possibleValues.AddRange(implementations.Select(implementation => implementation.GetCustomAttribute<ExpectedConfigAttribute>())
-                                                   .Where(attribute => attribute != null).Select(attribute => attribute.ExcpectedConfigType));
+                                                   .Where(attribute => attribute != null).Select(attribute => attribute.ExpectedConfigType));
             return possibleValues;
         }
     }

@@ -1,9 +1,7 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Linq;
-
-namespace Moryx.Workflows.Transitions
+namespace Moryx.Workplans.Transitions
 {
     /// <summary>
     /// Special transition that can be used to create optional steps in workplans. If a condition for

@@ -1,10 +1,10 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.Container.Tests
 {
-    [Registration(LifeCycle.Singleton)]
-    internal class Component
+    [Component(LifeCycle.Singleton)]
+    public class Component
     {
         public IDependency Unnamed { get; set; }
 
@@ -15,18 +15,18 @@ namespace Moryx.Container.Tests
         public IDependency DepB { get; set; }
     }
 
-    internal class Impossible
+    public class Impossible
     {
         [Named("DepC")]
         public IDependency DepC { get; set; }
     }
 
-    internal interface IDependency
+    public interface IDependency
     {
         string GetName();
     }
 
-    internal class DependencyA : IDependency
+    public class DependencyA : IDependency
     {
         public string GetName()
         {
@@ -34,7 +34,7 @@ namespace Moryx.Container.Tests
         }
     }
 
-    internal class DependencyB : IDependency
+    public class DependencyB : IDependency
     {
         public string GetName()
         {

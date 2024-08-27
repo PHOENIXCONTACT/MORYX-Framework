@@ -1,9 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Interface of the helper component that can be used to create
@@ -12,14 +12,14 @@ namespace Moryx.Workflows
     public interface ITransitionMapper : IDisposable
     {
         /// <summary>
-        /// Event handler for <see cref="IWorkflowEngine.TransitionTriggered"/>
+        /// Event handler for <see cref="IWorkplanEngine.TransitionTriggered"/>
         /// </summary>
         void TransitionTriggered(object sender, ITransition transition);
 
         /// <summary>
-        /// Register another <see cref="IAttemptInvokation"/> strategy
+        /// Register another <see cref="IAttemptInvocation"/> strategy
         /// </summary>
-        ITransitionMapper Map(IAttemptInvokation invokation); // TODO: Rename to invocation in the next major
+        ITransitionMapper Map(IAttemptInvocation invocation);
 
         /// <summary>
         /// Register a typed delegate for a certain

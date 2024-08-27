@@ -1,13 +1,13 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Tests.Mocks;
 using Moryx.Runtime.Tests.Modules;
 using Moq;
 using NUnit.Framework;
+using Moryx.Configuration;
 
 namespace Moryx.Runtime.Tests
 {
@@ -15,23 +15,18 @@ namespace Moryx.Runtime.Tests
     public class StateTransitionTest
     {
         private TestModule _moduleUnderTest;
-        private Mock<IRuntimeConfigManager> _configManagerMock;
+        private Mock<IConfigManager> _configManagerMock;
 
         [SetUp]
         public void Setup()
         {
-            _configManagerMock = new Mock<IRuntimeConfigManager>();
-            _configManagerMock.Setup(c => c.GetConfiguration<TestConfig>()).Returns(new TestConfig
+            _configManagerMock = new Mock<IConfigManager>();
+            _configManagerMock.Setup(c => c.GetConfiguration(typeof(TestConfig), It.IsAny<string>(), false)).Returns(new TestConfig
             {
                 Strategy = new StrategyConfig()
             });
 
-            _moduleUnderTest = new TestModule
-            {
-                ConfigManager = _configManagerMock.Object,
-                LoggerManagement = new TestLoggerMgmt(),
-                ContainerFactory = new ModuleContainerFactory(),
-        };
+            _moduleUnderTest = new TestModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
         }
 
         [Test]
@@ -127,12 +122,7 @@ namespace Moryx.Runtime.Tests
         [Test]
         public void FailureInStopped()
         {
-            var module = new DelayedExceptionModule
-            {
-                ConfigManager = _configManagerMock.Object,
-                LoggerManagement = new TestLoggerMgmt(),
-                ContainerFactory = new ModuleContainerFactory()
-            };
+            var module = new DelayedExceptionModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
             var casted = (IServerModule) module;
 
             casted.Initialize();

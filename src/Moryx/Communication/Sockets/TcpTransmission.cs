@@ -1,11 +1,12 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 using Moryx.Serialization;
 
 namespace Moryx.Communication.Sockets
@@ -20,7 +21,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Logger for logging - makes sense ;)
         /// </summary>
-        private readonly IModuleLogger _logger;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Delegate invoked when connection was lost
@@ -30,7 +31,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Callback to forward transmission exceptions to connection
         /// </summary>
-        public event EventHandler<Exception> ExceptionOccured;
+        public event EventHandler<Exception> ExceptionOccurred;
 
         /// <summary>
         /// Initialize TcpTransmission
@@ -38,7 +39,7 @@ namespace Moryx.Communication.Sockets
         /// <param name="client">The client.</param>
         /// <param name="interpreter">The interpreter.</param>
         /// <param name="logger">Logger used to write exceptions to log</param>
-        public TcpTransmission(TcpClient client, IMessageInterpreter interpreter, IModuleLogger logger)
+        public TcpTransmission(TcpClient client, IMessageInterpreter interpreter, ILogger logger)
         {
             _interpreter = interpreter;
             _client = client;
@@ -52,10 +53,10 @@ namespace Moryx.Communication.Sockets
 
         private void RaiseException(Exception ex)
         {
-            if (ExceptionOccured == null)
-                _logger.LogException(LogLevel.Error, ex, "TcpTransmission encountered an error");
+            if (ExceptionOccurred == null)
+                _logger.Log(LogLevel.Error, ex, "TcpTransmission encountered an error");
             else
-                ExceptionOccured(this, ex);
+                ExceptionOccurred(this, ex);
         }
 
         private void RaiseDisconnected()
@@ -68,21 +69,45 @@ namespace Moryx.Communication.Sockets
 
         /// <summary>
         /// Trigger to check if we are still connected
-        /// http://stackoverflow.com/a/4667582/6082960
+        /// https://stackoverflow.com/a/4667582/6082960
+        /// https://stackoverflow.com/a/69497010/6082960
         /// http://tldp.org/HOWTO/TCP-Keepalive-HOWTO/overview.html
         /// </summary>
         public void ConfigureKeepAlive(int interval, int timeout)
         {
-            // Create config array
-            var index = 0;
-            var socketConfig = new byte[12]; // 3 * 4 byte
-            InlineConverter.Include(1, socketConfig, ref index);
-            InlineConverter.Include(interval, socketConfig, ref index);
-            InlineConverter.Include(timeout, socketConfig, ref index);
-
-            // Configure socket
             var socket = _client.Client;
-            socket.IOControl(IOControlCode.KeepAliveValues, socketConfig, null);
+
+#if HAVE_TCP_KEEPALIVE
+            // Configure socket using net6 keep alive configuration
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, interval);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, timeout);
+
+            try
+            {
+                // Try to set the TcpKeeepAliveRetryCount, it is not supported on all windows systems
+                // https://learn.microsoft.com/en-us/windows/win32/winsock/ipproto-tcp-socket-options#windows-support-for-ipproto_tcp-options
+                socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 2);
+                
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "TcpKeepAliveRetryCount could not be applied!");
+            }
+
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+#else
+            // Keep alive only supported for windows under netstandard2.0
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Create config array
+                var index = 0;
+                var socketConfig = new byte[12]; // 3 * 4 byte
+                InlineConverter.Include(1, socketConfig, ref index);
+                InlineConverter.Include(interval, socketConfig, ref index);
+                InlineConverter.Include(timeout, socketConfig, ref index);
+                socket.IOControl(IOControlCode.KeepAliveValues, socketConfig, null);
+            }
+#endif
         }
 
         #region Send

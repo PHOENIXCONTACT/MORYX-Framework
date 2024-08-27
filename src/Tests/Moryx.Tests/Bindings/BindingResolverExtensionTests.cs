@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Bindings;
@@ -125,6 +125,19 @@ namespace Moryx.Tests.Bindings
             Assert.AreEqual(5 - removeCount, CountChainLinks(_resolver));
         }
 
+        [TestCase(null, Description = "should return null value")]
+        [TestCase("This is a wrong binding", Description = "Should return original string value")]
+        [TestCase("This text used {Branch.Nmae} on data which was not found", Description = "Should return original string value")]
+        public void ShouldReturnOriginalValue(string textToFormat)
+        {
+            var data = new Foo { Branch = new Branch { Name = "Binded Text"} };
+            var bindingResolverFactory = new BindingResolverFactory();
+            var resolver = TextBindingResolverFactory.Create(textToFormat, bindingResolverFactory);
+            var result = resolver.Resolve(data);
+
+            Assert.That(result, Is.EqualTo(textToFormat));
+        }
+
         private int CountChainLinks(IBindingResolverChain chain)
         {
             var links = 0;
@@ -179,5 +192,6 @@ namespace Moryx.Tests.Bindings
                 }
             };
         }
+
     }
 }

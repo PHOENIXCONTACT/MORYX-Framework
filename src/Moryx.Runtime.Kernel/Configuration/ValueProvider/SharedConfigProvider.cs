@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace Moryx.Runtime.Kernel
 {
     internal class SharedConfigProvider : IValueProvider
     {
-        private readonly IRuntimeConfigManager _configManager;
+        private readonly IConfigManager _configManager;
 
-        public SharedConfigProvider(IRuntimeConfigManager configManager)
+        public SharedConfigProvider(IConfigManager configManager)
         {
             _configManager = configManager;
         }

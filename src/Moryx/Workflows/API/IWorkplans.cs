@@ -1,9 +1,9 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Additional facade interface for components that store and provide workplans
@@ -33,14 +33,8 @@ namespace Moryx.Workflows
         /// Deletes workplan if in new state
         /// </summary>
         /// <param name="workplanId">Workplan id</param>
-        void DeleteWorkplan(long workplanId);
-    }
+        bool DeleteWorkplan(long workplanId);
 
-    /// <summary>
-    /// Extended workplans interface to load previous versions of workplans
-    /// </summary>
-    public interface IWorkplansVersions : IWorkplans
-    {
         /// <summary>
         /// Load previous versions of the workplan
         /// </summary>

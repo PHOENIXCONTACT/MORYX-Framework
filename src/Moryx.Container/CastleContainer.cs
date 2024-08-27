@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -18,107 +18,58 @@ namespace Moryx.Container
     /// </summary>
     public class CastleContainer : IContainer
     {
-        /// <summary>
-        /// Internal windsor container doing the real DI
-        /// </summary>
-        protected IWindsorContainer Container { get; private set; }
-
-        /// <summary>
-        /// Registrator used to evaluate attributes
-        /// </summary>
-        protected IComponentRegistrator Registrator { get; }
 
         #region Constructors
 
+        private readonly IWindsorContainer _container;
+
+        private readonly IDictionary<Type, string> _strategies;
+
         /// <summary>
-        /// Create new container instance with default registrator
+        /// Create instance without strategies
         /// </summary>
         public CastleContainer()
-            : this(new ComponentRegistrator())
+            : this(new Dictionary<Type, string>())
         {
         }
-
         /// <summary>
-        /// Constructor to modify the applied registrator
+        /// Create container with strategies
         /// </summary>
-        /// <param name="registrator">Registrator replacement</param>
-        internal CastleContainer(ComponentRegistrator registrator)
+        /// <param name="strategies"></param>
+        public CastleContainer(IDictionary<Type, string> strategies)
         {
-            // Boot up the container and give it to the registrator
-            Container = registrator.Container = new WindsorContainer();
-            Registrator = registrator;
+            _strategies = strategies;
 
-            Container.AddFacility<TypedFactoryFacility>();
-            Container.AddFacility<MoryxFacility>();
+            // Boot up the container 
+            _container = new WindsorContainer();
+
+            _container.AddFacility<TypedFactoryFacility>();
+            _container.AddFacility<MoryxFacility>(mf => mf.AddStrategies(strategies));
 
             // Self registration for framework functionality
-            SetInstance<IContainer>(this);
+            RegisterInstance(new[] { typeof(IContainer) }, this, null);
         }
 
         #endregion
-
-        /// <see cref="IContainer"/>
-        public virtual void Destroy()
-        {
-            Container.Dispose();
-            Container = null;
-        }
-
-        /// <summary>
-        /// Execute the installer for this assembly
-        /// </summary>
-        /// <param name="installer"></param>
-        public IContainer ExecuteInstaller(IContainerInstaller installer)
-        {
-            installer.Install(Registrator);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Resolve an instance of the given service
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns>Instance of type</returns>
-        public virtual T Resolve<T>()
-        {
-            return Container.Kernel.HasComponent(typeof(T)) ? Container.Resolve<T>() : default(T);
-        }
-
-        /// <summary>
-        /// Resolve this dependency
-        /// </summary>
-        public virtual object Resolve(Type service)
-        {
-            return Container.Kernel.HasComponent(service) ? Container.Resolve(service) : null;
-        }
-
-        /// <summary>
-        /// Resolve a named instance of the given service
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns>Instance of type</returns>
-        public T Resolve<T>(string name)
-        {
-            return Container.Kernel.HasComponent(name) ? Container.Resolve<T>(name) : default(T);
-        }
 
         /// <summary>
         /// Resolve this named dependency
         /// </summary>
         public object Resolve(Type service, string name)
         {
-            return Container.Kernel.HasComponent(name) ? Container.Resolve(name, service) : null;
-        }
+            if(name == null && _strategies.ContainsKey(service))
+                name = _strategies[service];
+            
+            // Resolve by name if given or determined
+            if (name != null && _container.Kernel.HasComponent(name))
+                return _container.Resolve(name, service);
 
-        /// <summary>
-        /// Resolve all implementations of this contract
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns></returns>
-        public T[] ResolveAll<T>()
-        {
-            return Container.ResolveAll<T>();
+            // Resolve by type if found
+            if (_container.Kernel.HasComponent(service))
+                return _container.Resolve(service);
+
+            // Otherwise return null
+            return null;
         }
 
         /// <summary>
@@ -126,132 +77,98 @@ namespace Moryx.Container
         /// </summary>
         public Array ResolveAll(Type service)
         {
-            return Container.ResolveAll(service);
+            return _container.ResolveAll(service);
         }
 
         /// <summary>
         /// Get all implementations for a given component interface
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Type> GetRegisteredImplementations(Type componentInterface)
+        public IEnumerable<Type> GetRegisteredImplementations(Type service)
         {
-            return Container.Kernel.GetHandlers(componentInterface).Select(handler => handler.ComponentModel.Implementation);
+            return _container.Kernel.GetHandlers(service).Select(handler => handler.ComponentModel.Implementation);
         }
-
-        #region LoadComponents
-        private static Type[] _knownTypes;
-
-        /// <summary>
-        /// Load all implementations of type from currently known types
-        /// KnownTypes: Types in default framework folders and deeper.
-        /// </summary>
-        public void LoadComponents<T>() where T : class
-        {
-            LoadComponents<T>(null);
-        }
-
-        /// <summary>
-        /// Loads all implementations of type from the currently known types
-        /// KnownTypes: Types in default framework folders and deeper.
-        /// </summary>
-        public virtual void LoadComponents<T>(Predicate<Type> condition) where T : class
-        {
-            if (_knownTypes == null)
-            {
-                _knownTypes = ReflectionTool.GetAssemblies()
-                    .Where(a => a.GetCustomAttribute<ComponentLoaderIgnoreAttribute>() == null)
-                    .SelectMany(a => a.GetTypes())
-                    .Where(t => t.GetCustomAttribute<RegistrationAttribute>(true) != null).ToArray();
-            }
-
-            foreach (var type in _knownTypes.Where(type => typeof(T).IsAssignableFrom(type)))
-            {
-                if(Registrator.ShallInstall(type) && (condition?.Invoke(type) ?? true))
-                    Registrator.Register(type);
-            }
-        }
-
-        #endregion
 
         #region Register methods
 
-        ///
-        public IContainer Register<TService, TComp>()
-            where TService : class
-            where TComp : TService
+        /// <summary>
+        /// Register a component in the container
+        /// </summary>
+        public void Register(Type type, Type[] services, string name, LifeCycle lifeCycle)
         {
-            Registrator.Register(typeof(TComp), new[] { typeof(TService) });
-            return this;
+            // Make sure component is not registered yet
+            var componentName = name ?? type.FullName;
+            if (_container.Kernel.HasComponent(componentName))
+                return;
+
+            var registration = Component.For(services).ImplementedBy(type);
+
+            // Register name
+            if (!string.IsNullOrEmpty(name))
+            {
+                registration.Named(name);
+            }
+
+            // Register life style
+            switch (lifeCycle)
+            {
+                case LifeCycle.Transient:
+                    registration.LifestyleTransient();
+                    break;
+                case LifeCycle.Singleton:
+                    registration.LifestyleSingleton();
+                    break;
+            }
+
+            _container.Register(registration);
         }
 
-        ///
-        public IContainer Register<TService, TComp>(string name, LifeCycle lifeCycle)
-            where TService : class
-            where TComp : TService
+        /// <summary>
+        /// Register factory interface
+        /// </summary>
+        public void RegisterFactory(Type factoryInterface, string name, Type selector)
         {
-            Registrator.Register(typeof(TComp), new[] { typeof(TService) }, name, lifeCycle);
-            return this;
+            var registration = Component.For(factoryInterface);
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                registration.Named(name);
+            }
+
+            if (selector == null)
+            {
+                registration.AsFactory();
+            }
+            else
+            {
+                // Make sure selector is registered in the container
+                // TODO: Super dirty hack to use interfaces in component selectors
+                var selectorName = selector.IsClass ? selector.FullName : $"{selector.Namespace}.{selector.Name.Substring(1)}";
+                registration.AsFactory(config => config.SelectedWith(selectorName));
+            }
+
+            _container.Register(registration);
         }
 
-        ///
-        public IContainer Register<TFactory>() where TFactory : class
+        /// <summary>
+        /// Register instance in the container
+        /// </summary>
+        public void RegisterInstance(Type[] services, object instance, string name)
         {
-            Registrator.RegisterFactory(typeof(TFactory));
-            return this;
-        }
+            var registration = Component.For(services).Instance(instance);
 
-        ///
-        public IContainer Register<TFactory>(string name) where TFactory : class
-        {
-            var factoryType = typeof(TFactory);
-            var att = typeof(TFactory).GetCustomAttribute<FactoryRegistrationAttribute>();
-            Registrator.RegisterFactory(factoryType, name, att?.Selector);
-            return this;
+            if (!string.IsNullOrEmpty(name))
+                registration.Named(name);
+
+            _container.Register(registration);
         }
 
         #endregion
 
-        #region SetInstances
-
-        /// <summary>
-        /// Set instance of service
-        /// </summary>
-        /// <typeparam name="T">Type of service</typeparam>
-        /// <param name="instance">Instance implementing the service</param>
-        public IContainer SetInstance<T>(T instance) where T : class
+        /// <see cref="IContainer"/>
+        public virtual void Destroy()
         {
-            if (instance != null)
-            {
-                Container.Register(Component.For<T>().Instance(instance));
-            }
-            return this;
+            _container.Dispose();
         }
-
-        /// <summary>
-        /// Set globally imported instance with name
-        /// </summary>
-        /// <typeparam name="T">Type of service</typeparam>
-        /// <param name="instance">Instance to register</param>
-        /// <param name="name">Name of instance</param>
-        public IContainer SetInstance<T>(T instance, string name) where T : class
-        {
-            if (instance != null)
-            {
-                Container.Register(Component.For<T>().Instance(instance).Named(name));
-            }
-            return this;
-        }
-
-        public void Extend<TExtension>() where TExtension : new()
-        {
-            var facilityType = typeof(IFacility);
-            if (!facilityType.IsAssignableFrom(typeof(TExtension)))
-                throw new InvalidOperationException("The underlying container only supports " + facilityType.FullName + "!");
-
-            var facility = (IFacility)new TExtension();
-            Container.AddFacility(facility);
-        }
-
-        #endregion
     }
 }

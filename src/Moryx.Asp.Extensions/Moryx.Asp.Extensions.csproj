@@ -1,21 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
-		<Description>Extensions for ASP.NET Core to combine it with the MORYX Runtime</Description>
-		<CreatePackage>true</CreatePackage>
+		<TargetFramework>net8.0</TargetFramework>
+		<Description>Extensions for the Integration of MORYX in ASP.NET Core</Description>
 		<PackageTags>MORYX;ASP</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-
-	<ItemGroup>
-      <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
-      <ProjectReference Include="..\Moryx\Moryx.csproj" />
-      <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
-      <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
 	</ItemGroup>
 
 </Project>

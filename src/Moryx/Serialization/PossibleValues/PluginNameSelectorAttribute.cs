@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -36,7 +36,7 @@ namespace Moryx.Serialization
 
         private static string GetComponentName(Type component)
         {
-            var att = component.GetCustomAttribute<RegistrationAttribute>();
+            var att = component.GetCustomAttribute<ComponentAttribute>();
             return string.IsNullOrEmpty(att?.Name) ? component.FullName : att.Name;
         }
 

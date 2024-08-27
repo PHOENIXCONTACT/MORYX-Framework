@@ -1,13 +1,12 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.Container.TestTools;
 
 namespace Moryx.Container.Tests
 {
     [Plugin(LifeCycle.Singleton, typeof(IRootClass), Name = PluginName)]
-    internal class RootClass : IRootClass
+    public class RootClass : IRootClass
     {
         internal const string PluginName = "RootClass";
 
@@ -34,7 +33,7 @@ namespace Moryx.Container.Tests
     }
 
     [Plugin(LifeCycle.Singleton, typeof(IConfiguredComponent), Name = PluginName)]
-    internal class ConfiguredComponentA : IConfiguredComponent
+    public class ConfiguredComponentA : IConfiguredComponent
     {
         internal const string PluginName = "ConfiguredA";
 
@@ -60,7 +59,7 @@ namespace Moryx.Container.Tests
     }
 
     [Plugin(LifeCycle.Singleton, typeof(IConfiguredComponent), Name = PluginName)]
-    internal class ConfiguredComponentB : IConfiguredComponent
+    public class ConfiguredComponentB : IConfiguredComponent
     {
         internal const string PluginName = "ConfiguredB";
 

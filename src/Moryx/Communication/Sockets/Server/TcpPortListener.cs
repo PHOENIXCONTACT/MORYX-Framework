@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Moryx.Communication.Sockets
 {
@@ -47,7 +47,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Some logger instance we steal from a listener
         /// </summary>
-        private IModuleLogger _logger;
+        private ILogger _logger;
 
         /// <summary>
         ///  All listeners on this port
@@ -73,7 +73,7 @@ namespace Moryx.Communication.Sockets
                 if (_protocolInterpreter == null)
                     _protocolInterpreter = listener.Validator.Interpreter;
                 if (_logger == null)
-                    _logger = listener.Logger.GetChild(string.Empty, typeof(TcpPortListener));
+                    _logger = listener.Logger;
 
                 _listeners.Add(listener);
 
@@ -117,7 +117,7 @@ namespace Moryx.Communication.Sockets
             }
 
             // Create new transmission and try to assign
-            var tcpTransmission = new TcpTransmission(client, _protocolInterpreter, _logger.GetChild(string.Empty, typeof(TcpTransmission)));
+            var tcpTransmission = new TcpTransmission(client, _protocolInterpreter, _logger);
             lock (_listeners)
             {
                 if (_listeners.Count == 1 && !_listeners[0].ValidateBeforeAssignment)
