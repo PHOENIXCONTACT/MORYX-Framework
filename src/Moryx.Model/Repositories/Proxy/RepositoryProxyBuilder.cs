@@ -45,7 +45,7 @@ namespace Moryx.Model.Repositories.Proxy
         public Type Build(Type repoApi)
         {
             // Check interface
-            ValidateRepositoryApi(repoApi, false);
+            ValidateRepositoryApi(repoApi);
 
             var proxyName = CreateProxyName(repoApi);
 
@@ -86,7 +86,7 @@ namespace Moryx.Model.Repositories.Proxy
         public Type Build(Type repoApi, Type repoImpl)
         {
             // Check interface
-            ValidateRepositoryApi(repoApi, false);
+            ValidateRepositoryApi(repoApi);
 
             var proxyName = CreateProxyName(repoImpl);
 
@@ -198,7 +198,7 @@ namespace Moryx.Model.Repositories.Proxy
             return typeof(IModificationTrackedEntity).IsAssignableFrom(entityType);
         }
 
-        private static void ValidateRepositoryApi(Type repoApi, bool additionalApis)
+        private static void ValidateRepositoryApi(Type repoApi)
         {
             if (!repoApi.IsInterface)
             {
@@ -206,11 +206,7 @@ namespace Moryx.Model.Repositories.Proxy
             }
 
             var repoInterfaces = repoApi.GetInterfaces();
-            if (additionalApis && (repoInterfaces.Length > 2 || repoInterfaces.First().GetGenericTypeDefinition() != typeof(IRepository<>)))
-            {
-                throw new InvalidOperationException($"'{repoApi.Name}' API does not inherit from IRepository<T>");
-            }
-            else if (repoInterfaces.Length != 2 || repoInterfaces.First().GetGenericTypeDefinition() != typeof(IRepository<>))
+            if (!repoInterfaces.Any(rI => rI.IsGenericType && rI.GetGenericTypeDefinition() == typeof(IRepository<>)))
             {
                 throw new InvalidOperationException($"'{repoApi.Name}' API does not inherit from IRepository<T>");
             }
