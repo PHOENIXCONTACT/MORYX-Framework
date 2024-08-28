@@ -7,7 +7,7 @@ using Moryx.Serialization;
 
 namespace Moryx.Resources.Samples
 {
-    public class RoutingResource : PublicResource
+    public class RoutingResource : Resource
     {
         [EntrySerialize, ResourceTypes(typeof(IWpc))]
         [Description("Type of wpc for Autocreate")]

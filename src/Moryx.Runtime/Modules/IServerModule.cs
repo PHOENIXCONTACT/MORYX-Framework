@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Collections.Generic;
+using Moryx.Container;
 using Moryx.Modules;
 
 namespace Moryx.Runtime.Modules
@@ -17,6 +19,11 @@ namespace Moryx.Runtime.Modules
     /// </summary>
     public interface IServerModule : IModule
     {
+        /// <summary>
+        /// Internal service provider of the module
+        /// </summary>
+        IContainer Container { get; }
+
         /// <summary>
         /// Console to interact with the module
         /// </summary>

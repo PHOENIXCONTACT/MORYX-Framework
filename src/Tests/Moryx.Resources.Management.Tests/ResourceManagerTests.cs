@@ -306,7 +306,7 @@ namespace Moryx.Resources.Management.Tests
             }
         }
 
-        private class PublicResourceMock : ResourceMockBase, IPublicResource, IReferenceResource
+        private class PublicResourceMock : ResourceMockBase, IResource, IReferenceResource
         {
             public ICapabilities Capabilities { get; private set; }
 

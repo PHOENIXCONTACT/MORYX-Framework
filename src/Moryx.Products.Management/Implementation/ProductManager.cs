@@ -79,7 +79,10 @@ namespace Moryx.Products.Management
         public long SaveType(IProductType modifiedInstance)
         {
             var saved = Storage.SaveType(modifiedInstance);
-            RaiseProductChanged(modifiedInstance);
+            //reload the object for correct references
+            var loadedType = Storage.LoadType(saved);
+            RaiseProductChanged(loadedType);
+
             return saved;
         }
 

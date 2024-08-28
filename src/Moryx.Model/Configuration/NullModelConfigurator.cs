@@ -89,6 +89,7 @@ namespace Moryx.Model.Configuration
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
+        /// <inheritdoc />
         public DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions)
         {
             throw new NotImplementedException();

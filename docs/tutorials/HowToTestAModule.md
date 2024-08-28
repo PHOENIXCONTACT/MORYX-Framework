@@ -3,7 +3,7 @@
 In order to test a module in its lifecycle with its respective facade we offer the `Moryx.TestTools.IntegrationTest`.
 The package brings a `MoryxTestEnvironment<T>`.
 With this class you can first create mocks for all module facades your module dependents on using the static `CreateModuleMock<FacadeType>` method.
-Afterwards you can create the environment using an implementation of the `ServerModuleFacadeControllerBase`, an instance of the `ConfigBase` and the set of dependency mocks.
+Afterwards you can create the environment using an implementation of the `ServerModuleBase<T>` class, an instance of the `ConfigBase` and the set of dependency mocks.
 The first two parameters are usually your `ModuleController` and your `ModuleConfig`.
 The following example shows a setup for the `IShiftManagement` facade interface. The module depends on the `IResourceManagement` and `IOperatorManagement` facades.
 
