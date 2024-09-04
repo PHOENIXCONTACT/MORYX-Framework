@@ -122,7 +122,7 @@ namespace Moryx.Container.Tests
 
         private static IContainer CreateContainer(IDictionary<Type, string> strategies)
         {
-            var container = new LocalContainer(strategies);
+            var container = new CastleContainer(strategies);
 
             container.LoadComponents<IRootClass>();
             container.LoadComponents<IConfiguredComponent>();

@@ -15,7 +15,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Add a resource to the graph
         /// </summary>
-        ResourceWrapper Add(Resource instance);
+        Resource Add(Resource instance);
 
         /// <summary>
         /// Remove an instance from the graph
@@ -23,14 +23,14 @@ namespace Moryx.Resources.Management
         bool Remove(Resource instance);
 
         /// <summary>
-        /// Return the wrapper of a resource instance
+        /// Return the resource instance
         /// </summary>
-        ResourceWrapper GetWrapper(long id);
+        Resource GetResource(long id);
 
         /// <summary>
         /// Access the full graph
         /// </summary>
-        ICollection<ResourceWrapper> GetAll();
+        ICollection<Resource> GetAll();
 
         /// <summary>
         /// TODO: Find a better way
