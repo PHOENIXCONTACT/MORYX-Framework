@@ -20,7 +20,7 @@
         "@types/react": "^18.2.55",
         "@types/react-dom": "^18.2.19",
         "@types/react-redux": "^7.1.33",
-        "@types/uuid": "^9.0.8",
+        "@types/uuid": "^10.0.0",
         "moment": "^2.30.1",
         "path-scurry": "^1.10.2",
         "query-string": "^9.0.0",
