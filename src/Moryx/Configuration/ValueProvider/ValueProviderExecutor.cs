@@ -36,6 +36,11 @@ namespace Moryx.Configuration
         /// <exception cref="ArgumentNullException"></exception>
         public static void Execute(object targetObject, ValueProviderExecutorSettings settings)
         {
+            if (targetObject is null)
+            {
+                throw new ArgumentNullException(nameof(targetObject));
+            }
+
             if (settings.Providers == null)
             {
                 throw new ArgumentNullException(nameof(settings.Providers));
@@ -55,29 +60,33 @@ namespace Moryx.Configuration
             {
                 foreach (var settingsProvider in settings.Providers)
                 {
-                    if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
+                    try
                     {
-                        break;
+                        if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
+                        {
+                            break;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // TODO: Restrict exception type
+                        // TODO: Consider enabling logging
                     }
                 }
 
                 var value = property.GetValue(target);
-
-                if (property.PropertyType.IsValueType && !property.PropertyType.IsPrimitive ||
-                     property.PropertyType.IsClass &&
-                     property.PropertyType != typeof(string) &&
-                     !(value is IEnumerable))
+                // Iterate each item of an enumerable
+                if (value is IEnumerable enumerable)
                 {
-                    Iterate(value, settings);
-                }
-
-                if (value is IEnumerable)
-                {
-                    var enumerable = value as IEnumerable;
                     foreach (var item in enumerable)
                     {
-                        Iterate(item, settings);
+                        if (item != null)
+                            Iterate(item, settings);
                     }
+                }
+                else if (value != null && property.PropertyType.IsClass && property.PropertyType != typeof(string))
+                {
+                    Iterate(value, settings);
                 }
             }
         }
