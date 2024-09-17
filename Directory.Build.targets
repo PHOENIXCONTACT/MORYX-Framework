@@ -26,7 +26,7 @@
       		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
   		</PackageReference>
 
-		<PackageReference Update="Newtonsoft.Json" Version="12.0.3" />
+		<PackageReference Update="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Update="CommandLineParser" Version="2.9.1" />
 
 		<FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)"/>
