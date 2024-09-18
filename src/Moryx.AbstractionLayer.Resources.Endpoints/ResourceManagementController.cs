@@ -16,7 +16,6 @@ using Moryx.Tools;
 using Moryx.AbstractionLayer.Properties;
 using Moryx.Runtime.Modules;
 using Moryx.Configuration;
-using Moryx.Resources.Management;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
