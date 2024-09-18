@@ -9,6 +9,7 @@ using Moq;
 using Moryx.Model.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using System.ComponentModel;
 
 namespace Moryx.Resources.Management.Tests
 {
@@ -22,12 +23,33 @@ namespace Moryx.Resources.Management.Tests
         public void Setup()
         {
             var typeControllerMock = new Mock<IResourceTypeController>();
-            typeControllerMock.Setup(tc => tc.Create(It.IsAny<string>())).Returns(new TestResource());
+            typeControllerMock.Setup(tc => tc.Create(It.Is<string>(type => type == typeof(TestResource).ResourceType()))).Returns(new TestResource());
+            typeControllerMock.Setup(tc => tc.Create(It.Is<string>(type => type == typeof(DefaultTestResource).ResourceType()))).Returns(new DefaultTestResource());
 
             _typeControllerMock = typeControllerMock.Object;
 
             var resourceCreator = new Mock<IResourceGraph>();
             _resourceGraph = resourceCreator.Object;
+        }
+
+        [Test(Description = "Calling Instantiate without an entity sets default value")]
+        public void InstantiateWithoutEntitySetsDefaults()
+        {
+            // Arrange
+            var accessor = new ResourceEntityAccessor
+            {
+                Type = typeof(DefaultTestResource).ResourceType()
+            };
+
+            // Act
+            var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as DefaultTestResource;
+
+            // Assert
+            Assert.NotNull(resource);
+            Assert.AreEqual(accessor.Type, resource.GetType().ResourceType());
+
+            Assert.IsTrue(resource.Enabled);
+            Assert.AreEqual(42, resource.Number);
         }
 
         [Test(Description = "Instantiates a resource")]
@@ -116,6 +138,15 @@ namespace Moryx.Resources.Management.Tests
         private class ExtensionDataInherited : ExtensionDataTestBase
         {
             public long Value3 => 42;
+        }
+
+        private class DefaultTestResource : Resource
+        {
+            [DataMember, DefaultValue(42)]
+            public int Number { get; set; }
+
+            [DataMember, DefaultValue(true)]
+            public bool Enabled { get; set; }
         }
 
         private class TestResource : Resource
