@@ -72,9 +72,8 @@ namespace Moryx.Resources.Management
             Instance.Name = Name;
             Instance.Description = Description;
 
-            // Copy extended data from json
-            if (ExtensionData != null)
-                JsonConvert.PopulateObject(ExtensionData, Instance, JsonSettings.Minimal);
+            // Copy extended data from json, or simply use JSON to provide defaults
+            JsonConvert.PopulateObject(ExtensionData ?? "{}", Instance, JsonSettings.Minimal);
 
             return Instance;
         }
@@ -111,14 +110,14 @@ namespace Moryx.Resources.Management
         {
             var resourceRepo = uow.GetRepository<IResourceRepository>();
 
-            var resources = 
+            var resources =
                 (from res in resourceRepo.Linq
                  where res.Deleted == null
                  select res)
                 .ToList();
 
             var resourcEntityAccessors = resources
-                .Select(res => 
+                .Select(res =>
                     new ResourceEntityAccessor
                     {
                         Id = res.Id,
@@ -127,13 +126,13 @@ namespace Moryx.Resources.Management
                         Description = res.Description,
                         ExtensionData = res.ExtensionData,
                         Relations = (from target in res.Targets
-                                    where target.Target.Deleted == null
-                                    // Attention: This is Copy&Paste because of LinQ limitations
-                                    select new ResourceRelationAccessor
-                                    {
-                                        Entity = target,
-                                        Role = ResourceReferenceRole.Target,
-                                    }).Concat(
+                                     where target.Target.Deleted == null
+                                     // Attention: This is Copy&Paste because of LinQ limitations
+                                     select new ResourceRelationAccessor
+                                     {
+                                         Entity = target,
+                                         Role = ResourceReferenceRole.Target,
+                                     }).Concat(
                                     from source in res.Sources
                                     where source.Source.Deleted == null
                                     // Attention: This is Copy&Paste because of LinQ limitations
@@ -181,7 +180,7 @@ namespace Moryx.Resources.Management
         /// Type of the reference relation
         /// </summary>
         public ResourceRelationType RelationType => (ResourceRelationType)Entity.RelationType;
-        
+
         /// <summary>
         /// Id of the referenced resource
         /// </summary>

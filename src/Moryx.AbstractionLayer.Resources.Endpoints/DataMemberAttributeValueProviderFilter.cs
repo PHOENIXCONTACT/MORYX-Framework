@@ -1,15 +1,13 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.Resources.Management
+namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
-    [Obsolete("No longer needed within the ResourceManagement")]
-    public class DataMemberAttributeValueProviderFilter : IValueProviderFilter
+    internal class DataMemberAttributeValueProviderFilter : IValueProviderFilter
     {
         private readonly bool _filterDataMembers;
 
@@ -20,7 +18,7 @@ namespace Moryx.Resources.Management
 
         public bool CheckProperty(PropertyInfo propertyInfo)
         {
-            if(_filterDataMembers)
+            if (_filterDataMembers)
                 return propertyInfo.GetCustomAttribute<DataMemberAttribute>() == null;
             return propertyInfo.GetCustomAttribute<DataMemberAttribute>() != null;
         }
