@@ -73,6 +73,12 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         [DataMember]
         public List<PropertyFilter> PropertyFilters { get; set; }
+
+        /// <summary>
+        /// Select whether the parts should be excluded in the query
+        /// </summary>
+        [DataMember]
+        public bool NoPartLinks { get; set; }
     }
 
     /// <summary>
