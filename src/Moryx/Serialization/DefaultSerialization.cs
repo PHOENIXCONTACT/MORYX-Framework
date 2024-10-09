@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Tools;
@@ -103,29 +104,44 @@ namespace Moryx.Serialization
             // Iterate over attributes reading all validation rules
             foreach (var attribute in validationAttributes)
             {
-                if (attribute is MinLengthAttribute minAttribute)
+                switch (attribute)
                 {
-                    validation.Minimum = minAttribute.Length;
+                    case MinLengthAttribute minAttribute:
+                        validation.Minimum = minAttribute.Length;
+                        break;
+
+                    case MaxLengthAttribute maxAttribute:
+                        validation.Maximum = maxAttribute.Length;
+                        break;
+
+                    case RangeAttribute rangeAttribute:
+                        validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum);
+                        validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum);
+                        break;
+
+                    case RequiredAttribute requiredAttribute:
+                        validation.IsRequired = true;
+                        break;
+
+#if NET8_0
+                    case AllowedValuesAttribute allowedAttribute:
+                        object[] allowed = allowedAttribute.Values;
+                        validation.AllowedValues = Array.ConvertAll(allowed, item => (string)item);
+                        break;
+
+                    case DeniedValuesAttribute deniedAttribute:
+                        object[] denied = deniedAttribute.Values;
+                        validation.DeniedValues = Array.ConvertAll(denied, item => (string)item);
+                        break;
+
+                    case LengthAttribute lengthAttribute:
+                        validation.MinLength = lengthAttribute.MinimumLength;
+                        validation.MaxLength = lengthAttribute.MaximumLength;
+                        break;
+#endif
                 }
-                else if (attribute is MaxLengthAttribute maxAttribute)
-                {
-                    validation.Maximum = maxAttribute.Length;
-                }
-                else if (attribute is RangeAttribute rangeAttribute)
-                {
-                    validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum);
-                    validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum);
-                }
-                else if (attribute is RegularExpressionAttribute regexAttribute)
-                    validation.Regex = regexAttribute.Pattern;
-                else if (attribute is StringLengthAttribute strLength)
-                {
-                    validation.Minimum = strLength.MinimumLength;
-                    validation.Maximum = strLength.MaximumLength;
-                }
-                else if (attribute is RequiredAttribute)
-                    validation.IsRequired = true;
             }
+          
 
             return validation;
         }
@@ -221,7 +237,7 @@ namespace Moryx.Serialization
                     return CollectionBuilder(memberType, currentValue, mappedEntry);
                 default:
                     var value = mappedEntry.Value.Current;
-                    if (value is null)
+                    if (value is null) 
                         return null;
 
                     try
@@ -250,9 +266,6 @@ namespace Moryx.Serialization
         public EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property)
         {
             var unitType = EntryUnitType.None;
-
-            if (HasFlagsAttribute(property))
-                unitType = EntryUnitType.Flags;
 
             var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
             if (passwordAttr != null)
@@ -320,18 +333,6 @@ namespace Moryx.Serialization
 
             // Other collections are not supported
             return null;
-        }
-
-        /// <summary>
-        /// Checks if the given property is an enum and has the <see cref="System.FlagsAttribute"/>.
-        /// </summary>
-        /// <param name="property">The property to inspect for attributes.</param>
-        /// <returns>True if the property has the Flags attribute; otherwise, false.</returns>
-        private bool HasFlagsAttribute(ICustomAttributeProvider property)
-        {
-            return property is PropertyInfo propertyInfo &&
-                   propertyInfo.PropertyType.IsEnum &&
-                   propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any();
         }
     }
 }

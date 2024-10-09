@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace Moryx.Serialization
@@ -36,11 +37,23 @@ namespace Moryx.Serialization
         [DataMember]
         public bool IsRequired { get; set; }
 
-        /// <summary>
-        /// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/> 
-        /// and <see cref="EntryValidation.Minimum"/> validation to the largest possible range.
-        /// </summary>
-        public EntryValidation()
+        [DataMember]
+        public string[] DeniedValues { get; set; }
+
+        [DataMember]
+        public string[] AllowedValues { get; set; }
+
+        [DataMember]
+        public double MinLength { get; set; }
+
+        [DataMember]
+        public double MaxLength { get; set; }
+
+/// <summary>
+/// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/> 
+/// and <see cref="EntryValidation.Minimum"/> validation to the largest possible range.
+/// </summary>
+public EntryValidation()
         {
             Minimum = double.MinValue;
             Maximum = double.MaxValue;
@@ -63,7 +76,11 @@ namespace Moryx.Serialization
                 Minimum = Minimum, 
                 Maximum = Maximum, 
                 Regex = Regex, 
-                IsRequired = IsRequired
+                IsRequired = IsRequired,
+                DeniedValues = DeniedValues,
+                AllowedValues = AllowedValues,
+                MaxLength = MaxLength,
+                MinLength = MinLength,
             };
             return copy;
         }
