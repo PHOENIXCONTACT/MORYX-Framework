@@ -18,7 +18,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// </summary>
         private EntrySerializeSerialization _memberFilter = new();
 
-        public ResourceSerialization(IContainer container) : base(container, new ValueProviderExecutor(new ValueProviderExecutorSettings()))
+        public ResourceSerialization(IContainer container, IServiceProvider serviceProvider) : base(container, serviceProvider, new ValueProviderExecutor(new ValueProviderExecutorSettings()))
         {
         }
 

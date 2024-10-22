@@ -26,12 +26,14 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         private readonly IModuleManager _moduleManager;
         private readonly IConfigManager _configManager;
         private readonly IParallelOperations _parallelOperations;
+        private readonly IServiceProvider _serviceProvider;
 
-        public ModulesController(IModuleManager moduleManager, IConfigManager configManager, IParallelOperations parallelOperations)
+        public ModulesController(IModuleManager moduleManager, IConfigManager configManager, IParallelOperations parallelOperations, IServiceProvider serviceProvider)
         {
             _moduleManager = moduleManager;
             _configManager = configManager;
             _parallelOperations = parallelOperations;
+            _serviceProvider = serviceProvider;
         }
 
         [HttpGet("dependencies")]
@@ -254,7 +256,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         {
             var host = (IContainerHost)module;
             // TODO: This is dangerous
-            return new PossibleValuesSerialization(host.Container, (IEmptyPropertyProvider)_configManager)
+            return new PossibleValuesSerialization(host.Container, _serviceProvider, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };

@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
     <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
+    <ProjectReference Include="..\Moryx.TestModule\Moryx.TestModule.csproj" />
   </ItemGroup>
 
 </Project>

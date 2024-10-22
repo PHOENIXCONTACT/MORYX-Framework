@@ -21,7 +21,7 @@ namespace Moryx.Products.Samples.Recipe
             Case = source.Case;
         }
 
-        [EntrySerialize]
+        [EntrySerialize, FacacadeRecipeValue]
         [DisplayName("Cores Installed")]
         public int CoresInstalled { get; set; }
 
