@@ -37,7 +37,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             _productManagement = productManagement;
 
-            var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
+            var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IProductManagement>);    
             _productConverter = new ProductConverter(_productManagement, module.Container, serviceProvider);
         }
 
@@ -257,7 +257,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipes = _productManagement.GetRecipes(productType, (RecipeClassification)classification);
             var recipeModels = new List<RecipeModel>();
             foreach (var recipe in recipes)
-                recipeModels.Add(_productConverter.ConvertRecipe(recipe));
+                recipeModels.Add(_productConverter.ConvertRecipeV2(recipe));
             return recipeModels.ToArray();
         }
         #endregion
@@ -340,7 +340,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipe = _productManagement.LoadRecipe(id);
             if (recipe == null)
                 return NotFound(new MoryxExceptionResponse {Title= string.Format(Strings.RecipeNotFoundException_Message, id) });
-            return _productConverter.ConvertRecipe(recipe);
+            return _productConverter.ConvertRecipeV2(recipe);
         }
 
         [HttpPost]
@@ -390,7 +390,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipe = _productManagement.CreateRecipe(recipeType);
             if (recipe == null)
                 recipe = (IProductRecipe)TypeTool.CreateInstance<IProductRecipe>(recipeType);
-            return _productConverter.ConvertRecipe(recipe);
+            return _productConverter.ConvertRecipeV2(recipe);
         }
         #endregion
     }
