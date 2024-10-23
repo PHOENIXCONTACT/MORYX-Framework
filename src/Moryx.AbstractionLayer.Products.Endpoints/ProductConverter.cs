@@ -326,7 +326,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             }
         }
 
-        public RecipeModel ConvertRecipe(IRecipe recipe)
+        [Obsolete("Use ConvertRecipe on instance")]
+        public static RecipeModel ConvertRecipe(IRecipe recipe) => ConvertRecipe(recipe, new PartialSerialization<ProductionRecipe>(null, null));
+
+        public RecipeModel ConvertRecipeV2(IRecipe recipe) => ConvertRecipe(recipe, _recipeSerialization);
+
+        private static RecipeModel ConvertRecipe(IRecipe recipe, ICustomSerialization serialization)
         {
             // Transform to DTO and transmit
             var converted = new RecipeModel
@@ -336,7 +341,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 Type = recipe.GetType().Name,
                 State = recipe.State,
                 Revision = recipe.Revision,
-                Properties = EntryConvert.EncodeObject(recipe, _recipeSerialization),
+                Properties = EntryConvert.EncodeObject(recipe, serialization),
                 IsClone = recipe.Classification.HasFlag(RecipeClassification.Clone)
             };
 

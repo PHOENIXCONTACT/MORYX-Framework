@@ -227,7 +227,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
 
 
             // Act
-            var convertedModel = _productConverter.ConvertRecipe(originalRecipe);
+            var convertedModel = _productConverter.ConvertRecipeV2(originalRecipe);
             var recoveredOriginal = _productConverter.ConvertRecipeBack(convertedModel, targetDummyRecipe, backupProductType);
 
 
