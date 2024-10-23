@@ -43,7 +43,7 @@ jobs:
         run: ./Build.ps1 -Build -Pack
 
       - name: Upload package artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: packages
           path: artifacts/Packages/
@@ -72,7 +72,7 @@ jobs:
         run: ./Build.ps1 -UnitTests
 
       - name: Upload test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: artifacts/Tests/
@@ -101,7 +101,7 @@ jobs:
         run: ./Build.ps1 -IntegrationTests
 
       - name: Upload test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: artifacts/Tests/
@@ -112,7 +112,7 @@ jobs:
     runs-on: windows-2019
     steps:
       - name: Download test results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: test-results
           path: artifacts/Tests/
@@ -133,7 +133,7 @@ jobs:
         run: ./Build.ps1 -GenerateDocs
 
       - name: Upload documentation results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: documentation
           path: artifacts/Documentation/
@@ -159,7 +159,7 @@ jobs:
           dotnet-version: '6'
   
       - name: Download package artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: packages
           path: artifacts/Packages/
