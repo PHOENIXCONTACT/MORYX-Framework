@@ -18,7 +18,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Runtime.Modules;
 using System.ComponentModel;
-using Moryx.Runtime.Container;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
@@ -39,8 +38,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             _productManagement = productManagement;
 
             var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
-            var host = (IContainerHost)module;
-            _productConverter = new ProductConverter(_productManagement, host.Container, serviceProvider);
+            _productConverter = new ProductConverter(_productManagement, module.Container, serviceProvider);
         }
 
         #region importers
