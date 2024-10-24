@@ -29,7 +29,7 @@ $NugetPackageArtifacts = "$ArtifactsDir\Packages";
 . "$PSScriptRoot\Output.ps1";
 
 # Define Tools
-$global:DotNetCli = "dotnet.exe";
+$global:DotNetCli = "dotnet";
 $global:NugetCli = "nuget.exe";
 $global:GitCli = "";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
