@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Workplans;
@@ -20,12 +21,19 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         // Null object pattern for identity
         private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
 
-        private static readonly ICustomSerialization ProductSerialization = new PartialSerialization<ProductType>();
-        private static readonly ICustomSerialization RecipeSerialization = new PartialSerialization<ProductionRecipe>();
+        private readonly ICustomSerialization _productSerialization;
+        private readonly ICustomSerialization _recipeSerialization;
 
-        public ProductConverter(IProductManagement productManagement)
+        public IContainer ProductManagerContainer { get; }
+        public IServiceProvider GlobalContainer { get; }
+
+        public ProductConverter(IProductManagement productManagement, IContainer localContainer, IServiceProvider globalContainer)
         {
             _productManagement = productManagement;
+            ProductManagerContainer = localContainer;
+            GlobalContainer = globalContainer;
+            _productSerialization = new PartialSerialization<ProductType>(localContainer, globalContainer);
+            _recipeSerialization = new PartialSerialization<ProductionRecipe>(localContainer, globalContainer);
         }
 
         public ProductDefinitionModel ConvertProductType(Type productType)
@@ -39,7 +47,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 Name = productType.FullName,
                 DisplayName = productType.GetDisplayName() ?? productType.Name,
                 BaseDefinition = baseTypeName,
-                Properties = EntryConvert.EncodeClass(productType, ProductSerialization)
+                Properties = EntryConvert.EncodeClass(productType, _productSerialization)
             };
         }
 
@@ -73,7 +81,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             // Properties
             var typeWrapper = _productManagement.GetTypeWrapper(productType.GetType().FullName);
             var properties = typeWrapper != null ? typeWrapper.Properties.ToArray() : productType.GetType().GetProperties();
-            converted.Properties = EntryConvert.EncodeObject(productType, ProductSerialization);
+            converted.Properties = EntryConvert.EncodeObject(productType, _productSerialization);
 
             // Files         
             converted.Files = ConvertFiles(productType, properties);
@@ -124,7 +132,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                         DisplayName = displayName,
                         Type = FetchProductType(property.PropertyType),
                         Parts = partModel is null ? new PartModel[0] : new[] { partModel },
-                        PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, ProductSerialization)
+                        PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, _productSerialization)
                     };
                     connectors.Add(connector);
                 }
@@ -139,7 +147,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                         DisplayName = displayName,
                         Type = FetchProductType(linkType),
                         Parts = links?.Select(ConvertPart).ToArray(),
-                        PropertyTemplates = EntryConvert.EncodeClass(linkType, ProductSerialization)
+                        PropertyTemplates = EntryConvert.EncodeClass(linkType, _productSerialization)
                     };
                     connectors.Add(connector);
                 }
@@ -165,7 +173,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             {
                 Id = link.Id,
                 Product = ConvertProduct(link.Product, true),
-                Properties = EntryConvert.EncodeObject(link, ProductSerialization)
+                Properties = EntryConvert.EncodeObject(link, _productSerialization)
             };
             return part;
         }
@@ -214,7 +222,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             // Copy extended properties
             var typeWrapper = _productManagement.GetTypeWrapper(converted.GetType().FullName);
             var properties = typeWrapper != null ? typeWrapper.Properties.ToArray() : converted.GetType().GetProperties();
-            EntryConvert.UpdateInstance(converted, source.Properties, ProductSerialization);
+            EntryConvert.UpdateInstance(converted, source.Properties, _productSerialization);
 
             // Copy Files
             ConvertFilesBack(converted, source, properties);
@@ -318,7 +326,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             }
         }
 
-        public static RecipeModel ConvertRecipe(IRecipe recipe)
+        [Obsolete("Use ConvertRecipe on instance")]
+        public static RecipeModel ConvertRecipe(IRecipe recipe) => ConvertRecipe(recipe, new PartialSerialization<ProductionRecipe>(null, null));
+
+        public RecipeModel ConvertRecipeV2(IRecipe recipe) => ConvertRecipe(recipe, _recipeSerialization);
+
+        private static RecipeModel ConvertRecipe(IRecipe recipe, ICustomSerialization serialization)
         {
             // Transform to DTO and transmit
             var converted = new RecipeModel
@@ -328,7 +341,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 Type = recipe.GetType().Name,
                 State = recipe.State,
                 Revision = recipe.Revision,
-                Properties = EntryConvert.EncodeObject(recipe, RecipeSerialization),
+                Properties = EntryConvert.EncodeObject(recipe, serialization),
                 IsClone = recipe.Classification.HasFlag(RecipeClassification.Clone)
             };
 
@@ -377,7 +390,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 productRecipe.Product = productType;
             }
 
-            EntryConvert.UpdateInstance(productRecipe, recipe.Properties, RecipeSerialization);
+            EntryConvert.UpdateInstance(productRecipe, recipe.Properties, _recipeSerialization);
 
             // Do not update a clones classification
             if (productRecipe.Classification.HasFlag(RecipeClassification.Clone))

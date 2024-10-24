@@ -27,7 +27,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
         {
             _productManagerMock = new Mock<IProductManagement>();
 
-            _productConverter = new ProductConverter(_productManagerMock.Object);
+            _productConverter = new ProductConverter(_productManagerMock.Object, null, null);
         }
 
         #region Products
@@ -227,7 +227,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
 
 
             // Act
-            var convertedModel = ProductConverter.ConvertRecipe(originalRecipe);
+            var convertedModel = _productConverter.ConvertRecipeV2(originalRecipe);
             var recoveredOriginal = _productConverter.ConvertRecipeBack(convertedModel, targetDummyRecipe, backupProductType);
 
 
