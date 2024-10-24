@@ -29,7 +29,7 @@ $NugetPackageArtifacts = "$ArtifactsDir\Packages";
 . "$PSScriptRoot\Output.ps1";
 
 # Define Tools
-$global:DotNetCli = "dotnet";
+$global:DotNetCli = "dotnet.exe";
 $global:NugetCli = "nuget.exe";
 $global:GitCli = "";
 $global:OpenCoverCli = "$BuildTools\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe";
@@ -331,10 +331,11 @@ function Invoke-CoverTests($SearchPath = $RootPath, $SearchFilter = "*.csproj", 
             $openCoverAgs = "-target:$global:NunitCli", "-targetargs:/config:$env:MORYX_BUILD_CONFIG /result:$nunitXml $testAssembly"
         }
 
-        $openCoverAgs += "-log:Debug", "-register:administrator", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops";
+        $openCoverAgs += "-log:Debug", "-register:path64", "-output:$openCoverXml", "-hideskipped:all", "-skipautoprops";
         $openCoverAgs += "-returntargetcode" # We need the nunit return code
         $openCoverAgs += "-filter:$includeFilter $excludeFilter"
 
+        Write-Host "$global:OpenCoverCli $openCoverAgs"
         & $global:OpenCoverCli $openCoverAgs
         
         $exitCode = [int]::Parse($LastExitCode);
