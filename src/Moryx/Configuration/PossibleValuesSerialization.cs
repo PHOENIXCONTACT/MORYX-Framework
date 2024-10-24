@@ -22,6 +22,11 @@ namespace Moryx.Configuration
         protected IContainer Container { get; }
 
         /// <summary>
+        /// Access to level 1 service registration
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; }
+
+        /// <summary>
         /// Empty property provider to pre-fill newley created objects
         /// </summary>
         protected IEmptyPropertyProvider EmptyPropertyProvider { get; }
@@ -29,9 +34,17 @@ namespace Moryx.Configuration
         /// <summary>
         /// Initialize base class
         /// </summary>
+        [Obsolete("Construct possible values with ServiceProvider for attributes that rely on it")]
         public PossibleValuesSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider)
+            :this(container, null, emptyPropertyProvider) { }
+
+        /// <summary>
+        /// Initialize base class
+        /// </summary>
+        public PossibleValuesSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider)
         {
             Container = container;
+            ServiceProvider = serviceProvider;
             EmptyPropertyProvider = emptyPropertyProvider;
         }
 
@@ -45,9 +58,9 @@ namespace Moryx.Configuration
 
             // Create prototypes from possible values
             var list = new List<EntryPrototype>();
-            foreach (var value in possibleValuesAtt.GetValues(Container))
+            foreach (var value in possibleValuesAtt.GetValues(Container, ServiceProvider))
             {
-                var prototype = possibleValuesAtt.Parse(Container, value);
+                var prototype = possibleValuesAtt.Parse(Container, ServiceProvider, value);
                 EmptyPropertyProvider.FillEmpty(prototype);
                 list.Add(new EntryPrototype(value, prototype));
             }
@@ -63,7 +76,7 @@ namespace Moryx.Configuration
                 return base.PossibleValues(memberType, attributeProvider);
 
             // Use attribute
-            var values = valuesAttribute.GetValues(Container);
+            var values = valuesAttribute.GetValues(Container, ServiceProvider);
             return values?.Distinct().ToArray();
         }
 
@@ -90,7 +103,7 @@ namespace Moryx.Configuration
             }
 
             // Use attribute
-            var values = valuesAttribute.GetValues(Container);
+            var values = valuesAttribute.GetValues(Container, ServiceProvider);
             return values?.Distinct().ToArray();
         }
 
@@ -99,7 +112,7 @@ namespace Moryx.Configuration
         {
             var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             var instance = possibleValuesAtt != null
-                ? possibleValuesAtt.Parse(Container, encoded.Value.Current)
+                ? possibleValuesAtt.Parse(Container, ServiceProvider, encoded.Value.Current)
                 : base.CreateInstance(memberType, attributeProvider, encoded);
 
             EmptyPropertyProvider.FillEmpty(instance);
@@ -120,7 +133,7 @@ namespace Moryx.Configuration
             if (value.Type == EntryValueType.Class && currentValue != null && currentValue.GetType().Name == value.Current)
                 return currentValue;
 
-            var instance = att.Parse(Container, mappedEntry.Value.Current);
+            var instance = att.Parse(Container, ServiceProvider, mappedEntry.Value.Current);
             if (mappedEntry.Value.Type == EntryValueType.Class)
             {
                 EmptyPropertyProvider.FillEmpty(instance);

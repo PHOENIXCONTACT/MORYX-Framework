@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
@@ -28,7 +29,21 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             _serialization = new EntrySerializeSerialization();
         }
 
-        public PartialSerialization() : base(null, new EmptyValueProvider())
+        /// <summary>
+        /// Creates a new <see cref="PartialSerialization{T}"/>  instance
+        /// </summary>
+        [Obsolete("Use serialization with containers instead")]
+        public PartialSerialization() : this(null, null)
+        {
+        }
+
+        /// <summary>
+        /// Create serialization with access to global and local container
+        /// </summary>
+        /// <param name="localContainer"></param>
+        /// <param name="serviceProvider"></param>
+        public PartialSerialization(IContainer localContainer, IServiceProvider serviceProvider) 
+            : base(localContainer, serviceProvider, new EmptyValueProvider())
         {
         }
 

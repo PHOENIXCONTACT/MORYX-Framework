@@ -14,6 +14,11 @@ using Microsoft.AspNetCore.Authorization;
 using Moryx.Configuration;
 using Moryx.Asp.Extensions;
 using Moryx.AbstractionLayer.Properties;
+using Microsoft.Extensions.DependencyInjection;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Runtime.Modules;
+using System.ComponentModel;
+using Moryx.Runtime.Container;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
@@ -27,10 +32,15 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
     {
         private readonly IProductManagement _productManagement;
         private readonly ProductConverter _productConverter;
-        public ProductManagementController(IProductManagement productManagement)
+        public ProductManagementController(IProductManagement productManagement,
+            IModuleManager moduleManager,
+            IServiceProvider serviceProvider)
         {
             _productManagement = productManagement;
-            _productConverter = new ProductConverter(_productManagement);
+
+            var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IProductManagement>);
+            var host = (IContainerHost)module;      
+            _productConverter = new ProductConverter(_productManagement, host.Container, serviceProvider);
         }
 
         #region importers
@@ -39,6 +49,8 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [Authorize(Policy = ProductPermissions.CanViewTypes)]
         public ActionResult<ProductCustomization> GetProductCustomization()
         {
+            var parameterSerialization = new PossibleValuesSerialization(_productConverter.ProductManagerContainer, _productConverter.GlobalContainer,
+                new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider()));
             return new ProductCustomization
             {
                 ProductTypes = GetProductTypes(),
@@ -46,7 +58,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 Importers = _productManagement.Importers.Select(i => new ProductImporter
                 {
                     Name = i.Key,
-                    Parameters = EntryConvert.EncodeObject(i.Value, new PossibleValuesSerialization(null, new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider())))
+                    Parameters = EntryConvert.EncodeObject(i.Value, parameterSerialization) 
                 }).ToArray()
             };
         }
@@ -247,7 +259,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipes = _productManagement.GetRecipes(productType, (RecipeClassification)classification);
             var recipeModels = new List<RecipeModel>();
             foreach (var recipe in recipes)
-                recipeModels.Add(ProductConverter.ConvertRecipe(recipe));
+                recipeModels.Add(_productConverter.ConvertRecipeV2(recipe));
             return recipeModels.ToArray();
         }
         #endregion
@@ -330,7 +342,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipe = _productManagement.LoadRecipe(id);
             if (recipe == null)
                 return NotFound(new MoryxExceptionResponse {Title= string.Format(Strings.RecipeNotFoundException_Message, id) });
-            return ProductConverter.ConvertRecipe(recipe);
+            return _productConverter.ConvertRecipeV2(recipe);
         }
 
         [HttpPost]
@@ -380,7 +392,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipe = _productManagement.CreateRecipe(recipeType);
             if (recipe == null)
                 recipe = (IProductRecipe)TypeTool.CreateInstance<IProductRecipe>(recipeType);
-            return ProductConverter.ConvertRecipe(recipe);
+            return _productConverter.ConvertRecipeV2(recipe);
         }
         #endregion
     }
