@@ -16,7 +16,6 @@ using Moryx.Tools;
 using Moryx.AbstractionLayer.Properties;
 using Moryx.Runtime.Modules;
 using Moryx.Configuration;
-using Moryx.Resources.Management;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
@@ -32,12 +31,15 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         private readonly IResourceTypeTree _resourceTypeTree;
         private readonly ResourceSerialization _serialization;
 
-        public ResourceModificationController(IResourceManagement resourceManagement, IResourceTypeTree resourceTypeTree, IModuleManager moduleManager)
+        public ResourceModificationController(IResourceManagement resourceManagement, 
+            IResourceTypeTree resourceTypeTree, 
+            IModuleManager moduleManager,
+            IServiceProvider serviceProvider)
         {
             _resourceManagement = resourceManagement ?? throw new ArgumentNullException(nameof(resourceManagement));
             _resourceTypeTree = resourceTypeTree ?? throw new ArgumentNullException(nameof(resourceTypeTree));
             var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
-            _serialization = new ResourceSerialization(module.Container);
+            _serialization = new ResourceSerialization(module.Container, serviceProvider);
         }
 
         [HttpGet]
