@@ -76,7 +76,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 Description = current.Description,
 
                 // Use simplified type reference
-                Type = current.ResourceType()
+                Type = current.ResourceType(),
             };
 
             // Set partial flag or load complex properties depending on details depth
@@ -197,14 +197,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 Creatable = node.Creatable,
                 Name = node.Name,
                 BaseType = baseType?.Name,
-
-                // Read display name of the type otherwise use type short name
-                DisplayName = resType.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName ??
-                              Regex.Replace(resType.Name, @"`\d", string.Empty),
-
-                // Read description of the type
-                Description = resType.GetCustomAttribute<DescriptionAttribute>(false)?.Description,
-
+                DisplayName = resType.GetDisplayName(),
+                Description = resType.GetDescription(),
                 // Convert resource constructors
                 Constructors = node.Constructors.Select(ctr => EntryConvert.EncodeMethod(ctr, Serialization)).ToArray()
             };
