@@ -67,6 +67,12 @@ namespace Moryx.Resources.Management.Tests
         [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
         public DerivedResource Reference2 { get; set; }
 
+        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(TargetReference))]
+        public BidirectionalReferenceResource TargetReference { get; set; }
+
+        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(NewTargetReference))]
+        public BidirectionalReferenceResource NewTargetReference { get; set; }
+
         [ResourceReference(ResourceRelationType.PossibleExchangablePart)]
         public IReferences<ISimpleResource> References { get; set; }
 
@@ -98,11 +104,16 @@ namespace Moryx.Resources.Management.Tests
                 References.Add(reference);
         }
 
-
         public INonPublicResource NonPublic { get; set; }
 
         public event EventHandler<ISimpleResource> ReferenceChanged;
 
         public event EventHandler<ISimpleResource[]> SomeChanged;
+    }
+
+    public class BidirectionalReferenceResource : PublicResource
+    {
+        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source, nameof(SourceReference))]
+        public ReferenceResource SourceReference { get; set; }
     }
 }

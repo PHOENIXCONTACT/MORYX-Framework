@@ -197,7 +197,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 Creatable = node.Creatable,
                 Name = node.Name,
                 BaseType = baseType?.Name,
-                DisplayName = resType.GetDisplayName(),
+                DisplayName = resType.GetDisplayName() ?? Regex.Replace(resType.Name, @"`\d", string.Empty),
                 Description = resType.GetDescription(),
                 // Convert resource constructors
                 Constructors = node.Constructors.Select(ctr => EntryConvert.EncodeMethod(ctr, Serialization)).ToArray()
