@@ -221,7 +221,19 @@ namespace Moryx.Serialization
                     return CollectionBuilder(memberType, currentValue, mappedEntry);
                 default:
                     var value = mappedEntry.Value.Current;
-                    return value == null ? null : EntryConvert.ToObject(memberType, value, FormatProvider);
+                    if (value is null) 
+                        return null;
+
+                    try
+                    {
+                        return EntryConvert.ToObject(memberType, value, FormatProvider);
+                    }
+                    catch (Exception e)
+                    {
+                        if (e is FormatException or OverflowException)
+                            throw new ArgumentException($"Invalid value {mappedEntry.Value.Current} for entry {mappedEntry.DisplayName ?? mappedEntry.Identifier}", e);
+                        throw;
+                    }
             }
         }
         /// <see cref="ICustomSerialization"/>
