@@ -17,6 +17,7 @@ using Moryx.AbstractionLayer.Properties;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Container;
 using Moryx.Configuration;
+using System.Runtime.Serialization;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
@@ -170,23 +171,31 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Policy = ResourcePermissions.CanAdd)]
         public ActionResult<ResourceModel> Save(ResourceModel model)
         {
-            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == model.Id).Count() > 0)
+            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == model.Id).Any())
                 return Conflict($"The resource '{model.Id}' already exists.");
+            try
+            {
+                var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r => {
+                    var resourcesToSave = new HashSet<long>();
+                    var resourceCache = new Dictionary<long, Resource>();
+                    FromModel(model, resourcesToSave, resourceCache, r);
+                    resourcesToSave.Skip(1).ForEach(id => _resourceManagement.Modify(id, r => true));
+                });
 
-            var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r => {
-                var resourcesToSave = new HashSet<long>();
-                var resourceCache = new Dictionary<long, Resource>();
-                FromModel(model, resourcesToSave, resourceCache, r);
-                resourcesToSave.Skip(1).ForEach(id => _resourceManagement.Modify(id, r => true ));
-            });
-
-            return GetDetails(id);
+                return Ok(GetDetails(id));
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException or SerializationException)
+                    return BadRequest(e.Message);
+                throw;
+            }
         }
-
 
         /// <summary>
         /// Convert ResourceModel back to resource and/or update its properties
@@ -309,8 +318,9 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Route("{id}")]
         [Authorize(Policy = ResourcePermissions.CanEdit)]
         public ActionResult<ResourceModel> Update(long id, ResourceModel model)
@@ -318,15 +328,25 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             if (_resourceManagement.GetAllResources<IResource>(r=>r.Id == id) is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
-            _resourceManagement.Modify(id, r => {
-                var resourcesToSave = new HashSet<long>();
-                var resourceCache = new Dictionary<long, Resource>();
-                FromModel(model, resourcesToSave, resourceCache, r);
-                resourcesToSave.ForEach(id => _resourceManagement.Modify(id, r => true));
-                return true;
-            });
+            try
+            {
+                _resourceManagement.Modify(id, r =>
+                {
+                    var resourcesToSave = new HashSet<long>();
+                    var resourceCache = new Dictionary<long, Resource>();
+                    FromModel(model, resourcesToSave, resourceCache, r);
+                    resourcesToSave.ForEach(id => _resourceManagement.Modify(id, r => true));
+                    return true;
+                });
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException or SerializationException)
+                    return BadRequest(e.Message);
+                throw;
+            }            
 
-            return GetDetails(id);
+            return Ok(GetDetails(id));
         }
 
         [HttpDelete]
