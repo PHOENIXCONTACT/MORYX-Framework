@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 
 namespace Moryx.AbstractionLayer.Resources.Extensions
 {
@@ -13,7 +16,7 @@ namespace Moryx.AbstractionLayer.Resources.Extensions
         /// <param name="configurable">The resource to be configured</param>
         /// <param name="onConfigure">Action to configure the given `configurable`</param>
         /// <returns>The provided `configurable`</returns>
-        public static TResult Configure<TResult>(this TResult configurable, Action<TResult> onConfigure)
+        public static TResult Configure<TResult>(this TResult configurable, Action<TResult> onConfigure) where TResult : Resource
         {
             onConfigure(configurable);
             return configurable;
