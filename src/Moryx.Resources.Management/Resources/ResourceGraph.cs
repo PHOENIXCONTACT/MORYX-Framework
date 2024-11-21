@@ -29,24 +29,16 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// All resources of the graph
         /// </summary>
-        private readonly IDictionary<long, ResourceWrapper> _graph = new Dictionary<long, ResourceWrapper>();
-
-        /// <summary>
-        /// Quick access to all public resources
-        /// </summary>
-        private readonly IList<IPublicResource> _publicResources = new List<IPublicResource>();
+        private readonly IDictionary<long, Resource> _graph = new Dictionary<long, Resource>();
 
         public Action<Resource> SaveDelegate { get; set; }
 
         public Func<Resource, bool, bool> DestroyDelegate { get; set; }
 
-        public ResourceWrapper Add(Resource instance)
+        public Resource Add(Resource instance)
         {
             _graphLock.EnterWriteLock();
-            var wrapper = _graph[instance.Id] = new ResourceWrapper(instance);
-
-            if (instance is IPublicResource publicResource)
-                _publicResources.Add(publicResource);
+            var wrapper = _graph[instance.Id] = instance;
             _graphLock.ExitWriteLock();
 
             return wrapper;
@@ -56,8 +48,6 @@ namespace Moryx.Resources.Management
         {
             _graphLock.EnterWriteLock();
             var found = _graph.Remove(instance.Id);
-            if (found)
-                _publicResources.Remove(instance as IPublicResource);
             _graphLock.ExitWriteLock();
 
             return found;
@@ -65,10 +55,10 @@ namespace Moryx.Resources.Management
 
         public Resource Get(long id)
         {
-            return GetWrapper(id)?.Target;
+            return GetResource(id);
         }
 
-        public ResourceWrapper GetWrapper(long id)
+        public Resource GetResource(long id)
         {
             _graphLock.EnterReadLock();
             var match = _graph.ContainsKey(id) ? _graph[id] : null;
@@ -77,7 +67,7 @@ namespace Moryx.Resources.Management
             return match;
         }
 
-        public ICollection<ResourceWrapper> GetAll()
+        public ICollection<Resource> GetAll()
         {
             _graphLock.EnterReadLock();
             var values = _graph.Values;
@@ -120,16 +110,8 @@ namespace Moryx.Resources.Management
         {
             IEnumerable<TResource> matches;
             _graphLock.EnterReadLock();
-            // Use short cut if a public resource is requested
-            if (typeof(IPublicResource).IsAssignableFrom(typeof(TResource)))
-            {
-                matches = _publicResources.Where(p => _graph[p.Id].State.IsAvailable).OfType<TResource>().Where(predicate);
-            }
-            else
-            {
-                matches = from wrapper in _graph.Values let target = wrapper.Target as TResource 
+                matches = from resource in _graph.Values let target = resource as TResource 
                     where target != null && predicate(target) select target;
-            }
             _graphLock.ExitReadLock();
 
             return matches;

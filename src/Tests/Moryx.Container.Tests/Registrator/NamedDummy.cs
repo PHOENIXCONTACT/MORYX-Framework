@@ -3,13 +3,13 @@
 
 namespace Moryx.Container.Tests
 {
-    [Registration(LifeCycle.Transient, Name = "Dummy")]
-    internal class NamedDummy
+    [Component(LifeCycle.Transient, Name = "Dummy")]
+    public class NamedDummy
     {
     }
 
-    [Registration(LifeCycle.Transient)]
-    internal class UnnamedDummy
+    [Component(LifeCycle.Transient)]
+    public class UnnamedDummy
     {
         
     }

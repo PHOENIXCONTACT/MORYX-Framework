@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
     <DebugType>full</DebugType>
   </PropertyGroup>
@@ -17,7 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Runtime\Moryx.Runtime.csproj" />
     <ProjectReference Include="..\..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
-    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
   </ItemGroup>
 
 </Project>

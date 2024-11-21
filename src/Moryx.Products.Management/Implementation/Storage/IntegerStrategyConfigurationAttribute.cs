@@ -5,9 +5,11 @@ using System;
 
 namespace Moryx.Products.Management
 {
+    /// <inheritdoc/>
     [AttributeUsage(AttributeTargets.Class)]
     public class IntegerStrategyConfigurationAttribute : PropertyStrategyConfigurationAttribute
     {
+        /// <inheritdoc/>
         public IntegerStrategyConfigurationAttribute()
         {
             ColumnType = typeof(long);

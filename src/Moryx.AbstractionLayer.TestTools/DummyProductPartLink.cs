@@ -11,6 +11,7 @@ namespace Moryx.AbstractionLayer.TestTools
     /// </summary>
     public class DummyProductPartLink : ProductPartLink<DummyProductType>
     {
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             var toCompareWith = obj as DummyProductPartLink;

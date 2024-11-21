@@ -34,9 +34,12 @@ namespace Moryx.Products.Management
             _columnType = columnType;
         }
 
+        /// <inheritdoc />
         public override bool OverridesConversion => false;
+        /// <inheritdoc />
         public override bool UpdateFromPredecessor => false;
 
+        /// <inheritdoc />
         public override IEnumerable<string> GetValues(IContainer container)
         {
             return typeof(IGenericColumns).GetProperties()
