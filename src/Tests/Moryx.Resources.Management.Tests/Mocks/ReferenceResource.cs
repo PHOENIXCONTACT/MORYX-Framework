@@ -111,7 +111,7 @@ namespace Moryx.Resources.Management.Tests
         public event EventHandler<ISimpleResource[]> SomeChanged;
     }
 
-    public class BidirectionalReferenceResource : PublicResource
+    public class BidirectionalReferenceResource : Resource
     {
         [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source, nameof(SourceReference))]
         public ReferenceResource SourceReference { get; set; }

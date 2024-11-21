@@ -141,9 +141,9 @@ namespace Moryx.Resources.Management.Tests
             var newCollectionResource = new SimpleResource() { Name = "newCollectionResource" };
             ResourceReferenceTools.InitializeCollections(newCollectionResource);
             // Fill graph
-            _graph[1] = new ResourceWrapper(instance);
-            _graph[2] = new ResourceWrapper(resource);
-            _graph[3] = new ResourceWrapper(collectionResource);
+            _graph[1] = instance;
+            _graph[2] = resource;
+            _graph[3] = collectionResource;
             // Set single references
             instance.TargetReference = resource; // The bidirectional reference is created with an existing resource
             instance.NewTargetReference = newResource; // The bidirectional reference is created with a new resource
