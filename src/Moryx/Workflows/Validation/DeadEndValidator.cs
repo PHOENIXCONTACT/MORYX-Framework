@@ -28,6 +28,10 @@ namespace Moryx.Workplans.Validation
                 if(connector.Classification.HasFlag(NodeClassification.Exit))
                     continue;
 
+                //  or if it is not used as an output anywhere and is not a start connector
+                if (!workplan.Steps.Any(step => step.Outputs.Contains(connector)) && !connector.Classification.HasFlag(NodeClassification.Entry))
+                    continue;
+
                 errors.Add(new DeadEndValidationError(connector.Id));
             }
             return errors.Count == 0;
