@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -58,6 +58,9 @@ namespace Moryx.Serialization
             }
             else
             {
+                // check if this member is abstract
+                if (memberType.IsAbstract) return prototypes.ToArray();
+
                 var prototype = Activator.CreateInstance(memberType);
                 if (memberType.IsClass)
                     ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
@@ -218,7 +221,19 @@ namespace Moryx.Serialization
                     return CollectionBuilder(memberType, currentValue, mappedEntry);
                 default:
                     var value = mappedEntry.Value.Current;
-                    return value == null ? null : EntryConvert.ToObject(memberType, value, FormatProvider);
+                    if (value is null) 
+                        return null;
+
+                    try
+                    {
+                        return EntryConvert.ToObject(memberType, value, FormatProvider);
+                    }
+                    catch (Exception e)
+                    {
+                        if (e is FormatException or OverflowException)
+                            throw new ArgumentException($"Invalid value {mappedEntry.Value.Current} for entry {mappedEntry.DisplayName ?? mappedEntry.Identifier}", e);
+                        throw;
+                    }
             }
         }
         /// <see cref="ICustomSerialization"/>

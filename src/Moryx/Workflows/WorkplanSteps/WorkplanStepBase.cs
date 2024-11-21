@@ -1,10 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Drawing;
 using System.Runtime.Serialization;
-using Moryx.Workflows.Transitions;
+using Moryx.Workplans.Transitions;
 
-namespace Moryx.Workflows.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps
 {
     /// <summary>
     /// Base class for all workplanstep
@@ -22,26 +23,33 @@ namespace Moryx.Workflows.WorkplanSteps
             OutputDescriptions = new[] { new OutputDescription { Name = "Complete", OutputType = OutputType.Success} };
         }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public long Id { get; set; }
 
-        ///
-        public abstract string Name { get; }
+        /// <summary>
+        /// Name of the step given by the user
+        /// </summary>
+        [DataMember]
+        public string Name { get; set; }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public IConnector[] Inputs { get; set; }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public IConnector[] Outputs { get; set; }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public OutputDescription[] OutputDescriptions { get; set; }
 
-        ///
+        /// <inheritdoc/>
+        [DataMember]
+        public Point Position { get; set; }
+
+        /// <inheritdoc/>
         public ITransition CreateInstance(IWorkplanContext context)
         {
             var transition = Instantiate(context);

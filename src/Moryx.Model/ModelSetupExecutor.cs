@@ -1,10 +1,12 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
@@ -12,7 +14,7 @@ using Moryx.Tools;
 namespace Moryx.Model
 {
     /// <inheritdoc />
-    internal class ModelSetupExecutor<TContext> : IModelSetupExecutor
+    public class ModelSetupExecutor<TContext> : IModelSetupExecutor
         where TContext : DbContext
     {
         private readonly IDbContextManager _dbContextManager;
@@ -39,11 +41,12 @@ namespace Moryx.Model
         public IReadOnlyList<IModelSetup> GetAllSetups() => _setups;
 
         /// <inheritdoc />
-        public void Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
+        public async Task Execute(IDatabaseConfig config, IModelSetup setup, string setupData)
         {
             var unitOfWorkFactory = new UnitOfWorkFactory<TContext>(_dbContextManager);
-            using (var uow = unitOfWorkFactory.Create(config))
-                setup.Execute(uow, setupData);
+            using var uow = unitOfWorkFactory.Create(config);
+
+            await setup.Execute(uow, setupData);
         }
     }
 }

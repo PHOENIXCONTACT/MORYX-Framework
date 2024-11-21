@@ -1,9 +1,10 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Drawing;
 using System.Runtime.Serialization;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Connector implementations
@@ -11,19 +12,23 @@ namespace Moryx.Workflows
     [DataContract(IsReference = true)]
     public class Connector : IConnector
     {
-        /// 
+        /// <inheritdoc/>
         [DataMember]
         public long Id { get; set; }
 
-        ///
+        /// <inheritdoc/>
         [DataMember]
         public string Name { get; set; }
 
-        /// 
+        /// <inheritdoc/>
         [DataMember]
         public NodeClassification Classification { get; set; }
 
-        /// 
+        /// <inheritdoc/>
+        [DataMember]
+        public Point Position { get; set; }
+
+        /// <inheritdoc/>
         public virtual IPlace CreateInstance()
         {
             return new Place

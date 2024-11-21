@@ -129,10 +129,10 @@
   <data name="SplitWorkplanStep_Description" xml:space="preserve">
     <value>Teilt den eingehenden Pfad in mehrere Ausgänge</value>
   </data>
-  <data name="SubworkflowStep_Description" xml:space="preserve">
+  <data name="SubworkplanStep_Description" xml:space="preserve">
     <value>Sub-Workplan</value>
   </data>
-  <data name="SubworkflowStep_Name" xml:space="preserve">
+  <data name="SubworkplanStep_Name" xml:space="preserve">
     <value>Bindet einen Arbeitsplan als Schritt ein</value>
   </data>
 </root>

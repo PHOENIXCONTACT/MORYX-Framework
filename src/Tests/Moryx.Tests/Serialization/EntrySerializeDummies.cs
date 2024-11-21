@@ -1,4 +1,4 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Serialization;
@@ -75,6 +75,20 @@ namespace Moryx.Tests
         public string NullMethod2() => "1234";
     }
 
+    [EntrySerialize]
+    public class EntrySerialize_AlwaysClassAlwaysMember 
+    {
+        [EntrySerialize]
+        public string AlwaysProperty { get; set; } = "123456";
+        [EntrySerialize]
+        public int Property1 { get; set; }
+
+        [EntrySerialize]
+        public EntrySerialize_AlwaysClassAlwaysMember AnotherProperty { get; set; }
+
+        internal IExplicitInterface ExplicitInterface { get; }
+    }
+
     // ReSharper disable once InconsistentNaming
     [EntrySerialize(EntrySerializeMode.Never)]
     public class EntrySerialize_NeverClassAlwaysMember
@@ -101,5 +115,32 @@ namespace Moryx.Tests
         public string NullProperty2 { get; set; } = "789456";
 
         public bool NullProperty3 { get; set; } = false;
+    }
+
+    [EntrySerialize]
+    public class AlwaysClass_Inherited : EntrySerialize_InheritedBase
+    {
+        [EntrySerialize]
+        public string NullProperty2 { get; set; } = "789456";
+
+        public bool NullProperty3 { get; set; } = false;
+    }
+
+    public class EntrySerialize_Methods : EntrySerialize_InheritedBase
+    {
+        [EntrySerialize]
+        public void InvocablePublic() { }
+
+        [EntrySerialize]
+        public void InvocablePublic(int intValue,string stringValue1,string stringValue2 = "testing value") { }
+
+        [EntrySerialize]
+        internal void InvocableInternal() { }
+
+        [EntrySerialize]
+        protected void NonInvocableProtected() { }
+     
+        [EntrySerialize]
+        private void NonInvocablePrivate() { }
     }
 }

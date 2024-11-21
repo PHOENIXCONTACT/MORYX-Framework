@@ -1,2 +1,3 @@
-﻿Enable-Migrations -ContextTypeName TestModelContext -EnableAutomaticMigrations -ProjectName Moryx.TestTools.Test.Model -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" -ConnectionProviderName Npgsql
-Add-Migration -Name InitialCreate -ProjectName Moryx.TestTools.Test.Model -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" -ConnectionProviderName Npgsql
+﻿dotnet ef migrations add InitialCreate  --startup-project ..\StartProject.Core\StartProject.Core.csproj
+dotnet ef database update InitialCreate  --startup-project ..\StartProject.Core\StartProject.Core.csproj
+

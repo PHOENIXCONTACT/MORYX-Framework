@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System.ComponentModel;
 using System.Reflection;
 using Moryx.Tools;
+using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.Tests.Extensions
 {
@@ -15,7 +16,7 @@ namespace Moryx.Tests.Extensions
         public const string ClassDescription = "Some Description";
     }
 
-    [ClassDisplay(Name = TestConstants.ClassDisplayName, Description = TestConstants.ClassDescription)]
+    [Display(Name = TestConstants.ClassDisplayName, Description = TestConstants.ClassDescription)]
     internal class ClassDisplayAttributeDummy
     {
     }

@@ -26,15 +26,15 @@ public abstract class PossibleValuesAttribute : Attribute
     public abstract bool UpdateFromPredecessor { get; }
 
     /// <summary>
-    /// All possible values for this member represented as strings. The given container might be null
+    /// All possible values for this member represented as strings. The given containers might be null
     /// and can be used to resolve possible values
     /// </summary>
-    public abstract IEnumerable<string> GetValues(IContainer container);
+    public virtual IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider);
 
     /// <summary>
     /// String to value conversion. Must be override if <see cref="OverridesConversion"/> is set to true"/>
     /// </summary>
-    public virtual object Parse(IContainer container, string value)
+    public virtual object Parse(IContainer container, IServiceProvider serviceProvider), string value)
     {
        return value;
     }

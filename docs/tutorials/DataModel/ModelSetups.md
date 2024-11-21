@@ -12,7 +12,7 @@ As a sample model we will use a small datamodel that could be used to manage a c
 
 ## Hard coded setup
 
-As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassAssembly project with all necessary references. Inherit it from [ModelSetupBase](xref:Moryx.Model.ModelSetupBase) and add the [ModelSetupAttribute](xref:Moryx.Model.ModelSetupAttribute).
+As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassLibrary project with all necessary references. Inherit it from [IModelSetup](../../../src/Moryx.Model/IModelSetup.cs) and add the [ModelSetupAttribute](../../../src/Moryx.Model/Attributes/ModelSetupAttribute.cs).
 
 ````cs
 [ModelSetup(typeof(EmployeeContext))]
@@ -42,7 +42,7 @@ First we have to take care of the properties required by the Runtime. They are n
 When the setup gets executed, MORYX will create a `IUnitOfWork` and provides it within the `Execute` method. Here everything can be done for setting up the database:
 
 ````cs
-public void Execute(IUnitOfWork openContext, string setupData)
+public Task Execute(IUnitOfWork openContext, string setupData)
 {
 }
 ````
@@ -74,10 +74,10 @@ Kathrin Cole
 A setup parsing the file and creating the entity might look likes this:
 
 ````cs
-public void Execute(IUnitOfWork openContext, string setupData)
+public async Task Execute(IUnitOfWork uow, string setupData)
 {
-    var employeeRepo = openContext.GetRepository<IEmployeeRepository>();
-    var addressRepo = openContext.GetRepository<IAddressRepository>();
+    var employeeRepo = uow.GetRepository<IEmployeeRepository>();
+    var addressRepo = uow.GetRepository<IAddressRepository>();
 
     var index = 0;
     var lines = File.ReadAllLines(setupData);
@@ -102,10 +102,11 @@ public void Execute(IUnitOfWork openContext, string setupData)
         supervisor = lines[index].Split(' ');
 
     // Create entity
-    var employee = employeeRepo.Create(name[0], name[1], birthDay);
-    employee.Addresses.Add(addressRepo.Create(street, number, zip, state));
+    var employee = await employeeRepo.CreateAsync(name[0], name[1], birthDay);
+    var address = await addressRepo.CreateAsync(street, number, zip, state);
+    employee.Addresses.Add(address);
     employee.Supervisor = employeeRepo.GetMatch(supervisor[0], supervisor[1]);
 
-    openContext.Save();
+    await uow.SaveChangesAsync();
 }
 ````

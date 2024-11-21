@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 
 namespace Moryx.StateMachines
@@ -67,13 +68,7 @@ namespace Moryx.StateMachines
         /// </summary>
         protected Task InvalidStateAsync([CallerMemberName] string methodName = "")
         {
-#if HAVE_TASK_FROMEXCEPTION
             return Task.FromException(CreateAndLogInvalidStateException(methodName));
-#else
-            var tcs = new TaskCompletionSource<int>();
-            tcs.SetException(CreateAndLogInvalidStateException(methodName));
-            return tcs.Task;
-#endif
         }
 
         /// <summary>
@@ -81,13 +76,7 @@ namespace Moryx.StateMachines
         /// </summary>
         protected Task<T> InvalidStateAsync<T>([CallerMemberName] string methodName = "")
         {
-#if HAVE_TASK_FROMEXCEPTION
             return Task.FromException<T>(CreateAndLogInvalidStateException(methodName));
-#else
-            var tcs = new TaskCompletionSource<T>();
-            tcs.SetException(CreateAndLogInvalidStateException(methodName));
-            return tcs.Task;
-#endif
         }
 
         /// <summary>

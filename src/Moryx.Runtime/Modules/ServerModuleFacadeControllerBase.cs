@@ -1,10 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime.Container;
@@ -23,14 +24,18 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         private readonly ICollection<IFacadeControl> _activeFacades = new List<IFacadeControl>();
 
+        protected ServerModuleFacadeControllerBase(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+            : base(containerFactory, configManager, loggerFactory)
+        {
+        }
+
         /// <summary>
         /// Activate our public API facade
         /// </summary>
         protected void ActivateFacade(IFacadeControl facade)
         {
             // First activation
-            if (facade.ValidateHealthState == null)
-                facade.ValidateHealthState = ValidateHealthState;
+            facade.ValidateHealthState = ValidateHealthState;
 
             FillProperties(facade, FillProperty);
             facade.Activate();

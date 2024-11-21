@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -30,7 +30,7 @@ namespace Moryx.Model
     /// DTO for modified entities
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class ModifiedEntity<TEntity> : DataModification<TEntity>, IEquatable<ModifiedEntity<TEntity>> 
+    public class ModifiedEntity<TEntity> : DataModification<TEntity>, IEquatable<ModifiedEntity<TEntity>>
         where TEntity : class, IEntity
     {
         /// <summary>

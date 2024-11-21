@@ -10,9 +10,11 @@ namespace Moryx.Tools
     /// </summary>
     public static class ExceptionPrinter
     {
+        // TODO: Remove with.NET Core, done in ReflectionTypeLoadException:
+        // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Reflection/ReflectionTypeLoadException.cs#L49
+
         /// <summary>
         /// Create a print string from an exception object
-        /// TODO: Remove with .NET Core
         /// </summary>
         public static string Print(Exception ex)
         {

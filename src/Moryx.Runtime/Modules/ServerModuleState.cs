@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.Runtime.Modules
@@ -41,6 +41,11 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Service failed
         /// </summary>
-        Failure = 0x4
+        Failure = 0x4,
+
+        /// <summary>
+        /// Service Missing
+        /// </summary>
+        Missing = 0x5
     }
 }

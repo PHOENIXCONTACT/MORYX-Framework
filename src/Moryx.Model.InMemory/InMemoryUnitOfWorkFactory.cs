@@ -1,7 +1,7 @@
-﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 using Moryx.Model.Repositories;
 
@@ -39,13 +39,5 @@ namespace Moryx.Model.InMemory
         /// <inheritdoc />
         public IUnitOfWork<TContext> Create(IDatabaseConfig config) =>
             _internalFactory.Create(config);
-
-        /// <inheritdoc />
-        public IUnitOfWork<TContext> Create(ContextMode contextMode) =>
-            _internalFactory.Create(contextMode);
-
-        /// <inheritdoc />
-        public IUnitOfWork<TContext> Create(IDatabaseConfig config, ContextMode contextMode) =>
-            _internalFactory.Create(config, contextMode);
     }
 }

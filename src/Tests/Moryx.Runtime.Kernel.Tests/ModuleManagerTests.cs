@@ -1,4 +1,4 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -13,6 +13,7 @@ using Moryx.Runtime.Modules;
 using Moq;
 using Moryx.Tools;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Moryx.Runtime.Kernel.Tests
 {
@@ -20,7 +21,6 @@ namespace Moryx.Runtime.Kernel.Tests
     public class ModuleManagerTests
     {
         private Mock<IConfigManager> _mockConfigManager;
-        private Mock<IServerLoggerManagement> _mockLoggerManagement;
         private Mock<IModuleLogger> _mockLogger;
 
         [SetUp]
@@ -28,36 +28,22 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             _mockConfigManager = new Mock<IConfigManager>();
             var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = new List<ManagedModuleConfig>()};
-            _mockConfigManager.Setup(mock => mock.GetConfiguration<ModuleManagerConfig>()).Returns(moduleManagerConfig);
-            _mockConfigManager.Setup(mock => mock.GetConfiguration<RuntimeConfigManagerTestConfig2>()).Returns(new RuntimeConfigManagerTestConfig2());
+            _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false)).Returns(moduleManagerConfig);
+            _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false)).Returns(new RuntimeConfigManagerTestConfig2());
 
-            _mockLoggerManagement = new Mock<IServerLoggerManagement>();
             _mockLogger = new Mock<IModuleLogger>();
             _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);
-            _mockLoggerManagement.Setup(mock => mock.ActivateLogging(It.IsAny<ILoggingHost>()))
-                .Callback((ILoggingHost par) => par.Logger = _mockLogger.Object);
         }
 
 
         private ModuleManager CreateObjectUnderTest(IServerModule[] modules)
         {
-            return new ModuleManager
-            {
-                ServerModules = modules,
-                ConfigManager = _mockConfigManager.Object,
-                LoggerManagement = _mockLoggerManagement.Object
-            };
+            return new ModuleManager(modules, _mockConfigManager.Object, new NullLogger<ModuleManager>());
         }
 
         private LifeCycleBoundFacadeTestModule CreateLifeCycleBoundFacadeTestModuleUnderTest()
         {
-            return new LifeCycleBoundFacadeTestModule
-            {
-                LoggerManagement = _mockLoggerManagement.Object,
-                Logger = _mockLogger.Object,
-                ConfigManager = _mockConfigManager.Object,
-                ContainerFactory = new ModuleContainerFactory()
-            };
+            return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
         }
 
         [Test]
@@ -75,7 +61,7 @@ namespace Moryx.Runtime.Kernel.Tests
 
 
             // Act
-            moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.NotNull(dependend.Facades, "No facade injected");
@@ -93,7 +79,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.NotNull(dependend.Facades, "No facade injected");
@@ -112,7 +98,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.NotNull(dependend.Facades, "No facade injected");
@@ -133,7 +119,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.NotNull(depend.Dependency, "Facade not injected correctly");
@@ -152,7 +138,7 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.AreEqual(4, moduleManager.AllModules.Count());
@@ -173,13 +159,34 @@ namespace Moryx.Runtime.Kernel.Tests
             });
 
             // Act
-            moduleManager.Initialize();
+            moduleManager.StartModules();
 
             // Assert
             Assert.AreEqual(3, moduleManager.AllModules.Count());
             var available = moduleManager.DependencyTree.RootModules
                 .Flatten(md => md.Dependends).ToList();
-            Assert.AreEqual(1, available.Count);
+            Assert.AreEqual(2, available.Count);
+        }
+
+        [Test]
+        public void ShouldIncludeMissingFacadeInDependencyList()
+        {
+            // Arrange
+            var moduleBUsingA = new ModuleBUsingA();
+            var moduleManager = CreateObjectUnderTest(new IServerModule[]
+            {
+                new ModuleB1(),
+                moduleBUsingA,
+                new ModuleC()
+            });
+
+            // Act
+            moduleManager.StartModules();
+
+            // Assert
+            Assert.AreEqual(3, moduleManager.AllModules.Count());
+            var moduleBUsingA_Dependencies = moduleManager.StartDependencies(moduleBUsingA);
+            Assert.AreEqual(1,moduleBUsingA_Dependencies.Count());
         }
 
         [Test]
@@ -189,7 +196,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule = new Mock<IServerModule>();
 
             var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
-            moduleManager.Initialize();
+            //moduleManager.Initialize();
 
             // Act
             moduleManager.InitializeModule(mockModule.Object);
@@ -210,7 +217,6 @@ namespace Moryx.Runtime.Kernel.Tests
                 mockModule1.Object,
                 mockModule2.Object
             });
-            moduleManager.Initialize();
 
             // Act
             moduleManager.StartModules();
@@ -225,22 +231,23 @@ namespace Moryx.Runtime.Kernel.Tests
             mockModule2.Verify(mock => mock.Start());
         }
 
-        //[Test]
-        //public void ShouldStartOneModule()
-        //{
-        //    // Argange
-        //    var mockModule = new Mock<IServerModule>();
+        [Test]
+        public void ShouldStartOneModule()
+        {
+            // Argange
+            var mockModule = new Mock<IServerModule>();
 
-        //    var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
-        //    moduleManager.Initialize();
+            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
 
-        //    // Act
-        //    moduleManager.StartModule(mockModule.Object);
+            // Act
+            moduleManager.StartModule(mockModule.Object);
 
-        //    // Assert
-        //    mockModule.Verify(mock => mock.Initialize(), Times.Exactly(2));
-        //    mockModule.Verify(mock => mock.Start());
-        //}
+            Thread.Sleep(1);
+
+            // Assert
+            mockModule.Verify(mock => mock.Initialize());
+            mockModule.Verify(mock => mock.Start());
+        }
 
         [Test]
         public void ShouldStopModulesAndDeregisterFromEvents()
@@ -250,7 +257,6 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule2 = new Mock<IServerModule>();
 
             var moduleManager = CreateObjectUnderTest(new[] {mockModule1.Object, mockModule2.Object});
-            moduleManager.Initialize();
             moduleManager.StartModules();
 
             // Act
@@ -270,10 +276,8 @@ namespace Moryx.Runtime.Kernel.Tests
 
             var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
             moduleManager.ModuleStateChanged += (sender, args) => eventFired = true;
-            moduleManager.Initialize();
 
             // Act
-            moduleManager.Initialize();
             mockModule.Raise(mock => mock.StateChanged += null, null, new ModuleStateChangedEventArgs());
 
             // Assert
@@ -288,13 +292,10 @@ namespace Moryx.Runtime.Kernel.Tests
             var moduleManager = CreateObjectUnderTest(new[] { module });
 
             // Act
-            moduleManager.Initialize();
             moduleManager.StartModules();
 
-            while (module.State != ServerModuleState.Running)
-            {
-                Thread.Sleep(100);
-            }
+            var i = 0;
+            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
             // Assert
             Assert.AreEqual(1, module.ActivatedCount);
@@ -308,23 +309,25 @@ namespace Moryx.Runtime.Kernel.Tests
             var moduleManager = CreateObjectUnderTest(new[] { module });
 
             // Act
-            moduleManager.Initialize();
             moduleManager.StartModules();
 
-            while (module.State != ServerModuleState.Running)
-            {
-                Thread.Sleep(100);
-            }
+            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
             moduleManager.StopModules();
 
-            while (module.State != ServerModuleState.Stopped)
-            {
-                Thread.Sleep(100);
-            }
+            WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
 
             // Assert
             Assert.AreEqual(1, module.ActivatedCount);
+        }
+
+        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10) {
+            var i = 0;
+            while (!condition() && (i < maxSeconds))
+            {
+                Thread.Sleep(100);
+                i++;
+            }
         }
     }
 }

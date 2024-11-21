@@ -1,8 +1,9 @@
-﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model.InMemory;
 using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ namespace Moryx.Model.Tests
     {
 
         [Test]
-        public void InMemoryContextShouldWork()
+        public async Task InMemoryContextShouldWork()
         {
             // Arrange
             const string carName = "BMW 320d F31 - Mineral Gray";
@@ -25,17 +26,40 @@ namespace Moryx.Model.Tests
 
             // Assert
             var carsSet = context.Cars;
-            var someCar = carsSet.Create();
-            someCar.Name = carName;
+            var someCar = new CarEntity {Name = carName};
+            await carsSet.AddAsync(someCar);
 
-            carsSet.Add(someCar);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             context = inMemoryFactory.Create<TestModelContext>();
-            var reloadedCar = context.Cars.First();
+            var reloadedCar = await context.Cars.FirstAsync();
 
             Assert.IsNotNull(reloadedCar);
             Assert.AreEqual(carName, reloadedCar.Name);
+            
+        }
+
+        [Test]
+        public async Task TimeShouldAlwaysBeSavedAsUtc()
+        {
+            // Arrange          
+            var inMemoryFactory = new InMemoryDbContextManager(Guid.NewGuid().ToString());
+
+            // Act
+            var context = inMemoryFactory.Create<TestModelContext>();
+            var carsSet = context.Cars;
+            var someCar = new CarEntity { ReleaseDateLocal = DateTime.Now, ReleaseDateUtc = DateTime.Now };
+            await carsSet.AddAsync(someCar);
+
+            await context.SaveChangesAsync();
+
+            context = inMemoryFactory.Create<TestModelContext>();
+            var reloadedCar = await context.Cars.FirstAsync();
+
+            // Assert
+            Assert.IsNotNull(reloadedCar);
+            Assert.AreEqual(DateTimeKind.Utc, reloadedCar.ReleaseDateUtc.Kind);
+            Assert.AreEqual(DateTimeKind.Local, reloadedCar.ReleaseDateLocal.Kind);
         }
     }
 }

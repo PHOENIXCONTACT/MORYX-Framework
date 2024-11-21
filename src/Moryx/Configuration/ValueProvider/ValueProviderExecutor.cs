@@ -21,7 +21,7 @@ namespace Moryx.Configuration
         {
             _settings = settings;
         }
-        
+
         /// <inheritdoc />
         public void FillEmpty(object obj)
         {
@@ -51,6 +51,7 @@ namespace Moryx.Configuration
                 throw new ArgumentNullException(nameof(settings.Filters));
             }
 
+
             Iterate(targetObject, settings);
         }
 
@@ -69,7 +70,7 @@ namespace Moryx.Configuration
                     }
                     catch (Exception)
                     {
-                        // TODO: Restrict exception type
+                        // TODO: Restrict exceception type
                         // TODO: Consider enabling logging
                     }
                 }
@@ -94,10 +95,9 @@ namespace Moryx.Configuration
         private static IEnumerable<PropertyInfo> FilterProperties(object target, ValueProviderExecutorSettings settings)
         {
             var filteredProperties = new List<PropertyInfo>();
-
             foreach (var property in target.GetType().GetProperties(settings.PropertyBindingFlags))
             {
-                if(settings.Filters.All(f => f.CheckProperty(property)))
+                if (settings.Filters.All(f => f.CheckProperty(property)))
                 {
                     filteredProperties.Add(property);
                 }

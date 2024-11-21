@@ -1,11 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using Moryx.Threading;
 
-namespace Moryx.Workflows
+namespace Moryx.Workplans
 {
     /// <summary>
     /// Maps different transition types onto dedicated methods
@@ -20,7 +20,7 @@ namespace Moryx.Workflows
         /// <summary>
         /// All registered maps
         /// </summary>
-        private readonly List<IAttemptInvokation> _delegateMaps = new List<IAttemptInvokation>();
+        private readonly List<IAttemptInvocation> _delegateMaps = new List<IAttemptInvocation>();
 
         /// <summary>
         /// Create mapper that invokes synchronous
@@ -38,7 +38,7 @@ namespace Moryx.Workflows
         }
 
         /// <summary>
-        /// Event handler for <see cref="IWorkflowEngine.TransitionTriggered"/>
+        /// Event handler for <see cref="IWorkplanEngine.TransitionTriggered"/>
         /// </summary>
         public void TransitionTriggered(object sender, ITransition transition)
         {
@@ -50,11 +50,11 @@ namespace Moryx.Workflows
         }
 
         /// <summary>
-        /// Register another <see cref="IAttemptInvokation"/> strategy
+        /// Register another <see cref="IAttemptInvocation"/> strategy
         /// </summary>
-        public ITransitionMapper Map(IAttemptInvokation invokation)
+        public ITransitionMapper Map(IAttemptInvocation invocation)
         {
-            _delegateMaps.Add(invokation);
+            _delegateMaps.Add(invocation);
             return this;
         }
 
@@ -75,7 +75,7 @@ namespace Moryx.Workflows
         /// <summary>
         /// Delegate that tries to invoke the callback if type matches
         /// </summary>
-        private readonly struct AttemptInvocation<T> : IAttemptInvokation
+        private readonly struct AttemptInvocation<T> : IAttemptInvocation
             where T : class , ITransition
         {
             private readonly Action<T> _callback;
@@ -99,7 +99,7 @@ namespace Moryx.Workflows
         /// <summary>
         /// Delegate that tries to match the type and invokes the handler on a new thread
         /// </summary>
-        private readonly struct AsyncAttemptInvocation<T> : IAttemptInvokation
+        private readonly struct AsyncAttemptInvocation<T> : IAttemptInvocation
             where T : class , ITransition
         {
             private readonly Action<T> _callback;

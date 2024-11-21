@@ -1,15 +1,18 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
 using Moryx.Configuration;
+using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
+using Moryx.Serialization;
 
 namespace Moryx.Model
 {
     /// <inheritdoc />
     [DataContract]
-    public class DatabaseConfig : IDatabaseConfig
+    public class DatabaseConfig<T> : IDatabaseConfig
+        where T : DatabaseConnectionSettings
     {
         /// <inheritdoc />
         [DataMember]
@@ -20,22 +23,20 @@ namespace Moryx.Model
 
         /// <inheritdoc />
         [DataMember]
-        public string Host { get; set; }
+        public DatabaseConnectionSettings ConnectionSettings { get; set; }
 
         /// <inheritdoc />
         [DataMember]
-        public int Port { get; set; }
+        public string ConfiguratorTypename { get; set; }
 
         /// <inheritdoc />
-        [DataMember]
-        public string Database { get; set; }
+        public void Initialize()
+        {
+        }
 
         /// <inheritdoc />
-        [DataMember]
-        public string Username { get; set; }
-
-        /// <inheritdoc />
-        [DataMember]
-        public string Password { get; set; }
+        public bool IsValid()
+            => !string.IsNullOrEmpty(ConfiguratorTypename)
+                && ConnectionSettings.IsValid();
     }
 }

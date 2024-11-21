@@ -271,6 +271,11 @@ namespace Moryx.Serialization
             var filtered = customSerialization.GetProperties(instance.GetType());
             foreach (var property in filtered)
             {
+                //exclude property that can lead to self reference
+                var propertyType = property.PropertyType;
+                if (propertyType == instanceType)
+                    continue;
+
                 var convertedProperty = EncodeProperty(property, customSerialization);
 
                 object value;
@@ -467,6 +472,9 @@ namespace Moryx.Serialization
                 },
                 Validation = serialization.CreateValidation(parameterType, parameter)
             };
+
+            // mark the parameter as required when there is no default value
+            parameterModel.Validation.IsRequired = defaultValue is null ? true : false;
 
             switch (parameterModel.Value.Type)
             {
@@ -739,8 +747,13 @@ namespace Moryx.Serialization
         /// </summary>
         public static Entry InvokeMethod(object target, MethodEntry methodEntry, ICustomSerialization customSerialization)
         {
-            var method = target.GetType().GetMethods()
-                .First(m => m.Name == methodEntry.Name && ParametersProvided(m.GetParameters(), methodEntry));
+            var method = target.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .FirstOrDefault(m => m.Name == methodEntry.Name && (m.IsPublic || m.IsAssembly) && ParametersProvided(m.GetParameters(), methodEntry));
+            if(method == null)
+            {
+                throw new MissingMethodException();
+            }
+
             var arguments = ConvertArguments(method, methodEntry, customSerialization);
 
             var result = method.Invoke(target, arguments);

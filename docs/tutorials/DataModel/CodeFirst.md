@@ -3,7 +3,7 @@ uid: GettingStarted.CodeFirst
 ---
 # Code first
 
-This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) in the world of the MORYX Core. MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
+This article describes the usage of the Code First approach with [Entity Framework](https://docs.microsoft.com/en-us/ef/) and [Npgsql](http://www.npgsql.org) (or any other data provider) in the world of the MORYX Core. MORYX fully supports the Code First approach. The next lines of code will show you exemplary how the Code First approach can be implemented.
 
 ## Basics
 
@@ -19,28 +19,18 @@ More extended, additional repositories can be created for the [UnitOfWork Reposi
 
 ## The database DbContext
 
-Create your own database context by deriving from `DbContext` or for more comfortability from [MoryxDbContext](xref:Moryx.Model.MoryxDbContext) and add the three constructor overloads as shown below.
+Create your own database context by deriving from `DbContext` or for more comfortability from [MoryxDbContext](../../../src/Moryx.Model/MoryxDbContext.cs) and add the two constructor overloads as shown below.
 
 ````cs
-[ModelConfigurator(typeof(NpgsqlModelConfigurator))]
-[DbConfigurationType(typeof(NpgsqlConfiguration))]
 public class SolarSystemContext : MoryxDbContext
 {
     public SolarSystemContext()
     {
-        // Important: Migration functions needing a parameterless constructor
     }
 
-    public SolarSystemContext(string connectionString)
-        : base(connectionString)
+    public SolarSystemContext(DbContextOptions options) : base(options)
     {
-        // Used by MORYX internals
-    }
-
-    public SolarSystemContext(DbConnection connection)
-        : base(connection)
-    {
-        // Optional: If Moryx.InMemory is used for testing
+        // Optional: If Moryx.Model.InMemory is used for testing
     }
 
     public virtual DbSet<Planet> Planets { get; set; }
@@ -57,8 +47,6 @@ public class SolarSystemContext : MoryxDbContext
     }
 }
 ````
-
-Please note the [ModelConfiguratorAttribute](xref:Moryx.Model.ModelConfiguratorAttribute) which is used by MORYX to create a configuration for the context. Here the `NpgsqlModelConfigurator` is using `Npgsql` for PostgreSQL databases.
 
 ## Entities
 
@@ -101,17 +89,26 @@ public class Asteroid : ModificationTrackedEntityBase
 }
 ````
 
-The entities are either derived from [EntityBase](xref:Moryx.Model.EntityBase) or [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase).
+The entities are either derived from [EntityBase](../../../src/Moryx.Model/EntityBase.cs) or [ModificationTrackedEntityBase](../../../src/Moryx.Model/ModificationTrackedEntityBase.cs).
 Is that necessary?
-That's pretty much better because the [EntityBase](xref:Moryx.Model.EntityBase) defines an extra property for the `Id`.
-This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](xref:Moryx.Model.ModificationTrackedEntityBase) derives from the base.
+That's pretty much better because the [EntityBase](../../../src/Moryx.Model/EntityBase.cs) defines an extra property for the `Id`.
+This `Id` is treated specially as self incrementing primary key. [ModificationTrackedEntityBase](../../../src/Moryx.Model/ModificationTrackedEntityBase.cs) derives from the base.
 It has three properties which are monitored by triggers (Created, Updated, Deleted).
 These triggers are automatically applied to the entity.
-You can find further information regarding Modification Tracking [here](../../articles/Core/DataModel/ModificationTracking.md).
+You can find further information regarding modification tracking [here](../../articles/Core/DataModel/ModificationTracking.md).
+
+## Proxies
+
+EF Core can dynamically generate proxy types that implement `INotifyPropertyChanging` and `INotifyPropertyChanged`. This requires installing the `Microsoft.EntityFrameworkCore.Proxies` NuGet package, and enabling change-tracking proxies with UseChangeTrackingProxies For example:
+
+````cs
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    => optionsBuilder.UseChangeTrackingProxies();
+````
 
 ## Entity loading & change tracking behavior
 
-The Entity Framework supports a set of [configurable features](https://msdn.microsoft.com/en-us/library/system.data.entity.infrastructure.dbcontextconfiguration.aspx) how the context behaves when you are accessing or changing entites. Please have a look on [Entity Framework Loading Related Entities](https://msdn.microsoft.com/en-us/library/jj574232(v=vs.113).aspx) if you want to dive deeper.
+The Entity Framework supports a set of features how the context behaves when you are accessing or changing entites. Please have a look on [Entity Framework Loading Related Data](https://docs.microsoft.com/en-us/ef/core/querying/related-data/) if you want to dive deeper.
 
 These two features are called lazy loading and change tracking.
 
@@ -135,16 +132,14 @@ There are three ways to access these kind of properties:
 | `Lazy loading`     | Lazy loading loads relations when you access them |
 | `Explicit loading`   | You can load a relation explictly when lazy loading was turned off |
 
-### Enable lazy loading
+### Enable automatic lazy loading
 
-If you want to profit from lazy loading, setting the right `ContextMode` is only one of the two steps required.
-EntityFramework supports a per navigation property switch for lazy loading support.
+If you want to profit from automatic lazy loading, ef proxies are required. EntityFramework supports a per navigation property switch for lazy loading support.
 You need __explicitly__ define the navigation property as __`virtual`__ if you want lazy loading support to be enabled on this.
 
 ### MORYX specific
 
-To use the context within a MORYX module, you must declare a dependency on `IDbContextManager` and register it together with the context specific factory in your local container.
-Afterwards you can use injection for context specific factories anywhere in the module.
+To use the context within a MORYX module, you must declare a dependency on `IDbContextManager` and register it together with the context specific factory in your local container. Afterwards you can use injection for context specific factories anywhere in the module.
 
 ````cs
 // ModuleController.cs
@@ -163,19 +158,6 @@ public class MyComponent : IMyComponent
 {
     // Injected
     public IContextFactory<SolarSystemContext> SolarContextFactory { get; set; }
-}
-````
-
-The MORYX framework uses `Dynamic Change Tracking` and lazy loading by default,  but it is possbile to override these settings.
-You can change settings via the [ContextMode](xref:Moryx.Model.ContextMode):
-
-````cs
-// Example how you can change the default setting via ContextMode on the context
-// This call enables `Dynamic Change Tracking` only feature
-using (var context = SolarContextFactory.Create(ContextMode.Tracking))
-{
-    // or later with
-    context.SetContextMode(ContextMode.Tracking);
 }
 ````
 
@@ -250,15 +232,12 @@ public class MyComponent : IMyComponent
 The repository can be used by creating a unit of work with the factory and resolving the repository
 
 ````cs
-using (var uow = UnitOfWokFactory.Create())
-{
-    var planetRepo = uow.GetRepository<IPlanetRepository>();
-    var planetEntity = planetRepo.Create();
+using var uow = UnitOfWokFactory.Create();
+var planetRepo = uow.GetRepository<IPlanetRepository>();
+var planetEntity = planetRepo.Create();
 
-    //[...]
+await uow.SaveChangesAsync();
 
-    uow.SaveChanges();
-}
 ````
 
 You do not need to implement your repository interface, this is completly done by the [Repository Proxy Builder](../../articles/Core/DataModel/RepositoryProxyBuilder.md).
@@ -271,84 +250,72 @@ The EntityFramework comes with a tool to make the migration hassle a little bit 
 
 Database migration consists of a migration configuration that is needed for every `DbContext` and a set of migration steps. Both things are generated by migration scripts.
 
-The entity framework comes with three scripts to do database model migration:
+The entity framework comes with two cli commands to do database model migration:
 
 | Script | Explaination |
 |---------------------|---|
-| `Enable-Migrations` | As the name implicits this script initializes the project and makes it ready for migration |
-| `Add-Migration`     | This script is executed every time you want to create a new migration |
-| `Update-Database`   | This runs all database migrations found in the corresponding assembly. This step can also be called from code. |
+| `dotnet ef migrations add`    | This command is executed every time you want to create a new migration |
+| `dotnet ef database update`   | This command runs all database migrations found in the corresponding assembly. This step can also be called from code. |
 
-When EF guys are talking about the *CodeFirst Migrations* approach they mean exactly these three scripts.
+When EF guys are talking about the *CodeFirst Migrations* approach they mean exactly these commands.
 
-### Initial creation of migration configuration
+### Creation of migration configuration
 
-Before we implement the UnitOfWork you can configure your migration.
-This is an easy step to take, because MORYX has prepared a few things for you.
-But before we call the Enable-Migration script you need to add `Npgsql` & `System.Threading.Tasks.Extensions` via Nuget to your project.
-After that, you need to open your `App.config` and add the following lines:
+Before we implement the UnitOfWork you can configure your migration. The ef migration everytime needs an executable for the startup project.
+It is necessary to have one if you project is just a class library.
+We use the default StartProject of an application to create the migration. Keep in mind that the project must be referenced in the start project. The migration tool needs to know the data model connection string for the migration. MORYX cannot configure the migration process therefore we must put the connection string in the default `appsettings.json`. Make this file copy to output directory in build process.
 
-````xml
-  <configSections>
-    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
-  </configSections>
-  <entityFramework>
-    <providers>
-      <provider invariantName="Npgsql" type="Npgsql.NpgsqlServices, EntityFramework6.Npgsql" />
-    </providers>
-  </entityFramework>
+````json
+{
+  "ConnectionStrings": {
+    "Moryx.TestTools.Test.Model": "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=Moryx.TestTools.Test.Model"
+  }
+}
 ````
 
-If you found an already existing section called configSections and entityFramework replace it.
-The migration script needs this to identify the driver to communicate with the database.
-Note: If you use another version of EntityFramwork you need to change the full qualified assembly name.
+The model will be instantiated without any configuration and therfore it is necessary to tell the model where the connectionString can be found. This must be done within the DbContext implementation `OnConfiguring` method.
 
-Now, open the `Package Manager Console`
-(You may ask 'Really?
-Why the Package Manager Console?'
-Thats because in Visual Studio the Package Manager Console also is the Powershell console within Visual Studio).
-Then enter the following command
+````cs
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    base.OnConfiguring(optionsBuilder);
+
+    if (!optionsBuilder.IsConfigured)
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+        var connectionString = configuration.GetConnectionString("Moryx.TestTools.Test.Model");
+        optionsBuilder.UseNpgsql(connectionString);
+    }
+}
+````
+
+After you configured the connection string, navigate with your command line to the folder of the data model project. To create a migration call:
 
 ````ps
-Enable-Migrations -ContextTypeName SolarSystemContext -EnableAutomaticMigrations `
-    -ProjectName Moryx.TestTools.Test.Model `
-    -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql
+dotnet ef migrations add InitialCreate  --startup-project ..\StartProject.Core\StartProject.Core.csproj
 ````
 
-and execute it.
+An alternative is that the StartProject is the default visual studio start up project and you use the `Package Manager Console`.
+
 This will create a folder named Migrations in the project and a `Configurations.cs` file within.
-As mentioned before Moryx has already done some work for you.
-
-### Add-Migrations
-
-Now time has come to create the initial migration. You need to ensure that the target database does NOT exist yet.
-This forces the Add-Migration script to create the code for a full database setup.
-
-To start, type the following line to the `Package Manager Console`:
-
-````ps
-Add-Migration -Name InitialCreate -ProjectName Moryx.TestTools.Test.Model `
-    -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql
-````
-
-That's it. The script should have added a new class to the `Migrations` folder of the project. It's name should look like `201801120742211_InitialCreate`. The leading numbers will be different.
+As mentioned before MORYX has already done some work for you.
 
 ### Update-Database
 
-The last step to do, is to apply the migrations to the database so that your context and its entities are on the same version.
-Now the last of the three scripts comes into play.
-Copy the following line to the Package Manager Console:
+The last step to do, is to apply the migrations to the database so that your context and its entities are on the same version. Copy the following line to the command line:
 
 ````ps
-Update-Database -TargetMigration Version1 -ProjectName Moryx.TestTools.Test.Model `
-    -ConnectionString "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=NpgsqlTest" ` -ConnectionProviderName Npgsql -Verbose
+dotnet ef database update InitialCreate  --startup-project ..\StartProject.Core\StartProject.Core.csproj
 ````
 
 The database should now have been updated. Have a look.
 
 ### Repeat when necessary
 
-When you have changed your entities or your context while developing you only need to call the `Add-Migration` script once more.
+When you have changed your entities or your context while developing you only need to call the `dotnet ef migrations add` once more.
 You have to consider two things: First ensure that your database is on the latest migration.
 Second change the `Name` parameter of the script to a speaking version name.
 

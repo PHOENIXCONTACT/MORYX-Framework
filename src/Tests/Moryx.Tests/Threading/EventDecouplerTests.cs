@@ -1,16 +1,16 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
-using Moryx.TestTools.UnitTest;
 using Moryx.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework;
-using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal;
 
 namespace Moryx.Tests.Threading
 {
@@ -18,14 +18,16 @@ namespace Moryx.Tests.Threading
     public class EventDecouplerTests
     {
         private ParallelOperations _parallelOperations;
+        private Tuple<LogLevel, string, Exception> _message;
 
         [SetUp]
         public void Setup()
         {
-            _parallelOperations = new ParallelOperations
-            {
-                Logger = new DummyLogger()
-            };
+            var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, m, e) => _message = new(l, m, e));
+
+            _message = null;
+
+            _parallelOperations = new ParallelOperations(logger);
         }
 
         [TearDown]
@@ -114,7 +116,15 @@ namespace Moryx.Tests.Threading
 
         private class InvocationTarget : ILoggingComponent
         {
-            public IModuleLogger Logger { get; set; } = new DummyLogger();
+            public Tuple<LogLevel, string, Exception> Message { get; set; }
+
+            public IModuleLogger Logger { get; set; } 
+
+            public InvocationTarget()
+            {
+                var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, m, e) => Message = new(l, m, e));
+                Logger = logger;
+            }
 
             public void FaultyListener(object sender, EventArgs e)
             {
@@ -122,28 +132,33 @@ namespace Moryx.Tests.Threading
             }
         }
 
-        [TestCase(true, Description = "The handler raises throws an exception and is a logging component")]
-        [TestCase(false, Description = "The handler raises throws an exception and is a logging component")]
+       [TestCase(true, Description = "The handler raises throws an exception and is a logging component")]
+       [TestCase(false, Description = "The handler raises throws an exception and is a logging component")]
         public void ExceptionInHandler(bool targetHasLogger)
         {
             // Arrange
             var target = new InvocationTarget();
-            var logger = (DummyLogger)(targetHasLogger ? target.Logger : _parallelOperations.Logger);
             if (targetHasLogger)
                 SimpleEventSource += _parallelOperations.DecoupleListener(target.FaultyListener);
             else
                 SimpleEventSource += _parallelOperations.DecoupleListener(FaultyListener);
             // Act
             SimpleEventSource(this, EventArgs.Empty);
-            while (!logger.Messages.Any())
+            while (target.Message == null && _message == null)
             {
                 Thread.Sleep(1);
             }
 
             // Assert
             if (targetHasLogger)
-                Assert.AreEqual(0, ((DummyLogger)_parallelOperations.Logger).Messages.Count, "ParallelOperations should not use its own logger for logging components");
-            Assert.AreEqual(logger.Messages[0].Exception.Message, "Test", "Did not log the correct exception");
+            {
+                Assert.IsNull(_message, "ParallelOperations should not use its own logger for logging components");
+                Assert.NotNull(target.Message.Item3, "Did not log the correct exception");
+            }
+            else
+            {
+                Assert.NotNull(_message.Item3, "Did not log the correct exception");
+            }
         }
 
         public void FaultyListener(object sender, EventArgs e)
