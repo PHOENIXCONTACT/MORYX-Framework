@@ -181,12 +181,12 @@ namespace Moryx.Resources.Management
         public ResourceRelationType RelationType => (ResourceRelationType)Entity.RelationType;
 
         /// <summary>
-        /// Id of the referenced resource
+        /// Id of the resource with the specified <see cref="Role"/> in the relation
         /// </summary>
         public long ReferenceId => Role == ResourceReferenceRole.Target ? Entity.TargetId : Entity.SourceId;
 
         /// <summary>
-        /// References entity
+        /// Entity of the resource with the specified <see cref="Role"/> in the relation
         /// </summary>
         public ResourceEntity ReferenceEntity => Role == ResourceReferenceRole.Target ? Entity.Target : Entity.Source;
 
