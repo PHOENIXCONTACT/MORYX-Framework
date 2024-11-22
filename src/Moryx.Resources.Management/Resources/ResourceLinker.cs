@@ -98,15 +98,15 @@ namespace Moryx.Resources.Management
             if(dict != null)
                 dict.Add(instance, entity);
 
-            var relations = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity)
+            var referenceAccessors = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity)
                 .Union(ResourceRelationAccessor.FromQueryable(context.CreatedRelations.AsQueryable(), entity))
                 .ToList();
 
             var createdResources = new List<Resource>();
             foreach (var referenceProperty in ReferenceProperties(instance.GetType(), false))
             {
-                var matches = MatchingRelations(relations, referenceProperty);
-                var typeMatches = TypeFilter(matches, referenceProperty, context.ResolveReference).ToList();
+                var matches = MatchingRelations(referenceAccessors, referenceProperty);
+                var typeMatches = TypeFilter(matches, referenceProperty, context.ResolveReferencedResource).ToList();
                 if (typeof(IEnumerable<IResource>).IsAssignableFrom(referenceProperty.PropertyType))
                 {
                     // Save a collection reference
@@ -135,7 +135,7 @@ namespace Moryx.Resources.Management
 
             var context = new ReferenceSaverContext(uow, Graph, instance, entity);
             var matches = MatchingRelations(relations, property);
-            var typeMatches = TypeFilter(matches, property, context.ResolveReference).ToList();
+            var typeMatches = TypeFilter(matches, property, context.ResolveReferencedResource).ToList();
             var created = UpdateCollectionReference(context, entity, instance, property, typeMatches);
 
             foreach (var resource in created)
@@ -169,7 +169,7 @@ namespace Moryx.Resources.Management
                 throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was null!");
 
             // Check if there is a relation that represents this reference
-            if (referencedResource != null && matches.Any(m => referencedResource == context.ResolveReference(m)))
+            if (referencedResource != null && matches.Any(m => referencedResource == context.ResolveReferencedResource(m)))
                 return null;
 
             // Get all references of this resource with the same relation information
@@ -177,19 +177,19 @@ namespace Moryx.Resources.Management
 
             // Try to find a match that is not used in any reference
             var relMatch = (from match in matches
-                            where currentReferences.All(cr => cr != context.ResolveReference(match))
+                            where currentReferences.All(cr => cr != context.ResolveReferencedResource(match))
                             select match).FirstOrDefault();
             var relEntity = relMatch?.Entity;
             if (relEntity == null && referencedResource != null)
             {
                 // Create a new relation
                 relEntity = CreateRelationForProperty(context, relationRepo, referenceAtt);
-                SetOnTarget(referencedResource, resource, referenceAtt);
+                SetOnTarget(referencedResource, resource, referenceAtt, relEntity);
             }
             else if (relEntity != null && referencedResource == null)
             {
                 // Delete a relation, that no longer exists
-                ClearOnTarget(context.ResolveReference(relMatch), resource, referenceAtt);
+                ClearOnTarget(context.ResolveReferencedResource(relMatch), resource, referenceAtt);
                 relationRepo.Remove(relEntity);
                 return null;
             }
@@ -202,8 +202,8 @@ namespace Moryx.Resources.Management
             // Relation was updated, make sure the backlinks match
             else
             {
-                ClearOnTarget(context.ResolveReference(relMatch), resource, referenceAtt);
-                SetOnTarget(referencedResource, resource, referenceAtt);
+                ClearOnTarget(context.ResolveReferencedResource(relMatch), resource, referenceAtt);
+                SetOnTarget(referencedResource, resource, referenceAtt, relEntity);
             }
 
             // Set source and target of the relation depending on the reference roles
@@ -237,19 +237,19 @@ namespace Moryx.Resources.Management
 
             // First delete references that are not used by ANY property of the same configuration
             var currentReferences = CurrentReferences(resource, referenceAtt);
-            var deleted = relationTemplates.Where(m => currentReferences.All(cr => cr != context.ResolveReference(m))).ToList();
+            var deleted = relationTemplates.Where(m => currentReferences.All(cr => cr != context.ResolveReferencedResource(m))).ToList();
             foreach (var relation in deleted)
             {
-                ClearOnTarget(context.ResolveReference(relation), resource, referenceAtt);
+                ClearOnTarget(context.ResolveReferencedResource(relation), resource, referenceAtt);
                 relationRepo.Remove(relation.Entity);
             }
 
             // Now create new relations
-            var created = referencedResources.Where(rr => relationTemplates.All(m => rr != context.ResolveReference(m))).ToList();
+            var created = referencedResources.Where(rr => relationTemplates.All(m => rr != context.ResolveReferencedResource(m))).ToList();
             foreach (var createdReference in created)
             {
-                SetOnTarget(createdReference, resource, referenceAtt);
                 var relEntity = CreateRelationForProperty(context, relationRepo, referenceAtt);
+                SetOnTarget(createdReference, resource, referenceAtt, relEntity);
                 var referencedEntity = GetOrCreateEntity(context, createdReference);
                 UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
             }
@@ -299,8 +299,7 @@ namespace Moryx.Resources.Management
             var propOnTarget = (from prop in ReferenceProperties(target.GetType(), false)
                                 where IsInstanceOfReference(prop, value)
                                 let backAtt = prop.GetCustomAttribute<ResourceReferenceAttribute>()
-                                where backAtt.Name == referenceAtt.Name // Compare name
-                                      && backAtt.RelationType == referenceAtt.RelationType // Compare relation type
+                                where backAtt.RelationType == referenceAtt.RelationType // Compare relation type
                                       && backAtt.Role != referenceAtt.Role // Validate inverse role
                                 select prop).FirstOrDefault();
             return propOnTarget;
@@ -320,7 +319,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Update backlink if possible
         /// </summary>
-        private static void SetOnTarget(Resource target, Resource value, ResourceReferenceAttribute referenceAtt)
+        private static void SetOnTarget(Resource target, Resource value, ResourceReferenceAttribute referenceAtt, ResourceRelationEntity relationEntity)
         {
             var prop = FindBackLink(target, value, referenceAtt);
             if (prop == null)
@@ -330,13 +329,11 @@ namespace Moryx.Resources.Management
             {
                 prop.SetValue(target, value);
             }
-            else
-            {
-                var collection = prop.GetValue(target) as IReferenceCollection;
-                if (collection != null && !collection.UnderlyingCollection.Contains(value))
-                    collection.UnderlyingCollection.Add(value);
-            }
-
+            else if (prop.GetValue(target) is IReferenceCollection collection && !collection.UnderlyingCollection.Contains(value))
+                collection.UnderlyingCollection.Add(value);
+            
+            var backAttr = prop.GetCustomAttribute<ResourceReferenceAttribute>();
+            UpdateRelationEntity(relationEntity, backAttr);
         }
 
         /// <summary>
@@ -404,17 +401,34 @@ namespace Moryx.Resources.Management
         {
             if (att.Role == ResourceReferenceRole.Source)
             {
+                relEntity.SourceId = referencedResource.Id;
                 relEntity.Source = referencedResource;
+                relEntity.TargetId = resource.Id;
                 relEntity.Target = resource;
                 relEntity.SourceName = att.Name;
             }
             else
             {
                 relEntity.Source = resource;
+                relEntity.SourceId = resource.Id;
                 relEntity.Target = referencedResource;
+                relEntity.TargetId = referencedResource.Id;
                 relEntity.TargetName = att.Name;
             }
         }
+
+        /// <summary>
+        /// Set <see cref="ResourceRelationEntity.SourceName"/> and <see cref="ResourceRelationEntity.TargetName"/> depending on the <see cref="ResourceReferenceRole"/>
+        /// of the reference property
+        /// </summary>
+        private static void UpdateRelationEntity(ResourceRelationEntity relEntity, ResourceReferenceAttribute att)
+        {
+            if (att.Role == ResourceReferenceRole.Source)
+                relEntity.SourceName = att.Name;
+            else
+                relEntity.TargetName = att.Name;
+        }
+
 
         /// <inheritdoc />
         public void RemoveLinking(IResource deletedInstance, IResource reference)
@@ -477,8 +491,8 @@ namespace Moryx.Resources.Management
             Func<ResourceRelationAccessor, Resource> instanceResolver)
         {
             return from relation in relations
-                   let target = instanceResolver(relation)
-                   where IsInstanceOfReference(property, target)
+                   let other = instanceResolver(relation)
+                   where IsInstanceOfReference(property, other)
                    select relation;
         }
 
@@ -533,11 +547,11 @@ namespace Moryx.Resources.Management
             public IList<ResourceRelationEntity> CreatedRelations { get; }
 
             /// <summary>
-            /// Resolve a relation reference
+            /// Resolve a referenced resource from a <paramref name="refAccessor"/>
             /// </summary>
-            public Resource ResolveReference(ResourceRelationAccessor relation)
+            public Resource ResolveReferencedResource(ResourceRelationAccessor refAccessor)
             {
-                return relation.ReferenceId > 0 ? _graph.Get(relation.ReferenceId) : ResourceLookup[relation.ReferenceEntity];
+                return refAccessor.ReferenceId > 0 ? _graph.Get(refAccessor.ReferenceId) : ResourceLookup[refAccessor.ReferenceEntity];
             }
         }
     }
