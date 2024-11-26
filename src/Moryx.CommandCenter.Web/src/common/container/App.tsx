@@ -104,7 +104,7 @@ function App(props: AppPropModel & AppDispatchPropModel) {
           <Routes>
             <Route path="/modules/*" element={<Modules />} />
             <Route path="/databases/*" element={<Databases />} />
-            <Route path="*" element={<Navigate to="/databases/*" />} />
+            <Route path="*" element={<Navigate to="/modules/*" />} />
           </Routes>
         </Container>
       </div>
