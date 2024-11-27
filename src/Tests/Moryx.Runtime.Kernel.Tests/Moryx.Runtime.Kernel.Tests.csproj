@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>Library</OutputType>
     <DebugType>full</DebugType>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,7 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector" />
   </ItemGroup>
 
   <ItemGroup>

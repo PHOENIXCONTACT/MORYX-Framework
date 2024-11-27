@@ -12,6 +12,7 @@ on:
     branches: 
       - dev
       - future
+      - release/3
 
 env:
   MORYX_OPTIMIZE_CODE: "false"
@@ -76,6 +77,7 @@ jobs:
         with:
           name: test-results
           path: artifacts/Tests/
+          if-no-files-found: error
           retention-days: 1
 
   IntegrationTests:
@@ -103,8 +105,9 @@ jobs:
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: integration-test-results
           path: artifacts/Tests/
+          if-no-files-found: error
           retention-days: 1
 
   Codecov:
@@ -117,10 +120,16 @@ jobs:
           name: test-results
           path: artifacts/Tests/
 
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: integration-test-results
+          path: artifacts/Tests/
+
       - name: Codecov
         uses: codecov/codecov-action@v1
         with:
-          files: '*.OpenCover.xml'
+          files: '*coverage.cobertura.xml'
 
   Documentation:
     needs: [Build]
