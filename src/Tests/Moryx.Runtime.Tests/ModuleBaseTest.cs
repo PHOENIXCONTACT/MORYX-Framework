@@ -1,7 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Runtime.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Tests.Mocks;
 using Moryx.Runtime.Tests.Modules;
@@ -36,7 +35,7 @@ namespace Moryx.Runtime.Tests
             var casted = (IServerModule) _moduleUnderTest;
             casted.Initialize();
 
-            var containerConfig = ((IContainerHost) _moduleUnderTest).Strategies;
+            var containerConfig = _moduleUnderTest.Strategies;
 
             Assert.GreaterOrEqual(containerConfig.Count, 1, "No strategy found!");
             Assert.IsTrue(containerConfig.ContainsKey(typeof(IStrategy)), "Wrong type!");
