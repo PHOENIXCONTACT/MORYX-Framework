@@ -12,7 +12,7 @@ using Moryx.TestModule;
 namespace Moryx.DependentTestModule
 {
     [Description("Test module for System tests")]
-    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<IDependentTestModule>
+    public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer<IDependentTestModule>
     {
         /// <summary>
         /// Name of this module

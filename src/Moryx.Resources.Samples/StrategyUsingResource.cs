@@ -1,13 +1,6 @@
-﻿using Moryx.AbstractionLayer.Drivers.Rfid;
-using Moryx.AbstractionLayer.Drivers;
-using Moryx.AbstractionLayer.Resources;
+﻿using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moryx.Serialization;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;

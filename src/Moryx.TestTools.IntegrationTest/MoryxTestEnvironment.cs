@@ -5,7 +5,6 @@ using Moq;
 using Moryx.Configuration;
 using Moryx.Model.InMemory;
 using Moryx.Model;
-using Moryx.Runtime.Container;
 using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.UnitTest;
@@ -15,7 +14,7 @@ using System.Linq;
 using Moryx.Tools;
 using System.Collections.Generic;
 
-namespace Moryx.Shifts.Management.IntegrationTests
+namespace Moryx.TestTools.IntegrationTest
 {
     /// <summary>
     /// A test environment for MORYX modules to test the module lifecycle as well as its 
@@ -103,10 +102,11 @@ namespace Moryx.Shifts.Management.IntegrationTests
             var module = (IServerModule)Services.GetService(_moduleType);
 
             module.Initialize();
-            var containerHost = module as IContainerHost;
-            containerHost.Container.Register<IParallelOperations, NotSoParallelOps>(nameof(NotSoParallelOps), Container.LifeCycle.Singleton);
-            if (!containerHost.Strategies.Any(s => s.Value == nameof(NotSoParallelOps)))
-                containerHost.Strategies.Add(typeof(IParallelOperations), nameof(NotSoParallelOps));
+            module.Container.Register(typeof(NotSoParallelOps), [typeof(IParallelOperations)], nameof(NotSoParallelOps), Container.LifeCycle.Singleton);
+
+            var strategies = module.GetType().GetProperty(nameof(ServerModuleBase<ConfigBase>.Strategies)).GetValue(module) as Dictionary<Type, string>;
+            if (strategies is not null && !strategies.Any(s => s.Value == nameof(NotSoParallelOps)))
+                strategies.Add(typeof(IParallelOperations), nameof(NotSoParallelOps));
 
             module.Start();
             return module;

@@ -8,7 +8,7 @@ namespace Moryx.Container.Tests
     }
 
     [Plugin(LifeCycle.Transient, typeof(ILocalComponent))]
-    internal class LocalComponent : ILocalComponent
+    public class LocalComponent : ILocalComponent
     {
     }
 
