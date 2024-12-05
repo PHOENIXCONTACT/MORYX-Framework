@@ -18,6 +18,7 @@ using Moryx.Runtime.Modules;
 using Moryx.Runtime.Container;
 using Moryx.Configuration;
 using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
@@ -33,8 +34,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         private readonly IResourceTypeTree _resourceTypeTree;
         private readonly ResourceSerialization _serialization;
 
-        public ResourceModificationController(IResourceManagement resourceManagement, 
-            IResourceTypeTree resourceTypeTree, 
+        public ResourceModificationController(IResourceManagement resourceManagement,
+            IResourceTypeTree resourceTypeTree,
             IModuleManager moduleManager,
             IServiceProvider serviceProvider)
         {
@@ -123,7 +124,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                     return true;
                 });
             }
-            catch(MissingMethodException)
+            catch (MissingMethodException)
             {
                 return BadRequest("Method could not be invoked. Please check spelling and access modifier (has to be `public` or `internal`).");
             }
@@ -144,28 +145,46 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         public ActionResult<ResourceModel> ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
         {
             var trustedType = WebUtility.HtmlEncode(type);
-
-            return method == null ? Construct(trustedType, null)
-                : Construct(trustedType, new MethodEntry { Name = method, Parameters = arguments });
+            if (method is null)
+                return Construct(trustedType);
+            else
+                return Construct(trustedType, new MethodEntry { Name = method, Parameters = arguments });
         }
 
-        private ActionResult<ResourceModel> Construct(string type, MethodEntry method)
+        private ActionResult<ResourceModel> Construct(string type)
         {
-            var resource = (Resource)Activator.CreateInstance(_resourceTypeTree[type].ResourceType);
-            if (resource is null)
+            Resource resource;
+            try
+            {
+                resource = (Resource)Activator.CreateInstance(_resourceTypeTree[type].ResourceType);
+            }
+            catch (Exception)
+            {
                 return NotFound(new MoryxExceptionResponse { Title = Strings.RESOURCE_NOT_FOUND });
+            }
 
             ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
                 .AddFilter(new DataMemberAttributeValueProviderFilter(false))
                 .AddDefaultValueProvider());
 
-            if (method != null)
-                EntryConvert.InvokeMethod(resource, method, _serialization);
-
             var model = new ResourceToModelConverter(_resourceTypeTree, _serialization).GetDetails(resource);
             model.Methods = Array.Empty<MethodEntry>(); // Reset methods because they can not be invoked on new objects
-
             return model;
+        }
+
+        private ActionResult<ResourceModel> Construct(string type, MethodEntry method)
+        {
+            try
+            {
+                var id = _resourceManagement.Create(_resourceTypeTree[type].ResourceType, r => EntryConvert.InvokeMethod(r, method, _serialization));
+                return GetDetails(id);
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException or SerializationException or ValidationException)
+                    return BadRequest(e.Message);
+                throw;
+            }
         }
 
         [HttpPost]
@@ -187,11 +206,11 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                     resourcesToSave.Skip(1).ForEach(id => _resourceManagement.Modify(id, r => true));
                 });
 
-                return Ok(GetDetails(id));
+                return GetDetails(id);
             }
             catch (Exception e)
             {
-                if (e is ArgumentException or SerializationException)
+                if (e is ArgumentException or SerializationException or ValidationException)
                     return BadRequest(e.Message);
                 throw;
             }
@@ -325,7 +344,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanEdit)]
         public ActionResult<ResourceModel> Update(long id, ResourceModel model)
         {
-            if (_resourceManagement.GetAllResources<IResource>(r=>r.Id == id) is null)
+            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             try
@@ -341,7 +360,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             }
             catch (Exception e)
             {
-                if (e is ArgumentException or SerializationException)
+                if (e is ArgumentException or SerializationException or ValidationException)
                     return BadRequest(e.Message);
                 throw;
             }            
