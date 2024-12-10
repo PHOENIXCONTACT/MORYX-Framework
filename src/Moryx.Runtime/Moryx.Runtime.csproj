@@ -6,6 +6,7 @@
     <Description>Server side component types and implementations for MORYX applications</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Runtime;Server</PackageTags>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

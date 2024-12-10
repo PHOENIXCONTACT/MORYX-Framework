@@ -6,6 +6,7 @@
     <Description>Adapter for Moryx.Model on PostgreSQL</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Entity;Framework;EntityFramework;DataModel;Model;Database;Npgsql;PostgreSQL;Postgres</PackageTags>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -6,6 +6,7 @@
     <Description>Datamodel integration for MORYX applications based on Entity Framework</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Entity;Framework;EntityFramework;DataModel;Model;Database</PackageTags>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

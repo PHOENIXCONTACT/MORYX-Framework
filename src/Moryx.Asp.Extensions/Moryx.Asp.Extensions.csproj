@@ -5,6 +5,7 @@
 		<Description>Extensions for the Integration of MORYX in ASP.NET Core</Description>
 		<CreatePackage>true</CreatePackage>
 		<PackageTags>MORYX;ASP</PackageTags>
+		<IsPackable>true</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>

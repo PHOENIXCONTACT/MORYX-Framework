@@ -7,6 +7,7 @@
     <Description>Core package of the MORYX ecosystem. It defines the necessary types for MORYX compatibility as well as commonly required tools.</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Serialization;Configuration;Logging;Core;Modules;Workplans</PackageTags>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">

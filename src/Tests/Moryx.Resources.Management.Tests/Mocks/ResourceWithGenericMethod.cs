@@ -57,4 +57,10 @@ namespace Moryx.Resources.Management.Tests
             throw new NotImplementedException();
         }
     }
+
+    public interface IGenericBaseResourceInterface : IResource { }
+
+    public class GenericBaseResource<T> : Resource, IGenericBaseResourceInterface { }
+
+    public class NonGenericInheritingResource : GenericBaseResource<object> { }
 }
