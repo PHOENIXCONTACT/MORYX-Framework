@@ -6,6 +6,7 @@
     <Description>MORYX container functionality based on Castle.Windsor.</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Container;IoC</PackageTags>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
