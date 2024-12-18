@@ -6,6 +6,7 @@
 	<IsPackable>true</IsPackable>
     <Description>ResourceManagement module composing and maintaining the resource graph as the habitat for digital twins of manufacturing assets.</Description>
     <PackageTags>MORYX;IIoT;IoT;Manufacturing;API;Resource</PackageTags>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

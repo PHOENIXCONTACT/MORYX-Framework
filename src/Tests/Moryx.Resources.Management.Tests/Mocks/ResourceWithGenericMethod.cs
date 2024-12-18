@@ -37,24 +37,18 @@ namespace Moryx.Resources.Management.Tests
         public event EventHandler SomeEvent;
         public event EventHandler<ICapabilities> CapabilitiesChanged;
 
-        public IList<TChannel> GenericMethod<TChannel>(string identifier)
-        {
-            throw new NotImplementedException();
-        }
+        public IList<TChannel> GenericMethod<TChannel>(string identifier) => throw new NotImplementedException();
 
-        public int MultiplyFoo(int factor)
-        {
-            throw new NotImplementedException();
-        }
+        public int MultiplyFoo(int factor) => throw new NotImplementedException();
 
-        public int MultiplyFoo(int factor, ushort offset)
-        {
-            throw new NotImplementedException();
-        }
+        public int MultiplyFoo(int factor, ushort offset) => throw new NotImplementedException();
 
-        public void RaiseEvent()
-        {
-            throw new NotImplementedException();
-        }
+        public void RaiseEvent() => throw new NotImplementedException();
     }
+
+    public interface IGenericBaseResourceInterface : IResource { }
+
+    public class GenericBaseResource<T> : Resource, IGenericBaseResourceInterface { }
+
+    public class InheritingFromGenericResource : GenericBaseResource<object> { }
 }
