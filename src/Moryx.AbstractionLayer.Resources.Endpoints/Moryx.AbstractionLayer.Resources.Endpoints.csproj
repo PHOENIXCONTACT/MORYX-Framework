@@ -6,6 +6,7 @@
     <Description>REST Api in order to interact with the resource management</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;IIoT;IoT;Resource</PackageTags>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

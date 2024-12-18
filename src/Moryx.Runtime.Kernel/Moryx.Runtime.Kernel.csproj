@@ -6,6 +6,7 @@
     <Description>Kernel components that comprise the MORYX server side runtime environment</Description>
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Kernel;Runtime;Server</PackageTags>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
