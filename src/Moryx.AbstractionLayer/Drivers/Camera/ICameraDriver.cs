@@ -1,4 +1,5 @@
 ﻿using Moryx.AbstractionLayer.Drivers;
+using System;
 using System.Threading.Tasks;
 
 namespace Moryx.Drivers.Camera.Interfaces
@@ -9,15 +10,9 @@ namespace Moryx.Drivers.Camera.Interfaces
     public interface ICameraDriver<TImage> : IDriver where TImage : class
     {
         /// <summary>
-        /// Registers an ICameraDriverListener that should be provided
-        /// with images.
+        /// Eventhandler to continously provide images from a camera
         /// </summary>
-        void Register(ICameraDriverListener<TImage> listener);
-
-        /// <summary>
-        /// Unregisters an ICameraDriverListener
-        /// </summary>
-        void Unregister(ICameraDriverListener<TImage> listener);
+        event EventHandler<TImage> CapturedImage;
 
         /// <summary>
         /// Capture a single image from the camera
