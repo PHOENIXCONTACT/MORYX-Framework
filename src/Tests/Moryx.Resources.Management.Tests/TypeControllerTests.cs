@@ -237,6 +237,20 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test]
+        public void ProxyBuilderSkipsGenericBaseTypes()
+        {
+            // Arrange
+            var driver = new InheritingFromGenericResource { Id = 42, Name = "A non generic resource inheriting from a generic base type" };
+
+            // Act
+            var proxy = _typeController.GetProxy(driver);
+
+            // Assert
+            Assert.IsNotNull(proxy);
+            Assert.IsFalse(typeof(GenericBaseResource<object>).IsAssignableFrom(proxy.GetType()));
+        }
+
+        [Test]
         public void FacadeExceptionForGenericProxy()
         {
             // Arrange

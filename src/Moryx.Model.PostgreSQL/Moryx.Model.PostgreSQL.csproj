@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Adapter for Moryx.Model on PostgreSQL</Description>
     <PackageTags>MORYX;Entity;Framework;EntityFramework;DataModel;Model;Database;Npgsql;PostgreSQL;Postgres</PackageTags>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
