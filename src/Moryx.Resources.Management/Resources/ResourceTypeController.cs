@@ -137,7 +137,7 @@ namespace Moryx.Resources.Management
 
         public Resource Create(string type)
         {
-            if(!_typeCache.ContainsKey(type))
+            if (!_typeCache.ContainsKey(type))
                 throw new KeyNotFoundException($"No resource of type {type} found!");
 
             var linker = _typeCache[type];
@@ -264,17 +264,19 @@ namespace Moryx.Resources.Management
         /// </summary>
         private void ProvideProxyType(Type resourceType)
         {
-            // Step 1: Find the least specific base type that offers the same amount of interfaces
+            // Step 1: Find the least specific base type that offers the same amount of interfaces and is not a generic itself
             // ReSharper disable once AssignNullToNotNullAttribute -> FullName should be not null
             var targetType = _typeCache[resourceType.ResourceType()];
             var linker = targetType;
 
             var interfaces = RelevantInterfaces(linker);
-            // Move up the type tree until the parent offers less interfaces than the current linker
-            while (linker.BaseType != null && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
+            // Move up the type tree until the parent offers less interfaces than the current linker, is abstract or a generic
+            while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType 
+                && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
             {
                 linker = linker.BaseType;
             }
+                
 
             // Step 2: Check if we already created a proxy for this type. If we already
             // did use this one for the requested type as well.
@@ -337,6 +339,10 @@ namespace Moryx.Resources.Management
                 return true;
 
             if (resourceInterface.GetMethods().Any(method => method.IsGenericMethod || method.ContainsGenericParameters))
+                return true;
+
+            // We also need to filter all interfaces that contain/inherit generic interfaces
+            if (resourceInterface.GetInterfaces().Any(IsGenericResourceInterface))
                 return true;
 
             return false;

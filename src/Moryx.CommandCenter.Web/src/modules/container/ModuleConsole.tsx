@@ -3,13 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiConsoleLine, mdiHexagon } from "@mdi/js";
-import Icon from "@mdi/react";
-import { number } from "prop-types";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
-import NotificationSystem = require("react-notification-system");
 import { connect } from "react-redux";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Row } from "reactstrap";
 import ModuleHeader from "../../common/components/ModuleHeader";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";
 import { ActionType } from "../../common/redux/Types";
@@ -24,7 +26,6 @@ import MethodEntry from "../models/MethodEntry";
 interface ModuleConsolePropModel {
     RestClient?: ModulesRestClient;
     ModuleName: string;
-    NotificationSystem: NotificationSystem;
 }
 
 interface ModuleConsoleDispatchPropsModel {
@@ -78,7 +79,7 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
     }
 
     private onSelectMethod(methodEntry: MethodEntry): void {
-        this.setState({SelectedMethod: methodEntry, Seed: this.state.Seed + 1});
+        this.setState({ SelectedMethod: methodEntry, Seed: this.state.Seed + 1 });
     }
 
     private onInvokeMethod(methodEntry: MethodEntry): void {
@@ -132,26 +133,29 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
     private preRenderFunctions(): React.ReactNode {
         return (
-            <ListGroup>
-                <ListGroupItem color="primary"
-                               className="selectable"
-                               onClick={() => this.onReset()}>
-                    Reset
-                </ListGroupItem>
+            <Card variant="outlined" style={{paddingBottom: 0}}>
+                <List dense={true}>
+                    <ListItemButton
+                        onClick={() => this.onReset()}
+                        divider={true}>
+                        <ListItemText primary="Reset" sx={{color: "secondary.dark"}}/>
+                    </ListItemButton>
 
-                {this.state.Methods.map((methodEntry, idx) => {
-                    return (
-                        <ListGroupItem key={idx}
-                                       className="selectable"
-                                       onClick={() => this.onSelectMethod(methodEntry)}
-                                       active={this.state.SelectedMethod === methodEntry}>
-                            {methodEntry.displayName}
-                        </ListGroupItem>
-                        );
+                    {this.state.Methods.map((methodEntry, idx) => {
+                        return [
+                            <ListItemButton
+                                key={idx}
+                                onClick={() => this.onSelectMethod(methodEntry)}
+                                selected={this.state.SelectedMethod === methodEntry}
+                                divider={idx < this.state.Methods.length - 1}
+                                >
+                                <ListItemText secondary={false} primary={methodEntry.displayName}/>
+                            </ListItemButton>,
+                        ];
                     })
-                }
-                </ListGroup>
-
+                    }
+                </List>
+            </Card>
         );
     }
 
@@ -160,53 +164,44 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
 
         if (this.state.Methods.length > 0) {
             let view = <ConsoleMethodConfigurator
-                                                  key={this.state.Seed}
-                                                  Method={this.state.SelectedMethod}
-                                                  ModuleName={this.props.ModuleName}
-                                                  onInvokeMethod={this.onInvokeMethod.bind(this)} />;
+                key={this.state.Seed}
+                Method={this.state.SelectedMethod}
+                ModuleName={this.props.ModuleName}
+                onInvokeMethod={this.onInvokeMethod.bind(this)} />;
 
             if (this.state.SelectedMethod != null) {
                 const invokeResult = this.invokeResult(this.state.SelectedMethod.name);
 
                 if (invokeResult != null) {
                     view = <ConsoleMethodResult Method={this.state.SelectedMethod}
-                                                InvokeResult={invokeResult.Result}
-                                                onResetInvokeResult={this.resetInvokeResult.bind(this)} />;
+                        InvokeResult={invokeResult.Result}
+                        onResetInvokeResult={this.resetInvokeResult.bind(this)} />;
                 }
             }
 
             content = (
-                <Container fluid={true} className="up-space-lg">
-                    <Row className="up-space-lg">
-                        <Col md={4}>
-                            {this.preRenderFunctions()}
-                        </Col>
-                        <Col md={8}>
-                            {view}
-                        </Col>
-                    </Row>
-                </Container>
+                <Grid container={true} spacing={2}>
+                    <Grid item={true} md={4}>
+                        {this.preRenderFunctions()}
+                    </Grid>
+                    <Grid item={true}  md={8}>
+                        {view}
+                    </Grid>
+                </Grid>
             );
         }
 
         return (
             <Card>
-                <CardHeader tag="h2">
-                    <Icon path={mdiHexagon} className="icon right-space" />
-                    {this.props.ModuleName}
-                </CardHeader>
-                <ListGroup>
-                    <ListGroupItem className="nav-listgroup-item">
-                        <ModuleHeader ModuleName={this.props.ModuleName} />
-                    </ListGroupItem>
-                    <CardBody>
-                        {this.state.IsLoading ? (
-                            <span className="up-space-lg font-italic">Loading available methods...</span>
-                        ) : (
-                            content
-                        )}
-                    </CardBody>
-                </ListGroup>
+                <ModuleHeader ModuleName={this.props.ModuleName} selectedTab="console" />
+
+                <CardContent>
+                    {this.state.IsLoading ? (
+                        <CircularProgress />
+                    ) : (
+                        content
+                    )}
+                </CardContent>
             </Card>
         );
     }

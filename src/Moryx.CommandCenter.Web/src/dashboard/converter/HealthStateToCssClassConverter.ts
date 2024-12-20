@@ -3,6 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { ChipPropsColorOverrides } from "@mui/material/Chip";
 import * as React from "react";
 import { ModuleServerModuleState } from "../../modules/models/ModuleServerModuleState";
 
@@ -12,31 +13,31 @@ export interface ForegroundBackgroundCssClass {
 }
 
 export class HealthStateToCssClassConverter {
-    public static Convert(healthState: ModuleServerModuleState): ForegroundBackgroundCssClass {
+    public static Color(healthState: ModuleServerModuleState): "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning" {
         switch (healthState) {
             case ModuleServerModuleState.Failure: {
-                return { Background: "danger", Foreground: "normal" };
+                return "error";
             }
             case ModuleServerModuleState.Initializing: {
-                return { Background: "info", Foreground: "normal" };
+                return "info";
             }
             case ModuleServerModuleState.Ready: {
-                return { Background: "secondary", Foreground: "composite" };
+                return "default";
             }
             case ModuleServerModuleState.Running: {
-                return { Background: "success", Foreground: "normal" };
+                return "success";
             }
             case ModuleServerModuleState.Starting: {
-                return { Background: "info", Foreground: "normal" };
+                return "info";
             }
             case ModuleServerModuleState.Stopping: {
-                return { Background: "info", Foreground: "normal" };
+                return "info";
             }
             case ModuleServerModuleState.Stopped: {
-                return { Background: "light", Foreground: "composite" };
+                return "warning";
             }
             default: {
-                return { Background: "danger", Foreground: "normal" };
+                return "error";
             }
         }
     }

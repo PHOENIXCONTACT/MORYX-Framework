@@ -9,7 +9,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management
 {
-    internal class ResourceManagementFacade : IResourceManagement, IFacadeControl
+    internal class ResourceManagementFacade : FacadeBase, IResourceManagement
     {
         #region Dependency Injection
 
@@ -22,11 +22,9 @@ namespace Moryx.Resources.Management
         #endregion
 
         #region IFacadeControl
-        /// <see cref="IFacadeControl.ValidateHealthState"/>
-        public Action ValidateHealthState { get; set; }
 
         /// <seealso cref="IFacadeControl"/>
-        public void Activate()
+        public override void Activate()
         {
             Manager.ResourceAdded += OnResourceAdded;
             Manager.CapabilitiesChanged += OnCapabilitiesChanged;
@@ -34,7 +32,7 @@ namespace Moryx.Resources.Management
         }
 
         /// <seealso cref="IFacadeControl"/>
-        public void Deactivate()
+        public override void Deactivate()
         {
             Manager.ResourceAdded -= OnResourceAdded;
             Manager.CapabilitiesChanged -= OnCapabilitiesChanged;

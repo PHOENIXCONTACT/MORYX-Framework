@@ -12,7 +12,11 @@ namespace Moryx.Resources.Management.Tests
     {
         ISimpleResource Reference { get; set; }
 
+        DerivedResource Reference2 { get; set; }
+
         IEnumerable<ISimpleResource> MoreReferences { get; }
+
+        IEnumerable<ISimpleResource> EvenMoreReferences { get; set; }
 
         INonPublicResource NonPublic { get; }
 
@@ -63,6 +67,12 @@ namespace Moryx.Resources.Management.Tests
         [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
         public DerivedResource Reference2 { get; set; }
 
+        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(TargetReference))]
+        public BidirectionalReferenceResource TargetReference { get; set; }
+
+        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(NewTargetReference))]
+        public BidirectionalReferenceResource NewTargetReference { get; set; }
+
         [ResourceReference(ResourceRelationType.PossibleExchangablePart)]
         public IReferences<ISimpleResource> References { get; set; }
 
@@ -70,6 +80,8 @@ namespace Moryx.Resources.Management.Tests
         internal IReferences<ISimpleResource> ChildReferences { get; set; }
 
         IEnumerable<ISimpleResource> IReferenceResource.MoreReferences => References;
+
+        public IEnumerable<ISimpleResource> EvenMoreReferences { get; set; }
 
         public ISimpleResource GetReference()
         {
@@ -92,11 +104,16 @@ namespace Moryx.Resources.Management.Tests
                 References.Add(reference);
         }
 
-
         public INonPublicResource NonPublic { get; set; }
 
         public event EventHandler<ISimpleResource> ReferenceChanged;
 
         public event EventHandler<ISimpleResource[]> SomeChanged;
+    }
+
+    public class BidirectionalReferenceResource : Resource
+    {
+        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source, nameof(SourceReference))]
+        public ReferenceResource SourceReference { get; set; }
     }
 }

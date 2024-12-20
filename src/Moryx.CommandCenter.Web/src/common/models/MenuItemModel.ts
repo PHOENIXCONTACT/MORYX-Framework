@@ -11,6 +11,7 @@ export const enum IconType {
 }
 
 export default interface MenuItemModel {
+    SecondaryName?: string;
     Name: string;
     NavPath: string;
     SubMenuItems: MenuItemModel[];

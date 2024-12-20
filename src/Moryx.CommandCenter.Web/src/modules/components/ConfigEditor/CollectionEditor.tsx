@@ -3,10 +3,17 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiChevronDown, mdiChevronUp, mdiFolderOpen, mdiPlus, mdiTrashCanOutline } from "@mdi/js";
-import Icon from "@mdi/react";
+import { mdiChevronDown, mdiChevronRight, mdiPlus, mdiTrashCanOutline } from "@mdi/js";
+import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
+import SvgIcon from "@mui/material/SvgIcon";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
-import { Button, ButtonGroup, Col, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Input, Row } from "reactstrap";
 import Entry from "../../models/Entry";
 import { EntryValueType } from "../../models/EntryValueType";
 import BooleanEditor from "./BooleanEditor";
@@ -43,8 +50,8 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
         return this.state.ExpandedEntryNames.find((e: string) => e === entryName) != undefined;
     }
 
-    public onSelect(e: React.FormEvent<HTMLInputElement>): void {
-        this.setState({ SelectedEntry: e.currentTarget.value });
+    public onSelect(e: React.ChangeEvent<HTMLInputElement>): void {
+        this.setState({ SelectedEntry: e.target.value });
     }
 
     public addEntry(): void {
@@ -75,7 +82,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
         const options: React.ReactNode[] = [];
         this.props.Entry.value.possible.map((colEntry, idx) =>
         (
-            options.push(<option key={idx} value={colEntry}>{colEntry}</option>)
+            options.push(<MenuItem   key={idx} value={colEntry}>{colEntry}</MenuItem>)
         ));
         return options;
     }
@@ -119,75 +126,87 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
 
     public render(): React.ReactNode {
         return (
-            <div className="up-space">
-                <Collapse isOpen={this.props.IsExpanded}>
-                    <Container fluid={true} className="no-padding up-space down-space">
-                        {
-                            this.props.Entry.subEntries.map((entry, idx) => {
-                                if (Entry.isClassOrCollection(entry)) {
-                                    return (
-                                        <div key={idx}>
-                                            <Row className="table-row down-space">
-                                                <Col md={6} className="no-padding">{entry.displayName}</Col>
-                                                <Col md={6} className="no-padding">
-                                                    <ButtonGroup>
-                                                        <Button color="secondary" onClick={() => this.props.navigateToEntry(entry)}>
-                                                            <Icon path={mdiFolderOpen} className="icon right-space" />
-                                                            Open
-                                                        </Button>
-                                                        <Button color="secondary" onClick={() => this.toggleCollapsible(entry.uniqueIdentifier)}>
-                                                        <Icon path={this.isExpanded(entry.uniqueIdentifier ?? entry.identifier) ? mdiChevronUp : mdiChevronDown} className="icon right-space" />
-                                                            {this.isExpanded(entry.uniqueIdentifier ?? entry.identifier) ? "Collapse" : "Expand"}
-                                                        </Button>
-                                                        <Button color="secondary" onClick={() => this.removeEntry(entry)} disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}>
-                                                            <Icon path={mdiTrashCanOutline} className="icon right-space" />
-                                                            Remove
-                                                        </Button>
-                                                    </ButtonGroup>
-                                                </Col>
-                                            </Row>
-                                            <Collapse isOpen={this.isExpanded(entry.uniqueIdentifier)}>
+            <Collapse in={this.props.IsExpanded}>
+                <Grid container={true} item={true} sx={{paddingLeft: 3, paddingRight: 0}}>
+                    {   this.props.IsExpanded &&
+                        this.props.Entry.subEntries.map((entry, idx) => {
+                            if (Entry.isClassOrCollection(entry)) {
+                                return (
+                                    <Grid container={true} key={idx}>
+                                        <Grid item={true} md={11} paddingTop={0.5} paddingRight={0}>
+                                            <IconButton
+                                                sx={{padding: 0}}
+                                                onClick={() => this.toggleCollapsible(entry.uniqueIdentifier ?? entry.identifier)}>
+                                                <SvgIcon><path d={this.isExpanded(entry.uniqueIdentifier ?? entry.identifier) ? mdiChevronDown : mdiChevronRight } /></SvgIcon>
+                                            </IconButton>
+                                            <Tooltip title={entry.description} placement="right">
+                                                <Button onClick={() => this.props.navigateToEntry(entry)}
+                                                    sx={{textTransform: "none"}}
+                                                    >
+                                                    {entry.displayName}
+                                                </Button>
+                                            </Tooltip>
+                                        </Grid>
+                                        <Grid container={true} item={true} md={1} justifyContent="flex-end">
+                                            <IconButton
+                                                onClick={() => this.removeEntry(entry)}
+                                                disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
+                                            >
+                                                <SvgIcon><path d={mdiTrashCanOutline} /></SvgIcon>
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid container={true} item={true}  direction="column" alignItems="stretch">
+                                            <Collapse in={this.isExpanded(entry.uniqueIdentifier)}>
+                                                <Grid item={true} sx={{paddingLeft: 3, paddingRight: 0}} md={12}>
                                                 {this.preRenderConfigEditor(entry)}
+                                                </Grid>
                                             </Collapse>
-                                        </div>
-                                    );
-                                } else {
-                                    return (
-                                        <div key={idx}>
-                                            <Row className="table-row down-space">
-                                                <Col md={6} className="no-padding">{this.preRenderConfigEditor(entry)}</Col>
-                                                <Col md={6} className="no-padding">
-                                                    <ButtonGroup>
-                                                        <Button color="secondary" onClick={() => this.removeEntry(entry)} disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}>
-                                                            <Icon path={mdiTrashCanOutline} className="icon right-space" />
-                                                            Remove
-                                                        </Button>
-                                                    </ButtonGroup>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                    );
-                                }
-                            })
-                        }
-                        <Row>
-                            <Col md={12} className="no-padding">
-                                <Input type="select" value={this.state.SelectedEntry}
-                                       className="right-space"
-                                       style={{display: "inline", width: "60%"}}
-                                       disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
-                                       onChange={(e: React.FormEvent<HTMLInputElement>) => this.onSelect(e)}>
-                                    {this.preRenderOptions()}
-                                </Input>
-                                <Button color="primary" onClick={() => this.addEntry()} disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}>
-                                    <Icon path={mdiPlus} className="icon-white right-space" />
-                                    Add entry
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
-                </Collapse>
-            </div>
+                                        </Grid>
+                                    </Grid >
+                                );
+                            } else {
+                                return (
+                                    <Grid container={true}>
+                                        <Grid item={true} md={11}>{this.preRenderConfigEditor(entry)}</Grid>
+                                        <Grid container={true} item={true} md={1} justifyContent="flex-end" alignContent="center">
+                                            <IconButton
+                                                onClick={() => this.removeEntry(entry)}
+                                                disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
+                                            >
+                                                <SvgIcon><path d={mdiTrashCanOutline} /></SvgIcon>
+                                            </IconButton>
+                                        </Grid>
+                                    </Grid>
+                                );
+                            }
+                        })
+                    }
+                    <Grid container={true} sx={{paddingTop: 1, paddingBottom: 1}}>
+                        <Grid item={true} md={11}>
+                            <TextField
+                                select={true}
+                                label="Type"
+                                value={this.state.SelectedEntry}
+                                disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onSelect(e)}
+                                size="small"
+                                fullWidth={true}
+                            >
+                                {this.preRenderOptions()}
+                            </TextField>
+                        </Grid>
+                        <Grid container={true} item={true} md={1} justifyContent="flex-end">
+                            <IconButton
+                                color="primary"
+                                onClick={() => this.addEntry()}
+                                disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
+                            >
+                                <SvgIcon><path d={mdiPlus} /></SvgIcon>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Collapse>
         );
     }
 }

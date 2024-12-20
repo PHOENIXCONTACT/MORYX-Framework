@@ -23,3 +23,7 @@ The following classes are affected by this change
 - MissingFacadeException
 - HealthStateException
 - InvalidConfigException
+
+## Merged IPublicResource into IResource
+
+`IPublicResource` and `IResource` were merged into `IResource`, since the differentiaten between those was hard to understand for some and barely had any real world advantages. Now literally "Everything is a resource".

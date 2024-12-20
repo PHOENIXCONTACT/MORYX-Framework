@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-	<Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
+	<Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
 
 	<PropertyGroup>
 		<dotnetVersion>8.0.0</dotnetVersion>
@@ -10,8 +10,8 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
-	<!-- Package refereces for all projects if CreatePackage=true -->
-	<ItemGroup Condition="'$(CreatePackage)' == 'true'">
+	<!-- Package refereces for all projects if IsPackable=true -->
+	<ItemGroup Condition="'$(IsPackable)' == 'true'">
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 

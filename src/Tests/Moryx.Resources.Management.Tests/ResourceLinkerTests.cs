@@ -127,6 +127,63 @@ namespace Moryx.Resources.Management.Tests
             };
         }
 
+        [Test(Description = "Save modified bidirectional references")]
+        public void SaveBidirectionalReferences()
+        {
+            // Arrange
+            var instance = new ReferenceResource { Id = 1 };
+            ResourceReferenceTools.InitializeCollections(instance);
+            // Prepare reference objects
+            var resource = new BidirectionalReferenceResource { Id = 2, Name = "resource" };
+            var collectionResource = new SimpleResource { Id = 3, Name = "collectionResource" };
+            var newResource = new BidirectionalReferenceResource() { Name = "newResource" };
+            ResourceReferenceTools.InitializeCollections(newResource);
+            var newCollectionResource = new SimpleResource() { Name = "newCollectionResource" };
+            ResourceReferenceTools.InitializeCollections(newCollectionResource);
+            // Fill graph
+            _graph[1] = instance;
+            _graph[2] = resource;
+            _graph[3] = collectionResource;
+            // Set single references
+            instance.TargetReference = resource; // The bidirectional reference is created with an existing resource
+            instance.NewTargetReference = newResource; // The bidirectional reference is created with a new resource
+            // Fill collections
+            instance.ChildReferences.Add(collectionResource); // An existing resource is added to the reference collection
+            instance.ChildReferences.Add(newCollectionResource); // A new resource is added to the reference collection
+            // Setup uow and repo to simulate the current database
+            var relations = new List<ResourceRelationEntity>();
+            var mocks = SetupDbMocks(relations);
+
+            // Act
+            var newResources = _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                // Resources were created
+                Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Exactly(2)), "Linker did not detect the new resources");
+                Assert.That(newResources, Has.Count.EqualTo(2));
+                Assert.That(newResource, Is.EqualTo(newResources[0]));
+                Assert.That(newCollectionResource, Is.EqualTo(newResources[1]));
+                // Resources properties were set
+                Assert.That(resource.SourceReference, Is.EqualTo(instance), "Backlink sync failed for a reference to an existing resource");
+                Assert.That(newResource.SourceReference, Is.EqualTo(instance), "Backlink sync failed for a reference to a new resource");
+                Assert.That(collectionResource.Parent, Is.EqualTo(instance), "Backlink sync failed for collection reference to a new resource");
+                Assert.That(newCollectionResource.Parent, Is.EqualTo(instance), "Backlink sync failed for a collection reference to a new resource");
+                // Relations were created
+                Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.Extension), Times.Exactly(2)), "Linker did not create relations for references");
+                Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Exactly(2)), "Linker did not create relations for collection references");
+                Assert.That(relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).Count(), Is.EqualTo(2));
+                Assert.That(relations.Where(r => r.RelationType == (int)ResourceRelationType.Extension).Count(), Is.EqualTo(2));
+                // Relation sources and targets were set
+                Assert.That(relations.Where(r => r.Source.Id == instance.Id).Count(), Is.EqualTo(4));
+                Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == resource.Id));
+                Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == collectionResource.Id));
+                Assert.DoesNotThrow(() => relations.Single(r => r.Target.Name == newResource.Name));
+                Assert.DoesNotThrow(() => relations.Single(r => r.Target.Name == newCollectionResource.Name));
+            });
+        }
+
         [Test(Description = "Save modified references of a resource")]
         public void SaveReferences()
         {
@@ -200,7 +257,7 @@ namespace Moryx.Resources.Management.Tests
             Assert.AreEqual(1, possiblePart.Count(r => r.Target.Id == 0));
         }
 
-        [Test(Description = "Multiple references of the same relation type shoudl not interfere with each other")]
+        [Test(Description = "Multiple references of the same relation type should not interfere with each other")]
         public void ReferenceInterferenceOnSave()
         {
             // Arrange
@@ -407,7 +464,7 @@ namespace Moryx.Resources.Management.Tests
             var resRepo = new Mock<IResourceRepository>();
             resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id > 0))).Returns<long>(id => new ResourceEntity { Id = id });
             resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id == 0))).Returns((ResourceEntity)null);
-            resRepo.Setup(r => r.Create()).Returns(new ResourceEntity());
+            resRepo.Setup(r => r.Create()).Returns(() => new ResourceEntity());
 
             var uowMock = new Mock<IUnitOfWork>();
             uowMock.Setup(u => u.GetRepository<IResourceRelationRepository>()).Returns(relRepo.Object);

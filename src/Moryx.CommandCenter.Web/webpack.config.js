@@ -17,9 +17,9 @@ module.exports = (env, options) => {
         },
 
         devServer: {
-            contentBase: __dirname + "/wwwroot"
+            static: __dirname + "/wwwroot"
         },
-        
+
         resolve: {
             // Add '.ts' and '.tsx' as resolvable extensions.
             extensions: [".ts", ".tsx", ".js", ".json"]
@@ -35,38 +35,39 @@ module.exports = (env, options) => {
                 },
 
                 // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-                { 
-                    test: /\.tsx?$/, 
-                    loader: "ts-loader" 
+                {
+                    test: /\.tsx?$/,
+                    loader: "ts-loader"
                 },
 
                 // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-                { 
-                    enforce: "pre", 
-                    test: /\.js$/, 
-                    loader: "source-map-loader" 
+                {
+                    enforce: "pre",
+                    test: /\.js$/,
+                    loader: "source-map-loader"
                 },
 
-                { 
+                {
                     //test: /.woff$|.woff2$|.ttf$|.eot$|.svg$|.png$/, 
                     test: /\.png$/,
                     loader: 'url-loader',
-                    options: { 
+                    options: {
                         limit: 10240,
                         name: 'images/[name].[ext]'
                     }
                 },
 
-                { 
+                {
                     test: /\.css$/,
                     use: [{
-                            loader: "style-loader"
-                        }, {
-                            loader: "css-loader",
-                        }]
+                        loader: "style-loader"
+                    }, {
+                        loader: "css-loader",
+                    }]
                 },
 
-                { test: /\.scss$/,
+                {
+                    test: /\.scss$/,
                     use: [{
                         loader: "style-loader" // creates style nodes from JS strings
                     }, {
@@ -78,7 +79,7 @@ module.exports = (env, options) => {
             ],
         },
         plugins: [
-            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-         ]
+            new webpack.IgnorePlugin({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ })
+        ]
     };
 };

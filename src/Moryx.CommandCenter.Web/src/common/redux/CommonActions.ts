@@ -3,7 +3,6 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import NotificationSystem = require("react-notification-system");
 import { ActionType } from "./Types";
 
 export const UPDATE_SERVER_TIME = "UPDATE_SERVER_TIME";
@@ -17,10 +16,6 @@ export function updateServerTime(newTime: string): ActionType<string> {
 
 export function updateIsConnected(isConnected: boolean): ActionType<boolean> {
     return { type: UPDATE_IS_CONNECTED, payload: isConnected };
-}
-
-export function updateNotificationInstance(notificationSystem: NotificationSystem): ActionType<NotificationSystem> {
-    return { type: UPDATE_NOTIFICATION_INSTANCE, payload: notificationSystem };
 }
 
 export function updateShowWaitDialog(showWaitDialog: boolean): ActionType<boolean> {
