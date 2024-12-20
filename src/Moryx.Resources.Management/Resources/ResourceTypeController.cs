@@ -264,17 +264,19 @@ namespace Moryx.Resources.Management
         /// </summary>
         private void ProvideProxyType(Type resourceType)
         {
-            // Step 1: Find the least specific base type that offers the same amount of interfaces
+            // Step 1: Find the least specific base type that offers the same amount of interfaces and is not a generic itself
             // ReSharper disable once AssignNullToNotNullAttribute -> FullName should be not null
             var targetType = _typeCache[resourceType.ResourceType()];
             var linker = targetType;
 
             var interfaces = RelevantInterfaces(linker);
-            // Move up the type tree until the parent offers less interfaces than the current linker
-            while (linker.BaseType != null && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
+            // Move up the type tree until the parent offers less interfaces than the current linker, is abstract or a generic
+            while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType 
+                && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
             {
                 linker = linker.BaseType;
             }
+                
 
             // Step 2: Check if we already created a proxy for this type. If we already
             // did use this one for the requested type as well.

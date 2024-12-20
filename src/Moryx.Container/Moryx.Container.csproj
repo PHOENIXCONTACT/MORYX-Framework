@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>MORYX container functionality based on Castle.Windsor.</Description>
     <PackageTags>MORYX;Container;IoC</PackageTags>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

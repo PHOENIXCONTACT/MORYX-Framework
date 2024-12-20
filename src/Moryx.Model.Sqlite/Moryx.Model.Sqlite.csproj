@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Adapter for Moryx.Model on Sqlite</Description>
     <PackageTags>MORYX;Entity;Framework;EntityFramework;DataModel;Model;Database;Sqlite</PackageTags>
+	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
