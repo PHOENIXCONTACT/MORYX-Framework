@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moryx.FileSystem;
+using Moryx.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +13,7 @@ namespace Moryx.Runtime.Kernel.FileSystem
     internal class MoryxFileSystem : IMoryxFileSystem
     {
         private string _fsDirectory;
+        private string _ownerFilesDirectory;
         private readonly ILogger _logger;
 
         public MoryxFileSystem(ILoggerFactory loggerFactory)
@@ -21,15 +24,10 @@ namespace Moryx.Runtime.Kernel.FileSystem
         public void SetBasePath(string basePath = "fs")
         {
             _fsDirectory = Path.Combine(Directory.GetCurrentDirectory(), basePath);
+            _ownerFilesDirectory = Path.Combine(_fsDirectory, "owners");
         }
 
-        public Stream ReadFile(string hash)
-        {
-            var path = HashPath.FromHash(hash).FilePath(_fsDirectory);           
-            return File.Exists(path) ? new FileStream(path, FileMode.Open, FileAccess.Read) : null;
-        }
-
-        public async Task<string> WriteFile(Stream stream)
+        public async Task<string> WriteBlobAsync(Stream stream)
         {
             var hashPath = HashPath.FromStream(stream);
 
@@ -54,7 +52,7 @@ namespace Moryx.Runtime.Kernel.FileSystem
             {
                 using var fileStream = new FileStream(fileName, FileMode.Create);
                 await stream.CopyToAsync(fileStream);
-                fileStream.Flush();
+                await fileStream.FlushAsync();
                 stream.Position = 0;
             }
             catch (Exception e)
@@ -63,6 +61,134 @@ namespace Moryx.Runtime.Kernel.FileSystem
             }
 
             return hashPath.Hash;
+        }
+        public async Task<string> WriteTreeAsync(IReadOnlyList<MoryxFileMetadata> metadata)
+        {
+            // Convert metadata to lines 
+            var lines = metadata.Select(md => md.ToString()).ToList();
+            var stream = new MemoryStream();
+            using (var sw = new StreamWriter(stream))
+            {
+                foreach (var line in lines)
+                    sw.WriteLine(line);
+                await sw.FlushAsync();
+            }
+
+            return await WriteBlobAsync(stream);
+        }
+
+        public async Task<string> WriteBlobAsync(Stream fileStream, MoryxFileMetadata metadata, string ownerKey)
+        {
+            // Create file first
+            var hash = await WriteBlobAsync(fileStream);
+            metadata.Hash = hash;
+
+            // Read current owner tree
+            var ownerFile = Path.Combine(_ownerFilesDirectory, ownerKey);
+            var ownerTree = File.ReadAllText(ownerFile);
+            var tree = ReadExtensibleTree(ownerTree);
+
+            // Add to owner tree/replace hash and write new
+            var exisiting = tree.FirstOrDefault();
+            tree.Add(metadata);
+            var treeHash = await WriteTreeAsync(tree);
+            File.WriteAllText(ownerFile, treeHash);
+
+            return hash;
+        }
+
+        public Stream ReadBlob(string hash)
+        {
+            var path = HashPath.FromHash(hash).FilePath(_fsDirectory);
+            return File.Exists(path) ? new FileStream(path, FileMode.Open, FileAccess.Read) : null;
+        }
+
+        public IReadOnlyList<MoryxFileMetadata> ReadTree(string hash) => ReadExtensibleTree(hash);
+
+
+        public IReadOnlyList<MoryxFileMetadata> ReadTreeByOwner(string ownerKey)
+        {
+            // read hash from owner file
+            var ownerFile = Path.Combine(_ownerFilesDirectory, ownerKey);
+            var ownerTree = File.ReadAllText(ownerFile);
+
+            return ReadExtensibleTree(ownerTree);
+        }
+
+        private List<MoryxFileMetadata> ReadExtensibleTree(string hash)
+        {
+            // Read tree from hash
+            var stream = ReadBlob(hash);
+            var metadata = new List<MoryxFileMetadata>();
+            using (var sr = new StreamReader(stream))
+            {
+                var line = sr.ReadLine();
+                metadata.Add(MoryxFileMetadata.FromLine(line));
+            }
+
+            return metadata;
+        }
+
+        public bool RemoveFile(string hash, string ownerKey)
+        {
+            if (!IsOwner(hash, ownerKey))
+                return false;
+
+            // Delete file if found
+            var hashPath = HashPath.FromHash(hash);
+            var filePath = hashPath.FilePath(_fsDirectory);
+            if (!File.Exists(filePath))
+                return false;
+            RemoveFile(filePath, _logger);
+
+            // Check if subdirectory is empty and remove
+            var directory = hashPath.DirectoryPath(_fsDirectory);
+            CleanUpDirectory(directory, _logger);
+
+            // TODO: Remove file from owner list
+
+            return true;
+        }
+
+        private bool IsOwner(string hash, string ownerFile)
+        {
+            var ownerFilePath = Path.Combine(_ownerFilesDirectory, ownerFile);
+            using (var reader = new StreamReader(ownerFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.Contains(hash))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private void RemoveFile(string filePath, ILogger logger)
+        {
+            try
+            {
+                File.Delete(filePath);
+            }
+            catch (Exception e)
+            {
+                throw LoggedException(e, logger, filePath);
+            }
+        }
+
+        private void CleanUpDirectory(string directoryPath, ILogger logger)
+
+        {
+            try
+            {
+                if (Directory.GetFiles(directoryPath).Length == 0)
+                    Directory.Delete(directoryPath);
+            }
+            catch (Exception e)
+            {
+                throw LoggedException(e, logger, directoryPath);
+            }
         }
 
         private Exception LoggedException(Exception e, ILogger logger, string cause)
