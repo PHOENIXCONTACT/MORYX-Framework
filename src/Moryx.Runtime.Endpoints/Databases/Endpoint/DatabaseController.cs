@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -30,7 +30,13 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
     {
         private readonly IDbContextManager _dbContextManager;
         private readonly IDatabaseConfigUpdateService _databaseUpdateService;
-        private readonly string _dataDirectory = @".\Backups\";
+        private static readonly string DataDirectory;
+
+        static DatabaseController()
+        {
+            var executingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            DataDirectory = Path.Combine(executingDirectory!, "Backups");
+        }
 
         public DatabaseController(IDbContextManager dbContextManager)
         {
@@ -183,7 +189,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 return BadConfigValues();
 
 
-            var targetPath = Path.Combine(_dataDirectory, targetModel);
+            var targetPath = Path.Combine(DataDirectory, targetModel);
             if (!Directory.Exists(targetPath))
                 Directory.CreateDirectory(targetPath);
 
@@ -204,7 +210,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             if (!IsConfigValid(updatedConfig))
                 return BadConfigValues();
 
-            var filePath = Path.Combine(_dataDirectory, targetModel, request.BackupFileName);
+            var filePath = Path.Combine(DataDirectory, targetModel, request.BackupFileName);
             targetConfigurator.RestoreDatabase(updatedConfig, filePath);
 
             return new InvocationResponse();
@@ -355,7 +361,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             var setups = allSetups.Where(setup => string.IsNullOrEmpty(setup.SupportedFileRegex))
                                   .Select(ConvertSetup).OrderBy(setup => setup.SortOrder).ToList();
             string[] files;
-            if (!Directory.Exists(_dataDirectory) || !(files = Directory.GetFiles(_dataDirectory)).Any())
+            if (!Directory.Exists(DataDirectory) || !(files = Directory.GetFiles(DataDirectory)).Any())
                 return setups.ToArray();
 
             var fileSetups = allSetups.Where(setup => !string.IsNullOrEmpty(setup.SupportedFileRegex))
@@ -372,7 +378,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         private IEnumerable<BackupModel> GetAllBackups(Type contextType)
         {
             var targetModel = TargetModelName(contextType);
-            var backupFolder = Path.Combine(_dataDirectory, targetModel);
+            var backupFolder = Path.Combine(DataDirectory, targetModel);
 
             if (!Directory.Exists(backupFolder))
                 return Array.Empty<BackupModel>();
