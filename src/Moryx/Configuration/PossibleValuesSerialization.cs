@@ -3,11 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
+using Newtonsoft.Json.Linq;
 
 namespace Moryx.Configuration
 {
@@ -68,6 +70,43 @@ namespace Moryx.Configuration
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
+#if NET8_0
+        public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        {
+            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+            var validationAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+            var validation = new EntryValidation();
+
+            if (validationAttribute != null)
+            {
+                object[] allowed = validationAttribute.Values;
+                validation.AllowedValues = Array.ConvertAll(allowed, item => item.ToString());
+            }
+
+            IEnumerable<string> values;
+            // Possible values for primitive collections only apply to members
+            if (valuesAttribute == null || IsPrimitiveCollection(memberType))
+            {
+                if (validation.AllowedValues == null || IsPrimitiveCollection(memberType))
+                    return base.PossibleValues(memberType, attributeProvider);
+                else
+                    values = validation.AllowedValues.AsEnumerable();
+            }
+            else
+            {
+                if (validation.AllowedValues == null || IsPrimitiveCollection(memberType))
+                    values = valuesAttribute.GetValues(Container, ServiceProvider);
+                else
+                {
+                    var allowedValues = validation.AllowedValues.AsEnumerable();
+                    var possibleValues = valuesAttribute.GetValues(Container, ServiceProvider);
+                    values = possibleValues.Concat(allowedValues);
+                }
+            }
+
+            return values?.Distinct().ToArray();
+        }
+#else
         public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
@@ -79,6 +118,7 @@ namespace Moryx.Configuration
             var values = valuesAttribute.GetValues(Container, ServiceProvider);
             return values?.Distinct().ToArray();
         }
+#endif
 
         /// <summary>
         /// Check if a property is a collection of primitives

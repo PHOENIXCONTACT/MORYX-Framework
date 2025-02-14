@@ -37,17 +37,18 @@ namespace Moryx.Serialization
         [DataMember]
         public bool IsRequired { get; set; }
 
+        /// <summary>
+        /// List of denied values
+        /// </summary>
         [DataMember]
         public string[] DeniedValues { get; set; }
 
+        /// <summary>
+        /// List of allowed values
+        /// </summary>
         [DataMember]
         public string[] AllowedValues { get; set; }
 
-        [DataMember]
-        public double MinLength { get; set; }
-
-        [DataMember]
-        public double MaxLength { get; set; }
 
 /// <summary>
 /// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/> 
@@ -79,8 +80,6 @@ public EntryValidation()
                 IsRequired = IsRequired,
                 DeniedValues = DeniedValues,
                 AllowedValues = AllowedValues,
-                MaxLength = MaxLength,
-                MinLength = MinLength,
             };
             return copy;
         }

@@ -11,6 +11,4 @@ export default class EntryValidation {
     public isPassword: boolean;
     public deniedValue: string[];
     public allowedValue: string[];
-    public minLength: number;
-    public maxLength: number;
 }

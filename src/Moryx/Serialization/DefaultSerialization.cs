@@ -124,25 +124,18 @@ namespace Moryx.Serialization
                         break;
 
 #if NET8_0
-                    case AllowedValuesAttribute allowedAttribute:
-                        object[] allowed = allowedAttribute.Values;
-                        validation.AllowedValues = Array.ConvertAll(allowed, item => (string)item);
-                        break;
-
                     case DeniedValuesAttribute deniedAttribute:
                         object[] denied = deniedAttribute.Values;
-                        validation.DeniedValues = Array.ConvertAll(denied, item => (string)item);
+                        validation.DeniedValues = Array.ConvertAll(denied, item => item.ToString());
                         break;
 
                     case LengthAttribute lengthAttribute:
-                        validation.MinLength = lengthAttribute.MinimumLength;
-                        validation.MaxLength = lengthAttribute.MaximumLength;
+                        validation.Minimum = lengthAttribute.MinimumLength;
+                        validation.Maximum = lengthAttribute.MaximumLength;
                         break;
 #endif
                 }
             }
-          
-
             return validation;
         }
 
