@@ -92,14 +92,30 @@ namespace Moryx.Runtime.Kernel.FileSystem
             tree.Add(metadata);
             var treeHash = WriteTree(tree);
 
-            // Update owner file
-            var ownerFilePath = Path.Combine(_ownerFilesDirectory, ownerKey);
-            if (File.Exists(ownerFilePath))
-                await File.WriteAllLinesAsync(ownerFilePath, new[] { hash });
-            else
-                await File.AppendAllLinesAsync(ownerFilePath, new[] { hash });
+            await UpdateOwnerFile(hash, ownerFile);
 
             return hash;
+        }
+
+        private static async Task UpdateOwnerFile(string hash, string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+#if NETSTANDARD
+                await Task.Run(() => File.WriteAllLines(filePath, [hash]));
+#else
+                await File.WriteAllLinesAsync(filePath, [hash]);
+#endif
+            }
+            else
+            {
+#if NETSTANDARD
+                await Task.Run(() => File.AppendAllLines(filePath, [hash]));
+#else
+                await File.AppendAllLinesAsync(filePath, [hash]);
+#endif
+            }
+            
         }
 
         public Stream ReadBlob(string hash)
@@ -163,7 +179,7 @@ namespace Moryx.Runtime.Kernel.FileSystem
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.Contains(searchLine))
+                    if (line.Contains(hash))
                         return true;
                 }
             }
