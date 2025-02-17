@@ -4,7 +4,7 @@ name: CI
 on:
   push:
     branches: 
-      - dev
+      - feature/moryx-file-system-ci-publish
       - future
     tags:
       - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
@@ -40,59 +40,74 @@ jobs:
 
   Build:
     needs: [EnvVar]
-    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
-  UnitTests:
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+
+      - name: Clean
+        run: dotnet clean && dotnet nuget locals all --clear
+
+      - name: Execute dotnet restore
+        run: dotnet restore
+       
+      - name: Execute dotnet build
+        run: |
+          ASSEMBLY_VERSION="$(cat VERSION)"
+          ASSEMBLY_VERSION="${ASSEMBLY_VERSION%%.*}".0.0.0
+          echo "ASSEMBLY_VERSION = ${ASSEMBLY_VERSION}"
+          FILE_VERSION="$(cat VERSION)"."${{github.run_number}}"
+          echo "FILE_VERSION = ${FILE_VERSION}"
+          INFORMATIONAL_VERSION="$(cat VERSION)"-"moryx-file-system-ci-publish"."${{github.run_number}}"
+          echo "INFORMATIONAL_VERSION = ${INFORMATIONAL_VERSION}"
+          dotnet build --configuration Release --no-restore -p:AssemblyVersion=$ASSEMBLY_VERSION -p:FileVersion=$FILE_VERSION -p:InformationalVersion=$INFORMATIONAL_VERSION
+
+      - name: Execute dotnet pack with production version (dev or future)
+        run: |
+          PRODUCTION_VERSION="$(cat VERSION)"-"moryx-file-system-ci-publish"."${{github.run_number}}"
+          echo "PRODUCTION_VERSION = ${PRODUCTION_VERSION}"
+          dotnet pack --configuration Release --no-build --no-restore --output artifacts/packages -p:PackageVersion=$PRODUCTION_VERSION
+        
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME}}-packages
+          path: artifacts/packages/
+          retention-days: 1
+
+  Publish-CI: 
     needs: [EnvVar, Build]
-    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-  IntegrationTests:
-    needs: [EnvVar, Build]
-    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+          
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1
 
-  ReportGenerator:
-    needs: [EnvVar, UnitTests, IntegrationTests]
-    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
-    with:
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-               
-  Publish-Test-Coverage:
-    needs: [EnvVar, ReportGenerator]
-    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
-    with:
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Download package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}-packages
+          path: artifacts/packages/
 
-  # currently not working
-  # Documentation:
-  #   needs: [EnvVar, UnitTests]
-  #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@main
-  #   with:
-  #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-
-  Publish:
-    needs: [EnvVar, UnitTests]
-    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-      MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
-      MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
-      MORYX_PACKAGE_TARGET_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_FUTURE }}
-      MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
-      MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
-      MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
-    secrets: 
-      MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
-      NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+      - name: dotnet push
+        env:
+          MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
+          MORYX_PACKAGE_TARGET: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
+          MORYX_PACKAGE_TARGET_V3: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
+        run: dotnet nuget push "artifacts/packages/" --api-key $MORYX_NUGET_APIKEY --source $MORYX_PACKAGE_TARGET --skip-duplicate --symbol-api-key $MORYX_NUGET_APIKEY --symbol-source $MORYX_PACKAGE_TARGET_V3
+  
