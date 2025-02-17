@@ -56,32 +56,32 @@ Example class:
 ````cs
 public class PackagingResource
 {
-    [EntrySerialize, DataMember]
+    [EntrySerialize]
     [isRequiered]
     public Product Product_1 { get; set; }
 
-    [EntrySerialize, DataMember]
+    [EntrySerialize]
     [DisplayName("Material"), DefaultValue("material1")]
     public string MaterialType { get; set; }
 }
 
 public class Product
 {
-    [EntrySerialize, DataMember]
+    [EntrySerialize]
     [isRequiered, Length(7,8)]
-    public int product_id { get; set; }
+    public int ProductID { get; set; }
 
-    [EntrySerialize, DataMember]
+    [EntrySerialize]
     [DisplayName("Name"), MaxLength(10)]
-    public string product_name { get; set; }
+    public string ProductName { get; set; }
 }
 ````
 
-The PackagingResource object as a JSON-Script:
+The PackagingResource object as a serialized entry tree:
 ````JSON
 {
-    "identifier": "Product_1",
-    "displayName": "Product_1",
+    "identifier": "Product1",
+    "displayName": "Product1",
     "description": null,
     "value": {
         "type": "Product",
@@ -96,8 +96,8 @@ The PackagingResource object as a JSON-Script:
     },
     "subEntries": [
         {
-            "identifier": "product_id",
-            "displayName": "product_id",
+            "identifier": "ProductID",
+            "displayName": "ProductID",
             "description": null,
             "value": {
                 "type": "int",
@@ -109,14 +109,14 @@ The PackagingResource object as a JSON-Script:
             },
             "validation": {
                 "isRequired": true,
-                "minLength": 7,
-                "maxLength": 8
+                "minimum": 7,
+                "maximum": 8
             },
             "subEntries": [],
             "prototypes": []
         },
         {
-            "identifier": "product_name",
+            "identifier": "ProductName",
             "displayName": "Name",
             "description": null,
             "value": {
@@ -128,8 +128,8 @@ The PackagingResource object as a JSON-Script:
                 "isReadOnly": false
             },
             "validation": {
-                "maximum": 10,
                 "isRequired": true
+                "maximum": 10,
             },
             "subEntries": [],
             "prototypes": []
@@ -147,7 +147,7 @@ The PackagingResource object as a JSON-Script:
 		"type": "String",
 		"unitType": null,
 		"current": null,
-		"default": "abc",
+		"default": "material1",
 		"possible": null,
 		"isReadOnly": false
 	},
