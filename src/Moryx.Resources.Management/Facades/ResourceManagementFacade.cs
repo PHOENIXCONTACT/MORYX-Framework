@@ -59,35 +59,35 @@ namespace Moryx.Resources.Management
         public TResource GetResource<TResource>() where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return ResourceGraph.GetResource<TResource>().Proxify(TypeController);
+            return ResourceGraph.GetResource<TResource>()?.Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(long id)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return ResourceGraph.GetResource<TResource>(id).Proxify(TypeController);
+            return ResourceGraph.GetResource<TResource>(id)?.Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(string name)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return ResourceGraph.GetResource<TResource>(name).Proxify(TypeController);
+            return ResourceGraph.GetResource<TResource>(name)?.Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(ICapabilities requiredCapabilities)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return ResourceGraph.GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities)).Proxify(TypeController);
+            return ResourceGraph.GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities))?.Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(Func<TResource, bool> predicate)
             where TResource : class, IPublicResource
         {
             ValidateHealthState();
-            return ResourceGraph.GetResource(predicate).Proxify(TypeController);
+            return ResourceGraph.GetResource(predicate)?.Proxify(TypeController);
         }
 
         public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IPublicResource
