@@ -43,12 +43,6 @@ namespace Moryx.Serialization
         [DataMember]
         public string[] DeniedValues { get; set; }
 
-        /// <summary>
-        /// List of allowed values
-        /// </summary>
-        [DataMember]
-        public string[] AllowedValues { get; set; }
-
 
 /// <summary>
 /// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/> 
@@ -79,7 +73,6 @@ public EntryValidation()
                 Regex = Regex, 
                 IsRequired = IsRequired,
                 DeniedValues = DeniedValues,
-                AllowedValues = AllowedValues,
             };
             return copy;
         }

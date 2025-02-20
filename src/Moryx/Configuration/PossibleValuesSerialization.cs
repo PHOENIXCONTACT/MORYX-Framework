@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
@@ -73,37 +74,13 @@ namespace Moryx.Configuration
 #if NET8_0
         public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>() ;
             var validationAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
-            var validation = new EntryValidation();
 
-            if (validationAttribute != null)
-            {
-                object[] allowed = validationAttribute.Values;
-                validation.AllowedValues = Array.ConvertAll(allowed, item => item.ToString());
-            }
-
-            IEnumerable<string> values;
-            // Possible values for primitive collections only apply to members
-            if (valuesAttribute == null || IsPrimitiveCollection(memberType))
-            {
-                if (validation.AllowedValues == null || IsPrimitiveCollection(memberType))
-                    return base.PossibleValues(memberType, attributeProvider);
-                else
-                    values = validation.AllowedValues.AsEnumerable();
-            }
-            else
-            {
-                if (validation.AllowedValues == null || IsPrimitiveCollection(memberType))
-                    values = valuesAttribute.GetValues(Container, ServiceProvider);
-                else
-                {
-                    var allowedValues = validation.AllowedValues.AsEnumerable();
-                    var possibleValues = valuesAttribute.GetValues(Container, ServiceProvider);
-                    values = possibleValues.Concat(allowedValues);
-                }
-            }
-
+            var possibleValues = valuesAttribute?.GetValues(Container, ServiceProvider) ?? Enumerable.Empty<string>();
+            var allowedValues = validationAttribute?.Values.Select(o => o.ToString()) ?? Enumerable.Empty<string>();
+            
+            var values = allowedValues ?.Concat(possibleValues);
             return values?.Distinct().ToArray();
         }
 #else
