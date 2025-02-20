@@ -10,5 +10,4 @@ export default class EntryValidation {
     public isRequired: boolean;
     public isPassword: boolean;
     public deniedValue: string[];
-    public allowedValue: string[];
 }
