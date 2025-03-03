@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Castle.MicroKernel.Registration;
+using Microsoft.Extensions.Logging;
 using Moryx.FileSystem;
 using Moryx.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +17,8 @@ namespace Moryx.Runtime.Kernel.FileSystem
         private string _fsDirectory;
         private string _ownerFilesDirectory;
         private readonly ILogger _logger;
+
+        private readonly List<MoryxFileTree> _ownerTrees = new List<MoryxFileTree>();
 
         public MoryxFileSystem(ILoggerFactory loggerFactory)
         {
@@ -27,7 +31,97 @@ namespace Moryx.Runtime.Kernel.FileSystem
             _ownerFilesDirectory = Path.Combine(_fsDirectory, "owners");
         }
 
-        public async Task<string> WriteBlobAsync(Stream stream)
+        public void LoadTrees()
+        {
+            // Load all trees from the owner directory
+            var ownerFiles = Directory.EnumerateFiles(_ownerFilesDirectory);
+            foreach (var ownerFile in ownerFiles)
+            {
+                var treeHash = File.ReadAllText(ownerFile);
+                var ownerTree = new MoryxFileTree
+                {
+                    FileName = ownerFile,
+                    Hash = treeHash,
+                };
+                ReadExtensibleTree(ownerTree);
+            }
+        }
+
+        public MoryxFile GetFile(string hash)
+        {
+            return FindOnTree(_ownerTrees, hash);
+        }
+
+        private MoryxFile FindOnTree(IReadOnlyList<MoryxFile> files, string hash)
+        {
+            foreach (var file in files)
+            {
+                if (file.Hash == hash)
+                    return file;
+
+                if (file is not MoryxFileTree subTree)
+                    continue;
+
+                var match = FindOnTree(subTree.Files, hash);
+                if (match != null)
+                    return match;
+            }
+
+            return null;
+        }
+
+        public async Task<string> WriteAsync(MoryxFile file, Stream content)
+        {
+            if (file is MoryxFileTree fileTree)
+                return await WriteTreeAsync(fileTree);
+            else if (content != null)
+                return await WriteBlobAsync(file, content);
+
+            throw new ArgumentException("For all files except trees the content stream must be given");
+        }
+
+
+
+        private async Task<string> WriteTreeAsync(MoryxFileTree tree)
+        {
+            // Convert metadata to lines 
+            var stream = new MemoryStream();
+            using (var sw = new StreamWriter(stream))
+            {
+                foreach (var line in tree.Files.Select(FileToLine))
+                    sw.WriteLine(line);
+                await sw.FlushAsync();
+            }
+
+            tree.Hash = await StreamToDiskAsync(stream);
+
+            // Update parent or owner file
+            if (tree.ParentTree == null)
+            {
+                var ownerFile = Path.Combine(_ownerFilesDirectory, tree.FileName);
+                File.WriteAllText(ownerFile, tree.Hash);
+            }
+            else
+            {
+                await WriteTreeAsync(tree.ParentTree);
+            }
+
+            return tree.Hash;
+        }
+
+        private async Task<string> WriteBlobAsync(MoryxFile file, Stream fileStream)
+        {
+            // Create file first
+            var hash = await StreamToDiskAsync(fileStream);
+            file.Hash = hash;
+
+            // Now write the tree recursively 
+            await WriteTreeAsync(file.ParentTree);
+
+            return hash;
+        }
+
+        private async Task<string> StreamToDiskAsync(Stream stream)
         {
             var hashPath = HashPath.FromStream(stream);
 
@@ -62,90 +156,63 @@ namespace Moryx.Runtime.Kernel.FileSystem
 
             return hashPath.Hash;
         }
-        public async Task<string> WriteTreeAsync(IReadOnlyList<MoryxFileMetadata> metadata)
+
+        public Stream OpenStream(MoryxFile file)
         {
-            // Convert metadata to lines 
-            var lines = metadata.Select(md => md.ToString()).ToList();
-            var stream = new MemoryStream();
-            using (var sw = new StreamWriter(stream))
-            {
-                foreach (var line in lines)
-                    sw.WriteLine(line);
-                await sw.FlushAsync();
-            }
-
-            return await WriteBlobAsync(stream);
-        }
-
-        public async Task<string> WriteBlobAsync(Stream fileStream, MoryxFileMetadata metadata, string ownerKey)
-        {
-            // Create file first
-            var hash = await WriteBlobAsync(fileStream);
-            metadata.Hash = hash;
-
-            // Read current owner tree
-            var ownerFile = Path.Combine(_ownerFilesDirectory, ownerKey);
-            var ownerTree = File.ReadAllText(ownerFile);
-            var tree = ReadExtensibleTree(ownerTree);
-
-            // Add to owner tree/replace hash and write new
-            var exisiting = tree.FirstOrDefault();
-            tree.Add(metadata);
-            var treeHash = await WriteTreeAsync(tree);
-            File.WriteAllText(ownerFile, treeHash);
-
-            return hash;
-        }
-
-        public Stream ReadBlob(string hash)
-        {
+            var hash = file.Hash;
             var path = HashPath.FromHash(hash).FilePath(_fsDirectory);
             return File.Exists(path) ? new FileStream(path, FileMode.Open, FileAccess.Read) : null;
         }
 
-        public IReadOnlyList<MoryxFileMetadata> ReadTree(string hash) => ReadExtensibleTree(hash);
-
-
-        public IReadOnlyList<MoryxFileMetadata> ReadTreeByOwner(string ownerKey)
+        public MoryxFileTree ReadTreeByOwner(string ownerKey)
         {
-            // read hash from owner file
-            var ownerFile = Path.Combine(_ownerFilesDirectory, ownerKey);
-            var ownerTree = File.ReadAllText(ownerFile);
-
-            return ReadExtensibleTree(ownerTree);
+            var existingTree = _ownerTrees.FirstOrDefault(ot => ot.FileName == ownerKey);
+            if (existingTree == null)
+            {
+                existingTree = new MoryxFileTree { FileName = ownerKey };
+                _ownerTrees.Add(existingTree);
+            }
+            return existingTree;
         }
 
-        private List<MoryxFileMetadata> ReadExtensibleTree(string hash)
+        private MoryxFileTree ReadExtensibleTree(MoryxFileTree tree)
         {
             // Read tree from hash
-            var stream = ReadBlob(hash);
-            var metadata = new List<MoryxFileMetadata>();
-            using (var sr = new StreamReader(stream))
+            var path = HashPath.FromHash(tree.Hash).FilePath(_fsDirectory);
+            if (!File.Exists(path))
+                throw new FileNotFoundException(path);
+
+            var lines = File.ReadAllLines(path);
+            foreach (var line in lines)
             {
-                var line = sr.ReadLine();
-                metadata.Add(MoryxFileMetadata.FromLine(line));
+                var file = FileFromLine(line);
+                tree.AddFile(file);
+
+                if (file is MoryxFileTree subTree)
+                    ReadExtensibleTree(subTree);
             }
 
-            return metadata;
+            return tree;
         }
 
-        public bool RemoveFile(string hash, string ownerKey)
+        public bool RemoveFile(MoryxFile file)
         {
-            if (!IsOwner(hash, ownerKey))
-                return false;
-
             // Delete file if found
-            var hashPath = HashPath.FromHash(hash);
+            var hashPath = HashPath.FromHash(file.Hash);
             var filePath = hashPath.FilePath(_fsDirectory);
             if (!File.Exists(filePath))
                 return false;
+
             RemoveFile(filePath, _logger);
 
             // Check if subdirectory is empty and remove
             var directory = hashPath.DirectoryPath(_fsDirectory);
             CleanUpDirectory(directory, _logger);
 
-            // TODO: Remove file from owner list
+            // Remove file from tree and rewrite
+            var parentTree = file.ParentTree;
+            parentTree.RemoveFile(file);
+
 
             return true;
         }
@@ -208,6 +275,25 @@ namespace Moryx.Runtime.Kernel.FileSystem
                     logger.LogError("Unspecified error on file system access: {0}", e.Message);
                     return e;
             }
+        }
+
+        private static string FileToLine(MoryxFile file)
+        {
+            return $"{(int)file.Mode} {file.FileType.ToString().ToLower()} {file.MimeType} {file.Hash} {file.FileName}";
+        }
+
+        private static MoryxFile FileFromLine(string line)
+        {
+            var parts = line.Split(' ');
+
+            var file = parts[1] == FileType.Blob.ToString().ToLower()
+                ? new MoryxFile() : new MoryxFileTree();
+            file.Mode = (MoryxFileMode)int.Parse(parts[0]);
+            file.MimeType = parts[2];
+            file.Hash = parts[3];
+            file.FileName = string.Join(" ", parts.Skip(4));
+
+            return file;
         }
     }
 }
