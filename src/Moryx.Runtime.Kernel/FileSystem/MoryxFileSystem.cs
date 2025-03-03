@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Castle.MicroKernel.Registration;
+using Microsoft.Extensions.Logging;
 using Moryx.FileSystem;
 using Moryx.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +27,13 @@ namespace Moryx.Runtime.Kernel.FileSystem
         {
             _fsDirectory = Path.Combine(Directory.GetCurrentDirectory(), basePath);
             _ownerFilesDirectory = Path.Combine(_fsDirectory, "owners");
+        }
+
+        public void LoadTrees()
+        {
+            // Load all trees from the owner directory
+            var ownerFiles = Directory.EnumerateFiles(_ownerFilesDirectory);
+
         }
 
         public async Task<string> WriteBlobAsync(Stream stream)
@@ -103,10 +112,8 @@ namespace Moryx.Runtime.Kernel.FileSystem
             return File.Exists(path) ? new FileStream(path, FileMode.Open, FileAccess.Read) : null;
         }
 
-        public IReadOnlyList<MoryxFileMetadata> ReadTree(string hash) => ReadExtensibleTree(hash);
 
-
-        public IReadOnlyList<MoryxFileMetadata> ReadTreeByOwner(string ownerKey)
+        public MoryxFileTree ReadTreeByOwner(string ownerKey)
         {
             // read hash from owner file
             var ownerFile = Path.Combine(_ownerFilesDirectory, ownerKey);
@@ -115,18 +122,18 @@ namespace Moryx.Runtime.Kernel.FileSystem
             return ReadExtensibleTree(ownerTree);
         }
 
-        private List<MoryxFileMetadata> ReadExtensibleTree(string hash)
+        private MoryxFileTree ReadExtensibleTree(string hash)
         {
             // Read tree from hash
             var stream = ReadBlob(hash);
-            var metadata = new List<MoryxFileMetadata>();
+            var files = new List<MoryxFile>();
             using (var sr = new StreamReader(stream))
             {
                 var line = sr.ReadLine();
-                metadata.Add(MoryxFileMetadata.FromLine(line));
+                files.Add(FileFromLine(line));
             }
 
-            return metadata;
+            return new MoryxFileTree(files);
         }
 
         public bool RemoveFile(string hash, string ownerKey)
@@ -208,6 +215,25 @@ namespace Moryx.Runtime.Kernel.FileSystem
                     logger.LogError("Unspecified error on file system access: {0}", e.Message);
                     return e;
             }
+        }
+
+        private static string FileToLine(MoryxFile file)
+        {
+            return $"{(int)file.Mode} {file.FileType.ToString().ToLower()} {file.MimeType} {file.Hash} {file.FileName}";
+        }
+
+        private static MoryxFile FileFromLine(string line)
+        {
+            var parts = line.Split(' ');
+
+            var file = parts[1] == FileType.Blob.ToString().ToLower()
+                ? new MoryxFile() : new MoryxFileTree();
+            file.Mode = (MoryxFileMode)int.Parse(parts[0]);
+            file.MimeType = parts[2];
+            file.Hash = parts[3];
+            file.FileName = string.Join(" ", parts.Skip(4));
+
+            return file;
         }
     }
 }
