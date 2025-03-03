@@ -3,11 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
+using Newtonsoft.Json.Linq;
 
 namespace Moryx.Configuration
 {
@@ -68,6 +71,19 @@ namespace Moryx.Configuration
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
+#if NET8_0
+        public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        {
+            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>() ;
+            var validationAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+
+            var possibleValues = valuesAttribute?.GetValues(Container, ServiceProvider) ?? Enumerable.Empty<string>();
+            var allowedValues = validationAttribute?.Values.Select(o => o.ToString()) ?? Enumerable.Empty<string>();
+            
+            var values = allowedValues ?.Concat(possibleValues);
+            return values?.Distinct().ToArray();
+        }
+#else
         public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
@@ -79,6 +95,7 @@ namespace Moryx.Configuration
             var values = valuesAttribute.GetValues(Container, ServiceProvider);
             return values?.Distinct().ToArray();
         }
+#endif
 
         /// <summary>
         /// Check if a property is a collection of primitives
