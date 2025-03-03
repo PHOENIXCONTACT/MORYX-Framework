@@ -4,6 +4,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.FileSystem;
+using Moryx.Runtime.Kernel.FileSystem;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 using System;
@@ -29,6 +31,10 @@ namespace Moryx.Runtime.Kernel
             // Register module manager
             serviceCollection.AddSingleton<ModuleManager>();
             serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
+
+            // Register module manager
+            serviceCollection.AddSingleton<MoryxFileSystem>();
+            serviceCollection.AddSingleton<IMoryxFileSystem>(x => x.GetRequiredService<MoryxFileSystem>());
 
             // Register parallel operations
             serviceCollection.AddTransient<IParallelOperations, ParallelOperations>();
@@ -85,6 +91,19 @@ namespace Moryx.Runtime.Kernel
                 Directory.CreateDirectory(configDirectory);
             configManager.ConfigDirectory = configDirectory;
             return configManager;
+        }
+
+        /// <summary>
+        /// Use moryx file system and configure base directory
+        /// </summary>
+        /// <returns></returns>
+        public static IMoryxFileSystem UseMoryxFileSystem(this IServiceProvider serviceProvider, string path)
+        {
+            var fileSystem = serviceProvider.GetRequiredService<MoryxFileSystem>();
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            fileSystem.SetBasePath(path);
+            return fileSystem;
         }
 
         private static IModuleManager _moduleManager;
