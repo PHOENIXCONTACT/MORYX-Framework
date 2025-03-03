@@ -12,43 +12,32 @@ namespace Moryx.FileSystem
     public interface IMoryxFileSystem
     {
         /// <summary>
-        /// Write a file to the file system and receive the hash to access it later
+        /// Write a stream to the file system and represent by the given file
         /// </summary>
-        Task<string> WriteBlobAsync(Stream fileStream);
+        /// <returns>The hash of the written file on the disk</returns>
+        Task<string> WriteAsync(MoryxFile file, Stream content);
 
         /// <summary>
-        /// Write a file to the file system and receive the hash to access it later
+        /// Resolve MORYX file by hash
         /// </summary>
-        Task<string> WriteBlobAsync(Stream fileStream, MoryxFileMetadata metadata, string ownerKey);
+        MoryxFile GetFile(string hash);
 
         /// <summary>
-        /// Write a file to the file system and receive the hash to access it later
+        /// Read the file content for the MORYX file
         /// </summary>
-        Task<string> WriteTreeAsync(IReadOnlyList<MoryxFileMetadata> metadata);
+        Stream OpenStream(MoryxFile file);
 
         /// <summary>
-        /// Read the file by passing the file system hash
-        /// </summary>
-        /// <param name="hash"></param>
-        /// <returns></returns>
-        Stream ReadBlob(string hash);
-
-        /// <summary>
-        /// Read a tree file and return the listed files
-        /// </summary>
-        IReadOnlyList<MoryxFileMetadata> ReadTree(string hash);
-
-        /// <summary>
-        /// Return all files stored under
+        /// Return all files stored under a given owner
         /// </summary>
         /// <param name="ownerKey"></param>
         /// <returns></returns>
-        IReadOnlyList<MoryxFileMetadata> ReadTreeByOwner(string ownerKey);
+        MoryxFileTree ReadTreeByOwner(string ownerKey);
 
         /// <summary>
         /// Remove a file by hash and provided owner key.
         /// Files without owner key can not be removed
         /// </summary>
-        bool RemoveFile(string hash, string ownerKey);
+        bool RemoveFile(MoryxFile file);
     }
 }
