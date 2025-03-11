@@ -221,7 +221,7 @@ namespace Moryx.Serialization
                     return CollectionBuilder(memberType, currentValue, mappedEntry);
                 default:
                     var value = mappedEntry.Value.Current;
-                    if (value is null) 
+                    if (value is null)
                         return null;
 
                     try
@@ -250,6 +250,15 @@ namespace Moryx.Serialization
         public EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property)
         {
             var unitType = EntryUnitType.None;
+
+            // Check if the property is an enum and has the <see cref="System.FlagsAttribute"/>
+            if (property is PropertyInfo propertyInfo && propertyInfo.PropertyType.IsEnum)
+            {
+                if (propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any())
+                {
+                    unitType = EntryUnitType.Flags;
+                }
+            }
 
             var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
             if (passwordAttr != null)
