@@ -251,14 +251,8 @@ namespace Moryx.Serialization
         {
             var unitType = EntryUnitType.None;
 
-            // Check if the property is an enum and has the <see cref="System.FlagsAttribute"/>
-            if (property is PropertyInfo propertyInfo && propertyInfo.PropertyType.IsEnum)
-            {
-                if (propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any())
-                {
-                    unitType = EntryUnitType.Flags;
-                }
-            }
+            if (HasFlagsAttribute(property))
+                unitType = EntryUnitType.Flags;
 
             var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
             if (passwordAttr != null)
@@ -326,6 +320,18 @@ namespace Moryx.Serialization
 
             // Other collections are not supported
             return null;
+        }
+
+        /// <summary>
+        /// Checks if the given property is an enum and has the <see cref="System.FlagsAttribute"/>.
+        /// </summary>
+        /// <param name="property">The property to inspect for attributes.</param>
+        /// <returns>True if the property has the Flags attribute; otherwise, false.</returns>
+        private bool HasFlagsAttribute(ICustomAttributeProvider property)
+        {
+            return property is PropertyInfo propertyInfo &&
+                   propertyInfo.PropertyType.IsEnum &&
+                   propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any();
         }
     }
 }
