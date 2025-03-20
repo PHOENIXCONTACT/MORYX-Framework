@@ -74,6 +74,13 @@ namespace Moryx.Serialization
         /// <see cref="ICustomSerialization"/>
         public virtual string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
+#if NET8_0
+            var validationAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+            var allowedValues = validationAttribute?.Values.Select(o => o.ToString()) ?? Enumerable.Empty<string>();
+            if (allowedValues.All(value => !string.IsNullOrEmpty(value))) 
+                return allowedValues?.Distinct().ToArray();            
+#endif
+
             // Element type for collections
             var isCollection = EntryConvert.IsCollection(memberType);
             if (isCollection)
