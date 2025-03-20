@@ -3,11 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
+using Newtonsoft.Json.Linq;
 
 namespace Moryx.Configuration
 {

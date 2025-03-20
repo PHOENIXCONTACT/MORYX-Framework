@@ -54,33 +54,109 @@ The recursive `SubEntries` structure represents properties of a `EntryValueType.
 Example class:
 
 ````cs
-public class Root
+public class PackagingResource
 {
-    [DisplayName("Bob")]
-    public Foo Blah { get; set; }
-}
-public class Foo
-{
-    public int ValueA { get; set; }
+    [EntrySerialize]
+    [isRequiered]
+    public Product Product_1 { get; set; }
 
-    [DefaultValue("Hello")]
-    public string ValueB { get; set; }
+    [EntrySerialize]
+    [DisplayName("Material"), DefaultValue("material1")]
+    public string MaterialType { get; set; }
+}
+
+public class Product
+{
+    [EntrySerialize]
+    [isRequiered, Length(7,8)]
+    public int ProductID { get; set; }
+
+    [EntrySerialize]
+    [DisplayName("Name"), MaxLength(10)]
+    public string ProductName { get; set; }
 }
 ````
 
-The root object as a entry tree:
+The PackagingResource object as a serialized entry tree:
+````JSON
+{
+    "identifier": "Product1",
+    "displayName": "Product1",
+    "description": null,
+    "value": {
+        "type": "Product",
+        "unitType": null,
+        "current": "",
+        "default": null,
+        "possible": null,
+        "isReadOnly": false
+    },
+    "validation": {
+        "isRequired": true,
+    },
+    "subEntries": [
+        {
+            "identifier": "ProductID",
+            "displayName": "ProductID",
+            "description": null,
+            "value": {
+                "type": "int",
+                "unitType": null,
+                "current": "",
+                "default": null,
+                "possible": null,
+                "isReadOnly": false
+            },
+            "validation": {
+                "isRequired": true,
+                "minimum": 7,
+                "maximum": 8
+            },
+            "subEntries": [],
+            "prototypes": []
+        },
+        {
+            "identifier": "ProductName",
+            "displayName": "Name",
+            "description": null,
+            "value": {
+                "type": "string",
+                "unitType": null,
+                "current": "",
+                "default": null,
+                "possible": null,
+                "isReadOnly": false
+            },
+            "validation": {
+                "isRequired": true
+                "maximum": 10,
+            },
+            "subEntries": [],
+            "prototypes": []
 
-````sh
-Entry
-- Key { Identifier = "Blah", Name = "Bob" }
-- Value { Current = "Foo" }
-- SubEntries
--- Entry-A
---- Key { Identifier = "ValueA", Name = "ValueA" }
---- Value { Current = "10" }
--- Entry-B
---- Key { Identifier = "ValueB", Name = "ValueB" }
---- Value { Current = "SomeString", Default = "Hello" }
+        }
+    ],
+    "prototypes": []
+
+},
+{
+	"identifier": "MaterialType",
+	"displayName": "Marterial",
+	"description": null,
+	"value": {
+		"type": "String",
+		"unitType": null,
+		"current": null,
+		"default": "material1",
+		"possible": null,
+		"isReadOnly": false
+	},
+	"validation": {
+	},
+	"subEntries": [],
+	"prototypes": []
+    
+}
 ````
 
 ## Prototypes

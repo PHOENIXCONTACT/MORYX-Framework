@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Tools;
@@ -73,6 +74,13 @@ namespace Moryx.Serialization
         /// <see cref="ICustomSerialization"/>
         public virtual string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
+#if NET8_0
+            var validationAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+            var allowedValues = validationAttribute?.Values.Select(o => o.ToString()) ?? Enumerable.Empty<string>();
+            if (allowedValues.All(value => !string.IsNullOrEmpty(value))) 
+                return allowedValues?.Distinct().ToArray();            
+#endif
+
             // Element type for collections
             var isCollection = EntryConvert.IsCollection(memberType);
             if (isCollection)
@@ -103,30 +111,38 @@ namespace Moryx.Serialization
             // Iterate over attributes reading all validation rules
             foreach (var attribute in validationAttributes)
             {
-                if (attribute is MinLengthAttribute minAttribute)
+                switch (attribute)
                 {
-                    validation.Minimum = minAttribute.Length;
-                }
-                else if (attribute is MaxLengthAttribute maxAttribute)
-                {
-                    validation.Maximum = maxAttribute.Length;
-                }
-                else if (attribute is RangeAttribute rangeAttribute)
-                {
-                    validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum);
-                    validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum);
-                }
-                else if (attribute is RegularExpressionAttribute regexAttribute)
-                    validation.Regex = regexAttribute.Pattern;
-                else if (attribute is StringLengthAttribute strLength)
-                {
-                    validation.Minimum = strLength.MinimumLength;
-                    validation.Maximum = strLength.MaximumLength;
-                }
-                else if (attribute is RequiredAttribute)
-                    validation.IsRequired = true;
-            }
+                    case MinLengthAttribute minAttribute:
+                        validation.Minimum = minAttribute.Length;
+                        break;
 
+                    case MaxLengthAttribute maxAttribute:
+                        validation.Maximum = maxAttribute.Length;
+                        break;
+
+                    case RangeAttribute rangeAttribute:
+                        validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum);
+                        validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum);
+                        break;
+
+                    case RequiredAttribute requiredAttribute:
+                        validation.IsRequired = true;
+                        break;
+
+#if NET8_0
+                    case DeniedValuesAttribute deniedAttribute:
+                        object[] denied = deniedAttribute.Values;
+                        validation.DeniedValues = Array.ConvertAll(denied, item => item.ToString());
+                        break;
+
+                    case LengthAttribute lengthAttribute:
+                        validation.Minimum = lengthAttribute.MinimumLength;
+                        validation.Maximum = lengthAttribute.MaximumLength;
+                        break;
+#endif
+                }
+            }
             return validation;
         }
 
