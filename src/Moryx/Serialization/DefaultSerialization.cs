@@ -76,9 +76,11 @@ namespace Moryx.Serialization
         {
 #if NET8_0
             var validationAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
-            var allowedValues = validationAttribute?.Values.Select(o => o.ToString()) ?? Enumerable.Empty<string>();
-            if (allowedValues.All(value => !string.IsNullOrEmpty(value))) 
-                return allowedValues?.Distinct().ToArray();            
+            if (validationAttribute != null)
+            {
+                var allowedValues = validationAttribute.Values.Select(o => o.ToString());
+                return allowedValues?.Distinct().ToArray();
+            }
 #endif
 
             // Element type for collections
@@ -128,6 +130,15 @@ namespace Moryx.Serialization
 
                     case RequiredAttribute requiredAttribute:
                         validation.IsRequired = true;
+                        break;
+
+                    case RegularExpressionAttribute regexAttribute:
+                        validation.Regex = regexAttribute.Pattern;
+                        break;
+
+                    case StringLengthAttribute strLength:
+                        validation.Minimum = strLength.MinimumLength;
+                        validation.Maximum = strLength.MaximumLength;
                         break;
 
 #if NET8_0
