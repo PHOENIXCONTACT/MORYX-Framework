@@ -5,7 +5,7 @@ namespace Moryx.FileSystem
 {
     public class MoryxFile
     {
-        public MoryxFileMode Mode { get; set; } = new MoryxFileMode();
+        public int Mode { get; set; } = (int)new MoryxFileMode();
 
         public virtual FileType FileType { get; } = FileType.Blob;
 

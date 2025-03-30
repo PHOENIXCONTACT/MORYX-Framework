@@ -25,7 +25,7 @@ namespace Moryx.FileSystem
         /// <summary>
         /// Read the file content for the MORYX file
         /// </summary>
-        Stream OpenStream(MoryxFile file);
+        Stream OpenStream(string fileHash);
 
         /// <summary>
         /// Return all files stored under a given owner

@@ -49,25 +49,7 @@ namespace Moryx.Runtime.Kernel.FileSystem
 
         public MoryxFile GetFile(string hash)
         {
-            return FindOnTree(_ownerTrees, hash);
-        }
-
-        private MoryxFile FindOnTree(IReadOnlyList<MoryxFile> files, string hash)
-        {
-            foreach (var file in files)
-            {
-                if (file.Hash == hash)
-                    return file;
-
-                if (file is not MoryxFileTree subTree)
-                    continue;
-
-                var match = FindOnTree(subTree.Files, hash);
-                if (match != null)
-                    return match;
-            }
-
-            return null;
+            return _ownerTrees.FindFile(hash);
         }
 
         public async Task<string> WriteAsync(MoryxFile file, Stream content)
@@ -79,8 +61,6 @@ namespace Moryx.Runtime.Kernel.FileSystem
 
             throw new ArgumentException("For all files except trees the content stream must be given");
         }
-
-
 
         private async Task<string> WriteTreeAsync(MoryxFileTree tree)
         {
@@ -157,9 +137,8 @@ namespace Moryx.Runtime.Kernel.FileSystem
             return hashPath.Hash;
         }
 
-        public Stream OpenStream(MoryxFile file)
+        public Stream OpenStream(string hash)
         {
-            var hash = file.Hash;
             var path = HashPath.FromHash(hash).FilePath(_fsDirectory);
             return File.Exists(path) ? new FileStream(path, FileMode.Open, FileAccess.Read) : null;
         }
@@ -212,7 +191,7 @@ namespace Moryx.Runtime.Kernel.FileSystem
             // Remove file from tree and rewrite
             var parentTree = file.ParentTree;
             parentTree.RemoveFile(file);
-
+            WriteTreeAsync(parentTree).Wait();
 
             return true;
         }
@@ -279,7 +258,7 @@ namespace Moryx.Runtime.Kernel.FileSystem
 
         private static string FileToLine(MoryxFile file)
         {
-            return $"{(int)file.Mode} {file.FileType.ToString().ToLower()} {file.MimeType} {file.Hash} {file.FileName}";
+            return $"{file.Mode} {file.FileType.ToString().ToLower()} {file.MimeType} {file.Hash} {file.FileName}";
         }
 
         private static MoryxFile FileFromLine(string line)
@@ -288,7 +267,7 @@ namespace Moryx.Runtime.Kernel.FileSystem
 
             var file = parts[1] == FileType.Blob.ToString().ToLower()
                 ? new MoryxFile() : new MoryxFileTree();
-            file.Mode = (MoryxFileMode)int.Parse(parts[0]);
+            file.Mode = int.Parse(parts[0]);
             file.MimeType = parts[2];
             file.Hash = parts[3];
             file.FileName = string.Join(" ", parts.Skip(4));
