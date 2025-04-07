@@ -9,4 +9,4 @@ Their interface [IDriver](../../../../src/Moryx.AbstractionLayer/Drivers/IDriver
 Other driver interfaces like those for a Programable Logic Controller (PLC) or an RFID reader are derived from IDriver and should ideally offer an easy, but generic API. 
 For a resource developer it is supposed to make the interaction with the device easy without being too speciﬁc for a single device.
 
-Have also a look on the tutorial [how to build a driver](../../Tutorials/HowToBuildADriver.md).
+Have also a look on the tutorial [how to build a driver](/docs/tutorials/HowToBuildADriver.md).

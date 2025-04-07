@@ -14,4 +14,4 @@ Go deeper into resource types with the following articles which present branches
 * [Driver resource](DriverResource.md) - Communicate with another device
 * [Interaction resource](InteractionResource.md) - A resource to interact with an UI
 
-Have also a look on the tutorial [how to create a resource](../../Tutorials/HowToCreateResource.md).
+Have also a look on the tutorial [how to create a resource](/docs/tutorials/HowToCreateResource.md).
