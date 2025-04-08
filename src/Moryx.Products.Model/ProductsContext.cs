@@ -29,8 +29,6 @@ namespace Moryx.Products.Model
 
         public virtual DbSet<ProductTypePropertiesEntity> ProductTypeProperties { get; set; }
 
-        public virtual DbSet<ProductFileEntity> ProductFiles { get; set; }
-
         public virtual DbSet<ProductInstanceEntity> ProductInstances { get; set; }
 
         public virtual DbSet<WorkplanEntity> Workplans { get; set; }

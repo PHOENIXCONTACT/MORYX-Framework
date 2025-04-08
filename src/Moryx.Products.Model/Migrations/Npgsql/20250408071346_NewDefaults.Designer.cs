@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Products.Model;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Moryx.Products.Model.Migrations.Npgsql
 {
     [DbContext(typeof(NpgsqlProductsContext))]
-    partial class ProductsContextModelSnapshot : ModelSnapshot
+    [Migration("20250408071346_NewDefaults")]
+    partial class NewDefaults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,6 +125,39 @@ namespace Moryx.Products.Model.Migrations.Npgsql
                     b.HasIndex("ParentId");
 
                     b.ToTable("PartLinks", "public");
+                });
+
+            modelBuilder.Entity("Moryx.Products.Model.ProductFileEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("FileHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MimeType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductFiles", "public");
                 });
 
             modelBuilder.Entity("Moryx.Products.Model.ProductInstanceEntity", b =>
@@ -708,6 +744,15 @@ namespace Moryx.Products.Model.Migrations.Npgsql
                     b.Navigation("Child");
 
                     b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Moryx.Products.Model.ProductFileEntity", b =>
+                {
+                    b.HasOne("Moryx.Products.Model.ProductTypeEntity", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Moryx.Products.Model.ProductInstanceEntity", b =>

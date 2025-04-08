@@ -21,11 +21,5 @@ namespace Moryx.Products.Model
         public SqliteProductsContext(DbContextOptions options) : base(options)
         {
         }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
     }
 }
