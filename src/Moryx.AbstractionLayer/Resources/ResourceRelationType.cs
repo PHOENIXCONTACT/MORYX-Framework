@@ -59,12 +59,12 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Defines the current mounted exchangeable part like a probe head.
         /// </summary>
-        CurrentExchangablePart = (16 << 3) + 4, // Exchangable parts are usages
+        CurrentExchangeablePart = (16 << 3) + 4, // Exchangeable parts are usages
 
         /// <summary>
         /// Defines the possible exchangeable parts like probe heads.
         /// </summary>
-        PossibleExchangablePart = (17 << 3) + 4, // Exchangeable parts are usages
+        PossibleExchangeablePart = (17 << 3) + 4, // Exchangeable parts are usages
 
         /// <summary>
         /// Indicates that the source decorates the target

@@ -57,7 +57,7 @@ namespace Moryx.Resources.Samples
         // Automatically detect relation name based
         public IVisualInstructor Instructor { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart, AutoSave = true)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, AutoSave = true)]
         public IReferences<IWpc> CurentWpcs { get; set; }
     }
 }
