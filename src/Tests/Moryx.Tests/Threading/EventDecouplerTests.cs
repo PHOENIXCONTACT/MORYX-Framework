@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 using Moryx.Threading;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace Moryx.Tests.Threading
 {

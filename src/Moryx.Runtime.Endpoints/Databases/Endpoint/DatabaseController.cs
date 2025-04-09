@@ -1,9 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Moryx.Model;
 using Moryx.Model.Configuration;
@@ -11,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Response;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Request;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Moryx.Tools;
 using System.Runtime.Serialization;

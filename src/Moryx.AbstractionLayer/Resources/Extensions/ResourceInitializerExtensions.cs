@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Moryx.AbstractionLayer.Resources.Extensions
+﻿namespace Moryx.AbstractionLayer.Resources.Extensions
 {
     /// <summary>
     /// Provides an API to generate fluent code for resource initializion by method chaining.

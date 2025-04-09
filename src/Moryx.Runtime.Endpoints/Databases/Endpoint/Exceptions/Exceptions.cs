@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Exceptions
+﻿namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Exceptions
 {
     public class NotFoundException : Exception
     {

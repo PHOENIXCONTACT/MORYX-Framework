@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Microsoft.Data.Sqlite;
-using System;
 
 namespace Moryx.Model.Sqlite
 {

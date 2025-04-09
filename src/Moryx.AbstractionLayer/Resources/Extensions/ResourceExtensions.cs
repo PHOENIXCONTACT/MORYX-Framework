@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Moryx.AbstractionLayer.Resources
+﻿namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
     /// Extensions for resources

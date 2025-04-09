@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Moryx.Workplans.Validation
+﻿namespace Moryx.Workplans.Validation
 {
     /// <summary>
     /// Engine validation class

@@ -1,6 +1,5 @@
 ﻿using Moryx.Container;
 using Moryx.Tools.FunctionResult;
-using System;
 
 namespace Moryx.Communication.Connection
 {

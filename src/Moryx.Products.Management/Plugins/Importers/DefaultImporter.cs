@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;

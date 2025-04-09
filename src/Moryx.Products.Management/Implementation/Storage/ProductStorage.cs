@@ -1,12 +1,9 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
 using Moryx.Model;
 using Moryx.Products.Model;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;

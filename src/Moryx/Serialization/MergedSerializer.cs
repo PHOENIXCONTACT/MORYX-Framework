@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Linq;
 using Moryx.Communication;
 
 namespace Moryx.Serialization

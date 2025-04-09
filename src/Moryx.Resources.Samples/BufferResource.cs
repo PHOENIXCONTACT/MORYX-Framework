@@ -3,7 +3,6 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Runtime.Endpoints.Common.Endpoint.Response;
-using System;
 using System.Globalization;
 using System.Reflection;
 

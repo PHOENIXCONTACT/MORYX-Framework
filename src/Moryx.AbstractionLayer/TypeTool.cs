@@ -1,6 +1,4 @@
 ﻿using Moryx.Tools;
-using System;
-using System.Linq;
 
 namespace Moryx.AbstractionLayer
 {

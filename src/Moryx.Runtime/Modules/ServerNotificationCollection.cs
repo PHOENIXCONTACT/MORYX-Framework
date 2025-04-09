@@ -2,9 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using Moryx.Modules;
 
 namespace Moryx.Runtime.Modules

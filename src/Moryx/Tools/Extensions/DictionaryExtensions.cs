@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Moryx.Tools
+﻿namespace Moryx.Tools
 {
     /// <summary>
     /// Extension methods for dictionaries

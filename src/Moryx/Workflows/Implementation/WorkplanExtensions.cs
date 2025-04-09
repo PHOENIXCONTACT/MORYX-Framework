@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Moryx.Workplans
+﻿namespace Moryx.Workplans
 {
     /// <summary>
     /// Extension methods for the <see cref="IWorkplan"/>

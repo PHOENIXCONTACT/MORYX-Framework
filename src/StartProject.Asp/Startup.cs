@@ -1,14 +1,8 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.Configuration;
 using Moryx.Asp.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
 
 namespace StartProject.Asp
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;

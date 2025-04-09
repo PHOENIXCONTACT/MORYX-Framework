@@ -4,9 +4,6 @@
 using Castle.Core;
 using Castle.MicroKernel.Context;
 using Castle.MicroKernel;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Moryx.Container
 {
