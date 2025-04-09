@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Moryx.Tools
@@ -26,18 +24,18 @@ namespace Moryx.Tools
         public ReferenceGroup(PropertyInfo key, TReference value)
         {
             Key = key;
-            Values = value == null ? Enumerable.Empty<TReference>() : new[] { value };
+            Values = value == null ? [] : [value];
         }
 
         public ReferenceGroup(PropertyInfo key, IEnumerable<TReference> values)
         {
             Key = key;
-            Values = values ?? Enumerable.Empty<TReference>();
+            Values = values ?? [];
         }
 
         public IEnumerator<TReference> GetEnumerator()
         {
-            return (Values ?? Enumerable.Empty<TReference>()).GetEnumerator();
+            return (Values ?? []).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

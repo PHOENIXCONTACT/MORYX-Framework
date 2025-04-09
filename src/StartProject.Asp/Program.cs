@@ -1,10 +1,6 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using Moryx.Runtime.Kernel;
 using Moryx.Tools;
 using Moryx.Model;
-using Moryx.Runtime.Endpoints;
-using Microsoft.Extensions.DependencyInjection;
 using Moryx.Runtime.Modules;
 
 namespace StartProject.Asp

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Moryx.Serialization
+﻿namespace Moryx.Serialization
 {
     [AttributeUsage(AttributeTargets.All)]
     public class EntrySerializeAttribute : Attribute

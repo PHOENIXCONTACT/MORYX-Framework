@@ -1,9 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
@@ -178,7 +175,7 @@ namespace Moryx.Resources.Management
         /// <inheritdoc />
         public IEnumerable<ResourceTypeNode> SupportedTypes(Type constraint)
         {
-            return SupportedTypes(new[] { constraint });
+            return SupportedTypes([constraint]);
         }
         /// <inheritdoc />
         IEnumerable<IResourceTypeNode> IResourceTypeTree.SupportedTypes(Type constraint) => SupportedTypes(constraint);

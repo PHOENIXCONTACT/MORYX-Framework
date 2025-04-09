@@ -1,11 +1,8 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
@@ -14,7 +11,6 @@ using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Resources.Model;
-using Moryx.Tools;
 using static Moryx.Resources.Management.ResourceReferenceTools;
 
 namespace Moryx.Resources.Management
@@ -280,14 +276,14 @@ namespace Moryx.Resources.Management
             // Check if it is a single reference
             var asResource = propertyValue as IResource;
             if (asResource != null)
-                return new[] { asResource };
+                return [asResource];
 
             // Otherwise it must be a collection
             var asEnumerable = propertyValue as IEnumerable;
             if (asEnumerable != null)
                 return asEnumerable.Cast<IResource>();
 
-            return Enumerable.Empty<IResource>();
+            return [];
         }
 
         /// <summary>

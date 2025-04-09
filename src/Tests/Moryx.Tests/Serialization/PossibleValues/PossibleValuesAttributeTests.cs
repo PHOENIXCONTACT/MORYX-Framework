@@ -24,7 +24,7 @@ namespace Moryx.Tests
         {
             // Arrange
             var attrWithBase = new PossibleTypesAttribute(typeof(SomeBase));
-            var attrWithArray = new PossibleTypesAttribute(new[] { typeof(SomeImpl) });
+            var attrWithArray = new PossibleTypesAttribute([typeof(SomeImpl)]);
             var attrWithFull = new PossibleTypesAttribute(typeof(SomeBase)) { UseFullname = true };
 
             // Act

@@ -48,9 +48,9 @@ namespace Moryx.Resources.Management.Tests
                 .Returns(new Resource[0]);
 
             _initializerMock = new Mock<IResourceInitializer>();
-            _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>())).Returns(new[] { _resourceMock });
+            _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>())).Returns([_resourceMock]);
             _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
-                .Returns(new[] { _resourceMock });
+                .Returns([_resourceMock]);
             _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
                 It.IsAny<Dictionary<Resource, ResourceEntity>>()))
                 .Returns(new Resource[0]);

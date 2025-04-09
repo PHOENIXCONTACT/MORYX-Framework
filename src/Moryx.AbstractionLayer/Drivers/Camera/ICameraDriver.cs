@@ -1,6 +1,4 @@
 ﻿using Moryx.AbstractionLayer.Drivers;
-using System;
-using System.Threading.Tasks;
 
 namespace Moryx.Drivers.Camera.Interfaces
 {

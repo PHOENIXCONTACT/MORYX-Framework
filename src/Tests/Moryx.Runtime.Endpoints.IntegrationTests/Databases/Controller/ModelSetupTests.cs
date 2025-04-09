@@ -16,7 +16,7 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
     {
         private IDbContextManager? _dbContextManager;
         private DatabaseController _databaseController;
-        private readonly List<Exception> _exceptions = new List<Exception>();
+        private readonly List<Exception> _exceptions = [];
 
         [SetUp]
         public void Setup()

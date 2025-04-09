@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Properties;
 using Moryx.Asp.Extensions;
 using Moryx.Workplans;
-using System.Collections.Generic;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {

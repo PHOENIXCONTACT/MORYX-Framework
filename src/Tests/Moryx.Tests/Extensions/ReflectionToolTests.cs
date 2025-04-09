@@ -184,9 +184,9 @@ namespace Moryx.Tests.Extensions
                 NotRelevant = "None",
                 BaseRef1 = new BaseClass(),
                 ChildRef = new ChildClass2(),
-                Children1 = new List<ChildClass1>(),
+                Children1 = [],
                 Children2 = new List<ChildClass2>(),
-                EmptyArray = new GranChildClass1[0],
+                EmptyArray = [],
                 NullArray = null
             };
 
@@ -224,7 +224,7 @@ namespace Moryx.Tests.Extensions
             var target = new ReferenceClass
             {
 
-                EmptyArray = new GranChildClass1[0],
+                EmptyArray = [],
                 NullArray = null
             };
 
@@ -252,9 +252,9 @@ namespace Moryx.Tests.Extensions
                 NotRelevant = "None",
                 BaseRef1 = new BaseClass(),
                 ChildRef = new ChildClass2(),
-                Children1 = new List<ChildClass1>(),
+                Children1 = [],
                 Children2 = new List<ChildClass2>(),
-                EmptyArray = new GranChildClass1[0],
+                EmptyArray = [],
                 NullArray = null
             };
 

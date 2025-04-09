@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model.Attributes;
-using System;
 
 namespace Moryx.Model.PostgreSQL.Attributes
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 
 namespace Moryx.Tools
 {
@@ -15,7 +12,7 @@ namespace Moryx.Tools
         /// </summary>
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerable)
         {
-            return enumerable == null ? new ObservableCollection<T>() : new ObservableCollection<T>(enumerable);
+            return enumerable == null ? [] : new ObservableCollection<T>(enumerable);
         }
 
         /// <summary>

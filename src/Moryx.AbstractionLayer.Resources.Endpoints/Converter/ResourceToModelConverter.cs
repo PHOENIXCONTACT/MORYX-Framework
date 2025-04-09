@@ -1,10 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Moryx.Serialization;
@@ -137,7 +133,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 return referenceModel;
 
             // Convert referenced resource objects and possible instance types         
-            var referenceTargets = (value as IEnumerable<IResource>) ?? new[] { (IResource)value };
+            var referenceTargets = (value as IEnumerable<IResource>) ?? [(IResource)value];
             foreach (Resource resource in referenceTargets)
             {
                 // Load references partially UNLESS they are new, unsaved objects
@@ -164,12 +160,12 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             // If there are no overrides the only limitation is the target type
             if (!referenceOverrides.ContainsKey(property.Name))
-                return new[] { targetType };
+                return [targetType];
 
             // Otherwise find all types that limit the reference type without redundancies. This means eliminating all types
             // represented by another type
             var myOverrides = referenceOverrides[property.Name];
-            return myOverrides.Concat(new[] { targetType })
+            return myOverrides.Concat([targetType])
                 .Where(type => !myOverrides.Any(over => over != type && type.IsAssignableFrom(over))).ToList();
         }
 

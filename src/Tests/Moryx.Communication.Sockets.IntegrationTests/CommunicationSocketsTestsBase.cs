@@ -20,7 +20,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         private List<ConnectionBuffer<TMessage>> _overallClients;
 
         private int _testPort;
-        protected const string TestIpAdress = "127.0.0.1";
+        protected const string Tests = "127.0.0.1";
 
         protected List<ConnectionBuffer<TMessage>> ServerConnections => _serverConnections;
         protected List<ConnectionBuffer<TMessage>> Clients => _clients;
@@ -33,7 +33,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             var rnd = new Random();
             _testPort = rnd.Next(2000, 2101);
 
-            _overallClients = new List<ConnectionBuffer<TMessage>>();
+            _overallClients = [];
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         public void SetupTestCase()
         {
             _binaryConnectionFactory = new BinaryConnectionFactoryMock();
-            _clients = new List<ConnectionBuffer<TMessage>>();
-            _serverConnections = new List<ConnectionBuffer<TMessage>>();
+            _clients = [];
+            _serverConnections = [];
         }
 
         [TearDown]
@@ -315,7 +315,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         {
             return new TcpClientConfig
             {
-                IpAdress = adress.ToString(),
+                IpAddress = adress.ToString(),
                 Port = port,
                 RetryWaitMs = connectRetryWaitMs,
                 MonitoringIntervalMs = 100,
@@ -333,7 +333,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         {
             return new TcpListenerConfig
             {
-                IpAdress = adress.ToString(),
+                IpAddress = adress.ToString(),
                 Port = port,
                 MonitoringIntervalMs = 100,
                 MonitoringTimeoutMs = 500

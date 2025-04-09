@@ -10,10 +10,6 @@ using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.Resources.Model;
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using IResource = Moryx.AbstractionLayer.Resources.IResource;
 
 namespace Moryx.Resources.Management
@@ -101,7 +97,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Look-up of resources that failed during init or start and are excluded from certain calls
         /// </summary>
-        private List<Resource> _failedResources = new List<Resource>();
+        private List<Resource> _failedResources = [];
 
         #endregion
 

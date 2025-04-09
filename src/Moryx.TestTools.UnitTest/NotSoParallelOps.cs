@@ -1,10 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Moryx.Threading;
 
 namespace Moryx.TestTools.UnitTest
@@ -83,7 +79,7 @@ namespace Moryx.TestTools.UnitTest
 
         private int _lastTimerId;
         private readonly CountdownEvent _countdown = new CountdownEvent(1);
-        private readonly List<TimerInfo> _timers = new List<TimerInfo>();
+        private readonly List<TimerInfo> _timers = [];
 
         /// <inheritdoc />
         public int ScheduleExecution(Action operation, int delayMs, int periodMs)

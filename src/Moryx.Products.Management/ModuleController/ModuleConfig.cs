@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Products;
@@ -24,13 +23,13 @@ namespace Moryx.Products.Management
             base.Initialize();
 
             // Default importer is always included -> hence the name DEFAULT
-            Importers = new List<ProductImporterConfig>
-            {
+            Importers =
+            [
                 new ProductImporterConfig
                 {
                     PluginName = nameof(DefaultImporter)
                 }
-            };
+            ];
         }
 
         /// <summary>

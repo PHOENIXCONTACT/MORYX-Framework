@@ -1,12 +1,8 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -107,7 +103,7 @@ namespace Moryx.Runtime.Modules
             OnInitialize();
 
             // Execute SubInitializer
-            var subInits = Container.ResolveAll<ISubInitializer>() ?? new ISubInitializer[0];
+            var subInits = Container.ResolveAll<ISubInitializer>() ?? [];
             foreach (var subInitializer in subInits)
             {
                 subInitializer.Initialize(Container);

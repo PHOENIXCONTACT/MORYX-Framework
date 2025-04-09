@@ -104,11 +104,11 @@ namespace Moryx.Tests
             dummy.Number = 10;
             dummy.Name = "Thomas";
             dummy.SingleClass = null;
-            dummy.SubArray = new[] { new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB } };
-            dummy.SubList = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
+            dummy.SubArray = [new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB }];
+            dummy.SubList = [new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA }];
             dummy.SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
             dummy.SubDictionary = new Dictionary<int, SubClass>();
-            dummy.SubIList = new int[] {1,2,3,7};
+            dummy.SubIList = [1,2,3,7];
             
             var entry = EntryConvert.EncodeObject(dummy);
             var x = entry.SubEntries.FirstOrDefault(e => e.Identifier == "SubIList");
@@ -129,11 +129,11 @@ namespace Moryx.Tests
             dummy.Number = 10;
             dummy.Name = "Thomas";
             dummy.SingleClass = null;
-            dummy.SubArray = new[] { new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB } };
-            dummy.SubList = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
+            dummy.SubArray = [new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB }];
+            dummy.SubList = [new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA }];
             dummy.SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
             dummy.SubDictionary = new Dictionary<int, SubClass>();
-            dummy.SubIList = new int[] { 1, 2, 3, 7 };
+            dummy.SubIList = [1, 2, 3, 7];
 
             var entry = EntryConvert.EncodeObject(dummy);
             var x = entry.SubEntries.FirstOrDefault(e => e.Identifier == "SubIList");
@@ -228,11 +228,11 @@ namespace Moryx.Tests
                 Text = "A Text",
                 HasAnything = true,
                 Class = new EntryModelSubClassDummyServer { Value = 0.5f, Enum = DummyEnum.ValueB },
-                Collection = new List<EntryModelSubClassDummyServer>
-                {
-                    new EntryModelSubClassDummyServer {Value = 0.1f, Enum = DummyEnum.ValueB},
-                    new EntryModelSubClassDummyServer {Value = 0.2f, Enum = DummyEnum.ValueA}
-                },
+                Collection =
+                [
+                    new EntryModelSubClassDummyServer { Value = 0.1f, Enum = DummyEnum.ValueB },
+                    new EntryModelSubClassDummyServer { Value = 0.2f, Enum = DummyEnum.ValueA }
+                ],
                 Dictionary = new Dictionary<int, EntryModelSubClassDummyServer>
                 {
                     { 1, new EntryModelSubClassDummyServer { Value = 15.8f, Enum = DummyEnum.Unset } },
@@ -251,11 +251,11 @@ namespace Moryx.Tests
                 Collection = new EntryCollection<EntryModelSubClassDummyClient>(EntryConvert.EncodeObject(
                     new EntryModelListHelperDummy
                     {
-                        Collection = new List<EntryModelSubClassDummyClient>
-                        {
-                            new EntryModelSubClassDummyClient {Value = "0.8", Enum = "ValueA"},
-                            new EntryModelSubClassDummyClient {Value = "0.4", Enum = "Unset"}
-                        }
+                        Collection =
+                        [
+                            new EntryModelSubClassDummyClient { Value = "0.8", Enum = "ValueA" },
+                            new EntryModelSubClassDummyClient { Value = "0.4", Enum = "Unset" }
+                        ]
                     }).SubEntries[0]),
                 Dictionary = new EntryDictionary<EntryModelSubClassDummyClient>(EntryConvert.EncodeObject(
                     new EntryModelDictionaryHelperDummy

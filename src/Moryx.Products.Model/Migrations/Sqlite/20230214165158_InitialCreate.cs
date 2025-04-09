@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -484,7 +483,7 @@ namespace Moryx.Products.Model.Migrations.Sqlite
                 name: "IX_ProductTypes_Identifier_Revision",
                 schema: "public",
                 table: "ProductTypes",
-                columns: new[] { "Identifier", "Revision" });
+                columns: ["Identifier", "Revision"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkplanConnectorEntities_WorkplanId",

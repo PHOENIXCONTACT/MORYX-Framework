@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Moryx.Serialization
@@ -29,7 +28,7 @@ namespace Moryx.Serialization
             TypeNameHandling = TypeNameHandling.Auto,
             DefaultValueHandling = DefaultValueHandling.Include,
             NullValueHandling = NullValueHandling.Include,
-            Converters = new JsonConverter[] {new StringEnumConverter()}
+            Converters = [new StringEnumConverter()]
         };
 
         /// <summary>

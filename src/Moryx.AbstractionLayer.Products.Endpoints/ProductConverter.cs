@@ -6,10 +6,7 @@ using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Workplans;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
@@ -131,7 +128,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                         Name = property.Name,
                         DisplayName = displayName,
                         Type = FetchProductType(property.PropertyType),
-                        Parts = partModel is null ? new PartModel[0] : new[] { partModel },
+                        Parts = partModel is null ? [] : [partModel],
                         PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, _productSerialization)
                     };
                     connectors.Add(connector);

@@ -1,6 +1,5 @@
 ﻿using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
-using System.Linq;
 using Moryx.Serialization;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;

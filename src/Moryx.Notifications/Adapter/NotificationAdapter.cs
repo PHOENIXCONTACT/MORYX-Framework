@@ -2,10 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace Moryx.Notifications
 {
@@ -155,7 +151,7 @@ namespace Moryx.Notifications
                 }
             }
 
-            foreach (var published in publishes ?? Array.Empty<NotificationMap>())
+            foreach (var published in publishes ?? [])
                 Acknowledged?.Invoke(this, published.Notification);
         }
 
@@ -234,7 +230,7 @@ namespace Moryx.Notifications
         void INotificationSourceAdapter.Sync()
         {
             // Publish pending notifications
-            NotificationMap[] pendingPublishes = Array.Empty<NotificationMap>();
+            NotificationMap[] pendingPublishes = [];
             lock (_listLock)
             {
                 pendingPublishes = _pendingPubs.ToArray();
@@ -245,7 +241,7 @@ namespace Moryx.Notifications
             }
 
             // Acknowledge pending acknowledges
-            NotificationMap[] pendingAcks = Array.Empty<NotificationMap>();
+            NotificationMap[] pendingAcks = [];
             lock (_listLock)
             {
                 pendingAcks = _pendingAcks.ToArray();

@@ -7,13 +7,13 @@ namespace Moryx.Resources.Management.Tests
 {
     public class InterferenceResource : Resource
     {
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
         public DerivedResource Derived { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
         public IReferences<OtherResource> Others { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
         public DifferentResource Different { get; set; }
     }
 }

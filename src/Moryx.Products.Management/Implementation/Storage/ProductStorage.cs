@@ -1,12 +1,9 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
 using Moryx.Model;
 using Moryx.Products.Model;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -317,7 +314,8 @@ namespace Moryx.Products.Management
                     foreach (var propertyFilter in query.PropertyFilters)
                     {
                         var expression = ConvertPropertyFilter(targetType, propertyFilter);
-                        var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch, new object[] { expression });
+                        var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch,
+                            [expression]);
                         var versionExpression = AsVersionExpression(columnExpression);
                         productsQuery = productsQuery.Where(versionExpression);
                     }
@@ -644,7 +642,7 @@ namespace Moryx.Products.Management
                     }
                     else if (linkEntity != null && link == null) // link was removed
                     {
-                        linkStrategy.DeletePartLink(new IGenericColumns[] { linkEntity });
+                        linkStrategy.DeletePartLink([linkEntity]);
                         linkRepo.Remove(linkEntity);
                     }
                     else if (linkEntity != null && link != null) // link was modified

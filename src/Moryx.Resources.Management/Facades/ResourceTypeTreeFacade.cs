@@ -1,7 +1,5 @@
 ﻿using Moryx.AbstractionLayer.Resources;
 using Moryx.Runtime.Modules;
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.Resources.Management.Facades
 {

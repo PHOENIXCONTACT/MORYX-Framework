@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
@@ -28,7 +27,7 @@ namespace Moryx.Products.Management.Importers
 
             return Task.FromResult(new ProductImporterResult
             {
-                ImportedTypes = new[] { productType }
+                ImportedTypes = [productType]
             });
         }
     }

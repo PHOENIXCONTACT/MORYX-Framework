@@ -5,8 +5,6 @@ using Castle.Core.Configuration;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.Container
 {

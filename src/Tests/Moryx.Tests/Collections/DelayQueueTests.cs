@@ -23,7 +23,7 @@ namespace Moryx.Tests.Collections
 
         private DelayQueue<DummyMessage> _queue;
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        private readonly List<long> _times = new List<long>();
+        private readonly List<long> _times = [];
 
         [SetUp]
         public void CreateQueue()

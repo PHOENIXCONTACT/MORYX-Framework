@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Moryx.AbstractionLayer
+﻿namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Constraint that evalutes an expression and compares it to an expected value

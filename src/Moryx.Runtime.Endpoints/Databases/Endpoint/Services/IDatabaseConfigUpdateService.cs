@@ -1,5 +1,4 @@
 ﻿using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
-using System;
 
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Services
 {

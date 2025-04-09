@@ -5,19 +5,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.Serialization;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Moryx.Configuration;
 using Moryx.Asp.Extensions;
 using Moryx.AbstractionLayer.Properties;
-using Microsoft.Extensions.DependencyInjection;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Runtime.Modules;
-using System.ComponentModel;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {

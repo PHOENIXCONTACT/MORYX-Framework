@@ -15,6 +15,6 @@ namespace Moryx.Tests
 
         public List<DummyEnum> EnumList { get; set; }
 
-        public List<SubClass> ReadOnly => new List<SubClass> { new SubClass { Foo = 4.2f } };
+        public List<SubClass> ReadOnly => [new SubClass { Foo = 4.2f }];
     }
 }

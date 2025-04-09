@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;

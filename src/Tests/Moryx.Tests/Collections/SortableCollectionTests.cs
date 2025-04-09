@@ -22,13 +22,13 @@ namespace Moryx.Tests.Collections
         [SetUp]
         public void SetUp()
         {
-            _collection = new SortableCollection<SortObj>
-            {
+            _collection =
+            [
                 new SortObj("A"),
                 new SortObj("B"),
                 new SortObj("C"),
-                new SortObj("D"),
-            };
+                new SortObj("D")
+            ];
         }
 
         [TearDown]

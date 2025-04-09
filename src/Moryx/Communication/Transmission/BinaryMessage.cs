@@ -11,7 +11,7 @@ namespace Moryx.Communication
         /// <summary>
         /// Empty payload to optimize memory usage and avoid creating unnecessary objects
         /// </summary>
-        public static byte[] EmptyBytes = new byte[0];
+        public static byte[] EmptyBytes = [];
 
         /// <summary>
         /// Default constructor used to create a <see cref="BinaryMessage"/>

@@ -1,11 +1,7 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Moryx.Configuration;
-using Moryx.Container;
 using Moryx.Serialization;
 using Newtonsoft.Json;
 
@@ -35,12 +31,12 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Override ValueProviders to include shared config provider
         /// </summary>
-        protected IValueProvider[] ValueProviders => new IValueProvider[]
-        {
+        protected IValueProvider[] ValueProviders =>
+        [
             _sharedProvider,
             new DefaultValueAttributeProvider(),
             new ActivatorValueProvider()
-        };
+        ];
 
         /// <summary>
         /// Directory used to read and write config files

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Moryx.Communication
+﻿namespace Moryx.Communication
 {
     /// <summary>
     /// Extensions to improve use of message hooks in your application

@@ -1,8 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-
 namespace Moryx.Products.Management
 {
     public class TextStrategyConfigurationAttribute : PropertyStrategyConfigurationAttribute
@@ -11,7 +9,7 @@ namespace Moryx.Products.Management
         {
             ColumnType = typeof(string);
             DerivedTypes = true;
-            SupportedTypes = new[] {typeof(string), typeof(object), typeof(Guid)};
+            SupportedTypes = [typeof(string), typeof(object), typeof(Guid)];
         }
 
         /// <inheritdoc />

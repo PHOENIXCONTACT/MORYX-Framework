@@ -1,7 +1,4 @@
 ﻿using Moryx.Runtime.Modules;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Moryx.Runtime.Kernel.Modules
 {
@@ -19,6 +16,6 @@ namespace Moryx.Runtime.Kernel.Modules
 
         public IReadOnlyList<IModuleDependency> Dependencies => throw new NotImplementedException();
 
-        public IReadOnlyList<IModuleDependency> Dependends => throw new NotImplementedException();
+        public IReadOnlyList<IModuleDependency> Dependents => throw new NotImplementedException();
     }
 }

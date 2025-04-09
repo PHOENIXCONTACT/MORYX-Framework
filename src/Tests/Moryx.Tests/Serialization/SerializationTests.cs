@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Moryx.Configuration;
 using Moryx.Serialization;
@@ -201,9 +200,9 @@ namespace Moryx.Tests
             // Arrange
             var dummy = new ArrayDummy
             {
-                Array = new[] { 2, 5, 7 },
-                Keys = new[] { "test1_2", "test_02", "1245" },
-                Enums = new[] { DummyEnum.Unset, DummyEnum.ValueB, DummyEnum.ValueA }
+                Array = [2, 5, 7],
+                Keys = ["test1_2", "test_02", "1245"],
+                Enums = [DummyEnum.Unset, DummyEnum.ValueB, DummyEnum.ValueA]
             };
 
             // Act
@@ -278,8 +277,8 @@ namespace Moryx.Tests
             var dummy = new ListDummy
             {
                 Number = 0,
-                DoubleList = new List<double> { 1.7, 2.5, 3 },
-                EnumList = new List<DummyEnum> { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB }
+                DoubleList = [1.7, 2.5, 3],
+                EnumList = [DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB]
             };
 
             var encoded = EntryConvert.EncodeObject(dummy, defaultSerialization);
@@ -340,8 +339,8 @@ namespace Moryx.Tests
                 Number = 10,
                 Name = "Thomas",
                 SingleClass = null,
-                SubArray = new[] { new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB } },
-                SubList = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
+                SubArray = [new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB }],
+                SubList = [new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA }],
                 SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
                 SubDictionary = new Dictionary<int, SubClass>()
             };
@@ -736,7 +735,7 @@ namespace Moryx.Tests
             var entry = CreateTestEntry();
             var entry2 = CreateTestEntry();
 
-            entry2.SubEntries = new List<Entry>();
+            entry2.SubEntries = [];
 
             // Act
             var equals = entry.Equals(entry2);

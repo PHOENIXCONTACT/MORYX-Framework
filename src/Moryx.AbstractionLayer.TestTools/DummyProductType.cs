@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.AbstractionLayer.TestTools
 {

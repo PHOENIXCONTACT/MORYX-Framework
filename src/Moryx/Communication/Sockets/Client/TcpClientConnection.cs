@@ -1,11 +1,8 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
@@ -86,7 +83,7 @@ namespace Moryx.Communication.Sockets
 
             StateMachine.Initialize(this).With<ClientStateBase>();
 
-            Endpoint = GetIpEndpointFromHost(Config.IpAdress, Config.Port);
+            Endpoint = GetIpEndpointFromHost(Config.IpAddress, Config.Port);
         }
 
         /// <summary>

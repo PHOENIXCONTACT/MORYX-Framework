@@ -1,7 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
@@ -16,8 +15,8 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         /// </summary>
         public ServerModuleModel()
         {
-            Dependencies = new List<ServerModuleModel>();
-            Notifications = new ModuleNotificationModel[0];
+            Dependencies = [];
+            Notifications = [];
         }
 
         /// <summary>
