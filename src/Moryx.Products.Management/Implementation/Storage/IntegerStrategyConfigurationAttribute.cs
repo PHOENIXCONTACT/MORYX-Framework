@@ -11,8 +11,8 @@ namespace Moryx.Products.Management
         public IntegerStrategyConfigurationAttribute()
         {
             ColumnType = typeof(long);
-            SupportedTypes = new[]
-            {
+            SupportedTypes =
+            [
                 typeof(short),
                 typeof(ushort),
                 typeof(int),
@@ -21,8 +21,8 @@ namespace Moryx.Products.Management
                 typeof(ulong),
                 typeof(Enum),
                 typeof(DateTime),
-                typeof(bool),
-            };
+                typeof(bool)
+            ];
         }
 
         public override int TypeCompliance(Type targetType)

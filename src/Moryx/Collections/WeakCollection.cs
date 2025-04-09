@@ -12,7 +12,7 @@ namespace Moryx.Collections
         /// <summary>
         /// The actual collection of strongly-typed weak references.
         /// </summary>
-        private readonly List<WeakReference<T>> _list = new List<WeakReference<T>>();
+        private readonly List<WeakReference<T>> _list = [];
 
         /// <summary>
         /// Gets a list of live objects from this collection, causing a purge.

@@ -43,7 +43,7 @@ namespace Moryx.TestModule
                         DefaultValueHandling = DefaultValueHandling.Include,
                         NullValueHandling = NullValueHandling.Include,
                         Formatting = Formatting.Indented,
-                        Converters = new[] {new StringEnumConverter()}
+                        Converters = [new StringEnumConverter()]
                     }
                 },
                 new
@@ -111,27 +111,29 @@ namespace Moryx.TestModule
                     PluginIntegerValue = 7505,
                     PluginLongValue = 18364752513
                 },
-                Plugins = new List<TestPluginConfig>
-                {
+                Plugins =
+                [
                     new TestPluginConfig2
                     {
-                      PluginBoolValue  = true,
-                      PluginDoubleValue = 10.5,
-                      PluginStringValue = "owgegvuqwvqwe",
-                      PluginEnumValue = ConfigEnumeration.Value2,
-                      PluginIntegerValue = 7505,
-                      PluginLongValue = 18364752513
+                        PluginBoolValue = true,
+                        PluginDoubleValue = 10.5,
+                        PluginStringValue = "owgegvuqwvqwe",
+                        PluginEnumValue = ConfigEnumeration.Value2,
+                        PluginIntegerValue = 7505,
+                        PluginLongValue = 18364752513
                     },
+
                     new TestPluginConfig1
                     {
-                      PluginBoolValue  = true,
-                      PluginDoubleValue = 10.5,
-                      PluginStringValue = "owgegvuqwvqwe",
-                      PluginEnumValue = ConfigEnumeration.Value2,
-                      PluginIntegerValue = 7505,
-                      PluginLongValue = 18364752513
-                    },
-                }
+                        PluginBoolValue = true,
+                        PluginDoubleValue = 10.5,
+                        PluginStringValue = "owgegvuqwvqwe",
+                        PluginEnumValue = ConfigEnumeration.Value2,
+                        PluginIntegerValue = 7505,
+                        PluginLongValue = 18364752513
+                    }
+
+                ]
             };
             return config;
         }
@@ -171,7 +173,7 @@ namespace Moryx.TestModule
             }
             var readTime = stopWatch.ElapsedMilliseconds;
 
-            return new[] { writeTime, readTime };
+            return [writeTime, readTime];
         }
 
         private long WriteLoop(IUnitOfWork uow, ModuleConfig config, JsonSerializerSettings settings)

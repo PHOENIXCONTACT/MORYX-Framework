@@ -147,7 +147,7 @@ namespace Moryx.Model.Configuration
             if (pendingMigrations.Length == 0)
             {
                 result.Result = MigrationResult.NoMigrationsAvailable;
-                result.ExecutedMigrations = Array.Empty<string>();
+                result.ExecutedMigrations = [];
                 Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!", config.ConnectionSettings.Database);
 
                 return result;

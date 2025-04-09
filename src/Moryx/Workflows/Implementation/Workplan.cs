@@ -14,7 +14,7 @@ namespace Moryx.Workplans
         /// <summary>
         /// Create a new workplan instance
         /// </summary>
-        public Workplan() : this(new List<IConnector>(), new List<IWorkplanStep>())
+        public Workplan() : this([], [])
         {
         }
 

@@ -18,7 +18,7 @@ namespace Moryx.AbstractionLayer.Capabilities
 
         /// <inheritdoc />
         public IEnumerable<ICapabilities> GetAll() =>
-            new ICapabilities[] { this };
+            [this];
 
         /// <summary>
         /// Check if our required capabilities are provided by the given object

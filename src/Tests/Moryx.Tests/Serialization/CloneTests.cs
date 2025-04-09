@@ -39,7 +39,7 @@ namespace Moryx.Tests
                     Default = "42",
                     Type = (EntryValueType) (id%7),
                     UnitType = (EntryUnitType) (id%Enum.GetNames(typeof(EntryUnitType)).Length),
-                    Possible = new[] {"12334", "1123361", "11236"}
+                    Possible = ["12334", "1123361", "11236"]
                 }
             };
             for (var i = 0; i < children; i++)

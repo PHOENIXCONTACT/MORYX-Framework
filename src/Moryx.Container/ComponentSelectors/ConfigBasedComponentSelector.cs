@@ -44,8 +44,9 @@ namespace Moryx.Container
                 var configType = config.GetType();
                 var genericPluginApi = typeof(IConfiguredInitializable<>).MakeGenericType(configType);
 
-                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<IPluginConfig>.Initialize), new[] { configType });
-                initMethod.Invoke(instance, new[] { config });
+                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<IPluginConfig>.Initialize),
+                    [configType]);
+                initMethod.Invoke(instance, [config]);
                 return instance;
             });
             return createFunc;

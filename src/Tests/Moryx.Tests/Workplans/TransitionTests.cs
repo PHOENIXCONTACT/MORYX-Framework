@@ -32,8 +32,8 @@ namespace Moryx.Tests.Workplans
         public void Prepare()
         {
             // Inputs and outputs
-            _inputs = new IPlace[] { new Place { Id = 10 }, new Place { Id = 11 } };
-            _outputs = new IPlace[] { new Place { Id = 20 }, new Place { Id = 21 } };
+            _inputs = [new Place { Id = 10 }, new Place { Id = 11 }];
+            _outputs = [new Place { Id = 20 }, new Place { Id = 21 }];
             foreach (var output in _outputs)
             {
                 output.TokenAdded += (sender, token) => { };
@@ -50,7 +50,7 @@ namespace Moryx.Tests.Workplans
             var trans = new SplitTransition
             {
                 Id = 1,
-                Inputs = new[] { _inputs[0] },
+                Inputs = [_inputs[0]],
                 Outputs = _outputs
             };
 
@@ -76,7 +76,7 @@ namespace Moryx.Tests.Workplans
             {
                 Id = 1,
                 Inputs = _inputs,
-                Outputs = new[] { _outputs[0] }
+                Outputs = [_outputs[0]]
             };
             var split1 = new SplitToken(_token);
             var split2 = new SplitToken(_token);
@@ -103,7 +103,7 @@ namespace Moryx.Tests.Workplans
             {
                 Id = 1,
                 Inputs = _inputs,
-                Outputs = new[] { _outputs[0] }
+                Outputs = [_outputs[0]]
             };
             var split = new SplitToken(_token);
 
@@ -134,7 +134,7 @@ namespace Moryx.Tests.Workplans
             var trans = new SubworkplanTransition(WorkplanInstance.CreateEngine(workplan, new NullContext()), TransitionBase.CreateIndexResolver(outputs))
             {
                 Id = 1,
-                Inputs = new[] { _inputs[0] },
+                Inputs = [_inputs[0]],
                 Outputs = _outputs
             };
             var triggered = new List<ITransition>();
@@ -166,7 +166,7 @@ namespace Moryx.Tests.Workplans
             var trans = new SubworkplanTransition(WorkplanInstance.CreateEngine(workplan, new NullContext()), TransitionBase.CreateIndexResolver(outputs))
             {
                 Id = 1,
-                Inputs = new[] { _inputs[0] },
+                Inputs = [_inputs[0]],
                 Outputs = _outputs
             };
             var triggered = new List<ITransition>();

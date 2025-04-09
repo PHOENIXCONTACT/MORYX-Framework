@@ -10,12 +10,12 @@ namespace Moryx.Products.Management
         public FloatStrategyConfigurationAttribute()
         {
             ColumnType = typeof(double);
-            SupportedTypes = new[]
-            {
+            SupportedTypes =
+            [
                 typeof(float),
                 typeof(double),
                 typeof(decimal)
-            };
+            ];
         }
     }
 }

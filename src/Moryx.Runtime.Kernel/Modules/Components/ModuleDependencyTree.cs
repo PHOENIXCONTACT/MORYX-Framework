@@ -27,7 +27,7 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public IServerModule RepresentedModule { get; }
 
-        public List<IModuleDependency> Dependencies { get; set; } = new List<IModuleDependency>();
+        public List<IModuleDependency> Dependencies { get; set; } = [];
         /// <summary>
         /// All modules this module depends on
         /// </summary>
@@ -36,7 +36,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// All modules that depend on this module
         /// </summary>
-        public List<IModuleDependency> Dependends { get; set; } = new List<IModuleDependency>();
+        public List<IModuleDependency> Dependends { get; set; } = [];
         /// <summary>
         /// All modules that depend on this module
         /// </summary>

@@ -404,7 +404,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
             catch (NotSupportedException)
             {
-                return Array.Empty<DbMigrationsModel>();
+                return [];
             }
         }
 
@@ -420,7 +420,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
             catch (NotSupportedException)
             {
-                return Array.Empty<DbMigrationsModel>();
+                return [];
             }
         }
 

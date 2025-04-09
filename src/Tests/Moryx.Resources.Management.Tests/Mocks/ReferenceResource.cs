@@ -60,7 +60,7 @@ namespace Moryx.Resources.Management.Tests
             {
                 _reference = value;
                 ReferenceChanged?.Invoke(this, value);
-                SomeChanged?.Invoke(this, new[] { value });
+                SomeChanged?.Invoke(this, [value]);
             }
         }
 

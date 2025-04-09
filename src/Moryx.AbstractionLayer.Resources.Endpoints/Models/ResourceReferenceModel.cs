@@ -21,6 +21,6 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// Targets of this reference
         /// </summary>
         [DataMember]
-        public List<ResourceModel> Targets { get; set; } = new List<ResourceModel>();
+        public List<ResourceModel> Targets { get; set; } = [];
     }
 }

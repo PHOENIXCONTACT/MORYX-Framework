@@ -9,10 +9,10 @@
         /// All available validators
         /// </summary>
         private static readonly IWorkplanValidator[] Validators =
-        {
+        [
             new DeadEndValidator(),
-            new LoneWolfValidator(),
-        };
+            new LoneWolfValidator()
+        ];
 
         /// <summary>
         /// Validate the workplan under different aspects. Aspects can be combined using '|' operator.

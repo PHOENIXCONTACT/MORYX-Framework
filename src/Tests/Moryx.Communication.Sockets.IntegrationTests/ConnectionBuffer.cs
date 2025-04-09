@@ -9,8 +9,8 @@ namespace Moryx.Communication.Sockets.IntegrationTests
     {
         public ConnectionBuffer()
         {
-            Received = new List<TMessage>();
-            LastStateChangeEvents = new List<BinaryConnectionState>();
+            Received = [];
+            LastStateChangeEvents = [];
         }
 
         public IBinaryConnection Connection { get; set; }

@@ -25,19 +25,20 @@ namespace Moryx.Products.Samples
                 {
                     Product = (WatchFaceType)Storage.LoadType(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
                 },
-                Needles = new List<NeedlePartLink>
-                {
+                Needles =
+                [
                     new NeedlePartLink
                     {
                         Role = NeedleRole.Minutes,
-                        Product = (NeedleType)Storage.LoadType(new ProductIdentity(parameters.MinuteNeedleIdentifier, ProductIdentity.LatestRevision))
+                        Product = (NeedleType)Storage.LoadType(new ProductIdentity(parameters.MinuteNeedleIdentifier,
+                            ProductIdentity.LatestRevision))
                     }
-                }
+                ]
             };
 
             return Task.FromResult(new ProductImporterResult
             {
-                ImportedTypes = new ProductType[] { product }
+                ImportedTypes = [product]
             });
         }
     }

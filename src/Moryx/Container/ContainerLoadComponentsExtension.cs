@@ -122,7 +122,7 @@ namespace Moryx.Container
             if (!typeof(ISubInitializer).IsAssignableFrom(att.Initializer))
                 throw new InvalidCastException($"SubInitializer {att.Initializer.Name} of component {implementation.Name} does not implement interface ISubInitializer");
 
-            container.Register(att.Initializer, new[] { typeof(ISubInitializer), att.Initializer }, null, LifeCycle.Singleton);
+            container.Register(att.Initializer, [typeof(ISubInitializer), att.Initializer], null, LifeCycle.Singleton);
         }
     }
 }

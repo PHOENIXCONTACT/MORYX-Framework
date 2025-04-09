@@ -31,12 +31,12 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Override ValueProviders to include shared config provider
         /// </summary>
-        protected IValueProvider[] ValueProviders => new IValueProvider[]
-        {
+        protected IValueProvider[] ValueProviders =>
+        [
             _sharedProvider,
             new DefaultValueAttributeProvider(),
             new ActivatorValueProvider()
-        };
+        ];
 
         /// <summary>
         /// Directory used to read and write config files

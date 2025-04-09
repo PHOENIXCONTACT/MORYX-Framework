@@ -30,7 +30,7 @@ namespace Moryx.Serialization
             /// <summary>
             /// Chain of responsibility of serializers
             /// </summary>
-            private readonly ConcurrentBag<IByteSerializer<T>> _serializers = new ConcurrentBag<IByteSerializer<T>>();
+            private readonly ConcurrentBag<IByteSerializer<T>> _serializers = [];
 
             /// <summary>
             /// Initialize merged serializer with a minimum of one target

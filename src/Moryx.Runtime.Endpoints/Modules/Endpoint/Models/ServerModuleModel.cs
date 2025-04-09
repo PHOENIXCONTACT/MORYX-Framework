@@ -15,8 +15,8 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         /// </summary>
         public ServerModuleModel()
         {
-            Dependencies = new List<ServerModuleModel>();
-            Notifications = new ModuleNotificationModel[0];
+            Dependencies = [];
+            Notifications = [];
         }
 
         /// <summary>

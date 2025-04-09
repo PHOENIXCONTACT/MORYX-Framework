@@ -137,7 +137,7 @@ namespace Moryx.Runtime.Kernel
         public IEnumerable<IServerModule> StartDependencies(IServerModule service)
         {
             return _dependencyManager.GetDependencyBranch(service)?.Dependencies.Select(item => item.RepresentedModule)
-                   ?? Enumerable.Empty<IServerModule>();
+                   ?? [];
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Moryx.Tests.Extensions
         #region WeekNumbers
 
         private static readonly object[] WeekNumberCases =
-        {
+        [
             new object[] {new DateTime(2000, 12, 31), 52},
             new object[] {new DateTime(2001, 1, 1), 1},
             new object[] {new DateTime(2005, 1, 1), 53},
@@ -23,8 +23,8 @@ namespace Moryx.Tests.Extensions
             new object[] {new DateTime(2011, 12, 31), 52},
             new object[] {new DateTime(2012, 1, 1), 52},
             new object[] {new DateTime(2013, 1, 2), 1},
-            new object[] {new DateTime(2013, 12, 31), 1},
-        };
+            new object[] {new DateTime(2013, 12, 31), 1}
+        ];
 
         [Test, TestCaseSource(nameof(WeekNumberCases))]
         public void WeekNumberTest(DateTime dateTime, int result)
@@ -39,11 +39,11 @@ namespace Moryx.Tests.Extensions
         #region AddWeeks
 
         private static readonly object[] AddWeekCases =
-        {
+        [
             new object[] {new DateTime(2015, 7, 1), 5, new DateTime(2015, 8, 5)},
             new object[] {new DateTime(2015, 2, 12), 3, new DateTime(2015, 3, 5)},
-            new object[] {new DateTime(2008, 4, 4), 12, new DateTime(2008, 6, 27)},
-        };
+            new object[] {new DateTime(2008, 4, 4), 12, new DateTime(2008, 6, 27)}
+        ];
 
         [Test, TestCaseSource(nameof(AddWeekCases))]
         public void AddWeekTest(DateTime dateTime, int weeksToAdd, DateTime resultDateTime)
@@ -58,10 +58,10 @@ namespace Moryx.Tests.Extensions
         #region Start and End of Week
 
         private static readonly object[] StartEndOfWeekCases =
-        {
+        [
             new object[] {new DateTime(2015, 12, 8), new DateTime(2015, 12, 7), new DateTime(2015, 12, 13, 23, 59, 59, 999)},
-            new object[] {new DateTime(2015, 12, 24), new DateTime(2015, 12, 21), new DateTime(2015, 12, 27, 23, 59, 59, 999)},
-        };
+            new object[] {new DateTime(2015, 12, 24), new DateTime(2015, 12, 21), new DateTime(2015, 12, 27, 23, 59, 59, 999)}
+        ];
 
         [Test, TestCaseSource(nameof(StartEndOfWeekCases))]
         public void StartOfWeekTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
@@ -84,10 +84,10 @@ namespace Moryx.Tests.Extensions
         #region Start and End of Week but with year and calendar week
 
         private static readonly object[] StartEndOfWeekWithCalendarWeekCases =
-        {
+        [
             new object[] {2015, 50, new DateTime(2015, 12, 7), new DateTime(2015, 12, 13, 23, 59, 59, 999)},
-            new object[] {2015, 51, new DateTime(2015, 12, 14), new DateTime(2015, 12, 20, 23, 59, 59, 999)},
-        };
+            new object[] {2015, 51, new DateTime(2015, 12, 14), new DateTime(2015, 12, 20, 23, 59, 59, 999)}
+        ];
 
         [Test, TestCaseSource(nameof(StartEndOfWeekWithCalendarWeekCases))]
         public void StartOfWeekTest(int year, int calendarweek, DateTime startResult, DateTime endResult)
@@ -108,10 +108,10 @@ namespace Moryx.Tests.Extensions
         #region Start and End of Month
 
         private static readonly object[] StartEndOfMonthCases =
-        {
+        [
             new object[] {new DateTime(2015, 12, 15), new DateTime(2015, 12, 1), new DateTime(2015, 12, 31, 23, 59, 59, 999)},
-            new object[] {new DateTime(2015, 6, 12), new DateTime(2015, 6, 1), new DateTime(2015, 6, 30, 23, 59, 59, 999)},
-        };
+            new object[] {new DateTime(2015, 6, 12), new DateTime(2015, 6, 1), new DateTime(2015, 6, 30, 23, 59, 59, 999)}
+        ];
 
         [Test, TestCaseSource(nameof(StartEndOfMonthCases))]
         public void StartOfMonthTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)

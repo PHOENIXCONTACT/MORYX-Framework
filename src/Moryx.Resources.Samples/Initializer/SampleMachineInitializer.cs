@@ -31,7 +31,7 @@ namespace Moryx.Resources.Samples.Initializer
             anotherGate.Parent = machine;
             machine.Children.Add(anotherGate);
 
-            return new Resource[] { machine };
+            return [machine];
         }
     }
 }

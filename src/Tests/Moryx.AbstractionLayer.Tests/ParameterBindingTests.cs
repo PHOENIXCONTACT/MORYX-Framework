@@ -107,7 +107,7 @@ namespace Moryx.AbstractionLayer.Tests
                 Id = 42,
                 Name = "Bob",
                 Foo = 1337,
-                Bobs = new[] { 1, 3, 7, 42, 1337 },
+                Bobs = [1, 3, 7, 42, 1337],
                 Identity = new ProductIdentity("123456", 01),
                 Part = new ProductPartLink<DummyType>(2)
                 {

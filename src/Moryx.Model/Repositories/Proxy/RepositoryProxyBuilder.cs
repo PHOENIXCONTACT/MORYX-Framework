@@ -26,12 +26,12 @@ namespace Moryx.Model.Repositories.Proxy
             var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(AssemblyName), AssemblyBuilderAccess.Run);
 
             ModuleBuilder = assemblyBuilder.DefineDynamicModule(DynamicModuleName);
-            MethodStrategies = new IMethodProxyStrategy[]
-            {
+            MethodStrategies =
+            [
                 new CreateMethodStrategy(),
                 new FilterMethodStrategy(),
-                new RemoveMethodStrategy(),
-            };
+                new RemoveMethodStrategy()
+            ];
         }
 
         /// <summary>

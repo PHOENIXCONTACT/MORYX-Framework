@@ -23,14 +23,14 @@ namespace Moryx.Resources.Management.Tests
             // Mock of the container
             var containerMock = new Mock<IContainer>();
             containerMock.Setup(c => c.GetRegisteredImplementations(It.IsAny<Type>()))
-                .Returns(() => new[]
-                {
+                .Returns(() =>
+                [
                     typeof(SimpleResource),
                     typeof(DerivedResource),
                     typeof(ReferenceResource),
                     typeof(NonPublicResource),
                     typeof(ResourceWithImplicitApi)
-                });
+                ]);
 
             _typeController = new ResourceTypeController
             {

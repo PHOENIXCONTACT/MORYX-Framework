@@ -10,9 +10,9 @@ namespace Moryx.Configuration
     /// </summary>
     public class ValueProviderExecutorSettings
     {
-        private readonly List<IValueProvider> _providers = new List<IValueProvider>();
+        private readonly List<IValueProvider> _providers = [];
 
-        private readonly List<IValueProviderFilter> _filters = new List<IValueProviderFilter> { new DefaultCanWriteValueProviderFilter() };
+        private readonly List<IValueProviderFilter> _filters = [new DefaultCanWriteValueProviderFilter()];
 
         /// <summary>
         /// Configured filters

@@ -171,7 +171,7 @@ namespace Moryx.Workplans
         /// <summary>
         /// All end places reachable from
         /// </summary>
-        private readonly List<IConnector> _results = new List<IConnector>();
+        private readonly List<IConnector> _results = [];
 
         public PossibleResults(long targetId)
         {

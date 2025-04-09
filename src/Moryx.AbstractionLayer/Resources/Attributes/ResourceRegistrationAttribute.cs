@@ -37,7 +37,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// Constructor of custom type with lifecycle <see cref="LifeCycle.Singleton"/>
         /// </summary>
         public ResourceRegistrationAttribute(Type customRegistration, params Type[] customRegistrations)
-            : base(LifeCycle.Singleton, customRegistrations.Union(new[] { typeof(IResource), customRegistration }).ToArray())
+            : base(LifeCycle.Singleton, customRegistrations.Union([typeof(IResource), customRegistration]).ToArray())
         {
         }
     }

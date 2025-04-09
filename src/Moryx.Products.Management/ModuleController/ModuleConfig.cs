@@ -23,13 +23,13 @@ namespace Moryx.Products.Management
             base.Initialize();
 
             // Default importer is always included -> hence the name DEFAULT
-            Importers = new List<ProductImporterConfig>
-            {
+            Importers =
+            [
                 new ProductImporterConfig
                 {
                     PluginName = nameof(DefaultImporter)
                 }
-            };
+            ];
         }
 
         /// <summary>

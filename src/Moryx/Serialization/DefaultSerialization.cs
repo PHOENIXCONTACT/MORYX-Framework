@@ -41,7 +41,7 @@ namespace Moryx.Serialization
                 memberType = EntryConvert.ElementType(memberType);
             }
 
-            List<EntryPrototype> prototypes = new List<EntryPrototype>();
+            List<EntryPrototype> prototypes = [];
             if (memberType == typeof(string))
             {
                 prototypes.Add(new EntryPrototype(nameof(String), string.Empty));

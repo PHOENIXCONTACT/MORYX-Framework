@@ -27,7 +27,7 @@ namespace Moryx.Products.Management.Importers
 
             return Task.FromResult(new ProductImporterResult
             {
-                ImportedTypes = new[] { productType }
+                ImportedTypes = [productType]
             });
         }
     }

@@ -16,7 +16,7 @@ namespace Moryx.TestTools.UnitTest
         public static void Install(this IContainer container)
         {
             container.Register(typeof(EmptyInterceptor));
-            container.Register(typeof(NullLoggerFactory), new []{typeof(ILoggerFactory)});
+            container.Register(typeof(NullLoggerFactory), [typeof(ILoggerFactory)]);
         }
     }
 }

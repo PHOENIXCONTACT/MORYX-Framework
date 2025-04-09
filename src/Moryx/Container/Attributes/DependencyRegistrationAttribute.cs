@@ -30,7 +30,7 @@ namespace Moryx.Container
         public DependencyRegistrationAttribute(InstallerMode mode)
         {
             InstallerMode = mode;
-            RequiredTypes = new Type[0];
+            RequiredTypes = [];
         }
 
         /// <summary>

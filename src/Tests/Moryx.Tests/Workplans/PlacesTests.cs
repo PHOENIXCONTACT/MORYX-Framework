@@ -41,7 +41,7 @@ namespace Moryx.Tests.Workplans
             place.TokenAdded += (sender, token) => raised = token;
 
             // Act
-            place.Tokens = new IToken[] { dummy };
+            place.Tokens = [dummy];
             place.Resume();
 
             // Assert
@@ -62,7 +62,7 @@ namespace Moryx.Tests.Workplans
 
             // Act
             if (exisiting)
-                place.Tokens = new IToken[] { dummy };
+                place.Tokens = [dummy];
             place.Remove(dummy);
         }
     }

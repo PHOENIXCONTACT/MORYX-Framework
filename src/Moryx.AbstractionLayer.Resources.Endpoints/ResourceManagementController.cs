@@ -163,7 +163,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 .AddDefaultValueProvider());
 
             var model = new ResourceToModelConverter(_resourceTypeTree, _serialization).GetDetails(resource);
-            model.Methods = Array.Empty<MethodEntry>(); // Reset methods because they can not be invoked on new objects
+            model.Methods = []; // Reset methods because they can not be invoked on new objects
             return model;
         }
 

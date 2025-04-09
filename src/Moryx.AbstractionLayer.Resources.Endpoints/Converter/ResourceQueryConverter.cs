@@ -25,7 +25,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             {
                 var model = ToModel(matches[i], true);
                 model.References = Query.IncludedReferences?.Length > 0
-                    ? FilteredReferences(matches[i]) : new ResourceReferenceModel[0];
+                    ? FilteredReferences(matches[i]) : [];
                 models[i] = model;
             }
 
@@ -39,7 +39,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             var model = ToModel(match, true);
             model.References = Query.IncludedReferences?.Length > 0
-                ? FilteredReferences(match) : new ResourceReferenceModel[0];
+                ? FilteredReferences(match) : [];
             return model;
         }
 

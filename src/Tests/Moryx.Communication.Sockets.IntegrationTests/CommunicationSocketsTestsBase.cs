@@ -33,7 +33,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             var rnd = new Random();
             _testPort = rnd.Next(2000, 2101);
 
-            _overallClients = new List<ConnectionBuffer<TMessage>>();
+            _overallClients = [];
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         public void SetupTestCase()
         {
             _binaryConnectionFactory = new BinaryConnectionFactoryMock();
-            _clients = new List<ConnectionBuffer<TMessage>>();
-            _serverConnections = new List<ConnectionBuffer<TMessage>>();
+            _clients = [];
+            _serverConnections = [];
         }
 
         [TearDown]

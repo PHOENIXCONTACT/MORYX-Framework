@@ -276,14 +276,14 @@ namespace Moryx.Resources.Management
             // Check if it is a single reference
             var asResource = propertyValue as IResource;
             if (asResource != null)
-                return new[] { asResource };
+                return [asResource];
 
             // Otherwise it must be a collection
             var asEnumerable = propertyValue as IEnumerable;
             if (asEnumerable != null)
                 return asEnumerable.Cast<IResource>();
 
-            return Enumerable.Empty<IResource>();
+            return [];
         }
 
         /// <summary>

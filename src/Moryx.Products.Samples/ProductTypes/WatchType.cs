@@ -22,7 +22,7 @@ namespace Moryx.Products.Samples
         public ProductPartLink<WatchFaceTypeBase> WatchFace { get; set; }
 
         [DisplayName("Watch needle")]
-        public List<NeedlePartLink> Needles { get; set; } = new List<NeedlePartLink>();
+        public List<NeedlePartLink> Needles { get; set; } = [];
 
         protected override ProductInstance Instantiate()
         {

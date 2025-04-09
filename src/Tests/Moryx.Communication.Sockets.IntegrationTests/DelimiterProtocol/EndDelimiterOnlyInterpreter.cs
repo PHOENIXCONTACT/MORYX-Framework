@@ -5,7 +5,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
 {
     public class EndDelimiterOnlyInterpreter : DelimitedMessageInterpreter
     {
-        public static byte[] TestEndDelimiter = { 1, 3, 3, 7 };
+        public static byte[] TestEndDelimiter = [1, 3, 3, 7];
         public const int TestBufferSize = 1024;
         public const int TestReadSize = 100;
 

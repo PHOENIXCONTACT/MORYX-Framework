@@ -106,13 +106,13 @@ namespace Moryx.Serialization
         /// Responsibility chain starting with most specific shifting towards the least specific
         /// </summary>
         private static readonly ITypeWrapperFactory[] TypeWrapperFactories =
-        {
+        [
             new CollectionWrapperFactory(),
             new DictionaryWrapperFactory(),
             new ClassWrapperFactory(),
             new PossibleValuesWrapperFactory(),
             new AttributeWrapperFactory(),
-            new NameWrapperFactory(),
-        };
+            new NameWrapperFactory()
+        ];
     }
 }

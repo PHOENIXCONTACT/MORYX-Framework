@@ -18,7 +18,7 @@ namespace Moryx.Workplans
         /// <summary>
         /// All registered maps
         /// </summary>
-        private readonly List<IAttemptInvocation> _delegateMaps = new List<IAttemptInvocation>();
+        private readonly List<IAttemptInvocation> _delegateMaps = [];
 
         /// <summary>
         /// Create mapper that invokes synchronous

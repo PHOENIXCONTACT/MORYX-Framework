@@ -117,7 +117,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort + 1, -1, 1, new TestDelimiterValidator());
             WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
 
-            var message = new BinaryMessage(new byte[0]);
+            var message = new BinaryMessage([]);
             Clients[0].Connection.Send(message);
             server.Connection.Send(message);
 

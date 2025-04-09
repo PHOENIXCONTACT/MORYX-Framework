@@ -14,7 +14,7 @@ namespace Moryx.Products.Samples.Recipe
         public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
         {
             var module = serviceProvider.GetRequiredService<ITestModule>();
-            return new[] { module.Bla.ToString("D") };
+            return [module.Bla.ToString("D")];
         }
     }
 }

@@ -103,7 +103,7 @@ namespace Moryx.Runtime.Modules
             OnInitialize();
 
             // Execute SubInitializer
-            var subInits = Container.ResolveAll<ISubInitializer>() ?? new ISubInitializer[0];
+            var subInits = Container.ResolveAll<ISubInitializer>() ?? [];
             foreach (var subInitializer in subInits)
             {
                 subInitializer.Initialize(Container);

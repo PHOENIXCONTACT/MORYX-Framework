@@ -39,7 +39,7 @@ namespace Moryx.Tests.Configuration
         public TransformerTestConfig()
         {
             SubConfig = new SubConfig();
-            SubConfigList = new List<SubConfig>();
+            SubConfigList = [];
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace Moryx.Runtime.Modules
 {
     internal class ServerNotificationCollection : INotificationCollection
     {
-        private readonly List<IModuleNotification> _internalList = new List<IModuleNotification>();
+        private readonly List<IModuleNotification> _internalList = [];
         private readonly object _lockObj = new object();
 
         // ReSharper disable once InconsistentlySynchronizedField

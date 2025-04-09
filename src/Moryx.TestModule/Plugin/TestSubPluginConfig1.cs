@@ -10,7 +10,7 @@ namespace Moryx.TestModule
     {
         public TestSubPluginConfig1()
         {
-            OrderSources = new List<SourceConfig>();
+            OrderSources = [];
         }
 
         public override string PluginName { get { return TestSubPlugin1.ComponentName; } }

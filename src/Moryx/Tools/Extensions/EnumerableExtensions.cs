@@ -12,7 +12,7 @@ namespace Moryx.Tools
         /// </summary>
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerable)
         {
-            return enumerable == null ? new ObservableCollection<T>() : new ObservableCollection<T>(enumerable);
+            return enumerable == null ? [] : new ObservableCollection<T>(enumerable);
         }
 
         /// <summary>

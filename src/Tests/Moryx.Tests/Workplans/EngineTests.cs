@@ -167,14 +167,14 @@ namespace Moryx.Tests.Workplans
             var stepId = workplan.Steps.Single(s => s is PausableStep).Id;
             var snapShot = new WorkplanSnapshot
             {
-                Holders = new[]
-                {
+                Holders =
+                [
                     new HolderSnapshot
                     {
                         HolderId = stepId,
-                        Tokens = new IToken[] { new MainToken() }
+                        Tokens = [new MainToken()]
                     }
-                }
+                ]
             };
 
             // Act

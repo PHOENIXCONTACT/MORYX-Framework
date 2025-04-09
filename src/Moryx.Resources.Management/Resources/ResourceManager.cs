@@ -97,7 +97,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Look-up of resources that failed during init or start and are excluded from certain calls
         /// </summary>
-        private List<Resource> _failedResources = new List<Resource>();
+        private List<Resource> _failedResources = [];
 
         #endregion
 

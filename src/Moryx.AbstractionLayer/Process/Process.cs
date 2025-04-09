@@ -10,7 +10,7 @@ namespace Moryx.AbstractionLayer
     /// </summary>
     public class Process : IProcess
     {
-        private readonly List<IActivity> _activities = new List<IActivity>();
+        private readonly List<IActivity> _activities = [];
         private readonly ReaderWriterLockSlim _activitiesLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
         /// <inheritdoc />

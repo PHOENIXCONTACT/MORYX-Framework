@@ -162,7 +162,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
                 Thread.Sleep(1);
 
             // Act
-            var binMessage = CreateMessage(42, new byte[] { 1, 3, 3, 7, 42 });
+            var binMessage = CreateMessage(42, [1, 3, 3, 7, 42]);
             if (clientSendsMessage)
                 client.Connection.Send(binMessage);
             else

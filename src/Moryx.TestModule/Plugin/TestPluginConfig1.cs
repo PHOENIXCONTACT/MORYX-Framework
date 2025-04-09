@@ -11,7 +11,7 @@ namespace Moryx.TestModule
     {
         public TestPluginConfig1()
         {
-            OrderSources = new List<SourceConfig>();
+            OrderSources = [];
         }
 
         /// <summary>

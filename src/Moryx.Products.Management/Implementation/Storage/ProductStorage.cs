@@ -314,7 +314,8 @@ namespace Moryx.Products.Management
                     foreach (var propertyFilter in query.PropertyFilters)
                     {
                         var expression = ConvertPropertyFilter(targetType, propertyFilter);
-                        var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch, new object[] { expression });
+                        var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch,
+                            [expression]);
                         var versionExpression = AsVersionExpression(columnExpression);
                         productsQuery = productsQuery.Where(versionExpression);
                     }
@@ -641,7 +642,7 @@ namespace Moryx.Products.Management
                     }
                     else if (linkEntity != null && link == null) // link was removed
                     {
-                        linkStrategy.DeletePartLink(new IGenericColumns[] { linkEntity });
+                        linkStrategy.DeletePartLink([linkEntity]);
                         linkRepo.Remove(linkEntity);
                     }
                     else if (linkEntity != null && link != null) // link was modified

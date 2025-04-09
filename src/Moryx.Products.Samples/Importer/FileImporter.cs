@@ -33,14 +33,14 @@ namespace Moryx.Products.Samples
 
                 return Task.FromResult(new ProductImporterResult
                 {
-                    ImportedTypes = new ProductType[]
-                    {
+                    ImportedTypes =
+                    [
                         new NeedleType
                         {
                             Name = name,
                             Identity = new ProductIdentity(identifier, revision)
                         }
-                    }
+                    ]
                 });
             }
         }

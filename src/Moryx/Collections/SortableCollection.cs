@@ -74,8 +74,8 @@ namespace Moryx.Collections
     /// <typeparam name="T">The type of the elements whithin this collection</typeparam>
     public class SortableCollection<T> : ISortableCollection<T> where T : class, ISortableObject
     {
-        private readonly List<T> _items = new List<T>();
-        private readonly List<T> _changeCache = new List<T>();
+        private readonly List<T> _items = [];
+        private readonly List<T> _changeCache = [];
 
         /// 
         public T this[int index]
@@ -148,7 +148,7 @@ namespace Moryx.Collections
             item.SortOrder = targetItem.SortOrder;
             targetItem.SortOrder = item.SortOrder + offset;
 
-            AddItemsToModificationCache(new[] { item, targetItem });
+            AddItemsToModificationCache([item, targetItem]);
         }
 
         /// 

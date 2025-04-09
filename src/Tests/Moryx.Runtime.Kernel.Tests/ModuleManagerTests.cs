@@ -27,7 +27,7 @@ namespace Moryx.Runtime.Kernel.Tests
         public void Setup()
         {
             _mockConfigManager = new Mock<IConfigManager>();
-            var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = new List<ManagedModuleConfig>()};
+            var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = [] };
             _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false)).Returns(moduleManagerConfig);
             _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false)).Returns(new RuntimeConfigManagerTestConfig2());
 
@@ -51,13 +51,12 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Arrange
             var dependent = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
                 new ModuleB2(),
                 new ModuleB3(),
                 dependent
-            });
+            ]);
 
 
             // Act
@@ -73,10 +72,9 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Arrange
             var dependent = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 dependent
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -91,11 +89,10 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Arrange
             var dependent = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
                 dependent
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -112,11 +109,10 @@ namespace Moryx.Runtime.Kernel.Tests
             // Arrange
             var dependency = new ModuleA();
             var depend = new ModuleADependent();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 dependency,
                 depend
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -129,13 +125,12 @@ namespace Moryx.Runtime.Kernel.Tests
         public void ShouldExcludeMissingFacadeAndItsDependents()
         {
             // Arrange
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
                 new ModuleCSingle(), 
                 new ModuleADependent(),
                 new ModuleADependentTransient()
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -151,12 +146,11 @@ namespace Moryx.Runtime.Kernel.Tests
         public void ShouldExcludeWhenInCollection()
         {
             // Arrange
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
                 new ModuleBUsingA(),
                 new ModuleC()
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -173,12 +167,11 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Arrange
             var moduleBUsingA = new ModuleBUsingA();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
                 moduleBUsingA,
                 new ModuleC()
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -195,7 +188,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Arrange
             var mockModule = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
+            var moduleManager = CreateObjectUnderTest([mockModule.Object]);
             //moduleManager.Initialize();
 
             // Act
@@ -212,11 +205,10 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule1 = new Mock<IServerModule>();
             var mockModule2 = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 mockModule1.Object,
                 mockModule2.Object
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -237,7 +229,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Argange
             var mockModule = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
+            var moduleManager = CreateObjectUnderTest([mockModule.Object]);
 
             // Act
             moduleManager.StartModule(mockModule.Object);
@@ -256,7 +248,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule1 = new Mock<IServerModule>();
             var mockModule2 = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[] {mockModule1.Object, mockModule2.Object});
+            var moduleManager = CreateObjectUnderTest([mockModule1.Object, mockModule2.Object]);
             moduleManager.StartModules();
 
             // Act
@@ -274,7 +266,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule = new Mock<IServerModule>();
             var eventFired = false;
 
-            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
+            var moduleManager = CreateObjectUnderTest([mockModule.Object]);
             moduleManager.ModuleStateChanged += (sender, args) => eventFired = true;
 
             // Act
@@ -289,7 +281,7 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Argange
             var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
-            var moduleManager = CreateObjectUnderTest(new[] { module });
+            var moduleManager = CreateObjectUnderTest([module]);
 
             // Act
             moduleManager.StartModules();
@@ -305,7 +297,7 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Argange
             var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
-            var moduleManager = CreateObjectUnderTest(new[] { module });
+            var moduleManager = CreateObjectUnderTest([module]);
 
             // Act
             moduleManager.StartModules();

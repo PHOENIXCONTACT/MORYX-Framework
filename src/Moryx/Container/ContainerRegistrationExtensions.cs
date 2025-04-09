@@ -19,7 +19,7 @@ namespace Moryx.Container
         {
             var type = typeof(TComp);
             var regAtt = type.GetCustomAttribute<ComponentAttribute>();
-            container.Register(type, new[] { typeof(TService) }, regAtt?.Name, regAtt?.LifeStyle ?? LifeCycle.Singleton);
+            container.Register(type, [typeof(TService)], regAtt?.Name, regAtt?.LifeStyle ?? LifeCycle.Singleton);
 
             return container;
         }
@@ -31,7 +31,7 @@ namespace Moryx.Container
             where TComp : TService
             where TService : class
         {
-            container.Register(typeof(TComp), new[] { typeof(TService) }, name, lifeCycle);
+            container.Register(typeof(TComp), [typeof(TService)], name, lifeCycle);
 
             return container;
         }
@@ -61,10 +61,10 @@ namespace Moryx.Container
         {
             var att = type.GetCustomAttribute<ComponentAttribute>();
             if (att != null)
-                return att.Services.Any() ? att.Services : new[] { type };
+                return att.Services.Any() ? att.Services : [type];
 
             var interfaces = type.GetInterfaces();
-            return interfaces.Any() ? interfaces : new[] { type };
+            return interfaces.Any() ? interfaces : [type];
         }
 
 
@@ -142,7 +142,7 @@ namespace Moryx.Container
         {
             if (instance != null)
             {
-                container.RegisterInstance(new[] {typeof(T)}, instance, null);
+                container.RegisterInstance([typeof(T)], instance, null);
             }
             return container;
         }
@@ -158,7 +158,7 @@ namespace Moryx.Container
         {
             if (instance != null)
             {
-                container.RegisterInstance(new[] { typeof(T) }, instance, name);
+                container.RegisterInstance([typeof(T)], instance, name);
             }
             return container;
         }

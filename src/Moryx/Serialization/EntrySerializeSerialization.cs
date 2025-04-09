@@ -23,7 +23,7 @@ namespace Moryx.Serialization
         /// </summary>
         public EntrySerializeSerialization()
         {
-            _basePropertyFilter = Array.Empty<string>();
+            _basePropertyFilter = [];
         }
 
         /// <summary>

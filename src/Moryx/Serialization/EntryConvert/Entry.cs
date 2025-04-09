@@ -22,8 +22,8 @@ namespace Moryx.Serialization
         public Entry()
         {
             Value = new EntryValue();
-            SubEntries = new List<Entry>();
-            Prototypes = new List<Entry>();
+            SubEntries = [];
+            Prototypes = [];
         }
 
         /// <summary>

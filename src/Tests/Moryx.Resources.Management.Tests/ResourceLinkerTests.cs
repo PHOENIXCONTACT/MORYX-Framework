@@ -322,7 +322,7 @@ namespace Moryx.Resources.Management.Tests
             ResourceReferenceTools.InitializeCollections(parent);
             var child = new SimpleResource { Id = 2 };
             ResourceReferenceTools.InitializeCollections(child);
-            var mocks = SetupDbMocks(new List<ResourceRelationEntity>());
+            var mocks = SetupDbMocks([]);
             // Setup graph mock
             _graph[1] = parent;
             _graph[2] = child;
@@ -431,7 +431,7 @@ namespace Moryx.Resources.Management.Tests
             var reference = new SimpleResource();
             ResourceReferenceTools.InitializeCollections(instance);
             ResourceReferenceTools.InitializeCollections(reference);
-            var dbMocks = SetupDbMocks(new List<ResourceRelationEntity>());
+            var dbMocks = SetupDbMocks([]);
 
             // Act
             if (!isNull)

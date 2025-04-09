@@ -175,7 +175,7 @@ namespace Moryx.Resources.Management
         /// <inheritdoc />
         public IEnumerable<ResourceTypeNode> SupportedTypes(Type constraint)
         {
-            return SupportedTypes(new[] { constraint });
+            return SupportedTypes([constraint]);
         }
         /// <inheritdoc />
         IEnumerable<IResourceTypeNode> IResourceTypeTree.SupportedTypes(Type constraint) => SupportedTypes(constraint);

@@ -41,7 +41,7 @@ namespace Moryx.Container
             _container.AddFacility<MoryxFacility>(mf => mf.AddStrategies(strategies));
 
             // Self registration for framework functionality
-            RegisterInstance(new[] { typeof(IContainer) }, this, null);
+            RegisterInstance([typeof(IContainer)], this, null);
         }
 
         #endregion

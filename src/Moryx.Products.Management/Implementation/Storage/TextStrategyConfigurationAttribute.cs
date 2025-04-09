@@ -9,7 +9,7 @@ namespace Moryx.Products.Management
         {
             ColumnType = typeof(string);
             DerivedTypes = true;
-            SupportedTypes = new[] {typeof(string), typeof(object), typeof(Guid)};
+            SupportedTypes = [typeof(string), typeof(object), typeof(Guid)];
         }
 
         /// <inheritdoc />

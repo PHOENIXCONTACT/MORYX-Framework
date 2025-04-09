@@ -95,7 +95,7 @@ namespace Moryx.Tests.Configuration.ValueProvider
         public void EnumerableTest()
         {
             // Arrange
-            var config = new TestConfig3 { Configs = new List<TestConfig1> { new TestConfig1(), new TestConfig1(), new TestConfig1() } };
+            var config = new TestConfig3 { Configs = [new TestConfig1(), new TestConfig1(), new TestConfig1()] };
 
             // Act
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
