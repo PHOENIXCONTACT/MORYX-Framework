@@ -17,7 +17,10 @@ namespace Moryx.Products.Model.Migrations.Sqlite
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "6.0.0");
+                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true);
 
             modelBuilder.Entity("Moryx.Products.Model.PartLinkEntity", b =>
                 {
@@ -113,37 +116,6 @@ namespace Moryx.Products.Model.Migrations.Sqlite
                     b.HasIndex("ParentId");
 
                     b.ToTable("PartLinks", "public");
-                });
-
-            modelBuilder.Entity("Moryx.Products.Model.ProductFileEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FileHash")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MimeType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("ProductId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductFiles", "public");
                 });
 
             modelBuilder.Entity("Moryx.Products.Model.ProductInstanceEntity", b =>
@@ -712,15 +684,6 @@ namespace Moryx.Products.Model.Migrations.Sqlite
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Moryx.Products.Model.ProductFileEntity", b =>
-                {
-                    b.HasOne("Moryx.Products.Model.ProductTypeEntity", "Product")
-                        .WithMany("Files")
-                        .HasForeignKey("ProductId");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("Moryx.Products.Model.ProductInstanceEntity", b =>
                 {
                     b.HasOne("Moryx.Products.Model.ProductInstanceEntity", "Parent")
@@ -824,13 +787,13 @@ namespace Moryx.Products.Model.Migrations.Sqlite
             modelBuilder.Entity("Moryx.Products.Model.WorkplanReferenceEntity", b =>
                 {
                     b.HasOne("Moryx.Products.Model.WorkplanEntity", "Source")
-                        .WithMany("SourceReferences")
+                        .WithMany("TargetReferences")
                         .HasForeignKey("SourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Moryx.Products.Model.WorkplanEntity", "Target")
-                        .WithMany("TargetReferences")
+                        .WithMany("SourceReferences")
                         .HasForeignKey("TargetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -864,8 +827,6 @@ namespace Moryx.Products.Model.Migrations.Sqlite
 
             modelBuilder.Entity("Moryx.Products.Model.ProductTypeEntity", b =>
                 {
-                    b.Navigation("Files");
-
                     b.Navigation("OldVersions");
 
                     b.Navigation("Parents");

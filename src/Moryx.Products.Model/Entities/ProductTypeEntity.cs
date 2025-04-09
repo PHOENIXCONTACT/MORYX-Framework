@@ -23,8 +23,6 @@ namespace Moryx.Products.Model
 
         public virtual ICollection<PartLinkEntity> Parents { get; set; }
 
-        public virtual ICollection<ProductFileEntity> Files { get; set; }
-
         public virtual ICollection<ProductRecipeEntity> Recipes { get; set; }
 
         public virtual ICollection<ProductTypePropertiesEntity> OldVersions { get; set; }
@@ -35,7 +33,6 @@ namespace Moryx.Products.Model
         {
             Parts = new List<PartLinkEntity>();
             Parents = new List<PartLinkEntity>();
-            Files = new List<ProductFileEntity>();
             Recipes = new List<ProductRecipeEntity>();
             OldVersions = new List<ProductTypePropertiesEntity>();
         }
