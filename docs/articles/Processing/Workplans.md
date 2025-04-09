@@ -41,7 +41,7 @@ To implement `IWorkplanStep` it is recommended to derive from `WorkplanStepBase`
 !["Petri Net](images/petrinet.png)
 
 Unlike MORYX Classic, there shall be not one single large workplan but separate small workplans to get from one construction level to the next one.
-In addition to the work plan steps work plans may contains splits and joins to support parallel processing. Therefore there will be not one single token inside the net as in MORYX Classic but a group of tokens. 
+In addition to the work plan steps, work plans may contains splits and joins to support parallel processing. Therefore there will be not one single token inside the net as in MORYX Classic but a group of tokens. 
 
 The ProcessController will be changed to get a list of activities instead of a single one. The list may be empty if there is a join still waiting for other tokens. The workflow finishes if the list of activities is null.
 
@@ -55,7 +55,7 @@ The Control System checks the workplan on import for compatibility.
 
 A work plan has a version identifier. There is some kind of release management needed. The process tracing data refers one distinct version of the work plan.
 
-To reduce waist there must be a possibility to change the work plan version while the process is running. To change should be allowed only if the finished and the current steps are equal to the new definition. It should be quite easy to check the tracing data whether the new definition would have led to the same tracing result. It should be forbidden to change the version if the tracing data does not fit to the new one.
+To reduce waste there must be a possibility to change the work plan version while the process is running. To change should be allowed only if the finished and the current steps are equal to the new definition. It should be quite easy to check the tracing data whether the new definition would have led to the same tracing result. It should be forbidden to change the version if the tracing data does not fit to the new one.
 
 For each group of splits and joins leading to parallel threads there must be a bounding box with exactly one entry and one exit. The only exception of this rule is a global abort, if the process shall be terminated in case of an error. It is difficult (or even impossible) to validate termination if loops are allowed, because the termination of the loop cannot be validated at all.
 
@@ -118,9 +118,9 @@ engine.Start();
 
 ### Path Prediction
 
-Sometimes the result of a worplan instance execution is foreseeable during execution even though the engine has not completed yet because the workplan defines final steps before the instance was truly completed. However in order to save time it might make sense to process the expected result without awaiting the engines completion. Path prediction refers to the ability to analyze a workplan and identify paths that lead to only one possible outcome. Once the workplan engine enters that path during execution the result can be predicted **before** the workplan instance was completed.
+Sometimes the result of a workplan instance execution is foreseeable during execution even though the engine has not completed yet because the workplan defines final steps before the instance was truly completed. However in order to save time it might make sense to process the expected result without awaiting the engines completion. Path prediction refers to the ability to analyze a workplan and identify paths that lead to only one possible outcome. Once the workplan engine enters that path during execution the result can be predicted **before** the workplan instance was completed.
 
-In _Moryx.Workplans_ this feature is available via the [PathPredictor](../../../src/Moryx/Workflows/API/IPathPredictor.cs). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of  the afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that paths an event is published that contains the expected result in the form of a `NodeClassification`.
+In _Moryx.Workplans_ this feature is available via the [PathPredictor](../../../src/Moryx/Workflows/API/IPathPredictor.cs). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of  the afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that path an event is published that contains the expected result in the form of a `NodeClassification`.
 
 ````cs
 var workplan = MethodThatReturnsWorkplan();
