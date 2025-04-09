@@ -50,13 +50,13 @@ namespace Moryx.Runtime.Kernel.Tests
         public void FacadeCollectionInjection()
         {
             // Arrange
-            var dependend = new ModuleC();
+            var dependent = new ModuleC();
             var moduleManager = CreateObjectUnderTest(new IServerModule[]
             {
                 new ModuleB1(),
                 new ModuleB2(),
                 new ModuleB3(),
-                dependend
+                dependent
             });
 
 
@@ -64,45 +64,45 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-            Assert.NotNull(dependend.Facades, "No facade injected");
-            Assert.AreEqual(3, dependend.Facades.Length, "Faulty number of facades");
+            Assert.NotNull(dependent.Facades, "No facade injected");
+            Assert.AreEqual(3, dependent.Facades.Length, "Faulty number of facades");
         }
 
         [Test]
         public void FacadeCollectionNoEntry()
         {
             // Arrange
-            var dependend = new ModuleC();
+            var dependent = new ModuleC();
             var moduleManager = CreateObjectUnderTest(new IServerModule[]
             {
-                dependend
+                dependent
             });
 
             // Act
             moduleManager.StartModules();
 
             // Assert
-            Assert.NotNull(dependend.Facades, "No facade injected");
-            Assert.AreEqual(0, dependend.Facades.Length, "Faulty number of facades");
+            Assert.NotNull(dependent.Facades, "No facade injected");
+            Assert.AreEqual(0, dependent.Facades.Length, "Faulty number of facades");
         }
 
         [Test]
         public void FacadeCollectionSingleEntry()
         {
             // Arrange
-            var dependend = new ModuleC();
+            var dependent = new ModuleC();
             var moduleManager = CreateObjectUnderTest(new IServerModule[]
             {
                 new ModuleB1(),
-                dependend
+                dependent
             });
 
             // Act
             moduleManager.StartModules();
 
             // Assert
-            Assert.NotNull(dependend.Facades, "No facade injected");
-            Assert.AreEqual(1, dependend.Facades.Length, "Faulty number of facades");
+            Assert.NotNull(dependent.Facades, "No facade injected");
+            Assert.AreEqual(1, dependent.Facades.Length, "Faulty number of facades");
         }
 
 
@@ -111,7 +111,7 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Arrange
             var dependency = new ModuleA();
-            var depend = new ModuleADependend();
+            var depend = new ModuleADependent();
             var moduleManager = CreateObjectUnderTest(new IServerModule[]
             {
                 dependency,
@@ -126,15 +126,15 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void ShouldExcludeMissingFacadeAndItsDependends()
+        public void ShouldExcludeMissingFacadeAndItsDependents()
         {
             // Arrange
             var moduleManager = CreateObjectUnderTest(new IServerModule[]
             {
                 new ModuleB1(),
                 new ModuleCSingle(), 
-                new ModuleADependend(),
-                new ModuleADependendTransient()
+                new ModuleADependent(),
+                new ModuleADependentTransient()
             });
 
             // Act
@@ -143,7 +143,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Assert
             Assert.AreEqual(4, moduleManager.AllModules.Count());
             var available = moduleManager.DependencyTree.RootModules
-                .Flatten(md => md.Dependends).ToList();
+                .Flatten(md => md.Dependents).ToList();
             Assert.AreEqual(2, available.Count);
         }
 
@@ -164,7 +164,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Assert
             Assert.AreEqual(3, moduleManager.AllModules.Count());
             var available = moduleManager.DependencyTree.RootModules
-                .Flatten(md => md.Dependends).ToList();
+                .Flatten(md => md.Dependents).ToList();
             Assert.AreEqual(2, available.Count);
         }
 

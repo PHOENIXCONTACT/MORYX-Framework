@@ -26,13 +26,13 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         {
             // Skip eval for empty list
             var allModules = tree.RootModules
-                .Flatten(md => md.Dependends).ToList();
+                .Flatten(md => md.Dependents).ToList();
             if (tree.RootModules.Any())
             {
                 RootModules = tree.RootModules.Count();
                 MaxDepth = tree.RootModules.Max(branch => CalculateTreeDepth(1, branch));
                 MaxDependencies = allModules.Max(item => item.Dependencies.Count());
-                MaxDependends = allModules.Max(item => item.Dependends.Count());
+                MaxDependends = allModules.Max(item => item.Dependents.Count());
             }
         }
 
@@ -59,7 +59,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         private int CalculateTreeDepth(int currentLevel, IModuleDependency branch)
         {
             var childLevel = currentLevel + 1;
-            return branch.Dependends.Any() ? branch.Dependends.Max(dependency => CalculateTreeDepth(childLevel, dependency)) : currentLevel;
+            return branch.Dependents.Any() ? branch.Dependents.Max(dependency => CalculateTreeDepth(childLevel, dependency)) : currentLevel;
         }
     }
 }

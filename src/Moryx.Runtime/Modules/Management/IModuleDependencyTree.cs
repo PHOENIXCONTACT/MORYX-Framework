@@ -32,6 +32,6 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// All modules that depend on this module
         /// </summary>
-        IReadOnlyList<IModuleDependency> Dependends { get; } 
+        IReadOnlyList<IModuleDependency> Dependents { get; } 
     }
 }

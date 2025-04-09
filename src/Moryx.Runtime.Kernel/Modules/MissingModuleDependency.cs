@@ -16,6 +16,6 @@ namespace Moryx.Runtime.Kernel.Modules
 
         public IReadOnlyList<IModuleDependency> Dependencies => throw new NotImplementedException();
 
-        public IReadOnlyList<IModuleDependency> Dependends => throw new NotImplementedException();
+        public IReadOnlyList<IModuleDependency> Dependents => throw new NotImplementedException();
     }
 }

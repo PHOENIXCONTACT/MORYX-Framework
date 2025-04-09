@@ -40,7 +40,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// All modules that depend on this module
         /// </summary>
-        IReadOnlyList<IModuleDependency> IModuleDependency.Dependends => Dependends;
+        IReadOnlyList<IModuleDependency> IModuleDependency.Dependents => Dependends;
     }
 }
 

@@ -110,23 +110,23 @@ namespace Moryx.Runtime.Kernel
                 if (!WaitingModules.ContainsKey(module))
                     return;
 
-                // To increase boot speed we fork plugin start if more than one dependents was found
+                // To increase boot speed we fork plugin start if more than one dependent was found
                 foreach (var waitingModule in WaitingModules[module].ToArray())
                 {
                     WaitingModules[module].Remove(waitingModule);
                     StartModule(waitingModule);
                 }
-                // We remove this service for now after we started every dependend
+                // We remove this service for now after we started every dependent
                 WaitingModules.Remove(module);
             }
         }
 
         private void ConvertBranch(IModuleDependency branch)
         {
-            foreach (var dependend in branch.Dependends.Where(ShouldBeStarted))
+            foreach (var dependent in branch.Dependents.Where(ShouldBeStarted))
             {
-                AddWaitingService(branch.RepresentedModule, dependend.RepresentedModule);
-                ConvertBranch(dependend);
+                AddWaitingService(branch.RepresentedModule, dependent.RepresentedModule);
+                ConvertBranch(dependent);
             }
         }
 
@@ -142,7 +142,7 @@ namespace Moryx.Runtime.Kernel
         private bool ShouldBeStarted(IModuleDependency plugin)
         {
             var conf = _config.GetOrCreate(plugin.RepresentedModule.Name);
-            var result = conf.StartBehaviour == ModuleStartBehaviour.Auto || plugin.Dependends.Any(ShouldBeStarted);
+            var result = conf.StartBehaviour == ModuleStartBehaviour.Auto || plugin.Dependents.Any(ShouldBeStarted);
             return result;
         }
     }
