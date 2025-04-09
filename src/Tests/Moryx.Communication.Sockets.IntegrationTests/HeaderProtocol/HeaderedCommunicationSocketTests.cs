@@ -34,7 +34,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             {
                 CreateAndStartServer(IPAddress.Any, TestPort, i, new SystemTestValidator(i));
 
-                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 500, i, new SystemTestValidator(i));
+                var clientIdx = CreateAndStartClient(IPAddress.Parse(Tests), TestPort, 500, i, new SystemTestValidator(i));
 
                 // Client should be connected
                 WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
@@ -100,7 +100,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             {
                 CreateAndStartServer(IPAddress.Any, TestPort, i, new SystemTestValidator(i));
 
-                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 500, i, new SystemTestValidator(i));
+                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, 500, i, new SystemTestValidator(i));
 
                 // Client should be connected
                 WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
@@ -152,7 +152,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         {
             // Arrange
             var server = CreateAndStartServer(IPAddress.Any, TestPort, 1, new SystemTestValidator(1));
-            var clientId = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 100, 1, new SystemTestValidator(1));
+            var clientId = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, 100, 1, new SystemTestValidator(1));
             var client = GetClient(clientId);
             // Client should be connected
             WaitForConnectionState(clientId, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
@@ -196,7 +196,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             {
                 CreateAndStartServer(IPAddress.Any, TestPort, i, new SystemTestValidator(i));
 
-                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 500, i, new SystemTestValidator(i));
+                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, 500, i, new SystemTestValidator(i));
 
                 // Client should be connected
                 WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
@@ -245,7 +245,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             {
                 CreateAndStartServer(IPAddress.Any, TestPort, i, new SystemTestValidator(i));
 
-                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 500, i, new SystemTestValidator(i));
+                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, 500, i, new SystemTestValidator(i));
 
                 // Client should be connected
                 WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);

@@ -33,7 +33,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             {
                 for (var j = 0; j < simultaneousClients; j++)
                 {
-                    var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, -1, j, new SystemTestValidator(j));
+                    var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, -1, j, new SystemTestValidator(j));
 
                     // Client should be connected
                     WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 20), BinaryConnectionState.Connected);
@@ -60,7 +60,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         {
             for (var i = 0; i < numberOfClients; i++)
             {
-                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 500, i, new SystemTestValidator(i));
+                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, 500, i, new SystemTestValidator(i));
 
                 // Client should be attempting to Connect
                 WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.AttemptingConnection);
@@ -79,7 +79,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         public void ReconnectTest()
         {
             // Arrange
-            var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, -1, 0, new SystemTestValidator(0));
+            var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, -1, 0, new SystemTestValidator(0));
 
             // Act
             // Assert
@@ -114,7 +114,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         public void SendEmptyMessages()
         {
             var server = CreateAndStartServer(IPAddress.Any, TestPort + 1, 1, new TestDelimiterValidator());
-            CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort + 1, -1, 1, new TestDelimiterValidator());
+            CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort + 1, -1, 1, new TestDelimiterValidator());
             WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
 
             var message = new BinaryMessage(new byte[0]);

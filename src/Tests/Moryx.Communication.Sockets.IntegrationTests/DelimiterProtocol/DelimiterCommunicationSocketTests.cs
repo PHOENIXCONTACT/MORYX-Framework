@@ -42,7 +42,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             // Arrange
             CreateAndStartServer(IPAddress.Any, TestPort, 0, new TestDelimiterValidator());
 
-            var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 500, 0, new TestDelimiterValidator());
+            var clientIdx = CreateAndStartClient(IPAddress.Parse(Tests), TestPort, 500, 0, new TestDelimiterValidator());
 
             WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
 

@@ -21,14 +21,14 @@ namespace Moryx.Communication.Sockets
         public override string PluginName => nameof(TcpClientConnection);
 
         /// <summary>
-        /// Gets or sets the ip adress.
+        /// Gets or sets the ip address.
         /// </summary>
         /// <value>
-        /// The ip adress.
+        /// The ip address.
         /// </value>
         [DataMember]
-        [Description("The IPAdress for this device")]
-        public string IpAdress { get; set; }
+        [Description("The IP-Address for this device")]
+        public string IpAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the port.

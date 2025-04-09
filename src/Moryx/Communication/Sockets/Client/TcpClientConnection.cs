@@ -83,7 +83,7 @@ namespace Moryx.Communication.Sockets
 
             StateMachine.Initialize(this).With<ClientStateBase>();
 
-            Endpoint = GetIpEndpointFromHost(Config.IpAdress, Config.Port);
+            Endpoint = GetIpEndpointFromHost(Config.IpAddress, Config.Port);
         }
 
         /// <summary>

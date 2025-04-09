@@ -6,5 +6,7 @@ The `ProductFileEntity` was not used in the product-model. There was no api to a
 
 ## Renamings and Typo-Fixes
 
+- TcpClientConfig.IpAdress -> TcpClientConfig.IpAddress
+- TcpListenerConfig.IpAdress -> TcpListenerConfig.IpAddress
 - ResourceRelationType.CurrentExchangablePart -> ResourceRelationType.CurrentExchangeablePart
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart

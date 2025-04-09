@@ -91,10 +91,10 @@ namespace Moryx.Communication.Sockets
         {
             _config = (TcpListenerConfig)config;
 
-            if (IPAddress.TryParse(_config.IpAdress, out var address))
+            if (IPAddress.TryParse(_config.IpAddress, out var address))
                 Address = address;
             else
-                throw new FormatException($"Failed to parse IPAddress: {_config.IpAdress}");
+                throw new FormatException($"Failed to parse IPAddress: {_config.IpAddress}");
 
             StateMachine.Initialize(this).With<ServerStateBase>();
         }

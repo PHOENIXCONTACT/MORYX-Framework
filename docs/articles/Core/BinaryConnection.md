@@ -169,6 +169,6 @@ The following table illustrates differences between Little-Endian and Big-Endian
 
 ### .NET Conversion-Methods
 
-The .Net-Framework offers serveral Helper Methods and Classes and should be used for the conversion of data before sending it via network. To make sure, that multibyte values have the right byte order before being converted in to a byte-stream use [IpAdress.HostToNetworkOrder](https://msdn.microsoft.com/de-de/library/653kcke1%28v=vs.110%29.aspx) For incoming data [IpAddress.NetworkToHostOrder](https://msdn.microsoft.com/de-de/library/system.net.ipaddress.networktohostorder%28v=vs.100%29.aspx) maybe used.
+The .Net-Framework offers serveral Helper Methods and Classes and should be used for the conversion of data before sending it via network. To make sure, that multibyte values have the right byte order before being converted in to a byte-stream use [.HostToNetworkOrder](https://msdn.microsoft.com/de-de/library/653kcke1%28v=vs.110%29.aspx) For incoming data [IpAddress.NetworkToHostOrder](https://msdn.microsoft.com/de-de/library/system.net.ipaddress.networktohostorder%28v=vs.100%29.aspx) maybe used.
 
 To create Byte-Arrays the .Net-class [BitConverter](https://msdn.microsoft.com/en-us/library/vstudio/system.bitconverter%28v=vs.100%29.aspx) may be used after the multibyte values have been converted into the right order.
