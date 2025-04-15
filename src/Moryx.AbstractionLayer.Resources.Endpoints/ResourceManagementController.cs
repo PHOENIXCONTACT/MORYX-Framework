@@ -365,7 +365,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 throw;
             }            
 
-            return Ok(GetDetails(id));
+            return GetDetails(id);
         }
 
         [HttpDelete]
