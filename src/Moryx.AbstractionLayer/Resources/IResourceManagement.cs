@@ -63,7 +63,7 @@ namespace Moryx.AbstractionLayer.Resources
             where TResource : class, IResource;
 
         /// <summary>
-        /// Get all resources inluding the private ones of this type that match the predicate
+        /// Get all resources including the private ones of this type that match the predicate
         /// </summary>
         IEnumerable<TResource> GetAllResources<TResource>(Func<TResource, bool> predicate)
             where TResource : class, IResource;
@@ -89,8 +89,6 @@ namespace Moryx.AbstractionLayer.Resources
         /// Create and initialize a resource
         /// </summary>
         bool Delete(long id);
-
-
 
         /// <summary>
         /// Event raised when a resource was added at runtime
