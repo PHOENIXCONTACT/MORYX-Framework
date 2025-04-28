@@ -68,5 +68,5 @@ The [Workplan](Processing/Workplans.md) package of the AbstrationLayer contains 
 
 To start using the AbstractionLayer for your own projects you can jump into these tutorials:
 
-* [How to create a Resource](Tutorials/HowToCreateResource.md)
-* [How to build a Driver](Tutorials/HowToBuildADriver.md)
+* [How to create a Resource](/docs/tutorials/HowToCreateResource.md)
+* [How to build a Driver](/docs/tutorials/HowToBuildADriver.md)

@@ -8,7 +8,7 @@ They can be coupled with active devices or represent passive objects like a tabl
 The main advantage of this concept is that the resource interface and implementation structure is the same for all resources. 
 So [accessing a resource](ResourceManagement.md) is done in an abstract and general way. 
 Processing, configuring and visualization of a resource is done in the same way with the same classes. 
-Extending a default resource can be done in a standard way and includes expansion of the [default UI](ResourceManagementUI.md) as well.
+Extending a default resource can be done in a standard way and includes expansion of the default UI as well.
 
 ## Resource type tree
 

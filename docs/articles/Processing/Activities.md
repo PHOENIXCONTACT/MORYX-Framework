@@ -3,7 +3,7 @@ uid: Activities
 ---
 # Activities
 
-An [Activity](../../src/Moryx.AbstractionLayer/Activities/IActivity.cs) is the smallest separately executable step of a [Process](Processes.md). Activities are defined as classes derived from [Activity](../../src/Moryx.AbstractionLayer/Activities/Activity.cs) and are always specific to a certain task or application. Activities are instantiated by dedicated modules in their respective domains and then executed by resources. Each activity has a set of required [Capabilities](Capabilities.md) while the [production Resources](../Resources/Overview.md) each have a set of provided capabilities. All activities are stored permanently with the process for tracing purposes.
+An [Activity](../../../src/Moryx.AbstractionLayer/Activities/IActivity.cs) is the smallest separately executable step of a [Process](Processes.md). Activities are defined as classes derived from [Activity](../../../src/Moryx.AbstractionLayer/Activities/IActivity.cs) and are always specific to a certain task or application. Activities are instantiated by dedicated modules in their respective domains and then executed by resources. Each activity has a set of required [Capabilities](Capabilities.md) while the [production Resources](../Resources/Overview.md) each have a set of provided capabilities. All activities are stored permanently with the process for tracing purposes.
 
 ## Activity Structure
 
@@ -117,7 +117,7 @@ private void OnMyActivtiy(StartActivity activity, MyActivity activity)
 }
 // some more resource code
 ````
-For more information on how a Driver works see [this article](../Tutorials/HowToBuildADriver.md).
+For more information on how a Driver works see [this article](/docs/tutorials/HowToBuildADriver.md).
 
 ## Activity Results
 
