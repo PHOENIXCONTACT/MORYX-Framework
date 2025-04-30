@@ -6,6 +6,7 @@ on:
     branches: 
       - dev
       - future
+      - feature/moryx-file-system
     tags:
       - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
   pull_request:
