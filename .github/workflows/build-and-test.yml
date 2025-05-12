@@ -30,7 +30,7 @@ jobs:
       - run: echo ""
     outputs:
       dotnet_sdk_version: ${{ env.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
+      REPOSITORY_NAME: ${{ github.ref }}
       MORYX_PACKAGE_TARGET_DEV: ${{ env.MORYX_PACKAGE_TARGET_DEV }}
       MORYX_PACKAGE_TARGET_V3_DEV: ${{ env.MORYX_PACKAGE_TARGET_V3_DEV }}
       MORYX_PACKAGE_TARGET_FUTURE: ${{ env.MORYX_PACKAGE_TARGET_FUTURE }}
