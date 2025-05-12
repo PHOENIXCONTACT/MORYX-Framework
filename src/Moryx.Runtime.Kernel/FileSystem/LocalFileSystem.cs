@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Moryx.Runtime.Kernel.FileSystem
 {
-    internal class MoryxFileSystem : IMoryxFileSystem
+    internal class LocalFileSystem : IMoryxFileSystem
     {
         private string _fsDirectory;
         private string _ownerFilesDirectory;
@@ -20,9 +20,9 @@ namespace Moryx.Runtime.Kernel.FileSystem
 
         private readonly List<MoryxFileTree> _ownerTrees = new List<MoryxFileTree>();
 
-        public MoryxFileSystem(ILoggerFactory loggerFactory)
+        public LocalFileSystem(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger(nameof(MoryxFileSystem));
+            _logger = loggerFactory.CreateLogger(nameof(LocalFileSystem));
         }
 
         public void SetBasePath(string basePath = "fs")
