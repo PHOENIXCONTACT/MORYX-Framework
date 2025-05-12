@@ -6,7 +6,6 @@ on:
     branches: 
       - dev
       - future
-      - feature/moryx-file-system
     tags:
       - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
   pull_request:
@@ -41,7 +40,7 @@ jobs:
 
   Build:
     needs: [EnvVar]
-    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@main
+    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@rc-builds
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
@@ -84,7 +83,7 @@ jobs:
 
   Publish:
     needs: [EnvVar, UnitTests]
-    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
+    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@rc-builds
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
