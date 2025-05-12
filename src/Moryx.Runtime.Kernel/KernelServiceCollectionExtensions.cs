@@ -30,8 +30,8 @@ namespace Moryx.Runtime.Kernel
             serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
 
             // Register module manager
-            serviceCollection.AddSingleton<MoryxFileSystem>();
-            serviceCollection.AddSingleton<IMoryxFileSystem>(x => x.GetRequiredService<MoryxFileSystem>());
+            serviceCollection.AddSingleton<LocalFileSystem>();
+            serviceCollection.AddSingleton<IMoryxFileSystem>(x => x.GetRequiredService<LocalFileSystem>());
 
             // Register parallel operations
             serviceCollection.AddTransient<IParallelOperations, ParallelOperations>();
@@ -106,7 +106,7 @@ namespace Moryx.Runtime.Kernel
         /// <returns></returns>
         public static IMoryxFileSystem UseMoryxFileSystem(this IServiceProvider serviceProvider, string path)
         {
-            var fileSystem = serviceProvider.GetRequiredService<MoryxFileSystem>();
+            var fileSystem = serviceProvider.GetRequiredService<LocalFileSystem>();
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             fileSystem.SetBasePath(path);
