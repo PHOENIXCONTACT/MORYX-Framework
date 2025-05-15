@@ -32,7 +32,7 @@ namespace Moryx.Runtime.Kernel
             serviceCollection.AddSingleton<ModuleManager>();
             serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
 
-            // Register module manager
+            // Register local file system
             serviceCollection.AddSingleton<LocalFileSystem>();
             serviceCollection.AddSingleton<IMoryxFileSystem>(x => x.GetRequiredService<LocalFileSystem>());
 
@@ -97,7 +97,7 @@ namespace Moryx.Runtime.Kernel
         /// Use moryx file system and configure base directory
         /// </summary>
         /// <returns></returns>
-        public static IMoryxFileSystem UseMoryxFileSystem(this IServiceProvider serviceProvider, string path)
+        public static IMoryxFileSystem UseLocalFileSystem(this IServiceProvider serviceProvider, string path)
         {
             var fileSystem = serviceProvider.GetRequiredService<LocalFileSystem>();
             if (!Directory.Exists(path))

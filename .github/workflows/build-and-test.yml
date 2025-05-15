@@ -6,6 +6,7 @@ on:
     branches: 
       - dev
       - future
+      - rc/*
     tags:
       - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
   pull_request:
@@ -22,6 +23,10 @@ env:
   MORYX_PACKAGE_TARGET_V3_FUTURE: 'https://www.myget.org/F/moryx-oss-ci/api/v3/index.json'
   MORYX_PACKAGE_TARGET_RELEASE: 'https://api.nuget.org/v3/index.json'
   MORYX_PACKAGE_TARGET_V3_RELEASE: 'https://api.nuget.org/v3/index.json'
+  REF_NAME: ${{ github.ref_name}}
+  BASE_REF: ${{ github.base_ref}}
+  REF: ${{ github.ref }}
+  HEAD_REF: ${{ github.head_ref }}
 
 jobs:
   EnvVar:
@@ -30,15 +35,14 @@ jobs:
       - run: echo ""
     outputs:
       dotnet_sdk_version: ${{ env.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ github.ref }}
+      REPOSITORY_NAME: ${{ github.event.repository.name }}
       MORYX_PACKAGE_TARGET_DEV: ${{ env.MORYX_PACKAGE_TARGET_DEV }}
       MORYX_PACKAGE_TARGET_V3_DEV: ${{ env.MORYX_PACKAGE_TARGET_V3_DEV }}
       MORYX_PACKAGE_TARGET_FUTURE: ${{ env.MORYX_PACKAGE_TARGET_FUTURE }}
       MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ env.MORYX_PACKAGE_TARGET_V3_FUTURE }}
       MORYX_PACKAGE_TARGET_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_RELEASE }}
       MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_V3_RELEASE }}
-      REF_NAME: ${{ github.ref_name}}
-      REF: ${{ github.ref }}
+      
 
   Build:
     needs: [EnvVar]

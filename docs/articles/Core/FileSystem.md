@@ -3,6 +3,12 @@ uid: FileSystem
 ---
 # FileSystem
 
+## Inspiration
+
+The MORYX file system was inspired by the GIT tree and obj structure. 
+
+## Architecture
+
 ````mermaid
 classDiagram
     MoryxFile <|-- Blob
