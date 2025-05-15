@@ -1,17 +1,25 @@
-﻿using System;
+﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Moryx.FileSystem
+namespace Moryx.FileSystem;
+
+/// <summary>
+/// Moryx file types in owner tree file
+/// </summary>
+public enum FileType
 {
     /// <summary>
-    /// Moryx file types in owner tree file
+    /// Binary file, unspecified
     /// </summary>
-    public enum FileType
-    {
-        Blob = 0,
+    Blob = 0,
 
-        Tree = 1,
-    }
+    /// <summary>
+    /// Tree file with references to files
+    /// </summary>
+    Tree = 1,
 }
