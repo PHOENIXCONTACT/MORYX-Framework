@@ -29,7 +29,7 @@ namespace Moryx.Runtime.Kernel
             serviceCollection.AddSingleton<ModuleManager>();
             serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
 
-            // Register module manager
+            // Register local file system
             serviceCollection.AddSingleton<LocalFileSystem>();
             serviceCollection.AddSingleton<IMoryxFileSystem>(x => x.GetRequiredService<LocalFileSystem>());
 
@@ -104,38 +104,13 @@ namespace Moryx.Runtime.Kernel
         /// Use moryx file system and configure base directory
         /// </summary>
         /// <returns></returns>
-        public static IMoryxFileSystem UseMoryxFileSystem(this IServiceProvider serviceProvider, string path)
+        public static IMoryxFileSystem UseLocalFileSystem(this IServiceProvider serviceProvider, string path)
         {
             var fileSystem = serviceProvider.GetRequiredService<LocalFileSystem>();
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             fileSystem.SetBasePath(path);
             return fileSystem;
-        }
-
-        private static IModuleManager _moduleManager;
-        /// <summary>
-        /// Boot system and start all modules
-        /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
-        [Obsolete("Resolve IModuleManager and call StartModules directly")]
-        public static IModuleManager StartMoryxModules(this IServiceProvider serviceProvider)
-        {
-            var moduleManager = serviceProvider.GetRequiredService<IModuleManager>();
-            moduleManager.StartModules();
-            return _moduleManager = moduleManager;
-        }
-
-        /// <summary>
-        /// Stop all modules
-        /// </summary>
-        [Obsolete("Stopping modules on service collection causes an exception, call StopModules on the return value of StartModules")]
-        public static IModuleManager StopMoryxModules(this IServiceProvider serviceProvider)
-        {
-            var moduleManager = _moduleManager ?? serviceProvider.GetRequiredService<IModuleManager>();
-            moduleManager.StopModules();
-            return moduleManager;
         }
     }
 }

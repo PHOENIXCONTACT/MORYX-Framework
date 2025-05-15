@@ -51,12 +51,7 @@ namespace Moryx.Runtime.Kernel.FileSystem
                 stream.Position = 0;
 
                 var hash = hashing.ComputeHash(stream);
-                var nameBuilder = new StringBuilder(hash.Length * 2);
-                foreach (var hashByte in hash)
-                {
-                    nameBuilder.AppendFormat("{0:X2}", hashByte);
-                }
-                name = nameBuilder.ToString();
+                name = BitConverter.ToString(hash).Replace("-", string.Empty);
 
                 stream.Position = 0;
             }
