@@ -1,18 +1,21 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.Asp.Extensions;
+using Moryx.Container;
+using Moryx.Model.Repositories;
+using Moryx.Products.Model;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Products;
-using Moryx.AbstractionLayer.Recipes;
-using Moryx.Container;
-using Moryx.Model.Repositories;
-using Moryx.Products.Model;
 
 namespace Moryx.Products.Management
 {
@@ -90,9 +93,22 @@ namespace Moryx.Products.Management
         {
             var wrapper = Storage.GetTypeWrapper(type);
             if (wrapper == null || wrapper.Constructor == null)
-                return (ProductType)TypeTool.CreateInstance<ProductType>(type);          
+                return (ProductType)TypeTool.CreateInstance<ProductType>(type);
             return wrapper.Constructor();
         }
+
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        //[Route("instances/{id}")]
+        //[Authorize(Policy = ProductPermissions.CanViewInstances)]
+        //public ActionResult<ProductInstanceModel> GetInstance(long id)
+        public ActionResult<IProductType> ProperDuplicate(ProductType template, ProductIdentity newIdentity)
+        {
+            return Conflict(new MoryxExceptionResponse { Title = string.Format("Strings.RecipeNotFoundException_Message") });
+        }
+
 
         public IProductType Duplicate(ProductType template, ProductIdentity newIdentity)
         {

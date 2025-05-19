@@ -227,6 +227,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)] // NEW
         [Route("types/{id}")]
         [Authorize(Policy = ProductPermissions.CanDuplicateType)]
         public ActionResult<ProductModel> Duplicate(long id, [FromBody] string newIdentity)
