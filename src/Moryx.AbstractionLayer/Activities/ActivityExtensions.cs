@@ -13,13 +13,18 @@ namespace Moryx.AbstractionLayer
     public static class ActivityExtensions
     {
         /// <summary>
-        /// Get the task of an activity
+        /// Get the task of an <see cref="Activity"/>.
+        /// Interface extension for more accessibility and less casting.
         /// </summary>
-        public static IWorkplanStep GetTask(this Activity activity)
+        /// <param name="activity">Must derive from <seealso cref="Activity"/>!</param>
+        public static IWorkplanStep GetTask(this IActivity activity)
         {
+            if (activity is not Activity cast)
+                throw new ArgumentException("GetTask only works for Activity (IActivity is slightly not enough)!", nameof(activity));
+
             if (activity.Process.Recipe is WorkplanRecipe workplanRecipe)
             {
-                var step = workplanRecipe.Workplan.Steps.FirstOrDefault(s => s.Id == activity.StepId);
+                var step = workplanRecipe.Workplan.Steps.FirstOrDefault(s => s.Id == cast.StepId);
                 return step;
             }
             return null;
