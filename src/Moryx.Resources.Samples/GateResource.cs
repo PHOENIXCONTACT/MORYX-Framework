@@ -17,6 +17,10 @@ namespace Moryx.Resources.Samples
 
         public override object Descriptor => new AxisControls(this);
 
+        [DisplayName("WPCs")]
+        [ReferenceOverride(nameof(Children))]
+        public IReferences<Wpc> Wpcs { get; set; }
+
         [EntrySerialize]
         public class AxisControls
         {

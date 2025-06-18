@@ -19,6 +19,32 @@ namespace Moryx.Resources.Samples.Initializer
         {
             var machine = graph.Instantiate<Machine>();
             machine.Name = Config.MachineName;
+            machine.AdditionalInformation = new MachineInfos
+            {
+                MaximumNumberOperator = 4,
+                TechnicalStaff = "Max Mustermann",
+            };
+            machine.ProductionHours = 50000;
+            machine.Description = "This is a description";
+            machine.Values = new List<int> { 1, 2, 3, 4 };
+            machine.PossibleTechnicalStaffs = new List<TechnicalStaff>()
+            {
+                new TechnicalStaff
+                {
+                    FirstName = "Max",
+                    LastName = "Mustermann",
+                    StaffNumber = 0815
+                },
+                new TechnicalStaff
+                {
+                    FirstName = "Flynn",
+                    LastName = "Rider",
+                    StaffNumber = 4711
+                }
+            };
+           
+            machine.MachineType = MachineType.halfAutomatic;
+            machine.Power = 234.1;
 
             var someGate = graph.Instantiate<GateResource>();
             someGate.Name = "Some Gate";
