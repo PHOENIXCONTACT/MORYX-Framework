@@ -1,0 +1,108 @@
+@use "@moryx/ngx-web-framework/styles/theme"; 
+@use "@moryx/ngx-web-framework/styles/variables"; 
+
+html, body { 
+  height: 100%;
+  font-family: Roboto;
+}
+body { margin: 0; overflow: hidden; }
+
+app-root {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+app-default-view {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+app-product-recipes-details{
+  display:flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+app-dialog-remove-product{
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+  justify-content: space-between;
+}
+
+app-dialog-show-revisions{
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+  justify-content: flex-start;
+}
+
+app-dialog-create-revision{
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+}
+
+app-product-properties{
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 100%;
+}
+
+app-product-references{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 8px 8px 24px 8px;
+  box-sizing: border-box;
+}
+
+app-product-recipes{
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  height: 100%;
+}
+
+app-product-recipes-details{
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 100%;
+}
+
+app-product-recipes-details-header{
+  display: flex;
+  flex-flow: column nowrap;
+  height: fit-content;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+app-product-parts{
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-y: auto;
+}
+
+app-product-importer{
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}

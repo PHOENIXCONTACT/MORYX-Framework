@@ -1,0 +1,83 @@
+@use  "../colors.scss" as *;
+@use '@angular/material' as mat;
+
+.resources {
+  flex: 1;
+  @include mat.tree-overrides((
+    node-min-height: 40px
+  ));
+}
+
+.resources-tree {
+  width: 300px;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}
+
+.resources-side-bar {
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+}
+
+.resources-toolbar {
+  color: $mat-color-light;
+  background-color: rgba(0, 0, 0, 0.60);
+  background-blend-mode: darken;
+}
+
+.no-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resources-toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.resources-tree-contents {
+  flex: 1 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: $mat-background-light;
+  padding-bottom: 48px;
+}
+.mat-toolbar-row{
+  color: $mat-background-light;
+  button{
+    color: $mat-background-light;
+    margin: 10px;
+  }
+}
+
+.resources-tree-item {
+  cursor: pointer !important;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.resources-tree-item:hover {
+  background-color: $light-background-hover;
+}
+
+.resources-add-button {
+  position: absolute;
+  top: 75px;
+  right: 16px;
+  z-index: 10;
+}
+
+.resources-side-bar-right {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  justify-content: flex-end;
+}

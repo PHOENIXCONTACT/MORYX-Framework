@@ -1,0 +1,43 @@
+@use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+@use "@moryx/ngx-web-framework/styles/colors" as *; 
+
+.parts {
+  display: flex;
+  flex: 1 1;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 8px;
+  @include mat.expansion-overrides((
+    container-background-color: $mat-background-light,
+  ));
+}
+
+.parts-part-list {
+  display: flex;
+  height: fit-content;
+  flex-flow: row nowrap;
+  padding-bottom: 8px;
+}
+
+.parts-part-list-list {
+  flex: 1 1 20%;
+}
+
+.parts-part-list-list-item {
+  cursor: pointer !important;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.parts-part-list-details {
+  flex: 1 1 80%;
+  margin-left: 10px;
+}
+
+.moryx-selected {
+  background: $primary-light;
+}

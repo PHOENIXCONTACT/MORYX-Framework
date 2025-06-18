@@ -1,0 +1,51 @@
+{
+  "APP": {
+    "RESOURCES": "Resources",
+    "NO_NAME": "Unnamed Resource"
+  },
+  "DISMISS": "DISMISS",
+  "DEFAULT_MESSAGE": "Something went wrong on the server.",
+  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
+  "SHARED": {
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "SAVE": "Save",
+    "ID": "Id",
+    "TYPE": "Type",
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "INTERNAL": "Internal",
+    "CANCEL": "Cancel",
+    "CREATE": "CREATE",
+    "ADD": "Add resource",
+    "ADD_CHILD": "Add child resource",
+    "RELOAD:": "Reload",
+    "NEXT": "Next"
+  },
+  "ADD_RESOURCE_DIALOG": {
+    "TITLE": "Which resource type do you want to create?"
+  },
+  "DEFAULT_VIEW": {
+    "FAILED_LOADING": "Could not load resource.",
+    "NOT_FOUND": "The requested resource doesn't exist.",
+    "EMPTY_STATE_HEADER": "No Resource",
+    "EMPTY_STATE_TEXT": "Select a Resource from the list or add a new one by clicking the plus sign."
+  },
+  "DETAILS": {
+    "PROPERTIES": "Properties",
+    "REFERENCES": "References",
+    "METHODS": "Methods",
+    "REFS": {
+      "LINK": "Link",
+      "LINKED_RESOURCE": "Linked Resource",
+      "PLACEHOLDER": "Select an available resource to add it as a reference",
+      "NO_TARGET": "No Target Selected"
+    },
+    "METS": {
+      "WAS_INVOKED": "The method was invoked",
+      "INVOKE": "INVOKE",
+      "REPEAT": "REPEAT",
+      "CLEAR": "CLEAR"
+    }
+  }
+}

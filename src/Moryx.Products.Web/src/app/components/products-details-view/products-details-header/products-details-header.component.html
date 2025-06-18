@@ -1,0 +1,41 @@
+<div class="header">
+  <div class="header-information">
+    <div *ngIf="editMode(); then form; else header_info"></div>
+
+    <ng-template #header_info>
+      <div>
+        <h2 class="header-information-title">
+          {{ identifier() }}&nbsp;{{ currentProduct()?.name }}
+        </h2>
+        <p class="header-subtitle">{{ currentProduct()?.state }}</p>
+      </div>
+    </ng-template>
+    <ng-template #form>
+      <div class="header-container">
+        <mat-form-field class="form-field" appearance="outline" require>
+          <mat-label>{{
+            TranslationConstants.SHARED.NAME | translate
+          }}</mat-label>
+          <input
+            matInput
+            aria-label="Product Name"
+            [(ngModel)]="currentProduct().name"
+          />
+          <span matTextPrefix>{{ identifier() }}&nbsp;</span>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>{{
+            TranslationConstants.SHARED.STATE | translate
+          }}</mat-label>
+          <mat-select
+            [(ngModel)]="currentProduct().state"
+          >
+            <mat-option *ngFor="let state of possibleStates()" [value]="state">
+              {{ state }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-template>
+  </div>
+</div>
