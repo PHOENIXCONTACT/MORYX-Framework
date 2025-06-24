@@ -1,0 +1,35 @@
+﻿@page
+@using Moryx.Asp.Integration
+@using Moryx.Launcher
+@inject IShellNavigator _navigator
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Home page";
+}
+<div class="tw-grid tw-auto-rows-auto tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-4 2xl:tw-grid-cols-6 tw-gap-4 tw-p-4 tw-overflow-y-auto tw-h-full tw-w-full tw-gap-2 tw-justify-items-stretch">
+    @{
+        var modules = await _navigator.GetWebModuleItems(HttpContext);
+
+        foreach (var item in modules.Where(m => m.Category == ModuleCategory.User))
+        {
+            <a class="tw-flex tw-flex-col tw-text-clip tw-border tw-border-gray-200 tw-shadow-md tw-rounded tw-bg-white  tw-p-4
+                                    hover:tw-border-primary-600 hover:tw-bg-primary-200" asp-page="@(@item.Route)">
+                <div class="tw-flex tw-flex-row tw-pl-1 tw-items-center">
+                    <div class="tw-mr-2">
+                        <span class="material-symbols-outlined tw-text-4xl">@item.Icon</span>
+                    </div>
+                    <div class="tw-flex tw-flex-col">
+                        <p class="tw-font-bold tw-text-xl">@item.Title</p>
+                        <p class="">/@item.Route</p>
+                    </div>
+                </div>
+
+                <p class="tw-p-2 tw-h-36 tw-overflow-hidden tw-text-ellipsis">
+                    @item.Description
+                </p>
+            </a>
+        }
+    }
+</div>

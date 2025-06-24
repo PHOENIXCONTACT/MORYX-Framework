@@ -1,0 +1,312 @@
+﻿@using System.Linq;
+@using Microsoft.AspNetCore.Builder;
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Options;
+@using Moryx.Asp.Integration;
+@using Moryx.Identity;
+@using Moryx.Launcher
+@using Moryx.Launcher.Properties
+@inject IShellNavigator _navigator
+@inject IConfiguration _configuration
+@inject IOptionsMonitor<RequestLocalizationOptions> _localizationOptions
+@inject IOptionsMonitor<MoryxIdentityOptions> _identityOptions
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    if (string.IsNullOrWhiteSpace(Context.Request.Cookies[".AspNetCore.Culture"]))
+    {
+        var culture = _localizationOptions.CurrentValue.DefaultRequestCulture.Culture;
+        var uiCulture = _localizationOptions.CurrentValue.DefaultRequestCulture.Culture;
+        Context.Response.Cookies.Append(".AspNetCore.Culture", "c=en-US|uic=en-US");
+    }
+
+    var modules = (await _navigator.GetWebModuleItems(Context)).OrderBy(wmi => wmi.SortIndex);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <base href="/@ViewData["BaseRef"]">
+    <!--TODO: remove bulma in MORYX 10-->
+    <link rel="stylesheet" href="/_content/Moryx.Launcher/lib/bulma/css/bulma.min.css" />
+    <link rel="stylesheet" href="/_content/Moryx.Launcher/css/site.css" />
+    <link rel="icon" type="image/x-icon" href="/_content/Moryx.Launcher/favicon.ico">
+    <link rel="stylesheet" href="/_content/Moryx.Launcher/css/icons.css" />
+    <link rel="stylesheet" href="/_content/Moryx.Launcher/css/fonts.css" />
+    <link rel="stylesheet" href="/_content/Moryx.Launcher/css/app.min.css" />
+    @RenderSection("Styles", false)
+</head>
+<body class="tw-flex tw-flex-col mat-typography ">
+    <moryx-layout fullscreenButton="fullscreen" operatorMode="operator-mode" class="tw-relative">
+        <div style="z-index:1000;" class="tw-w-full tw-h-full tw-bg-white tw-absolute" overlay></div>
+        <span style="z-index:999;" class="tw-px-4 tw-py-1 tw-rounded-full tw-shadow tw-border tw-border-gray-200 tw-bg-primary-600 tw-text-white" floatingbar>
+            @Strings.EXIT_FULLSCREEN
+        </span>
+        <header class="tw-relative tw-flex tw-flex-col tw-w-full tw-border-b tw-border-gray-100 tw-z-100 tw-bg-white" role="navigation" aria-label="main navigation" topbar>
+            <div class="tw-relative tw-flex tw-items-center tw-shadow tw-justify-between tw-gap-2 tw-px-2">
+                <div class="tw-flex tw-items-center">
+                    <a class="tw-p-0" asp-area="" asp-page="/Index">
+                        <img class="moryx-logo" src="/_content/Moryx.Launcher/assets/moryx-banner-small.webp" alt="Moryx Home Logo">
+                    </a>
+                </div>
+                <moryx-searchbox placeholder="@Strings.SEARCH ..."></moryx-searchbox>
+
+                <div class="tw-flex tw-gap-x-2 tw-flew-row tw-justify-between tw-items-center tw-relative">
+                    <moryx-dropdown-menu>
+                        <button class="tw-flex tw-items-center tw-justify-center tw-rounded-full tw-p-3 hover:tw-bg-primary-200 group-hover:tw-border-1 hover:tw-border-1 group-hover:tw-border-gray-300 hover:tw-border-gray-300" button>
+                            <span class="material-symbols-outlined">more_vert</span>
+                        </button>
+                        <moryx-dropdown-container style="left: -100000px; z-index: 999;" class="tw-absolute tw-bg-white tw-rounded tw-w-60 tw-shadow-md tw-flex tw-flex-col tw-drop-shadow-md">
+                            <moryx-dropdown-subitem class="tw-w-auto tw-h-full hover:tw-bg-primary-200 hover:tw-cursor-pointer tw-p-1 tw-text-nowrap ">
+                                <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
+                                    <div class="tw-flex tw-items-center">
+                                        <span class="material-symbols-outlined">translate</span>
+                                        <span class="tw-pl-3">@Strings.LANGUAGE</span>
+                                    </div>
+                                    <span class="material-symbols-outlined">arrow_right</span>
+                                </div>
+                                <moryx-dropdown-container class="tw-absolute tw-w-60 tw-shadow-md tw-rounded tw-flex tw-flex-col tw-gap-2 tw-bg-white">
+                                    @foreach (var culture in _localizationOptions.CurrentValue.SupportedCultures)
+                                    {
+                                        <moryx-dropdown-item class="tw-p-1 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
+                                            <moryx-language-selector language="@culture.Name" class="tw-flex tw-items-center">
+                                                <span class="tw-whitespace-nowrap">@culture.DisplayName</span>
+                                            </moryx-language-selector>
+                                        </moryx-dropdown-item>
+                                    }
+
+                                </moryx-dropdown-container>
+                            </moryx-dropdown-subitem>
+                            <moryx-dropdown-subitem class="tw-w-auto tw-h-full hover:tw-bg-primary-200 hover:tw-cursor-pointer tw-p-1 tw-text-nowrap tw-border-b tw-border-gray-200">
+                                <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
+                                    <div class="tw-flex tw-items-center">
+                                        <span class="material-symbols-outlined">dashboard</span>
+                                        <span class="tw-pl-3">@Strings.VIEWS</span>
+                                    </div>
+                                    <span class="material-symbols-outlined">arrow_right</span>
+                                </div>
+                                <moryx-dropdown-container class="tw-absolute tw-w-60 tw-shadow-md tw-rounded tw-flex tw-flex-col tw-gap-2 tw-bg-white">
+                                    <moryx-dropdown-item class="tw-p-1 tw-flex tw-items-center tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200" name="fullscreen">
+                                        <span class="material-symbols-outlined">fullscreen</span>
+                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.FULLSCREEN_MODE</span>
+                                    </moryx-dropdown-item>
+                                    <moryx-dropdown-item class="tw-p-1 tw-flex tw-items-center tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200" name="operator-mode">
+                                        <span class="material-symbols-outlined">engineering</span>
+                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.OPERATOR_MODE</span>
+                                    </moryx-dropdown-item>
+                                </moryx-dropdown-container>
+                            </moryx-dropdown-subitem>
+
+                            @foreach (var menuCategory in new[] { ModuleCategory.Settings, ModuleCategory.Diagnostics, ModuleCategory.Help })
+                            {
+                                var categoryModules = modules.Where(m => m.Category == menuCategory).ToList();
+                                if (categoryModules.Count > 0)
+                                {
+                                    @foreach (var module in categoryModules)
+                                    {
+                                        <moryx-dropdown-item class="tw-p-1 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
+                                            <a href="/@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
+                                                <span class="material-symbols-outlined">@module.Icon</span>
+                                                <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@module.Title</span>
+                                            </a>
+                                        </moryx-dropdown-item>
+                                    }
+                                }
+                            }
+                        </moryx-dropdown-container>
+                    </moryx-dropdown-menu>
+
+                    <!-- Use sign-in module if there is one in the shell-->
+                    @{
+                        string signInRedirectUrl = null;
+                        if (_identityOptions.CurrentValue.BaseAddress is not null)
+                            signInRedirectUrl = _identityOptions.CurrentValue.BaseAddress;
+                        else if (modules.FirstOrDefault(m => m.Category == ModuleCategory.SignIn) is var signInModule && signInModule is not null)
+                            signInRedirectUrl = signInModule.Route;
+
+                        <moryx-auth-buttons authUrl="@signInRedirectUrl">
+                            <span sign-in>@Strings.SIGN_IN</span>
+                        </moryx-auth-buttons>
+                    }
+                </div>
+            </div>
+        </header>
+        @{
+            var countModules = modules.Count(m => m.Category == ModuleCategory.User);
+            @if (countModules > 1)
+            {
+                <aside class="tw-w-14 md:tw-w-full  tw-h-screen tw-border-r tw-border-gray-100 tw-bg-white" name="navigation-sidebar" leftbar>
+                    <ul class="tw-relative tw-flex tw-flex-col tw-p-1 tw-h-full" id="navigation-items-container">
+                        @foreach (var item in modules.Where(m => m.Category == ModuleCategory.User))
+                        {
+                            // Fetch last location if set for this route
+                            var cookie = Context.Request.Cookies[item.Route + "-location"];
+                            var currentRoute = @Url.RouteUrl(ViewContext.RouteData.Values);
+                            string[] splitRoute = currentRoute.Split('/');
+                            if (splitRoute.Length <= 1) return;
+                            var isActive = splitRoute[1].Equals(item.Route);
+                            var activeClass = isActive ? "active tw-border-primary-600" : "tw-border-transparent";
+                            var route = cookie == null || isActive ? $"/{item.Route}" : cookie;
+                            <li class="tw-group tw-relative tw-w-full hover:tw-cursor-pointer hover:tw-bg-primary-200
+                                                            hover:tw-text-primary-600
+                                                                        tw-border-l-4 hover:tw-rounded tw-p-1 @(activeClass) ">
+                                <a class="tw-flex tw-flex-row tw-items-center 2xl:tw-justify-start tw-p-1 tw-w-full" href="@(route)">
+                                    @if (!isActive & !string.IsNullOrEmpty(item.EventStream))
+                                    {
+                                        <moryx-notification-badge eventstream="@item.EventStream"></moryx-notification-badge>
+                                    }
+                                    <span id="@item.Route" class="@(activeClass)  material-symbols-outlined tw-mr-[3px]">@item.Icon</span>
+                                    <span class="tw-font-semibold tw-hidden 2xl:tw-block">@item.Title</span>
+                                </a>
+                                <p class="tw-align-middle tw-hidden 2xl:group-hover:tw-hidden tw-absolute group-hover:tw-block tw-bg-primary-600  tw-min-w-full tw-p-2 tw-text-white tw-text-nowrap tw-z-100
+                                                                    tw-top-0 tw-left-full tw-ml-2 tw-pl-3 tw-rounded-md tw-truncate">@item.Title</p>
+                            </li>
+                        }
+                        <li class="tw-invisible tw-h-6 tw-pt-10 tw-text-sm tw-font-thin"></li>
+                    </ul>
+                </aside>
+            }
+        }
+        <div class="tw-flex-1 tw-flex tw-flex-col tw-overflow-auto tw-h-full tw-w-full tw-box-border" main>
+            @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 && 
+            !Url.RouteUrl(ViewContext.RouteData.Values).Split('/')[1].Contains("Notifications"))
+            {
+                <moryx-notifications-bar>@Strings.DETAILS</moryx-notifications-bar>
+            }
+            <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
+                @RenderBody()
+            </div>
+        </div>
+        <div class="tw-w-full tw-h-14 tw-shadow-md tw-bg-white tw-drop-shadow" bottombar>
+            <div class="tw-relative tw-flex tw-items-center tw-justify-around">
+            
+                <moryx-nav-button position="fixed" class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center ">
+                    <moryx-dropdown-menu position="top" align="left">
+                        <button class="tw-h-full tw-w-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-2" button>
+                            <span class="material-symbols-outlined">view_module</span>
+                            <span class="tw-font-bold tw-truncate tw-text-wrap">@Strings.MODULES</span>
+                        </button>
+                        <moryx-dropdown-container style="left: -100000px; z-index: 999;" 
+                        class="tw-absolute tw-bg-white tw-rounded tw-w-72 tw-flex tw-flex-col tw-shadow">
+                            <moryx-dropdown-item closeOnClick="false" class="tw-max-h-80 tw-overflow-auto tw-flex tw-flex-col tw-p-2 tw-border-y tw-border-gray-200 tw-rounded">
+                                <div class="tw-grid tw-grid-cols-2 tw-auto-rows-auto tw-gap-2  tw-p-2 tw-mb-2">
+                                    @foreach (var item in modules.Where(m => m.Category == ModuleCategory.User))
+                                    {
+                                        <a class="tw-w-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-border tw-border-gray-200 tw-rounded tw-p-2" href="@item.Route">
+                                            <span id="@item.Route" class="material-symbols-outlined">@item.Icon</span>
+                                            <span class="tw-truncate tw-w-20 tw-text-center">@item.Title</span>
+                                        </a>
+                                    }
+                                </div>
+                                <span class="tw-h-8"></span>
+                            </moryx-dropdown-item>
+                        </moryx-dropdown-container>
+                    </moryx-dropdown-menu>
+                </moryx-nav-button>
+                @for(var index=0; index <10; index++)
+                {
+                    var list = modules.Where(m => m.Category == ModuleCategory.User).ToList();
+                    if(index < list.Count)
+                    {
+                        var item = list[index];
+                    // Fetch last location if set for this route
+                        var cookie = Context.Request.Cookies[item.Route + "-location"];
+                        var currentRoute = @Url.RouteUrl(ViewContext.RouteData.Values);
+                        string[] splitRoute = currentRoute.Split('/');
+                        if (splitRoute.Length <= 1) return;
+                        var isActive = splitRoute[1].Equals(item.Route);
+                        var activeClass = isActive ? "tw-text-primary-600" : "";
+                        var route = cookie == null || isActive ? $"/{item.Route}" : cookie;
+                        <moryx-nav-button class="tw-relative tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center tw-group ">
+                            <a class="tw-h-full tw-w-full tw-flex tw-flex-col tw-flex tw-items-center tw-justify-center @(activeClass)" href="@(route)">
+                                @if (!isActive & !string.IsNullOrEmpty(item.EventStream))
+                                {
+                                    <moryx-notification-badge eventstream="@item.EventStream" class="tw-absolute tw-right-1/2 -tw-top-2"></moryx-notification-badge>
+                                }
+                                <span id="@item.Route" class="material-symbols-outlined">@item.Icon</span>
+                                <span class="tw-truncate tw-w-30 tw-font-bold">@item.Title</span>
+                            </a>
+                        </moryx-nav-button>
+                    }
+                }
+                
+                <moryx-nav-button position="fixed" class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center tw-group">
+                    <moryx-dropdown-menu position="top">
+                        <button class="tw-h-full tw-w-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-2" button>
+                            <span class="material-symbols-outlined">more_horiz</span>
+                            <span class="tw-font-bold tw-truncate tw-text-wrap">@Strings.MORE</span>
+                        </button>
+                        <moryx-dropdown-container style="left: -100000px; z-index: 999;" 
+                        class="tw-absolute tw-bg-white tw-rounded tw-w-60 tw-flex tw-flex-col tw-shadow">
+                            <moryx-dropdown-subitem class="tw-w-full tw-h-full hover:tw-bg-primary-200 hover:tw-cursor-pointer tw-p-3 tw-text-nowrap ">
+                                <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
+                                    <div class="tw-flex tw-items-center">
+                                        <span class="material-symbols-outlined">translate</span>
+                                        <span class="tw-pl-3">@Strings.LANGUAGE</span>
+                                    </div>
+                                    <span class="material-symbols-outlined">arrow_right</span>
+                                </div>
+                                <moryx-dropdown-container class="tw-absolute tw-w-60 tw-shadow-md tw-rounded tw-flex tw-flex-col tw-gap-2 tw-bg-white">
+                                    @foreach (var culture in _localizationOptions.CurrentValue.SupportedCultures)
+                                    {
+                                        <moryx-dropdown-item class="tw-p-3 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
+                                            <moryx-language-selector language="@culture.Name" class="tw-flex tw-items-center">
+                                                <span class="tw-whitespace-nowrap">@culture.DisplayName</span>
+                                            </moryx-language-selector>
+                                        </moryx-dropdown-item>
+                                    }
+
+                                </moryx-dropdown-container>
+                            </moryx-dropdown-subitem>
+                            <moryx-dropdown-subitem class="tw-w-full tw-h-full hover:tw-bg-primary-200 hover:tw-cursor-pointer tw-p-3 tw-text-nowrap ">
+                                <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
+                                    <div class="tw-flex tw-items-center">
+                                        <span class="material-symbols-outlined">dashboard</span>
+                                        <span class="tw-pl-3">@Strings.VIEWS</span>
+                                    </div>
+                                    <span class="material-symbols-outlined">arrow_right</span>
+                                </div>
+                                <moryx-dropdown-container class="tw-absolute tw-w-60 tw-shadow-md tw-rounded tw-flex tw-flex-col tw-gap-2 tw-bg-white">
+                                    <moryx-dropdown-item class="tw-p-3 tw-flex tw-items-center tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200" name="fullscreen">
+                                        <span class="material-symbols-outlined">fullscreen</span>
+                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.FULLSCREEN_MODE</span>
+                                    </moryx-dropdown-item>
+                                    <moryx-dropdown-item class="tw-p-3 tw-flex tw-items-center tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200" name="operator-mode">
+                                        <span class="material-symbols-outlined">engineering</span>
+                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.OPERATOR_MODE</span>
+                                    </moryx-dropdown-item>
+                                </moryx-dropdown-container>
+                            </moryx-dropdown-subitem>
+                            @foreach (var menuCategory in new[] { ModuleCategory.Settings, ModuleCategory.Diagnostics, ModuleCategory.Help })
+                            {
+                                var categoryModules = modules.Where(m => m.Category == menuCategory).ToList();
+                                if (categoryModules.Count > 0)
+                                {
+                                    @foreach (var module in categoryModules)
+                                    {
+                                        <moryx-dropdown-item class="tw-p-3 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
+                                            <a href="/@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
+                                                <span class="material-symbols-outlined">@module.Icon</span>
+                                                <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@module.Title</span>
+                                            </a>
+                                        </moryx-dropdown-item>
+                                    }
+                                }
+                            }
+                        </moryx-dropdown-container>
+                    </moryx-dropdown-menu>
+                </moryx-nav-button>
+            </div>
+        </div>
+    </moryx-layout>
+
+    <script src="/_content/Moryx.Launcher/js/shell.js"></script>
+    <script src="/_content/Moryx.Launcher/js/dist/polyfills.js" type="module"></script>
+    <script src="/_content/Moryx.Launcher/js/dist/main.js" type="module"></script>    
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,50 @@
+ <div class="tw-hidden">
+  <ng-content select="[overlay]"></ng-content>
+</div>
+<button
+  class="tw-absolute tw-top-2 tw-left-1/2 tw-bg-transparent"
+  (click)="exitFullscreen()"
+  [ngStyle]="{
+    display: state.operatorMode && state.fullscreen ? 'block' : 'none',
+    zIndex: 999
+  }"
+>
+  <ng-content select="[floatingbar]"></ng-content>
+</button>
+<div
+  class="tw-w-full"
+  [ngStyle]="{
+    display: state.fullscreen || state.operatorMode ? 'none' : 'block'
+  }"
+>
+  <ng-content select="[topbar]"></ng-content>
+</div>
+<div
+  class="tw-flex-1 tw-flex tw-h-full tw-w-full tw-overflow-hidden"
+  [ngClass]="{
+    'tw-flex-row': !state.operatorMode,
+    'tw-flex-col': state.operatorMode
+  }"
+>
+  <div
+    class="tw-w-auto tw-h-full tw-border-r tw-shadow"
+    [ngStyle]="{
+      display: state.fullscreen || state.operatorMode ? 'none' : 'block'
+    }"
+  >
+    <ng-content select="[leftbar]"></ng-content>
+  </div>
+  <div class="tw-flex-1 tw-overflow-auto tw-h-auto">
+    <ng-content select="[main]"></ng-content>
+  </div>
+  <div
+    class="tw-w-full tw-h-auto tw-border-t"
+    #bottombar
+    [ngStyle]="{
+      display: state.operatorMode && !state.fullscreen ? 'block' : 'none',
+      zIndex: '999'
+    }"
+  >
+    <ng-content select="[bottombar]"></ng-content>
+  </div>
+</div>

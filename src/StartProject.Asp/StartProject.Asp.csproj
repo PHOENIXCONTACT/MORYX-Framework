@@ -13,8 +13,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
     <ProjectReference Include="..\Moryx.CommandCenter.Web\Moryx.CommandCenter.Web.csproj" />
+    <ProjectReference Include="..\Moryx.Launcher\Moryx.Launcher.csproj" />
     <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
+    <ProjectReference Include="..\Moryx.Products.Web\Moryx.Products.Web.csproj" />
+    <ProjectReference Include="..\Moryx.Resources.Web\Moryx.Resources.Web.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />
     <ProjectReference Include="..\Moryx.TestModule\Moryx.TestModule.csproj" />

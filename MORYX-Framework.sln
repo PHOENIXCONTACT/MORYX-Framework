@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Asp", "src\StartProject.Asp\StartProject.Asp.csproj", "{4F1466B5-131E-4080-AC4F-BD1630EDF11F}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime", "src\Moryx.Runtime\Moryx.Runtime.csproj", "{92777E64-9978-40AE-8B90-93ECBBBEFE67}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Kernel", "src\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj", "{8FF77F62-43C3-40FE-9DFE-01A53FE8A68E}"
@@ -71,8 +73,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Model.Sqlite", "src\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj", "{C40AA3D2-F535-4E60-BF43-F4A5D874FD74}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Asp", "src\StartProject.Asp\StartProject.Asp.csproj", "{4F1466B5-131E-4080-AC4F-BD1630EDF11F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Runtime.Endpoints", "src\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj", "{0C0374D2-BA98-4BDC-9747-7D1FF3E61715}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommandCenter", "CommandCenter", "{50AD5155-2CC6-496B-849C-57DC56021F5F}"
@@ -126,6 +126,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Web", "src\Moryx.Resources.Web\Moryx.Resources.Web.csproj", "{CB57616C-2223-460E-871F-4C336FC40B9E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Web", "src\Moryx.Products.Web\Moryx.Products.Web.csproj", "{8C7E60B8-4431-4E06-A0DE-BD013994F594}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Launcher", "src\Moryx.Launcher\Moryx.Launcher.csproj", "{274F60BB-5CD3-4F76-A7D5-B80B7586414C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -321,6 +323,10 @@ Global
 		{8C7E60B8-4431-4E06-A0DE-BD013994F594}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C7E60B8-4431-4E06-A0DE-BD013994F594}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C7E60B8-4431-4E06-A0DE-BD013994F594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{274F60BB-5CD3-4F76-A7D5-B80B7586414C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{274F60BB-5CD3-4F76-A7D5-B80B7586414C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{274F60BB-5CD3-4F76-A7D5-B80B7586414C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{274F60BB-5CD3-4F76-A7D5-B80B7586414C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -371,8 +377,8 @@ Global
 		{8C7E60B8-4431-4E06-A0DE-BD013994F594} = {CA2B9835-7C05-417F-882C-72A8B857679E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		    RESX_ShowErrorsInErrorList = True
-		RESX_TaskErrorCategory = Message
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
+		RESX_TaskErrorCategory = Message
+		    RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal
