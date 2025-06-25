@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -20,7 +20,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Moryx\Moryx.csproj" />
-		<PackageReference Include="Moryx.Identity" />
+		<ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj" />
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 

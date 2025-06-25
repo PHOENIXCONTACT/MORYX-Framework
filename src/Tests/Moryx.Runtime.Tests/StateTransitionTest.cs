@@ -33,14 +33,14 @@ namespace Moryx.Runtime.Tests
         public void StoppedToReady()
         {
             var casted = (IServerModule) _moduleUnderTest;
-            Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module not in stopped state!");
+            Assert.That(ServerModuleState.Stopped, Is.EqualTo(casted.State), "Module not in stopped state!");
 
             // Call initialize
             casted.Initialize();
 
             // Validate result
-            Assert.AreEqual(InvokedMethod.Initialize, _moduleUnderTest.LastInvoke, "Initialize was not called!");
-            Assert.AreEqual(ServerModuleState.Ready, casted.State, "Module did not enter ready state!");
+            Assert.That(InvokedMethod.Initialize, Is.EqualTo(_moduleUnderTest.LastInvoke), "Initialize was not called!");
+            Assert.That(ServerModuleState.Ready, Is.EqualTo(casted.State), "Module did not enter ready state!");
         }
 
         [Test]
@@ -48,14 +48,14 @@ namespace Moryx.Runtime.Tests
         {
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
-            Assert.AreEqual(ServerModuleState.Ready, casted.State, "Module not in ready state!");
+            Assert.That(ServerModuleState.Ready, Is.EqualTo(casted.State), "Module not in ready state!");
 
             // Call initialize
             casted.Start();
 
             // Validate result
-            Assert.AreEqual(InvokedMethod.Start, _moduleUnderTest.LastInvoke, "Start was not called!");
-            Assert.AreEqual(ServerModuleState.Running, casted.State, "Module did not enter running state!");
+            Assert.That(InvokedMethod.Start, Is.EqualTo(_moduleUnderTest.LastInvoke), "Start was not called!");
+            Assert.That(ServerModuleState.Running, Is.EqualTo(casted.State), "Module did not enter running state!");
         }
 
         [Test]
@@ -64,14 +64,14 @@ namespace Moryx.Runtime.Tests
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
             casted.Start();
-            Assert.AreEqual(ServerModuleState.Running, casted.State, "Module not in running state!");
+            Assert.That(ServerModuleState.Running, Is.EqualTo(casted.State), "Module not in running state!");
 
             // Call initialize
             casted.Stop();
 
             // Validate result
-            Assert.AreEqual(InvokedMethod.Stop, _moduleUnderTest.LastInvoke, "Stop was not called!");
-            Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module did not enter stopped state!");
+            Assert.That(InvokedMethod.Stop, Is.EqualTo(_moduleUnderTest.LastInvoke), "Stop was not called!");
+            Assert.That(ServerModuleState.Stopped, Is.EqualTo(casted.State), "Module did not enter stopped state!");
         }
 
         [Test]

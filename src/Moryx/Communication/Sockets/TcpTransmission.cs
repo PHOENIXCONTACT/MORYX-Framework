@@ -77,7 +77,6 @@ namespace Moryx.Communication.Sockets
         {
             var socket = _client.Client;
 
-#if HAVE_TCP_KEEPALIVE
             // Configure socket using net6 keep alive configuration
             socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, interval);
             socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, timeout);
@@ -87,27 +86,14 @@ namespace Moryx.Communication.Sockets
                 // Try to set the TcpKeeepAliveRetryCount, it is not supported on all windows systems
                 // https://learn.microsoft.com/en-us/windows/win32/winsock/ipproto-tcp-socket-options#windows-support-for-ipproto_tcp-options
                 socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 2);
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Log(LogLevel.Warning, ex, "TcpKeepAliveRetryCount could not be applied!");
             }
 
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-#else
-            // Keep alive only supported for windows under netstandard2.0
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                // Create config array
-                var index = 0;
-                var socketConfig = new byte[12]; // 3 * 4 byte
-                InlineConverter.Include(1, socketConfig, ref index);
-                InlineConverter.Include(interval, socketConfig, ref index);
-                InlineConverter.Include(timeout, socketConfig, ref index);
-                socket.IOControl(IOControlCode.KeepAliveValues, socketConfig, null);
-            }
-#endif
         }
 
         #region Send

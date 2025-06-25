@@ -13,4 +13,14 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+
+	<PropertyGroup>
+		<dotnetVersion>8.0.1</dotnetVersion>
+		<efCoreVersion>8.0.11</efCoreVersion>
+		
+		<AspNetCoreVersion>8.0.11</AspNetCoreVersion>
+
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
 </Project>

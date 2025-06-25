@@ -30,12 +30,12 @@ namespace Moryx.Model.Tests
         public async Task SqliteCreateDatabaseShouldWork()
         {
             var result = await configurator.TestConnection(dbConfig);
-            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, result);
+            Assert.That(TestConnectionResult.ConnectionOkDbDoesNotExist, Is.EqualTo(result));
 
             bool isCreated = await configurator.CreateDatabase(dbConfig);
 
-            Assert.IsTrue(isCreated);
-            Assert.IsTrue(File.Exists(datasource));
+            Assert.That(isCreated);
+            Assert.That(File.Exists(datasource));
 
             //remove the database
             await configurator.DeleteDatabase(dbConfig);
@@ -46,13 +46,13 @@ namespace Moryx.Model.Tests
         public async Task SqliteDeleteDatabaseShouldWork()
         {
             var connectionResult = await configurator.TestConnection(dbConfig);
-            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, connectionResult);
+            Assert.That(TestConnectionResult.ConnectionOkDbDoesNotExist, Is.EqualTo(connectionResult));
 
             bool isCreated = await configurator.CreateDatabase(dbConfig);
-            Assert.IsTrue(isCreated);
+            Assert.That(isCreated);
 
             await configurator.DeleteDatabase(dbConfig);
-            Assert.IsFalse(File.Exists(datasource));
+            Assert.That(!File.Exists(datasource));
         }
 
         private static ConfigManager CreateConfigManager()
