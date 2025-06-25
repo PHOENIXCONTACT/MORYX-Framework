@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<Moryx.Identity.AccessManagement.Models.PermissionsViewModel>
+@{
+    ViewData["Title"] = "Permissions";
+}
+
+<form method="post" asp-action="AddPermission" asp-controller="Permissions">
+    <div class="input-group">
+        <input id="permission" name="permission" class="form-control w-25" placeholder="Permission" aria-label="Permission">
+        <div class="input-group-append">
+            <button id="addPermission" class="btn btn-outline-info" disabled>
+                <i class="fa fa-plus"></i> Add New Permission
+            </button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped table-bordered" id="permissionTable">
+    <thead>
+        <tr>
+            <th>Permission</th>
+            <th style="width:45%">Roles</th>
+            <th style="width:15%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var permission in Model)
+        {
+            <tr>
+                <td>@permission.Name</td>
+                <td>@string.Join(", ", permission.Roles)</td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-danger" asp-controller="Permissions" asp-action="Delete" asp-route-permissionId="@permission.Id">
+                            <i class="fa fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    const permissionInput = document.getElementById('permission');
+    const permissionButton = document.getElementById('addPermission');
+
+    permissionInput.addEventListener('input', function () {
+        if (permissionInput.value.trim() !== '')
+            permissionButton.removeAttribute('disabled');
+        else
+            permissionButton.setAttribute('disabled', 'disabled');
+    });
+</script>

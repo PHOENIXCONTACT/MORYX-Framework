@@ -1,0 +1,67 @@
+﻿@page "{*_}"
+@model Moryx.Identity.Web.Pages.Identity.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.Extensions.Configuration
+@using Moryx.Asp.Integration
+@using Moryx.Identity.Web.Properties
+@using System.ComponentModel.DataAnnotations
+@inject IConfiguration configuration
+@{
+    ViewData["Title"] = "Identity/Login";
+    ViewData["BaseRef"] = "Identity/Login";
+    Layout = "_Layout";
+}
+@attribute [WebModule("Identity", "person", Category = ModuleCategory.SignIn),
+  Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description")]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/_content/Moryx.Identity.Web/css/login.css" />
+</head>
+<section class="hero login-background" style="background-image: url(../_content/Moryx.WebShell/assets/moryx_transparent_colored.png);">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+                    <div class="box">
+                        <div class="field">
+                            <label for="" class="label">@Strings.USERNAME</label>
+                            <div class="control has-icons-left">
+                                <input type="text" placeholder="e.g. MORYX" class="input" id="username" required>
+                                <span class="icon is-small is-left">
+                                    <span class="material-symbols-outlined">
+                                        person
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="" class="label">@Strings.PASSWORD</label>
+                            <div class="control has-icons-left">
+                                <input type="password" placeholder="*******" class="input" id="password" required>
+                                <span class="icon is-small is-left">
+                                    <span class="material-symbols-outlined">
+                                        lock
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div id="login-validation" class="login-validation hide">@Strings.VALIDATION_MESSAGE</div>
+                        <div class="field">
+                            <button onclick="signIn('@(configuration["IdentityUrl"])')" class="button sign-in">
+                                @Strings.SIGN_IN
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</html>
+
+@section Scripts
+    {
+    <script src="/_content/Moryx.Identity.Web/js/signin.js"></script>
+}

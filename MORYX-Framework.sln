@@ -129,6 +129,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Products.Web", "src\M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Launcher", "src\Moryx.Launcher\Moryx.Launcher.csproj", "{274F60BB-5CD3-4F76-A7D5-B80B7586414C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{B52BF137-56D8-4A77-B5C7-CF2F3226EC59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Identity", "src\Moryx.Identity\Moryx.Identity.csproj", "{8260DA8C-E13D-4852-A56C-7A3BA92B83EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Identity.AccessManagement", "src\Moryx.Identity.AccessManagement\Moryx.Identity.AccessManagement.csproj", "{A643CAF4-F8DF-4CED-BFEA-36CB17514EA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Identity.Web", "src\Moryx.Identity.Web\Moryx.Identity.Web.csproj", "{F0E307AC-37A7-45A5-A0B2-0743D299C709}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -327,6 +335,18 @@ Global
 		{274F60BB-5CD3-4F76-A7D5-B80B7586414C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{274F60BB-5CD3-4F76-A7D5-B80B7586414C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{274F60BB-5CD3-4F76-A7D5-B80B7586414C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8260DA8C-E13D-4852-A56C-7A3BA92B83EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8260DA8C-E13D-4852-A56C-7A3BA92B83EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8260DA8C-E13D-4852-A56C-7A3BA92B83EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8260DA8C-E13D-4852-A56C-7A3BA92B83EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A643CAF4-F8DF-4CED-BFEA-36CB17514EA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A643CAF4-F8DF-4CED-BFEA-36CB17514EA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A643CAF4-F8DF-4CED-BFEA-36CB17514EA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A643CAF4-F8DF-4CED-BFEA-36CB17514EA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0E307AC-37A7-45A5-A0B2-0743D299C709}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0E307AC-37A7-45A5-A0B2-0743D299C709}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0E307AC-37A7-45A5-A0B2-0743D299C709}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0E307AC-37A7-45A5-A0B2-0743D299C709}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -375,10 +395,13 @@ Global
 		{C949164C-0345-4893-9E4C-A79BC1F93F85} = {953AAE25-26C8-4A28-AB08-61BAFE41B22F}
 		{CB57616C-2223-460E-871F-4C336FC40B9E} = {0D2B1DF8-2E8F-404D-B146-B8B567D8ACAE}
 		{8C7E60B8-4431-4E06-A0DE-BD013994F594} = {CA2B9835-7C05-417F-882C-72A8B857679E}
+		{8260DA8C-E13D-4852-A56C-7A3BA92B83EC} = {B52BF137-56D8-4A77-B5C7-CF2F3226EC59}
+		{A643CAF4-F8DF-4CED-BFEA-36CB17514EA0} = {B52BF137-56D8-4A77-B5C7-CF2F3226EC59}
+		{F0E307AC-37A7-45A5-A0B2-0743D299C709} = {B52BF137-56D8-4A77-B5C7-CF2F3226EC59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
-		RESX_TaskErrorCategory = Message
 		    RESX_ShowErrorsInErrorList = True
+		RESX_TaskErrorCategory = Message
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
 	EndGlobalSection
 EndGlobal
