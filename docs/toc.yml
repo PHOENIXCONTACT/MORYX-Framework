@@ -13,3 +13,7 @@
 - name: Migrations
   href: migrations/
   homepage: migrations/index.md
+
+- name: API
+  href: api/
+  homepage: api/index.md

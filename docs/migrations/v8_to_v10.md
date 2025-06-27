@@ -1,5 +1,5 @@
-# Migration from MORYX Framework v8 to v10
+# Factory 6.x to 8.x
 
-## Removal of ProductFileEntity
+## Replaced result of visual instructions with dedicated result object
 
-The `ProductFileEntity` was not used in the product-model. There was no api to access it in a simple way. With the implementation of the [`FileSystem`](https://github.com/PHOENIXCONTACT/MORYX-Framework/pull/517) it is also not required anymore.
+In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and optional extended APIs. The result object solved issues caused by localization of the different results. With **Moryx 10** we remove all old APIs based on strings.

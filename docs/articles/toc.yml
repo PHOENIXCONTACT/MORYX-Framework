@@ -53,3 +53,6 @@
 
 - name: Core
   href: Core/toc.yml
+
+- name: Control System
+  href: ControlSystem/toc.yml
