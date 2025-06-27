@@ -43,9 +43,9 @@ namespace Moryx.AbstractionLayer.Tests
             var watchInstance = (WatchInstance)watch.CreateInstance();
 
             // Assert
-            Assert.AreEqual(watch, watchInstance.Type, "Wrong watch product");
-            Assert.AreEqual(watch.WatchFace.Product, watchInstance.WatchFace.Type, "Wrong watchface product");
-            Assert.AreEqual(NeedleRole.Hours, watch.Needles.ElementAt(0).Role, "Role not set on instance");
+            Assert.That(watchInstance.Type, Is.EqualTo(watch), "Wrong watch product");
+            Assert.That(watchInstance.WatchFace.Type, Is.EqualTo(watch.WatchFace.Product), "Wrong watchface product");
+            Assert.That(watch.Needles.ElementAt(0).Role, Is.EqualTo(NeedleRole.Hours), "Role not set on instance");
         }
     }
 }

@@ -41,11 +41,11 @@ namespace Moryx.AbstractionLayer.Tests
 
             var wpcTracing = activity.TransformTracing<FooTracing>();
 
-            Assert.AreEqual(_startDateTime, wpcTracing.Started);
-            Assert.AreEqual(_endDateTime, wpcTracing.Completed);
-            Assert.AreEqual(null, wpcTracing.FooName);
-            Assert.AreEqual(0, wpcTracing.FooNumber);
-            Assert.AreEqual(FooProgress.Initial, wpcTracing.Progress);
+            Assert.That(wpcTracing.Started, Is.EqualTo(_startDateTime));
+            Assert.That(wpcTracing.Completed, Is.EqualTo(_endDateTime));
+            Assert.That(wpcTracing.FooName, Is.EqualTo(null));
+            Assert.That(wpcTracing.FooNumber, Is.EqualTo(0));
+            Assert.That(wpcTracing.Progress, Is.EqualTo(FooProgress.Initial));
         }
 
         [Test]
@@ -56,8 +56,8 @@ namespace Moryx.AbstractionLayer.Tests
             activity.Tracing.Completed = _endDateTime;
             var defaultTracing = activity.TransformTracing<Tracing>();
 
-            Assert.AreEqual(_startDateTime, defaultTracing.Started);
-            Assert.AreEqual(_endDateTime, defaultTracing.Completed);
+            Assert.That(defaultTracing.Started, Is.EqualTo(_startDateTime));
+            Assert.That(defaultTracing.Completed, Is.EqualTo(_endDateTime));
         }
 
         [Test]
@@ -72,11 +72,11 @@ namespace Moryx.AbstractionLayer.Tests
                 .Trace(t => t.FooNumber = 42)
                 .Trace(t => t.Progress = FooProgress.Done);
 
-            Assert.AreEqual(_startDateTime, wpcTracing.Started);
-            Assert.AreEqual(_endDateTime, wpcTracing.Completed);
-            Assert.AreEqual("42", wpcTracing.FooName);
-            Assert.AreEqual(42, wpcTracing.FooNumber);
-            Assert.AreEqual((int)FooProgress.Done, ((Tracing)activity.Tracing).Progress);
+            Assert.That(wpcTracing.Started, Is.EqualTo(_startDateTime));
+            Assert.That(wpcTracing.Completed, Is.EqualTo(_endDateTime));
+            Assert.That(wpcTracing.FooName, Is.EqualTo("42"));
+            Assert.That(wpcTracing.FooNumber, Is.EqualTo(42));
+            Assert.That(activity.Tracing.Progress, Is.EqualTo((int)FooProgress.Done));
         }
 
         [Test]
@@ -86,8 +86,8 @@ namespace Moryx.AbstractionLayer.Tests
 
             var defaultTracing = trace.Transform<Tracing>();
 
-            Assert.AreEqual(trace.Started, defaultTracing.Started);
-            Assert.AreEqual(trace.Completed, defaultTracing.Completed);
+            Assert.That(defaultTracing.Started, Is.EqualTo(trace.Started));
+            Assert.That(defaultTracing.Completed, Is.EqualTo(trace.Completed));
         }
 
         [Test]
@@ -97,11 +97,11 @@ namespace Moryx.AbstractionLayer.Tests
             var defaultTracing = tracing.Transform<Tracing>();
             var newWpcTracing = defaultTracing.Transform<FooTracing>();
 
-            Assert.AreEqual(tracing.Started, newWpcTracing.Started);
-            Assert.AreEqual(tracing.Completed, newWpcTracing.Completed);
-            Assert.AreEqual(tracing.Text, newWpcTracing.Text);
-            Assert.AreEqual("42", newWpcTracing.FooName);
-            Assert.AreEqual(42, newWpcTracing.FooNumber);
+            Assert.That(newWpcTracing.Started, Is.EqualTo(tracing.Started));
+            Assert.That(newWpcTracing.Completed, Is.EqualTo(tracing.Completed));
+            Assert.That(newWpcTracing.Text, Is.EqualTo(tracing.Text));
+            Assert.That(newWpcTracing.FooName, Is.EqualTo("42"));
+            Assert.That(newWpcTracing.FooNumber, Is.EqualTo(42));
         }
 
         [Test]
@@ -112,11 +112,11 @@ namespace Moryx.AbstractionLayer.Tests
             var wpcTracing = trace.Transform<FooTracing>()
                 .Trace(t => t.Processing());
 
-            Assert.AreEqual(trace.Started, wpcTracing.Started);
-            Assert.AreEqual(trace.Completed, wpcTracing.Completed);
-            Assert.AreEqual(trace.FooName, wpcTracing.FooName);
-            Assert.AreEqual(trace.FooNumber, wpcTracing.FooNumber);
-            Assert.AreEqual(FooProgress.Running, wpcTracing.Progress);
+            Assert.That(wpcTracing.Started, Is.EqualTo(trace.Started));
+            Assert.That(wpcTracing.Completed, Is.EqualTo(trace.Completed));
+            Assert.That(wpcTracing.FooName, Is.EqualTo(trace.FooName));
+            Assert.That(wpcTracing.FooNumber, Is.EqualTo(trace.FooNumber));
+            Assert.That(wpcTracing.Progress, Is.EqualTo(FooProgress.Running));
         }
 
         private static Activity CreateActivity()

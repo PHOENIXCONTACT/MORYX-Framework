@@ -41,7 +41,7 @@ namespace Moryx.Tests.Configuration
 
             config1.DummyNumber++;
 
-            Assert.AreNotEqual(config1.DummyNumber, config2.DummyNumber);
+            Assert.That(config1.DummyNumber, Is.Not.EqualTo(config2.DummyNumber));
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Moryx.Tests.Configuration
 
             config1.DummyNumber++;
 
-            Assert.AreEqual(config1.DummyNumber, config2.DummyNumber);
+            Assert.That(config2.DummyNumber, Is.EqualTo(config1.DummyNumber));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace Moryx.Tests.Configuration
 
             var config2 = _configManager.GetConfiguration<TestConfig>(true);
 
-            Assert.AreEqual(config1.DummyNumber, config2.DummyNumber);
+            Assert.That(config2.DummyNumber, Is.EqualTo(config1.DummyNumber));
         }
     }
 }

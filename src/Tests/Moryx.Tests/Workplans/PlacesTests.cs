@@ -26,9 +26,9 @@ namespace Moryx.Tests.Workplans
 
             // Assert
             if (paused)
-                Assert.IsNull(raised);
+                Assert.That(raised, Is.Null);
             else
-                Assert.AreEqual(dummy, raised);
+                Assert.That(raised, Is.EqualTo(dummy));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Moryx.Tests.Workplans
             place.Resume();
 
             // Assert
-            Assert.AreEqual(dummy, raised);
+            Assert.That(raised, Is.EqualTo(dummy));
         }
 
         [TestCase(true, true, Description = "Existing token and event registered")]

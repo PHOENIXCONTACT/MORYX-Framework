@@ -35,11 +35,11 @@ namespace Moryx.Tests.Configuration
             var config = _configManager.GetConfiguration<TestConfig>();
 
             // Check if all properies and subclasses are filled
-            Assert.AreEqual(DefaultValues.Number, config.DummyNumber, "Integer value was not initialized");
-            Assert.AreEqual(DefaultValues.Number, config.DummyShort, "UShort value was not initialized");
-            Assert.AreEqual(DefaultValues.Text, config.DummyString, "String was not initialized");
-            Assert.NotNull(config.Child, "Child property was not initialized with class instance");
-            Assert.AreEqual(DefaultValues.Decimal, config.Child.DummyDouble, "Double was not initialized");
+            Assert.That(config.DummyNumber, Is.EqualTo(DefaultValues.Number), "Integer value was not initialized");
+            Assert.That(config.DummyShort, Is.EqualTo(DefaultValues.Number), "UShort value was not initialized");
+            Assert.That(config.DummyString, Is.EqualTo(DefaultValues.Text), "String was not initialized");
+            Assert.That(config.Child, Is.Not.Null, "Child property was not initialized with class instance");
+            Assert.That(config.Child.DummyDouble, Is.EqualTo(DefaultValues.Decimal), "Double was not initialized");
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace Moryx.Tests.Configuration
             var config = _configManager.GetConfiguration<TestConfig>();
             _configManager.SaveConfiguration(config);
 
-            Assert.True(Directory.GetFiles(_fullConfigDir).Any(), "No config file was created!");
+            Assert.That(Directory.GetFiles(_fullConfigDir).Any(), Is.True, "No config file was created!");
         }
 
         [Test]
@@ -66,9 +66,9 @@ namespace Moryx.Tests.Configuration
             // Load config again
             var reloadConfig = _configManager.GetConfiguration<TestConfig>(true);
 
-            Assert.AreEqual(config.DummyNumber, reloadConfig.DummyNumber, "Number change was not saved");
-            Assert.AreEqual(config.DummyString, reloadConfig.DummyString, "Text change was not saved");
-            Assert.AreEqual(config.Child.DummyDouble, reloadConfig.Child.DummyDouble, "Decimal was not saved");
+            Assert.That(reloadConfig.DummyNumber, Is.EqualTo(config.DummyNumber), "Number change was not saved");
+            Assert.That(reloadConfig.DummyString, Is.EqualTo(config.DummyString), "Text change was not saved");
+            Assert.That(reloadConfig.Child.DummyDouble, Is.EqualTo(config.Child.DummyDouble), "Decimal was not saved");
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Moryx.Tests.Configuration
             _configManager.SaveConfiguration(config);
 
             config = _configManager.GetConfiguration<TestConfig>(true);
-            Assert.AreEqual(DefaultValues.Number, config.DummyNumber, "Default not restored");
+            Assert.That(config.DummyNumber, Is.EqualTo(DefaultValues.Number), "Default not restored");
         }
 
         [Test]
@@ -93,9 +93,9 @@ namespace Moryx.Tests.Configuration
 
             // Load config an check if present values where preserved
             var config = _configManager.GetConfiguration<TestConfig>(configName);
-            Assert.AreEqual(ModifiedValues.Text, config.DummyString, "Modified value not recovered!");
-            Assert.AreEqual(ModifiedValues.Decimal, config.Child.DummyDouble, "Decimal value not preserved!");
-            Assert.AreEqual(DefaultValues.Number, config.DummyNumber, "Default value not restored");
+            Assert.That(config.DummyString, Is.EqualTo(ModifiedValues.Text), "Modified value not recovered!");
+            Assert.That(config.Child.DummyDouble, Is.EqualTo(ModifiedValues.Decimal), "Decimal value not preserved!");
+            Assert.That(config.DummyNumber, Is.EqualTo(DefaultValues.Number), "Default value not restored");
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Moryx.Tests.Configuration
 
             config1.DummyNumber++;
 
-            Assert.AreNotEqual(config1.DummyNumber, config2.DummyNumber);
+            Assert.That(config1.DummyNumber, Is.Not.EqualTo(config2.DummyNumber));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Moryx.Tests.Configuration
 
             config1.DummyNumber++;
 
-            Assert.AreNotEqual(config1.DummyNumber, config2.DummyNumber);
+            Assert.That(config1.DummyNumber, Is.Not.EqualTo(config2.DummyNumber));
         }
 
         [Test(Description = "Saves and loads a configuration by a custom name.")]
@@ -134,10 +134,10 @@ namespace Moryx.Tests.Configuration
 
             //Assert
             var configPath = Path.Combine(_fullConfigDir, configName + ConfigManager.FileExtension);
-            Assert.IsTrue(File.Exists(configPath), "Config file was not created");
+            Assert.That(File.Exists(configPath), "Config file was not created");
 
             var reloaded = _configManager.GetConfiguration<TestConfig>(configName);
-            Assert.AreEqual(someString, reloaded.DummyString, "Config file was not loaded correctly");
+            Assert.That(reloaded.DummyString, Is.EqualTo(someString), "Config file was not loaded correctly");
         }
 
         [TearDown]

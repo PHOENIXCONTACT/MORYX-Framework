@@ -30,9 +30,9 @@ namespace Moryx.Tests.Communication
 
             // Assert
             if (allowed)
-                Assert.IsTrue(success, "Failed to register despite different address");
+                Assert.That(success, "Failed to register despite different address");
             else
-                Assert.IsFalse(success, "Should not allow registration");
+                Assert.That(success, Is.False, "Should not allow registration");
         }
 
         [TestCase(13, 14, false, true)]
@@ -50,9 +50,9 @@ namespace Moryx.Tests.Communication
 
             // Assert
             if (allowed)
-                Assert.IsTrue(success, "Failed to register despite different address");
+                Assert.That(success, "Failed to register despite different address");
             else
-                Assert.IsFalse(success, "Should not allow registration");
+                Assert.That(success, Is.False, "Should not allow registration");
         }
 
         private class DummyProtocol : IMessageInterpreter

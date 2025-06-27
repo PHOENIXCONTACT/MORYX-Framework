@@ -28,8 +28,8 @@ namespace Moryx.AbstractionLayer.Tests
                 .FirstOrDefault(x => x.MappingValue == (long)TestResults.Success);
 
             //assert
-            Assert.That(failedResultDescription.Name, Is.EqualTo(expectedFailedDisplayName));
-            Assert.That(successResultDescription.Name, Is.EqualTo(expectedSuccesDisplayName));
+            Assert.That(expectedFailedDisplayName, Is.EqualTo(failedResultDescription.Name));
+            Assert.That(expectedSuccesDisplayName, Is.EqualTo(successResultDescription.Name));
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Moryx.Model.Tests
         public async Task SqliteCreateDatabaseShouldWork()
         {
             var result = await configurator.TestConnection(dbConfig);
-            Assert.That(TestConnectionResult.ConnectionOkDbDoesNotExist, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
             bool isCreated = await configurator.CreateDatabase(dbConfig);
 
@@ -46,7 +46,7 @@ namespace Moryx.Model.Tests
         public async Task SqliteDeleteDatabaseShouldWork()
         {
             var connectionResult = await configurator.TestConnection(dbConfig);
-            Assert.That(TestConnectionResult.ConnectionOkDbDoesNotExist, Is.EqualTo(connectionResult));
+            Assert.That(connectionResult, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
             bool isCreated = await configurator.CreateDatabase(dbConfig);
             Assert.That(isCreated);

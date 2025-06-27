@@ -59,17 +59,17 @@ namespace Moryx.Products.IntegrationTests
             loaded2 = _recipeManagement.LoadWorkplan(id2);
 
             // Assert
-            Assert.AreNotEqual(id1, id2);
-            Assert.AreEqual(workplan.Id, id1, "Id not assigned to original object!");
+            Assert.That(id1, Is.Not.EqualTo(id2));
+            Assert.That(id1, Is.EqualTo(workplan.Id), "Id not assigned to original object!");
             using (var uow = _factory.Create())
             {
                 var entity1 = uow.GetRepository<IWorkplanRepository>().GetByKey(id1);
-                Assert.AreEqual(workplan.Name, entity1.Name, "Name not correctly stored and saved");
+                Assert.That(entity1.Name, Is.EqualTo(workplan.Name), "Name not correctly stored and saved");
             }
-            Assert.AreEqual(loaded.Id, id2, "Name not correctly stored and saved");
-            Assert.AreEqual(loaded.Name, loaded2.Name, "Name not correctly stored and saved");
-            Assert.AreEqual(workplan.State, loaded.State);
-            Assert.AreEqual(workplan.MaxElementId, loaded.MaxElementId);
+            Assert.That(id2, Is.EqualTo(loaded.Id), "Name not correctly stored and saved");
+            Assert.That(loaded2.Name, Is.EqualTo(loaded.Name), "Name not correctly stored and saved");
+            Assert.That(loaded.State, Is.EqualTo(workplan.State));
+            Assert.That(loaded.MaxElementId, Is.EqualTo(workplan.MaxElementId));
 
             // Compare workplans
             var steps = workplan.Steps.ToList();
@@ -77,26 +77,26 @@ namespace Moryx.Products.IntegrationTests
             foreach (var step in steps)
             {
                 var loadedStep = loadedSteps.FirstOrDefault(s => s.Id == step.Id);
-                Assert.NotNull(loadedStep);
-                Assert.AreEqual(step.GetType(), loadedStep.GetType());
-                Assert.AreEqual(step.Position.X, loadedStep.Position.X, "Workplan step position: x coordinate not as expected");
-                Assert.AreEqual(step.Position.Y, loadedStep.Position.Y, "Workplan step position: y coordinate not as expected");
+                Assert.That(loadedStep, Is.Not.Null);
+                Assert.That(loadedStep.GetType(), Is.EqualTo(step.GetType()));
+                Assert.That(loadedStep.Position.X, Is.EqualTo(step.Position.X), "Workplan step position: x coordinate not as expected");
+                Assert.That(loadedStep.Position.Y, Is.EqualTo(step.Position.Y), "Workplan step position: y coordinate not as expected");
 
                 for (int index = 0; index < step.Inputs.Length; index++)
                 {
-                    Assert.AreEqual(step.Inputs[index].Id, loadedStep.Inputs[index].Id);
-                    Assert.AreEqual(step.Inputs[index].Name, loadedStep.Inputs[index].Name);
+                    Assert.That(loadedStep.Inputs[index].Id, Is.EqualTo(step.Inputs[index].Id));
+                    Assert.That(loadedStep.Inputs[index].Name, Is.EqualTo(step.Inputs[index].Name));
                 }
                 for (int index = 0; index < step.Outputs.Length; index++)
                 {
-                    Assert.AreEqual(step.Outputs[index].Id, loadedStep.Outputs[index].Id);
-                    Assert.AreEqual(step.Outputs[index].Name, loadedStep.Outputs[index].Name);
+                    Assert.That(loadedStep.Outputs[index].Id, Is.EqualTo(step.Outputs[index].Id));
+                    Assert.That(loadedStep.Outputs[index].Name, Is.EqualTo(step.Outputs[index].Name));
                 }
             }
 
             var startConnector = loaded.Connectors.FirstOrDefault(c => c.Name == "Start");
-            Assert.AreEqual(10, startConnector.Position.X, "Connector position: x coordingate not as expected");
-            Assert.AreEqual(15, startConnector.Position.Y, "Connector position: y coordingate not as expected");
+            Assert.That(startConnector.Position.X, Is.EqualTo(10), "Connector position: x coordingate not as expected");
+            Assert.That(startConnector.Position.Y, Is.EqualTo(15), "Connector position: y coordingate not as expected");
         }
 
         private static Workplan CreateWorkplan()

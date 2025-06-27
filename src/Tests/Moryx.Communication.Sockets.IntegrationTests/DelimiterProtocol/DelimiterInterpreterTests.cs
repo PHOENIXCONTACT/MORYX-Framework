@@ -36,9 +36,9 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
 
             // Base properties
             // Assert
-            Assert.AreEqual(0, context.CurrentIndex);
-            Assert.AreEqual(EndDelimiterOnlyInterpreter.TestReadSize, context.ReadSize);
-            Assert.AreEqual(EndDelimiterOnlyInterpreter.TestBufferSize, context.ReadBuffer.Length);
+            Assert.That(context.CurrentIndex, Is.EqualTo(0));
+            Assert.That(context.ReadSize, Is.EqualTo(EndDelimiterOnlyInterpreter.TestReadSize));
+            Assert.That(context.ReadBuffer.Length, Is.EqualTo(EndDelimiterOnlyInterpreter.TestBufferSize));
         }
 
         [Test(Description = "Check if a partial received message was read correctly")]
@@ -62,8 +62,8 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             _interpreter.ProcessReadBytes(_context, readMessage.Length, m => { });
 
             // Assert
-            Assert.IsTrue(_context.StartFound);
-            Assert.AreEqual(readMessage.Length, _context.CurrentIndex);
+            Assert.That(_context.StartFound);
+            Assert.That(_context.CurrentIndex, Is.EqualTo(readMessage.Length));
         }
 
         [Test(Description = "Check if full received message was parsed correctly")]
@@ -90,12 +90,12 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             _interpreter.ProcessReadBytes(_context, readMessage.Length, m => published = m);
 
             // Assert
-            Assert.IsFalse(_context.StartFound);
-            Assert.AreEqual(0, _context.CurrentIndex);
+            Assert.That(_context.StartFound, Is.False);
+            Assert.That(_context.CurrentIndex, Is.EqualTo(0));
 
-            Assert.NotNull(published);
-            Assert.AreEqual(readMessage.Length - leadingChunk, published.Payload.Length);
-            Assert.AreEqual(readMessage.Skip(leadingChunk).Sum(e => (short)e), published.Payload.Sum(e => (short)e));
+            Assert.That(published, Is.Not.Null);
+            Assert.That(published.Payload.Length, Is.EqualTo(readMessage.Length - leadingChunk));
+            Assert.That(published.Payload.Sum(e => e), Is.EqualTo(readMessage.Skip(leadingChunk).Sum(e => e)));
         }
 
         [Test(Description = "Check wether a overlaaping received message was parsed correctly")]
@@ -127,14 +127,14 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             _interpreter.ProcessReadBytes(_context, remain, m => notPublished = m);
 
             // Assert
-            Assert.IsTrue(_context.StartFound);
-            Assert.AreEqual(readMessage.Length - fullmessage.Length, _context.CurrentIndex);
+            Assert.That(_context.StartFound);
+            Assert.That(_context.CurrentIndex, Is.EqualTo(readMessage.Length - fullmessage.Length));
             // Check published message
-            Assert.NotNull(published);
-            Assert.AreEqual(fullmessage.Length, published.Payload.Length);
-            Assert.AreEqual(fullmessage.Sum(e => (short)e), published.Payload.Sum(e => (short)e));
+            Assert.That(published, Is.Not.Null);
+            Assert.That(published.Payload.Length, Is.EqualTo(fullmessage.Length));
+            Assert.That(published.Payload.Sum(e => e), Is.EqualTo(fullmessage.Sum(e => e)));
             // Check second was not published
-            Assert.IsNull(notPublished);
+            Assert.That(notPublished, Is.Null);
         }
 
         [Test(Description = "Read message chunk wise")]
@@ -181,14 +181,14 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             }
 
             // Assert
-            Assert.IsTrue(_context.StartFound);
-            Assert.AreEqual(4, _context.CurrentIndex);
+            Assert.That(_context.StartFound);
+            Assert.That(_context.CurrentIndex, Is.EqualTo(4));
 
-            Assert.AreEqual(3, published.Count);
+            Assert.That(published.Count, Is.EqualTo(3));
             for (var i = 0; i < 3; i++)
             {
-                Assert.AreEqual(fullMessages[i].Length, published[i].Payload.Length);
-                Assert.AreEqual(fullMessages[i].Sum(e => (short)e), published[i].Payload.Sum(e => (short)e));
+                Assert.That(published[i].Payload.Length, Is.EqualTo(fullMessages[i].Length));
+                Assert.That(published[i].Payload.Sum(e => e), Is.EqualTo(fullMessages[i].Sum(e => e)));
             }
         }
 
@@ -207,8 +207,8 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             _interpreter.ProcessReadBytes(_context, text.Length, m => published = m);
 
             // Assert
-            Assert.NotNull(published);
-            Assert.AreEqual(published.Payload, Encoding.UTF8.GetBytes(Output));
+            Assert.That(published, Is.Not.Null);
+            Assert.That(Encoding.UTF8.GetBytes(Output), Is.EqualTo(published.Payload));
         }
     }
 }

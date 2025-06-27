@@ -72,9 +72,8 @@ namespace Moryx.Communication.Sockets.IntegrationTests
                     return;
 
                 s.Connection.Dispose();
-                Assert.AreEqual(s.Connection.CurrentState, BinaryConnectionState.Disconnected,
-                    "Server is not in the state '{0:G}'. CurrentState: {1:G}", BinaryConnectionState.Disconnected,
-                    s.Connection.CurrentState);
+                Assert.That(s.Connection.CurrentState, Is.EqualTo(BinaryConnectionState.Disconnected),
+                    $"Server is not in the state '{BinaryConnectionState.Disconnected:G}'. CurrentState: {s.Connection.CurrentState:G}");
                 s.Connection = null;
             }
         }
@@ -115,7 +114,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             stopWatch.Stop();
 
             // Client should be connected
-            Assert.AreEqual(wantedState, _clients[clientIdx].Connection.CurrentState,
+            Assert.That(_clients[clientIdx].Connection.CurrentState, Is.EqualTo(wantedState),
                 $"Client ({clientIdx}) is not in the state '{wantedState:G}'. " +
                 $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {stopWatch.ElapsedMilliseconds/1000}s");
         }
@@ -138,13 +137,13 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             server.Connection.NotifyConnectionState += (sender, message) => server.LastStateChangeEvents.Add(message);
 
             // Server should be disconnected
-            Assert.AreEqual(server.Connection.CurrentState, BinaryConnectionState.Disconnected,
+            Assert.That(BinaryConnectionState.Disconnected, Is.EqualTo(server.Connection.CurrentState),
                 $"server is not in the state '{BinaryConnectionState.Disconnected:G}'. CurrentState: {server.Connection.CurrentState:G}");
 
             server.Connection.Start();
 
             // Server should be listening 
-            Assert.AreEqual(BinaryConnectionState.AttemptingConnection, server.Connection.CurrentState,
+            Assert.That(server.Connection.CurrentState, Is.EqualTo(BinaryConnectionState.AttemptingConnection),
                 $"server is not in the state '{BinaryConnectionState.AttemptingConnection:G}'. CurrentState: {server.Connection.CurrentState:G}");
 
             _serverConnections.Add(server);
@@ -178,7 +177,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             Console.WriteLine("CreateAndStartClient Added Client idx: {0}.", clientIdx);
 
             // Client should be disconnected
-            Assert.AreEqual(_clients[clientIdx].Connection.CurrentState, BinaryConnectionState.Disconnected,
+            Assert.That(BinaryConnectionState.Disconnected, Is.EqualTo(_clients[clientIdx].Connection.CurrentState),
                 $"Client is not in the state '{BinaryConnectionState.Disconnected:G}'. CurrentState: {_clients[clientIdx].Connection.CurrentState:G}");
 
             _clients[clientIdx].Connection.Start();
@@ -284,21 +283,21 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         /// <returns>True if messages are equal otherwise false</returns>
         protected static bool CompareMessages(BinaryMessage<SystemTestHeader> msg1, BinaryMessage<SystemTestHeader> msg2)
         {
-            Assert.IsNotNull(msg1, "Message 1 is null");
-            Assert.IsNotNull(msg2, "Message 2 is null");
+            Assert.That(msg1, Is.Not.Null, "Message 1 is null");
+            Assert.That(msg2, Is.Not.Null, "Message 2 is null");
 
-            Assert.AreEqual(msg1.Header.ClientIdx, msg2.Header.ClientIdx, "ClientIdxs do not match");
+            Assert.That(msg2.Header.ClientIdx, Is.EqualTo(msg1.Header.ClientIdx), "ClientIdxs do not match");
 
-            Assert.AreEqual(msg1.Header.HeaderString, msg2.Header.HeaderString, "HeaderStrings do not match");
+            Assert.That(msg2.Header.HeaderString, Is.EqualTo(msg1.Header.HeaderString), "HeaderStrings do not match");
 
-            Assert.AreEqual(msg1.Payload != null, msg2.Payload != null, "One Message has PayLoad, the other has not");
+            Assert.That(msg2.Payload != null, Is.EqualTo(msg1.Payload != null), "One Message has PayLoad, the other has not");
 
             if (msg1.Payload != null && msg2.Payload != null)
             {
-                Assert.AreEqual(msg1.Payload.Length, msg2.Payload.Length, "Messages have different PayLoad-Length");
+                Assert.That(msg2.Payload.Length, Is.EqualTo(msg1.Payload.Length), "Messages have different PayLoad-Length");
                 for (var i = 0; i < msg1.Payload.Length; i++)
                 {
-                    Assert.AreEqual(msg1.Payload[i], msg2.Payload[i], "Messages-Payloads are different.");
+                    Assert.That(msg2.Payload[i], Is.EqualTo(msg1.Payload[i]), "Messages-Payloads are different.");
                 }
             }
             return true;

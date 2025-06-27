@@ -31,7 +31,7 @@ namespace Moryx.AbstractionLayer.Tests
             var result = constraint.Check(context);
 
             // Arrange
-            Assert.AreEqual(result, foo == compareValue, "Constraint failed to compare objects");
+            Assert.That(foo == compareValue, Is.EqualTo(result), "Constraint failed to compare objects");
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Moryx.AbstractionLayer.Tests
             var result = constraint.Check(context);
 
             // Arrange
-            Assert.AreEqual(result, foo <= compareValue, "Constraint failed to compare objects");
+            Assert.That(foo <= compareValue, Is.EqualTo(result), "Constraint failed to compare objects");
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Moryx.AbstractionLayer.Tests
             var result = constraint.Check(context);
 
             // Arrange
-            Assert.AreEqual(result, foo >= compareValue, "Constraint failed to compare objects");
+            Assert.That(foo >= compareValue, Is.EqualTo(result), "Constraint failed to compare objects");
         }
     }
 }

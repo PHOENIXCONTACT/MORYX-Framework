@@ -31,10 +31,10 @@ namespace Moryx.Model.Tests
 
             // Assert
             var baseType = proxyType.BaseType;
-            Assert.IsNotNull(baseType);
+            Assert.That(baseType, Is.Not.Null);
 
             var genericBaseType = baseType.GetGenericTypeDefinition();
-            Assert.AreEqual(typeof(Repository<>), genericBaseType);
+            Assert.That(genericBaseType, Is.EqualTo(typeof(Repository<>)));
         }
 
         [Test]
@@ -105,10 +105,10 @@ namespace Moryx.Model.Tests
 
             // Assert
             var baseType = proxyType.BaseType;
-            Assert.IsNotNull(baseType);
+            Assert.That(baseType, Is.Not.Null);
 
             var genericBaseType = baseType.GetGenericTypeDefinition();
-            Assert.AreEqual(typeof(Repository<>), genericBaseType);
+            Assert.That(genericBaseType, Is.EqualTo(typeof(Repository<>)));
         }
 
         [Test]
@@ -119,10 +119,10 @@ namespace Moryx.Model.Tests
 
             // Assert
             var baseType = proxyType.BaseType;
-            Assert.IsNotNull(baseType);
+            Assert.That(baseType, Is.Not.Null);
 
             var genericBaseType = baseType.GetGenericTypeDefinition();
-            Assert.AreEqual(typeof(ModificationTrackedRepository<>), genericBaseType);
+            Assert.That(genericBaseType, Is.EqualTo(typeof(ModificationTrackedRepository<>)));
         }
 
         [Test]

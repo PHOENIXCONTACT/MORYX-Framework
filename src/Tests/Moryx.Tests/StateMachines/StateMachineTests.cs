@@ -34,9 +34,9 @@ namespace Moryx.Tests
             context.State.AtoB();
 
             // Assert
-            Assert.IsTrue(context.AtoBTriggered);
-            Assert.IsFalse(context.BtoCTriggered);
-            Assert.IsFalse(context.CtoATriggered);
+            Assert.That(context.AtoBTriggered);
+            Assert.That(context.BtoCTriggered, Is.False);
+            Assert.That(context.CtoATriggered, Is.False);
         }
 
         [Test(Description = "Test transition from B to C state. This state is only possible in BState")]
@@ -50,9 +50,9 @@ namespace Moryx.Tests
             context.State.BtoC();
 
             // Assert
-            Assert.IsTrue(context.AtoBTriggered);
-            Assert.IsTrue(context.BtoCTriggered);
-            Assert.IsFalse(context.CtoATriggered);
+            Assert.That(context.AtoBTriggered);
+            Assert.That(context.BtoCTriggered);
+            Assert.That(context.CtoATriggered, Is.False);
         }
 
         [Test(Description = "Test transition from C to A state. This state is only possible in CState")]
@@ -67,9 +67,9 @@ namespace Moryx.Tests
             context.State.CtoA();
 
             // Assert
-            Assert.IsTrue(context.AtoBTriggered);
-            Assert.IsTrue(context.BtoCTriggered);
-            Assert.IsTrue(context.CtoATriggered);
+            Assert.That(context.AtoBTriggered);
+            Assert.That(context.BtoCTriggered);
+            Assert.That(context.CtoATriggered);
         }
 
         [Test(Description = "Test will check the string representation of StateMachine.Dump")]
@@ -83,7 +83,7 @@ namespace Moryx.Tests
 
             // Assert
             const string resultText = "Current: [AState (10)] - All: [AState (10)], [BState (20)], [CState (30)]";
-            Assert.AreEqual(resultText, text);
+            Assert.That(text, Is.EqualTo(resultText));
         }
 
         [Test]
@@ -106,8 +106,8 @@ namespace Moryx.Tests
             context.State.BtoC();
 
             // Assert
-            Assert.IsTrue(context.BtoCTriggered);
-            Assert.IsFalse(context.CtoATriggered);
+            Assert.That(context.BtoCTriggered);
+            Assert.That(context.CtoATriggered, Is.False);
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace Moryx.Tests
             StateMachine.Force(context.State, MyStateBase.StateA, true, false);
 
             // Assert
-            Assert.IsTrue(context.BExited);
+            Assert.That(context.BExited);
         }
 
         [Test(Description = "Brings the StateMachine to B and force to A with entering the forced state.")]
@@ -165,7 +165,7 @@ namespace Moryx.Tests
             StateMachine.Force(context.State, MyStateBase.StateA, false, true);
 
             // Assert
-            Assert.IsTrue(context.AEntered);
+            Assert.That(context.AEntered);
         }
 
         private static MyContext CreateContext()

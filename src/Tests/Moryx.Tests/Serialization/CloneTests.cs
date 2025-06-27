@@ -52,21 +52,21 @@ namespace Moryx.Tests
         private static void Compare(Entry expected, Entry value)
         {
             // Compare all values
-            Assert.AreEqual(expected.Description, value.Description);
+            Assert.That(value.Description, Is.EqualTo(expected.Description));
 
             // Compare key
-            Assert.AreEqual(expected.Identifier, value.Identifier);
-            Assert.AreEqual(expected.DisplayName, expected.DisplayName);
+            Assert.That(value.Identifier, Is.EqualTo(expected.Identifier));
+            Assert.That(expected.DisplayName, Is.EqualTo(expected.DisplayName));
 
             // Compare value
-            Assert.AreEqual(expected.Value.Current, value.Value.Current);
-            Assert.AreEqual(expected.Value.Default, value.Value.Default);
-            Assert.AreEqual(expected.Value.Possible, value.Value.Possible);
-            Assert.AreEqual(expected.Value.Type, value.Value.Type);
-            Assert.AreEqual(expected.Value.UnitType, value.Value.UnitType);
+            Assert.That(value.Value.Current, Is.EqualTo(expected.Value.Current));
+            Assert.That(value.Value.Default, Is.EqualTo(expected.Value.Default));
+            Assert.That(value.Value.Possible, Is.EqualTo(expected.Value.Possible));
+            Assert.That(value.Value.Type, Is.EqualTo(expected.Value.Type));
+            Assert.That(value.Value.UnitType, Is.EqualTo(expected.Value.UnitType));
 
             // Continue recursive
-            Assert.AreEqual(expected.SubEntries.Count, value.SubEntries.Count);
+            Assert.That(value.SubEntries.Count, Is.EqualTo(expected.SubEntries.Count));
             for (var i = 0; i < expected.SubEntries.Count; i++)
             {
                 Compare(expected.SubEntries[i], value.SubEntries[i]);

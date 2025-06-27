@@ -40,8 +40,8 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
 
         Assert.That(result.Success, Is.True);
         Assert.That(result.Error, Is.Null);
-        Assert.That(result.Result, Is.EqualTo(1));
-        Assert.That(result.ToString(), Is.EqualTo("1"));
+        Assert.That(1, Is.EqualTo(result.Result));
+        Assert.That("1", Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -50,11 +50,11 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
         var result = new FunctionResult<int>(new FunctionResultError(Message));
 
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Result, Is.EqualTo(0));
+        Assert.That(0, Is.EqualTo(result.Result));
 
-        Assert.That(result.Error.Message, Is.EqualTo(Message));
+        Assert.That(Message, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.Null);
-        Assert.That(result.ToString(), Is.EqualTo(Message));
+        Assert.That(Message, Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -63,11 +63,11 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
         var result = new FunctionResult<int>(new FunctionResultError(new Exception(ExceptionMessage)));
 
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Result, Is.EqualTo(0));
+        Assert.That(0, Is.EqualTo(result.Result));
 
-        Assert.That(result.Error.Message, Is.EqualTo(ExceptionMessage));
+        Assert.That(ExceptionMessage, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.TypeOf<Exception>());
-        Assert.That(result.ToString(), Is.EqualTo(ExceptionMessage));
+        Assert.That(ExceptionMessage, Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -76,10 +76,10 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
         var result = FunctionResult.Ok(10);
 
         Assert.That(result.Success, Is.True);
-        Assert.That(result.Result, Is.EqualTo(10));
+        Assert.That(10, Is.EqualTo(result.Result));
 
         Assert.That(result.Error, Is.Null);
-        Assert.That(result.ToString(), Is.EqualTo("10"));
+        Assert.That("10", Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -88,12 +88,12 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
         var result = FunctionResult.WithError<int>(Message);
 
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Result, Is.EqualTo(0));
+        Assert.That(0, Is.EqualTo(result.Result));
 
 
-        Assert.That(result.Error.Message, Is.EqualTo(Message));
+        Assert.That(Message, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.Null);
-        Assert.That(result.ToString(), Is.EqualTo(Message));
+        Assert.That(Message, Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -102,11 +102,11 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
         var result = FunctionResult.WithError<int>(new Exception(ExceptionMessage));
 
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Result, Is.EqualTo(0));
+        Assert.That(0, Is.EqualTo(result.Result));
 
-        Assert.That(result.Error.Message, Is.EqualTo(ExceptionMessage));
+        Assert.That(ExceptionMessage, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.TypeOf<Exception>());
-        Assert.That(result.ToString(), Is.EqualTo(ExceptionMessage));
+        Assert.That(ExceptionMessage, Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -119,9 +119,9 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
 
         Assert.Multiple(() =>
         {
-            Assert.That($"{floatResult}", Is.EqualTo(floatAsString));
-            Assert.That($"{noResult}", Is.EqualTo(new Nothing().ToString()));
-            Assert.That($"{nullResult}", Is.EqualTo("null"));
+            Assert.That(floatAsString, Is.EqualTo($"{floatResult}"));
+            Assert.That(new Nothing().ToString(), Is.EqualTo($"{noResult}"));
+            Assert.That("null", Is.EqualTo($"{nullResult}"));
         });
     }
 

@@ -60,7 +60,7 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
             GC.Collect();
 
             Assert.That(result?.Value?.Success, Is.True);
-            Assert.That(_exceptions.Count, Is.EqualTo(0));
+            Assert.That(0, Is.EqualTo(_exceptions.Count));
         }
     }
 }

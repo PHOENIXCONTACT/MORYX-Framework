@@ -23,8 +23,8 @@ namespace Moryx.Tests.Configuration.ValueProvider
             var canWriteNoSetter = filter.CheckProperty(noSetterProperty);
 
             // Assert
-            Assert.IsFalse(canWritePrivateSetter, "Private setter should be treated as not writable");
-            Assert.IsFalse(canWriteNoSetter, "No setter should be treated as not writable");
+            Assert.That(canWritePrivateSetter, Is.False, "Private setter should be treated as not writable");
+            Assert.That(canWriteNoSetter, Is.False, "No setter should be treated as not writable");
         }
 
         public class PrivateSetterClass

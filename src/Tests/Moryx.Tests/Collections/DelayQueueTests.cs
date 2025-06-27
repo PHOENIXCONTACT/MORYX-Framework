@@ -66,13 +66,13 @@ namespace Moryx.Tests.Collections
             // Assert
             if (delay < Delay)
             {
-                Assert.GreaterOrEqual(_times[0], Delay - 2);
-                Assert.Less(_times[0], 2 * Delay);
+                Assert.That(_times[0], Is.GreaterThanOrEqualTo(Delay - 2));
+                Assert.That(_times[0], Is.LessThan(2 * Delay));
             }
             else
             {
-                Assert.GreaterOrEqual(_times[0], delay - 2);
-                Assert.Less(_times[0], delay + Delay);
+                Assert.That(_times[0], Is.GreaterThanOrEqualTo(delay - 2));
+                Assert.That(_times[0], Is.LessThan(delay + Delay));
             }
         }
 
@@ -94,16 +94,16 @@ namespace Moryx.Tests.Collections
             // Validate first message
             if (queueReady)
             {
-                Assert.LessOrEqual(_times[0], Delay + initalDelay);
+                Assert.That(_times[0], Is.LessThanOrEqualTo(Delay + initalDelay));
             }
             else
             {
-                Assert.GreaterOrEqual(_times[0], Delay - 2);
+                Assert.That(_times[0], Is.GreaterThanOrEqualTo(Delay - 2));
             }
             // Validate second message
             var timeDiff = _times[1] - _times[0];
-            Assert.GreaterOrEqual(timeDiff, Delay - 2);
-            Assert.LessOrEqual(timeDiff, 2 * Delay);
+            Assert.That(timeDiff, Is.GreaterThanOrEqualTo(Delay - 2));
+            Assert.That(timeDiff, Is.LessThanOrEqualTo(2 * Delay));
         }
 
         [TestCase(-1, 10, Description = "Direct burst of 3 objects in 10ms interval")]
@@ -125,11 +125,11 @@ namespace Moryx.Tests.Collections
             Thread.Sleep(initialDelay + (loops + 1) * Delay);
 
             // Assert
-            Assert.AreEqual(loops, _times.Count);
+            Assert.That(_times.Count, Is.EqualTo(loops));
             for (var i = 0; i < _times.Count; i++)
             {
                 var diff = i == 0 ? _times[i] : _times[i] - _times[i - 1];
-                Assert.GreaterOrEqual(diff, Delay - 2);
+                Assert.That(diff, Is.GreaterThanOrEqualTo(Delay - 2));
             }
         }
 
@@ -141,7 +141,7 @@ namespace Moryx.Tests.Collections
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => _queue.Enqueue(new DummyMessage()));
-            Assert.AreEqual(0, _times.Count);
+            Assert.That(_times.Count, Is.EqualTo(0));
         }
 
         [Test(Description = ""), Explicit]
@@ -162,8 +162,8 @@ namespace Moryx.Tests.Collections
             Thread.Sleep(Delay * 2);
 
             // Assert
-            Assert.GreaterOrEqual(preClear, 0);
-            Assert.AreEqual(0, _times.Count);
+            Assert.That(preClear, Is.GreaterThanOrEqualTo(0));
+            Assert.That(_times.Count, Is.EqualTo(0));
         }
     }
 }

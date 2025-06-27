@@ -7,6 +7,14 @@
 		<CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
 		<!-- Set to true to allow floating versions if necessary. Only works with .net sdk >8.0.200 -->
 	</PropertyGroup>
+	
+	<!-- Global version definitions need to be done here, this file is loaded before all others-->
+	<PropertyGroup>
+		<dotnetVersion>8.0.1</dotnetVersion>
+		<efCoreVersion>8.0.11</efCoreVersion>
+
+		<AspNetCoreVersion>8.0.11</AspNetCoreVersion>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- Test libraries -->
@@ -41,6 +49,7 @@
 		<PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageVersion Include="CommandLineParser" Version="2.9.1" />
 		<PackageVersion Include="AutoMapper" Version="14.0.0" />
+		<PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />
 		
 		<PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
 		<PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />

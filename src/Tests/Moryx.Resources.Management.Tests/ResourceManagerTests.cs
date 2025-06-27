@@ -99,8 +99,8 @@ namespace Moryx.Resources.Management.Tests
             _resourceManager.Initialize();
 
             // Assert
-            Assert.AreEqual(1, _resourceMock.InitializeCalls, "The resource was not initialized.");
-            Assert.AreEqual(DatabaseResourceName, _resourceMock.Name, "Name does not match to the database entity");
+            Assert.That(_resourceMock.InitializeCalls, Is.EqualTo(1), "The resource was not initialized.");
+            Assert.That(_resourceMock.Name, Is.EqualTo(DatabaseResourceName), "Name does not match to the database entity");
         }
 
         [Test(Description = "Start call to ResourceManager starts the handled resources.")]
@@ -113,9 +113,9 @@ namespace Moryx.Resources.Management.Tests
             _resourceManager.Start();
 
             // Assert
-            Assert.AreEqual(1, _resourceMock.InitializeCalls);
-            Assert.AreEqual(1, _resourceMock.StartCalls);
-            Assert.AreEqual(0, _resourceMock.StopCalls);
+            Assert.That(_resourceMock.InitializeCalls, Is.EqualTo(1));
+            Assert.That(_resourceMock.StartCalls, Is.EqualTo(1));
+            Assert.That(_resourceMock.StopCalls, Is.EqualTo(0));
         }
 
         [Test(Description = "Stop call to ResourceManager stops the handled resources.")]
@@ -129,9 +129,9 @@ namespace Moryx.Resources.Management.Tests
             _resourceManager.Stop();
 
             // Assert
-            Assert.AreEqual(1, _resourceMock.InitializeCalls);
-            Assert.AreEqual(1, _resourceMock.StartCalls);
-            Assert.AreEqual(1, _resourceMock.StopCalls);
+            Assert.That(_resourceMock.InitializeCalls, Is.EqualTo(1));
+            Assert.That(_resourceMock.StartCalls, Is.EqualTo(1));
+            Assert.That(_resourceMock.StopCalls, Is.EqualTo(1));
         }
 
         [Test(Description = "ResourceManager is attached to all reference collections and and listens to changed events.")]
@@ -178,7 +178,7 @@ namespace Moryx.Resources.Management.Tests
                 var resourceRepo = uow.GetRepository<IResourceRepository>();
                 var entity = resourceRepo.GetByKey(_resourceMock.Id);
 
-                Assert.AreEqual(_resourceMock.Description, entity.Description);
+                Assert.That(entity.Description, Is.EqualTo(_resourceMock.Description));
             }
         }
 
@@ -208,8 +208,8 @@ namespace Moryx.Resources.Management.Tests
                 entity = resourceRepo.GetByKey(testResource.Id);
             }
 
-            Assert.IsNotNull(entity);
-            Assert.AreEqual(testResource.Name, entity.Name);
+            Assert.That(entity, Is.Not.Null);
+            Assert.That(entity.Name, Is.EqualTo(testResource.Name));
         }
 
         [Test(Description = "Adds a resource while the ResourceManager was initialized but not started")]
@@ -223,8 +223,8 @@ namespace Moryx.Resources.Management.Tests
             _resourceManager.Save(testResource);
 
             // Arrange
-            Assert.AreEqual(1, testResource.InitializeCalls);
-            Assert.AreEqual(0, testResource.StartCalls);
+            Assert.That(testResource.InitializeCalls, Is.EqualTo(1));
+            Assert.That(testResource.StartCalls, Is.EqualTo(0));
         }
 
         [TestCase(true, Description = "")]
@@ -242,7 +242,7 @@ namespace Moryx.Resources.Management.Tests
             _resourceManager.Destroy(testResource, permanent);
 
             // Assert
-            Assert.AreEqual(1, testResource.StopCalls);
+            Assert.That(testResource.StopCalls, Is.EqualTo(1));
 
             _typeControllerMock.Verify(t => t.Destroy(testResource), Times.Once);
 
@@ -255,12 +255,12 @@ namespace Moryx.Resources.Management.Tests
                 var entity = resourceRepo.GetByKey(testResource.Id);
                 if (permanent)
                 {
-                    Assert.IsNull(entity);
+                    Assert.That(entity, Is.Null);
                 }
                 else
                 {
-                    Assert.IsNotNull(entity);
-                    Assert.IsNotNull(entity.Deleted);
+                    Assert.That(entity, Is.Not.Null);
+                    Assert.That(entity.Deleted, Is.Not.Null);
                 }
 
             }

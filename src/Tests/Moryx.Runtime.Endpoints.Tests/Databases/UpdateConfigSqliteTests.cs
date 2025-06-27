@@ -40,10 +40,10 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             var result = _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
 
             var updatedConfig = GetUpdatedConfig();
-            Assert.AreEqual(typeof(TestModelContext), result);
-            Assert.True(updatedConfig.ConfiguratorTypename.Contains(_configuratorType.FullName));
-            Assert.AreEqual("TestModelContext", updatedConfig.ConnectionSettings.Database);
-            Assert.AreEqual("Data Source=.\\db-filename.db", updatedConfig.ConnectionSettings.ConnectionString);
+            Assert.That(result, Is.EqualTo(typeof(TestModelContext)));
+            Assert.That(updatedConfig.ConfiguratorTypename, Does.Contain(_configuratorType.FullName));
+            Assert.That(updatedConfig.ConnectionSettings.Database, Is.EqualTo("TestModelContext"));
+            Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\db-filename.db"));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             BadRequestException exception = Assert.Throws<BadRequestException>(
                 () => _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config));
 
-            Assert.AreEqual("Requested config values aren't valid", exception.Message);
+            Assert.That(exception.Message, Is.EqualTo("Requested config values aren't valid"));
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             BadRequestException exception  = Assert.Throws<BadRequestException>(
                 () => _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config));
 
-            Assert.AreEqual("Requested config values aren't valid", exception.Message);
+            Assert.That(exception.Message, Is.EqualTo("Requested config values aren't valid"));
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             BadRequestException exception = Assert.Throws<BadRequestException>(
                 () => _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config));
 
-            Assert.AreEqual("Requested config values aren't valid", exception.Message);
+            Assert.That(exception.Message, Is.EqualTo("Requested config values aren't valid"));
         }
 
         [Test]
@@ -96,9 +96,9 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
             var updatedConfig = GetUpdatedConfig();
 
-            Assert.True(updatedConfig.ConfiguratorTypename.Contains(_configuratorType.FullName));
-            Assert.AreEqual("MyDatabase", updatedConfig.ConnectionSettings.Database);
-            Assert.AreEqual("Data Source=.\\MyDatabase.db", updatedConfig.ConnectionSettings.ConnectionString);
+            Assert.That(updatedConfig.ConfiguratorTypename, Does.Contain(_configuratorType.FullName));
+            Assert.That(updatedConfig.ConnectionSettings.Database, Is.EqualTo("MyDatabase"));
+            Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\MyDatabase.db"));
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
             var updatedConfig = GetUpdatedConfig();
 
-            Assert.AreEqual("Data Source=.\\TestModelContext.db", updatedConfig.ConnectionSettings.ConnectionString);
+            Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\TestModelContext.db"));
         }
 
         private static DatabaseConfigModel SqliteConfigModel()

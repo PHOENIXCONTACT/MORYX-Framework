@@ -26,7 +26,7 @@ namespace Moryx.Tests.Threading
 
             _nonStackingTimerCallback.Callback(null);
 
-            Assert.AreEqual(1, _counter);
+            Assert.That(_counter, Is.EqualTo(1));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Moryx.Tests.Threading
             _nonStackingTimerCallback.Callback(null);
             _nonStackingTimerCallback.Callback(null);
 
-            Assert.AreEqual(2, _counter);
+            Assert.That(_counter, Is.EqualTo(2));
         }
 
         private void RecursiveCallback()

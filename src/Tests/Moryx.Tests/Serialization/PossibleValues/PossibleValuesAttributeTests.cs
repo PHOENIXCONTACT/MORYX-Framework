@@ -34,18 +34,18 @@ namespace Moryx.Tests
 
             // Assert
             // Check values from base type
-            Assert.AreEqual(2, valuesFromBase.Length);
-            Assert.AreEqual(nameof(SomeBase), valuesFromBase[0]);
-            Assert.AreEqual(nameof(SomeImpl), valuesFromBase[1]);
+            Assert.That(valuesFromBase.Length, Is.EqualTo(2));
+            Assert.That(valuesFromBase[0], Is.EqualTo(nameof(SomeBase)));
+            Assert.That(valuesFromBase[1], Is.EqualTo(nameof(SomeImpl)));
 
             // Check values from array types
-            Assert.AreEqual(1, valuesFromArray.Length);
-            Assert.AreEqual(nameof(SomeImpl), valuesFromArray[0]);
+            Assert.That(valuesFromArray.Length, Is.EqualTo(1));
+            Assert.That(valuesFromArray[0], Is.EqualTo(nameof(SomeImpl)));
 
             // Check values from base type with full name
-            Assert.AreEqual(2, valuesWithFull.Length);
-            Assert.AreEqual(typeof(SomeBase).FullName, valuesWithFull[0]);
-            Assert.AreEqual(typeof(SomeImpl).FullName, valuesWithFull[1]);
+            Assert.That(valuesWithFull.Length, Is.EqualTo(2));
+            Assert.That(valuesWithFull[0], Is.EqualTo(typeof(SomeBase).FullName));
+            Assert.That(valuesWithFull[1], Is.EqualTo(typeof(SomeImpl).FullName));
         }
 
         [Test(Description = "Uses the " + nameof(StateMachineKeysAttribute) + " to read possible state keys from the given state machine type.")]
@@ -58,10 +58,10 @@ namespace Moryx.Tests
             var possibleValues = attr.GetValues(null).ToArray();
 
             // Assert
-            Assert.AreEqual(3, possibleValues.Length);
-            Assert.AreEqual(nameof(MyStateBase.StateA), possibleValues[0]);
-            Assert.AreEqual(nameof(MyStateBase.StateB), possibleValues[1]);
-            Assert.AreEqual(nameof(MyStateBase.StateC), possibleValues[2]);
+            Assert.That(possibleValues.Length, Is.EqualTo(3));
+            Assert.That(possibleValues[0], Is.EqualTo(nameof(MyStateBase.StateA)));
+            Assert.That(possibleValues[1], Is.EqualTo(nameof(MyStateBase.StateB)));
+            Assert.That(possibleValues[2], Is.EqualTo(nameof(MyStateBase.StateC)));
         }
 
 

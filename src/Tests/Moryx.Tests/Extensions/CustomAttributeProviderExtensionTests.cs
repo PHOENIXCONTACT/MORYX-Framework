@@ -39,7 +39,7 @@ namespace Moryx.Tests.Extensions
             var displayName = target.GetDisplayName();
 
             // Assert
-            Assert.AreEqual(TestConstants.ClassDisplayName, displayName);
+            Assert.That(displayName, Is.EqualTo(TestConstants.ClassDisplayName));
         }
 
         [System.ComponentModel.Description("Tests if the GetDescription extension returns the correct description")]
@@ -51,7 +51,7 @@ namespace Moryx.Tests.Extensions
             var description = target.GetDescription();
 
             // Assert
-            Assert.AreEqual(TestConstants.ClassDescription, description);
+            Assert.That(description, Is.EqualTo(TestConstants.ClassDescription));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Moryx.Tests.Extensions
             var attr = provider.GetCustomAttribute<DisplayNameAttribute>();
 
             // Assert
-            Assert.NotNull(attr);
+            Assert.That(attr, Is.Not.Null);
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace Moryx.Tests.Extensions
             var attr = provider.GetCustomAttribute<AssemblyTitleAttribute>();
 
             // Assert
-            Assert.IsNull(attr);
+            Assert.That(attr, Is.Null);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Moryx.Products.IntegrationTests
             var compliance = _textStrategyAttribute.TypeCompliance(type);
 
             // Assert
-            Assert.AreEqual(expCompliance, compliance);
+            Assert.That(compliance, Is.EqualTo(expCompliance));
         }
 
         private class SomeType

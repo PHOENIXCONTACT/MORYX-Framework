@@ -23,7 +23,7 @@ namespace Moryx.Tests.Bindings
             var result = resolver.Resolve(foo);
 
             // Assert
-            Assert.AreEqual("Howard", result);
+            Assert.That(result, Is.EqualTo("Howard"));
         }
 
         [Test(Description = "Update the propert value using a delegate resolver")]
@@ -40,7 +40,7 @@ namespace Moryx.Tests.Bindings
             resolver.Update(foo, "Howard");
 
             // Assert
-            Assert.AreEqual("Howard", foo.Branch.Name);
+            Assert.That(foo.Branch.Name, Is.EqualTo("Howard"));
         }
     }
 }

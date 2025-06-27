@@ -30,7 +30,7 @@ namespace Moryx.Container.Tests
             var comp = _container.Resolve<ParentOnly>();
 
             // Assert: Check if correct instance was set
-            Assert.AreEqual(_parent, comp.Parent, "Container did not inject the right instance!");
+            Assert.That(comp.Parent, Is.EqualTo(_parent), "Container did not inject the right instance!");
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Moryx.Container.Tests
             var comp = _container.Resolve<TypedChild>();
 
             // Assert: Check if type was set
-            Assert.AreEqual(comp.GetType(), comp.Child.Target, "Container did not forward type corretly!");
+            Assert.That(comp.GetType(), Is.EqualTo(comp.Child.Target), "Container did not forward type corretly!");
         }
 
         [Test]
@@ -56,8 +56,8 @@ namespace Moryx.Container.Tests
             var comp = _container.Resolve<NamedChild>();
 
             // Assert: Check if type and name were set
-            Assert.AreEqual(comp.GetType(), comp.Child.Target, "Container did not forward type corretly!");
-            Assert.AreEqual("Child", comp.Child.Name, "Container did not forward type corretly!");
+            Assert.That(comp.GetType(), Is.EqualTo(comp.Child.Target), "Container did not forward type corretly!");
+            Assert.That(comp.Child.Name, Is.EqualTo("Child"), "Container did not forward type corretly!");
         }
 
         [TearDown]
@@ -97,7 +97,7 @@ namespace Moryx.Container.Tests
             var comp = _container.Resolve<NamedParentOnly>();
 
             // Assert: Check if correct instance was set
-            Assert.AreEqual(_parent2, comp.Parent, "Container did not inject the right instance!");
+            Assert.That(comp.Parent, Is.EqualTo(_parent2), "Container did not inject the right instance!");
         }
 
         [Test]
@@ -110,9 +110,9 @@ namespace Moryx.Container.Tests
             var comp = _container.Resolve<NamedChildNamedParent>();
 
             // Assert: Check if type and name were set
-            Assert.AreEqual(comp.GetType(), comp.Child.Target, "Container did not forward type corretly!");
-            Assert.AreEqual(_parent2, comp.Child.Parent, "Container did not fetch from the correct parent!");
-            Assert.AreEqual("Child", comp.Child.Name, "Container did not forward name correctly!");
+            Assert.That(comp.GetType(), Is.EqualTo(comp.Child.Target), "Container did not forward type corretly!");
+            Assert.That(comp.Child.Parent, Is.EqualTo(_parent2), "Container did not fetch from the correct parent!");
+            Assert.That(comp.Child.Name, Is.EqualTo("Child"), "Container did not forward name correctly!");
         }
     }
 }

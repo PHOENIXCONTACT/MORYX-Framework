@@ -64,8 +64,8 @@ namespace Moryx.Tests.Workplans
             {
                 MAssert.That(_inputs[0].Tokens, Is.Empty);
                 MAssert.That(_outputs.Select(o => o.Tokens), Has.All.Count.EqualTo(1));
-                MAssert.That(() => ((SplitToken)_outputs[0].Tokens.First()).Original, Is.EqualTo(_token));
-                MAssert.That(() => ((SplitToken)_outputs[1].Tokens.First()).Original, Is.EqualTo(_token));
+                MAssert.That(_token, Is.EqualTo(() => ((SplitToken)_outputs[0].Tokens.First()).Original));
+                MAssert.That(_token, Is.EqualTo(() => ((SplitToken)_outputs[1].Tokens.First()).Original));
             });
         }
 
@@ -91,7 +91,7 @@ namespace Moryx.Tests.Workplans
             {
                 MAssert.That(_inputs.All(i => !i.Tokens.Any()));
                 MAssert.That(_outputs[0].Tokens.Count(), Is.EqualTo(1), "The split token should be joined into one");
-                MAssert.That(_outputs[0].Tokens.First(), Is.EqualTo(_token));
+                MAssert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
             });
         }
 
@@ -148,8 +148,8 @@ namespace Moryx.Tests.Workplans
             // Assert
             Assert.Multiple(() => { 
                 MAssert.That(_inputs[0].Tokens, Is.Empty);
-                MAssert.That(() => _outputs[0].Tokens.First(), Is.EqualTo(_token));
-                MAssert.That(triggered.Count, Is.EqualTo(2));
+                MAssert.That(_token, Is.EqualTo(() => _outputs[0].Tokens.First()));
+                MAssert.That(2, Is.EqualTo(triggered.Count));
                 MAssert.That(triggered, Has.All.InstanceOf<DummyTransition>());
             });
         }
@@ -184,13 +184,13 @@ namespace Moryx.Tests.Workplans
             Assert.Multiple(() =>
             {
                 MAssert.That(_inputs[0].Tokens, Is.Empty);
-                MAssert.That(_outputs[0].Tokens.First(), Is.EqualTo(_token));
+                MAssert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
                 MAssert.That(triggered, Has.Count.EqualTo(1));
                 MAssert.That(state, Is.InstanceOf<WorkplanSnapshot>());
                 var snapshot = (WorkplanSnapshot)state;
                 MAssert.That(snapshot.Holders, Has.Length.EqualTo(1));
                 var stepId = workplan.Steps.First(s => s is PausableStep).Id;
-                MAssert.That(snapshot.Holders[0].HolderId, Is.EqualTo(stepId));
+                MAssert.That(stepId, Is.EqualTo(snapshot.Holders[0].HolderId));
             });
         }
     }

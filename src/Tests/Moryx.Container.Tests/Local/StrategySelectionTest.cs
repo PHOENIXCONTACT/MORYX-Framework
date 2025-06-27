@@ -36,8 +36,8 @@ namespace Moryx.Container.Tests
             var root = container.Resolve<IRootClass>();
 
             // Assert
-            Assert.NotNull(root, "Root not resolved.");
-            Assert.NotNull(root.ConfiguredComponent, "root.ConfiguredComponent not resolved.");
+            Assert.That(root, Is.Not.Null, "Root not resolved.");
+            Assert.That(root.ConfiguredComponent, Is.Not.Null, "root.ConfiguredComponent not resolved.");
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Moryx.Container.Tests
             var component = container.Resolve<IConfiguredComponent>();
 
             // Assert
-            Assert.AreEqual(ConfiguredComponentB.PluginName, component.GetName());
+            Assert.That(component.GetName(), Is.EqualTo(ConfiguredComponentB.PluginName));
         }
 
         [Test]
@@ -69,9 +69,9 @@ namespace Moryx.Container.Tests
             var root = container.Resolve<IRootClass>();
 
             // Assert
-            Assert.NotNull(root, "Root not resolved.");
-            Assert.NotNull(root.ConfiguredComponent, "root.ConfiguredComponent not resolved.");
-            Assert.AreEqual(ConfiguredComponentB.PluginName, root.ConfiguredComponent.GetName(), "Strategy was not overridden!");
+            Assert.That(root, Is.Not.Null, "Root not resolved.");
+            Assert.That(root.ConfiguredComponent, Is.Not.Null, "root.ConfiguredComponent not resolved.");
+            Assert.That(root.ConfiguredComponent.GetName(), Is.EqualTo(ConfiguredComponentB.PluginName), "Strategy was not overridden!");
         }
 
         [Test]
@@ -87,9 +87,9 @@ namespace Moryx.Container.Tests
             var root = container.Resolve<IRootClass>();
 
             // Assert
-            Assert.NotNull(root, "Root not resolved.");
-            Assert.NotNull(root.ConfiguredComponent, "root.ConfiguredComponent not resolved.");
-            Assert.AreEqual(ConfiguredComponentA.PluginName, root.ConfiguredComponent.GetName(), "Strategy was not overridden!");
+            Assert.That(root, Is.Not.Null, "Root not resolved.");
+            Assert.That(root.ConfiguredComponent, Is.Not.Null, "root.ConfiguredComponent not resolved.");
+            Assert.That(root.ConfiguredComponent.GetName(), Is.EqualTo(ConfiguredComponentA.PluginName), "Strategy was not overridden!");
         }
 
         [TestCase(RootClass.PluginName, ConfiguredComponentA.PluginName)]
@@ -116,8 +116,8 @@ namespace Moryx.Container.Tests
             });
 
             // Assert
-            Assert.AreEqual(rootName, root.GetName(), "Strategy was not overridden!");
-            Assert.AreEqual(pluginName, root.ConfiguredComponent.GetName(), "Strategy was not overridden!");
+            Assert.That(root.GetName(), Is.EqualTo(rootName), "Strategy was not overridden!");
+            Assert.That(root.ConfiguredComponent.GetName(), Is.EqualTo(pluginName), "Strategy was not overridden!");
         }
 
         private static IContainer CreateContainer(IDictionary<Type, string> strategies)

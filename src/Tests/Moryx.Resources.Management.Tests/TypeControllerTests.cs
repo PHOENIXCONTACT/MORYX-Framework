@@ -57,12 +57,12 @@ namespace Moryx.Resources.Management.Tests
             var duplicate = (IDuplicateFoo)proxy;
 
             // Assert
-            Assert.AreEqual(resource.Foo, proxy.Foo);
-            Assert.AreEqual(resource.Foo, duplicate.Foo);
+            Assert.That(proxy.Foo, Is.EqualTo(resource.Foo));
+            Assert.That(duplicate.Foo, Is.EqualTo(resource.Foo));
             proxy.Foo = 187;
             // duplicate.Foo = 10; ReadOnly but still uses the same property
-            Assert.AreEqual(187, resource.Foo);
-            Assert.AreEqual(187, duplicate.Foo);
+            Assert.That(resource.Foo, Is.EqualTo(187));
+            Assert.That(duplicate.Foo, Is.EqualTo(187));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace Moryx.Resources.Management.Tests
             var proxy = (ISimpleResource) _typeController.GetProxy(instance);
 
             // Assert: Make sure proxy is still the base type
-            Assert.AreEqual(baseProxy.GetType(), proxy.GetType());
+            Assert.That(proxy.GetType(), Is.EqualTo(baseProxy.GetType()));
         }
 
         [Test]
@@ -107,8 +107,8 @@ namespace Moryx.Resources.Management.Tests
             proxy.MultiplyFoo(2, 10);
 
             // Assert: Check result and modified foo
-            Assert.AreEqual(30, result);
-            Assert.AreEqual(70, proxy.Foo);
+            Assert.That(result, Is.EqualTo(30));
+            Assert.That(proxy.Foo, Is.EqualTo(70));
         }
 
         [Test(Description = "Calls a method on proxy from interface which is declared within the ResourceAvailableAsAttribute")]
@@ -121,7 +121,7 @@ namespace Moryx.Resources.Management.Tests
             var proxy = _typeController.GetProxy(instance);
 
             // Assert
-            Assert.IsInstanceOf<INonResourceInterface>(proxy);
+            Assert.That(proxy, Is.InstanceOf<INonResourceInterface>());
             Assert.DoesNotThrow(() => ((INonResourceInterface)proxy).Validate());
         }
 
@@ -136,8 +136,8 @@ namespace Moryx.Resources.Management.Tests
             var result = proxy.MultiplyFoo(3);
 
             // Assert: Check result and modified foo
-            Assert.AreEqual(40, result);
-            Assert.AreEqual(40, proxy.Foo);
+            Assert.That(result, Is.EqualTo(40));
+            Assert.That(proxy.Foo, Is.EqualTo(40));
         }
 
         [Test(Description = "Test if implemented proxy supports inherited interfaces")]
@@ -151,8 +151,8 @@ namespace Moryx.Resources.Management.Tests
             Assert.DoesNotThrow(() => proxy = (IResourceWithImplicitApi) _typeController.GetProxy(instance));
 
             // Assert:
-            Assert.IsInstanceOf<IExtension>(proxy);
-            Assert.AreEqual(20, proxy.Add(10));
+            Assert.That(proxy, Is.InstanceOf<IExtension>());
+            Assert.That(proxy.Add(10), Is.EqualTo(20));
         }
 
         [Test]
@@ -190,15 +190,15 @@ namespace Moryx.Resources.Management.Tests
             proxy.CapabilitiesChanged -= eventHandler2;
 
             // Assert: Check if eventSender is not null and equals the proxy
-            Assert.NotNull(eventSender);
-            Assert.NotNull(eventSender2);
-            Assert.NotNull(eventSender3);
-            Assert.AreNotEqual(0, eventValue);
-            Assert.AreEqual(proxy, eventSender);
-            Assert.AreEqual(proxy, eventSender3);
-            Assert.AreEqual(NullCapabilities.Instance, capabilitiesValue);
-            Assert.AreEqual(100, eventValue);
-            Assert.IsTrue(finallyEven);
+            Assert.That(eventSender, Is.Not.Null);
+            Assert.That(eventSender2, Is.Not.Null);
+            Assert.That(eventSender3, Is.Not.Null);
+            Assert.That(eventValue, Is.Not.EqualTo(0));
+            Assert.That(eventSender, Is.EqualTo(proxy));
+            Assert.That(eventSender3, Is.EqualTo(proxy));
+            Assert.That(capabilitiesValue, Is.EqualTo(NullCapabilities.Instance));
+            Assert.That(eventValue, Is.EqualTo(100));
+            Assert.That(finallyEven);
         }
 
         [Test]
@@ -210,7 +210,7 @@ namespace Moryx.Resources.Management.Tests
             var called = false;
             proxy.FooChanged += (sender, i) => called = true;
             instance.Foo = 10;
-            Assert.IsTrue(called);
+            Assert.That(called);
 
             // Act: Dispose the type controller and use the proxy again
             called = false;
@@ -218,7 +218,7 @@ namespace Moryx.Resources.Management.Tests
             instance.Foo = 10;
 
             // Assert: Event was not raised and proxy can no longer be used
-            Assert.IsFalse(called);
+            Assert.That(called, Is.False);
             Assert.Throws<ProxyDetachedException>(() => proxy.MultiplyFoo(2));
         }
 
@@ -232,8 +232,8 @@ namespace Moryx.Resources.Management.Tests
             var proxy = (ISimpleResource)_typeController.GetProxy(driver);
 
             // Assert
-            Assert.IsNotNull(proxy);
-            Assert.IsFalse(typeof(IGenericMethodCall).IsAssignableFrom(proxy.GetType()));
+            Assert.That(proxy, Is.Not.Null);
+            Assert.That(typeof(IGenericMethodCall).IsAssignableFrom(proxy.GetType()), Is.False);
         }
 
         [Test]
@@ -246,8 +246,8 @@ namespace Moryx.Resources.Management.Tests
             var proxy = _typeController.GetProxy(driver);
 
             // Assert
-            Assert.IsNotNull(proxy);
-            Assert.IsFalse(typeof(GenericBaseResource<object>).IsAssignableFrom(proxy.GetType()));
+            Assert.That(proxy, Is.Not.Null);
+            Assert.That(typeof(GenericBaseResource<object>).IsAssignableFrom(proxy.GetType()), Is.False);
         }
 
         [Test]
@@ -300,24 +300,24 @@ namespace Moryx.Resources.Management.Tests
             proxy.SetMany(references);
 
             // Make sure all references where replaced with proxies
-            Assert.AreNotEqual(ref1, reference);
-            Assert.AreNotEqual(ref2, references[0]);
-            Assert.AreNotEqual(ref2, references2[0]);
-            Assert.AreNotEqual(nonPub, nonPubProxy);
-            Assert.AreEqual(20, reference.Foo);
-            Assert.AreEqual(reference, methodRef);
-            Assert.AreEqual(30, references[0].Foo);
-            Assert.AreEqual(30, references2[0].Foo);
-            Assert.NotNull(eventArgs);
-            Assert.AreEqual(30, eventArgs.Foo);
-            Assert.NotNull(eventArgs2);
-            Assert.AreEqual(1, eventArgs2.Length);
-            Assert.AreEqual(30, eventArgs2[0].Foo);
-            Assert.AreEqual("NonPublic", nonPubProxy.Name);
+            Assert.That(ref1, Is.Not.EqualTo(reference));
+            Assert.That(ref2, Is.Not.EqualTo(references[0]));
+            Assert.That(ref2, Is.Not.EqualTo(references2[0]));
+            Assert.That(nonPub, Is.Not.EqualTo(nonPubProxy));
+            Assert.That(reference.Foo, Is.EqualTo(20));
+            Assert.That(methodRef, Is.EqualTo(reference));
+            Assert.That(references[0].Foo, Is.EqualTo(30));
+            Assert.That(references2[0].Foo, Is.EqualTo(30));
+            Assert.That(eventArgs, Is.Not.Null);
+            Assert.That(eventArgs.Foo, Is.EqualTo(30));
+            Assert.That(eventArgs2, Is.Not.Null);
+            Assert.That(eventArgs2.Length, Is.EqualTo(1));
+            Assert.That(eventArgs2[0].Foo, Is.EqualTo(30));
+            Assert.That(nonPubProxy.Name, Is.EqualTo("NonPublic"));
             // Assert modifications of the setters
-            Assert.AreEqual(instance.Reference, ref2);
-            Assert.AreEqual(instance.References.Count, 3);
-            Assert.AreEqual(instance.References.ElementAt(1), ref1);
+            Assert.That(ref2, Is.EqualTo(instance.Reference));
+            Assert.That(3, Is.EqualTo(instance.References.Count));
+            Assert.That(ref1, Is.EqualTo(instance.References.ElementAt(1)));
             // Make sure null references work
             Assert.DoesNotThrow(() => _ = proxy.Reference2);
             Assert.DoesNotThrow(() => proxy.Reference2 = null);

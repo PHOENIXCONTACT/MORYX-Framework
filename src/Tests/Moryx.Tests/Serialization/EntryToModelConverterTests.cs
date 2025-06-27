@@ -30,16 +30,16 @@ namespace Moryx.Tests
 
             // Assert
             // Check server to client conversion
-            Assert.AreEqual(73, dummyClassClient.Value);
-            Assert.AreEqual(true, dummyClassClient.HasAnything);
-            Assert.AreEqual("0.5", dummyClassClient.Class.Value);
-            Assert.AreEqual("ValueB", dummyClassClient.Class.Enum);
-            Assert.AreEqual(2, dummyClassClient.Collection.Count());
-            Assert.AreEqual(2, dummyClassClient.Dictionary.Count<EntryModelSubClassDummyClient>());
-            Assert.AreEqual("15.8", dummyClassClient.Dictionary["1"].Value);
-            Assert.AreEqual("Unset", dummyClassClient.Dictionary["1"].Enum);
-            Assert.AreEqual("435.2", dummyClassClient.Dictionary["2"].Value);
-            Assert.AreEqual("ValueA", dummyClassClient.Dictionary["2"].Enum);
+            Assert.That(dummyClassClient.Value, Is.EqualTo(73));
+            Assert.That(dummyClassClient.HasAnything, Is.EqualTo(true));
+            Assert.That(dummyClassClient.Class.Value, Is.EqualTo("0.5"));
+            Assert.That(dummyClassClient.Class.Enum, Is.EqualTo("ValueB"));
+            Assert.That(dummyClassClient.Collection.Count(), Is.EqualTo(2));
+            Assert.That(dummyClassClient.Dictionary.Count(), Is.EqualTo(2));
+            Assert.That(dummyClassClient.Dictionary["1"].Value, Is.EqualTo("15.8"));
+            Assert.That(dummyClassClient.Dictionary["1"].Enum, Is.EqualTo("Unset"));
+            Assert.That(dummyClassClient.Dictionary["2"].Value, Is.EqualTo("435.2"));
+            Assert.That(dummyClassClient.Dictionary["2"].Enum, Is.EqualTo("ValueA"));
 
             // Arrange
             dummyClassClient.Value = 174;
@@ -60,16 +60,16 @@ namespace Moryx.Tests
 
             // Assert
             // Check client to server conversion
-            Assert.AreEqual(174, dummyClass.Value);
-            Assert.AreEqual(false, dummyClass.HasAnything);
-            Assert.AreEqual(15.8f, dummyClass.Class.Value);
-            Assert.AreEqual(DummyEnum.ValueA, dummyClass.Class.Enum);
-            Assert.AreEqual(1, dummyClass.Collection.Count);
-            Assert.AreEqual(90f, dummyClass.Collection.First().Value);
-            Assert.AreEqual(DummyEnum.ValueA, dummyClass.Collection.First().Enum);
-            Assert.AreEqual(1, dummyClass.Dictionary.Count);
-            Assert.AreEqual(10076f, dummyClass.Dictionary[1].Value);
-            Assert.AreEqual(DummyEnum.ValueB, dummyClass.Dictionary[1].Enum);
+            Assert.That(dummyClass.Value, Is.EqualTo(174));
+            Assert.That(dummyClass.HasAnything, Is.EqualTo(false));
+            Assert.That(dummyClass.Class.Value, Is.EqualTo(15.8f));
+            Assert.That(dummyClass.Class.Enum, Is.EqualTo(DummyEnum.ValueA));
+            Assert.That(dummyClass.Collection.Count, Is.EqualTo(1));
+            Assert.That(dummyClass.Collection.First().Value, Is.EqualTo(90f));
+            Assert.That(dummyClass.Collection.First().Enum, Is.EqualTo(DummyEnum.ValueA));
+            Assert.That(dummyClass.Dictionary.Count, Is.EqualTo(1));
+            Assert.That(dummyClass.Dictionary[1].Value, Is.EqualTo(10076f));
+            Assert.That(dummyClass.Dictionary[1].Enum, Is.EqualTo(DummyEnum.ValueB));
         }
 
         [Test]
@@ -88,12 +88,12 @@ namespace Moryx.Tests
             clientConverter.ToModel(dummyClient, serverEntry);
 
             // Assert
-            Assert.AreEqual(3, dummyClient.Collection.Count());
-            Assert.IsNull(dummyClient.Collection.Last().Value);
-            Assert.IsNull(dummyClient.Collection.Last().Enum);
+            Assert.That(dummyClient.Collection.Count(), Is.EqualTo(3));
+            Assert.That(dummyClient.Collection.Last().Value, Is.Null);
+            Assert.That(dummyClient.Collection.Last().Enum, Is.Null);
 
-            Assert.AreEqual(3, serverEntry.SubEntries[4].SubEntries.Count);
-            Assert.AreEqual(typeof(EntryModelSubClassDummyClient).Name, serverEntry.SubEntries[4].SubEntries[2].Value.Current);
+            Assert.That(serverEntry.SubEntries[4].SubEntries.Count, Is.EqualTo(3));
+            Assert.That(serverEntry.SubEntries[4].SubEntries[2].Value.Current, Is.EqualTo(typeof(EntryModelSubClassDummyClient).Name));
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace Moryx.Tests
             EntryConvert.UpdateInstance(dummy, entry);
 
             //Assert
-            Assert.AreEqual(dummy.SubIList.Count, 3);
+            Assert.That(3, Is.EqualTo(dummy.SubIList.Count));
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace Moryx.Tests
             EntryConvert.UpdateInstance(dummy, entry);
 
             //Assert
-            Assert.AreEqual(dummy.SubIList.Count, 5);
+            Assert.That(5, Is.EqualTo(dummy.SubIList.Count));
         }
 
         [Test]
@@ -162,13 +162,13 @@ namespace Moryx.Tests
             clientConverter.ToModel(dummyClient, serverEntry);
 
             // Assert
-            Assert.AreEqual(1, dummyClient.Collection.Count());
-            Assert.AreEqual("0.8", dummyClient.Collection.Last().Value);
-            Assert.AreEqual("ValueA", dummyClient.Collection.Last().Enum);
+            Assert.That(dummyClient.Collection.Count(), Is.EqualTo(1));
+            Assert.That(dummyClient.Collection.Last().Value, Is.EqualTo("0.8"));
+            Assert.That(dummyClient.Collection.Last().Enum, Is.EqualTo("ValueA"));
 
-            Assert.AreEqual(1, serverEntry.SubEntries[4].SubEntries.Count);
-            Assert.AreEqual("0.8", serverEntry.SubEntries[4].SubEntries[0].SubEntries[0].Value.Current);
-            Assert.AreEqual("ValueA", serverEntry.SubEntries[4].SubEntries[0].SubEntries[1].Value.Current);
+            Assert.That(serverEntry.SubEntries[4].SubEntries.Count, Is.EqualTo(1));
+            Assert.That(serverEntry.SubEntries[4].SubEntries[0].SubEntries[0].Value.Current, Is.EqualTo("0.8"));
+            Assert.That(serverEntry.SubEntries[4].SubEntries[0].SubEntries[1].Value.Current, Is.EqualTo("ValueA"));
         }
 
         [Test]
@@ -187,12 +187,12 @@ namespace Moryx.Tests
             clientConverter.ToModel(dummyClient, serverEntry);
 
             // Assert
-            Assert.AreEqual(3, dummyClient.Dictionary.Count());
-            Assert.IsNull(dummyClient.Dictionary["3"].Value);
-            Assert.IsNull(dummyClient.Dictionary["3"].Enum);
+            Assert.That(dummyClient.Dictionary.Count(), Is.EqualTo(3));
+            Assert.That(dummyClient.Dictionary["3"].Value, Is.Null);
+            Assert.That(dummyClient.Dictionary["3"].Enum, Is.Null);
 
-            Assert.AreEqual(3, serverEntry.SubEntries[5].SubEntries.Count);
-            Assert.AreEqual(typeof(EntryModelSubClassDummyClient).Name, serverEntry.SubEntries[5].SubEntries[2].Value.Current);
+            Assert.That(serverEntry.SubEntries[5].SubEntries.Count, Is.EqualTo(3));
+            Assert.That(serverEntry.SubEntries[5].SubEntries[2].Value.Current, Is.EqualTo(typeof(EntryModelSubClassDummyClient).Name));
         }
 
         [Test]
@@ -211,13 +211,13 @@ namespace Moryx.Tests
             clientConverter.ToModel(dummyClient, serverEntry);
 
             // Assert
-            Assert.AreEqual(1, dummyClient.Dictionary.Count());
-            Assert.AreEqual("4.6", dummyClient.Dictionary["1"].Value);
-            Assert.AreEqual("ValueA", dummyClient.Dictionary["1"].Enum);
+            Assert.That(dummyClient.Dictionary.Count(), Is.EqualTo(1));
+            Assert.That(dummyClient.Dictionary["1"].Value, Is.EqualTo("4.6"));
+            Assert.That(dummyClient.Dictionary["1"].Enum, Is.EqualTo("ValueA"));
 
-            Assert.AreEqual(1, serverEntry.SubEntries[5].SubEntries.Count);
-            Assert.AreEqual("4.6", serverEntry.SubEntries[5].SubEntries[0].SubEntries[0].Value.Current);
-            Assert.AreEqual("ValueA", serverEntry.SubEntries[5].SubEntries[0].SubEntries[1].Value.Current);
+            Assert.That(serverEntry.SubEntries[5].SubEntries.Count, Is.EqualTo(1));
+            Assert.That(serverEntry.SubEntries[5].SubEntries[0].SubEntries[0].Value.Current, Is.EqualTo("4.6"));
+            Assert.That(serverEntry.SubEntries[5].SubEntries[0].SubEntries[1].Value.Current, Is.EqualTo("ValueA"));
         }
 
         private EntryModelDummyServer CreateDummyServer()

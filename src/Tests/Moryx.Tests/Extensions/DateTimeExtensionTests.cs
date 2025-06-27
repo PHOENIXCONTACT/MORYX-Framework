@@ -31,7 +31,7 @@ namespace Moryx.Tests.Extensions
         {
             var week = dateTime.WeekNumber();
 
-            Assert.AreEqual(week, result, "Week is not as expected!");
+            Assert.That(result, Is.EqualTo(week), "Week is not as expected!");
         }
 
         #endregion
@@ -139,17 +139,17 @@ namespace Moryx.Tests.Extensions
         {
             var numberOfWeeks = DateTimeExtensions.GetNumberOfCalendarWeeksForYear(year);
 
-            Assert.AreEqual(numberOfWeeks, resultWeeks);
+            Assert.That(resultWeeks, Is.EqualTo(numberOfWeeks));
         }
 
         #endregion
 
         private void AssertEqualDateTime(DateTime a, DateTime b)
         {
-            Assert.AreEqual(a.Day, b.Day);
-            Assert.AreEqual(a.Hour, b.Hour);
-            Assert.AreEqual(a.Minute, b.Minute);
-            Assert.AreEqual(a.Millisecond, b.Millisecond);
+            Assert.That(b.Day, Is.EqualTo(a.Day));
+            Assert.That(b.Hour, Is.EqualTo(a.Hour));
+            Assert.That(b.Minute, Is.EqualTo(a.Minute));
+            Assert.That(b.Millisecond, Is.EqualTo(a.Millisecond));
         }
     }
 }

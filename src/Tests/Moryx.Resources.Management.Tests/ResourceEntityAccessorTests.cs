@@ -45,11 +45,11 @@ namespace Moryx.Resources.Management.Tests
             var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as DefaultTestResource;
 
             // Assert
-            Assert.NotNull(resource);
-            Assert.AreEqual(accessor.Type, resource.GetType().ResourceType());
+            Assert.That(resource, Is.Not.Null);
+            Assert.That(resource.GetType().ResourceType(), Is.EqualTo(accessor.Type));
 
-            Assert.IsTrue(resource.Enabled);
-            Assert.AreEqual(42, resource.Number);
+            Assert.That(resource.Enabled);
+            Assert.That(resource.Number, Is.EqualTo(42));
         }
 
         [Test(Description = "Instantiates a resource")]
@@ -69,17 +69,17 @@ namespace Moryx.Resources.Management.Tests
             var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as TestResource;
 
             // Assert
-            Assert.NotNull(resource);
-            Assert.AreEqual(10, resource.Id);
-            Assert.AreEqual(accessor.Type, resource.GetType().ResourceType());
-            Assert.AreEqual(accessor.Name, resource.Name);
-            Assert.AreEqual(accessor.Description, resource.Description);
+            Assert.That(resource, Is.Not.Null);
+            Assert.That(resource.Id, Is.EqualTo(10));
+            Assert.That(resource.GetType().ResourceType(), Is.EqualTo(accessor.Type));
+            Assert.That(resource.Name, Is.EqualTo(accessor.Name));
+            Assert.That(resource.Description, Is.EqualTo(accessor.Description));
 
-            Assert.NotNull(resource.Data);
-            Assert.AreEqual(typeof(ExtensionDataInherited), resource.Data.GetType());
-            Assert.AreEqual(1, resource.Data.Value1);
-            Assert.AreEqual("MyVal", resource.Data.Value2);
-            Assert.AreEqual(42, ((ExtensionDataInherited)resource.Data).Value3);
+            Assert.That(resource.Data, Is.Not.Null);
+            Assert.That(resource.Data.GetType(), Is.EqualTo(typeof(ExtensionDataInherited)));
+            Assert.That(resource.Data.Value1, Is.EqualTo(1));
+            Assert.That(resource.Data.Value2, Is.EqualTo("MyVal"));
+            Assert.That(((ExtensionDataInherited)resource.Data).Value3, Is.EqualTo(42));
         }
 
         [TestCase(false, Description = "Updates an existing ResourceEntity")]
@@ -120,12 +120,12 @@ namespace Moryx.Resources.Management.Tests
             var resourceEntity = ResourceEntityAccessor.SaveToEntity(unitOfWorkMock.Object, resource);
 
             // Assert
-            Assert.NotNull(resourceEntity);
-            Assert.AreEqual(id, resourceEntity.Id);
-            Assert.AreEqual(type, resourceEntity.Type);
-            Assert.AreEqual(name, resourceEntity.Name);
-            Assert.AreEqual(description, resourceEntity.Description);
-            Assert.AreEqual(extensionDataJson, resourceEntity.ExtensionData);
+            Assert.That(resourceEntity, Is.Not.Null);
+            Assert.That(resourceEntity.Id, Is.EqualTo(id));
+            Assert.That(resourceEntity.Type, Is.EqualTo(type));
+            Assert.That(resourceEntity.Name, Is.EqualTo(name));
+            Assert.That(resourceEntity.Description, Is.EqualTo(description));
+            Assert.That(resourceEntity.ExtensionData, Is.EqualTo(extensionDataJson));
         }
 
         private class ExtensionDataTestBase

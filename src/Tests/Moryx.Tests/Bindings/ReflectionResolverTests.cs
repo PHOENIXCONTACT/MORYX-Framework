@@ -26,8 +26,8 @@ namespace Moryx.Tests.Bindings
             var result = reflectionResolver.Resolve(obj);
 
             // Assert
-            Assert.IsTrue(result is string);
-            Assert.AreEqual(str, (string)result);
+            Assert.That(result is string);
+            Assert.That(result, Is.EqualTo(str));
         }
 
         [Test]
@@ -43,8 +43,8 @@ namespace Moryx.Tests.Bindings
             var result = reflectionResolver.Update(obj, str);
 
             // Assert
-            Assert.IsTrue(result);
-            Assert.AreEqual(str, obj.SimpleString);
+            Assert.That(result);
+            Assert.That(obj.SimpleString, Is.EqualTo(str));
         }
 
         [Test]
@@ -60,8 +60,8 @@ namespace Moryx.Tests.Bindings
             var result = reflectionResolver.Update(obj, number);
 
             // Assert
-            Assert.IsTrue(result);
-            Assert.AreEqual(int.Parse(number), obj.SimpleInt);
+            Assert.That(result);
+            Assert.That(obj.SimpleInt, Is.EqualTo(int.Parse(number)));
         }
 
         [Test]
@@ -77,8 +77,8 @@ namespace Moryx.Tests.Bindings
             var result = reflectionResolver.Update(obj, value);
 
             // Assert
-            Assert.IsTrue(result);
-            Assert.AreEqual(value, Convert.ToDouble(obj.SimpleString));
+            Assert.That(result);
+            Assert.That(Convert.ToDouble(obj.SimpleString), Is.EqualTo(value));
         }
 
         [Test(Description = "Checks if the reflection resolver returns null by resolving an unknown property")]
@@ -92,7 +92,7 @@ namespace Moryx.Tests.Bindings
             var result = reflectionResolver.Resolve(obj);
 
             // Assert
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test(Description = "The error was that the reflection resolver throws an " +
@@ -115,7 +115,7 @@ namespace Moryx.Tests.Bindings
             });
 
             // Assert
-            Assert.NotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
     }
 }

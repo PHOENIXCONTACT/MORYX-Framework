@@ -26,7 +26,7 @@ namespace Moryx.Tests
             var entry = EntryConvert.InvokeMethod(_sut, NoParamsMethodEntry("InvocablePublic"));
             
             // Assert
-            Assert.Null(entry);
+            Assert.That(entry, Is.Null);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Moryx.Tests
             var entry = EntryConvert.InvokeMethod(_sut, NoParamsMethodEntry("InvocableInternal"));
 
             // Assert
-            Assert.Null(entry);
+            Assert.That(entry, Is.Null);
         }
 
         [Test]

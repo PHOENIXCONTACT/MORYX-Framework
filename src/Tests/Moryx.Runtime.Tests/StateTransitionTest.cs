@@ -33,14 +33,14 @@ namespace Moryx.Runtime.Tests
         public void StoppedToReady()
         {
             var casted = (IServerModule) _moduleUnderTest;
-            Assert.That(ServerModuleState.Stopped, Is.EqualTo(casted.State), "Module not in stopped state!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module not in stopped state!");
 
             // Call initialize
             casted.Initialize();
 
             // Validate result
-            Assert.That(InvokedMethod.Initialize, Is.EqualTo(_moduleUnderTest.LastInvoke), "Initialize was not called!");
-            Assert.That(ServerModuleState.Ready, Is.EqualTo(casted.State), "Module did not enter ready state!");
+            Assert.That(_moduleUnderTest.LastInvoke, Is.EqualTo(InvokedMethod.Initialize), "Initialize was not called!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Ready), "Module did not enter ready state!");
         }
 
         [Test]
@@ -48,14 +48,14 @@ namespace Moryx.Runtime.Tests
         {
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
-            Assert.That(ServerModuleState.Ready, Is.EqualTo(casted.State), "Module not in ready state!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Ready), "Module not in ready state!");
 
             // Call initialize
             casted.Start();
 
             // Validate result
-            Assert.That(InvokedMethod.Start, Is.EqualTo(_moduleUnderTest.LastInvoke), "Start was not called!");
-            Assert.That(ServerModuleState.Running, Is.EqualTo(casted.State), "Module did not enter running state!");
+            Assert.That(_moduleUnderTest.LastInvoke, Is.EqualTo(InvokedMethod.Start), "Start was not called!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Running), "Module did not enter running state!");
         }
 
         [Test]
@@ -64,14 +64,14 @@ namespace Moryx.Runtime.Tests
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
             casted.Start();
-            Assert.That(ServerModuleState.Running, Is.EqualTo(casted.State), "Module not in running state!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Running), "Module not in running state!");
 
             // Call initialize
             casted.Stop();
 
             // Validate result
-            Assert.That(InvokedMethod.Stop, Is.EqualTo(_moduleUnderTest.LastInvoke), "Stop was not called!");
-            Assert.That(ServerModuleState.Stopped, Is.EqualTo(casted.State), "Module did not enter stopped state!");
+            Assert.That(_moduleUnderTest.LastInvoke, Is.EqualTo(InvokedMethod.Stop), "Stop was not called!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module did not enter stopped state!");
         }
 
         [Test]
@@ -79,13 +79,13 @@ namespace Moryx.Runtime.Tests
         {
             _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             var casted = (IServerModule)_moduleUnderTest;
-            Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module not in stopped state!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module not in stopped state!");
 
             // Call initialize
             casted.Initialize();
 
             // Validate result
-            Assert.AreEqual(ServerModuleState.Failure, casted.State, "Module did not detect error!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Failure), "Module did not detect error!");
         }
 
         [Test]
@@ -94,13 +94,13 @@ namespace Moryx.Runtime.Tests
             var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
             _moduleUnderTest.CurrentMode = TestMode.MoryxException;
-            Assert.AreEqual(ServerModuleState.Ready, casted.State, "Module not in ready state!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Ready), "Module not in ready state!");
 
             // Call initialize
             casted.Start();
 
             // Validate result
-            Assert.AreEqual(ServerModuleState.Failure, casted.State, "Module did not detect error!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Failure), "Module did not detect error!");
         }
 
         [Test]
@@ -110,13 +110,13 @@ namespace Moryx.Runtime.Tests
             casted.Initialize();
             casted.Start();
             _moduleUnderTest.CurrentMode = TestMode.MoryxException;
-            Assert.AreEqual(ServerModuleState.Running, casted.State, "Module not in running state!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Running), "Module not in running state!");
 
             // Call initialize
             casted.Stop();
 
             // Validate result
-            Assert.AreEqual(ServerModuleState.Stopped, casted.State, "Module was not stopped!");
+            Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module was not stopped!");
         }
 
         [Test]

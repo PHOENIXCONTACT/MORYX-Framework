@@ -51,8 +51,8 @@ namespace Moryx.Resources.Management.Tests
             ResourceReferenceTools.InitializeCollections(resource);
 
             // Assert
-            Assert.NotNull(resource.References);
-            Assert.NotNull(resource.ChildReferences);
+            Assert.That(resource.References, Is.Not.Null);
+            Assert.That(resource.ChildReferences, Is.Not.Null);
         }
 
         [Test(Description = "Detect all collections flagged with 'AutoSave' on the test resource")]
@@ -64,7 +64,7 @@ namespace Moryx.Resources.Management.Tests
             // Act
             ResourceReferenceTools.InitializeCollections(resource);
             var autosave = ResourceReferenceTools.GetAutoSaveCollections(resource);
-            Assert.AreEqual(1, autosave.Count);
+            Assert.That(autosave.Count, Is.EqualTo(1));
 
             // Validate event raised on modification
             var overrideAutosave = autosave.First();
@@ -73,9 +73,9 @@ namespace Moryx.Resources.Management.Tests
             resource.ChildReferences.Add(new DerivedResource { Id = 42 });
 
             // Assert
-            Assert.NotNull(eventArgs);
-            Assert.AreEqual(resource, eventArgs.Parent);
-            Assert.AreEqual(nameof(Resource.Children), eventArgs.CollectionProperty.Name);
+            Assert.That(eventArgs, Is.Not.Null);
+            Assert.That(eventArgs.Parent, Is.EqualTo(resource));
+            Assert.That(eventArgs.CollectionProperty.Name, Is.EqualTo(nameof(Resource.Children)));
         }
 
         [Test(Description = "Fill all references of the test resource")]
@@ -107,12 +107,12 @@ namespace Moryx.Resources.Management.Tests
             _linker.LinkReferences(instance, relations);
 
             // Assert
-            Assert.NotNull(instance.Parent, "Parent reference not set");
-            Assert.NotNull(instance.Reference, "Named reference not set");
-            Assert.NotNull(instance.Reference2, "Type inferred reference not set");
-            Assert.AreEqual(4, instance.Children.Count, "Children not set");
-            Assert.AreEqual(4, instance.ChildReferences.Count, "Children override not set");
-            Assert.AreEqual(3, instance.References.Count, "Possible parts not set");
+            Assert.That(instance.Parent, Is.Not.Null, "Parent reference not set");
+            Assert.That(instance.Reference, Is.Not.Null, "Named reference not set");
+            Assert.That(instance.Reference2, Is.Not.Null, "Type inferred reference not set");
+            Assert.That(instance.Children.Count, Is.EqualTo(4), "Children not set");
+            Assert.That(instance.ChildReferences.Count, Is.EqualTo(4), "Children override not set");
+            Assert.That(instance.References.Count, Is.EqualTo(3), "Possible parts not set");
         }
 
         private ResourceRelationAccessor RelationAccessor(long id,
@@ -163,20 +163,20 @@ namespace Moryx.Resources.Management.Tests
                 // Resources were created
                 Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Exactly(2)), "Linker did not detect the new resources");
                 Assert.That(newResources, Has.Count.EqualTo(2));
-                Assert.That(newResource, Is.EqualTo(newResources[0]));
-                Assert.That(newCollectionResource, Is.EqualTo(newResources[1]));
+                Assert.That(newResources[0], Is.EqualTo(newResource));
+                Assert.That(newResources[1], Is.EqualTo(newCollectionResource));
                 // Resources properties were set
-                Assert.That(resource.SourceReference, Is.EqualTo(instance), "Backlink sync failed for a reference to an existing resource");
-                Assert.That(newResource.SourceReference, Is.EqualTo(instance), "Backlink sync failed for a reference to a new resource");
-                Assert.That(collectionResource.Parent, Is.EqualTo(instance), "Backlink sync failed for collection reference to a new resource");
-                Assert.That(newCollectionResource.Parent, Is.EqualTo(instance), "Backlink sync failed for a collection reference to a new resource");
+                Assert.That(instance, Is.EqualTo(resource.SourceReference), "Backlink sync failed for a reference to an existing resource");
+                Assert.That(instance, Is.EqualTo(newResource.SourceReference), "Backlink sync failed for a reference to a new resource");
+                Assert.That(instance, Is.EqualTo(collectionResource.Parent), "Backlink sync failed for collection reference to a new resource");
+                Assert.That(instance, Is.EqualTo(newCollectionResource.Parent), "Backlink sync failed for a collection reference to a new resource");
                 // Relations were created
                 Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.Extension), Times.Exactly(2)), "Linker did not create relations for references");
                 Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Exactly(2)), "Linker did not create relations for collection references");
-                Assert.That(relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).Count(), Is.EqualTo(2));
-                Assert.That(relations.Where(r => r.RelationType == (int)ResourceRelationType.Extension).Count(), Is.EqualTo(2));
+                Assert.That(2, Is.EqualTo(relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).Count()));
+                Assert.That(2, Is.EqualTo(relations.Where(r => r.RelationType == (int)ResourceRelationType.Extension).Count()));
                 // Relation sources and targets were set
-                Assert.That(relations.Where(r => r.Source.Id == instance.Id).Count(), Is.EqualTo(4));
+                Assert.That(4, Is.EqualTo(relations.Where(r => r.Source.Id == instance.Id).Count()));
                 Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == resource.Id));
                 Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == collectionResource.Id));
                 Assert.DoesNotThrow(() => relations.Single(r => r.Target.Name == newResource.Name));
@@ -236,9 +236,9 @@ namespace Moryx.Resources.Management.Tests
             var newResources = _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
-            Assert.AreEqual(1, newResources.Count);
-            Assert.AreEqual(ref3, newResources[0]);
-            Assert.IsTrue(ref5.Children.Contains(instance), "Backlink sync failed for parent ref5");
+            Assert.That(newResources.Count, Is.EqualTo(1));
+            Assert.That(newResources[0], Is.EqualTo(ref3));
+            Assert.That(ref5.Children.Contains(instance), "Backlink sync failed for parent ref5");
 
             Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Once), "Linker did not detect the new resource");
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangablePart), Times.Once), "Linker did not create relation for ref3 in References");
@@ -246,15 +246,15 @@ namespace Moryx.Resources.Management.Tests
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once), "Linker did not remove relation 1-3");
 
             var parentChild = relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).ToArray();
-            Assert.AreEqual(4, parentChild.Length);
+            Assert.That(parentChild.Length, Is.EqualTo(4));
             var currentPart = relations.Where(r => r.RelationType == (int)ResourceRelationType.CurrentExchangablePart).ToArray();
-            Assert.AreEqual(2, currentPart.Length);
-            Assert.AreEqual(1, currentPart.Count(r => r.Target.Id == 3));
-            Assert.AreEqual(1, currentPart.Count(r => r.Target.Id == 0));
+            Assert.That(currentPart.Length, Is.EqualTo(2));
+            Assert.That(currentPart.Count(r => r.Target.Id == 3), Is.EqualTo(1));
+            Assert.That(currentPart.Count(r => r.Target.Id == 0), Is.EqualTo(1));
             var possiblePart = relations.Where(r => r.RelationType == (int)ResourceRelationType.PossibleExchangablePart).ToArray();
-            Assert.AreEqual(2, possiblePart.Length);
-            Assert.AreEqual(1, possiblePart.Count(r => r.Target.Id == 2));
-            Assert.AreEqual(1, possiblePart.Count(r => r.Target.Id == 0));
+            Assert.That(possiblePart.Length, Is.EqualTo(2));
+            Assert.That(possiblePart.Count(r => r.Target.Id == 2), Is.EqualTo(1));
+            Assert.That(possiblePart.Count(r => r.Target.Id == 0), Is.EqualTo(1));
         }
 
         [Test(Description = "Multiple references of the same relation type should not interfere with each other")]
@@ -332,8 +332,8 @@ namespace Moryx.Resources.Management.Tests
             _linker.SaveReferences(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
 
             // Assert
-            Assert.IsTrue(parent.Children.Contains(child), "Child was not set");
-            Assert.AreEqual(parent, child.Parent, "Parent was not set");
+            Assert.That(parent.Children.Contains(child), "Child was not set");
+            Assert.That(child.Parent, Is.EqualTo(parent), "Parent was not set");
         }
 
         [Test(Description = "Extend children and make sure the parent is set")]
@@ -362,8 +362,8 @@ namespace Moryx.Resources.Management.Tests
             _linker.SaveReferences(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
 
             // Assert
-            Assert.IsFalse(parent.Children.Contains(child), "Child was not removed");
-            Assert.IsNull(child.Parent, "Parent was not cleared");
+            Assert.That(parent.Children.Contains(child), Is.False, "Child was not removed");
+            Assert.That(child.Parent, Is.Null, "Parent was not cleared");
         }
 
         [Test(Description = "Change parent and make sure children are updated")]
@@ -395,8 +395,8 @@ namespace Moryx.Resources.Management.Tests
             _linker.SaveReferences(mocks.Item1.Object, child, new ResourceEntity { Id = 3 });
 
             // Assert
-            Assert.IsFalse(parent1.Children.Contains(child), "Child was not removed");
-            Assert.IsTrue(parent2.Children.Contains(child), "Child was not set");
+            Assert.That(parent1.Children, Does.Not.Contain(child), "Child was not removed");
+            Assert.That(parent2.Children.Contains(child), "Child was not set");
         }
 
         [Test(Description = "A resource was deleted and should be removed from all resources referencing it")]
@@ -416,8 +416,8 @@ namespace Moryx.Resources.Management.Tests
             _linker.RemoveLinking(deletedRef, instance);
 
             // Assert
-            Assert.IsNull(instance.Reference2);
-            Assert.AreEqual(1, instance.References.Count);
+            Assert.That(instance.Reference2, Is.Null);
+            Assert.That(instance.References.Count, Is.EqualTo(1));
         }
 
         [TestCase(false, false, Description = "Validation should go through if both required properties are set")]

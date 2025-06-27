@@ -23,7 +23,7 @@ namespace Moryx.Tests.Bindings
             resolver.Update(foo, "Thomas");
 
             // Assert
-            Assert.AreEqual("Thomas", foo.Branch.Name);
+            Assert.That(foo.Branch.Name, Is.EqualTo("Thomas"));
         }
     }
 }

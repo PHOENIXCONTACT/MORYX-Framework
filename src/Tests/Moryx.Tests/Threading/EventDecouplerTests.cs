@@ -47,7 +47,7 @@ namespace Moryx.Tests.Threading
             SimpleEventSource -= _parallelOperations.RemoveListener(listener);
 
             // Assert
-            Assert.IsNull(SimpleEventSource);
+            Assert.That(SimpleEventSource, Is.Null);
         }
 
 
@@ -72,7 +72,7 @@ namespace Moryx.Tests.Threading
             }
 
             // Assert
-            Assert.AreEqual(EventArgs.Empty, _receivedArgument);
+            Assert.That(_receivedArgument, Is.EqualTo(EventArgs.Empty));
         }
 
         private void ArgumentlessTarget(object sender, EventArgs args)
@@ -102,7 +102,7 @@ namespace Moryx.Tests.Threading
             resetEvent.Set();
 
             // Assert
-            Assert.Greater(100, stopWatch.ElapsedMilliseconds);
+            Assert.That(stopWatch.ElapsedMilliseconds, Is.LessThan(100));
         }
 
         private void BlockingTarget(object sender, ManualResetEvent blockingEvent)
@@ -152,12 +152,12 @@ namespace Moryx.Tests.Threading
             // Assert
             if (targetHasLogger)
             {
-                Assert.IsNull(_message, "ParallelOperations should not use its own logger for logging components");
-                Assert.NotNull(target.Message.Item3, "Did not log the correct exception");
+                Assert.That(_message, Is.Null, "ParallelOperations should not use its own logger for logging components");
+                Assert.That(target.Message.Item3, Is.Not.Null, "Did not log the correct exception");
             }
             else
             {
-                Assert.NotNull(_message.Item3, "Did not log the correct exception");
+                Assert.That(_message.Item3, Is.Not.Null, "Did not log the correct exception");
             }
         }
 
@@ -206,7 +206,7 @@ namespace Moryx.Tests.Threading
 
             // Assert
             var expected = Enumerable.Range(1, index).Sum();
-            Assert.AreEqual(expected, _total, "Sums do not match");
+            Assert.That(_total, Is.EqualTo(expected), "Sums do not match");
         }
 
         private int _count;

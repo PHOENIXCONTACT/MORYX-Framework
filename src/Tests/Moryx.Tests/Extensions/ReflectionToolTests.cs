@@ -27,13 +27,13 @@ namespace Moryx.Tests.Extensions
         {
             Type[] result = ReflectionTool.GetPublicClasses(type);
 
-            Assert.AreEqual(5, result.Length, "Unexpected number of classes.");
+            Assert.That(result.Length, Is.EqualTo(5), "Unexpected number of classes.");
 
-            Assert.True(result.Contains(typeof(BaseClass)));
-            Assert.True(result.Contains(typeof(ChildClass1)));
-            Assert.True(result.Contains(typeof(ChildClass2)));
-            Assert.True(result.Contains(typeof(GranChildClass1)));
-            Assert.True(result.Contains(typeof(GranChildClass2)));
+            Assert.That(result, Does.Contain(typeof(BaseClass)));
+            Assert.That(result, Does.Contain(typeof(ChildClass1)));
+            Assert.That(result, Does.Contain(typeof(ChildClass2)));
+            Assert.That(result, Does.Contain(typeof(GranChildClass1)));
+            Assert.That(result, Does.Contain(typeof(GranChildClass2)));
         }
 
         [Test]
@@ -41,11 +41,11 @@ namespace Moryx.Tests.Extensions
         {
             Type[] result = ReflectionTool.GetPublicClasses<ChildClass1>();
 
-            Assert.AreEqual(3, result.Length, "Unexpected number of classes.");
+            Assert.That(result.Length, Is.EqualTo(3), "Unexpected number of classes.");
 
-            Assert.True(result.Contains(typeof(ChildClass1)));
-            Assert.True(result.Contains(typeof(GranChildClass1)));
-            Assert.True(result.Contains(typeof(GranChildClass2)));
+            Assert.That(result, Does.Contain(typeof(ChildClass1)));
+            Assert.That(result, Does.Contain(typeof(GranChildClass1)));
+            Assert.That(result, Does.Contain(typeof(GranChildClass2)));
         }
 
         [TestCase(typeof(ChildClass2))]
@@ -55,9 +55,9 @@ namespace Moryx.Tests.Extensions
         {
             Type[] result = ReflectionTool.GetPublicClasses(type);
 
-            Assert.AreEqual(1, result.Length, "Unexpected number of classes.");
+            Assert.That(result.Length, Is.EqualTo(1), "Unexpected number of classes.");
 
-            Assert.True(result.Contains(type));
+            Assert.That(result, Does.Contain(type));
         }
 
         [TestCase(typeof(BaseClass), Description = "Create constructor for the base type")]
@@ -74,9 +74,9 @@ namespace Moryx.Tests.Extensions
             var result2 = func2();
 
             // Assert
-            Assert.NotNull(result1);
-            Assert.NotNull(result2);
-            Assert.IsInstanceOf<BaseClass>(result1);
+            Assert.That(result1, Is.Not.Null);
+            Assert.That(result2, Is.Not.Null);
+            Assert.That(result1, Is.InstanceOf<BaseClass>());
         }
 
         [TestCase(true, Description = "Create TypeChecker including derived types")]
@@ -95,9 +95,9 @@ namespace Moryx.Tests.Extensions
             var isDerived = derivedTypeCheck(matchObject);
 
             // Assert
-            Assert.IsTrue(isSame, "Comparison for the same type must always return true");
-            Assert.IsFalse(different, "Comparison for incompatible types must return false");
-            Assert.AreEqual(derivedTypes, isDerived, "Comparison for derived types should only work if configured that way");
+            Assert.That(isSame, "Comparison for the same type must always return true");
+            Assert.That(different, Is.False, "Comparison for incompatible types must return false");
+            Assert.That(isDerived, Is.EqualTo(derivedTypes), "Comparison for derived types should only work if configured that way");
         }
 
         [Test(Description = "Create accessor to read and write custom property")]
@@ -127,12 +127,12 @@ namespace Moryx.Tests.Extensions
             accessor4.WriteProperty(child5, 42);
 
             // Assert
-            Assert.AreEqual(42, child0.Foo);
-            Assert.AreEqual(42, child1.Foo);
-            Assert.AreEqual(42, child2.Foo);
-            Assert.AreEqual(42, child3.Foo);
-            Assert.AreEqual(42, child4.Foo);
-            Assert.AreEqual(42, child5.Foo);
+            Assert.That(child0.Foo, Is.EqualTo(42));
+            Assert.That(child1.Foo, Is.EqualTo(42));
+            Assert.That(child2.Foo, Is.EqualTo(42));
+            Assert.That(child3.Foo, Is.EqualTo(42));
+            Assert.That(child4.Foo, Is.EqualTo(42));
+            Assert.That(child5.Foo, Is.EqualTo(42));
         }
 
         //[Test]
@@ -170,8 +170,8 @@ namespace Moryx.Tests.Extensions
             var accesor = stopWatch.ElapsedTicks;
 
             // Asser
-            Assert.AreEqual(child1.Foo, child2.Foo);
-            Assert.Less(accesor, reflection, "Accessor should be faster");
+            Assert.That(child2.Foo, Is.EqualTo(child1.Foo));
+            Assert.That(accesor, Is.LessThan(reflection), "Accessor should be faster");
         }
 
         [Test(Description = "Retreive all references of a certain type")]
@@ -194,7 +194,7 @@ namespace Moryx.Tests.Extensions
             var references = ReflectionTool.GetReferences<BaseClass>(target).ToArray();
 
             // Assert
-            Assert.AreEqual(6, references.Length, "Tool did not detect all references");
+            Assert.That(references.Length, Is.EqualTo(6), "Tool did not detect all references");
         }
 
         [Test(Description = "Return the object values of the properties")]
@@ -211,10 +211,10 @@ namespace Moryx.Tests.Extensions
             var references = ReflectionTool.GetReferences<ChildClass2>(target).ToArray();
 
             // Assert
-            Assert.AreEqual(2, references.Length, "Tool did not detect all references");
-            Assert.AreEqual(target.ChildRef, references[0].First(), "Tool did not return the reference");
-            Assert.AreEqual(target.Children2.First(), references.Skip(1).First().First(), "Tool did not return the reference");
-            Assert.AreEqual(target.Children2.Skip(1).First(), references.Skip(1).First().Skip(1).First(), "Tool did not return the reference");
+            Assert.That(references.Length, Is.EqualTo(2), "Tool did not detect all references");
+            Assert.That(references[0].First(), Is.EqualTo(target.ChildRef), "Tool did not return the reference");
+            Assert.That(target.Children2.First(), Is.EqualTo(references.Skip(1).First().First()), "Tool did not return the reference");
+            Assert.That(target.Children2.Skip(1).First(), Is.EqualTo(references.Skip(1).First().Skip(1).First()), "Tool did not return the reference");
         }
 
         [Test(Description = "ReflectionTool must handle null or empty properties")]
@@ -233,13 +233,13 @@ namespace Moryx.Tests.Extensions
             var nullRef = ReflectionTool.GetReferences<ChildClass2>(target).ToArray();
 
             // Assert
-            Assert.AreEqual(3, references.Length, "Tool did not detect all references");
-            Assert.AreEqual(0, references[0].Count());
-            Assert.AreEqual(0, references[1].Count());
-            Assert.AreEqual(0, references[2].Count());
-            Assert.AreEqual(2, nullRef.Length);
-            Assert.AreEqual(nameof(ReferenceClass.ChildRef), nullRef[0].Key.Name);
-            Assert.IsEmpty(nullRef[0]);
+            Assert.That(references.Length, Is.EqualTo(3), "Tool did not detect all references");
+            Assert.That(references[0].Count(), Is.EqualTo(0));
+            Assert.That(references[1].Count(), Is.EqualTo(0));
+            Assert.That(references[2].Count(), Is.EqualTo(0));
+            Assert.That(nullRef.Length, Is.EqualTo(2));
+            Assert.That(nullRef[0].Key.Name, Is.EqualTo(nameof(ReferenceClass.ChildRef)));
+            Assert.That(nullRef[0], Is.Empty);
         }
 
         [Test(Description = "ReflectionTool must handle null or empty properties")]
@@ -262,7 +262,7 @@ namespace Moryx.Tests.Extensions
             var references = ReflectionTool.GetReferences<BaseClass>(target, p => p.Name.StartsWith("Child")).ToArray();
 
             // Assert
-            Assert.AreEqual(3, references.Length, "Tool did not detect all references");
+            Assert.That(references.Length, Is.EqualTo(3), "Tool did not detect all references");
         }
     }
 }

@@ -71,21 +71,21 @@ namespace Moryx.Tests.Collections
 
             var changedItems = _collection.FlushModifications();
             
-            Assert.AreEqual(targetOrder, originItem.SortOrder);
+            Assert.That(originItem.SortOrder, Is.EqualTo(targetOrder));
 
             if (defaultIndex != targetIndex)
             {
-                Assert.True(changedItems.Contains(originItem), "Changed items does not contain the origin item");
-                Assert.True(changedItems.Contains(targetItem), "Changed items does not contain the target item");
+                Assert.That(changedItems.Contains(originItem), Is.True, "Changed items does not contain the origin item");
+                Assert.That(changedItems.Contains(targetItem), Is.True, "Changed items does not contain the target item");
             }
 
             if (defaultIndex == targetIndex)
             {
-                Assert.True(!changedItems.Any());
+                Assert.That(changedItems, Is.Empty);
             }
 
             var itemIndex = _collection.IndexOf(originItem);
-            Assert.AreEqual(targetIndex, itemIndex, "Item is not at the right position!");
+            Assert.That(itemIndex, Is.EqualTo(targetIndex), "Item is not at the right position!");
         }
 
         [TestCase(0, 1, 5, TestName = "Insert E before A")]
@@ -100,9 +100,9 @@ namespace Moryx.Tests.Collections
             _collection.InsertBefore(beforeItem, newItem);
             var changedItems = _collection.FlushModifications();
 
-            Assert.AreEqual(originTargetIndex, _collection.IndexOf(beforeItem));
-            Assert.AreEqual(changedItemsCount, changedItems.Count);
-            Assert.IsTrue(changedItems.Contains(newItem));
+            Assert.That(_collection.IndexOf(beforeItem), Is.EqualTo(originTargetIndex));
+            Assert.That(changedItems.Count, Is.EqualTo(changedItemsCount));
+            Assert.That(changedItems.Contains(newItem));
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace Moryx.Tests.Collections
 
             _collection.Add(newItem);
 
-            Assert.AreEqual(currentItems + 1, newItem.SortOrder);
+            Assert.That(newItem.SortOrder, Is.EqualTo(currentItems + 1));
         }
 
         [TestCase(0, 3)]
@@ -140,7 +140,7 @@ namespace Moryx.Tests.Collections
 
             var changedItems = _collection.FlushModifications();
 
-            Assert.AreEqual(changedItemsCount, changedItems.Count);
+            Assert.That(changedItems.Count, Is.EqualTo(changedItemsCount));
         }
     }
 }

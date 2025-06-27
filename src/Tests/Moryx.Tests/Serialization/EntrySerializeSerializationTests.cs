@@ -28,10 +28,10 @@ namespace Moryx.Tests
             var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(1, filteredProperties.Length);
+            Assert.That(filteredProperties.Length, Is.EqualTo(1));
 
             var alwaysProperty = sourceType.GetProperty(nameof(EntrySerialize_NotClassMixed.AlwaysProperty1));
-            Assert.AreEqual(alwaysProperty, filteredProperties[0], "Only the always property should be filtered.");
+            Assert.That(filteredProperties[0], Is.EqualTo(alwaysProperty), "Only the always property should be filtered.");
         }
 
         [Test(Description = "Attribute is not defined on class but mixed (always, never) on methods: Only always methods")]
@@ -44,10 +44,10 @@ namespace Moryx.Tests
             var filteredMethods = _serialization.GetMethods(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(1, filteredMethods.Length);
+            Assert.That(filteredMethods.Length, Is.EqualTo(1));
 
             var alwaysMethod = sourceType.GetMethod(nameof(EntrySerialize_NotClassMixed.AlwaysMethod1));
-            Assert.AreEqual(alwaysMethod, filteredMethods[0], "Only the always method should be filtered.");
+            Assert.That(filteredMethods[0], Is.EqualTo(alwaysMethod), "Only the always method should be filtered.");
         }
 
         [Test(Description = "Attribute is not defined on class nor on properties: Serialize all")]
@@ -60,7 +60,7 @@ namespace Moryx.Tests
             var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(2, filteredProperties.Length, "Some property was not filtered.");
+            Assert.That(filteredProperties.Length, Is.EqualTo(2), "Some property was not filtered.");
         }
 
         [Test(Description = "Attribute is not defined on class nor on methods: No methods")]
@@ -73,7 +73,7 @@ namespace Moryx.Tests
             var filteredMethods = _serialization.GetMethods(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(0, filteredMethods.Length, "No method should be filtered.");
+            Assert.That(filteredMethods.Length, Is.EqualTo(0), "No method should be filtered.");
         }
 
         [Test(Description = "Attribute is defined as 'Never' on class but not on any property: Serialize nothing")]
@@ -86,7 +86,7 @@ namespace Moryx.Tests
             var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(0, filteredProperties.Length, "No property should be selected.");
+            Assert.That(filteredProperties.Length, Is.EqualTo(0), "No property should be selected.");
         }
 
         [Test(Description = "Attribute is defined as 'Never' on class but not on any property: Serialize nothing")]
@@ -99,7 +99,7 @@ namespace Moryx.Tests
             var filteredMethods = _serialization.GetMethods(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(0, filteredMethods.Length, "No method should be filtered.");
+            Assert.That(filteredMethods.Length, Is.EqualTo(0), "No method should be filtered.");
         }
 
         [Test(Description = "Attribute is defined as 'Never' on class but 'Always' property: Only always properties")]
@@ -112,10 +112,10 @@ namespace Moryx.Tests
             var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(1, filteredProperties.Length);
+            Assert.That(filteredProperties.Length, Is.EqualTo(1));
 
             var alwaysProperty = sourceType.GetProperty(nameof(EntrySerialize_NeverClassAlwaysMember.AlwaysProperty1));
-            Assert.AreEqual(alwaysProperty, filteredProperties[0], "Only the always property should be filtered.");
+            Assert.That(filteredProperties[0], Is.EqualTo(alwaysProperty), "Only the always property should be filtered.");
         }
 
         [Test(Description = "Attribute is defined as 'Never' on class but 'Always' property: Only always methods")]
@@ -128,10 +128,10 @@ namespace Moryx.Tests
             var filteredMethods = _serialization.GetMethods(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(1, filteredMethods.Length);
+            Assert.That(filteredMethods.Length, Is.EqualTo(1));
 
             var alwaysMethod = sourceType.GetMethod(nameof(EntrySerialize_NeverClassAlwaysMember.AlwaysMethod1));
-            Assert.AreEqual(alwaysMethod, filteredMethods[0], "Only the always method should be filtered.");
+            Assert.That(filteredMethods[0], Is.EqualTo(alwaysMethod), "Only the always method should be filtered.");
         }
 
         [Test(Description = "Attribute is defined as 'Never' on base class: No property should be serialized")]
@@ -144,7 +144,7 @@ namespace Moryx.Tests
             var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(0, filteredProperties.Length);
+            Assert.That(filteredProperties.Length, Is.EqualTo(0));
         }
 
         [Test(Description = "Explicit properties are not filtered by default")]
@@ -157,7 +157,7 @@ namespace Moryx.Tests
             var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(2, filteredProperties.Length);
+            Assert.That(filteredProperties.Length, Is.EqualTo(2));
         }
 
         [Test(Description = "Explicit properties are filtered if enabled")]
@@ -171,10 +171,10 @@ namespace Moryx.Tests
             var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(1, filteredProperties.Length);
+            Assert.That(filteredProperties.Length, Is.EqualTo(1));
 
             var normalProperty = sourceType.GetProperty(nameof(EntrySerialize_Explicit.NormalProperty));
-            Assert.AreEqual(normalProperty, filteredProperties[0]);
+            Assert.That(filteredProperties[0], Is.EqualTo(normalProperty));
         }
 
         [Test(Description = "Properties of given base type are filtered by default")]
@@ -189,10 +189,10 @@ namespace Moryx.Tests
             var filteredProperties = _serialization.GetProperties(sourceType).ToArray();
 
             // Assert
-            Assert.AreEqual(1, filteredProperties.Length);
+            Assert.That(filteredProperties.Length, Is.EqualTo(1));
 
             var baseTypeProperty = sourceType.GetProperty(nameof(EntrySerialize_BaseType.Property1));
-            Assert.IsFalse(filteredProperties.Contains(baseTypeProperty));
+            Assert.That(filteredProperties, Does.Not.Contain(baseTypeProperty));
         }
     }
 }
