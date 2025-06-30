@@ -42,5 +42,11 @@ namespace Moryx.Tools.Wcf
         /// </summary>
         [DataMember]
         public bool HelpEnabled { get; set; }
+
+        /// <summary>
+        /// Determine if the endpoint should be local (127.0.0.1) only or not.
+        /// </summary>
+        [DataMember]
+        public bool LocalOnly { get; set; }
     }
 }

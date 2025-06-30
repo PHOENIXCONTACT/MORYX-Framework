@@ -58,7 +58,8 @@ namespace Moryx.Runtime.Wcf
             var hostConfig = new HostConfig
             {
                 Endpoint = "endpoints",
-                MetadataEnabled = true
+                MetadataEnabled = true,
+                BindingType = ServiceBindingType.WebHttps
             };
             host.Setup(typeof(IVersionService), hostConfig);
             host.Start();

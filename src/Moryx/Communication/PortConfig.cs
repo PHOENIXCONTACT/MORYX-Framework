@@ -32,6 +32,13 @@ namespace Moryx.Communication
         public int HttpPort { get; set; }
 
         /// <summary>
+        /// Port used for https services
+        /// </summary>
+        [DataMember]
+        [DefaultValue(443)]
+        public int HttpsPort { get; set; }
+
+        /// <summary>
         /// Port used for net tcp bindings
         /// </summary>
         [DataMember]
@@ -82,5 +89,11 @@ namespace Moryx.Communication
         /// </summary>
         [ReadOnly(true)]
         public string LoadError { get; set; }
+
+        /// <summary>
+        /// The Thumbprint of the used SSL Certificate for Https.
+        /// </summary>
+        [DataMember]
+        public string CertificateThumbprint { get; set; }
     }
 }

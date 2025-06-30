@@ -1,8 +1,11 @@
-// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Reflection;
+using System.Runtime.ConstrainedExecution;
+using System.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
@@ -58,6 +61,10 @@ namespace Moryx.Runtime.Wcf
                 case ServiceBindingType.NetTcp:
                     protocol = "net.tcp";
                     break;
+                case ServiceBindingType.BasicHttps:
+                case ServiceBindingType.WebHttps:
+                    protocol = "https";
+                    break;
                 default:
                     protocol = "http";
                     break;
@@ -78,6 +85,10 @@ namespace Moryx.Runtime.Wcf
                 case ServiceBindingType.BasicHttp: binding = BindingFactory.CreateBasicHttpBinding(config.RequiresAuthentification);
                     break;
                 case ServiceBindingType.NetTcp: binding = BindingFactory.CreateNetTcpBinding(config.RequiresAuthentification);
+                    break;
+                case ServiceBindingType.WebHttps: binding = BindingFactory.CreateWebHttpsBinding();
+                    break;
+                case ServiceBindingType.BasicHttps: binding = BindingFactory.CreateBasicHttpsBinding(config.RequiresAuthentification);
                     break;
                 default: binding = BindingFactory.CreateWebHttpBinding();
                     break;
@@ -101,7 +112,23 @@ namespace Moryx.Runtime.Wcf
                 : TimeSpan.MaxValue;
 
             // Create endpoint address from config
-            var port = config.BindingType == ServiceBindingType.NetTcp ? _portConfig.NetTcpPort : _portConfig.HttpPort;
+            //var port = config.BindingType == ServiceBindingType.NetTcp ? _portConfig.NetTcpPort : _portConfig.HttpPort;
+            var port = 0;
+
+            switch (config.BindingType)
+            {
+                case ServiceBindingType.NetTcp:
+                    port = _portConfig.NetTcpPort;
+                    break;
+                case ServiceBindingType.BasicHttps:
+                case ServiceBindingType.WebHttps:
+                    port = _portConfig.HttpsPort;
+                    break;
+                case ServiceBindingType.BasicHttp:
+                default:
+                    port = _portConfig.HttpPort;
+                    break;
+            }
 
             // Override binding timeouts if necessary
             if (config is ExtendedHostConfig extendedConfig && extendedConfig.OverrideFrameworkConfig)
@@ -125,14 +152,17 @@ namespace Moryx.Runtime.Wcf
                     : TimeSpan.MaxValue;
             }
 
-            _endpointAddress = $"{protocol}://{_portConfig.Host}:{port}/{config.Endpoint}/";
+            // Configuration if the endpoint should be only local available (Example Maintenance only works on server and not from everywhere)
+            string host = config.LocalOnly ? "127.0.0.1" : _portConfig.Host;
+
+            _endpointAddress = $"{protocol}://{host}:{port}/{config.Endpoint}/";
 
             var endpoint = _service.AddServiceEndpoint(contract, binding, _endpointAddress);
 
             // Add  behaviors
             endpoint.Behaviors.Add(new CultureBehavior());
 
-            if (config.BindingType == ServiceBindingType.WebHttp)
+            if (config.BindingType == ServiceBindingType.WebHttp | config.BindingType == ServiceBindingType.WebHttps)
             {
                 endpoint.Behaviors.Add(new WebHttpBehavior());
                 endpoint.Behaviors.Add(new CorsBehaviorAttribute());
@@ -140,20 +170,84 @@ namespace Moryx.Runtime.Wcf
 
             if (config.MetadataEnabled)
             {
-                var serviceMetadataBehavior = new ServiceMetadataBehavior
+                if (config.BindingType == ServiceBindingType.WebHttps | config.BindingType == ServiceBindingType.BasicHttps)
                 {
-                    HttpGetEnabled = true,
-                    HttpGetUrl = new Uri($"http://{_portConfig.Host}:{_portConfig.HttpPort}/Metadata/{config.Endpoint}")
-                };
-                _service.Description.Behaviors.Add(serviceMetadataBehavior);
+                    var serviceMetadataBehavior = new ServiceMetadataBehavior
+                    {
+                        HttpsGetEnabled = true,
+                        HttpsGetUrl =
+                            new Uri($"https://{host}:{_portConfig.HttpsPort}/Metadata/{config.Endpoint}")
+                    };
+                    _service.Description.Behaviors.Add(serviceMetadataBehavior);
+                }
+                else
+                {
+                    var serviceMetadataBehavior = new ServiceMetadataBehavior
+                    {
+                        HttpGetEnabled = true,
+                        HttpGetUrl =
+                            new Uri($"http://{host}:{_portConfig.HttpPort}/Metadata/{config.Endpoint}")
+                    };
+                    _service.Description.Behaviors.Add(serviceMetadataBehavior);
+                }
             }
 
             if (config.HelpEnabled)
             {
-                var serviceDebugBehavior = _service.Description.Behaviors.Find<ServiceDebugBehavior>();
-                serviceDebugBehavior.IncludeExceptionDetailInFaults = true;
-                serviceDebugBehavior.HttpHelpPageEnabled = true;
-                serviceDebugBehavior.HttpHelpPageUrl = new Uri($"http://{_portConfig.Host}:{_portConfig.HttpPort}/Help/{config.Endpoint}");
+                if (config.BindingType == ServiceBindingType.WebHttps | config.BindingType == ServiceBindingType.BasicHttps)
+                {
+                    var serviceDebugBehavior = _service.Description.Behaviors.Find<ServiceDebugBehavior>();
+                    serviceDebugBehavior.IncludeExceptionDetailInFaults = true;
+                    serviceDebugBehavior.HttpsHelpPageEnabled = true;
+                    serviceDebugBehavior.HttpsHelpPageUrl = new Uri($"https://{host}:{_portConfig.HttpsPort}/Help/{config.Endpoint}");
+                }
+                else
+                {
+                    var serviceDebugBehavior = _service.Description.Behaviors.Find<ServiceDebugBehavior>();
+                    serviceDebugBehavior.IncludeExceptionDetailInFaults = true;
+                    serviceDebugBehavior.HttpHelpPageEnabled = true;
+                    serviceDebugBehavior.HttpHelpPageUrl = new Uri($"http://{host}:{_portConfig.HttpPort}/Help/{config.Endpoint}");
+                }
+            }
+
+            if (config.BindingType == ServiceBindingType.WebHttps | config.BindingType == ServiceBindingType.BasicHttps)
+            {
+                if (string.IsNullOrEmpty(_portConfig.CertificateThumbprint))
+                {
+                    _logger?.Log(LogLevel.Error, $"Certificate: A Certificate Thumbprint is needed but it was not set in the config.");
+                    return;
+                }
+                X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+                store.Open(OpenFlags.ReadOnly);
+                
+                // Zertifikat finden (z.B. anhand des Betreffs)
+                X509Certificate2 certificate = null;
+                foreach (var cert in store.Certificates)
+                {
+                    if (string.IsNullOrEmpty(cert.Thumbprint))
+                    {
+                        _logger?.Log(LogLevel.Trace, $"Certificate: thumbprint was empty for cert: {cert.SubjectName.Name}");
+                        continue;
+                    }
+
+                    if (cert.Thumbprint.Equals(_portConfig.CertificateThumbprint.ToUpper()))
+                    {
+                        certificate = cert;
+                        _logger?.Log(LogLevel.Trace, "Certificate: Found one with name " + _portConfig.CertificateThumbprint);
+                        break;
+                    }
+                }
+
+                store.Close();
+
+                if (certificate == null)
+                {
+                    _logger?.Log(LogLevel.Error,$"Certificate with thumbprint {_portConfig.CertificateThumbprint} was not found on local machine.");
+                    return;
+                }
+                
+                _service.Credentials.ServiceCertificate.SetCertificate(StoreLocation.LocalMachine, StoreName.My, X509FindType.FindByThumbprint, _portConfig.CertificateThumbprint.ToUpper());
+                
             }
 
             _hostConfig = config;

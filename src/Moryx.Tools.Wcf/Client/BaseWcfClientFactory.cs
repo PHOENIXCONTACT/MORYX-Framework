@@ -658,6 +658,7 @@ namespace Moryx.Tools.Wcf
 
             // Add callback context if the service is an net.tcp service
             var bindingType = serviceConfiguration?.Binding ?? monitoredClientConfig?.BindingType ?? ServiceBindingType.BasicHttp;
+
             if (bindingType == ServiceBindingType.NetTcp && monitoredClient.CallbackService != null)
             {
                 if (monitoredClient.ClientType.GetConstructor(new[] {typeof(InstanceContext), typeof(Binding), typeof(EndpointAddress)}) == null)
@@ -730,7 +731,21 @@ namespace Moryx.Tools.Wcf
                 return new EndpointAddress(serviceConfig.Address);
 
             //Set binding type for the uri
-            var bindingType = clientConfig.BindingType == ServiceBindingType.NetTcp ? "net.tcp" : "http";
+            //var bindingType = clientConfig.BindingType == ServiceBindingType.NetTcp ? "net.tcp" : "http";
+            string bindingType;
+            switch (clientConfig.BindingType)
+            {
+                case ServiceBindingType.NetTcp:
+                    bindingType = "net.tcp";
+                    break;
+                case ServiceBindingType.BasicHttps:
+                case ServiceBindingType.WebHttps:
+                    bindingType = "https";
+                    break;
+                default:
+                    bindingType = "http";
+                    break;
+            }
 
             //Set host. Use host from configuration, and if not set, than use host from factory config
             var host = string.IsNullOrEmpty(clientConfig.Host) ? _factoryConfig.Host : clientConfig.Host;
