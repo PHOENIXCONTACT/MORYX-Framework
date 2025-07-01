@@ -1,19 +1,15 @@
-- name: Documentation
-  href: articles/
+- name: Overview
+  href: index.md
 
 - name: User Manual
   href: manual/
-
-- name: Tutorials
-  href: tutorials/
 
 - name: Developer
   href: articles/
 
 - name: Migrations
   href: migrations/
-  homepage: migrations/index.md
-
+  
 - name: API
   href: api/
   homepage: api/index.md

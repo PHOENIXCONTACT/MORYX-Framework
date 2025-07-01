@@ -1,0 +1,13 @@
+- name: Resources
+  items: 
+    - name: Assembly Instruction
+      href: AssemblyInstruction.md
+
+    - name: Commissioning Resource
+      href: CommissioningResource.md
+
+    - name: Visual Instructions
+      href: VisualInstructions.md
+
+    - name: Process Holding
+      href: ProcessHolders.md
