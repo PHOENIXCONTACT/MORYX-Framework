@@ -12,12 +12,11 @@
     <PackageReference Include="NUnit" />
     <PackageReference Include="Moq" />
 	<PackageReference Include="NUnit3TestAdapter" />
-
-    <PackageReference Include="Moryx.TestTools.UnitTest" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.ProcessData\Moryx.ProcessData.csproj" />
+    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
   </ItemGroup>
 
 </Project>

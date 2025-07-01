@@ -18,6 +18,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtime", "Runtime", "{7DCDBDA5-4163-41EA-B24E-9316DFB9F354}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{10B4B5A2-3914-48B9-9304-C31338A6D980}"
+	ProjectSection(SolutionItems) = preProject
+		src\Tests\Directory.Build.props = src\Tests\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestTools", "TestTools", "{953AAE25-26C8-4A28-AB08-61BAFE41B22F}"
 EndProject
@@ -151,6 +154,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Simulation", "src\Moryx.Simulation\Moryx.Simulation.csproj", "{61E04D4E-A5CC-46BE-A75A-54047C9C506D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Users", "src\Moryx.Users\Moryx.Users.csproj", "{D43E59E4-7E68-4F3E-AB4F-6DC91CD2937D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.Tests", "src\Tests\Moryx.ControlSystem.Tests\Moryx.ControlSystem.Tests.csproj", "{F5C2E437-E4F6-4F05-A602-E4CB1AD703AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ProcessData.Tests", "src\Tests\Moryx.ProcessData.Tests\Moryx.ProcessData.Tests.csproj", "{AD19999E-0D04-43BC-8781-1D0F05B0C38D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -386,6 +393,14 @@ Global
 		{D43E59E4-7E68-4F3E-AB4F-6DC91CD2937D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D43E59E4-7E68-4F3E-AB4F-6DC91CD2937D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D43E59E4-7E68-4F3E-AB4F-6DC91CD2937D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5C2E437-E4F6-4F05-A602-E4CB1AD703AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5C2E437-E4F6-4F05-A602-E4CB1AD703AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5C2E437-E4F6-4F05-A602-E4CB1AD703AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5C2E437-E4F6-4F05-A602-E4CB1AD703AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD19999E-0D04-43BC-8781-1D0F05B0C38D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD19999E-0D04-43BC-8781-1D0F05B0C38D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD19999E-0D04-43BC-8781-1D0F05B0C38D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD19999E-0D04-43BC-8781-1D0F05B0C38D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -443,6 +458,8 @@ Global
 		{26AA1F0D-C667-4070-8464-C0B3BBA59F4D} = {893AA1C8-0FF6-4A47-B79D-E72059F93118}
 		{61E04D4E-A5CC-46BE-A75A-54047C9C506D} = {893AA1C8-0FF6-4A47-B79D-E72059F93118}
 		{D43E59E4-7E68-4F3E-AB4F-6DC91CD2937D} = {893AA1C8-0FF6-4A47-B79D-E72059F93118}
+		{F5C2E437-E4F6-4F05-A602-E4CB1AD703AE} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
+		{AD19999E-0D04-43BC-8781-1D0F05B0C38D} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		

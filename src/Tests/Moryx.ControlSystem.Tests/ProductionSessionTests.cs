@@ -18,8 +18,8 @@ namespace Moryx.ControlSystem.Tests
         {
             var readyToWork = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull, 1);
 
-            Assert.IsTrue(readyToWork.Reference.HasReference);
-            Assert.IsFalse(readyToWork.Reference.IsEmpty);
+            Assert.That(readyToWork.Reference.HasReference, Is.True);
+            Assert.That(readyToWork.Reference.IsEmpty, Is.False);
         }
 
         [Test]
@@ -27,8 +27,8 @@ namespace Moryx.ControlSystem.Tests
         {
             var readyToWork = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull);
 
-            Assert.IsFalse(readyToWork.Reference.HasReference);
-            Assert.IsTrue(readyToWork.Reference.IsEmpty);
+            Assert.That(readyToWork.Reference.HasReference, Is.False);
+            Assert.That(readyToWork.Reference.IsEmpty, Is.True);
         }
 
         [TestCase(ReadyToWorkType.Pull)]
@@ -37,8 +37,8 @@ namespace Moryx.ControlSystem.Tests
         {
             var readyToWork = Session.StartSession(ActivityClassification.Production, readyToWorkType, 4242);
 
-            Assert.AreEqual(ProcessReference.ProcessId(4242), readyToWork.Reference);
-            Assert.AreEqual(readyToWorkType, readyToWork.ReadyToWorkType);
+            Assert.That(readyToWork.Reference, Is.EqualTo(ProcessReference.ProcessId(4242)));
+            Assert.That(readyToWork.ReadyToWorkType, Is.EqualTo(readyToWorkType));
         }
 
         [Test]
@@ -48,9 +48,9 @@ namespace Moryx.ControlSystem.Tests
 
             var activityStart = readyToWork.StartActivity(new DummyActivity { Process = new Process { Id = 4242 } });
 
-            Assert.AreEqual(readyToWork.Reference, activityStart.Reference);
-            Assert.AreEqual(readyToWork.Id, activityStart.Id);
-            Assert.AreNotEqual(readyToWork.Process, activityStart.Process); // Make sure process is not populated back to RTW
+            Assert.That(activityStart.Reference, Is.EqualTo(readyToWork.Reference));
+            Assert.That(activityStart.Id, Is.EqualTo(readyToWork.Id));
+            Assert.That(readyToWork.Process, Is.Not.EqualTo(activityStart.Process)); // Make sure process is not populated back to RTW
         }
 
         [Test]
@@ -60,8 +60,8 @@ namespace Moryx.ControlSystem.Tests
 
             var notReadyToWork = readyToWork.PauseSession();
 
-            Assert.AreEqual(readyToWork.Reference, notReadyToWork.Reference);
-            Assert.AreEqual(readyToWork.Id, notReadyToWork.Id);
+            Assert.That(notReadyToWork.Reference, Is.EqualTo(readyToWork.Reference));
+            Assert.That(notReadyToWork.Id, Is.EqualTo(readyToWork.Id));
         }
 
         [TestCase(ReadyToWorkType.Pull)]
@@ -74,8 +74,8 @@ namespace Moryx.ControlSystem.Tests
 
             var readyToWork2 = notReadyToWork.ResumeSession();
 
-            Assert.AreEqual(readyToWork2.Reference, notReadyToWork.Reference);
-            Assert.AreEqual(readyToWork2.Id, notReadyToWork.Id);
+            Assert.That(notReadyToWork.Reference, Is.EqualTo(readyToWork2.Reference));
+            Assert.That(notReadyToWork.Id, Is.EqualTo(readyToWork2.Id));
         }
 
         [Test]
@@ -88,8 +88,8 @@ namespace Moryx.ControlSystem.Tests
 
             var activityCompleted = activityStart.CreateResult();
 
-            Assert.AreEqual(readyToWork.Reference, activityCompleted.Reference);
-            Assert.AreEqual(readyToWork.Id, activityCompleted.Id);
+            Assert.That(activityCompleted.Reference, Is.EqualTo(readyToWork.Reference));
+            Assert.That(activityCompleted.Id, Is.EqualTo(readyToWork.Id));
         }
 
         [Test]
@@ -104,8 +104,8 @@ namespace Moryx.ControlSystem.Tests
 
             var sequenceCompleted = activityCompleted.CompleteSequence(activityStart.Process, true);
 
-            Assert.AreEqual(readyToWork.Reference, sequenceCompleted.Reference);
-            Assert.AreEqual(readyToWork.Id, sequenceCompleted.Id);
+            Assert.That(sequenceCompleted.Reference, Is.EqualTo(readyToWork.Reference));
+            Assert.That(sequenceCompleted.Id, Is.EqualTo(readyToWork.Id));
         }
 
         [Test]
@@ -133,10 +133,10 @@ namespace Moryx.ControlSystem.Tests
 
             var readyToWork2 = sequenceCompleted.ContinueSession();
 
-            Assert.AreEqual(readyToWork.Reference, readyToWork2.Reference);
-            Assert.AreEqual(readyToWork.Id, readyToWork2.Id);
-            Assert.AreEqual(readyToWorkType, readyToWork.ReadyToWorkType);
-            Assert.AreEqual(ReadyToWorkType.Pull, readyToWork2.ReadyToWorkType);
+            Assert.That(readyToWork2.Reference, Is.EqualTo(readyToWork.Reference));
+            Assert.That(readyToWork2.Id, Is.EqualTo(readyToWork.Id));
+            Assert.That(readyToWork.ReadyToWorkType, Is.EqualTo(readyToWorkType));
+            Assert.That(readyToWork2.ReadyToWorkType, Is.EqualTo(ReadyToWorkType.Pull));
         }
 
         [Test]

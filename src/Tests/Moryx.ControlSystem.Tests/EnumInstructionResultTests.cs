@@ -25,8 +25,8 @@ namespace Moryx.ControlSystem.Tests
             var possibleResults = EnumInstructionResult.PossibleInstructionResults(typeof(TestResults1));
 
             // Assert
-            Assert.AreEqual(2, instructionResult.Count(), "There should be 2 results because all of the results are not decorated");
-            Assert.AreEqual(2, possibleResults.Count(), "There should be 2 results because all of the results are not decorated");
+            Assert.That(instructionResult.Count(), Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
+            Assert.That(possibleResults.Count(), Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
         }
 
         private enum TestResults2
@@ -44,7 +44,7 @@ namespace Moryx.ControlSystem.Tests
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults2));
 
             // Assert
-            Assert.AreEqual(2, instructionResult.Count, "There should be 2 results because all of the results are decorated");
+            Assert.That(instructionResult.Count, Is.EqualTo(2), "There should be 2 results because all of the results are decorated");
         }
 
         private enum TestResults3
@@ -61,7 +61,7 @@ namespace Moryx.ControlSystem.Tests
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults3));
 
             // Assert
-            Assert.AreEqual(1, instructionResult.Count, "There should be 1 result because only one value is decorated");
+            Assert.That(instructionResult.Count, Is.EqualTo(1), "There should be 1 result because only one value is decorated");
         }
 
         private enum TestResults4
@@ -78,7 +78,7 @@ namespace Moryx.ControlSystem.Tests
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults4));
 
             // Assert
-            Assert.AreEqual(1, instructionResult.Count, "There should be one result, the non-decorated non-hidden enum value");
+            Assert.That(instructionResult.Count, Is.EqualTo(1), "There should be one result, the non-decorated non-hidden enum value");
         }
 
         private enum TestResults5
@@ -96,7 +96,7 @@ namespace Moryx.ControlSystem.Tests
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults5));
 
             // Assert
-            Assert.AreEqual(0, instructionResult.Count, "There should be no results because all of them are hidden");
+            Assert.That(instructionResult.Count, Is.EqualTo(0), "There should be no results because all of them are hidden");
         }
 
         [Test]
@@ -111,8 +111,8 @@ namespace Moryx.ControlSystem.Tests
             var directValue = EnumInstructionResult.ResultToGenericEnumValue<TestResults1>(instructionResult[1]);
 
             // Assert
-            Assert.AreEqual(TestResults1.Value2, enumValue);
-            Assert.AreEqual(TestResults1.Value2, directValue);
+            Assert.That(enumValue, Is.EqualTo(TestResults1.Value2));
+            Assert.That(directValue, Is.EqualTo(TestResults1.Value2));
         }
 
         private class MyInput
@@ -135,8 +135,8 @@ namespace Moryx.ControlSystem.Tests
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults6));
 
             // Assert
-            Assert.AreEqual(1, instructionResult.Count(), "There should be two results, because one does not have the EnumInstruction attribute");
-            Assert.AreEqual("Value 1", instructionResult[0].DisplayValue);
+            Assert.That(instructionResult.Count(), Is.EqualTo(1), "There should be two results, because one does not have the EnumInstruction attribute");
+            Assert.That(instructionResult[0].DisplayValue, Is.EqualTo("Value 1"));
         }
     }
 }

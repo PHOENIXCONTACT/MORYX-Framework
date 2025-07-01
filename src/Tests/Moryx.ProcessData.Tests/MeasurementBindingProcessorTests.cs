@@ -44,15 +44,15 @@ namespace Moryx.ProcessData.Tests
             processor.Apply(someMeasurement, new object());
 
             // Assert
-            Assert.AreEqual(1, someMeasurement.Fields.Count);
+            Assert.That(someMeasurement.Fields.Count, Is.EqualTo(1));
             var field = someMeasurement.Fields[0];
-            Assert.AreEqual(field.Name, "propA");
-            Assert.AreEqual(field.Value, valuePropA);
+            Assert.That("propA", Is.EqualTo(field.Name));
+            Assert.That(valuePropA, Is.EqualTo(field.Value));
 
-            Assert.AreEqual(1, someMeasurement.Tags.Count);
+            Assert.That(someMeasurement.Tags.Count, Is.EqualTo(1));
             var tag = someMeasurement.Tags[0];
-            Assert.AreEqual(tag.Name, "propB");
-            Assert.AreEqual(tag.Value, valuePropB);
+            Assert.That("propB", Is.EqualTo(tag.Name));
+            Assert.That(valuePropB, Is.EqualTo(tag.Value));
         }
 
         private static IEnumerable<MeasurementBinding> CreateBindingConfiguration()

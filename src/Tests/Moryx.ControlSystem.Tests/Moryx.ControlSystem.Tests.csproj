@@ -12,12 +12,11 @@
     <PackageReference Include="NUnit" />
 	<PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Moq" />
-
-    <PackageReference Include="Moryx.AbstractionLayer.TestTools" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
   </ItemGroup>
 
 </Project>
