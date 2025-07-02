@@ -1,0 +1,43 @@
+@use "@moryx/ngx-web-framework/styles/theme" as *;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+app-root {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.has {
+  &-background {
+    &-secondary {
+      background-color: $accent !important;
+    }
+    &-success {
+      background-color: $success !important;
+    }
+    &-Info {
+      background-color: $info !important;
+    }
+    &-Warning {
+      background-color: $warning !important;
+    }
+    &-Error {
+      background-color: $danger !important;
+    }
+    &-Fatal {
+      background-color: $fatal !important;
+    }
+  }
+  &-text-secondary {
+    color: $accent !important;
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "APP": {
+      "NOTIFICATIONS": "Benachrichtigungen",
+      "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal.",
+      "EMPTY_STATE_HEADER": "Keine Benachrichtigungen",
+      "EMPTY_STATE_TEXT": "Zurzeit erfordert kein Anliegen deine Aufmerksamkeit."
+    },
+    "DETAILS": {
+      "ACKNOWLEDGE": "BESTÄTIGEN"
+    },    
+    "DISMISS": "OKAY",
+    "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+    "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen."
+  }
+

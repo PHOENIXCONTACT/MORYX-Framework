@@ -1,0 +1,37 @@
+{
+  "PROCESSES": {
+    "TITLE": "Processi",
+    "ACTIVITIES": "Attività",
+    "ACTIVITY_DETAILS": "Dettagli attività",
+    "STARTED": "Avviato",
+    "COMPLETED": "Completato",
+    "CAPABILITIES": "Funzionalità",
+    "RESOURCE": "Risorsa",
+    "POSSIBLE_RESOURCES": "Possibili risorse",
+    "ARTICLE_ID": "Id articolo",
+    "ERROR_CODE": "Codice di errore",
+    "TEXT": "Testo",
+    "SHOW_ALL_PROCESSES": "Mostra tutti i processi"
+  },
+  "JOBS": {
+    "ORDER": "Ordine",
+    "OPERATION": "Operazione",
+    "ID": "Id",
+    "STATE": "Stato",
+    "AMOUNT": "Quantità",
+    "PRODUCT": "Prodotto",
+    "RUNNING": "In esecuzione",
+    "WORKPLAN": "Piano di lavoro",
+    "SUCCESS": "Successo",
+    "REWORKED": "Rielaborato",
+    "FAILED": "Fallito",
+    "COMPLETE": "COMPLETO",
+    "ABORT": "INTERROMPI",
+    "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi.",
+    "EMPTY_STATE_HEADER": "Nessun processo attivo",
+    "EMPTY_STATE_TEXT": "Avviate una produzione e i suoi processi saranno visualizzati qui."
+  },
+  "DISMISS": "RIFIUTARE",
+  "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
+  "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione a Internet o le impostazioni del proxy."
+}

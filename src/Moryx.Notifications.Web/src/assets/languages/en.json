@@ -1,0 +1,14 @@
+{
+  "APP": {
+    "NOTIFICATIONS": "Notifications",
+    "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later.",
+    "EMPTY_STATE_HEADER": "No pending Notifications",
+    "EMPTY_STATE_TEXT": "Nothing requires your attention here currently."
+  },
+  "DETAILS": {
+    "ACKNOWLEDGE": "ACKNOWLEDGE"
+  },
+  "DISMISS": "DISMISS",
+  "DEFAULT_MESSAGE": "Something went wrong on the server.",
+  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings."
+}

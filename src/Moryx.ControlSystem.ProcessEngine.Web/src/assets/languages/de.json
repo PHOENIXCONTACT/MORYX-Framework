@@ -1,0 +1,37 @@
+{
+    "PROCESSES": {
+      "TITLE": "Prozesse",
+      "ACTIVITIES": "Aktivitäten",
+      "ACTIVITY_DETAILS": "Details zur Aktivität",
+      "STARTED": "Gestartet",
+      "COMPLETED": "Fertiggestellt",
+      "CAPABILITIES": "Fähigkeiten",
+      "RESOURCE": "Ressource",
+      "POSSIBLE_RESOURCES": "Mögliche Ressourcen",
+      "ARTICLE_ID": "Artikel-ID",
+      "ERROR_CODE": "Fehlercode",
+      "TEXT": "Text",
+      "SHOW_ALL_PROCESSES": "Alle Prozesse anzeigen"
+    },
+    "JOBS": {
+      "ORDER": "Auftrag",
+      "OPERATION": "Vorgang",
+      "ID": "Id",
+      "STATE": "Status",
+      "AMOUNT": "Menge",
+      "PRODUCT": "Produkt",
+      "RUNNING": "Laufend",
+      "WORKPLAN": "Arbeitsplan",
+      "SUCCESS": "Gutteil",
+      "REWORKED": "Überarbeitet",
+      "FAILED": "Fehlgeschlagen",
+      "COMPLETE": "FERTIG",
+      "ABORT": "ABBRECHEN",
+      "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal.",
+      "EMPTY_STATE_HEADER": "Keine aktiven Prozesse",
+      "EMPTY_STATE_TEXT": "Starte eine Produktion und die Prozesse werden hier angezeigt."
+    },
+    "DISMISS": "OKAY",
+    "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+    "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen."
+  }

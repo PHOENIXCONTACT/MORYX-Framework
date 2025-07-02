@@ -1,0 +1,67 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  overflow: auto;
+}
+
+.notifications-item {
+  min-height: 100px;
+  border-radius: 0px;
+  margin-bottom: 1px;
+  cursor: pointer;
+}
+
+.notification-item-title {
+  width: 250px;
+  white-space: nowrap;
+  overflow-x: hidden;
+  line-height: 32px;
+  text-overflow: ellipsis;
+}
+
+.notifications-item-content {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.notifications-item-icon-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 0px;
+  height: 34px;
+  width: 34px;
+}
+.notifications-item-icon {
+  text-align: center;
+  font-size: 28px !important;
+  line-height: 32px !important;
+  color: $mat-background-light;
+}
+
+.notifications-item-sideLine {
+  width: 10px;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.selected {
+  background-color: $light-background-hover;
+}
+.hovered {
+  background-color: $lighter-background-hover;
+}
+
+.notification-container {
+  padding-left: 20px;
+}
+
+.padding-0 {
+  padding: 0px !important;
+}

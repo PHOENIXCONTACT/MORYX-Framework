@@ -1,0 +1,101 @@
+@use "@angular/material" as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.overall-container {
+  padding: 8px;
+  overflow: auto;
+  height: 100%;
+  box-sizing: border-box;
+  
+  @include mat.expansion-overrides((
+    container-background-color: $mat-background-light,
+));
+}
+.overall-container.loading {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.process-list {
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.job {
+  display: flex;
+  flex-direction: column;
+}
+
+.job-container {
+  width: 100%;
+}
+
+.job-details-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+
+  mat-icon {
+    margin-right: 16px;
+    align-self: center;
+  }
+}
+
+.job-details {
+  margin-right: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.job-progress {
+  display: flex;
+  flex-direction: row;
+  margin-top: 8px;
+}
+
+.job-details-setup-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.job-details-setup-steps {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 16px;
+  margin-bottom: 8px;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+.icon-primary-color {
+  color: $primary;
+}
+
+.icon-accent-color {
+  color: $accent;
+}
+.progress-accent-color {
+  @include mat.progress-bar-overrides(
+    (
+      active-indicator-color: $primary,
+    )
+  );
+}
+.progress-warn-color {
+  @include mat.progress-bar-overrides(
+    (
+      active-indicator-color: $primary,
+    )
+  );
+}

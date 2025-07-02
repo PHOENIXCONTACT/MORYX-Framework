@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	
+	<PropertyGroup>
+		<TargetFrameworks>net8.0</TargetFrameworks>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Description>Moryx.Notifications.Publisher</Description>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />
+	  <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
+	  <ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />
+	</ItemGroup>
+	
+</Project>

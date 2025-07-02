@@ -1,0 +1,58 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scaling {
+  box-sizing: border-box;
+  padding: 2px;
+  width: 50%;
+  height: 50%;
+  overflow: hidden;
+  transform: scale(2);
+}
+
+.notification-card {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.notification-header {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  color: $mat-background-light;
+}
+
+.notification-content {
+  flex: 1 1;
+  overflow-y: auto;
+  padding-top: 10px;
+}
+
+.notification-icon {
+  font-size: 40px;
+  line-height: 40px;
+}
+
+.navigation-bar{
+  margin: 0;
+}
+
+.notification-message{
+  font-size: 20px;
+  line-height: 1.4;
+} 
+
+.notification-title{
+  font-size: 30px;
+}
+
+.mat-mdc-card-subtitle{
+  margin-bottom: 10px;
+}

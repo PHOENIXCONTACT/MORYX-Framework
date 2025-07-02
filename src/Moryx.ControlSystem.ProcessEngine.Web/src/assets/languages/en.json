@@ -1,0 +1,37 @@
+{
+  "PROCESSES": {
+    "TITLE": "Processes",
+    "ACTIVITIES": "Activities",
+    "ACTIVITY_DETAILS": "Activity Details",
+    "STARTED": "Started",
+    "COMPLETED": "Completed",
+    "CAPABILITIES": "Capabilities",
+    "RESOURCE": "Resource",
+    "POSSIBLE_RESOURCES": "Possible Resources",
+    "ARTICLE_ID": "Article Id",
+    "ERROR_CODE": "Error Code",
+    "TEXT": "Text",
+    "SHOW_ALL_PROCESSES": "Show all processes"
+  },
+  "JOBS": {
+    "ORDER": "Order",
+    "OPERATION": "Operation",
+    "ID": "Id",
+    "STATE": "State",
+    "AMOUNT": "Amount",
+    "PRODUCT": "Product",
+    "RUNNING": "Running",
+    "WORKPLAN": "Workplan",
+    "SUCCESS": "Success",
+    "REWORKED": "Reworked",
+    "FAILED": "Failed",
+    "COMPLETE": "COMPLETE",
+    "ABORT": "ABORT",
+    "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later.",
+    "EMPTY_STATE_HEADER": "No active Processes",
+    "EMPTY_STATE_TEXT": "Start a production and its processes will be displayed here."
+  },
+  "DISMISS": "DISMISS",
+  "DEFAULT_MESSAGE": "Something went wrong on the server.",
+  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings."
+}
