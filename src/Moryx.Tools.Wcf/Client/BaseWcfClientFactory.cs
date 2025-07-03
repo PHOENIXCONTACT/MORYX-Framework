@@ -731,7 +731,6 @@ namespace Moryx.Tools.Wcf
                 return new EndpointAddress(serviceConfig.Address);
 
             //Set binding type for the uri
-            //var bindingType = clientConfig.BindingType == ServiceBindingType.NetTcp ? "net.tcp" : "http";
             string bindingType;
             switch (clientConfig.BindingType)
             {

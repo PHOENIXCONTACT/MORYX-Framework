@@ -59,10 +59,22 @@ namespace Moryx.Runtime.Wcf
             {
                 Endpoint = "endpoints",
                 MetadataEnabled = true,
-                BindingType = ServiceBindingType.WebHttps
+                BindingType = ServiceBindingType.WebHttp
             };
             host.Setup(typeof(IVersionService), hostConfig);
             host.Start();
+            if (!string.IsNullOrEmpty(_portConfig.CertificateThumbprint))
+            {
+                var hostHttps = new ConfiguredServiceHost(factory, Logger, collector, _portConfig);
+                var hostHttpsConfig = new HostConfig
+                {
+                    Endpoint = "endpoints",
+                    MetadataEnabled = true,
+                    BindingType = ServiceBindingType.WebHttps
+                };
+                hostHttps.Setup(typeof(IVersionService), hostHttpsConfig);
+                hostHttps.Start();
+            }
         }
 
         /// <inheritdoc />

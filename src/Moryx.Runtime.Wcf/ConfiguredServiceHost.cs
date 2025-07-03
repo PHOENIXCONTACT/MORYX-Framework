@@ -159,7 +159,7 @@ namespace Moryx.Runtime.Wcf
 
             var endpoint = _service.AddServiceEndpoint(contract, binding, _endpointAddress);
 
-            // Add  behaviors
+            // Add behaviors
             endpoint.Behaviors.Add(new CultureBehavior());
 
             if (config.BindingType == ServiceBindingType.WebHttp | config.BindingType == ServiceBindingType.WebHttps)
@@ -194,17 +194,16 @@ namespace Moryx.Runtime.Wcf
 
             if (config.HelpEnabled)
             {
+                var serviceDebugBehavior = _service.Description.Behaviors.Find<ServiceDebugBehavior>();
+                serviceDebugBehavior.IncludeExceptionDetailInFaults = true;
+
                 if (config.BindingType == ServiceBindingType.WebHttps | config.BindingType == ServiceBindingType.BasicHttps)
                 {
-                    var serviceDebugBehavior = _service.Description.Behaviors.Find<ServiceDebugBehavior>();
-                    serviceDebugBehavior.IncludeExceptionDetailInFaults = true;
                     serviceDebugBehavior.HttpsHelpPageEnabled = true;
                     serviceDebugBehavior.HttpsHelpPageUrl = new Uri($"https://{host}:{_portConfig.HttpsPort}/Help/{config.Endpoint}");
                 }
                 else
                 {
-                    var serviceDebugBehavior = _service.Description.Behaviors.Find<ServiceDebugBehavior>();
-                    serviceDebugBehavior.IncludeExceptionDetailInFaults = true;
                     serviceDebugBehavior.HttpHelpPageEnabled = true;
                     serviceDebugBehavior.HttpHelpPageUrl = new Uri($"http://{host}:{_portConfig.HttpPort}/Help/{config.Endpoint}");
                 }
@@ -220,7 +219,7 @@ namespace Moryx.Runtime.Wcf
                 X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly);
                 
-                // Zertifikat finden (z.B. anhand des Betreffs)
+                // Zertifikat finden (z.B. anhand des Fingerabdrucks (Thumbprint))
                 X509Certificate2 certificate = null;
                 foreach (var cert in store.Certificates)
                 {
@@ -247,9 +246,7 @@ namespace Moryx.Runtime.Wcf
                 }
                 
                 _service.Credentials.ServiceCertificate.SetCertificate(StoreLocation.LocalMachine, StoreName.My, X509FindType.FindByThumbprint, _portConfig.CertificateThumbprint.ToUpper());
-                
             }
-
             _hostConfig = config;
         }
 

@@ -22,14 +22,14 @@ namespace Moryx.Tools.Wcf
         /// Net tcp binding for fast, session bound duplex connections
         /// </summary>
         NetTcp,
-        
+
         /// <summary>
-        /// method to use a certificate to create a https secure connection
+        /// WebHttp binding to use a certificate to create a https secure connection
         /// </summary>
         WebHttps,
 
         /// <summary>
-        /// Soap https binding
+        /// Soap https binding with using a certificate
         /// </summary>
         BasicHttps
         
