@@ -1,0 +1,29 @@
+---
+---
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+
+$primary: #20A07F;
+
+$theme-colors: map-merge($theme-colors, (
+  "primary": $primary
+));
+
+@import "bootstrap/scss/bootstrap";
+
+.headline {
+  font-weight: 500;
+  text-align: center;
+}
+
+.headline-sub {
+  text-align: center;
+  color: $body-secondary-color;
+  font-weight: 100;
+}
+
+.nav-link {
+  color: $white;
+}
