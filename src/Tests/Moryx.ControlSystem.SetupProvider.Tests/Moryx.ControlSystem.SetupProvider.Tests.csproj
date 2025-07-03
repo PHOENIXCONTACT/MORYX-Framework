@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -13,14 +13,12 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
+	<PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="coverlet.collector" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
-    <ProjectReference Include="..\..\Moryx.Notifications.Publisher\Moryx.Notifications.Publisher.csproj" />
-    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
+    <ProjectReference Include="..\..\Moryx.ControlSystem.SetupProvider\Moryx.ControlSystem.SetupProvider.csproj" />
   </ItemGroup>
 
 </Project>

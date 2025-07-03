@@ -64,8 +64,8 @@ namespace Moryx.Tests.Workplans
             {
                 MAssert.That(_inputs[0].Tokens, Is.Empty);
                 MAssert.That(_outputs.Select(o => o.Tokens), Has.All.Count.EqualTo(1));
-                MAssert.That(_token, Is.EqualTo(() => ((SplitToken)_outputs[0].Tokens.First()).Original));
-                MAssert.That(_token, Is.EqualTo(() => ((SplitToken)_outputs[1].Tokens.First()).Original));
+                MAssert.That(_token, Is.EqualTo(((SplitToken)_outputs[0].Tokens.First()).Original));
+                MAssert.That(_token, Is.EqualTo(((SplitToken)_outputs[1].Tokens.First()).Original));
             });
         }
 
@@ -148,7 +148,7 @@ namespace Moryx.Tests.Workplans
             // Assert
             Assert.Multiple(() => { 
                 MAssert.That(_inputs[0].Tokens, Is.Empty);
-                MAssert.That(_token, Is.EqualTo(() => _outputs[0].Tokens.First()));
+                MAssert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
                 MAssert.That(2, Is.EqualTo(triggered.Count));
                 MAssert.That(triggered, Has.All.InstanceOf<DummyTransition>());
             });
