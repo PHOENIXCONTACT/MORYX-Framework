@@ -1,0 +1,164 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.no-instruction {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.scaling {
+  box-sizing: border-box;
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  max-width: 100% !important;
+}
+
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  overflow: hidden;
+  max-width: 100% !important;
+}
+
+.content {
+  flex: 1 1;
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 0;
+}
+.mat-card > :first-child,
+.mat-card-content > :first-child {
+  margin: -16px -16px 0px -16px;
+}
+
+.card-title {
+  font: 500 60px/36px Roboto, sans-serif;
+  margin-bottom: 16px;
+  padding-top: 10px;
+  padding-bottom: 16pt;
+  line-height: 60px;
+}
+
+.card-content {
+  font: 200 45px/36px Roboto, sans-serif !important;
+  margin-bottom: 20px !important;
+  color: #0000008a;
+  line-height: 50px !important;
+}
+
+.media-instructions-container {
+  flex: 1 1;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.text-instructions {
+  overflow-y: scroll;
+  margin-bottom: 22px;
+}
+
+.text-instruction-container {
+  flex: 1 1;
+  margin-top: 32px;
+  margin-left: 32px;
+  margin-bottom: 32px;
+  margin-right: 2px;
+  padding-right: 30px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.mat-card .mat-divider-horizontal {
+  position: static;
+  margin: 0px -16px;
+  width: auto;
+}
+
+.mat-card .mat-divider-vertical {
+  margin-top: -16px;
+}
+
+.mat-mdc-outlined-button {
+  text-transform: uppercase;
+  font-size: xx-large;
+  height: 80px;
+  margin-left: 16px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(217, 217, 217, 0.6);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card-action-buttons {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content :space-between ;
+  margin-bottom: 18px;
+}
+
+.fullscreen{
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
+.previous-instruction{
+  z-index: 1;
+  color: black;
+}
+
+.next-instruction{
+  z-index: 1;
+  color: black;
+}
+
+.carousel-buttons{
+  margin-left: 8px;
+  width: 168px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 4px;
+  opacity: 0.5;
+  border-radius: 30px;
+  margin-bottom: -20px;
+}
+
+.instruction-counter{
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  text-align: center;
+  font-size: 28px;
+  line-height: 60px;
+  font-weight: 200;
+}
+.result-actions{
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: end;
+}

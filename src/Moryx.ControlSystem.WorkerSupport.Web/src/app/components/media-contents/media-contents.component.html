@@ -1,0 +1,45 @@
+<div class="media-instruction">
+  <img
+  *ngIf="selectedContent()?.type?.includes('image') || selectedContent()?.type?.includes('undefined') "
+  class="media-content-detail-image"
+  [src]="selectedContent()?.url"
+  alt=""
+/>
+<ngx-doc-viewer
+  *ngIf="selectedContent()?.type?.includes('application/pdf') "
+  viewer="url"
+  [url]="selectedContent()?.url ?? ''"
+  class="media-content-detail-image"
+></ngx-doc-viewer>
+ </div>
+<div class="media-navigation" *ngIf="medias().length > 1">
+      <button
+      class="next-image"
+      mat-mini-fab
+      aria-label="Example icon button with a vertical three dot icon"
+      (click)="onPrevious()"
+    >
+      <mat-icon>navigate_before</mat-icon>
+    </button>
+
+  <div class="media-navigation">
+      <button
+      *ngFor="let content of medias()"
+      (click)="onSelect(content)"
+      class="image-quick-link"
+      mat-mini-fab
+      [ngClass]="{ selected: selectedContent()?.url == content.url}"
+      aria-label="Example icon button with a vertical three dot icon"
+    ></button>
+  </div>
+
+    <button
+    class="next-image"
+    mat-mini-fab
+    aria-label="Example icon button with a vertical three dot icon"
+    (click)="onNext()"
+  >
+    <mat-icon>navigate_next</mat-icon>
+  </button>
+
+</div>
