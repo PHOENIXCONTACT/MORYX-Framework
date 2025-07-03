@@ -1,0 +1,329 @@
+<ng-container *ngIf="!isLoading(); else loadingSpinner">
+  <mat-drawer-container
+    class="operations-drawer-container"
+    *ngIf="operations().length; else emptyStatePage"
+    [hasBackdrop]="mobileQuery.matches">
+    <mat-drawer
+      #drawer
+      [ngSwitch]="drawerContent()"
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      position="end"
+      class="operations-drawer">
+      <ng-container *ngSwitchCase="DrawerContent.Messages">
+        <div class="operations-drawer-content">
+          <div class="operations-drawer-title">
+            <h2>{{ TranslationConstants.OPERATIONS.TITLE | translate }}</h2>
+            <a mat-icon-button (click)="closeDrawer()">
+              <mat-icon>close</mat-icon>
+            </a>
+          </div>
+          <app-log-message-list [guid]="selectedOperation()?.identifier!"></app-log-message-list>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="DrawerContent.Parts">
+        <div class="operations-drawer-content">
+          <div class="operations-drawer-title">
+            <h2>{{ TranslationConstants.OPERATIONS.SUB_TITLE | translate }}</h2>
+            <a mat-icon-button (click)="drawer.close()">
+              <mat-icon>close</mat-icon>
+            </a>
+          </div>
+          <app-part-list [guid]="selectedOperation()?.identifier!"></app-part-list>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="DrawerContent.Source">
+        <div class="operations-drawer-content">
+          <div class="operations-drawer-title">
+            <h2>{{ TranslationConstants.OPERATIONS.SOURCE_TITLE | translate }}</h2>
+            <a mat-icon-button (click)="drawer.close()">
+              <mat-icon>close</mat-icon>
+            </a>
+          </div>
+          <app-operation-source [operationSource]="selectedOperation()?.operationSource!"></app-operation-source>
+        </div>
+      </ng-container>
+    </mat-drawer>
+
+    <mat-drawer-content>
+      <div class="operation-list">
+        <mat-accordion>
+          <mat-expansion-panel
+            class="operation"
+            *ngFor="let operation of filteringOperations(operations())"
+            (expandedChange)="onPanelExpandedChange($event, operation)">
+            <mat-expansion-panel-header
+              [collapsedHeight]="'128px'"
+              [expandedHeight]="'128px'"
+              class="operation-header flex-row-center">
+              <div class="flex-row-center">
+                <mat-icon
+                  *ngIf="!operation.model.canBegin"
+                  class="operation-state-indicator operation-indicator-disabled"
+                  >error
+                </mat-icon>
+                <mat-icon
+                  *ngIf="
+                    operation.model.canBegin &&
+                    operation.model.classification !== 'Running' &&
+                    operation.model.classification !== 'Interrupting'
+                  "
+                  color="primary"
+                  class="operation-state-indicator"
+                  >settings</mat-icon
+                >
+                <mat-icon
+                  *ngIf="operation.model.classification === 'Running' && !operation.isProducing"
+                  color="accent"
+                  class="operation-state-indicator"
+                  >settings</mat-icon
+                >
+                <mat-icon
+                  *ngIf="operation.model.classification === 'Running' && operation.isProducing"
+                  color="accent"
+                  class="operation-state-indicator operation-indicator-animation"
+                  >settings
+                </mat-icon>
+                <mat-icon
+                  *ngIf="operation.model.classification === 'Interrupting'"
+                  class="flex-row-center operation-state-indicator operation-indicator-interrupting operation-indicator-animation">
+                  settings</mat-icon
+                >
+              </div>
+
+              <div class="operation-header-content">
+                <div class="operation-header-row">
+                  <h2 class="operation-title">
+                    {{ operation.model.order }} -
+                    {{ operation.model.number }}
+                  </h2>
+                </div>
+
+                <div class="operation-header-row">
+                  <h3 class="operation-subtitle">
+                    {{ TranslationConstants.OPERATIONS.PRODUCT | translate }}:
+                    {{ operation.model.productIdentifier }}-{{ operation.model.productRevision | number : '2.0' }}
+                    {{ operation.model.productName }} |
+                    {{
+                      (operation.model.recipeIds?.length ?? 0) > 1
+                        ? operation.model.recipeName + ', ...'
+                        : operation.model.recipeName
+                    }}
+                  </h3>
+                </div>
+
+                <div class="operation-header-row">
+                  <div>{{ TranslationConstants.OPERATIONS.AMOUNT | translate }}: {{ operation.model.totalAmount }}</div>
+                  <div>
+                    {{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ operation.model.successCount }}
+                  </div>
+                  <div>
+                    {{ TranslationConstants.OPERATIONS.RUNNING | translate }}: {{ operation.model.progressRunning }}
+                  </div>
+                  <div>
+                    {{ TranslationConstants.OPERATIONS.SCRAP | translate }}:
+                    {{ operation.model.scrapCount }}
+                  </div>
+                </div>
+
+                <div class="operation-header-row operation-progress">
+                  <mat-progress-bar
+                    mode="determinate"
+                    value="100"
+                    class="progress-accent-color"
+                    [ngStyle]="{
+                      width: operation.progressSuccessPercent + '%'
+                    }">
+                  </mat-progress-bar>
+                  <mat-progress-bar
+                    mode="determinate"
+                    value="100"
+                    class="progress-warn-color"
+                    [ngStyle]="{
+                      width: operation.progressScrapPercent + '%'
+                    }"></mat-progress-bar>
+                  <mat-progress-bar
+                    mode="determinate"
+                    value="100"
+                    [ngStyle]="{
+                      width: operation.progressRunningPercent + '%'
+                    }">
+                  </mat-progress-bar>
+                  <mat-progress-bar
+                    class="operation-pending-parts"
+                    mode="determinate"
+                    value="100"
+                    [ngStyle]="{
+                      width: operation.progressPendingPercent + '%'
+                    }">
+                  </mat-progress-bar>
+                  <mat-progress-bar
+                    mode="determinate"
+                    value="0"
+                    [class.progress-error-color]=" operation.model.classification === 'Failed'"
+                    [ngStyle]="{
+                      width: operation.progressResidualPercent + '%',
+                      'background-color': operation.model.classification === 'Failed' ? '#e3232f' : 'initial'
+                    }">
+                  </mat-progress-bar>
+                </div>
+              </div>
+            </mat-expansion-panel-header>
+
+            <div class="operation-details flex-row-center">
+              <div class="operation-details-content">
+                <div>
+                  {{ TranslationConstants.OPERATIONS.RECIPE | translate }}:
+                  {{ operation.model.recipeName }}
+                </div>
+                <div>
+                  {{ TranslationConstants.OPERATIONS.REPORTED_SUCCESS | translate }}:
+                  {{ operation.model.reportedSuccessCount }}
+                </div>
+                <div>
+                  {{ TranslationConstants.OPERATIONS.REPORTED_SCRAP | translate }}:
+                  {{ operation.model.reportedFailureCount }}
+                </div>
+                <div>
+                  {{ TranslationConstants.OPERATIONS.OVERDELIVERY | translate }}:
+                  {{ operation.model.overDeliveryAmount }}
+                </div>
+                <div>
+                  {{ TranslationConstants.OPERATIONS.UNDERDELIVERY | translate }}:
+                  {{ operation.model.underDeliveryAmount }}
+                </div>
+              </div>
+
+              <div
+                class="operation-details-state"
+                [ngStyle]="{ color: operation.model.classification === 'Failed' ? '#e3232f' : 'inherit' }">
+                {{ operation.model.stateDisplayName }}
+              </div>
+            </div>
+
+            <div class="operation-details-buttons">
+              <span
+                [matTooltip]="
+                  !operation.model.canAssign
+                    ? (TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE | translate)
+                    : (operation.model.isCreated
+                        ? (TranslationConstants.OPERATIONS.REFRESH_RECOMMENDED | translate)
+                        : (TranslationConstants.OPERATIONS.REFRESH_OPTIONAL | translate)
+                      )"
+                matTooltipShowDelay="300">
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  (click)="onAssign(operation)"
+                  [disabled]="!operation.model.canAssign"
+                  [matBadge]="operation.model.canAssign && operation.model.isCreated ? '!' : ''"
+                  [matBadgeHidden]="!(operation.model.canAssign && operation.model.isCreated)"
+                  matBadgeColor="accent">
+                  <mat-icon>sync</mat-icon>
+                  {{ TranslationConstants.OPERATIONS.REFRESH_DATA | translate }}
+                </button>
+              </span>
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="onShowMessages(operation)"
+                [matBadge]="operation.errorMessagesCount"
+                [matBadgeHidden]="operation.errorMessagesCount < 1"
+                matBadgeColor="warn">
+                <mat-icon>chat_alt</mat-icon>
+                {{ TranslationConstants.OPERATIONS.MESSAGES | translate }}
+              </button>
+              <button
+                *ngIf="operation.model.operationSource"
+                mat-stroked-button
+                color="primary"
+                (click)="onToggleSource(operation)">
+                <mat-icon>move_to_inbox</mat-icon>
+                {{ TranslationConstants.OPERATIONS.SOURCE | translate }}
+              </button>
+              <button
+                mat-stroked-button
+                color="primary"
+                *ngIf="!operation.model.isFailed && operation.model.hasPartList"
+                (click)="onShowPartList(operation)">
+                <mat-icon>summarize</mat-icon>
+                {{ TranslationConstants.OPERATIONS.PART_LIST | translate }}
+              </button>
+              <button
+                mat-stroked-button
+                color="primary"
+                *ngIf="!operation.model.isFailed && operation.model.hasDocuments"
+                (click)="showDocuments(operation)">
+                <mat-icon>perm_media</mat-icon>
+                {{ TranslationConstants.OPERATIONS.DOCUMENTS | translate }}
+              </button>
+              <button
+                mat-stroked-button
+                color="primary"
+                *ngIf="
+                  !operation.model.isFailed &&
+                  !operation.model.isAssigning &&
+                  operation.model.recipeIds &&
+                  operation.model.recipeIds.length > 0
+                "
+                (click)="showRecipes(operation)">
+                <mat-icon>tune</mat-icon>
+                {{ TranslationConstants.OPERATIONS.RECIPES | translate }}
+              </button>
+            </div>
+
+            <mat-action-row>
+              <button
+                mat-flat-button
+                color="primary"
+                *ngIf="operation.model.canAssign && !operation.model.isCreated"
+                (click)="onAssign(operation)">
+                {{ TranslationConstants.OPERATIONS.TRY_AGAIN | translate }}
+              </button>
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="onBegin(operation)"
+                [disabled]="!operation.model.canBegin">
+                {{
+                  operation.model.classification !== OperationClassification.Running &&
+                  operation.model.classification !== OperationClassification.Interrupting
+                    ? (TranslationConstants.OPERATIONS.BEGIN | translate)
+                    : (TranslationConstants.OPERATIONS.CHANGE_AMOUNT | translate)
+                }}
+              </button>
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="onInterrupt(operation)"
+                [disabled]="!operation.model.canInterrupt">
+                {{ TranslationConstants.OPERATIONS.INTERRUPT | translate }}
+              </button>
+              <button
+                mat-flat-button
+                color="primary"
+                [disabled]="!operation.model.canReport"
+                (click)="onReport(operation)">
+                {{ TranslationConstants.OPERATIONS.REPORT | translate }}
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+  <button class="operation-create-fab-button" mat-mini-fab color="primary" (click)="onCreate()">
+    <mat-icon>add</mat-icon>
+  </button>
+</ng-container>
+
+<ng-template #loadingSpinner>
+  <div class="operations-loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>
+
+<ng-template #emptyStatePage>
+  <empty-state
+    header="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_HEADER | translate }}"
+    message="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_TEXT | translate }}"></empty-state>
+</ng-template>

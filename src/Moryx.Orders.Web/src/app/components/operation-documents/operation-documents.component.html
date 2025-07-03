@@ -1,0 +1,67 @@
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="isLoading()"
+  class="operation-document-loading"></mat-progress-bar>
+<mat-sidenav-container class="operation-document-container">
+  <mat-sidenav opened mode="side" position="start">
+    <div class="">
+      <mat-toolbar
+        [ngStyle]="{
+          'background-image': 'url(' + operationDocumentViewerToolbarImage + ')'
+        }"
+        color="primary"
+        class="operation-document-toolbar">
+        <mat-toolbar-row>
+          <a mat-icon-button [routerLink]="['/operations']" mat-icon-button aria-label="Go back to operations">
+            <mat-icon>arrow_back</mat-icon>
+          </a>
+        </mat-toolbar-row>
+        <mat-toolbar-row class="operation-document-title">
+          <div>
+            {{ TranslationConstants.DOCUMENTS.DOCUMENTS_OF | translate }}
+          </div>
+          <div>{{ operation().order }} - {{ operation().number }}</div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-list>
+        <mat-list-item
+          *ngFor="let document of documents()"
+          [ngClass]="{ 'moryx-selected': selectedDocument()?.identifier == document.identifier}"
+          class="operation-documents-list-item"
+          (click)="onSelect(document)">
+            <span matListItemTitle>
+              {{ document.type }}
+            </span>
+            <span class="operation-document-number-version-text" matListItemLine>{{ document.number }}-{{ document.revision }}</span>
+            <span *ngIf="document.description" >
+              {{
+                document.description.length > 28
+                  ? (document.description | slice: 0:28) + '...'
+                  : document.description
+              }}
+            </span>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content >
+    <div class="operation-document-details" *ngIf="selectedDocument(); else emptyStatePage">
+      <img *ngIf="isImage()" src="{{ path() }}" class="operation-image" />
+      <ngx-doc-viewer
+        class="operation-pdf"
+        viewer="url"
+        *ngIf="url() && !isImage()"
+        [url]="url()!"></ngx-doc-viewer>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #emptyStatePage>
+  <empty-state
+    header="{{
+      TranslationConstants.DOCUMENTS.EMPTY_STATE_HEADER | translate
+    }}"
+    message="{{
+      TranslationConstants.DOCUMENTS.EMPTY_STATE_TEXT | translate
+    }}"></empty-state>
+</ng-template>

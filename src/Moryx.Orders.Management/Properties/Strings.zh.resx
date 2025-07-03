@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OperationManager_NoPartialReportErrorText" xml:space="preserve">
+    <value>在当前操作状态下无法进行部分报告。</value>
+  </data>
+  <data name="OperationManager_NoFinalReportErrorText" xml:space="preserve">
+    <value>在当前操作状态下无法进行最终报告。</value>
+  </data>
+  <data name="OperationManager_StateErrorText" xml:space="preserve">
+    <value>无法启动处于此状态的操作。</value>
+  </data>
+  <data name="OperationManager_MaxRunningErrorText" xml:space="preserve">
+    <value>已达到最大运行操作数量。</value>
+  </data>
+  <data name="RecipeAssignStep_WorkplanValidation_Failed" xml:space="preserve">
+    <value>工作计划验证失败。错误：\n{0}</value>
+  </data>
+  <data name="OperationState_AbortedState" xml:space="preserve">
+    <value>已中止</value>
+  </data>
+  <data name="OperationState_AmountReachedState" xml:space="preserve">
+    <value>达到数量上限</value>
+  </data>
+  <data name="OperationState_CompletedState" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="OperationState_InitialAssignState" xml:space="preserve">
+    <value>正在创建</value>
+  </data>
+  <data name="OperationState_InitialAssignFailedState" xml:space="preserve">
+    <value>创建失败</value>
+  </data>
+  <data name="OperationState_InitialState" xml:space="preserve">
+    <value>初始的</value>
+  </data>
+  <data name="OperationState_InterruptedState" xml:space="preserve">
+    <value>中断</value>
+  </data>
+  <data name="OperationState_InterruptingState" xml:space="preserve">
+    <value>中断中</value>
+  </data>
+  <data name="OperationState_ReadyState" xml:space="preserve">
+    <value>准备就绪</value>
+  </data>
+  <data name="OperationState_RunningState" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="RecipeAssignStep_Processing_Failed" xml:space="preserve">
+    <value>无法成功处理配方 '{0}'！</value>
+  </data>
+  <data name="RecipeAssignStep_Selection_Failed" xml:space="preserve">
+    <value>无法为操作选择配方！存在空值或未选择任何配方！</value>
+  </data>
+  <data name="ProductAssignStep_Selection_Failed" xml:space="preserve">
+    <value>无法分配该产品！</value>
+  </data>
+  <data name="OperationManager_NoReportErrorText" xml:space="preserve">
+    <value>在当前操作状态下无法进行报告。</value>
+  </data>
+  <data name="OperationState_AmountReachedAssignState" xml:space="preserve">
+    <value>正在分配</value>
+  </data>
+  <data name="OperationState_AmountReachedAssignFailedState" xml:space="preserve">
+    <value>分配失败</value>
+  </data>
+  <data name="OperationState_InterruptedAssignState" xml:space="preserve">
+    <value>正在分配</value>
+  </data>
+  <data name="OperationState_InterruptedAssignFailedState" xml:space="preserve">
+    <value>分配失败</value>
+  </data>
+  <data name="OperationState_ReadyAssignFailedState" xml:space="preserve">
+    <value>分配失败</value>
+  </data>
+  <data name="OperationState_ReadyAssignState" xml:space="preserve">
+    <value>正在分配</value>
+  </data>
+  <data name="OperationAssignment_Exception_Assign" xml:space="preserve">
+    <value>无法分配操作</value>
+  </data>
+  <data name="RecipeAssignStep_Restore_Failed" xml:space="preserve">
+    <value>无法分配配方，应该只有引用。</value>
+  </data>
+  <data name="RegexOperationValidation_Regex_Match_Failed" xml:space="preserve">
+    <value>操作编号不符合正则表达式：{0}。</value>
+  </data>
+  <data name="RegexOperationValidation_Wrong_Amount" xml:space="preserve">
+    <value>操作数量必须大于零。</value>
+  </data>
+  <data name="RegexOperationValidation_No_Valid_Recipe" xml:space="preserve">
+    <value>该操作没有有效的配方。</value>
+  </data>
+  <data name="DocumentAssignStep_Documents_Loading_Failed" xml:space="preserve">
+    <value>从文档提供程序加载文档信息时出现错误！</value>
+  </data>
+  <data name="DocumentAssignStep_Document_Loading_Failed" xml:space="preserve">
+    <value>从文档提供程序加载文档 '{0}' 时出现错误！</value>
+  </data>
+  <data name="DocumentAssignStep_Restore_Documents_Failed" xml:space="preserve">
+    <value>无法从文件系统中恢复文档！</value>
+  </data>
+  <data name="OperationData_AmountReachedNotificationTitle" xml:space="preserve">
+    <value>操作准备报告</value>
+  </data>
+  <data name="OperationData_AmountReachedNotificationMessage" xml:space="preserve">
+    <value>操作 {0} 已完成最后的部分，准备报告。请报告生产的部分。</value>
+  </data>
+  <data name="OperationAssignment_Successful" xml:space="preserve">
+    <value>成功执行操作分配步骤 {0}</value>
+  </data>
+  <data name="OperationAssignment_Started" xml:space="preserve">
+    <value>开始操作分配...</value>
+  </data>
+  <data name="OperationAssignment_RecipeReassigned" xml:space="preserve">
+    <value>配方 {0} 重新分配给操作</value>
+  </data>
+  <data name="PartsAssignStep_Threw_Exception" xml:space="preserve">
+    <value>{0} 加载产品部件时出现异常</value>
+  </data>
+  <data name="PartsAssignStep_Failed" xml:space="preserve">
+    <value>无法分配产品部件。</value>
+  </data>
+  <data name="OperationManager_OverDeliveryNotice" xml:space="preserve">
+    <value>不能将目标数量减至低于成功生产的件数。</value>
+  </data>
+</root>

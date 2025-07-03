@@ -1,0 +1,27 @@
+@page "{*_}"
+@using Microsoft.AspNetCore.Authorization;
+@using Moryx.Asp.Integration
+@using Moryx.Orders.Endpoints;
+@using Moryx.Orders.Web.Properties
+@using System.ComponentModel.DataAnnotations
+@{
+  ViewData["Title"] = "Orders";
+  ViewData["BaseRef"] = "Orders";
+
+  Layout = "_Layout";
+}
+@attribute [WebModule("Orders", "shopping_cart"),
+    Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"), 
+    Authorize(Policy = OrderPermissions.CanView),
+    AllowAnonymous]
+@section Styles {
+  <link rel="stylesheet" href="/_content/Moryx.Orders.Web/styles.css">
+}
+@section Scripts
+{
+  <script src="/_content/Moryx.Orders.Web/runtime.js" type="module"></script>
+  <script src="/_content/Moryx.Orders.Web/polyfills.js" type="module"></script>
+  <script src="/_content/Moryx.Orders.Web/main.js" type="module"></script>
+}
+
+<app-root></app-root>

@@ -1,0 +1,96 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+@use '@angular/material' as mat;
+
+$warning-light: #FFECB3;
+$warning-dark: #FF6F00;
+
+$danger-light:#FFCCBC;
+$danger-dark: #BF360C;
+
+$debug-light: #BBDEFB;
+$debug-dark: #0D47A1;
+
+.log-line {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.log-level {
+  font-size: 9pt;
+  display: table;
+  margin: 0 auto;
+}
+
+.log-level-indicator {
+  width: 70px;
+  border-radius: 16px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.log-time {
+  width: 114px;
+  font-size: 9pt;
+}
+
+mat-expansion-panel {
+  border-radius: 0px;
+}
+
+mat-panel-description {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.mat-expanded {
+  mat-panel-description {
+    display: none;
+  }
+}
+
+.light-text {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.message-list-status {
+  padding: 16px;
+}
+
+.chip-color-info {
+  color: #000;
+}
+
+.chip-color-debug {
+  background-color: $debug-light;
+  color: $debug-dark;
+}
+
+.chip-color-trace {
+  background-color: $debug-dark;
+  color: $debug-light;
+}
+
+.chip-color-warning {
+  background-color: $warning-light;
+  color: $warning-dark;
+}
+
+.chip-color-error {
+  background-color: $danger-light;
+  color: $danger-dark;
+}
+
+.chip-color-fatal {
+  background-color: $warn-dark;
+  color: $danger-light;
+}
+
+.wrap-lines {
+  white-space: pre-line;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
