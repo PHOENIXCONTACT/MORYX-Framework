@@ -27,18 +27,12 @@ url: "https://phoenixcontact.github.io/MORYX-Framework" # the base hostname & pr
 repository: "https://github.com/PHOENIXCONTACT/MORYX-Framework"
 logo: "/assets/images/MORYX_logo"
 
-navigation:
-- title: Documentation
-  url: https://github.com/PHOENIXCONTACT/MORYX-Framework/tree/future/docs
-- title: Repository
-  url: https://github.com/PHOENIXCONTACT/MORYX-Framework
-
-
 # Build settings
 theme: minima
 plugins:
   - jekyll-feed
 
+highlighter: rouge
 
 # Exclude from processing.
 # The following items will not be processed, by default.

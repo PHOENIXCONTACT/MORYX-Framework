@@ -5,8 +5,8 @@
         <img src="{{ site.baseurl }}/assets/images/moryx_small.png" alt="Bootstrap" width="48" height="48">
       </a>
       <div class="d-flex justify-content-end">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">        
-          {% for link in site.navigation %}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">     
+          {% for link in site.data.navigation.items %}
           
           {% if link.url contains '://' %}
           {% assign url = link.url %}
@@ -15,7 +15,12 @@
           {% endif %}
           
           <li class="nav-link">
-            <a class="nav-link" href="{{ url }}">{{ link.title }}</a>
+            <a class="nav-link" href="{{ url }}">
+              {% if link.icon %}
+              <i class="bi {{ link.icon }}"></i>&nbsp;
+              {% endif %}
+              {{ link.title }}
+            </a>
           </li>
           {% endfor %}
         </ul>

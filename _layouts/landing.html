@@ -2,28 +2,123 @@
 layout: home
 ---
 
-<div class="bd-masthead mb-3" id="content"> 
-  <div class="container-xxl bd-gutter"> 
+<div class="intro-header mb-3">
+  <div class="container-xxl bd-gutter">
     <div class="col-md-8 mx-auto text-center">
       <p align="center">
-          <br />
-          <br />
-          <img src="assets/images/MORYX_logo.svg" alt="MORYX Logo" width="400px" />
+        <img
+          src="assets/images/MORYX_logo.svg"
+          alt="MORYX Logo"
+          width="400px"
+        />
       </p>
 
       <h1 class="display-2 headline" align="center">Level up your factory</h1>
       <br />
 
       <h1 class="lead mb-4">
-        The MORYX Framework is a .NET based framework to quickly build three-tier applications. 
-        <br/> 
-        It aims to reduce boilerplate code as much as possible and provides modularity, flexibility and easy configuration with very little effort.
+        The MORYX Framework is a .NET based framework to quickly build
+        three-tier applications.
+        <br />
+        It aims to reduce boilerplate code as much as possible and provides
+        modularity, flexibility and easy configuration with very little effort.
       </h1>
     </div>
-    <div class="col-md-8 mx-auto">
-
-{{ content }}
-
-    </div>
   </div>
+</div>
+<div class="container-xxl bd-gutter">
+  <section class="row g-3 g-md-5 mb-5 pb-5 justify-content-center">
+    <div class="col-lg-6 py-lg-4 pe-lg-5">
+      <h3><i class="bi bi-rocket-takeoff"></i> Get started quickly</h3>
+      <p class="pe-lg-5">
+        Use <code>dotnet tools</code> to install the MORYX toolchain and
+        bootstrap your digital shopfloor in minutes.
+      </p>
+      <div class="code-block">
+        <div class="clipboard-button-container">
+          <button type="button" class="clipboard-button">
+            <i class="bi bi-clipboard"></i>
+          </button>
+        </div>
+        <div class="highlight">
+          <!-- Code blocks have to start at col 1 as their content would be indented otherwise 
+                and `</pre>` has to close after `</code>` to not include a linebreak at the end.
+          -->
+          <pre class="language-sh">
+<code class="language-sh">dotnet tools install Moryx.Cli</code></pre>
+        </div>
+      </div>
+      <p></p>
+      <div class="code-block">
+        <div class="clipboard-button-container">
+          <button type="button" class="clipboard-button">
+            <i class="bi bi-clipboard"></i>
+          </button>
+        </div>
+        <div class="highlight">
+          <!-- Code blocks have to start at col 1 as their content would be indented otherwise 
+                and `</pre>` has to close after `</code>` to not include a linebreak at the end.
+          -->
+          <pre class="language-sh">
+<code class="language-sh">moryx new Factory</code></pre>
+        </div>
+      </div>
+      <p></p>
+      <p>
+        <a href="https://moryx-industry.github.io/application-developer-training/">Take our tour</a> to get a hands on introduction on how to
+        setup a factory.
+      </p>
+    </div>
+    <div class="col-lg-6 py-lg-4 pe-lg-5">
+      <h3><i class="bi bi-code-square"></i> Utilize .NET</h3>
+      <p class="pe-lg-5">
+        MORYX builds upon the
+        <a href="https://dotnet.microsoft.com/en-us/">.NET</a> stack.
+        Incorporate the latest .NET features to build modern applications to
+        operate your factory.
+      </p>
+      <div class="code-block">
+        <div class="clipboard-button-container">
+          <button type="button" class="clipboard-button">
+            <i class="bi bi-clipboard"></i>
+          </button>
+        </div>
+        <div class="highlight">
+          <!-- Code blocks have to start at col 1 as their content would be indented otherwise 
+                and `</pre>` has to close after `</code>` to not include a linebreak at the end.
+          -->
+          <pre class="language-csharp">
+<code class="language-csharp">var builder = WebApplication.CreateBuilder();
+var services = builder.Services;
+
+// Setup MORYX
+services.AddMoryxKernel();
+services.AddMoryxModels();
+services.AddMoryxModules();
+
+// Setup other services ...
+
+services.AddLocalization();
+services.AddRazorPages();
+services.AddControllers();
+
+// Setup app ...
+
+app.Services.UseMoryxConfigurations("Config");
+
+var moduleManager = app.Services.GetRequiredService&lt;IModuleManager&gt;();
+moduleManager.StartModules();
+
+app.Run();
+
+moduleManager.StopModules();</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="row g-3 g-md-5 mb-5 pb-5 justify-content-center">
+
+  {{ content }}
+
+  </section>
 </div>

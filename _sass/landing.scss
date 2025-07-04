@@ -1,0 +1,62 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+.intro-header {
+  padding: 48px 0px;
+}
+
+.headline {
+  font-weight: 500;
+  text-align: center;
+}
+
+.headline-sub {
+  text-align: center;
+  color: $body-secondary-color;
+  font-weight: 100;
+}
+
+.clipboard-button {
+  display: block;
+  padding: .5em;
+  line-height: 1;
+  color: var(--bs-body-color);
+  background-color: var(--bd-pre-bg);
+  border: 0;
+  border-radius: .25rem;
+  position: relative;
+  z-index: 3;
+  margin-top: 1.25rem;
+  margin-right: .75rem;
+}
+
+.clipboard-button-container {
+  position: relative;
+  float: right;
+}
+
+@media (min-width: 768px) {
+  .clipboard-button-container {
+    display: block;
+  }
+}
+
+.code-block {
+  margin-right: 0;
+  margin-left: 0;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background-color: #f5f2f0;
+}
+
+.highlight {
+  background-color: #f5f2f0;
+}
+
+pre[class*="language-"] {
+  margin: 0;
+}
+
+.btn-gh {
+  color: $white;
+}

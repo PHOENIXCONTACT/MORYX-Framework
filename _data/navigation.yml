@@ -1,0 +1,7 @@
+items:
+- title: Documentation
+  url: https://github.com/PHOENIXCONTACT/MORYX-Framework/tree/future/docs
+- title: Repository
+  icon: bi-github
+  test: test
+  url: https://github.com/PHOENIXCONTACT/MORYX-Framework
