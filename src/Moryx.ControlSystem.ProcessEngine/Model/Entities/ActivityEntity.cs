@@ -1,4 +1,7 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -64,3 +67,4 @@ namespace Moryx.ControlSystem.ProcessEngine.Model
         public event EventHandler IdChanged;
     }
 }
+

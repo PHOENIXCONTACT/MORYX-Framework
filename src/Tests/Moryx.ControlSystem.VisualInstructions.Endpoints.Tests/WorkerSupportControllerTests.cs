@@ -1,3 +1,6 @@
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System.Linq;
 using NUnit.Framework;
 using System;
@@ -20,7 +23,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
+        [TestCase("Ãœmlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldReturnInstructions(string identifier)
         {
@@ -43,7 +46,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
+        [TestCase("Ãœmlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldAddInstruction(string identifier)
         {
@@ -61,7 +64,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
+        [TestCase("Ãœmlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldClearInstruction(string identifier)
         {
@@ -80,7 +83,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
+        [TestCase("Ãœmlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldCompleteInstruction(string identifier)
         {
@@ -100,7 +103,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
+        [TestCase("Ãœmlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldCompleteInstructionWithInputs(string identifier)
         {
@@ -128,3 +131,4 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
         }
     }
 }
+

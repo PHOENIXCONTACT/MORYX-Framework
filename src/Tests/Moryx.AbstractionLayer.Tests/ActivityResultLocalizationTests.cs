@@ -1,4 +1,7 @@
-﻿using Moryx.AbstractionLayer.Tests.TestData;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.AbstractionLayer.Tests.TestData;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -33,3 +36,4 @@ namespace Moryx.AbstractionLayer.Tests
         }
     }
 }
+

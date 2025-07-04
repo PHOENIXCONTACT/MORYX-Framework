@@ -1,4 +1,7 @@
-﻿namespace Moryx.ControlSystem.ProcessEngine
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.ControlSystem.ProcessEngine
 {
     /// <summary>
     /// Generates database ids for processes and activities based on their

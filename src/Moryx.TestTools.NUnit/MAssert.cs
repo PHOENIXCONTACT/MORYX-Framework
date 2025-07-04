@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using System;
@@ -52,3 +55,4 @@ namespace Moryx.TestTools.NUnit
     }
 
 }
+

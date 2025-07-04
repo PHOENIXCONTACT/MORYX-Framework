@@ -1,4 +1,7 @@
-﻿using Moryx.AbstractionLayer.Recipes;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.ControlSystem.TestTools.Tasks;
 using Moryx.Workplans;

@@ -1,4 +1,7 @@
-﻿using Microsoft.Data.Sqlite;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
@@ -52,3 +55,4 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         }
     }
 }
+

@@ -1,4 +1,7 @@
-﻿using Moryx.ControlSystem.Jobs;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.ControlSystem.Jobs;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs
 {
@@ -14,3 +17,4 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         Job Get(long jobId);
     }
 }
+

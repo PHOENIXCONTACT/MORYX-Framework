@@ -1,4 +1,7 @@
-﻿using Moryx.Runtime.Modules;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.Runtime.Modules;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,3 +25,4 @@ namespace Moryx.Runtime.Kernel.Modules
         public IReadOnlyList<IModuleDependency> Dependends => throw new NotImplementedException();
     }
 }
+

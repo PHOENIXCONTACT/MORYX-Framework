@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
@@ -90,3 +93,4 @@ namespace Moryx.Notifications.Publisher
         INotificationPublisher IFacadeContainer<INotificationPublisher>.Facade => _notificationPublisherFacade;      
     }
 }
+

@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.ComponentModel.DataAnnotations;
 using Moryx.Orders.Management.Properties;
 
 namespace Moryx.Orders.Management
@@ -23,3 +26,4 @@ namespace Moryx.Orders.Management
         }
     }
 }
+

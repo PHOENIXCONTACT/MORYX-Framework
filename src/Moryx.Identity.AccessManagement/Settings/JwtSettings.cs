@@ -1,4 +1,7 @@
-﻿namespace Moryx.Identity.AccessManagement.Settings
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.Identity.AccessManagement.Settings
 {
     /// <summary>
     /// Settings for the creation of the JWT token in the MORYX AccessManagement
@@ -26,3 +29,4 @@
         public int ExpirationInMinutes { get; set; }
     }
 }
+

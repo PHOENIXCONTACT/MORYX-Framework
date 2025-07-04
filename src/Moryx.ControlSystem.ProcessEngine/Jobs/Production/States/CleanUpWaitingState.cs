@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Moryx.ControlSystem.Jobs;

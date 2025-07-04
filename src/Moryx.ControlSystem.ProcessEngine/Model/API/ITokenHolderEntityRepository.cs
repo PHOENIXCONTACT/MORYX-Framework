@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Collections.Generic;
 using Moryx.Model.Repositories;
 
 namespace Moryx.ControlSystem.ProcessEngine.Model
@@ -21,3 +24,4 @@ namespace Moryx.ControlSystem.ProcessEngine.Model
         TokenHolderEntity Create(long holderId, string tokens);
     }
 }
+

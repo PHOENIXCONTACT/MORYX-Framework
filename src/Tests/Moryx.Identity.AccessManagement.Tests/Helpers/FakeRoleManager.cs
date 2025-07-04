@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moryx.Identity.AccessManagement.Data;

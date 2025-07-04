@@ -1,4 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Text.RegularExpressions;
 using Moryx.ControlSystem.VisualInstructions;
 
 namespace Moryx.ControlSystem.WorkerSupport

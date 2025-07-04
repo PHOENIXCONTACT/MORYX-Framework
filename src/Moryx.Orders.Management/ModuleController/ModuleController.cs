@@ -1,3 +1,6 @@
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System;
 using Moryx.AbstractionLayer.Products;
 using Moryx.ControlSystem.Jobs;
@@ -140,3 +143,4 @@ namespace Moryx.Orders.Management
         IOrderManagement IFacadeContainer<IOrderManagement>.Facade => _orderManagementFacade;
     }
 }
+

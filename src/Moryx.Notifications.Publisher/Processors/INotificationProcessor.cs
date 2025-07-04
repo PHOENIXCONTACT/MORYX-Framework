@@ -1,3 +1,6 @@
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System;
 using System.Collections.Generic;
 using Moryx.Modules;
@@ -45,3 +48,4 @@ namespace Moryx.Notifications.Publisher
         IReadOnlyList<Notification> GetHistory(DateTime start, DateTime end, Severity[] severity);
     }
 }
+

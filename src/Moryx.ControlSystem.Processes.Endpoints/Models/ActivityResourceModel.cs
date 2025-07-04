@@ -1,4 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Runtime.Serialization;
 
 namespace Moryx.ControlSystem.Processes.Endpoints
 {
@@ -12,3 +15,4 @@ namespace Moryx.ControlSystem.Processes.Endpoints
         public string Name { get; set; }
     }
 }
+

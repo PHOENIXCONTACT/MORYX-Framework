@@ -1,4 +1,7 @@
-﻿namespace Moryx.AbstractionLayer.Drivers.PickByLight
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.AbstractionLayer.Drivers.PickByLight
 {
     /// <summary>
     /// Output structure for a pick by light driver

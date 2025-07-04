@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -148,3 +151,4 @@ namespace Moryx.TestTools.Test.Model.Migrations
         }
     }
 }
+

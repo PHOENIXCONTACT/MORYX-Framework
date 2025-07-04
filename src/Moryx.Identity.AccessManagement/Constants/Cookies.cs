@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
 
 namespace Moryx.Identity.AccessManagement
 {
@@ -27,3 +30,4 @@ namespace Moryx.Identity.AccessManagement
         public const string USER_COOKIE_NAME = "moryx_user";
     }
 }
+

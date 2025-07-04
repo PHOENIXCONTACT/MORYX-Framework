@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
 
 namespace Moryx.Orders.Management.Model
@@ -63,3 +66,4 @@ namespace Moryx.Orders.Management.Model
         }
     }
 }
+

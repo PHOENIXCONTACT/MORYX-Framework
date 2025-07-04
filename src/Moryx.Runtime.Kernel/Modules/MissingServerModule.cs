@@ -1,4 +1,7 @@
-﻿using Moryx.Container;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using System;
@@ -66,3 +69,4 @@ namespace Moryx.Runtime.Kernel.Modules
         public bool Optional { get; }
     }
 }
+

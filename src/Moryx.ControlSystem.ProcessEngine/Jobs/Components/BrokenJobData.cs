@@ -1,4 +1,7 @@
-﻿using Moryx.AbstractionLayer.Recipes;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
@@ -101,3 +104,4 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Components
         #endregion
     }
 }
+

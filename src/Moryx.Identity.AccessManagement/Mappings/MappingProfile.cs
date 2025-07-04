@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Linq;
 using AutoMapper;
 using Moryx.Identity.AccessManagement.Data;
 using Moryx.Identity.AccessManagement.Models;
@@ -31,3 +34,4 @@ namespace Moryx.Identity.AccessManagement.Mappings
         }
     }
 }
+

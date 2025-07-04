@@ -1,4 +1,7 @@
-﻿using Moq;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moq;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
@@ -446,3 +449,4 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         }
     }
 }
+

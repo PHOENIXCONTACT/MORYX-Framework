@@ -1,4 +1,7 @@
-﻿namespace Moryx.Identity.AccessManagement.Data
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.Identity.AccessManagement.Data
 {
     /// <summary>
     /// Mapping class for the m-to-n relation between roles and permissions

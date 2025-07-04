@@ -1,4 +1,7 @@
-﻿using Moq;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moq;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.VisualInstructions;
 using Moryx.Logging;
@@ -91,3 +94,4 @@ namespace Moryx.ControlSystem.WorkerSupport.Tests
         }
     }
 }
+

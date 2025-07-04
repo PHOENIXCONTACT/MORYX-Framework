@@ -1,4 +1,7 @@
-﻿using Moryx.AbstractionLayer.Capabilities;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
@@ -52,3 +55,4 @@ namespace Moryx.Resources.Management.Tests
 
     public class InheritingFromGenericResource : GenericBaseResource<object> { }
 }
+
