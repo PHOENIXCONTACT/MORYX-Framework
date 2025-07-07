@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Moryx.Notifications.Endpoints\Moryx.Notifications.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.Notifications.Publisher\Moryx.Notifications.Publisher.csproj" />
     <ProjectReference Include="..\Moryx.Notifications.Web\Moryx.Notifications.Web.csproj" />
+    <ProjectReference Include="..\Moryx.Orders.Web\Moryx.Orders.Web.csproj" />
     <ProjectReference Include="..\Moryx.Products.Web\Moryx.Products.Web.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Web\Moryx.Resources.Web.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
