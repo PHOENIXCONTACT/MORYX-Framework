@@ -23,7 +23,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ãœmlaut")]
+        [TestCase("Ümlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldReturnInstructions(string identifier)
         {
@@ -46,7 +46,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ãœmlaut")]
+        [TestCase("Ümlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldAddInstruction(string identifier)
         {
@@ -64,7 +64,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ãœmlaut")]
+        [TestCase("Ümlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldClearInstruction(string identifier)
         {
@@ -83,7 +83,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ãœmlaut")]
+        [TestCase("Ümlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldCompleteInstruction(string identifier)
         {
@@ -103,7 +103,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         [Test]
         [TestCase("Instructor")]
-        [TestCase("Ãœmlaut")]
+        [TestCase("Ümlaut")]
         [TestCase("Instructor with spaces")]
         public void ShouldCompleteInstructionWithInputs(string identifier)
         {
