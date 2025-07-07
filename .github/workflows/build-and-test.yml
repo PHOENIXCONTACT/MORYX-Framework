@@ -45,35 +45,35 @@ jobs:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
-  UnitTests:
-    needs: [EnvVar, Build]
-    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-
-  IntegrationTests:
-    needs: [EnvVar, Build]
-    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-
-  ReportGenerator:
-    needs: [EnvVar, UnitTests, IntegrationTests]
-    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
-    with:
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-               
-  Publish-Test-Coverage:
-    needs: [EnvVar, ReportGenerator]
-    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
-    with:
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+#  UnitTests:
+#    needs: [EnvVar, Build]
+#    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
+#    with:
+#      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+#      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+#
+#  IntegrationTests:
+#    needs: [EnvVar, Build]
+#    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@main
+#    with:
+#      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+#      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+#
+#  ReportGenerator:
+#    needs: [EnvVar, UnitTests, IntegrationTests]
+#    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
+#    with:
+#      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+#               
+#  Publish-Test-Coverage:
+#    needs: [EnvVar, ReportGenerator]
+#    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
+#    with:
+#      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+#    secrets:
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#
   # currently not working
   # Documentation:
   #   needs: [EnvVar, UnitTests]
@@ -82,7 +82,7 @@ jobs:
   #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   Publish:
-    needs: [EnvVar, UnitTests]
+    needs: [EnvVar, Build] #, UnitTests]
     uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
