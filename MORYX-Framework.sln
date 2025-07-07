@@ -213,6 +213,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Orders.Endpoints.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Orders.Management.Tests", "src\Tests\Moryx.Orders.Management.Tests\Moryx.Orders.Management.Tests.csproj", "{17BBB47E-E25E-4B7D-8BE1-4A67914BA1DB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmark", "Benchmark", "{8BBF84BB-4A8B-49F4-BA74-F25CBEED3F57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Benchmarking", "src\Moryx.Benchmarking\Moryx.Benchmarking.csproj", "{A73C5D36-E3EF-43C2-8A4D-69819B001FF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Benchmarking", "src\Moryx.Resources.Benchmarking\Moryx.Resources.Benchmarking.csproj", "{39EDE0BB-F7D8-4E2E-9D1B-36A7A245FA05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Benchmarking.Setups", "src\Moryx.Resources.BenchmarkSetup\Moryx.Benchmarking.Setups.csproj", "{D473D554-26F3-47EC-AE7D-A9754556C9D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -551,6 +559,18 @@ Global
 		{17BBB47E-E25E-4B7D-8BE1-4A67914BA1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17BBB47E-E25E-4B7D-8BE1-4A67914BA1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17BBB47E-E25E-4B7D-8BE1-4A67914BA1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A73C5D36-E3EF-43C2-8A4D-69819B001FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A73C5D36-E3EF-43C2-8A4D-69819B001FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A73C5D36-E3EF-43C2-8A4D-69819B001FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A73C5D36-E3EF-43C2-8A4D-69819B001FF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39EDE0BB-F7D8-4E2E-9D1B-36A7A245FA05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39EDE0BB-F7D8-4E2E-9D1B-36A7A245FA05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39EDE0BB-F7D8-4E2E-9D1B-36A7A245FA05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39EDE0BB-F7D8-4E2E-9D1B-36A7A245FA05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D473D554-26F3-47EC-AE7D-A9754556C9D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D473D554-26F3-47EC-AE7D-A9754556C9D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D473D554-26F3-47EC-AE7D-A9754556C9D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D473D554-26F3-47EC-AE7D-A9754556C9D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -634,6 +654,9 @@ Global
 		{39B087D4-D384-4FC1-9EAC-01E2D8EEB91B} = {E0E7AB53-7008-476A-AADA-ED49220C1B6F}
 		{E1E32C87-43BF-4178-9AE1-588BEF46A532} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 		{17BBB47E-E25E-4B7D-8BE1-4A67914BA1DB} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
+		{A73C5D36-E3EF-43C2-8A4D-69819B001FF0} = {8BBF84BB-4A8B-49F4-BA74-F25CBEED3F57}
+		{39EDE0BB-F7D8-4E2E-9D1B-36A7A245FA05} = {8BBF84BB-4A8B-49F4-BA74-F25CBEED3F57}
+		{D473D554-26F3-47EC-AE7D-A9754556C9D9} = {8BBF84BB-4A8B-49F4-BA74-F25CBEED3F57}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		    RESX_ShowErrorsInErrorList = True
