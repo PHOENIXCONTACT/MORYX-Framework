@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Moryx.ControlSystem.ProcessEngine.Web\Moryx.ControlSystem.ProcessEngine.Web.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.ProcessEngine\Moryx.ControlSystem.ProcessEngine.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.Processes.Endpoints\Moryx.ControlSystem.Processes.Endpoints.csproj" />
+    <ProjectReference Include="..\Moryx.Drivers.Mqtt\Moryx.Drivers.Mqtt.csproj" />
     <ProjectReference Include="..\Moryx.Launcher\Moryx.Launcher.csproj" />
     <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />

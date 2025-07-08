@@ -70,5 +70,9 @@
 		<PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
 		
 		<PackageVersion Include="Castle.Windsor" Version="6.0.0" />
+
+		<!-- Dependencies for drivers -->
+		<PackageVersion Include="MQTTnet" Version="4.3.1.873" />
+
 	</ItemGroup>
 </Project>

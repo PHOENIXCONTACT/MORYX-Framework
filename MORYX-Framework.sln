@@ -221,6 +221,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Benchmarkin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Benchmarking.Setups", "src\Moryx.Resources.BenchmarkSetup\Moryx.Benchmarking.Setups.csproj", "{D473D554-26F3-47EC-AE7D-A9754556C9D9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drivers", "Drivers", "{93C94C82-873F-4D31-8A9C-0227047BD5A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Drivers.Mqtt", "src\Moryx.Drivers.Mqtt\Moryx.Drivers.Mqtt.csproj", "{7EDCD56F-EF56-40DF-A25F-5896990D2407}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.Mqtt.Tests", "src\Tests\Moryx.Recources.Mqtt.Tests\Moryx.Resources.Mqtt.Tests.csproj", "{4C32122A-90B9-4E49-AE3E-985FA5D4AC54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -571,6 +577,14 @@ Global
 		{D473D554-26F3-47EC-AE7D-A9754556C9D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D473D554-26F3-47EC-AE7D-A9754556C9D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D473D554-26F3-47EC-AE7D-A9754556C9D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EDCD56F-EF56-40DF-A25F-5896990D2407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EDCD56F-EF56-40DF-A25F-5896990D2407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EDCD56F-EF56-40DF-A25F-5896990D2407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EDCD56F-EF56-40DF-A25F-5896990D2407}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C32122A-90B9-4E49-AE3E-985FA5D4AC54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C32122A-90B9-4E49-AE3E-985FA5D4AC54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C32122A-90B9-4E49-AE3E-985FA5D4AC54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C32122A-90B9-4E49-AE3E-985FA5D4AC54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -657,10 +671,12 @@ Global
 		{A73C5D36-E3EF-43C2-8A4D-69819B001FF0} = {8BBF84BB-4A8B-49F4-BA74-F25CBEED3F57}
 		{39EDE0BB-F7D8-4E2E-9D1B-36A7A245FA05} = {8BBF84BB-4A8B-49F4-BA74-F25CBEED3F57}
 		{D473D554-26F3-47EC-AE7D-A9754556C9D9} = {8BBF84BB-4A8B-49F4-BA74-F25CBEED3F57}
+		{7EDCD56F-EF56-40DF-A25F-5896990D2407} = {93C94C82-873F-4D31-8A9C-0227047BD5A8}
+		{4C32122A-90B9-4E49-AE3E-985FA5D4AC54} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		    RESX_ShowErrorsInErrorList = True
-		RESX_TaskErrorCategory = Message
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
+		RESX_TaskErrorCategory = Message
+		    RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal
