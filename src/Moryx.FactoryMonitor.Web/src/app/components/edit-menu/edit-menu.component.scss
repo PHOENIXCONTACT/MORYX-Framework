@@ -1,0 +1,31 @@
+
+.edit-menu-container {
+    display: flex;
+  }
+
+  .go-back-button{
+    margin-bottom: 5px;
+  }
+  
+  .edit-menu {
+    position: relative;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 16px;
+  
+      button {
+        margin-bottom: 16px;
+      }
+    }
+  }
+  
+  .menu-button.mat-mdc-mini-fab{
+    background-color: rgb(245, 245, 245, 0.8);
+  }

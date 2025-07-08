@@ -1,0 +1,12 @@
+  <span class="material-symbols-outlined"> 
+    {{ value().iconName ? value().iconName : 'info' }}
+  </span>
+  <div class="property-container">
+    <div class="property-content">
+      <span class="property-value truncate">
+        {{ value().currentValue ? value().currentValue : '-' }}
+      </span>
+      <span class="property-unit" [ngStyle]="{'visibility': value().valueUnit ? 'visible':'hidden'}">{{value().valueUnit}}</span>
+    </div>
+    <span class="property-label">{{name()}}</span>
+  </div>

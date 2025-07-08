@@ -1,0 +1,30 @@
+<div mat-dialog-title>
+  <span>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_IMAGE | translate }}</span>
+</div>
+<div mat-dialog-content>
+  <div>
+    <mat-form-field class="background-input" *ngIf="backgroundChangeService.canSaveBackground$ | async"
+    appearance="outline">
+      <mat-label>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate }}</mat-label>
+      <input
+        matInput
+        [placeholder]="TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate"
+        [formControl]="backgroundUrlFormControl"
+        [errorStateMatcher]="matcher" />
+      <mat-error *ngIf="backgroundUrlFormControl.hasError('required')">{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.ENTER_URL | translate }}</mat-error>
+    </mat-form-field>
+    <p *ngIf="!(backgroundChangeService.canSaveBackground$ | async)">
+      {{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.NO_MANUFACTURING_RESOURCE| translate }}
+    </p>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="primary">  {{ TranslationConstants.SHARED.CANCEL | translate }}</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="backgroundUrlFormControl.invalid || !(backgroundChangeService.canSaveBackground$ | async)">
+    {{ TranslationConstants.SHARED.SAVE | translate }}
+  </button>
+</div>

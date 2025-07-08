@@ -1,0 +1,39 @@
+.cell-image-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: -9px;
+  button {
+    margin-right: 5px;
+  }
+}
+mat-form-field {
+  width: 100%;
+}
+
+.image-container {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom:  2px;
+  width: 350px;
+  height: 400px;
+  border:  1px solid rgb(206, 206, 206);
+  img {
+    width: 350px;
+    height: 400px;
+    object-fit: cover;
+  }
+}
+
+.cell-image-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  mat-form-field{
+    margin-top: 10px;
+  }
+}

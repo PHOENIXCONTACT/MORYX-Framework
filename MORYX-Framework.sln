@@ -231,6 +231,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Drivers.OpcUa", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Drivers.OpcUa.Tests", "src\Tests\Moryx.Drivers.OpcUa.Tests\Moryx.Drivers.OpcUa.Tests.csproj", "{CB5BC342-4952-4419-ABB9-0D240684A3DE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FactoryMonitor", "FactoryMonitor", "{73AFB51B-B1A2-4144-AB4C-9CDE80CBCFBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.FactoryMonitor.Endpoints", "src\Moryx.FactoryMonitor.Endpoints\Moryx.FactoryMonitor.Endpoints.csproj", "{58CD8D72-1000-479A-B82A-D8C018345239}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.FactoryMonitor.Web", "src\Moryx.FactoryMonitor.Web\Moryx.FactoryMonitor.Web.csproj", "{F1D9AEC4-4707-4076-BE44-CEC7AB451FC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.FactoryMonitor.Endpoints.Tests", "src\Tests\Moryx.FactoryMonitor.Endpoints.Tests\Moryx.FactoryMonitor.Endpoints.Tests.csproj", "{850552B6-A93E-4614-9151-522EFE59F0DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -597,6 +605,18 @@ Global
 		{CB5BC342-4952-4419-ABB9-0D240684A3DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB5BC342-4952-4419-ABB9-0D240684A3DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB5BC342-4952-4419-ABB9-0D240684A3DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58CD8D72-1000-479A-B82A-D8C018345239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58CD8D72-1000-479A-B82A-D8C018345239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58CD8D72-1000-479A-B82A-D8C018345239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58CD8D72-1000-479A-B82A-D8C018345239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1D9AEC4-4707-4076-BE44-CEC7AB451FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D9AEC4-4707-4076-BE44-CEC7AB451FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D9AEC4-4707-4076-BE44-CEC7AB451FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D9AEC4-4707-4076-BE44-CEC7AB451FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{850552B6-A93E-4614-9151-522EFE59F0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{850552B6-A93E-4614-9151-522EFE59F0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{850552B6-A93E-4614-9151-522EFE59F0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{850552B6-A93E-4614-9151-522EFE59F0DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -687,6 +707,9 @@ Global
 		{4C32122A-90B9-4E49-AE3E-985FA5D4AC54} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 		{BD3B74DF-9EC2-4A5A-BCFE-1707C83756CC} = {93C94C82-873F-4D31-8A9C-0227047BD5A8}
 		{CB5BC342-4952-4419-ABB9-0D240684A3DE} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
+		{58CD8D72-1000-479A-B82A-D8C018345239} = {73AFB51B-B1A2-4144-AB4C-9CDE80CBCFBC}
+		{F1D9AEC4-4707-4076-BE44-CEC7AB451FC5} = {73AFB51B-B1A2-4144-AB4C-9CDE80CBCFBC}
+		{850552B6-A93E-4614-9151-522EFE59F0DF} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		

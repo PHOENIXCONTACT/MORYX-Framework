@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
+    <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+    <ProjectReference Include="..\..\Moryx.FactoryMonitor.Endpoints\Moryx.FactoryMonitor.Endpoints.csproj" />
+  </ItemGroup>
+</Project>
