@@ -73,6 +73,7 @@
 
 		<!-- Dependencies for drivers -->
 		<PackageVersion Include="MQTTnet" Version="4.3.1.873" />
+		<PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.213" />
 
 	</ItemGroup>
 </Project>

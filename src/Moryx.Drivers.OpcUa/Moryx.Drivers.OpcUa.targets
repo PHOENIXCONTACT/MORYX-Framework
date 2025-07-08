@@ -1,0 +1,8 @@
+<Project>
+	<ItemGroup>
+		<ItemToCopy Include="$(MSBuildThisFileDirectory)..\Config\**\Opc.Ua.Default.Config.xml" />
+	</ItemGroup>
+	<Target Name="CopyLogFiles" BeforeTargets="CopyFilesToOutputDirectory">
+		<Copy SourceFiles="@(ItemToCopy)" DestinationFolder="$(TargetDir)\..\..\..\Config\" Condition="!Exists(@(ItemToCopy->'$(TargetDir)\..\..\..\Config\%(Filename)%(Extension)'))"/>
+	</Target>
+</Project>
