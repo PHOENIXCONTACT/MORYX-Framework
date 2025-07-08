@@ -63,7 +63,7 @@ namespace Moryx.Runtime.Wcf
             };
             host.Setup(typeof(IVersionService), hostConfig);
             host.Start();
-            if (!string.IsNullOrEmpty(_portConfig.CertificateThumbprint))
+            if (!string.IsNullOrEmpty(_portConfig.CertificateSerialNumber))
             {
                 var hostHttps = new ConfiguredServiceHost(factory, Logger, collector, _portConfig);
                 var hostHttpsConfig = new HostConfig

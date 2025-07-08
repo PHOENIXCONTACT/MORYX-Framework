@@ -211,9 +211,9 @@ namespace Moryx.Runtime.Wcf
 
             if (config.BindingType == ServiceBindingType.WebHttps | config.BindingType == ServiceBindingType.BasicHttps)
             {
-                if (string.IsNullOrEmpty(_portConfig.CertificateThumbprint))
+                if (string.IsNullOrEmpty(_portConfig.CertificateSerialNumber))
                 {
-                    _logger?.Log(LogLevel.Error, $"Certificate: A Certificate Thumbprint is needed but it was not set in the config.");
+                    _logger?.Log(LogLevel.Error, $"Certificate: A Certificate SerialNumber is needed but it was not set in the config.");
                     return;
                 }
                 X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
@@ -223,16 +223,16 @@ namespace Moryx.Runtime.Wcf
                 X509Certificate2 certificate = null;
                 foreach (var cert in store.Certificates)
                 {
-                    if (string.IsNullOrEmpty(cert.Thumbprint))
+                    if (string.IsNullOrEmpty(cert.SerialNumber))
                     {
-                        _logger?.Log(LogLevel.Trace, $"Certificate: thumbprint was empty for cert: {cert.SubjectName.Name}");
+                        _logger?.Log(LogLevel.Trace, $"Certificate: SerialNumber was empty for cert: {cert.SubjectName.Name}");
                         continue;
                     }
 
-                    if (cert.Thumbprint.Equals(_portConfig.CertificateThumbprint.ToUpper()))
+                    if (cert.SerialNumber.Equals(_portConfig.CertificateSerialNumber.ToUpper()))
                     {
                         certificate = cert;
-                        _logger?.Log(LogLevel.Trace, "Certificate: Found one with name " + _portConfig.CertificateThumbprint);
+                        _logger?.Log(LogLevel.Trace, "Certificate: Found one with name " + _portConfig.CertificateSerialNumber);
                         break;
                     }
                 }
@@ -241,11 +241,11 @@ namespace Moryx.Runtime.Wcf
 
                 if (certificate == null)
                 {
-                    _logger?.Log(LogLevel.Error,$"Certificate with thumbprint {_portConfig.CertificateThumbprint} was not found on local machine.");
+                    _logger?.Log(LogLevel.Error,$"Certificate with SerialNumber {_portConfig.CertificateSerialNumber} was not found on local machine.");
                     return;
                 }
                 
-                _service.Credentials.ServiceCertificate.SetCertificate(StoreLocation.LocalMachine, StoreName.My, X509FindType.FindByThumbprint, _portConfig.CertificateThumbprint.ToUpper());
+                _service.Credentials.ServiceCertificate.SetCertificate(StoreLocation.LocalMachine, StoreName.My, X509FindType.FindBySerialNumber, _portConfig.CertificateSerialNumber.ToUpper());
             }
             _hostConfig = config;
         }

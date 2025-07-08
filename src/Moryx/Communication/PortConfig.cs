@@ -91,9 +91,9 @@ namespace Moryx.Communication
         public string LoadError { get; set; }
 
         /// <summary>
-        /// The Thumbprint of the used SSL/TLS Certificate for Https.
+        /// The SerialNumber of the used SSL/TLS Certificate for Https.
         /// </summary>
         [DataMember]
-        public string CertificateThumbprint { get; set; }
+        public string CertificateSerialNumber { get; set; }
     }
 }
